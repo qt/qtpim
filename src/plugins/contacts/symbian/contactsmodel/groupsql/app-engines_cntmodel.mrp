@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+# All rights reserved.
+# This component and the accompanying materials are made available
+# under the terms of "Eclipse Public License v1.0"
+# which accompanies this distribution, and is available
+# at the URL "http://www.eclipse.org/legal/epl-v10.html".
+#
+# Initial Contributors:
+# Nokia Corporation - initial contribution.
+#
+# Contributors:
+#
+# Description: 
+#
+
+component	app-engines_cntmodel
+source	\sf\app\contacts\phonebookengines\contactsmodel
+binary	\sf\app\contacts\phonebookengines\contactsmodel\groupsql	all
+
+exports	\sf\app\contacts\phonebookengines\contactsmodel\groupsql
+
+notes_source	\component_defs\release.src
+
+
+ipr E 
+ipr T \sf\app\contacts\phonebookengines\contactsmodel\tsrc
+ipr T \sf\app\contacts\phonebookengines\contactsmodel\tsrcsql
+

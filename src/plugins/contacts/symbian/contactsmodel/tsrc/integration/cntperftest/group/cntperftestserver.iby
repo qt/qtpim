@@ -1,0 +1,49 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+
+#ifndef __CNTPERFTESTSERVER_IBY__
+#define __CNTPERFTESTSERVER_IBY__
+
+#include <testexecute.iby>
+
+file=ABI_DIR\BUILD_DIR\cntperftestserver.exe		Sys\Bin\cntperftestserver.exe
+
+data=EPOCROOT##epoc32\data\c\cntperftest\configs\cntperftest.ini 		cntperftest\configs\cntperftest.ini
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\cntperftest.script 		cntperftest\scripts\cntperftest.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\customlabeluid.script 		cntperftest\scripts\customlabeluid.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\unifiedsingular.script 	cntperftest\scripts\unifiedsingular.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\viewdefcustomfieldstest.script cntperftest\scripts\viewdefcustomfieldstest.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\customtemplatetest.script 	cntperftest\scripts\customtemplatetest.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\acesscounttests.script 	cntperftest\scripts\acesscounttests.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\contactviewtest.script 	cntperftest\scripts\contactviewtest.script
+data=EPOCROOT##epoc32\data\c\cntperftest\scripts\viewdefanyfieldstest.script 	cntperftest\scripts\viewdefanyfieldstest.script
+data=EPOCROOT##epoc32\data\c\cntviewtest\scripts\testcontactviewsuite.script 	cntviewtest\scripts\testcontactviewsuite.script
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\testcontactviewsuite.ini 	cntviewtest\configs\testcontactviewsuite.ini
+data=EPOCROOT##epoc32\data\c\cntviewtest\scripts\testcontactviewunderbackuprestorestep.script 	cntviewtest\scripts\testcontactviewunderbackuprestorestep.script
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\testcontactviewunderbackuprestorestep.ini	cntviewtest\configs\testcontactviewunderbackuprestorestep.ini	
+data=EPOCROOT##epoc32\data\c\cntviewtest\scripts\testcontactviewunderlyingviewupdatestep.script 	cntviewtest\scripts\testcontactviewunderlyingviewupdatestep.script 
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\testcontactviewunderlyingviewupdatestep.ini 	cntviewtest\configs\testcontactviewunderlyingviewupdatestep.ini
+data=EPOCROOT##epoc32\data\c\cntviewtest\scripts\testcontactviewcrudoperationsstep.script	cntviewtest\scripts\testcontactviewcrudoperationsstep.script 
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\testcontactviewcrudoperationsstep.ini 	cntviewtest\configs\testcontactviewcrudoperationsstep.ini
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\vcf\vcard01.vcf		cntviewtest\configs\vcf\vcard01.vcf
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\vcf\vcard02.vcf		cntviewtest\configs\vcf\vcard02.vcf
+data=EPOCROOT##epoc32\data\c\cntviewtest\configs\vcf\vcard100.vcf		cntviewtest\configs\vcf\vcard100.vcf
+
+
+
+#endif
+

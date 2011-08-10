@@ -1,0 +1,39 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+
+#ifndef __TE_PERFORMANCEFUNCTIONALITYTESTS_SUITE_IBY__
+#define __TE_PERFORMANCEFUNCTIONALITYTESTS_SUITE_IBY__
+
+#include <testexecute.iby>
+
+file=ABI_DIR\BUILD_DIR\te_performancefunctionalitysuite.exe													System\bin\te_performancefunctionalitysuite.exe
+
+data=EPOCROOT##epoc32\data\c\performancefunc\configs\te_performancefunctionalitysuite.ini 					performancefunc\configs\te_performancefunctionalitysuite.ini
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\te_performancefunctionalitysuite.script 				performancefunc\scripts\te_performancefunctionalitysuite.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\te_performancefunctionalityconcurrent.script			performancefunc\scripts\te_performancefunctionalityconcurrent.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\te_performancefunctionalitytimeoutconcurrent.script	performancefunc\scripts\te_performancefunctionalitytimeoutconcurrent.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\requestmixstep.script									performancefunc\scripts\requestmixstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\transactionsstep.script								performancefunc\scripts\transactionsstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\crudoomstep.script										performancefunc\scripts\crudoomstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\timeoutstep.script										performancefunc\scripts\timeoutstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\randomblobstep.script									performancefunc\scripts\randomblobstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\notificationstep.script								performancefunc\scripts\notificationstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\lowdiskspacestep.script								performancefunc\scripts\lowdiskspacestep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\compactandrecoverstep.script							performancefunc\scripts\compactandrecoverstep.script
+data=EPOCROOT##epoc32\data\c\performancefunc\scripts\statemachinestep.script								performancefunc\scripts\statemachinestep.script
+
+#endif

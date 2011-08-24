@@ -552,9 +552,11 @@ void QDeclarativeContactModel::requestUpdated()
             }
 
             reset();
-            beginInsertRows(QModelIndex(), 0, req->contacts().count());
-            d->m_contacts = dcs;
-            endInsertRows();
+            if (contacts.count()>0) {
+                beginInsertRows(QModelIndex(), 0, contacts.count() - 1);
+                d->m_contacts = dcs;
+                endInsertRows();
+            }
         } else {
             //Partial updating, insert the fetched contacts into the the exist contact list.
             QList<QDeclarativeContact*> dcs;

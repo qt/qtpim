@@ -27,7 +27,8 @@ HEADERS += \
     details/qdeclarativecontacttag_p.h \
     details/qdeclarativecontacttimestamp_p.h \
     details/qdeclarativecontacturl_p.h \
-    details/qdeclarativecontacthobby_p.h
+    details/qdeclarativecontacthobby_p.h \
+    details/qdeclarativecontactpersonid_p.h
 
 SOURCES += \
     details/qdeclarativecontactmoc_p.cpp

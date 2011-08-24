@@ -76,7 +76,7 @@ public:
     void setContact(const QContact& contact);
     QContact contact();
     QContactId contactId() const;
-    int localId() const;
+    QContactLocalId localId() const;
 
 
     static void detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *p, QDeclarativeContactDetail *detail);

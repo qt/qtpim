@@ -72,5 +72,6 @@
 #include "qcontacttimestamp.h"
 #include "qcontacttype.h"
 #include "qcontacturl.h"
+#include "qcontactpersonid.h"
 
 #endif

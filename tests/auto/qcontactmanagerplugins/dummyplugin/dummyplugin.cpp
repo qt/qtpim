@@ -149,7 +149,7 @@ bool DummyEngine::saveContact(QContact* contact, bool batch, QContactManager::Er
     // success!
     QContactId newId;
     newId.setManagerUri(managerUri());
-    newId.setLocalId(5);
+    newId.setLocalId("5");
     contact->setId(newId);
     *error = QContactManager::NoError;
 
@@ -166,7 +166,7 @@ bool DummyEngine::saveContact(QContact* contact, bool batch, QContactManager::Er
 
 bool DummyEngine::removeContact(const QContactLocalId& contactId, bool batch, QContactManager::Error* error)
 {
-    if (contactId != 5) {
+    if (contactId != "5") {
         *error = QContactManager::DoesNotExistError;
         return false;
     }

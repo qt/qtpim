@@ -73,9 +73,9 @@ class QDeclarativeContactRelationshipModelPrivate
 {
 public:
     QDeclarativeContactRelationshipModelPrivate()
-        :m_manager(0),
-        m_participantId(0),
-        m_role(QDeclarativeContactRelationship::Either)
+        : m_manager(0)
+        , m_participantId("")
+        , m_role(QDeclarativeContactRelationship::Either)
     {
     }
 
@@ -84,29 +84,27 @@ public:
         delete m_manager;
     }
 
-    QContactManager* m_manager;
+    QContactManager *m_manager;
     QDeclarativeContactRelationship m_relationshipTypeHolder;
     QContactLocalId m_participantId;
     QDeclarativeContactRelationship::RelationshipRole m_role;
     QList<QContactRelationship> m_relationships;
-    QList<QDeclarativeContactRelationship*> m_declarativeRelationships;
+    QList<QDeclarativeContactRelationship *> m_declarativeRelationships;
 };
 
 QDeclarativeContactRelationshipModel::QDeclarativeContactRelationshipModel(QObject *parent)
-    :QAbstractListModel(parent),
-    d(new QDeclarativeContactRelationshipModelPrivate)
+    : QAbstractListModel(parent)
+    , d(new QDeclarativeContactRelationshipModelPrivate)
 {
     QHash<int, QByteArray> roleNames;
     roleNames = QAbstractItemModel::roleNames();
     roleNames.insert(RelationshipRole, "relationship");
     setRoleNames(roleNames);
 
-
     connect(this, SIGNAL(managerChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(participantIdChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(relationshipTypeChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(roleChanged()), SLOT(fetchAgain()));
-
 }
 
 QDeclarativeContactRelationshipModel::~QDeclarativeContactRelationshipModel()

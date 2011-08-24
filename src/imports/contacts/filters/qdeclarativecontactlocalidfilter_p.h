@@ -66,7 +66,7 @@ public:
     {
         QStringList ids;
         foreach (const QContactLocalId& id, d.ids()) {
-            ids << QString::number(id);
+            ids << id;
         }
         return ids;
     }
@@ -74,11 +74,10 @@ public:
     void setIds(const QStringList& ids)
     {
         QList<QContactLocalId> contactIds;
-        bool ok;
 
         foreach (const QString& id, ids) {
-            QContactLocalId localId = id.toInt(&ok);
-            if (ok) {
+            QContactLocalId localId = id;
+            if (!id.isEmpty()) {
                 contactIds << localId;
             }
         }

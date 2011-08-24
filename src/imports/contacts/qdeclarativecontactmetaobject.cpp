@@ -100,6 +100,8 @@ static ContactDetailNameMap qt_contactDetailNameMap[] = {
     {QDeclarativeContactDetail::Url,            "urls",           QContactUrl::DefinitionName.latin1(), true},
     {QDeclarativeContactDetail::Hobby,          "hobby",          QContactHobby::DefinitionName.latin1(), false},
     {QDeclarativeContactDetail::Hobby,          "hobbies",        QContactHobby::DefinitionName.latin1(), true},
+    {QDeclarativeContactDetail::PersonId,       "personid",       QContactPersonId::DefinitionName.latin1(), false},
+    {QDeclarativeContactDetail::PersonId,       "personids",      QContactPersonId::DefinitionName.latin1(), true},
     {QDeclarativeContactDetail::Customized,     "",               "",                false}
 };
 
@@ -291,7 +293,7 @@ QContact QDeclarativeContactMetaObject::contact()
     return m_contact;
 }
 
-int QDeclarativeContactMetaObject::localId() const
+QContactLocalId QDeclarativeContactMetaObject::localId() const
 {
     return m_contact.localId();
 }
@@ -425,6 +427,8 @@ QDeclarativeContactDetail* QDeclarativeContactMetaObject::createContactDetail(QD
         return new QDeclarativeContactTimestamp(parent);
     case QDeclarativeContactDetail::Url:
         return new QDeclarativeContactUrl(parent);
+    case QDeclarativeContactDetail::PersonId:
+        return new QDeclarativeContactPersonId(parent);
     case QDeclarativeContactDetail::Customized:
     default:
         break;

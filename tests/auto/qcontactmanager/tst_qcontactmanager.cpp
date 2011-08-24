@@ -2412,7 +2412,7 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCA.count(), addSigCount);
     args = spyCA.takeFirst();
     addSigCount -= 1;
-    arg = args.first().value<QList<quint32> >();
+    arg = args.first().value<QList<QString> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QContactLocalId(arg.at(0)), cid);
 
@@ -2428,7 +2428,7 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCOM1->count(), 1);
     args = spyCM.takeFirst();
     modSigCount -= 1;
-    arg = args.first().value<QList<quint32> >();
+    arg = args.first().value<QList<QString> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QContactLocalId(arg.at(0)), cid);
 
@@ -2439,7 +2439,7 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCOR1->count(), 1);
     args = spyCR.takeFirst();
     remSigCount -= 1;
-    arg = args.first().value<QList<quint32> >();
+    arg = args.first().value<QList<QString> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QContactLocalId(arg.at(0)), cid);
 
@@ -3089,13 +3089,13 @@ void tst_QContactManager::changeSet()
     changeSet.removedRelationshipsContacts().insert(id);
     changeSet.emitSignals(0);
 
-    changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(QContactLocalId(0), id));
+    changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(QContactLocalId("0"), id));
     changeSet2 = changeSet;
     QVERIFY(changeSet2.addedRelationshipsContacts() == changeSet.addedRelationshipsContacts());
     QVERIFY(changeSet2.removedRelationshipsContacts() == changeSet.removedRelationshipsContacts());
     QVERIFY(changeSet2.oldAndNewSelfContactId() == changeSet.oldAndNewSelfContactId());
     changeSet.emitSignals(0);
-    changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(id, QContactLocalId(0)));
+    changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(id, QContactLocalId("0")));
     QVERIFY(changeSet2.oldAndNewSelfContactId() != changeSet.oldAndNewSelfContactId());
     changeSet.setDataChanged(true);
     changeSet.emitSignals(0);
@@ -3175,8 +3175,8 @@ void tst_QContactManager::selfContactId()
     QTRY_VERIFY(spy.count() == 2);
     QVERIFY(spy.at(1).count() == 2);
     QVERIFY(*((const QContactLocalId*) spy.at(1).at(0).constData()) == newSelfContact);
-    QVERIFY(*((const QContactLocalId*) spy.at(1).at(1).constData()) == QContactLocalId(0));
-    QVERIFY(cm->selfContactId() == QContactLocalId(0)); // ensure reset after removed.
+    QVERIFY(*((const QContactLocalId*) spy.at(1).at(1).constData()) == QContactLocalId("0"));
+    QVERIFY(cm->selfContactId() == QContactLocalId("0")); // ensure reset after removed.
 
     // reset to original state.
     cm->setSelfContactId(selfContact);
@@ -3442,7 +3442,7 @@ void tst_QContactManager::relationships()
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
         return;
     }
-    
+
     // Get supported relationship types
     QStringList availableRelationshipTypes;
     if (cm->isRelationshipTypeSupported(QContactRelationship::HasMember))
@@ -3456,7 +3456,6 @@ void tst_QContactManager::relationships()
     if (cm->isRelationshipTypeSupported(QContactRelationship::IsSameAs))
         availableRelationshipTypes << QContactRelationship::IsSameAs;
 
-    
     // Check arbitrary relationship support
     if (cm->hasFeature(QContactManager::ArbitraryRelationshipTypes)) {
         // add some arbitrary type for testing
@@ -3468,12 +3467,12 @@ void tst_QContactManager::relationships()
             availableRelationshipTypes.append(QContactRelationship::HasAssistant);
         }
     }
-    
+
     // Verify that we have relationship types. If there are none then the manager
     // is saying it supports relationships but does not actually implement any 
     // relationship type.
     QVERIFY(!availableRelationshipTypes.isEmpty());
-    
+
     // Some backends (eg. symbian) require that when type is "HasMember" 
     // then "first" contact must be a group.
     if (availableRelationshipTypes.at(0) == QContactRelationship::HasMember) {
@@ -3576,7 +3575,7 @@ void tst_QContactManager::relationships()
     QVERIFY(dest2.relatedContacts(availableRelationshipTypes.at(0), QContactRelationship::First).contains(source.id()));
     QVERIFY(dest2.relatedContacts(availableRelationshipTypes.at(0), QContactRelationship::Second).isEmpty());
     QVERIFY(!dest2.relatedContacts(availableRelationshipTypes.at(0), QContactRelationship::Second).contains(source.id()));
-    
+
     QVERIFY(dest3.relatedContacts().contains(source.id()));
     QVERIFY(!dest3.relationships().contains(customRelationshipOne));
     QVERIFY(dest3.relationships().contains(customRelationshipTwo));
@@ -3592,7 +3591,7 @@ void tst_QContactManager::relationships()
         QVERIFY(it->second() == dest2.id() || it->second() == dest3.id());
         it++;
     }
-    
+
     if (availableRelationshipTypes.count() > 1) {
         QVERIFY(source.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::Second).contains(dest3.id()));
         QVERIFY(source.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::First).isEmpty());
@@ -3608,11 +3607,10 @@ void tst_QContactManager::relationships()
         QVERIFY(!dest3.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::Second).contains(source.id()));
         QVERIFY(dest3.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::First).contains(source.id()));
         QVERIFY(dest2.relatedContacts(availableRelationshipTypes.at(1)).isEmpty());
-    }
-    else {
+    } else {
         QVERIFY(source.relatedContacts(availableRelationshipTypes.at(0), QContactRelationship::Second).contains(dest3.id()));
     }
-    
+
     // Cleanup a bit
     QMap<int, QContactManager::Error> errorMap;
     QList<QContactRelationship> moreRels;
@@ -3632,14 +3630,11 @@ void tst_QContactManager::relationships()
     br2.setFirst(source.id());
     br2.setSecond(dest3.id());
     br2.setRelationshipType(availableRelationshipTypes.at(0));
-    if (availableRelationshipTypes.count() > 1)
-    {
+    if (availableRelationshipTypes.count() > 1) {
         br3.setFirst(source.id());
         br3.setSecond(dest3.id());
         br3.setRelationshipType(availableRelationshipTypes.at(1));
-    }
-    else
-    {
+    } else {
         br3.setFirst(source.id());
         br3.setSecond(dest4.id());
         br3.setRelationshipType(availableRelationshipTypes.at(0));
@@ -3670,19 +3665,19 @@ void tst_QContactManager::relationships()
     // attempt to save relationships between an existing source but non-existent destination
     QContactId nonexistentDest;
     quint32 idSeed = 0x5544;
-    QContactLocalId nonexistentLocalId = QContactLocalId(idSeed);
-    nonexistentDest.setManagerUri(cm->managerUri());
+    QContactLocalId nonexistentLocalId = QContactLocalId(QString::number(idSeed));
+    nonexistentDest.setManagerUri(cm->managerUri());qDebug()<<__FILE__<<__LINE__;
     while (true) {
         nonexistentLocalId = cm->contact(nonexistentLocalId).localId();
-        if (nonexistentLocalId == QContactLocalId(0)) {
+        if (nonexistentLocalId == QContactLocalId("")) {
             // found a "spare" local id (no contact with that id)
             break;
         }
 
         // keep looking...
         idSeed += 1;
-        nonexistentLocalId = QContactLocalId(idSeed);
-        QVERIFY(nonexistentLocalId != QContactLocalId(0)); // integer overflow check.
+        nonexistentLocalId = QContactLocalId(QString::number(idSeed));
+        QVERIFY(nonexistentLocalId != QContactLocalId("0")); // integer overflow check.
     }
     nonexistentDest.setLocalId(nonexistentLocalId);
     QContactRelationship maliciousRel;
@@ -4034,7 +4029,7 @@ void tst_QContactManager::errorSemantics()
     QContact alice = createContact(nameDef, "Alice", "inWonderland", "1234567");
 
     // Try creating some specific error so we can test it later on
-    QContact a = m.contact(567);
+    QContact a = m.contact("567");
     QVERIFY(m.error() == QContactManager::DoesNotExistError);
 
     // Now save something

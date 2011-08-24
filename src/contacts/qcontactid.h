@@ -50,7 +50,7 @@
 class QDataStream;
 QTPIM_BEGIN_NAMESPACE
 
-typedef quint32 QContactLocalId;
+typedef QString QContactLocalId;
 
 class QContactIdPrivate;
 class Q_CONTACTS_EXPORT QContactId

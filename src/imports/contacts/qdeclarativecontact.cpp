@@ -544,6 +544,16 @@ QDeclarativeContactHobby*  QDeclarativeContact::hobby()
     return static_cast<QDeclarativeContactHobby*>(d->detail(QDeclarativeContactDetail::Hobby).value<QDeclarativeContactDetail*>());
 }
 
+/*!
+    \qmlproperty PersonID Contact::personid
+
+    This property holds the personid detail of the Contact object.
+*/
+QDeclarativeContactPersonId*  QDeclarativeContact::personid()
+{
+    return static_cast<QDeclarativeContactPersonId*>(d->detail(QDeclarativeContactDetail::PersonId).value<QDeclarativeContactDetail*>());
+}
+
 #include "moc_qdeclarativecontact_p.cpp"
 
 QTPIM_END_NAMESPACE

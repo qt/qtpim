@@ -156,41 +156,42 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
 }
 
 /*!
-  \qmlproperty enumeration ContactDetail::type
+    \qmlproperty enumeration ContactDetail::type
 
-  This property holds the type of the detail.
+    This property holds the type of the detail.
 
-   \list
-   \o ContactDetail.Address
-   \o ContactDetail.Anniversary
-   \o ContactDetail.Avatar
-   \o ContactDetail.Birthday
-   \o ContactDetail.DisplayLabel
-   \o ContactDetail.Email
-   \o ContactDetail.Family
-   \o ContactDetail.Favorite
-   \o ContactDetail.Gender
-   \o ContactDetail.Geolocation
-   \o ContactDetail.GlobalPresence
-   \o ContactDetail.Guid
-   \o ContactDetail.Name
-   \o ContactDetail.NickName
-   \o ContactDetail.Note
-   \o ContactDetail.OnlineAccount
-   \o ContactDetail.Organization
-   \o ContactDetail.PhoneNumber
-   \o ContactDetail.Presence
-   \o ContactDetail.Ringtone
-   \o ContactDetail.SyncTarget
-   \o ContactDetail.Tag
-   \o ContactDetail.Timestamp
-   \o ContactDetail.Url
-   \o ContactDetail.Hobby
-   \o ContactDetail.Customized
-   \endlist
+    \list
+    \o ContactDetail.Address
+    \o ContactDetail.Anniversary
+    \o ContactDetail.Avatar
+    \o ContactDetail.Birthday
+    \o ContactDetail.DisplayLabel
+    \o ContactDetail.Email
+    \o ContactDetail.Family
+    \o ContactDetail.Favorite
+    \o ContactDetail.Gender
+    \o ContactDetail.Geolocation
+    \o ContactDetail.GlobalPresence
+    \o ContactDetail.Guid
+    \o ContactDetail.Name
+    \o ContactDetail.NickName
+    \o ContactDetail.Note
+    \o ContactDetail.OnlineAccount
+    \o ContactDetail.Organization
+    \o ContactDetail.PhoneNumber
+    \o ContactDetail.Presence
+    \o ContactDetail.Ringtone
+    \o ContactDetail.SyncTarget
+    \o ContactDetail.Tag
+    \o ContactDetail.Timestamp
+    \o ContactDetail.Url
+    \o ContactDetail.Hobby
+    \o ContactDetail.Customized
+    \o ContactDetail.PersonId
+    \endlist
 
-  This property is read only.
-  */
+    This property is read only.
+*/
 QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailType() const
 {
     return QDeclarativeContactDetail::Customized;
@@ -277,6 +278,8 @@ QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::Con
         return QContactTimestamp::DefinitionName;
     case QDeclarativeContactDetail::Url:
         return QContactUrl::DefinitionName;
+    case QDeclarativeContactDetail::PersonId:
+        return QContactPersonId::DefinitionName;
     case QDeclarativeContactDetail::Customized:
     default:
         break;
@@ -334,6 +337,8 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
         return QDeclarativeContactDetail::Timestamp;
     if (definitionName == QContactUrl::DefinitionName)
         return QDeclarativeContactDetail::Url;
+    if (definitionName == QContactPersonId::DefinitionName)
+        return QDeclarativeContactDetail::PersonId;
 
     return QDeclarativeContactDetail::Customized;
 }
@@ -389,6 +394,8 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
         return QDeclarativeContactTimestamp::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Url:
         return QDeclarativeContactUrl::fieldNameFromFieldType(fieldType);
+    case QDeclarativeContactDetail::PersonId:
+        return QDeclarativeContactPersonId::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Customized:
     default:
         break;
@@ -1288,6 +1295,26 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
   \o Url.Favourite - indicating this url is one of the contact's favourite URLs (or bookmarks).
   \endlist
   */
+
+/* ==================== QDeclarativeContactPersonId ======================= */
+/*!
+    \qmlclass PersonID QDeclarativeContactPersonId
+    \brief The PersonId element contains a unique Id of a contact This groups all together a persons contact details.
+    \ingroup qml-contacts
+
+    PersonId element contains the following field types:
+    \list
+    \o PersonId.PersonId
+    \endlist
+
+    This element is part of the \bold{QtMobility.contacts 1.1} module.
+ */
+
+/*!
+    \qmlproperty string PersonId::personid
+
+    This property holds the value of the PersonId.
+ */
 
 #include "moc_qdeclarativecontactdetail_p.cpp"
 

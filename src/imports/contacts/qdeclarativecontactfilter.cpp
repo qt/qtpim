@@ -170,6 +170,7 @@ QTPIM_BEGIN_NAMESPACE
   \sa Timestamp
   \sa Url
   \sa Hobby
+  \sa PersonId
   */
 
 /*!

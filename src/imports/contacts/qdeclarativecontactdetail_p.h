@@ -90,6 +90,7 @@ public:
         Timestamp,
         Url,
         Hobby,
+        PersonId,
         Customized = 100
     };
 

@@ -904,7 +904,7 @@ void tst_QContactFilter::idListFilter()
     QVERIFY(idf.ids().count() == 0);
 
     QList<QContactLocalId> ids;
-    ids << 5 << 6 << 17;
+    ids << "5" << "6" << "17";
 
     idf.setIds(ids);
     QVERIFY(idf.ids() == ids);
@@ -1067,7 +1067,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactLocalIdFilter qclif;
-        qclif.setIds(QList<QContactLocalId>() << 1 << 2);
+        qclif.setIds(QList<QContactLocalId>() << "1" << "2");
         QTest::newRow("Normal local id filter")
                 << static_cast<QContactFilter>(qclif)
                 << static_cast<QContactFilter>(qclif);
@@ -1414,7 +1414,7 @@ void tst_QContactFilter::datastream_data()
 
     {
         QContactLocalIdFilter filter;
-        filter.setIds(QList<QContactLocalId>() << 1 << 2 << 3);
+        filter.setIds(QList<QContactLocalId>() << "1" << "2" << "3");
         QTest::newRow("localid") << (QContactFilter)filter;
     }
 
@@ -1423,7 +1423,7 @@ void tst_QContactFilter::datastream_data()
         filter.setRelationshipType("member");
         QContactId id;
         id.setManagerUri("a");
-        id.setLocalId(1);
+        id.setLocalId("1");
         filter.setRelatedContactId(id);
         filter.setRelatedContactRole(QContactRelationship::First);
         QTest::newRow("relationship") << (QContactFilter)filter;

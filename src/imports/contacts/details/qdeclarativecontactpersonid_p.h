@@ -39,51 +39,59 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTID_P_H
-#define QCONTACTID_P_H
+#ifndef QDECLARATIVECONTACTPERSONID_H
+#define QDECLARATIVECONTACTPERSONID_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include <QString>
-#include <QSharedData>
-
-#include "qtcontactsglobal.h"
+#include "qdeclarativecontactdetail_p.h"
+#include <qcontactpersonid.h>
 
 QTPIM_BEGIN_NAMESPACE
 
-class QContactIdPrivate : public QSharedData
+class QDeclarativeContactPersonId : public QDeclarativeContactDetail
 {
+    Q_OBJECT
+    Q_PROPERTY(QString personid READ personid WRITE setPersonid NOTIFY fieldsChanged)
+    Q_ENUMS(FieldType)
+    Q_CLASSINFO("DefaultProperty", "personid")
 public:
-    QContactIdPrivate()
-        : QSharedData()
-        , m_localId("")
-    {
-    }
+    enum FieldType {
+        Personid = 0
+    };
 
-    QContactIdPrivate(const QContactIdPrivate& other)
-            : QSharedData(other),
-            m_managerUri(other.m_managerUri),
-            m_localId(other.m_localId)
+    QDeclarativeContactPersonId(QObject* parent = 0)
+        :QDeclarativeContactDetail(parent)
     {
+        setDetail(QContactPersonId());
+        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
     }
-
-    ~QContactIdPrivate()
+    ContactDetailType detailType() const
     {
+        return QDeclarativeContactDetail::PersonId;
     }
-
-    QString m_managerUri;
-    QContactLocalId m_localId;
+    static QString fieldNameFromFieldType(int fieldType)
+    {
+        switch (fieldType) {
+        case Personid:
+            return QContactPersonId::FieldPersonId;
+        default:
+            break;
+        }
+        qmlInfo(0) << tr("Unknown field type.");
+        return QString();
+    }
+    void setPersonid(const QString& v)
+    {
+        if (!readOnly() && v != personid()) {
+            detail().setValue(QContactPersonId::FieldPersonId, v);
+        }
+    }
+    QString personid() const {return detail().value(QContactPersonId::FieldPersonId);}
+signals:
+    void fieldsChanged();
 };
 
 QTPIM_END_NAMESPACE
 
-#endif
+QML_DECLARE_TYPE(QtAddOn::Pim::QDeclarativeContactPersonId)
+
+#endif // QDECLARATIVECONTACTPERSONID_H

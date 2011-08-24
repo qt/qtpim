@@ -150,7 +150,7 @@ QMap<QString, QString> QContactMemoryEngine::managerParameters() const
 /*! \reimp */
 bool QContactMemoryEngine::setSelfContactId(const QContactLocalId& contactId, QContactManager::Error* error)
 {
-    if (contactId == QContactLocalId(0) || d->m_contactIds.contains(contactId)) {
+    if (contactId.isEmpty() || d->m_contactIds.contains(contactId)) {
         *error = QContactManager::NoError;
         QContactLocalId oldId = d->m_selfContactId;
         d->m_selfContactId = contactId;
@@ -169,7 +169,7 @@ bool QContactMemoryEngine::setSelfContactId(const QContactLocalId& contactId, QC
 QContactLocalId QContactMemoryEngine::selfContactId(QContactManager::Error* error) const
 {
     *error = QContactManager::DoesNotExistError;
-    if (d->m_selfContactId != QContactLocalId(0))
+    if (!d->m_selfContactId.isEmpty())
         *error = QContactManager::NoError;
     return d->m_selfContactId;
 }
@@ -288,7 +288,8 @@ bool QContactMemoryEngine::saveContact(QContact* theContact, QContactChangeSet& 
         theContact->saveDetail(&ts);
 
         // update the contact item - set its ID
-        newId.setLocalId(++d->m_nextContactId);
+        d->m_nextContactId = QString::number(d->m_nextContactId.toInt()+1);
+        newId.setLocalId(d->m_nextContactId);
         theContact->setId(newId);
 
         // synthesize the display label for the contact.
@@ -367,8 +368,8 @@ bool QContactMemoryEngine::removeContact(const QContactLocalId& contactId, QCont
 
     // and if it was the self contact, reset the self contact id
     if (contactId == d->m_selfContactId) {
-        d->m_selfContactId = QContactLocalId(0);
-        changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(contactId, QContactLocalId(0)));
+        d->m_selfContactId = QContactLocalId("0");
+        changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(contactId, QContactLocalId("0")));
     }
 
     changeSet.insertRemovedContact(contactId);

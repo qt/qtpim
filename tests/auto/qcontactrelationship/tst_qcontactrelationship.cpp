@@ -78,9 +78,9 @@ void tst_QContactRelationship::operations()
     QContactRelationship r1;
 
     QContactId id1, id2;
-    id1.setLocalId(1);
+    id1.setLocalId("1");
     id1.setManagerUri("test");
-    id2.setLocalId(2);
+    id2.setLocalId("2");
     id2.setManagerUri("test");
 
     QVERIFY(r1.first() == QContactId());
@@ -103,11 +103,11 @@ void tst_QContactRelationship::emptiness()
     QContactRelationship r1, r2, r3;
 
     QContactId id1, id2, id3;
-    id1.setLocalId(1);
+    id1.setLocalId("1");
     id1.setManagerUri("test");
-    id2.setLocalId(2);
+    id2.setLocalId("2");
     id2.setManagerUri("test");
-    id3.setLocalId(3);
+    id3.setLocalId("3");
     id3.setManagerUri("test");
 
     QVERIFY(r1.first() == QContactId());
@@ -145,11 +145,11 @@ void tst_QContactRelationship::hash()
     QContactRelationship r1;
     QContactId id1;
     id1.setManagerUri("a");
-    id1.setLocalId(1);
+    id1.setLocalId("1");
     r1.setFirst(id1);
     QContactId id2;
     id2.setManagerUri("b");
-    id2.setLocalId(2);
+    id2.setLocalId("2");
     r1.setSecond(id2);
     r1.setRelationshipType(QContactRelationship::HasMember);
 
@@ -162,7 +162,7 @@ void tst_QContactRelationship::hash()
     r3.setFirst(id1);
     QContactId id3;
     id3.setManagerUri("c");
-    id3.setLocalId(3);
+    id3.setLocalId("3");
     r3.setSecond(id3);
     r3.setRelationshipType(QContactRelationship::HasMember);
 
@@ -178,11 +178,11 @@ void tst_QContactRelationship::datastream()
     QContactRelationship relationshipIn;
     QContactId id1;
     id1.setManagerUri("a");
-    id1.setLocalId(1);
+    id1.setLocalId("1");
     relationshipIn.setFirst(id1);
     QContactId id2;
     id2.setManagerUri("b");
-    id2.setLocalId(2);
+    id2.setLocalId("2");
     relationshipIn.setSecond(id2);
     relationshipIn.setRelationshipType(QContactRelationship::HasMember);
     stream1 << relationshipIn;

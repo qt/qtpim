@@ -911,6 +911,46 @@ QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
   This property holds the list of exception dates.
   */
 
+void QDeclarativeOrganizerItemRecurrence::rrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
+                                                      QDeclarativeOrganizerRecurrenceRule *item)
+{
+    QDeclarativeOrganizerItemRecurrence* recurrence = qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object);
+    connect(item, SIGNAL(recurrenceRuleChanged()), recurrence, SLOT(_saveRecurrenceRules()));
+    static_cast<QList <QDeclarativeOrganizerRecurrenceRule*> *>(p->data)->append(item);
+    emit recurrence->recurrenceRulesChanged();
+}
+
+void QDeclarativeOrganizerItemRecurrence::xrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
+                                                      QDeclarativeOrganizerRecurrenceRule *item)
+{
+    QDeclarativeOrganizerItemRecurrence* recurrence = qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object);
+    connect(item, SIGNAL(recurrenceRuleChanged()), recurrence, SLOT(_saveExceptionRules()));
+    static_cast<QList <QDeclarativeOrganizerRecurrenceRule*> *>(p->data)->append(item);
+    emit recurrence->exceptionRulesChanged();
+}
+
+int  QDeclarativeOrganizerItemRecurrence::rule_count(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+{
+    return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->count();
+}
+
+QDeclarativeOrganizerRecurrenceRule* QDeclarativeOrganizerItemRecurrence::rule_at(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx)
+{
+    return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->at(idx);
+}
+
+void QDeclarativeOrganizerItemRecurrence::rrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+{
+    static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->clear();
+    emit qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object)->recurrenceRulesChanged();
+}
+
+void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+{
+    static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->clear();
+    emit qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object)->exceptionRulesChanged();
+}
+
 ////////////////QDeclarativeOrganizerItemPriority////////////////////////
 /*!
    \qmlclass Priority QDeclarativeOrganizerItemPriority

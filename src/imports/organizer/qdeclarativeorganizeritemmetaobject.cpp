@@ -191,7 +191,7 @@ QVariant QDeclarativeOrganizerItemMetaObject::detail(QDeclarativeOrganizerItemDe
 
     //Check should we create a new detail for this type
     //XXX:TODO check mutable detail definition feature in manager?
-    if (m_defs.isEmpty() || !m_defs.value(QDeclarativeOrganizerItemDetail::detailName(type)).isEmpty()) {
+    if (m_defs.isEmpty() || !m_defs.value(QDeclarativeOrganizerItemDetail::definitionName(type)).isEmpty()) {
         QDeclarativeOrganizerItemDetail* itemDetail = createItemDetail(type, object());
         m_details.append(itemDetail);
         return QVariant::fromValue(itemDetail);

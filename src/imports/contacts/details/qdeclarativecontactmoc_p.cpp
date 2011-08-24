@@ -28,5 +28,6 @@ QTPIM_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontacttag_p.cpp"
 #include "moc_qdeclarativecontacttimestamp_p.cpp"
 #include "moc_qdeclarativecontacturl_p.cpp"
+#include "moc_qdeclarativecontactpersonid_p.cpp"
 
 QTPIM_END_NAMESPACE

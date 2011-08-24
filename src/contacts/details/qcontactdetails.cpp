@@ -2888,7 +2888,45 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
     return f;
 }
 
+/* ==================== QContactPersonId ======================= */
 
+/*!
+   \class QContactPersonId
+   \brief The QContactPersonId class contains the personid of a contact.This groups all together a persons contact details.
+   \ingroup contacts-details
+   \since 1.0
+
+   This leaf-class has been part of the default schema since version
+   1.0 of the Qt Mobility project.
+ */
+
+/*!
+   \variable QContactPersonId::DefinitionName
+   The string constant for the definition name of QContactPersonId details.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::DefinitionName, "Personid");
+
+/*!
+   \variable QContactPersonId::FieldPersonId
+
+   The field key constant for the value containing the personid.
+   \sa personId(), setPersonId()
+ */
+Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::FieldPersonId, "Personid");
+
+/*!
+   \fn QContactPersonId::personId() const
+
+   Returns the personid of the contact, as stored in this detail.This groups all together a persons contact details.
+   \since 1.0
+ */
+
+/*!
+   \fn QContactPersonId::setPersonId(const QString& personid)
+
+   Sets the personid of the contact (as stored in this detail) to personid.
+   \since 1.0
+ */
 
 
 /* ==================== Convenience Filters ======================= */

@@ -1604,6 +1604,30 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
         }
         break;
 
+    case QOrganizerAbstractRequest::ItemFetchByIdRequest: {
+        QOrganizerItemFetchByIdRequest* r = static_cast<QOrganizerItemFetchByIdRequest*>(currentRequest);
+        // fetch hint cannot be used in memory backend
+
+        QOrganizerManager::Error operationError = QOrganizerManager::NoError;
+        QMap<int, QOrganizerManager::Error> errorMap;
+
+        QList<QOrganizerItem> requestedOrganizerItems;
+
+        for (int i = 0; i < r->ids().size(); i++) {
+            QOrganizerItem item = d->m_idToItemHash.value(r->ids().at(i), QOrganizerItem());
+            requestedOrganizerItems.append(item);
+            if (item.isEmpty())
+                errorMap.insert(i, QOrganizerManager::DoesNotExistError);
+        }
+
+        // update the request with the results.
+        if (!requestedOrganizerItems.isEmpty() || operationError != QOrganizerManager::NoError || !errorMap.isEmpty())
+            QOrganizerManagerEngineV2::updateItemFetchByIdRequest(r, requestedOrganizerItems, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        else
+            updateRequestState(currentRequest, QOrganizerAbstractRequest::FinishedState);
+    }
+    break;
+
         case QOrganizerAbstractRequest::ItemFetchForExportRequest:
         {
             QOrganizerItemFetchForExportRequest* r = static_cast<QOrganizerItemFetchForExportRequest*>(currentRequest);

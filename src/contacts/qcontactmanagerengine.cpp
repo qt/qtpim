@@ -999,6 +999,19 @@ QMap<QString, QMap<QString, QContactDetailDefinition> > QContactManagerEngine::s
     d.setUnique(false);
     retn.insert(d.name(), d);
 
+    // personid
+    fields.clear();
+    f.setDataType(QVariant::String);
+    f.setAllowableValues(QVariantList());
+    d.setName(QContactPersonId::DefinitionName);
+    fields.insert(QContactPersonId::FieldPersonId, f);
+    f.setDataType(QVariant::StringList);
+    f.setAllowableValues(contexts);
+    fields.insert(QContactDetail::FieldContext, f);
+    d.setFields(fields);
+    d.setUnique(false);
+    retn.insert(d.name(), d);
+
     // url
     d.setName(QContactUrl::DefinitionName);
     fields.clear();
@@ -2189,7 +2202,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
 #define CONTACT_IDS_MATCH(specific, other) \
             ((specific == QContactId()) \
                 || (specific.managerUri().isEmpty() && specific.localId() == other.localId()) \
-                || (specific.managerUri() == other.managerUri() && specific.localId() == QContactLocalId(0)) \
+                || (specific.managerUri() == other.managerUri() && specific.localId() == QContactLocalId("0")) \
                 || (specific.managerUri() == other.managerUri() && specific.localId() == other.localId()))
 
                 // now check to see if we have a match.
@@ -2646,9 +2659,12 @@ void QContactManagerEngine::updateDefinitionSaveRequest(QContactDetailDefinition
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+        if ((ireq.data())) {
+            if (emitState)
+                emit ireq.data()->stateChanged(newState);
+            if (newState == QContactAbstractRequest::FinishedState)
+                emit ireq.data()->resultsAvailable();
+        }
     }
 }
 

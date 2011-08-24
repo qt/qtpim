@@ -39,51 +39,34 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTID_P_H
-#define QCONTACTID_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#ifndef QCONTACTPERSONID_H
+#define QCONTACTPERSONID_H
 
 #include <QString>
-#include <QSharedData>
 
 #include "qtcontactsglobal.h"
+#include "qcontactdetail.h"
+#include "qcontact.h"
 
 QTPIM_BEGIN_NAMESPACE
 
-class QContactIdPrivate : public QSharedData
+/* Leaf class */
+class Q_CONTACTS_EXPORT QContactPersonId : public QContactDetail
 {
 public:
-    QContactIdPrivate()
-        : QSharedData()
-        , m_localId("")
-    {
-    }
+#ifdef Q_QDOC
+    static const QLatin1Constant DefinitionName;
+    static const QLatin1Constant FieldPersonId;
+#else
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPersonId, "Personid")
+    Q_DECLARE_LATIN1_CONSTANT(FieldPersonId, "Personid");
+#endif
 
-    QContactIdPrivate(const QContactIdPrivate& other)
-            : QSharedData(other),
-            m_managerUri(other.m_managerUri),
-            m_localId(other.m_localId)
-    {
-    }
+    void setPersonId(const QString& personId) {setValue(FieldPersonId, personId);}
+    QString personId() const {return value(FieldPersonId);}
 
-    ~QContactIdPrivate()
-    {
-    }
-
-    QString m_managerUri;
-    QContactLocalId m_localId;
 };
 
 QTPIM_END_NAMESPACE
 
-#endif
+#endif // QCONTACTPERSONID_H

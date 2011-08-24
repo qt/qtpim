@@ -101,6 +101,7 @@ public:
         qmlRegisterType<QDeclarativeContactTimestamp>(uri, major, minor, "Timestamp");
         qmlRegisterType<QDeclarativeContactUrl>(uri, major, minor, "Url");
         qmlRegisterType<QDeclarativeContactHobby>(uri, major, minor, "Hobby");
+        qmlRegisterType<QDeclarativeContactPersonId>(uri, major, minor, "Personid");
 
         //filters
         qmlRegisterType<QDeclarativeContactFilter>(uri, major, minor, "Filter");

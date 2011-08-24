@@ -110,7 +110,13 @@ public:
 
     void setLimit(const QVariant& value)
     {
-        if (value.type() == QVariant::Date) {
+        if (!value.isValid()) {
+            if (m_rule.limitType() != QOrganizerRecurrenceRule::NoLimit) {
+                m_rule.clearLimit();
+                emit recurrenceRuleChanged();
+            }
+        }
+        else if (value.type() == QVariant::Date || value.type() == QVariant::DateTime) {
             QDate v = value.value<QDate>();
             if (v != m_rule.limitDate()) {
                 m_rule.setLimit(v);

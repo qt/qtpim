@@ -567,23 +567,55 @@ public:
 
     QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules()
     {
-        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, m_recurrenceRules);
+        QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
+        if (m_recurrenceRules.isEmpty() && !ruleSet.isEmpty()) {
+            foreach (QOrganizerRecurrenceRule rule, ruleSet) {
+                QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
+                drule->setRule(rule);
+                connect(drule, SIGNAL(recurrenceRuleChanged()), this, SLOT(_saveRecurrenceRules()));
+                m_recurrenceRules.append(drule);
+            }
+        }
+        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_recurrenceRules, rrule_append, rule_count, rule_at, rrule_clear);
     }
+
 
     QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules()
     {
-        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, m_exceptionRules);
+        QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
+        if (m_exceptionRules.isEmpty() && !ruleSet.isEmpty()) {
+            foreach (QOrganizerRecurrenceRule rule, ruleSet) {
+                QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
+                drule->setRule(rule);
+                connect(drule, SIGNAL(recurrenceRuleChanged()), this, SLOT(_saveExceptionRules()));
+                m_exceptionRules.append(drule);
+            }
+        }
+        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_exceptionRules, xrule_append, rule_count, rule_at, xrule_clear);
     }
+
 
     QVariantList recurrenceDates() const
     {
-        return m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceRules).toList();
+        QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceDates);
+        QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
+        QVariantList dates;
+        foreach (QDate date, dateSet)
+            dates.append(QVariant(date));
+        return dates;
     }
 
     void setRecurrenceDates(const QVariantList& dates)
     {
         if (dates != recurrenceDates() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceRules, dates);
+            QSet<QDate> dateSet;
+            QVariant dateSetVariant;
+            foreach (QVariant date, dates) {
+                if (date.canConvert(QVariant::Date))
+                    dateSet.insert(date.toDate());
+            }
+            dateSetVariant.setValue(dateSet);
+            m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceDates, dateSetVariant);
             emit valueChanged();
         }
     }
@@ -591,14 +623,26 @@ public:
     void setExceptionDates(const QVariantList& dates)
     {
         if (dates != exceptionDates() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionRules, dates);
+            QSet<QDate> dateSet;
+            QVariant dateSetVariant;
+            foreach (QVariant date, dates) {
+                if (date.canConvert(QVariant::Date))
+                    dateSet.insert(date.toDate());
+            }
+            dateSetVariant.setValue(dateSet);
+            m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionDates, dateSetVariant);
             emit valueChanged();
         }
     }
 
     QVariantList exceptionDates() const
     {
-        return m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionRules).toList();
+        QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionDates);
+        QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
+        QVariantList dates;
+        foreach (QDate date, dateSet)
+            dates.append(QVariant(date));
+        return dates;
     }
 
 signals:
@@ -629,6 +673,13 @@ private slots:
     }
 
 private:
+    static void rrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
+    static void xrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
+    static int  rule_count(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
+    static QDeclarativeOrganizerRecurrenceRule * rule_at(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx);
+    static void  rrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
+    static void  xrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
+
     QList<QDeclarativeOrganizerRecurrenceRule*>   m_recurrenceRules;
     QList<QDeclarativeOrganizerRecurrenceRule*>   m_exceptionRules;
 };

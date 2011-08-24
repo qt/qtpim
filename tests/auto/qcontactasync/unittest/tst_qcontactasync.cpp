@@ -1268,7 +1268,7 @@ void tst_QContactAsync::contactPartialSave()
 
     // 7) Have a non existing contact in the middle followed by a save error
     badId = id3;
-    badId.setLocalId(987234); // something nonexistent (hopefully)
+    badId.setLocalId("987234"); // something nonexistent (hopefully)
     contacts[3].setId(badId);
     csr.setContacts(contacts);
     csr.setDefinitionMask(QStringList("BadDetail"));

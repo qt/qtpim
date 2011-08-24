@@ -42,7 +42,8 @@
 #define QDECLARATIVECONTACT_P_H
 #include <qdeclarative.h>
 #include <QDeclarativeListProperty>
-#include "qcontact.h"
+#include <qcontact.h>
+#include <qcontactid.h>
 #include "qdeclarativecontactdetails_p.h"
 
 QTPIM_BEGIN_NAMESPACE
@@ -81,6 +82,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (ContactType  type READ type  WRITE setType NOTIFY detailsChanged)
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY detailsChanged)
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY detailsChanged)
+    Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY detailsChanged)
     Q_PROPERTY (bool modified READ modified)
     Q_CLASSINFO("DefaultProperty", "details")
     Q_ENUMS(ContactType)
@@ -139,6 +141,7 @@ public:
     void  setThumbnail(const QUrl& url);
     QDeclarativeContactUrl*  url();
     QDeclarativeContactHobby*  hobby();
+    QDeclarativeContactPersonId* personid();
 
 public slots:
     void clearDetails();

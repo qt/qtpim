@@ -44,7 +44,7 @@ SUBDIRS += \
 SUBDIRS += \
     qvcard21writer \
     qvcard30writer \
-   qversitcontactexporter \
+#    qversitcontactexporter \
     qversitcontactimporter \
     qversitcontactplugins \
     qversitdocument \
@@ -56,4 +56,4 @@ SUBDIRS += \
 SUBDIRS += \
     qversitorganizerexporter \
     qversitorganizerimporter \
-    qversit
+#    qversit

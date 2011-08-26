@@ -49,7 +49,7 @@
 #include "qorganizeritemdetails.h"
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
-QTPIM_USE_NAMESPACE;
+QTPIM_USE_NAMESPACE
 
 class QDeclarativeOrganizerItemDetail : public QObject
 {

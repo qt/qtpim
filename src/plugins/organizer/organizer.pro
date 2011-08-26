@@ -2,6 +2,8 @@ TEMPLATE = subdirs
 
 CONFIG += ordered
 
+contains(QT_CONFIG, jsondb): SUBDIRS += jsondb
+
 #include(../../common.pri)
 
 #wince*:SUBDIRS += wince

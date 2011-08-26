@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += maliciousplugin \
-           unittest
+           unittest \
+           jsondbtests

@@ -863,6 +863,8 @@ void tst_QContactManager::ctors()
     QCOMPARE(defaultStore, QString("maemo5"));
 #elif defined(Q_OS_WINCE)
     QCOMPARE(defaultStore, QString("wince"));
+#elif !defined(QT_NO_JSONDB)
+    QCOMPARE(defaultStore, QString("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("memory"));
 #endif

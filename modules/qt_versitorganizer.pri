@@ -1,5 +1,5 @@
-QT.versitorganizer.VERSION = 5.0.0
-QT.versitorganizer.MAJOR_VERSION = 5
+QT.versitorganizer.VERSION = 2.0.0
+QT.versitorganizer.MAJOR_VERSION = 2
 QT.versitorganizer.MINOR_VERSION = 0
 QT.versitorganizer.PATCH_VERSION = 0
 

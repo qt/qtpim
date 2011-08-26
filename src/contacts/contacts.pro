@@ -86,6 +86,10 @@ SOURCES += \
     qcontactrelationship.cpp \
     qcontactsortorder.cpp
 
+contains(QT_CONFIG, jsondb) {
+    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb
+}
+
 maemo6|meego {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=tracker
 }

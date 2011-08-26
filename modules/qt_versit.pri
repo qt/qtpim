@@ -1,5 +1,5 @@
-QT.versit.VERSION = 5.0.0
-QT.versit.MAJOR_VERSION = 5
+QT.versit.VERSION = 2.0.0
+QT.versit.MAJOR_VERSION = 2
 QT.versit.MINOR_VERSION = 0
 QT.versit.PATCH_VERSION = 0
 

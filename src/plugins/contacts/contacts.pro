@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 
 CONFIG += ordered
 
-#include(../../common.pri)
+contains(QT_CONFIG, jsondb): SUBDIRS += jsondb
 
 #symbian {
 #    SUBDIRS += symbian

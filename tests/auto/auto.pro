@@ -19,6 +19,11 @@ SUBDIRS += \
     qcontactrelationship \
 #    qdeclarativecontact
 
+contains(QT_CONFIG, jsondb) {
+    SUBDIRS += qcontactjsondb \
+               qcontactjsondbconverter
+}
+
 linux*: SUBDIRS += qcontactmemusage
 
 #contains(mobility_modules,serviceframework){

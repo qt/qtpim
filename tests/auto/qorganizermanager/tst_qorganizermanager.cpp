@@ -152,9 +152,11 @@ private slots:
 
     /* Special test with special data */
     void uriParsing();
+#if !defined(QT_NO_JSONDB)
     void compatibleItem();
     void recurrenceWithGenerator();
     void todoRecurrenceWithGenerator();
+#endif
     void dateRange();
 
     /* Tests that are run on all managers */
@@ -163,8 +165,10 @@ private slots:
     void add();
     void saveRecurrence();
     void persistence();
+#if !defined(QT_NO_JSONDB)
     void addExceptions();
     void addExceptionsWithGuid();
+#endif
     void update();
     void remove();
     void batch();
@@ -172,17 +176,25 @@ private slots:
     void signalEmission();
     void detailDefinitions();
     void detailOrders();
+#if !defined(QT_NO_JSONDB)
     void itemType();
+#endif
     void collections();
     void dataSerialization();
+#if !defined(QT_NO_JSONDB)
     void itemFetch();
     void todoItemFetch();
     void itemFetchV2();
+#endif
     void spanOverDays();
+#if !defined(QT_NO_JSONDB)
     void recurrence();
+#endif
     void idComparison();
+#if !defined(QT_NO_JSONDB)
     void emptyItemManipulation();
     void partialSave();
+#endif
 
     /* Tests that take no data */
     void itemValidation();
@@ -193,14 +205,18 @@ private slots:
     void changeSet();
     void fetchHint();
     void testFilterFunction();
+#if !defined(QT_NO_JSONDB)
     void testItemOccurrences();
     void errorSemantics();
+#endif
 
     /* Special test with special data */
     void uriParsing_data();
+#if !defined(QT_NO_JSONDB)
     void compatibleItem_data();
     void recurrenceWithGenerator_data();
     void todoRecurrenceWithGenerator_data();
+#endif
     void dateRange_data();
     /* Tests that are run on all managers */
     void metadata_data() {addManagers();}
@@ -208,26 +224,36 @@ private slots:
     void add_data() {addManagers();}
     void saveRecurrence_data() {addManagers();}
     void persistence_data() {addManagers();}
+#if !defined(QT_NO_JSONDB)
     void addExceptions_data() {addManagers();}
     void addExceptionsWithGuid_data() {addManagers();}
+#endif
     void update_data() {addManagers();}
     void remove_data() {addManagers();}
     void batch_data() {addManagers();}
     void signalEmission_data() {addManagers();}
     void detailDefinitions_data() {addManagers();}
     void detailOrders_data() {addManagers();}
+#if !defined(QT_NO_JSONDB)
     void itemType_data() {addManagers();}
+#endif
     void collections_data() {addManagers();}
     void dataSerialization_data() {addManagers();}
+#if !defined(QT_NO_JSONDB)
     void itemFetch_data() {addManagers();}
     void todoItemFetch_data() {addManagers();}
     void itemFetchV2_data() {addManagers();}
+#endif
     void spanOverDays_data() {addManagers();}
+#if !defined(QT_NO_JSONDB)
     void recurrence_data() {addManagers();}
+#endif
     void idComparison_data() {addManagers();}
+#if !defined(QT_NO_JSONDB)
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
     void testItemOccurrences_data(){addManagers();}
+#endif
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -318,9 +344,9 @@ void tst_QOrganizerManager::initTestCase()
 
     /* Make sure these other test plugins are NOT loaded by default */
     // These are now removed from the list of managers in addManagers()
-    //QVERIFY(!QOrganizerManager::availableManagers().contains("testdummy"));
-    //QVERIFY(!QOrganizerManager::availableManagers().contains("teststaticdummy"));
-    //QVERIFY(!QOrganizerManager::availableManagers().contains("maliciousplugin"));
+    QVERIFY(!QOrganizerManager::availableManagers().contains("testdummy"));
+    QVERIFY(!QOrganizerManager::availableManagers().contains("teststaticdummy"));
+    QVERIFY(!QOrganizerManager::availableManagers().contains("maliciousplugin"));
 }
 
 void tst_QOrganizerManager::cleanupTestCase()
@@ -764,6 +790,8 @@ void tst_QOrganizerManager::ctors()
     QCOMPARE(defaultStore, QString("maemo5"));
 #elif defined(Q_OS_WINCE)
     QCOMPARE(defaultStore, QString("wince"));
+#elif !defined(QT_NO_JSONDB)
+    QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("memory"));
 #endif
@@ -886,6 +914,7 @@ void tst_QOrganizerManager::add()
     // - save the item
     // - read it back
     // - ensure that it's the same.
+#if !defined(QT_NO_JSONDB)
     QOrganizerEvent megaevent;
     QMap<QString, QOrganizerItemDetailDefinition> defmap = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
     QList<QOrganizerItemDetailDefinition> defs = defmap.values();
@@ -970,6 +999,7 @@ void tst_QOrganizerManager::add()
     // if the detail is not unique it should then support minumum of two of the same kind
     // const int nrOfdetails = 2;
     // XXX TODO.
+#endif
 }
 
 void tst_QOrganizerManager::saveRecurrence()
@@ -1061,6 +1091,7 @@ void tst_QOrganizerManager::persistence()
 #endif
 }
 
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::addExceptions()
 {
     QFETCH(QString, uri);
@@ -1377,6 +1408,7 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     savedException = cm->item(exception3.id());
     QCOMPARE(savedException.parentId(), christmas.id());
 }
+#endif
 
 void tst_QOrganizerManager::update()
 {
@@ -1392,7 +1424,7 @@ void tst_QOrganizerManager::update()
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
 
-    /* Save a new item first */
+    // Save a new item first
     QOrganizerItem item;
     item.setType(type);
     item.setDisplayLabel("Yet another note");
@@ -1400,7 +1432,7 @@ void tst_QOrganizerManager::update()
     QVERIFY(cm->saveItem(&item));
     QVERIFY(cm->error() == QOrganizerManager::NoError);
 
-    /* Update name */
+    // Update name
     QOrganizerItemDescription descr = item.detail(QOrganizerItemDescription::DefinitionName);
     descr.setDescription("This note is now slightly noteworthy");
     item.saveDetail(&descr);
@@ -1415,6 +1447,7 @@ void tst_QOrganizerManager::update()
     QCOMPARE(updatedDescr, descr);
 
     /* Create a recurring event, update an occurrence and save (should persist as an exceptional occurrence) */
+#if !defined(QT_NO_JSONDB)
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     QOrganizerEvent recEvent;
     recEvent.setDescription("a recurring event");
@@ -1476,6 +1509,7 @@ void tst_QOrganizerManager::update()
             QVERIFY(!curr.id().isNull()); // we have two exceptions this time
         }
     }
+#endif
 }
 
 void tst_QOrganizerManager::remove()
@@ -1492,7 +1526,7 @@ void tst_QOrganizerManager::remove()
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
 
-    /* Save a new item first */
+    // Save a new item first
     QOrganizerItem item;
     item.setType(type);
     item.setDisplayLabel("Not another note");
@@ -1501,14 +1535,24 @@ void tst_QOrganizerManager::remove()
     QVERIFY(cm->error() == QOrganizerManager::NoError);
     QVERIFY(item.id() != QOrganizerItemId());
 
-    /* Remove the created item */
+    // Remove the created item
     const int itemCount = cm->itemIds().count();
     QVERIFY(cm->removeItem(item.id()));
     QCOMPARE(cm->itemIds().count(), itemCount - 1);
     QVERIFY(cm->item(item.id()).isEmpty());
     QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
 
+    //delete item not exist
+    QVERIFY(!cm->removeItem(item.id()));
+    QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
+
+    //delet item id is empty
+    QOrganizerItemId id;
+    QVERIFY(!cm->removeItem( id ));
+    QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
+
     /* Create a recurring event, save an exception, remove the recurring event should remove all children occurrences incl. persisted exceptions. */
+#if !defined(QT_NO_JSONDB)
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     QOrganizerEvent recEvent;
     recEvent.setDescription("a recurring event");
@@ -1552,8 +1596,9 @@ void tst_QOrganizerManager::remove()
     QVERIFY(cm->removeItem(exception.id()));
     QCOMPARE(cm->itemsForExport().size(), 1); // only parent remains as persistent
     QCOMPARE(cm->items().size(), 2);          // the exception date remains in parent, so only 2 occurrences are generated.
+#endif
 
-    /* Create a recurring event, remove a generated occurrence should add an exdate in the parent */
+    // Create a recurring event, remove a generated occurrence should add an exdate in the parent
     // XXX TODO.  Need to add this API in Mobility 1.2.0.
     // At the moment, we can only remove items by id, and generated occurrences do not have ids.
     // Thus, to remove a normal occurrence, you must modify the parent item (adding an exdate manually) and resave it.
@@ -1696,12 +1741,14 @@ void tst_QOrganizerManager::batch()
     b.setId(QOrganizerItemId());
     c.setId(QOrganizerItemId());
 
+    items << a << b << c;
+
+#if !defined(QT_NO_JSONDB)
     /* Make B the bad guy */
     QOrganizerItemDetail bad("does not exist and will break if you add it");
     bad.setValue("This is also bad", "Very bad");
     b.saveDetail(&bad);
 
-    items << a << b << c;
     QVERIFY(!cm->saveItems(&items)); // since we don't setCollectionId() in any of the items, they go in default collection.
     /* We can't really say what the error will be.. maybe bad argument, maybe invalid detail */
     QVERIFY(cm->error() != QOrganizerManager::NoError);
@@ -1737,7 +1784,8 @@ void tst_QOrganizerManager::batch()
     errorMap = cm->errorMap();
     QVERIFY(errorMap.count() == 0);
     QVERIFY(cm->error() == QOrganizerManager::NoError);
-    
+#endif
+
     // Save and remove a fourth item. Store the id.
     QOrganizerItem d;
     d.setType(type);
@@ -2029,7 +2077,7 @@ void tst_QOrganizerManager::memoryManager()
     QCOMPARE(m5.itemIds().count(), 0);
 }
 
-
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::compatibleItem_data()
 {
     // XXX TODO: fix this test - need more item types tested etc.
@@ -2469,6 +2517,7 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
         qWarning() << "The todo not supported by the backend";
     }
 }
+#endif
 
 void tst_QOrganizerManager::itemValidation()
 {
@@ -2773,6 +2822,7 @@ void tst_QOrganizerManager::signalEmission()
     QVERIFY(m1->hasFeature(QOrganizerManager::Anonymous) ==
         m2->hasFeature(QOrganizerManager::Anonymous));
 
+#if !defined(QT_NO_JSONDB)
     /* Now some cross manager testing */
     spyAdded.clear();
     spyModified.clear();
@@ -2802,6 +2852,7 @@ void tst_QOrganizerManager::signalEmission()
         m2->removeItem(todo.id());
         QTRY_VERIFY(spyDataChanged.count() || (spyRemoved.count() == 1)); // check that we received the remove signal.
     }
+#endif
 }
 
 void tst_QOrganizerManager::errorStayingPut()
@@ -3313,6 +3364,7 @@ void tst_QOrganizerManager::dataSerialization()
     }
 }
 
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::itemFetch()
 {
     QFETCH(QString, uri);
@@ -3707,6 +3759,7 @@ void tst_QOrganizerManager::itemFetchV2()
     QCOMPARE(items[1].displayLabel(), QLatin1String("event2"));
     QCOMPARE(items[2].displayLabel(), QLatin1String("event1"));
 }
+#endif
 
 void tst_QOrganizerManager::spanOverDays()
 {
@@ -3755,6 +3808,7 @@ void tst_QOrganizerManager::spanOverDays()
     QCOMPARE(items.count(), 1);
 }
 
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::recurrence()
 {
     QFETCH(QString, uri);
@@ -3917,6 +3971,7 @@ void tst_QOrganizerManager::recurrence()
         }
     }
 }
+#endif
 
 void tst_QOrganizerManager::idComparison()
 {
@@ -4041,6 +4096,7 @@ void tst_QOrganizerManager::idComparison()
     QVERIFY(testMap.value(QOrganizerItemId()) != 12); // removed this entry.
 }
 
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::emptyItemManipulation()
 {
     QFETCH(QString, uri);
@@ -4193,6 +4249,7 @@ void tst_QOrganizerManager::partialSave()
     QCOMPARE(errorMap[4], QOrganizerManager::DoesNotExistError);
     QCOMPARE(errorMap[5], QOrganizerManager::InvalidDetailError);
 }
+#endif
 
 void tst_QOrganizerManager::dateRange()
 {
@@ -4289,6 +4346,7 @@ void tst_QOrganizerManager::detailOrders()
 
     QOrganizerEvent a;
 
+#if !defined(QT_NO_JSONDB)
     // comments are not supported in mkcal
     if (cm->managerName() != "mkcal") {
         // comments
@@ -4321,6 +4379,7 @@ void tst_QOrganizerManager::detailOrders()
         details = a.details(QOrganizerItemComment::DefinitionName);
         QVERIFY(details.count() == 3);
     }
+#endif
 
     //addresses
     {
@@ -4357,12 +4416,12 @@ void tst_QOrganizerManager::detailOrders()
     }
 }
 
-
+#if !defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::itemType()
 {
     // XXX TODO!
 }
-
+#endif
 
 void tst_QOrganizerManager::collections()
 {
@@ -4400,7 +4459,9 @@ void tst_QOrganizerManager::collections()
     i4.setDisplayLabel("four");
     i4.setGuid(QUuid::createUuid().toString());
     i5.setDisplayLabel("five");
+#if !defined(QT_NO_JSONDB)
     i5.setLocation("test location address");
+#endif
 
     // first test
     {
@@ -4469,6 +4530,7 @@ void tst_QOrganizerManager::collections()
             i5 = saveList.at(3);
             QList<QOrganizerItem> fetchedItems = oim->items();
             QCOMPARE(fetchedItems.count(), originalItemCount + 4);
+            //fails here
             QVERIFY(fetchedItems.contains(i2)); // these three should have been added
             QVERIFY(fetchedItems.contains(i3));
             QVERIFY(fetchedItems.contains(i4));
@@ -4484,9 +4546,10 @@ void tst_QOrganizerManager::collections()
             QVERIFY(fetchedItems.contains(i5));
 
             // exceptions must be saved in the same collection as their parent.
+#if !defined(QT_NO_JSONDB)
             QOrganizerEvent recurringEvent;
             recurringEvent.setDescription("A recurring test event parent.");
-            recurringEvent.setLocation("Some Location");
+//            recurringEvent.setLocation("Some Location");
             recurringEvent.setStartDateTime(QDateTime(QDate(2010,10,5), QTime(10,30)));
             recurringEvent.setEndDateTime(QDateTime(QDate(2010,10,5), QTime(11,30)));
             QOrganizerRecurrenceRule rrule;
@@ -4500,11 +4563,12 @@ void tst_QOrganizerManager::collections()
             QList<QOrganizerItem> occ(oim->itemOccurrences(recurringEvent, QDateTime(), QDateTime()));
             QVERIFY(occ.size() == 5);
             QOrganizerEventOccurrence someException = occ.at(2); // there should be five, so this shouldn't segfault.
-            someException.setLocation("Other Location");
+//            someException.setLocation("Other Location");
             someException.setCollectionId(c3.id()); // different to parent.
             QVERIFY(!oim->saveItem(&someException)); // shouldn't work.
             someException.setCollectionId(c2.id()); // same as parent.
             QVERIFY(oim->saveItem(&someException)); // should work.
+#endif
 
             // remove a collection, removes its items.
             QVERIFY(oim->removeCollection(c2.id()));
@@ -4513,8 +4577,10 @@ void tst_QOrganizerManager::collections()
             QVERIFY(!fetchedItems.contains(i2)); // these three should have been removed
             QVERIFY(!fetchedItems.contains(i3));
             QVERIFY(!fetchedItems.contains(i4));
+#if !defined(QT_NO_JSONDB)
             QVERIFY(!fetchedItems.contains(recurringEvent)); // the parent
             QVERIFY(!fetchedItems.contains(someException));  // and exceptions too.
+#endif
             QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
 
             // attempt to save an item in a non-existent collection should fail.
@@ -4528,6 +4594,7 @@ void tst_QOrganizerManager::collections()
     }
 }
 
+#if !defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {
     Q_OBJECT;
 public:
@@ -4591,7 +4658,7 @@ void tst_QOrganizerManager::errorSemantics()
     QVERIFY(t.slotErrorWasBadArgument);
     QVERIFY(m.error() == QOrganizerManager::NoError);
 }
-
+#endif
 
 QTEST_MAIN(tst_QOrganizerManager)
 #include "tst_qorganizermanager.moc"

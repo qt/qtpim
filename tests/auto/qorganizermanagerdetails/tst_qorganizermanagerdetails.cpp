@@ -131,7 +131,9 @@ void tst_QOrganizerManagerDetails::saveAndVerifyItem(QOrganizerManager *manager,
         qDebug() << "expected: " << original;
         qDebug() << "loaded: " << loaded;
         QCOMPARE(loaded.details().count(), original.details().count());
+#if !defined(QT_NO_JSONDB)
         QCOMPARE(loaded, original);
+#endif
     }
 }
 

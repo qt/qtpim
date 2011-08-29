@@ -80,7 +80,6 @@ private:
     QContactActionFilter d;
 };
 
-#include "moc_qdeclarativecontactactionfilter_p.cpp"
 
 QTPIM_END_NAMESPACE
 

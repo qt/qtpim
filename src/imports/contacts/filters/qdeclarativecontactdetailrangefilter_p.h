@@ -206,7 +206,7 @@ private:
     QContactDetailRangeFilter d;
 };
 
-#include "moc_qdeclarativecontactdetailrangefilter_p.cpp"
+
 
 QTPIM_END_NAMESPACE
 

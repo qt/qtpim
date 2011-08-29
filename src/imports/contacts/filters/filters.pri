@@ -9,4 +9,9 @@ HEADERS += \
     filters/qdeclarativecontactinvalidfilter_p.h \
     filters/qdeclarativecontactintersectionfilter_p.h \
     filters/qdeclarativecontactrelationshipfilter_p.h \
-    filters/qdeclarativecontactunionfilter_p.h
+    filters/qdeclarativecontactunionfilter_p.h \
+    filters/qdeclarativecontactfilters_p.h
+
+SOURCES += \
+    filters/qdeclarativecontactfiltermoc.cpp
+

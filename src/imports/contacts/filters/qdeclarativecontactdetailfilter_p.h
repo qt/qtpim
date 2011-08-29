@@ -168,7 +168,7 @@ private:
     QContactDetailFilter d;
 };
 
-#include "moc_qdeclarativecontactdetailfilter_p.cpp"
+
 
 QTPIM_END_NAMESPACE
 

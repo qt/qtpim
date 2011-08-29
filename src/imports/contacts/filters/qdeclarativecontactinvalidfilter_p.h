@@ -62,7 +62,7 @@ public:
     }
 };
 
-#include "moc_qdeclarativecontactinvalidfilter_p.cpp"
+
 
 QTPIM_END_NAMESPACE
 

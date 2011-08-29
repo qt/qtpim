@@ -99,7 +99,7 @@ private:
     QContactLocalIdFilter d;
 };
 
-#include "moc_qdeclarativecontactlocalidfilter_p.cpp"
+
 
 QTPIM_END_NAMESPACE
 

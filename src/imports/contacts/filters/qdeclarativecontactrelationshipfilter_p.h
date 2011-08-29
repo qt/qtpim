@@ -160,7 +160,6 @@ private:
     QContactRelationshipFilter d;
 };
 
-#include "moc_qdeclarativecontactrelationshipfilter_p.cpp"
 
 QTPIM_END_NAMESPACE
 

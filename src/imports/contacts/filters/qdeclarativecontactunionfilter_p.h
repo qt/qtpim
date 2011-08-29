@@ -70,8 +70,6 @@ public:
     }
 };
 
-#include "moc_qdeclarativecontactunionfilter_p.cpp"
-
 QTPIM_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactUnionFilter))

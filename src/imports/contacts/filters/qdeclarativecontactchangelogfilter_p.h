@@ -104,7 +104,7 @@ private:
     QContactChangeLogFilter d;
 };
 
-#include "moc_qdeclarativecontactchangelogfilter_p.cpp"
+
 
 QTPIM_END_NAMESPACE
 

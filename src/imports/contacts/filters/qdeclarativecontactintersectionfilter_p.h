@@ -71,7 +71,6 @@ public:
     }
 };
 
-#include "moc_qdeclarativecontactintersectionfilter_p.cpp"
 
 QTPIM_END_NAMESPACE
 

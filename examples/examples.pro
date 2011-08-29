@@ -1,2 +1,4 @@
-TEMPLATE      = subdirs
-SUBDIRS       = \
+TEMPLATE = subdirs
+SUBDIRS = \
+    qmlcontacts \
+    qmlcontacts-components \

@@ -11,6 +11,7 @@ QT = core gui
 DEFINES += QT_BUILD_CONTACTS_LIB QT_MAKEDLL
 
 load(qt_module_config)
+VERSION = $$QT.contacts.VERSION
 
 include(details/details.pri)
 include(engines/engines.pri)

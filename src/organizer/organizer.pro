@@ -11,6 +11,7 @@ QT = core gui
 DEFINES += QT_BUILD_ORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
+VERSION = $$QT.organizer.VERSION
 
 include(details/details.pri)
 include(items/items.pri)

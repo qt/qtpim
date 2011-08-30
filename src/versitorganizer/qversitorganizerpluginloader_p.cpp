@@ -42,7 +42,7 @@
 #include <QPluginLoader>
 
 #include "qversitorganizerpluginloader_p.h"
-#include "qmobilitypluginsearch_p.h"
+#include <private/qmobilitypluginsearch_p.h>
 
 QTPIM_USE_NAMESPACE
 

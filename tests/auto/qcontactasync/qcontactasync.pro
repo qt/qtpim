@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += maliciousplugin \
-           unittest \
-           jsondbtests
+           unittest
+
+contains(QT_CONFIG, jsondb): SUBDIRS += jsondbtests

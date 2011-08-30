@@ -6,17 +6,12 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_versit.pri
 
-QT = core gui contacts
+QT = core gui contacts contacts-private
 
 DEFINES += QT_BUILD_VERSIT_LIB QT_MAKEDLL
 
 load(qt_module_config)
-
-INCLUDEPATH +=  . \
-                ../contacts \
-                ../contacts/requests \
-                ../contacts/filters \
-                ../contacts/details
+VERSION = $$QT.versit.VERSION
 
 PUBLIC_HEADERS += \
     qversitdocument.h \

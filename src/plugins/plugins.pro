@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS += contacts organizer
+SUBDIRS += contacts organizer versit

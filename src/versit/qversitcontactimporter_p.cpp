@@ -44,7 +44,7 @@
 #include "qversitdocument.h"
 #include "qversitproperty.h"
 #include "qversit_p.h"
-#include "qmobilitypluginsearch_p.h"
+#include <private/qmobilitypluginsearch_p.h>
 
 #include <qcontactmanagerengine.h>
 #include <qcontact.h>

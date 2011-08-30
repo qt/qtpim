@@ -6,19 +6,12 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_versitorganizer.pri
 
-QT = core gui versit organizer
+QT = core gui versit versit-private organizer organizer-private
 
 DEFINES += QT_BUILD_VERSITORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
-
-INCLUDEPATH +=  . \
-                ../versit \
-                ../organizer \
-                ../organizer/requests \
-                ../organizer/filters \
-                ../organizer/details \
-                ../organizer/items
+VERSION = $$QT.versitorganizer.VERSION
 
 PUBLIC_HEADERS += \
     qversitorganizerhandler.h \

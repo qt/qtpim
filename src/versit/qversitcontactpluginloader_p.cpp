@@ -42,7 +42,7 @@
 #include <QPluginLoader>
 
 #include "qversitcontactpluginloader_p.h"
-#include "qmobilitypluginsearch_p.h"
+#include <private/qmobilitypluginsearch_p.h>
 
 QTPIM_BEGIN_NAMESPACE
 

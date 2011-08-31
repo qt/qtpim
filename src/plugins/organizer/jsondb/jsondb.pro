@@ -17,4 +17,5 @@ SOURCES += \
     qorganizerjsondbrequestthread.cpp \
     qorganizerjsondbenginefactory.cpp \
     qorganizerjsondbid.cpp \
-    qorganizerjsondbrequestmanager.cpp
+    qorganizerjsondbrequestmanager.cpp \
+    qorganizerjsondbstring.cpp

@@ -32,6 +32,6 @@ public:
     QHash<QString, QString> phoneNumbersSubtypesMapping;
 private:
     void initializeMappings();
-    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, QString value, QString UriScheme);
+    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "");
 };
 #endif // QCONTACTJSONDBCONVERTER_H

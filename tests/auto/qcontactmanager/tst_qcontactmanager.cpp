@@ -861,10 +861,10 @@ void tst_QContactManager::ctors()
     QCOMPARE(defaultStore, QString("tracker"));
 #elif defined(Q_WS_MAEMO_5)
     QCOMPARE(defaultStore, QString("maemo5"));
+#elif defined(QT_JSONDB_ENABLED)
+    QCOMPARE(defaultStore, QString("jsondb"));
 #elif defined(Q_OS_WINCE)
     QCOMPARE(defaultStore, QString("wince"));
-#elif !defined(QT_NO_JSONDB)
-    QCOMPARE(defaultStore, QString("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("memory"));
 #endif
@@ -3930,7 +3930,7 @@ void tst_QContactManager::partialSave()
 
     // 7) Have a non existing contact in the middle followed by a save error
     badId = id4;
-    badId.setLocalId(987234); // something nonexistent
+    badId.setLocalId("987234"); // something nonexistent
     contacts[4].setId(badId);
     QVERIFY(!cm->saveContacts(&contacts, QStringList("BadDetail"), &errorMap));
     QCOMPARE(errorMap.count(), 2);

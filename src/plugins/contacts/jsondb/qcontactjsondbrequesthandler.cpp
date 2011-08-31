@@ -325,8 +325,6 @@ void QContactJsonDbRequestHandler::onResponse(int id, const QVariant &object)
             else {
                 m_ccs.insertChangedContact(contact.id().localId());
             }
-
-
             m_requestMgr->addContact(req, contact, contactIndex);
         }
 
@@ -393,7 +391,6 @@ void QContactJsonDbRequestHandler::onResponse(int id, const QVariant &object)
         }
 
         if (m_requestMgr->isRequestCompleted(req)) {
-            QList<QContact> contacts = m_requestMgr->contacts(req);
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);
             QContactManagerEngine::updateContactRemoveRequest(removeReq, error, errorMap, QContactAbstractRequest::FinishedState);
@@ -413,14 +410,12 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
 {
     QMutexLocker locker(m_reqStateMutex);
     QContactManager::Error error = QContactManager::NoError;
-    QMap<int, QContactManager::Error> errorMap;
     int itemIndex;
     QContactAbstractRequest* req = m_requestMgr->removeTransaction(id, itemIndex);
     if (!req) {
         qWarning() << Q_FUNC_INFO << "request not found";
         return;
     }
-
     switch (code) {
         case JsonDbError::NoError: {
             break;
@@ -459,42 +454,73 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
         // Note: The JsonDb returns a QContactManager::UnspecifiedError when trying to remove a non-existing contact
         //       and emits the message: "Cannot remove non-existing object"
         //       Capture this message to ensure proper error code emission by the contactsRemove function (DoesNotExistError)
-        if (message=="Cannot remove non-existing object")
+        if (message=="Cannot remove non-existing object") {
             error = QContactManager::DoesNotExistError;
-        if (qt_debug_jsondb_contacts())
+        }
+
+        if (qt_debug_jsondb_contacts()) {
             qDebug() << "[QContactJsonDb] Error generated from jsonDB: " + message;
+        }
     }
 
     switch (req->type()) {
     case QContactAbstractRequest::ContactFetchRequest: {
         QList<QContact> contacts;
-        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
-        m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactFetchRequest (static_cast<QContactFetchRequest*>(req), contacts,
+        if (m_requestMgr->isRequestCompleted(req)) {
+            QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+            m_requestMgr->removeRequest(req);
+            QContactManagerEngine::updateContactFetchRequest (static_cast<QContactFetchRequest*>(req), contacts,
                                                           error, QContactAbstractRequest::FinishedState);
-        if (waitCondition)
-            waitCondition->wakeAll();
+            if (waitCondition) {
+                waitCondition->wakeAll();
+            }
+        } else {
+            QContactManagerEngine::updateContactFetchRequest (static_cast<QContactFetchRequest*>(req), contacts,
+                                                          error, QContactAbstractRequest::ActiveState);
+        }
+
         break;
     }
     case QContactAbstractRequest::ContactSaveRequest: {
         QList<QContact> contacts;
-        const QMap<int, QContactManager::Error> errorMap;
-        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
-        m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactSaveRequest(static_cast<QContactSaveRequest*>(req),contacts,
-                                                        error,errorMap,QContactAbstractRequest::FinishedState);
-        if (waitCondition)
-            waitCondition->wakeAll();
+        QContactSaveRequest* saveReq = static_cast<QContactSaveRequest*>(req);
+        QMap<int, QContactManager::Error> errorMap = saveReq->errorMap();
+        if (error != QContactManager::NoError) {
+            errorMap.insert(itemIndex, error);
+        }
+        if (m_requestMgr->isRequestCompleted(req)) {
+            QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+            m_requestMgr->removeRequest(req);
+            QContactManagerEngine::updateContactSaveRequest(static_cast<QContactSaveRequest*>(req),contacts,
+                                                            error,errorMap,QContactAbstractRequest::FinishedState);
+            if (waitCondition) {
+                waitCondition->wakeAll();
+            }
+        } else {
+            QContactManagerEngine::updateContactSaveRequest(static_cast<QContactSaveRequest*>(req),contacts,
+                                                            error,errorMap,QContactAbstractRequest::ActiveState);
+        }
+
         break;
     }
     case QContactAbstractRequest::ContactRemoveRequest: {
-        const QMap<int, QContactManager::Error> errorMap;
-        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
-        m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactRemoveRequest(static_cast<QContactRemoveRequest*>(req),
-                                                        error,errorMap,QContactAbstractRequest::FinishedState);
-        if (waitCondition)
-            waitCondition->wakeAll();
+        QContactRemoveRequest* removeReq = static_cast<QContactRemoveRequest*>(req);
+        QMap<int, QContactManager::Error> errorMap = removeReq->errorMap();
+        if (error != QContactManager::NoError) {
+            errorMap.insert(itemIndex, error);
+        }
+        if (m_requestMgr->isRequestCompleted(req)) {
+            QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+            m_requestMgr->removeRequest(req);
+            QContactManagerEngine::updateContactRemoveRequest(removeReq, error, errorMap, QContactAbstractRequest::FinishedState);
+            m_ccs.emitSignals(m_engine);
+            m_ccs.clearRemovedContacts();
+            if (waitCondition)
+                waitCondition->wakeAll();
+        } else {
+            // If request not yet completed, just add error to the requests' error map.
+            QContactManagerEngine::updateContactRemoveRequest(removeReq, error, errorMap, QContactAbstractRequest::ActiveState);
+        }
         break;
     }
     default:

@@ -181,7 +181,8 @@ bool QContactJsonDbBackup::loadTestData() {
 
 
 bool QContactJsonDbBackup::backupJsonDb() {
-    QString query = "[?_type=\"Contact\"]";
+    //QString query = "[?_type=\"Contact\"]";
+    QString query = "[?_type=\"com.nokia.mp.contacts.Contact\"]";
     QVariantMap map = JsonDbConnection::makeQueryRequest(query);
     map = JsonDbConnection::instance()->sync(map).value<QVariantMap>();
     m_backupData = map["data"].value<QVariantList>();

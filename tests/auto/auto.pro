@@ -8,21 +8,21 @@ SUBDIRS += \
 # contacts
 SUBDIRS += \
     qcontact \
-    qcontactasync \
+#    qcontactasync \
     qcontactdetail \
     qcontactdetaildefinition \
     qcontactdetails \
     qcontactfilter \
-    qcontactmanager \
-    qcontactmanagerdetails \
+#    qcontactmanager \
+#    qcontactmanagerdetails \
     qcontactmanagerplugins \
     qcontactrelationship \
 #    qdeclarativecontact
 
-contains(QT_CONFIG, jsondb) {
-    SUBDIRS += qcontactjsondb \
-               qcontactjsondbconverter
-}
+#contains(QT_CONFIG, jsondb) {
+#    SUBDIRS += qcontactjsondb \
+#               qcontactjsondbconverter
+#}
 
 linux*: SUBDIRS += qcontactmemusage
 

@@ -1,7 +1,10 @@
+load(qt_module)
+
 QT += organizer organizer-private network jsondb jsondb-private
-TEMPLATE = lib
-CONFIG += plugin
-TARGET = $$qtLibraryTarget(qtorganizer_jsondb)
+TARGET = qtorganizer_jsondb
+
+load(qt_plugin)
+
 DESTDIR = $$QT.organizer.plugins/organizer
 
 HEADERS += \

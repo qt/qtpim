@@ -1,8 +1,11 @@
-TEMPLATE = lib
-CONFIG += plugin
-TARGET = $$qtLibraryTarget(qtversit_backuphandler)
-DESTDIR = $$QT.versit.plugins/versit
+load(qt_module)
+
+TARGET = qtversit_backuphandler
 QT += versit versit-private contacts
+
+load(qt_plugin)
+
+DESTDIR = $$QT.versit.plugins/versit
 
 HEADERS += backupvcardhandler.h
 SOURCES += backupvcardhandler.cpp

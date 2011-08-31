@@ -1,7 +1,10 @@
+load(qt_module)
+
 QT += contacts contacts-private network declarative jsondb jsondb-private
-TEMPLATE = lib
-CONFIG += plugin
-TARGET = $$qtLibraryTarget(qtcontacts_jsondb)
+TARGET = qtcontacts_jsondb
+
+load(qt_plugin)
+
 DESTDIR = $$QT.contacts.plugins/contacts
 
 # Input
@@ -17,6 +20,3 @@ SOURCES += qcontactjsondbenginefactory.cpp \
     qcontactjsondbrequesthandler.cpp \
     qcontactjsondbrequestmanager.cpp \
     qcontactjsondbconverter.cpp
-
-
-#INSTALLS += target

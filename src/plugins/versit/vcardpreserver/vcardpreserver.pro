@@ -1,8 +1,10 @@
-TEMPLATE = lib
-CONFIG += plugin
-TARGET = $$qtLibraryTarget(qtversit_vcardpreserver)
-DESTDIR = $$QT.versit.plugins/versit
+load(qt_module)
+
 QT += versit contacts
+TARGET = qtversit_vcardpreserver
+
+load(qt_plugin)
+DESTDIR = $$QT.versit.plugins/versit
 
 HEADERS += vcardpreserver.h
 SOURCES += vcardpreserver.cpp

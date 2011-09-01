@@ -1111,8 +1111,8 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     if (item.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEvent event = static_cast<QOrganizerEvent>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Event);
-        object->insert(QOrganizerJsonDbStr::EventStartDateTime, event.startDateTime().toString (Qt::ISODate));
-        object->insert(QOrganizerJsonDbStr::EventEndDateTime, event.endDateTime().toString (Qt::ISODate));
+        object->insert(QOrganizerJsonDbStr::EventStartDateTime, event.startDateTime().toString(Qt::ISODate));
+        object->insert(QOrganizerJsonDbStr::EventEndDateTime, event.endDateTime().toString(Qt::ISODate));
         object->insert(QOrganizerJsonDbStr::EventIsAllDay, event.isAllDay());
         recurrenceRules = event.recurrenceRules();
         exceptionRules = event.exceptionRules();
@@ -1121,8 +1121,8 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     } else if (item.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodo todo = static_cast<QOrganizerTodo>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Todo);
-        object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todo.startDateTime());
-        object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todo.dueDateTime());
+        object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todo.startDateTime().toString(Qt::ISODate));
+        object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todo.dueDateTime().toString(Qt::ISODate));
         object->insert(QOrganizerJsonDbStr::TodoIsAllDay, todo.isAllDay());
         recurrenceRules = todo.recurrenceRules();
         exceptionRules = todo.exceptionRules();
@@ -1179,7 +1179,7 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     if (!recurrenceDates.isEmpty()) {
         QVariantList recurrenceDatesList;
         foreach (QDate recurrenceDate, recurrenceDates) {
-            recurrenceDatesList.append(recurrenceDate);
+            recurrenceDatesList.append(recurrenceDate.toString(Qt::ISODate));
         }
         object->insert(QOrganizerJsonDbStr::ItemRecurrenceDates, recurrenceDatesList);
     }
@@ -1187,11 +1187,10 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     if (!exceptionDates.isEmpty()) {
         QVariantList exceptionDatesList;
         foreach (QDate exceptionDate, exceptionDates) {
-            exceptionDatesList.append(exceptionDate);
+            exceptionDatesList.append(exceptionDate.toString(Qt::ISODate));
         }
         object->insert(QOrganizerJsonDbStr::ItemExceptioneDates, exceptionDatesList);
     }
-
     return true;
 }
 
@@ -1325,7 +1324,7 @@ void QOrganizerJsonDbRequestThread::convertRecurrenceRuleToJsonDbObject(const QO
     object->insert(QOrganizerJsonDbStr::RuleFrequency, convertEnumToJsonDbFrequency(rule.frequency()));
     object->insert(QOrganizerJsonDbStr::RuleInterval, rule.interval());
     object->insert(QOrganizerJsonDbStr::RuleLimitCount, rule.limitCount());
-    object->insert(QOrganizerJsonDbStr::RuleLimitDate, rule.limitDate());
+    object->insert(QOrganizerJsonDbStr::RuleLimitDate, rule.limitDate().toString(Qt::ISODate));
     QSet<int> positions = rule.positions();
     if (!positions.isEmpty()) {
         QVariantList positionsList;

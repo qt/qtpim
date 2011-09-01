@@ -1,5 +1,5 @@
 TEMPLATE = lib
-CONFIG += qt debug warn_on depend_includepath plugin
+CONFIG += qt warn_on depend_includepath plugin
 DESTDIR = $$QT.contacts.plugins/contacts
 
 qtAddLibrary(QtTest)

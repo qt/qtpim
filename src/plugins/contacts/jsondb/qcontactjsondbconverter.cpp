@@ -99,7 +99,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
 
     //personid
     QContactPersonId* personid = new QContactPersonId();
-    stringValue = object.value("personid").toString();
+    stringValue = object[detailsToJsonMapping.value(QContactPersonId::DefinitionName)].toString();
     if (!stringValue.isEmpty()) {
         personid->setPersonId(stringValue);
         detailList << personid;
@@ -120,27 +120,6 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     array = object[detailsToJsonMapping.value(QContactOrganization::DefinitionName)].value<QVariantList>();
     for(int i = 0; i < array.size(); ++i) {
         map = array[i].value<QVariantMap>();
-        if (!map[organizationFieldsMapping.value(QContactOrganization::FieldName)].toString().isEmpty())
-            organization->setName(map[organizationFieldsMapping.value(QContactOrganization::FieldName)].toString());
-        stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldDepartment)].toString();
-        if (!stringValue.isEmpty())
-        {
-            QStringList stringList;
-            stringList << stringValue;
-            organization->setDepartment(stringList);
-        }
-        if (!map[organizationFieldsMapping.value(QContactOrganization::FieldTitle)].toString().isEmpty())
-            organization->setTitle(map[organizationFieldsMapping.value(QContactOrganization::FieldTitle)].toString());
-        if (!map[organizationFieldsMapping.value(QContactOrganization::FieldRole)].toString().isEmpty())
-            organization->setRole(map[organizationFieldsMapping.value(QContactOrganization::FieldRole)].toString());
-        if (!map[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)].toString().isEmpty())
-            organization->setAssistantName(map[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)].toString());
-        stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)].toString();
-        if (!stringValue.isEmpty())
-        {
-            QUrl url(stringValue);
-            organization->setLogoUrl(url);
-        }
         // name
         if (!map[organizationFieldsMapping.value(QContactOrganization::FieldName)].toString().isEmpty())
             organization->setName(map[organizationFieldsMapping.value(QContactOrganization::FieldName)].toString());
@@ -161,6 +140,14 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
         stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)].toString();
         if (!stringValue.isEmpty())
             organization->setLogoUrl(QUrl(stringValue));
+        //startDate
+        stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)].toString();
+        if (!stringValue.isEmpty())
+            organization->setStartDate(QDateTime::fromString(stringValue));
+        //endDate
+        stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)].toString();
+        if (!stringValue.isEmpty())
+            organization->setEndDate(QDateTime::fromString(stringValue));
         // Add organization to details
         detailList << organization;
     }
@@ -364,14 +351,14 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
                 nameMap[contactNameFieldsMapping.value(QContactName::FieldFirstName)] = name->firstName();
             if(!name->middleName().isEmpty())
                 nameMap[contactNameFieldsMapping.value(QContactName::FieldMiddleName)] = name->middleName();
-            object->insert("name", nameMap);
+            object->insert(detailsToJsonMapping.value(QContactName::DefinitionName), nameMap);
         }
 
         //personid
         else if( (detail.definitionName() == QContactPersonId::DefinitionName) ) {
             personid = static_cast<QContactPersonId *>(&detail);
             if(!personid->personId().isEmpty() )
-                object->insert("personid",personid->personId());
+                object->insert(detailsToJsonMapping.value(QContactPersonId::DefinitionName),personid->personId());
         }
 
         //gender
@@ -379,20 +366,23 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             QVariantMap genderMap;
             gender = static_cast<QContactGender *>(&detail);
             if(!gender->gender().isEmpty())
-                genderMap["gender"] = gender->gender();
-            object->insert("gender", genderMap);
+                genderMap[detailsToJsonMapping.value(QContactGender::FieldGender)] = gender->gender();
+            object->insert(detailsToJsonMapping.value(QContactGender::DefinitionName), genderMap);
         }
 
         //organization
         else if( (detail.definitionName() == QContactOrganization::DefinitionName) ) {
             QVariantMap organizationMap;
             organization = static_cast<QContactOrganization *>(&detail);
-            organizationMap["name"] = organization->name();
-            organizationMap["department"] = organization->department();
-            organizationMap["title"] = organization->title();
-            organizationMap["role"] = organization->role();
-            organizationMap["assistantName"] = organization->assistantName();
-            organizationMap["logoUrl"] = organization->logoUrl();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldName)] = organization->name();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldDepartment)] = organization->department();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldTitle)] = organization->title();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldRole)] = organization->role();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization->assistantName();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organization->startDate();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organization->endDate();
+
             updateContexts(*organization, &organizationMap);
             if (!organization->contexts().isEmpty())
                 organizationMap["context"] = organization->contexts().first().toLower();
@@ -403,28 +393,28 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         // birthday
         else if( (detail.definitionName() == QContactBirthday::DefinitionName) ) {
             birthday = static_cast<QContactBirthday *>(&detail);
-            embeddedDetailsMap["birthday"] = birthday->dateTime();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactBirthday::DefinitionName)] = birthday->dateTime();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
         //avatar
         else if( (detail.definitionName() == QContactAvatar::DefinitionName) ) {
             avatar = static_cast<QContactAvatar *>(&detail);
-            embeddedDetailsMap["photoUrl"] = avatar->imageUrl();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactAvatar::DefinitionName)] = avatar->imageUrl();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
         //ringtone
         else if( (detail.definitionName() == QContactRingtone::DefinitionName) ) {
             ringtone = static_cast<QContactRingtone *>(&detail);
-            embeddedDetailsMap["ringtoneUrl"] = ringtone->audioRingtoneUrl();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactRingtone::DefinitionName)] = ringtone->audioRingtoneUrl();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
         // nickname
         else if( (detail.definitionName() == QContactNickname::DefinitionName) ) {
             nick = static_cast<QContactNickname *>(&detail);
-            embeddedDetailsMap["nickname"] = nick->nickname();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactNickname::DefinitionName)] = nick->nickname();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
@@ -432,7 +422,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         else if( (detail.definitionName() == QContactNote::DefinitionName) ) {
 
             note = static_cast<QContactNote *>(&detail);
-            embeddedDetailsMap["note"] = note->note();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactNote::DefinitionName)] = note->note();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
@@ -746,6 +736,7 @@ void QContactJsonDbConverter::initializeMappings()
     detailsToJsonMapping.insert(QContactRingtone::DefinitionName,"ringtoneUrl");
     detailsToJsonMapping.insert(QContactOrganization::DefinitionName,"organization");
     detailsToJsonMapping.insert(QContactNote::DefinitionName, "note");
+    detailsToJsonMapping.insert(QContactPersonId::DefinitionName, "personid");
     contactNameFieldsMapping.insert(QContactName::FieldCustomLabel,"customLabel");
     contactNameFieldsMapping.insert(QContactName::FieldFirstName,"firstName");
     contactNameFieldsMapping.insert(QContactName::FieldLastName,"lastName");
@@ -765,6 +756,8 @@ void QContactJsonDbConverter::initializeMappings()
     organizationFieldsMapping.insert(QContactOrganization::FieldRole,"role");
     organizationFieldsMapping.insert(QContactOrganization::FieldAssistantName,"assistantName");
     organizationFieldsMapping.insert(QContactOrganization::FieldLogoUrl,"logoUrl");
+    organizationFieldsMapping.insert(QContactOrganization::FieldStartDate,"startDate");
+    organizationFieldsMapping.insert(QContactOrganization::FieldEndDate,"endDate");
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeMobile, SubTypeCell);
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeFax, SubTypeFax);
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeVideo, SubTypeVideo);

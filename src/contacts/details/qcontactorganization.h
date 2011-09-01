@@ -64,6 +64,8 @@ public:
     static const QLatin1Constant FieldRole;
     static const QLatin1Constant FieldTitle;
     static const QLatin1Constant FieldAssistantName;
+    static const QLatin1Constant FieldStartDate;
+    static const QLatin1Constant FieldEndDate;
 #else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactOrganization, "Organization")
     Q_DECLARE_LATIN1_CONSTANT(FieldName, "Name");
@@ -73,6 +75,8 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(FieldRole, "Role");
     Q_DECLARE_LATIN1_CONSTANT(FieldTitle, "Title");
     Q_DECLARE_LATIN1_CONSTANT(FieldAssistantName, "AssistantName");
+    Q_DECLARE_LATIN1_CONSTANT(FieldStartDate, "StartDate");
+    Q_DECLARE_LATIN1_CONSTANT(FieldEndDate, "EndDate");
 
 #endif
 
@@ -90,6 +94,10 @@ public:
     QString title() const {return value(FieldTitle);}
     void setAssistantName(const QString& assistantName) {setValue(FieldAssistantName, assistantName);}
     QString assistantName() const {return value(FieldAssistantName);}
+    void setStartDate(const QDateTime& dateTime) {setValue(FieldStartDate, dateTime);}
+    QDateTime startDate() const {return value<QDateTime>(FieldStartDate);}
+    void setEndDate(const QDateTime& dateTime) {setValue(FieldEndDate, dateTime);}
+    QDateTime endDate() const {return value<QDateTime>(FieldEndDate);}
 };
 
 QTPIM_END_NAMESPACE

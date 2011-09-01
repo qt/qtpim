@@ -1020,6 +1020,8 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
    \o Organization.Role
    \o Organization.Title
    \o Organization.AssistantName
+   \o Organization.StartDate
+   \o Organization.EndDate
    \endlist
 
   This element is part of the \bold{QtMobility.contacts 1.1} module.
@@ -1059,6 +1061,17 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
   \qmlproperty string Organization::assistantName
 
   This property holds the value of the name of the contact's assistant.
+  */
+
+/*!
+  \qmlproperty datetime Organization::startDate
+
+  This property holds the value of the contact's startDate in the organization.
+  */
+/*!
+  \qmlproperty datetime Organization::endDate
+
+  This property holds the value of the contact's endDate in the organization.
   */
 
 /* ==================== QDeclarativeContactPhoneNumber ======================= */

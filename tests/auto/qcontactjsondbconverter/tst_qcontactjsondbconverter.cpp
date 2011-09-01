@@ -107,6 +107,8 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("role", "Superhero");
     jsonData.insert("assistantName", "Daisy Duck");
     jsonData.insert("logoUrl", "http://www.acme.com/logo.jpg");
+    jsonData.insert("startDate","Thu Jan 1 00:01:02 1998");
+    jsonData.insert("endDate","Thu Jan 1 00:01:02 1998");
     jsonContact.insert("organization", QVariantList() << jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactOrganization::DefinitionName);
@@ -119,6 +121,8 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(org->role(), QString("Superhero"));
     QCOMPARE(org->assistantName(), QString("Daisy Duck"));
     QCOMPARE(org->logoUrl(), QUrl("http://www.acme.com/logo.jpg"));
+    QCOMPARE(org->startDate(),QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
+    QCOMPARE(org->endDate(),QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
     // cleanup
     jsonData.clear();
     contact.clearDetails();
@@ -141,7 +145,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
 */
 
     // avatar
-    initializeJsonContact(jsonContact);
+    /*initializeJsonContact(jsonContact);
     jsonData.insert("photoUrl", "http://www.acme.com/logo.jpg");
     jsonContact.insert("contactDetails", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
@@ -152,7 +156,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(avatar->imageUrl(), QUrl("http://www.acme.com/logo.jpg"));
     // cleanup
     jsonData.clear();
-    contact.clearDetails();
+    contact.clearDetails();*/
 
 
     // ringtone
@@ -391,6 +395,8 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     organization.setRole("Superhero");
     organization.setAssistantName("Daisy Duck");
     organization.setLogoUrl(QUrl("http://www.acme.com/logo.jpg"));
+    organization.setStartDate(QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
+    organization.setEndDate(QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
     organization.setContexts("test context");
     contact.saveDetail(&organization);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
@@ -400,6 +406,8 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testFields.insert("role", "Superhero");
     testFields.insert("assistantName", "Daisy Duck");
     testFields.insert("logoUrl", "http://www.acme.com/logo.jpg");
+    testFields.insert("startDate", "1998-01-01T00:01:02");
+    testFields.insert("endDate", "1998-01-01T00:01:02");
     testFields.insert("context", "test context");
     // test fields
     testJsonDetailItems(jsonContact, "organization", testFields);

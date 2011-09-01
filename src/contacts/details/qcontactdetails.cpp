@@ -2340,6 +2340,23 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldTitle, "Title");
 Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldAssistantName, "AssistantName");
 
 /*!
+   \variable QContactOrganization::FieldStartDate
+
+   The field key constant for the value of the contact's startdate in organization.
+   \sa startDate(), setStartDate()
+ */
+
+Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldStartDate, "StartDate");
+
+/*!
+   \variable QContactOrganization::FieldEndDate
+   The field key constant for the value of the contact's end date in organization.
+   \sa endDate(), setEndDate()
+ */
+
+Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldEndDate, "EndDate");
+
+/*!
    \fn QContactOrganization::setName(const QString& name)
    Sets the name of the organization stored in this detail to \a name.
    \since 1.0
@@ -2434,6 +2451,27 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldAssistantName, "AssistantNam
    Returns the name of the default assistant of contacts belonging to
    this organization.
    \since 1.0
+ */
+
+/*!
+   \fn QContactOrganization::setStartDate(const QDateTime& dateTime)
+   Sets the start date and time of the organization  which is stored in this detail to \a startDate.
+   \since 2.0
+ */
+/*!
+   \fn QContactOrganization::startDate() const
+    Returns the start date and time of the organization which is stored in this detail.
+   \since 2.0
+ */
+/*!
+   \fn QContactOrganization::setEndDate(const QDateTime& dateTime)
+   Sets the end date and time of the organization  which is stored in this detail to \a endDate.
+   \since 2.0
+ */
+/*!
+   \fn QContactOrganization::endDate() const
+   Returns the end date and time of the organization which is stored in this detail.
+   \since 2.0
  */
 
 /* ==================== QContactRingtone ======================= */

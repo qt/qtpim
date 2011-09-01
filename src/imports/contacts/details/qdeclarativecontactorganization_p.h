@@ -59,6 +59,8 @@ class QDeclarativeContactOrganization : public QDeclarativeContactDetail
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY fieldsChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY fieldsChanged)
     Q_PROPERTY(QString assistantName READ assistantName WRITE setAssistantName NOTIFY fieldsChanged)
+    Q_PROPERTY(QDateTime startDate READ startDate WRITE setStartDate NOTIFY fieldsChanged)
+    Q_PROPERTY(QDateTime endDate READ endDate WRITE setEndDate NOTIFY fieldsChanged)
     Q_CLASSINFO("DefaultProperty", "name")
     Q_ENUMS(FieldType)
 public:
@@ -69,7 +71,9 @@ public:
         Location,
         Role,
         Title,
-        AssistantName
+        AssistantName,
+        StartDate,
+        EndDate
     };
 
     QDeclarativeContactOrganization(QObject* parent = 0)
@@ -99,6 +103,10 @@ public:
             return QContactOrganization::FieldTitle;
         case AssistantName:
             return QContactOrganization::FieldAssistantName;
+        case StartDate:
+            return QContactOrganization::FieldStartDate;
+        case EndDate:
+            return QContactOrganization::FieldEndDate;
         default:
             break;
         }
@@ -161,6 +169,22 @@ public:
         }
     }
     QString assistantName() const {return detail().value(QContactOrganization::FieldAssistantName);}
+    void setStartDate(const QDateTime& v)
+    {
+        if (!readOnly() && v != startDate()) {
+            detail().setValue(QContactOrganization::FieldStartDate, v);
+            emit fieldsChanged();
+        }
+    }
+    QDateTime startDate() const {return detail().value<QDateTime>(QContactOrganization::FieldStartDate);}
+    void setEndDate(const QDateTime& v)
+    {
+        if (!readOnly() && v != endDate()) {
+            detail().setValue(QContactOrganization::FieldEndDate, v);
+            emit fieldsChanged();
+        }
+    }
+    QDateTime endDate() const {return detail().value<QDateTime>(QContactOrganization::FieldEndDate);}
 signals:
     void fieldsChanged();
 

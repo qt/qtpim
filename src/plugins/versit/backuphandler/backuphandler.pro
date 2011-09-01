@@ -1,7 +1,10 @@
 load(qt_module)
 
-TARGET = qtversit_backuphandler
 QT += versit versit-private contacts
+
+TARGET = qtversit_backuphandler
+target.path += $$[QT_INSTALL_PLUGINS]/versit
+INSTALLS += target
 
 load(qt_plugin)
 

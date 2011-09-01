@@ -1,7 +1,10 @@
 load(qt_module)
 
 QT += versit contacts
+
 TARGET = qtversit_vcardpreserver
+target.path += $$[QT_INSTALL_PLUGINS]/versit
+INSTALLS += target
 
 load(qt_plugin)
 DESTDIR = $$QT.versit.plugins/versit

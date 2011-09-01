@@ -87,6 +87,10 @@ SOURCES += \
     qorganizeritemsortorder.cpp \
     qorganizermanager_p.cpp
 
+contains(QT_CONFIG, jsondb) {
+    isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=jsondb
+}
+
 maemo6 {
     isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=mkcal
 }

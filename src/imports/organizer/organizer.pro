@@ -35,10 +35,6 @@ SOURCES += plugin.cpp \
            qdeclarativeorganizeritemfetchhint.cpp \
            qdeclarativeopenmetaobject.cpp
 
-contains(QT_CONFIG, jsondb) {
-    isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=jsondb
-}
-
 symbian {
     # In Symbian, a library should enjoy _largest_ possible capability set.
     TARGET.CAPABILITY = ALL -TCB

@@ -70,7 +70,7 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemCollectionId, "collectionId");
     Q_DECLARE_LATIN1_CONSTANT(ItemDescription,  "description");
     Q_DECLARE_LATIN1_CONSTANT(ItemCustomFields, "customFields");
-    Q_DECLARE_LATIN1_CONSTANT(ItemComment,      "comment");
+    Q_DECLARE_LATIN1_CONSTANT(ItemComments,     "comments");
     Q_DECLARE_LATIN1_CONSTANT(ItemLocation,     "location");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriority,     "Priority");
 

@@ -4344,7 +4344,6 @@ void tst_QOrganizerManager::detailOrders()
 
     QOrganizerEvent a;
 
-#if defined(QT_NO_JSONDB)
     // comments are not supported in mkcal
     if (cm->managerName() != "mkcal") {
         // comments
@@ -4364,6 +4363,7 @@ void tst_QOrganizerManager::detailOrders()
         QList<QOrganizerItemDetail> details = a.details(QOrganizerItemComment::DefinitionName);
         QVERIFY(details.count() == 3);
 
+        comment2 = a.details(QOrganizerItemComment::DefinitionName).at(1);
         QVERIFY(a.removeDetail(&comment2));
         QVERIFY(cm->saveItem(&a));
         a = cm->item(a.id());
@@ -4377,7 +4377,6 @@ void tst_QOrganizerManager::detailOrders()
         details = a.details(QOrganizerItemComment::DefinitionName);
         QVERIFY(details.count() == 3);
     }
-#endif
 
     //addresses
     {

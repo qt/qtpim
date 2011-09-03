@@ -1027,6 +1027,10 @@ bool QOrganizerJsonDbRequestThread::convertJsonDbObjectToItem(const QVariantMap&
     if (!comments.isEmpty())
         item->setComments(comments);
 
+    QStringList tags(object.value(QOrganizerJsonDbStr::ItemTags).toStringList());
+    if (!tags.isEmpty())
+        item->setTags(tags);
+
     QVariantMap location = object.value(QOrganizerJsonDbStr::ItemLocation).toMap();
     if (!location.isEmpty()) {
         QOrganizerItemLocation locationDetail;
@@ -1208,6 +1212,10 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     object->insert (QOrganizerJsonDbStr::ItemCollectionId,
                     item.collectionId().toString().remove(QOrganizerJsonDbStr::ManagerName));
     object->insert(QOrganizerJsonDbStr::ItemComments, item.comments());
+
+    QStringList tags(item.tags());
+    if (!tags.isEmpty())
+        object->insert(QOrganizerJsonDbStr::ItemTags, tags);
 
     QOrganizerItemLocation locationDetail = item.detail(QOrganizerItemLocation::DefinitionName);
     if (!locationDetail.isEmpty()) {

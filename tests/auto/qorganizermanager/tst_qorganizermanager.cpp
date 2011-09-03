@@ -250,6 +250,9 @@ private slots:
 #if defined(QT_NO_JSONDB)
     void testItemOccurrences_data(){addManagers();}
 #endif
+
+    void testTags_data() { addManagers(); }
+    void testTags();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -4725,8 +4728,41 @@ void tst_QOrganizerManager::testReminder()
     oim->saveItem (&bigEvent);
     fetchedItems = oim->items();
     QVERIFY(fetchedItems.contains(bigEvent));
-
 }
+
+void tst_QOrganizerManager::testTags()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+
+    // save & load
+    QOrganizerEvent event;
+    event.setTags(QStringList() << QString::fromAscii("Tag1") << QString::fromAscii("Tag2"));
+    event.addTag(QString::fromAscii("Tag3"));
+    QVERIFY(mgr->saveItem(&event));
+    QOrganizerItemId id = event.id();
+    QOrganizerItem item = mgr->item(id);
+    QVERIFY(item.tags().size() == 3);
+    QVERIFY(item.tags().contains(QString::fromAscii("Tag1")));
+    QVERIFY(item.tags().contains(QString::fromAscii("Tag2")));
+    QVERIFY(item.tags().contains(QString::fromAscii("Tag3")));
+
+    // update
+    item.addTag(QString::fromAscii("Tag4"));QVERIFY(mgr->saveItem(&event));
+    QList<QOrganizerItemDetail> details = item.details(QOrganizerItemTag::DefinitionName);
+    QOrganizerItemTag tag = details.at(1);
+    tag.setTag(QString::fromAscii("Tag222"));
+    item.saveDetail(&tag);
+    item.removeDetail(&details[2]);
+    QVERIFY(mgr->saveItem(&item));
+    QOrganizerItemId id2 = item.id();
+    QOrganizerItem item2 = mgr->item(id2);
+    QVERIFY(item2.tags().size() == 3);
+    QVERIFY(item2.tags().contains(QString::fromAscii("Tag1")));
+    QVERIFY(item2.tags().contains(QString::fromAscii("Tag222")));
+    QVERIFY(item2.tags().contains(QString::fromAscii("Tag4")));
+}
+
 #if defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {
     Q_OBJECT;

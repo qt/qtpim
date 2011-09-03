@@ -54,6 +54,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFields, "customFields");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemComments,     "comments");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocation,     "location");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriority,     "Priority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemTags,         "tags");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminder, "visualReminder");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminder,"audibleReminder");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminder,  "emailReminder");

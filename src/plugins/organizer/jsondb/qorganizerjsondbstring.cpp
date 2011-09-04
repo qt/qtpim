@@ -112,7 +112,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionName,         "displayNa
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionDescription,  "description");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionColor,        "color");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionImage,        "image");
-
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionCustomFields, "customFields");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DefaultCollectionName, "defaultCollection");
 
 // Recurrence sub properties

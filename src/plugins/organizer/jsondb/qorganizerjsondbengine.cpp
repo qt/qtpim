@@ -246,6 +246,24 @@ QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QDateTime& startDate, 
 
 }
 
+QList<QOrganizerItem> QOrganizerJsonDbEngine::itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+{
+    QOrganizerItemFetchRequest fetchReq;
+    fetchReq.setStartDate(startDate);
+    fetchReq.setEndDate(endDate);
+    fetchReq.setFilter(filter);
+    fetchReq.setSorting(sortOrders);
+    fetchReq.setFetchHint(fetchHint);
+    *error = QOrganizerManager::NoError;
+
+    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&fetchReq);
+    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&fetchReq, 0)) {
+        *error = fetchReq.error();
+        return fetchReq.items();
+    }
+    return QList<QOrganizerItem>();
+}
+
 QOrganizerItem QOrganizerJsonDbEngine::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
 {
     /*

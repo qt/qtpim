@@ -964,6 +964,11 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         return false;
     }
 
+    if (theOrganizerItem->type().isEmpty()) {
+        *error = QOrganizerManager::InvalidItemTypeError;
+        return false;
+    }
+
     // check to see if this organizer item already exists
     const QOrganizerItemId& theOrganizerItemId = theOrganizerItem->id();
     QHash<QOrganizerItemId, QOrganizerItem>::const_iterator hashIterator = d->m_idToItemHash.find(theOrganizerItemId);

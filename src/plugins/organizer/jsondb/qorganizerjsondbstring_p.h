@@ -131,6 +131,7 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(CollectionDescription,  "description");
     Q_DECLARE_LATIN1_CONSTANT(CollectionColor,        "color");
     Q_DECLARE_LATIN1_CONSTANT(CollectionImage,        "image");
+    Q_DECLARE_LATIN1_CONSTANT(CollectionCustomFields, "customFields");
 
     Q_DECLARE_LATIN1_CONSTANT(DefaultCollectionName, "defaultCollection");
 

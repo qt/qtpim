@@ -203,6 +203,8 @@ private slots:
     void itemRemove_data() { addManagers(); }
     void itemSave();
     void itemSave_data() { addManagers(); }
+    void itemListSave();
+    void itemListSave_data() { addManagers(); }
 #if defined(QT_NO_JSONDB)
     void itemPartialSave();
     void itemPartialSave_data() { addManagers(); }
@@ -1660,7 +1662,6 @@ void tst_QOrganizerItemAsync::itemSave()
     QCOMPARE(oim->itemIds().size(), originalCount + 1);
 
     // update a previously saved item
-#if defined(QT_NO_JSONDB)
     QOrganizerItemPriority priority = result.first().detail<QOrganizerItemPriority>();
     priority.setPriority(QOrganizerItemPriority::LowestPriority);
     testTodo = result.first();
@@ -1691,7 +1692,7 @@ void tst_QOrganizerItemAsync::itemSave()
     // XXX: really, we should use isSuperset() from tst_QOrganizerManager, but this will do for now:
     QVERIFY(result.first().detail<QOrganizerItemPriority>().priority() == priority.priority());
     QCOMPARE(oim->itemIds().size(), originalCount + 1);
-
+#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerItem temp = testTodo;
     temp.setDisplayLabel("should not get saved");
@@ -1783,6 +1784,111 @@ void tst_QOrganizerItemAsync::itemSave()
         break;
     }
 #endif
+}
+
+void tst_QOrganizerItemAsync::itemListSave()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> oim(prepareModel(uri));
+    QOrganizerItemSaveRequest isr;
+    QVERIFY(isr.type() == QOrganizerAbstractRequest::ItemSaveRequest);
+
+    // item with invalid collection id cannot be saved
+    QOrganizerCollection collection;
+    oim->saveCollection(&collection);
+    QOrganizerCollectionId invalidCollectionId = collection.id();
+    oim->removeCollection(invalidCollectionId);
+
+    // initial state - not started, no manager.
+    QVERIFY(!isr.isActive());
+    QVERIFY(!isr.isFinished());
+    QVERIFY(!isr.start());
+    QVERIFY(!isr.cancel());
+    QVERIFY(!isr.waitForFinished());
+
+    // save a list of items where one in the middle is invalid
+    QOrganizerEvent e0, e1, e2, e3, e4;
+    e0.setDisplayLabel("Test Event 0");
+    e1.setDisplayLabel("Test Event 1");
+    e2.setDisplayLabel("Test Event 2");
+    e3.setDisplayLabel("Test Event 3");
+    e4.setDisplayLabel("Test Event 4");
+
+    e2.setCollectionId(invalidCollectionId);
+
+    QList<QOrganizerItem> saveList;
+    saveList << e0 << e1 << e2 << e3 << e4;
+    isr.setManager(oim.data());
+    QCOMPARE(isr.manager(), oim.data());
+    QVERIFY(!isr.isActive());
+    QVERIFY(!isr.isFinished());
+    QVERIFY(!isr.cancel());
+    QVERIFY(!isr.waitForFinished());
+    qRegisterMetaType<QOrganizerItemSaveRequest*>("QOrganizerItemSaveRequest*");
+    QThreadSignalSpy spy(&isr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
+    isr.setItems(saveList);
+    QVERIFY(!isr.cancel()); // not started
+    QVERIFY(isr.start());
+
+    QVERIFY((isr.isActive() && isr.state() == QOrganizerAbstractRequest::ActiveState) || isr.isFinished());
+    //QVERIFY(isr.isFinished() || !isr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QOrganizerItem> expected = isr.items();
+    QCOMPARE(expected.size(), 5);
+    QVERIFY(isr.error() != QOrganizerManager::NoError);
+    QVERIFY(isr.errorMap().contains(2));
+    QVERIFY(!expected[0].id().isNull());
+    QVERIFY(!expected[1].id().isNull());
+    QVERIFY(expected[2].id().isNull()); // Should not have been saved
+    QVERIFY(!expected[3].id().isNull());
+    QVERIFY(!expected[4].id().isNull());
+
+    QVERIFY(oim->item(expected[0].id()).displayLabel() == expected[0].displayLabel());
+    QVERIFY(oim->item(expected[1].id()).displayLabel() == expected[1].displayLabel());
+    QVERIFY(oim->item(expected[3].id()).displayLabel() == expected[3].displayLabel());
+    QVERIFY(oim->item(expected[4].id()).displayLabel() == expected[4].displayLabel());
+
+
+    // save a list of items where all items are invalid
+    QOrganizerTodo t0, t1;
+    t0.setDisplayLabel("Test Todo 0");
+    t1.setDisplayLabel("Test Todo 1");
+
+    t0.setCollectionId(invalidCollectionId);
+    t1.setCollectionId(invalidCollectionId);
+
+    QList<QOrganizerItem> invalidSaveList;
+    invalidSaveList << t0 << t1;
+    isr.setManager(oim.data());
+    QCOMPARE(isr.manager(), oim.data());
+    QVERIFY(!isr.isInactive());
+    QVERIFY(!isr.isActive());
+    QVERIFY(isr.isFinished());
+    QVERIFY(!isr.cancel());
+    QVERIFY(isr.waitForFinished());
+    //qRegisterMetaType<QOrganizerItemSaveRequest*>("QOrganizerItemSaveRequest*");
+    isr.setItems(invalidSaveList);
+    QVERIFY(!isr.cancel()); // not started
+    QVERIFY(isr.start());
+
+    QVERIFY((isr.isActive() && isr.state() == QOrganizerAbstractRequest::ActiveState) || isr.isFinished());
+    //QVERIFY(isr.isFinished() || !isr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    expected = isr.items();
+    QCOMPARE(expected.size(), 2);
+    QVERIFY(isr.error() != QOrganizerManager::NoError);
+    QVERIFY(isr.errorMap().contains(0));
+    QVERIFY(isr.errorMap().contains(1));
+    QVERIFY(expected[0].id().isNull());
+    QVERIFY(expected[1].id().isNull());
 }
 
 #if defined(QT_NO_JSONDB)

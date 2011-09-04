@@ -3203,13 +3203,15 @@ bool QOrganizerManagerEngineV2::saveItems(QList<QOrganizerItem> *items, const QS
 
                 // Existing item we should have fetched
                 itemToSave = existingItems.at(fetchedIdx);
-
                 QSharedDataPointer<QOrganizerItemData>& data = QOrganizerItemData::itemData(itemToSave);
                 data->removeOnly(mask);
             } else if (errorMap->contains(i)) {
                 // A bad argument.  Leave it out of the itemsToSave list
                 continue;
-            } // else new item
+            } else {
+                // new item
+                itemToSave.setType(items->at(i).type());
+            }
 
             // Now copy in the details from the arguments
             const QOrganizerItem& item = items->at(i);
@@ -3222,7 +3224,6 @@ bool QOrganizerManagerEngineV2::saveItems(QList<QOrganizerItem> *items, const QS
                     itemToSave.saveDetail(&detail);
                 }
             }
-
             savedToOriginalMap.append(i);
             itemsToSave.append(itemToSave);
         }
@@ -3231,7 +3232,6 @@ bool QOrganizerManagerEngineV2::saveItems(QList<QOrganizerItem> *items, const QS
         QMap<int, QOrganizerManager::Error> saveErrors;
         QOrganizerManager::Error saveError = QOrganizerManager::NoError;
         saveItems(&itemsToSave, &saveErrors, &saveError);
-
         // Now update the passed in arguments, where necessary
 
         // Update IDs of the items list
@@ -3246,7 +3246,6 @@ bool QOrganizerManagerEngineV2::saveItems(QList<QOrganizerItem> *items, const QS
             }
             it++;
         }
-
         return errorMap->isEmpty();
     }
 }

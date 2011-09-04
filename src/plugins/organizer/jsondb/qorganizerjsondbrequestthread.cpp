@@ -297,14 +297,13 @@ void QOrganizerJsonDbRequestThread::handleResponse(int trId, QOrganizerManager::
 void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequest* saveReq)
 {
     QOrganizerManager::Error error = QOrganizerManager::NoError;
-    bool errorFound = false;
     QList<QOrganizerItem> items = saveReq->items();
     m_requestMgr->setActive(saveReq);
 
     for (int i = 0; i < items.size(); i++) {
         QOrganizerItem item = items.at(i);
-
         bool itemIsNew = item.id().isNull();
+        bool errorFound = false;
 
         QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
         // check manager uri if is the same with the engine uri
@@ -312,6 +311,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             error = QOrganizerManager::BadArgumentError;
             errorFound = true;
         }
+
         // ensure that the organizeritem's details conform to their definitions
         if (!errorFound && !m_engine->validateItem(item, &error))
             errorFound = true;
@@ -328,7 +328,6 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         } else {
             item.setCollectionId(defaultCollection().id());
         }
-
         QVariantMap newJsonDbItem;
         if (!errorFound) {
             if (convertItemToJsonDbObject(item, &newJsonDbItem)) {
@@ -344,14 +343,23 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
                 error = QOrganizerManager::InvalidItemTypeError;
             }
         }
-
         if (errorFound) {
-            QMap<int, QOrganizerManager::Error> errorMap;
-            QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
-            m_requestMgr->removeRequest(saveReq);
-            QOrganizerManagerEngine::updateItemSaveRequest(saveReq, items, error, errorMap, QOrganizerAbstractRequest::FinishedState);
-            if (waitCondition)
-                waitCondition->wakeAll();
+            m_requestMgr->updateRequestData(saveReq, error, i, item);
+            // Is this the last item in the list and have other items already been handled
+            if (i == items.size() - 1 && m_requestMgr->isRequestCompleted(saveReq)) {
+                QOrganizerManager::Error latestError;
+                QMap<int, QOrganizerManager::Error> errorMap;
+                QList<QOrganizerItem> items;
+                m_requestMgr->requestData(saveReq, &latestError, &errorMap,&items);
+                QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
+                m_requestMgr->removeRequest(saveReq);
+                QOrganizerManagerEngine::updateItemSaveRequest(saveReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+                m_ics.emitSignals(m_engine);
+                m_ics.clearAddedItems();
+                m_ics.clearChangedItems();
+                if (waitCondition)
+                    waitCondition->wakeAll();
+            }
         }
     }
 }
@@ -427,13 +435,12 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
 void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollectionSaveRequest *collectionSaveReq)
 {
     QOrganizerManager::Error error = QOrganizerManager::NoError;
-    bool errorFound = false;
     QList<QOrganizerCollection> collections = collectionSaveReq->collections();
     m_requestMgr->setActive(collectionSaveReq);
 
     for (int i = 0; i < collections.size(); i++) {
         QOrganizerCollection collection = collections.at(i);
-
+        bool errorFound = false;
         bool collectionIsNew = collection.id().isNull();
 
         QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
@@ -445,7 +452,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
 
         QVariantMap newJsonDbCollection;
         if (!errorFound) {
-            if (convertCollectionToJsonDbObject (collection, &newJsonDbCollection)) {
+            if (convertCollectionToJsonDbObject(collection, &newJsonDbCollection)) {
                 int trId;
                 if (collectionIsNew)
                     trId = m_jsonDb->create(newJsonDbCollection);
@@ -461,12 +468,22 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
         }
 
         if (errorFound) {
-            QMap<int, QOrganizerManager::Error> errorMap;
-            QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionSaveReq);
-            m_requestMgr->removeRequest(collectionSaveReq);
-            QOrganizerManagerEngine::updateCollectionSaveRequest(collectionSaveReq, collections, error, errorMap, QOrganizerAbstractRequest::FinishedState);
-            if (waitCondition)
-                waitCondition->wakeAll();
+            m_requestMgr->updateRequestData(collectionSaveReq, error, i, QOrganizerItem(), collection);
+            // Is this the last collection in the list and have other collections already been handled
+            if (i == collections.size() - 1 && m_requestMgr->isRequestCompleted(collectionSaveReq)) {
+                QOrganizerManager::Error latestError;
+                QMap<int, QOrganizerManager::Error> errorMap;
+                QList<QOrganizerCollection> collections;
+                m_requestMgr->requestData(collectionSaveReq, &latestError, &errorMap, 0, &collections);
+                QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionSaveReq);
+                m_requestMgr->removeRequest(collectionSaveReq);
+                QOrganizerManagerEngine::updateCollectionSaveRequest(collectionSaveReq, collections, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+                m_ccs.emitSignals(m_engine);
+                m_ccs.clearAddedCollections();
+                m_ccs.clearChangedCollections();
+                if (waitCondition)
+                    waitCondition->wakeAll();
+            }
         }
     }
 }
@@ -1287,6 +1304,13 @@ bool QOrganizerJsonDbRequestThread::convertJsonDbObjectToCollection(const QVaria
     if (!image.isEmpty())
         collection->setMetaData(QOrganizerCollection::KeyImage, image);
 
+    QVariantMap jsonMetaData = object.value(QOrganizerJsonDbStr::CollectionCustomFields).toMap();
+    if (!jsonMetaData.isEmpty()) {
+        QList<QString> metaDataKeys = jsonMetaData.keys();
+        foreach (QString key, metaDataKeys)
+            collection->setMetaData(key, jsonMetaData.value(key));
+    }
+
     bool isDefaultCollection = object.value(QOrganizerJsonDbStr::CollectionDefaultFlag).toBool();
     if (isDefaultCollection) {
         //Default collection create
@@ -1302,23 +1326,43 @@ bool QOrganizerJsonDbRequestThread::convertCollectionToJsonDbObject(const QOrgan
     if (!collection.id().isNull()) {
         QString jsonUuid = collection.id().toString();
         jsonUuid.remove (QOrganizerJsonDbStr::ManagerName);
-        if (jsonUuid == defaultCollectionId ())
+        if (jsonUuid == defaultCollectionId())
             isDefaultCollection = true;
 
-        object->insert (JsonDbString::kUuidStr, jsonUuid);
+        object->insert(JsonDbString::kUuidStr, jsonUuid);
     } else {
-        if (collection.metaData (QOrganizerCollection::KeyName) == QOrganizerJsonDbStr::DefaultCollectionName
+        if (collection.metaData(QOrganizerCollection::KeyName) == QOrganizerJsonDbStr::DefaultCollectionName
                 && m_defaultCollection.id().isNull())
             //Now we create default collection
             isDefaultCollection = true;
     }
 
-    object->insert (JsonDbString::kTypeStr, QOrganizerJsonDbStr::Collection);
-    object->insert (QOrganizerJsonDbStr::CollectionDefaultFlag, isDefaultCollection);
-    object->insert (QOrganizerJsonDbStr::CollectionName, collection.metaData (QOrganizerCollection::KeyName));
-    object->insert (QOrganizerJsonDbStr::CollectionDescription, collection.metaData (QOrganizerCollection::KeyDescription));
-    object->insert (QOrganizerJsonDbStr::CollectionColor, collection.metaData (QOrganizerCollection::KeyColor));
-    object->insert (QOrganizerJsonDbStr::CollectionImage, collection.metaData (QOrganizerCollection::KeyImage));
+    object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Collection);
+    object->insert(QOrganizerJsonDbStr::CollectionDefaultFlag, isDefaultCollection);
+    object->insert(QOrganizerJsonDbStr::CollectionName, collection.metaData(QOrganizerCollection::KeyName));
+    object->insert(QOrganizerJsonDbStr::CollectionDescription, collection.metaData(QOrganizerCollection::KeyDescription));
+    object->insert(QOrganizerJsonDbStr::CollectionColor, collection.metaData(QOrganizerCollection::KeyColor));
+    object->insert(QOrganizerJsonDbStr::CollectionImage, collection.metaData(QOrganizerCollection::KeyImage));
+
+    QVariantMap metaData = collection.metaData();
+    QVariantMap jsonMetaData;
+    QList<QString> metaDataKeys = metaData.keys();
+    foreach (QString key, metaDataKeys) {
+        if (key == QOrganizerCollection::KeyName)
+            object->insert(QOrganizerJsonDbStr::CollectionName, collection.metaData(QOrganizerCollection::KeyName));
+        else if (key == QOrganizerCollection::KeyDescription)
+            object->insert(QOrganizerJsonDbStr::CollectionDescription, collection.metaData(QOrganizerCollection::KeyDescription));
+        else if (key == QOrganizerCollection::KeyColor)
+            object->insert(QOrganizerJsonDbStr::CollectionColor, collection.metaData(QOrganizerCollection::KeyColor));
+        else if (key == QOrganizerCollection::KeyImage)
+            object->insert(QOrganizerJsonDbStr::CollectionImage, collection.metaData(QOrganizerCollection::KeyImage));
+        else
+            jsonMetaData.insert(key, metaData.value(key));
+    }
+
+    if (!jsonMetaData.isEmpty())
+        object->insert(QOrganizerJsonDbStr::CollectionCustomFields, jsonMetaData);
+
     return true;
 }
 

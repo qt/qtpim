@@ -176,9 +176,7 @@ private slots:
     void signalEmission();
     void detailDefinitions();
     void detailOrders();
-#if defined(QT_NO_JSONDB)
     void itemType();
-#endif
     void collections();
     void dataSerialization();
 #if defined(QT_NO_JSONDB)
@@ -191,10 +189,8 @@ private slots:
     void recurrence();
 #endif
     void idComparison();
-#if defined(QT_NO_JSONDB)
     void emptyItemManipulation();
     void partialSave();
-#endif
 
     /* Tests that take no data */
     void itemValidation();
@@ -235,9 +231,7 @@ private slots:
     void signalEmission_data() {addManagers();}
     void detailDefinitions_data() {addManagers();}
     void detailOrders_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void itemType_data() {addManagers();}
-#endif
     void collections_data() {addManagers();}
     void dataSerialization_data() {addManagers();}
 #if defined(QT_NO_JSONDB)
@@ -251,9 +245,9 @@ private slots:
 #endif
     void idComparison_data() {addManagers();}
     void testReminder_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
+#if defined(QT_NO_JSONDB)
     void testItemOccurrences_data(){addManagers();}
 #endif
 };
@@ -1071,7 +1065,7 @@ void tst_QOrganizerManager::persistence()
     qDebug() << cm2->items();
     QCOMPARE(cm2->items().size(), 0);
 
-#if 0
+//#if 0
     // This is disabled because it'll fail on managers that don't support collections
 
     // Remove all non-default collections
@@ -1090,7 +1084,7 @@ void tst_QOrganizerManager::persistence()
     QVERIFY(cm->saveCollection(&collection));
     QTest::qWait(500);
     QCOMPARE(cm2->collections().size(), cm->collections().size());
-#endif
+//#endif
 }
 
 #if defined(QT_NO_JSONDB)
@@ -4096,7 +4090,6 @@ void tst_QOrganizerManager::idComparison()
     QVERIFY(testMap.value(QOrganizerItemId()) != 12); // removed this entry.
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::emptyItemManipulation()
 {
     QFETCH(QString, uri);
@@ -4249,7 +4242,6 @@ void tst_QOrganizerManager::partialSave()
     QCOMPARE(errorMap[4], QOrganizerManager::DoesNotExistError);
     QCOMPARE(errorMap[5], QOrganizerManager::InvalidDetailError);
 }
-#endif
 
 void tst_QOrganizerManager::dateRange()
 {
@@ -4415,12 +4407,10 @@ void tst_QOrganizerManager::detailOrders()
     }
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::itemType()
 {
     // XXX TODO!
 }
-#endif
 
 void tst_QOrganizerManager::collections()
 {
@@ -4443,9 +4433,10 @@ void tst_QOrganizerManager::collections()
         }
     }
 
-    QOrganizerCollection c1, c2, c3;
+    QOrganizerCollection c1, c2, c3, sc1;
     c1.setMetaData(QOrganizerCollection::KeyName, "Test One");
     c1.setMetaData(QOrganizerCollection::KeyDescription, "This collection is for testing purposes.");
+    c1.setMetaData("key", "value");
     c2.setMetaData(QOrganizerCollection::KeyName, "Test Two");
     c2.setMetaData(QOrganizerCollection::KeyColor, Qt::blue);
     // c3 doesn't have any meta-data, just an id.
@@ -4458,9 +4449,7 @@ void tst_QOrganizerManager::collections()
     i4.setDisplayLabel("four");
     i4.setGuid(QUuid::createUuid().toString());
     i5.setDisplayLabel("five");
-#if defined(QT_NO_JSONDB)
-    i5.setLocation("test location address");
-#endif
+//    i5.setLocation("test location address");
 
     // first test
     {
@@ -4472,6 +4461,10 @@ void tst_QOrganizerManager::collections()
             QVERIFY(oim->saveCollection(&c1));
             QVERIFY(!c1.id().isNull()); // should have been set by the save operation
             QVERIFY(oim->collections().contains(c1));
+            sc1 = oim->collection(c1.id());
+            QVERIFY(sc1.metaData(QOrganizerCollection::KeyName) == "Test One");
+            QVERIFY(sc1.metaData(QOrganizerCollection::KeyDescription) == "This collection is for testing purposes.");
+            QVERIFY(sc1.metaData("key") == "value");
 
             // save an item in that collection
             QOrganizerItemCollectionFilter fil;

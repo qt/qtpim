@@ -47,6 +47,7 @@
 #include <qversitwriter.h>
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
+#include "qdeclarativeorganizercollection_p.h"
 #include <QFile>
 
 #include <qorganizeritemrequests.h>
@@ -101,6 +102,7 @@ public:
     QVersitWriter m_writer;
     QDateTime m_startPeriod;
     QDateTime m_endPeriod;
+    QList<QDeclarativeOrganizerCollection*> m_collections;
 
     bool m_autoUpdate;
     bool m_updatePending;
@@ -246,6 +248,7 @@ void QDeclarativeOrganizerModel::update()
 
     d->m_updatePending = true; // Disallow possible duplicate request triggering
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
 }
 
 void QDeclarativeOrganizerModel::doUpdate()
@@ -378,6 +381,10 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
     connect(d->m_manager, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SLOT(update()));
     connect(d->m_manager, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(itemsRemoved(QList<QOrganizerItemId>)));
     connect(d->m_manager, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(itemsChanged(QList<QOrganizerItemId>)));
+    connect(d->m_manager, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
+    connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
+    connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
+
     emit managerChanged();
 }
 
@@ -629,7 +636,7 @@ QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganiz
 
 /*!
   \qmlmethod OrganizerModel::fetchItems(list<QString> itemIds)
-  Fetch a list of organizer items from the organizer store by given \a itemIds.
+  Fetch asynchronously a list of organizer items from the organizer store by given \a itemIds.
   */
 void QDeclarativeOrganizerModel::fetchItems(const QList<QString>& itemIds)
 {
@@ -793,7 +800,7 @@ void QDeclarativeOrganizerModel::requestUpdated()
 
 /*!
   \qmlmethod OrganizerModel::saveItem(OrganizerItem item)
-  Saves the given \a item into the organizer backend.
+  Saves asynchronously the given \a item into the organizer backend.
 
   \since organizer 1.1.1
   */
@@ -856,7 +863,7 @@ void QDeclarativeOrganizerModel::removeItem(const QString& id)
 
 /*!
   \qmlmethod OrganizerModel::removeItems(list<string> itemId)
-  Removes the organizer items with the given \a ids from the backend.
+  Removes asynchronously the organizer items with the given \a ids from the backend.
 
   \since organizer 1.1.1
   */
@@ -957,7 +964,140 @@ void QDeclarativeOrganizerModel::itemsRemoved(const QList<QOrganizerItemId>& ids
     }
 }
 
+/*!
+  \qmlmethod OrganizerModel::fetchCollections()
+  Fetch asynchronously a list of organizer collections from the organizer backend.
+  */
+void QDeclarativeOrganizerModel::fetchCollections()
+{
+    // fetchCollections() is used for both direct calls and
+    // signals from model. For signal from model, check also the
+    // autoupdate-flag.
+    if (sender() == d->m_manager && !d->m_autoUpdate) {
+        return;
+    }
 
+    QOrganizerCollectionFetchRequest* req = new QOrganizerCollectionFetchRequest(this);
+    req->setManager(d->m_manager);
+
+    connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionsFetched()));
+
+    req->start();
+}
+
+void QDeclarativeOrganizerModel::collectionsFetched()
+{
+    QOrganizerCollectionFetchRequest* req = qobject_cast<QOrganizerCollectionFetchRequest*>(QObject::sender());
+    if (req->isFinished()) {
+        // prepare tables
+        QHash<QString, const QOrganizerCollection*> collections;
+        foreach (const QOrganizerCollection& collection, req->collections()) {
+            collections.insert(collection.id().toString(), &collection);
+        }
+        QHash<QString, QDeclarativeOrganizerCollection*> declCollections;
+        foreach(QDeclarativeOrganizerCollection* declCollection, d->m_collections) {
+            declCollections.insert(declCollection->collection().id().toString(), declCollection);
+        }
+        // go tables through
+        QHashIterator<QString, const QOrganizerCollection*> collIterator(collections);
+        while (collIterator.hasNext()) {
+            collIterator.next();
+            if (declCollections.contains(collIterator.key())) {
+                // collection on both sides, update the declarative collection
+                declCollections.value(collIterator.key())->setCollection(*collections.value(collIterator.key()));
+            } else {
+                // new collection, add it to declarative collection list
+                QDeclarativeOrganizerCollection* declCollection = new QDeclarativeOrganizerCollection(this);
+                declCollection->setCollection(*collections.value(collIterator.key()));
+                d->m_collections.append(declCollection);
+            }
+        }
+        QHashIterator<QString, QDeclarativeOrganizerCollection*> declCollIterator(declCollections);
+        while (declCollIterator.hasNext()) {
+            declCollIterator.next();
+            if (!collections.contains(declCollIterator.key())) {
+                // collection deleted on the backend side, delete from declarative collection list
+                QDeclarativeOrganizerCollection* toBeDeletedColl = declCollections.value(declCollIterator.key());
+                d->m_collections.removeOne(toBeDeletedColl);
+                delete toBeDeletedColl;
+            }
+        }
+        req->deleteLater();
+        emit collectionsChanged();
+    }
+}
+
+/*!
+  \qmlmethod OrganizerModel::saveCollection(QDeclarativeOrganizerCollection collection)
+  Saves asynchronously the given \a collection into the organizer backend.
+  */
+void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl)
+{
+    if (declColl) {
+        QOrganizerCollection collection = declColl->collection();
+        QOrganizerCollectionSaveRequest* req = new QOrganizerCollectionSaveRequest(this);
+        req->setManager(d->m_manager);
+        req->setCollection(collection);
+
+        connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionSaved()));
+
+        req->start();
+    }
+}
+
+void QDeclarativeOrganizerModel::collectionSaved()
+{
+    QOrganizerCollectionSaveRequest* req = qobject_cast<QOrganizerCollectionSaveRequest*>(QObject::sender());
+    if (req->isFinished()) {
+        req->deleteLater();
+    }
+}
+
+/*!
+  \qmlmethod OrganizerModel::removeCollection(string collectionId)
+  Removes asynchronously the organizer collection with the given \a collectionId from the backend.
+  */
+void QDeclarativeOrganizerModel::removeCollection(const QString &collectionId)
+{
+    QOrganizerCollectionRemoveRequest* req = new QOrganizerCollectionRemoveRequest(this);
+    req->setManager(d->m_manager);
+    req->setCollectionId(QOrganizerCollectionId::fromString(collectionId));
+
+    connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionRemoved()));
+
+    req->start();
+}
+
+void QDeclarativeOrganizerModel::collectionRemoved()
+{
+    QOrganizerCollectionRemoveRequest* req = qobject_cast<QOrganizerCollectionRemoveRequest*>(QObject::sender());
+    if (req->isFinished()) {
+        req->deleteLater();
+    }
+}
+
+/*!
+  \qmlmethod Collection OrganizerModel::defaultCollection()
+  Returns the default Collection object.
+  */
+QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::defaultCollection()
+{
+    return collection(d->m_manager->defaultCollection().id().toString());
+}
+
+/*!
+  \qmlmethod Collection OrganizerModel::collection(string collectionId)
+  Returns the Collection object which collection id is the given \a collectionId and
+  null if collection id is not found.
+  */
+QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection(const QString &collectionId)
+{
+    foreach (QDeclarativeOrganizerCollection* collection, d->m_collections) {
+        if (collection->id() == collectionId)
+            return collection;
+    }
+    return 0;
+}
 
 QVariant QDeclarativeOrganizerModel::data(const QModelIndex &index, int role) const
 {
@@ -1086,6 +1226,17 @@ QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::
     return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
 }
 
+/*!
+  \qmlproperty list<Collection> OrganizerModel::collections
+
+  This property holds a list of collections in the organizer model.
+
+  \sa Collection
+  */
+QDeclarativeListProperty<QDeclarativeOrganizerCollection> QDeclarativeOrganizerModel::collections()
+{
+    return QDeclarativeListProperty<QDeclarativeOrganizerCollection>(this, 0, collection_append, collection_count, collection_at);
+}
 
 void QDeclarativeOrganizerModel::item_append(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item)
 {
@@ -1206,3 +1357,26 @@ void  QDeclarativeOrganizerModel::sortOrder_clear(QDeclarativeListProperty<QDecl
     }
 }
 
+void QDeclarativeOrganizerModel::collection_append(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection)
+{
+    Q_UNUSED(p);
+    Q_UNUSED(collection);
+    qmlInfo(0) << tr("OrganizerModel: appending collections is not currently supported");
+}
+
+int  QDeclarativeOrganizerModel::collection_count(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p)
+{
+    QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
+    return model ? model->d->m_collections.count() : 0;
+}
+
+QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, int idx)
+{
+    QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
+    QDeclarativeOrganizerCollection* collection = 0;
+    if (model) {
+        if (!model->d->m_collections.isEmpty() && idx >= 0 && idx < model->d->m_collections.count())
+            collection = model->d->m_collections.at(idx);
+    }
+    return collection;
+}

@@ -54,6 +54,7 @@
 #include "qdeclarativeorganizeritemfetchhint_p.h"
 #include "qdeclarativeorganizeritemsortorder_p.h"
 #include "qdeclarativeorganizeritemfilter_p.h"
+#include "qdeclarativeorganizercollection_p.h"
 
 QTPIM_USE_NAMESPACE
 
@@ -78,6 +79,7 @@ class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativ
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> todoOccurrences READ todoOccurrences NOTIFY modelChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> journals READ journals NOTIFY modelChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> notes READ notes NOTIFY modelChanged)
+    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -124,15 +126,21 @@ public:
     QDeclarativeListProperty<QDeclarativeOrganizerItem> todoOccurrences();
     QDeclarativeListProperty<QDeclarativeOrganizerItem> journals();
     QDeclarativeListProperty<QDeclarativeOrganizerItem> notes();
+    QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections();
 
     Q_INVOKABLE void removeItem(const QString& id);
     Q_INVOKABLE void removeItems(const QList<QString>& ids);
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
     Q_INVOKABLE void fetchItems(const QList<QString>& ids);
+    Q_INVOKABLE void removeCollection(const QString& collectionId);
+    Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
+    Q_INVOKABLE void fetchCollections();
 
     Q_INVOKABLE bool containsItems(QDateTime start, QDateTime end = QDateTime());
     Q_INVOKABLE QDeclarativeOrganizerItem* item(const QString& id);
     Q_INVOKABLE QStringList itemIds(QDateTime start=QDateTime(), QDateTime end = QDateTime());
+    Q_INVOKABLE QDeclarativeOrganizerCollection* defaultCollection();
+    Q_INVOKABLE QDeclarativeOrganizerCollection* collection(const QString& collectionId);
     bool autoUpdate() const;
     void setAutoUpdate(bool autoUpdate);
 
@@ -151,6 +159,7 @@ signals:
     void startPeriodChanged();
     void endPeriodChanged();
     void autoUpdateChanged();
+    void collectionsChanged();
 
 public slots:
     void update();
@@ -170,7 +179,9 @@ private slots:
     void startImport(QVersitReader::State state);
     void itemsExported(QVersitWriter::State state);
 
-
+    void collectionsFetched();
+    void collectionSaved();
+    void collectionRemoved();
 
 private:
     void clearItems();
@@ -189,6 +200,10 @@ private:
     static int  sortOrder_count(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p);
     static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx);
     static void  sortOrder_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p);
+
+    static void collection_append(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection);
+    static int collection_count(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p);
+    static QDeclarativeOrganizerCollection* collection_at(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, int idx);
 
     QDeclarativeOrganizerModelPrivate* d;
 };

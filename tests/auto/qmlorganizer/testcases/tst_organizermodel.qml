@@ -41,9 +41,9 @@
 
 //TESTED_COMPONENT=src/organizer
 
-import QtQuick 1.0
+import QtQuick 2.0
 import QtTest 1.0
-import QtMobility.organizer 1.1
+import QtAddOn.organizer 2.0
 
 TestCase {
     name: "ModelTests"
@@ -57,21 +57,21 @@ TestCase {
         return [
                 // OrganizerModel
                 {tag: "No properties",
-                 code: "import QtQuick 1.0\n"
-                    + "import QtMobility.organizer 1.1 \n"
+                 code: "import QtQuick 2.0\n"
+                    + "import QtAddOn.organizer 2.0 \n"
                     + "   OrganizerModel {\n"
                     + "   }"
                 },
                 {tag: "Only id property",
-                 code: "import QtQuick 1.0\n"
-                   + "import QtMobility.organizer 1.1\n"
+                 code: "import QtQuick 2.0\n"
+                   + "import QtAddOn.organizer 2.0\n"
                    + "    OrganizerModel {\n"
                    + "        id:organizerModelId\n"
                    + "     }\n"
                 },
                 {tag: "Valuetype properties",
-                 code: "import QtQuick 1.0\n"
-                   + "import QtMobility.organizer 1.1\n"
+                 code: "import QtQuick 2.0\n"
+                   + "import QtAddOn.organizer 2.0\n"
                    + "    OrganizerModel {\n"
                    + "        id:organizerModelId\n"
                    + "        manager:'memory'\n"
@@ -80,8 +80,8 @@ TestCase {
                    + "     }\n"
                 },
                 {tag: "With filter",
-                 code: "import QtQuick 1.0\n"
-                   + "import QtMobility.organizer 1.1\n"
+                 code: "import QtQuick 2.0\n"
+                   + "import QtAddOn.organizer 2.0\n"
                    + "OrganizerModel {\n"
                    + "    id:organizerModelId\n"
                    + "    filter:DetailFilter{\n"
@@ -93,7 +93,7 @@ TestCase {
                 },
                 {tag: "With invalid filter",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:InvalidFilter{\n"
@@ -103,7 +103,7 @@ TestCase {
                 },
                 {tag: "With range filter",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:DetailRangeFilter{\n"
@@ -116,7 +116,7 @@ TestCase {
                 },
                 {tag: "With changelog filter",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:ChangeLogFilter{\n"
@@ -130,7 +130,7 @@ TestCase {
                 /*
                 {tag: "With action filter",
                 code: "import Qt 4.7\n"
-                   + "import QtMobility.organizer 1.1\n"
+                   + "import QtAddOn.organizer 2.0\n"
                    + "OrganizerModel {\n"
                    + "   id:organizerModelId\n"
                    + "   filter:ActionFilter{\n"
@@ -142,7 +142,7 @@ TestCase {
                 */
                 {tag: "With collection filter",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:CollectionFilter{\n"
@@ -153,7 +153,7 @@ TestCase {
                 },
                 {tag: "With intersection filter",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:IntersectionFilter {\n"
@@ -176,7 +176,7 @@ TestCase {
                 },
                 {tag: "With fetchHint",
                  code: "import Qt 4.7 \n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "    id:organizerModelId\n"
                     + "    fetchHint:FetchHint {\n"
@@ -189,20 +189,20 @@ TestCase {
                 // Organizer Items
                 {tag: "Base organizer item",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: only id",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: Valuetype properties",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    displayLabel:'test item'\n"
@@ -212,7 +212,7 @@ TestCase {
                 },
                 {tag: "Base organizer item: default property",
                  code: "import Qt 4.7\n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    DisplayLabel {\n"
@@ -230,13 +230,13 @@ TestCase {
                 //Event
                 {tag: "Organizer event",
                  code: "import Qt 4.7 \n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "Event {\n"
                     + "}\n"
                 },
                 {tag: "Organizer event:Valuetype properties",
                  code: "import Qt 4.7 \n"
-                    + "import QtMobility.organizer 1.1\n"
+                    + "import QtAddOn.organizer 2.0\n"
                     + "Event {\n"
                     + "    id:organizerEvent\n"
                     + "    displayLabel:'meeting'\n"

@@ -875,7 +875,8 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveResponse(QOrganizerCol
             //Make the item change set
             for (int i = 0; i < jsoItemList.size(); i++) {
                 //Get delete item id
-                QString uuid = jsoItemList.at(i).toMap().value (JsonDbString::kUuidStr).toString();
+                QString uuid = QOrganizerJsonDbStr::ManagerName
+                    + jsoItemList.at(i).toMap().value (JsonDbString::kUuidStr).toString();
                 QOrganizerItemId itemId = QOrganizerItemId::fromString (uuid);
                 m_ics.insertRemovedItem (itemId);
             }

@@ -69,6 +69,7 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(QDateTime itemEndTime READ itemEndTime NOTIFY itemChanged)
     Q_PROPERTY(bool isOccurrence READ isOccurrence)
     Q_PROPERTY(bool isFloatingTime READ isFloatingTime)
+    Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
     Q_ENUMS(OrganizerItemType)
     Q_CLASSINFO("DefaultProperty", "details")
 
@@ -118,6 +119,8 @@ public:
     QString guid() const;
     void setGuid(const QString& guid);
     bool isOccurrence() const;
+    QString collectionId() const;
+    void setCollectionId(const QString& collectionId);
 
 public slots:
     void save();

@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.0
-import QtMobility.organizer 1.1
+import QtQuick 2.0
+import QtAddOn.organizer 2.0
 
 OrganizerModel {
     id:myModel;

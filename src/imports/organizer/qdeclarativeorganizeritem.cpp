@@ -468,6 +468,29 @@ bool QDeclarativeOrganizerItem::isOccurrence() const
 {
       return itemType() == QDeclarativeOrganizerItem::EventOccurrence || itemType() == QDeclarativeOrganizerItem::TodoOccurrence;
 }
+
+/*!
+    \qmlproperty string OrganizerItem::collectionId
+
+    This property holds the id of collection where the item belongs to.
+*/
+
+QString QDeclarativeOrganizerItem::collectionId() const
+{
+    return d->m_item.collectionId().toString();
+}
+
+void QDeclarativeOrganizerItem::setCollectionId(const QString &collectionId)
+{
+    QOrganizerCollectionId newCollId = QOrganizerCollectionId::fromString(collectionId);
+    // in case invalid collectionId-string, fromString() will return default collectionId-string
+    // instead of the intended collectionId-string
+    if (newCollId.toString() == collectionId && d->m_item.collectionId().toString() != collectionId) {
+        d->m_item.setCollectionId(newCollId);
+        emit itemChanged();
+    }
+}
+
 ///////////////////////QDeclarativeOrganizerEvent////////////////////////////////////
 
 /*!

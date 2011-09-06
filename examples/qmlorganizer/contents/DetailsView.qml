@@ -49,6 +49,8 @@ Rectangle
     property bool isNewItem
     property variant item
     property variant rule
+    property variant audibleReminderdetail
+    property variant visualReminderdetail
 
     onOpacityChanged: {
         // Is this view visible
@@ -95,6 +97,26 @@ Rectangle
 //            customInterval.setValue(rule.interval != 1);
             customRecurrenceLimitRow.setValue(rule != undefined && rule.limit != null);
             customLimitDateRow.dateTimeRoller.setDateTime((rule.limit == null || typeof rule.limit == "number")? null : rule.limit);
+
+            //Audible reminder
+            var audibleDetailList = item.details("audibleReminder");
+            if (audibleDetailList != undefined) {
+                audibleReminderdetail = item.detail("audibleReminder");
+                audibleReminderCheckBox.setValue(true);
+            } else {
+                audibleReminderdetail = emptyAudibleReminder;
+                audibleReminderCheckBox.setValue(false);
+            }
+
+            //Visual reminder
+            var visualDetailList = item.details("visualReminder");
+            if (visualDetailList != undefined) {
+                visualReminderdetail = item.detail("visualReminder");
+                visualReminderCheckBox.setValue(true);
+            } else {
+                visualReminderdetail = emptyVisualReminder;
+                visualReminderCheckBox.setValue(false);
+            }
         }
     }
 
@@ -102,12 +124,20 @@ Rectangle
         id: emptyRecurrenceRule
     }
 
+    AudibleReminder {
+        id: emptyAudibleReminder
+        dataUrl: "http://www.qt.nokia.com"
+    }
+
+    VisualReminder {
+        id: emptyVisualReminder
+        dataUrl: "http://www.qt.nokia.com"
+        message: "empty message"
+    }
+
     Image { source: "images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 0.8 }
     color: "#343434";
-    // TODOs:
-    //  1) add reminder details
-    //  2) add recurrences
-    //  3) write back
+
     Button {
         id: saveButton
         text: "Save & Exit"
@@ -158,9 +188,6 @@ Rectangle
     VisualItemModel {
         id:eventOccurrenceItemModel
 
-        Item {//space for the top save and delete buttons
-            height: saveButton.height
-        }
         Text {
             width: detailsView.width - 6;
             height: 30
@@ -201,7 +228,7 @@ Rectangle
        FieldRow {
             id: customDescriptionRow
             label: "Description"
-            height: 150
+            height: 80
             onNewValueChanged: {
                 item.description = customDescriptionRow.newValue;
             }
@@ -240,6 +267,7 @@ Rectangle
        RollerRow {
            id: customFrequencyRow
            label: "Frequency"
+           height: visible? 100 :0
            visible: customRecurrenceRow.newValue
            value: rule.frequency
            valueSet: ["Invalid", "Daily", "Weekly", "Monthly", "Yearly"]
@@ -252,12 +280,14 @@ Rectangle
            id: customRecurrenceLimitRow
            label: "Repeat limit"
            visible: customRecurrenceRow.newValue
+           height: visible? 60 :0
        }
 
        DateTimeRollerRow {
            id: customLimitDateRow
            label: "Repeat until"
            visible: customRecurrenceRow.newValue && customRecurrenceLimitRow.newValue
+           height: visible? 100 :0
            onRollerChanged: {
                if (customLimitDateRow.visible)
                    rule.limit = customLimitDateRow.dateTimeRoller.selectedDateTime();
@@ -267,14 +297,157 @@ Rectangle
                    rule.limit = null;
            }
        }
+
+       CheckBoxRow {
+           id: audibleReminderCheckBox
+           label: "Audible reminder"
+           onCheckBoxChanged: {
+                if (newValue) {
+                    audibleReminderdetail = emptyAudibleReminder;
+                    //This function will create new detail
+                    item.addDetail(audibleReminderdetail);
+                    audibleReminderdetail = item.detail("audibleReminder");
+                } else {
+                    var removeDetail = item.detail("audibleReminder");
+                    item.removeDetail(removeDetail);
+                }
+           }
+       }
+       Item {
+           height: visible? 220 :0
+           width: detailsView.width
+           id: audibleReminderDataRow
+           visible: audibleReminderCheckBox.newValue
+           Text {
+               id: audibleReminderDataRowText
+               anchors.top: parent.top
+               width: detailsView.width;
+               height: 20
+               text: "Audible reminder"
+               verticalAlignment: Text.AlignVCenter
+               horizontalAlignment: Text.AlignHCenter
+               color: "White";
+               font.weight: Font.Bold
+           }
+
+           FieldRow {
+               id: customAudibleReminderRepCountRow
+               anchors.top: audibleReminderDataRowText.bottom
+               label: "Repetition count"
+               value: audibleReminderdetail.repetitionCount
+               onNewValueChanged: {
+                   audibleReminderdetail.repetitionCount = newValue;
+               }
+           }
+           FieldRow {
+                id: customAudibleReminderRepDelayRow
+                anchors.top: customAudibleReminderRepCountRow.bottom
+                label: "Repetition delay"
+                value: audibleReminderdetail.repetitionDelay
+                onNewValueChanged: {
+                    audibleReminderdetail.repetitionDelay = newValue;
+                }
+            }
+            FieldRow {
+                id: customAudibleReminderSecBeforeStartRow
+                anchors.top: customAudibleReminderRepDelayRow.bottom
+                label: "Seconds before start"
+                value: audibleReminderdetail.secondsBeforeStart
+                onNewValueChanged: {
+                    audibleReminderdetail.secondsBeforeStart = newValue;
+                }
+            }
+            FieldRow {
+                anchors.top: customAudibleReminderSecBeforeStartRow.bottom
+                label: "Data url"
+                value: audibleReminderdetail.dataUrl
+                onNewValueChanged: {
+                    audibleReminderdetail.dataUrl = newValue;
+                }
+            }
+        }
+
+        CheckBoxRow {
+            id:  visualReminderCheckBox
+            label: "Visual reminder"
+            onCheckBoxChanged: {
+                if (newValue) {
+                    visualReminderdetail = emptyVisualReminder;
+                    item.addDetail(visualReminderdetail);
+                    visualReminderdetail = item.detail("visualReminder");
+                } else {
+                    var removeDetail = item.detail("visualReminder");
+                    item.removeDetail(removeDetail);
+                }
+            }
+        }
+        Item {
+            height: visible? 260 : 0
+            width: detailsView.width
+            id:  visualReminderDataRow
+            visible:  visualReminderCheckBox.newValue
+            Text {
+                id:  visualReminderDataRowText
+                anchors.top: parent.top
+                width: detailsView.width;
+                height: 20
+                text: "Visual reminder"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                color: "White";
+                font.weight: Font.Bold
+            }
+            FieldRow {
+                id: customVisualReminderRepCountRow
+                anchors.top:  visualReminderDataRowText.bottom
+                label: "Repetition count"
+                value:  visualReminderdetail.repetitionCount
+                onNewValueChanged: {
+                    visualReminderdetail.repetitionCount = newValue;
+                }
+            }
+            FieldRow {
+                id: customVisualReminderRepDelayRow
+                anchors.top: customVisualReminderRepCountRow.bottom
+                label: "Repetition delay"
+                value:  visualReminderdetail.repetitionDelay
+                onNewValueChanged: {
+                     visualReminderdetail.repetitionDelay = newValue;
+                }
+            }
+            FieldRow {
+                id: customVisualReminderSecBeforeStartRow
+                anchors.top: customVisualReminderRepDelayRow.bottom
+                label: "Seconds before start"
+                value: visualReminderdetail.secondsBeforeStart
+                onNewValueChanged: {
+                    visualReminderdetail.secondsBeforeStart = newValue;
+                }
+            }
+            FieldRow {
+                id: customVisualReminderDataUrlRow
+                anchors.top: customVisualReminderSecBeforeStartRow.bottom
+                label: "Data url"
+                value: visualReminderdetail.dataUrl
+                onNewValueChanged: {
+                    visualReminderdetail.dataUrl = newValue;
+                }
+            }
+            FieldRow {
+                anchors.top: customVisualReminderDataUrlRow.bottom
+                label: "Message"
+                value: visualReminderdetail.message
+                onNewValueChanged: {
+                    visualReminderdetail.message = newValue;
+                }
+            }
+        }
+
     }
 
     //todo
     VisualItemModel {
         id:todoItemModel
-        Item {//space for the top save and delete buttons
-            height: saveButton.height
-        }
         Text {
             width: detailsView.width - 6;
             height: 30

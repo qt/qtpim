@@ -203,7 +203,7 @@ void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req
     }
     case QOrganizerAbstractRequest::CollectionRemoveRequest:
     {
-        handleCollectionRemoveRequest (static_cast<QOrganizerCollectionRemoveRequest*>(req));
+        handleCollectionRemoveRequest(static_cast<QOrganizerCollectionRemoveRequest*>(req));
         break;
     }
 
@@ -317,12 +317,10 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             errorFound = true;
 
         //Check the collection id validation
-        if (!item.collectionId().isNull())
-        {
+        if (!item.collectionId().isNull()) {
             QOrganizerCollectionId collectionID = item.collectionId();
             //If we could find the collection id in collection id list
-            if (!m_collectionsIdList.contains(collectionID))
-            {
+            if (!m_collectionsIdList.contains(collectionID)) {
                 //Collection id is invalid
                 error = QOrganizerManager::BadArgumentError;
                 errorFound = true;
@@ -697,15 +695,14 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveResponse(QOrganizerItemRemov
     //Get the number of items that was removed from JSONDB
     int delCount = object.toMap().value (JsonDbString::kCountStr).toInt ();
     if (QOrganizerManager::NoError == error) {
-         //Check the count for the result. the count may > 0
-         if ( delCount > 1)
-         {
+        //Check the count for the result. the count may > 0
+        if (delCount > 1) {
             //More than 1 item delete from jsondb!! same uuid refers to multipul items!
             QString warning = QOrganizerJsonDbStr::WarningMoreItemDelete;
             qWarning() << delCount << warning;
-         } else {// successfull delete
+        } else {// successfull delete
             m_ics.insertRemovedItem(removeReq->itemIds().at(index));
-         }
+        }
     } else {
         //something wrong with jsondb request and update the error map
         m_requestMgr->updateRequestData(removeReq, error, index);
@@ -921,35 +918,35 @@ QOrganizerManager::Error QOrganizerJsonDbRequestThread::convertJsondbErrorToOrga
 {
     QOrganizerManager::Error error;
     switch (jsonErrorCode) {
-        case JsonDbError::NoError:
-            error = QOrganizerManager::NoError;
-            break;
+    case JsonDbError::NoError:
+        error = QOrganizerManager::NoError;
+        break;
 
-        case JsonDbError::DatabaseError:
-            error = QOrganizerManager::UnspecifiedError;
-            break;
+    case JsonDbError::DatabaseError:
+        error = QOrganizerManager::UnspecifiedError;
+        break;
 
-        case JsonDbError::QuotaExceeded:
-            error = QOrganizerManager::OutOfMemoryError;
-            break;
+    case JsonDbError::QuotaExceeded:
+        error = QOrganizerManager::OutOfMemoryError;
+        break;
 
-        case JsonDbError::OperationNotPermitted:
-            error = QOrganizerManager::PermissionsError;
-            break;
+    case JsonDbError::OperationNotPermitted:
+        error = QOrganizerManager::PermissionsError;
+        break;
 
-        case JsonDbError::InvalidRequest:
-            // update request with invalid uuid
-            error = QOrganizerManager::DoesNotExistError;
-            break;
+    case JsonDbError::InvalidRequest:
+        // update request with invalid uuid
+        error = QOrganizerManager::DoesNotExistError;
+        break;
 
-        case JsonDbError::MissingObject:
-            // update request with invalid uuid
-            error = QOrganizerManager::DoesNotExistError;
-            break;
+    case JsonDbError::MissingObject:
+        // update request with invalid uuid
+        error = QOrganizerManager::DoesNotExistError;
+        break;
 
-        default:
-            error = QOrganizerManager::UnspecifiedError;
-            break;
+    default:
+        error = QOrganizerManager::UnspecifiedError;
+        break;
     }
     return error;
 }
@@ -1028,6 +1025,53 @@ bool QOrganizerJsonDbRequestThread::convertJsonDbObjectToItem(const QVariantMap&
         locationDetail.setLongitude(longitude);
 
         item->saveDetail(&locationDetail);
+    }
+
+    //Visual reminder
+    QVariantMap jsondbVisualReminder = object.value(QOrganizerJsonDbStr::ItemVisualReminder).toMap();
+    if (!jsondbVisualReminder.isEmpty()) {
+        QOrganizerItemVisualReminder visualReminder;
+        convertJsonDbObjectToItemReminderDetailCommon(jsondbVisualReminder, &visualReminder);
+        QString message = jsondbVisualReminder.value(QOrganizerJsonDbStr::ItemVisualReminderMessage).toString();
+        if (!message.isEmpty())
+            visualReminder.setMessage(message);
+        QString dataUrlStr = jsondbVisualReminder.value(QOrganizerJsonDbStr::ItemVisualReminderDataUrl).toString();
+        if (!dataUrlStr.isEmpty())
+            visualReminder.setDataUrl(QUrl(dataUrlStr));
+        item->saveDetail(&visualReminder);
+    }
+    //Audible reminder
+    QVariantMap jsondbAudibleReminder = object.value(QOrganizerJsonDbStr::ItemAudibleReminder).toMap();
+    if (!jsondbAudibleReminder.isEmpty()) {
+        QOrganizerItemAudibleReminder audibleReminder;
+        convertJsonDbObjectToItemReminderDetailCommon(jsondbAudibleReminder, &audibleReminder);
+        QString dataUrlStr = jsondbAudibleReminder.value(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl).toString();
+        if (!dataUrlStr.isEmpty()) {
+            QUrl url(dataUrlStr);
+            audibleReminder.setDataUrl(url);
+        }
+        item->saveDetail(&audibleReminder);
+    }
+    //Email reminder
+    QVariantMap jsondbEmailReminder = object.value(QOrganizerJsonDbStr::ItemEmailReminder).toMap();
+    if (!jsondbEmailReminder.isEmpty()) {
+        QOrganizerItemEmailReminder emailReminder;
+        convertJsonDbObjectToItemReminderDetailCommon(jsondbEmailReminder, &emailReminder);
+        QString subject = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderSubject).toString();
+        if (!subject.isEmpty())
+            emailReminder.setValue(QOrganizerItemEmailReminder::FieldSubject, subject);
+        QString body = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderBody).toString();
+        if (!body.isEmpty())
+            emailReminder.setValue(QOrganizerItemEmailReminder::FieldBody, body);
+        if (jsondbEmailReminder.contains(QOrganizerJsonDbStr::ItemEmailReminderAttachments)) {
+            QVariantList attachments = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderAttachments).toList();
+            emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
+        }
+        if (jsondbEmailReminder.contains(QOrganizerJsonDbStr::ItemEmailReminderRecipients)) {
+            QStringList recipients = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderRecipients).toStringList();
+            emailReminder.setRecipients(recipients);
+        }
+        item->saveDetail(&emailReminder);
     }
 
     //Get "_type" value
@@ -1161,7 +1205,25 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
     if (!priorityDetail.isEmpty()) {
         object->insert(QOrganizerJsonDbStr::ItemPriority, convertEnumToJsonDbPriority(priorityDetail.priority()));
     }
-
+    //Audio,visual,email reminder details
+    QOrganizerItemVisualReminder visualReminder = item.detail(QOrganizerItemVisualReminder::DefinitionName);
+    if (!visualReminder.isEmpty()) {
+        QVariantMap reminderObject;
+        convertItemReminderDetailToJsonDbObject(visualReminder, reminderObject);
+        object->insert(QOrganizerJsonDbStr::ItemVisualReminder, reminderObject);
+    }
+    QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
+    if (!audibleReminder.isEmpty()) {
+        QVariantMap reminderObject;
+        convertItemReminderDetailToJsonDbObject(audibleReminder, reminderObject);
+        object->insert(QOrganizerJsonDbStr::ItemAudibleReminder, reminderObject);
+    }
+    QOrganizerItemEmailReminder emailReminder = item.detail(QOrganizerItemEmailReminder::DefinitionName);
+    if (!emailReminder.isEmpty()) {
+        QVariantMap reminderObject;
+        convertItemReminderDetailToJsonDbObject(emailReminder, reminderObject);
+        object->insert(QOrganizerJsonDbStr::ItemEmailReminder, reminderObject);
+    }
     if (!recurrenceRules.isEmpty()) {
         QVariantList recurrenceRulesList;
         foreach (QOrganizerRecurrenceRule recurrenceRule, recurrenceRules) {
@@ -1392,25 +1454,83 @@ QString QOrganizerJsonDbRequestThread::filterToJsondbQuery (const QOrganizerItem
 {
     QString jsonDbQueryStr;
     switch (filter.type()) {
-        case QOrganizerItemFilter::CollectionFilter: {
-                const QOrganizerItemCollectionFilter cf(filter);
-                const QSet<QOrganizerCollectionId>& ids = cf.collectionIds();
-                //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
-                jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
-                foreach (const QOrganizerCollectionId id, ids) {
-                    jsonDbQueryStr += id.toString().remove (QOrganizerJsonDbStr::ManagerName);
-                    jsonDbQueryStr += "\",\""; // ","
-                }
-                jsonDbQueryStr += "]]";
-                //change last "collection_uuid","]] to "collection_uuid"]]
-                jsonDbQueryStr.replace(",\"]]", "]]");
-            }
-            break;
-        default:
-            break;
+    case QOrganizerItemFilter::CollectionFilter: {
+        const QOrganizerItemCollectionFilter cf(filter);
+        const QSet<QOrganizerCollectionId>& ids = cf.collectionIds();
+        //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
+        jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
+        foreach (const QOrganizerCollectionId id, ids) {
+            jsonDbQueryStr += id.toString().remove (QOrganizerJsonDbStr::ManagerName);
+            jsonDbQueryStr += "\",\""; // ","
+        }
+        jsonDbQueryStr += "]]";
+        //change last "collection_uuid","]] to "collection_uuid"]]
+        jsonDbQueryStr.replace(",\"]]", "]]");
+        break;
+    }
+    default:
+        break;
     }
 
     return jsonDbQueryStr;
+}
+
+void QOrganizerJsonDbRequestThread::convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const
+{
+    //Item reminder common part
+    if (itemReminder.hasValue(itemReminder.FieldSecondsBeforeStart))
+        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderSecBeforeStart, itemReminder.secondsBeforeStart());
+    if (itemReminder.hasValue(itemReminder.FieldRepetitionCount))
+        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderRepCount, itemReminder.repetitionCount());
+    if (itemReminder.hasValue(itemReminder.FieldRepetitionDelay))
+        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderRepDelay, itemReminder.repetitionDelay());
+
+    //Audio, visual, Email sepcified properties
+    switch (itemReminder.reminderType()) {
+    case QOrganizerItemReminder::NoReminder :
+        break;
+    case QOrganizerItemReminder::VisualReminder : {
+        if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldMessage))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderMessage, itemReminder.value(QOrganizerItemVisualReminder::FieldMessage));
+        if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldDataUrl))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderDataUrl, itemReminder.value(QOrganizerItemVisualReminder::FieldDataUrl));
+        break;
+    }
+    case QOrganizerItemReminder::AudibleReminder : {
+        if (itemReminder.hasValue(QOrganizerItemAudibleReminder::FieldDataUrl))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl, itemReminder.value(QOrganizerItemAudibleReminder::FieldDataUrl));
+        break;
+    }
+    case QOrganizerItemReminder::EmailReminder : {
+        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldSubject))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderSubject, itemReminder.value(QOrganizerItemEmailReminder::FieldSubject));
+        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldBody))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderBody, itemReminder.value(QOrganizerItemEmailReminder::FieldBody));
+        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldAttachments))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderAttachments, itemReminder.variantValue(QOrganizerItemEmailReminder::FieldAttachments));//QVariantList
+        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldRecipients))
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderRecipients, itemReminder.variantValue(QOrganizerItemEmailReminder::FieldRecipients));//QStringList
+        break;
+    }
+    }
+}
+
+void QOrganizerJsonDbRequestThread::convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const
+{
+    //Common details exist in all reminder types
+    if (object.contains(QOrganizerJsonDbStr::ItemReminderSecBeforeStart)) {
+        int secBeforeStart = object.value(QOrganizerJsonDbStr::ItemReminderSecBeforeStart).toInt();
+        itemReminder->setSecondsBeforeStart(secBeforeStart);
+    }
+
+    if (object.contains(QOrganizerJsonDbStr::ItemReminderRepCount)) {
+        int repetitionCount = object.value(QOrganizerJsonDbStr::ItemReminderRepCount).toInt();
+        itemReminder->setValue(QOrganizerItemReminder::FieldRepetitionCount, repetitionCount);
+    }
+    if (object.contains(QOrganizerJsonDbStr::ItemReminderRepDelay)) {
+        int repetitionDelay = object.value(QOrganizerJsonDbStr::ItemReminderRepDelay).toInt();
+        itemReminder->setValue(QOrganizerItemReminder::FieldRepetitionDelay, repetitionDelay);
+    }
 }
 
 QOrganizerItemPriority::Priority QOrganizerJsonDbRequestThread::convertJsonDbPriorityToEnum(const QString& jsonPriority) const

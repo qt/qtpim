@@ -73,6 +73,9 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemComments,     "comments");
     Q_DECLARE_LATIN1_CONSTANT(ItemLocation,     "location");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriority,     "Priority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminder, "visualReminder");
+    Q_DECLARE_LATIN1_CONSTANT(ItemAudibleReminder,"audibleReminder");
+    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminder,  "emailReminder");
 
     //Location sub properties
     Q_DECLARE_LATIN1_CONSTANT(ItemLocationLabel,    "label");
@@ -90,6 +93,21 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVerylowPriority,      "VeryLowPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelylowPriority, "ExtremelyLowPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityLowestPriority,       "LowestPriority");
+
+    //Item reminder properties
+    Q_DECLARE_LATIN1_CONSTANT(ItemReminderSecBeforeStart,  "secondsBeforeStart"); //SecondsBeforeStart
+    Q_DECLARE_LATIN1_CONSTANT(ItemReminderRepCount,        "repetitionCount"); //RepetitionCount
+    Q_DECLARE_LATIN1_CONSTANT(ItemReminderRepDelay,        "repetitionDelay"); //RepetitionDelay
+    //Item audible remibder
+    Q_DECLARE_LATIN1_CONSTANT(ItemAudibleReminderDataUrl,  "dataUrl");
+    //Item email reminder
+    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderSubject,    "subject");
+    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderBody,       "body");
+    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderAttachments,"attachments");
+    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderRecipients, "recipients");
+    //Item visual reminder
+    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminderMessage,   "message");
+    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminderDataUrl,   "dataUrl");
 
     //Event item
     Q_DECLARE_LATIN1_CONSTANT(Event, "com.nokia.mp.organizer.Event");

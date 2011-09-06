@@ -635,10 +635,10 @@ QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganiz
 }
 
 /*!
-  \qmlmethod OrganizerModel::fetchItems(list<QString> itemIds)
-  Fetch asynchronously a list of organizer items from the organizer store by given \a itemIds.
+  \qmlmethod OrganizerModel::fetchItems(QStringList itemIds)
+  Fetch a list of organizer items from the organizer store by given \a itemIds.
   */
-void QDeclarativeOrganizerModel::fetchItems(const QList<QString>& itemIds)
+void QDeclarativeOrganizerModel::fetchItems(const QStringList& itemIds)
 {
     d->m_updatedItemIds = itemIds;
     d->m_updatePending = true;
@@ -867,7 +867,7 @@ void QDeclarativeOrganizerModel::removeItem(const QString& id)
 
   \since organizer 1.1.1
   */
-void QDeclarativeOrganizerModel::removeItems(const QList<QString>& ids)
+void QDeclarativeOrganizerModel::removeItems(const QStringList& ids)
 {
     QOrganizerItemRemoveRequest* req = new QOrganizerItemRemoveRequest(this);
     req->setManager(d->m_manager);

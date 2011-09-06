@@ -129,9 +129,9 @@ public:
     QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections();
 
     Q_INVOKABLE void removeItem(const QString& id);
-    Q_INVOKABLE void removeItems(const QList<QString>& ids);
+    Q_INVOKABLE void removeItems(const QStringList& ids);
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
-    Q_INVOKABLE void fetchItems(const QList<QString>& ids);
+    Q_INVOKABLE void fetchItems(const QStringList& ids);
     Q_INVOKABLE void removeCollection(const QString& collectionId);
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
     Q_INVOKABLE void fetchCollections();

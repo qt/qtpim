@@ -57,7 +57,7 @@ class QDeclarativeOrganizerItemDetail;
 class QDeclarativeOrganizerItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> details READ details NOTIFY itemChanged)
+    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails READ itemDetails NOTIFY itemChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY itemChanged)
     Q_PROPERTY (QString itemId READ itemId NOTIFY itemChanged)
     Q_PROPERTY (QString type READ type NOTIFY itemChanged)
@@ -71,7 +71,7 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(bool isFloatingTime READ isFloatingTime)
     Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
     Q_ENUMS(OrganizerItemType)
-    Q_CLASSINFO("DefaultProperty", "details")
+    Q_CLASSINFO("DefaultProperty", "itemDetails")
 
 public:
     enum OrganizerItemType {
@@ -104,7 +104,7 @@ public:
     void setDetailDefinitions(const QMap<QString, QOrganizerItemDetailDefinition>& defs);
     QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions() const;
 
-    QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> details();
+    QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails();
 
     Q_INVOKABLE QVariant detail(const QString& name);
     Q_INVOKABLE QVariant details(const QString& name);

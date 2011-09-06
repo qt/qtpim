@@ -54,6 +54,9 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFields, "customFields");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemComments,     "comments");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocation,     "location");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriority,     "Priority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminder, "visualReminder");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminder,"audibleReminder");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminder,  "emailReminder");
 
 //Location sub properties
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLabel,    "label");
@@ -71,6 +74,21 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowPriority,          
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVerylowPriority,      "VeryLowPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelylowPriority, "ExtremelyLowPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowestPriority,       "LowestPriority");
+
+//Item reminder properties
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderSecBeforeStart,  "secondsBeforeStart");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderRepCount,        "repetitionCount");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderRepDelay,        "repetitionDelay");
+//Item audible remibder
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl,  "dataUrl");
+//Item email reminder
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderSubject,    "subject");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderBody,       "body");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderAttachments,"attachments");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderRecipients, "recipients");
+//Item visual reminder
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminderMessage,   "message");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminderDataUrl,   "dataUrl");
 
 //Event item
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::Event, "com.nokia.mp.organizer.Event");

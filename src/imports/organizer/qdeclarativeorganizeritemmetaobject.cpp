@@ -255,6 +255,7 @@ void QDeclarativeOrganizerItemMetaObject::setItem(const QOrganizerItem& item)
 
 QOrganizerItem QDeclarativeOrganizerItemMetaObject::item()
 {
+    m_item.clearDetails();
     foreach ( QDeclarativeOrganizerItemDetail* cd, m_details) {
        QOrganizerItemDetail detail = cd->detail();
        m_item.saveDetail(&detail);

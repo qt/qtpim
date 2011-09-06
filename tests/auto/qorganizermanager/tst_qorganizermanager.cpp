@@ -205,6 +205,7 @@ private slots:
     void changeSet();
     void fetchHint();
     void testFilterFunction();
+    void testReminder();
 #if defined(QT_NO_JSONDB)
     void testItemOccurrences();
     void errorSemantics();
@@ -249,6 +250,7 @@ private slots:
     void recurrence_data() {addManagers();}
 #endif
     void idComparison_data() {addManagers();}
+    void testReminder_data() {addManagers();}
 #if defined(QT_NO_JSONDB)
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
@@ -4591,6 +4593,147 @@ void tst_QOrganizerManager::collections()
     }
 }
 
+void tst_QOrganizerManager::testReminder()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> oim(QOrganizerManager::fromUri(uri));
+
+    /*audible reminder test*/
+    QOrganizerItemAudibleReminder audioReminder;
+    QOrganizerEvent oi;
+    oi.setDisplayLabel("test reminder");
+    audioReminder.setRepetition(3, 100);
+    QVERIFY(oi.saveDetail(&audioReminder));
+    QVERIFY(oim->saveItem (&oi));
+    QList<QOrganizerItem> fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(oi));
+
+    //Test SecondsBeforeStart properties
+    audioReminder.setSecondsBeforeStart(30); // reminder, 30 seconds before the item is due to start.
+    QVERIFY(oi.saveDetail(&audioReminder));
+    QVERIFY(oim->saveItem (&oi));
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(oi));
+
+    // update
+    audioReminder.setSecondsBeforeStart(300);
+    audioReminder.setDataUrl(QUrl("http://www.test.com"));
+    QVERIFY(audioReminder.dataUrl() == QUrl("http://www.test.com"));
+    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() != audioReminder);
+    QVERIFY(oi.saveDetail(&audioReminder));
+    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 1); // should update, not add another
+    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() == audioReminder);
+    oim->saveItem (&oi);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(oi));
+
+    // remove
+    QVERIFY(oi.removeDetail(&audioReminder));
+    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 0);
+    oim->saveItem (&oi);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(oi));
+
+    /*Email reminder test*/
+    QOrganizerItemEmailReminder emailReminder;
+    QOrganizerEvent emailEvent;
+    QVERIFY(emailReminder.reminderType() == QOrganizerItemReminder::EmailReminder);
+    emailReminder.setRepetition(3, 100);
+
+    QVERIFY(emailEvent.saveDetail(&emailReminder));
+    QVERIFY(oim->saveItem (&emailEvent));
+    fetchedItems = oim->items();
+
+    QVERIFY(fetchedItems.contains(emailEvent));
+
+    emailReminder.setSecondsBeforeStart(30); // reminder, 30 seconds before the item is due to start.
+    QVERIFY(emailReminder.secondsBeforeStart() == 30);
+    QVERIFY(emailEvent.saveDetail(&emailReminder));
+    QVERIFY(oim->saveItem (&emailEvent));
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(emailEvent));
+
+    // update
+    emailReminder.setSecondsBeforeStart(300);
+    emailReminder.setContents("subject", "body", QVariantList());
+    emailReminder.setRecipients(QStringList() << "recipient" << "other recipient");
+    QVERIFY(emailReminder.subject() == QString("subject"));
+    QVERIFY(emailReminder.body() == QString("body"));
+    QVERIFY(emailReminder.attachments() == QVariantList());
+    QVERIFY(emailReminder.recipients() == (QStringList() << "recipient" << "other recipient"));
+    QVERIFY(emailEvent.detail<QOrganizerItemEmailReminder>() != emailReminder);
+    QVERIFY(emailEvent.saveDetail(&emailReminder));
+    oim->saveItem (&emailEvent);
+    fetchedItems = oim->items();
+
+//    dumpOrganizerItem (emailEvent);
+//    foreach (QOrganizerItem item, fetchedItems) {
+//        if (emailEvent.id() == item.id())
+//            dumpOrganizerItem (item);
+//    }
+
+    QVERIFY(fetchedItems.contains(emailEvent));
+
+    // remove
+    QVERIFY(emailEvent.removeDetail(&emailReminder));
+    QVERIFY(emailEvent.details<QOrganizerItemEmailReminder>().size() == 0);
+    oim->saveItem (&emailEvent);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(emailEvent));
+
+    /*Visual reminder test*/
+    QOrganizerItemVisualReminder visualReminder;
+    QOrganizerEvent visualEvent;
+    QVERIFY(visualReminder.reminderType() == QOrganizerItemReminder::VisualReminder);
+    visualReminder.setRepetition(3, 100);
+
+    QVERIFY(visualEvent.saveDetail(&visualReminder));
+    QVERIFY(oim->saveItem (&visualEvent));
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(visualEvent));
+
+    visualReminder.setSecondsBeforeStart(30); // reminder, 30 seconds before the item is due to start.
+    QVERIFY(visualReminder.secondsBeforeStart() == 30);
+    QVERIFY(visualEvent.saveDetail(&visualReminder));
+    QVERIFY(oim->saveItem (&visualEvent));
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(visualEvent));
+
+    // update
+    visualReminder.setSecondsBeforeStart(300);
+    visualReminder.setMessage("test");
+    visualReminder.setDataUrl(QUrl("http://www.test.com"));
+    QVERIFY(visualReminder.message() == QString("test"));
+    QVERIFY(visualReminder.dataUrl() == QUrl("http://www.test.com"));
+    QVERIFY(visualEvent.detail<QOrganizerItemVisualReminder>() != visualReminder);
+    QVERIFY(visualEvent.saveDetail(&visualReminder));
+    oim->saveItem (&visualEvent);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(visualEvent));
+
+    // remove
+    QVERIFY(visualEvent.removeDetail(&visualReminder));
+    QVERIFY(visualEvent.details<QOrganizerItemVisualReminder>().size() == 0);
+    oim->saveItem (&visualEvent);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(visualEvent));
+
+    /*Event with more reminder*/
+    QOrganizerEvent bigEvent;
+    bigEvent.saveDetail(&audioReminder);
+    bigEvent.saveDetail(&visualReminder);
+    bigEvent.saveDetail(&emailReminder);
+    oim->saveItem (&bigEvent);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(bigEvent));
+
+    // remove
+    QVERIFY(bigEvent.removeDetail(&visualReminder));
+    oim->saveItem (&bigEvent);
+    fetchedItems = oim->items();
+    QVERIFY(fetchedItems.contains(bigEvent));
+
+}
 #if defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {
     Q_OBJECT;

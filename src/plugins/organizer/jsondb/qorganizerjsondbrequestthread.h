@@ -116,6 +116,8 @@ private:
     bool convertCollectionToJsonDbObject(const QOrganizerCollection& collection, QVariantMap* object) const;
     void convertJsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const;
     void convertRecurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const;
+    void convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
+    void convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
 
     //Interpret the filter to Jsondb query string
     QString filterToJsondbQuery(const QOrganizerItemFilter filter);

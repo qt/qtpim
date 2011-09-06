@@ -255,17 +255,17 @@ QVariant QDeclarativeOrganizerItem::detail(const QString& name)
 }
 
 /*!
-    \qmlproperty list<Detail> OrganizerItem::details
+    \qmlproperty list<Detail> OrganizerItem::itemDetails
 
     This property holds the list of \l Detail elements that the organizer item has.
 */
-QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> QDeclarativeOrganizerItem::details()
+QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> QDeclarativeOrganizerItem::itemDetails()
 {
     return d->details(QString()).value< QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> >();
 }
 
 /*!
-  \qmlmethod list<Detail> OrganizerItem::details(name)
+  \qmlmethod list<Detail> OrganizerItem::detailsLists(name)
 
     This method returns a list of details which detail name is \a name.
   */

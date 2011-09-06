@@ -40,10 +40,9 @@
 ****************************************************************************/
 
 #include "qversitorganizerimporter_p.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversitorganizer_p.h"
-#include "qtorganizer.h"
+#include <qversitdocument.h>
+#include <qversitproperty.h>
+#include <qorganizer.h>
 #include "qversitorganizerdefs_p.h"
 #include "qversitorganizerpluginloader_p.h"
 

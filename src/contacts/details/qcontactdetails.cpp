@@ -38,15 +38,16 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #include <QByteArray>
 #include <QUrl>
 #include <QFile>
 #include <QPixmap>
 #include <QImage>
-#include "qcontactmanager.h"
-#include "qtcontacts.h"
 
-#include "qcontactdetails.h"
+#include <qcontactmanager.h>
+#include <qcontacts.h>
+#include <qcontactdetails.h>
 
 QTPIM_BEGIN_NAMESPACE
 

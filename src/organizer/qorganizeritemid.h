@@ -42,11 +42,13 @@
 #ifndef QORGANIZERITEMID_H
 #define QORGANIZERITEMID_H
 
-#include <QMap>
-#include <QString>
-#include <QSharedDataPointer>
+#include <qorganizerglobal.h>
+#include <qorganizeritemengineid.h>
 
-#include <qtorganizerglobal.h>
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qshareddata.h>
 
 class QDataStream;
 
@@ -64,7 +66,6 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId& id);
 #endif
 
 class QOrganizerManagerEngine;
-class QOrganizerItemEngineId;
 
 class Q_ORGANIZER_EXPORT QOrganizerItemId
 {
@@ -100,7 +101,7 @@ private:
 QTPIM_END_NAMESPACE
 
 Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerItemId), Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerItemId))
+Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerItemId));
 
 #endif
 

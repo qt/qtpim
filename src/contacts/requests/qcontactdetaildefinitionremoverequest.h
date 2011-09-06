@@ -42,8 +42,8 @@
 #ifndef QCONTACTDETAILDEFINITIONREMOVEREQUEST_H
 #define QCONTACTDETAILDEFINITIONREMOVEREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
 
 #include <QStringList>
 

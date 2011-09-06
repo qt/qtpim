@@ -48,7 +48,7 @@
 #include <QSharedDataPointer>
 #include <QVariant>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizeritemdetailfielddefinition.h"
 
 class QDataStream;

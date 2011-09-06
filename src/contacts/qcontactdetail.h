@@ -43,7 +43,8 @@
 #ifndef QCONTACTDETAIL_H
 #define QCONTACTDETAIL_H
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
+#include <qlatin1constant.h>
 
 #include <QSharedDataPointer>
 #include <QStringList>

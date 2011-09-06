@@ -42,7 +42,7 @@
 #ifndef QORGANIZERTODOOCCURRENCE_H
 #define QORGANIZERTODOOCCURRENCE_H
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizertodoprogress.h"
 
 QTPIM_BEGIN_NAMESPACE

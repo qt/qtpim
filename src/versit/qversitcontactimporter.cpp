@@ -39,12 +39,11 @@
 **
 ****************************************************************************/
 
-#include "qcontactmanagerengine.h"
-#include "qversitcontactimporter.h"
+#include <qcontactmanagerengine.h>
+#include <qversitcontactimporter.h>
 #include "qversitcontactimporter_p.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversit_p.h"
+#include <qversitdocument.h>
+#include <qversitproperty.h>
 
 QTPIM_BEGIN_NAMESPACE
 

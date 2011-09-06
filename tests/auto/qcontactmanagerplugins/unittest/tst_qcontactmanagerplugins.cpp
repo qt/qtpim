@@ -46,7 +46,7 @@
 
 #include <QtTest/QtTest>
 
-#include "qtcontacts.h"
+#include <qcontacts.h>
 
 #include <QApplication>
 QTPIM_USE_NAMESPACE

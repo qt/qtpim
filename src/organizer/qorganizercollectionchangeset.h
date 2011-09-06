@@ -43,12 +43,10 @@
 #ifndef QORGANIZERCOLLECTIONCHANGESET_H
 #define QORGANIZERCOLLECTIONCHANGESET_H
 
-#include "qtorganizerglobal.h"
-#include "qorganizercollectionid.h"
+#include <qorganizerglobal.h>
+#include <qorganizercollectionid.h>
 
-#include <QSet>
-#include <QPair>
-#include <QSharedDataPointer>
+#include <QtCore/qset.h>
 
 QTPIM_BEGIN_NAMESPACE
 

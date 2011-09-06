@@ -45,9 +45,9 @@
 
 #include <QString>
 
-#include "qtcontactsglobal.h"
-#include "qcontactdetail.h"
-#include "qcontactfilter.h"
+#include <qcontactsglobal.h>
+#include <qcontactdetail.h>
+#include <qcontactfilter.h>
 
 QTPIM_BEGIN_NAMESPACE
 

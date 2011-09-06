@@ -41,7 +41,7 @@
 
 #include <QtTest/QtTest>
 #include <QDateTime>
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "../qorganizermanagerdataholder.h"
 
 QTPIM_USE_NAMESPACE

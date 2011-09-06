@@ -39,12 +39,11 @@
 **
 ****************************************************************************/
 
-#include "qversit_p.h"
 #include "qversitwriter_p.h"
 #include "qversitdocumentwriter_p.h"
 #include "qvcard21writer_p.h"
 #include "qvcard30writer_p.h"
-#include "versitutils_p.h"
+#include "qversitutils_p.h"
 
 #include <QStringList>
 #include <QMutexLocker>

@@ -42,6 +42,7 @@
 #ifndef QVERSITTIMEZONEHANDLER_H
 #define QVERSITTIMEZONEHANDLER_H
 
+#include <qversitorganizerglobal.h>
 #include <QDateTime>
 
 QTPIM_BEGIN_NAMESPACE

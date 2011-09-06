@@ -41,7 +41,7 @@
 
 #include <QtTest/QtTest>
 
-#include "qtcontacts.h"
+#include <qcontacts.h>
 #include <QSet>
 
 //TESTED_COMPONENT=src/contacts

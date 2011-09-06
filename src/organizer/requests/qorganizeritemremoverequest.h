@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMREMOVEREQUEST_H
 #define QORGANIZERITEMREMOVEREQUEST_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemfilter.h"
 

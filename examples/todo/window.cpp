@@ -40,7 +40,7 @@
 
 #include <QtGui>
 
-#include <qtorganizer.h>
+#include <qorganizer.h>
 
 #include "window.h"
 #include "todoeditor.h"

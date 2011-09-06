@@ -54,7 +54,6 @@
 //
 
 #include "qversitdocumentwriter_p.h"
-#include "qversit_p.h"
 
 QTPIM_BEGIN_NAMESPACE
 

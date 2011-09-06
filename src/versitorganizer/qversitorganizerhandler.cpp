@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include "qversitorganizerhandler.h"
+#include <qversitorganizerhandler.h>
 
 QTPIM_USE_NAMESPACE
 

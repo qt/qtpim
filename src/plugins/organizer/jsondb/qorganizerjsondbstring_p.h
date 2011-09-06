@@ -42,7 +42,8 @@
 #ifndef QORGANIZERJSONDBSTRING_H
 #define QORGANIZERJSONDBSTRING_H
 
-#include <qtorganizerglobal.h>
+#include <qorganizerglobal.h>
+#include <qlatin1constant.h>
 
 QTPIM_USE_NAMESPACE
 

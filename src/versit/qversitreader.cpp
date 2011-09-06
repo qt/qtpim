@@ -40,10 +40,9 @@
 ****************************************************************************/
 
 
-#include "qversitreader.h"
+#include <qversitreader.h>
 #include "qversitreader_p.h"
-#include "versitutils_p.h"
-#include "qversit_p.h"
+#include "qversitutils_p.h"
 
 #include <QTextCodec>
 #include <QMutexLocker>

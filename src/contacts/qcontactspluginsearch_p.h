@@ -38,10 +38,11 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef QMOBILITYPLUGINSEARCH_H
-#define QMOBILITYPLUGINSEARCH_H
 
-#include "qpim_p.h"
+#ifndef QCONTACTSPLUGINSEARCH_H
+#define QCONTACTSPLUGINSEARCH_H
+
+#include <qcontactsglobal.h>
 
 #include <QCoreApplication>
 #include <QStringList>
@@ -171,4 +172,4 @@ inline QStringList mobilityPlugins(const QString& plugintype)
 
 QTPIM_END_NAMESPACE
 
-#endif
+#endif // QCONTACTSPLUGINSEARCH_H

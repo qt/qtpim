@@ -42,8 +42,7 @@
 #ifndef QVCARDRESTOREHANDLER_P_H
 #define QVCARDRESTOREHANDLER_P_H
 
-#include "qversit_p.h"
-#include "qlatin1constant_p.h"
+#include <qlatin1constant.h>
 #include <qcontactdetail.h>
 
 QTPIM_BEGIN_NAMESPACE

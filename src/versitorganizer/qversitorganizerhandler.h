@@ -42,8 +42,8 @@
 #ifndef QVERSITORGANIZERHANDLER_H
 #define QVERSITORGANIZERHANDLER_H
 
-#include "qversitorganizerimporter.h"
-#include "qversitorganizerexporter.h"
+#include <qversitorganizerimporter.h>
+#include <qversitorganizerexporter.h>
 
 QTPIM_BEGIN_NAMESPACE
 

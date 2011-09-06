@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMIDFETCHREQUEST_H
 #define QORGANIZERITEMIDFETCHREQUEST_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemsortorder.h"
 #include "qorganizeritemfilter.h"

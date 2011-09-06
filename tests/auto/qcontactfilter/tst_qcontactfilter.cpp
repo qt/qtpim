@@ -41,7 +41,7 @@
 #include <QtTest/QtTest>
 #include <QMetaType>
 
-#include "qtcontacts.h"
+#include <qcontacts.h>
 
 //TESTED_COMPONENT=src/contacts
 //TESTED_CLASS=

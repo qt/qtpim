@@ -39,12 +39,11 @@
 **
 ****************************************************************************/
 
-#include "qversitcontactexporter.h"
+#include <qversitcontactexporter.h>
 #include "qversitcontactexporter_p.h"
 #include "qversitcontactimporter_p.h"
 #include "qversitcontactsdefs_p.h"
-#include "versitutils_p.h"
-#include "qversit_p.h"
+#include "qversitutils_p.h"
 
 #include <qcontact.h>
 #include <qcontactdetail.h>

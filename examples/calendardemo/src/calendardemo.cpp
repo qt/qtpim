@@ -56,7 +56,7 @@
 #endif
 #include <QtGui>
 #include <QDesktopServices>
-#include <qtorganizer.h>
+#include <qorganizer.h>
 
 QTPIM_USE_NAMESPACE
 

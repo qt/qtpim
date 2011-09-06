@@ -43,10 +43,10 @@
 #define QCONTACTOBSERVER_H
 
 #include <QObject>
-#include "qcontacts_p.h"
-#include "qcontactmanager.h"
+#include <qcontactmanager.h>
 
 QTPIM_BEGIN_NAMESPACE
+
 class QContactObserverPrivate;
 
 class Q_CONTACTS_EXPORT QContactObserver : public QObject

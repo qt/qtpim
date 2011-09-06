@@ -39,11 +39,10 @@
 **
 ****************************************************************************/
 
-#include "qversitorganizerimporter.h"
+#include <qversitorganizerimporter.h>
 #include "qversitorganizerimporter_p.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversitorganizer_p.h"
+#include <qversitdocument.h>
+#include <qversitproperty.h>
 
 QTPIM_USE_NAMESPACE
 

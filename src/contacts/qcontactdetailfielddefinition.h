@@ -46,7 +46,7 @@
 #include <QVariant>
 #include <QSharedDataPointer>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 

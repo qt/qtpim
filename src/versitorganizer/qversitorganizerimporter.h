@@ -42,7 +42,7 @@
 #ifndef QVERSITORGANIZERIMPORTER_H
 #define QVERSITORGANIZERIMPORTER_H
 
-#include "qversitorganizer_p.h"
+#include <qversitorganizerglobal.h>
 
 #include <qorganizeritem.h>
 

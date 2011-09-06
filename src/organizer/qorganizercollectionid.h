@@ -42,11 +42,10 @@
 #ifndef QORGANIZERCOLLECTIONID_H
 #define QORGANIZERCOLLECTIONID_H
 
-#include <QMap>
-#include <QString>
-#include <QSharedDataPointer>
+#include <qorganizerglobal.h>
 
-#include "qtorganizerglobal.h"
+#include <QtCore/qmetatype.h>
+#include <QtCore/qshareddata.h>
 
 QTPIM_BEGIN_NAMESPACE
 
@@ -99,7 +98,6 @@ QTPIM_END_NAMESPACE
 
 Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionId), Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionId))
+Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionId));
 
 #endif
-

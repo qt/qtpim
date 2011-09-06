@@ -40,14 +40,13 @@ PUBLIC_HEADERS += \
     qorganizermanagerenginefactory.h \
     qorganizerrecurrencerule.h \
     qorganizeritemsortorder.h \
-    qtorganizerglobal.h \
-    qtorganizer.h
+    qorganizerglobal.h \
+    qorganizer.h \
+    qlatin1constant.h
 
 PRIVATE_HEADERS += \
-    qpim_p.h \
-    qlatin1constant_p.h \
     qmalgorithms_p.h \
-    qmobilitypluginsearch_p.h \
+    qorganizerpluginsearch_p.h \
     qorganizercollection_p.h \
     qorganizercollectionchangeset_p.h \
     qorganizerabstractrequest_p.h \

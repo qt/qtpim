@@ -55,7 +55,7 @@
 //
 //
 #include <private/qversitdefs_p.h>
-#include <qtorganizer.h>
+#include <qorganizer.h>
 
 QTPIM_BEGIN_NAMESPACE
 

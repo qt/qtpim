@@ -54,10 +54,11 @@
 // We mean it.
 //
 
-#include "qtorganizerglobal.h"
-#include <QSharedData>
-#include <QSet>
-#include <QPair>
+#include <qorganizerglobal.h>
+#include <qorganizeritemid.h>
+
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
 
 QTPIM_BEGIN_NAMESPACE
 

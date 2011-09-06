@@ -43,7 +43,7 @@
 #define tst_QVCARD21WRITER_H
 
 #include <QObject>
-#include <private/qversit_p.h>
+#include <qversitglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 class QVCard21Writer;

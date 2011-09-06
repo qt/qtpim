@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMDETAILDEFINITIONREMOVEREQUEST_H
 #define QORGANIZERITEMDETAILDEFINITIONREMOVEREQUEST_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerabstractrequest.h"
 
 #include <QStringList>

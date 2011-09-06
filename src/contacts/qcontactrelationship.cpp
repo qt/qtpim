@@ -39,10 +39,9 @@
 **
 ****************************************************************************/
 
-#include "qcontactrelationship.h"
+#include <qcontactrelationship.h>
 #include "qcontactrelationship_p.h"
-#include "qtcontactsglobal.h"
-#include "qcontactid.h"
+#include <qcontactid.h>
 
 #include <QList>
 #include <QPair>

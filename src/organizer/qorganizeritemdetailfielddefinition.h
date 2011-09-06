@@ -46,7 +46,7 @@
 #include <QVariant>
 #include <QSharedDataPointer>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 
 class QDataStream;
 

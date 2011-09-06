@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qorganizertodo.h"
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 QTPIM_USE_NAMESPACE
 

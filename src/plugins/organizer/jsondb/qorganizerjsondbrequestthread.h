@@ -46,7 +46,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 QTPIM_USE_NAMESPACE
 #include <jsondb-error.h>

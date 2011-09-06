@@ -42,10 +42,10 @@
 #ifndef QCONTACTRELATIONSHIPFETCHREQUEST_H
 #define QCONTACTRELATIONSHIPFETCHREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactrelationship.h"
-#include "qcontactrelationshipfilter.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
+#include <qcontactrelationship.h>
+#include <qcontactrelationshipfilter.h>
 
 #include <QList>
 #include <QPair>

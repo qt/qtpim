@@ -63,7 +63,7 @@
 
 #include "qorganizeritemmemorybackend_p.h"
 #include "qorganizeriteminvalidbackend_p.h"
-#include "qmobilitypluginsearch_p.h"
+#include "qorganizerpluginsearch_p.h"
 
 QTPIM_BEGIN_NAMESPACE
 

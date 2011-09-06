@@ -39,56 +39,33 @@
 **
 ****************************************************************************/
 
+#ifndef QTCONTACTS_H
+#define QTCONTACTS_H
 
-#ifndef VERSITUTILS_P_H
-#define VERSITUTILS_P_H
+// this file includes all of the public header files
+// provided by the Qt Contacts API
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#include <qcontactsglobal.h>                    // global exports
+#include <qcontactmanager.h>                    // manager
+#include <qcontactmanagerengine.h>              // manager backend
+#include <qcontactmanagerenginefactory.h>       // manage backend instantiator
+#include <qcontact.h>                           // contact
+#include <qcontactid.h>                         // contact identifier
+#include <qcontactobserver.h>                   // contact observer
+#include <qcontactdetaildefinition.h>           // detail definition
+#include <qcontactdetailfielddefinition.h>      // field in a detail definition
+#include <qcontactdetail.h>                     // contact detail
+#include <qcontactdetails.h>                    // leaf detail classes
+#include <qcontactfetchhint.h>                  // backend optimization hint class
+#include <qcontactfilter.h>                     // contact filter
+#include <qcontactfilters.h>                    // leaf filter classes
+#include <qcontactsortorder.h>                  // contact sorting
+#include <qcontactaction.h>                     // actions
+#include <qcontactactiondescriptor.h>           // action descriptors
+#include <qcontactactionfactory.h>              // action factory
+#include <qcontactactiontarget.h>               // action target (contact + detail(s))
+#include <qcontactabstractrequest.h>            // asynchronous request
+#include <qcontactrequests.h>                   // request leaf classes
+#include <qcontactrelationship.h>               // contact relationships
 
-#include "qversit_p.h"
-
-#include <QByteArray>
-#include <QByteArrayMatcher>
-#include <QPair>
-#include <QString>
-#include <QStringList>
-#include <QMultiHash>
-
-QTPIM_BEGIN_NAMESPACE
-class QVersitDocument;
-class QVersitProperty;
-
-class Q_VERSIT_EXPORT VersitUtils
-{
-public:
-    static QByteArray encode(const QByteArray& ba, QTextCodec* codec);
-    static QByteArray encode(char ch, QTextCodec* codec);
-    static QList<QByteArrayMatcher>* newlineList(QTextCodec* codec);
-    static void changeCodec(QTextCodec* codec);
-    static QVersitProperty takeProperty(const QVersitDocument& document,
-                                        const QString& propertyName,
-                                        QList<QVersitProperty>* toBeRemoved);
-    static bool isValidUtf8(const QByteArray& bytes);
-
-private:
-    // These are caches for performance:
-    // The previous codec that encode(char, QTextCodec) was called with
-    static QTextCodec* m_previousCodec;
-    // The QByteArray corresponding to each char from 0-255, encoded with m_previousCodec
-    static QByteArray m_encodingMap[256];
-    // List of different newline delimeters, encoded with m_previousCodec
-    static QList<QByteArrayMatcher>* m_newlineList;
-};
-
-QTPIM_END_NAMESPACE
-
-#endif // VERSITUTILS_P_H
+#endif

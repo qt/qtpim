@@ -47,9 +47,9 @@
 #include <QStringList>
 #include <QList>
 
-#include "qversitorganizer_p.h"
-#include "qversitorganizerhandler.h"
-#include "qversittimezonehandler.h"
+#include <qversitorganizerglobal.h>
+#include <qversitorganizerhandler.h>
+#include <qversittimezonehandler.h>
 
 QTPIM_BEGIN_NAMESPACE
 

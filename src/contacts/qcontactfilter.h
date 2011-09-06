@@ -47,7 +47,7 @@
 #include <QDateTime>
 #include <QSharedData>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 

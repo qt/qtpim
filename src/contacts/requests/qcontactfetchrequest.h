@@ -42,12 +42,12 @@
 #ifndef QCONTACTFETCHREQUEST_H
 #define QCONTACTFETCHREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactsortorder.h"
-#include "qcontactfilter.h"
-#include "qcontact.h"
-#include "qcontactfetchhint.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
+#include <qcontactsortorder.h>
+#include <qcontactfilter.h>
+#include <qcontact.h>
+#include <qcontactfetchhint.h>
 
 #include <QList>
 #include <QStringList>

@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qorganizercollectionid.h"
-#include "qorganizercollectionengineid.h"
+#include <qorganizercollectionid.h>
+#include <qorganizercollectionengineid.h>
 #include "qorganizermanager_p.h"
 #include <QHash>
 #include <QDebug>

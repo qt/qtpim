@@ -41,7 +41,7 @@
 #include <QtTest/QtTest>
 #include <QMetaType>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritemengineid.h"
 
 //TESTED_COMPONENT=src/organizer

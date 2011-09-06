@@ -40,9 +40,8 @@
 ****************************************************************************/
 
 
-#include "qversitcontactexporter.h"
+#include <qversitcontactexporter.h>
 #include "qversitcontactexporter_p.h"
-#include "qversit_p.h"
 
 #include <qcontact.h>
 #include <qcontactdetail.h>

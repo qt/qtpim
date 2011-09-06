@@ -43,7 +43,7 @@
 
 #include "tst_qversitcontactexporter.h"
 #include <qversitcontactexporter.h>
-#include <private/qversitcontactexporter_p.h>
+#include <qversitglobal.h>
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 #include <qcontactmanagerengine.h>
@@ -53,7 +53,7 @@
 #include <QPixmap>
 #include <QImageWriter>
 #include <QtTest/QtTest>
-#include <qtcontacts.h>
+#include <qcontacts.h>
 
 QTPIM_BEGIN_NAMESPACE
 

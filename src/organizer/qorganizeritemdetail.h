@@ -43,7 +43,8 @@
 #ifndef QORGANIZERITEMDETAIL_H
 #define QORGANIZERITEMDETAIL_H
 
-#include "qtorganizerglobal.h"
+#include <qorganizerglobal.h>
+#include <qlatin1constant.h>
 
 #include <QSharedDataPointer>
 #include <QStringList>

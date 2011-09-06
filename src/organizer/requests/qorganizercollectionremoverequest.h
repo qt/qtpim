@@ -42,7 +42,7 @@
 #ifndef QORGANIZERCOLLECTIONREMOVEREQUEST_H
 #define QORGANIZERCOLLECTIONREMOVEREQUEST_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizercollection.h"
 

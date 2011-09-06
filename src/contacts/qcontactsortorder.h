@@ -42,7 +42,7 @@
 #ifndef QCONTACTSORTORDER_H
 #define QCONTACTSORTORDER_H
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 
 #include <QString>
 #include <QSharedData>

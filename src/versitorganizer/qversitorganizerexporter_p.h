@@ -42,10 +42,10 @@
 #ifndef QVERSITORGANIZEREXPORTER_P_H
 #define QVERSITORGANIZEREXPORTER_P_H
 
-#include "qversitorganizerexporter.h"
-#include "qorganizerrecurrencerule.h"
-#include "qversitorganizerhandler.h"
-#include "qversittimezonehandler.h"
+#include <qversitorganizerexporter.h>
+#include <qorganizerrecurrencerule.h>
+#include <qversitorganizerhandler.h>
+#include <qversittimezonehandler.h>
 
 QTPIM_BEGIN_NAMESPACE
 

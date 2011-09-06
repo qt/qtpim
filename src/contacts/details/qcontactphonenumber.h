@@ -45,7 +45,7 @@
 
 #include <QString>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 #include "qcontactdetail.h"
 #include "qcontactfilter.h"
 

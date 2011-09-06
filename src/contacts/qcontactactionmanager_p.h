@@ -58,7 +58,6 @@
 #include <QHash>
 #include <QMutex>
 
-//#include "qcontacts_p.h"
 #include <qcontact.h>
 #include <qcontactactiondescriptor.h>
 

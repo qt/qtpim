@@ -56,7 +56,6 @@
 #include <qversitwriter.h>
 #include <qversitdocument.h>
 #include <qversitproperty.h>
-#include "qversit_p.h"
 
 #include <QThread>
 #include <QIODevice>

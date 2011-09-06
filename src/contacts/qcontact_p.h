@@ -59,7 +59,7 @@
 #include <QDateTime>
 #include <QMultiHash>
 
-#include <qtcontacts.h>
+#include <qcontacts.h>
 
 QTPIM_BEGIN_NAMESPACE
 

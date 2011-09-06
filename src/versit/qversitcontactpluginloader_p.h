@@ -46,7 +46,6 @@
 #include <QStringList>
 #include <QList>
 
-#include "qversit_p.h"
 #include <qversitcontacthandler.h>
 
 QTPIM_BEGIN_NAMESPACE

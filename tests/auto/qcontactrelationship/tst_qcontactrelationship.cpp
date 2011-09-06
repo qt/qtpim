@@ -43,7 +43,7 @@
 
 #include <QtTest/QtTest>
 
-#include "qtcontacts.h"
+#include <qcontacts.h>
 
 //TESTED_CLASS=
 //TESTED_FILES=

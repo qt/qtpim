@@ -39,9 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qversitdocument.h"
+#include <qversitdocument.h>
 #include "qversitdocument_p.h"
-#include "qversit_p.h"
 
 #include <QTextCodec>
 

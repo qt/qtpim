@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include "timezones_p.h"
-#include "qtorganizer.h"
+#include "qtimezones_p.h"
+#include <qorganizer.h>
 #include <QDateTime>
 
 QOrganizerManager* TimeZone::getManager()

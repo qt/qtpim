@@ -39,10 +39,9 @@
 **
 ****************************************************************************/
 
-#include "versitutils_p.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversit_p.h"
+#include "qversitutils_p.h"
+#include <qversitdocument.h>
+#include <qversitproperty.h>
 
 #include <QMap>
 #include <QTextCodec>

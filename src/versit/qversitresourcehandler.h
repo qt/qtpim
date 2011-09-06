@@ -42,7 +42,7 @@
 #ifndef QVERSITRESOURCEHANDLER_H
 #define QVERSITRESOURCEHANDLER_H
 
-#include "qversit_p.h"
+#include <qversitglobal.h>
 
 #include <QString>
 #include <QByteArray>

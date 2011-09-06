@@ -59,7 +59,7 @@
 #include <QDateTime>
 #include <QMultiHash>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 QTPIM_BEGIN_NAMESPACE
 

@@ -46,7 +46,7 @@
 #include <private/qversitcontactimporter_p.h>
 #include <qversitproperty.h>
 #include <qversitdocument.h>
-#include <qtcontacts.h>
+#include <qcontacts.h>
 #include <QtTest/QtTest>
 #include <QDir>
 

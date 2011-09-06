@@ -42,7 +42,7 @@
 #ifndef QORGANIZERTODO_H
 #define QORGANIZERTODO_H
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritemrecurrence.h"
 #include "qorganizertodoprogress.h"
 

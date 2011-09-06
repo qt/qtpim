@@ -39,9 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qversitproperty.h"
+#include <qversitproperty.h>
 #include "qversitproperty_p.h"
-#include "qversit_p.h"
 
 #include <QStringList>
 #include <QTextCodec>

@@ -46,7 +46,7 @@
 #include <QString>
 #include <QUrl>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 #include "qcontactdetail.h"
 #include "qcontact.h"
 

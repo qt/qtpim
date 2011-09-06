@@ -60,7 +60,7 @@
 #include <QDebug>
 #include <QVariantList>
 
-#include <qtcontacts.h>
+#include <qcontacts.h>
 #include <qcontactmanager.h>
 #include <private/qcontactmanager_p.h>
 #include "qcontactjsondbenginedata.h"

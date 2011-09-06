@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the QtPIM module of the Qt Toolkit.
+** This file is part of the Qt Mobility Components.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,6 +39,10 @@
 **
 ****************************************************************************/
 
+
+#ifndef QVERSITUTILS_P_H
+#define QVERSITUTILS_P_H
+
 //
 //  W A R N I N G
 //  -------------
@@ -50,14 +54,41 @@
 // We mean it.
 //
 
-#ifndef QPIM_P_H
-#define QPIM_P_H
+#include <qversitglobal.h>
 
-#include <QtCore/qglobal.h>
+#include <QByteArray>
+#include <QByteArrayMatcher>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QMultiHash>
 
-# define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-# define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-# define QTPIM_END_NAMESPACE } }
-# define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+QTPIM_BEGIN_NAMESPACE
+class QVersitDocument;
+class QVersitProperty;
 
-#endif // QPIM_P_H
+class Q_VERSIT_EXPORT VersitUtils
+{
+public:
+    static QByteArray encode(const QByteArray& ba, QTextCodec* codec);
+    static QByteArray encode(char ch, QTextCodec* codec);
+    static QList<QByteArrayMatcher>* newlineList(QTextCodec* codec);
+    static void changeCodec(QTextCodec* codec);
+    static QVersitProperty takeProperty(const QVersitDocument& document,
+                                        const QString& propertyName,
+                                        QList<QVersitProperty>* toBeRemoved);
+    static bool isValidUtf8(const QByteArray& bytes);
+
+private:
+    // These are caches for performance:
+    // The previous codec that encode(char, QTextCodec) was called with
+    static QTextCodec* m_previousCodec;
+    // The QByteArray corresponding to each char from 0-255, encoded with m_previousCodec
+    static QByteArray m_encodingMap[256];
+    // List of different newline delimeters, encoded with m_previousCodec
+    static QList<QByteArrayMatcher>* m_newlineList;
+};
+
+QTPIM_END_NAMESPACE
+
+#endif // QVERSITUTILS_P_H

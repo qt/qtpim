@@ -38,10 +38,10 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef QMOBILITYPLUGINSEARCH_H
-#define QMOBILITYPLUGINSEARCH_H
+#ifndef QVERSITORGANIZERPLUGINSEARCH_H
+#define QVERSITORGANIZERPLUGINSEARCH_H
 
-#include "qpim_p.h"
+#include <qversitorganizerglobal.h>
 
 #include <QCoreApplication>
 #include <QStringList>
@@ -171,4 +171,4 @@ inline QStringList mobilityPlugins(const QString& plugintype)
 
 QTPIM_END_NAMESPACE
 
-#endif
+#endif // QVERSITORGANIZERPLUGINSEARCH_H

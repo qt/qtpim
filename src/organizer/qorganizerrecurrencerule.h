@@ -43,14 +43,15 @@
 #ifndef QORGANIZERRECURRENCERULE_H
 #define QORGANIZERRECURRENCERULE_H
 
+#include <qorganizerglobal.h>
+
 #include <QString>
 #include <QDateTime>
 #include <QSet>
 #include <QHash>
-#include "qtorganizerglobal.h"
-
-
-
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 
 QTPIM_BEGIN_NAMESPACE
 class QOrganizerRecurrenceRulePrivate;
@@ -161,9 +162,8 @@ inline uint qHash(const QDate &date)
 
 
 Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule))
-Q_DECLARE_METATYPE(QSet<QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>)
-Q_DECLARE_METATYPE(QSet<QDate>)
-
+Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule));
+Q_DECLARE_METATYPE(QSet<QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>);
+Q_DECLARE_METATYPE(QSet<QDate>);
 
 #endif

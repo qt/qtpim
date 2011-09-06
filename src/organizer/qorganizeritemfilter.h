@@ -47,7 +47,7 @@
 #include <QDateTime>
 #include <QSharedData>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 
 class QDataStream;
 

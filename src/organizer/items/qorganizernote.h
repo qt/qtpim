@@ -42,7 +42,7 @@
 #ifndef QORGANIZERNOTE_H
 #define QORGANIZERNOTE_H
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 QTPIM_BEGIN_NAMESPACE
 

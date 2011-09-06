@@ -43,7 +43,7 @@
 
 #include <QWidget>
 #include <QDate>
-#include <qtorganizerglobal.h>
+#include <qorganizerglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 class QOrganizerManager;

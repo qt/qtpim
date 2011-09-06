@@ -48,8 +48,9 @@
 #include <QPair>
 #include <QSharedDataPointer>
 
-#include "qtcontactsglobal.h"
-#include "qcontactid.h"
+#include <qcontactsglobal.h>
+#include <qcontactid.h>
+#include <qlatin1constant.h>
 
 class QDataStream;
 

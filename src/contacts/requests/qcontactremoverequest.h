@@ -42,9 +42,9 @@
 #ifndef QCONTACTREMOVEREQUEST_H
 #define QCONTACTREMOVEREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactfilter.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
+#include <qcontactfilter.h>
 
 #include <QList>
 

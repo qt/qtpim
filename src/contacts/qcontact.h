@@ -50,7 +50,7 @@
 #include <QDateTime>
 #include <QSharedDataPointer>
 
-#include <qtcontactsglobal.h>
+#include <qcontactsglobal.h>
 #include <qcontactdetail.h>
 #include <qcontactrelationship.h>
 

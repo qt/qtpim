@@ -54,7 +54,7 @@
 // We mean it.
 //
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 #include <QSharedData>
 #include <QSet>
 #include <QPair>

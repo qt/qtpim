@@ -39,12 +39,13 @@
 **
 ****************************************************************************/
 
-#ifndef TIMEZONES_P_H
-#define TIMEZONES_P_H
+#ifndef QTIMEZONES_P_H
+#define QTIMEZONES_P_H
 
 #include <QDateTime>
 #include <QHash>
-#include "qorganizerrecurrencerule.h"
+#include <qorganizerrecurrencerule.h>
+#include <qversitorganizerglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 class QOrganizerManager;

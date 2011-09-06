@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the QtPIM module of the Qt Toolkit.
+** This file is part of the Qt Mobility Components.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,25 +39,47 @@
 **
 ****************************************************************************/
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#ifndef QPIM_P_H
-#define QPIM_P_H
+#ifndef QTCONTACTSGLOBAL_H
+#define QTCONTACTSGLOBAL_H
 
 #include <QtCore/qglobal.h>
 
-# define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-# define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-# define QTPIM_END_NAMESPACE } }
-# define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
+#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
+#define QTPIM_END_NAMESPACE } }
+#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
 
-#endif // QPIM_P_H
+#if defined(Q_OS_WIN)
+#  if defined(QT_NODLL)
+#    undef QT_MAKEDLL
+#    undef QT_DLL
+#  elif defined(QT_MAKEDLL)
+#    if defined(QT_DLL)
+#      undef QT_DLL
+#    endif
+#    if defined(QT_BUILD_CONTACTS_LIB)
+#      define Q_CONTACTS_EXPORT Q_DECL_EXPORT
+#    else
+#      define Q_CONTACTS_EXPORT Q_DECL_IMPORT
+#    endif
+#  elif defined(QT_DLL)
+#    define Q_CONTACTS_EXPORT Q_DECL_EXPORT
+#  endif
+#endif
+
+#if !defined(Q_CONTACTS_EXPORT)
+#  if defined(QT_SHARED)
+#    define Q_CONTACTS_EXPORT Q_DECL_EXPORT
+#  else
+#    define Q_CONTACTS_EXPORT
+#  endif
+#endif
+
+#define QTCONTACTS_VERSION_NAME "com.nokia.qt.pim.contacts.api.version"
+#define QTCONTACTS_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.pim.contacts.implementation.version"
+#define QTCONTACTS_VERSION 1
+
+// Not needed since this is a typedef, and qglobal already does this for the base type
+// Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactLocalId), Q_PRIMITIVE_TYPE);
+
+#endif

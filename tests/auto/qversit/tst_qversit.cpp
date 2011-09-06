@@ -51,8 +51,8 @@
 #include "qversitcontacthandler.h"
 #include "qversitorganizerexporter.h"
 #include "qversitorganizerimporter.h"
-#include "qtorganizer.h"
-#include "qtcontacts.h"
+#include "qorganizer.h"
+#include <qcontacts.h>
 
 #include <QtTest/QtTest>
 #include <QDebug>

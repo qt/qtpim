@@ -43,7 +43,7 @@
 #ifndef QCONTACTACTIONFACTORY_H
 #define QCONTACTACTIONFACTORY_H
 
-#include <qtcontactsglobal.h>
+#include <qcontactsglobal.h>
 #include <qcontactactiondescriptor.h>
 #include <qcontactactiontarget.h>
 

@@ -39,10 +39,9 @@
 **
 ****************************************************************************/
 
-#include "qversitwriter.h"
+#include <qversitwriter.h>
 #include "qversitwriter_p.h"
-#include "versitutils_p.h"
-#include "qversit_p.h"
+#include "qversitutils_p.h"
 
 #include <QStringList>
 #include <QTextCodec>

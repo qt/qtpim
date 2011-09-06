@@ -39,25 +39,40 @@
 **
 ****************************************************************************/
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#ifndef QPIM_P_H
-#define QPIM_P_H
+#ifndef QVERSITORGANIZERGLOBAL_H
+#define QVERSITORGANIZERGLOBAL_H
 
 #include <QtCore/qglobal.h>
 
-# define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-# define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-# define QTPIM_END_NAMESPACE } }
-# define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
+#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
+#define QTPIM_END_NAMESPACE } }
+#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
 
-#endif // QPIM_P_H
+#if defined(Q_OS_WIN)
+#  if defined(QT_NODLL)
+#    undef QT_MAKEDLL
+#    undef QT_DLL
+#  elif defined(QT_MAKEDLL)
+#    if defined(QT_DLL)
+#      undef QT_DLL
+#    endif
+#    if defined(QT_BUILD_VERSIT_ORGANIZER_LIB)
+#      define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_EXPORT
+#    else
+#      define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_IMPORT
+#    endif
+#  elif defined(QT_DLL)
+#    define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_EXPORT
+#  endif
+#endif
+
+#if !defined(Q_VERSIT_ORGANIZER_EXPORT)
+#  if defined(QT_SHARED)
+#    define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_EXPORT
+#  else
+#    define Q_VERSIT_ORGANIZER_EXPORT
+#  endif
+#endif
+
+#endif // QVERSITORGANIZERGLOBAL_H

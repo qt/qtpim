@@ -53,12 +53,11 @@
 // We mean it.
 //
 
-#include "qcontactabstractrequest_p.h"
-#include "qcontactfilter.h"
-#include "qcontactrelationshipfilter.h"
-#include "qcontactsortorder.h"
-#include "qcontact.h"
-#include "qtcontactsglobal.h"
+#include <qcontactabstractrequest_p.h>
+#include <qcontactfilter.h>
+#include <qcontactrelationshipfilter.h>
+#include <qcontactsortorder.h>
+#include <qcontact.h>
 
 #include <QStringList>
 #include <QList>

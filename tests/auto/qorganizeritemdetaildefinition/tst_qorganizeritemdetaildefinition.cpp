@@ -40,7 +40,7 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 //TESTED_COMPONENT=src/organizer
 //TESTED_CLASS=

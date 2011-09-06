@@ -51,13 +51,12 @@
 #include <QList>
 #include <QDateTime>
 
-#include "qtcontactsglobal.h"
-#include "qcontact.h"
-#include "qcontactid.h"
-#include "qcontactrelationship.h"
-#include "qcontactsortorder.h"
-#include "qcontactfetchhint.h"
-#include "qcontacttype.h"
+#include <qcontact.h>
+#include <qcontactid.h>
+#include <qcontactrelationship.h>
+#include <qcontactsortorder.h>
+#include <qcontactfetchhint.h>
+#include <qcontacttype.h>
 
 QTPIM_BEGIN_NAMESPACE
 

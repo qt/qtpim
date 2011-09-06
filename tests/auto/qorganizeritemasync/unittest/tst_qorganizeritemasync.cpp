@@ -44,7 +44,7 @@
 #include <QCoreApplication>
 #include <QScopedPointer>
 
-#include <qtorganizer.h>
+#include <qorganizer.h>
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
 
 QTPIM_USE_NAMESPACE

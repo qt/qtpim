@@ -54,11 +54,10 @@
 // We mean it.
 //
 
-#include "qversit_p.h"
 #include <qversitreader.h>
 #include <qversitdocument.h>
 #include <qversitproperty.h>
-#include "versitutils_p.h"
+#include "qversitutils_p.h"
 
 #include <QObject>
 #include <QThread>

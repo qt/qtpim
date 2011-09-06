@@ -42,7 +42,6 @@
 #ifndef QVERSITCONTACTEXPORTER_H
 #define QVERSITCONTACTEXPORTER_H
 
-#include "qversit_p.h"
 #include <qversitresourcehandler.h>
 #include <qversitdocument.h>
 

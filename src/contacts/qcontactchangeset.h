@@ -43,7 +43,7 @@
 #ifndef QCONTACTCHANGESET_H
 #define QCONTACTCHANGESET_H
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 #include "qcontactid.h"
 
 #include <QSet>

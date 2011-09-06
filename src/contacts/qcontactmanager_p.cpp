@@ -71,7 +71,7 @@
 
 #include "qcontactmemorybackend_p.h"
 #include "qcontactinvalidbackend_p.h"
-#include "qmobilitypluginsearch_p.h"
+#include "qcontactspluginsearch_p.h"
 
 QTPIM_BEGIN_NAMESPACE
 

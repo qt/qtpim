@@ -53,7 +53,6 @@
 // We mean it.
 //
 
-#include "qversit_p.h"
 #include <qversitcontactimporter.h>
 #include "qvcardrestorehandler_p.h"
 

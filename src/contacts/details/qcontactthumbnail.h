@@ -45,7 +45,7 @@
 #include <QString>
 #include <QImage>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 #include "qcontactdetail.h"
 #include "qcontact.h"
 

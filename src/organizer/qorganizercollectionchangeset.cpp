@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include "qorganizercollectionchangeset.h"
+#include <qorganizercollectionchangeset.h>
 #include "qorganizercollectionchangeset_p.h"
-#include "qorganizermanagerengine.h"
+#include <qorganizermanagerengine.h>
 
 QTPIM_BEGIN_NAMESPACE
 

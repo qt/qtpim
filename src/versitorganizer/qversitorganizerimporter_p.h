@@ -52,12 +52,12 @@
 // We mean it.
 //
 
-#include "qversitorganizer_p.h"
-#include "qversitorganizerimporter.h"
-#include "qorganizeritemrecurrence.h"
-#include "qversitorganizerhandler.h"
-#include "qversittimezonehandler.h"
-#include "timezones_p.h"
+#include <qversitorganizerglobal.h>
+#include <qversitorganizerimporter.h>
+#include <qorganizeritemrecurrence.h>
+#include <qversitorganizerhandler.h>
+#include <qversittimezonehandler.h>
+#include "qtimezones_p.h"
 
 QTPIM_BEGIN_NAMESPACE
 class QOrganizerItem;

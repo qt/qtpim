@@ -41,10 +41,9 @@
 
 #include "qversitcontactsdefs_p.h"
 #include "qversitcontactimporter_p.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversit_p.h"
-#include <private/qmobilitypluginsearch_p.h>
+#include <qversitdocument.h>
+#include <qversitproperty.h>
+#include "qversitpluginsearch_p.h"
 
 #include <qcontactmanagerengine.h>
 #include <qcontact.h>
@@ -69,7 +68,7 @@
 #include <qcontactdisplaylabel.h>
 #include <qcontactthumbnail.h>
 #include <qcontactringtone.h>
-#include "qversitcontacthandler.h"
+#include <qversitcontacthandler.h>
 #include "qversitcontactpluginloader_p.h"
 
 #include <QHash>

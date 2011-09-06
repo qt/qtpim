@@ -51,7 +51,7 @@
 #include <QList>
 #include <QDateTime>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizeritem.h"
 #include "qorganizeritemid.h"
 #include "qorganizeritemsortorder.h"

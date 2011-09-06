@@ -43,7 +43,6 @@
 #define QVERSITREADER_H
 
 #include <qversitdocument.h>
-#include "qversit_p.h"
 
 #include <QObject>
 

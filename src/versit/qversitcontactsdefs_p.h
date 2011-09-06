@@ -54,7 +54,7 @@
 // We mean it.
 //
 
-#include <qtcontacts.h>
+#include <qcontacts.h>
 #include "qversitdefs_p.h"
 
 QTPIM_BEGIN_NAMESPACE

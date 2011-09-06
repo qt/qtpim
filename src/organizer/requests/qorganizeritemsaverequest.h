@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMSAVEREQUEST_H
 #define QORGANIZERITEMSAVEREQUEST_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritem.h"
 

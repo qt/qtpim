@@ -42,10 +42,10 @@
 #ifndef QCONTACTRELATIONSHIPFILTER_H
 #define QCONTACTRELATIONSHIPFILTER_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactfilter.h"
-#include "qcontactid.h"
-#include "qcontactrelationship.h"
+#include <qcontactsglobal.h>
+#include <qcontactfilter.h>
+#include <qcontactid.h>
+#include <qcontactrelationship.h>
 
 #include <QSharedDataPointer>
 #include <QStringList>

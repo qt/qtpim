@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the QtPIM module of the Qt Toolkit.
+** This file is part of the Qt Mobility Components.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,25 +39,44 @@
 **
 ****************************************************************************/
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#ifndef QPIM_P_H
-#define QPIM_P_H
+#ifndef QTORGANIZERGLOBAL_H
+#define QTORGANIZERGLOBAL_H
 
 #include <QtCore/qglobal.h>
 
-# define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-# define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-# define QTPIM_END_NAMESPACE } }
-# define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
+#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
+#define QTPIM_END_NAMESPACE } }
+#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
 
-#endif // QPIM_P_H
+#if defined(Q_OS_WIN)
+#  if defined(QT_NODLL)
+#    undef QT_MAKEDLL
+#    undef QT_DLL
+#  elif defined(QT_MAKEDLL)
+#    if defined(QT_DLL)
+#      undef QT_DLL
+#    endif
+#    if defined(QT_BUILD_ORGANIZER_LIB)
+#      define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
+#    else
+#      define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
+#    endif
+#  elif defined(QT_DLL)
+#    define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
+#  endif
+#endif
+
+#if !defined(Q_ORGANIZER_EXPORT)
+#  if defined(QT_SHARED)
+#    define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
+#  else
+#    define Q_ORGANIZER_EXPORT
+#  endif
+#endif
+
+#define QTORGANIZER_VERSION_NAME "com.nokia.qt.pim.organizer.api.version"
+#define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.pim.organizer.implementation.version"
+#define QTORGANIZER_VERSION 1
+
+#endif

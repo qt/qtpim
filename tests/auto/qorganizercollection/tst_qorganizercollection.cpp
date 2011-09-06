@@ -41,7 +41,7 @@
 
 #include <QtTest/QtTest>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritemid.h"
 #include "qorganizercollectionengineid.h"
 #include <QSet>

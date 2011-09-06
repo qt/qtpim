@@ -54,7 +54,6 @@
 //
 
 #include <qversitdocument.h>
-#include "qversit_p.h"
 #include <qversitproperty.h>
 
 #include <QSharedData>

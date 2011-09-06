@@ -44,7 +44,7 @@
 #include "tst_qversitreader.h"
 #include <qversitproperty.h>
 #include <private/qversitreader_p.h>
-#include <private/versitutils_p.h>
+#include <private/qversitutils_p.h>
 #include <QtTest/QtTest>
 #include <QSignalSpy>
 

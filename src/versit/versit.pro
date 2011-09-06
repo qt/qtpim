@@ -6,7 +6,7 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_versit.pri
 
-QT = core gui contacts contacts-private
+QT = core gui contacts
 
 DEFINES += QT_BUILD_VERSIT_LIB QT_MAKEDLL
 
@@ -14,6 +14,7 @@ load(qt_module_config)
 VERSION = $$QT.versit.VERSION
 
 PUBLIC_HEADERS += \
+    qversitglobal.h \
     qversitdocument.h \
     qversitproperty.h \
     qversitreader.h \
@@ -21,11 +22,10 @@ PUBLIC_HEADERS += \
     qversitcontactexporter.h \
     qversitcontactimporter.h \
     qversitcontacthandler.h \
-    qversitresourcehandler.h
+    qversitresourcehandler.h \
+    qlatin1constant.h
 
 PRIVATE_HEADERS += \
-    qpim_p.h \
-    qlatin1constant_p.h \
     qversitdocument_p.h \
     qversitdocumentwriter_p.h \
     qversitproperty_p.h \
@@ -39,7 +39,8 @@ PRIVATE_HEADERS += \
     qversitdefs_p.h \
     qversitcontactsdefs_p.h \
     qversitcontactpluginloader_p.h \
-    versitutils_p.h
+    qversitutils_p.h \
+    qversitpluginsearch_p.h
 
 SOURCES += \
     qversitdocument.cpp \
@@ -60,7 +61,7 @@ SOURCES += \
     qversitresourcehandler.cpp \
     qversitcontacthandler.cpp \
     qversitcontactpluginloader_p.cpp \
-    versitutils.cpp
+    qversitutils.cpp
 
 symbian {
     TARGET.UID3 = 0x2002BFBF

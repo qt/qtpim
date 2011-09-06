@@ -46,10 +46,10 @@
 #include <QString>
 #include <QUrl>
 
-#include "qtcontactsglobal.h"
-#include "qcontactdetail.h"
-#include "qcontact.h"
-#include "qcontactpresence.h"
+#include <qcontactsglobal.h>
+#include <qcontactdetail.h>
+#include <qcontact.h>
+#include <qcontactpresence.h>
 
 QTPIM_BEGIN_NAMESPACE
 

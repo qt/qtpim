@@ -43,7 +43,7 @@
 #ifndef QCONTACTACTIONDESCRIPTOR_H
 #define QCONTACTACTIONDESCRIPTOR_H
 
-#include <qtcontactsglobal.h>
+#include <qcontactsglobal.h>
 #include <qcontactfilter.h>
 #include <qcontactdetail.h>
 

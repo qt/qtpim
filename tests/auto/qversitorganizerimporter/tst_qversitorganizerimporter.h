@@ -46,7 +46,7 @@
 #include "qversitorganizerimporter.h"
 #include "qversitdocument.h"
 #include "qversitproperty.h"
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 QTPIM_BEGIN_NAMESPACE
 QTPIM_END_NAMESPACE

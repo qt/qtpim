@@ -42,7 +42,7 @@
 #ifndef QORGANIZEREVENT_H
 #define QORGANIZEREVENT_H
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritemrecurrence.h"
 #include "qorganizeritempriority.h"
 

@@ -42,7 +42,7 @@
 #ifndef QORGANIZEREVENTOCCURRENCE_H
 #define QORGANIZEREVENTOCCURRENCE_H
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritempriority.h"
 
 QTPIM_BEGIN_NAMESPACE

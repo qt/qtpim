@@ -42,9 +42,9 @@
 #ifndef QCONTACTRELATIONSHIPSAVEREQUEST_H
 #define QCONTACTRELATIONSHIPSAVEREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactrelationship.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
+#include <qcontactrelationship.h>
 
 #include <QList>
 #include <QStringList>

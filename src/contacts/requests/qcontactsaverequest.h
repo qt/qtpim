@@ -42,9 +42,9 @@
 #ifndef QCONTACTSAVEREQUEST_H
 #define QCONTACTSAVEREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-#include "qcontact.h"
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
+#include <qcontact.h>
 
 #include <QList>
 

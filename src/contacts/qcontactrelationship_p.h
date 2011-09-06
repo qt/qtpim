@@ -58,8 +58,8 @@
 #include <QString>
 #include <QSharedData>
 
-#include "qtcontactsglobal.h"
-#include "qcontactid.h"
+#include <qcontactsglobal.h>
+#include <qcontactid.h>
 
 QTPIM_BEGIN_NAMESPACE
 

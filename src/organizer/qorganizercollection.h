@@ -48,8 +48,9 @@
 #include <QList>
 #include <QSharedDataPointer>
 
-#include "qorganizeritemid.h"
-#include "qorganizercollectionid.h"
+#include <qlatin1constant.h>
+#include <qorganizeritemid.h>
+#include <qorganizercollectionid.h>
 
 QTPIM_BEGIN_NAMESPACE
 

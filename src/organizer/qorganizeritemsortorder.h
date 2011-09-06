@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMSORTORDER_H
 #define QORGANIZERITEMSORTORDER_H
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 
 #include <QString>
 #include <QSharedData>

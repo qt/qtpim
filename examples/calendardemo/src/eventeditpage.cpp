@@ -40,7 +40,7 @@
 #include "eventeditpage.h"
 
 #include <QtGui>
-#include <qtorganizer.h>
+#include <qorganizer.h>
 
 QTPIM_USE_NAMESPACE
 

@@ -46,7 +46,7 @@
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbrequestmanager.h"
 #include "qorganizerjsondbstring_p.h"
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 #include <jsondb-client.h>
 #include <private/jsondb-connection_p.h>

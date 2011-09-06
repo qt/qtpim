@@ -42,7 +42,7 @@
 #ifndef QDECLARATIVEOPENMETAOBJECT_H
 #define QDECLARATIVEOPENMETAOBJECT_H
 
-#include <qtorganizer.h>
+#include <qorganizer.h>
 #include <QtCore/QMetaObject>
 #include <QtCore/QObject>
 

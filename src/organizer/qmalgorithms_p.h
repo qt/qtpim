@@ -42,7 +42,7 @@
 #ifndef QMALGORITHMS_H
 #define QMALGORITHMS_H
 
-#include "qpim_p.h"
+#include <qorganizerglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 

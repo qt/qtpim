@@ -42,8 +42,8 @@
 #ifndef QVERSITORGANIZEREXPORTER_H
 #define QVERSITORGANIZEREXPORTER_H
 
-#include "qversitorganizer_p.h"
-#include "qversitdocument.h"
+#include <qversitorganizerglobal.h>
+#include <qversitdocument.h>
 
 #include <qorganizeritem.h>
 

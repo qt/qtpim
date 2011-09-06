@@ -58,7 +58,7 @@
 #include "qorganizeritemfilter.h"
 #include "qorganizeritemsortorder.h"
 #include "qorganizeritem.h"
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 
 #include <QStringList>
 #include <QList>

@@ -44,7 +44,7 @@
 
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbstring_p.h"
-#include "qtorganizer.h"
+#include "qorganizer.h"
 
 //QTM_USE_NAMESPACE
 

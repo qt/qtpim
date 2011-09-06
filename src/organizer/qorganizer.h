@@ -45,7 +45,7 @@
 // this file includes all of the public header files
 // provided by the Qt Organizer API
 
-#include "qtorganizerglobal.h"                        // global exports
+#include "qorganizerglobal.h"                        // global exports
 
 #include "qorganizerabstractrequest.h"                // asynchronous request
 #include "qorganizeritemdetail.h"                     // organizer item detail

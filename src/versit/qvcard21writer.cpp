@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include "qvcard21writer_p.h"
-#include "versitutils_p.h"
 
 #include <QTextCodec>
 

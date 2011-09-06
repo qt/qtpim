@@ -41,7 +41,7 @@
 
 #include <QtGui>
 #include <QComboBox>
-#include <qtorganizer.h>
+#include <qorganizer.h>
 
 QTPIM_USE_NAMESPACE
 

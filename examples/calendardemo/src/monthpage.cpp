@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include <qtorganizer.h>
+#include <qorganizer.h>
 #include <qorganizerabstractrequest.h>
 
 #include "monthpage.h"

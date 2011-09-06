@@ -43,7 +43,8 @@
 
 #include <QtTest/QtTest>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
+#include <qlatin1constant.h>
 #include <QSet>
 #include <QMetaType>
 #include <QTypeInfo>

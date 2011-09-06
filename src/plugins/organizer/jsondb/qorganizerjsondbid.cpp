@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbid.h"
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizerjsondbstring_p.h"
 
 //QTM_USE_NAMESPACE

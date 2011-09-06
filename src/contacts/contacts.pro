@@ -38,14 +38,11 @@ PUBLIC_HEADERS += \
     qcontactobserver.h \
     qcontactrelationship.h \
     qcontactsortorder.h \
-    qtcontactsglobal.h \
-    qtcontacts.h
+    qcontactsglobal.h \
+    qcontacts.h \
+    qlatin1constant.h \
 
 PRIVATE_HEADERS += \
-    qpim_p.h \
-    qlatin1constant_p.h \
-    qmobilitypluginsearch_p.h \
-    qcontacts_p.h \
     qcontact_p.h \
     qcontactabstractrequest_p.h \
     qcontactactiondescriptor_p.h \
@@ -61,7 +58,8 @@ PRIVATE_HEADERS += \
     qcontactmanager_p.h \
     qcontactmanagerenginev2wrapper_p.h \
     qcontactrelationship_p.h \
-    qcontactsortorder_p.h
+    qcontactsortorder_p.h \
+    qcontactspluginsearch_p.h
 
 SOURCES += \
     qcontact.cpp \

@@ -48,7 +48,7 @@
 #include <QList>
 #include <QVariantList>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 

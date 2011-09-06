@@ -42,10 +42,8 @@
 #ifndef QCONTACTRELATIONSHIPREMOVEREQUEST_H
 #define QCONTACTRELATIONSHIPREMOVEREQUEST_H
 
-#include "qtcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-
-#include <QString>
+#include <qcontactsglobal.h>
+#include <qcontactabstractrequest.h>
 
 QTPIM_BEGIN_NAMESPACE
 

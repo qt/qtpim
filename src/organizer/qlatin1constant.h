@@ -42,8 +42,9 @@
 #ifndef QLATIN1CONSTANT_H
 #define QLATIN1CONSTANT_H
 
-#include <QString>
-#include <QVariant>
+#include <qorganizerglobal.h>
+
+#include <QtCore/qvariant.h>
 
 QTPIM_BEGIN_NAMESPACE
 

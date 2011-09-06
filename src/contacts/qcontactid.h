@@ -45,7 +45,7 @@
 #include <QString>
 #include <QSharedDataPointer>
 
-#include "qtcontactsglobal.h"
+#include <qcontactsglobal.h>
 
 class QDataStream;
 QTPIM_BEGIN_NAMESPACE

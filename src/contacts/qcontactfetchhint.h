@@ -47,8 +47,7 @@
 #include <QSharedData>
 #include <QSize>
 
-#include "qtcontactsglobal.h"
-#include "qcontactdetaildefinition.h"
+#include <qcontactdetaildefinition.h>
 
 QTPIM_BEGIN_NAMESPACE
 

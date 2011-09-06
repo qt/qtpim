@@ -54,7 +54,7 @@
 // We mean it.
 //
 
-#include "qversit_p.h"
+#include <qversitglobal.h>
 
 QTPIM_BEGIN_NAMESPACE
 

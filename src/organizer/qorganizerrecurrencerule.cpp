@@ -47,7 +47,7 @@
 #include <QDebug>
 #endif
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizerrecurrencerule_p.h"
 #include "qorganizerrecurrencerule.h"
 

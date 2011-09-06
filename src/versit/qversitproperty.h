@@ -42,7 +42,6 @@
 #ifndef QVERSITPROPERTY_H
 #define QVERSITPROPERTY_H
 
-#include "qversit_p.h"
 #include <qversitdocument.h>
 
 #include <QString>

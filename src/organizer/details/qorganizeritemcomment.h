@@ -44,7 +44,7 @@
 
 #include <QString>
 
-#include "qtorganizerglobal.h"
+#include "qorganizerglobal.h"
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 #include "qorganizeritemfilter.h"

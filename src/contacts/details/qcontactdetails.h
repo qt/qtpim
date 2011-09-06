@@ -45,33 +45,33 @@
 // this file includes all of the leaf detail classes
 // provided by the Qt Contacts API.
 
-#include "qcontactaddress.h"
-#include "qcontactanniversary.h"
-#include "qcontactavatar.h"
-#include "qcontactbirthday.h"
-#include "qcontactdisplaylabel.h"
-#include "qcontactemailaddress.h"
-#include "qcontactfamily.h"
-#include "qcontactfavorite.h"
-#include "qcontactgender.h"
-#include "qcontactgeolocation.h"
-#include "qcontactglobalpresence.h"
-#include "qcontactguid.h"
-#include "qcontacthobby.h"
-#include "qcontactname.h"
-#include "qcontactnickname.h"
-#include "qcontactnote.h"
-#include "qcontactonlineaccount.h"
-#include "qcontactorganization.h"
-#include "qcontactphonenumber.h"
-#include "qcontactpresence.h"
-#include "qcontactringtone.h"
-#include "qcontactsynctarget.h"
-#include "qcontacttag.h"
-#include "qcontactthumbnail.h"
-#include "qcontacttimestamp.h"
-#include "qcontacttype.h"
-#include "qcontacturl.h"
-#include "qcontactpersonid.h"
+#include <qcontactaddress.h>
+#include <qcontactanniversary.h>
+#include <qcontactavatar.h>
+#include <qcontactbirthday.h>
+#include <qcontactdisplaylabel.h>
+#include <qcontactemailaddress.h>
+#include <qcontactfamily.h>
+#include <qcontactfavorite.h>
+#include <qcontactgender.h>
+#include <qcontactgeolocation.h>
+#include <qcontactglobalpresence.h>
+#include <qcontactguid.h>
+#include <qcontacthobby.h>
+#include <qcontactname.h>
+#include <qcontactnickname.h>
+#include <qcontactnote.h>
+#include <qcontactonlineaccount.h>
+#include <qcontactorganization.h>
+#include <qcontactphonenumber.h>
+#include <qcontactpresence.h>
+#include <qcontactringtone.h>
+#include <qcontactsynctarget.h>
+#include <qcontacttag.h>
+#include <qcontactthumbnail.h>
+#include <qcontacttimestamp.h>
+#include <qcontacttype.h>
+#include <qcontacturl.h>
+#include <qcontactpersonid.h>
 
 #endif

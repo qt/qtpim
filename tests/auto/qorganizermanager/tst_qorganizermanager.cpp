@@ -44,7 +44,7 @@
 #include <QtTest/QtTest>
 #include <QUuid>
 
-#include "qtorganizer.h"
+#include "qorganizer.h"
 #include "qorganizeritemchangeset.h"
 #include "../qorganizermanagerdataholder.h"
 

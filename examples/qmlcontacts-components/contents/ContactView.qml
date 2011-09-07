@@ -295,23 +295,6 @@ Page {
             }
         }
     }
-
-    QueryDialog {
-        id: deleteConfirmationDialog; objectName: "deleteConfirmationDialog"
-        property string name
-        property string uuid
-
-        message: qsTr("Are you sure you want to delete %1?").arg(name)
-        titleText: qsTr("Confirm delete")
-        acceptButtonText: qsTr("Yes")
-        rejectButtonText: qsTr("No")
-        function accept(){
-       //     Contacts.removeContact(deleteConfirmationDialog.uuid)
-       //     contactEditPage.contactDeleted()
-            deleteConfirmationDialog.close()
-        }
-    }
-
 }
 
 /*    ListModel {

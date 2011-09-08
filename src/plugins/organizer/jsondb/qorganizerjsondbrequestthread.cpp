@@ -1202,13 +1202,16 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
         QOrganizerTodo todo = static_cast<QOrganizerTodo>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Todo);
         object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todo.startDateTime().toString(Qt::ISODate));
-        object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todo.dueDateTime().toString(Qt::ISODate));
+
+        QDateTime dueDateTime(todo.dueDateTime());
+        if (!dueDateTime.isNull())
+            object->insert(QOrganizerJsonDbStr::TodoDueDateTime, dueDateTime.toString(Qt::ISODate));
+
         object->insert(QOrganizerJsonDbStr::TodoIsAllDay, todo.isAllDay());
         recurrenceRules = todo.recurrenceRules();
         exceptionRules = todo.exceptionRules();
         recurrenceDates = todo.recurrenceDates();
         exceptionDates = todo.exceptionDates();
-
     } else {
         return false;
     }
@@ -1217,11 +1220,20 @@ bool QOrganizerJsonDbRequestThread::convertItemToJsonDbObject(const QOrganizerIt
         QString jsonUuid = item.id().toString().remove (QOrganizerJsonDbStr::ManagerName);
         object->insert (JsonDbString::kUuidStr, jsonUuid);
     }
-    object->insert (QOrganizerJsonDbStr::ItemName, item.displayLabel());
-    object->insert (QOrganizerJsonDbStr::ItemDescription, item.description());
-    object->insert (QOrganizerJsonDbStr::ItemCollectionId,
-                    item.collectionId().toString().remove(QOrganizerJsonDbStr::ManagerName));
-    object->insert(QOrganizerJsonDbStr::ItemComments, item.comments());
+    object->insert(QOrganizerJsonDbStr::ItemCollectionId,
+                   item.collectionId().toString().remove(QOrganizerJsonDbStr::ManagerName));
+
+    QString displayLabel(item.displayLabel());
+    if (!displayLabel.isEmpty())
+        object->insert(QOrganizerJsonDbStr::ItemName, displayLabel);
+
+    QString description(item.description());
+    if (!description.isEmpty())
+        object->insert (QOrganizerJsonDbStr::ItemDescription, description);
+
+    QStringList comments(item.comments());
+    if (!comments.isEmpty())
+        object->insert(QOrganizerJsonDbStr::ItemComments, comments);
 
     QStringList tags(item.tags());
     if (!tags.isEmpty())

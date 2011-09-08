@@ -55,8 +55,6 @@
 #include <QDir>
 #include <QFile>
 
-#include <QApplication>
-
 #if defined(Q_OS_SYMBIAN)
 # include <f32file.h>
 #endif

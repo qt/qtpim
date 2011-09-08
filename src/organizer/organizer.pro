@@ -6,7 +6,7 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_organizer.pri
 
-QT = core gui
+QT = core 
 
 DEFINES += QT_BUILD_ORGANIZER_LIB QT_MAKEDLL
 

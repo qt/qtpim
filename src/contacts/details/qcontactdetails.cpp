@@ -42,8 +42,6 @@
 #include <QByteArray>
 #include <QUrl>
 #include <QFile>
-#include <QPixmap>
-#include <QImage>
 
 #include <qcontactmanager.h>
 #include <qcontacts.h>

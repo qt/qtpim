@@ -6,7 +6,7 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_versitorganizer.pri
 
-QT = core gui versit versit-private organizer
+QT = core versit versit-private organizer
 
 DEFINES += QT_BUILD_VERSITORGANIZER_LIB QT_MAKEDLL
 

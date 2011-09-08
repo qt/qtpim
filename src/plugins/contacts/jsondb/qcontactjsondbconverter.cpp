@@ -42,7 +42,6 @@ Q_DEFINE_LATIN1_CONSTANT(SubTypeVideo, "video");
 Q_DEFINE_LATIN1_CONSTANT(SubTypeLandline, "landline");
 Q_DEFINE_LATIN1_CONSTANT(ContactDetails, "details");
 Q_DEFINE_LATIN1_CONSTANT(PhoneNumberUriScheme, "tel:");
-Q_DEFINE_LATIN1_CONSTANT(EmailUriScheme, "mailto:");
 
 QContactJsonDbConverter::QContactJsonDbConverter()
 {
@@ -212,7 +211,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     for(int i = 0; i < array.size(); ++i) {
         QContactEmailAddress* email = new QContactEmailAddress;
         map = array[i].value<QVariantMap>();
-        email->setEmailAddress(map["value"].toString().remove(EmailUriScheme));
+        email->setEmailAddress(map["value"].toString());
         updateContexts(map,email);
         detailList << email;
     }
@@ -430,7 +429,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         else if( (detail.definitionName() == QContactEmailAddress::DefinitionName) ) {
             QVariantMap emailMap;
             email = static_cast<QContactEmailAddress *>(&detail);
-            emailMap["value"] = EmailUriScheme + email->emailAddress();
+            emailMap["value"] = email->emailAddress();
             updateContexts(*email, &emailMap);
             if (!email->contexts().isEmpty())
                 emailMap["context"] = email->contexts().first().toLower();//TODO: To fix when moving to new schema
@@ -599,7 +598,7 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
                  newJsonDbQuery.append("[?" + detailsToJsonMapping.value(detailFilter.detailDefinitionName()) + "." + "0" + "."
                                        + "value" );
                  QString paramValue = detailFilter.value().toString();
-                 createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue, EmailUriScheme);
+                 createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue);
             }
             // Default case: return all the contacts
             else {

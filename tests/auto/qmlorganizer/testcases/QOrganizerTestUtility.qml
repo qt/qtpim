@@ -7,6 +7,11 @@ TestCase {
     property OrganizerModel model
     property SignalSpy spy
 
+    function debug(string, flag) {
+        if (flag == 1)
+            console.log (string);
+    }
+
     function test_managerdata() {
         var model = Qt.createQmlObject(
                 "import QtAddOn.organizer 2.0; OrganizerModel {}"

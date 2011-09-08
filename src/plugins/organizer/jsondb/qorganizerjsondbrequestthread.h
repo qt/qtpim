@@ -119,8 +119,8 @@ private:
     void convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
     void convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
 
-    //Interpret the filter to Jsondb query string
-    QString filterToJsondbQuery(const QOrganizerItemFilter filter);
+    //Interpret the filter to Jsondb query string, return true if filter is valid.
+    bool filterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
 
     //Get default collection ID from engine
     QString defaultCollectionId() const;

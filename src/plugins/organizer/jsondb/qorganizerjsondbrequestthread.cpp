@@ -366,20 +366,30 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
 void QOrganizerJsonDbRequestThread::handleItemFetchRequest(QOrganizerItemFetchRequest *fetchReq)
 {
-    QList<QOrganizerItem> items;
     m_requestMgr->setActive(fetchReq);
 
-    //jsondb query [?type="com.nokia.mp.organizer.Item"]
+    //Jsondb query [?type="com.nokia.mp.organizer.Item"]
     QString newJsonDbQuery = ALL_ITEM_QUERY_STRING;//"=\"OrganizerItem\"]";
     //Apply Filter and get expression
-    newJsonDbQuery += filterToJsondbQuery (fetchReq->filter());
-    int trId = m_jsonDb->query(newJsonDbQuery);
-    m_requestMgr->addTransaction(fetchReq, trId);
+    QString filterString;
+    if (filterToJsondbQuery (fetchReq->filter(), filterString)) {
+        newJsonDbQuery += filterString;
+        int trId = m_jsonDb->query(newJsonDbQuery);
+        m_requestMgr->addTransaction(fetchReq, trId);
+    } else {
+        //Invalid filter means empty items list could get from Jsondb
+        QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchReq);
+        QOrganizerManager::Error error = QOrganizerManager::BadArgumentError;
+        QList<QOrganizerItem> items;
+        m_requestMgr->removeRequest(fetchReq);
+        QOrganizerManagerEngine::updateItemFetchRequest(fetchReq, items, error, QOrganizerAbstractRequest::FinishedState);
+        if (waitCondition)
+            waitCondition->wakeAll();
+    }
 }
 
 void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFetchRequest *idFetchReq)
 {
-    QList<QOrganizerItem> items;
     m_requestMgr->setActive(idFetchReq);
 
     //jsondb query [?type="com.nokia.mp.organizer.Item"][=_uuid]
@@ -391,7 +401,6 @@ void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFet
 
 void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *fetchByIdReq)
 {
-    QList<QOrganizerItem> items;
     QList<QOrganizerItemId> ids = fetchByIdReq->ids();
     QString itemQuery = "[?";
     for (int i = 0; i < ids.size(); i++) {
@@ -545,11 +554,12 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerColl
 
         //Remove the items that are belong to collections
         QString jsondbQuery = ALL_ITEM_QUERY_STRING;
-
         //Set the filter for the jsondb query string
-        QOrganizerItemCollectionFilter collectonfilter;
-        collectonfilter.setCollectionIds (removeCollectionIdValidSet);
-        jsondbQuery += filterToJsondbQuery (collectonfilter);
+        QOrganizerItemCollectionFilter collectonFilter;
+        collectonFilter.setCollectionIds(removeCollectionIdValidSet);
+        QString filterString;
+        filterToJsondbQuery(collectonFilter, filterString);
+        jsondbQuery += filterString;
 
         //Send items remove request to jsondb
         trId = m_jsonDb->remove (jsondbQuery);
@@ -1502,29 +1512,41 @@ void QOrganizerJsonDbRequestThread::convertRecurrenceRuleToJsonDbObject(const QO
     }
 }
 
-QString QOrganizerJsonDbRequestThread::filterToJsondbQuery (const QOrganizerItemFilter filter)
+bool QOrganizerJsonDbRequestThread::filterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
 {
-    QString jsonDbQueryStr;
+    bool isValidFilter = true;
     switch (filter.type()) {
     case QOrganizerItemFilter::CollectionFilter: {
         const QOrganizerItemCollectionFilter cf(filter);
         const QSet<QOrganizerCollectionId>& ids = cf.collectionIds();
-        //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
-        jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
-        foreach (const QOrganizerCollectionId id, ids) {
-            jsonDbQueryStr += id.toString().remove (QOrganizerJsonDbStr::ManagerName);
-            jsonDbQueryStr += "\",\""; // ","
+        if (!ids.empty()) {
+            //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
+            jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
+            int validIdCount = 0;
+            foreach (const QOrganizerCollectionId id, ids) {
+                if (m_collectionsIdList.contains(id)) {
+                    jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
+                    jsonDbQueryStr += "\",\""; // ","
+                    validIdCount ++;
+                }
+            }
+            if (validIdCount > 0) {
+                jsonDbQueryStr += "]]";
+                //change last "collection_uuid","]] to "collection_uuid"]]
+                jsonDbQueryStr.replace(",\"]]", "]]");
+            } else {
+                isValidFilter = false;
+            }
+        } else {
+            isValidFilter = false;
         }
-        jsonDbQueryStr += "]]";
-        //change last "collection_uuid","]] to "collection_uuid"]]
-        jsonDbQueryStr.replace(",\"]]", "]]");
         break;
     }
     default:
         break;
     }
 
-    return jsonDbQueryStr;
+    return isValidFilter;
 }
 
 void QOrganizerJsonDbRequestThread::convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const

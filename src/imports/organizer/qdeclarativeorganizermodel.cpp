@@ -78,7 +78,8 @@ public:
         m_endPeriod(QDateTime::currentDateTime()),
         m_autoUpdate(true),
         m_updatePending(false),
-        m_componentCompleted(false)
+        m_componentCompleted(false),
+        m_fullUpdate(false)
     {
     }
     ~QDeclarativeOrganizerModelPrivate()
@@ -107,6 +108,8 @@ public:
     bool m_autoUpdate;
     bool m_updatePending;
     bool m_componentCompleted;
+
+    bool m_fullUpdate;
 };
 
 /*!
@@ -245,7 +248,6 @@ void QDeclarativeOrganizerModel::update()
 {
     if (!d->m_componentCompleted || d->m_updatePending)
         return;
-
     d->m_updatePending = true; // Disallow possible duplicate request triggering
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
@@ -411,11 +413,12 @@ QDeclarativeOrganizerItemFilter* QDeclarativeOrganizerModel::filter() const
 
 void QDeclarativeOrganizerModel::setFilter(QDeclarativeOrganizerItemFilter* filter)
 {
-    if (filter && filter != d->m_filter) {
+    if (filter != d->m_filter) {
         if (d->m_filter)
             delete d->m_filter;
         d->m_filter = filter;
-        connect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
+        if (d->m_filter)
+            connect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
         emit filterChanged();
     }
 }
@@ -714,8 +717,11 @@ QStringList QDeclarativeOrganizerModel::itemIds(QDateTime start, QDateTime end)
 void QDeclarativeOrganizerModel::fetchAgain()
 {
     cancelUpdate();
-    if (d->m_updatedItemIds.isEmpty()) //fetch all items
+    if (d->m_updatedItemIds.isEmpty()) {//fetch all items
+        if (!d->m_items.empty())
+            d->m_fullUpdate = true;
         clearItems();
+    }
 
     d->m_fetchRequest  = new QOrganizerItemFetchRequest(this);
     d->m_fetchRequest->setManager(d->m_manager);
@@ -757,6 +763,7 @@ void QDeclarativeOrganizerModel::fetchAgain()
   */
 void QDeclarativeOrganizerModel::requestUpdated()
 {
+
     QList<QOrganizerItem> items;
     QOrganizerItemFetchRequest* ifr = qobject_cast<QOrganizerItemFetchRequest*>(QObject::sender());
     if (ifr && ifr->isFinished()) {
@@ -772,7 +779,8 @@ void QDeclarativeOrganizerModel::requestUpdated()
         }
     }
 
-    if (!items.isEmpty()) {
+    if (!items.isEmpty() || d->m_fullUpdate) {
+        d->m_fullUpdate = false;
         if (d->m_items.isEmpty()) {
             QDeclarativeOrganizerItem* di;
             foreach (const QOrganizerItem& item, items) {
@@ -792,7 +800,6 @@ void QDeclarativeOrganizerModel::requestUpdated()
                 addSorted(di);
             }
         }
-
         emit modelChanged();
         emit errorChanged();
     }
@@ -841,7 +848,6 @@ void QDeclarativeOrganizerModel::itemsSaved()
                 addSorted(di);
             }
         }
-
         req->deleteLater();
         emit errorChanged();
     }

@@ -160,11 +160,11 @@ TestCase {
         // change
         newCollection.color = data.testValue;
         compare(spy.count, 1);
-        compare(newCollection.color, data.colorCode);
+        compare(newCollection.color.toString(), data.colorCode.toString());
         // change without change
         newCollection.color = data.testValue;
         compare(spy.count, 1);
-        compare(newCollection.color, data.colorCode);
+        compare(newCollection.color.toString(), data.colorCode.toString());
     }
 
     // image API
@@ -185,7 +185,7 @@ TestCase {
         // change without change
         newCollection.image = data.testValue;
         compare(spy.count, 1);
-        compare(newCollection.image, pathString);
+        compare(newCollection.image.toString(), pathString);
     }
 
     // metadata API
@@ -200,11 +200,11 @@ TestCase {
         // change
         newCollection.setMetaData(data.testKey, data.testValue);
         compare(spy.count, 1);
-        compare(newCollection.metaData(data.testKey), data.testValue);
+        compare(newCollection.metaData(data.testKey).toString(), data.testValue);
         // change without change
         newCollection.setMetaData(data.testKey, data.testValue);
         compare(spy.count, 1);
-        compare(newCollection.metaData(data.testKey), data.testValue);
+        compare(newCollection.metaData(data.testKey).toString(), data.testValue);
     }
 
     // ITEM COLLECTION API
@@ -385,12 +385,9 @@ TestCase {
         var modifiableCollection = organizerModel.collections[amountBeforeSavingAgain - 1];
         compare(modifiableCollection.name, coll2.name);
         compare(modifiableCollection.description, coll2.description);
-        compare(modifiableCollection.color, coll2.color);
-        compare(modifiableCollection.image, coll2.image);
-        if (data.managerToBeTested != "jsondb") {
-          // todo; remove when jsondb backend supports metadata!
-          compare(modifiableCollection.metaData("MyKey"), coll2.metaData("MyKey"));
-        }
+        compare(modifiableCollection.color.toString(), coll2.color.toString());
+        compare(modifiableCollection.image.toString(), coll2.image.toString());
+        compare(modifiableCollection.metaData("MyKey").toString(), coll2.metaData("MyKey").toString());
         // -modify collection content
         modifiableCollection.name = "My brilliant collection";
         modifiableCollection.description = "My awesome description";
@@ -404,12 +401,9 @@ TestCase {
         var resavedCollection = organizerModel.collections[organizerModel.collections.length - 1];
         compare(resavedCollection.name, modifiableCollection.name);
         compare(resavedCollection.description, modifiableCollection.description);
-        compare(resavedCollection.color, modifiableCollection.color);
-        compare(resavedCollection.image, modifiableCollection.image);
-        if (data.managerToBeTested != "jsondb") {
-          // todo; remove when jsondb backend supports metadata!
-          compare(resavedCollection.metaData("MyKey"), modifiableCollection.metaData("MyKey"));
-        }
+        compare(resavedCollection.color.toString(), modifiableCollection.color.toString());
+        compare(resavedCollection.image.toString(), modifiableCollection.image.toString());
+        compare(resavedCollection.metaData("MyKey").toString(), modifiableCollection.metaData("MyKey").toString());
 
         // verify we can see same collections on different OrganizerModel element
         var organizerModel2 = create_testobject("import QtQuick 2.0\n"

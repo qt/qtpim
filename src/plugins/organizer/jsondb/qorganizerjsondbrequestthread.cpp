@@ -1369,25 +1369,31 @@ bool QOrganizerJsonDbRequestThread::convertCollectionToJsonDbObject(const QOrgan
 
     object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Collection);
     object->insert(QOrganizerJsonDbStr::CollectionDefaultFlag, isDefaultCollection);
-    object->insert(QOrganizerJsonDbStr::CollectionName, collection.metaData(QOrganizerCollection::KeyName));
-    object->insert(QOrganizerJsonDbStr::CollectionDescription, collection.metaData(QOrganizerCollection::KeyDescription));
-    object->insert(QOrganizerJsonDbStr::CollectionColor, collection.metaData(QOrganizerCollection::KeyColor));
-    object->insert(QOrganizerJsonDbStr::CollectionImage, collection.metaData(QOrganizerCollection::KeyImage));
 
     QVariantMap metaData = collection.metaData();
     QVariantMap jsonMetaData;
     QList<QString> metaDataKeys = metaData.keys();
     foreach (QString key, metaDataKeys) {
-        if (key == QOrganizerCollection::KeyName)
-            object->insert(QOrganizerJsonDbStr::CollectionName, collection.metaData(QOrganizerCollection::KeyName));
-        else if (key == QOrganizerCollection::KeyDescription)
-            object->insert(QOrganizerJsonDbStr::CollectionDescription, collection.metaData(QOrganizerCollection::KeyDescription));
-        else if (key == QOrganizerCollection::KeyColor)
-            object->insert(QOrganizerJsonDbStr::CollectionColor, collection.metaData(QOrganizerCollection::KeyColor));
-        else if (key == QOrganizerCollection::KeyImage)
-            object->insert(QOrganizerJsonDbStr::CollectionImage, collection.metaData(QOrganizerCollection::KeyImage));
-        else
+        //Jsondb accepts string and stringlist type value
+        if (collection.metaData(key).canConvert(QVariant::String)) {
+            collection.metaData(key).toString();
+            if (key == QOrganizerCollection::KeyName)
+                object->insert(QOrganizerJsonDbStr::CollectionName, collection.metaData(QOrganizerCollection::KeyName).toString());
+            else if (key == QOrganizerCollection::KeyDescription)
+                object->insert(QOrganizerJsonDbStr::CollectionDescription, collection.metaData(QOrganizerCollection::KeyDescription).toString());
+            else if (key == QOrganizerCollection::KeyColor)
+                object->insert(QOrganizerJsonDbStr::CollectionColor, collection.metaData(QOrganizerCollection::KeyColor).toString());
+            else if (key == QOrganizerCollection::KeyImage)
+                object->insert(QOrganizerJsonDbStr::CollectionImage, collection.metaData(QOrganizerCollection::KeyImage).toString());
+            else
+                jsonMetaData.insert(key, metaData.value(key).toString());
+        } else if (!collection.metaData(key).canConvert(QVariant::StringList)
+                   && key != QOrganizerCollection::KeyName
+                   && key != QOrganizerCollection::KeyDescription
+                   && key != QOrganizerCollection::KeyColor
+                   && key != QOrganizerCollection::KeyImage) {
             jsonMetaData.insert(key, metaData.value(key));
+        }
     }
 
     if (!jsonMetaData.isEmpty())

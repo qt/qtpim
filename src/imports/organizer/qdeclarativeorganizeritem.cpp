@@ -38,304 +38,323 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "qdeclarativeorganizeritemdetail_p.h"
+
 #include "qdeclarativeorganizeritem_p.h"
-#include "qdeclarativeorganizeritemmetaobject_p.h"
 #include "qdeclarativeorganizermodel_p.h"
+
+#include <QtDeclarative/qdeclarativeengine.h>
 
 /*!
     \qmlclass OrganizerItem QDeclarativeOrganizerItem
 
-    \brief The OrganizerItem element represents the in-memory version of a calendar organizer item,
-  and has no tie to a specific backend calendar store.
+    \brief The OrganizerItem element represents the in-memory version of a organizer item.
 
     \ingroup qml-organizer
 
-  A OrganizerItem has a number of mandatory details. Different subclasses of OrganizerItem
-  (i.e., Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note) may have more mandatory details.
+    A OrganizerItem has a number of mandatory details. Different subclasses of OrganizerItem
+    (i.e., Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note) may have more mandatory details.
 
-    If some of the organizer item details are non-unique, all of this type of detail values
-    can be accessed by dynamic properties. For example, there are 3 comment details stored in
-    an event item, they can be accessed by event.comments property, which holds a list of
-    all comment details. If the dynamic property does not exist (for unique details), an undefined
-    value is returned. The list of dynamic detail properties depends on the engine implementations.
+    Most frequently-used details can also be accessed through convenient properties, e.g. displayLabel,
+    while all details can be accessed through detail(), details(), saveDetail(), among others.
 
-  \sa Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerManager}, {QOrganizerItem}
+    \sa Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerManager}, {QOrganizerItem}
 
-  The OrganizerItem element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
+    The OrganizerItem element is part of the \bold{QtAddOn.Organizer 2.0} module.
+ */
 
-
-
-
+/*!
+    \internal
+ */
 QDeclarativeOrganizerItem::QDeclarativeOrganizerItem(QObject *parent)
-    :QObject(parent),
-    d(new QDeclarativeOrganizerItemMetaObject(this, QOrganizerItem()))
+    : QObject(parent)
+    , m_modified(false)
 {
-    d->setMetaObject(QDeclarativeOrganizerItem::staticMetaObject);
-    connect(this, SIGNAL(itemChanged()), SLOT(setModified()));
 }
 
-
-QDeclarativeOrganizerItem::QDeclarativeOrganizerItem(const QOrganizerItem& item, const QMap<QString, QOrganizerItemDetailDefinition>& defs, QObject *parent)
-    :QObject(parent),
-    d(new QDeclarativeOrganizerItemMetaObject(this, item))
-{
-    d->setMetaObject(QDeclarativeOrganizerItem::staticMetaObject);
-    setDetailDefinitions(defs);
-    connect(this, SIGNAL(itemChanged()), SLOT(setModified()));
-}
-
+/*!
+    \internal
+ */
 QDeclarativeOrganizerItem::~QDeclarativeOrganizerItem()
 {
-    delete d;
+    clearDetails();
 }
 
-void QDeclarativeOrganizerItem::setDetailDefinitions(const QMap<QString, QOrganizerItemDetailDefinition>& defs)
-{
-    d->m_defs = defs;
-}
-
-QMap<QString, QOrganizerItemDetailDefinition> QDeclarativeOrganizerItem::detailDefinitions() const
-{
-    return d->m_defs;
-}
-
-void QDeclarativeOrganizerItem::setItem(const QOrganizerItem& item)
-{
-   d->setItem(item);
-   emit itemChanged ();
-   d->m_modified = false;
-}
-
-QOrganizerItem QDeclarativeOrganizerItem::item() const
-{
-    return d->item();
-}
-
-
+// basic information
 /*!
-  \qmlproperty string OrganizerItem::itemId
+    \qmlproperty bool OrganizerItem::modified
 
-   This property holds the id of the OrganizerItem object.
-   This property is read only.
-  */
-QString QDeclarativeOrganizerItem::itemId() const
-{
-    return d->itemId();
-}
+    This property holds the dirty flag of the OrganizerItem object.
 
-/*!
-  \qmlproperty string OrganizerItem::manager
-
-  This property holds the manager uri which the \l OrganizerItem object comes from.
-  */
-QString QDeclarativeOrganizerItem::manager() const
-{
-    return d->m_item.id().managerUri();
-}
-
-/*!
-  \qmlproperty bool OrganizerItem::modified
-
-   This property holds the dirty flag of the OrganizerItem object.
-   If the OrganizerItem has been changed, returns true, otherwise returns false.
-
-   \sa OrganizerItem::save
-  */
+    \sa OrganizerItem::save
+ */
 bool QDeclarativeOrganizerItem::modified() const
 {
-    return d->m_modified;
+    return m_modified;
 }
 
 /*!
-  \qmlproperty bool OrganizerItem::isFloatingTime
+    \qmlproperty enum OrganizerItem::itemType
 
-   This property indicates whether the organizer item created with floating date time.
-   A floating time will always appear with the same value regardless of what time zone the user is in.
-   A non-floating (absolute) time represents the same time regardless of the time zone,
-   but will appear to change in value if the user's time zone changes.
-   This property is read only.
-
-   \since organizer 1.1.1
-  */
-bool QDeclarativeOrganizerItem::isFloatingTime() const
+    This property holds the type of the OrganizerItem object.
+ */
+QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItem::itemType() const
 {
-    switch (itemType()) {
-    case QDeclarativeOrganizerItem::Event:
-    case QDeclarativeOrganizerItem::EventOccurrence:
-        return d->m_item.detail<QOrganizerEventTime>().startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItem::Todo:
-    case QDeclarativeOrganizerItem::TodoOccurrence:
-        return d->m_item.detail<QOrganizerTodoTime>().startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItem::Journal:
-        return d->m_item.detail<QOrganizerJournalTime>().entryDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItem::Note:
-    default:
-        break;
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Type == detail->type())
+            return static_cast<QDeclarativeOrganizerItemType *>(detail)->itemType();
     }
-    return d->m_item.detail<QOrganizerItemTimestamp>().created().timeSpec() == Qt::LocalTime;
-}
-
-/*!
-  \qmlproperty date OrganizerItem::itemStartTime
-
-   This property holds the start date time of the OrganizerItem object.
-   For differrent organizer item type, the return value is differrent, too.
-
-   \since organizer 1.1.1
-   \sa QDeclarativeOrganizerItem::OrganizerItemType
-  */
-QDateTime QDeclarativeOrganizerItem::itemStartTime() const
-{
-    switch (itemType()) {
-    case QDeclarativeOrganizerItem::Event:
-        return static_cast<const QDeclarativeOrganizerEvent*>(this)->startDateTime();
-    case QDeclarativeOrganizerItem::EventOccurrence:
-        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->startDateTime();
-    case QDeclarativeOrganizerItem::Todo:
-        return static_cast<const QDeclarativeOrganizerTodo*>(this)->startDateTime();
-    case QDeclarativeOrganizerItem::TodoOccurrence:
-        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->startDateTime();
-    case QDeclarativeOrganizerItem::Journal:
-        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime();
-    case QDeclarativeOrganizerItem::Note:
-    default:
-        break;
-    }
-    return item().detail<QOrganizerItemTimestamp>().created().toLocalTime();
-}
-
-/*!
-  \qmlproperty date OrganizerItem::itemEndTime
-
-   This property holds the end date time of the OrganizerItem object.
-   For different organizer item type, the return value is different, too.
-
-   \since organizer 1.1.1
-   \sa QDeclarativeOrganizerItem::OrganizerItemType
-  */
-
-QDateTime QDeclarativeOrganizerItem::itemEndTime() const
-{
-    switch (itemType()) {
-    case QDeclarativeOrganizerItem::Event:
-        return static_cast<const QDeclarativeOrganizerEvent*>(this)->endDateTime();
-    case QDeclarativeOrganizerItem::EventOccurrence:
-        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->endDateTime();
-    case QDeclarativeOrganizerItem::Todo:
-        return static_cast<const QDeclarativeOrganizerTodo*>(this)->dueDateTime();
-    case QDeclarativeOrganizerItem::TodoOccurrence:
-        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->dueDateTime();
-    case QDeclarativeOrganizerItem::Journal:
-        //there is no end time for journal item,  make it 30mins later for display purpose
-        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime().addSecs(60*30);
-    case QDeclarativeOrganizerItem::Note:
-    default:
-        break;
-    }
-    //there is no end time for note or customized items,  make it 30mins later for display purpose
-    return item().detail<QOrganizerItemTimestamp>().created().toLocalTime().addSecs(60*30);
-}
-
-
-void QDeclarativeOrganizerItem::setModified()
-{
-    d->m_modified = true;
-}
-
-/*!
-  \qmlmethod Detail OrganizerItem::detail(name)
-
-    This method returns an \l Detail object which detail name is \a name.
-  */
-QVariant QDeclarativeOrganizerItem::detail(const QString& name)
-{
-    return d->detail(name);
+    return QDeclarativeOrganizerItemType::Customized;
 }
 
 /*!
     \qmlproperty list<Detail> OrganizerItem::itemDetails
 
-    This property holds the list of \l Detail elements that the organizer item has.
-*/
+    This property holds the details of the OrganizerItem object.
+ */
 QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> QDeclarativeOrganizerItem::itemDetails()
 {
-    return d->details(QString()).value< QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> >();
+    return QDeclarativeListProperty<QDeclarativeOrganizerItemDetail>(this, 0,
+                                                                     &QDeclarativeOrganizerItem::_q_detail_append,
+                                                                     &QDeclarativeOrganizerItem::_q_detail_count,
+                                                                     &QDeclarativeOrganizerItem::_q_detail_at,
+                                                                     &QDeclarativeOrganizerItem::_q_detail_clear);
 }
 
 /*!
-  \qmlmethod list<Detail> OrganizerItem::detailsLists(name)
+    \qmlproperty string OrganizerItem::itemId
 
-    This method returns a list of details which detail name is \a name.
-  */
-QVariant QDeclarativeOrganizerItem::details(const QString& name)
+    This property holds the id of the OrganizerItem object.
+ */
+QString QDeclarativeOrganizerItem::itemId() const
 {
-    return d->details(name);
+    return m_id.toString();
 }
 
 /*!
-    \qmlmethod OrganizerItem::addComment(comment)
+    \qmlproperty string OrganizerItem::manager
 
-    Addes a \a comment for the organizer item.
-
-    \sa OrganizerItem::clearComments()
-*/
-void QDeclarativeOrganizerItem::addComment(const QString& comment)
+    This property holds the manager uri which the \l OrganizerItem object comes from.
+ */
+QString QDeclarativeOrganizerItem::manager() const
 {
-    d->m_item.addComment(comment);
-    emit itemChanged();
+    return m_id.managerUri();
 }
 
 /*!
-    \qmlmethod OrganizerItem::clearComments()
+    \qmlproperty string OrganizerItem::collectionId
 
-    Removes all comments from the organizer item.
-
-    \sa OrganizerItem::addComment()
-*/
-void QDeclarativeOrganizerItem::clearComments()
+    This property holds the id of collection where the item belongs to.
+ */
+QString QDeclarativeOrganizerItem::collectionId() const
 {
-    d->m_item.clearComments();
-    emit itemChanged();
+    return m_collectionId.toString();
 }
 
-/*!
-    \qmlmethod bool OrganizerItem::removeDetail(detail)
-
-    Removes given \a detail from the organizer item. If the detail is not removable, returns false.
-
-    \sa Detail::removable
-*/
-bool QDeclarativeOrganizerItem::removeDetail(QDeclarativeOrganizerItemDetail* detail)
+void QDeclarativeOrganizerItem::setCollectionId(const QString &collectionId)
 {
-    if (detail->removable()) {
-        d->m_details.removeAll(detail);
-        emit itemChanged();
-        return true;
+    QOrganizerCollectionId newCollectionId(QOrganizerCollectionId::fromString(collectionId));
+
+    // in case invalid collectionId-string, fromString() will return default collectionId-string
+    // instead of the intended collectionId-string
+    if (newCollectionId.toString() == collectionId && m_collectionId.toString() != collectionId) {
+        m_collectionId = newCollectionId;
+        m_modified = true;
+        Q_EMIT itemChanged();
     }
-    return false;
-
 }
 
+// convenient access to most frequently used details
 /*!
-    \qmlmethod bool OrganizerItem::addDetail(detail)
+    \qmlproperty string OrganizerItem::description
 
-    Adds the given organizer item \a detail to the organizer item, returns true if successful, otherwise returns false.
-
-    \note: If the \a detail has been added into the same organizer item before, this operation will be ignored,
-    so if you want to add a \a detail multiple times, the \a detail should be copied before calling this function.
-*/
-bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail* detail)
+    This property holds the description text of the organizer item.
+ */
+QString QDeclarativeOrganizerItem::description() const
 {
-    if (detail) {
-        if (!d->m_details.contains(detail)) {
-            d->m_details.append(detail);
-            emit itemChanged();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Description == detail->type())
+            return static_cast<QDeclarativeOrganizerItemDescription *>(detail)->description();
+    }
+    return QString::null;
+}
+
+void QDeclarativeOrganizerItem::setDescription(const QString &description)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Description == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemDescription *>(detail)->setDescription(description);
+            found = true;
+            break;
         }
-        return true;
     }
-    return false;
+
+    if (!found) {
+        QDeclarativeOrganizerItemDescription *desc = new QDeclarativeOrganizerItemDescription(this);
+        desc->setDescription(description);
+        m_details.append(desc);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+/*!
+    \qmlproperty string OrganizerItem::displayLabel
+
+    This property holds the display label of the organizer item.
+ */
+QString QDeclarativeOrganizerItem::displayLabel() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::DisplayLabel == detail->type())
+            return static_cast<QDeclarativeOrganizerItemDisplayLabel *>(detail)->label();
+    }
+    return QString::null;
+}
+
+void QDeclarativeOrganizerItem::setDisplayLabel(const QString &label)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::DisplayLabel == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemDisplayLabel *>(detail)->setLabel(label);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemDisplayLabel *displayLabel = new QDeclarativeOrganizerItemDisplayLabel(this);
+        displayLabel->setLabel(label);
+        m_details.append(displayLabel);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+/*!
+    \qmlproperty string OrganizerItem::guid
+
+    This property holds the GUID string of the organizer item.
+ */
+QString QDeclarativeOrganizerItem::guid() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Guid == detail->type())
+            return static_cast<QDeclarativeOrganizerItemGuid *>(detail)->guid();
+    }
+    return QString::null;
+}
+
+void QDeclarativeOrganizerItem::setGuid(const QString &guid)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Guid == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemGuid *>(detail)->setGuid(guid);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemGuid *itemGuid = new QDeclarativeOrganizerItemGuid(this);
+        itemGuid->setGuid(guid);
+        m_details.append(itemGuid);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+// functions
+/*!
+    \qmlmethod Detail OrganizerItem::detail(Detail::ItemDetailType)
+
+    Returns the first detail stored in the organizer item with the given \a type.
+ */
+QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::detail(int type)
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (type == detail->type()) {
+            QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
+            QDeclarativeEngine::setObjectOwnership(itemDetail, QDeclarativeEngine::JavaScriptOwnership);
+            itemDetail->setDetail(detail->detail());
+            return itemDetail;
+        }
+    }
+    return 0;
+}
+
+/*!
+    \qmlmethod list<Detail> OrganizerItem::details(Detail::ItemDetailType)
+
+    Returns all the details stored in the organizer item with the given \a type.
+ */
+QVariantList QDeclarativeOrganizerItem::details(int type)
+{
+    QVariantList list;
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (type == detail->type()) {
+            QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
+            QDeclarativeEngine::setObjectOwnership(itemDetail, QDeclarativeEngine::JavaScriptOwnership);
+            itemDetail->setDetail(detail->detail());
+            list.append(QVariant::fromValue((QObject*)itemDetail));
+        }
+    }
+    return list;
+}
+
+/*!
+    \qmlmethod void OrganizerItem::setDetail(detail)
+
+    Saves the given \a detail in the organizer item, and sets its id.
+ */
+void QDeclarativeOrganizerItem::setDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (!detail)
+        return;
+
+    bool found(false);
+    int key = detail->detail().key();
+    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
+        if (key == itemDetail->detail().key()) {
+            itemDetail->setDetail(detail->detail());
+            found = true;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
+        itemDetail->setDetail(detail->detail());
+        m_details.append(itemDetail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+/*!
+    \qmlmethod void OrganizerItem::removeDetail(detail)
+
+    Removes given \a detail from the organizer item.
+ */
+void QDeclarativeOrganizerItem::removeDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (!detail->removable())
+        return;
+
+    int key = detail->detail().key();
+    int i = 0;
+    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
+        if (key == itemDetail->detail().key()) {
+            delete itemDetail;
+            m_details.removeAt(i);
+        }
+        ++i;
+    }
 }
 
 /*!
@@ -344,12 +363,14 @@ bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail* detai
     Removes all details from the organizer item.
 
     \sa OrganizerItem::removeDetail()
-*/
+ */
 void QDeclarativeOrganizerItem::clearDetails()
 {
-    d->m_item.clearDetails();
-    d->m_details.clear();
-    emit itemChanged();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
+        delete detail;
+    m_details.clear();
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 /*!
@@ -358,268 +379,459 @@ void QDeclarativeOrganizerItem::clearDetails()
     Saves this OrganizerItem if the item has been modified.
 
     \sa  OrganizerItem::modified
-*/
+ */
 void QDeclarativeOrganizerItem::save()
 {
-    if (modified()) {
-        QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(parent());
+    if (m_modified) {
+        QDeclarativeOrganizerModel *model = qobject_cast<QDeclarativeOrganizerModel *>(parent());
         if (model) {
             model->saveItem(this);
+            m_modified = false;
         }
     }
 }
 
+// non-QML APIs, used by model only
 /*!
-    \qmlproperty string OrganizerItem::type
-
-    This property holds the type name of the organizer item.
-    This property is read only.
-*/
-QString QDeclarativeOrganizerItem::type() const
+    \internal
+ */
+void QDeclarativeOrganizerItem::setItem(const QOrganizerItem &item)
 {
-    return d->m_item.type();
-}
+    m_id = item.id();
+    m_collectionId = item.collectionId();
 
-QDeclarativeOrganizerItem::OrganizerItemType QDeclarativeOrganizerItem::itemType() const
-{
-    if (d->m_item.type() == QOrganizerItemType::TypeEvent)
-        return QDeclarativeOrganizerItem::Event;
-    else if (d->m_item.type() == QOrganizerItemType::TypeEventOccurrence)
-        return QDeclarativeOrganizerItem::EventOccurrence;
-    else if (d->m_item.type() == QOrganizerItemType::TypeTodo)
-        return QDeclarativeOrganizerItem::Todo;
-    else if (d->m_item.type() == QOrganizerItemType::TypeTodoOccurrence)
-        return QDeclarativeOrganizerItem::TodoOccurrence;
-    else if (d->m_item.type() == QOrganizerItemType::TypeJournal)
-        return QDeclarativeOrganizerItem::Journal;
-    else if (d->m_item.type() == QOrganizerItemType::TypeNote)
-        return QDeclarativeOrganizerItem::Note;
-    return QDeclarativeOrganizerItem::Customized;
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
+        delete detail;
+    m_details.clear();
+    QList<QOrganizerItemDetail> details(item.details());
+    foreach (const QOrganizerItemDetail &detail, details) {
+        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail.definitionName());
+        itemDetail->setDetail(detail);
+        m_details.append(itemDetail);
+    }
+
+    m_modified = false;
+    Q_EMIT itemChanged();
 }
 
 /*!
-    \qmlproperty string OrganizerItem::displayLabel
-
-    This property holds the display label of the organizer item.
-*/
-QString QDeclarativeOrganizerItem::displayLabel() const
+    \internal
+ */
+QOrganizerItem QDeclarativeOrganizerItem::item() const
 {
-    QDeclarativeOrganizerItemDisplayLabel* dl = d->detail<QDeclarativeOrganizerItemDisplayLabel>();
-    if (dl)
-        return dl->label();
-    return QString();
+    QOrganizerItem item;
+    item.setId(m_id);
+    item.setCollectionId(m_collectionId);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
+        item.saveDetail(&detail->detail());
+    return item;
 }
 
-void QDeclarativeOrganizerItem::setDisplayLabel(const QString& label)
+// call-back functions for list property
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItem::_q_detail_append(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value)
 {
-    QDeclarativeOrganizerItemDisplayLabel* dl = d->detail<QDeclarativeOrganizerItemDisplayLabel>();
-    if (dl)
-        dl->setLabel(label);
+    QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
+    if (object)
+        object->m_details.append(value);
 }
 
 /*!
-    \qmlproperty string OrganizerItem::description
-
-    This property holds the description text of the organizer item.
-*/
-QString QDeclarativeOrganizerItem::description() const
+    \internal
+ */
+QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::_q_detail_at(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, int index)
 {
-    QDeclarativeOrganizerItemDescription* desc = d->detail<QDeclarativeOrganizerItemDescription>();
-    if (desc)
-        return desc->description();
-    return QString();
-}
-
-void QDeclarativeOrganizerItem::setDescription(const QString& description)
-{
-    QDeclarativeOrganizerItemDescription* desc = d->detail<QDeclarativeOrganizerItemDescription>();
-    if (desc)
-        desc->setDescription(description);
+    QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
+    if (object)
+        return object->m_details.at(index);
+    else
+        return 0;
 }
 
 /*!
-    \qmlproperty string OrganizerItem::guid
-
-    This property holds the GUID string of the organizer item.
-*/
-QString QDeclarativeOrganizerItem::guid() const
+    \internal
+ */
+void QDeclarativeOrganizerItem::_q_detail_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property)
 {
-    QDeclarativeOrganizerItemGuid* id = d->detail<QDeclarativeOrganizerItemGuid>();
-    if (id)
-        return id->guid();
-    return QString();
-}
-void QDeclarativeOrganizerItem::setGuid(const QString& guid)
-{
-    QDeclarativeOrganizerItemGuid* id = d->detail<QDeclarativeOrganizerItemGuid>();
-    if (id)
-        id->setGuid(guid);
-}
-
-/*!
-    \qmlproperty bool OrganizerItem::isOccurrence
-
-    If this OrganizerItem is an occurrence item, returns true, otherwise returns false.
-
-    This is a read only property.
-    \since organizer 1.1.1
-*/
-bool QDeclarativeOrganizerItem::isOccurrence() const
-{
-      return itemType() == QDeclarativeOrganizerItem::EventOccurrence || itemType() == QDeclarativeOrganizerItem::TodoOccurrence;
-}
-
-/*!
-    \qmlproperty string OrganizerItem::collectionId
-
-    This property holds the id of collection where the item belongs to.
-*/
-
-QString QDeclarativeOrganizerItem::collectionId() const
-{
-    return d->m_item.collectionId().toString();
-}
-
-void QDeclarativeOrganizerItem::setCollectionId(const QString &collectionId)
-{
-    QOrganizerCollectionId newCollId = QOrganizerCollectionId::fromString(collectionId);
-    // in case invalid collectionId-string, fromString() will return default collectionId-string
-    // instead of the intended collectionId-string
-    if (newCollId.toString() == collectionId && d->m_item.collectionId().toString() != collectionId) {
-        d->m_item.setCollectionId(newCollId);
-        emit itemChanged();
+    QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
+    if (object) {
+        foreach (QDeclarativeOrganizerItemDetail *obj, object->m_details)
+            delete obj;
+        object->m_details.clear();
     }
 }
 
-///////////////////////QDeclarativeOrganizerEvent////////////////////////////////////
-
 /*!
-    \qmlclass Event QDeclarativeOrganizerEvent
-
-    \brief The Event element provides an event in time which may reoccur.
-
-    \ingroup qml-organizer
-
-    \sa OrganizerItem, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerEvent}
-
-  The Event element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
-QDeclarativeOrganizerEvent::QDeclarativeOrganizerEvent(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
+    \internal
+ */
+int QDeclarativeOrganizerItem::_q_detail_count(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property)
 {
-    setItem (QOrganizerEvent());
-    d->setMetaObject(QDeclarativeOrganizerEvent::staticMetaObject);
-    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
+    QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
+    if (object)
+        return object->m_details.size();
+    else
+        return 0;
+}
+
+
+// detail definition, need to be further checked
+QDeclarativeOrganizerItem::QDeclarativeOrganizerItem(const QOrganizerItem &item,
+                                                     const QMap<QString, QOrganizerItemDetailDefinition> &defs,
+                                                     QObject *parent)
+    : QObject(parent)
+{
+    setItem(item);
+    setDetailDefinitions(defs);
+}
+
+void QDeclarativeOrganizerItem::setDetailDefinitions(const QMap<QString, QOrganizerItemDetailDefinition> &defs)
+{
+    m_defs = defs;
+}
+
+QMap<QString, QOrganizerItemDetailDefinition> QDeclarativeOrganizerItem::detailDefinitions() const
+{
+    return m_defs;
+}
+
+
+// to be removed
+/*!
+    WARNING: This is to be removed soon.
+ */
+QString QDeclarativeOrganizerItem::type() const
+{
+    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
+    switch (type) {
+    case QDeclarativeOrganizerItemType::Event:
+        return QOrganizerItemType::TypeEvent;
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return QOrganizerItemType::TypeEventOccurrence;
+    case QDeclarativeOrganizerItemType::Todo:
+        return QOrganizerItemType::TypeTodo;
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return QOrganizerItemType::TypeTodoOccurrence;
+    case QDeclarativeOrganizerItemType::Journal:
+        return QOrganizerItemType::TypeJournal;
+    case QDeclarativeOrganizerItemType::Note:
+        return QOrganizerItemType::TypeNote;
+    default:
+        return QOrganizerItemType::TypeNote; // XX Customized
+    }
 }
 
 /*!
-  \qmlproperty date Event::startDateTime
-
-  This property holds the start date time of the event.
-  */
-void QDeclarativeOrganizerEvent::setStartDateTime(const QDateTime& datetime)
+    WARNING: This is to be removed soon.
+ */
+bool QDeclarativeOrganizerItem::isFloatingTime()
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        time->setStartDateTime(datetime);
+    switch (itemType()) {
+    case QDeclarativeOrganizerItemType::Event:
+        return static_cast<QDeclarativeOrganizerEvent *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return static_cast<QDeclarativeOrganizerEventOccurrence *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
+    case QDeclarativeOrganizerItemType::Todo:
+        return static_cast<QDeclarativeOrganizerTodo *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return static_cast<QDeclarativeOrganizerTodoOccurrence *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
+    case QDeclarativeOrganizerItemType::Journal:
+        return static_cast<QDeclarativeOrganizerJournal *>(this)->dateTime().timeSpec() == Qt::LocalTime;
+    case QDeclarativeOrganizerItemType::Note:
+    default:
+        break;
+    }
+
+    QDeclarativeOrganizerItemTimestamp *timestamp = static_cast<QDeclarativeOrganizerItemTimestamp *>(detail(QDeclarativeOrganizerItemDetail::Timestamp));
+    bool floatingTime = timestamp->created().timeSpec() == Qt::LocalTime;
+    delete timestamp;
+    return floatingTime;
+}
+
+/*!
+    WARNING: This is to be removed soon.
+ */
+QDateTime QDeclarativeOrganizerItem::itemStartTime() const
+{
+    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
+    switch (type) {
+    case QDeclarativeOrganizerItemType::Event:
+        return static_cast<const QDeclarativeOrganizerEvent*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::Todo:
+        return static_cast<const QDeclarativeOrganizerTodo*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::Journal:
+        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime();
+    case QDeclarativeOrganizerItemType::Note:
+    default:
+        break;
+    }
+    return QDateTime();
+}
+
+/*!
+    WARNING: This is to be removed soon.
+ */
+QDateTime QDeclarativeOrganizerItem::itemEndTime() const
+{
+    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
+    switch (type) {
+    case QDeclarativeOrganizerItemType::Event:
+        return static_cast<const QDeclarativeOrganizerEvent*>(this)->endDateTime();
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->endDateTime();
+    case QDeclarativeOrganizerItemType::Todo:
+        return static_cast<const QDeclarativeOrganizerTodo*>(this)->dueDateTime();
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->dueDateTime();
+    case QDeclarativeOrganizerItemType::Journal:
+        //there is no end time for journal item,  make it 30mins later for display purpose
+        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime().addSecs(60*30);
+    case QDeclarativeOrganizerItemType::Note:
+    default:
+        break;
+    }
+    return QDateTime();
+}
+
+/*!
+    WARNING: This is to be removed soon.
+ */
+bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (!detail)
+        return false;
+
+    QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
+    itemDetail->setDetail(detail->detail());
+    m_details.append(itemDetail);
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+    return true;
+}
+
+/*!
+    WARNING: This is to be removed soon.
+ */
+bool QDeclarativeOrganizerItem::isOccurrence() const
+{
+    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
+    return type == QDeclarativeOrganizerItemType::EventOccurrence || type == QDeclarativeOrganizerItemType::TodoOccurrence;
+}
+
+
+/*!
+    \qmlclass Event QDeclarativeOrganizerEvent
+    \brief The Event element provides an event in time which may reoccur.
+    \ingroup qml-organizer
+
+    The Event element is part of the \bold{QtAddOn.organizer 2.0} module.
+
+    \sa OrganizerItem, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerEvent}
+*/
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerEvent::QDeclarativeOrganizerEvent(QObject *parent)
+    : QDeclarativeOrganizerItem(parent)
+{
+    setItem(QOrganizerEvent());
+}
+
+/*!
+    \qmlproperty bool Event::allDay
+
+    This property indicates whether the time-of-day component of the event's start date-time or end date-time is
+    insignificant. If allDay is true, the time-of-day component is considered insignificant, and the event will
+    be an all-day item.
+ */
+void QDeclarativeOrganizerEvent::setAllDay(bool allDay)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setAllDay(allDay);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setAllDay(allDay);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+bool QDeclarativeOrganizerEvent::isAllDay() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->isAllDay();
+    }
+    return false;
+}
+
+/*!
+    \qmlproperty date Event::startDateTime
+
+    This property holds the start date time of the event.
+ */
+void QDeclarativeOrganizerEvent::setStartDateTime(const QDateTime &datetime)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setStartDateTime(datetime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setStartDateTime(datetime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEvent::startDateTime() const
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        return time->startDateTime();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->startDateTime();
+    }
     return QDateTime();
 }
 
 /*!
-  \qmlproperty date Event::endDateTime
+    \qmlproperty date Event::endDateTime
 
-  This property holds the end date time of the event.
-  */
-
+    This property holds the end date time of the event.
+ */
 void QDeclarativeOrganizerEvent::setEndDateTime(const QDateTime& datetime)
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        time->setEndDateTime(datetime);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setEndDateTime(datetime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setEndDateTime(datetime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
+
 QDateTime QDeclarativeOrganizerEvent::endDateTime() const
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        return time->endDateTime();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->endDateTime();
+    }
     return QDateTime();
 }
 
 /*!
-  \qmlproperty bool Event::allDay
+    \qmlproperty enumeration Event::priority
 
-  This property indicates whether the time-of-day component of the event's start date-time or end date-time is
-  insignificant. If allDay is true, the time-of-day component is considered insignificant, and the event will
-  be an all-day item.
-  */
-void QDeclarativeOrganizerEvent::setAllDay(bool allDay)
+    This property holds the priority of the event. The value can be one of:
+    \list
+    \o Priority.Unknown
+    \o Priority.Highest
+    \o Priority.ExtremelyHigh
+    \o Priority.VeryHigh
+    \o Priority.High
+    \o Priority.Medium
+    \o Priority.Low
+    \o Priority.VeryLow
+    \o Priority.ExtremelyLow
+    \o Priority.Lowest
+    \endlist
+ */
+void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        time->setAllDay(allDay);
-}
-bool QDeclarativeOrganizerEvent::isAllDay() const
-{
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    return time->isAllDay();
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
+        detail->setPriority(priority);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
-/*!
-  \qmlproperty enumeration Event::priority
-
-  This property holds the priority of the event. The value can be one of:
-  \list
-  \o Priority.Unknown
-  \o Priority.Highest
-  \o Priority.ExtremelyHigh
-  \o Priority.VeryHigh
-  \o Priority.High
-  \o Priority.Medium
-  \o Priority.Low
-  \o Priority.VeryLow
-  \o Priority.ExtremelyLow
-  \o Priority.Lowest
-  \endlist
-  \sa Priority
-  */
-void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::PriorityType value)
+QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEvent::priority() const
 {
-    QDeclarativeOrganizerItemPriority* priority = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (priority)
-        priority->setPriority(value);
-}
-QDeclarativeOrganizerItemPriority::PriorityType QDeclarativeOrganizerEvent::priority() const
-{
-    QDeclarativeOrganizerItemPriority* priority = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (priority)
-        return priority->priority();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type())
+            return static_cast<QDeclarativeOrganizerItemPriority *>(detail)->priority();
+    }
     return QDeclarativeOrganizerItemPriority::Unknown;
 }
 
 /*!
-  \qmlproperty string Event::location
+    \qmlproperty string Event::location
 
-  This property holds the label of the location at which the event occurs.
-  */
+    This property holds the label of the location at which the event occurs.
+ */
+
+void QDeclarativeOrganizerEvent::setLocation(const QString &location)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Location == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemLocation *>(detail)->setLabel(location);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemLocation *detail = new QDeclarativeOrganizerItemLocation;
+        detail->setLabel(location);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
 QString QDeclarativeOrganizerEvent::location() const
 {
-    QDeclarativeOrganizerItemLocation* loc = d->detail<QDeclarativeOrganizerItemLocation>();
-    if (loc)
-        return loc->label();
-    return QString();
-}
-void QDeclarativeOrganizerEvent::setLocation(const QString& newLocation)
-{
-    QDeclarativeOrganizerItemLocation* loc = d->detail<QDeclarativeOrganizerItemLocation>();
-    if (loc)
-        loc->setLabel(newLocation);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Location == detail->type())
+            return static_cast<QDeclarativeOrganizerItemLocation *>(detail)->label();
+    }
+    return QString::null;
 }
 
 /*!
@@ -627,625 +839,933 @@ void QDeclarativeOrganizerEvent::setLocation(const QString& newLocation)
 
   This property holds the recurrence element of the event item.
   */
-QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerEvent::recurrence()
+QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
 {
-    QDeclarativeOrganizerItemDetail* detail = d->detail(QDeclarativeOrganizerItemRecurrence::DetailName).value<QDeclarativeOrganizerItemDetail*>();
-    return static_cast<QDeclarativeOrganizerItemRecurrence*>(detail);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Recurrence == detail->type())
+            return static_cast<QDeclarativeOrganizerItemRecurrence *>(detail);
+    }
+    return 0;
 }
 
 
-///////////////////////////QDeclarativeOrganizerEventOccurrence////////////////////////////
 /*!
     \qmlclass EventOccurrence QDeclarativeOrganizerEventOccurrence
-
     \brief The EventOccurrence element provides an occurrence of an event.
-
     \ingroup qml-organizer
 
+    The EventOccurrence element is part of the \bold{QtAddOn.organizer 2.0} module.
     \sa OrganizerItem, Event, Journal, Todo, TodoOccurrence, Note, {QOrganizerEventOccurrence}
+ */
 
-  The EventOccurrence element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
-
+/*!
+    \internal
+ */
 QDeclarativeOrganizerEventOccurrence::QDeclarativeOrganizerEventOccurrence(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
+    : QDeclarativeOrganizerItem(parent)
 {
     setItem (QOrganizerEventOccurrence());
-    d->setMetaObject(QDeclarativeOrganizerEventOccurrence::staticMetaObject);
-    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
 }
 
 /*!
-  \qmlproperty date EventOccurrence::originalDate
+    \qmlproperty date EventOccurrence::originalDate
 
-  This property holds the date at which the occurrence was originally going to occur.
-  */
-void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate& date)
+    This property holds the date at which the occurrence was originally going to occur.
+ */
+void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate &date)
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        parent->setOriginalDate(date);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setOriginalDate(date);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
+        detail->setOriginalDate(date);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDate QDeclarativeOrganizerEventOccurrence::originalDate() const
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        return parent->originalDate();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
+            return static_cast<QDeclarativeOrganizerItemParent *>(detail)->originalDate();
+    }
     return QDate();
 }
 
 /*!
-  \qmlproperty date EventOccurrence::startDateTime
+    \qmlproperty date EventOccurrence::startDateTime
 
-  This property holds the start date time of the event occurrence.
-  */
-void QDeclarativeOrganizerEventOccurrence::setStartDateTime(const QDateTime& datetime)
+    This property holds the start date time of the event occurrence.
+ */
+void QDeclarativeOrganizerEventOccurrence::setStartDateTime(const QDateTime &dateTime)
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        time->setStartDateTime(datetime);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setStartDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setStartDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEventOccurrence::startDateTime() const
 {
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    return time->startDateTime();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->startDateTime();
+    }
+    return QDateTime();
 }
 
 /*!
-  \qmlproperty int EventOccurrence::parentId
+    \qmlproperty date EventOccurrence::endDateTime
 
-  This property holds the id of the event which is this occurrence's parent.
-  */
-void QDeclarativeOrganizerEventOccurrence::setParentId(const QString& pid)
+    This property holds the date time at which the event occurrence ends.
+ */
+void QDeclarativeOrganizerEventOccurrence::setEndDateTime(const QDateTime &dateTime)
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        parent->setParentId(pid);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setEndDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setEndDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDateTime QDeclarativeOrganizerEventOccurrence::endDateTime() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->endDateTime();
+    }
+    return QDateTime();
+}
+
+/*!
+    \qmlproperty enumeration EventOccurrence::priority
+
+    This property holds the priority of the event occurrence. The value can be one of:
+    \list
+    \o Priority.Unknown
+    \o Priority.Highest
+    \o Priority.ExtremelyHigh
+    \o Priority.VeryHigh
+    \o Priority.High
+    \o Priority.Medium
+    \o Priority.Low
+    \o Priority.VeryLow
+    \o Priority.ExtremelyLow
+    \o Priority.Lowest
+    \endlist
+ */
+void QDeclarativeOrganizerEventOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
+        detail->setPriority(priority);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEventOccurrence::priority() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type())
+            return static_cast<QDeclarativeOrganizerItemPriority *>(detail)->priority();
+    }
+    return QDeclarativeOrganizerItemPriority::Unknown;
+}
+
+/*!
+    \qmlproperty string EventOccurrence::location
+
+    This property holds the label of the location at which the event occurrence is held.
+ */
+void QDeclarativeOrganizerEventOccurrence::setLocation(const QString &location)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Location == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemLocation *>(detail)->setLabel(location);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemLocation *detail = new QDeclarativeOrganizerItemLocation;
+        detail->setLabel(location);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QString QDeclarativeOrganizerEventOccurrence::location() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Location == detail->type())
+            return static_cast<QDeclarativeOrganizerItemLocation *>(detail)->label();
+    }
+    return QString::null;
+}
+
+/*!
+    \qmlproperty int EventOccurrence::parentId
+
+    This property holds the id of the event which is this occurrence's parent.
+ */
+void QDeclarativeOrganizerEventOccurrence::setParentId(const QString &parentId)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setParentId(parentId);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
+        detail->setParentId(parentId);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QString QDeclarativeOrganizerEventOccurrence::parentId() const
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        return parent->parentId();
-    return QString();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
+            return static_cast<QDeclarativeOrganizerItemParent *>(detail)->parentId();
+    }
+    return QString::null;
 }
 
-
-/*!
-  \qmlproperty date EventOccurrence::endDateTime
-
-  This property holds the date time at which the event occurrence ends.
-  */
-void QDeclarativeOrganizerEventOccurrence::setEndDateTime(const QDateTime& datetime)
-{
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    if (time)
-        time->setEndDateTime(datetime);
-}
-QDateTime QDeclarativeOrganizerEventOccurrence::endDateTime() const
-{
-    QDeclarativeOrganizerEventTime* time = d->detail<QDeclarativeOrganizerEventTime>();
-    return time->endDateTime();
-}
-
-/*!
-  \qmlproperty enumeration EventOccurrence::priority
-
-  This property holds the priority of the event occurrence. The value can be one of:
-  \list
-  \o Priority.Unknown
-  \o Priority.Highest
-  \o Priority.ExtremelyHigh
-  \o Priority.VeryHigh
-  \o Priority.High
-  \o Priority.Medium
-  \o Priority.Low
-  \o Priority.VeryLow
-  \o Priority.ExtremelyLow
-  \o Priority.Lowest
-  \endlist
-  \sa Priority
-  */
-void QDeclarativeOrganizerEventOccurrence::setPriority(QDeclarativeOrganizerItemPriority::PriorityType value)
-{
-    QDeclarativeOrganizerItemPriority* priority = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (priority)
-        priority->setPriority(value);
-}
-QDeclarativeOrganizerItemPriority::PriorityType QDeclarativeOrganizerEventOccurrence::priority() const
-{
-    QDeclarativeOrganizerItemPriority* priority = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (priority)
-        return priority->priority();
-    return QDeclarativeOrganizerItemPriority::Unknown;
-}
-
-/*!
-  \qmlproperty string EventOccurrence::location
-
-  This property holds the label of the location at which the event occurrence is held.
-  */
-QString QDeclarativeOrganizerEventOccurrence::location() const
-{
-    QDeclarativeOrganizerItemLocation* loc = d->detail<QDeclarativeOrganizerItemLocation>();
-    if (loc)
-        return loc->label();
-    return QString();
-}
-void QDeclarativeOrganizerEventOccurrence::setLocation(const QString& newLocation)
-{
-    QDeclarativeOrganizerItemLocation* loc = d->detail<QDeclarativeOrganizerItemLocation>();
-    if (loc)
-        loc->setLabel(newLocation);
-}
-////////////////////////////////QDeclarativeOrganizerJournal////////////////////////////////////
 
 /*!
     \qmlclass Journal QDeclarativeOrganizerJournal
-
     \brief The Journal element provides a journal which is associated with a particular point in time.
-
     \ingroup qml-organizer
 
+    The Journal element is part of the \bold{QtAddOn.organizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Todo, TodoOccurrence, Note, {QOrganizerJournal}
+ */
 
-  The Journal element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
-
+/*!
+    \internal
+ */
 QDeclarativeOrganizerJournal::QDeclarativeOrganizerJournal(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
+    : QDeclarativeOrganizerItem(parent)
 {
     setItem (QOrganizerJournal());
-    d->setMetaObject(QDeclarativeOrganizerJournal::staticMetaObject);
-    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
 }
 
 /*!
-  \qmlproperty date Journal::dateTime
+    \qmlproperty date Journal::dateTime
 
-  This property holds the date time associated with this journal.
-  */
-void QDeclarativeOrganizerJournal::setDateTime(const QDateTime& dt)
+    This property holds the date time associated with this journal.
+ */
+void QDeclarativeOrganizerJournal::setDateTime(const QDateTime &dateTime)
 {
-    QDeclarativeOrganizerJournalTime* time = d->detail<QDeclarativeOrganizerJournalTime>();
-    if (time)
-        time->setEntryDateTime(dt);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::JournalTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerJournalTime *>(detail)->setEntryDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerJournalTime *detail = new QDeclarativeOrganizerJournalTime;
+        detail->setEntryDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerJournal::dateTime() const
 {
-    QDeclarativeOrganizerJournalTime* time = d->detail<QDeclarativeOrganizerJournalTime>();
-    if (time)
-        return time->entryDateTime();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::JournalTime == detail->type())
+            return static_cast<QDeclarativeOrganizerJournalTime *>(detail)->entryDateTime();
+    }
     return QDateTime();
 }
 
-////////////////////QDeclarativeOrganizerNote////////////////////////
+
 /*!
     \qmlclass Note QDeclarativeOrganizerNote
-
     \brief The Note element provides a note which is not associated with any particular point in time.
-
     \ingroup qml-organizer
 
+    The Note element is part of the \bold{QtAddOn.organizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, TodoOccurrence, {QOrganizerNote}
+ */
 
-  The Note element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
-
-
+/*!
+    \internal
+ */
 QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
+    : QDeclarativeOrganizerItem(parent)
 {
-    setItem (QOrganizerNote());
-
-    d->setMetaObject(QDeclarativeOrganizerNote::staticMetaObject);
+    setItem(QOrganizerNote());
 }
 
-//////////////////////QDeclarativeOrganizerTodo////////////////////////////////
+
 /*!
     \qmlclass Todo QDeclarativeOrganizerTodo
-
     \brief The Todo element provides a task which should be completed.
-
     \ingroup qml-organizer
 
+    The Todo element is part of the \bold{QtAddOn.organizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, TodoOccurrence, Note, {QOrganizerTodo}
-
-  The Todo element is part of the \bold{QtMobility.organizer 1.1} module.
 */
 
+/*!
+    \internal
+ */
 QDeclarativeOrganizerTodo::QDeclarativeOrganizerTodo(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
+    : QDeclarativeOrganizerItem(parent)
 {
-    setItem (QOrganizerTodo());
-    d->setMetaObject(QDeclarativeOrganizerTodo::staticMetaObject);
-    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
+    setItem(QOrganizerTodo());
 }
 
 /*!
-  \qmlproperty Recurrence Todo::recurrence
+    \qmlproperty bool Todo::allDay
 
-  This property holds the recurrence element of the todo item.
-  */
-QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
-{
-    QDeclarativeOrganizerItemDetail* detail = d->detail(QDeclarativeOrganizerItemRecurrence::DetailName).value<QDeclarativeOrganizerItemDetail*>();
-    return static_cast<QDeclarativeOrganizerItemRecurrence*>(detail);
-}
-
-/*!
-  \qmlproperty date Todo::startDateTime
-
-  This property holds the date time at which the task should be started.
-  */
-void QDeclarativeOrganizerTodo::setStartDateTime(const QDateTime& datetime)
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        time->setStartDateTime(datetime);
-}
-
-QDateTime QDeclarativeOrganizerTodo::startDateTime() const
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        return time->startDateTime();
-    return QDateTime();
-}
-
-/*!
-  \qmlproperty date Todo::dueDateTime
-
-  This property holds the date time by which the task should be completed.
-  */
-void QDeclarativeOrganizerTodo::setDueDateTime(const QDateTime& datetime)
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        time->setDueDateTime(datetime);
-}
-
-QDateTime QDeclarativeOrganizerTodo::dueDateTime() const
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        return time->dueDateTime();
-    return QDateTime();
-}
-
-/*!
-  \qmlproperty bool Todo::allDay
-
-  This property indicates whether the time-of-day component of the Todo's start date-time or due date-time is
-  insignificant. If allDay is true, the time-of-day component is considered insignificant, and the todo will
-  be an all-day item.
-  */
+    This property indicates whether the time-of-day component of the Todo's start date-time or due date-time is
+    insignificant. If allDay is true, the time-of-day component is considered insignificant, and the todo will
+    be an all-day item.
+ */
 void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 {
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        time->setAllDay(allDay);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setAllDay(allDay);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        detail->setAllDay(allDay);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 bool QDeclarativeOrganizerTodo::isAllDay() const
 {
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        return time->isAllDay();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->isAllDay();
+    }
     return false;
 }
 
 /*!
-  \qmlproperty enumeration Todo::priority
+    \qmlproperty int Todo::progressPercentage
 
-  This property holds the priority of the todo item. The value can be one of:
-  \list
-  \o Priority.Unknown
-  \o Priority.Highest
-  \o Priority.ExtremelyHigh
-  \o Priority.VeryHigh
-  \o Priority.High
-  \o Priority.Medium
-  \o Priority.Low
-  \o Priority.VeryLow
-  \o Priority.ExtremelyLow
-  \o Priority.Lowest
-  \endlist
-  \sa Priority
-  */
-void QDeclarativeOrganizerTodo::setPriority(QDeclarativeOrganizerItemPriority::PriorityType value)
-{
-    QDeclarativeOrganizerItemPriority* pri = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (pri)
-        pri->setPriority(value);
-}
-
-QDeclarativeOrganizerItemPriority::PriorityType QDeclarativeOrganizerTodo::priority() const
-{
-    QDeclarativeOrganizerItemPriority* pri = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (pri)
-        return pri->priority();
-    return QDeclarativeOrganizerItemPriority::Unknown;
-}
-
-/*!
-  \qmlproperty int Todo::progressPercentage
-
-  This property holds the percentage of progress completed on the task described by the todo item.
-  */
+    This property holds the percentage of progress completed on the task described by the todo item.
+ */
 void QDeclarativeOrganizerTodo::setProgressPercentage(int percentage)
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setPercentageComplete(percentage);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setPercentage(percentage);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setPercentage(percentage);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 int QDeclarativeOrganizerTodo::progressPercentage() const
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->percentageComplete();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentage();
+    }
     return 0;
 }
 
-
 /*!
-  \qmlproperty enumeration Todo::status
+    \qmlproperty date Todo::startDateTime
 
-  This property holds the progress status of the task described by the todo. The value can be one of:
-  \list
-  \o TodoProgress.NotStarted
-  \o TodoProgress.InProgress
-  \o TodoProgress.Complete
-  \endlist
-  \sa TodoProgress
-  */
-void QDeclarativeOrganizerTodo::setStatus(QDeclarativeOrganizerTodoProgress::StatusType value)
+    This property holds the date time at which the task should be started.
+ */
+void QDeclarativeOrganizerTodo::setStartDateTime(const QDateTime &dateTime)
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setStatus(value);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setStartDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
+        detail->setStartDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
-QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodo::status() const
+QDateTime QDeclarativeOrganizerTodo::startDateTime() const
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->status();
-    return QDeclarativeOrganizerTodoProgress::NotStarted;
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->startDateTime();
+    }
+    return QDateTime();
 }
 
 /*!
-  \qmlproperty date Todo::finishedDateTime
+    \qmlproperty date Todo::dueDateTime
 
-  This property holds the date and time at which the task was completed, if known.
-  */
-void QDeclarativeOrganizerTodo::setFinishedDateTime(const QDateTime& datetime)
+    This property holds the date time by which the task should be completed.
+ */
+void QDeclarativeOrganizerTodo::setDueDateTime(const QDateTime &dateTime)
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setFinishedDateTime(datetime);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setDueDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
+        detail->setDueDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDateTime QDeclarativeOrganizerTodo::dueDateTime() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->dueDateTime();
+    }
+    return QDateTime();
+}
+
+/*!
+    \qmlproperty date Todo::finishedDateTime
+
+    This property holds the date and time at which the task was completed, if known.
+ */
+void QDeclarativeOrganizerTodo::setFinishedDateTime(const QDateTime &dateTime)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setFinishedDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setFinishedDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodo::finishedDateTime() const
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->finishedDateTime();
-    return QDateTime();
-}
-
-//////////////////////////QDeclarativeOrganizerTodoOccurrence////////////////////////////////
-/*!
-    \qmlclass TodoOccurrence QDeclarativeOrganizerTodoOccurrence
-
-    \brief The TodoOccurrence element provides an occurrence of an event.
-
-    \ingroup qml-organizer
-
-    \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}
-
-  The TodoOccurrence element is part of the \bold{QtMobility.organizer 1.1} module.
-*/
-QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject *parent)
-    :QDeclarativeOrganizerItem(parent)
-{
-    setItem (QOrganizerTodoOccurrence());
-    d->setMetaObject(QDeclarativeOrganizerTodoOccurrence::staticMetaObject);
-
-    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
-}
-
-/*!
-  \qmlproperty date TodoOccurrence::startDateTime
-
-  This property holds the date time at which the task should be started.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setStartDateTime(const QDateTime& datetime)
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        time->setStartDateTime(datetime);
-}
-
-QDateTime QDeclarativeOrganizerTodoOccurrence::startDateTime() const
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        return time->startDateTime();
-    return QDateTime();
-}
-/*!
-  \qmlproperty date TodoOccurrence::dueDateTime
-
-  This property holds the date time by which the task should be completed.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setDueDateTime(const QDateTime& datetime)
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        time->setDueDateTime(datetime);
-}
-
-QDateTime QDeclarativeOrganizerTodoOccurrence::dueDateTime() const
-{
-    QDeclarativeOrganizerTodoTime* time = d->detail<QDeclarativeOrganizerTodoTime>();
-    if (time)
-        return time->dueDateTime();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->finishedDateTime();
+    }
     return QDateTime();
 }
 
 /*!
-  \qmlproperty enumeration TodoOccurrence::priority
+    \qmlproperty enumeration Todo::priority
 
-  This property holds the priority of the todo occurrence. The value can be one of:
-  \list
-  \o Priority.Unknown
-  \o Priority.Highest
-  \o Priority.ExtremelyHigh
-  \o Priority.VeryHigh
-  \o Priority.High
-  \o Priority.Medium
-  \o Priority.Low
-  \o Priority.VeryLow
-  \o Priority.ExtremelyLow
-  \o Priority.Lowest
-  \endlist
-  \sa Priority
-  */
-void QDeclarativeOrganizerTodoOccurrence::setPriority(QDeclarativeOrganizerItemPriority::PriorityType value)
+    This property holds the priority of the todo item. The value can be one of:
+    \list
+    \o Priority.Unknown
+    \o Priority.Highest
+    \o Priority.ExtremelyHigh
+    \o Priority.VeryHigh
+    \o Priority.High
+    \o Priority.Medium
+    \o Priority.Low
+    \o Priority.VeryLow
+    \o Priority.ExtremelyLow
+    \o Priority.Lowest
+    \endlist
+ */
+void QDeclarativeOrganizerTodo::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    QDeclarativeOrganizerItemPriority* pri = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (pri)
-        pri->setPriority(value);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
+        detail->setPriority(priority);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
-QDeclarativeOrganizerItemPriority::PriorityType QDeclarativeOrganizerTodoOccurrence::priority() const
+QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodo::priority() const
 {
-    QDeclarativeOrganizerItemPriority* pri = d->detail<QDeclarativeOrganizerItemPriority>();
-    if (pri)
-        return pri->priority();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type())
+            return static_cast<QDeclarativeOrganizerItemPriority *>(detail)->priority();
+    }
     return QDeclarativeOrganizerItemPriority::Unknown;
 }
 
 /*!
-  \qmlproperty int TodoOccurrence::progressPercentage
+    \qmlproperty enumeration Todo::status
 
-  This property holds the percentage of progress completed on the task described by the todo item.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
+    This property holds the progress status of the task described by the todo. The value can be one of:
+    \list
+    \o TodoProgress.NotStarted
+    \o TodoProgress.InProgress
+    \o TodoProgress.Complete
+    \endlist
+ */
+void QDeclarativeOrganizerTodo::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setPercentageComplete(percentage);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setStatus(status);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setStatus(status);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
-int QDeclarativeOrganizerTodoOccurrence::progressPercentage() const
+QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodo::status() const
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->percentageComplete();
-    return 0;
-}
-
-/*!
-  \qmlproperty enumeration TodoOccurrence::status
-
-  This property holds the progress status of the task described by the todo occurrence. The value can be one of:
-  \list
-  \o TodoProgress.NotStarted
-  \o TodoProgress.InProgress
-  \o TodoProgress.Complete
-  \endlist
-  \sa TodoProgress
-  */
-void QDeclarativeOrganizerTodoOccurrence::setStatus(QDeclarativeOrganizerTodoProgress::StatusType value)
-{
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setStatus(value);
-}
-
-QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoOccurrence::status() const
-{
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->status();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->status();
+    }
     return QDeclarativeOrganizerTodoProgress::NotStarted;
 }
 
 /*!
-  \qmlproperty date TodoOccurrence::finishedDateTime
+    \qmlproperty Recurrence Todo::recurrence
 
-  This property holds the date and time at which the task was completed, if known.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime& datetime)
+    This property holds the recurrence element of the todo item.
+ */
+QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        progress->setFinishedDateTime(datetime);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Recurrence == detail->type())
+            return static_cast<QDeclarativeOrganizerItemRecurrence *>(detail);
+    }
+    return 0;
 }
 
-QDateTime QDeclarativeOrganizerTodoOccurrence::finishedDateTime() const
+
+/*!
+    \qmlclass TodoOccurrence QDeclarativeOrganizerTodoOccurrence
+    \brief The TodoOccurrence element provides an occurrence of an event.
+    \ingroup qml-organizer
+
+    The TodoOccurrence element is part of the \bold{QtAddOn.organizer 2.0} module.
+    \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}
+ */
+QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject *parent)
+    : QDeclarativeOrganizerItem(parent)
 {
-    QDeclarativeOrganizerTodoProgress* progress = d->detail<QDeclarativeOrganizerTodoProgress>();
-    if (progress)
-        return progress->finishedDateTime();
-    return QDateTime();
+    setItem(QOrganizerTodoOccurrence());
 }
 
 /*!
-  \qmlproperty int TodoOccurrence::parentId
+    \qmlproperty int TodoOccurrence::progressPercentage
 
-  This property holds the id of the todo which is this occurrence's parent.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setParentId(const QString& pid)
+    This property holds the percentage of progress completed on the task described by the todo item.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        parent->setParentId(pid);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setPercentage(percentage);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setPercentage(percentage);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
-QString QDeclarativeOrganizerTodoOccurrence::parentId() const
+int QDeclarativeOrganizerTodoOccurrence::progressPercentage() const
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        return parent->parentId();
-    return QString();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentage();
+    }
+    return 0;
 }
+
 /*!
-  \qmlproperty date TodoOccurrence::originalDate
+    \qmlproperty date TodoOccurrence::originalDate
 
-  This property holds the date at which the occurrence was originally going to occur.
-  */
-void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate& date)
+    This property holds the date at which the occurrence was originally going to occur.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        parent->setOriginalDate(date);
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setOriginalDate(date);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
+        detail->setOriginalDate(date);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
 }
 
 QDate QDeclarativeOrganizerTodoOccurrence::originalDate() const
 {
-    QDeclarativeOrganizerItemParent* parent = d->detail<QDeclarativeOrganizerItemParent>();
-    if (parent)
-        return parent->originalDate();
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
+            return static_cast<QDeclarativeOrganizerItemParent *>(detail)->originalDate();
+    }
     return QDate();
 }
 
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerEvent::ItemName, "event");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerEvent::ItemGroupName, "events");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerEventOccurrence::ItemName, "eventOccurrence");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerEventOccurrence::ItemGroupName, "eventOccurrences");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerJournal::ItemName, "journal");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerJournal::ItemGroupName, "journals");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerNote::ItemName, "note");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerNote::ItemGroupName, "notes");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerTodo::ItemName, "todo");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerTodo::ItemGroupName, "todos");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerTodoOccurrence::ItemName, "todoOccurrence");
-Q_DEFINE_LATIN1_CONSTANT(QDeclarativeOrganizerTodoOccurrence::ItemGroupName, "todoOccurrences");
+/*!
+    \qmlproperty date TodoOccurrence::startDateTime
+
+    This property holds the date time at which the task should be started.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setStartDateTime(const QDateTime &dateTime)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setStartDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
+        detail->setStartDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDateTime QDeclarativeOrganizerTodoOccurrence::startDateTime() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->startDateTime();
+    }
+    return QDateTime();
+}
+/*!
+    \qmlproperty date TodoOccurrence::dueDateTime
+
+    This property holds the date time by which the task should be completed.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setDueDateTime(const QDateTime &dateTime)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setDueDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
+        detail->setDueDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDateTime QDeclarativeOrganizerTodoOccurrence::dueDateTime() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->dueDateTime();
+    }
+    return QDateTime();
+}
+
+/*!
+    \qmlproperty date TodoOccurrence::finishedDateTime
+
+    This property holds the date and time at which the task was completed, if known.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime &dateTime)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setFinishedDateTime(dateTime);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setFinishedDateTime(dateTime);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDateTime QDeclarativeOrganizerTodoOccurrence::finishedDateTime() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->finishedDateTime();
+    }
+    return QDateTime();
+}
+
+/*!
+    \qmlproperty enumeration TodoOccurrence::priority
+
+    This property holds the priority of the todo occurrence. The value can be one of:
+    \list
+    \o Priority.Unknown
+    \o Priority.Highest
+    \o Priority.ExtremelyHigh
+    \o Priority.VeryHigh
+    \o Priority.High
+    \o Priority.Medium
+    \o Priority.Low
+    \o Priority.VeryLow
+    \o Priority.ExtremelyLow
+    \o Priority.Lowest
+    \endlist
+ */
+void QDeclarativeOrganizerTodoOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
+        detail->setPriority(priority);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodoOccurrence::priority() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Priority == detail->type())
+            return static_cast<QDeclarativeOrganizerItemPriority *>(detail)->priority();
+    }
+    return QDeclarativeOrganizerItemPriority::Unknown;
+}
+
+/*!
+    \qmlproperty enumeration TodoOccurrence::status
+
+    This property holds the progress status of the task described by the todo occurrence. The value can be one of:
+    \list
+    \o TodoProgress.NotStarted
+    \o TodoProgress.InProgress
+    \o TodoProgress.Complete
+    \endlist
+ */
+void QDeclarativeOrganizerTodoOccurrence::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setStatus(status);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
+        detail->setStatus(status);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoOccurrence::status() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->status();
+    }
+    return QDeclarativeOrganizerTodoProgress::NotStarted;
+}
+
+/*!
+    \qmlproperty int TodoOccurrence::parentId
+
+    This property holds the id of the todo which is this occurrence's parent.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setParentId(const QString &parentId)
+{
+    bool found(false);
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
+            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setParentId(parentId);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
+        detail->setParentId(parentId);
+        m_details.append(detail);
+    }
+
+    m_modified = true;
+    Q_EMIT itemChanged();
+}
+
+QString QDeclarativeOrganizerTodoOccurrence::parentId() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
+            return static_cast<QDeclarativeOrganizerItemParent *>(detail)->parentId();
+    }
+    return QString::null;
+}

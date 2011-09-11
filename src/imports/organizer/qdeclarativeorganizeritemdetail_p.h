@@ -42,11 +42,7 @@
 #ifndef QDECLARATIVEORGANIZERITEMDETAIL_H
 #define QDECLARATIVEORGANIZERITEMDETAIL_H
 
-#include <QtDeclarative>
-#include <QtDeclarative/qdeclarativeinfo.h>
-#include <QVariant>
-#include "qorganizeritemdetail.h"
-#include "qorganizeritemdetails.h"
+#include <qorganizeritemdetails.h>
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
 QTPIM_USE_NAMESPACE
@@ -54,12 +50,17 @@ QTPIM_USE_NAMESPACE
 class QDeclarativeOrganizerItemDetail : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString definitionName READ definitionName)
-    Q_PROPERTY(QStringList fieldNames READ fieldNames)
-    Q_PROPERTY(ItemDetailType type READ type)
+
+    Q_ENUMS(ItemDetailType)
+
     Q_PROPERTY(bool readOnly READ readOnly)
     Q_PROPERTY(bool removable READ removable)
-    Q_ENUMS(ItemDetailType)
+    Q_PROPERTY(ItemDetailType type READ type)
+    Q_PROPERTY(QStringList fieldNames READ fieldNames)
+
+    // to be removed
+    Q_PROPERTY(QString definitionName READ definitionName)
+
 public:
     enum ItemDetailType {
         EventTime = 0,
@@ -84,418 +85,229 @@ public:
         Customized = 100
     };
 
-    explicit QDeclarativeOrganizerItemDetail(QObject* parent = 0)
-        :QObject(parent)
-    {
+    explicit QDeclarativeOrganizerItemDetail(QObject *parent = 0);
+    ~QDeclarativeOrganizerItemDetail();
 
-    }
+    bool readOnly() const;
+    bool removable() const;
 
-    bool readOnly() const
-    {
-        return m_detail.accessConstraints().testFlag(QOrganizerItemDetail::ReadOnly);
-    }
+    virtual ItemDetailType type() const;
 
-    bool removable() const
-    {
-        return !m_detail.accessConstraints().testFlag(QOrganizerItemDetail::Irremovable);
-    }
+    QStringList fieldNames() const;
 
-    virtual ItemDetailType type() const
-    {
-        return Customized;
-    }
-    QString definitionName() const
-    {
-        return m_detail.definitionName();
-    }
+    // QML functions
+    Q_INVOKABLE QVariant value(const QString& key) const;
+    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value);
+    Q_INVOKABLE bool removeValue(const QString& key);
 
-    QOrganizerItemDetail detail()
-    {
-        return m_detail;
-    }
+    // non-QML APIs
+    QOrganizerItemDetail detail() const;
+    void setDetail(const QOrganizerItemDetail &detail);
 
-    void setDetail(const QOrganizerItemDetail& detail)
-    {
-        m_detail = detail;
-    }
+    static QString fieldName(ItemDetailType detailType, int fieldType); // used by filters
+    static QString definitionName(ItemDetailType type);
 
-    QStringList fieldNames() const
-    {
-        return m_detail.variantValues().keys();
-    }
-    Q_INVOKABLE QVariant value(const QString& key) const
-    {
-        return m_detail.variantValue(key);
-    }
+    static ItemDetailType detailTypeByDefinitionName(const QString& definitionName); // used by sort order
 
-    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value)
-    {
-        bool ok = m_detail.setValue(key, value);
-        emit detailChanged();
-        return ok;
-    }
+    // to be removed
+    QString definitionName() const;
 
-    Q_INVOKABLE bool removeValue(const QString& key)
-    {
-        bool ok = m_detail.removeValue(key);
-        emit detailChanged();
-        return ok;
-    }
-
-    static QString detailName(ItemDetailType type) ;
-    static QString definitionName(ItemDetailType type) ;
-    static ItemDetailType detailTypeByDefinitionName(const QString& definitionName) ;
-    static ItemDetailType detailTypeByDetailName(const QString& definitionName) ;
-    static QString fieldName(ItemDetailType detailType, int fieldType);
-
-signals:
+Q_SIGNALS:
     void detailChanged();
 
 protected:
     QOrganizerItemDetail m_detail;
+
+private:
+    Q_DISABLE_COPY(QDeclarativeOrganizerItemDetail)
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemDetail)
 
 
-//event time range detail
 class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+
+    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        StartDateTime = 0,
-        EndDateTime,
-        AllDay
-    };
+    QDeclarativeOrganizerEventTime(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setAllDay(bool allDay);
+    bool isAllDay();
+
+    void setStartDateTime(const QDateTime &datetime);
+    QDateTime startDateTime() const;
+
+    void setEndDateTime(const QDateTime &datetime);
+    QDateTime endDateTime() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "eventTime");
-
-    QDeclarativeOrganizerEventTime(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerEventTime());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::EventTime;
-    }
-
-    void setStartDateTime(const QDateTime& datetime)
-    {
-         if (datetime != startDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerEventTime::FieldStartDateTime, datetime.toUTC());
-            emit valueChanged();
-         }
-    }
-    QDateTime startDateTime() const {return m_detail.value<QDateTime>(QOrganizerEventTime::FieldStartDateTime).toLocalTime();}
-    void setEndDateTime(const QDateTime& datetime)
-    {
-        if (datetime != endDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerEventTime::FieldEndDateTime, datetime.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime endDateTime() const {return m_detail.value<QDateTime>(QOrganizerEventTime::FieldEndDateTime).toLocalTime();}
-    void setAllDay(bool allDay)
-    {
-        if (allDay != isAllDay() && !readOnly()) {
-            m_detail.setValue(QOrganizerEventTime::FieldAllDay, allDay);
-            emit valueChanged();
-        }
-    }
-    bool isAllDay() {return m_detail.value<bool>(QOrganizerEventTime::FieldAllDay);}
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerEventTime)
 
-//comment detail
+
 class QDeclarativeOrganizerItemComment : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Comment = 0
-    };
+    QDeclarativeOrganizerItemComment(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setComment(const QString &newComment);
+    QString comment() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "comment");
-    Q_DECLARE_LATIN1_CONSTANT(DetailGroupName, "comments");
-
-    QDeclarativeOrganizerItemComment(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemComment());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Comment;
-    }
-
-    void setComment(const QString& newComment)
-    {
-        if (newComment != comment() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemComment::FieldComment, newComment);
-            emit valueChanged();
-        }
-    }
-    QString comment() const {return m_detail.value(QOrganizerItemComment::FieldComment);}
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemComment)
 
-//description detail
+
 class QDeclarativeOrganizerItemDescription : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Description = 0
-    };
+    QDeclarativeOrganizerItemDescription(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setDescription(const QString &desc);
+    QString description() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "description");
-
-    QDeclarativeOrganizerItemDescription(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemDescription());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Description;
-    }
-
-    void setDescription(const QString& desc)
-    {
-        if (desc != description() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemDescription::FieldDescription, desc);
-            emit valueChanged();
-        }
-    }
-    QString description() const {return m_detail.value(QOrganizerItemDescription::FieldDescription);}
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemDescription)
 
-//display label detail
+
 class QDeclarativeOrganizerItemDisplayLabel : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Label = 0
-    };
+    QDeclarativeOrganizerItemDisplayLabel(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setLabel(const QString &newLabel);
+    QString label() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "label");
-    QDeclarativeOrganizerItemDisplayLabel(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemDisplayLabel());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::DisplayLabel;
-    }
-
-    void setLabel(const QString& newLabel)
-    {
-        if (newLabel != label() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemDisplayLabel::FieldLabel, newLabel);
-            emit valueChanged();
-        }
-    }
-    QString label() const {return m_detail.value(QOrganizerItemDisplayLabel::FieldLabel);}
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemDisplayLabel)
 
-//guid detail
+
 class QDeclarativeOrganizerItemGuid : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Guid = 0
-    };
+    QDeclarativeOrganizerItemGuid(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setGuid(const QString &newGuid);
+    QString guid() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "guid");
-    QDeclarativeOrganizerItemGuid(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemGuid());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Guid;
-    }
-
-    void setGuid(const QString& newGuid)
-    {
-        if (newGuid != guid() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemGuid::FieldGuid, newGuid);
-            emit valueChanged();
-        }
-    }
-    QString guid() const {return m_detail.value(QOrganizerItemGuid::FieldGuid);}
-
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemGuid)
 
-//parent detail
-class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
-{
-    Q_OBJECT
-    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
 
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        ParentId = 0,
-        OriginalDate
-    };
-    static QString fieldNameFromFieldType(int type);
-
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "parent");
-    QDeclarativeOrganizerItemParent(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemParent());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Parent;
-    }
-
-    void setParentId(const QString& newParentId)
-    {
-        if (newParentId != parentId() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemParent::FieldParentId, QVariant::fromValue(QOrganizerItemId::fromString(newParentId)));
-            emit valueChanged();
-        }
-    }
-    QString parentId() const
-    {
-        return m_detail.variantValue(QOrganizerItemParent::FieldParentId).value<QOrganizerItemId>().toString();
-    }
-
-
-    void setOriginalDate(const QDate& date)
-    {
-        if (date != originalDate() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date);
-            emit valueChanged();
-        }
-    }
-    QDate originalDate() const {return m_detail.variantValue(QOrganizerItemParent::FieldOriginalDate).toDate();}
-
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemParent)
-
-//location detail
 class QDeclarativeOrganizerItemLocation : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY valueChanged)
-    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY valueChanged)
-    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
 
-    Q_ENUMS(FieldType)
+    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY detailChanged)
+    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY detailChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Latitude = 0,
-        Longitude,
-        Label
-    };
+    QDeclarativeOrganizerItemLocation(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setLatitude(double newLatitude);
+    double latitude() const;
+
+    void setLongitude(double newLongitude);
+    double longitude() const;
+
+    void setLabel(const QString &newLabel);
+    QString label() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "location");
-    QDeclarativeOrganizerItemLocation(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemLocation());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Location;
-    }
-    void setLabel(const QString& newLabel)
-    {
-        if (newLabel != label() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemLocation::FieldLabel, newLabel);
-            emit valueChanged();
-        }
-    }
-    QString label() const {return m_detail.value(QOrganizerItemLocation::FieldLabel);}
-
-    void setLatitude(double newLatitude)
-    {
-        if (qFuzzyCompare(newLatitude, latitude()) && !readOnly()) {
-            m_detail.setValue(QOrganizerItemLocation::FieldLatitude, newLatitude);
-            emit valueChanged();
-        }
-    }
-    double latitude() const {return m_detail.value<double>(QOrganizerItemLocation::FieldLatitude);}
-    void setLongitude(double newLongitude)
-    {
-        if (!qFuzzyCompare(newLongitude, longitude()) && !readOnly()) {
-            m_detail.setValue(QOrganizerItemLocation::FieldLongitude, newLongitude);
-            emit valueChanged();
-        }
-    }
-    double longitude() const {return m_detail.value<double>(QOrganizerItemLocation::FieldLongitude);}
-
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemLocation)
 
-//priority detail
+
+class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY detailChanged)
+    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizerItemParent(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setOriginalDate(const QDate &date);
+    QDate originalDate() const;
+
+    void setParentId(const QString &newParentId);
+    QString parentId() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemParent)
+
+
 class QDeclarativeOrganizerItemPriority : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(PriorityType priority READ priority WRITE setPriority NOTIFY valueChanged)
-    Q_ENUMS(PriorityType)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        Priority = 0
-    };
-    static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "priority");
-    enum PriorityType {
+    Q_ENUMS(Priority)
+
+    Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY detailChanged)
+
+public:
+    enum Priority {
         Unknown = QOrganizerItemPriority::UnknownPriority,
         Highest = QOrganizerItemPriority::HighestPriority,
         ExtremelyHigh = QOrganizerItemPriority::ExtremelyHighPriority,
@@ -508,149 +320,53 @@ public:
         Lowest = QOrganizerItemPriority::LowestPriority
     };
 
-    QDeclarativeOrganizerItemPriority(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemPriority());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Priority;
-    }
+    QDeclarativeOrganizerItemPriority(QObject *parent = 0);
 
-    void setPriority(PriorityType newPriority)
-    {
-        if (newPriority != priority() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemPriority::FieldPriority, static_cast<int>(newPriority));
-            emit valueChanged();
-        }
-    }
-    PriorityType priority() const {return static_cast<PriorityType>(m_detail.value<int>(QOrganizerItemPriority::FieldPriority));}
+    virtual ItemDetailType type() const;
 
-signals:
-    void valueChanged();
+    void setPriority(Priority newPriority);
+    Priority priority() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemPriority)
 
-//recurrence detail
+
 class QDeclarativeOrganizerItemRecurrence : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
+
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules READ recurrenceRules NOTIFY recurrenceRulesChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules READ exceptionRules NOTIFY exceptionRulesChanged)
-    Q_PROPERTY(QVariantList recurrenceDates READ recurrenceDates WRITE setRecurrenceDates NOTIFY valueChanged)
-    Q_PROPERTY(QVariantList exceptionDates  READ exceptionDates WRITE setExceptionDates NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+    Q_PROPERTY(QVariantList recurrenceDates READ recurrenceDates WRITE setRecurrenceDates NOTIFY detailChanged)
+    Q_PROPERTY(QVariantList exceptionDates  READ exceptionDates WRITE setExceptionDates NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        RecurrenceRules = 0,
-        ExceptionRules,
-        RecurrenceDates,
-        ExceptionDates
-    };
+    QDeclarativeOrganizerItemRecurrence(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules();
+
+    QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules();
+
+    void setRecurrenceDates(const QVariantList &dates);
+    QVariantList recurrenceDates() const;
+
+    void setExceptionDates(const QVariantList &dates);
+    QVariantList exceptionDates() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "recurrence");
-    QDeclarativeOrganizerItemRecurrence(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemRecurrence());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-        connect(this, SIGNAL(recurrenceRulesChanged()), SLOT(_saveRecurrenceRules()));
-        connect(this, SIGNAL(exceptionRulesChanged()), SLOT(_saveExceptionRules()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Recurrence;
-    }
-
-    QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules()
-    {
-        QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
-        if (m_recurrenceRules.isEmpty() && !ruleSet.isEmpty()) {
-            foreach (QOrganizerRecurrenceRule rule, ruleSet) {
-                QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
-                drule->setRule(rule);
-                connect(drule, SIGNAL(recurrenceRuleChanged()), this, SLOT(_saveRecurrenceRules()));
-                m_recurrenceRules.append(drule);
-            }
-        }
-        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_recurrenceRules, rrule_append, rule_count, rule_at, rrule_clear);
-    }
-
-
-    QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules()
-    {
-        QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
-        if (m_exceptionRules.isEmpty() && !ruleSet.isEmpty()) {
-            foreach (QOrganizerRecurrenceRule rule, ruleSet) {
-                QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
-                drule->setRule(rule);
-                connect(drule, SIGNAL(recurrenceRuleChanged()), this, SLOT(_saveExceptionRules()));
-                m_exceptionRules.append(drule);
-            }
-        }
-        return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_exceptionRules, xrule_append, rule_count, rule_at, xrule_clear);
-    }
-
-
-    QVariantList recurrenceDates() const
-    {
-        QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceDates);
-        QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
-        QVariantList dates;
-        foreach (QDate date, dateSet)
-            dates.append(QVariant(date));
-        return dates;
-    }
-
-    void setRecurrenceDates(const QVariantList& dates)
-    {
-        if (dates != recurrenceDates() && !readOnly()) {
-            QSet<QDate> dateSet;
-            QVariant dateSetVariant;
-            foreach (QVariant date, dates) {
-                if (date.canConvert(QVariant::Date))
-                    dateSet.insert(date.toDate());
-            }
-            dateSetVariant.setValue(dateSet);
-            m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceDates, dateSetVariant);
-            emit valueChanged();
-        }
-    }
-
-    void setExceptionDates(const QVariantList& dates)
-    {
-        if (dates != exceptionDates() && !readOnly()) {
-            QSet<QDate> dateSet;
-            QVariant dateSetVariant;
-            foreach (QVariant date, dates) {
-                if (date.canConvert(QVariant::Date))
-                    dateSet.insert(date.toDate());
-            }
-            dateSetVariant.setValue(dateSet);
-            m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionDates, dateSetVariant);
-            emit valueChanged();
-        }
-    }
-
-    QVariantList exceptionDates() const
-    {
-        QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionDates);
-        QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
-        QVariantList dates;
-        foreach (QDate date, dateSet)
-            dates.append(QVariant(date));
-        return dates;
-    }
-
-signals:
+Q_SIGNALS:
     void recurrenceRulesChanged();
     void exceptionRulesChanged();
-    void valueChanged();
+    void detailChanged();
 
-private slots:
+private Q_SLOTS:
     void _saveRecurrenceRules()
     {
         QSet<QOrganizerRecurrenceRule> rules;
@@ -658,7 +374,7 @@ private slots:
             rules << r->rule();
         }
         m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceRules, QVariant::fromValue(rules));
-        emit valueChanged();
+        emit detailChanged();
     }
 
     void _saveExceptionRules()
@@ -669,7 +385,7 @@ private slots:
         }
         m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionRules, QVariant::fromValue(rules));
 
-        emit valueChanged();
+        emit detailChanged();
     }
 
 private:
@@ -685,27 +401,189 @@ private:
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemRecurrence)
 
-//reminder detail
+
+class QDeclarativeOrganizerItemTag : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizerItemTag(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setTag(const QString &newTag);
+    QString tag() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemTag)
+
+
+class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QDateTime created READ created WRITE setCreated NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime lastModified READ lastModified WRITE setLastModified NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizerItemTimestamp(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setCreated(const QDateTime &timestamp);
+    QDateTime created() const;
+
+    void setLastModified(const QDateTime &timestamp);
+    QDateTime lastModified() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemTimestamp)
+
+
+class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_ENUMS(OrganizerItemType)
+
+    Q_PROPERTY(OrganizerItemType itemType READ itemType WRITE setItemType NOTIFY detailChanged)
+
+public:
+    enum OrganizerItemType {
+        Event = 0,
+        EventOccurrence,
+        Todo,
+        TodoOccurrence,
+        Journal,
+        Note,
+        Customized = 100
+    };
+
+    QDeclarativeOrganizerItemType(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setItemType(OrganizerItemType newType);
+    OrganizerItemType itemType() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemType)
+
+
+class QDeclarativeOrganizerJournalTime : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QDateTime entryDateTime READ entryDateTime WRITE setEntryDateTime NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizerJournalTime(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setEntryDateTime(const QDateTime &datetime);
+    QDateTime entryDateTime() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerJournalTime)
+
+
+class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_ENUMS(StatusType)
+
+    Q_PROPERTY(int percentage READ percentage WRITE setPercentage NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY detailChanged)
+    Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY detailChanged)
+
+public:
+    enum StatusType {
+        NotStarted = QOrganizerTodoProgress::StatusNotStarted,
+        InProgress = QOrganizerTodoProgress::StatusInProgress,
+        Complete = QOrganizerTodoProgress::StatusComplete
+    };
+
+    QDeclarativeOrganizerTodoProgress(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setPercentage(int newPercentage);
+    int percentage() const;
+
+    void setFinishedDateTime(const QDateTime &datetime);
+    QDateTime finishedDateTime() const;
+
+    void setStatus(StatusType newStatus);
+    StatusType status() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerTodoProgress)
+
+class QDeclarativeOrganizerTodoTime : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizerTodoTime(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setAllDay(bool allDay);
+    bool isAllDay();
+
+    void setStartDateTime(const QDateTime &datetime);
+    QDateTime startDateTime() const;
+
+    void setDueDateTime(const QDateTime &dateTime);
+    QDateTime dueDateTime() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizerTodoTime)
+
+
 class QDeclarativeOrganizerItemReminder : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(ReminderType reminderType READ reminderType NOTIFY reminderChanged)
-    Q_PROPERTY(int secondsBeforeStart READ secondsBeforeStart WRITE setSecondsBeforeStart NOTIFY reminderChanged)
-    Q_PROPERTY(int repetitionCount READ repetitionCount WRITE setRepetitionCount NOTIFY reminderChanged)
-    Q_PROPERTY(int repetitionDelay READ repetitionDelay WRITE setRepetitionDelay NOTIFY reminderChanged)
-    Q_ENUMS(ReminderType)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        Type = 0,
-        SecondsBeforeStart,
-        RepetitionCount,
-        RepetitionDelay
-    };
-    static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "reminder");
-    Q_DECLARE_LATIN1_CONSTANT(DetailGroupName, "reminders");
+    Q_ENUMS(ReminderType)
+
+    Q_PROPERTY(ReminderType reminderType READ reminderType NOTIFY detailChanged)
+    Q_PROPERTY(int repetitionCount READ repetitionCount WRITE setRepetitionCount NOTIFY detailChanged)
+    Q_PROPERTY(int repetitionDelay READ repetitionDelay WRITE setRepetitionDelay NOTIFY detailChanged)
+    Q_PROPERTY(int secondsBeforeStart READ secondsBeforeStart WRITE setSecondsBeforeStart NOTIFY detailChanged)
+
+public:
     enum ReminderType {
         NoReminder = QOrganizerItemReminder::NoReminder,
         VisualReminder = QOrganizerItemReminder::VisualReminder,
@@ -713,522 +591,116 @@ public:
         EmailReminder = QOrganizerItemReminder::EmailReminder
     };
 
-    QDeclarativeOrganizerItemReminder(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemReminder());
-        connect(this, SIGNAL(reminderChanged()), SIGNAL(detailChanged()));
-    }
+    QDeclarativeOrganizerItemReminder(QObject *parent = 0);
 
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Reminder;
-    }
+    virtual ItemDetailType type() const;
 
-    ReminderType reminderType() const
-    {
-        if (m_detail.definitionName() == QOrganizerItemAudibleReminder::DefinitionName) {
-            return QDeclarativeOrganizerItemReminder::AudibleReminder;
-        } else if (m_detail.definitionName() == QOrganizerItemEmailReminder::DefinitionName) {
-            return QDeclarativeOrganizerItemReminder::EmailReminder;
-        } else if (m_detail.definitionName() == QOrganizerItemVisualReminder::DefinitionName) {
-            return QDeclarativeOrganizerItemReminder::VisualReminder;
-        }
+    ReminderType reminderType() const;
 
-        return QDeclarativeOrganizerItemReminder::NoReminder;
-    }
+    void setRepetitionCount(int count);
+    int repetitionCount() const;
 
-    void setSecondsBeforeStart(int seconds)
-    {
-        if (seconds != secondsBeforeStart() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemReminder::FieldSecondsBeforeStart, seconds);
-            emit reminderChanged();
-        }
-    }
-    int secondsBeforeStart() const {return m_detail.value<int>(QOrganizerItemReminder::FieldSecondsBeforeStart);}
+    void setRepetitionDelay(int delaySeconds);
+    int repetitionDelay() const;
 
-    void setRepetitionDelay(int delaySeconds)
-    {
-        if (delaySeconds != repetitionDelay() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemReminder::FieldRepetitionDelay, delaySeconds);
-            emit reminderChanged();
-        }
-    }
-    void setRepetitionCount(int count)
-    {
-        if (count != repetitionCount() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemReminder::FieldRepetitionCount, count);
-            emit reminderChanged();
-        }
-    }
-    int repetitionDelay() const {return m_detail.value<int>(QOrganizerItemReminder::FieldRepetitionDelay);}
-    int repetitionCount() const {return m_detail.value<int>(QOrganizerItemReminder::FieldRepetitionCount);}
+    void setSecondsBeforeStart(int seconds);
+    int secondsBeforeStart() const;
 
-signals:
-    void reminderChanged();
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemReminder)
 
-//audible reminder detail
+
 class QDeclarativeOrganizerItemAudibleReminder : public QDeclarativeOrganizerItemReminder
 {
     Q_OBJECT
-    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        DataUrl = 0
-    };
+    QDeclarativeOrganizerItemAudibleReminder(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setDataUrl(const QUrl &url);
+    QUrl dataUrl() const;
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "audibleReminder");
-    Q_DECLARE_LATIN1_CONSTANT(DetailGroupName, "audibleReminders");
-    QDeclarativeOrganizerItemAudibleReminder(QObject* parent = 0)
-        :QDeclarativeOrganizerItemReminder(parent)
-    {
-        setDetail(QOrganizerItemAudibleReminder());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::AudibleReminder;
-    }
-    void setDataUrl(const QUrl& url)
-    {
-        if (url != dataUrl() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemAudibleReminder::FieldDataUrl, url);
-            emit valueChanged();
-        }
-    }
-    QUrl dataUrl() const {return m_detail.value<QUrl>(QOrganizerItemAudibleReminder::FieldDataUrl);}
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemAudibleReminder)
 
-//visual reminder detail
-class QDeclarativeOrganizerItemVisualReminder : public QDeclarativeOrganizerItemReminder
-{
-    Q_OBJECT
-    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY valueChanged)
-    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        DataUrl = 0,
-        Message
-    };
-    static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "visualReminder");
-    Q_DECLARE_LATIN1_CONSTANT(DetailGroupName, "visualReminders");
-    QDeclarativeOrganizerItemVisualReminder(QObject* parent = 0)
-        :QDeclarativeOrganizerItemReminder(parent)
-    {
-        setDetail(QOrganizerItemVisualReminder());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::VisualReminder;
-    }
-    // message and visual data to be displayed if visual notification.
-    void setMessage(const QString& msg)
-    {
-        if (msg != message() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemVisualReminder::FieldMessage, msg);
-            emit valueChanged();
-        }
-    }
-    QString message() const {return m_detail.value<QString>(QOrganizerItemVisualReminder::FieldMessage);}
-    void setDataUrl(const QUrl& url)
-    {
-        if (url != dataUrl() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemVisualReminder::FieldDataUrl, url);
-            emit valueChanged();
-        }
-    }
-    QUrl dataUrl() const {return m_detail.value<QUrl>(QOrganizerItemVisualReminder::FieldDataUrl);}
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemVisualReminder)
-
-//email reminder detail
 class QDeclarativeOrganizerItemEmailReminder : public QDeclarativeOrganizerItemReminder
 {
     Q_OBJECT
-    Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY valueChanged)
-    Q_PROPERTY(QString body READ body WRITE setBody NOTIFY valueChanged)
-    Q_PROPERTY(QStringList recipients READ recipients WRITE setRecipients NOTIFY valueChanged)
-    Q_PROPERTY(QVariantList attachments READ attachments WRITE setAttachments NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString body READ body WRITE setBody NOTIFY detailChanged)
+    Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY detailChanged)
+    Q_PROPERTY(QStringList recipients READ recipients WRITE setRecipients NOTIFY detailChanged)
+    Q_PROPERTY(QVariantList attachments READ attachments WRITE setAttachments NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        Subject = 0,
-        Body,
-        Recipients,
-        Attachments
-    };
+    QDeclarativeOrganizerItemEmailReminder(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setBody(const QString &newBody);
+    QString body() const;
+
+    void setSubject(const QString &newSubject);
+    QString subject() const;
+
+    void setRecipients(const QStringList &newRecipients);
+    QStringList recipients() const;
+
+    void setAttachments(const QVariantList &newAttachments);
+    QVariantList attachments();
+
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "emailReminder");
-    Q_DECLARE_LATIN1_CONSTANT(DetailGroupName, "emailReminders");
-    QDeclarativeOrganizerItemEmailReminder(QObject* parent = 0)
-        :QDeclarativeOrganizerItemReminder(parent)
-    {
-        setDetail(QOrganizerItemEmailReminder());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::EmailReminder;
-    }
-    QString subject() const {return m_detail.value(QOrganizerItemEmailReminder::FieldSubject);}
-    void setSubject(const QString& newSubject)
-    {
-        if (newSubject != subject() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemEmailReminder::FieldSubject, newSubject);
-            emit valueChanged();
-        }
-    }
-
-    QString body() const {return m_detail.value(QOrganizerItemEmailReminder::FieldBody);}
-    void setBody(const QString& newBody)
-    {
-        if (newBody != body() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemEmailReminder::FieldBody, newBody);
-            emit valueChanged();
-        }
-    }
-
-    QVariantList attachments() {return m_detail.value<QVariantList>(QOrganizerItemEmailReminder::FieldAttachments);}
-    void setAttachments(const QVariantList& newAttachments)
-    {
-        if (newAttachments != attachments() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemEmailReminder::FieldAttachments, newAttachments);
-            emit valueChanged();
-        }
-    }
-
-    void setRecipients(const QStringList& newRecipients)
-    {
-        if (newRecipients != recipients() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemEmailReminder::FieldRecipients, newRecipients);
-            emit valueChanged();
-        }
-    }
-    QStringList recipients() const {return m_detail.value<QStringList>(QOrganizerItemEmailReminder::FieldRecipients);}
-
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemEmailReminder)
 
-//timestamp detail
-class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetail
+
+class QDeclarativeOrganizerItemVisualReminder : public QDeclarativeOrganizerItemReminder
 {
     Q_OBJECT
-    Q_PROPERTY(QDateTime lastModified READ lastModified WRITE setLastModified NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime created READ created WRITE setCreated NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
+
+    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY detailChanged)
+    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY detailChanged)
+
 public:
-    enum FieldType {
-        LastModified = 0,
-        Created
-    };
-    static QString fieldNameFromFieldType(int type);
+    QDeclarativeOrganizerItemVisualReminder(QObject *parent = 0);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "timestamp");
-    QDeclarativeOrganizerItemTimestamp(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemTimestamp());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Timestamp;
-    }
-    void setLastModified(const QDateTime& timestamp)
-    {
-        if (timestamp != lastModified() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemTimestamp::FieldModificationTimestamp, timestamp.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime lastModified() const {return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldModificationTimestamp).toLocalTime();}
-    void setCreated(const QDateTime& timestamp)
-    {
-        if (timestamp != created() && !readOnly()) {
-            m_detail.setValue(QOrganizerItemTimestamp::FieldCreationTimestamp, timestamp.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime created() const {return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldCreationTimestamp).toLocalTime();}
+    virtual ItemDetailType type() const;
 
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemTimestamp)
+    void setMessage(const QString &msg);
+    QString message() const;
 
-
-//type detail
-class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
-{
-    Q_OBJECT
-    Q_PROPERTY(OrganizerItemType itemType READ itemType WRITE setItemType NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        ItemType = 0
-    };
-    static QString fieldNameFromFieldType(int type);
-
-    enum OrganizerItemType {
-        Event = 0,
-        EventOccurrence,
-        Todo,
-        TodoOccurrence,
-        Note,
-        Journal,
-        Customized
-    };
-
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "type");
-    QDeclarativeOrganizerItemType(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerItemType());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::Type;
-    }
-    void setItemType(OrganizerItemType newType)
-    {
-        if (newType != itemType() && !readOnly()) {
-            switch (newType) {
-            case Event:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeEvent);
-                break;
-            case EventOccurrence:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeEventOccurrence);
-                break;
-            case Todo:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeTodo);
-                break;
-            case TodoOccurrence:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeTodoOccurrence);
-                break;
-            case Note:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeNote);
-                break;
-            case Journal:
-                m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeJournal);
-                break;
-            default:
-                qmlInfo(this) << tr("I don't known how to set the customized item type name here!");
-                break;
-            }
-            emit valueChanged();
-        }
-    }
-    OrganizerItemType itemType() const
-    {
-        QString typeString = m_detail.value(QOrganizerItemType::FieldType);
-        if (typeString == QOrganizerItemType::TypeEvent)
-            return Event;
-        else if (typeString == QOrganizerItemType::TypeEventOccurrence)
-            return EventOccurrence;
-        else if (typeString == QOrganizerItemType::TypeTodo)
-            return Todo;
-        else if (typeString == QOrganizerItemType::TypeTodoOccurrence)
-            return TodoOccurrence;
-        else if (typeString == QOrganizerItemType::TypeNote)
-            return Note;
-        else if (typeString == QOrganizerItemType::TypeJournal)
-            return Journal;
-        qmlInfo(this) << tr("Unknown organizer item type: ") << typeString;
-        return Customized;
-    }
-
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemType)
-
-//journal time range detail
-class QDeclarativeOrganizerJournalTime : public QDeclarativeOrganizerItemDetail
-{
-    Q_OBJECT
-    Q_PROPERTY(QDateTime entryDateTime READ entryDateTime WRITE setEntryDateTime NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        EntryDateTime = 0
-    };
-    static QString fieldNameFromFieldType(int type);
-
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "journalTime");
-    QDeclarativeOrganizerJournalTime(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerJournalTime());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::JournalTime;
-    }
-    void setEntryDateTime(const QDateTime& datetime)
-    {
-        if (datetime != entryDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerJournalTime::FieldEntryDateTime, datetime.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime entryDateTime() const {return m_detail.value<QDateTime>(QOrganizerJournalTime::FieldEntryDateTime).toLocalTime();}
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerJournalTime)
-
-//todo progress detail
-class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
-{
-    Q_OBJECT
-    Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY valueChanged)
-    Q_PROPERTY(int percentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
-    Q_ENUMS(StatusType)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        Status = 0,
-        Percentage,
-        FinishedDateTime
-    };
-
-    enum StatusType {
-        NotStarted = QOrganizerTodoProgress::StatusNotStarted,
-        InProgress = QOrganizerTodoProgress::StatusInProgress,
-        Complete = QOrganizerTodoProgress::StatusComplete
-    };
-    static QString fieldNameFromFieldType(int type);
-
-    Q_DECLARE_LATIN1_CONSTANT(DetailName,"todoProgress");
-
-    QDeclarativeOrganizerTodoProgress(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerTodoProgress());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::TodoProgress;
-    }
-
-    void setFinishedDateTime(const QDateTime& datetime)
-    {
-        if (datetime != finishedDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerTodoProgress::FieldFinishedDateTime, datetime.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime finishedDateTime() const {return m_detail.value<QDateTime>(QOrganizerTodoProgress::FieldFinishedDateTime).toLocalTime();}
-
-    void setPercentageComplete(int percentage)
-    {
-        if (percentage != percentageComplete() && !readOnly()) {
-            if (percentage >=0 && percentage <= 100) {
-                m_detail.setValue(QOrganizerTodoProgress::FieldPercentageComplete, percentage);
-                emit valueChanged();
-            } else {
-                qmlInfo(this) << tr("Trying to set an invalid percentage value:") << percentage;
-            }
-        }
-    }
-    int percentageComplete() const {return m_detail.value<int>(QOrganizerTodoProgress::FieldPercentageComplete);}
-
-
-
-    void setStatus(StatusType newStatus)
-    {
-        if (newStatus != status() && !readOnly()) {
-            m_detail.setValue(QOrganizerTodoProgress::FieldStatus, (int) newStatus);
-            emit valueChanged();
-        }
-    }
-    StatusType status() const {return (StatusType) m_detail.value<int>(QOrganizerTodoProgress::FieldStatus);}
-signals:
-    void valueChanged();
-};
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodoProgress)
-
-//todo time range detail
-class QDeclarativeOrganizerTodoTime : public QDeclarativeOrganizerItemDetail
-{
-    Q_OBJECT
-    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
-    Q_ENUMS(FieldType)
-public:
-    enum FieldType {
-        AllDay = 0,
-        StartDateTime,
-        DueDateTime
-    };
+    void setDataUrl(const QUrl &url);
+    QUrl dataUrl() const;
 
     static QString fieldNameFromFieldType(int type);
 
-    Q_DECLARE_LATIN1_CONSTANT(DetailName, "todoTime");
-    QDeclarativeOrganizerTodoTime(QObject* parent = 0)
-        :QDeclarativeOrganizerItemDetail(parent)
-    {
-        setDetail(QOrganizerTodoTime());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
-    }
-    virtual ItemDetailType type() const
-    {
-        return QDeclarativeOrganizerItemDetail::TodoTime;
-    }
-    void setStartDateTime(const QDateTime& datetime)
-    {
-        if (datetime != startDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerTodoTime::FieldStartDateTime, datetime.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime startDateTime() const {return m_detail.value<QDateTime>(QOrganizerTodoTime::FieldStartDateTime).toLocalTime();}
-    void setDueDateTime(const QDateTime& dateTime)
-    {
-        if (dateTime != dueDateTime() && !readOnly()) {
-            m_detail.setValue(QOrganizerTodoTime::FieldDueDateTime, dateTime.toUTC());
-            emit valueChanged();
-        }
-    }
-    QDateTime dueDateTime() const {return m_detail.value<QDateTime>(QOrganizerTodoTime::FieldDueDateTime).toLocalTime();}
-
-    void setAllDay(bool allDay)
-    {
-        if (allDay != isAllDay() && !readOnly()) {
-            m_detail.setValue(QOrganizerTodoTime::FieldAllDay, allDay);
-            emit valueChanged();
-        }
-    }
-    bool isAllDay() {return m_detail.value<bool>(QOrganizerTodoTime::FieldAllDay);}
-
-signals:
-    void valueChanged();
+Q_SIGNALS:
+    void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodoTime)
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemVisualReminder)
+
+
+class QDeclarativeOrganizerItemDetailFactory
+{
+public:
+    static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type);
+    static QDeclarativeOrganizerItemDetail *createItemDetail(const QString &definitionName);
+};
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H
-
-
-

@@ -17,7 +17,6 @@ HEADERS += qdeclarativeorganizermodel_p.h \
            qdeclarativeorganizeritem_p.h \
            qdeclarativeorganizeritemdetail_p.h \
            qdeclarativeorganizeritemfilter_p.h \
-           qdeclarativeorganizeritemmetaobject_p.h \
            qdeclarativeorganizerrecurrencerule_p.h \
            qdeclarativeorganizercollection_p.h \
            qdeclarativeorganizeritemsortorder_p.h \
@@ -26,14 +25,12 @@ HEADERS += qdeclarativeorganizermodel_p.h \
 SOURCES += plugin.cpp \
            qdeclarativeorganizeritem.cpp \
            qdeclarativeorganizeritemdetail.cpp \
-           qdeclarativeorganizeritemmetaobject.cpp \
            qdeclarativeorganizermodel.cpp \
            qdeclarativeorganizeritemfilter.cpp \
            qdeclarativeorganizercollection.cpp \
            qdeclarativeorganizeritemsortorder.cpp \
            qdeclarativeorganizerrecurrencerule.cpp \
-           qdeclarativeorganizeritemfetchhint.cpp \
-           qdeclarativeopenmetaobject.cpp
+           qdeclarativeorganizeritemfetchhint.cpp
 
 symbian {
     # In Symbian, a library should enjoy _largest_ possible capability set.

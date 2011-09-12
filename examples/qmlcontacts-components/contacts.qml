@@ -46,7 +46,7 @@ import com.nokia.components.style 1.0
 import "contents"
 ApplicationWindow {
     id: screen; width: 320; height: 480
-    property bool enabled: !pageStack.busy && _running && !busy // global app flag
+    property bool enabled: !pageStack.busy && !busy // global app flag
     property bool busy: false
     property string viewType : "contactListView"
     property bool showContact: false
@@ -79,20 +79,23 @@ ApplicationWindow {
                 //iconSource: "../images/toolbar_add.png"
                 iconId: "clist.gadd"
                 onClicked: {
-                    //Cleanup of empty contact card before showing the new contact view
-                    //otherwise the newContact element will hold values entered for a
-                    //previously added contact.
-                    for (var i = 0; i < newContact.details.length; i++) {
-                        newContact.removeDetail (newContact.details[i])
-                    }
-                    emptyPhone.number = ""
-                    emptyPhone.subTypes = ["Mobile"]
-                    newContact.addDetail (emptyPhone)
-                    emptyEmail.emailAddress = ""
-                    newContact.addDetail (emptyEmail)
+                    var tempContact = Qt.createQmlObject(
+                        "import QtAddOn.contacts 2.0;" +
+                        "Contact {}", contactModel);
+                    var phone = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                                   "PhoneNumber {contexts: ['Home']}", contactModel);
+                    var email = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                                   "EmailAddress {}", contactModel);
+                    var address = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                                     "Address {locality: \"\";street: \"\";country: \"\";postcode: \"\";}", contactModel);
+                    var name = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                                  "Name {firstName: \"\";lastName: \"\"}", contactModel);
+                    tempContact.addDetail(name)
+                    tempContact.addDetail(phone)
+                    tempContact.addDetail(email)
+                    tempContact.addDetail(address)
 
-                    pageStack.push(contactEditComponent, {contact: newContact, addMode: true, mainModel: contactModel});
-                    console.log ("Add button clicked!")
+                    pageStack.push(contactEditComponent, {contact: tempContact, addMode: true, mainModel: contactModel});
                 }
                 enabled: true
                 visible: enabled
@@ -156,7 +159,7 @@ ApplicationWindow {
                 id: contactView
 
 
-                onBackClicked: pageStack.pop(screen.pageList)
+                onBackClicked: pageStack.pop()
 
                 onDismissed: {screen.showContact = false;}
                 onDeleted: {contactModel.removeContact(id);}
@@ -233,27 +236,6 @@ ApplicationWindow {
                      }
         }
 
-
-        Contact {
-            id: newContact
-            type:"Contact"
-                Name {
-                    firstName:""
-                    lastName:""
-                }
-        }
-
-        PhoneNumber {
-            id: emptyPhone
-            number: ""
-            subTypes:["Mobile"]
-        }
-
-        EmailAddress {
-            id: emptyEmail
-            emailAddress:""
-        }
-
         states: [
                 State {
                     name: "List";
@@ -268,71 +250,6 @@ ApplicationWindow {
             ]
 
 
-        // Attach scrollbar to the right edge of the view.
-        ScrollBar {
-            id: verticalScrollBar
-            opacity: 0
-            orientation: "Vertical"
-            position: contactListView.visibleArea.yPosition
-            pageSize: contactListView.visibleArea.heightRatio
-            width: 20
-            height: contactListView.height
-            anchors.right: contactListView.right
-            anchors.top: titleBar.bottom
-            fgColor: "white"
-            // Only show the scrollbar when the view is moving.
-            states: [
-                State {
-                    name: "ShowBars"; when: contactListView.moving
-                    PropertyChanges { target: verticalScrollBar; opacity: 1 }
-                }
-            ]
-            transitions: [ Transition { NumberAnimation { property: "opacity"; duration: 400 } } ]
-        }
-
-        // Message box
-        Rectangle {
-            id:messageBox
-            property string messageString: ""
-            opacity:0
-            height:50
-            width:parent.width
-            anchors.top:parent.top
-            anchors.topMargin:200
-            border.width: 0
-            radius: 10
-
-            color:"white"
-            Text {
-                text:messageBox.messageString
-                color:"red"
-                font.pointSize:20
-                horizontalAlignment:Text.AlignHCenter
-            }
-
-            // Only show the messageBox when messageString is not empty.
-            states: [
-                State {
-                    name: "ShowMessage"; when: messageBox.messageString != ""
-                    PropertyChanges { target: messageBox; opacity: 1 }
-                    PropertyChanges { target: timer; running: true }
-                }
-            ]
-            transitions: [
-                Transition {
-                    NumberAnimation { property: "opacity"; duration: 500; to:0 }
-                }
-            ]
-            Timer {
-                id:timer
-                interval: 1000; running: false; repeat: false
-                onTriggered: {
-                    messageBox.messageString = ""
-                    running = false
-                }
-            }
-
-        }
 
         ListModel {
             id: managersModel;
@@ -363,4 +280,4 @@ ApplicationWindow {
         }
     }
 }
-// ![0]
+

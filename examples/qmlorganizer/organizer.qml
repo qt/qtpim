@@ -251,6 +251,8 @@ Rectangle {
                 return Qt.createQmlObject("import QtAddOn.organizer 2.0; Event { }", organizer);
             } else if (type == "Todo") {
                 return Qt.createQmlObject("import QtAddOn.organizer 2.0; Todo { }", organizer);
+            } else if (type == "Collectionfilter") {
+                return Qt.createQmlObject("import QtAddOn.organizer 2.0; CollectionFilter { }", organizer);
     //        } else if (type == "EventOccurrence") {
     //            return Qt.createQmlObject("import QtAddOn.organizer 2.0; EventOccurrence { }", organizer);
     //        } else if (type == "TodoOccurrence") {

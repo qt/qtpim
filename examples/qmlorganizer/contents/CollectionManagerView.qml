@@ -65,19 +65,40 @@ Item {
         ListView {
             id: collectionList
             opacity: 0.8
-            width: parent.width; height: parent.height - 50;
+            width: parent.width; height: parent.height - instructionsText.height;
             model: organizer.collections
 
             clip: true
             focus: true
             delegate: listViewDelegate
         }
+
+        Text {
+            id: instructionsText
+            text: "<To start filtering collections, check the squares of wanted collections, by default all collections are enabled>"
+            height: 100; width: parent.width
+            anchors { horizontalCenter: parent.horizontalCenter }
+            color: "White"
+            wrapMode: TextEdit.WordWrap
+            font { italic: true }
+        }
     }
 
     Component {
         id: listViewDelegate
         Row {
-            property bool activeOnFilter: false
+            property bool isEnabledInCollectionFilter: {
+                var ret = false;
+                if (organizer.filter == undefined) {
+                    ret = true;
+                } else {
+                    var list = organizer.filter.ids;
+                    if (list.indexOf(collectionId) != -1){
+                        ret = true;
+                    }
+                }
+                return ret;
+            }
             anchors { horizontalCenter: parent.horizontalCenter }
             spacing: 5
             Text {
@@ -94,6 +115,19 @@ Item {
                     }
                 }
             }
+            Rectangle {
+                width: 20; height: 20
+                border { color: "black"; width: 1; }
+                color: isEnabledInCollectionFilter ? "black" : "gray"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        collectionList.currentIndex = index;
+                        isEnabledInCollectionFilter = !isEnabledInCollectionFilter;
+                        modifyCollectionFilter(isEnabledInCollectionFilter, index);
+                    }
+                }
+            }
         }
     }
 
@@ -105,5 +139,46 @@ Item {
     function modifyCollection() {
         collectionEditorView.collection = organizer.collections[collectionList.currentIndex];
         calendar.state = "CollectionEditorView";
+    }
+
+    function modifyCollectionFilter(enabled, index) {
+        //Currently we shall only have collection filter
+        var modelCollectionFilter = organizer.filter
+        if (modelCollectionFilter == undefined) {
+            //Create new filter
+            modelCollectionFilter = calendar.createEmptyItem("Collectionfilter");
+            var collectionList = organizer.collections;
+            var collectionFilterList = [];
+            if (false == enabled) {//add all ids to the list except the one is not enabled
+                for (var i = 0; i < collectionList.length; i++) {
+                    if (i != index)
+                        collectionFilterList.push(organizer.collections[i].collectionId);
+                }
+            }//We shall not have the case that enable==true
+            modelCollectionFilter.ids = collectionFilterList
+            //Update model filter
+            organizer.filter = modelCollectionFilter;
+
+        } else { //Update filter list
+            //Get exist filter id list,
+            var filterIdsList = modelCollectionFilter.ids;
+            var collectionId = organizer.collections[index].collectionId;
+            if (false == enabled) {
+                //If the enable is false, remove from the list if we found inside list
+                var filterIndex = filterIdsList.indexOf(collectionId);
+                if (filterIndex >= 0)
+                    filterIdsList.splice(filterIndex, 1);
+                else
+                    console.log("Warning: Collection id is not found in filter list" + collectionId);
+            } else {
+                //else if the enable is true, add this id in the filter list if we do not have it in list
+                if (filterIdsList.indexOf(collectionId) == -1)
+                    filterIdsList.push(collectionId);
+                else
+                    console.log("Warning: Collection id exists in filter list :" + collectionId);
+            }
+            //update model filter
+            modelCollectionFilter.ids = filterIdsList;
+        }
     }
 }

@@ -332,6 +332,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
     QVariantList emails;
     QVariantList urls;
     QVariantList organizations;
+    QVariantList addresses;
     QVariantMap embeddedDetailsMap;
 
     for(int i = 0; i < details.size(); ++i) {
@@ -465,7 +466,8 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             if(!address->country().isEmpty())
                 addressMap[addressFieldsMapping.value(QContactAddress::FieldCountry)] = address->country();
             updateContexts(*address, &addressMap);
-            object->insert(detailsToJsonMapping.value(QContactAddress::DefinitionName), addressMap);
+            addresses.append(addressMap);
+            object->insert(detailsToJsonMapping.value(QContactAddress::DefinitionName), addresses);
         }
         // url
         else if( (detail.definitionName() == QContactUrl::DefinitionName) ) {

@@ -39,54 +39,71 @@
 ****************************************************************************/
 
 import QtQuick 2.0
+import QtAddOn.organizer 2.0
 
-// These buttons are very ugly
-Rectangle {
-    id: container
+Item {
+    anchors.centerIn: parent
+    opacity: 0
+    width: calendar.width;
+    height: calendar.height - menuBar.height - statusBar.height - 50;
 
-    signal clicked
-    property string image: ""
-    property string text: ""
-    property int padding: 2
+    property Collection collection;
 
-    color: activePalette.button;
-    smooth: true
-    border.width: 1;
-    border.color: Qt.darker(activePalette.dark);
-    radius: 2;
+    Column {
+        spacing: 2
 
+        width: parent.width; height: parent.height;
 
-    gradient: Gradient {
-        GradientStop { position: 0.0; color: Qt.lighter(activePalette.button) }
-        GradientStop { position: 1.0; color : mr.pressed ?  Qt.lighter(activePalette.light) : Qt.darker(activePalette.dark) }
+        Text {
+            text: "Collections:"
+            height: 30
+            anchors { horizontalCenter: parent.horizontalCenter }
+            color: "White"
+            font { pointSize: 15; weight: Font.Bold }
+        }
+
+        ListView {
+            id: collectionList
+            opacity: 0.8
+            width: parent.width; height: parent.height - 50;
+            model: organizer.collections
+
+            clip: true
+            focus: true
+            delegate: listViewDelegate
+        }
     }
-    width: stuff.width + 4 * padding
-    height: stuff.height + 2 * padding
 
-    Item {
-        id: stuff
-        width: childrenRect.width;
-        height: childrenRect.height;
-        y: padding
-        anchors.horizontalCenter: parent.horizontalCenter
-
+    Component {
+        id: listViewDelegate
         Row {
-            Image {
-                id: imgItem;
-                smooth: true
-                width: source != "" ? 16 : 0; height: source != "" ? 16 : 0;
-                source: container.image;
-                opacity: source == "" ? 0 : 1;
-            }
-
+            property bool activeOnFilter: false
+            anchors { horizontalCenter: parent.horizontalCenter }
+            spacing: 5
             Text {
-                horizontalAlignment: Text.AlignHCenter
-                id: txtItem; text: container.text; font.pixelSize: 14; color: activePalette.buttonText
+                text: name
+                height: 30
+                color: "White"
+                font { weight: Font.Bold }
+
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        collectionList.currentIndex = index;
+                        modifyCollection();
+                    }
+                }
             }
         }
     }
 
-    // Don't make mr part of the size determination, since it uses anchors.fill
-    MouseArea { id: mr; anchors.fill: parent; onClicked: container.clicked() }
+    function addCollection() {
+        collectionEditorView.collection = Qt.createQmlObject('import QtQuick 2.0; import QtAddOn.organizer 2.0; Collection {}',organizer);
+        calendar.state = "CollectionEditorView";
+    }
 
+    function modifyCollection() {
+        collectionEditorView.collection = organizer.collections[collectionList.currentIndex];
+        calendar.state = "CollectionEditorView";
+    }
 }

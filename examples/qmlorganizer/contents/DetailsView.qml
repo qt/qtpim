@@ -78,11 +78,13 @@ Rectangle
                 customAlldayCheckBox.setValue(item.allDay);
                 customDescriptionRow.setValue(item.description);
                 customLocationRow.setValue(item.location);
+                customCollectionRow.value = customCollectionRow.findCollectionArrayIndex(item.collectionId);
             } else if (item.type == "Todo") {
                 todoCustomLabelRow.setValue(item.displayLabel);
                 todoCustomDueDateRow.dateTimeRoller.setDateTime(detailsView.item.dueDateTime);
                 todoCustomDescriptionRow.setValue(item.description);
                 todoCustomPriorityRow.value = detailsView.item.priority;
+                todoCollectionRow.value = todoCollectionRow.findCollectionArrayIndex(item.collectionId);
             }
 
             if (item.recurrence != undefined && item.recurrence.recurrenceRules.length > 0) {
@@ -443,6 +445,12 @@ Rectangle
             }
         }
 
+        CollectionRoller {
+            id: customCollectionRow
+            onCurrentIndexChanged: {
+                item.collectionId = organizer.collections[currentIndex].collectionId;
+            }
+        }
     }
 
     //todo
@@ -490,6 +498,12 @@ Rectangle
            valueSet: ["Unknown", "Highest", "ExtremelyHigh", "VeryHigh", "High", "Medium", "Low", "VeryLow", "ExtremelyLow", "Lowest"]
            onRollerChanged: {
                item.priority = todoCustomPriorityRow.valueRoller.selectedValue();
+           }
+       }
+       CollectionRoller {
+           id: todoCollectionRow
+           onCurrentIndexChanged: {
+               item.collectionId = organizer.collections[currentIndex].collectionId;
            }
        }
     }

@@ -39,54 +39,76 @@
 ****************************************************************************/
 
 import QtQuick 2.0
+import QtAddOn.organizer 2.0
 
-// These buttons are very ugly
-Rectangle {
-    id: container
+Item {
+    anchors.centerIn: parent
+    opacity: 0
+    width: calendar.width;
+    height: calendar.height - menuBar.height - statusBar.height// - editorItems.height;
 
-    signal clicked
-    property string image: ""
-    property string text: ""
-    property int padding: 2
-
-    color: activePalette.button;
-    smooth: true
-    border.width: 1;
-    border.color: Qt.darker(activePalette.dark);
-    radius: 2;
+    property Collection collection;
 
 
-    gradient: Gradient {
-        GradientStop { position: 0.0; color: Qt.lighter(activePalette.button) }
-        GradientStop { position: 1.0; color : mr.pressed ?  Qt.lighter(activePalette.light) : Qt.darker(activePalette.dark) }
-    }
-    width: stuff.width + 4 * padding
-    height: stuff.height + 2 * padding
+    Column {
+        id: editorItems
 
-    Item {
-        id: stuff
-        width: childrenRect.width;
-        height: childrenRect.height;
-        y: padding
-        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 4
+        opacity: 0.8
 
         Row {
-            Image {
-                id: imgItem;
-                smooth: true
-                width: source != "" ? 16 : 0; height: source != "" ? 16 : 0;
-                source: container.image;
-                opacity: source == "" ? 0 : 1;
-            }
+            spacing: 4
+            Button { id: saveCollectionButton; text: "Save"; width: calendar.width/2; onClicked: saveCollection(); }
+            Button { id: removeCollectionButton; text: "Delete"; width: calendar.width/2; onClicked: removeCollection(); }
+        }
 
-            Text {
-                horizontalAlignment: Text.AlignHCenter
-                id: txtItem; text: container.text; font.pixelSize: 14; color: activePalette.buttonText
-            }
+        Text {
+            text: "Collection"
+            height: 30
+            anchors { horizontalCenter: parent.horizontalCenter }
+            color: "White"
+            font { pointSize: 15; weight: Font.Bold }
+        }
+        FieldRow {
+            id: nameRow
+            label: "Name"
+            value: collection.name
+        }
+//        FieldRow {
+//            id: idRow
+//            label: "Id"
+//            value: collection.collectionId
+//        }
+        FieldRow {
+            id: descRow
+            label: "Description"
+            value: collection.description
+        }
+        FieldRow {
+            id: colorRow
+            label: "Color"
+            value: collection.color
+        }
+        FieldRow {
+            id: imageRow
+            label: "Image"
+            value: collection.image
         }
     }
 
-    // Don't make mr part of the size determination, since it uses anchors.fill
-    MouseArea { id: mr; anchors.fill: parent; onClicked: container.clicked() }
+    function saveCollection() {
+        var newCollection = Qt.createQmlObject('import QtQuick 2.0; import QtAddOn.organizer 2.0; Collection {}',organizer);
+        newCollection.name = nameRow.newValue;
+        newCollection.collectionId = collection.collectionId;
+        newCollection.description = descRow.newValue;
+        newCollection.color = colorRow.newValue;
+        newCollection.image = imageRow.newValue;
+        organizer.saveCollection(newCollection);
+        calendar.state = "CollectionManagerView";
+    }
 
+    function removeCollection() {
+        organizer.removeCollection(collection.collectionId);
+        calendar.state = "CollectionManagerView";
+    }
 }

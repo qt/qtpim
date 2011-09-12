@@ -47,8 +47,10 @@ OTHER_FILES += \
     contents/SelectionView.qml \
     contents/RollerRow.qml \
     contents/CheckBox.qml \
-    contents/CheckBoxRow.qml
-
+    contents/CheckBoxRow.qml \
+    contents/CollectionManagerView.qml \
+    contents/CollectionEditorView.qml \
+    contents/CollectionRoller.qml
 
 symbian: {
     load(data_caging_paths)

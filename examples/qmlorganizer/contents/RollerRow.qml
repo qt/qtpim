@@ -47,6 +47,7 @@ Item {
     property variant valueSet
     property alias label: nameField.text
     property alias valueRoller : valueRoller
+    property alias currentIndex : valueSpinner.currentIndex
 
     signal rollerChanged
 

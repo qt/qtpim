@@ -68,6 +68,8 @@ Rectangle {
         Button { id: weekButton; text: "Week";onClicked: calendar.state="WeekView";}
         Button { id: monthButton; text: "Month"; onClicked: calendar.state="MonthView";}
         Button { id: timelineButton; text: "Timeline";onClicked: calendar.state="TimelineView";}
+        Button { id: collectionButton; text: "Collections";onClicked: calendar.state="CollectionManagerView";}
+
         Text { color: "#f5f210";text:info ; font.bold: true; verticalAlignment: Text.AlignVCenter; style: Text.Sunken;font.pointSize: 6}
     }
 }

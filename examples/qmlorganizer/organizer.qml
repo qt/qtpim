@@ -79,6 +79,13 @@ Rectangle {
                 calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
 
             }
+            onCollectionsChanged: {
+                //update all the calendar views such as Monthview and weekview by change the calendar currentDate
+                //ugly!
+                calendar.currentDate = new Date (calendar.year, calendar.month + 1, calendar.day + 1);
+                calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
+            }
+
             onManagerChanged:{
                 //update all the calendar views such as Monthview and weekview by change the calendar currentDate
                 //ugly!
@@ -116,7 +123,11 @@ Rectangle {
             //add new item clicked
             onAddClicked : {
                 calendar.preState = calendar.state;
-                calendar.state = "AddNewItemSelectView";
+                if (calendar.state != "CollectionManagerView") {
+                    calendar.state = "AddNewItemSelectView";
+                } else {
+                    collectionManagerView.addCollection();
+                }
             }
         }
 
@@ -127,7 +138,9 @@ Rectangle {
             State {name: "DayView"; PropertyChanges { target: dayView; opacity: 1; }},
             State {name: "AgenderView"; PropertyChanges { target: agenderView; opacity: 1; }},
             State {name: "DetailsView"; PropertyChanges { target: detailsView; opacity: 1; }},
-            State {name: "AddNewItemSelectView"; PropertyChanges { target: addNewItemview; opacity: 0.8; }}
+            State {name: "AddNewItemSelectView"; PropertyChanges { target: addNewItemview; opacity: 0.8; }},
+            State {name: "CollectionManagerView"; PropertyChanges { target: collectionManagerView; opacity: 1; }},
+            State {name: "CollectionEditorView"; PropertyChanges { target: collectionEditorView; opacity: 1; }}
         ]
         transitions: [
             Transition {
@@ -223,6 +236,12 @@ Rectangle {
                     }
 
                 }
+            }
+            CollectionManagerView {
+                id: collectionManagerView;
+            }
+            CollectionEditorView {
+                id: collectionEditorView;
             }
         }
 

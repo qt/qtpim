@@ -3,8 +3,7 @@
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbenginefactory.h"
 #include "qcontactjsondbbackup.h"
-
-
+#include "qcontactjsondbglobal.h"
 
 
 class tst_QContactJsondbEngine : public QObject
@@ -38,10 +37,6 @@ private:
     QContactJsonDbBackup* m_myBackup;
 };
 
-
-
-
-
 void tst_QContactJsondbEngine::init() {
     // clears the database and loads desired test data
 
@@ -49,22 +44,13 @@ void tst_QContactJsondbEngine::init() {
     //myBackup.loadTestData();
 }
 
-
-
-
-
 void tst_QContactJsondbEngine::cleanup(){
     delete(m_myBackup);
 }
 
-
-
-
-
 tst_QContactJsondbEngine::tst_QContactJsondbEngine()
 {
     m_engine = new QContactJsonDbEngine();
-
 }
 
 tst_QContactJsondbEngine::~tst_QContactJsondbEngine()
@@ -75,7 +61,6 @@ tst_QContactJsondbEngine::~tst_QContactJsondbEngine()
     }
 }
 
-
 void tst_QContactJsondbEngine::testSelfContactId() {
     qDebug() << "NOTE: THE IDENTIFICATION FIELD DOES NOT EXIST YET IN JSON SCHEMA, just returns \"not found\"";
     QContactManager::Error* error;
@@ -84,8 +69,6 @@ void tst_QContactJsondbEngine::testSelfContactId() {
     myId = myContactManager.selfContactId();
     qDebug() << "MyId is:" << myId;
 }
-
-
 
 void tst_QContactJsondbEngine::testContactIds() {
     QContactManager myContactManager;
@@ -104,7 +87,6 @@ void tst_QContactJsondbEngine::testContactIds() {
         QVERIFY(resultContactIds.at(i) == referenceContactIds.at(i));
     }
 }
-
 
 void tst_QContactJsondbEngine::testContacts() {
     QContactManager cm;
@@ -156,7 +138,6 @@ void tst_QContactJsondbEngine::testContacts_data() {
     }
 }
 
-
 void tst_QContactJsondbEngine::testContact() {
     QContactManager cm;
 
@@ -207,7 +188,6 @@ void tst_QContactJsondbEngine::testContact_data() {
     }
 }
 
-
 void tst_QContactJsondbEngine::testSaveContact() {
     QContactManager cm;
 
@@ -230,8 +210,6 @@ void tst_QContactJsondbEngine::testSaveContact() {
     QVERIFY(testContact == expected);
     QCOMPARE(cm.contactIds().size(), originalCount + 1);
 }
-
-
 
 void tst_QContactJsondbEngine::testSaveContacts() {
     QContactManager cm;
@@ -275,7 +253,6 @@ void tst_QContactJsondbEngine::testSaveContacts() {
     QVERIFY(contact2Found == true);
     QCOMPARE(cm.contactIds().size(), originalCount + 2);
 }
-
 
 void tst_QContactJsondbEngine::testContactDetailFilter() {
     QContactManager myContactManager;
@@ -330,10 +307,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
     }
-//TODO: Enable the two test cases below as soon as the corresponding jsondb
-//      query works properly.
-    qDebug() << "Skipping phone number and email filtering tests.....";
-/*
+
     // retrieve contacts filtering by phone number
     QString phoneNr = "6543";
     dfil.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
@@ -377,7 +351,6 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
     }
-*/
 
     //                ------------  MATCH FLAG = MATCH EXACTLY  ------------
 
@@ -419,7 +392,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
     }
-/*
+
     // retrieve contacts filtering by phone number
     phoneNr = "+358507654321";
     dfil.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
@@ -440,8 +413,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     }
 
     // retrieve contacts filtering by email
-
-    email = "mailto:Angelina.Row@ovi.com";
+    email = "Angelina.Row@ovi.com";
     dfil.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
     dfil.setValue(email);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchExactly);
@@ -463,7 +435,6 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
     }
-*/
 
     // retrieve contacts filtering by local ID
     QContactLocalIdFilter idf;
@@ -478,14 +449,11 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     idf.setIds(shortList);
     QVERIFY(idf.ids() == shortList);
 
-
     QContact contact = myContactManager.contact(firstId);
     QVERIFY(firstId == contact.id().localId());
     contacts = myContactManager.contacts(idf, sortOrders);
-// qDebug() << "First Contact: " << contacts;
     QVERIFY(contacts.size() == 1);
     QFETCH(QString, expectedContact1FirstName);
-    QFETCH(QString, expectedContact1LastName);
     QFETCH(QString, expectedContact2FirstName);
     QFETCH(QString, expectedContact3LastName);
     expectedContacts.clear();
@@ -499,12 +467,10 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
 
-
     // Retrieve multiple IDs
     idf.setIds(ids);
     QVERIFY(idf.ids() == ids);
     contacts = myContactManager.contacts(idf, sortOrders);
-//qDebug() << " All the Contacts: " << contacts;
     QVERIFY(contacts.size() == 5);
     expectedContacts.clear();
     expectedContacts << expectedContact1FirstName << expectedContact1LastName << expectedContact2FirstName << expectedContact2LastName << expectedContact3FirstName << expectedContact3LastName << expectedContact4FirstName << expectedContact4LastName << expectedContact5FirstName << expectedContact5LastName;
@@ -519,8 +485,6 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         QCOMPARE(contactFound, true);
     }
 
-
-
     //                ------------  MATCH FLAG = MatchStartsWith  ------------
 
     // retrieve contacts filtering by first name
@@ -530,7 +494,6 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     dfil.setMatchFlags(QContactFilter::MatchStartsWith);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchStartsWith);
     contacts = myContactManager.contacts(dfil, sortOrders);
-  //qDebug() << " MatchStartsWith Jul returned: " << contacts;
     QVERIFY(contacts.size() == 1);
     expectedContacts.clear();
     expectedContacts << expectedContact3FirstName;
@@ -553,7 +516,6 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     dfil.setMatchFlags(QContactFilter::MatchEndsWith);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchEndsWith);
     contacts = myContactManager.contacts(dfil, sortOrders);
-    //qDebug() << " MatchEndssWith ie returned: " << contacts;
     QVERIFY(contacts.size() == 2);
     expectedContacts.clear();
     expectedContacts << expectedContact3FirstName  << expectedContact5FirstName;
@@ -566,10 +528,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
         }
         QCOMPARE(contactFound, true);
     }
-
-
 }
-
 
 void tst_QContactJsondbEngine::testContactDetailFilter_data() {
     QTest::addColumn<QString>("expectedContact1FirstName");
@@ -590,24 +549,10 @@ void tst_QContactJsondbEngine::testContactDetailFilter_data() {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void tst_QContactJsondbEngine::testContactSortOrder() {
     QContactManager myContactManager;
     QContactManager::Error* error;
-/*
+
     // sort order
     QContactSortOrder sortOrder;
     sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
@@ -617,7 +562,6 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     // retrieve all the contacts and sort first names alphabetically
     QContactFilter filter;
     QList<QContact> contacts = myContactManager.contacts(filter, sortOrders);
-    qDebug() << " (TEST) contacts sorted: " << contacts;
     QVERIFY(contacts.size() == 5);
 
     QFETCH(QString, expectedContact1FirstName);
@@ -628,19 +572,19 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     QList<QString> expectedContacts;
     expectedContacts << expectedContact4FirstName << expectedContact1FirstName << expectedContact3FirstName << expectedContact5FirstName << expectedContact2FirstName;
     QVERIFY(expectedContacts.size() == 5);
-    //qDebug() << " (TEST) expected ordered contacts: " << expectedContacts;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) expected ordered contacts: " << expectedContacts;
     for (int i = 0; i < contacts.size(); i++) {
         QVERIFY (contacts.at(i).detail<QContactName>().firstName() == expectedContacts.at(i));
     }
 
-
-// At the moment the JsonDb has problems in ordering by last name and emails...
     // now sort last names alphabetically
     sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
     sortOrders.clear();
     sortOrders.append(sortOrder);
     contacts = myContactManager.contacts(filter, sortOrders);
-    //qDebug() << " (TEST) contacts sorted by surname: " << contacts;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) contacts sorted by surname: " << contacts;
     QVERIFY(contacts.size() == 5);
 
     expectedContacts.clear();
@@ -650,13 +594,36 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     QFETCH(QString, expectedContact4LastName);
     QFETCH(QString, expectedContact5LastName);
     expectedContacts << expectedContact1LastName << expectedContact3LastName << expectedContact4LastName << expectedContact2LastName << expectedContact5LastName;
-    //qDebug() << " (TEST) EXPECTED contacts sorted by surname: " << expectedContacts;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) EXPECTED contacts sorted by surname: " << expectedContacts;
     bool found = false;
     for (int i = 0; i < contacts.size(); i++) {
         QVERIFY (contacts.at(i).detail<QContactName>().lastName() == expectedContacts.at(i));
     }
 
+    // now sort emails alphabetically
+    sortOrder.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    sortOrders.clear();
+    sortOrders.append(sortOrder);
+    contacts = myContactManager.contacts(filter, sortOrders);
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) contacts sorted by email address: " << contacts;
+    QVERIFY(contacts.size() == 5);
 
+    expectedContacts.clear();
+    QFETCH(QString, expectedContact1EmailAddress);
+    QFETCH(QString, expectedContact2EmailAddress);
+    QFETCH(QString, expectedContact3EmailAddress);
+    QFETCH(QString, expectedContact4EmailAddress);
+    QFETCH(QString, expectedContact5EmailAddress);
+    expectedContacts << expectedContact4EmailAddress << expectedContact1EmailAddress << expectedContact3EmailAddress << expectedContact5EmailAddress << expectedContact2EmailAddress;
+    QVERIFY(expectedContacts.size() == 5);
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) EXPECTED contacts sorted by email: " << expectedContacts;
+    found = false;
+    for (int i = 0; i < contacts.size(); i++) {
+        QVERIFY (contacts.at(i).detail<QContactEmailAddress>().emailAddress() == expectedContacts.at(i));
+    }
 
     // retrieve contacts filtering them by first name, then sort the results alphabetically
     sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
@@ -669,19 +636,33 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     dfil.setMatchFlags(QContactFilter::MatchContains);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     contacts = myContactManager.contacts(dfil, sortOrders);
-    //qDebug() << " (TEST) contacts filtered and sorted by first name: " << contacts;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) contacts filtered and sorted by first name: " << contacts;
     expectedContacts.clear();
     QVERIFY(contacts.size() == 3);
 
     expectedContacts << expectedContact4FirstName << expectedContact3FirstName << expectedContact5FirstName;
     QVERIFY(expectedContacts.size() == 3);
-    //qDebug() << " (TEST) expected filtered and ordered contacts: " << expectedContacts;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) expected filtered and ordered contacts: " << expectedContacts;
     for (int i = 0; i < expectedContacts.size(); i++) {
         QVERIFY (contacts.at(i).detail<QContactName>().firstName() == expectedContacts.at(i));
     }
-    */
-}
 
+    // now sort the filtered results by email address
+    sortOrder.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    sortOrders.clear();
+    sortOrders.append(sortOrder);
+    firstName = "";
+    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setValue(firstName);
+    dfil.setMatchFlags(QContactFilter::MatchContains);
+    QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
+    contacts = myContactManager.contacts(dfil, sortOrders);
+    if (qt_debug_jsondb_contacts())
+        qDebug() << " (TEST) filtered contacts sorted by email address: " << contacts;
+    QVERIFY(contacts.size() == 5);
+}
 
 void tst_QContactJsondbEngine::testContactSortOrder_data() {
     QTest::addColumn<QString>("expectedContact1FirstName");
@@ -694,25 +675,15 @@ void tst_QContactJsondbEngine::testContactSortOrder_data() {
     QTest::addColumn<QString>("expectedContact4LastName");
     QTest::addColumn<QString>("expectedContact5FirstName");
     QTest::addColumn<QString>("expectedContact5LastName");
+    QTest::addColumn<QString>("expectedContact1EmailAddress");
     QTest::addColumn<QString>("expectedContact2EmailAddress");
+    QTest::addColumn<QString>("expectedContact3EmailAddress");
     QTest::addColumn<QString>("expectedContact4EmailAddress");
     QTest::addColumn<QString>("expectedContact5EmailAddress");
     {
-        QTest::newRow("expectedContactsNames")  << "Harry" << "Baker" << "Paul" << "Thomson" << "Julie" << "King" << "Angelina" << "Row" << "Natalie" << "Watson" << "mailto:Paul.Thomson@ovi.com" << "mailto:Angelina.Row@ovi.com" << "mailto:Natalie.Watson@ovi.com";
+        QTest::newRow("expectedContactsNames")  << "Harry" << "Baker" << "Paul" << "Thomson" << "Julie" << "King" << "Angelina" << "Row" << "Natalie" << "Watson" << "Harry.Baker@ovi.com" << "Paul.Thomson@ovi.com" << "Julie.King@ovi.com" << "Angelina.Row@ovi.com" << "Natalie.Watson@ovi.com";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 void tst_QContactJsondbEngine::testRemoveContacts() {
     QContactManager cm;
@@ -733,7 +704,6 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     QVERIFY(returnValue == false);
     QVERIFY(cm.error() == 1); // Check if the generated error is in fact "DoesNotExistError"
 
-
     // Test error generation when passing invalid Ids: non existing string
     QList<QContactLocalId> invalidList;
     invalidList << "00000000-0000-0000-0000-0000000000000000";
@@ -741,7 +711,6 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     returnValue = cm.removeContacts(invalidList);
     QVERIFY(returnValue == false);
     QVERIFY(cm.error() == 1); // Check whether the generated error code is in fact "DoesNotExistError"
-
 
     // Remove only two contacts
     QList<QContact> saveList;
@@ -774,12 +743,11 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
         if (curr.detail<QContactName>() == nameDetail1) contactsToRemove << curr.id().localId();
         if (curr.detail<QContactName>() == nameDetail2) contactsToRemove << curr.id().localId();
     }
-    qDebug() << "(two contacts) TO REMOVE: " << contactsToRemove;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << "(two contacts) TO REMOVE: " << contactsToRemove;
     returnValue = cm.removeContacts(contactsToRemove);
     QVERIFY(returnValue == true);
 
-    //qDebug() << "removeContacts return value: " << returnValue;
-    //qDebug() << "error value: " << cm.error();
     QVERIFY(cm.error() == 0); // Check if there are errors
     //QCOMPARE(cm.contactIds().size(), originalCount - 2);  // Does not work when there are multiple contacts with the same name
     bool contact1Found = false;
@@ -792,17 +760,9 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     QVERIFY(contact1Found == false);
     QVERIFY(contact2Found == false);
 
-
-    // Remove all the contacts
-/*
-    contacts = cm.contacts(filter, sortOrders); // Update the contact list after removal
-    foreach (QContact curr, contacts) {
-        qDebug() << "COMPLETE LIST OF CONTACTS TO REMOVE: " << curr.detail<QContactName>();
-    }
-*/
-
     QList<QContactLocalId> toRemove = cm.contactIds();
-    qDebug() << "TO REMOVE: " << toRemove;
+    if (qt_debug_jsondb_contacts())
+        qDebug() << "TO REMOVE: " << toRemove;
     returnValue = cm.removeContacts(toRemove);
     QVERIFY(returnValue == true || cm.error() == QContactManager::BadArgumentError);  // It currently gives BadArgumentError if empty list given (no contacts in cm).
     QList<QContactLocalId> contactsLeft = cm.contactIds();
@@ -820,13 +780,10 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     newContact2.saveDetail(&nameDetail);
     saveList << newContact2;
     cm.saveContact(&newContact2);
-
 }
-
 
 void tst_QContactJsondbEngine::testRemoveContact() {
     QContactManager cm;
-
 
     // save a new contact
     QContact contactToRemove;
@@ -835,31 +792,6 @@ void tst_QContactJsondbEngine::testRemoveContact() {
     contactToRemove.saveDetail(&nameDetail);
     cm.saveContact(&contactToRemove);
     QContactLocalId contactToRemoveId = contactToRemove.localId();
-
-/*
-    // Test error generation when passing empty Id
-    QContactLocalId emptyId;
-    qDebug() << "(no contact) TO REMOVE: " << emptyId;
-    qDebug() << "removeContact return value: " << cm.removeContact(emptyId);
-    qDebug() << "error value: " << cm.error();
-    QVERIFY(cm.error() == 10); // Check if the generated error is in fact "BadArgumentError"
-
-    // Test error generation when passing an invalid Id: empty string
-    QContactLocalId voidId = "";
-    //voidId << "";
-    qDebug() << "(fake contact Id) TO REMOVE: " << voidId;
-    qDebug() << "removeContact return value: " << cm.removeContact(voidId);
-    qDebug() << "error value: " << cm.error();
-    QVERIFY(cm.error() == 1); // Check if the generated error is in fact "DoesNotExistError"
-
-    // Test error generation when passing invalid Id: non existing string
-    QContactLocalId invalidId;
-    invalidId << "00000000-0000-0000-0000-0000000000000000";
-    qDebug() << "(fake contact Id) TO REMOVE: " << invalidId;
-    qDebug() << "removeContact return value: " << cm.removeContact(invalidId);
-    qDebug() << "error value: " << cm.error();
-    QVERIFY(cm.error() == 1); // Check if the generated error is in fact "DoesNotExistError"
-*/
 
     // Remove the contact
     int originalCount = cm.contactIds().size();
@@ -875,8 +807,6 @@ void tst_QContactJsondbEngine::testRemoveContact() {
     }
     QVERIFY(contactToRemoveFound == false);
 }
-
-
 
 
 QTEST_MAIN(tst_QContactJsondbEngine);

@@ -156,9 +156,11 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     map = object[ContactDetails].value<QVariantMap>();
     QString dateString;
     dateString = map[detailsToJsonMapping.value(QContactBirthday::DefinitionName)].toString();
+    //remove the ending "Z" character required by Jsondb DateTime format.
+    dateString.remove(dateString.length()-1,1);
     if(!dateString.isEmpty()) {
-        QDate date = QDate::fromString(dateString,Qt::ISODate);
-        birthday->setDate(date);
+        QDateTime date = QDateTime::fromString(dateString,Qt::ISODate);
+        birthday->setDateTime(date);
         detailList << birthday;
     }
 
@@ -393,7 +395,8 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         // birthday
         else if( (detail.definitionName() == QContactBirthday::DefinitionName) ) {
             birthday = static_cast<QContactBirthday *>(&detail);
-            embeddedDetailsMap[detailsToJsonMapping.value(QContactBirthday::DefinitionName)] = birthday->dateTime();
+            QString dateString = birthday->dateTime().toString(Qt::ISODate) + "Z";
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactBirthday::DefinitionName)] = dateString;
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 

@@ -70,6 +70,18 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     QContactId newId = convertId(stringValue, engine);
     contact->setId(newId);
 
+    //personid
+    QContactPersonId* personid = new QContactPersonId();
+    stringValue = object[detailsToJsonMapping.value(QContactPersonId::DefinitionName)].toString();
+    if (!stringValue.isEmpty()) {
+        personid->setPersonId(stringValue);
+    }
+    else { // if no personid is stored in backend, we return the local
+        personid->setPersonId(newId.localId());
+    }
+    detailList << personid;
+
+    //name
     QContactName* name = new QContactName();
     map = object[detailsToJsonMapping.value(QContactName::DefinitionName)].value<QVariantMap>();
     stringValue = map[contactNameFieldsMapping.value(QContactName::FieldFirstName)].toString();
@@ -94,14 +106,6 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
         QContactNickname* nick = new QContactNickname();
         nick->setNickname(stringValue);
         detailList << nick;
-    }
-
-    //personid
-    QContactPersonId* personid = new QContactPersonId();
-    stringValue = object[detailsToJsonMapping.value(QContactPersonId::DefinitionName)].toString();
-    if (!stringValue.isEmpty()) {
-        personid->setPersonId(stringValue);
-        detailList << personid;
     }
 
     //gender

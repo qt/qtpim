@@ -75,25 +75,28 @@ ApplicationWindow {
 
             ToolIcon {
                 objectName: "toolIcon3"
-                // TEMP: we need correct toolbar icons from Qt-components when toolkit design stable and available
-                //iconSource: "../images/toolbar_add.png"
                 iconId: "clist.gadd"
                 onClicked: {
                     var tempContact = Qt.createQmlObject(
                         "import QtAddOn.contacts 2.0;" +
                         "Contact {}", contactModel);
-                    var phone = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
-                                                   "PhoneNumber {contexts: ['Home']}", contactModel);
-                    var email = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
-                                                   "EmailAddress {}", contactModel);
-                    var address = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
-                                                     "Address {locality: \"\";street: \"\";country: \"\";postcode: \"\";}", contactModel);
-                    var name = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
-                                                  "Name {firstName: \"\";lastName: \"\"}", contactModel);
-                    tempContact.addDetail(name)
-                    tempContact.addDetail(phone)
-                    tempContact.addDetail(email)
-                    tempContact.addDetail(address)
+
+// NOTE:    Following code is commented out, since with
+//          current approach in ContactView.qml (VisualItemModel),
+//          no pre-filling of contact details is needed in the tempContact variable.
+//
+//                    var phone = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                                                   "PhoneNumber {contexts: ['Home']}", contactModel);
+//                    var email = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                                                   "EmailAddress {}", contactModel);
+//                    var address = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                                                     "Address {locality: \"\";street: \"\";country: \"\";postcode: \"\";}", contactModel);
+//                    var name = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                                                  "Name {firstName: \"\";lastName: \"\"}", contactModel);
+//                    tempContact.addDetail(name)
+//                    tempContact.addDetail(phone)
+//                    tempContact.addDetail(email)
+//                    tempContact.addDetail(address)
 
                     pageStack.push(contactEditComponent, {contact: tempContact, addMode: true, mainModel: contactModel});
                 }

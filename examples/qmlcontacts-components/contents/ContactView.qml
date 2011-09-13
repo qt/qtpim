@@ -270,6 +270,17 @@ Page {
                 contact.ringtone.audioRingtoneUrl = newValue;
             }
         }
+        FieldEdit {
+            id: personIdEdit
+            field: "personid"
+            detailDefinitionName: "Personid"
+            detail: contact.personid
+            text: contact.personid.personid
+            width: contactEditListView.width
+            onValueChanged: {
+                contact.personid.personid = newValue;
+            }
+        }
     }
 
     ToolBarLayout {

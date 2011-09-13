@@ -403,14 +403,14 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         //avatar
         else if( (detail.definitionName() == QContactAvatar::DefinitionName) ) {
             avatar = static_cast<QContactAvatar *>(&detail);
-            embeddedDetailsMap[detailsToJsonMapping.value(QContactAvatar::DefinitionName)] = avatar->imageUrl();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactAvatar::DefinitionName)] = avatar->imageUrl().toString();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 
         //ringtone
         else if( (detail.definitionName() == QContactRingtone::DefinitionName) ) {
             ringtone = static_cast<QContactRingtone *>(&detail);
-            embeddedDetailsMap[detailsToJsonMapping.value(QContactRingtone::DefinitionName)] = ringtone->audioRingtoneUrl();
+            embeddedDetailsMap[detailsToJsonMapping.value(QContactRingtone::DefinitionName)] = ringtone->audioRingtoneUrl().toString();
             object->insert(ContactDetails, embeddedDetailsMap);
         }
 

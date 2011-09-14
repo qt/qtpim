@@ -477,7 +477,6 @@ QMap<QString, QContactDetailDefinition> QContactJsonDbEngine::detailDefinitions(
         fields = defns[contactType][QContactBirthday::DefinitionName].fields();
         fields.remove(QContactDetail::FieldContext);
         fields.remove(QContactBirthday::FieldCalendarId);
-        fields[QContactBirthday::FieldBirthday].setDataType(QVariant::DateTime);
         // Note: in the jsondb schema this detaile is called date-time !!!
         defns[contactType][QContactBirthday::DefinitionName].setFields(fields);
         defns[contactType][QContactBirthday::DefinitionName].setUnique(true);

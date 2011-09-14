@@ -33,5 +33,7 @@ public:
 private:
     void initializeMappings();
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "");
+    QString toJsonDate(const QDateTime& date) const;
+    QDateTime toContactDate(const QString& dateString) const;
 };
 #endif // QCONTACTJSONDBCONVERTER_H

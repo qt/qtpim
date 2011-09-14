@@ -281,6 +281,28 @@ Page {
                 contact.personid.personid = newValue;
             }
         }
+        FieldEdit {
+            id: assistantnameEdit
+            field: "assistantName"
+            detailDefinitionName: "Organization"
+            detail: contact.organization
+            text: contact.organization.assistantName
+            width: contactEditListView.width
+            onValueChanged: {
+                contact.organization.assistantName = newValue;
+            }
+        }
+        FieldEdit {
+            id: startdateEdit
+            field: "startDate"
+            detailDefinitionName: "Organization"
+            detail: contact.organization
+            text: contact.organization.startDate
+            width: contactEditListView.width
+            onValueChanged: {
+                contact.organization.startDate = newValue;
+            }
+        }
     }
 
     ToolBarLayout {

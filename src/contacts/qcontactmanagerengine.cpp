@@ -885,7 +885,7 @@ QMap<QString, QMap<QString, QContactDetailDefinition> > QContactManagerEngine::s
     d.setUnique(false);
     retn.insert(d.name(), d);
 
-    // organisation
+    // organization
     d.setName(QContactOrganization::DefinitionName);
     fields.clear();
     f.setDataType(QVariant::String);
@@ -893,8 +893,12 @@ QMap<QString, QMap<QString, QContactDetailDefinition> > QContactManagerEngine::s
     fields.insert(QContactOrganization::FieldName, f);
     fields.insert(QContactOrganization::FieldLocation, f);
     fields.insert(QContactOrganization::FieldTitle, f);
+    fields.insert(QContactOrganization::FieldAssistantName, f);
     f.setDataType(QVariant::Url);
     fields.insert(QContactOrganization::FieldLogoUrl, f);
+    f.setDataType(QVariant::DateTime);
+    fields.insert(QContactOrganization::FieldStartDate, f);
+    fields.insert(QContactOrganization::FieldEndDate, f);
     f.setDataType(QVariant::StringList);
     fields.insert(QContactOrganization::FieldDepartment, f);
     f.setAllowableValues(contexts);
@@ -963,7 +967,7 @@ QMap<QString, QMap<QString, QContactDetailDefinition> > QContactManagerEngine::s
     // birthday
     d.setName(QContactBirthday::DefinitionName);
     fields.clear();
-    f.setDataType(QVariant::Date);
+    f.setDataType(QVariant::DateTime);
     f.setAllowableValues(QVariantList());
     fields.insert(QContactBirthday::FieldBirthday, f);
     f.setDataType(QVariant::StringList);

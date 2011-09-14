@@ -142,12 +142,16 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
             organization->setLogoUrl(QUrl(stringValue));
         //startDate
         stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)].toString();
-        if (!stringValue.isEmpty())
-            organization->setStartDate(QDateTime::fromString(stringValue));
+        if (!stringValue.isEmpty()){
+            QDateTime date = toContactDate(stringValue);
+            organization->setStartDate(date);
+        }
         //endDate
         stringValue = map[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)].toString();
-        if (!stringValue.isEmpty())
-            organization->setEndDate(QDateTime::fromString(stringValue));
+        if (!stringValue.isEmpty()){
+            QDateTime date = toContactDate(stringValue);
+            organization->setEndDate(date);
+        }
         // Add organization to details
         detailList << organization;
     }
@@ -157,10 +161,9 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     map = object[ContactDetails].value<QVariantMap>();
     QString dateString;
     dateString = map[detailsToJsonMapping.value(QContactBirthday::DefinitionName)].toString();
-    //remove the ending "Z" character required by Jsondb DateTime format.
-    dateString.remove(dateString.length()-1,1);
+
     if(!dateString.isEmpty()) {
-        QDateTime date = QDateTime::fromString(dateString,Qt::ISODate);
+        QDateTime date = toContactDate(dateString);
         birthday->setDateTime(date);
         detailList << birthday;
     }
@@ -374,8 +377,12 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldRole)] = organization->role();
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization->assistantName();
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl();
-            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organization->startDate();
-            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organization->endDate();
+            QDateTime startDate = organization->startDate();
+            QString organizationStartDate = toJsonDate(startDate);
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organizationStartDate;
+            QDateTime endDate = organization->endDate();
+            QString organizationEndDate = toJsonDate(endDate);
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
 
             updateContexts(*organization, &organizationMap);
             if (!organization->contexts().isEmpty())
@@ -386,7 +393,8 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         // birthday
         else if( (detail.definitionName() == QContactBirthday::DefinitionName) ) {
             birthday = static_cast<QContactBirthday *>(&detail);
-            QString dateString = birthday->dateTime().toString(Qt::ISODate) + "Z";
+            QDateTime date = birthday->dateTime();
+            QString dateString = toJsonDate(date);
             embeddedDetailsMap[detailsToJsonMapping.value(QContactBirthday::DefinitionName)] = dateString;
             object->insert(ContactDetails, embeddedDetailsMap);
         }
@@ -773,4 +781,17 @@ void QContactJsonDbConverter::createMatchFlagQuery(QString& queryString, QContac
         default:
           break;
     }
+}
+
+QString QContactJsonDbConverter::toJsonDate(const QDateTime& date) const
+{
+    QString dateString = date.toString(Qt::ISODate) + "Z";
+    return dateString;
+}
+
+QDateTime QContactJsonDbConverter::toContactDate(const QString &dateString) const
+{
+    //removes the ending "Z" character required by Jsondb DateTime format.
+    QDateTime date = QDateTime::fromString(dateString.left(dateString.length()-1),Qt::ISODate);
+    return date;
 }

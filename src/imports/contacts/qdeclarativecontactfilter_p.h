@@ -50,6 +50,7 @@ QTPIM_BEGIN_NAMESPACE
 class QDeclarativeContactFilter : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(FilterType type READ type NOTIFY filterChanged)
     Q_ENUMS(FilterType)
     Q_FLAGS(MatchFlags)
 public:

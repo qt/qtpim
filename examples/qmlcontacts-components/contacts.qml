@@ -50,6 +50,7 @@ ApplicationWindow {
     property bool busy: false
     property string viewType : "contactListView"
     property bool showContact: false
+    property Filter currentFilter: contactDetailFilter
     // let the ApplicationWindow push the first page
     initialPage: pageList
 
@@ -105,11 +106,9 @@ ApplicationWindow {
             }
             ToolIcon {
                 objectName: "toolIcon4"
-                // TEMP: we need correct toolbar icons from Qt-components when toolkit design stable and available
-                //iconSource: "../images/toolbar_options.png"
                 iconId: "ctoolbar.gcategories"
                 onClicked: {
-                    contextManagerSelectMenu.open()
+                    settingsMenu.open()
                 }
                 enabled: true
                 visible: enabled
@@ -145,15 +144,7 @@ ApplicationWindow {
                     direction: Qt.AscendingOrder
                 }
             ]
-            filter: phoneNumberFilter
-        }
-
-        DetailFilter {
-            id: phoneNumberFilter
-            detail: ContactDetail.PhoneNumber
-            field: PhoneNumber.Number
-            value: searchField.text
-            matchFlags: Filter.MatchContains
+            filter: currentFilter
         }
 
         Component {
@@ -184,7 +175,6 @@ ApplicationWindow {
                     searchField.forceActiveFocus()
 
             }
-
             states: [
                 State {
                     name: "empty"
@@ -197,7 +187,7 @@ ApplicationWindow {
                     name: "someText"
                     when: searchField.text != ""
                     PropertyChanges {
-                        target: contactModel; filter: phoneNumberFilter
+                        target: contactModel; filter: currentFilter
                     }
                 }
             ]
@@ -254,10 +244,77 @@ ApplicationWindow {
 
 
 
+        DetailFilter {
+            id: contactDetailFilter
+            detail: ContactDetail.PhoneNumber
+            field: PhoneNumber.Number
+            value: searchField.text
+            matchFlags: Filter.MatchContains
+        }
+
+        IdFilter {
+            id: localIdFilter
+            ids: {searchField.text}
+        }
+
         ListModel {
             id: managersModel;
         }
 
+        ListModel {
+            id: filtersModel
+            ListElement {
+                label: "Phone"
+                field: PhoneNumber.Number
+                detail: ContactDetail.PhoneNumber
+            }
+            ListElement {
+                label: "Firstname"
+                field: Name.FirstName
+                detail: ContactDetail.Name
+            }
+            ListElement {
+                label: "Lastname"
+                field: Name.LastName
+                detail: ContactDetail.Name
+            }
+            ListElement {
+                label: "Email"
+                field: EmailAddress.EmailAddress
+                detail: ContactDetail.Email
+            }
+            ListElement {
+                label: "Contact Id"
+            }
+
+        }
+
+        ContextMenu {
+            id: settingsMenu
+            objectName: "settingsMenu"
+            titleText: qsTr("Settings")
+            MenuLayout {
+                objectName: "settingsMenuLayout"
+                MenuItem {
+                    objectName: "filtering_menuItem"
+                    text: {
+                        return "Filtering"
+                    }
+                    onClicked: {
+                        filteringMenu.open()
+                    }
+                }
+                MenuItem {
+                    objectName: "manager_menuItem"
+                    text: {
+                        return "Manager"
+                    }
+                    onClicked: {
+                        contextManagerSelectMenu.open()
+                    }
+                }
+            }
+        }
         ContextMenu {
             id: contextManagerSelectMenu
             objectName: "contextManagerSelectMenu"
@@ -281,6 +338,34 @@ ApplicationWindow {
                 }
             }
         }
-    }
-}
+        ContextMenu {
+            id: filteringMenu
+            objectName: "filteringMenu"
+            titleText: qsTr("Filtering by")
+            MenuLayout {
+                objectName: "filteringMenuLayout"
+                Repeater {
+                    objectName: "filteringMenuRepeater"
+                    model: filtersModel
+                    MenuItem {
+                        objectName: label + "_menuItem"
+                        text: {
+                            return label
+                        }
+                        onClicked: {
+                            if (label != "Contact Id") {
+                                currentFilter = contactDetailFilter
+                                contactDetailFilter.detail = detail
+                                contactDetailFilter.field = field
+                            } else {
+                                currentFilter = localIdFilter
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }//Page
+}//App window
 

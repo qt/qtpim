@@ -805,8 +805,8 @@ void QOrganizerJsonDbRequestThread::handleCollectionFetchResponse(QOrganizerColl
         jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
     }
 
-    QOrganizerCollection collection;
     for (int i = 0; i < jsonDbObjectList.size(); i++) {
+        QOrganizerCollection collection;
         if (convertJsonDbObjectToCollection (jsonDbObjectList.at(i).toMap(), &collection)) {
             collections.append (collection);
             m_collectionsIdList.append (collection.id());

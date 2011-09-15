@@ -404,20 +404,36 @@ TestCase {
         compare(resavedCollection.color.toString(), modifiableCollection.color.toString());
         compare(resavedCollection.image.toString(), modifiableCollection.image.toString());
         compare(resavedCollection.metaData("MyKey").toString(), modifiableCollection.metaData("MyKey").toString());
-
-        // verify we can see same collections on different OrganizerModel element
-        var organizerModel2 = create_testobject("import QtQuick 2.0\n"
+        // -save new collection with empty content data
+        var coll3 = create_testobject("import QtQuick 2.0 \n"
           + "import QtAddOn.organizer 2.0\n"
-          + "OrganizerModel {\n"
-          + "  manager: '" + data.managerToBeTested + "'\n"
-          + "  startPeriod:'2009-01-01'\n"
-          + "  endPeriod:'2012-12-31'\n"
+          + "Collection {\n"
           + "}\n");
-        var collectionsChangedSpy2 = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
-        collectionsChangedSpy2.target = organizerModel2;
-        collectionsChangedSpy2.signalName = "collectionsChanged"
-        collectionsChangedSpy2.wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
-        compare(organizerModel.collections.length, amountBeforeSavingAgain);
+        coll3.name = "My empty collection";
+        organizerModel.saveCollection(coll3);
+        collectionsChangedSpy.wait(spyWaitDelay);
+        compare(organizerModel.collections.length, amountBeforeSavingAgain+1);
+        compare(collectionsChangedSpy.count, 4);
+        var savedEmptyCollection = organizerModel.collections[organizerModel.collections.length - 1];
+        compare(savedEmptyCollection.name, coll3.name);
+        compare(savedEmptyCollection.description, coll3.description);
+        compare(savedEmptyCollection.color.toString(), coll3.color.toString());
+        compare(savedEmptyCollection.image.toString(), coll3.image.toString());
+        // verify we can see same collections on different OrganizerModel element
+        if (data.managerToBeTested == "jsondb") {
+            var organizerModel2 = create_testobject("import QtQuick 2.0\n"
+              + "import QtAddOn.organizer 2.0\n"
+              + "OrganizerModel {\n"
+              + "  manager: '" + data.managerToBeTested + "'\n"
+              + "  startPeriod:'2009-01-01'\n"
+              + "  endPeriod:'2012-12-31'\n"
+              + "}\n");
+            var collectionsChangedSpy2 = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
+            collectionsChangedSpy2.target = organizerModel2;
+            collectionsChangedSpy2.signalName = "collectionsChanged"
+            collectionsChangedSpy2.wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
+            compare(organizerModel.collections.length, organizerModel2.collections.length);
+        }
 
         // fetching existing and non-existing collection
         var existingCollection = organizerModel.collection(organizerModel.collections[organizerModel.collections.length - 1].collectionId);
@@ -431,7 +447,7 @@ TestCase {
         organizerModel.removeCollection(organizerModel.collections[organizerModel.collections.length - 1].collectionId);
         collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, amountBeforeDeletions - 1);
-        compare(collectionsChangedSpy.count, 4);
+        compare(collectionsChangedSpy.count, 5);
         // - remove collection with items
         var toBeDeletedCollection = organizerModel.collections[organizerModel.collections.length - 1];
         var event = create_testobject("import QtTest 1.0\nimport QtAddOn.organizer 2.0\n"
@@ -450,19 +466,19 @@ TestCase {
         organizerModel.removeCollection(toBeDeletedCollection.collectionId);
         collectionsChangedSpy.wait(spyWaitDelay);
         modelChangedSpy.wait(spyWaitDelay);
-        wait(150);//waiting for asyncronous operations to finish on backend side
+        wait(200);//waiting for asyncronous operations to finish on backend side
         verify(!organizerModel.item(eventItemId));
-        compare(collectionsChangedSpy.count, 6);// item addition caused one and collection removal second
+        compare(collectionsChangedSpy.count, 7);// item addition caused one and collection removal second
         // - remove non-existing
         organizerModel.removeCollection("Missing in action");
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 6);
+        compare(collectionsChangedSpy.count, 7);
         // - remove default collection
         organizerModel.removeCollection(organizerModel.defaultCollection.collectionId);
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 6);
+        compare(collectionsChangedSpy.count, 7);
 
         // after all the modifications to collections, default should still be the same
         compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);

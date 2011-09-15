@@ -39,7 +39,7 @@
 ****************************************************************************/
 #include "eventoccurrenceeditpage.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <qorganizer.h>
 
 QTPIM_USE_NAMESPACE

@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = qmlcontacts
 
-QT += declarative
+QT += declarative widgets
 
 win32 {
     #required by Qt SDK to resolve Mobility libraries

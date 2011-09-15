@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = todo
-QT += organizer
+QT += organizer widgets
 
 HEADERS += todoeditor.h \
            window.h

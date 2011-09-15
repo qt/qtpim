@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = qmlorganizer
 
-QT += declarative
+QT += declarative widgets
 
 HEADERS = qmlapplicationviewer.h
 SOURCES = \

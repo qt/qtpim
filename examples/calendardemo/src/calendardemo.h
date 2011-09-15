@@ -41,7 +41,7 @@
 #ifndef CALENDARDEMO_H
 #define CALENDARDEMO_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QDate>
 #include <qorganizeritemsaverequest.h>
 #include <qorganizeritemremoverequest.h>

@@ -54,7 +54,7 @@
 #include "qversitorganizerimporter.h"
 #include "qversitorganizerexporter.h"
 #endif
-#include <QtGui>
+#include <QtWidgets>
 #include <QDesktopServices>
 #include <qorganizer.h>
 

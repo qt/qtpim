@@ -39,7 +39,7 @@
 ****************************************************************************/
 #include "todoeditpage.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QComboBox>
 #include <qorganizer.h>
 

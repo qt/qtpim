@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 #include <qorganizer.h>
 #include <qorganizerabstractrequest.h>
 

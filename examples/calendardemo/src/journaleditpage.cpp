@@ -39,7 +39,7 @@
 ****************************************************************************/
 #include "journaleditpage.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QComboBox>
 #include <qorganizer.h>
 

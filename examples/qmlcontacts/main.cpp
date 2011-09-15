@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "qmlapplicationviewer.h"
 
 int main(int argc, char *argv[])

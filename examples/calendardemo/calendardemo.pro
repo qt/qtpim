@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = calendardemo
-QT += organizer versit
+QT += organizer versit widgets
 
 # Input
 SOURCES += src/main.cpp \

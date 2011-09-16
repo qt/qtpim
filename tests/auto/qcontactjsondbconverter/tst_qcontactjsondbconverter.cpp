@@ -128,9 +128,9 @@ void tst_QcontactJsondbConverter::toQContactTest()
     contact.clearDetails();
     
     // birthday
- /*   initializeJsonContact(jsonContact);
-    jsonData.insert("birthday", "1979-11-22T00:00:00");
-    jsonContact.insert("contactDetails", jsonData);
+    initializeJsonContact(jsonContact);
+    jsonData.insert("birthday", "1979-11-22T00:00:00Z");
+    jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactBirthday::DefinitionName);
     QVERIFY(!detail.isEmpty());
@@ -142,12 +142,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     jsonData.clear();
     contact.clearDetails();
-*/
+
 
     // avatar
-    /*initializeJsonContact(jsonContact);
+    initializeJsonContact(jsonContact);
     jsonData.insert("photoUrl", "http://www.acme.com/logo.jpg");
-    jsonContact.insert("contactDetails", jsonData);
+    jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactAvatar::DefinitionName);
     QVERIFY(!detail.isEmpty());
@@ -156,13 +156,13 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(avatar->imageUrl(), QUrl("http://www.acme.com/logo.jpg"));
     // cleanup
     jsonData.clear();
-    contact.clearDetails();*/
+    contact.clearDetails();
 
 
     // ringtone
     initializeJsonContact(jsonContact);
     jsonData.insert("ringtoneUrl", "http://www.acme.com/ring.mp3");
-    jsonContact.insert("contactDetails", jsonData);
+    jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactRingtone::DefinitionName);
     QVERIFY(!detail.isEmpty());
@@ -177,7 +177,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // nickname
     initializeJsonContact(jsonContact);
     jsonData.insert("nickname", "Chupacabra");
-    jsonContact.insert("contactDetails", jsonData);
+    jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactNickname::DefinitionName);
     QVERIFY(!detail.isEmpty());
@@ -192,7 +192,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // note
     initializeJsonContact(jsonContact);
     jsonData.insert("note", "test note");
-    jsonContact.insert("contactDetails", jsonData);
+    jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactNote::DefinitionName);
     QVERIFY(!detail.isEmpty());
@@ -286,7 +286,6 @@ void tst_QcontactJsondbConverter::toQContactTest()
 
 void tst_QcontactJsondbConverter::toQContactsTest()
 {
-
     QVariantList contacts;
     QVariantMap contact;
     QVariantMap phoneMap;
@@ -423,7 +422,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     birthday.setDate(QDate(1979, 11, 22));
     contact.saveDetail(&birthday);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    testFields.insert("birthday", "1979-11-22T00:00:00");
+    testFields.insert("birthday", "1979-11-22T00:00:00Z");
     // avatar
     QContactAvatar avatar;
     avatar.setImageUrl(QUrl("http://www.acme.com/logo.jpg"));
@@ -447,7 +446,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     // convert
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
     // test fields
-    testJsonDetailItems(jsonContact, "contactDetails", testFields);
+    testJsonDetailItems(jsonContact, "details", testFields);
     //cleanup
     contact.clearDetails();
     jsonContact.clear();
@@ -460,7 +459,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     email.setContexts(QContactEmailAddress::ContextHome);
     contact.saveDetail(&email);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    testFields.insert("value", "mailto:john@doe.com");
+    testFields.insert("value", "john@doe.com");
     testFields.insert("context", "home");
     testJsonDetailItems(jsonContact, "emails", testFields);
     //cleanup

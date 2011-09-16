@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 
-#include <QApplication>
 #include <QtDeclarative>
 #include <QDeclarativeExtensionPlugin>
 

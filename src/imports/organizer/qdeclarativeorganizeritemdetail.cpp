@@ -238,6 +238,8 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
         return QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Type:
         return QDeclarativeOrganizerItemType::fieldNameFromFieldType(fieldType);
+    case QDeclarativeOrganizerItemDetail::Tag:
+        return QDeclarativeOrganizerItemTag::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
         return QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
@@ -289,6 +291,8 @@ QString QDeclarativeOrganizerItemDetail::definitionName(QDeclarativeOrganizerIte
         return QOrganizerItemTimestamp::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Type:
         return QOrganizerItemType::DefinitionName;
+    case QDeclarativeOrganizerItemDetail::Tag:
+        return QOrganizerItemTag::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Customized:
         return QOrganizerItemExtendedDetail::DefinitionName;
     default:
@@ -339,6 +343,8 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
         return QDeclarativeOrganizerItemDetail::Timestamp;
     if (definitionName == QOrganizerItemType::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Type;
+    if (definitionName == QOrganizerItemTag::DefinitionName)
+        return QDeclarativeOrganizerItemTag::Tag;
     if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Customized;
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
@@ -1963,6 +1969,16 @@ QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
         return QOrganizerItemTimestamp::FieldModificationTimestamp;
     case 1:
         return QOrganizerItemTimestamp::FieldCreationTimestamp;
+    }
+    qmlInfo(0) << tr("invalid field type:") << type;
+    return QString();
+}
+
+QString QDeclarativeOrganizerItemTag::fieldNameFromFieldType(int type)
+{
+    switch (type) {
+    case 0:
+        return QOrganizerItemTag::FieldTag;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
     return QString();

@@ -556,7 +556,6 @@ void tst_QOrganizerItemAsync::itemFetch()
         QVERIFY(containsIgnoringDetailKeys(mitems, items.at(i)));
     }
 
-#if defined(QT_NO_JSONDB)
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
     dfil.setDetailDefinitionName(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
@@ -574,11 +573,14 @@ void tst_QOrganizerItemAsync::itemFetch()
 
     mitems = oim->items(dfil);
     items = ifr.items();
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
+    QVERIFY(!mitems.isEmpty());
     QCOMPARE(mitems.size(), items.size());
     for (int i = 0; i < items.size(); i++) {
         QVERIFY(containsIgnoringDetailKeys(mitems, items.at(i)));
     }
 
+#if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
     sortOrder.setDetailDefinitionName(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
@@ -848,7 +850,6 @@ void tst_QOrganizerItemAsync::itemIdFetch()
     QList<QOrganizerItemId> result = ifr.itemIds();
     QCOMPARE(itemIds, result);
 
-#if defined(QT_NO_JSONDB)
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
     dfil.setDetailDefinitionName(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
@@ -867,8 +868,11 @@ void tst_QOrganizerItemAsync::itemIdFetch()
 
     itemIds = oim->itemIds(dfil);
     result = ifr.itemIds();
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
+    QVERIFY(!itemIds.isEmpty());
     QCOMPARE(itemIds, result);
 
+#if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
     sortOrder.setDetailDefinitionName(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
@@ -1467,7 +1471,6 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(irr.itemIds() == QList<QOrganizerItemId>() << removableId);
 
     // specific item removal via detail filter
-#if defined(QT_NO_JSONDB)
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
     dfil.setDetailDefinitionName(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
@@ -1482,6 +1485,7 @@ void tst_QOrganizerItemAsync::itemRemove()
     QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
     QVERIFY(!irr.cancel()); // not started
 
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!oim->itemIds(dfil).isEmpty());
 
     QVERIFY(irr.start());
@@ -1494,15 +1498,14 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QCOMPARE(oim->itemIds().size(), originalCount - 1);
     QVERIFY(oim->itemIds(dfil).isEmpty());
-#endif
 
     // remove all items
 //    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName); // delete everything.
 #if !defined(QT_NO_JSONDB)
     qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
-    QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
 #endif
     irr.setManager(oim.data());
 
@@ -3040,7 +3043,6 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
     cTypeDetail.setType(QOrganizerItemType::TypeEvent);
     c.saveDetail(&cTypeDetail);
 
-#if defined(QT_NO_JSONDB)
     QOrganizerItemPriority priority;
     priority.setPriority(QOrganizerItemPriority::HighestPriority);
     c.saveDetail(&priority);
@@ -3057,7 +3059,6 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
     QDate currentDate = QDate::currentDate();
     recurrenceDates << currentDate << currentDate.addDays(2) << currentDate.addDays(4);
     b.setRecurrenceDates(recurrenceDates);
-#endif
 
     oim->saveItem(&a);
     oim->saveItem(&b);

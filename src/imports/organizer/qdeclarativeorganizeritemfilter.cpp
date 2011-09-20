@@ -113,6 +113,33 @@ QTORGANIZER_BEGIN_NAMESPACE
 
    This element is part of the \bold{QtMobility.organizer 1.1} module.
 
+   Simple example how to utilize DetailFilter element together with OrganizerModel and ListView elements:
+   \code
+   Rectangle {
+       height: 400; width: 400;
+
+       OrganizerModel{
+           id: organizer
+           startPeriod: "2009-01-01"
+           endPeriod: "2012-12-31"
+           filter: todoFilter
+       }
+
+       DetailFilter {
+           id: todoFilter
+           detail: Detail.Type
+           field: "Type"
+           value: Type.Todo
+       }
+
+       ListView {
+           width: parent.width; height: parent.height;
+           model: organizer.items
+           delegate: Text {text: displayLabel}
+       }
+   }
+   \endcode
+
    \sa QOrganizerItemDetailFilter
  */
 
@@ -366,6 +393,58 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
     f.setCollectionIds(ids);
     return f;
 }
+
+void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant& v)
+{
+    // C++ side uses strings to identify Type-values, so possible enum needs to be mapped to a string
+    if (QOrganizerItemType::FieldType == m_detail
+        && QOrganizerItemType::FieldType == m_field
+        && QVariant::Int == v.type()) {
+        QString typeValueName(toTypeValueName(v.toInt()));
+        if (typeValueName != value()) {
+            d.setValue(typeValueName);
+            emit valueChanged();
+        }
+    } else if (v != value()) {
+        // UTC time is used with details internally
+        if (QVariant::DateTime == v.type())
+            d.setValue(v.toDateTime().toUTC());
+        else
+            d.setValue(v);
+        emit valueChanged();
+    }
+}
+
+QVariant QDeclarativeOrganizerItemDetailFilter::value() const
+{
+    // UTC time is used with details internally
+    if (QVariant::DateTime == d.value().type()) {
+        return d.value().toDateTime().toLocalTime();
+    } else {
+        return d.value();
+    }
+}
+
+const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType)
+{
+    switch (static_cast<QDeclarativeOrganizerItemType::OrganizerItemType>(newType)) {
+    case QDeclarativeOrganizerItemType::Event:
+        return QOrganizerItemType::TypeEvent;
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return QOrganizerItemType::TypeEventOccurrence;
+    case QDeclarativeOrganizerItemType::Todo:
+        return QOrganizerItemType::TypeTodo;
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return QOrganizerItemType::TypeTodoOccurrence;
+    case QDeclarativeOrganizerItemType::Note:
+        return QOrganizerItemType::TypeNote;
+    case QDeclarativeOrganizerItemType::Journal:
+        return QOrganizerItemType::TypeJournal;
+    default:
+        return QString();
+  }
+}
+
 
 QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> QDeclarativeOrganizerItemCompoundFilter::filters()
 {

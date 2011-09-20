@@ -1189,15 +1189,15 @@ void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 {
     bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
-        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setAllDay(allDay);
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setAllDay(allDay);
             found = true;
             break;
         }
     }
 
     if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
+        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
         detail->setAllDay(allDay);
         m_details.append(detail);
     }
@@ -1209,8 +1209,8 @@ void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 bool QDeclarativeOrganizerTodo::isAllDay() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
-        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
-            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->isAllDay();
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->isAllDay();
     }
     return false;
 }

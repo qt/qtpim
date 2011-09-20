@@ -366,7 +366,7 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
 
     //Apply Filter and get jsondb query expression
     QString filterString;
-    if (compoundFilterToJsondbQuery(m_filter, filterString)) {
+    if (m_converter.compoundFilterToJsondbQuery(m_filter, filterString)) {
         newJsonDbQuery += filterString;
         int trId = m_jsonDb->query(newJsonDbQuery);
         // we don't care about item index when fetching items --> 0 index
@@ -479,7 +479,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdRequest()
     QOrganizerItemCollectionFilter collectonFilter;
     collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(m_removeItemCollectionIds));
     QString filterString;
-    singleFilterToJsondbQuery(collectonFilter, filterString);
+    m_converter.singleFilterToJsondbQuery(collectonFilter, filterString);
     jsondbQuery += filterString;
     int trId = m_jsonDb->remove(jsondbQuery);
     m_transactionIds.insert(trId, 0);
@@ -660,115 +660,6 @@ QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const 
         jsonErrorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorObject.toList().at(0).toMap().value(JsonDbString::kCodeStr).toInt());
 
     return m_converter.jsondbErrorToOrganizerError (jsonErrorCode);
-}
-
-bool QOrganizerJsonDbDataStorage::compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
-{
-    bool isValidFilter = true;
-    switch (filter.type()) {
-    case QOrganizerItemFilter::IntersectionFilter: {
-        const QOrganizerItemIntersectionFilter isf(filter);
-        QList<QOrganizerItemFilter> filterList = isf.filters();
-        foreach (QOrganizerItemFilter filter, filterList){
-            //query filter1 filter2 filter3 ...
-            //query [?definition="value"][?definition="value"][?definition="value"]
-            QString filterStr;
-            if (singleFilterToJsondbQuery(filter, filterStr))
-                jsonDbQueryStr += filterStr;
-            else //For intersection filter, single filter invalid means empty result from jsondb query
-                isValidFilter = false;
-        }
-        break;
-    }
-    case QOrganizerItemFilter::UnionFilter: {
-        const QOrganizerItemUnionFilter uf(filter);
-        QList<QOrganizerItemFilter> filterList = uf.filters();
-        int validFilterCount = 0;
-        foreach (QOrganizerItemFilter filter, filterList){
-            //query filter1 filter2 filter3 ...
-            //query [?definition="value" | definition="value" | definition="value"]
-            QString filterStr;
-            if (singleFilterToJsondbQuery(filter, filterStr)) {
-                jsonDbQueryStr += filterStr;
-                validFilterCount ++;
-            } else {//For union filter, single filter invalid means we could skip this filter
-                continue;
-            }
-        }
-        if (validFilterCount > 0)
-            jsonDbQueryStr.replace("][?", " | "); //replace the "][?" to " | "
-        else //no valid filter means empty item list from jsondb
-            isValidFilter = false;
-        break;
-    }
-    default:
-        isValidFilter = singleFilterToJsondbQuery(filter, jsonDbQueryStr);
-        break;
-    }
-    if (!isValidFilter)
-        jsonDbQueryStr.clear();
-
-    return isValidFilter;
-}
-
-bool QOrganizerJsonDbDataStorage::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
-{
-    bool isValidFilter = true;
-    switch (filter.type()) {
-    case QOrganizerItemFilter::CollectionFilter: {
-        const QOrganizerItemCollectionFilter cf(filter);
-        const QSet<QOrganizerCollectionId>& ids = cf.collectionIds();
-        if (!ids.empty()) {
-            //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
-            jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
-            int validIdCount = 0;
-            foreach (const QOrganizerCollectionId id, ids) {
-                jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
-                jsonDbQueryStr += "\",\""; // ","
-                validIdCount ++;
-            }
-            if (validIdCount > 0) {
-                jsonDbQueryStr += "]]";
-                //change last "collection_uuid","]] to "collection_uuid"]]
-                jsonDbQueryStr.replace(",\"]]", "]]");
-            } else {
-                isValidFilter = false;
-            }
-        } else {
-            isValidFilter = false;
-        }
-        break;
-    }
-    case QOrganizerItemFilter::IdFilter: {
-        const QOrganizerItemIdFilter idf(filter);
-        const QList<QOrganizerItemId>& ids = idf.ids();
-        if (!ids.empty()) {
-            //query [?_uuid in ["uuid1", "uuid2", ...]]
-            jsonDbQueryStr = ITEM_IDS_LIST_QUERY_STRING;
-            int validIdCount = 0;
-            foreach (const QOrganizerItemId id, ids) {
-                if (!id.isNull()) {
-                    jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
-                    jsonDbQueryStr += "\",\""; // add "," between item ids
-                    validIdCount ++;
-                }
-            }
-            if (validIdCount > 0) {
-                jsonDbQueryStr += "]]";
-                jsonDbQueryStr.replace(",\"]]", "]]"); //change last "uuid","]] to "uuid"]]
-            } else {
-                isValidFilter = false;
-            }
-        } else {
-            isValidFilter = false;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-
-    return isValidFilter;
 }
 
 void QOrganizerJsonDbDataStorage::processRequest()

@@ -279,27 +279,31 @@ public:
         d.setDetailDefinitionName(ddn, dfn);
         m_detail = ddn;
         m_field = dfn;
+        emit valueChanged();
     }
 
     QVariant detail() const { return m_detail; }
     void setDetail(const QVariant& v)
     {
-        if (v != m_detail || m_componentCompleted) {
-            m_detail = v;
+        // C++ side uses strings to identify details, so enum needs to be mapped to a string
+        QString detailName;
+        if (QVariant::Int == v.type()) {
+            detailName = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(v.toInt()));
+        }
+        if (detailName.isEmpty() ? v != m_detail : detailName != m_detail) {
+            m_detail = detailName.isEmpty() ? v : detailName;
             if (m_componentCompleted)
                 setDetailDefinitionName();
-            emit filterChanged();
         }
     }
 
     QVariant field() const { return m_field; }
     void setField(const QVariant& v)
     {
-        if (v != m_field || m_componentCompleted) {
+        if (v != m_field) {
             m_field = v;
             if (m_componentCompleted)
                 setDetailDefinitionName();
-            emit filterChanged();
         }
     }
 
@@ -320,15 +324,8 @@ public:
         return newFlags;
     }
 
-
-    void setValue(const QVariant& v)
-    {
-        if (v != value()) {
-            d.setValue(v);
-            emit valueChanged();
-        }
-    }
-    QVariant value() const { return d.value(); }
+    void setValue(const QVariant& v);
+    QVariant value() const;
 
     QOrganizerItemFilter filter() const
     {
@@ -337,6 +334,9 @@ public:
 
 signals:
     void valueChanged();
+
+private:
+    const QString toTypeValueName(int newType);
 
 private:
     QVariant m_field;

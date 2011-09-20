@@ -72,6 +72,13 @@ Rectangle {
             }
         }
 
+        DetailFilter {
+            id: todoFilter
+            detail: Detail.Type
+            field: "Type"
+            value: Type.Todo
+        }
+
         IntersectionFilter {
             id: intersectionFilter
             filters: [modelCollectionFilter]
@@ -110,6 +117,9 @@ Rectangle {
                 //calendar.currentDate = new Date (calendar.year, calendar.month + 1, calendar.day + 1);
                 //calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
             }
+            //onErrorChanged: {
+            //    console.log("OrganizerModel error changed: " + error);
+            //}
         }
 
         MenuBar { id: menuBar; width: parent.width; height: 35; opacity: 0.9; info: organizer.error + "\nTotal:" + organizer.itemCount }
@@ -166,7 +176,8 @@ Rectangle {
                 name: "CollectionEditorView";
                 PropertyChanges { target: collectionEditorView; opacity: 1; }
                 PropertyChanges { target: statusBar; opacity: 0; }
-            }
+            },
+            State {name: "TodoView"; PropertyChanges { target: todoView; opacity: 1; }}
         ]
         transitions: [
             Transition {
@@ -177,6 +188,17 @@ Rectangle {
                 }
             }
         ]
+
+        // some views are based on certain filters
+        onStateChanged: {
+            if (state == "TodoView") {
+                intersectionFilter.filters = [todoFilter, modelCollectionFilter];
+            } else if (intersectionFilter.filters.length != 1) {
+                // No need to change the filter if filter is the same
+                // (Currently changing the filter triggers also a full update.)
+                intersectionFilter.filters = [modelCollectionFilter];
+            }
+        }
 
         Item {
             id: contentArea;
@@ -269,6 +291,9 @@ Rectangle {
             CollectionEditorView {
                 id: collectionEditorView;
             }
+            TodoView {
+                id: todoView;
+            }
         }
 
         function createEmptyItem(type)
@@ -285,6 +310,4 @@ Rectangle {
                 return Qt.createQmlObject("import QtOrganizer 5.0; Event { }", organizer);
             }
         }
-
-
 }

@@ -67,6 +67,8 @@ public:
     const static QString ManagerUri;
     const static QString JsonDbEngineId;
 
+    const static QString JsonDbSchemaPrefix;
+
     //Organizer item string
     const static QString ItemName;
     const static QString ItemCollectionId;

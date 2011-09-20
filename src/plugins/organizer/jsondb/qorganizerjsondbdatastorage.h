@@ -147,9 +147,6 @@ private:
     void handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
 
     QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
-    //Interpret the filter to Jsondb query string, return true if filter is valid.
-    bool singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
-    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
 
     void processRequest();
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);

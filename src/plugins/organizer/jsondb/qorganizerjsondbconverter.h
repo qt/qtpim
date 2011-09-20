@@ -58,7 +58,6 @@ struct QOrganizerJsonDbEnumConversionData
     const QLatin1String enumStr;
 };
 
-
 class QOrganizerJsonDbConverter
 {
 public:
@@ -66,21 +65,25 @@ public:
 
     QOrganizerManager::Error jsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode);
 
-    bool jsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const;
-    bool itemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const;
+    bool jsonDbObjectToItem(const QVariantMap &object, QOrganizerItem *item) const;
+    bool itemToJsonDbObject(const QOrganizerItem &item, QVariantMap *object) const;
 
-    bool jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection);
-    bool collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const;
+    bool jsonDbObjectToCollection(const QVariantMap &object, QOrganizerCollection *collection, bool &isDefaultCollection);
+    bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QVariantMap *object) const;
+
+    // filter handling
+    bool singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const;
+    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const;
 
 private:
-    void jsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const;
-    void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const;
+    void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
+    void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;
 
-    void itemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
-    void jsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
+    void itemReminderDetailToJsonDbObject(const QOrganizerItemReminder &itemReminder, QVariantMap &reminderObject) const;
+    void jsonDbObjectToItemReminderDetailCommon(const QVariantMap &object, QOrganizerItemReminder *itemReminder) const;
 
-    int stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const;
-    QString enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
+    int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, QString enumStr) const;
+    QString enumToString(const QOrganizerJsonDbEnumConversionData *const conversionData, int enumValue) const;
 
     void extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant& property) const;
 
@@ -89,6 +92,16 @@ private:
 
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
+
+    // separate filter type specific handling
+    bool intersectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool unionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool isSupportedDetailFilter(
+        const QOrganizerItemDetailFilter &filter, const QString &detailDefinitionName, const QString &detailFieldName) const;
+    QString createMatchFlagQuery(const QString &value, QOrganizerItemFilter::MatchFlags flags) const;
 };
 
 QTORGANIZER_END_NAMESPACE

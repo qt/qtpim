@@ -179,6 +179,7 @@ private slots:
     void todoItemFetch();
     void itemFetchV2();
 #endif
+    void itemFilterFetch();
     void spanOverDays();
 #if defined(QT_NO_JSONDB)
     void recurrence();
@@ -232,6 +233,7 @@ private slots:
     void todoItemFetch_data() {addManagers();}
     void itemFetchV2_data() {addManagers();}
 #endif
+    void itemFilterFetch_data() {addManagers();}
     void spanOverDays_data() {addManagers();}
 #if defined(QT_NO_JSONDB)
     void recurrence_data() {addManagers();}
@@ -2888,6 +2890,90 @@ void tst_QOrganizerManager::dataSerialization()
 
         QVERIFY(id == event.id());
     }
+}
+
+void tst_QOrganizerManager::itemFilterFetch()
+{
+    // Some of the tests present on itemFetch()-tests, but this test extends the cases a bit
+    // Preparations
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    for (int i=0; i<6; i++) {
+        QOrganizerEvent event;
+        event.setDisplayLabel(QString("event %1").arg(i));
+        event.setStartDateTime(QDateTime(QDate(2010, 9, 9), QTime(11, 0, 0)));
+        event.setEndDateTime(QDateTime(QDate(2010, 9, 9), QTime(11, 30, 0)));
+        if (i==0) {
+            // 1
+            event.setPriority(QOrganizerItemPriority::VeryLowPriority);
+        } else if (i==1) {
+            // 2
+            QOrganizerItemComment comment;
+            comment.setComment("my comment");
+            event.saveDetail(&comment);
+        } else if (i==2) {
+            // 3
+            QOrganizerItemDisplayLabel label;
+            label.setLabel("my 3rd event!");
+            event.saveDetail(&label);
+        } else if (i==3) {
+            // 4
+            QOrganizerItemDisplayLabel label;
+            label.setLabel("my 4th event!");
+            event.saveDetail(&label);
+        } else if (i==4) {
+            // 5
+            event.setEndDateTime(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
+        } else if (i==5) {
+            // 6
+            QOrganizerItemExtendedDetail extDetail;
+            extDetail.setName("DetailOfMine");
+            extDetail.setData(42);
+            event.saveDetail(&extDetail);
+        }
+        QVERIFY(cm->saveItem(&event));
+    }
+    QCOMPARE(cm->items().count(), 6);
+
+    // Checks
+    QOrganizerItemDetailFilter dfil;
+    // 1
+    dfil.setDetailDefinitionName(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    dfil.setValue(QOrganizerItemPriority::VeryHighPriority);
+    QCOMPARE(cm->items(dfil).count(), 0);
+    dfil.setValue(QOrganizerItemPriority::VeryLowPriority);
+    QCOMPARE(cm->items(dfil).count(), 1);
+    // 2
+    dfil.setDetailDefinitionName(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    dfil.setValue("my comment");
+    QCOMPARE(cm->items(dfil).count(), 1);
+    // 3-4
+    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    dfil.setValue("my 3rd event!");
+    QCOMPARE(cm->items(dfil).count(), 1);
+    dfil.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
+    QCOMPARE(cm->items(dfil).count(), 1);
+    dfil.setValue("event!");
+    QCOMPARE(cm->items(dfil).count(), 2);
+    dfil.setValue("event");
+    dfil.setMatchFlags(QOrganizerItemFilter::MatchContains);
+    QCOMPARE(cm->items(dfil).count(), cm->items().count());
+    dfil.setValue("my");
+    QCOMPARE(cm->items(dfil).count(), 2);
+    dfil.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
+    QCOMPARE(cm->items(dfil).count(), 2);
+    dfil.setValue("event");
+    QCOMPARE(cm->items(dfil).count(), 4);
+    // 5
+    dfil.setMatchFlags(QOrganizerItemFilter::MatchExactly);
+    dfil.setDetailDefinitionName(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldEndDateTime);
+    dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
+    QCOMPARE(cm->items(dfil).count(), 1);
+    // 6
+    dfil.setDetailDefinitionName(QOrganizerItemExtendedDetail::DefinitionName, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
+    dfil.setValue("DetailOfMine");
+    QCOMPARE(cm->items(dfil).count(), 1);
 }
 
 #if defined(QT_NO_JSONDB)

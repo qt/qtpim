@@ -48,6 +48,8 @@ const QString QOrganizerJsonDbStr::ManagerName(QStringLiteral("qtorganizer:jsond
 const QString QOrganizerJsonDbStr::ManagerUri(QStringLiteral("qtorganizer:jsondb:"));
 const QString QOrganizerJsonDbStr::JsonDbEngineId(QStringLiteral("jsondb"));
 
+const QString QOrganizerJsonDbStr::JsonDbSchemaPrefix(QStringLiteral("com.nokia.mp.organizer."));
+
 //Organizer item string
 const QString QOrganizerJsonDbStr::ItemName(QStringLiteral("displayName"));
 const QString QOrganizerJsonDbStr::ItemCollectionId(QStringLiteral("collectionId"));

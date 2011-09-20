@@ -91,7 +91,9 @@ public:
     {
         if (m_manager)
             delete m_manager;
-    }
+        if (m_filter)
+            delete m_filter;
+}
 
     QList<QDeclarativeOrganizerItem*> m_items;
     QMap<QString, QDeclarativeOrganizerItem*> m_itemMap;
@@ -255,7 +257,6 @@ void QDeclarativeOrganizerModel::update()
     if (!d->m_componentCompleted || d->m_updatePending)
         return;
     d->m_updatePending = true; // Disallow possible duplicate request triggering
-    QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
 }
 
@@ -430,8 +431,6 @@ QDeclarativeOrganizerItemFilter* QDeclarativeOrganizerModel::filter() const
 void QDeclarativeOrganizerModel::setFilter(QDeclarativeOrganizerItemFilter* filter)
 {
     if (filter != d->m_filter) {
-        if (d->m_filter)
-            delete d->m_filter;
         d->m_filter = filter;
         if (d->m_filter)
             connect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
@@ -995,7 +994,7 @@ void QDeclarativeOrganizerModel::fetchCollections()
 void QDeclarativeOrganizerModel::collectionsFetched()
 {
     QOrganizerCollectionFetchRequest* req = qobject_cast<QOrganizerCollectionFetchRequest*>(QObject::sender());
-    if (req->isFinished()) {
+    if (req->isFinished() && QOrganizerManager::NoError == req->error()) {
         // prepare tables
         QHash<QString, const QOrganizerCollection*> collections;
         foreach (const QOrganizerCollection& collection, req->collections()) {
@@ -1029,10 +1028,11 @@ void QDeclarativeOrganizerModel::collectionsFetched()
                 delete toBeDeletedColl;
             }
         }
-        checkError(req);
-        req->deleteLater();
         emit collectionsChanged();
+        QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+        req->deleteLater();
     }
+    checkError(req);
 }
 
 /*!

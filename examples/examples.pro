@@ -2,5 +2,5 @@ TEMPLATE = subdirs
 SUBDIRS = \
 #    qmlcontacts \
 #    qmlorganizer \
-    calendardemo \
-    todo \
+#    calendardemo \
+#    todo \

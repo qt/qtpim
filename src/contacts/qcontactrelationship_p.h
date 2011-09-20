@@ -59,7 +59,7 @@
 #include <QSharedData>
 
 #include <qcontactsglobal.h>
-#include <qcontactid.h>
+#include <qcontact.h>
 
 QTPIM_BEGIN_NAMESPACE
 
@@ -83,8 +83,8 @@ public:
     {
     }
 
-    QContactId m_first;
-    QContactId m_second;
+    QContact m_first;
+    QContact m_second;
     QString m_relationshipType;
 };
 

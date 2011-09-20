@@ -49,7 +49,6 @@
 #include <QSharedDataPointer>
 
 #include <qcontactsglobal.h>
-#include <qcontactid.h>
 #include <qlatin1constant.h>
 
 class QDataStream;
@@ -57,6 +56,7 @@ class QDataStream;
 QTPIM_BEGIN_NAMESPACE
 
 class QContactRelationshipPrivate;
+class QContact;
 
 class Q_CONTACTS_EXPORT QContactRelationship
 {
@@ -85,12 +85,12 @@ public:
     bool operator==(const QContactRelationship &other) const;
     bool operator!=(const QContactRelationship &other) const { return !(*this==other); }
 
-    QContactId first() const;
-    QContactId second() const;
+    QContact first() const;
+    QContact second() const;
     QString relationshipType() const;
 
-    void setFirst(const QContactId& firstId);
-    void setSecond(const QContactId& secondId);
+    void setFirst(const QContact& firstContact);
+    void setSecond(const QContact& secondContact);
     void setRelationshipType(const QString& relationshipType);
 
     enum Role {

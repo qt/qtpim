@@ -52,7 +52,7 @@ QTPIM_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-   \since 1.0
+   \since 2.0
 
   \ingroup contacts-filters
 
@@ -65,7 +65,7 @@ QTPIM_BEGIN_NAMESPACE
   \code
   QContactRelationshipFilter groupFilter;                               // select all contacts which are involved
   groupFilter.setRelationshipType(QContactRelationship::HasMember);     // in a group relationship
-  groupFilter.setRelatedContactId(groupContact.id());                   // with the group contact
+  groupFilter.setRelatedContact(groupContact());                   // with the group contact
   groupFilter.setRelatedContactRole(QContactRelationship::First); // where the group contact is the first participant
   \endcode
 
@@ -75,7 +75,7 @@ QTPIM_BEGIN_NAMESPACE
   \code
   QContactRelationshipFilter whichGroupsFilter;                                 // select all contacts which are involved
   whichGroupsFilter.setRelationshipType(QContactRelationship::HasMember); // in a group relationship
-  whichGroupsFilter.setRelatedContactId(particularContact.id());                // with the particular contact
+  whichGroupsFilter.setRelatedContact(particularContact());                // with the particular contact
   whichGroupsFilter.setRelatedContactRole(QContactRelationship::Second);  // where the particular contact is the second participant
   \endcode
 
@@ -86,7 +86,7 @@ Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactRelationshipFilter)
 /*!
   \fn QContactRelationshipFilter::QContactRelationshipFilter(const QContactFilter& other)
   Constructs a copy of \a other if possible, else constructs a new QContactRelationshipFilter.
- * \since 1.0
+ * \since 2.0
  */
 
 /*!
@@ -99,7 +99,7 @@ QContactRelationshipFilter::QContactRelationshipFilter()
 
 /*!
   Sets the type of relationship which a contact must have in order to match this filter to \a relationshipType
-  \since 1.0
+  \since 2.0
  */
 void QContactRelationshipFilter::setRelationshipType(const QString& relationshipType)
 {
@@ -109,7 +109,7 @@ void QContactRelationshipFilter::setRelationshipType(const QString& relationship
 
 /*!
   Returns the type of relationship that a contact must have in order to match the filter
-  \since 1.0
+  \since 2.0
  */
 QString QContactRelationshipFilter::relationshipType() const
 {
@@ -118,28 +118,28 @@ QString QContactRelationshipFilter::relationshipType() const
 }
 
 /*!
-  Sets the id of the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter to be \a relatedContactId
-  \since 1.0
+  Sets the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter to be \a relatedContact
+  \since 2.0
  */
-void QContactRelationshipFilter::setRelatedContactId(const QContactId &relatedContactId)
+void QContactRelationshipFilter::setRelatedContact(const QContact &relatedContact)
 {
     Q_D(QContactRelationshipFilter);
-    d->m_relatedContactId = relatedContactId;
+    d->m_relatedContact = relatedContact;
 }
 
 /*!
-  Returns the id of the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter
-  \since 1.0
+  Returns the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter
+  \since 2.0
  */
-QContactId QContactRelationshipFilter::relatedContactId() const
+QContact QContactRelationshipFilter::relatedContact() const
 {
     Q_D(const QContactRelationshipFilter);
-    return d->m_relatedContactId;
+    return d->m_relatedContact;
 }
 
 /*!
   Sets the role in the relationship with the tested contact that the related contact must play in order for the tested contact to match this filter to be \a relatedContactRole
-  \since 1.0
+  \since 2.0
  */
 void QContactRelationshipFilter::setRelatedContactRole(QContactRelationship::Role relatedContactRole)
 {
@@ -149,7 +149,7 @@ void QContactRelationshipFilter::setRelatedContactRole(QContactRelationship::Rol
 
 /*!
   Returns the role in the relationship with the tested contact that the related contact must play in order for the tested contact to match this filter
-  \since 1.0
+  \since 2.0
  */
 QContactRelationship::Role QContactRelationshipFilter::relatedContactRole() const
 {

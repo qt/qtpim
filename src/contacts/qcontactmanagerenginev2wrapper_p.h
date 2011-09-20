@@ -98,7 +98,7 @@ public:
     virtual QString synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const {return m_engine->synthesizedDisplayLabel(contact, error);}
     virtual bool setSelfContactId(const QContactLocalId& contactId, QContactManager::Error* error) {return m_engine->setSelfContactId(contactId, error);}
     virtual QContactLocalId selfContactId(QContactManager::Error* error) const {return m_engine->selfContactId(error);}
-    virtual QList<QContactRelationship> relationships(const QString& relationshipType, const QContactId& participantId, QContactRelationship::Role role, QContactManager::Error* error) const {return m_engine->relationships(relationshipType, participantId, role, error);}
+    virtual QList<QContactRelationship> relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const {return m_engine->relationships(relationshipType, participant, role, error);}
     virtual bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->saveRelationships(relationships, errorMap, error);}
     virtual bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeRelationships(relationships, errorMap, error);}
     virtual bool validateContact(const QContact& contact, QContactManager::Error* error) const {return m_engine->validateContact(contact, error);}

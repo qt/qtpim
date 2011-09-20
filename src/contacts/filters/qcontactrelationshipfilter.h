@@ -44,7 +44,7 @@
 
 #include <qcontactsglobal.h>
 #include <qcontactfilter.h>
-#include <qcontactid.h>
+#include <qcontact.h>
 #include <qcontactrelationship.h>
 
 #include <QSharedDataPointer>
@@ -62,11 +62,11 @@ public:
     QContactRelationshipFilter(const QContactFilter& other);
 
     void setRelationshipType(const QString& relationshipType);
-    void setRelatedContactId(const QContactId& relatedContactId);
+    void setRelatedContact(const QContact& relatedContact);
     void setRelatedContactRole(QContactRelationship::Role relatedContactRole);
 
     QString relationshipType() const;
-    QContactId relatedContactId() const;
+    QContact relatedContact() const;
     QContactRelationship::Role relatedContactRole() const;
 
 private:

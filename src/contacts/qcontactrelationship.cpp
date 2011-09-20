@@ -41,7 +41,7 @@
 
 #include <qcontactrelationship.h>
 #include "qcontactrelationship_p.h"
-#include <qcontactid.h>
+#include <qcontact.h>
 
 #include <QList>
 #include <QPair>
@@ -58,12 +58,12 @@ QTPIM_BEGIN_NAMESPACE
   between a locally-stored contact and another (possibly remote) contact.
 
   \inmodule QtContacts
-   \since 1.0
+   \since 2.0
 
   \ingroup contacts-main
 
   Each relationship is uniquely identified by the combination of the first
-  contact id, second contact id, and the relationship type.
+  contact, second contact, and the relationship type.
 
   A relationship should not contain a second contact which is the same as
   the first contact.
@@ -139,7 +139,7 @@ QContactRelationship::~QContactRelationship()
 
 /*!
  * Creates a copy of the \a other relationship
- * \since 1.0
+ * \since 2.0
  */
 QContactRelationship::QContactRelationship(const QContactRelationship& other)
         : d(other.d)
@@ -148,7 +148,7 @@ QContactRelationship::QContactRelationship(const QContactRelationship& other)
 
 /*!
  * Assigns this relationship to be equal to \a other
- * \since 1.0
+ * \since 2.0
  */
 QContactRelationship& QContactRelationship::operator=(const QContactRelationship& other)
 {
@@ -211,9 +211,9 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QContactId first;
+        QContact first;
         QString relationshipType;
-        QContactId second;
+        QContact second;
         in >> first >> relationshipType >> second;
         rel.setFirst(first);
         rel.setRelationshipType(relationshipType);
@@ -228,25 +228,25 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
 /*!
  * \fn QContactRelationship::operator!=(const QContactRelationship& other) const
  * Returns true if this relationship is not equal to \a other, otherwise returns false.
- * \since 1.0
+ * \since 2.0
  */
 
 /*!
- * Returns the id of the locally-stored contact which has a relationship of the given type with the second contact
+ * Returns the locally-stored contact which has a relationship of the given type with the second contact
  * \sa relationshipType(), second(), setFirst()
- * \since 1.0
+ * \since 2.0
  */
-QContactId QContactRelationship::first() const
+QContact QContactRelationship::first() const
 {
     return d->m_first;
 }
 
 /*!
- * Returns the id of the contact with which the first contact has a relationship of the given type
+ * Returns the contact with which the first contact has a relationship of the given type
  * \sa relationshipType(), first()
- * \since 1.0
+ * \since 2.0
  */
-QContactId QContactRelationship::second() const
+QContact QContactRelationship::second() const
 {
     return d->m_second;
 }
@@ -254,7 +254,7 @@ QContactId QContactRelationship::second() const
 /*!
  * Returns the type of relationship which the source contact has with the destination contacts
  * \sa setRelationshipType()
- * \since 1.0
+ * \since 2.0
  */
 QString QContactRelationship::relationshipType() const
 {
@@ -268,9 +268,9 @@ QString QContactRelationship::relationshipType() const
  * \since 1.0
  * \sa first()
  */
-void QContactRelationship::setFirst(const QContactId& firstId)
+void QContactRelationship::setFirst(const QContact& firstContact)
 {
-    d->m_first = firstId;
+    d->m_first = firstContact;
 }
 
 /*!
@@ -279,9 +279,9 @@ void QContactRelationship::setFirst(const QContactId& firstId)
  * \since 1.0
  * \sa second()
  */
-void QContactRelationship::setSecond(const QContactId& secondId)
+void QContactRelationship::setSecond(const QContact& secondContact)
 {
-    d->m_second = secondId;
+    d->m_second = secondContact;
 }
 
 /*!

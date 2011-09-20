@@ -348,9 +348,7 @@ bool QContactMemoryEngine::removeContact(const QContactLocalId& contactId, QCont
     }
 
     // remove the contact from any relationships it was in.
-    QContactId thisContact;
-    thisContact.setManagerUri(managerUri());
-    thisContact.setLocalId(contactId);
+    QContact thisContact = d->m_contacts.at(index);
     QList<QContactRelationship> allRelationships = relationships(QString(), thisContact, QContactRelationship::Either, error);
     if (*error != QContactManager::NoError && *error != QContactManager::DoesNotExistError) {
         *error = QContactManager::UnspecifiedError; // failed to clean up relationships
@@ -403,9 +401,9 @@ bool QContactMemoryEngine::removeContacts(const QList<QContactLocalId>& contactI
 }
 
 /*! \reimp */
-QList<QContactRelationship> QContactMemoryEngine::relationships(const QString& relationshipType, const QContactId& participantId, QContactRelationship::Role role, QContactManager::Error* error) const
+QList<QContactRelationship> QContactMemoryEngine::relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const
 {
-    QContactId defaultId;
+    QContact defaultContact;
     QList<QContactRelationship> retn;
     for (int i = 0; i < d->m_relationships.size(); i++) {
         QContactRelationship curr = d->m_relationships.at(i);
@@ -415,17 +413,17 @@ QList<QContactRelationship> QContactMemoryEngine::relationships(const QString& r
             continue;
 
         // if the participantId argument is default constructed, then the relationship matches.
-        if (participantId == defaultId) {
+        if (participant == defaultContact) {
             retn.append(curr);
             continue;
         }
 
         // otherwise, check that the participant exists and plays the required role in the relationship.
-        if (role == QContactRelationship::First && curr.first() == participantId) {
+        if (role == QContactRelationship::First && curr.first() == participant) {
             retn.append(curr);
-        } else if (role == QContactRelationship::Second && curr.second() == participantId) {
+        } else if (role == QContactRelationship::Second && curr.second() == participant) {
             retn.append(curr);
-        } else if (role == QContactRelationship::Either && (curr.first() == participantId || curr.second() == participantId)) {
+        } else if (role == QContactRelationship::Either && (curr.first() == participant || curr.second() == participant)) {
             retn.append(curr);
         }
     }
@@ -445,30 +443,30 @@ bool QContactMemoryEngine::saveRelationship(QContactRelationship* relationship, 
     // Attempt to validate the relationship.
     // first, check that the source contact exists and is in this manager.
     QString myUri = managerUri();
-    int firstContactIndex = d->m_contactIds.indexOf(relationship->first().localId());
-    if ((!relationship->first().managerUri().isEmpty() && relationship->first().managerUri() != myUri)
+    int firstContactIndex = d->m_contactIds.indexOf(relationship->first().id().localId());
+    if ((!relationship->first().id().managerUri().isEmpty() && relationship->first().id().managerUri() != myUri)
             ||firstContactIndex == -1) {
         *error = QContactManager::InvalidRelationshipError;
         return false;
     }
 
     // second, check that the second contact exists (if it's local); we cannot check other managers' contacts.
-    QContactId dest = relationship->second();
-    int secondContactIndex = d->m_contactIds.indexOf(dest.localId());
+    QContact dest = relationship->second();
+    int secondContactIndex = d->m_contactIds.indexOf(dest.id().localId());
 
-    if (dest.managerUri().isEmpty() || dest.managerUri() == myUri) {
+    if (dest.id().managerUri().isEmpty() || dest.id().managerUri() == myUri) {
         // this entry in the destination list is supposedly stored in this manager.
         // check that it exists, and that it isn't the source contact (circular)
-        if (secondContactIndex == -1 || dest.localId() == relationship->first().localId()) {
+        if (secondContactIndex == -1 || dest.id().localId() == relationship->first().id().localId()) {
             *error = QContactManager::InvalidRelationshipError;
             return false;
         }
     }
 
     // the relationship is valid.  We need to update the manager URIs in the second contact if it is empty to our URI.
-    if (dest.managerUri().isEmpty()) {
+    if (dest.id().managerUri().isEmpty()) {
         // need to update the URI
-        dest.setManagerUri(myUri);
+        dest.id().setManagerUri(myUri);
         relationship->setSecond(dest);
     }
 
@@ -485,14 +483,14 @@ bool QContactMemoryEngine::saveRelationship(QContactRelationship* relationship, 
     }
 
     // no matching relationship; must be new.  append it to lists in our map of relationships where required.
-    QList<QContactRelationship> firstRelationships = d->m_orderedRelationships.value(relationship->first().localId());
-    QList<QContactRelationship> secondRelationships = d->m_orderedRelationships.value(relationship->second().localId());
+    QList<QContactRelationship> firstRelationships = d->m_orderedRelationships.value(relationship->first().id().localId());
+    QList<QContactRelationship> secondRelationships = d->m_orderedRelationships.value(relationship->second().id().localId());
     firstRelationships.append(*relationship);
     secondRelationships.append(*relationship);
-    d->m_orderedRelationships.insert(relationship->first().localId(), firstRelationships);
-    d->m_orderedRelationships.insert(relationship->second().localId(), secondRelationships);
-    changeSet.insertAddedRelationshipsContact(relationship->first().localId());
-    changeSet.insertAddedRelationshipsContact(relationship->second().localId());
+    d->m_orderedRelationships.insert(relationship->first().id().localId(), firstRelationships);
+    d->m_orderedRelationships.insert(relationship->second().id().localId(), secondRelationships);
+    changeSet.insertAddedRelationshipsContact(relationship->first().id().localId());
+    changeSet.insertAddedRelationshipsContact(relationship->second().id().localId());
 
     // update the contacts involved
     QContactManagerEngine::setContactRelationships(&d->m_contacts[firstContactIndex], firstRelationships);
@@ -541,24 +539,24 @@ bool QContactMemoryEngine::removeRelationship(const QContactRelationship& relati
     }
 
     // if that worked, then we need to remove it from the two locations in our map, also.
-    QList<QContactRelationship> firstRelationships = d->m_orderedRelationships.value(relationship.first().localId());
-    QList<QContactRelationship> secondRelationships = d->m_orderedRelationships.value(relationship.second().localId());
+    QList<QContactRelationship> firstRelationships = d->m_orderedRelationships.value(relationship.first().id().localId());
+    QList<QContactRelationship> secondRelationships = d->m_orderedRelationships.value(relationship.second().id().localId());
     firstRelationships.removeOne(relationship);
     secondRelationships.removeOne(relationship);
-    d->m_orderedRelationships.insert(relationship.first().localId(), firstRelationships);
-    d->m_orderedRelationships.insert(relationship.second().localId(), secondRelationships);
+    d->m_orderedRelationships.insert(relationship.first().id().localId(), firstRelationships);
+    d->m_orderedRelationships.insert(relationship.second().id().localId(), secondRelationships);
 
     // Update the contacts as well
-    int firstContactIndex = d->m_contactIds.indexOf(relationship.first().localId());
-    int secondContactIndex = relationship.second().managerUri() == managerUri() ? d->m_contactIds.indexOf(relationship.second().localId()) : -1;
+    int firstContactIndex = d->m_contactIds.indexOf(relationship.first().id().localId());
+    int secondContactIndex = relationship.second().id().managerUri() == managerUri() ? d->m_contactIds.indexOf(relationship.second().id().localId()) : -1;
     if (firstContactIndex != -1)
         QContactMemoryEngine::setContactRelationships(&d->m_contacts[firstContactIndex], firstRelationships);
     if (secondContactIndex != -1)
         QContactMemoryEngine::setContactRelationships(&d->m_contacts[secondContactIndex], secondRelationships);
 
     // set our changes, and return.
-    changeSet.insertRemovedRelationshipsContact(relationship.first().localId());
-    changeSet.insertRemovedRelationshipsContact(relationship.second().localId());
+    changeSet.insertRemovedRelationshipsContact(relationship.first().id().localId());
+    changeSet.insertRemovedRelationshipsContact(relationship.second().id().localId());
     *error = QContactManager::NoError;
     return true;
 }
@@ -866,15 +864,15 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
             QContactRelationshipFetchRequest* r = static_cast<QContactRelationshipFetchRequest*>(currentRequest);
             QContactManager::Error operationError = QContactManager::NoError;
             QList<QContactManager::Error> operationErrors;
-            QList<QContactRelationship> allRelationships = relationships(QString(), QContactId(), QContactRelationship::Either, &operationError);
+            QList<QContactRelationship> allRelationships = relationships(QString(), QContact(), QContactRelationship::Either, &operationError);
             QList<QContactRelationship> requestedRelationships;
 
             // select the requested relationships.
             for (int i = 0; i < allRelationships.size(); i++) {
                 QContactRelationship currRel = allRelationships.at(i);
-                if (r->first() != QContactId() && r->first() != currRel.first())
+                if (r->first() != QContact() && r->first() != currRel.first())
                     continue;
-                if (r->second() != QContactId() && r->second() != currRel.second())
+                if (r->second() != QContact() && r->second() != currRel.second())
                     continue;
                 if (!r->relationshipType().isEmpty() && r->relationshipType() != currRel.relationshipType())
                     continue;

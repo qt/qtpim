@@ -153,8 +153,8 @@ public:
     QContactLocalId selfContactId() const;
 
     /* Relationships */
-    QList<QContactRelationship> relationships(const QContactId& participantId, QContactRelationship::Role role = QContactRelationship::Either) const;
-    QList<QContactRelationship> relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationship::Role role = QContactRelationship::Either) const;
+    QList<QContactRelationship> relationships(const QContact& participant, QContactRelationship::Role role = QContactRelationship::Either) const;
+    QList<QContactRelationship> relationships(const QString& relationshipType = QString(), const QContact& participant = QContact(), QContactRelationship::Role role = QContactRelationship::Either) const;
     bool saveRelationship(QContactRelationship* relationship);
     bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap = 0);
     bool removeRelationship(const QContactRelationship& relationship);

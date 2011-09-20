@@ -137,10 +137,18 @@ Rectangle {
             State {name: "WeekView"; PropertyChanges { target: weekView; opacity: 1; }},
             State {name: "DayView"; PropertyChanges { target: dayView; opacity: 1; }},
             State {name: "AgenderView"; PropertyChanges { target: agenderView; opacity: 1; }},
-            State {name: "DetailsView"; PropertyChanges { target: detailsView; opacity: 1; }},
+            State {
+                name: "DetailsView";
+                PropertyChanges { target: detailsView; opacity: 1;}
+                PropertyChanges { target: statusBar; opacity: 0; }
+            },
             State {name: "AddNewItemSelectView"; PropertyChanges { target: addNewItemview; opacity: 0.8; }},
             State {name: "CollectionManagerView"; PropertyChanges { target: collectionManagerView; opacity: 1; }},
-            State {name: "CollectionEditorView"; PropertyChanges { target: collectionEditorView; opacity: 1; }}
+            State {
+                name: "CollectionEditorView";
+                PropertyChanges { target: collectionEditorView; opacity: 1; }
+                PropertyChanges { target: statusBar; opacity: 0; }
+            }
         ]
         transitions: [
             Transition {
@@ -157,7 +165,7 @@ Rectangle {
             anchors.top: menuBar.bottom;
             anchors.left: calendar.left;
             anchors.right: calendar.right;
-            anchors.bottom: statusBar.top;
+            anchors.bottom: (statusBar.opacity != 0) ? statusBar.top : statusBar.bottom;
 
             MonthView {
                 id: monthView;

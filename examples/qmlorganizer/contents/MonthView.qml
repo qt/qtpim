@@ -80,23 +80,29 @@ Rectangle  {
         Repeater { model: 42
                    Rectangle {
                        id:dayContainer
+                       radius:10
                        width: container.width / 7
                        height: (container.height - 35) / 6
                        color:  {
-                                  if (Month.isToday(startDay,   index - startWeekday +1))
+                                  if (Month.isToday(startDay,   index - startWeekday +1)) {
+                                      dayContainer.radius= 20
                                       return "lightsteelblue";
-                                  else if (calendar.organizer.containsItems(Month.dateOfThisDay(startDay,   index - startWeekday +1), Month.dateOfThisDay(startDay,   index - startWeekday +2)))
+                                  }
+                                  else if (calendar.organizer.containsItems(Month.dateOfThisDay(startDay,   index - startWeekday +1), Month.dateOfThisDay(startDay,   index - startWeekday +2))) {
+                                      dayContainer.radius= 20
                                       return "yellow";
-                                  else
+                                  }
+                                  else {
+                                      dayContainer.radius= 0
                                       return Month.getColorOfDay(startDay,   index - startWeekday +1);
+                                  }
                               }
-                       border.color: "black"
                        Text {
                            color: "#6ba24b";
                            text: Month.getDayOfMonth(startDay,   index - startWeekday +1)
                            font.bold: true
                            style: Text.Raised
-                           font.pointSize: 12
+                           font.pointSize: 10
                            anchors.centerIn: parent
                        }
 
@@ -104,16 +110,17 @@ Rectangle  {
                            hoverEnabled:true
                            anchors.fill: parent
                            onEntered: {
-                               dayContainer.border.color = "#1365f3";
+                               dayContainer.border.color = "#1365f3"; // Set a dark blue surrounding border...
                                dayContainer.border.width = 3;
-                               dayContainer.radius = 5
                            }
                            onExited: {
-                               dayContainer.border.color = "black";
-                               dayContainer.border.width = 1;
-                               dayContainer.radius = 0;
+                               dayContainer.border.color = "#ffffff"; // Must reset the border and turn off else becomes graphics artifact
+                           }
+                           onReleased: {
+                               dayContainer.border.color = "#ffffff"; // Must reset the border and turn off else becomes graphics artifact
                            }
                            onClicked: {
+                               dayContainer.border.color = "#ffffff"; // Must reset the border and turn off else becomes graphics artifact
                                calendar.currentDate = new Date(calendar.year, calendar.month, index - startWeekday +1);
                                calendar.state = "DayView";
                            }

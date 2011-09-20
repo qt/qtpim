@@ -56,12 +56,6 @@ Item {
         spacing: 4
         opacity: 0.8
 
-        Row {
-            spacing: 4
-            Button { id: saveCollectionButton; text: "Save"; width: calendar.width/2; onClicked: saveCollection(); }
-            Button { id: removeCollectionButton; text: "Delete"; width: calendar.width/2; onClicked: removeCollection(); }
-        }
-
         Text {
             text: "Collection"
             height: 30
@@ -95,6 +89,17 @@ Item {
             value: collection.image
         }
     }
+
+    Rectangle {
+        id: buttonRow
+        anchors { bottom: parent.bottom; left: parent.left; right: parent.right;  }
+        height: saveCollectionButton.height
+        color:"#343434"
+
+        Button { id: saveCollectionButton; text: "Save"; width: calendar.width/2; onClicked: saveCollection(); anchors.left:parent.left }
+        Button { id: removeCollectionButton; text: "Delete"; width: calendar.width/2; onClicked: removeCollection(); anchors.left:saveCollectionButton.right }
+    }
+
 
     function saveCollection() {
         var newCollection = Qt.createQmlObject('import QtQuick 2.0; import QtAddOn.organizer 2.0; Collection {}',organizer);

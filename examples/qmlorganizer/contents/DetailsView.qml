@@ -52,6 +52,7 @@ Rectangle
     property variant audibleReminderdetail
     property variant visualReminderdetail
 
+
     onOpacityChanged: {
         // Is this view visible
         if (detailsView.opacity == 1) {
@@ -140,34 +141,42 @@ Rectangle
     Image { source: "images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 0.8 }
     color: "#343434";
 
-    Button {
-        id: saveButton
-        text: "Save & Exit"
-        anchors { top: parent.top; left: parent.left }
-        width: parent.width / 2
-        onClicked: {
-            //save item
-            saveButton.enabled = false;
-            calendar.currentDate = item.startDateTime;
-            calendar.organizer.saveItem(item);
-            calendar.state = "DayView";
-            saveButton.enabled = true;
+    Rectangle {
+        id: buttonRow
+        anchors { bottom: parent.bottom; left: parent.left; right: parent.right;  }
+        height: saveButton.height
+        color:"#343434"
+        Button {
+            id: saveButton
+            text: "Save & Exit"
+            //anchors { top: parent.top; left: parent.left }
+            anchors { top: parent.top; left: parent.left }
+            width: parent.width / 2
+            onClicked: {
+                //save item
+                saveButton.enabled = false;
+                calendar.currentDate = item.startDateTime;
+                calendar.organizer.saveItem(item);
+                calendar.state = "DayView";
+                saveButton.enabled = true;
+            }
         }
-    }
-    Button {
-        id: deleteButton
-        visible: !isNewItem
-        text: "Delete"
-        anchors { top: parent.top; left: saveButton.right }
-        width: parent.width / 2
-        onClicked: {
-            calendar.organizer.removeItem(item.itemId);
-            calendar.state = "DayView";
+        Button {
+            id: deleteButton
+            visible: !isNewItem
+            text: "Delete"
+            anchors { top: buttons.top; left: saveButton.right }
+            //anchors { top: parent.top; left: saveButton.right }
+            width: parent.width / 2
+            onClicked: {
+                calendar.organizer.removeItem(item.itemId);
+                calendar.state = "DayView";
+            }
         }
     }
 
     ListView {
-        anchors {top: saveButton.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors {top: parent.top; bottom: buttonRow.top; left: parent.left; right: parent.right }
         clip: true
         opacity: 0.8
         model: {

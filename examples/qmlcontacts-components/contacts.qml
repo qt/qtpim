@@ -51,6 +51,8 @@ ApplicationWindow {
     property string viewType : "contactListView"
     property bool showContact: false
     property Filter currentFilter: contactDetailFilter
+    property SortOrder currentSortOrder: defaultSortOrder
+
     // let the ApplicationWindow push the first page
     initialPage: pageList
 
@@ -137,16 +139,18 @@ ApplicationWindow {
                 if (manager == "memory")
                     contactModel.importContacts(Qt.resolvedUrl("contents/example.vcf"));
             }
-            sortOrders: [
-                SortOrder {
-                    detail: ContactDetail.Name
-                    field: Name.FirstName
-                    direction: Qt.AscendingOrder
-                }
-            ]
+
+            sortOrders: currentSortOrder
+
             filter: currentFilter
         }
 
+        SortOrder {
+            id: defaultSortOrder
+            detail: ContactDetail.Name
+            field: Name.FirstName
+            direction: Qt.AscendingOrder
+        }
         Component {
             id: contactEditComponent
             ContactView {
@@ -173,7 +177,6 @@ ApplicationWindow {
             onFocusChanged: {
                 if ((pageList.state == "List") && (searchField.state == "someText"))
                     searchField.forceActiveFocus()
-
             }
             states: [
                 State {
@@ -286,6 +289,25 @@ ApplicationWindow {
             ListElement {
                 label: "Contact Id"
             }
+        }
+
+        ListModel {
+            id: sortDetailsModel
+            ListElement {
+                label: "Firstname"
+                field: Name.FirstName
+                detail: ContactDetail.Name
+            }
+            ListElement {
+                label: "Lastname"
+                field: Name.LastName
+                detail: ContactDetail.Name
+            }
+            ListElement {
+                label: "Email"
+                field: EmailAddress.EmailAddress
+                detail: ContactDetail.Email
+            }
 
         }
 
@@ -311,6 +333,16 @@ ApplicationWindow {
                     }
                     onClicked: {
                         contextManagerSelectMenu.open()
+                    }
+                }
+
+                MenuItem {
+                    objectName: "sorting_menuItem"
+                    text: {
+                        return "Sorting"
+                    }
+                    onClicked: {
+                        sortingMenu.open()
                     }
                 }
             }
@@ -366,6 +398,31 @@ ApplicationWindow {
                 }
             }
         }
+
+        ContextMenu {
+            id: sortingMenu
+            objectName: "sortingMenu"
+            titleText: qsTr("Sorting by")
+            MenuLayout {
+                objectName: "sortingMenuLayout"
+                Repeater {
+                    objectName: "sortingMenuRepeater"
+                    model: sortDetailsModel
+                    MenuItem {
+                        objectName: label + "_menuItem"
+                        text: {
+                            return label
+                        }
+                        onClicked: {
+                                currentSortOrder = defaultSortOrder
+                                defaultSortOrder.detail = detail
+                                defaultSortOrder.field = field
+                        }
+                   }
+                }
+            }
+        }
+
     }//Page
 }//App window
 

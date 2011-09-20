@@ -47,6 +47,7 @@
 #include <QWaitCondition>
 
 #include "qorganizer.h"
+#include "qorganizerjsondbconverter.h"
 
 QTPIM_USE_NAMESPACE
 #include <jsondb-error.h>
@@ -108,16 +109,6 @@ private:
     void handleCollectionRemoveResponse(QOrganizerCollectionRemoveRequest* collectionRemoveReq, const QVariant &object, int index, QOrganizerManager::Error error);
 
     QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
-    QOrganizerManager::Error convertJsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode);
-
-    bool convertJsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const;
-    bool convertItemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const;
-    bool convertJsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection);
-    bool convertCollectionToJsonDbObject(const QOrganizerCollection& collection, QVariantMap* object) const;
-    void convertJsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const;
-    void convertRecurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const;
-    void convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
-    void convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
 
     //Interpret the filter to Jsondb query string, return true if filter is valid.
     bool filterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
@@ -125,20 +116,9 @@ private:
     //Get default collection ID from engine
     QString defaultCollectionId() const;
 
-    // Conversions between enums and jsondb enum strings
-    QOrganizerItemPriority::Priority convertJsonDbPriorityToEnum(const QString& jsonPriority) const;
-    QString convertEnumToJsonDbPriority(const QOrganizerItemPriority::Priority& priority) const;
-    QOrganizerRecurrenceRule::Frequency convertJsonDbFrequencyToEnum(const QString& jsonFrequency) const;
-    QString convertEnumToJsonDbFrequency(const QOrganizerRecurrenceRule::Frequency& frequency) const;
-    QOrganizerRecurrenceRule::LimitType convertJsonDbLimitTypeToEnum(const QString& jsonLimitType) const;
-    QString convertEnumToJsonDbLimitType(const QOrganizerRecurrenceRule::LimitType& limitType) const;
-    Qt::DayOfWeek convertJsonDbDayOfWeekToEnum(const QString& jsonDayOfWeek) const;
-    QString convertEnumToJsonDbDayOfWeek(const Qt::DayOfWeek& dayOfWeek) const;
-    QOrganizerRecurrenceRule::Month convertJsonDbMonthToEnum(const QString& jsonMonth) const;
-    QString convertEnumToJsonDbMonth(const QOrganizerRecurrenceRule::Month& month) const;
-
     // Member variables
     QOrganizerJsonDbEngine* m_engine;
+    QOrganizerJsonDbConverter m_converter;
     JsonDbClient* m_jsonDb;
     JsonDbConnection* m_jsonConnection;
     QOrganizerJsonDbRequestManager* m_requestMgr;

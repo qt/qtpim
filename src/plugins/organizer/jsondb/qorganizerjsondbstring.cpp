@@ -65,15 +65,15 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLatitude, "latitude");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLongitude,"longitude");
 
 //Priority sub properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityUnkownPriority,       "UnknownPriority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityUnknownPriority,      "UnknownPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityHighestPriority,      "HighestPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelyhighPriority,"ExtremelyHighPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVeryhighPriority,     "VeryHighPriority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelyHighPriority,"ExtremelyHighPriority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVeryHighPriority,     "VeryHighPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityHighPriority,         "HighPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityMediumPriority,       "MediumPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowPriority,          "LowPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVerylowPriority,      "VeryLowPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelylowPriority, "ExtremelyLowPriority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVeryLowPriority,      "VeryLowPriority");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelyLowPriority, "ExtremelyLowPriority");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowestPriority,       "LowestPriority");
 
 //Item reminder properties
@@ -142,11 +142,6 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyDaily,"Daily");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyWeekly,"Weekly");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyMonthly,"Monthly");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyYearly,"Yearly");
-
-// Recurrence rule limit type emun
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::LimitNoLimit,"NoLimit");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::LimitCount,"CountLimit");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::LimitDate,"DateLimit");
 
 // Recurrence rule day of week emun
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayMonday,"Monday");

@@ -84,15 +84,15 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemLocationLongitude,"longitude");
 
     //Priority sub properties
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityUnkownPriority,       "UnknownPriority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityUnknownPriority,       "UnknownPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityHighestPriority,      "HighestPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelyhighPriority,"ExtremelyHighPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVeryhighPriority,     "VeryHighPriority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelyHighPriority,"ExtremelyHighPriority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVeryHighPriority,     "VeryHighPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityHighPriority,         "HighPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityMediumPriority,       "MediumPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityLowPriority,          "LowPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVerylowPriority,      "VeryLowPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelylowPriority, "ExtremelyLowPriority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVeryLowPriority,      "VeryLowPriority");
+    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelyLowPriority, "ExtremelyLowPriority");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriorityLowestPriority,       "LowestPriority");
 
     //Item reminder properties
@@ -162,11 +162,6 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(FrequencyWeekly,"Weekly");
     Q_DECLARE_LATIN1_CONSTANT(FrequencyMonthly,"Monthly");
     Q_DECLARE_LATIN1_CONSTANT(FrequencyYearly,"Yearly");
-
-    // Recurrence rule limit type emun
-    Q_DECLARE_LATIN1_CONSTANT(LimitNoLimit,"NoLimit");
-    Q_DECLARE_LATIN1_CONSTANT(LimitCount,"CountLimit");
-    Q_DECLARE_LATIN1_CONSTANT(LimitDate,"DateLimit");
 
     // Recurrence rule day of week emun
     Q_DECLARE_LATIN1_CONSTANT(DayMonday,"Monday");

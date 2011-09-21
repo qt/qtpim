@@ -45,7 +45,8 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactrelationshipfilter.h"
 #include "qdeclarativecontactrelationship_p.h"
-
+#include "qdeclarativecontact_p.h"
+#include <qcontactmanager.h>
 #include <QDebug>
 
 QTPIM_BEGIN_NAMESPACE
@@ -54,7 +55,7 @@ class QDeclarativeContactRelationshipFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
     Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY valueChanged())
-    Q_PROPERTY(QContactLocalId relatedContactId READ relatedContactId WRITE setRelatedContactId NOTIFY valueChanged())
+    Q_PROPERTY(QDeclarativeContact* relatedContact READ relatedContact WRITE setRelatedContact NOTIFY valueChanged())
     Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole relatedContactRole READ relatedContactRole WRITE setRelatedContactRole NOTIFY valueChanged())
 
 public:
@@ -105,17 +106,17 @@ public:
         }
     }
 
-    QContactLocalId relatedContactId() const
+    QDeclarativeContact* relatedContact() const
     {
-        return d.relatedContactId().localId();
+        QDeclarativeContact *v = new QDeclarativeContact();
+        v->setContact(d.relatedContact());
+        return v;
     }
 
-    void setRelatedContactId(const QContactLocalId& v)
+    void setRelatedContact(const QDeclarativeContact* v)
     {
-        if (v != d.relatedContactId().localId()) {
-            QContactId contactId;
-            contactId.setLocalId(v);
-            d.setRelatedContactId(contactId);
+        if (v->contact() != d.relatedContact()) {
+            d.setRelatedContact(v->contact());
             emit valueChanged();
         }
     }

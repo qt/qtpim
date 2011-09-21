@@ -54,7 +54,7 @@ class QDeclarativeContactRelationshipModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QString manager READ manager WRITE setManager NOTIFY managerChanged)
     Q_PROPERTY(bool autoUpdate READ autoUpdate WRITE setAutoUpdate NOTIFY autoUpdateChanged)
-    Q_PROPERTY(QContactLocalId participantId READ participantId WRITE setParticipantId NOTIFY participantIdChanged)
+    Q_PROPERTY(QDeclarativeContact* participant READ participant WRITE setParticipant NOTIFY participantChanged)
     Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY relationshipTypeChanged)
     Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole role READ role WRITE setRole NOTIFY roleChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContactRelationship> relationships READ relationships NOTIFY relationshipsChanged)
@@ -73,8 +73,8 @@ public:
     bool autoUpdate() const;
     void setAutoUpdate(bool autoUpdate);
     QString error() const;
-    QContactLocalId participantId() const;
-    void setParticipantId(const QContactLocalId& id);
+    QDeclarativeContact* participant() const;
+    void setParticipant(QDeclarativeContact* participant);
 
     QVariant relationshipType() const;
     void setRelationshipType(const QVariant& type);
@@ -90,7 +90,7 @@ public:
     Q_INVOKABLE void addRelationship(QDeclarativeContactRelationship* dcr);
 signals:
     void managerChanged();
-    void participantIdChanged();
+    void participantChanged();
     void relationshipTypeChanged();
     void roleChanged();
     void relationshipsChanged();

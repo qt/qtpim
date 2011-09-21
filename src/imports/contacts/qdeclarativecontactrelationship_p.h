@@ -46,14 +46,15 @@
 #include <QDeclarativeExtensionPlugin>
 
 #include "qcontactrelationship.h"
+#include "qdeclarativecontact_p.h"
 
 QTPIM_BEGIN_NAMESPACE
 
 class QDeclarativeContactRelationship : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QContactLocalId first READ first WRITE setFirst NOTIFY valueChanged)
-    Q_PROPERTY(QContactLocalId second READ second WRITE setSecond NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContact* first READ first WRITE setFirst NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContact* second READ second WRITE setSecond NOTIFY valueChanged)
     Q_PROPERTY(QVariant type READ relationshipType WRITE setRelationshipType NOTIFY valueChanged)
     Q_ENUMS(RelationshipRole)
     Q_ENUMS(RelationshipType)
@@ -76,12 +77,12 @@ public:
 
     QDeclarativeContactRelationship(QObject* parent = 0);
 
-    QContactLocalId first() const;
-    QContactLocalId second() const;
+    QDeclarativeContact* first() const;
+    QDeclarativeContact* second() const;
     QVariant relationshipType() const;
 
-    void setFirst( QContactLocalId firstId);
-    void setSecond( QContactLocalId secondId);
+    void setFirst( QDeclarativeContact* firstContact);
+    void setSecond( QDeclarativeContact* secondContact);
     void setRelationshipType(const QVariant& relationshipType);
 
     QContactRelationship relationship() const;

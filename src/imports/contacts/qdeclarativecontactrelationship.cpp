@@ -51,7 +51,7 @@ QTPIM_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts 2.0} module.
 
    \sa QContactRelationship
    \sa RelationshipModel
@@ -67,22 +67,26 @@ QDeclarativeContactRelationship::QDeclarativeContactRelationship(QObject* parent
 /*!
   \qmlproperty int Relationship::first
 
-  This property holds the id of the locally-stored contact which has a relationship of the given type with the second contact.
+  This property holds the locally-stored contact which has a relationship of the given type with the second contact.
   */
 
-QContactLocalId QDeclarativeContactRelationship::first() const
+QDeclarativeContact* QDeclarativeContactRelationship::first() const
 {
-    return m_relationship.first().localId();
+    QDeclarativeContact *v = new QDeclarativeContact();
+    v->setContact(m_relationship.first());
+    return v;
 }
 
 /*!
   \qmlproperty int Relationship::second
 
-  This property holds the id of the contact with which the first contact has a relationship of the given type.
+  This property holds the contact with which the first contact has a relationship of the given type.
   */
-QContactLocalId  QDeclarativeContactRelationship::second() const
+QDeclarativeContact*  QDeclarativeContactRelationship::second() const
 {
-    return m_relationship.second().localId();
+    QDeclarativeContact *v = new QDeclarativeContact();
+    v->setContact(m_relationship.second());
+    return v;
 }
 
 /*!
@@ -106,18 +110,14 @@ QVariant QDeclarativeContactRelationship::relationshipType() const
     return m_relationship.relationshipType();
 }
 
-void QDeclarativeContactRelationship::setFirst(QContactLocalId firstId)
+void QDeclarativeContactRelationship::setFirst(QDeclarativeContact* firstContact)
 {
-    QContactId id;
-    id.setLocalId(firstId);
-    m_relationship.setFirst(id);
+    m_relationship.setFirst(firstContact->contact());
 }
 
-void QDeclarativeContactRelationship::setSecond(QContactLocalId secondId)
+void QDeclarativeContactRelationship::setSecond(QDeclarativeContact* secondContact)
 {
-    QContactId id;
-    id.setLocalId(secondId);
-    m_relationship.setSecond(id);
+    m_relationship.setSecond(secondContact->contact());
 }
 
 void QDeclarativeContactRelationship::setRelationshipType(const QVariant& relationshipType)

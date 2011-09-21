@@ -74,7 +74,7 @@ class QDeclarativeContactRelationshipModelPrivate
 public:
     QDeclarativeContactRelationshipModelPrivate()
         : m_manager(0)
-        , m_participantId("")
+        , m_participant(0)
         , m_role(QDeclarativeContactRelationship::Either)
     {
     }
@@ -86,7 +86,7 @@ public:
 
     QContactManager *m_manager;
     QDeclarativeContactRelationship m_relationshipTypeHolder;
-    QContactLocalId m_participantId;
+    QDeclarativeContact* m_participant;
     QDeclarativeContactRelationship::RelationshipRole m_role;
     QList<QContactRelationship> m_relationships;
     QList<QDeclarativeContactRelationship *> m_declarativeRelationships;
@@ -102,7 +102,7 @@ QDeclarativeContactRelationshipModel::QDeclarativeContactRelationshipModel(QObje
     setRoleNames(roleNames);
 
     connect(this, SIGNAL(managerChanged()), SLOT(fetchAgain()));
-    connect(this, SIGNAL(participantIdChanged()), SLOT(fetchAgain()));
+    connect(this, SIGNAL(participantChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(relationshipTypeChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(roleChanged()), SLOT(fetchAgain()));
 }
@@ -182,20 +182,20 @@ void QDeclarativeContactRelationshipModel::setManager(const QString& manager)
 /*!
   \qmlproperty int RelationshipModel::participantId
 
-  This property holds the participant id which the list of relationships returned by RelationshipModel should contain.
+  This property holds the participant which the list of relationships returned by RelationshipModel should contain.
 
   \sa RelationshipFilter::relatedContactId
   \sa RelationshipModel::role
   */
-QContactLocalId QDeclarativeContactRelationshipModel::participantId() const
+QDeclarativeContact* QDeclarativeContactRelationshipModel::participant() const
 {
-    return d->m_participantId;
+    return d->m_participant;
 }
-void QDeclarativeContactRelationshipModel::setParticipantId(const QContactLocalId& id)
+void QDeclarativeContactRelationshipModel::setParticipant(QDeclarativeContact* participant)
 {
-    if (d->m_participantId != id) {
-        d->m_participantId = id;
-        emit participantIdChanged();
+    if (d->m_participant != this->participant()) {
+        d->m_participant = this->participant();
+        emit participantChanged();
     }
 }
 
@@ -277,7 +277,7 @@ QVariant QDeclarativeContactRelationshipModel::data(const QModelIndex &index, in
     if (role == RelationshipRole) {
         return QVariant::fromValue(dcr);
     } else if (role == Qt::DisplayRole) {
-        return QString("%1 %2 %3").arg(dcr->first()).arg(dcr->relationship().relationshipType()).arg(dcr->second());
+        return QString("%1 %2 %3").arg(dcr->relationship().first().id().localId()).arg(dcr->relationship().relationshipType()).arg(dcr->relationship().second().id().localId());
     }
     return QVariant();
 }
@@ -288,14 +288,12 @@ void QDeclarativeContactRelationshipModel::fetchAgain()
         QContactRelationshipFetchRequest* req = new QContactRelationshipFetchRequest(this);
         req->setManager(d->m_manager);
 
-        QContactId id;
-        id.setManagerUri(d->m_manager->managerUri());
-        id.setLocalId(d->m_participantId);
+        QContact contact (d->m_participant->contact());
         if (d->m_role == QDeclarativeContactRelationship::First || d->m_role == QDeclarativeContactRelationship::Either)
-            req->setFirst(id);
+            req->setFirst(contact);
 
         if (d->m_role == QDeclarativeContactRelationship::Second || d->m_role == QDeclarativeContactRelationship::Either)
-            req->setSecond(id);
+            req->setSecond(contact);
 
 
         req->setRelationshipType(d->m_relationshipTypeHolder.relationship().relationshipType());

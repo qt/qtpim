@@ -77,21 +77,21 @@ void tst_QContactRelationship::operations()
 {
     QContactRelationship r1;
 
-    QContactId id1, id2;
-    id1.setLocalId("1");
-    id1.setManagerUri("test");
-    id2.setLocalId("2");
-    id2.setManagerUri("test");
+    QContact contact1, contact2;
+    contact1.id().setLocalId("1");
+    contact1.id().setManagerUri("test");
+    contact2.id().setLocalId("2");
+    contact2.id().setManagerUri("test");
 
-    QVERIFY(r1.first() == QContactId());
-    QVERIFY(r1.second() == QContactId());
+    QVERIFY(r1.first() == QContact());
+    QVERIFY(r1.second() == QContact());
     QVERIFY(r1.relationshipType() == QString());
 
-    r1.setFirst(id1);
-    QVERIFY(r1.first() == id1);
-    r1.setSecond(id2);
-    QVERIFY(r1.second() == id2);
-    QVERIFY(r1.first() == id1);
+    r1.setFirst(contact1);
+    QVERIFY(r1.first() == contact1);
+    r1.setSecond(contact2);
+    QVERIFY(r1.second() == contact2);
+    QVERIFY(r1.first() == contact1);
     QVERIFY(r1.relationshipType() == QString());
 
     r1.setRelationshipType(QContactRelationship::HasSpouse);
@@ -102,23 +102,24 @@ void tst_QContactRelationship::emptiness()
 {
     QContactRelationship r1, r2, r3;
 
-    QContactId id1, id2, id3;
-    id1.setLocalId("1");
-    id1.setManagerUri("test");
-    id2.setLocalId("2");
-    id2.setManagerUri("test");
-    id3.setLocalId("3");
-    id3.setManagerUri("test");
-
-    QVERIFY(r1.first() == QContactId());
-    QVERIFY(r1.second() == QContactId());
+    QContact contact1, contact2, contact3;
+    QContactId id;
+    id.setLocalId("1");
+    id.setManagerUri("test");
+    contact1.setId(id);
+    id.setLocalId("2");
+    contact2.setId(id);
+    id.setLocalId("3");
+    contact3.setId(id);
+    QVERIFY(r1.first() == QContact());
+    QVERIFY(r1.second() == QContact());
     QVERIFY(r1.relationshipType() == QString());
 
-    r1.setFirst(id1);
-    QVERIFY(r1.first() == id1);
-    r1.setSecond(id2);
-    QVERIFY(r1.second() == id2);
-    QVERIFY(r1.first() == id1);
+    r1.setFirst(contact1);
+    QVERIFY(r1.first() == contact1);
+    r1.setSecond(contact2);
+    QVERIFY(r1.second() == contact2);
+    QVERIFY(r1.first() == contact1);
     QVERIFY(r1.relationshipType() == QString());
 
     r1.setRelationshipType(QContactRelationship::HasSpouse);
@@ -129,12 +130,11 @@ void tst_QContactRelationship::emptiness()
     QVERIFY(r1 != r3);
     QVERIFY(r2 != r3);
 
-    r3.setFirst(id3);
-    r3.setSecond(id2);
+    r3.setFirst(contact3);
+    r3.setSecond(contact2);
     r3.setRelationshipType(QContactRelationship::HasAssistant);
 
-    r2.setFirst(id3);
-
+    r2.setFirst(contact3);
     QVERIFY(r1 != r2);
     QVERIFY(r2 != r3);
     QVERIFY(r3 != r1);
@@ -143,27 +143,31 @@ void tst_QContactRelationship::emptiness()
 void tst_QContactRelationship::hash()
 {
     QContactRelationship r1;
-    QContactId id1;
-    id1.setManagerUri("a");
-    id1.setLocalId("1");
-    r1.setFirst(id1);
-    QContactId id2;
-    id2.setManagerUri("b");
-    id2.setLocalId("2");
-    r1.setSecond(id2);
+    QContact contact1;
+    QContactId id;
+    id.setLocalId("1");
+    id.setManagerUri("a");
+    contact1.setId(id);
+    r1.setFirst(contact1);
+    QContact contact2;
+    id.setLocalId("2");
+    id.setManagerUri("b");
+    contact2.setId(id);
+    r1.setSecond(contact2);
     r1.setRelationshipType(QContactRelationship::HasMember);
 
     QContactRelationship r2;
-    r2.setFirst(id1);
-    r2.setSecond(id2);
+    r2.setFirst(contact1);
+    r2.setSecond(contact2);
     r2.setRelationshipType(QContactRelationship::HasMember);
 
     QContactRelationship r3;
-    r3.setFirst(id1);
-    QContactId id3;
-    id3.setManagerUri("c");
-    id3.setLocalId("3");
-    r3.setSecond(id3);
+    r3.setFirst(contact1);
+    QContact contact3;
+    id.setManagerUri("c");
+    id.setLocalId("3");
+    contact3.setId(id);
+    r3.setSecond(contact3);
     r3.setRelationshipType(QContactRelationship::HasMember);
 
     QVERIFY(qHash(r1) == qHash(r2));
@@ -176,14 +180,14 @@ void tst_QContactRelationship::datastream()
     QByteArray buffer;
     QDataStream stream1(&buffer, QIODevice::WriteOnly);
     QContactRelationship relationshipIn;
-    QContactId id1;
-    id1.setManagerUri("a");
-    id1.setLocalId("1");
-    relationshipIn.setFirst(id1);
-    QContactId id2;
-    id2.setManagerUri("b");
-    id2.setLocalId("2");
-    relationshipIn.setSecond(id2);
+    QContact contact1;
+    contact1.id().setManagerUri("a");
+    contact1.id().setLocalId("1");
+    relationshipIn.setFirst(contact1);
+    QContact contact2;
+    contact2.id().setManagerUri("b");
+    contact2.id().setLocalId("2");
+    relationshipIn.setSecond(contact2);
     relationshipIn.setRelationshipType(QContactRelationship::HasMember);
     stream1 << relationshipIn;
 

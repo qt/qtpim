@@ -494,7 +494,7 @@ void tst_QContact::relationships()
 
     // boring test, because the default contact has no relationships
     // we test this more convincingly in the QContactManager tests.
-    QList<QContactId> related = c.relatedContacts();
+    QList<QContact> related = c.relatedContacts();
     QVERIFY(related.isEmpty());
 
     related = c.relatedContacts(QContactRelationship::HasMember);

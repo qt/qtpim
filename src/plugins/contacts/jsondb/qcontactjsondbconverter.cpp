@@ -227,10 +227,12 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
         QContactPhoneNumber* number = new QContactPhoneNumber;
         map = array[i].value<QVariantMap>();
         number->setNumber(map["value"].toString().remove(PhoneNumberUriScheme));
-        stringValue = map["subType"].toString();
+        stringValue = map["context"].toString();
         if (stringValue == ContextHome || stringValue == ContextWork || stringValue == ContextOther) {
             updateContexts(map, number);
-        } else if (stringValue == SubTypeFax) {
+        }
+        stringValue = map["subType"].toString();
+        if (stringValue == SubTypeFax) {
             number->setSubTypes(QContactPhoneNumber::SubTypeFax);
         } else if (stringValue == SubTypeCell) {
             number->setSubTypes(QContactPhoneNumber::SubTypeMobile);
@@ -376,7 +378,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldTitle)] = organization->title();
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldRole)] = organization->role();
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization->assistantName();
-            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl();
+            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl().toString();
             QDateTime startDate = organization->startDate();
             QString organizationStartDate = toJsonDate(startDate);
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organizationStartDate;

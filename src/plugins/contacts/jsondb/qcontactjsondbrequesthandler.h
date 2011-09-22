@@ -45,9 +45,13 @@
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
-#include "qcontactabstractrequest.h"
-#include "qcontact.h"
-#include "qcontactchangeset.h"
+#include <qcontactabstractrequest.h>
+#include <qcontactsaverequest.h>
+#include <qcontactfetchrequest.h>
+#include <qcontactdetaildefinitionfetchrequest.h>
+#include <qcontactremoverequest.h>
+#include <qcontact.h>
+#include <qcontactchangeset.h>
 
 QTPIM_USE_NAMESPACE
 
@@ -80,6 +84,15 @@ public slots:
 public slots:
   void removeDestroyed(QObject *);
 private:
+    void handleContactSaveRequest(QContactSaveRequest* req);
+    void handleContactFetchRequest(QContactFetchRequest* req);
+    void handleContactRemoveRequest(QContactRemoveRequest* req);
+    void handleDetailDefinitionFetchRequest(QContactDetailDefinitionFetchRequest* req);
+
+    void handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error);
+    void handleContactFetchResponse(QContactFetchRequest* req, const QVariant &object, QContactManager::Error error);
+    void handleContactRemoveResponse(QContactRemoveRequest* req, const QVariant &object, int index, QContactManager::Error error);
+
     QContactJsonDbEngine* m_engine;
     JsonDbClient* m_jsonDb;
     JsonDbConnection* m_jsonConnection;

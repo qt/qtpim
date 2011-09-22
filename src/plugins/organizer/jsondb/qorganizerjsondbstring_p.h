@@ -83,18 +83,6 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemLocationLatitude, "latitude");
     Q_DECLARE_LATIN1_CONSTANT(ItemLocationLongitude,"longitude");
 
-    //Priority sub properties
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityUnknownPriority,       "UnknownPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityHighestPriority,      "HighestPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelyHighPriority,"ExtremelyHighPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVeryHighPriority,     "VeryHighPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityHighPriority,         "HighPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityMediumPriority,       "MediumPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityLowPriority,          "LowPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityVeryLowPriority,      "VeryLowPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityExtremelyLowPriority, "ExtremelyLowPriority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriorityLowestPriority,       "LowestPriority");
-
     //Item reminder properties
     Q_DECLARE_LATIN1_CONSTANT(ItemReminderSecBeforeStart,  "secondsBeforeStart"); //SecondsBeforeStart
     Q_DECLARE_LATIN1_CONSTANT(ItemReminderRepCount,        "repetitionCount"); //RepetitionCount
@@ -155,36 +143,6 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(RuleDaysOfYear,"daysOfYear");
     Q_DECLARE_LATIN1_CONSTANT(RuleWeeksOfYear,"weeksOfYear");
     Q_DECLARE_LATIN1_CONSTANT(RuleMonthsOfYear,"monthsOfYear");
-
-    // Recurrence rule frequency emun
-    Q_DECLARE_LATIN1_CONSTANT(FrequencyInvalid,"Invalid");
-    Q_DECLARE_LATIN1_CONSTANT(FrequencyDaily,"Daily");
-    Q_DECLARE_LATIN1_CONSTANT(FrequencyWeekly,"Weekly");
-    Q_DECLARE_LATIN1_CONSTANT(FrequencyMonthly,"Monthly");
-    Q_DECLARE_LATIN1_CONSTANT(FrequencyYearly,"Yearly");
-
-    // Recurrence rule day of week emun
-    Q_DECLARE_LATIN1_CONSTANT(DayMonday,"Monday");
-    Q_DECLARE_LATIN1_CONSTANT(DayTuesday,"Tuesday");
-    Q_DECLARE_LATIN1_CONSTANT(DayWednesday,"Wednesday");
-    Q_DECLARE_LATIN1_CONSTANT(DayThursday,"Thursday");
-    Q_DECLARE_LATIN1_CONSTANT(DayFriday,"Friday");
-    Q_DECLARE_LATIN1_CONSTANT(DaySaturday,"Saturday");
-    Q_DECLARE_LATIN1_CONSTANT(DaySunday,"Sunday");
-
-    // Recurrence rule month emun
-    Q_DECLARE_LATIN1_CONSTANT(MonthJanuary,"January");
-    Q_DECLARE_LATIN1_CONSTANT(MonthFebruary,"February");
-    Q_DECLARE_LATIN1_CONSTANT(MonthMarch,"March");
-    Q_DECLARE_LATIN1_CONSTANT(MonthApril,"April");
-    Q_DECLARE_LATIN1_CONSTANT(MonthMay,"May");
-    Q_DECLARE_LATIN1_CONSTANT(MonthJune,"June");
-    Q_DECLARE_LATIN1_CONSTANT(MonthJuly,"July");
-    Q_DECLARE_LATIN1_CONSTANT(MonthAugust,"August");
-    Q_DECLARE_LATIN1_CONSTANT(MonthSeptember,"September");
-    Q_DECLARE_LATIN1_CONSTANT(MonthOctober,"October");
-    Q_DECLARE_LATIN1_CONSTANT(MonthNovember,"November");
-    Q_DECLARE_LATIN1_CONSTANT(MonthDecember,"December");
 
     //warning string
     Q_DECLARE_LATIN1_CONSTANT(WarningMoreItemDelete, "Items are delete from jsondb!!");

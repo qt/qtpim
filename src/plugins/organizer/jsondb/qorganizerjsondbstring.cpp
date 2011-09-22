@@ -64,18 +64,6 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLabel,    "label");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLatitude, "latitude");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLongitude,"longitude");
 
-//Priority sub properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityUnknownPriority,      "UnknownPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityHighestPriority,      "HighestPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelyHighPriority,"ExtremelyHighPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVeryHighPriority,     "VeryHighPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityHighPriority,         "HighPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityMediumPriority,       "MediumPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowPriority,          "LowPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityVeryLowPriority,      "VeryLowPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityExtremelyLowPriority, "ExtremelyLowPriority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriorityLowestPriority,       "LowestPriority");
-
 //Item reminder properties
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderSecBeforeStart,  "secondsBeforeStart");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderRepCount,        "repetitionCount");
@@ -135,36 +123,6 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfMonth,"daysOfMonth");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfYear,"daysOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleWeeksOfYear,"weeksOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleMonthsOfYear,"monthsOfYear");
-
-// Recurrence rule frequency emun
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyInvalid,"Invalid");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyDaily,"Daily");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyWeekly,"Weekly");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyMonthly,"Monthly");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::FrequencyYearly,"Yearly");
-
-// Recurrence rule day of week emun
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayMonday,"Monday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayTuesday,"Tuesday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayWednesday,"Wednesday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayThursday,"Thursday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DayFriday,"Friday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DaySaturday,"Saturday");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DaySunday,"Sunday");
-
-// Recurrence rule month emun
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthJanuary,"January");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthFebruary,"February");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthMarch,"March");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthApril,"April");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthMay,"May");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthJune,"June");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthJuly,"July");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthAugust,"August");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthSeptember,"September");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthOctober,"October");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthNovember,"November");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::MonthDecember,"December");
 
 //warning string
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningMoreItemDelete, "Items are delete from jsondb!!");

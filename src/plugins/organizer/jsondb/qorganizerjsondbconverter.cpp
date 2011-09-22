@@ -50,51 +50,52 @@ Q_USE_JSONDB_NAMESPACE
 
 const int enumMapEnd = -1212;
 static QOrganizerJsonDbEnumConversionData qt_organizerPriorityEnumMap[] = {
-    {QOrganizerItemPriority::UnknownPriority,        QOrganizerJsonDbStr::ItemPriorityUnknownPriority},
-    {QOrganizerItemPriority::ExtremelyHighPriority,  QOrganizerJsonDbStr::ItemPriorityExtremelyHighPriority},
-    {QOrganizerItemPriority::VeryHighPriority,       QOrganizerJsonDbStr::ItemPriorityVeryHighPriority},
-    {QOrganizerItemPriority::HighPriority,           QOrganizerJsonDbStr::ItemPriorityHighPriority},
-    {QOrganizerItemPriority::MediumPriority,         QOrganizerJsonDbStr::ItemPriorityMediumPriority},
-    {QOrganizerItemPriority::LowPriority,            QOrganizerJsonDbStr::ItemPriorityLowPriority},
-    {QOrganizerItemPriority::VeryLowPriority,        QOrganizerJsonDbStr::ItemPriorityVeryLowPriority},
-    {QOrganizerItemPriority::ExtremelyLowPriority,   QOrganizerJsonDbStr::ItemPriorityExtremelyLowPriority},
-    {QOrganizerItemPriority::LowestPriority,         QOrganizerJsonDbStr::ItemPriorityLowestPriority},
+    {QOrganizerItemPriority::UnknownPriority,        QLatin1String("UnknownPriority")},
+    {QOrganizerItemPriority::ExtremelyHighPriority,  QLatin1String("HighestPriority")},
+    {QOrganizerItemPriority::ExtremelyHighPriority,  QLatin1String("ExtremelyHighPriority")},
+    {QOrganizerItemPriority::VeryHighPriority,       QLatin1String("VeryHighPriority")},
+    {QOrganizerItemPriority::HighPriority,           QLatin1String("HighPriority")},
+    {QOrganizerItemPriority::MediumPriority,         QLatin1String("MediumPriority")},
+    {QOrganizerItemPriority::LowPriority,            QLatin1String("LowPriority")},
+    {QOrganizerItemPriority::VeryLowPriority,        QLatin1String("VeryLowPriority")},
+    {QOrganizerItemPriority::ExtremelyLowPriority,   QLatin1String("ExtremelyLowPriority")},
+    {QOrganizerItemPriority::LowestPriority,         QLatin1String("LowestPriority")},
     {enumMapEnd,                                     QLatin1String("")}
 };
 
 static QOrganizerJsonDbEnumConversionData qt_organizerFrequencyEnumMap[] = {
-    {QOrganizerRecurrenceRule::Invalid,              QOrganizerJsonDbStr::FrequencyInvalid},
-    {QOrganizerRecurrenceRule::Daily,                QOrganizerJsonDbStr::FrequencyDaily},
-    {QOrganizerRecurrenceRule::Weekly,               QOrganizerJsonDbStr::FrequencyWeekly},
-    {QOrganizerRecurrenceRule::Monthly,              QOrganizerJsonDbStr::FrequencyMonthly},
-    {QOrganizerRecurrenceRule::Yearly,               QOrganizerJsonDbStr::FrequencyYearly},
+    {QOrganizerRecurrenceRule::Invalid,              QLatin1String("Invalid")},
+    {QOrganizerRecurrenceRule::Daily,                QLatin1String("Daily")},
+    {QOrganizerRecurrenceRule::Weekly,               QLatin1String("Weekly")},
+    {QOrganizerRecurrenceRule::Monthly,              QLatin1String("Monthly")},
+    {QOrganizerRecurrenceRule::Yearly,               QLatin1String("Yearly")},
     {enumMapEnd,                                     QLatin1String("")}
 };
 
 static QOrganizerJsonDbEnumConversionData qt_organizerDayEnumMap[] = {
-    {Qt::Monday,                                     QOrganizerJsonDbStr::DayMonday},
-    {Qt::Tuesday,                                    QOrganizerJsonDbStr::DayTuesday},
-    {Qt::Wednesday,                                  QOrganizerJsonDbStr::DayWednesday},
-    {Qt::Thursday,                                   QOrganizerJsonDbStr::DayThursday},
-    {Qt::Friday,                                     QOrganizerJsonDbStr::DayFriday},
-    {Qt::Saturday,                                   QOrganizerJsonDbStr::DaySaturday},
-    {Qt::Sunday,                                     QOrganizerJsonDbStr::DaySunday},
+    {Qt::Monday,                                     QLatin1String("Monday")},
+    {Qt::Tuesday,                                    QLatin1String("Tuesday")},
+    {Qt::Wednesday,                                  QLatin1String("Wednesday")},
+    {Qt::Thursday,                                   QLatin1String("Thursday")},
+    {Qt::Friday,                                     QLatin1String("Friday")},
+    {Qt::Saturday,                                   QLatin1String("Saturday")},
+    {Qt::Sunday,                                     QLatin1String("Sunday")},
     {enumMapEnd,                                     QLatin1String("")}
 };
 
 static QOrganizerJsonDbEnumConversionData qt_organizerMonthEnumMap[] = {
-    {QOrganizerRecurrenceRule::January,              QOrganizerJsonDbStr::MonthJanuary},
-    {QOrganizerRecurrenceRule::February,             QOrganizerJsonDbStr::MonthFebruary},
-    {QOrganizerRecurrenceRule::March,                QOrganizerJsonDbStr::MonthMarch},
-    {QOrganizerRecurrenceRule::April,                QOrganizerJsonDbStr::MonthApril},
-    {QOrganizerRecurrenceRule::May,                  QOrganizerJsonDbStr::MonthMay},
-    {QOrganizerRecurrenceRule::June,                 QOrganizerJsonDbStr::MonthJune},
-    {QOrganizerRecurrenceRule::July,                 QOrganizerJsonDbStr::MonthJuly},
-    {QOrganizerRecurrenceRule::August,               QOrganizerJsonDbStr::MonthAugust},
-    {QOrganizerRecurrenceRule::September,            QOrganizerJsonDbStr::MonthSeptember},
-    {QOrganizerRecurrenceRule::October,              QOrganizerJsonDbStr::MonthOctober},
-    {QOrganizerRecurrenceRule::November,             QOrganizerJsonDbStr::MonthNovember},
-    {QOrganizerRecurrenceRule::December,             QOrganizerJsonDbStr::MonthDecember},
+    {QOrganizerRecurrenceRule::January,              QLatin1String("January")},
+    {QOrganizerRecurrenceRule::February,             QLatin1String("February")},
+    {QOrganizerRecurrenceRule::March,                QLatin1String("March")},
+    {QOrganizerRecurrenceRule::April,                QLatin1String("April")},
+    {QOrganizerRecurrenceRule::May,                  QLatin1String("May")},
+    {QOrganizerRecurrenceRule::June,                 QLatin1String("June")},
+    {QOrganizerRecurrenceRule::July,                 QLatin1String("July")},
+    {QOrganizerRecurrenceRule::August,               QLatin1String("August")},
+    {QOrganizerRecurrenceRule::September,            QLatin1String("September")},
+    {QOrganizerRecurrenceRule::October,              QLatin1String("October")},
+    {QOrganizerRecurrenceRule::November,             QLatin1String("November")},
+    {QOrganizerRecurrenceRule::December,             QLatin1String("December")},
     {enumMapEnd,                                     QLatin1String("")}
 };
 
@@ -104,7 +105,7 @@ QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
 }
 
-QOrganizerManager::Error QOrganizerJsonDbConverter::convertJsondbErrorToOrganizerError (JsonDbError::ErrorCode jsonErrorCode)
+QOrganizerManager::Error QOrganizerJsonDbConverter::jsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode)
 {
     QOrganizerManager::Error error;
     switch (jsonErrorCode) {
@@ -141,7 +142,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::convertJsondbErrorToOrganize
     return error;
 }
 
-bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const
+bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const
 {
     QSet<QOrganizerRecurrenceRule> recurrenceRules;
     QSet<QOrganizerRecurrenceRule> exceptionRules;
@@ -162,7 +163,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
         QVariantList recurrenceRulesList = object.value(QOrganizerJsonDbStr::ItemRecurrenceRules).toList();
         foreach (QVariant recurrenceRule, recurrenceRulesList) {
             QOrganizerRecurrenceRule rule;
-            convertJsonDbObjectToRecurrenceRule(recurrenceRule.toMap(), &rule);
+            jsonDbObjectToRecurrenceRule(recurrenceRule.toMap(), &rule);
             recurrenceRules.insert(rule);
         }
     }
@@ -171,7 +172,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
         QVariantList exceptionRulesList = object.value(QOrganizerJsonDbStr::ItemExceptionRules).toList();
         foreach (QVariant exceptionRule, exceptionRulesList) {
             QOrganizerRecurrenceRule rule;
-            convertJsonDbObjectToRecurrenceRule(exceptionRule.toMap(), &rule);
+            jsonDbObjectToRecurrenceRule(exceptionRule.toMap(), &rule);
             exceptionRules.insert(rule);
         }
     }
@@ -225,7 +226,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
     QVariantMap jsondbVisualReminder = object.value(QOrganizerJsonDbStr::ItemVisualReminder).toMap();
     if (!jsondbVisualReminder.isEmpty()) {
         QOrganizerItemVisualReminder visualReminder;
-        convertJsonDbObjectToItemReminderDetailCommon(jsondbVisualReminder, &visualReminder);
+        jsonDbObjectToItemReminderDetailCommon(jsondbVisualReminder, &visualReminder);
         QString message = jsondbVisualReminder.value(QOrganizerJsonDbStr::ItemVisualReminderMessage).toString();
         if (!message.isEmpty())
             visualReminder.setMessage(message);
@@ -238,7 +239,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
     QVariantMap jsondbAudibleReminder = object.value(QOrganizerJsonDbStr::ItemAudibleReminder).toMap();
     if (!jsondbAudibleReminder.isEmpty()) {
         QOrganizerItemAudibleReminder audibleReminder;
-        convertJsonDbObjectToItemReminderDetailCommon(jsondbAudibleReminder, &audibleReminder);
+        jsonDbObjectToItemReminderDetailCommon(jsondbAudibleReminder, &audibleReminder);
         QString dataUrlStr = jsondbAudibleReminder.value(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl).toString();
         if (!dataUrlStr.isEmpty()) {
             QUrl url(dataUrlStr);
@@ -250,7 +251,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
     QVariantMap jsondbEmailReminder = object.value(QOrganizerJsonDbStr::ItemEmailReminder).toMap();
     if (!jsondbEmailReminder.isEmpty()) {
         QOrganizerItemEmailReminder emailReminder;
-        convertJsonDbObjectToItemReminderDetailCommon(jsondbEmailReminder, &emailReminder);
+        jsonDbObjectToItemReminderDetailCommon(jsondbEmailReminder, &emailReminder);
         QString subject = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderSubject).toString();
         if (!subject.isEmpty())
             emailReminder.setValue(QOrganizerItemEmailReminder::FieldSubject, subject);
@@ -289,7 +290,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
             QString priority = object.value(QOrganizerJsonDbStr::ItemPriority).toString();
             if (!priority.isEmpty())
                 event->setPriority(static_cast<QOrganizerItemPriority::Priority>(
-                                       convertStringToEnum(qt_organizerPriorityEnumMap, priority)));
+                                       stringToEnum(qt_organizerPriorityEnumMap, priority)));
         }
 
         if (!recurrenceRules.isEmpty())
@@ -323,7 +324,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
             QString priority = object.value(QOrganizerJsonDbStr::ItemPriority).toString();
             if (!priority.isEmpty())
                 todo->setPriority(static_cast<QOrganizerItemPriority::Priority>(
-                                      convertStringToEnum(qt_organizerPriorityEnumMap, priority)));
+                                      stringToEnum(qt_organizerPriorityEnumMap, priority)));
         }
 
         if (!recurrenceRules.isEmpty())
@@ -346,7 +347,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToItem(const QVariantMap& obj
     return true;
 }
 
-bool QOrganizerJsonDbConverter::convertItemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const
+bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const
 {
     QSet<QOrganizerRecurrenceRule> recurrenceRules;
     QSet<QOrganizerRecurrenceRule> exceptionRules;
@@ -417,28 +418,28 @@ bool QOrganizerJsonDbConverter::convertItemToJsonDbObject(const QOrganizerItem& 
 
     QOrganizerItemPriority priorityDetail = item.detail(QOrganizerItemPriority::DefinitionName);
     if (!priorityDetail.isEmpty()) {
-        object->insert(QOrganizerJsonDbStr::ItemPriority, convertEnumToString(qt_organizerPriorityEnumMap, priorityDetail.priority()));
+        object->insert(QOrganizerJsonDbStr::ItemPriority, enumToString(qt_organizerPriorityEnumMap, priorityDetail.priority()));
     }
 
     //Audio,visual,email reminder details
     QOrganizerItemVisualReminder visualReminder = item.detail(QOrganizerItemVisualReminder::DefinitionName);
     if (!visualReminder.isEmpty()) {
         QVariantMap reminderObject;
-        convertItemReminderDetailToJsonDbObject(visualReminder, reminderObject);
+        itemReminderDetailToJsonDbObject(visualReminder, reminderObject);
         object->insert(QOrganizerJsonDbStr::ItemVisualReminder, reminderObject);
     }
 
     QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
     if (!audibleReminder.isEmpty()) {
         QVariantMap reminderObject;
-        convertItemReminderDetailToJsonDbObject(audibleReminder, reminderObject);
+        itemReminderDetailToJsonDbObject(audibleReminder, reminderObject);
         object->insert(QOrganizerJsonDbStr::ItemAudibleReminder, reminderObject);
     }
 
     QOrganizerItemEmailReminder emailReminder = item.detail(QOrganizerItemEmailReminder::DefinitionName);
     if (!emailReminder.isEmpty()) {
         QVariantMap reminderObject;
-        convertItemReminderDetailToJsonDbObject(emailReminder, reminderObject);
+        itemReminderDetailToJsonDbObject(emailReminder, reminderObject);
         object->insert(QOrganizerJsonDbStr::ItemEmailReminder, reminderObject);
     }
 
@@ -446,7 +447,7 @@ bool QOrganizerJsonDbConverter::convertItemToJsonDbObject(const QOrganizerItem& 
         QVariantList recurrenceRulesList;
         foreach (QOrganizerRecurrenceRule recurrenceRule, recurrenceRules) {
             QVariantMap recurrenceRuleObject;
-            convertRecurrenceRuleToJsonDbObject(recurrenceRule, &recurrenceRuleObject);
+            recurrenceRuleToJsonDbObject(recurrenceRule, &recurrenceRuleObject);
             recurrenceRulesList.append(recurrenceRuleObject);
         }
         object->insert(QOrganizerJsonDbStr::ItemRecurrenceRules, recurrenceRulesList);
@@ -456,7 +457,7 @@ bool QOrganizerJsonDbConverter::convertItemToJsonDbObject(const QOrganizerItem& 
         QVariantList exceptionRulesList;
         foreach (QOrganizerRecurrenceRule exceptionRule, exceptionRules) {
             QVariantMap exceptionRuleObject;
-            convertRecurrenceRuleToJsonDbObject(exceptionRule, &exceptionRuleObject);
+            recurrenceRuleToJsonDbObject(exceptionRule, &exceptionRuleObject);
             exceptionRulesList.append(exceptionRuleObject);
         }
         object->insert(QOrganizerJsonDbStr::ItemExceptionRules, exceptionRulesList);
@@ -481,7 +482,7 @@ bool QOrganizerJsonDbConverter::convertItemToJsonDbObject(const QOrganizerItem& 
     return true;
 }
 
-bool QOrganizerJsonDbConverter::convertJsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)
+bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)
 {
     QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
     if (jsonUuid.isEmpty()) {
@@ -517,7 +518,7 @@ bool QOrganizerJsonDbConverter::convertJsonDbObjectToCollection(const QVariantMa
     return true;
 }
 
-bool QOrganizerJsonDbConverter::convertCollectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const
+bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const
 {
     if (!collection.id().isNull()) {
         QString jsonUuid = collection.id().toString();
@@ -560,20 +561,26 @@ bool QOrganizerJsonDbConverter::convertCollectionToJsonDbObject(const QOrganizer
     return true;
 }
 
-void QOrganizerJsonDbConverter::convertJsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const
+void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const
 {
-    QString frequency = object.value(QOrganizerJsonDbStr::RuleFrequency, QOrganizerJsonDbStr::FrequencyInvalid).toString();
-    rule->setFrequency(static_cast<QOrganizerRecurrenceRule::Frequency>(
-                           convertStringToEnum(qt_organizerFrequencyEnumMap, frequency)));
-    rule->setInterval(object.value(QOrganizerJsonDbStr::RuleInterval, 1).toInt());
-
-    int limitCount = object.value(QOrganizerJsonDbStr::RuleLimitCount, -1).toInt();
-    if (limitCount >= 0)
-        rule->setLimit(limitCount);
-    QDate limitDate = object.value(QOrganizerJsonDbStr::RuleLimitDate, QDate()).toDate();
-    if (limitDate.isValid())
-        rule->setLimit(limitDate);
-
+    if (object.contains(QOrganizerJsonDbStr::RuleFrequency)) {
+        QString frequency = object.value(QOrganizerJsonDbStr::RuleFrequency).toString();
+        rule->setFrequency(static_cast<QOrganizerRecurrenceRule::Frequency>(
+                               stringToEnum(qt_organizerFrequencyEnumMap, frequency)));
+    }
+    if (object.contains(QOrganizerJsonDbStr::RuleInterval)) {
+        rule->setInterval(object.value(QOrganizerJsonDbStr::RuleInterval).toInt());
+    }
+    if (object.contains(QOrganizerJsonDbStr::RuleLimitCount)) {
+        int limitCount = object.value(QOrganizerJsonDbStr::RuleLimitCount).toInt();
+        if (limitCount >= 0)
+            rule->setLimit(limitCount);
+    }
+    if (object.contains(QOrganizerJsonDbStr::RuleLimitDate)) {
+        QDate limitDate = object.value(QOrganizerJsonDbStr::RuleLimitDate).toDate();
+        if (limitDate.isValid())
+            rule->setLimit(limitDate);
+    }
     if (object.contains(QOrganizerJsonDbStr::RulePositions)) {
         QVariantList positionsList = object.value(QOrganizerJsonDbStr::RulePositions).toList();
         QSet<int> positions;
@@ -581,17 +588,17 @@ void QOrganizerJsonDbConverter::convertJsonDbObjectToRecurrenceRule(const QVaria
             positions.insert(position.toInt());
         rule->setPositions(positions);
     }
-
-    QString firstDayOfWeek = object.value(QOrganizerJsonDbStr::RuleFirstDayOfWeek, QOrganizerJsonDbStr::DayMonday).toString();
-    rule->setFirstDayOfWeek(static_cast<Qt::DayOfWeek>(
-                                convertStringToEnum(qt_organizerDayEnumMap, firstDayOfWeek)));
-
+    if (object.contains(QOrganizerJsonDbStr::RuleFirstDayOfWeek)) {
+        QString firstDayOfWeek = object.value(QOrganizerJsonDbStr::RuleFirstDayOfWeek).toString();
+        rule->setFirstDayOfWeek(static_cast<Qt::DayOfWeek>(
+                                    stringToEnum(qt_organizerDayEnumMap, firstDayOfWeek)));
+    }
     if (object.contains(QOrganizerJsonDbStr::RuleDaysOfWeek)) {
         QVariantList daysOfWeekList = object.value(QOrganizerJsonDbStr::RuleDaysOfWeek).toList();
         QSet<Qt::DayOfWeek> daysOfWeek;
         foreach (QVariant day, daysOfWeekList)
             daysOfWeek.insert(static_cast<Qt::DayOfWeek>(
-                                  convertStringToEnum(qt_organizerDayEnumMap, day.toString())));
+                                  stringToEnum(qt_organizerDayEnumMap, day.toString())));
         rule->setDaysOfWeek(daysOfWeek);
     }
 
@@ -624,14 +631,14 @@ void QOrganizerJsonDbConverter::convertJsonDbObjectToRecurrenceRule(const QVaria
         QSet<QOrganizerRecurrenceRule::Month> monthsOfYear;
         foreach (QVariant month, monthsOfYearList)
             monthsOfYear.insert(static_cast<QOrganizerRecurrenceRule::Month>(
-                                    convertStringToEnum(qt_organizerMonthEnumMap, month.toString())));
+                                    stringToEnum(qt_organizerMonthEnumMap, month.toString())));
         rule->setMonthsOfYear(monthsOfYear);
     }
 }
 
-void QOrganizerJsonDbConverter::convertRecurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const
+void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const
 {
-    object->insert(QOrganizerJsonDbStr::RuleFrequency, convertEnumToString(qt_organizerFrequencyEnumMap, rule.frequency()));
+    object->insert(QOrganizerJsonDbStr::RuleFrequency, enumToString(qt_organizerFrequencyEnumMap, rule.frequency()));
     object->insert(QOrganizerJsonDbStr::RuleInterval, rule.interval());
     object->insert(QOrganizerJsonDbStr::RuleLimitCount, rule.limitCount());
     object->insert(QOrganizerJsonDbStr::RuleLimitDate, rule.limitDate().toString(Qt::ISODate));
@@ -644,13 +651,13 @@ void QOrganizerJsonDbConverter::convertRecurrenceRuleToJsonDbObject(const QOrgan
         object->insert(QOrganizerJsonDbStr::RulePositions, positionsList);
     }
 
-    object->insert(QOrganizerJsonDbStr::RuleFirstDayOfWeek, convertEnumToString(qt_organizerDayEnumMap, rule.firstDayOfWeek()));
+    object->insert(QOrganizerJsonDbStr::RuleFirstDayOfWeek, enumToString(qt_organizerDayEnumMap, rule.firstDayOfWeek()));
 
     QSet<Qt::DayOfWeek> daysOfWeek = rule.daysOfWeek();
     if (!daysOfWeek.isEmpty()) {
         QVariantList daysOfWeekList;
         foreach (Qt::DayOfWeek day, daysOfWeek) {
-            daysOfWeekList.append(convertEnumToString(qt_organizerDayEnumMap, day));
+            daysOfWeekList.append(enumToString(qt_organizerDayEnumMap, day));
         }
         object->insert(QOrganizerJsonDbStr::RuleDaysOfWeek, daysOfWeekList);
     }
@@ -686,13 +693,13 @@ void QOrganizerJsonDbConverter::convertRecurrenceRuleToJsonDbObject(const QOrgan
     if (!monthsOfYear.isEmpty()) {
         QVariantList monthsOfYearList;
         foreach (QOrganizerRecurrenceRule::Month month, monthsOfYear) {
-            monthsOfYearList.append(convertEnumToString(qt_organizerMonthEnumMap, month));
+            monthsOfYearList.append(enumToString(qt_organizerMonthEnumMap, month));
         }
         object->insert(QOrganizerJsonDbStr::RuleMonthsOfYear, monthsOfYearList);
     }
 }
 
-void QOrganizerJsonDbConverter::convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const
+void QOrganizerJsonDbConverter::itemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const
 {
     //Item reminder common part
     if (itemReminder.hasValue(itemReminder.FieldSecondsBeforeStart))
@@ -732,7 +739,7 @@ void QOrganizerJsonDbConverter::convertItemReminderDetailToJsonDbObject(const QO
     }
 }
 
-void QOrganizerJsonDbConverter::convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const
+void QOrganizerJsonDbConverter::jsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const
 {
     //Common details exist in all reminder types
     if (object.contains(QOrganizerJsonDbStr::ItemReminderSecBeforeStart)) {
@@ -750,7 +757,7 @@ void QOrganizerJsonDbConverter::convertJsonDbObjectToItemReminderDetailCommon(co
     }
 }
 
-int QOrganizerJsonDbConverter::convertStringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const
+int QOrganizerJsonDbConverter::stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const
 {
     int i = 0;
     while (conversionData[i].enumValue != enumMapEnd) {
@@ -763,7 +770,7 @@ int QOrganizerJsonDbConverter::convertStringToEnum(const QOrganizerJsonDbEnumCon
 }
 
 
-QString QOrganizerJsonDbConverter::convertEnumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const
+QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const
 {
     int i = 0;
     while (conversionData[i].enumValue != enumMapEnd) {

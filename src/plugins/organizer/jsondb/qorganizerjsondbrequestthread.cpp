@@ -329,7 +329,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         }
         QVariantMap newJsonDbItem;
         if (!errorFound) {
-            if (m_converter.convertItemToJsonDbObject(item, &newJsonDbItem)) {
+            if (m_converter.itemToJsonDbObject(item, &newJsonDbItem)) {
                 int trId;
                 if (itemIsNew)
                     trId = m_jsonDb->create(newJsonDbItem);
@@ -473,7 +473,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
 
         QVariantMap newJsonDbCollection;
         if (!errorFound) {
-            if (m_converter.convertCollectionToJsonDbObject(collection, isDefaultCollection, &newJsonDbCollection)) {
+            if (m_converter.collectionToJsonDbObject(collection, isDefaultCollection, &newJsonDbCollection)) {
                 int trId;
                 if (collectionIsNew)
                     trId = m_jsonDb->create(newJsonDbCollection);
@@ -658,7 +658,7 @@ void QOrganizerJsonDbRequestThread::handleItemFetchResponse(QOrganizerItemFetchR
 
     for (int i = 0; i < jsonDbObjectList.size(); i++) {
         QOrganizerItem item;
-        if (m_converter.convertJsonDbObjectToItem(jsonDbObjectList.at(i).toMap(), &item)) {
+        if (m_converter.jsonDbObjectToItem(jsonDbObjectList.at(i).toMap(), &item)) {
             if (QOrganizerManagerEngine::isItemBetweenDates(item, fetchReq->startDate(), fetchReq->endDate()))
                 items.append(item);
         }
@@ -710,7 +710,7 @@ void QOrganizerJsonDbRequestThread::handleItemFetchByIdResponse(QOrganizerItemFe
     int i;
     for (i = 0; i < jsonDbObjectList.size(); i++) {
         QOrganizerItem item;
-        if (m_converter.convertJsonDbObjectToItem(jsonDbObjectList.at(i).toMap(), &item))
+        if (m_converter.jsonDbObjectToItem(jsonDbObjectList.at(i).toMap(), &item))
             itemMap.insert(item.id(), item);
     }
     for (i = 0; i < ids.size(); i++) {
@@ -820,7 +820,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionFetchResponse(QOrganizerColl
     for (int i = 0; i < jsonDbObjectList.size(); i++) {
         QOrganizerCollection collection;
         bool isDefaultCollection;
-        if (m_converter.convertJsonDbObjectToCollection(jsonDbObjectList.at(i).toMap(), &collection, isDefaultCollection)) {
+        if (m_converter.jsonDbObjectToCollection(jsonDbObjectList.at(i).toMap(), &collection, isDefaultCollection)) {
             if (isDefaultCollection) {
                 //Default collection create
                 m_defaultCollection = collection;
@@ -886,12 +886,12 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveResponse(QOrganizerCol
                 QString uuid = jsonErrorList.at(i).toMap().value(JsonDbString::kUuidStr).toString();
                 //Find out the item index, the search index should be started from the previous error item index
                 for (int j = errorIndex; j < collectionRemoveReq->collectionIds().size(); j++) {
-                    QString candidate_uuid = collectionRemoveReq->collectionIds().at(j).toString().remove (QOrganizerJsonDbStr::ManagerName);
+                    QString candidate_uuid = collectionRemoveReq->collectionIds().at(j).toString().remove(QOrganizerJsonDbStr::ManagerName);
                     if (uuid == candidate_uuid) {
                         //Found the error item in request list
                         errorIndex = j;
                         JsonDbError::ErrorCode errorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorList.at(i).toMap().value(JsonDbString::kErrorStr).toInt());
-                        error = m_converter.convertJsondbErrorToOrganizerError (errorCode);
+                        error = m_converter.jsondbErrorToOrganizerError(errorCode);
                         //Insert error to error list
                         m_requestMgr->updateRequestData (collectionRemoveReq, error, j);
                         removedItemList.removeAt(j);
@@ -954,7 +954,7 @@ QOrganizerManager::Error QOrganizerJsonDbRequestThread::handleErrorResponse(cons
     } else {
         jsonErrorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorObject.toList().at(0).toMap().value(JsonDbString::kCodeStr).toInt());
     }
-    return m_converter.convertJsondbErrorToOrganizerError (jsonErrorCode);
+    return m_converter.jsondbErrorToOrganizerError (jsonErrorCode);
 
 }
 

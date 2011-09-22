@@ -64,22 +64,22 @@ class QOrganizerJsonDbConverter
 public:
     QOrganizerJsonDbConverter();
 
-    QOrganizerManager::Error convertJsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode);
+    QOrganizerManager::Error jsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode);
 
-    bool convertJsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const;
-    bool convertItemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const;
-    bool convertJsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection);
-    bool convertCollectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const;
+    bool jsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const;
+    bool itemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const;
+    bool jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection);
+    bool collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const;
 
 private:
-    void convertJsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const;
-    void convertRecurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const;
+    void jsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const;
+    void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const;
 
-    void convertItemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
-    void convertJsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
+    void itemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const;
+    void jsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const;
 
-    int convertStringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const;
-    QString convertEnumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
+    int stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const;
+    QString enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
 };
 
 #endif // QORGANIZERJSONDBCONVERTER_H

@@ -648,7 +648,7 @@ QContact tst_QContactManager::createContact(
             n.setCustomLabel(firstName + " " + lastName);
         } else {
             // assume that either first and last name or custom label is supported
-            QTest::qWarn("Neither custom label nor first name/last name supported!");
+            QWARN("Neither custom label nor first name/last name supported!");
             return QContact();
         }
         contact.saveDetail(&n);

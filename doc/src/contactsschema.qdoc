@@ -1,0 +1,147 @@
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+
+/*!
+
+\page contactsschema.html
+
+\title Qt Contacts Schema
+
+\tableofcontents
+
+\section1 Introduction
+
+The \l{Contacts}{Qt Contacts API} makes use of detail leaf classes
+which provide certain well-known functionality.  In order to develop a backend engine which
+can service clients or provide synchronization to other backends, the schema must be
+known.  The schema provided by the \l{Contacts}{Qt Contacts API} is updated with every
+release of QtMobility, so the function which returns the default schema definitions can
+take an integer which identifies the schema version which the engine writer developed against.
+Engine writers should call \l{QContactManagerEngine::schemaDefinitions()}{schemaDefinitions()}
+in their code which generates the manager-specific schema (which is returned to clients when
+they call \l{QContactManager::detailDefinitions()}).
+
+The \l{QContactManagerEngine::schemaDefinitions()}{schemaDefinitions()} function should
+NOT be called by clients; rather, clients should call \l{QContactManager::detailDefinitions()}
+instead.
+
+\section1 Schema Definition
+
+Different backends have different capabilities.  Some backends may not be able to implement
+certain definitions in the default schema (for example, some backends might not have support for
+storing location information), while other backends may not be able to implement some aspects
+of a particular definition in the default schema (for example, a logo field for organization
+details).
+
+In order to be useful for clients, however, all backends should attempt to support the default
+schema.  Furthermore, no backend should support a schema definition of a modified form where
+those modifications change the semantics of the data.  A client should be able to request details
+of the QContactPhoneNumber type (that is, details whose definition name is "PhoneNumber") with
+reasonable certainty that the data returned is a phone number.
+
+By implementing the default schema, the backend developer ensures that client code written against
+the default schema will work without source modification against their backend.
+
+\section1 Default Schema
+
+The leaf details that form the current version of the default schema are as follows:
+\annotatedlist contacts-details
+
+Note that the following leaf details were added to the default schema in version 1.1 of the
+QtMobility project:
+\list
+  \o QContactFamily
+  \o QContactFavorite
+\endlist
+
+
+\section2 Detail Definition Uniqueness
+
+A uniqueness constraint on a detail definition means that for any \l{QContact}, only one detail of that
+definition may be saved.
+
+The leaf classes which have a uniqueness constraint in the default schema are as follows:
+\list
+    \o \l{QContactDisplayLabel}
+    \o \l{QContactType}
+    \o \l{QContactSyncTarget}
+    \o \l{QContactGuid}
+\endlist
+
+\section2 Detail Access Constraints
+
+Some details in a contact retrieved from a manager may have access constraints set.
+An access constraint on a detail means that the detail may not be removed (if the access constraint is \c QContactDetail::Irremovable)
+or updated (if the access constraint is \c QContactDetail::ReadOnly) by the client.  If the client attempts to save an updated
+version of a read-only detail in a contact, or remove a detail which is irremovable from a contact, the operation will succeed;
+however those updates to the contact will be ignored by the manager when the contact is saved there.
+
+For example, the \l{QContactDisplayLabel} is defined in the default schema as a read-only, irremovable detail,
+meaning that it may not be modified or deleted by the client, but are provided by the backend (in the case
+of \l{QContactDisplayLabel}, automatically synthesized by the backend from various details of the contact, like
+the \l{QContactName}, \l{QContactNickname}, etc).
+
+There are three possible detail access constraints: read-only, irremovable and no constraint.
+A read-only constraint ensures that clients cannot modify the values stored in such details in the persistent
+copy of the contact (that is, the contact as it is stored in the manager); the irremovable constaint ensures
+that a particular detail may not be removed by clients.  In general, most details which are read only will
+also be irremovable, and vice versa.  One exception to this is the \l{QContactType} detail, which is
+irremovable but may be updated by clients as desired.
+Details with no constraint may be added, updated and removed as desired by the client.  Changes to such details
+in a contact will be persisted in the manager when the client calls \l{QContactManager::saveContact()}.
+
+Please see the documentation of \l{QContactDetail} for more information on access constraints.
+
+The leaf classes which have access constraints in the default schema are as follows:
+\list
+    \o \l{QContactGuid} is \c QContactDetail::ReadOnly and \c QContactDetail::Irremovable
+    \o \l{QContactSyncTarget} is \c QContactDetail::ReadOnly and \c QContactDetail::Irremovable
+    \o \l{QContactTimestamp} is \c QContactDetail::ReadOnly and \c QContactDetail::Irremovable
+    \o \l{QContactPresence} is \c QContactDetail::ReadOnly and \c QContactDetail::Irremovable
+    \o \l{QContactDisplayLabel} is \c QContactDetail::ReadOnly and \c QContactDetail::Irremovable
+    \o \l{QContactType} is \c QContactDetail::Irremovable
+\endlist
+
+Furthermore, in the default schema, every contact is required to have at least two details by default: a \l{QContactType} which describes
+the type of entity that the contact represents (for example, a person or a group), and a \l{QContactDisplayLabel} which holds
+the default display label for the contact.
+
+\section2 Backend-provided Details
+
+As described in the section on detail access constraints, some details are provided by the backend,
+such as \l{QContactDisplayLabel} and \l{QContactPresence}.  When the client attempts to save a \l{QContact}
+that contains these details, these details will be ignored by the backend (since any values in this field
+are synthesized by the backend).  This means that while clients may (for example) add a
+\l{QContactPresence} detail to a \l{QContact}, it will not be persisted in the manager when the
+client attempts to save that contact.
+
+Precisely which details are backend-provided is backend specific; some backends provide more details
+than others.
+
+
+*/

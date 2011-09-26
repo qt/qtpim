@@ -1,0 +1,275 @@
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+
+/*!
+
+\page organizerengines.html
+
+\title Qt Organizer Manager Engines
+
+\tableofcontents
+
+\section1 Introduction
+
+The QOrganizerManager interface provided to clients to allow access to organizer information depends
+on an implementation of QOrganizerManagerEngine existing.  This engine provides the methods
+which are called by the manager.  An engine is identified by its URI, which is the name
+reported to clients through the QOrganizerManager::managerUri() function.  The URI of a manager
+is built by combining its name, version and relevant construction parameters.
+
+\section1 Information For Engine Implementors
+
+Some developers may wish to provide implementations of QOrganizerManagerEngine for use by clients.
+The engine that they provide may aggregate multiple datastores, or access a remote datastore,
+or provide some other functionality to clients.  An engine is distributed as a Qt Plugin, and
+will be detected automatically by the plugin loading code in the QOrganizerManager, so long as the
+plugin is located in the correct path ($QT_PLUGINS_DIR/organizer/).
+
+\section2 Manager Engine
+
+The functionality exposed by the QOrganizerManager class may be implemented
+by \l{QOrganizerManagerEngine}{engine} plugins which interface directly to
+a platform-specific backend or provide their own data storage backend.  As
+such, the terms "manager", "plugin" and "backend" are used interchangeably in
+this documentation to refer to any engine plugin which implements the
+functionality exposed by the QOrganizerManager interface.  The plugin
+architecture allows dynamic loading of different manager engines at runtime.
+
+A manager backend may be implemented by subclassing
+\l{QOrganizerManagerEngine}, and providing a
+\l{QOrganizerManagerEngineFactory} which can instantiate it when required.
+
+\section2 Schemas
+
+The schema supported by a engine is the list of detail definitions which are
+supported by the engine.  For in-depth information about the schema, please
+refer to the main \l{Qt Organizer Schema} page.
+
+\section2 Engine-Specific Ids
+
+Each engine interfaces with a particular datastore, and that datastore may
+have its own particular way of identifying items stored in it.  The
+QtMobility Organizer API allows engine implementers to define their own
+id format.
+
+Engine implementers must implement their own id classes derived from
+\l QOrganizerItemEngineId and \l QOrganizerCollectionEngineId respectively.
+For an example of how to implement these classes, see the "skeleton" example
+plugin.
+
+\section2 Which Functions Do I Need To Implement
+
+Different engines provide different functionality and support different features.  Depending on
+the feature set of the engine, it will need to implement a particular subset of the API.
+The default implementation for most functions will set the error to
+\c QOrganizerManager::NotSupportedError and return the value which indicates that an error has
+occurred.
+
+\section3 Mandatory Functions
+
+All engines must implement the following functions:
+
+\list
+  \o QOrganizerManagerEngine::managerName()
+  \o QOrganizerManagerEngine::managerVersion()
+  \o QOrganizerManagerEngine::supportedItemTypes()
+  \o QOrganizerManagerEngine::hasFeature()
+  \o QOrganizerManagerEngine::detailDefinitions()
+  \o QOrganizerManagerEngine::itemIds()
+  \o QOrganizerManagerEngine::items()
+  \o QOrganizerManagerEngine::itemsForExport()
+  \o QOrganizerManagerEngine::defaultCollection()
+  \o QOrganizerManagerEngine::collections()
+\endlist
+
+Every engine implementation must also come with an implementation of QOrganizerManagerEngineFactory
+for that engine.
+
+Note that you do not need to implement filtering and sorting natively in an engine; the default
+implementation offers the following static functions to perform filtering and sorting respectively,
+in memory:
+\list
+  \o QOrganizerManagerEngine::testFilter()
+  \o QOrganizerManagerEngine::sortItems()
+\endlist
+
+However, engine implementors should be aware that the default implementation is naive and will
+have greatly reduced performance compared to a native implementation (e.g., SQL queries, if
+the calendar or personal data exposed by the engine implementation is stored in an SQL database).
+
+Similarly, any QOrganizerItemFetchHint parameter may be ignored by an engine implementation, but if
+it does so it must return all information available for the item.
+
+All engines must also implement the following functions to implement asynchronous requests:
+\list
+  \o QOrganizerManagerEngine::requestDestroyed()
+  \o QOrganizerManagerEngine::startRequest()
+  \o QOrganizerManagerEngine::cancelRequest()
+  \o QOrganizerManagerEngine::waitForRequestFinished()
+\endlist
+If the engine does not support asynchronous requests, it should always return false in the
+last three of those functions, and do nothing in the first.  If the engine does support
+asynchronous requests, it must ensure that all information required to perform the request
+is saved in the engine within QOrganizerManagerEngine::startRequest(), as the client owns the
+request object and may delete it at any time.  In general, engine implementors should be aware
+of this ownership semantic, and never attempt an unsafe operation on a request pointer.
+
+It is recommended that all engine implementations support asynchronous requests, even if they
+use a "dummy" implementation which services the request synchronously during startRequest, and then
+emit the appropriate signals from the request via a zero-millisecond timeout timer.
+
+\section3 Optional Functionality
+
+The rest of the virtual functions are optional, and should be implemented only if the engine
+supports the operations.
+
+If the engine can be constructed with different parameters, which affects the operation of the
+engine (for example, a parameter might define which file to read schedule or calendar information from, or
+it might be an access token to prove that the client has the access rights to read organizer information
+from the engine, etc), it must report which parameters it was constructed with via the
+\list
+  \o QOrganizerManagerEngine::managerParameters()
+\endlist
+function.
+
+If the engine supports native filtering of any kind, it must report to clients which filters
+are supported natively by implementing:
+\list
+  \o QOrganizerManagerEngine::isFilterSupported()
+\endlist
+
+If the engine supports saving or removing organizer item information, as well as retrieval, it must
+implement:
+\list
+  \o QOrganizerManagerEngine::saveItems()
+  \o QOrganizerManagerEngine::removeItems()
+\endlist
+It may also choose to implement the "single item" functions:
+\list
+  \o QOrganizerManagerEngine::saveItem()
+  \o QOrganizerManagerEngine::removeItem()
+\endlist
+If it does not, the default implementation of those functions will use the batch (plural) versions
+of those functions to implement the required behavior.
+
+If the engine supports addition, modification and removal of collections, it must implement:
+\list
+  \o QOrganizerManagerEngine::saveCollection()
+  \o QOrganizerManagerEngine::removeCollection()
+\endlist
+
+If the engine supports modification of its schema (that is, extension of its definitions at
+run-time), it must report that it supports the \c QOrganizerManager::MutableDefinitions feature
+via QOrganizerManagerEngine::hasFeature(), and must also implement:
+\list
+  \o QOrganizerManagerEngine::saveDetailDefinition()
+  \o QOrganizerManagerEngine::removeDetailDefinition()
+\endlist
+
+
+\section3 Optional Implementation
+
+Apart from areas of functionality which may be optionally implemented by the engine or not,
+the default implementation provides several functions which operate in a naive, in-memory
+manner.  An engine implementation can override this default implementation with its own,
+if it wishes, in order to obtain performance gains, or to more accurately implement the
+function.
+
+As previously mentioned it may implement its own sorting or filtering, in functions such as
+QOrganizerManagerEngine::items().  An engine may also implement:
+\list
+  \o QOrganizerManagerEngine::validateItem()
+  \o QOrganizerManagerEngine::validateCollection()
+  \o QOrganizerManagerEngine::validateDefinition()
+  \o QOrganizerManagerEngine::compatibleItem()
+  \o QOrganizerManagerEngine::compatibleCollection()
+\endlist
+
+
+\section2 Which Signals Do I Need To Emit
+
+An engine implementation must emit the appropriate signals for the subset of functionality
+that it supports.
+
+If the engine supports reading or saving items, it must emit the:
+\list
+  \o QOrganizerManagerEngine::itemsAdded()
+  \o QOrganizerManagerEngine::itemsChanged()
+  \o QOrganizerManagerEngine::itemsRemoved()
+\endlist
+signals as appropriate.  Alternatively, it can emit the QOrganizerManager::dataChanged()
+signal instead.
+
+Similarly, if the engine supports reading or saving collections, it must emit the:
+\list
+  \o QOrganizerManagerEngine::collectionsAdded()
+  \o QOrganizerManagerEngine::collectionsChanged()
+  \o QOrganizerManagerEngine::collectionsRemoved()
+\endlist
+signals as appropriate.  Alternatively, it can emit the QOrganizerManager::dataChanged()
+signal instead.
+
+Note that the collectionsChanged() signal should be emitted if the meta data of a collection
+is updated, not if the client saves an item in the collection.  That is, the collection-related
+signals are for collection meta-data, not the contents of the collection.
+
+\section2 Other Considerations
+
+There are several other considerations that engine writers must be aware of:
+\list
+  \o Most batch functions take an error map as a parameter.  This parameter cannot
+be null as it exists in the private implementation of QOrganizerManager,
+so engines need not check the pointer before attempting to dereference it.
+  \o Every function takes a mandatory \c QOrganizerManager::Error pointer argument.  This argument
+is also never null, since it exists in the private implementation of QOrganizerManager.  Testing this
+argument for null is, therefore, superfluous.
+  \o The single-item functions for item retrieval, removal and save
+already have a default implementation which merely wraps the batch retrieval, removal or save
+function appropriately.  This default implementation may not be as performant as a hand-rolled
+function.  Engine implementations MUST implement the batch functions for each area of
+functionality supported by the engine.
+  \o Most clients will prefer to use the asynchronous API to access information from the
+engine.  It is therefore suggested that asynchronous requests be serviced, even if it is
+implemented in a similar manner to the (provided) memory engine's naive implementation.
+\endlist
+
+\section2 Example Implementation
+
+There are several implementations of QOrganizerManagerEngine available in the QtMobility
+source code repository.  In particular, the "memory" engine provides an implementation of
+an in-memory, anonymous datastore which supports almost every feature in the API, and therefore
+is useful for demonstration purposes.  Be aware, however, that the implementation of all
+functionality in the "memory" engine is naive and not performant, and should not be copied
+in any real engine implementation (e.g., to perform filtering, it reads all items from the
+(in-memory) database, and checks one by one for matches; a real engine, on the other hand,
+might perform a database query to return the results directly, rather than performing n-reads).
+
+The "skeleton" engine provides a useful template for engine implementors, and it is suggested
+that it is used as a starting point for anyone who wishes to implement a QOrganizerManagerEngine.
+
+*/

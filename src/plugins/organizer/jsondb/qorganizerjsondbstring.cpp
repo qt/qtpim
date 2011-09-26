@@ -124,6 +124,10 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfYear,"daysOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleWeeksOfYear,"weeksOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleMonthsOfYear,"monthsOfYear");
 
+// Custom fields
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFieldName, "fieldName");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFieldData, "fieldData");
+
 //warning string
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningMoreItemDelete, "Items are delete from jsondb!!");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningCollectionMissing, "No default collection! error code:");

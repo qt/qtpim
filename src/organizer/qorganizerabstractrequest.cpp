@@ -106,9 +106,6 @@ QTPIM_BEGIN_NAMESPACE
   \value ItemIdFetchRequest A request to fetch a list of organizer item ids
   \value ItemRemoveRequest A request to remove a list of organizer items
   \value ItemSaveRequest A request to save a list of organizer items
-  \value DetailDefinitionFetchRequest A request to fetch a collection of detail definitions
-  \value DetailDefinitionRemoveRequest A request to remove a list of detail definitions
-  \value DetailDefinitionSaveRequest A request to save a list of detail definitions
   \value CollectionFetchRequest A request to fetch a collection.
   \value CollectionRemoveRequest A request to remove a collection.
   \value CollectionSaveRequest A request to save a collection.

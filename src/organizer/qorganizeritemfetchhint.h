@@ -47,7 +47,6 @@
 #include <QSharedData>
 
 #include "qorganizerglobal.h"
-#include "qorganizeritemdetaildefinition.h"
 
 class QDataStream;
 

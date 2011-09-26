@@ -41,7 +41,6 @@
 
 #include "qorganizermanager.h"
 
-#include "qorganizeritemdetaildefinition.h"
 #include "qorganizermanagerengine.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemrequests.h"
@@ -1449,91 +1448,6 @@ bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& 
 /*! \reimp
     \since 1.1
 */
-QMap<QString, QOrganizerItemDetailDefinition> QOrganizerItemMemoryEngine::detailDefinitions(const QString& organizeritemType, QOrganizerManager::Error* error) const
-{
-    // lazy initialisation of schema definitions.
-    if (d->m_definitions.isEmpty()) {
-        d->m_definitions = QOrganizerManagerEngine::schemaDefinitions();
-    }
-
-    *error = QOrganizerManager::NoError;
-    return d->m_definitions.value(organizeritemType);
-}
-
-/*! Saves the given detail definition \a def, storing any error to \a error and
-    filling the \a changeSet with ids of changed organizer items as required
-    \since 1.1
-*/
-bool QOrganizerItemMemoryEngine::saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& organizeritemType, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error)
-{
-    // we should check for changes to the database in this function, and add ids of changed data to changeSet. // XXX TODO.
-    Q_UNUSED(changeSet);
-
-    if (!validateDefinition(def, error)) {
-        return false;
-    }
-
-    detailDefinitions(organizeritemType, error); // just to populate the definitions if we haven't already.
-    QMap<QString, QOrganizerItemDetailDefinition> defsForThisType = d->m_definitions.value(organizeritemType);
-    defsForThisType.insert(def.name(), def);
-    d->m_definitions.insert(organizeritemType, defsForThisType);
-
-    *error = QOrganizerManager::NoError;
-    return true;
-}
-
-/*! \reimp
-    \since 1.1
-*/
-bool QOrganizerItemMemoryEngine::saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& organizeritemType, QOrganizerManager::Error* error)
-{
-    QOrganizerItemChangeSet changeSet;
-    bool retn = saveDetailDefinition(def, organizeritemType, changeSet, error);
-    d->emitSharedSignals(&changeSet);
-    return retn;
-}
-
-/*! Removes the detail definition identified by \a definitionId, storing any error to \a error and
-    filling the \a changeSet with ids of changed organizer items as required
-    \since 1.1
-*/
-bool QOrganizerItemMemoryEngine::removeDetailDefinition(const QString& definitionId, const QString& organizeritemType, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error)
-{
-    // we should check for changes to the database in this function, and add ids of changed data to changeSet...
-    // we should also check to see if the changes have invalidated any organizer item data, and add the ids of those organizer items
-    // to the change set.  TODO!
-    Q_UNUSED(changeSet);
-
-    if (definitionId.isEmpty()) {
-        *error = QOrganizerManager::BadArgumentError;
-        return false;
-    }
-
-    detailDefinitions(organizeritemType, error); // just to populate the definitions if we haven't already.
-    QMap<QString, QOrganizerItemDetailDefinition> defsForThisType = d->m_definitions.value(organizeritemType);
-    bool success = defsForThisType.remove(definitionId);
-    d->m_definitions.insert(organizeritemType, defsForThisType);
-    if (success)
-        *error = QOrganizerManager::NoError;
-    else
-        *error = QOrganizerManager::DoesNotExistError;
-    return success;
-}
-
-/*! \reimp
-    \since 1.1
-*/
-bool QOrganizerItemMemoryEngine::removeDetailDefinition(const QString& definitionId, const QString& organizeritemType, QOrganizerManager::Error* error)
-{
-    QOrganizerItemChangeSet changeSet;
-    bool retn = removeDetailDefinition(definitionId, organizeritemType, changeSet, error);
-    d->emitSharedSignals(&changeSet);
-    return retn;
-}
-
-/*! \reimp
-    \since 1.1
-*/
 void QOrganizerItemMemoryEngine::requestDestroyed(QOrganizerAbstractRequest* req)
 {
     Q_UNUSED(req);
@@ -1784,82 +1698,6 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
                 updateCollectionRemoveRequest(r, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
             else
                 updateRequestState(currentRequest, QOrganizerAbstractRequest::FinishedState);
-        }
-        break;
-
-        case QOrganizerAbstractRequest::DetailDefinitionFetchRequest:
-        {
-            QOrganizerItemDetailDefinitionFetchRequest* r = static_cast<QOrganizerItemDetailDefinitionFetchRequest*>(currentRequest);
-            QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-            QMap<int, QOrganizerManager::Error> errorMap;
-            QMap<QString, QOrganizerItemDetailDefinition> requestedDefinitions;
-            QStringList names = r->definitionNames();
-            if (names.isEmpty())
-                names = detailDefinitions(r->itemType(), &operationError).keys(); // all definitions.
-
-            QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-            for (int i = 0; i < names.size(); i++) {
-                QOrganizerItemDetailDefinition current = detailDefinition(names.at(i), r->itemType(), &tempError);
-                requestedDefinitions.insert(names.at(i), current);
-
-                if (tempError != QOrganizerManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            if (!errorMap.isEmpty() || !requestedDefinitions.isEmpty() || operationError != QOrganizerManager::NoError)
-                updateDefinitionFetchRequest(r, requestedDefinitions, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
-            else
-                updateRequestState(currentRequest, QOrganizerAbstractRequest::FinishedState);
-        }
-        break;
-
-        case QOrganizerAbstractRequest::DetailDefinitionSaveRequest:
-        {
-            QOrganizerItemDetailDefinitionSaveRequest* r = static_cast<QOrganizerItemDetailDefinitionSaveRequest*>(currentRequest);
-            QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-            QMap<int, QOrganizerManager::Error> errorMap;
-            QList<QOrganizerItemDetailDefinition> definitions = r->definitions();
-            QList<QOrganizerItemDetailDefinition> savedDefinitions;
-
-            QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-            for (int i = 0; i < definitions.size(); i++) {
-                QOrganizerItemDetailDefinition current = definitions.at(i);
-                saveDetailDefinition(current, r->itemType(), changeSet, &tempError);
-                savedDefinitions.append(current);
-
-                if (tempError != QOrganizerManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            // update the request with the results.
-            updateDefinitionSaveRequest(r, savedDefinitions, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
-        }
-        break;
-
-        case QOrganizerAbstractRequest::DetailDefinitionRemoveRequest:
-        {
-            QOrganizerItemDetailDefinitionRemoveRequest* r = static_cast<QOrganizerItemDetailDefinitionRemoveRequest*>(currentRequest);
-            QStringList names = r->definitionNames();
-
-            QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-            QMap<int, QOrganizerManager::Error> errorMap;
-
-            for (int i = 0; i < names.size(); i++) {
-                QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-                removeDetailDefinition(names.at(i), r->itemType(), changeSet, &tempError);
-
-                if (tempError != QOrganizerManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            // there are no results, so just update the status with the error.
-            updateDefinitionRemoveRequest(r, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
         }
         break;
 

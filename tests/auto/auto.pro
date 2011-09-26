@@ -39,7 +39,6 @@ SUBDIRS += \
     qorganizeritemasync \
     qorganizeritemdetail \
     qorganizeritemdetails \
-    qorganizeritemdetaildefinition \
     qorganizeritemfilter \
     qorganizermanager \
     qorganizermanagerdetails \

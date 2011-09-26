@@ -236,15 +236,11 @@ QOrganizerItemIdFetchRequest, QOrganizerItemFetchRequest,
 QOrganizerItemFetchForExportRequest,
 QOrganizerItemSaveRequest, QOrganizerItemRemoveRequest,
 QOrganizerItemOccurrenceFetchRequest, QOrganizerCollectionFetchRequest,
-QOrganizerCollectionRemoveRequest, QOrganizerCollectionSaveRequest,
-QOrganizerItemDetailDefinitionFetchRequest,
-QOrganizerItemDetailDefinitionSaveRequest, and
-QOrganizerItemDetailDefinitionRemoveRequest.
+QOrganizerCollectionRemoveRequest, and QOrganizerCollectionSaveRequest.
 
 The asynchronous API allows manipulation of \l{QOrganizerItem}{items},
-\l{QOrganizerCollection}{collections} and
-\l{QOrganizerItemDetailDefinition}{schema definitions}, but does not provide
-manager capability or meta data information reporting.
+and \l{QOrganizerCollection}{collections}, but does not provide manager
+capability information reporting.
 
 For more detailed documentation on the asynchronous API, see the \l{Organizer Asynchronous API}.
 
@@ -258,11 +254,8 @@ local, high-speed datastores, or for applications which do not require a
 responsive user interface.
 
 The synchronous API is offered through the QOrganizerManager class, and
-includes manipulation of \l{QOrganizerItem}{items},
-\l{QOrganizerCollection}{collections} and
-\l{QOrganizerItemDetailDefinition}{schema definitions}.  As previously
-described, the meta data reporting and manipulation functions are also
-provided via synchronous API only.
+includes manipulation of \l{QOrganizerItem}{items}, and
+\l{QOrganizerCollection}{collections}.
 
 For more detailed documentation on the synchronous API, see the
 \l{Organizer Synchronous API}.
@@ -294,9 +287,6 @@ choose not to support one or more of these subclasses as they appear here;
 they may offer their own which provide similar functionality.
 
 \annotatedlist organizer-details
-
-Each of these subclasses provide access to information stored in fields which
-may have certain constraints, as listed in the \l{Qt Organizer Schema}{schema}.
 
 \section2 Asynchronous Requests
 

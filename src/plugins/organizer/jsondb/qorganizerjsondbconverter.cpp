@@ -269,6 +269,15 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         item->saveDetail(&emailReminder);
     }
 
+    // custom details
+    QMap<QString, QVariant> customDetailsMap = object.value(QOrganizerJsonDbStr::ItemCustomFields).toMap();
+    if (!customDetailsMap.isEmpty()) {
+        QList<QOrganizerItemCustomDetail> customDetails;
+        jsonDbObjectToCustomDetails(customDetailsMap, customDetails);
+        foreach (QOrganizerItemCustomDetail detail, customDetails)
+            item->saveDetail(&detail);
+    }
+
     //Get "_type" value
     QString typeStr = object.value(JsonDbString::kTypeStr).toString();
     if (QOrganizerJsonDbStr::Event == typeStr) {
@@ -443,6 +452,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::ItemEmailReminder, reminderObject);
     }
 
+    // recurrence
     if (!recurrenceRules.isEmpty()) {
         QVariantList recurrenceRulesList;
         foreach (QOrganizerRecurrenceRule recurrenceRule, recurrenceRules) {
@@ -477,6 +487,15 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             exceptionDatesList.append(exceptionDate.toString(Qt::ISODate));
         }
         object->insert(QOrganizerJsonDbStr::ItemExceptioneDates, exceptionDatesList);
+    }
+
+    // custom details
+    QList<QOrganizerItemCustomDetail> customDetails = item.details<QOrganizerItemCustomDetail>();
+    if (!customDetails.isEmpty()) {
+        QVariantMap map;
+        customDetailsToJsonDbObject(customDetails, map);
+        if (!map.isEmpty())
+            object->insert(QOrganizerJsonDbStr::ItemCustomFields, map);
     }
 
     return true;
@@ -769,7 +788,6 @@ int QOrganizerJsonDbConverter::stringToEnum(const QOrganizerJsonDbEnumConversion
     return conversionData[0].enumValue;
 }
 
-
 QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const
 {
     int i = 0;
@@ -781,3 +799,86 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
     // first index contains default values
     return conversionData[0].enumStr;
 }
+
+void QOrganizerJsonDbConverter::customDetailsToJsonDbObject(const QList<QOrganizerItemCustomDetail> &customDetails, QVariantMap &object) const
+{
+    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
+        if (customDetail.name().isEmpty() || customDetail.data().isNull())
+            continue;
+        if (customDetail.data().canConvert(QVariant::String)) {
+            object.insert(customDetail.name(), customDetail.data().toString());
+        } else if (customDetail.data().type() == QVariant::List) {
+            QVariantList variantList;
+            dataToList(customDetail.data(), variantList);
+            object.insert(customDetail.name(), variantList);
+        } else if (customDetail.data().type() == QVariant::Map) {
+            QVariantMap variantMap;
+            dataToMap(customDetail.data(), variantMap);
+            object.insert(customDetail.name(), variantMap);
+        } else {
+            continue;
+        }
+    }
+}
+
+void QOrganizerJsonDbConverter::dataToList(const QVariant &data, QVariantList &list) const
+{
+    if (data.type() != QVariant::List)
+        return;
+
+    QList<QVariant> originalList(data.toList());
+    foreach (const QVariant &variant, originalList) {
+        if (variant.isNull())
+            continue;
+
+        if (variant.canConvert(QVariant::String)) {
+            list.append(variant.toString());
+        } else if (variant.type() == QVariant::List) {
+            dataToList(variant, list);
+        } else if (variant.type() == QVariant::Map) {
+            QVariantMap map;
+            dataToMap(variant, map);
+            list.append(map);
+        }
+    }
+}
+
+void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map) const
+{
+    if (data.type() != QVariant::Map)
+        return;
+
+    QMap<QString, QVariant> originalMap(data.toMap());
+    QMap<QString, QVariant>::const_iterator i = originalMap.constBegin();
+    while (i != originalMap.constEnd()) {
+        if (i.value().isValid() && !i.value().isNull()) {
+            if (i.value().canConvert(QVariant::String)) {
+                map.insert(i.key(), i.value().toString());
+            } else if (i.value().type() == QVariant::List) {
+                QVariantList list;
+                dataToList(i.value(), list);
+                map.insert(i.key(), list);
+            } else if (i.value().type() == QVariant::Map) {
+                QVariantMap embedMap;
+                dataToMap(i.value(), embedMap);
+                map.insert(i.key(), embedMap);
+            }
+        }
+        ++i;
+    }
+}
+
+void QOrganizerJsonDbConverter::jsonDbObjectToCustomDetails(const QVariantMap &object, QList<QOrganizerItemCustomDetail> &customDetails) const
+{
+    QMap<QString, QVariant>::const_iterator i = object.constBegin();
+    while (i != object.constEnd()) {
+        if (!i.key().isNull() && !i.value().isNull()) {
+            QOrganizerItemCustomDetail customDetail;
+            customDetail.setName(i.key());
+            customDetail.setData(i.value());
+            customDetails.append(customDetail);
+        }
+        ++i;
+    }
+}
+

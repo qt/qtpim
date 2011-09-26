@@ -1467,4 +1467,60 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodoOccurrence, "TodoOccurrence
     \since 1.1
  */
 
+/* ==================== QOrganizerItemCustomDetail ======================= */
+/*!
+    \class QOrganizerItemCustomDetail
+    \brief The QOrganizerItemCustomDetail class provides the possibility to save custom details to the organizer item.
+    \inmodule QtOrganizer
+    \ingroup organizer-details
+
+    Different back-end engines may or may not support custom details for different item types. Even
+    if supported, they may accept different QVariant types as the data.
+ */
+
+/*!
+    \variable QOrganizerItemCustomDetail::DefinitionName
+
+    The constant string which identifies the definition of details which are custom details.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::DefinitionName, "CustomDetail");
+
+/*!
+    \variable QOrganizerItemCustomDetail::FieldDetailName
+
+    Contains the name of the custom detail.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::FieldCustomDetailName, "CustomDetailName");
+
+/*!
+    \variable QOrganizerItemCustomDetail::FieldCustomDetailData
+
+    Contains the data this custom detail.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::FieldCustomDetailData, "CustomDetailData");
+
+/*!
+    \fn void QOrganizerItemCustomDetail::setName(const QString &name)
+
+    Sets the \a name of this custom detail.
+ */
+
+/*!
+    \fn QString QOrganizerItemCustomDetail::name() const
+
+    Gets the name of this custom detail.
+ */
+
+/*!
+    \fn void setDetailData(const QVariant &data)
+
+    Sets the \a data of the custom detail.
+ */
+
+/*!
+    \fn QVariant data() const
+
+    Gets the data of this custom detail.
+ */
+
 QTPIM_END_NAMESPACE

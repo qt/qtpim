@@ -81,7 +81,8 @@ QTPIM_BEGIN_NAMESPACE
   A QOrganizerItem object has an id and a collection of details (like a start date and location), as
   well as a collection id which identifies which QOrganizerCollection the item is part of in a manager.
   Each detail (which can have multiple fields) is stored in an appropriate subclass of QOrganizerItemDetail,
-  and the QOrganizerItem allows retrieving these details in various ways.
+  and the QOrganizerItem allows retrieving these details in various ways. QOrganizerItemCustomDetail is
+  supposed to be used to store user specific details that are not pre-defined in the detal leaf classes.
 
   Most clients will want to use the convenient subclasses of QOrganizerItem (i.e., QOrganizerEvent
   (and QOrganizerEventOccurence), QOrganizerTodo (and QOrganizerTodoOccurence), QOrganizerJournal and
@@ -408,9 +409,7 @@ QOrganizerItemDetail QOrganizerItem::detail(const QString& definitionName) const
     The definitionName string can be determined by the DefinitionName attribute
     of defined objects (e.g. QOrganizerItemPhoneNumber::DefinitionName) or by
     requesting a list of all the definition names using
-    \l {QOrganizerManager::detailDefinitions()}{detailDefinitions()} or the
-    asynchronous \l
-    {QOrganizerItemDetailDefinitionFetchRequest::definitionNames()}{definitionNames()}.
+    \l {QOrganizerManager::detailDefinitions()}{detailDefinitions()}.
     \since 1.1
 */
 QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionName) const
@@ -438,9 +437,7 @@ QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionNam
     The definitionName string can be determined by the DefinitionName attribute
     of defined objects (e.g. QOrganizerItemPhoneNumber::DefinitionName) or by
     requesting a list of all the definition names using
-    \l {QOrganizerManager::detailDefinitions()}{detailDefinitions()} or the
-    asynchronous \l
-    {QOrganizerItemDetailDefinitionFetchRequest::definitionNames()}{definitionNames()}.
+    \l {QOrganizerManager::detailDefinitions()}{detailDefinitions()}.
     \since 1.1
 */
 QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionName, const QString& fieldName, const QString& value) const
@@ -1002,6 +999,42 @@ void QOrganizerItem::setGuid(const QString& guid)
     QOrganizerItemGuid guidDetail = detail<QOrganizerItemGuid>();
     guidDetail.setGuid(guid);
     saveDetail(&guidDetail);
+}
+
+/*!
+    Returns the data of the custom detail with the given \a name.
+ */
+QVariant QOrganizerItem::customDetailData(const QString &name) const
+{
+    QList<QOrganizerItemCustomDetail> customDetails = details<QOrganizerItemCustomDetail>();
+    if (customDetails.size() > 0) {
+        if (name.isEmpty())
+            return customDetails.at(0).data();
+
+        foreach (const QOrganizerItemCustomDetail &detail, customDetails) {
+            if (name == detail.name())
+                return detail.data();
+        }
+    }
+    return QVariant();
+}
+
+/*!
+    Sets the \a data of a custom detail with the given \a name.
+ */
+void QOrganizerItem::setCustomDetailData(const QString &name, const QVariant &data)
+{
+    QList<QOrganizerItemCustomDetail> customDetails = details<QOrganizerItemCustomDetail>();
+    foreach (QOrganizerItemCustomDetail detail, customDetails) {
+        if (name == detail.name()) {
+            detail.setData(data);
+            return;
+        }
+    }
+    QOrganizerItemCustomDetail newDetail;
+    newDetail.setName(name);
+    newDetail.setData(data);
+    saveDetail(&newDetail);
 }
 
 /* Helper functions for QOrganizerItemData */

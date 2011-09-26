@@ -66,4 +66,6 @@
 #include "qorganizeritememailreminder.h"
 #include "qorganizeritemvisualreminder.h"
 
+#include "qorganizeritemcustomdetail.h"
+
 #endif

@@ -147,9 +147,6 @@ private slots:
     void doDump();
     void doDump_data() {addManagers();}
 
-    void doDumpSchema();
-    void doDumpSchema_data() {addManagers();}
-
     /* Special test with special data */
     void uriParsing();
 #if defined(QT_NO_JSONDB)
@@ -174,7 +171,6 @@ private slots:
     void batch();
     void observerDeletion();
     void signalEmission();
-    void detailDefinitions();
     void detailOrders();
     void itemType();
     void collections();
@@ -193,7 +189,6 @@ private slots:
     void partialSave();
 
     /* Tests that take no data */
-    void itemValidation();
     void errorStayingPut();
     void ctors();
     void invalidManager();
@@ -206,7 +201,6 @@ private slots:
     void testUnionFilter();
 #if defined(QT_NO_JSONDB)
     void testItemOccurrences();
-    void errorSemantics();
 #endif
 
     /* Special test with special data */
@@ -231,7 +225,6 @@ private slots:
     void remove_data() {addManagers();}
     void batch_data() {addManagers();}
     void signalEmission_data() {addManagers();}
-    void detailDefinitions_data() {addManagers();}
     void detailOrders_data() {addManagers();}
     void itemType_data() {addManagers();}
     void collections_data() {addManagers();}
@@ -257,6 +250,9 @@ private slots:
 
     void testTags_data() { addManagers(); }
     void testTags();
+
+    void testCustomDetail_data() { addManagers(); }
+    void testCustomDetail();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -813,55 +809,6 @@ void tst_QOrganizerManager::doDump()
 
 Q_DECLARE_METATYPE(QVariant)
 
-void tst_QOrganizerManager::doDumpSchema()
-{
-    // Only do this if it has been explicitly selected
-    if (QCoreApplication::arguments().contains("doDumpSchema")) {
-        QFETCH(QString, uri);
-        QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
-
-        // Get the schema for each supported type
-        foreach(QString type, cm->supportedItemTypes()) {
-            QMap<QString, QOrganizerItemDetailDefinition> defs = cm->detailDefinitions(type);
-
-            foreach(QOrganizerItemDetailDefinition def, defs.values()) {
-                if (def.isUnique())
-                    qDebug() << QString("%2::%1 (Unique) {").arg(def.name()).arg(type).toAscii().constData();
-                else
-                    qDebug() << QString("%2::%1 {").arg(def.name()).arg(type).toAscii().constData();
-                QMap<QString, QOrganizerItemDetailFieldDefinition> fields = def.fields();
-
-                foreach(QString fname, fields.keys()) {
-                    QOrganizerItemDetailFieldDefinition field = fields.value(fname);
-
-                    if (field.allowableValues().count() > 0) {
-                        // Make some pretty output
-                        QStringList allowedList;
-                        foreach(QVariant var, field.allowableValues()) {
-                            QString allowed;
-                            if (var.type() == QVariant::String)
-                                allowed = QString("'%1'").arg(var.toString());
-                            else if (var.type() == QVariant::StringList)
-                                allowed = QString("'%1'").arg(var.toStringList().join(","));
-                            else {
-                                // use the textstream <<
-                                QDebug dbg(&allowed);
-                                dbg << var;
-                            }
-                            allowedList.append(allowed);
-                        }
-
-                        qDebug() << QString("   %2 %1 {%3}").arg(fname).arg(QMetaType::typeName(field.dataType())).arg(allowedList.join(",")).toAscii().constData();
-                    } else
-                        qDebug() << QString("   %2 %1").arg(fname).arg(QMetaType::typeName(field.dataType())).toAscii().constData();
-                }
-
-                qDebug() << "}";
-            }
-        }
-    }
-}
-
 void tst_QOrganizerManager::add()
 {
     QFETCH(QString, uri);
@@ -869,9 +816,9 @@ void tst_QOrganizerManager::add()
     
     // Use note & todo item depending on backend support
     QString type;
-    if (cm->detailDefinitions(QOrganizerItemType::TypeNote).count())
+    if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
         type = QLatin1String(QOrganizerItemType::TypeNote);
-    else if (cm->detailDefinitions(QOrganizerItemType::TypeTodo).count())
+    else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
@@ -918,85 +865,85 @@ void tst_QOrganizerManager::add()
     // - read it back
     // - ensure that it's the same.
 #if defined(QT_NO_JSONDB)
-    QOrganizerEvent megaevent;
-    QMap<QString, QOrganizerItemDetailDefinition> defmap = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
-    QList<QOrganizerItemDetailDefinition> defs = defmap.values();
-    foreach (const QOrganizerItemDetailDefinition def, defs) {
+//    QOrganizerEvent megaevent;
+//    QMap<QString, QOrganizerItemDetailDefinition> defmap = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
+//    QList<QOrganizerItemDetailDefinition> defs = defmap.values();
+//    foreach (const QOrganizerItemDetailDefinition def, defs) {
 
-        // This is probably read-only
-        if (def.name() == QOrganizerItemTimestamp::DefinitionName)
-            continue;
+//        // This is probably read-only
+//        if (def.name() == QOrganizerItemTimestamp::DefinitionName)
+//            continue;
 
-        // otherwise, create a new detail of the given type and save it to the item
-        QOrganizerItemDetail det(def.name());
-        QMap<QString, QOrganizerItemDetailFieldDefinition> fieldmap = def.fields();
-        QStringList fieldKeys = fieldmap.keys();
-        foreach (const QString& fieldKey, fieldKeys) {
-            // get the field, and check to see that it's not constrained.
-            QOrganizerItemDetailFieldDefinition currentField = fieldmap.value(fieldKey);
+//        // otherwise, create a new detail of the given type and save it to the item
+//        QOrganizerItemDetail det(def.name());
+//        QMap<QString, QOrganizerItemDetailFieldDefinition> fieldmap = def.fields();
+//        QStringList fieldKeys = fieldmap.keys();
+//        foreach (const QString& fieldKey, fieldKeys) {
+//            // get the field, and check to see that it's not constrained.
+//            QOrganizerItemDetailFieldDefinition currentField = fieldmap.value(fieldKey);
 
-            // Attempt to create a worthy value
-            if (!currentField.allowableValues().isEmpty()) {
-                // we want to save a value that will be accepted.
-                if (currentField.dataType() == QVariant::StringList)
-                    det.setValue(fieldKey, QStringList() << currentField.allowableValues().first().toString());
-                else if (currentField.dataType() == QVariant::List)
-                    det.setValue(fieldKey, QVariantList() << currentField.allowableValues().first());
-                else
-                    det.setValue(fieldKey, currentField.allowableValues().first());
-            } else {
-                // any value of the correct type will be accepted
-                bool savedSuccessfully = false;
-                QVariant dummyValue = QVariant(fieldKey); // try to get some unique string data
-                if (currentField.dataType() < static_cast<int>(QVariant::UserType)) {
-                    QVariant::Type type = static_cast<QVariant::Type>(currentField.dataType());
-                    // It is not a user-defined type
-                    if (dummyValue.canConvert(type)) {
-                        savedSuccessfully = dummyValue.convert(type);
-                        if (savedSuccessfully) {
-                            // we have successfully created a (supposedly) valid field for this detail.
-                            det.setValue(fieldKey, dummyValue);
-                            continue;
-                        }
-                    }
+//            // Attempt to create a worthy value
+//            if (!currentField.allowableValues().isEmpty()) {
+//                // we want to save a value that will be accepted.
+//                if (currentField.dataType() == QVariant::StringList)
+//                    det.setValue(fieldKey, QStringList() << currentField.allowableValues().first().toString());
+//                else if (currentField.dataType() == QVariant::List)
+//                    det.setValue(fieldKey, QVariantList() << currentField.allowableValues().first());
+//                else
+//                    det.setValue(fieldKey, currentField.allowableValues().first());
+//            } else {
+//                // any value of the correct type will be accepted
+//                bool savedSuccessfully = false;
+//                QVariant dummyValue = QVariant(fieldKey); // try to get some unique string data
+//                if (currentField.dataType() < static_cast<int>(QVariant::UserType)) {
+//                    QVariant::Type type = static_cast<QVariant::Type>(currentField.dataType());
+//                    // It is not a user-defined type
+//                    if (dummyValue.canConvert(type)) {
+//                        savedSuccessfully = dummyValue.convert(type);
+//                        if (savedSuccessfully) {
+//                            // we have successfully created a (supposedly) valid field for this detail.
+//                            det.setValue(fieldKey, dummyValue);
+//                            continue;
+//                        }
+//                    }
 
-                    // nope, couldn't save the string value (test); try a date.
-                    dummyValue = QVariant(QDate::currentDate());
-                    if (dummyValue.canConvert(type)) {
-                        savedSuccessfully = dummyValue.convert(type);
-                        if (savedSuccessfully) {
-                            // we have successfully created a (supposedly) valid field for this detail.
-                            det.setValue(fieldKey, dummyValue);
-                            continue;
-                        }
-                    }
+//                    // nope, couldn't save the string value (test); try a date.
+//                    dummyValue = QVariant(QDate::currentDate());
+//                    if (dummyValue.canConvert(type)) {
+//                        savedSuccessfully = dummyValue.convert(type);
+//                        if (savedSuccessfully) {
+//                            // we have successfully created a (supposedly) valid field for this detail.
+//                            det.setValue(fieldKey, dummyValue);
+//                            continue;
+//                        }
+//                    }
 
-                    // nope, couldn't convert a string or a date - try the integer value (42)
-                    dummyValue = QVariant(42);
-                    if (dummyValue.canConvert(type)) {
-                        savedSuccessfully = dummyValue.convert(type);
-                        if (savedSuccessfully) {
-                            // we have successfully created a (supposedly) valid field for this detail.
-                            det.setValue(fieldKey, dummyValue);
-                            continue;
-                        }
-                    }
-                }
+//                    // nope, couldn't convert a string or a date - try the integer value (42)
+//                    dummyValue = QVariant(42);
+//                    if (dummyValue.canConvert(type)) {
+//                        savedSuccessfully = dummyValue.convert(type);
+//                        if (savedSuccessfully) {
+//                            // we have successfully created a (supposedly) valid field for this detail.
+//                            det.setValue(fieldKey, dummyValue);
+//                            continue;
+//                        }
+//                    }
+//                }
 
-                // if we get here, we don't know what sort of value can be saved...
-            }
-        }
-        if (!det.isEmpty())
-            megaevent.saveDetail(&det);
-    }
+//                // if we get here, we don't know what sort of value can be saved...
+//            }
+//        }
+//        if (!det.isEmpty())
+//            megaevent.saveDetail(&det);
+//    }
 
-    QVERIFY(cm->saveItem(&megaevent)); // must be able to save since built from definitions.
-    QOrganizerItem retrievedMegaitem = cm->item(megaevent.id());
-    if (!isSuperset(retrievedMegaitem, megaevent)) {
-        dumpOrganizerItemDifferences(megaevent, retrievedMegaitem);
-        QEXPECT_FAIL("mgr='wince'", "Address Display Label mismatch", Continue);
+//    QVERIFY(cm->saveItem(&megaevent)); // must be able to save since built from definitions.
+//    QOrganizerItem retrievedMegaitem = cm->item(megaevent.id());
+//    if (!isSuperset(retrievedMegaitem, megaevent)) {
+//        dumpOrganizerItemDifferences(megaevent, retrievedMegaitem);
+//        QEXPECT_FAIL("mgr='wince'", "Address Display Label mismatch", Continue);
         
-    }
+//    }
 
     // now a item with many details of a particular definition
     // if the detail is not unique it should then support minumum of two of the same kind
@@ -1334,8 +1281,8 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception.setStartDateTime(QDateTime(QDate(2010, 12, 25), QTime(0, 0, 0)));
     exception.setEndDateTime(QDateTime(QDate(2010, 12, 26), QTime(0, 0, 0)));
     exception.setDisplayLabel(QLatin1String("Xmas"));
-    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
-        exception.addComment(QLatin1String("With the in-laws"));
+//    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
+//        exception.addComment(QLatin1String("With the in-laws"));
     QVERIFY(!cm->saveItem(&exception));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
 
@@ -1366,8 +1313,8 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception2.setStartDateTime(QDateTime(QDate(2011, 12, 25), QTime(0, 0, 0)));
     exception2.setEndDateTime(QDateTime(QDate(2011, 12, 26), QTime(0, 0, 0)));
     exception2.setDisplayLabel(QLatin1String("XMas"));
-    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
-        exception2.addComment(QLatin1String("With the in-laws"));
+//    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
+//        exception2.addComment(QLatin1String("With the in-laws"));
     exception2.setParentId(report.id()); // report is not an event
     QVERIFY(!cm->saveItem(&exception2));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
@@ -1397,8 +1344,8 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception3.setStartDateTime(QDateTime(QDate(2012, 12, 25), QTime(0, 0, 0)));
     exception3.setEndDateTime(QDateTime(QDate(2012, 12, 26), QTime(0, 0, 0)));
     exception3.setDisplayLabel(QLatin1String("XMas"));
-    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
-        exception3.addComment(QLatin1String("With the in-laws"));
+//    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
+//        exception3.addComment(QLatin1String("With the in-laws"));
     exception3.setParentId(christmas.id());
     exception3.setGuid(QLatin1String("christmas"));
     QVERIFY(!cm->saveItem(&exception3));
@@ -1420,9 +1367,9 @@ void tst_QOrganizerManager::update()
     
     // Use note & todo item depending on backend support
     QString type;
-    if (cm->detailDefinitions(QOrganizerItemType::TypeNote).count())
+    if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
         type = QLatin1String(QOrganizerItemType::TypeNote);
-    else if (cm->detailDefinitions(QOrganizerItemType::TypeTodo).count())
+    else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
@@ -1522,9 +1469,9 @@ void tst_QOrganizerManager::remove()
 
     // Use note & todo item depending on backend support
     QString type;
-    if (cm->detailDefinitions(QOrganizerItemType::TypeNote).count())
+    if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
         type = QLatin1String(QOrganizerItemType::TypeNote);
-    else if (cm->detailDefinitions(QOrganizerItemType::TypeTodo).count())
+    else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
@@ -1621,9 +1568,9 @@ void tst_QOrganizerManager::batch()
     
     // Use note & todo item depending on backend support
     QString type;
-    if (cm->detailDefinitions(QOrganizerItemType::TypeNote).count())
+    if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
         type = QLatin1String(QOrganizerItemType::TypeNote);
-    else if (cm->detailDefinitions(QOrganizerItemType::TypeTodo).count())
+    else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
         QSKIP("This manager does not support note or todo item", SkipSingle);
@@ -1906,35 +1853,6 @@ void tst_QOrganizerManager::invalidManager()
     QVERIFY(errorMap.count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
 
-    /* Detail definitions */
-    QVERIFY(manager.detailDefinitions(QOrganizerItemType::TypeEvent).count() == 0);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-
-    QOrganizerItemDetailDefinition def;
-    def.setUnique(true);
-    def.setName("new field");
-    QMap<QString, QOrganizerItemDetailFieldDefinition> fields;
-    QOrganizerItemDetailFieldDefinition currField;
-    currField.setDataType(QVariant::String);
-    fields.insert("value", currField);
-    def.setFields(fields);
-
-    QVERIFY(manager.saveDetailDefinition(def, QOrganizerItemType::TypeNote) == false);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.saveDetailDefinition(def, QOrganizerItemType::TypeEvent) == false);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.detailDefinitions(QOrganizerItemType::TypeEvent).count(QOrganizerItemType::TypeNote) == 0);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.detailDefinitions(QOrganizerItemType::TypeEvent).count() == 0);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.detailDefinition("new field", QOrganizerItemType::TypeEvent).name() == QString());
-    QVERIFY(manager.removeDetailDefinition(def.name(), QOrganizerItemType::TypeNote) == false);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.removeDetailDefinition(def.name(), QOrganizerItemType::TypeEvent) == false);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-    QVERIFY(manager.detailDefinitions(QOrganizerItemType::TypeEvent).count() == 0);
-    QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidItemTypeError);
-
     /* Collections */
     QOrganizerCollection testCollection;
     testCollection.setMetaData("test", "example");
@@ -2136,13 +2054,13 @@ void tst_QOrganizerManager::compatibleItem_data()
 
 void tst_QOrganizerManager::compatibleItem()
 {
-    QOrganizerManager cm("memory");
+//    QOrganizerManager cm("memory");
 
-    QFETCH(QOrganizerItem, input);
-    QFETCH(QOrganizerItem, expected);
-    QFETCH(QOrganizerManager::Error, error);
-    QCOMPARE(cm.compatibleItem(input), expected);
-    QCOMPARE(cm.error(), error);
+//    QFETCH(QOrganizerItem, input);
+//    QFETCH(QOrganizerItem, expected);
+//    QFETCH(QOrganizerManager::Error, error);
+//    QCOMPARE(cm.compatibleItem(input), expected);
+//    QCOMPARE(cm.error(), error);
 }
 
 void tst_QOrganizerManager::recurrenceWithGenerator_data()
@@ -2520,104 +2438,6 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
 }
 #endif
 
-void tst_QOrganizerManager::itemValidation()
-{
-    /* Use the memory engine as a reference (validation is not engine specific) */
-    QScopedPointer<QOrganizerManager> cm(new QOrganizerManager("memory"));
-    QOrganizerNote c;
-
-    /*
-     * Add some definitions for testing:
-     *
-     * 1) a unique detail
-     * 2) a detail with restricted values
-     * 3) a create only detail
-     * 4) a unique create only detail
-     */
-    QOrganizerItemDetailDefinition uniqueDef;
-    QMap<QString, QOrganizerItemDetailFieldDefinition> fields;
-    QOrganizerItemDetailFieldDefinition field;
-    field.setDataType(QVariant::String);
-    fields.insert("value", field);
-    uniqueDef.setName("UniqueDetail");
-    uniqueDef.setFields(fields);
-    uniqueDef.setUnique(true);
-    QVERIFY(cm->saveDetailDefinition(uniqueDef, QOrganizerItemType::TypeNote));
-
-    QOrganizerItemDetailDefinition restrictedDef;
-    restrictedDef.setName("RestrictedDetail");
-    fields.clear();
-    field.setAllowableValues(QVariantList() << "One" << "Two" << "Three");
-    fields.insert("value", field);
-    restrictedDef.setFields(fields);
-    QVERIFY(cm->saveDetailDefinition(restrictedDef, QOrganizerItemType::TypeNote));
-
-    // first, test an invalid definition
-    QOrganizerItemDetail d1 = QOrganizerItemDetail("UnknownDefinition");
-    d1.setValue("test", "test");
-    c.saveDetail(&d1);
-    QVERIFY(!cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::InvalidDetailError);
-    c.removeDetail(&d1);
-
-    // second, test an invalid uniqueness constraint
-    QOrganizerItemDetail d2 = QOrganizerItemDetail("UniqueDetail");
-    d2.setValue("value", "test");
-    c.saveDetail(&d2);
-
-    // One unique should be ok
-    QVERIFY(cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::NoError);
-
-    // Two uniques should not be ok
-    QOrganizerItemDetail d3 = QOrganizerItemDetail("UniqueDetail");
-    d3.setValue("value", "test2");
-    c.saveDetail(&d3);
-    QVERIFY(!cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::AlreadyExistsError);
-    c.removeDetail(&d3);
-    c.removeDetail(&d2);
-
-    // third, test an invalid field name
-    QOrganizerItemDetail d4 = QOrganizerItemDetail(QOrganizerItemDescription::DefinitionName);
-    d4.setValue("test", "test");
-    c.saveDetail(&d4);
-    QVERIFY(!cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::InvalidDetailError);
-    c.removeDetail(&d4);
-
-    // fourth, test an invalid field data type
-    QOrganizerItemDetail d5 = QOrganizerItemDetail(QOrganizerItemDescription::DefinitionName);
-    d5.setValue(QOrganizerItemDescription::FieldDescription, QDateTime::currentDateTime());
-    c.saveDetail(&d5);
-    QVERIFY(!cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::InvalidDetailError);
-    c.removeDetail(&d5);
-
-    // fifth, test an invalid field value (not in the allowed list)
-    QOrganizerItemDetail d6 = QOrganizerItemDetail("RestrictedDetail");
-    d6.setValue("value", "Seven"); // not in One, Two or Three
-    c.saveDetail(&d6);
-    QVERIFY(!cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::InvalidDetailError);
-    c.removeDetail(&d6);
-
-    /* Now a valid value */
-    d6.setValue("value", "Two");
-    c.saveDetail(&d6);
-    QVERIFY(cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::NoError);
-    c.removeDetail(&d6);
-
-    // Test a completely valid one.
-    QOrganizerItemDetail d7 = QOrganizerItemDetail(QOrganizerItemDescription::DefinitionName);
-    d7.setValue(QOrganizerItemDescription::FieldDescription, "A valid description");
-    c.saveDetail(&d7);
-    QVERIFY(cm->saveItem(&c));
-    QCOMPARE(cm->error(), QOrganizerManager::NoError);
-    c.removeDetail(&d7);
-}
-
 void tst_QOrganizerManager::observerDeletion()
 {
     QOrganizerManager *manager = new QOrganizerManager("memory");
@@ -2885,226 +2705,9 @@ void tst_QOrganizerManager::errorStayingPut()
     d.setValue("Value that also doesn't exist", 5);
     c.saveDetail(&d);
 
-    QVERIFY(m1.saveItem(&c) == false);
-    QVERIFY(m1.error() == QOrganizerManager::InvalidDetailError);
+//    QVERIFY(m1.saveItem(&c) == false);
+//    QVERIFY(m1.error() == QOrganizerManager::InvalidDetailError);
     QVERIFY(m2.error() == QOrganizerManager::BadArgumentError);
-}
-
-void tst_QOrganizerManager::detailDefinitions()
-{
-    QFETCH(QString, uri);
-    QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
-    QMap<QString, QOrganizerItemDetailDefinition> defs = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
-    QVERIFY(defs.size() > 0);
-
-    /* Validate the existing definitions */
-
-    // Do some sanity checking on the definitions first
-    if (defs.keys().count() != defs.uniqueKeys().count()) {
-        qDebug() << "ERROR - duplicate definitions with the same name:";
-
-        QList<QString> defkeys = defs.keys();
-        foreach(QString uniq, defs.uniqueKeys()) {
-            if (defkeys.count(uniq) > 1) {
-                qDebug() << QString(" %1").arg(uniq).toAscii().constData();
-                defkeys.removeAll(uniq);
-            }
-        }
-        QVERIFY(defs.keys().count() == defs.uniqueKeys().count());
-    }
-
-    foreach(QOrganizerItemDetailDefinition def, defs.values()) {
-        QMap<QString, QOrganizerItemDetailFieldDefinition> fields = def.fields();
-
-        // Again some sanity checking
-        if (fields.keys().count() != fields.uniqueKeys().count()) {
-            qDebug() << "ERROR - duplicate fields with the same name:";
-
-            QList<QString> defkeys = fields.keys();
-            foreach(QString uniq, fields.uniqueKeys()) {
-                if (defkeys.count(uniq) > 1) {
-                    qDebug() << QString(" %2::%1").arg(uniq).arg(def.name()).toAscii().constData();
-                    defkeys.removeAll(uniq);
-                }
-            }
-            QVERIFY(fields.keys().count() == fields.uniqueKeys().count());
-        }
-
-        foreach(QOrganizerItemDetailFieldDefinition field, def.fields().values()) {
-            // Sanity check the allowed values
-            if (field.allowableValues().count() > 0) {
-                if (field.dataType() == QVariant::StringList) {
-                    // We accept QString or QStringList allowed values
-                    foreach(QVariant var, field.allowableValues()) {
-                        if (var.type() != QVariant::String && var.type() != QVariant::StringList) {
-                            QString foo;
-                            QDebug dbg(&foo);
-                            dbg.nospace() << var;
-                            qDebug().nospace() << "Field " << QString("%1::%2").arg(def.name()).arg(def.fields().key(field)).toAscii().constData() << " allowable value '" << foo.simplified().toAscii().constData() << "' not supported for field type " << QMetaType::typeName(field.dataType());
-                        }
-                        QVERIFY(var.type() == QVariant::String || var.type() == QVariant::StringList);
-                    }
-                } else if (field.dataType() == QVariant::List || field.dataType() == QVariant::Map || field.dataType() == qMetaTypeId<QVariant>()) {
-                    // Well, anything goes
-                } else {
-                    // The type of each allowed value must match the data type
-                    foreach(QVariant var, field.allowableValues()) {
-                        if (var.userType() != field.dataType()) {
-                            QString foo;
-                            QDebug dbg(&foo);
-                            dbg.nospace() << var;
-                            qDebug().nospace() << "Field " << QString("%1::%2").arg(def.name()).arg(def.fields().key(field)).toAscii().constData() << " allowable value '" << foo.simplified().toAscii().constData() << "' not supported for field type " << QMetaType::typeName(field.dataType());
-                        }
-                        QVERIFY(var.userType() == field.dataType());
-                    }
-                }
-            }
-        }
-    }
-
-
-    /* Try to make a credible definition */
-    QOrganizerItemDetailDefinition newDef;
-    QOrganizerItemDetailFieldDefinition field;
-    QMap<QString, QOrganizerItemDetailFieldDefinition> fields;
-    field.setDataType(QVariant::String);
-    fields.insert("New Value", field);
-    newDef.setName("New Definition");
-    newDef.setFields(fields);
-
-    /* Updated version of an existing definition */
-    QOrganizerItemDetailDefinition updatedDef = defs.begin().value();
-    fields = updatedDef.fields();
-    fields.insert("New Value", field);
-    updatedDef.setFields(fields);
-
-    /* A detail definition with valid allowed values (or really just one) */
-    QOrganizerItemDetailDefinition allowedDef = newDef;
-    field.setAllowableValues(field.allowableValues() <<
-                             (QVariant(static_cast<QVariant::Type>(field.dataType()))));
-    fields.clear();
-    fields.insert("Restricted value", field);
-    allowedDef.setFields(fields);
-
-    /* Many invalid definitions */
-    QOrganizerItemDetailDefinition noIdDef;
-    noIdDef.setFields(fields);
-
-    QOrganizerItemDetailDefinition noFieldsDef;
-    noFieldsDef.setName("No fields");
-
-    QOrganizerItemDetailDefinition invalidFieldKeyDef;
-    invalidFieldKeyDef.setName("Invalid field key");
-    QMap<QString, QOrganizerItemDetailFieldDefinition> badfields;
-    badfields.insert(QString(), field);
-    invalidFieldKeyDef.setFields(badfields);
-
-    QOrganizerItemDetailDefinition invalidFieldTypeDef;
-    invalidFieldTypeDef.setName("Invalid field type");
-    badfields.clear();
-    QOrganizerItemDetailFieldDefinition badfield;
-    badfield.setDataType(qMetaTypeId<UnsupportedMetatype>());
-    badfields.insert("Bad type", badfield);
-    invalidFieldTypeDef.setFields(badfields);
-
-    QOrganizerItemDetailDefinition invalidAllowedValuesDef;
-    invalidAllowedValuesDef.setName("Invalid field allowed values");
-    badfields.clear();
-    badfield.setDataType(field.dataType()); // use a supported type
-    badfield.setAllowableValues(QList<QVariant>() << "String" << 5); // but unsupported value
-    badfields.insert("Bad allowed", badfield);
-    invalidAllowedValuesDef.setFields(badfields);
-
-    /* XXX Multiply defined fields.. depends on semantichangeSet. */
-
-    if (cm->hasFeature(QOrganizerManager::MutableDefinitions)) {
-        /* First do some negative testing */
-
-        /* Bad add class */
-        QVERIFY(cm->saveDetailDefinition(QOrganizerItemDetailDefinition(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        /* Bad remove string */
-        QVERIFY(cm->removeDetailDefinition(QString(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(noIdDef, QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(noFieldsDef, QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(invalidFieldKeyDef, QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        // the manager can no longer report supportedDataTypes(), so the default validateDefinition() function passes.
-        //QVERIFY(cm->saveDetailDefinition(invalidFieldTypeDef, QOrganizerItemType::TypeEvent) == false);
-        //QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(invalidAllowedValuesDef, QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-
-        /* Check that our new definition doesn't already exist */
-        QVERIFY(cm->detailDefinition(newDef.name(),QOrganizerItemType::TypeEvent).isEmpty());
-        QVERIFY(cm->error() == QOrganizerManager::DoesNotExistError);
-
-        QVERIFY(cm->removeDetailDefinition(newDef.name(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::DoesNotExistError);
-
-        /* Add a new definition */
-        QVERIFY(cm->saveDetailDefinition(newDef, QOrganizerItemType::TypeEvent) == true);
-        QVERIFY(cm->error() == QOrganizerManager::NoError);
-
-        /* Now retrieve it */
-        QOrganizerItemDetailDefinition def = cm->detailDefinition(newDef.name(), QOrganizerItemType::TypeEvent);
-        QVERIFY(def == newDef);
-
-        /* Update it */
-        QMap<QString, QOrganizerItemDetailFieldDefinition> newFields = def.fields();
-        newFields.insert("Another new value", field);
-        newDef.setFields(newFields);
-
-        QVERIFY(cm->saveDetailDefinition(newDef, QOrganizerItemType::TypeEvent) == true);
-        QVERIFY(cm->error() == QOrganizerManager::NoError);
-
-        QVERIFY(cm->detailDefinition(newDef.name(), QOrganizerItemType::TypeEvent) == newDef);
-
-        /* Remove it */
-        QVERIFY(cm->removeDetailDefinition(newDef.name(), QOrganizerItemType::TypeEvent) == true);
-        QVERIFY(cm->error() == QOrganizerManager::NoError);
-
-        /* and make sure it does not exist any more */
-        QVERIFY(cm->detailDefinition(newDef.name(), QOrganizerItemType::TypeEvent) == QOrganizerItemDetailDefinition());
-        QVERIFY(cm->error() == QOrganizerManager::DoesNotExistError);
-
-        /* Add the other good one */
-        QVERIFY(cm->saveDetailDefinition(allowedDef, QOrganizerItemType::TypeEvent) == true);
-        QVERIFY(cm->error() == QOrganizerManager::NoError);
-
-        QVERIFY(allowedDef == cm->detailDefinition(allowedDef.name(), QOrganizerItemType::TypeEvent));
-
-        /* and remove it */
-        QVERIFY(cm->removeDetailDefinition(allowedDef.name(), QOrganizerItemType::TypeEvent) == true);
-        QVERIFY(cm->detailDefinition(allowedDef.name(), QOrganizerItemType::TypeEvent) == QOrganizerItemDetailDefinition());
-        QVERIFY(cm->error() == QOrganizerManager::DoesNotExistError);
-
-    } else {
-        /* Bad add class */
-        QVERIFY(cm->saveDetailDefinition(QOrganizerItemDetailDefinition(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::NotSupportedError);
-
-        /* Make sure we can't add/remove/modify detail definitions */
-        QVERIFY(cm->removeDetailDefinition(QString(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::NotSupportedError);
-
-        /* Try updating an existing definition */
-        QVERIFY(cm->saveDetailDefinition(updatedDef, QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::NotSupportedError);
-
-        /* Try removing an existing definition */
-        QVERIFY(cm->removeDetailDefinition(updatedDef.name(), QOrganizerItemType::TypeEvent) == false);
-        QVERIFY(cm->error() == QOrganizerManager::NotSupportedError);
-    }
 }
 
 void tst_QOrganizerManager::changeSet()
@@ -4245,9 +3848,9 @@ void tst_QOrganizerManager::partialSave()
     items[5].saveDetail(&badDetail);
     QVERIFY(!cm->saveItems(&items, QStringList("BadDetail")));
     QMap<int, QOrganizerManager::Error> errorMap = cm->errorMap();
-    QCOMPARE(errorMap.count(), 2);
+//    QCOMPARE(errorMap.count(), 2);
     QCOMPARE(errorMap[4], QOrganizerManager::DoesNotExistError);
-    QCOMPARE(errorMap[5], QOrganizerManager::InvalidDetailError);
+//    QCOMPARE(errorMap[5], QOrganizerManager::InvalidDetailError);
 }
 
 void tst_QOrganizerManager::dateRange()
@@ -4959,6 +4562,97 @@ void tst_QOrganizerManager::testTags()
     QVERIFY(item2.tags().contains(QString::fromAscii("Tag4")));
 }
 
+void tst_QOrganizerManager::testCustomDetail()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    QOrganizerEvent event;
+
+    // simple string
+    QOrganizerItemCustomDetail basicString;
+    basicString.setName(QStringLiteral("basic-string"));
+    basicString.setData(QStringLiteral("Qt Everywhere"));
+    event.saveDetail(&basicString);
+    QVERIFY(mgr->saveItem(&event));
+
+    event = mgr->item(event.id());
+    basicString = event.detail<QOrganizerItemCustomDetail>();
+    QCOMPARE(basicString.name(), QStringLiteral("basic-string"));
+    QCOMPARE(basicString.data().toString(), QStringLiteral("Qt Everywhere"));
+
+    // simple list
+    QOrganizerItemCustomDetail basicList;
+    basicList.setName(QStringLiteral("basic-list"));
+    basicList.setData(QVariantList() << QStringLiteral("data 1") << QStringLiteral("data 2") << 3);
+    event.saveDetail(&basicList);
+    QVERIFY(mgr->saveItem(&event));
+
+    event = mgr->item(event.id());
+    QList<QOrganizerItemCustomDetail> customDetails = event.details<QOrganizerItemCustomDetail>();
+    QCOMPARE(customDetails.size(), 2);
+    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
+        if (customDetail.name() == QStringLiteral("basic-list")) {
+            QVariantList data = customDetail.data().toList();
+            QCOMPARE(data.size(), 3);
+            QCOMPARE(data.at(0).toString(), QStringLiteral("data 1"));
+            QCOMPARE(data.at(1).toString(), QStringLiteral("data 2"));
+            QCOMPARE(data.at(2).toInt(), 3);
+            break;
+        }
+    }
+
+    // simple map
+    QOrganizerItemCustomDetail basicMap;
+    basicMap.setName(QStringLiteral("basic map"));
+    QVariantMap basicMapData;
+    basicMapData.insert(QStringLiteral("key1"), QStringLiteral("data-1"));
+    basicMapData.insert(QStringLiteral("key-2"), QStringLiteral("data2"));
+    basicMapData.insert(QStringLiteral("key_3"), 1989);
+    basicMap.setData(basicMapData);
+    event.saveDetail(&basicMap);
+    QVERIFY(mgr->saveItem(&event));
+
+    event = mgr->item(event.id());
+    customDetails = event.details<QOrganizerItemCustomDetail>();
+    QCOMPARE(customDetails.size(), 3);
+    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
+        if (customDetail.name() == QStringLiteral("basic map")) {
+            QVariantMap data = customDetail.data().toMap();
+            QCOMPARE(data.size(), 3);
+            QCOMPARE(data.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
+            QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
+            QCOMPARE(data.value(QStringLiteral("key_3")).toInt(), 1989);
+            break;
+        }
+    }
+
+    // map inside a list
+    QOrganizerItemCustomDetail mapInList;
+    mapInList.setName(QStringLiteral("map in list"));
+    mapInList.setData(QVariantList() << QStringLiteral("Qt is cute") << basicMapData);
+    event.saveDetail(&mapInList);
+    QVERIFY(mgr->saveItem(&event));
+
+    event = mgr->item(event.id());
+    customDetails = event.details<QOrganizerItemCustomDetail>();
+    QCOMPARE(customDetails.size(), 4);
+    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
+        if (customDetail.name() == QStringLiteral("map in list")) {
+            QVariantList data = customDetail.data().toList();
+            QCOMPARE(data.size(), 2);
+            QCOMPARE(data.at(0).toString(), QStringLiteral("Qt is cute"));
+
+            QVariantMap map = data.at(1).toMap();
+            QCOMPARE(map.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
+            QCOMPARE(map.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
+            QCOMPARE(map.value(QStringLiteral("key_3")).toInt(), 1989);
+            break;
+        }
+    }
+
+    QVERIFY(mgr->removeItem(event.id()));
+}
+
 #if defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {
     Q_OBJECT;
@@ -4986,43 +4680,6 @@ public slots:
         // and return
     }
 };
-
-void tst_QOrganizerManager::errorSemantics()
-{
-    /*
-        Test to make sure that calling functions in response to signals doesn't upset the correct error results
-        This relies on the memory engine emitting signals before e.g. saveItems returns
-     */
-
-    QOrganizerManager m("memory");
-    errorSemanticsTester t(&m);
-
-    QVERIFY(m.error() == QOrganizerManager::NoError);
-
-    QString type;
-    if (m.detailDefinitions(QOrganizerItemType::TypeNote).count())
-        type = QLatin1String(QOrganizerItemType::TypeNote);
-    else if (m.detailDefinitions(QOrganizerItemType::TypeTodo).count())
-        type = QLatin1String(QOrganizerItemType::TypeTodo);
-    else
-        QSKIP("This manager does not support note or todo item", SkipSingle);
-
-    QOrganizerItem item;
-    item.setType(type);
-    item.setDisplayLabel("This is a note");
-    item.setDescription("This note is a particularly notey note");
-
-    // Try creating some specific error so we can test it later on
-    QVERIFY(!m.removeItem(QOrganizerItemId()));
-    QVERIFY(m.error() == QOrganizerManager::DoesNotExistError);
-
-    // Now save something
-    QVERIFY(m.saveItem(&item));
-
-    QVERIFY(t.initialErrorWasDoesNotExist);
-    QVERIFY(t.slotErrorWasBadArgument);
-    QVERIFY(m.error() == QOrganizerManager::NoError);
-}
 #endif
 
 QTEST_MAIN(tst_QOrganizerManager)

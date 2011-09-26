@@ -638,7 +638,6 @@ QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganiz
     else
         di = new QDeclarativeOrganizerItem(this);
     di->setItem(item);
-    di->setDetailDefinitions(d->m_manager->detailDefinitions(item.type()));
     return di;
 }
 

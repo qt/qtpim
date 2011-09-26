@@ -145,6 +145,10 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(RuleWeeksOfYear,"weeksOfYear");
     Q_DECLARE_LATIN1_CONSTANT(RuleMonthsOfYear,"monthsOfYear");
 
+    // Custom fields
+    Q_DECLARE_LATIN1_CONSTANT(ItemCustomFieldName, "fieldName");
+    Q_DECLARE_LATIN1_CONSTANT(ItemCustomFieldData, "fieldData");
+
     //warning string
     Q_DECLARE_LATIN1_CONSTANT(WarningMoreItemDelete, "Items are delete from jsondb!!");
     Q_DECLARE_LATIN1_CONSTANT(WarningCollectionMissing, "No default collection! error code:");

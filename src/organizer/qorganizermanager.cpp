@@ -43,7 +43,6 @@
 
 #include "qorganizeritem_p.h"
 #include "qorganizeritemfilter.h"
-#include "qorganizeritemdetaildefinition.h"
 #include "qorganizermanager_p.h"
 #include "qorganizeritemfetchhint.h"
 
@@ -810,64 +809,6 @@ QOrganizerCollection QOrganizerManager::compatibleCollection(const QOrganizerCol
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->compatibleCollection(original, &h.error);
-}
-
-/*!
-  Returns a map of identifier to detail definition for the registered detail definitions for items whose type is the given \a organizeritemType
-  which are valid for the organizer items in this store
-  \since 1.1
- */
-QMap<QString, QOrganizerItemDetailDefinition> QOrganizerManager::detailDefinitions(const QString& organizeritemType) const
-{
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    if (!supportedItemTypes().contains(organizeritemType)) {
-        h.error = QOrganizerManager::InvalidItemTypeError;
-        return QMap<QString, QOrganizerItemDetailDefinition>();
-    }
-
-    return d->m_engine->detailDefinitions(organizeritemType, &h.error);
-}
-
-/*! Returns the definition identified by the given \a definitionName that is valid for the organizer items whose type is the given \a organizeritemType in this store, or a default-constructed QOrganizerItemDetailDefinition if no such definition exists
-  \since 1.1
-*/
-QOrganizerItemDetailDefinition QOrganizerManager::detailDefinition(const QString& definitionName, const QString& organizeritemType) const
-{
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    if (!supportedItemTypes().contains(organizeritemType)) {
-        h.error = QOrganizerManager::InvalidItemTypeError;
-        return QOrganizerItemDetailDefinition();
-    }
-
-    return d->m_engine->detailDefinition(definitionName, organizeritemType, &h.error);
-}
-
-/*! Persists the given definition \a def in the database, which is valid for organizer items whose type is the given \a organizeritemType.  Returns true if the definition was saved successfully, otherwise returns false
-  \since 1.1
-*/
-bool QOrganizerManager::saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& organizeritemType)
-{
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    if (!supportedItemTypes().contains(organizeritemType)) {
-        h.error = QOrganizerManager::InvalidItemTypeError;
-        return false;
-    }
-
-    return d->m_engine->saveDetailDefinition(def, organizeritemType, &h.error);
-}
-
-/*! Removes the detail definition identified by \a definitionName from the database, which is valid for organizer items whose type is the given \a organizeritemType.  Returns true if the definition was removed successfully, otherwise returns false
-  \since 1.1
-*/
-bool QOrganizerManager::removeDetailDefinition(const QString& definitionName, const QString& organizeritemType)
-{
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    if (!supportedItemTypes().contains(organizeritemType)) {
-        h.error = QOrganizerManager::InvalidItemTypeError;
-        return false;
-    }
-
-    return d->m_engine->removeDetailDefinition(definitionName, organizeritemType, &h.error);
 }
 
 /*!

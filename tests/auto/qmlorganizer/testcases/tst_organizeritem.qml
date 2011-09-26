@@ -79,6 +79,12 @@ TestCase {
         comment: "Code Less"
     }
 
+    CustomDetail {
+        id: customDetail
+        name: "customDetail1"
+        data: "data 1"
+    }
+
     function test_todoOccurrence() {
         compare(todoOccurrence.itemType, Type.TodoOccurrence)
 
@@ -224,5 +230,11 @@ TestCase {
 
         // remove all existing Details
         compare(item.itemDetails.length, 0)
+
+        // custom detail
+        item.setDetail(customDetail)
+        compare(item.details(Detail.Customized).length, 1)
+        compare(item.detail(Detail.Customized).name, "customDetail1")
+        compare(item.detail(Detail.Customized).data, "data 1")
     }
 }

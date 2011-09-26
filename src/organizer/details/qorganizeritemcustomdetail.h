@@ -39,43 +39,35 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILDEFINITIONSAVEREQUEST_H
-#define QORGANIZERITEMDETAILDEFINITIONSAVEREQUEST_H
+#ifndef QORGANIZERITEMCUSTOMDETAIL_H
+#define QORGANIZERITEMCUSTOMDETAIL_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemdetaildefinition.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerglobal.h>
+#include <qorganizeritemdetail.h>
 
 QTPIM_BEGIN_NAMESPACE
 
-class QOrganizerItemDetailDefinitionSaveRequestPrivate;
-class Q_ORGANIZER_EXPORT QOrganizerItemDetailDefinitionSaveRequest : public QOrganizerAbstractRequest
+/* Leaf class */
+class Q_ORGANIZER_EXPORT QOrganizerItemCustomDetail : public QOrganizerItemDetail
 {
-    Q_OBJECT
-
 public:
-    QOrganizerItemDetailDefinitionSaveRequest(QObject* parent = 0);
-    ~QOrganizerItemDetailDefinitionSaveRequest();
+#ifdef Q_QDOC
+    static const QLatin1Constant DefinitionName;
+    static const QLatin1Constant FieldCustomDetailName;
+    static const QLatin1Constant FieldCustomDetailData;
+#else
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemCustomDetail, "CustomDetail")
+    Q_DECLARE_LATIN1_CONSTANT(FieldCustomDetailName, "CustomDetailName");
+    Q_DECLARE_LATIN1_CONSTANT(FieldCustomDetailData, "CustomDetailData");
+#endif
 
-    /* Selection */
-    void setDefinition(const QOrganizerItemDetailDefinition& definition);
-    void setDefinitions(const QList<QOrganizerItemDetailDefinition>& definitions);
-    void setItemType(const QString& organizeritemType);
-    QString itemType() const;
+    void setName(const QString &name) { setValue(FieldCustomDetailName, name); }
+    QString name() const { return value(FieldCustomDetailName); }
 
-    /* Results */
-    QList<QOrganizerItemDetailDefinition> definitions() const;
-    QMap<int, QOrganizerManager::Error> errorMap() const;
-
-private:
-    Q_DISABLE_COPY(QOrganizerItemDetailDefinitionSaveRequest)
-    friend class QOrganizerManagerEngine;
-    Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemDetailDefinitionSaveRequest)
+    void setData(const QVariant &data) { setValue(FieldCustomDetailData, data); }
+    QVariant data() const { return variantValue(FieldCustomDetailData); }
 };
 
 QTPIM_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMCUSTOMDETAIL_H

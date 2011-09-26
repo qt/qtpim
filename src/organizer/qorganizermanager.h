@@ -144,12 +144,6 @@ public:
     QOrganizerItem compatibleItem(const QOrganizerItem& original) const;
     QOrganizerCollection compatibleCollection(const QOrganizerCollection& original) const;
 
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(const QString& itemType) const;
-    QOrganizerItemDetailDefinition detailDefinition(const QString& definitionName, const QString& itemType) const;
-    bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType);
-    bool removeDetailDefinition(const QString& definitionName, const QString& itemType);
-
     /* Functionality reporting */
     enum ManagerFeature {
         MutableDefinitions,

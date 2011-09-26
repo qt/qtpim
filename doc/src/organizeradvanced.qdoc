@@ -50,11 +50,9 @@ consists of nothing more than the details it contains, as well as an id and the
 id of its collection.
 
 A QOrganizerItemDetail is a single, cohesive unit of information that is stored
-in an item. Any detail stored in an item which is saved in a manager will
-conform to a particular detail definition which that manager supports. A detail
-may have specific meta-data associated with it, such as its sub-type and
-arbitrary, user-defined meta-data, as well as access constraints which may apply
-to the detail (e.g., read-only, irremovable, etc).
+in an item. A detail may have specific meta-data associated with it, as well as
+access constraints which may apply to the detail (e.g., read-only, irremovable,
+etc).
 
 A list of all standard details defined by this API are listed
 \l{QOrganizerItemDetail Leaf Classes}{here}.
@@ -79,24 +77,6 @@ providing a QOrganizerItemFetchHint as an argument to the retrieval operation.
 Note that if the item already exists in the database, it will be completely
 replaced. This means that clients should not save any item which was retrieved
 with a non-empty fetchHint defined, or data loss may occur.
-
-\section3 Detail Definitions
-
-Each detail stored in an item has defined semantics of usage and storage. The Qt
-Organizer API allows per-manager organizer item
-\l{QOrganizerItemDetailDefinition}{detail definitions}, allowing a
-manager to provide clients with this information on demand, and allowing
-third-party developers to register detail definitions for use by clients. A
-detail definition includes the fields (and value-types of those fields) which
-make up the detail, and per-item uniqueness constraints on details of the
-definition.
-
-\bold{Most clients can safely ignore this class entirely}, since they will most
-likely want to use the predefined details listed \l{QOrganizerItemDetail Leaf
-Classes}{here}. In some cases, however, a manager will not support all of the
-fields of a particular predefined detail leaf class; in that case, it may be
-necessary for the client to inspect the supported detail definition for that
-leaf class and modify its behavior accordingly.
 
 \section1 The Organizer Manager and Manager Engines
 \section2 The Organizer Manager
@@ -131,28 +111,6 @@ Since the data may physically be stored in a remote datastore, any operations
 may be dominated by the return-trip-time of communications with the remote
 datastore. As such, \bold{it is recommended that clients use the asynchronous
 client API to access organizer information from any QOrganizerManager.}
-
-\section2 Schema Differences
-
-Please see the documentation on \l{Qt Organizer Schema} model for background on
-this topic.
-
-The save operation includes a validation step, where the item's details are
-checked against the supported schema. If the item is valid, it will be saved;
-otherwise, an error will occur.
-
-Each engine may support a different schema (but that schema should be consistent
-within a manager - ie. it should be collection independent). All engines should
-attempt to support the default schema, described in the \l{Qt Organizer
-Schema}{default schema} documentation, however clients should never assume that
-any engine does support the default schema fully.
-
-Clients are able to retrieve the schema supported by a particular engine at
-run-time by calling QOrganizerManager::detailDefinitions(). Some engines support
-different detail definitions (that is, a different schema) for different types
-of organizer items (events, todos, journals, notes and so forth). Clients can
-retrieve the organizer item types supported by an engine by calling
-QOrganizerManager::supportedItemTypes().
 
 \section2 Provided Engines
 
@@ -225,22 +183,6 @@ interfaces with a particular online service).
 The client can load a manager with specific parameters defined. The parameters
 which are available are backend specific, and so the client has to know which
 parameters are valid for a particular backend, and what argument it takes.
-
-\section2 Querying the schema supported by a manager
-
-A client may query the schema supported by a manager, and check to see if a
-particular detail definition supports a certain field.
-
-\section2 Modifying the schema supported by a manager
-
-A client may attempt to modify a particular detail definition by extending it so
-that it supports an extra field, or add a new detail definition, or remove an
-existing one. These operations are not necessarily supported on various
-backends, and even those backends which do support a mutable schema may not
-allow modification of the default detail definitions.
-
-Note that some managers do not support mutable definitions, and hence attempting
-to modify or remove detail definitions in those managers will fail.
 
 \section2 Meta Data API
 

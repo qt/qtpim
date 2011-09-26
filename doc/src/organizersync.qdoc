@@ -108,24 +108,6 @@ The synchronous API offers the following functions to manipulate collections:
 
 It also offers a convenience function which returns a collection with a given collection id.
 
-\section2 Schema Manipulation
-
-The schema supported by a engine is the list of detail definitions which are
-supported by the engine.  For in-depth information about the schema, please
-refer to the main \l{Qt Organizer Schema} page.
-
-The synchronous API offers several functions to retrieve or modify the schema
-supported by an engine.  Engines which support these types of operations must
-report to clients that they support the QOrganizerManager::MutableDefinitions
-feature.
-\list
-  \o QOrganizerManager::detailDefinitions() returns all definitions in the schema for a particular item type
-  \o QOrganizerManager::detailDefinition() returns the definition of a particular name from the schema for a particular item type
-  \o QOrganizerManager::saveDetailDefinition() which updates or adds a definition to the schema for a particular item type
-  \o QOrganizerManager::removeDetailDefinition() which removes a definition from the schema for a particular item type
-\endlist
-
-
 \section2 Error Reporting
 
 When a synchronous operation fails, clients need to be able to retrieve error

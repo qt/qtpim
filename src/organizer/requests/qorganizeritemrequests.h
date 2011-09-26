@@ -45,10 +45,6 @@
 // this file includes all of the asynchronous request
 // leaf classes that are included in the public API
 
-#include "qorganizeritemdetaildefinitionfetchrequest.h"
-#include "qorganizeritemdetaildefinitionremoverequest.h"
-#include "qorganizeritemdetaildefinitionsaverequest.h"
-
 #include "qorganizeritemoccurrencefetchrequest.h"
 #include "qorganizeritemfetchrequest.h"
 #include "qorganizeritemfetchbyidrequest.h"

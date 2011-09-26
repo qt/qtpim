@@ -68,6 +68,7 @@ public:
 
     bool jsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const;
     bool itemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const;
+
     bool jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection);
     bool collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const;
 
@@ -80,6 +81,11 @@ private:
 
     int stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
+
+    void customDetailsToJsonDbObject(const QList<QOrganizerItemCustomDetail> &customDetails, QVariantMap& object) const;
+    void dataToList(const QVariant &data, QVariantList &list) const;
+    void dataToMap(const QVariant &data, QVariantMap &map) const;
+    void jsonDbObjectToCustomDetails(const QVariantMap &object, QList<QOrganizerItemCustomDetail> &customDetails) const;
 };
 
 #endif // QORGANIZERJSONDBCONVERTER_H

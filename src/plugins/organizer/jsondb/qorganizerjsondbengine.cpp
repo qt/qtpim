@@ -324,32 +324,6 @@ bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItemId>& itemIds,
     return *error == QOrganizerManager::NoError;
 }
 
-QMap<QString, QOrganizerItemDetailDefinition> QOrganizerJsonDbEngine::detailDefinitions(const QString& itemType, QOrganizerManager::Error* error) const
-{
-    /* TODO - once you know what your engine will support, implement this properly.  One way is to call the base version, and add/remove things as needed */
-    *error = QOrganizerManager::NoError;
-    return schemaDefinitions().value(itemType);
-}
-
-QOrganizerItemDetailDefinition QOrganizerJsonDbEngine::detailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error) const
-{
-    /* TODO - the default implementation just calls the base detailDefinitions function.  If that's inefficent, implement this */
-    return QOrganizerManagerEngine::detailDefinition(definitionId, itemType, error);
-}
-
-bool QOrganizerJsonDbEngine::saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType, QOrganizerManager::Error* error)
-{
-    /* TODO - if you support adding custom fields, do that here.  Otherwise call the base functionality. */
-    return QOrganizerManagerEngine::saveDetailDefinition(def, itemType, error);
-}
-
-bool QOrganizerJsonDbEngine::removeDetailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error)
-{
-    /* TODO - if you support removing custom fields, do that here.  Otherwise call the base functionality. */
-    return QOrganizerManagerEngine::removeDetailDefinition(definitionId, itemType, error);
-}
-
-
 QOrganizerCollection QOrganizerJsonDbEngine::defaultCollection(QOrganizerManager::Error* error) const
 {
     *error = QOrganizerManager::NoError;

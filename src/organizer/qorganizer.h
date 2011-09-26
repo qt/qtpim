@@ -49,8 +49,6 @@
 
 #include "qorganizerabstractrequest.h"                // asynchronous request
 #include "qorganizeritemdetail.h"                     // organizer item detail
-#include "qorganizeritemdetaildefinition.h"           // detail definition
-#include "qorganizeritemdetailfielddefinition.h"      // field in a detail definition
 #include "qorganizeritemfetchhint.h"                  // fetch hint class
 #include "qorganizeritemfilter.h"                     // organizer item filter
 #include "qorganizeritem.h"                           // organizer item

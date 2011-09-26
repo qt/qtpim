@@ -478,27 +478,6 @@ int QDeclarativeOrganizerItem::_q_detail_count(QDeclarativeListProperty<QDeclara
 }
 
 
-// detail definition, need to be further checked
-QDeclarativeOrganizerItem::QDeclarativeOrganizerItem(const QOrganizerItem &item,
-                                                     const QMap<QString, QOrganizerItemDetailDefinition> &defs,
-                                                     QObject *parent)
-    : QObject(parent)
-{
-    setItem(item);
-    setDetailDefinitions(defs);
-}
-
-void QDeclarativeOrganizerItem::setDetailDefinitions(const QMap<QString, QOrganizerItemDetailDefinition> &defs)
-{
-    m_defs = defs;
-}
-
-QMap<QString, QOrganizerItemDetailDefinition> QDeclarativeOrganizerItem::detailDefinitions() const
-{
-    return m_defs;
-}
-
-
 // to be removed
 /*!
     WARNING: This is to be removed soon.

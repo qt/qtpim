@@ -54,7 +54,6 @@
 #include "qorganizercollection.h"
 #include "qorganizercollectionid.h"
 #include "qorganizeritem.h"
-#include "qorganizeritemdetaildefinition.h"
 #include "qorganizermanager.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemfetchhint.h"
@@ -72,9 +71,6 @@ class QOrganizerItemIdFetchRequest;
 class QOrganizerItemFetchRequest;
 class QOrganizerItemRemoveRequest;
 class QOrganizerItemSaveRequest;
-class QOrganizerItemDetailDefinitionSaveRequest;
-class QOrganizerItemDetailDefinitionRemoveRequest;
-class QOrganizerItemDetailDefinitionFetchRequest;
 class QOrganizerItemFetchForExportRequest;
 
 class Q_ORGANIZER_EXPORT QOrganizerManagerEngine : public QObject
@@ -119,13 +115,6 @@ public:
     /* Validation for saving */
     virtual bool validateItem(const QOrganizerItem& item, QOrganizerManager::Error* error) const;
     virtual bool validateCollection(const QOrganizerCollection& collection, QOrganizerManager::Error* error) const;
-    virtual bool validateDefinition(const QOrganizerItemDetailDefinition& def, QOrganizerManager::Error* error) const;
-
-    /* Definitions - Accessors and Mutators */
-    virtual QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(const QString& itemType, QOrganizerManager::Error* error) const;
-    virtual QOrganizerItemDetailDefinition detailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error) const;
-    virtual bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType, QOrganizerManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error);
 
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QOrganizerAbstractRequest* req);
@@ -137,9 +126,6 @@ public:
     virtual bool hasFeature(QOrganizerManager::ManagerFeature feature, const QString& itemType) const;
     virtual bool isFilterSupported(const QOrganizerItemFilter& filter) const;
     virtual QStringList supportedItemTypes() const;
-
-    /* Reports the built-in definitions from the schema */
-    static QMap<QString, QMap<QString, QOrganizerItemDetailDefinition> > schemaDefinitions(int version = 1);
 
 Q_SIGNALS:
     void dataChanged();
@@ -160,9 +146,6 @@ public:
     static void updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
     static void updateItemRemoveRequest(QOrganizerItemRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
     static void updateItemSaveRequest(QOrganizerItemSaveRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateDefinitionSaveRequest(QOrganizerItemDetailDefinitionSaveRequest* req, const QList<QOrganizerItemDetailDefinition>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateDefinitionRemoveRequest(QOrganizerItemDetailDefinitionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateDefinitionFetchRequest(QOrganizerItemDetailDefinitionFetchRequest* req, const QMap<QString, QOrganizerItemDetailDefinition>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
     static void updateCollectionFetchRequest(QOrganizerCollectionFetchRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
     static void updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
     static void updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);

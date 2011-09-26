@@ -68,7 +68,6 @@
 #include "qorganizermanager.h"
 #include "qorganizermanagerengine.h"
 #include "qorganizermanagerenginefactory.h"
-#include "qorganizeritemdetaildefinition.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemchangeset.h"
 #include "qorganizeritemengineid.h"
@@ -127,12 +126,6 @@ public:
 
     bool saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     bool removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(const QString& itemType, QOrganizerManager::Error* error) const;
-    QOrganizerItemDetailDefinition detailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error) const;
-    bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType, QOrganizerManager::Error* error);
-    bool removeDetailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error);
 
     /* Collections - every item belongs to exactly one collection */
     QOrganizerCollection defaultCollection(QOrganizerManager::Error* error) const;

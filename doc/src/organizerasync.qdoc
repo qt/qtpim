@@ -50,7 +50,6 @@ categories:
 \list
   \o Organizer Item Manipulation
   \o Item Collection Manipulation
-  \o Schema Manipulation
 \endlist
 
 \section2 Organizer Item Manipulation
@@ -101,26 +100,6 @@ These operations are supported via the classes:
 \o QOrganizerCollectionRemoveRequest
 \endlist
 
-
-\section2 Schema Manipulation
-
-The schema supported by a engine is the list of detail definitions which are
-supported by the engine.  For in-depth information about the schema, please
-refer to the main \l{Qt Organizer Schema} page.
-
-There are three different types of operation which are supported by the asynchronous API:
-\list
-  \o Fetch detail definitions
-  \o Save detail definitions (create or update, if supported by the backend)
-  \o Remove detail definitions (if supported by the backend)
-\endlist
-
-These operations are supported via the classes:
-\list
-\o QOrganizerItemDetailDefinitionFetchRequest
-\o QOrganizerItemDetailDefinitionSaveRequest
-\o QOrganizerItemDetailDefinitionRemoveRequest
-\endlist
 
 \section1 Usage
 

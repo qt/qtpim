@@ -21,6 +21,7 @@ PUBLIC_HEADERS += \
     details/qorganizeritemdetails.h \
     details/qorganizerjournaltime.h \
     details/qorganizertodoprogress.h \
-    details/qorganizertodotime.h
+    details/qorganizertodotime.h \
+    details/qorganizeritemcustomdetail.h
 
 SOURCES += details/qorganizeritemdetails.cpp

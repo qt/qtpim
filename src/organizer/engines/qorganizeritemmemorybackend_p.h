@@ -68,7 +68,6 @@
 #include "qorganizeritem.h"
 #include "qorganizermanager.h"
 #include "qorganizermanagerengine.h"
-#include "qorganizeritemdetaildefinition.h"
 #include "qorganizerabstractrequest.h"
 #include "qorganizeritemchangeset.h"
 #include "qorganizerrecurrencerule.h"
@@ -160,7 +159,6 @@ public:
     QList<QOrganizerCollectionId> m_organizerCollectionIds; // list of collection ids
     QMultiMap<QOrganizerCollectionId, QOrganizerItemId> m_itemsInCollections; // map of collection ids to the ids of items the collection contains.
     QList<QString> m_definitionIds;                // list of definition types (id's)
-    mutable QMap<QString, QMap<QString, QOrganizerItemDetailDefinition> > m_definitions; // map of organizer item type to map of definition name to definitions.
     quint32 m_nextOrganizerItemId; // the m_itemId portion of a QOrganizerItemMemoryEngineId.
     quint32 m_nextOrganizerCollectionId; // the m_collectionId portion of a QOrganizerCollectionMemoryEngineId.
     bool m_anonymous;                              // Is this backend ever shared?
@@ -226,21 +224,6 @@ public:
         *error = QOrganizerManager::NoError;
         return true; // all collections are valid in the memory engine.
     }
-    /*! \reimp */
-    virtual bool validateDefinition(const QOrganizerItemDetailDefinition& def, QOrganizerManager::Error* error) const
-    {
-        return QOrganizerManagerEngine::validateDefinition(def, error);
-    }
-
-    /* Definitions - Accessors and Mutators */
-    virtual QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(const QString& organizeritemType, QOrganizerManager::Error* error) const;
-    /*! \reimp */
-    virtual QOrganizerItemDetailDefinition detailDefinition(const QString& definitionId, const QString& organizeritemType, QOrganizerManager::Error* error) const
-    {
-        return QOrganizerManagerEngine::detailDefinition(definitionId, organizeritemType, error);
-    }
-    virtual bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& organizeritemType, QOrganizerManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& organizeritemType, QOrganizerManager::Error* error);
 
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QOrganizerAbstractRequest* req);
@@ -264,8 +247,6 @@ protected:
     /* Implement "signal coalescing" for batch functions via change set */
     virtual bool saveItem(QOrganizerItem* theOrganizerItem, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
     virtual bool removeItem(const QOrganizerItemId& organizeritemId, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
-    virtual bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& organizeritemType, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& organizeritemType, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
 
 private:
     QOrganizerItem item(const QOrganizerItemId& organizeritemId) const;

@@ -696,6 +696,32 @@ Q_SIGNALS:
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemVisualReminder)
 
 
+class QDeclarativeOrganizeritemCustomDetail : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY detailChanged)
+    Q_PROPERTY(QVariant data READ data WRITE setData NOTIFY detailChanged)
+
+public:
+    QDeclarativeOrganizeritemCustomDetail(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setName(const QString &newDetailName);
+    QString name() const;
+
+    void setData(const QVariant &data);
+    QVariant data() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void detailChanged();
+};
+QML_DECLARE_TYPE(QDeclarativeOrganizeritemCustomDetail)
+
+
 class QDeclarativeOrganizerItemDetailFactory
 {
 public:

@@ -64,12 +64,6 @@ A manager backend may be implemented by subclassing
 \l{QOrganizerManagerEngine}, and providing a
 \l{QOrganizerManagerEngineFactory} which can instantiate it when required.
 
-\section2 Schemas
-
-The schema supported by a engine is the list of detail definitions which are
-supported by the engine.  For in-depth information about the schema, please
-refer to the main \l{Qt Organizer Schema} page.
-
 \section2 Engine-Specific Ids
 
 Each engine interfaces with a particular datastore, and that datastore may
@@ -99,7 +93,6 @@ All engines must implement the following functions:
   \o QOrganizerManagerEngine::managerVersion()
   \o QOrganizerManagerEngine::supportedItemTypes()
   \o QOrganizerManagerEngine::hasFeature()
-  \o QOrganizerManagerEngine::detailDefinitions()
   \o QOrganizerManagerEngine::itemIds()
   \o QOrganizerManagerEngine::items()
   \o QOrganizerManagerEngine::itemsForExport()
@@ -183,15 +176,6 @@ If the engine supports addition, modification and removal of collections, it mus
   \o QOrganizerManagerEngine::removeCollection()
 \endlist
 
-If the engine supports modification of its schema (that is, extension of its definitions at
-run-time), it must report that it supports the \c QOrganizerManager::MutableDefinitions feature
-via QOrganizerManagerEngine::hasFeature(), and must also implement:
-\list
-  \o QOrganizerManagerEngine::saveDetailDefinition()
-  \o QOrganizerManagerEngine::removeDetailDefinition()
-\endlist
-
-
 \section3 Optional Implementation
 
 Apart from areas of functionality which may be optionally implemented by the engine or not,
@@ -205,7 +189,6 @@ QOrganizerManagerEngine::items().  An engine may also implement:
 \list
   \o QOrganizerManagerEngine::validateItem()
   \o QOrganizerManagerEngine::validateCollection()
-  \o QOrganizerManagerEngine::validateDefinition()
   \o QOrganizerManagerEngine::compatibleItem()
   \o QOrganizerManagerEngine::compatibleCollection()
 \endlist

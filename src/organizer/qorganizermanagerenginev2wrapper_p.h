@@ -197,34 +197,6 @@ public:
             QOrganizerManager::Error* error) const {
         return m_engine->validateCollection(collection, error);
     }
-    bool validateDefinition(
-            const QOrganizerItemDetailDefinition& def,
-            QOrganizerManager::Error* error) const {
-        return m_engine->validateDefinition(def, error);
-    }
-    QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(
-            const QString& itemType,
-            QOrganizerManager::Error* error) const {
-        return m_engine->detailDefinitions(itemType, error);
-    }
-    QOrganizerItemDetailDefinition detailDefinition(
-            const QString& definitionId,
-            const QString& itemType,
-            QOrganizerManager::Error* error) const {
-        return m_engine->detailDefinition(definitionId, itemType, error);
-    }
-    bool saveDetailDefinition(
-            const QOrganizerItemDetailDefinition& def,
-            const QString& itemType,
-            QOrganizerManager::Error* error) {
-        return m_engine->saveDetailDefinition(def, itemType, error);
-    }
-    bool removeDetailDefinition(
-            const QString& definitionId,
-            const QString& itemType,
-            QOrganizerManager::Error* error) {
-        return m_engine->removeDetailDefinition(definitionId, itemType, error);
-    }
     bool hasFeature(
             QOrganizerManager::ManagerFeature feature,
             const QString& itemType) const {

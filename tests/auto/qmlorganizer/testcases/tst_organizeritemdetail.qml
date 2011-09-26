@@ -126,6 +126,21 @@ TestCase {
         id: recurrence
     }
 
+    CustomDetail {
+        id: customDetail
+    }
+
+    function test_customDetail() {
+        compare(customDetail.name, "")
+        customDetail.name = "my custom detail"
+        compare(customDetail.name, "my custom detail")
+
+        customDetail.setDetailValue("my key1", 1234)
+        compare(customDetail.detailValue("my key1"), 1234)
+        customDetail.setDetailValue("asdf", "bla bla bla")
+        compare(customDetail.detailValue("asdf"), "bla bla bla")
+    }
+
     function test_recurrence() {
     }
 

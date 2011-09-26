@@ -43,7 +43,6 @@
 #define QDECLARATIVEORGANIZERITEM_H
 
 #include <qorganizeritems.h>
-#include <qorganizeritemdetaildefinition.h>
 #include "qdeclarativeorganizeritemdetail_p.h"
 
 #include <QtDeclarative/qdeclarativelist.h>
@@ -115,11 +114,6 @@ public:
     void setItem(const QOrganizerItem &item);
     QOrganizerItem item() const;
 
-    // detail definition, need to be further checked
-    explicit QDeclarativeOrganizerItem(const QOrganizerItem &item, const QMap<QString, QOrganizerItemDetailDefinition> &defs, QObject *parent = 0);
-    void setDetailDefinitions(const QMap<QString, QOrganizerItemDetailDefinition> &defs);
-    QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions() const;
-
     // to be removed
     bool isFloatingTime();
 
@@ -147,8 +141,6 @@ protected:
 
 private:
      Q_DISABLE_COPY(QDeclarativeOrganizerItem)
-
-    QMap<QString, QOrganizerItemDetailDefinition> m_defs;
 
     // call-back functions for list property
     static void _q_detail_append(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value);

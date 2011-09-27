@@ -1,9 +1,0 @@
-// BLD.INF
-//
-// Copyright (c) http://creativecommons.org/licenses/by-sa/2.0/uk/.  All rights reserved.
-//
-
-PRJ_TESTMMPFILES
-
-PARAM_SVR_SUITENAME.mmp
-

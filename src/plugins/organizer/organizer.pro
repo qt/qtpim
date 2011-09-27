@@ -4,13 +4,7 @@ CONFIG += ordered
 
 contains(QT_CONFIG, jsondb): SUBDIRS += jsondb
 
-#include(../../common.pri)
-
 #wince*:SUBDIRS += wince
-#symbian {
-#    SUBDIRS += symbian
-#    contains(build_unit_tests, yes):SUBDIRS += symbian/tsrc
-#}
 
 # perhaps this should just use the configure test
 #maemo6|meego {

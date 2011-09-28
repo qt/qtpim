@@ -369,6 +369,9 @@ int QDeclarativeOrganizerModel::rowCount(const QModelIndex &parent) const
 
 void QDeclarativeOrganizerModel::setManager(const QString& managerName)
 {
+    if (d->m_manager && (managerName == d->m_manager->managerName() || managerName == d->m_manager->managerUri()))
+        return;
+
     if (d->m_manager) {
         delete d->m_manager;
     }

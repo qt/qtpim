@@ -373,6 +373,8 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
         return;
 
     if (d->m_manager) {
+        cancelUpdate();
+        d->m_updatePending = false;
         delete d->m_manager;
     }
 

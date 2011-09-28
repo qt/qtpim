@@ -48,6 +48,8 @@ Rectangle {
 
 property bool start: false
 property SignalSpy contactsChangedSpy
+property ContactModel contactModel
+property Contact testContact
 
     TestCase {
         name: "ContactsTests"
@@ -296,5 +298,49 @@ property SignalSpy contactsChangedSpy
             testHelper.destroy();
             component.destroy();
         }
+
+        function test_addAndRemoveDetails()
+        {
+            //TODO verify this test case when we remove dynamic properties from the Api
+            //currently removing details from the contact is not updated in contact model
+            //TODO add a test case to remove the same detail N times and remove a detail which doesnt exist etc...
+            var component = Qt.createComponent("contactsTestHelper.qml")
+            var testHelper = component.createObject(top)
+            var model = Qt.createQmlObject(
+                    "import QtAddOn.contacts 2.0;" +
+                    "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
+            var tmp = Qt.createQmlObject(
+                    "import QtAddOn.contacts 2.0;" +
+                    "Contact {}", testHelper);
+            var spy2 = Qt.createQmlObject("import QtTest 1.0;" +"SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
+            contactsChangedSpy = spy2;
+            contactsChangedSpy.target = model;
+            contactsChangedSpy.clear()
+            testHelper.model = model;
+            waitForContactsChanged (contactsChangedSpy.count + 1)
+            testHelper.emptyContactsDb();
+            testContact = tmp;
+            var phone = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                              "PhoneNumber {number: '99999999'}", testContact);
+            var nick = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+                                             "Nickname {nickname: 'jack'}", testContact);
+            testContact.name.firstName = "Joe"
+            testContact.name.lastName = "John"
+            testContact.addDetail(phone)
+            testContact.addDetail(nick)
+            model.saveContact(testContact)
+            waitForContactsChanged (contactsChangedSpy.count + 1)
+            compare(testContact.phoneNumber.number,"99999999")
+            compare(testContact.nickname.nickname,"jack")
+            testContact.removeDetail(phone);
+            testContact.removeDetail(nick);
+            model.saveContact(testContact)
+            waitForContactsChanged (contactsChangedSpy.count + 1)
+            compare(testContact.phoneNumber.number,"")
+            compare(testContact.nickname.nickname,"")
+            testHelper.emptyContactsDb();
+            testHelper.destroy();
+            component.destroy();
+          }
     }
 }

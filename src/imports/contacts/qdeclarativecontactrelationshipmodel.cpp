@@ -193,8 +193,8 @@ QDeclarativeContact* QDeclarativeContactRelationshipModel::participant() const
 }
 void QDeclarativeContactRelationshipModel::setParticipant(QDeclarativeContact* participant)
 {
-    if (d->m_participant != this->participant()) {
-        d->m_participant = this->participant();
+    if (d->m_participant != participant) {
+        d->m_participant = participant;
         emit participantChanged();
     }
 }

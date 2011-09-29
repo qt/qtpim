@@ -366,8 +366,8 @@ bool QContactMemoryEngine::removeContact(const QContactLocalId& contactId, QCont
 
     // and if it was the self contact, reset the self contact id
     if (contactId == d->m_selfContactId) {
-        d->m_selfContactId = QContactLocalId("0");
-        changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(contactId, QContactLocalId("0")));
+        d->m_selfContactId = QContactLocalId(QStringLiteral("0"));
+        changeSet.setOldAndNewSelfContactId(QPair<QContactLocalId, QContactLocalId>(contactId, QContactLocalId(QStringLiteral("0"))));
     }
 
     changeSet.insertRemovedContact(contactId);

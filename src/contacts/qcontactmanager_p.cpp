@@ -351,7 +351,7 @@ void QContactManagerData::unregisterObserver(QContactManager* manager, QContactO
     QContactManagerData* d = QContactManagerData::get(manager);
 
     QContactLocalId key = d->m_observerForContact.key(observer);
-    if (key != 0) {
+    if (!key.isEmpty()) {
         d->m_observerForContact.remove(key, observer);
 
         // If there are now no more observers, disconnect from the engine

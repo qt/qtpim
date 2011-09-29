@@ -422,8 +422,10 @@ QOrganizerItem QDeclarativeOrganizerItem::item() const
     QOrganizerItem item;
     item.setId(m_id);
     item.setCollectionId(m_collectionId);
-    foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
-        item.saveDetail(&detail->detail());
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        QOrganizerItemDetail itemDetail = detail->detail();
+        item.saveDetail(&itemDetail);
+    }
     return item;
 }
 

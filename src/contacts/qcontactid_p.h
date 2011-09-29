@@ -64,8 +64,6 @@ class QContactIdPrivate : public QSharedData
 {
 public:
     QContactIdPrivate()
-        : QSharedData()
-        , m_localId("")
     {
     }
 

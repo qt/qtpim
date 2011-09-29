@@ -83,8 +83,8 @@ public:
     QContactMemoryEngineData()
         : QSharedData()
         , m_refCount(QAtomicInt(1))
-        , m_selfContactId("0")
-        , m_nextContactId("1")
+        , m_selfContactId(QStringLiteral("0"))
+        , m_nextContactId(QStringLiteral("1"))
         , m_anonymous(false)
     {
     }

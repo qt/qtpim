@@ -2897,13 +2897,13 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
             // See if there's a contactId that's not from this manager
             const QContact c = contacts->at(i);
             if (c.id().managerUri() == managerUri()) {
-                if (c.localId() != 0) {
+                if (!c.localId().isEmpty()) {
                     existingIdMap.insert(i, existingContactIds.count());
                     existingContactIds.append(c.localId());
                 } else {
                     // Strange. it's just a new contact
                 }
-            } else if (!c.id().managerUri().isEmpty() || c.localId() != 0) {
+            } else if (!c.id().managerUri().isEmpty() || !c.localId().isEmpty()) {
                 // Hmm, error (wrong manager)
                 errorMap->insert(i, QContactManager::DoesNotExistError);
             } // else new contact

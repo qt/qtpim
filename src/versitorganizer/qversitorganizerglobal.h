@@ -57,7 +57,7 @@
 #    if defined(QT_DLL)
 #      undef QT_DLL
 #    endif
-#    if defined(QT_BUILD_VERSIT_ORGANIZER_LIB)
+#    if defined(QT_BUILD_VERSITORGANIZER_LIB)
 #      define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_EXPORT
 #    else
 #      define Q_VERSIT_ORGANIZER_EXPORT Q_DECL_IMPORT

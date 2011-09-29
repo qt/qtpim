@@ -292,14 +292,14 @@ bool PartialSaveRequestController::start()
         // See if there's a contactId that's not from this manager
         const QContact c = contacts.at(i);
         if (c.id().managerUri() == m_engine->managerUri()) {
-            if (c.localId() != 0) {
+            if (!c.localId().isEmpty()) {
                 m_existingIdMap.insert(i, existingContactIds.count());
                 existingContactIds.append(c.localId());
             } else {
                 // Strange. it's just a new contact (with a managerUri set?)
                 newContactIndices.append(i);
             }
-        } else if (!c.id().managerUri().isEmpty() || c.localId() != 0) {
+        } else if (!c.id().managerUri().isEmpty() || !c.localId().isEmpty()) {
             // Hmm, error (wrong manager)
             m_errorMap.insert(i, QContactManager::DoesNotExistError);
         } else {

@@ -150,7 +150,6 @@ private slots:
     /* Special test with special data */
     void uriParsing();
 #if defined(QT_NO_JSONDB)
-    void compatibleItem();
     void recurrenceWithGenerator();
     void todoRecurrenceWithGenerator();
 #endif
@@ -206,7 +205,6 @@ private slots:
     /* Special test with special data */
     void uriParsing_data();
 #if defined(QT_NO_JSONDB)
-    void compatibleItem_data();
     void recurrenceWithGenerator_data();
     void todoRecurrenceWithGenerator_data();
 #endif
@@ -1830,8 +1828,7 @@ void tst_QOrganizerManager::invalidManager()
     QVERIFY(manager.itemIds(df | df).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
 
-    QVERIFY(manager.isFilterSupported(f) == false);
-    QVERIFY(manager.isFilterSupported(df) == false);
+    QVERIFY(manager.supportedFilters().size() == 0);
 
     QList<QOrganizerItem> list;
     list << foo;
@@ -1864,8 +1861,6 @@ void tst_QOrganizerManager::invalidManager()
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
     QVERIFY(manager.collections().isEmpty());
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    testCollection = manager.compatibleCollection(testCollection);
-    QVERIFY(testCollection == QOrganizerCollection()); // no compatible collection.
 
     /* Requests */
     QOrganizerItemFetchRequest ifr;
@@ -1991,72 +1986,6 @@ void tst_QOrganizerManager::memoryManager()
 }
 
 #if defined(QT_NO_JSONDB)
-void tst_QOrganizerManager::compatibleItem_data()
-{
-    // XXX TODO: fix this test - need more item types tested etc.
-    QTest::addColumn<QOrganizerItem>("input");
-    QTest::addColumn<QOrganizerItem>("expected");
-    QTest::addColumn<QOrganizerManager::Error>("error");
-
-    QOrganizerNote baseNote;
-    QOrganizerItemDisplayLabel dl;
-    dl.setLabel(QLatin1String("There you go, labelling items again..."));
-    baseNote.saveDetail(&dl);
-
-    {
-        QTest::newRow("already compatible") << QOrganizerItem(baseNote) << QOrganizerItem(baseNote) << QOrganizerManager::NoError;
-    }
-
-    {
-        QOrganizerItem item(baseNote);
-        QOrganizerItemDetail detail("UnknownDetail");
-        detail.setValue("Key", QLatin1String("Value"));
-        item.saveDetail(&detail);
-        QTest::newRow("unknown detail") << item << QOrganizerItem(baseNote) << QOrganizerManager::NoError;
-    }
-
-    {
-        QOrganizerItem item(baseNote);
-        QOrganizerItemDescription description1;
-        description1.setDescription("This is the first description");
-        item.saveDetail(&description1);
-        QOrganizerItemDescription description2;
-        description2.setDescription("This is the second description");
-        item.saveDetail(&description2);
-        QOrganizerItem expected(baseNote);
-        expected.saveDetail(&description2); // can't have two descriptions, only the second will be kept XXX TODO: surely it's backend specific which gets kept?
-        QTest::newRow("duplicate unique field") << item << expected << QOrganizerManager::NoError;
-    }
-
-    {
-        QOrganizerItem item(baseNote);
-        QOrganizerItemDescription descr;
-        descr.setValue("UnknownKey", "Value");
-        item.saveDetail(&descr);
-        QTest::newRow("unknown field") << item << QOrganizerItem(baseNote) << QOrganizerManager::NoError;
-    }
-
-    {
-        // XXX TODO: fix this test.
-        //QOrganizerEvent item(baseNote);
-        //QOrganizerItemDisplayLabel displayLabel;
-        //displayLabel.setValue(QOrganizerItemDisplayLabel::FieldLabel, QStringList("Value"));
-        //item.saveDetail(&displayLabel);
-        //QTest::newRow("wrong type") << QOrganizerItem(item) << QOrganizerItem(baseNote) << QOrganizerManager::NoError;
-    }
-}
-
-void tst_QOrganizerManager::compatibleItem()
-{
-//    QOrganizerManager cm("memory");
-
-//    QFETCH(QOrganizerItem, input);
-//    QFETCH(QOrganizerItem, expected);
-//    QFETCH(QOrganizerManager::Error, error);
-//    QCOMPARE(cm.compatibleItem(input), expected);
-//    QCOMPARE(cm.error(), error);
-}
-
 void tst_QOrganizerManager::recurrenceWithGenerator_data()
 {
     QTest::addColumn<QString>("uri");
@@ -4049,136 +3978,123 @@ void tst_QOrganizerManager::collections()
 
     // first test
     {
-        if (oim->compatibleCollection(c1) != c1 || oim->compatibleItem(i1) != i1) {
-            qDebug("Skipping first collection test; collection or item not compatible with manager!");
-        } else {
-            // save a collection
-            QVERIFY(c1.id().isNull()); // should have a null id to start with.
-            QVERIFY(oim->saveCollection(&c1));
-            QVERIFY(!c1.id().isNull()); // should have been set by the save operation
-            QVERIFY(oim->collections().contains(c1));
-            sc1 = oim->collection(c1.id());
-            QVERIFY(sc1.metaData(QOrganizerCollection::KeyName) == "Test One");
-            QVERIFY(sc1.metaData(QOrganizerCollection::KeyDescription) == "This collection is for testing purposes.");
-            QVERIFY(sc1.metaData("key") == "value");
+        // save a collection
+        QVERIFY(c1.id().isNull()); // should have a null id to start with.
+        QVERIFY(oim->saveCollection(&c1));
+        QVERIFY(!c1.id().isNull()); // should have been set by the save operation
+        QVERIFY(oim->collections().contains(c1));
+        sc1 = oim->collection(c1.id());
+        QVERIFY(sc1.metaData(QOrganizerCollection::KeyName) == "Test One");
+        QVERIFY(sc1.metaData(QOrganizerCollection::KeyDescription) == "This collection is for testing purposes.");
+        QVERIFY(sc1.metaData("key") == "value");
 
-            // save an item in that collection
-            QOrganizerItemCollectionFilter fil;
-            fil.setCollectionId(c1.id());
-            i1.setCollectionId(c1.id());
-            QVERIFY(oim->saveItem(&i1));
-            QVERIFY(i1.collectionId() == c1.id());
+        // save an item in that collection
+        QOrganizerItemCollectionFilter fil;
+        fil.setCollectionId(c1.id());
+        i1.setCollectionId(c1.id());
+        QVERIFY(oim->saveItem(&i1));
+        QVERIFY(i1.collectionId() == c1.id());
 
-            QList<QOrganizerItem> c1Items = oim->items(fil);
-            int itemIndex = -1;
-            for (int i = 0; i < c1Items.count(); i++) {
-                if (c1Items.at(i).id() == i1.id()) {
-                    itemIndex = i;
-                    break;
-                }
+        QList<QOrganizerItem> c1Items = oim->items(fil);
+        int itemIndex = -1;
+        for (int i = 0; i < c1Items.count(); i++) {
+            if (c1Items.at(i).id() == i1.id()) {
+                itemIndex = i;
+                break;
             }
-            QVERIFY(itemIndex >= 0);
-            QVERIFY(oim->items(fil).contains(i1) || isSuperset(c1Items.at(itemIndex), i1));
-
-            fil.setCollectionId(oim->defaultCollection().id());
-            QVERIFY(!oim->items(fil).contains(i1)); // it should not be in the default collection.
         }
+        QVERIFY(itemIndex >= 0);
+        QVERIFY(oim->items(fil).contains(i1) || isSuperset(c1Items.at(itemIndex), i1));
+
+        fil.setCollectionId(oim->defaultCollection().id());
+        QVERIFY(!oim->items(fil).contains(i1)); // it should not be in the default collection.
     }
 
     // second test
     {
-        if (oim->compatibleCollection(c2) != c2
-                || oim->compatibleCollection(c3) != c3
-                || oim->compatibleItem(i2) != i2
-                || oim->compatibleItem(i3) != i3
-                || oim->compatibleItem(i4) != i4
-                || oim->compatibleItem(i5) != i5) {
-            qDebug("Skipping second collection test; collection or items not compatible with manager!");
-        } else {
-            // save multiple collections. // XXX TODO: batch save for collections?
-            int originalColCount = oim->collections().count();
-            QVERIFY(oim->saveCollection(&c2));
-            QVERIFY(oim->saveCollection(&c3));
-            QVERIFY(oim->collections().count() == (originalColCount + 2));
+        // save multiple collections. // XXX TODO: batch save for collections?
+        int originalColCount = oim->collections().count();
+        QVERIFY(oim->saveCollection(&c2));
+        QVERIFY(oim->saveCollection(&c3));
+        QVERIFY(oim->collections().count() == (originalColCount + 2));
 
-            // save i5 in c3 as a canary value.
-            i5.setCollectionId(c3.id());
+        // save i5 in c3 as a canary value.
+        i5.setCollectionId(c3.id());
 
-            // save multiple items in collection c2
-            QList<QOrganizerItem> saveList;
-            i2.setCollectionId(c2.id());
-            i3.setCollectionId(c2.id());
-            i4.setCollectionId(c2.id());
-            saveList << i2 << i3 << i4 << i5;
-            int originalItemCount = oim->items().count();
-            QVERIFY(oim->saveItems(&saveList));
-            i2 = saveList.at(0); // update from save list because manager might have added details / set ids etc.
-            i3 = saveList.at(1);
-            i4 = saveList.at(2);
-            i5 = saveList.at(3);
-            QList<QOrganizerItem> fetchedItems = oim->items();
-            QCOMPARE(fetchedItems.count(), originalItemCount + 4);
-            //fails here
-            QVERIFY(fetchedItems.contains(i2)); // these three should have been added
-            QVERIFY(fetchedItems.contains(i3));
-            QVERIFY(fetchedItems.contains(i4));
-            QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
+        // save multiple items in collection c2
+        QList<QOrganizerItem> saveList;
+        i2.setCollectionId(c2.id());
+        i3.setCollectionId(c2.id());
+        i4.setCollectionId(c2.id());
+        saveList << i2 << i3 << i4 << i5;
+        int originalItemCount = oim->items().count();
+        QVERIFY(oim->saveItems(&saveList));
+        i2 = saveList.at(0); // update from save list because manager might have added details / set ids etc.
+        i3 = saveList.at(1);
+        i4 = saveList.at(2);
+        i5 = saveList.at(3);
+        QList<QOrganizerItem> fetchedItems = oim->items();
+        QCOMPARE(fetchedItems.count(), originalItemCount + 4);
+        //fails here
+        QVERIFY(fetchedItems.contains(i2)); // these three should have been added
+        QVERIFY(fetchedItems.contains(i3));
+        QVERIFY(fetchedItems.contains(i4));
+        QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
 
-            // update a collection shouldn't remove its items.
-            c2.setMetaData(QOrganizerCollection::KeyName, "Test Two Updated");
-            QVERIFY(oim->saveCollection(&c2));
-            fetchedItems = oim->items();
-            QVERIFY(fetchedItems.contains(i2)); // no items should have been removed
-            QVERIFY(fetchedItems.contains(i3)); // nor should they have changed collection.
-            QVERIFY(fetchedItems.contains(i4));
-            QVERIFY(fetchedItems.contains(i5));
+        // update a collection shouldn't remove its items.
+        c2.setMetaData(QOrganizerCollection::KeyName, "Test Two Updated");
+        QVERIFY(oim->saveCollection(&c2));
+        fetchedItems = oim->items();
+        QVERIFY(fetchedItems.contains(i2)); // no items should have been removed
+        QVERIFY(fetchedItems.contains(i3)); // nor should they have changed collection.
+        QVERIFY(fetchedItems.contains(i4));
+        QVERIFY(fetchedItems.contains(i5));
 
-            // exceptions must be saved in the same collection as their parent.
+        // exceptions must be saved in the same collection as their parent.
 #if defined(QT_NO_JSONDB)
-            QOrganizerEvent recurringEvent;
-            recurringEvent.setDescription("A recurring test event parent.");
-//            recurringEvent.setLocation("Some Location");
-            recurringEvent.setStartDateTime(QDateTime(QDate(2010,10,5), QTime(10,30)));
-            recurringEvent.setEndDateTime(QDateTime(QDate(2010,10,5), QTime(11,30)));
-            QOrganizerRecurrenceRule rrule;
-            rrule.setFrequency(QOrganizerRecurrenceRule::Weekly);
-            rrule.setLimit(5); // count limited.
-            recurringEvent.setRecurrenceRule(rrule);
-            recurringEvent.setCollectionId(c2.id());
-            QVERIFY(oim->saveItem(&recurringEvent));
-            recurringEvent = oim->item(recurringEvent.id()); // reload it.
-            QVERIFY(recurringEvent.collectionId() == c2.id());
-            QList<QOrganizerItem> occ(oim->itemOccurrences(recurringEvent, QDateTime(), QDateTime()));
-            QVERIFY(occ.size() == 5);
-            QOrganizerEventOccurrence someException = occ.at(2); // there should be five, so this shouldn't segfault.
-//            someException.setLocation("Other Location");
-            someException.setCollectionId(c3.id()); // different to parent.
-            QVERIFY(!oim->saveItem(&someException)); // shouldn't work.
-            someException.setCollectionId(c2.id()); // same as parent.
-            QVERIFY(oim->saveItem(&someException)); // should work.
+        QOrganizerEvent recurringEvent;
+        recurringEvent.setDescription("A recurring test event parent.");
+        //            recurringEvent.setLocation("Some Location");
+        recurringEvent.setStartDateTime(QDateTime(QDate(2010,10,5), QTime(10,30)));
+        recurringEvent.setEndDateTime(QDateTime(QDate(2010,10,5), QTime(11,30)));
+        QOrganizerRecurrenceRule rrule;
+        rrule.setFrequency(QOrganizerRecurrenceRule::Weekly);
+        rrule.setLimit(5); // count limited.
+        recurringEvent.setRecurrenceRule(rrule);
+        recurringEvent.setCollectionId(c2.id());
+        QVERIFY(oim->saveItem(&recurringEvent));
+        recurringEvent = oim->item(recurringEvent.id()); // reload it.
+        QVERIFY(recurringEvent.collectionId() == c2.id());
+        QList<QOrganizerItem> occ(oim->itemOccurrences(recurringEvent, QDateTime(), QDateTime()));
+        QVERIFY(occ.size() == 5);
+        QOrganizerEventOccurrence someException = occ.at(2); // there should be five, so this shouldn't segfault.
+        //            someException.setLocation("Other Location");
+        someException.setCollectionId(c3.id()); // different to parent.
+        QVERIFY(!oim->saveItem(&someException)); // shouldn't work.
+        someException.setCollectionId(c2.id()); // same as parent.
+        QVERIFY(oim->saveItem(&someException)); // should work.
 #endif
 
-            // remove a collection, removes its items.
-            QVERIFY(oim->removeCollection(c2.id()));
-            fetchedItems = oim->items();
-            QCOMPARE(fetchedItems.count(), originalItemCount + 1); // i5 should remain, i2->i4 should be removed.
-            QVERIFY(!fetchedItems.contains(i2)); // these three should have been removed
-            QVERIFY(!fetchedItems.contains(i3));
-            QVERIFY(!fetchedItems.contains(i4));
+        // remove a collection, removes its items.
+        QVERIFY(oim->removeCollection(c2.id()));
+        fetchedItems = oim->items();
+        QCOMPARE(fetchedItems.count(), originalItemCount + 1); // i5 should remain, i2->i4 should be removed.
+        QVERIFY(!fetchedItems.contains(i2)); // these three should have been removed
+        QVERIFY(!fetchedItems.contains(i3));
+        QVERIFY(!fetchedItems.contains(i4));
 #if defined(QT_NO_JSONDB)
-            QVERIFY(!fetchedItems.contains(recurringEvent)); // the parent
-            QVERIFY(!fetchedItems.contains(someException));  // and exceptions too.
+        QVERIFY(!fetchedItems.contains(recurringEvent)); // the parent
+        QVERIFY(!fetchedItems.contains(someException));  // and exceptions too.
 #endif
-            QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
+        QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
 
-            // attempt to save an item in a non-existent collection should fail.
-            i2.setId(QOrganizerItemId()); // reset Id so save can succeed...
-            i2.setCollectionId(c2.id());
-            QVERIFY(!oim->saveItem(&i2));
-            fetchedItems = oim->items();
-            QVERIFY(!fetchedItems.contains(i2)); // shouldn't have been added.
-            QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
-        }
+        // attempt to save an item in a non-existent collection should fail.
+        i2.setId(QOrganizerItemId()); // reset Id so save can succeed...
+        i2.setCollectionId(c2.id());
+        QVERIFY(!oim->saveItem(&i2));
+        fetchedItems = oim->items();
+        QVERIFY(!fetchedItems.contains(i2)); // shouldn't have been added.
+        QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
     }
 }
 

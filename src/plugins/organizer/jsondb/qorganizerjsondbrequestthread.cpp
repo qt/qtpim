@@ -311,10 +311,6 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             errorFound = true;
         }
 
-        // ensure that the organizeritem's details conform to their definitions
-        if (!errorFound && !m_engine->validateItem(item, &error))
-            errorFound = true;
-
         //Check the collection id validation
         if (!item.collectionId().isNull()) {
             QOrganizerCollectionId collectionID = item.collectionId();

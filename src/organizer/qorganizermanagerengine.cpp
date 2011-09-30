@@ -486,16 +486,20 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
 
 
 /*!
-  Returns a whether the supplied \a filter can be implemented
-  natively by this engine.  If not, the base class implementation
-  will emulate the functionality.
-  \since 1.1
+    Returns the list of supported filters by this engine.
  */
-bool QOrganizerManagerEngine::isFilterSupported(const QOrganizerItemFilter& filter) const
+QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilters() const
 {
-    Q_UNUSED(filter);
+    return QList<QOrganizerItemFilter::FilterType>();
+}
 
-    return false;
+/*!
+    Returns the list of details that are supported by this engine for the given \a itemType.
+ */
+QStringList QOrganizerManagerEngine::supportedItemDetails(const QString &itemType) const
+{
+    Q_UNUSED(itemType)
+    return QStringList();
 }
 
 /*!
@@ -504,12 +508,7 @@ bool QOrganizerManagerEngine::isFilterSupported(const QOrganizerItemFilter& filt
  */
 QStringList QOrganizerManagerEngine::supportedItemTypes() const
 {
-    return QStringList() << QOrganizerItemType::TypeEvent
-                         << QOrganizerItemType::TypeEventOccurrence
-                         << QOrganizerItemType::TypeJournal
-                         << QOrganizerItemType::TypeNote
-                         << QOrganizerItemType::TypeTodo
-                         << QOrganizerItemType::TypeTodoOccurrence;
+    return QStringList();
 }
 
 /*!
@@ -518,36 +517,6 @@ QStringList QOrganizerManagerEngine::supportedItemTypes() const
   Returns the engine backend implementation version number
   \since 1.1
  */
-
-/*!
-    Checks if the given \item is valid for the current engine. If not, further information
-    can be found through \a error.
-    \since 1.1
- */
-bool QOrganizerManagerEngine::validateItem(const QOrganizerItem &item, QOrganizerManager::Error *error) const
-{
-    if (!supportedItemTypes().contains(item.type())) {
-        *error = QOrganizerManager::InvalidItemTypeError;
-        return false;
-    }
-
-    *error = QOrganizerManager::NoError;
-    return true;
-}
-
-/*!
-  Returns true if the \a collection is valid and can be saved in the engine.
-  By default, modifiable collections are not supported, so this function returns false,
-  and \a error is set to QOrganizerManager::NotSupportedError.
-  Engines which do implement mutable collections should reimplement this function.
-  \since 1.1
- */
-bool QOrganizerManagerEngine::validateCollection(const QOrganizerCollection& collection, QOrganizerManager::Error* error) const
-{
-    Q_UNUSED(collection);
-    *error = QOrganizerManager::NotSupportedError;
-    return false;
-}
 
 /*!
   Sets the access constraints of \a detail to the supplied \a constraints.
@@ -782,37 +751,6 @@ bool QOrganizerManagerEngine::removeCollection(const QOrganizerCollectionId& col
 
     *error = QOrganizerManager::NotSupportedError;
     return false;
-}
-
-/*!
-    Returns a pruned or modified version of the \a original item which is valid and can be saved in the manager.
-    The returned item might have details removed or arbitrarily changed.
-    Any error which occurs will be saved to \a error.
-    \since 1.1
- */
-QOrganizerItem QOrganizerManagerEngine::compatibleItem(const QOrganizerItem &original, QOrganizerManager::Error *error) const
-{
-    if (!supportedItemTypes().contains(original.type())) {
-        *error = QOrganizerManager::InvalidItemTypeError;
-        return QOrganizerItem();
-    }
-
-    *error = QOrganizerManager::NoError;
-    return original;
-}
-
-/*!
-  Returns a pruned or modified version of the \a original collection which is valid and can be saved in the manager.
-  The returned item might have meta data removed or arbitrarily changed.  Any error which occurs will be saved to \a error.
-  By default, modifiable collections are not supported, and so this function always returns false.
-  Any engine which supports mutable collections should reimplement this function.
-  \since 1.1
- */
-QOrganizerCollection QOrganizerManagerEngine::compatibleCollection(const QOrganizerCollection& original, QOrganizerManager::Error* error) const
-{
-    Q_UNUSED(original);
-    *error = QOrganizerManager::NotSupportedError;
-    return QOrganizerCollection();
 }
 
 /*!

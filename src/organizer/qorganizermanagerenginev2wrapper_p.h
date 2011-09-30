@@ -179,26 +179,11 @@ public:
             QOrganizerManager::Error* error) {
         return m_engine->removeCollection(collectionId, error);
     }
-    QOrganizerItem compatibleItem(
-            const QOrganizerItem& original,
-            QOrganizerManager::Error* error) const {
-        return m_engine->compatibleItem(original, error);
+    QList<QOrganizerItemFilter::FilterType> supportedFilters() const {
+        return m_engine->supportedFilters();
     }
-    QOrganizerCollection compatibleCollection(
-            const QOrganizerCollection& original,
-            QOrganizerManager::Error* error) const {
-        return m_engine->compatibleCollection(original, error);
-    }
-    bool validateItem(const QOrganizerItem& item, QOrganizerManager::Error* error) const {
-        return m_engine->validateItem(item, error);
-    }
-    bool validateCollection(
-            const QOrganizerCollection& collection,
-            QOrganizerManager::Error* error) const {
-        return m_engine->validateCollection(collection, error);
-    }
-    bool isFilterSupported(const QOrganizerItemFilter& filter) const {
-        return m_engine->isFilterSupported(filter);
+    QStringList supportedItemDetails(const QString &itemType) const {
+        return m_engine->supportedItemDetails(itemType);
     }
     QStringList supportedItemTypes() const {
         return m_engine->supportedItemTypes();

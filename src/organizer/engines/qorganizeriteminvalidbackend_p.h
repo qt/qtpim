@@ -77,13 +77,6 @@ public:
         *error =  QOrganizerManager::NotSupportedError;
         return QString();
     }
-
-    /*! \reimp */
-    virtual QOrganizerItem compatibleItem(const QOrganizerItem&, QOrganizerManager::Error* error) const
-    {
-        *error =  QOrganizerManager::NotSupportedError;
-        return QOrganizerItem();
-    }
 };
 
 QTPIM_END_NAMESPACE

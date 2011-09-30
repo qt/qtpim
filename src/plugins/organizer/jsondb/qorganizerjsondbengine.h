@@ -135,8 +135,9 @@ public:
     bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 
     /* Capabilities reporting */
-    bool isFilterSupported(const QOrganizerItemFilter& filter) const;
+    QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
     QList<int> supportedDataTypes() const;
+    QStringList supportedItemDetails(const QString &itemType) const;
     QStringList supportedItemTypes() const;
 
     /* Asynchronous Request Support */

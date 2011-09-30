@@ -415,7 +415,7 @@ void CalendarDemo::importItems()
         }
         QList<QOrganizerItem> items = importer.items();
         foreach (const QOrganizerItem& item, items) {
-            allItems.append(m_manager->compatibleItem(item));
+            allItems.append(item);
         }
     }
     if (!errorMessage.isEmpty())

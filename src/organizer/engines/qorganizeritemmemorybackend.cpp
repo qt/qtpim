@@ -958,11 +958,6 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         return false;
     }
 
-    // ensure that the organizer item's details conform to their definitions
-    if (!validateItem(*theOrganizerItem, error)) {
-        return false;
-    }
-
     if (theOrganizerItem->type().isEmpty()) {
         *error = QOrganizerManager::InvalidItemTypeError;
         return false;
@@ -1348,25 +1343,6 @@ QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerMa
     return d->m_organizerCollections;
 }
 
-QOrganizerCollection QOrganizerItemMemoryEngine::compatibleCollection(const QOrganizerCollection& original, QOrganizerManager::Error* error) const
-{
-    *error = QOrganizerManager::NoError;
-
-    // we don't allow people to change the default collection.
-    QOrganizerCollectionId defaultCollectionId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri));
-    if (original.id() == defaultCollectionId) {
-        for (int i = 0; i < d->m_organizerCollections.size(); ++i) {
-            QOrganizerCollection current = d->m_organizerCollections.at(i);
-            if (current.id() == defaultCollectionId) {
-                return current;
-            }
-        }
-    }
-
-    // if it isn't the default id, it's fine, since anything can be saved in the memory engine.
-    return original;
-}
-
 bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error)
 {
     QOrganizerCollectionChangeSet cs; // for signal emission.
@@ -1488,6 +1464,66 @@ bool QOrganizerItemMemoryEngine::waitForRequestFinished(QOrganizerAbstractReques
     Q_UNUSED(req);
 
     return true;
+}
+
+QStringList QOrganizerItemMemoryEngine::supportedItemDetails(const QString &itemType) const
+{
+
+    QStringList supportedDetails;
+    supportedDetails << QOrganizerItemType::DefinitionName
+                     << QOrganizerItemGuid::DefinitionName
+                     << QOrganizerItemTimestamp::DefinitionName
+                     << QOrganizerItemDisplayLabel::DefinitionName
+                     << QOrganizerItemDescription::DefinitionName
+                     << QOrganizerItemComment::DefinitionName
+                     << QOrganizerItemTag::DefinitionName
+                     << QOrganizerItemCustomDetail::DefinitionName;
+
+    if (itemType == QOrganizerItemType::TypeEvent) {
+        supportedDetails << QOrganizerItemRecurrence::DefinitionName
+                         << QOrganizerEventTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerItemLocation::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeTodo) {
+        supportedDetails << QOrganizerItemRecurrence::DefinitionName
+                         << QOrganizerTodoTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerTodoProgress::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {
+        supportedDetails << QOrganizerItemParent::DefinitionName
+                         << QOrganizerEventTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerItemLocation::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
+        supportedDetails << QOrganizerItemParent::DefinitionName
+                         << QOrganizerTodoTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerTodoProgress::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeJournal) {
+        supportedDetails << QOrganizerJournalTime::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeNote) {
+        // nothing ;)
+    } else {
+        supportedDetails.clear();
+    }
+
+    return supportedDetails;
 }
 
 /*!
@@ -1707,18 +1743,6 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 
     // now emit any signals we have to emit
     d->emitSharedSignals(&changeSet);
-}
-
-/*!
- * The function returns true if the backend natively supports the given filter \a filter, otherwise false.
-  \since 1.1
- */
-bool QOrganizerItemMemoryEngine::isFilterSupported(const QOrganizerItemFilter& filter) const
-{
-    Q_UNUSED(filter);
-
-    // Until we add hashes for common stuff, fall back to slow code
-    return false;
 }
 
 #include "moc_qorganizeritemmemorybackend_p.cpp"

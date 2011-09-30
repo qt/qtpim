@@ -204,27 +204,6 @@ public:
     virtual bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);
     virtual bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 
-    /*! \reimp */
-    virtual QOrganizerItem compatibleItem(const QOrganizerItem& original, QOrganizerManager::Error* error) const
-    {
-        return QOrganizerManagerEngine::compatibleItem(original, error);
-    }
-    /*! \reimp */
-    virtual QOrganizerCollection compatibleCollection(const QOrganizerCollection& original, QOrganizerManager::Error* error) const;
-
-    /*! \reimp */
-    virtual bool validateItem(const QOrganizerItem& organizeritem, QOrganizerManager::Error* error) const
-    {
-        return QOrganizerManagerEngine::validateItem(organizeritem, error);
-    }
-    /*! \reimp */
-    virtual bool validateCollection(const QOrganizerCollection& collection, QOrganizerManager::Error* error) const
-    {
-        Q_UNUSED(collection)
-        *error = QOrganizerManager::NoError;
-        return true; // all collections are valid in the memory engine.
-    }
-
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QOrganizerAbstractRequest* req);
     virtual bool startRequest(QOrganizerAbstractRequest* req);
@@ -232,11 +211,36 @@ public:
     virtual bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool isFilterSupported(const QOrganizerItemFilter& filter) const;
+    /*! \reimp */
+    virtual QList<QOrganizerItemFilter::FilterType> supportedFilters() const
+    {
+        QList<QOrganizerItemFilter::FilterType> supported;
+
+        supported << QOrganizerItemFilter::InvalidFilter
+                  << QOrganizerItemFilter::OrganizerItemDetailFilter
+                  << QOrganizerItemFilter::OrganizerItemDetailRangeFilter
+                  << QOrganizerItemFilter::ChangeLogFilter
+                  << QOrganizerItemFilter::ActionFilter
+                  << QOrganizerItemFilter::IntersectionFilter
+                  << QOrganizerItemFilter::UnionFilter
+                  << QOrganizerItemFilter::IdFilter
+                  << QOrganizerItemFilter::CollectionFilter
+                  << QOrganizerItemFilter::DefaultFilter;
+
+        return supported;
+    }
+    /*! \reimp */
+    virtual QStringList supportedItemDetails(const QString &itemType) const;
+
     /*! \reimp */
     virtual QStringList supportedItemTypes() const
     {
-        return QOrganizerManagerEngine::supportedItemTypes();
+        return QStringList() << QOrganizerItemType::TypeEvent
+                             << QOrganizerItemType::TypeEventOccurrence
+                             << QOrganizerItemType::TypeJournal
+                             << QOrganizerItemType::TypeNote
+                             << QOrganizerItemType::TypeTodo
+                             << QOrganizerItemType::TypeTodoOccurrence;
     }
 
 protected:

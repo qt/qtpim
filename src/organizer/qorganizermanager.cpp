@@ -429,7 +429,7 @@ QList<QOrganizerItemId> QOrganizerManager::itemIds(const QDateTime& startDate, c
   This function will return both persisted and generated occurrences of items which match the specified \a filter.
 
   Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l isFilterSupported() function.
+  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
 
   The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
   fetchHint is the default constructed hint, all existing details in the matching organizer items
@@ -456,7 +456,7 @@ QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filte
   This function will return both persisted and generated occurrences of items which match the specified criteria.
 
   Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l isFilterSupported() function.
+  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
 
   If no sort order is provided, the list is returned sorted by date.
 
@@ -488,7 +488,7 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
 
   Depending on the manager implementation, this filtering operation might be slow and involve
   retrieving all organizer items and testing them against the supplied filter - see the \l
-  isFilterSupported() function.
+  supportedFilters() function.
 
   The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
   fetchHint is the default constructed hint, all existing details in the matching organizer items
@@ -515,7 +515,7 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
   This function will only return parent items and persisted exceptions which match the specified criteria; not generated occurrences.
 
   Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l isFilterSupported() function.
+  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
 
   The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
   fetchHint is the default constructed hint, all existing details in the matching organizer items
@@ -757,11 +757,9 @@ QList<QOrganizerCollection> QOrganizerManager::collections() const
 
   Most managers will require a valid value for the \c QOrganizerCollection::KeyName
   meta data key to be set in a collection, before the collection can be saved
-  correctly.  Clients can call compatibleCollection() to retrieve a pruned
-  or updated version of the collection which is compatible with the manager.
+  correctly.
 
   \since 1.1
-  \sa compatibleCollection()
  */
 bool QOrganizerManager::saveCollection(QOrganizerCollection* collection)
 {
@@ -790,40 +788,19 @@ bool QOrganizerManager::removeCollection(const QOrganizerCollectionId& collectio
 }
 
 /*!
-  Returns a pruned or modified version of the \a original organizer item which is valid and can be saved in the manager.
-  The returned organizer item might have entire details removed or arbitrarily changed.
-  \since 1.1
+    Returns the list of supported filters by this manager.
  */
-QOrganizerItem QOrganizerManager::compatibleItem(const QOrganizerItem& original) const
+QList<QOrganizerItemFilter::FilterType> QOrganizerManager::supportedFilters() const
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->compatibleItem(original, &h.error);
+    return d->m_engine->supportedFilters();
 }
 
 /*!
-  Returns a pruned or modified version of the \a original organizer collection which is valid and can be saved in the manager.
-  The returned organizer collection might have meta data removed or arbitrarily changed.
-  \since 1.1
+    Returns the list of details that are supported by this manager for the given \a itemType.
  */
-QOrganizerCollection QOrganizerManager::compatibleCollection(const QOrganizerCollection& original) const
+QStringList QOrganizerManager::supportedItemDetails(const QString &itemType) const
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->compatibleCollection(original, &h.error);
-}
-
-/*!
-  Returns true if the given \a filter is supported natively by the
-  manager, and false if the filter behaviour would be emulated.
-
-  Note: In some cases, the behaviour of an unsupported filter
-  cannot be emulated.  For example, a filter that requests organizer items
-  that have changed since a given time depends on having that information
-  available.  In these cases, the filter will fail.
-  \since 1.1
- */
-bool QOrganizerManager::isFilterSupported(const QOrganizerItemFilter& filter) const
-{
-    return d->m_engine->isFilterSupported(filter);
+    return d->m_engine->supportedItemDetails(itemType);
 }
 
 /*!

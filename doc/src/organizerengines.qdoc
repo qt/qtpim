@@ -91,6 +91,8 @@ All engines must implement the following functions:
 \list
   \o QOrganizerManagerEngine::managerName()
   \o QOrganizerManagerEngine::managerVersion()
+  \o QOrganizerManagerEngine::supportedFilters()
+  \o QOrganizerManagerEngine::supportedItemDetails()
   \o QOrganizerManagerEngine::supportedItemTypes()
   \o QOrganizerManagerEngine::itemIds()
   \o QOrganizerManagerEngine::items()
@@ -152,7 +154,7 @@ function.
 If the engine supports native filtering of any kind, it must report to clients which filters
 are supported natively by implementing:
 \list
-  \o QOrganizerManagerEngine::isFilterSupported()
+  \o QOrganizerManagerEngine::supportedFilters()
 \endlist
 
 If the engine supports saving or removing organizer item information, as well as retrieval, it must
@@ -173,23 +175,6 @@ If the engine supports addition, modification and removal of collections, it mus
 \list
   \o QOrganizerManagerEngine::saveCollection()
   \o QOrganizerManagerEngine::removeCollection()
-\endlist
-
-\section3 Optional Implementation
-
-Apart from areas of functionality which may be optionally implemented by the engine or not,
-the default implementation provides several functions which operate in a naive, in-memory
-manner.  An engine implementation can override this default implementation with its own,
-if it wishes, in order to obtain performance gains, or to more accurately implement the
-function.
-
-As previously mentioned it may implement its own sorting or filtering, in functions such as
-QOrganizerManagerEngine::items().  An engine may also implement:
-\list
-  \o QOrganizerManagerEngine::validateItem()
-  \o QOrganizerManagerEngine::validateCollection()
-  \o QOrganizerManagerEngine::compatibleItem()
-  \o QOrganizerManagerEngine::compatibleCollection()
 \endlist
 
 

@@ -805,11 +805,10 @@ void QOrganizerItemSkeletonEngine::requestDestroyed(QOrganizerAbstractRequest* r
     return QOrganizerManagerEngine::requestDestroyed(req);
 }
 
-bool QOrganizerItemSkeletonEngine::isFilterSupported(const QOrganizerItemFilter& filter) const
+QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedFilters() const
 {
     // TODO if you engine can natively support the filter, return true.  Otherwise you should emulate support in the item{Ids} functions.
-    Q_UNUSED(filter);
-    return false;
+    return QList<QOrganizerItemFilter::FilterType>();
 }
 
 QList<int> QOrganizerItemSkeletonEngine::supportedDataTypes() const
@@ -822,6 +821,12 @@ QList<int> QOrganizerItemSkeletonEngine::supportedDataTypes() const
     ret << QVariant::Time;
 
     return ret;
+}
+
+QStringList QOrganizerItemSkeletonEngine::supportedItemDetails(const QString &itemType) const
+{
+    // TODO - return which [predefined] details this engine supports for this item type
+    return QStringList();
 }
 
 QStringList QOrganizerItemSkeletonEngine::supportedItemTypes() const

@@ -466,11 +466,19 @@ void QOrganizerJsonDbEngine::requestDestroyed(QOrganizerAbstractRequest* req)
     d->m_requestHandlerThread->requestDestroyed(req);
 }
 
-bool QOrganizerJsonDbEngine::isFilterSupported(const QOrganizerItemFilter& filter) const
+QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters() const
 {
-    // TODO if you engine can nativelconst QString& notifyUuid, const QVariant& object, const QString& actiony support the filter, return true.  Otherwise you should emulate support in the item{Ids} functions.
-    Q_UNUSED(filter);
-    return false;
+    QList<QOrganizerItemFilter::FilterType> supported;
+
+    supported << QOrganizerItemFilter::InvalidFilter
+              << QOrganizerItemFilter::OrganizerItemDetailFilter
+              << QOrganizerItemFilter::IntersectionFilter
+              << QOrganizerItemFilter::UnionFilter
+              << QOrganizerItemFilter::IdFilter
+              << QOrganizerItemFilter::CollectionFilter
+              << QOrganizerItemFilter::DefaultFilter;
+
+    return supported;
 }
 
 QList<int> QOrganizerJsonDbEngine::supportedDataTypes() const
@@ -483,6 +491,62 @@ QList<int> QOrganizerJsonDbEngine::supportedDataTypes() const
     ret << QVariant::Time;
 
     return ret;
+}
+
+QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType) const
+{
+    QStringList supportedDetails;
+    supportedDetails << QOrganizerItemType::DefinitionName
+                     << QOrganizerItemGuid::DefinitionName
+                     << QOrganizerItemTimestamp::DefinitionName
+                     << QOrganizerItemDisplayLabel::DefinitionName
+                     << QOrganizerItemDescription::DefinitionName
+                     << QOrganizerItemComment::DefinitionName
+                     << QOrganizerItemTag::DefinitionName
+                     << QOrganizerItemCustomDetail::DefinitionName;
+
+    if (itemType == QOrganizerItemType::TypeEvent) {
+        supportedDetails << QOrganizerItemRecurrence::DefinitionName
+                         << QOrganizerEventTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerItemLocation::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeTodo) {
+        supportedDetails << QOrganizerItemRecurrence::DefinitionName
+                         << QOrganizerTodoTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerTodoProgress::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {
+        supportedDetails << QOrganizerItemParent::DefinitionName
+                         << QOrganizerEventTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerItemLocation::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
+        supportedDetails << QOrganizerItemParent::DefinitionName
+                         << QOrganizerTodoTime::DefinitionName
+                         << QOrganizerItemPriority::DefinitionName
+                         << QOrganizerTodoProgress::DefinitionName
+                         << QOrganizerItemReminder::DefinitionName
+                         << QOrganizerItemAudibleReminder::DefinitionName
+                         << QOrganizerItemEmailReminder::DefinitionName
+                         << QOrganizerItemVisualReminder::DefinitionName;
+    } else {
+        // We don't support Journal and Note, yet ;)
+        supportedDetails.clear();
+    }
+
+    return supportedDetails;
 }
 
 QStringList QOrganizerJsonDbEngine::supportedItemTypes() const

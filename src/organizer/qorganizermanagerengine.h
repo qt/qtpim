@@ -108,14 +108,6 @@ public:
     virtual bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);
     virtual bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 
-    /* Return a pruned or modified item which is valid and can be saved in the backend */
-    virtual QOrganizerItem compatibleItem(const QOrganizerItem& original, QOrganizerManager::Error* error) const;
-    virtual QOrganizerCollection compatibleCollection(const QOrganizerCollection& original, QOrganizerManager::Error* error) const;
-
-    /* Validation for saving */
-    virtual bool validateItem(const QOrganizerItem& item, QOrganizerManager::Error* error) const;
-    virtual bool validateCollection(const QOrganizerCollection& collection, QOrganizerManager::Error* error) const;
-
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QOrganizerAbstractRequest* req);
     virtual bool startRequest(QOrganizerAbstractRequest* req);
@@ -123,7 +115,8 @@ public:
     virtual bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool isFilterSupported(const QOrganizerItemFilter& filter) const;
+    virtual QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
+    virtual QStringList supportedItemDetails(const QString &itemType) const;
     virtual QStringList supportedItemTypes() const;
 
 Q_SIGNALS:

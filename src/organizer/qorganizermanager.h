@@ -140,12 +140,9 @@ public:
     bool saveCollection(QOrganizerCollection* collection);
     bool removeCollection(const QOrganizerCollectionId& collectionId);
 
-    /* Return a pruned or modified item which is valid and can be saved in the manager */
-    QOrganizerItem compatibleItem(const QOrganizerItem& original) const;
-    QOrganizerCollection compatibleCollection(const QOrganizerCollection& original) const;
-
     /* Functionality reporting */
-    bool isFilterSupported(const QOrganizerItemFilter& filter) const;
+    QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
+    QStringList supportedItemDetails(const QString &itemType) const;
     QStringList supportedItemTypes() const;
 
     /* return a list of available backends for which a QOrganizerManager can be constructed. */

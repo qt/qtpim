@@ -364,18 +364,6 @@ QOrganizerItem QOrganizerManagerEngine::item(const QOrganizerItemId& organizerit
 }
 
 /*!
-  Returns true if the given \a feature is supported by this engine for organizer items of the given \a organizeritemType
-  \since 1.1
- */
-bool QOrganizerManagerEngine::hasFeature(QOrganizerManager::ManagerFeature feature, const QString& organizeritemType) const
-{
-    Q_UNUSED(feature);
-    Q_UNUSED(organizeritemType);
-
-    return false;
-}
-
-/*!
   Given an input \a filter, returns the canonical version of the filter.
 
   Some of the following transformations may be applied:

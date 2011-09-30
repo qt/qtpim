@@ -145,12 +145,6 @@ public:
     QOrganizerCollection compatibleCollection(const QOrganizerCollection& original) const;
 
     /* Functionality reporting */
-    enum ManagerFeature {
-        MutableDefinitions,
-        Anonymous,
-        ChangeLogs
-    };
-    bool hasFeature(QOrganizerManager::ManagerFeature feature, const QString& itemType = QOrganizerItemType::TypeEvent) const;
     bool isFilterSupported(const QOrganizerItemFilter& filter) const;
     QStringList supportedItemTypes() const;
 

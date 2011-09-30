@@ -196,7 +196,6 @@ QOrganizerManager class provides API to query the capabilities of a given
 manager with the following synchronous functions:
 
 \list
-\o \l{QOrganizerManager::hasFeature()}{hasFeature()}
 \o \l{QOrganizerManager::isFilterSupported()}{isFilterSupported()}
 \o \l{QOrganizerManager::supportedItemTypes()}{supportedItemTypes()}
 \endlist

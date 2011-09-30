@@ -1710,26 +1710,6 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 }
 
 /*!
- * \reimp
-  \since 1.1
- */
-bool QOrganizerItemMemoryEngine::hasFeature(QOrganizerManager::ManagerFeature feature, const QString& organizeritemType) const
-{
-    if (!supportedItemTypes().contains(organizeritemType))
-        return false;
-
-    switch (feature) {
-        case QOrganizerManager::MutableDefinitions:
-            return true;
-        case QOrganizerManager::Anonymous:
-            return d->m_anonymous;
-
-        default:
-            return false;
-    }
-}
-
-/*!
  * The function returns true if the backend natively supports the given filter \a filter, otherwise false.
   \since 1.1
  */

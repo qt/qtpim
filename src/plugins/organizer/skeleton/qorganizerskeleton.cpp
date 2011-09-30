@@ -805,26 +805,6 @@ void QOrganizerItemSkeletonEngine::requestDestroyed(QOrganizerAbstractRequest* r
     return QOrganizerManagerEngine::requestDestroyed(req);
 }
 
-bool QOrganizerItemSkeletonEngine::hasFeature(QOrganizerManager::ManagerFeature feature, const QString& itemType) const
-{
-    // TODO - the answer to the question may depend on the type
-    Q_UNUSED(itemType);
-    switch(feature) {
-        case QOrganizerManager::MutableDefinitions:
-            // TODO If you support save/remove detail definition, return true
-            return false;
-
-        case QOrganizerManager::Anonymous:
-            // TODO if this engine is anonymous (e.g. no other engine can share the data) return true
-            // (mostly for an in memory engine)
-            return false;
-        case QOrganizerManager::ChangeLogs:
-            // TODO if this engine supports filtering by last modified/created/removed timestamps, return true
-            return false;
-    }
-    return false;
-}
-
 bool QOrganizerItemSkeletonEngine::isFilterSupported(const QOrganizerItemFilter& filter) const
 {
     // TODO if you engine can natively support the filter, return true.  Otherwise you should emulate support in the item{Ids} functions.

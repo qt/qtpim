@@ -1867,9 +1867,6 @@ void tst_QOrganizerManager::invalidManager()
     testCollection = manager.compatibleCollection(testCollection);
     QVERIFY(testCollection == QOrganizerCollection()); // no compatible collection.
 
-    /* Capabilities */
-    QVERIFY(!manager.hasFeature(QOrganizerManager::MutableDefinitions));
-
     /* Requests */
     QOrganizerItemFetchRequest ifr;
     QOrganizerItemFetchForExportRequest ifer;
@@ -1938,10 +1935,7 @@ void tst_QOrganizerManager::memoryManager()
     QOrganizerManager m3("memory", params);
     QOrganizerManager m4("memory", params);
     params.insert("id", QString(""));
-    QOrganizerManager m5("memory", params); // should be another anonymous
-
-    QVERIFY(m1.hasFeature(QOrganizerManager::MutableDefinitions));
-    QVERIFY(m1.hasFeature(QOrganizerManager::Anonymous));
+    QOrganizerManager m5("memory", params);
 
     // add a item to each of m1, m2, m3
     QOrganizerItem c;
@@ -2640,39 +2634,36 @@ void tst_QOrganizerManager::signalEmission()
     QTRY_COMPARE(spyModified.count(), 0);
 
     QScopedPointer<QOrganizerManager> m2(QOrganizerManager::fromUri(uri));
-    QVERIFY(m1->hasFeature(QOrganizerManager::Anonymous) ==
-        m2->hasFeature(QOrganizerManager::Anonymous));
 
 #if defined(QT_NO_JSONDB)
-    /* Now some cross manager testing */
-    spyAdded.clear();
-    spyModified.clear();
-    spyRemoved.clear();
-    spyChanged.clear();
-    if (!m1->hasFeature(QOrganizerManager::Anonymous)) {
-        // verify that signals are emitted for modifications made to other managers (same id).
-        QSignalSpy spyDataChanged(m1.data(), SIGNAL(dataChanged()));
-        spyDataChanged.clear();
-        QOrganizerItemDisplayLabel ncs = todo.detail(QOrganizerItemDisplayLabel::DefinitionName);
-        ncs.setLabel("Test");
-        QVERIFY(todo.saveDetail(&ncs));
-        todo.setId(QOrganizerItemId()); // reset id so save can succeed.
-        QVERIFY(m2->saveItem(&todo));
+//    /* Now some cross manager testing */
+//    spyAdded.clear();
+//    spyModified.clear();
+//    spyRemoved.clear();
+//    spyChanged.clear();
 
-        // now modify and resave.
-        ncs.setLabel("Test2");
-        QVERIFY(todo.saveDetail(&ncs));
-        QVERIFY(m2->saveItem(&todo));
+//    // verify that signals are emitted for modifications made to other managers (same id).
+//    QSignalSpy spyDataChanged(m1.data(), SIGNAL(dataChanged()));
+//    spyDataChanged.clear();
+//    QOrganizerItemDisplayLabel ncs = todo.detail(QOrganizerItemDisplayLabel::DefinitionName);
+//    ncs.setLabel("Test");
+//    QVERIFY(todo.saveDetail(&ncs));
+//    todo.setId(QOrganizerItemId()); // reset id so save can succeed.
+//    QVERIFY(m2->saveItem(&todo));
 
-        // we should have one addition and one modification (or at least a data changed signal).
-        QTRY_VERIFY(spyDataChanged.count() || (spyAdded.count() == 1)); // check that we received the update signals.
-        QTRY_VERIFY(spyDataChanged.count() || (spyModified.count() == 1)); // check that we received the update signals.
-        todo = m2->item(todo.id()); // reload it.
-        QVERIFY(m1->item(todo.id()) == todo); // ensure we can read it from m1.
-        spyDataChanged.clear();
-        m2->removeItem(todo.id());
-        QTRY_VERIFY(spyDataChanged.count() || (spyRemoved.count() == 1)); // check that we received the remove signal.
-    }
+//    // now modify and resave.
+//    ncs.setLabel("Test2");
+//    QVERIFY(todo.saveDetail(&ncs));
+//    QVERIFY(m2->saveItem(&todo));
+
+//    // we should have one addition and one modification (or at least a data changed signal).
+//    QTRY_VERIFY(spyDataChanged.count() || (spyAdded.count() == 1)); // check that we received the update signals.
+//    QTRY_VERIFY(spyDataChanged.count() || (spyModified.count() == 1)); // check that we received the update signals.
+//    todo = m2->item(todo.id()); // reload it.
+//    QVERIFY(m1->item(todo.id()) == todo); // ensure we can read it from m1.
+//    spyDataChanged.clear();
+//    m2->removeItem(todo.id());
+//    QTRY_VERIFY(spyDataChanged.count() || (spyRemoved.count() == 1)); // check that we received the remove signal.
 #endif
 }
 
@@ -4028,11 +4019,6 @@ void tst_QOrganizerManager::collections()
 
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> oim(QOrganizerManager::fromUri(uri));
-
-    // XXX TODO: add this feature in 1.2.0 (and other features as required)
-    //if (!oim->hasFeature(QOrganizerManager::MutableCollections)) {
-    //    QSKIP("This manager does not support mutable collections!", SkipSingle);
-    //}
 
     // delete all collections in the database so that we know there can be no interference from previous test runs.
     QList<QOrganizerCollection> allCollections = oim->collections();

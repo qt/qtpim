@@ -812,24 +812,6 @@ QOrganizerCollection QOrganizerManager::compatibleCollection(const QOrganizerCol
 }
 
 /*!
-  \enum QOrganizerManager::ManagerFeature
-  This enum describes the possible features that a particular manager may support
-  \value MutableDefinitions The manager supports saving, updating or removing detail definitions.  Some built-in definitions may still be immutable
-  \value ChangeLogs The manager supports reporting of timestamps of changes, and filtering and sorting by those timestamps
-  \value Anonymous The manager is isolated from other managers
-  \since 1.1
- */
-
-/*!
-  Returns true if the given feature \a feature is supported by the manager, for the specified type of organizer item \a organizeritemType
-  \since 1.1
- */
-bool QOrganizerManager::hasFeature(QOrganizerManager::ManagerFeature feature, const QString& organizeritemType) const
-{
-    return d->m_engine->hasFeature(feature, organizeritemType);
-}
-
-/*!
   Returns true if the given \a filter is supported natively by the
   manager, and false if the filter behaviour would be emulated.
 

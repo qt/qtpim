@@ -232,7 +232,6 @@ public:
     virtual bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool hasFeature(QOrganizerManager::ManagerFeature feature, const QString& organizeritemType) const;
     virtual bool isFilterSupported(const QOrganizerItemFilter& filter) const;
     /*! \reimp */
     virtual QStringList supportedItemTypes() const

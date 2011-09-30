@@ -92,7 +92,6 @@ All engines must implement the following functions:
   \o QOrganizerManagerEngine::managerName()
   \o QOrganizerManagerEngine::managerVersion()
   \o QOrganizerManagerEngine::supportedItemTypes()
-  \o QOrganizerManagerEngine::hasFeature()
   \o QOrganizerManagerEngine::itemIds()
   \o QOrganizerManagerEngine::items()
   \o QOrganizerManagerEngine::itemsForExport()

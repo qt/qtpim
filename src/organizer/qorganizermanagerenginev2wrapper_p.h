@@ -197,11 +197,6 @@ public:
             QOrganizerManager::Error* error) const {
         return m_engine->validateCollection(collection, error);
     }
-    bool hasFeature(
-            QOrganizerManager::ManagerFeature feature,
-            const QString& itemType) const {
-        return m_engine->hasFeature(feature, itemType);
-    }
     bool isFilterSupported(const QOrganizerItemFilter& filter) const {
         return m_engine->isFilterSupported(filter);
     }

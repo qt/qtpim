@@ -198,7 +198,6 @@ public:
     bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 
     /* Capabilities reporting */
-    bool hasFeature(QOrganizerManager::ManagerFeature feature, const QString& itemType) const;
     bool isFilterSupported(const QOrganizerItemFilter& filter) const;
     QList<int> supportedDataTypes() const;
     QStringList supportedItemTypes() const;

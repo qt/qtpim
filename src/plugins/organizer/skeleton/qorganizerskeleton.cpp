@@ -689,9 +689,8 @@ bool QOrganizerItemSkeletonEngine::saveCollection(QOrganizerCollection* collecti
     /*
         TODO
 
-        This allows clients to create or update collections if the backend supports
-        mutable collections.  If the backend does support mutable collections, it
-        should report that it supports the MutableCollections manager feature.
+        This allows clients to create or update collections if supported by the
+        backend.
      */
     return QOrganizerManagerEngine::saveCollection(collection, error);
 }
@@ -701,9 +700,7 @@ bool QOrganizerItemSkeletonEngine::removeCollection(const QOrganizerCollectionId
     /*
         TODO
 
-        This allows clients to remove collections if the backend supports mutable
-        collections.  If the backend does support mutable collections, it should
-        report that it supports the MutableCollections manager feature.
+        This allows clients to remove collections if supported by the backend.
 
         When a collection is removed, all items in the collection are removed.
         That is, they are _not_ transferred to another collection.

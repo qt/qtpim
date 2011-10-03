@@ -279,7 +279,7 @@ Flickable
                                  anchors { verticalCenter: parent.verticalCenter }
                                  border { color: "black"; width: 1; }
                                  visible: (hourDelegateInstanceItem.rowIndex == Qt.formatTime(itemText.oi.itemStartTime, "hh")) ? true : false
-                                 color: calendar.organizer.collection(itemText.oi.collectionId).color//colorize(calendar.organizer.collection(itemText.oi.collectionId));//colorize();//
+                                 color: calendar.organizer.collection(itemText.oi.collectionId)? calendar.organizer.collection(itemText.oi.collectionId).color : "red"//colorize(calendar.organizer.collection(itemText.oi.collectionId));//colorize();//
 //                                 function colorize(collection) {
 //                                     console.log(collection)
 //                                     return collection ? collection.color : "black";

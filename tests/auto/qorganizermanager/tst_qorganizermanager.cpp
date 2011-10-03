@@ -202,6 +202,8 @@ private slots:
     void fetchHint();
     void testFilterFunction();
     void testReminder();
+    void testIntersectionFilter();
+    void testUnionFilter();
 #if defined(QT_NO_JSONDB)
     void testItemOccurrences();
     void errorSemantics();
@@ -245,6 +247,8 @@ private slots:
 #endif
     void idComparison_data() {addManagers();}
     void testReminder_data() {addManagers();}
+    void testIntersectionFilter_data() {addManagers();}
+    void testUnionFilter_data() {addManagers();}
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
 #if defined(QT_NO_JSONDB)
@@ -4728,6 +4732,198 @@ void tst_QOrganizerManager::testReminder()
     oim->saveItem (&bigEvent);
     fetchedItems = oim->items();
     QVERIFY(fetchedItems.contains(bigEvent));
+}
+
+void tst_QOrganizerManager::testIntersectionFilter()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+
+    //prepare filter data
+    QOrganizerCollection c1;
+    QOrganizerCollection c2;
+    mgr->saveCollection(&c1);
+    mgr->saveCollection(&c2);
+    QOrganizerItem event1;
+    event1.setType("Event");
+    QOrganizerItem event2;
+    event2.setType("Event");
+    event1.setCollectionId(c1.id());
+    event2.setCollectionId(c2.id());
+    mgr->saveItem(&event1);
+    mgr->saveItem(&event2);
+    //Test intersection filter with 2 different collection filter
+    QOrganizerItemCollectionFilter cf1;
+    cf1.setCollectionId(c1.id());
+    QOrganizerItemCollectionFilter cf2;
+    cf2.setCollectionId(c2.id());
+    QOrganizerItemIntersectionFilter isf;
+    isf.append(cf1);
+    isf.append(cf2);
+    QList<QOrganizerItem> itemList = mgr->items(cf1);
+    QCOMPARE(itemList.size(), 1);
+    QCOMPARE(itemList.at(0), event1);
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 0);
+
+    //Test intersection filter with 2 same collection filter
+    isf.remove(cf2);
+    cf2.setCollectionId(c1.id());
+    isf.append(cf2);
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 1);
+
+    //Test intersection filter with 2 collection filter and one of them is biger than another
+    isf.remove(cf2);
+    QSet<QOrganizerCollectionId> collectionList;
+    collectionList << c1.id() << c2.id();
+    cf2.setCollectionIds(collectionList);
+    isf.append(cf2);
+    isf.append(cf1);
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 1);
+
+    //Bad case: one empty filter
+    isf.remove(cf2);
+    cf2.setCollectionId(QOrganizerCollectionId());
+    isf.append(cf2);
+    QCOMPARE(isf.filters().size(), 2);
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 0);
+
+    //QOrganizerItemIdFilter test
+    QOrganizerItemIdFilter idFilter;
+    QList<QOrganizerItemId> ids;
+    QOrganizerItem event3;
+    event3.setType("Event");
+    mgr->saveItem(&event3);
+    ids << event1.id() << event3.id();
+    idFilter.setIds(ids);
+    itemList = mgr->items(idFilter);
+    QCOMPARE(itemList.size(), 2);
+    if (itemList.at(0).id() == event1.id()){
+        QCOMPARE(itemList.at(0), event1);
+        QCOMPARE(itemList.at(1), event3);
+    } else {
+        QCOMPARE(itemList.at(1), event1);
+        QCOMPARE(itemList.at(0), event3);
+    }
+    //a bad id inside the list
+    QOrganizerItem badEvent;
+    ids.prepend(badEvent.id());
+    idFilter.setIds(ids);
+    itemList = mgr->items(idFilter);
+    QCOMPARE(itemList.size(), 2);
+
+    //intersection filter contains QOrganizerItemIdFilter and QOrganizerItemCollectionFilter
+    cf2.setCollectionIds(collectionList);
+    isf.clear();
+    isf.append(cf2);//event1 event2
+    isf.append(idFilter);//event1 event3
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 1);
+    QCOMPARE(itemList.at(0), event1);//expect event1
+
+    //3 filters intersection
+    ids.clear();
+    ids.append(event1.id());
+    idFilter.setIds(ids);
+    isf.append(idFilter);//event1
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 1);
+
+    //empty intersection
+    ids.clear();
+    ids.append(event3.id());
+    idFilter.setIds(ids);
+    isf.append(idFilter);//event3
+    itemList = mgr->items(isf);
+    QCOMPARE(itemList.size(), 0);
+}
+
+void tst_QOrganizerManager::testUnionFilter()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+
+    //prepare filter data
+    QOrganizerCollection c1;
+    QOrganizerCollection c2;
+    mgr->saveCollection(&c1);
+    mgr->saveCollection(&c2);
+    QOrganizerItem event1;
+    event1.setType("Event");
+    QOrganizerItem event2;
+    event2.setType("Event");
+    event1.setCollectionId(c1.id());
+    event2.setCollectionId(c2.id());
+    mgr->saveItem(&event1);
+    mgr->saveItem(&event2);
+    //Test union filter with 2 different collection filter
+    QOrganizerItemCollectionFilter cf1;
+    cf1.setCollectionId(c1.id());
+    QOrganizerItemCollectionFilter cf2;
+    cf2.setCollectionId(c2.id());
+    QOrganizerItemUnionFilter unf;
+    unf.append(cf1);
+    unf.append(cf2);
+    QList<QOrganizerItem> itemList = mgr->items(cf1);
+    QCOMPARE(itemList.size(), 1);
+    QCOMPARE(itemList.at(0), event1);
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 2);
+
+    //Test union filter with 2 same collection filter
+    unf.remove(cf2);
+    cf2.setCollectionId(c1.id());
+    unf.append(cf2);
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 1);
+
+    //Test union filter with 2 collection filter and one of them is biger than another
+    unf.remove(cf2);
+    QSet<QOrganizerCollectionId> collectionList;
+    collectionList << c1.id() << c2.id();
+    cf2.setCollectionIds(collectionList);
+    unf.append(cf2);
+    unf.append(cf1);
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 2);
+
+    //Bad case: one empty filter
+    unf.remove(cf2);
+    cf2.setCollectionId(QOrganizerCollectionId());
+    unf.append(cf2);
+    QCOMPARE(unf.filters().size(), 2);
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 1);
+
+    //union filter contains QOrganizerItemIdFilter and QOrganizerItemCollectionFilter
+    QList<QOrganizerItemId> ids;
+    QOrganizerItemIdFilter idFilter;
+    QOrganizerItem event3;
+    event3.setType("Event");
+    mgr->saveItem(&event3);
+    ids << event3.id();
+    idFilter.setIds(ids);
+
+    cf2.setCollectionIds(collectionList);
+    unf.clear();
+    unf.append(cf2);//event1 event2
+    unf.append(idFilter);// event3
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 3);//expect event1 event2 event3
+
+    //3 filters union
+    QOrganizerItem event4;
+    event4.setType("Event");
+    mgr->saveItem(&event4);
+    ids.clear();
+    ids.append(event4.id());
+    idFilter.setIds(ids);
+    unf.append(idFilter);//event4
+    itemList = mgr->items(unf);
+    QCOMPARE(itemList.size(), 4);//expect event1 event2 event3 event4
 }
 
 void tst_QOrganizerManager::testTags()

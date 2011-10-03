@@ -379,8 +379,8 @@ void QDeclarativeOrganizerItemCompoundFilter::filters_append(QDeclarativeListPro
 {
     QDeclarativeOrganizerItemCompoundFilter* compoundFilter = static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object);
     compoundFilter->m_filters.append(filter);
-    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(filterChanged()));
-    emit compoundFilter->filterChanged();
+    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(valueChanged()));
+    emit compoundFilter->valueChanged();
 }
 
 int QDeclarativeOrganizerItemCompoundFilter::filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop)
@@ -397,7 +397,8 @@ QDeclarativeOrganizerItemFilter* QDeclarativeOrganizerItemCompoundFilter::filter
 void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop)
 {
     QDeclarativeOrganizerItemCompoundFilter* filter = static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object);
-    qDeleteAll(filter->m_filters);
-    filter->m_filters.clear();
-    emit filter->filterChanged();
+    if (!filter->m_filters.isEmpty()) {
+        filter->m_filters.clear();
+        emit filter->valueChanged();
+    }
 }

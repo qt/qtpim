@@ -1,39 +1,40 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the examples of the Qt Mobility Components.
+** This file is part of the test suite of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:BSD$
-** You may use this file under the terms of the BSD license as follows:
+** $QT_BEGIN_LICENSE:LGPL$
+** GNU Lesser General Public License Usage
+** This file may be used under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation and
+** appearing in the file LICENSE.LGPL included in the packaging of this
+** file. Please review the following information to ensure the GNU Lesser
+** General Public License version 2.1 requirements will be met:
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of Nokia Corporation and its Subsidiary(-ies) nor
-**     the names of its contributors may be used to endorse or promote
-**     products derived from this software without specific prior written
-**     permission.
+** In addition, as a special exception, Nokia gives you certain additional
+** rights. These rights are described in the Nokia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU General
+** Public License version 3.0 as published by the Free Software Foundation
+** and appearing in the file LICENSE.GPL included in the packaging of this
+** file. Please review the following information to ensure the GNU General
+** Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms and
+** conditions contained in a signed written agreement between you and Nokia.
+**
+**
+**
+**
+**
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
@@ -87,18 +88,7 @@ Item {
     Component {
         id: listViewDelegate
         Row {
-            property bool isEnabledInCollectionFilter: {
-                var ret = false;
-                if (organizer.filter == undefined) {
-                    ret = true;
-                } else {
-                    var list = organizer.filter.ids;
-                    if (list.indexOf(collectionId) != -1){
-                        ret = true;
-                    }
-                }
-                return ret;
-            }
+            property bool isEnabledInCollectionFilter: modelCollectionFilter.ids.indexOf(collectionId) != -1
             anchors { horizontalCenter: parent.horizontalCenter }
             spacing: 5
             Text {
@@ -142,43 +132,24 @@ Item {
     }
 
     function modifyCollectionFilter(enabled, index) {
-        //Currently we shall only have collection filter
-        var modelCollectionFilter = organizer.filter
-        if (modelCollectionFilter == undefined) {
-            //Create new filter
-            modelCollectionFilter = calendar.createEmptyItem("Collectionfilter");
-            var collectionList = organizer.collections;
-            var collectionFilterList = [];
-            if (false == enabled) {//add all ids to the list except the one is not enabled
-                for (var i = 0; i < collectionList.length; i++) {
-                    if (i != index)
-                        collectionFilterList.push(organizer.collections[i].collectionId);
-                }
-            }//We shall not have the case that enable==true
-            modelCollectionFilter.ids = collectionFilterList
-            //Update model filter
-            organizer.filter = modelCollectionFilter;
-
-        } else { //Update filter list
-            //Get exist filter id list,
-            var filterIdsList = modelCollectionFilter.ids;
-            var collectionId = organizer.collections[index].collectionId;
-            if (false == enabled) {
-                //If the enable is false, remove from the list if we found inside list
-                var filterIndex = filterIdsList.indexOf(collectionId);
-                if (filterIndex >= 0)
-                    filterIdsList.splice(filterIndex, 1);
-                else
-                    console.log("Warning: Collection id is not found in filter list" + collectionId);
-            } else {
-                //else if the enable is true, add this id in the filter list if we do not have it in list
-                if (filterIdsList.indexOf(collectionId) == -1)
-                    filterIdsList.push(collectionId);
-                else
-                    console.log("Warning: Collection id exists in filter list :" + collectionId);
-            }
-            //update model filter
-            modelCollectionFilter.ids = filterIdsList;
+        //Get exist filter id list,
+        var filterIdsList = modelCollectionFilter.ids;
+        //Collection id will be added or removed from filter
+        var collectionId = organizer.collections[index].collectionId;
+        var filterIndex = filterIdsList.indexOf(collectionId);
+        if (false == enabled) {
+            if (filterIndex >= 0) //If the enable is false, remove from the list if we found inside list
+                filterIdsList.splice(filterIndex, 1);
+            else
+                console.log("Warning: Collection id is not found in filter list" + collectionId);
+        } else {//Add this id in the filter list if we do not have it in list
+            if (filterIndex == -1)
+                filterIdsList.push(collectionId);
+            else
+                console.log("Warning: Collection id exists in filter list :" + collectionId);
         }
+        //Update model collection filter
+        modelCollectionFilter.ids = filterIdsList;
     }
 }
+

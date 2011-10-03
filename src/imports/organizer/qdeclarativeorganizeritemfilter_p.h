@@ -58,7 +58,7 @@ class QDeclarativeOrganizerItemFilter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(FilterType type READ type)
+    Q_PROPERTY(FilterType type READ type NOTIFY filterChanged)
 
     Q_ENUMS(FilterType)
     Q_FLAGS(MatchFlags)
@@ -114,11 +114,14 @@ QML_DECLARE_TYPE(QDeclarativeOrganizerItemFilter)
 class QDeclarativeOrganizerItemCompoundFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> filters READ filters)
+    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> filters READ filters NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
-    explicit QDeclarativeOrganizerItemCompoundFilter(QObject* parent = 0) : QDeclarativeOrganizerItemFilter(parent){}
+    explicit QDeclarativeOrganizerItemCompoundFilter(QObject* parent = 0) : QDeclarativeOrganizerItemFilter(parent)
+    {
+        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+    }
     virtual ~QDeclarativeOrganizerItemCompoundFilter() {}
     // 'READ' accessor for the filters, basically this is also a 'WRITE' accessor
     // as per QDeclarativeListProperty's design.
@@ -128,6 +131,9 @@ public:
     static int filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop);
     static QDeclarativeOrganizerItemFilter* filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop, int index);
     static void filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop);
+
+signals:
+    void valueChanged();
 
 protected:
     QList<QDeclarativeOrganizerItemFilter*> m_filters;

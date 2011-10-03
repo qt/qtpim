@@ -111,7 +111,8 @@ private:
     QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
 
     //Interpret the filter to Jsondb query string, return true if filter is valid.
-    bool filterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
+    bool singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
+    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
 
     //Get default collection ID from engine
     QString defaultCollectionId() const;

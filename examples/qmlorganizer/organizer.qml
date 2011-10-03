@@ -60,6 +60,23 @@ Rectangle {
 
         state: "MonthView";
 
+        CollectionFilter {
+            id: modelCollectionFilter
+            ids: {
+                var idList = [];
+                var list = organizer.collections;
+                for (var i = 0; i< list.length; i++) {
+                    idList.push(list[i].collectionId);
+                }
+                return idList;
+            }
+        }
+
+        IntersectionFilter {
+            id: intersectionFilter
+            filters: [modelCollectionFilter]
+        }
+
         SystemPalette { id: activePalette }
         property OrganizerModel organizer:OrganizerModel{
             id: organizer
@@ -68,6 +85,7 @@ Rectangle {
             startPeriod:'2009-01-01'
             endPeriod:'2012-12-31'
             autoUpdate:true
+            filter: intersectionFilter
             Component.onCompleted : {
                 if (managerName == "memory")
                     organizer.importItems(Qt.resolvedUrl("contents/test.ics"));
@@ -259,8 +277,6 @@ Rectangle {
                 return Qt.createQmlObject("import QtAddOn.organizer 2.0; Event { }", organizer);
             } else if (type == "Todo") {
                 return Qt.createQmlObject("import QtAddOn.organizer 2.0; Todo { }", organizer);
-            } else if (type == "Collectionfilter") {
-                return Qt.createQmlObject("import QtAddOn.organizer 2.0; CollectionFilter { }", organizer);
     //        } else if (type == "EventOccurrence") {
     //            return Qt.createQmlObject("import QtAddOn.organizer 2.0; EventOccurrence { }", organizer);
     //        } else if (type == "TodoOccurrence") {

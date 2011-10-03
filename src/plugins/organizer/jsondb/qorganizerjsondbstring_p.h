@@ -56,6 +56,7 @@ QTPIM_USE_NAMESPACE
 #define ITEM_IDS_QUERY_STRING(x) JsonDbString::kUuidStr + "=\"" + x + "\" | ";
 
 #define ITEM_COLLECTION_ID_QUERY_STRING    "[?" + QOrganizerJsonDbStr::ItemCollectionId + " in [\""
+#define ITEM_IDS_LIST_QUERY_STRING         "[?" + JsonDbString::kUuidStr + " in [\""
 
 class QOrganizerJsonDbStr
 {

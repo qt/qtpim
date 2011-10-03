@@ -52,7 +52,6 @@ Rectangle
     property variant audibleReminderdetail
     property variant visualReminderdetail
 
-
     onOpacityChanged: {
         // Is this view visible
         if (detailsView.opacity == 1) {
@@ -102,9 +101,9 @@ Rectangle
             customLimitDateRow.dateTimeRoller.setDateTime((rule.limit == null || typeof rule.limit == "number")? null : rule.limit);
 
             //Audible reminder
-            var audibleDetailList = item.details("audibleReminder");
-            if (audibleDetailList != undefined) {
-                audibleReminderdetail = item.detail("audibleReminder");
+            var audibleDetailList = item.details(Detail.AudibleReminder);
+            if (audibleDetailList.length > 0) {
+                audibleReminderdetail = item.detail(Detail.AudibleReminder);
                 audibleReminderCheckBox.setValue(true);
             } else {
                 audibleReminderdetail = emptyAudibleReminder;
@@ -112,9 +111,9 @@ Rectangle
             }
 
             //Visual reminder
-            var visualDetailList = item.details("visualReminder");
-            if (visualDetailList != undefined) {
-                visualReminderdetail = item.detail("visualReminder");
+            var visualDetailList = item.details(Detail.VisualReminder);
+            if (visualDetailList.length > 0) {
+                visualReminderdetail = item.detail(Detail.VisualReminder);
                 visualReminderCheckBox.setValue(true);
             } else {
                 visualReminderdetail = emptyVisualReminder;
@@ -156,6 +155,12 @@ Rectangle
                 //save item
                 saveButton.enabled = false;
                 calendar.currentDate = item.startDateTime;
+                if (item.detail(Detail.AudibleReminder)) {
+                    item.setDetail(audibleReminderdetail);
+                }
+                if (item.detail(Detail.VisualReminder)) {
+                    item.setDetail(visualReminderdetail);
+                }
                 calendar.organizer.saveItem(item);
                 calendar.state = "DayView";
                 saveButton.enabled = true;
@@ -165,7 +170,7 @@ Rectangle
             id: deleteButton
             visible: !isNewItem
             text: "Delete"
-            anchors { top: buttons.top; left: saveButton.right }
+            anchors { top: saveButton.top; left: saveButton.right }
             //anchors { top: parent.top; left: saveButton.right }
             width: parent.width / 2
             onClicked: {
@@ -180,6 +185,8 @@ Rectangle
         clip: true
         opacity: 0.8
         model: {
+            if (item == undefined)
+                return null;
             switch (item.type) {
                     case "Event" :
                         //temporary comment because recurrence is not supported yet
@@ -280,7 +287,7 @@ Rectangle
            label: "Frequency"
            height: visible? 100 :0
            visible: customRecurrenceRow.newValue
-           value: rule.frequency
+           value: rule? rule.frequency : 0
            valueSet: ["Invalid", "Daily", "Weekly", "Monthly", "Yearly"]
            onRollerChanged: {
                rule.frequency = customFrequencyRow.valueRoller.selectedValue();
@@ -304,7 +311,7 @@ Rectangle
                    rule.limit = customLimitDateRow.dateTimeRoller.selectedDateTime();
            }
            onVisibleChanged: {
-               if (!customRecurrenceLimitRow.newValue)
+               if (!customRecurrenceLimitRow.newValue && rule)
                    rule.limit = null;
            }
        }
@@ -317,9 +324,8 @@ Rectangle
                     audibleReminderdetail = emptyAudibleReminder;
                     //This function will create new detail
                     item.addDetail(audibleReminderdetail);
-                    audibleReminderdetail = item.detail("audibleReminder");
                 } else {
-                    var removeDetail = item.detail("audibleReminder");
+                    var removeDetail = item.detail(Detail.AudibleReminder);
                     item.removeDetail(removeDetail);
                 }
            }
@@ -345,7 +351,7 @@ Rectangle
                id: customAudibleReminderRepCountRow
                anchors.top: audibleReminderDataRowText.bottom
                label: "Repetition count"
-               value: audibleReminderdetail.repetitionCount
+               value: audibleReminderdetail? audibleReminderdetail.repetitionCount : 0
                onNewValueChanged: {
                    audibleReminderdetail.repetitionCount = newValue;
                }
@@ -354,7 +360,7 @@ Rectangle
                 id: customAudibleReminderRepDelayRow
                 anchors.top: customAudibleReminderRepCountRow.bottom
                 label: "Repetition delay"
-                value: audibleReminderdetail.repetitionDelay
+                value: audibleReminderdetail? audibleReminderdetail.repetitionDelay : 0
                 onNewValueChanged: {
                     audibleReminderdetail.repetitionDelay = newValue;
                 }
@@ -363,7 +369,7 @@ Rectangle
                 id: customAudibleReminderSecBeforeStartRow
                 anchors.top: customAudibleReminderRepDelayRow.bottom
                 label: "Seconds before start"
-                value: audibleReminderdetail.secondsBeforeStart
+                value: audibleReminderdetail? audibleReminderdetail.secondsBeforeStart : 0
                 onNewValueChanged: {
                     audibleReminderdetail.secondsBeforeStart = newValue;
                 }
@@ -371,7 +377,7 @@ Rectangle
             FieldRow {
                 anchors.top: customAudibleReminderSecBeforeStartRow.bottom
                 label: "Data url"
-                value: audibleReminderdetail.dataUrl
+                value: audibleReminderdetail? audibleReminderdetail.dataUrl : ""
                 onNewValueChanged: {
                     audibleReminderdetail.dataUrl = newValue;
                 }
@@ -385,9 +391,8 @@ Rectangle
                 if (newValue) {
                     visualReminderdetail = emptyVisualReminder;
                     item.addDetail(visualReminderdetail);
-                    visualReminderdetail = item.detail("visualReminder");
                 } else {
-                    var removeDetail = item.detail("visualReminder");
+                    var removeDetail = item.detail(Detail.VisualReminder);
                     item.removeDetail(removeDetail);
                 }
             }
@@ -412,7 +417,7 @@ Rectangle
                 id: customVisualReminderRepCountRow
                 anchors.top:  visualReminderDataRowText.bottom
                 label: "Repetition count"
-                value:  visualReminderdetail.repetitionCount
+                value:  visualReminderdetail? visualReminderdetail.repetitionCount : 0
                 onNewValueChanged: {
                     visualReminderdetail.repetitionCount = newValue;
                 }
@@ -421,7 +426,7 @@ Rectangle
                 id: customVisualReminderRepDelayRow
                 anchors.top: customVisualReminderRepCountRow.bottom
                 label: "Repetition delay"
-                value:  visualReminderdetail.repetitionDelay
+                value:  visualReminderdetail? visualReminderdetail.repetitionDelay : 0
                 onNewValueChanged: {
                      visualReminderdetail.repetitionDelay = newValue;
                 }
@@ -430,7 +435,7 @@ Rectangle
                 id: customVisualReminderSecBeforeStartRow
                 anchors.top: customVisualReminderRepDelayRow.bottom
                 label: "Seconds before start"
-                value: visualReminderdetail.secondsBeforeStart
+                value: visualReminderdetail? visualReminderdetail.secondsBeforeStart : 0
                 onNewValueChanged: {
                     visualReminderdetail.secondsBeforeStart = newValue;
                 }
@@ -439,7 +444,7 @@ Rectangle
                 id: customVisualReminderDataUrlRow
                 anchors.top: customVisualReminderSecBeforeStartRow.bottom
                 label: "Data url"
-                value: visualReminderdetail.dataUrl
+                value: visualReminderdetail? visualReminderdetail.dataUrl : ""
                 onNewValueChanged: {
                     visualReminderdetail.dataUrl = newValue;
                 }
@@ -447,7 +452,7 @@ Rectangle
             FieldRow {
                 anchors.top: customVisualReminderDataUrlRow.bottom
                 label: "Message"
-                value: visualReminderdetail.message
+                value: visualReminderdetail? visualReminderdetail.message : ""
                 onNewValueChanged: {
                     visualReminderdetail.message = newValue;
                 }

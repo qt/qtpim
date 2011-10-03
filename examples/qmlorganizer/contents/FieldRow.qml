@@ -68,7 +68,7 @@ Item {
             id: textEdit
             anchors { fill: parent; margins: 3}
             width: parent.width
-            text: value
+            text: value? value : ""
             wrapMode: TextEdit.Wrap
         }
     }

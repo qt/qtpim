@@ -66,7 +66,7 @@ Item {
         FieldRow {
             id: nameRow
             label: "Name"
-            value: collection.name
+            value: collection ? collection.name : ""
         }
 //        FieldRow {
 //            id: idRow
@@ -76,17 +76,17 @@ Item {
         FieldRow {
             id: descRow
             label: "Description"
-            value: collection.description
+            value: collection? collection.description : ""
         }
         FieldRow {
             id: colorRow
             label: "Color"
-            value: collection.color
+            value: collection? collection.color : ""
         }
         FieldRow {
             id: imageRow
             label: "Image"
-            value: collection.image
+            value: collection? collection.image : ""
         }
     }
 

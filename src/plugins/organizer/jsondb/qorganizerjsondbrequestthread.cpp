@@ -369,9 +369,9 @@ void QOrganizerJsonDbRequestThread::handleItemFetchRequest(QOrganizerItemFetchRe
 
     //Jsondb query [?type="com.nokia.mp.organizer.Item"]
     QString newJsonDbQuery = ALL_ITEM_QUERY_STRING;//"=\"OrganizerItem\"]";
-    //Apply Filter and get expression
+    //Apply Filter and get jsondb query expression
     QString filterString;
-    if (filterToJsondbQuery (fetchReq->filter(), filterString)) {
+    if (compoundFilterToJsondbQuery(fetchReq->filter(), filterString)) {
         newJsonDbQuery += filterString;
         int trId = m_jsonDb->query(newJsonDbQuery);
         m_requestMgr->addTransaction(fetchReq, trId);
@@ -394,8 +394,24 @@ void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFet
     //jsondb query [?type="com.nokia.mp.organizer.Item"][=_uuid]
     QString newJsonDbQuery = ALL_ITEM_QUERY_STRING;
     newJsonDbQuery += ITEM_ID_RESULT_STRING;
-    int trId = m_jsonDb->query(newJsonDbQuery);
-    m_requestMgr->addTransaction(idFetchReq, trId);
+
+    //Apply Filter and get jsondb query expression
+    QString filterString;
+    if (compoundFilterToJsondbQuery(idFetchReq->filter(), filterString)) {
+        newJsonDbQuery += filterString;
+        int trId = m_jsonDb->query(newJsonDbQuery);
+        m_requestMgr->addTransaction(idFetchReq, trId);
+    } else {
+        //Invalid filter means empty items list
+        QWaitCondition* waitCondition = m_requestMgr->waitCondition(idFetchReq);
+        QOrganizerManager::Error error = QOrganizerManager::BadArgumentError;
+        QList<QOrganizerItemId> itemIds;
+        m_requestMgr->removeRequest(idFetchReq);
+        QOrganizerManagerEngine::updateItemIdFetchRequest(idFetchReq, itemIds, error, QOrganizerAbstractRequest::FinishedState);
+        if (waitCondition)
+            waitCondition->wakeAll();
+    }
+
 }
 
 void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *fetchByIdReq)
@@ -570,7 +586,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerColl
         QOrganizerItemCollectionFilter collectonFilter;
         collectonFilter.setCollectionIds(removeCollectionIdValidSet);
         QString filterString;
-        filterToJsondbQuery(collectonFilter, filterString);
+        singleFilterToJsondbQuery(collectonFilter, filterString);
         jsondbQuery += filterString;
 
         //Send items remove request to jsondb
@@ -958,7 +974,56 @@ QOrganizerManager::Error QOrganizerJsonDbRequestThread::handleErrorResponse(cons
 
 }
 
-bool QOrganizerJsonDbRequestThread::filterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
+bool QOrganizerJsonDbRequestThread::compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
+{
+    bool isValidFilter = true;
+    switch (filter.type()) {
+    case QOrganizerItemFilter::IntersectionFilter: {
+        const QOrganizerItemIntersectionFilter isf(filter);
+        QList<QOrganizerItemFilter> filterList = isf.filters();
+        foreach (QOrganizerItemFilter filter, filterList){
+            //query filter1 filter2 filter3 ...
+            //query [?definition="value"][?definition="value"][?definition="value"]
+            QString filterStr;
+            if (singleFilterToJsondbQuery(filter, filterStr))
+                jsonDbQueryStr += filterStr;
+            else //For intersection filter, single filter invalid means empty result from jsondb query
+                isValidFilter = false;
+        }
+        break;
+    }
+    case QOrganizerItemFilter::UnionFilter: {
+        const QOrganizerItemUnionFilter uf(filter);
+        QList<QOrganizerItemFilter> filterList = uf.filters();
+        int validFilterCount = 0;
+        foreach (QOrganizerItemFilter filter, filterList){
+            //query filter1 filter2 filter3 ...
+            //query [?definition="value" | definition="value" | definition="value"]
+            QString filterStr;
+            if (singleFilterToJsondbQuery(filter, filterStr)) {
+                jsonDbQueryStr += filterStr;
+                validFilterCount ++;
+            } else {//For union filter, singel filter invalid means we could skip this filter
+                continue;
+            }
+        }
+        if (validFilterCount > 0)
+            jsonDbQueryStr.replace("][?", " | "); //replace the "][?" to " | "
+        else //no valid filter means empty item list from jsondb
+            isValidFilter = false;
+        break;
+    }
+    default:
+        isValidFilter = singleFilterToJsondbQuery(filter, jsonDbQueryStr);
+        break;
+    }
+    if (!isValidFilter)
+        jsonDbQueryStr.clear();
+
+    return isValidFilter;
+}
+
+bool QOrganizerJsonDbRequestThread::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr)
 {
     bool isValidFilter = true;
     switch (filter.type()) {
@@ -980,6 +1045,31 @@ bool QOrganizerJsonDbRequestThread::filterToJsondbQuery(const QOrganizerItemFilt
                 jsonDbQueryStr += "]]";
                 //change last "collection_uuid","]] to "collection_uuid"]]
                 jsonDbQueryStr.replace(",\"]]", "]]");
+            } else {
+                isValidFilter = false;
+            }
+        } else {
+            isValidFilter = false;
+        }
+        break;
+    }
+    case QOrganizerItemFilter::IdFilter: {
+        const QOrganizerItemIdFilter idf(filter);
+        const QList<QOrganizerItemId>& ids = idf.ids();
+        if (!ids.empty()) {
+            //query [?_uuid in ["uuid1", "uuid2", ...]]
+            jsonDbQueryStr = ITEM_IDS_LIST_QUERY_STRING;
+            int validIdCount = 0;
+            foreach (const QOrganizerItemId id, ids) {
+                if (!id.isNull()) {
+                    jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
+                    jsonDbQueryStr += "\",\""; // add "," between item ids
+                    validIdCount ++;
+                }
+            }
+            if (validIdCount > 0) {
+                jsonDbQueryStr += "]]";
+                jsonDbQueryStr.replace(",\"]]", "]]"); //change last "uuid","]] to "uuid"]]
             } else {
                 isValidFilter = false;
             }

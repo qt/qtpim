@@ -77,10 +77,10 @@ function extendYearModel(init) {
 
     //extends backward
     if (yearList.currentIndex == 0) {
-        if (start == 1900)
-             break;
         for (var i = 0; i < 10; i ++) {
             start--;
+            if (start == 1900)
+                 break;
             yearModel.insert(1, {"year" : start});
         }
         yearModel.move(0, 10, 1);

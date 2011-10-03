@@ -6,5 +6,10 @@ OTHER_FILES += testcases/addEvent.qml \
     testcases/tst_detailfilter.qml \
     testcases/tst_organizeritems.qml \
     testcases/tst_organizermodel.qml \
-    testcases/tst_collection.qml
+    testcases/tst_collection.qml \
+    testcases/tst_organizeraudiblereminder.qml \
+    testcases/tst_organizervisualreminder.qml \
+    testcases/tst_organizeremailreminder.qml \
+    testcases/tst_organizercollectionfilter.qml \
+    testcases/tst_organizerunionfilter.qml
 include (../qmlauto.pri)

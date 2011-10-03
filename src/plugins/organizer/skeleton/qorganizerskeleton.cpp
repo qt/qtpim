@@ -811,18 +811,6 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedF
     return QList<QOrganizerItemFilter::FilterType>();
 }
 
-QList<int> QOrganizerItemSkeletonEngine::supportedDataTypes() const
-{
-    QList<int> ret;
-    // TODO - tweak which data types this engine understands
-    ret << QVariant::String;
-    ret << QVariant::Date;
-    ret << QVariant::DateTime;
-    ret << QVariant::Time;
-
-    return ret;
-}
-
 QStringList QOrganizerItemSkeletonEngine::supportedItemDetails(const QString &itemType) const
 {
     // TODO - return which [predefined] details this engine supports for this item type

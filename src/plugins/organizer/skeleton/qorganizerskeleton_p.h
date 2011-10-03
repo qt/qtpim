@@ -199,7 +199,6 @@ public:
 
     /* Capabilities reporting */
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    QList<int> supportedDataTypes() const;
     QStringList supportedItemDetails(const QString &itemType) const;
     QStringList supportedItemTypes() const;
 

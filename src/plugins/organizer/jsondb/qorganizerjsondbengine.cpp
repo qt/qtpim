@@ -481,18 +481,6 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
     return supported;
 }
 
-QList<int> QOrganizerJsonDbEngine::supportedDataTypes() const
-{
-    QList<int> ret;
-    // TODO - tweak which data types this engine understands
-    ret << QVariant::String;
-    ret << QVariant::Date;
-    ret << QVariant::DateTime;
-    ret << QVariant::Time;
-
-    return ret;
-}
-
 QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType) const
 {
     QStringList supportedDetails;

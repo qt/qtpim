@@ -45,12 +45,31 @@ import QtAddOn.contacts 2.0
 
 Item {
     id:myModel;
-    property ContactModel model
-    property Contact myContact : Contact {id:myContact;PhoneNumber {number: "";}}
-    property Contact mycontact2 : Contact {id:mycontact2;PhoneNumber {number: "";contexts:["Home"];subTypes:[PhoneNumber.Mobile]} Organization {name: "";assistantName:"";}}
+    property ContactModel model;
+
+    property Contact myContact : Contact {
+        id:myContact;
+        PhoneNumber {
+            number: ""
+        }
+    }
+
+    property Contact mycontact2 : Contact {
+        id:mycontact2
+        PhoneNumber {
+            number: ""
+            contexts:["Home"]
+            subTypes:[PhoneNumber.Mobile]
+        }
+        Organization {
+            name: ""
+            assistantName:""
+        }
+    }
 
     function addContacts(contactsData)
     {
+        console.log("contactsTestHelper.addContacts: " + contactsData.length + " contacts");
         for (var index=0; index < contactsData.length; index++){
             var contactData = contactsData[index]
             myModel.myContact.name.firstName = contactData.firstName;
@@ -82,15 +101,18 @@ Item {
         return model.contacts
     }
 
-    //Empty contact datadabase
     function emptyContactsDb () {
+        console.log("contactsTestHelper.emptyContactsDb");
         var id;
         var temp = model.contacts.length;
         for (var i = 0; i < temp; i++) {
             id = model.contacts[0].contactId;
-            model.removeContact (id);
-            console.log("----------------------------"+id)
+            model.removeContact(id);
+            console.log("contactsTestHelper.emptyContactsDb: remove " + id);
             contactsChangedSpy.wait();
+        }
+        if (model.contacts.length > 0) {
+            console.log("contactsTestHelper.emptyContactsDb: Failed to empty Db");
         }
     }
 }

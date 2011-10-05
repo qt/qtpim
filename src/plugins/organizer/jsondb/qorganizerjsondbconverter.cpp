@@ -296,8 +296,9 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         if (endTime.isValid ())
             event->setEndDateTime(endTime);
 
-        if (object.value(QOrganizerJsonDbStr::EventIsAllDay).toBool())
-            event->setAllDay(true);
+        QVariant isAllDay = object.value(QOrganizerJsonDbStr::EventIsAllDay);
+        if (!isAllDay.isNull())
+            event->setAllDay(isAllDay.toBool());
 
         if (object.contains(QOrganizerJsonDbStr::ItemPriority)) {
             QString priority = object.value(QOrganizerJsonDbStr::ItemPriority).toString();
@@ -368,7 +369,6 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     QSet<QDate> exceptionDates;
 
     if (item.type() == QOrganizerItemType::TypeEvent) {
-
         QOrganizerEvent event = static_cast<QOrganizerEvent>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Event);
         object->insert(QOrganizerJsonDbStr::EventStartDateTime, event.startDateTime().toString(Qt::ISODate));
@@ -379,7 +379,6 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         recurrenceDates = event.recurrenceDates();
         exceptionDates = event.exceptionDates();
     } else if (item.type() == QOrganizerItemType::TypeTodo) {
-
         QOrganizerTodo todo = static_cast<QOrganizerTodo>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Todo);
         object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todo.startDateTime().toString(Qt::ISODate));

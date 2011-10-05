@@ -486,7 +486,7 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
     QStringList supportedDetails;
     supportedDetails << QOrganizerItemType::DefinitionName
                      << QOrganizerItemGuid::DefinitionName
-                     << QOrganizerItemTimestamp::DefinitionName
+//                     << QOrganizerItemTimestamp::DefinitionName
                      << QOrganizerItemDisplayLabel::DefinitionName
                      << QOrganizerItemDescription::DefinitionName
                      << QOrganizerItemComment::DefinitionName
@@ -506,7 +506,7 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
         supportedDetails << QOrganizerItemRecurrence::DefinitionName
                          << QOrganizerTodoTime::DefinitionName
                          << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerTodoProgress::DefinitionName
+//                         << QOrganizerTodoProgress::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
                          << QOrganizerItemAudibleReminder::DefinitionName
                          << QOrganizerItemEmailReminder::DefinitionName

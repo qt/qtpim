@@ -40,9 +40,6 @@
 ****************************************************************************/
 
 #include "qorganizerskeleton_p.h"
-#include "qtorganizer.h"
-
-//QTM_USE_NAMESPACE
 
 QOrganizerManagerEngine* QOrganizerItemSkeletonFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
 {
@@ -618,31 +615,6 @@ bool QOrganizerItemSkeletonEngine::removeItems(const QList<QOrganizerItemId>& it
     */
     return QOrganizerManagerEngine::removeItems(itemIds, errorMap, error);
 }
-
-QMap<QString, QOrganizerItemDetailDefinition> QOrganizerItemSkeletonEngine::detailDefinitions(const QString& itemType, QOrganizerManager::Error* error) const
-{
-    /* TODO - once you know what your engine will support, implement this properly.  One way is to call the base version, and add/remove things as needed */
-    return QOrganizerManagerEngine::detailDefinitions(itemType, error);
-}
-
-QOrganizerItemDetailDefinition QOrganizerItemSkeletonEngine::detailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error) const
-{
-    /* TODO - the default implementation just calls the base detailDefinitions function.  If that's inefficent, implement this */
-    return QOrganizerManagerEngine::detailDefinition(definitionId, itemType, error);
-}
-
-bool QOrganizerItemSkeletonEngine::saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType, QOrganizerManager::Error* error)
-{
-    /* TODO - if you support adding custom fields, do that here.  Otherwise call the base functionality. */
-    return QOrganizerManagerEngine::saveDetailDefinition(def, itemType, error);
-}
-
-bool QOrganizerItemSkeletonEngine::removeDetailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error)
-{
-    /* TODO - if you support removing custom fields, do that here.  Otherwise call the base functionality. */
-    return QOrganizerManagerEngine::removeDetailDefinition(definitionId, itemType, error);
-}
-
 
 QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerManager::Error* error) const
 {

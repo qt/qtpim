@@ -64,23 +64,22 @@
 #include <QString>
 #include <QObject>
 
-#include "qorganizeritem.h"
-#include "qorganizermanager.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizermanagerenginefactory.h"
-#include "qorganizeritemdetaildefinition.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemchangeset.h"
-#include "qorganizeritemengineid.h"
-#include "qorganizercollectionengineid.h"
+#include <qorganizeritem.h>
+#include <qorganizermanager.h>
+#include <qorganizermanagerengine.h>
+#include <qorganizermanagerenginefactory.h>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritemengineid.h>
+#include <qorganizercollectionengineid.h>
 
-QTM_USE_NAMESPACE
+QTPIM_USE_NAMESPACE
 
 class QOrganizerItemSkeletonFactory : public QObject, public QOrganizerManagerEngineFactory
 {
-  Q_OBJECT
-  Q_INTERFACES(QtMobility::QOrganizerManagerEngineFactory)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(QtAddOn::Pim::QOrganizerManagerEngineFactory)
+
+public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
     QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
     QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
@@ -184,12 +183,6 @@ public:
     bool saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     bool removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QOrganizerItemDetailDefinition> detailDefinitions(const QString& itemType, QOrganizerManager::Error* error) const;
-    QOrganizerItemDetailDefinition detailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error) const;
-    bool saveDetailDefinition(const QOrganizerItemDetailDefinition& def, const QString& itemType, QOrganizerManager::Error* error);
-    bool removeDetailDefinition(const QString& definitionId, const QString& itemType, QOrganizerManager::Error* error);
-
     /* Collections - every item belongs to exactly one collection */
     QOrganizerCollection defaultCollection(QOrganizerManager::Error* error) const;
     QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const;
@@ -215,4 +208,3 @@ private:
 };
 
 #endif
-

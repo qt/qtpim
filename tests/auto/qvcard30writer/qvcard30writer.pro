@@ -1,7 +1,5 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.versit.libs}
-
 QT += versit versit-private
 
 DEFINES += QT_ASCII_CAST_WARNINGS

@@ -1,7 +1,6 @@
 include(../../auto.pri)
 
 TARGET = tst_qcontactasync
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
 
 QT += contacts
 

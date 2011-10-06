@@ -1,6 +1,6 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
+unix:QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
 
 QT += contacts
 

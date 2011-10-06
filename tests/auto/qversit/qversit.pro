@@ -1,7 +1,5 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.versit.libs}
-
 QT += contacts organizer versit versitorganizer versit-private
 
 #symbian*: {

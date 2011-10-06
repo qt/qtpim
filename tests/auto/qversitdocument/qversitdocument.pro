@@ -1,7 +1,5 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.versit.libs}
-
 QT += versit
 
 HEADERS += tst_qversitdocument.h

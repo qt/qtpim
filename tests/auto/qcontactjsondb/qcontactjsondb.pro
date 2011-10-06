@@ -1,7 +1,5 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
-
 QT += contacts contacts-private jsondb jsondb-private
 
 SOURCES += tst_qcontactjsondbengine.cpp \

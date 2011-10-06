@@ -84,4 +84,4 @@ maemo6 {
     INSTALLS += pkgconfig
 }
 
-HEADERS += qtversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += qtaddonversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

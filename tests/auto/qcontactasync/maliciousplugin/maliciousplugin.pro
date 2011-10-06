@@ -4,8 +4,6 @@ DESTDIR = $$QT.contacts.plugins/contacts
 
 qtAddLibrary(QtTest)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
-
 QT += contacts
 
 DEFINES += MALICIOUSPLUGINTARGET=contacts_maliciousplugin

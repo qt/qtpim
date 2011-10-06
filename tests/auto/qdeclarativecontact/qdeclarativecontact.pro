@@ -1,7 +1,5 @@
 include(../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
-
 QT += contacts declarative versit
 
 DEFINES+=IGNORE_METAOBJECTBUILDER_EXPORT 

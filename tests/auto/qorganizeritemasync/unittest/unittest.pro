@@ -1,7 +1,6 @@
 include(../../auto.pri)
 
 TARGET = tst_qorganizeritemasync
-QMAKE_LIBS += -Wl,-rpath,$${QT.organizer.libs}
 
 QT += organizer
 

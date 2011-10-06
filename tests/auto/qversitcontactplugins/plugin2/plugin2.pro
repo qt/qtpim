@@ -6,6 +6,3 @@ DESTDIR = $$QT.versit.plugins/versit
 QT += contacts versit
 SOURCES += plugin2.cpp
 HEADERS += plugin2.h
-
-include(../../versit_plugins.pri)
-

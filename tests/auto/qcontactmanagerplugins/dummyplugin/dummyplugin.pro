@@ -11,5 +11,3 @@ HEADERS += dummyplugin.h
 
 DEFINES += DUMMYPLUGINNAME=testdummy
 
-include(../../contacts_plugins.pri)
-

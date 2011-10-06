@@ -63,7 +63,7 @@
 #      define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
 #    endif
 #  elif defined(QT_DLL)
-#    define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
+#    define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
 #  endif
 #endif
 

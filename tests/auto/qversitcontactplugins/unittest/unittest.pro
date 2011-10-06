@@ -1,7 +1,6 @@
 include(../../auto.pri)
 
 TARGET = tst_qversitcontactplugins
-QMAKE_LIBS += -Wl,-rpath,$${QT.versit.libs}
 
 QT += contacts versit
 

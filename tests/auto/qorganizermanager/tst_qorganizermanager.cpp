@@ -4473,19 +4473,23 @@ void tst_QOrganizerManager::testCustomDetail()
     // simple string
     QOrganizerItemCustomDetail basicString;
     basicString.setName(QStringLiteral("basic-string"));
-    basicString.setData(QStringLiteral("Qt Everywhere"));
+    basicString.setData(QString(QStringLiteral("Qt Everywhere")));
     event.saveDetail(&basicString);
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
     basicString = event.detail<QOrganizerItemCustomDetail>();
-    QCOMPARE(basicString.name(), QStringLiteral("basic-string"));
-    QCOMPARE(basicString.data().toString(), QStringLiteral("Qt Everywhere"));
+    QCOMPARE(basicString.name(), QLatin1String("basic-string"));
+    QCOMPARE(basicString.data().toString(), QLatin1String("Qt Everywhere"));
 
     // simple list
     QOrganizerItemCustomDetail basicList;
     basicList.setName(QStringLiteral("basic-list"));
-    basicList.setData(QVariantList() << QStringLiteral("data 1") << QStringLiteral("data 2") << 3);
+    QVariantList basicListData;
+    basicListData << QString(QStringLiteral("data 1"))
+                  << QString(QStringLiteral("data 2"))
+                  << QVariant(3);
+    basicList.setData(basicListData);
     event.saveDetail(&basicList);
     QVERIFY(mgr->saveItem(&event));
 
@@ -4496,8 +4500,8 @@ void tst_QOrganizerManager::testCustomDetail()
         if (customDetail.name() == QStringLiteral("basic-list")) {
             QVariantList data = customDetail.data().toList();
             QCOMPARE(data.size(), 3);
-            QCOMPARE(data.at(0).toString(), QStringLiteral("data 1"));
-            QCOMPARE(data.at(1).toString(), QStringLiteral("data 2"));
+            QCOMPARE(data.at(0).toString(), QLatin1String("data 1"));
+            QCOMPARE(data.at(1).toString(), QLatin1String("data 2"));
             QCOMPARE(data.at(2).toInt(), 3);
             break;
         }
@@ -4507,9 +4511,9 @@ void tst_QOrganizerManager::testCustomDetail()
     QOrganizerItemCustomDetail basicMap;
     basicMap.setName(QStringLiteral("basic map"));
     QVariantMap basicMapData;
-    basicMapData.insert(QStringLiteral("key1"), QStringLiteral("data-1"));
-    basicMapData.insert(QStringLiteral("key-2"), QStringLiteral("data2"));
-    basicMapData.insert(QStringLiteral("key_3"), 1989);
+    basicMapData.insert(QString(QStringLiteral("key1")), QString(QStringLiteral("data-1")));
+    basicMapData.insert(QString(QStringLiteral("key-2")), QString(QStringLiteral("data2")));
+    basicMapData.insert(QString(QStringLiteral("key_3")), QVariant(1989));
     basicMap.setData(basicMapData);
     event.saveDetail(&basicMap);
     QVERIFY(mgr->saveItem(&event));
@@ -4521,8 +4525,8 @@ void tst_QOrganizerManager::testCustomDetail()
         if (customDetail.name() == QStringLiteral("basic map")) {
             QVariantMap data = customDetail.data().toMap();
             QCOMPARE(data.size(), 3);
-            QCOMPARE(data.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
-            QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
+            QCOMPARE(data.value(QStringLiteral("key1")).toString(), QLatin1String("data-1"));
+            QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QLatin1String("data2"));
             QCOMPARE(data.value(QStringLiteral("key_3")).toInt(), 1989);
             break;
         }
@@ -4531,7 +4535,7 @@ void tst_QOrganizerManager::testCustomDetail()
     // map inside a list
     QOrganizerItemCustomDetail mapInList;
     mapInList.setName(QStringLiteral("map in list"));
-    mapInList.setData(QVariantList() << QStringLiteral("Qt is cute") << basicMapData);
+    mapInList.setData(QVariantList() << QString(QStringLiteral("Qt is cute")) << basicMapData);
     event.saveDetail(&mapInList);
     QVERIFY(mgr->saveItem(&event));
 
@@ -4542,11 +4546,11 @@ void tst_QOrganizerManager::testCustomDetail()
         if (customDetail.name() == QStringLiteral("map in list")) {
             QVariantList data = customDetail.data().toList();
             QCOMPARE(data.size(), 2);
-            QCOMPARE(data.at(0).toString(), QStringLiteral("Qt is cute"));
+            QCOMPARE(data.at(0).toString(), QLatin1String("Qt is cute"));
 
             QVariantMap map = data.at(1).toMap();
-            QCOMPARE(map.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
-            QCOMPARE(map.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
+            QCOMPARE(map.value(QStringLiteral("key1")).toString(), QLatin1String("data-1"));
+            QCOMPARE(map.value(QStringLiteral("key-2")).toString(), QLatin1String("data2"));
             QCOMPARE(map.value(QStringLiteral("key_3")).toInt(), 1989);
             break;
         }

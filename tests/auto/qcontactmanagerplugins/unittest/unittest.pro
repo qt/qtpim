@@ -1,7 +1,5 @@
 include(../../auto.pri)
 
-QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
-
 TARGET = tst_qcontactmanagerplugins
 QT += widgets contacts
 

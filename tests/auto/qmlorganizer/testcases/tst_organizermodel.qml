@@ -395,5 +395,27 @@ TestCase {
         obj.destroy()
         component.destroy()
     }
+
+    function test_organizermodel_error_data() {
+        return [
+            {tag: "memory backend", managerToBeTested: "memory"},
+            {tag: "jsondb backend", managerToBeTested: "jsondb"}
+        ]
+    }
+
+    function test_organizermodel_error(data) {
+        var spyWaitDelay = 200;
+        // Create and check that backend for the tests is available
+        var organizerModel = create_testobject("import QtQuick 2.0\n"
+            + "import QtAddOn.organizer 2.0\n"
+            + "OrganizerModel {\n"
+            + "  manager: '" + data.managerToBeTested + "'\n"
+            + "}\n");
+        wait(500);//needed so that OrganizerModel is initialised properly
+
+        organizerModel.removeCollection(organizerModel.defaultCollection().collectionId);
+        wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
+        compare(organizerModel.error, "PermissionsError");
+    }
 }
 

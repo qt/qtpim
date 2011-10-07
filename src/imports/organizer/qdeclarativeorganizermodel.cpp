@@ -76,6 +76,7 @@ public:
         m_occurrenceFetchRequest(0),
         m_startPeriod(QDateTime::currentDateTime()),
         m_endPeriod(QDateTime::currentDateTime()),
+        m_error(QOrganizerManager::NoError),
         m_autoUpdate(true),
         m_updatePending(false),
         m_componentCompleted(false),
@@ -105,10 +106,11 @@ public:
     QDateTime m_endPeriod;
     QList<QDeclarativeOrganizerCollection*> m_collections;
 
+    QOrganizerManager::Error m_error;
+
     bool m_autoUpdate;
     bool m_updatePending;
     bool m_componentCompleted;
-
     bool m_fullUpdate;
 };
 
@@ -392,6 +394,11 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
     connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
 
+    if (d->m_error != QOrganizerManager::NoError) {
+        d->m_error = QOrganizerManager::NoError;
+        emit errorChanged();
+    }
+
     emit managerChanged();
 }
 
@@ -471,7 +478,7 @@ int QDeclarativeOrganizerModel::itemCount() const
 QString QDeclarativeOrganizerModel::error() const
 {
     if (d->m_manager) {
-        switch (d->m_manager->error()) {
+        switch (d->m_error) {
         case QOrganizerManager::DoesNotExistError:
             return QLatin1String("DoesNotExist");
         case QOrganizerManager::AlreadyExistsError:
@@ -541,6 +548,11 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
             if (d->m_manager) {
                 if (d->m_manager->saveItems(&items)) {
                     update();
+                } else {
+                    if (d->m_error != d->m_manager->error()) {
+                        d->m_error = d->m_manager->error();
+                        emit errorChanged();
+                    }
                 }
             }
         }
@@ -639,6 +651,14 @@ QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganiz
         di = new QDeclarativeOrganizerItem(this);
     di->setItem(item);
     return di;
+}
+
+void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *request)
+{
+    if (request && d->m_error != request->error()) {
+        d->m_error = request->error();
+        emit errorChanged();
+    }
 }
 
 /*!
@@ -772,6 +792,7 @@ void QDeclarativeOrganizerModel::requestUpdated()
     QOrganizerItemFetchRequest* ifr = qobject_cast<QOrganizerItemFetchRequest*>(QObject::sender());
     if (ifr && ifr->isFinished()) {
         items = ifr->items();
+        checkError(ifr);
         ifr->deleteLater();
         d->m_fetchRequest = 0;
         d->m_updatePending = false;
@@ -779,6 +800,7 @@ void QDeclarativeOrganizerModel::requestUpdated()
         QOrganizerItemOccurrenceFetchRequest* iofr = qobject_cast<QOrganizerItemOccurrenceFetchRequest*>(QObject::sender());
         if (iofr && iofr->isFinished()) {
             items = iofr->itemOccurrences();
+            checkError(iofr);
             iofr->deleteLater();
         }
     }
@@ -852,6 +874,7 @@ void QDeclarativeOrganizerModel::itemsSaved()
                 addSorted(di);
             }
         }
+        checkError(req);
         req->deleteLater();
         emit errorChanged();
     }
@@ -921,7 +944,6 @@ void QDeclarativeOrganizerModel::itemsRemoved()
     if (d->m_autoUpdate) {
         QOrganizerItemRemoveRequest* req = qobject_cast<QOrganizerItemRemoveRequest*>(QObject::sender());
 
-
         if (req->isFinished()) {
             QList<QOrganizerItemId> ids = req->itemIds();
             QList<int> errorIds = req->errorMap().keys();
@@ -930,6 +952,7 @@ void QDeclarativeOrganizerModel::itemsRemoved()
                 if (!errorIds.contains(i))
                     removedIds << ids.at(i);
             }
+            checkError(req);
             if (!removedIds.isEmpty())
                 itemsRemoved(removedIds);
             req->deleteLater();
@@ -1032,6 +1055,7 @@ void QDeclarativeOrganizerModel::collectionsFetched()
                 delete toBeDeletedColl;
             }
         }
+        checkError(req);
         req->deleteLater();
         emit collectionsChanged();
     }
@@ -1059,6 +1083,7 @@ void QDeclarativeOrganizerModel::collectionSaved()
 {
     QOrganizerCollectionSaveRequest* req = qobject_cast<QOrganizerCollectionSaveRequest*>(QObject::sender());
     if (req->isFinished()) {
+        checkError(req);
         req->deleteLater();
     }
 }
@@ -1082,6 +1107,7 @@ void QDeclarativeOrganizerModel::collectionRemoved()
 {
     QOrganizerCollectionRemoveRequest* req = qobject_cast<QOrganizerCollectionRemoveRequest*>(QObject::sender());
     if (req->isFinished()) {
+        checkError(req);
         req->deleteLater();
     }
 }

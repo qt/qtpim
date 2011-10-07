@@ -191,6 +191,8 @@ private:
     bool itemHasReccurence(const QOrganizerItem& oi) const;
     void fetchOccurrences(const QOrganizerItem& item);
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
+    void checkError(const QOrganizerAbstractRequest *request);
+
     static void item_append(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item);
     static int  item_count(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p);
     static QDeclarativeOrganizerItem * item_at(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, int idx);

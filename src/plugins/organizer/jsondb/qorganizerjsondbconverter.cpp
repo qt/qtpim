@@ -135,6 +135,10 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsondbErrorToOrganizerError(
         error = QOrganizerManager::DoesNotExistError;
         break;
 
+    case JsonDbError::MissingTYPE://Remove no-exist item get this error from jsondb
+        error = QOrganizerManager::DoesNotExistError;
+        break;
+
     default:
         error = QOrganizerManager::UnspecifiedError;
         break;

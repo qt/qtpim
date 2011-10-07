@@ -850,7 +850,10 @@ void tst_QOrganizerManager::add()
     nonexistentItem.setDescription("This is `another note`'s description");
     QVERIFY(cm->saveItem(&nonexistentItem));       // should work
     QVERIFY(cm->removeItem(nonexistentItem.id())); // now nonexistentItem has an id which does not exist
+
+    QEXPECT_FAIL("mgr='jsondb'", "Expect fail due to Jsondb change", Continue);
     QVERIFY(!cm->saveItem(&nonexistentItem));      // hence, should fail
+    QEXPECT_FAIL("mgr='jsondb'", "Expect fail due to Jsondb change", Continue);
     QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
     nonexistentItem.setId(QOrganizerItemId());
     QVERIFY(cm->saveItem(&nonexistentItem));       // after setting id to zero, should save

@@ -152,13 +152,13 @@ Rectangle {
                 compare(model.itemCount, 1)
                 var savedEvent = fetchlist[0];
 
-                var detail = savedEvent.detail("emailReminder");
+                var detail = savedEvent.detail(Detail.EmailReminder);
                 verify(savedEvent != undefined)
                 verify(detail != undefined)
                 utility.compareReminderDetails(emailReminderDetail, detail);
 
                 //------update the detail test------//
-                var savedEventDetail = savedEvent.detail("emailReminder");
+                var savedEventDetail = savedEvent.detail(Detail.EmailReminder);
                 savedEventDetail.subject = "email subject";
                 savedEventDetail.body = "Hello! mail body!!!";
                 savedEventDetail.recipients = ["arecipients", "brecipients", "crecipients"];
@@ -173,6 +173,8 @@ Rectangle {
                 emailReminderDetail.secondsBeforeStart = 300;
                 emailReminderDetail.repetitionCount = -1;
 
+                savedEvent.setDetail(savedEventDetail);
+
                 model.saveItem(savedEvent);
                 organizerChangedSpy.wait();
                 model.update();
@@ -180,14 +182,14 @@ Rectangle {
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
                 var updatedEvent = fetchlist[0];
-                var updatedEventDetail = updatedEvent.detail("emailReminder");
+                var updatedEventDetail = updatedEvent.detail(Detail.EmailReminder);
                 verify(updatedEvent != undefined)
                 verify(updatedEventDetail != undefined)
                 utility.compareEvent(savedEvent, updatedEvent);
                 utility.compareReminderDetails(emailReminderDetail, updatedEventDetail);
 
                 //------remove the detail test------//
-                var removeEventDetail = updatedEvent.detail("emailReminder");
+                var removeEventDetail = updatedEvent.detail(Detail.EmailReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
                 organizerChangedSpy.wait();
@@ -196,10 +198,10 @@ Rectangle {
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
                 var detailRemovedEvent = fetchlist[0];
-                var detailRemovedEventDetailList = detailRemovedEvent.details("emailReminder");
-                if (detailRemovedEventDetailList != undefined)
-                    utility.outputDetail(detailRemovedEvent.detail("emailReminder"));
-                verify(detailRemovedEventDetailList == undefined)
+                var detailRemovedEventDetailList = detailRemovedEvent.details(Detail.EmailReminder);
+                if (detailRemovedEventDetailList.length > 0)
+                    utility.outputDetail(detailRemovedEvent.detail(Detail.EmailReminder));
+                verify(detailRemovedEventDetailList.length == 0)
                 verify(removeEventDetail != undefined)
 
                 organizerChangedSpy.clear();

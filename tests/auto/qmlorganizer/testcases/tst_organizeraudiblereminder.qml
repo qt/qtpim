@@ -144,12 +144,12 @@ Rectangle {
                 model.update();
                 var fetchlist = model.items;
                 var savedEvent = fetchlist[0];
-                verify (savedEvent != undefined);
-                verify (savedEvent.detail("audibleReminder") != undefined);
-                utility.compareReminderDetails(audibleReminderDetail, savedEvent.detail("audibleReminder"));
+                verify(savedEvent != undefined);
+                verify(savedEvent.detail(Detail.AudibleReminder) != undefined);
+                utility.compareReminderDetails(audibleReminderDetail, savedEvent.detail(Detail.AudibleReminder));
 
                 //------update the detail test------//
-                var savedEventDetail = savedEvent.detail("audibleReminder");
+                var savedEventDetail = savedEvent.detail(Detail.AudibleReminder);
                 savedEventDetail.dataUrl = "http://www.test222.com";
                 savedEventDetail.secondsBeforeStart = 300;
                 savedEventDetail.repetitionCount = -1;
@@ -158,6 +158,8 @@ Rectangle {
                 audibleReminderDetail.secondsBeforeStart = 300;
                 audibleReminderDetail.repetitionCount = -1;
 
+                savedEvent.setDetail(savedEventDetail);
+
                 model.saveItem(savedEvent);
                 organizerChangedSpy.wait();
                 model.update();
@@ -165,13 +167,13 @@ Rectangle {
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
                 var updatedEvent = fetchlist[0];
-                var updatedEventDetail = updatedEvent.detail("audibleReminder");
-                verify (updatedEvent != undefined);
+                var updatedEventDetail = updatedEvent.detail(Detail.AudibleReminder);
+                verify(updatedEvent != undefined);
                 utility.compareEvent(savedEvent, updatedEvent);
                 utility.compareReminderDetails(audibleReminderDetail, updatedEventDetail);
 
                 //------remove the detail test------//
-                var removeEventDetail = updatedEvent.detail("audibleReminder");
+                var removeEventDetail = updatedEvent.detail(Detail.AudibleReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
                 organizerChangedSpy.wait();
@@ -180,12 +182,12 @@ Rectangle {
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
                 var detailRemovedEvent = fetchlist[0];
-                var detailRemovedEventDetailList = detailRemovedEvent.details("audibleReminder");
-                if (detailRemovedEventDetailList != undefined)
-                    utility.outputDetail(detailRemovedEvent.detail("audibleReminder"));
-                verify(detailRemovedEventDetailList == undefined)
+                var detailRemovedEventDetailList = detailRemovedEvent.details(Detail.AudibleReminder);
+                if (detailRemovedEventDetailList.length > 0)
+                    utility.outputDetail(detailRemovedEvent.detail(Detail.AudibleReminder));
+                verify(detailRemovedEventDetailList.length == 0)
                 verify(removeEventDetail != undefined)
-                organizerChangedSpy.clear ();
+                organizerChangedSpy.clear();
                 organizerChangedSpy.destroy();
                 model.destroy();
                 event.destroy();

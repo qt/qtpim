@@ -152,12 +152,12 @@ Rectangle {
                 compare(model.itemCount, 1)
                 var fetchVisuallist = model.items;
                 var savedVisualEvent = fetchVisuallist[0];
-                verify (savedVisualEvent != undefined);
-                verify (savedVisualEvent.detail("visualReminder") != undefined);
-                utility.compareReminderDetails(visualReminderDetail, savedVisualEvent.detail("visualReminder"));
+                verify(savedVisualEvent != undefined);
+                verify(savedVisualEvent.detail(Detail.VisualReminder) != undefined);
+                utility.compareReminderDetails(visualReminderDetail, savedVisualEvent.detail(Detail.VisualReminder));
 
                 //------update the details test------//
-                var savedEventDetail = savedVisualEvent.detail("visualReminder");
+                var savedEventDetail = savedVisualEvent.detail(Detail.VisualReminder);
                 savedEventDetail.dataUrl = "http://www.test222.com";
                 savedEventDetail.message = "visual reminder message";
                 savedEventDetail.secondsBeforeStart = 300;
@@ -168,6 +168,8 @@ Rectangle {
                 visualReminderDetail.secondsBeforeStart = 300;
                 visualReminderDetail.repetitionCount = -1;
 
+                savedVisualEvent.setDetail(savedEventDetail);
+
                 model.saveItem(savedVisualEvent);
                 organizerChangedSpy.wait();
                 model.update();
@@ -176,14 +178,14 @@ Rectangle {
                 fetchVisuallist = model.items;
                 var updatedEvent = fetchVisuallist[0];
                 verify(updatedEvent != undefined);
-                verify(updatedEvent.detail("visualReminder") != undefined);
-                var updatedEventDetail = updatedEvent.detail("visualReminder");
+                verify(updatedEvent.detail(Detail.VisualReminder) != undefined);
+                var updatedEventDetail = updatedEvent.detail(Detail.VisualReminder);
                 utility.compareReminderDetails(savedEventDetail, updatedEventDetail);
                 utility.compareEvent(savedVisualEvent, updatedEvent);
                 utility.compareReminderDetails(visualReminderDetail, updatedEventDetail);
 
                 //------remove the details test------//
-                var removeEventDetail = updatedEvent.detail("visualReminder");
+                var removeEventDetail = updatedEvent.detail(Detail.VisualReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
                 organizerChangedSpy.wait();
@@ -192,12 +194,12 @@ Rectangle {
                 compare(model.itemCount, 1)
                 fetchVisuallist = model.items;
                 var detailRemovedEvent = fetchVisuallist[0];
-                var detailRemovedEventDetailList = detailRemovedEvent.details("visualReminder");
-                if (detailRemovedEventDetailList != undefined) {
-                    var detailRemovedEventDetail = detailRemovedEvent.detail("visualReminder");
-                    utility.outputEvent (detailRemovedEvent)
+                var detailRemovedEventDetailList = detailRemovedEvent.details(Detail.VisualReminder);
+                if (detailRemovedEventDetailList.length > 0) {
+                    var detailRemovedEventDetail = detailRemovedEvent.detail(Detail.VisualReminder);
+                    utility.outputEvent(detailRemovedEvent)
                 }
-                verify(detailRemovedEventDetailList == undefined);
+                verify(detailRemovedEventDetailList.length == 0);
                 verify(removeEventDetail != undefined)
                 organizerChangedSpy.clear();
                 organizerChangedSpy.destroy();

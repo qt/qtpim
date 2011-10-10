@@ -130,12 +130,12 @@ TestCase {
         console.log("organizer item id: " + event.itemId);
         console.log("audibleReminder:   ");
         //AudibleReminder
-        var eventDetail = event.detail("audibleReminder");
+        var eventDetail = event.detail(Detail.AudibleReminder);
         outputDetail(eventDetail);
 
-        eventDetail = event.detail("emailReminder");
+        eventDetail = event.detail(Detail.EmailReminder);
         outputDetail(eventDetail);
-        eventDetail = event.detail("visualReminder");
+        eventDetail = event.detail(Detail.VisualReminder);
         outputDetail(eventDetail);
     }
 
@@ -202,9 +202,9 @@ TestCase {
             console.log("compareEvent");
         }
         //Reminder compare
-        compareReminderDetails(event1.detail("audibleReminder"), event2.detail("audibleReminder"));
-        compareReminderDetails(event1.detail("visualReminder"), event2.detail("visualReminder"));
-        compareReminderDetails(event1.detail("emailReminder"), event2.detail("emailReminder"));
+        compareReminderDetails(event1.detail(Detail.AudibleReminder), event2.detail(Detail.AudibleReminder));
+        compareReminderDetails(event1.detail(Detail.VisualReminder), event2.detail(Detail.VisualReminder));
+        compareReminderDetails(event1.detail(Detail.EmailReminder), event2.detail(Detail.EmailReminder));
     }
 
     function compareList(a, b) {

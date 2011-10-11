@@ -109,6 +109,65 @@ property SignalSpy contactsChangedSpy
             component.destroy();
         }
 
+         Contact {
+            id: contactWithLastName1;
+            Name {
+                lastName: "A";
+            }
+        }
+
+        Contact {
+            id: contactWithLastName2;
+            Name {
+                lastName: "B";
+            }
+        }
+
+        function test_sortByLastName()
+        {
+            var component = Qt.createComponent("contactsTestHelper.qml")
+            var testHelper = component.createObject(top)
+            if (testHelper == undefined)
+            verify(testHelper != undefined, 'Unable to load component ' + name)
+
+            var model = Qt.createQmlObject(
+                    "import QtAddOn.contacts 2.0;" +
+                    "ContactModel {" +
+                    "id:model;" +
+                    "manager:\"jsondb\";" +
+                    "autoUpdate:true;" +
+                    "sortOrders: [" +
+                    "    SortOrder {" +
+                    "        detail: ContactDetail.Name;" +
+                    "        field: Name.LastName;" +
+                    "        direction: Qt.AscendingOrder;" +
+                    "    }" +
+                    "]" +
+                    "}",
+                    testHelper);
+            testHelper.model = model;
+
+            contactsChangedSpy = Qt.createQmlObject(
+                "import QtTest 1.0;" +
+                "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}",
+                testHelper);
+            contactsChangedSpy.target = model;
+            contactsChangedSpy.clear()
+
+            testHelper.emptyContactsDb();
+
+            model.saveContact(contactWithLastName2);
+            waitForContactsChanged()
+            model.saveContact(contactWithLastName1);
+            waitForContactsChanged()
+
+            compareContactArrays(model.contacts, [contactWithLastName1, contactWithLastName2]);
+
+            testHelper.emptyContactsDb();
+            testHelper.destroy();
+            component.destroy();
+        }
+
         function compareContactArrays(actual, expected) {
             compare(actual.length, expected.length, "length");
             for (var i = 0; i < expected.length; i++) {

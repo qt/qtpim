@@ -507,8 +507,8 @@ QString QDeclarativeOrganizerModel::error() const
             return QLatin1String("LimitReached");
         case QOrganizerManager::InvalidItemTypeError:
             return QLatin1String("InvalidItemType");
-            case QOrganizerManager::InvalidOccurrenceError:
-                return QLatin1String("InvalidOccurrence");
+        case QOrganizerManager::InvalidOccurrenceError:
+            return QLatin1String("InvalidOccurrence");
         default:
             break;
         }

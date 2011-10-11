@@ -54,13 +54,13 @@ class QDeclarativeContactAddress : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY fieldsChanged)
-    Q_PROPERTY(QString locality READ locality WRITE setLocality NOTIFY fieldsChanged)
-    Q_PROPERTY(QString region READ region WRITE setRegion  NOTIFY fieldsChanged)
-    Q_PROPERTY(QString postcode READ postcode WRITE setPostcode  NOTIFY fieldsChanged)
-    Q_PROPERTY(QString country READ country WRITE setCountry  NOTIFY fieldsChanged)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY fieldsChanged)
-    Q_PROPERTY(QString postOfficeBox READ postOfficeBox WRITE setPostOfficeBox  NOTIFY fieldsChanged)
+    Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY valueChanged)
+    Q_PROPERTY(QString locality READ locality WRITE setLocality NOTIFY valueChanged)
+    Q_PROPERTY(QString region READ region WRITE setRegion  NOTIFY valueChanged)
+    Q_PROPERTY(QString postcode READ postcode WRITE setPostcode  NOTIFY valueChanged)
+    Q_PROPERTY(QString country READ country WRITE setCountry  NOTIFY valueChanged)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY valueChanged)
+    Q_PROPERTY(QString postOfficeBox READ postOfficeBox WRITE setPostOfficeBox  NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(AddressSubType)
 public:
@@ -85,7 +85,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactAddress());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -120,7 +120,7 @@ public:
     {
         if (!readOnly() && v != street()) {
             detail().setValue(QContactAddress::FieldStreet, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString street() const {return detail().value(QContactAddress::FieldStreet);}
@@ -128,7 +128,7 @@ public:
     {
         if (!readOnly() && v != locality()) {
             detail().setValue(QContactAddress::FieldLocality, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString locality() const {return detail().value(QContactAddress::FieldLocality);}
@@ -136,7 +136,7 @@ public:
     {
         if (!readOnly() && v != region()) {
             detail().setValue(QContactAddress::FieldRegion, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString region() const {return detail().value(QContactAddress::FieldRegion);}
@@ -144,7 +144,7 @@ public:
     {
         if (!readOnly() && v != postcode()) {
             detail().setValue(QContactAddress::FieldPostcode, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString postcode() const {return detail().value(QContactAddress::FieldPostcode);}
@@ -152,7 +152,7 @@ public:
     {
         if (!readOnly() && v != country()) {
             detail().setValue(QContactAddress::FieldCountry, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString country() const {return detail().value(QContactAddress::FieldCountry);}
@@ -160,7 +160,7 @@ public:
     {
         if (!readOnly() && v != postOfficeBox()) {
             detail().setValue(QContactAddress::FieldPostOfficeBox, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString postOfficeBox() const {return detail().value(QContactAddress::FieldPostOfficeBox);}
@@ -194,7 +194,7 @@ public:
 
         if (!readOnly() && savedList.toSet() != oldList.toSet()) {
             detail().setValue(QContactAddress::FieldSubTypes, savedList);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
@@ -203,7 +203,7 @@ public:
         return QVariant::fromValue(detail().value<QStringList>(QContactAddress::FieldSubTypes));
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

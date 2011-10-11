@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactTag : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY fieldsChanged)
+    Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "tag")
 public:
@@ -63,7 +63,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactTag());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -84,12 +84,12 @@ public:
     {
         if (!readOnly() && v != tag()) {
             detail().setValue(QContactTag::FieldTag, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString tag() const {return detail().value(QContactTag::FieldTag);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

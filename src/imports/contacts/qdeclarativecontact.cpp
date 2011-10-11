@@ -42,9 +42,9 @@
 #include <qcontactdetails.h>
 #include <qcontactmanager.h>
 #include "qdeclarativecontact_p.h"
-#include "qdeclarativecontactdetail_p.h"
-#include "qdeclarativecontactmetaobject_p.h"
 #include "qdeclarativecontactmodel_p.h"
+
+#include <QtDeclarative/qdeclarativeengine.h>
 
 #include <QImage>
 #include <QUrl>
@@ -75,45 +75,58 @@
 QTCONTACTS_BEGIN_NAMESPACE
 
 QDeclarativeContact::QDeclarativeContact(QObject *parent)
-    :QObject(parent),
-    d(new QDeclarativeContactMetaObject(this, QContact()))
+    :QObject(parent)
+    , m_modified(false)
 {
-    connect(this, SIGNAL(detailsChanged()), SLOT(setModified()));
 }
 
-
 QDeclarativeContact::QDeclarativeContact(const QContact& contact, const QMap<QString, QContactDetailDefinition>& defs, QObject *parent)
-    :QObject(parent),
-    d(new QDeclarativeContactMetaObject(this, contact))
+    :QObject(parent)
 {
+    setContact(contact);
     setDetailDefinitions(defs);
-    connect(this, SIGNAL(detailsChanged()), SLOT(setModified()));
 }
 
 QDeclarativeContact::~QDeclarativeContact()
 {
-    delete d;
+    clearDetails();
 }
 
 void QDeclarativeContact::setDetailDefinitions(const QMap<QString, QContactDetailDefinition>& defs)
 {
-    d->m_defs = defs;
+    m_defs = defs;
 }
 
 QMap<QString, QContactDetailDefinition> QDeclarativeContact::detailDefinitions() const
 {
-    return d->m_defs;
+    return m_defs;
 }
 
 void QDeclarativeContact::setContact(const QContact& contact)
 {
-   d->setContact(contact);
-   d->m_modified = false;
+    m_id = contact.id();
+    foreach (QDeclarativeContactDetail *detail, m_details)
+        delete detail;
+    m_details.clear();
+    QList<QContactDetail> details(contact.details());
+    foreach (const QContactDetail &detail, details) {
+        QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail.definitionName());
+        contactDetail->setDetail(detail);
+        connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
+        m_details.append(contactDetail);
+    }
+
+    m_modified = false;
+    emit contactChanged();
 }
 
 QContact QDeclarativeContact::contact() const
 {
-    return d->contact();
+    QContact contact;
+    contact.setId(m_id);
+    foreach (QDeclarativeContactDetail *detail, m_details)
+        contact.saveDetail(&detail->detail());
+    return contact;
 }
 
 /*!
@@ -124,11 +137,7 @@ QContact QDeclarativeContact::contact() const
 */
 bool QDeclarativeContact::modified() const
 {
-     return d->m_modified;
-}
-void QDeclarativeContact::setModified()
-{
-     d->m_modified = true;
+     return m_modified;
 }
 
 /*!
@@ -141,37 +150,61 @@ void QDeclarativeContact::setModified()
     \o Contact.Group
     \endlist
 */
-void QDeclarativeContact::setType(QDeclarativeContact::ContactType newType)
+void QDeclarativeContact::setType(int newType)
 {
-    if (newType != type()) {
-        if (newType == QDeclarativeContact::Contact)
-            d->m_contact.setType(QContactType::TypeContact);
-        else if (newType == QDeclarativeContact::Group)
-            d->m_contact.setType(QContactType::TypeGroup);
-        emit detailsChanged();
+    bool found(false);
+    QDeclarativeContactType *contactType = 0;
+
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Type == detail->detailType()) {
+            contactType = static_cast<QDeclarativeContactType *>(detail);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        contactType = new QDeclarativeContactType(this);
+        m_details.append(contactType);
+    }
+
+    if ( contactType->type() != (static_cast<QDeclarativeContactType::ContactType>(newType)) ) {
+        contactType->setType(static_cast<QDeclarativeContactType::ContactType>(newType));
+        m_modified = true;
+        emit contactChanged();
     }
 }
 
-QDeclarativeContact::ContactType QDeclarativeContact::type() const
+QDeclarativeContactType::ContactType QDeclarativeContact::type() const
 {
-    if (d->m_contact.type() == QContactType::TypeGroup)
-        return QDeclarativeContact::Group;
-    return QDeclarativeContact::Contact;
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Type == detail->detailType())
+           return static_cast<QDeclarativeContactType *>(detail)->type();
+    }
+    return QDeclarativeContactType::Contact;
 }
 
 /*!
     \qmlmethod Contact::removeDetail(detail)
 
-    Removes the give contact \a detail from the contact, returns true if successful, otherwise returns false.
+    Removes the given contact \a detail from the contact, returns true if successful, otherwise returns false.
 */
 
 bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
 {
     if (detail) {
-        if (detail->removable()) {
-            d->m_details.removeAll(detail);
-            emit detailsChanged();
-            return true;
+        if (!detail->removable())
+            return false;
+        int key = detail->detail().key();
+        int i = 0;
+        foreach (QDeclarativeContactDetail *contactDetail, m_details) {
+            if (key == contactDetail->detail().key()) {
+                delete contactDetail;
+                m_details.removeAt(i);
+                emit contactChanged();
+                return true;
+            }
+        ++i;
         }
     }
     return false;
@@ -186,24 +219,30 @@ bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
 */
 bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
 {
-    if (detail) {
-        if (!d->m_details.contains(detail)) {
-            d->m_details.append(detail);
-            emit detailsChanged();
-        }
-        return true;
-    }
-    return false;
+    if (!detail)
+        return false;
+
+    QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
+    contactDetail->setDetail(detail->detail());
+    m_details.append(contactDetail);
+
+    m_modified = true;
+    emit contactChanged();
+    return true;
 }
 
 /*!
-    \qmlproperty list<ContactDetail> Contact::details
+    \qmlproperty list<ContactDetail> Contact::contactDetails
 
     This property holds the list of \l ContactDetail elements that the contact has.
 */
-QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::details()
+QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::contactDetails()
 {
-    return d->details(QString()).value< QDeclarativeListProperty<QDeclarativeContactDetail> >();
+    return QDeclarativeListProperty<QDeclarativeContactDetail>(this, 0,
+                                                                     &QDeclarativeContact::_q_detail_append,
+                                                                     &QDeclarativeContact::_q_detail_count,
+                                                                     &QDeclarativeContact::_q_detail_at,
+                                                                     &QDeclarativeContact::_q_detail_clear);
 }
 
 /*!
@@ -212,9 +251,9 @@ QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::details
     This property holds the id of the Contact object.
     This property is read only.
 */
-QContactLocalId QDeclarativeContact::contactId() const
+QString QDeclarativeContact::contactId() const
 {
-    return d->localId();
+    return m_id.localId();
 }
 
 /*!
@@ -224,33 +263,44 @@ QContactLocalId QDeclarativeContact::contactId() const
 */
 QString QDeclarativeContact::manager() const
 {
-    return d->contactId().managerUri();
+    return m_id.managerUri();
 }
 
 /*!
-    \qmlmethod ContactDetail Contact::detail(name)
+    \qmlmethod QDeclarativeContactDetail* QDeclarativeContact::detail(int type)
 
-    Returns ContactDetail object which detail name or detail type is \a name.
+    Returns contactDetail object which detail name or detail type is \a name.
 */
-QDeclarativeContactDetail* QDeclarativeContact::detail(const QVariant& name)
+QDeclarativeContactDetail* QDeclarativeContact::detail(int type)
 {
-    if (name.type() == QVariant::String)
-        return d->detail(name.toString()).value<QDeclarativeContactDetail*>();
-    else
-        return d->detail(static_cast<QDeclarativeContactDetail::ContactDetailType>(name.value<int>())).value<QDeclarativeContactDetail*>();
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (type == detail->detailType()) {
+            QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
+            QDeclarativeEngine::setObjectOwnership(contactDetail, QDeclarativeEngine::JavaScriptOwnership);
+            contactDetail->setDetail(detail->detail());
+            return contactDetail;
+        }
+    }
+    return 0;
 }
 
 /*!
-    \qmlmethod list<ContactDetail> Contact::details(name)
+    \qmlmethod QVariantList QDeclarativeContact::details(int type)
 
     Returns a list of ContactDetail objects which detail name or detail type is \a name.
 */
-QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::details(const QVariant& name)
+QVariantList QDeclarativeContact::details(int type)
 {
-    if (name.type() == QVariant::String)
-        return d->details(name.toString()).value< QDeclarativeListProperty<QDeclarativeContactDetail> >();
-    else
-        return d->details(static_cast<QDeclarativeContactDetail::ContactDetailType>(name.value<int>())).value< QDeclarativeListProperty<QDeclarativeContactDetail> >();
+    QVariantList list;
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (type == detail->detailType()) {
+            QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
+            QDeclarativeEngine::setObjectOwnership(contactDetail, QDeclarativeEngine::JavaScriptOwnership);
+            contactDetail->setDetail(detail->detail());
+            list.append(QVariant::fromValue((QObject*)contactDetail));
+        }
+    }
+    return list;
 }
 
 /*!
@@ -260,8 +310,14 @@ QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::details
 */
 void QDeclarativeContact::clearDetails()
 {
-    d->m_details.clear();
-    emit detailsChanged();
+    if (m_details.isEmpty())
+        return;
+
+    foreach (QDeclarativeContactDetail *detail, m_details)
+        delete detail;
+    m_details.clear();
+    m_modified = true;
+    emit contactChanged();
 }
 
 
@@ -278,19 +334,30 @@ void QDeclarativeContact::save()
         QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(parent());
         if (model) {
             model->saveContact(this);
+            m_modified = false;
         }
     }
 }
 
+// convenient access to most frequently used details
 /*!
     \qmlproperty Address Contact::address
 
-    This property holds the address detail of the Contact object.
+    This property holds the address detail of the Contact object. In case a contact has several addresses then
+    the first one is returned.
 */
 QDeclarativeContactAddress* QDeclarativeContact::address()
 {
-    return static_cast<QDeclarativeContactAddress*>(d->detail(QDeclarativeContactDetail::Address).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Address == detail->detailType())
+        {
+            QDeclarativeContactAddress* tempAddress = static_cast<QDeclarativeContactAddress *>(detail);
+            return tempAddress;
+        }
+    }
+    return 0;
 }
+
 
 /*!
     \qmlproperty Anniversary Contact::anniversary
@@ -299,7 +366,14 @@ QDeclarativeContactAddress* QDeclarativeContact::address()
 */
 QDeclarativeContactAnniversary* QDeclarativeContact::anniversary()
 {
-    return static_cast<QDeclarativeContactAnniversary*>(d->detail(QDeclarativeContactDetail::Anniversary).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Anniversary == detail->detailType())
+        {
+            QDeclarativeContactAnniversary* tempAnniversary = static_cast<QDeclarativeContactAnniversary *>(detail);
+            return tempAnniversary;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -309,7 +383,14 @@ QDeclarativeContactAnniversary* QDeclarativeContact::anniversary()
 */
 QDeclarativeContactAvatar* QDeclarativeContact::avatar()
 {
-    return static_cast<QDeclarativeContactAvatar*>(d->detail(QDeclarativeContactDetail::Avatar).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Avatar == detail->detailType())
+        {
+            QDeclarativeContactAvatar* tempAvatar = static_cast<QDeclarativeContactAvatar *>(detail);
+            return tempAvatar;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -319,7 +400,14 @@ QDeclarativeContactAvatar* QDeclarativeContact::avatar()
 */
 QDeclarativeContactBirthday*  QDeclarativeContact::birthday()
 {
-    return static_cast<QDeclarativeContactBirthday*>(d->detail(QDeclarativeContactDetail::Birthday).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Birthday == detail->detailType())
+        {
+            QDeclarativeContactBirthday* tempBirthday = static_cast<QDeclarativeContactBirthday *>(detail);
+            return tempBirthday;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -329,17 +417,32 @@ QDeclarativeContactBirthday*  QDeclarativeContact::birthday()
 */
 QString QDeclarativeContact::displayLabel()
 {
-    return d->m_contact.displayLabel();
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::DisplayLabel == detail->detailType())
+        {
+            QDeclarativeContactDisplayLabel* tempDisplayLabel = static_cast<QDeclarativeContactDisplayLabel *>(detail);
+            return tempDisplayLabel->label();
+        }
+    }
+    return QString::null;
 }
 
 /*!
     \qmlproperty EmailAddress Contact::email
 
-    This property holds the email address detail of the Contact object.
+    This property holds the email address detail of the Contact object. In case a contact has several email addresses then
+    the first one is returned.
 */
 QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 {
-    return static_cast<QDeclarativeContactEmailAddress*>(d->detail(QDeclarativeContactDetail::Email).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Email == detail->detailType())
+        {
+            QDeclarativeContactEmailAddress* tempEmail = static_cast<QDeclarativeContactEmailAddress *>(detail);
+            return tempEmail;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -349,7 +452,14 @@ QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 */
 QDeclarativeContactFamily*  QDeclarativeContact::family()
 {
-    return static_cast<QDeclarativeContactFamily*>(d->detail(QDeclarativeContactDetail::Family).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Family == detail->detailType())
+        {
+            QDeclarativeContactFamily* tempFamily = static_cast<QDeclarativeContactFamily *>(detail);
+            return tempFamily;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -359,7 +469,14 @@ QDeclarativeContactFamily*  QDeclarativeContact::family()
 */
 QDeclarativeContactFavorite*  QDeclarativeContact::favorite()
 {
-    return static_cast<QDeclarativeContactFavorite*>(d->detail(QDeclarativeContactDetail::Favorite).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Favorite == detail->detailType())
+        {
+            QDeclarativeContactFavorite* tempFavorite = static_cast<QDeclarativeContactFavorite *>(detail);
+            return tempFavorite;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -369,7 +486,14 @@ QDeclarativeContactFavorite*  QDeclarativeContact::favorite()
 */
 QDeclarativeContactGender*  QDeclarativeContact::gender()
 {
-    return static_cast<QDeclarativeContactGender*>(d->detail(QDeclarativeContactDetail::Gender).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Gender == detail->detailType())
+        {
+            QDeclarativeContactGender* tempGender = static_cast<QDeclarativeContactGender *>(detail);
+            return tempGender;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -379,7 +503,14 @@ QDeclarativeContactGender*  QDeclarativeContact::gender()
 */
 QDeclarativeContactGeoLocation*  QDeclarativeContact::geolocation()
 {
-    return static_cast<QDeclarativeContactGeoLocation*>(d->detail(QDeclarativeContactDetail::Geolocation).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Geolocation == detail->detailType())
+        {
+            QDeclarativeContactGeoLocation* tempGeolocation = static_cast<QDeclarativeContactGeoLocation *>(detail);
+            return tempGeolocation;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -389,7 +520,14 @@ QDeclarativeContactGeoLocation*  QDeclarativeContact::geolocation()
 */
 QDeclarativeContactGlobalPresence*  QDeclarativeContact::globalPresence()
 {
-    return static_cast<QDeclarativeContactGlobalPresence*>(d->detail(QDeclarativeContactDetail::GlobalPresence).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::GlobalPresence == detail->detailType())
+        {
+            QDeclarativeContactGlobalPresence* tempPresence = static_cast<QDeclarativeContactGlobalPresence *>(detail);
+            return tempPresence;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -399,7 +537,14 @@ QDeclarativeContactGlobalPresence*  QDeclarativeContact::globalPresence()
 */
 QDeclarativeContactGuid*  QDeclarativeContact::guid()
 {
-    return static_cast<QDeclarativeContactGuid*>(d->detail(QDeclarativeContactDetail::Guid).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Guid == detail->detailType())
+        {
+            QDeclarativeContactGuid* tempGuid = static_cast<QDeclarativeContactGuid *>(detail);
+            return tempGuid;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -409,7 +554,14 @@ QDeclarativeContactGuid*  QDeclarativeContact::guid()
 */
 QDeclarativeContactName*  QDeclarativeContact::name()
 {
-    return static_cast<QDeclarativeContactName*>(d->detail(QDeclarativeContactDetail::Name).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Name == detail->detailType())
+        {
+            QDeclarativeContactName* tempName = static_cast<QDeclarativeContactName *>(detail);
+            return tempName;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -419,7 +571,14 @@ QDeclarativeContactName*  QDeclarativeContact::name()
 */
 QDeclarativeContactNickname*  QDeclarativeContact::nickname()
 {
-    return static_cast<QDeclarativeContactNickname*>(d->detail(QDeclarativeContactDetail::NickName).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::NickName == detail->detailType())
+        {
+            QDeclarativeContactNickname* tempNickName = static_cast<QDeclarativeContactNickname *>(detail);
+            return tempNickName;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -429,17 +588,32 @@ QDeclarativeContactNickname*  QDeclarativeContact::nickname()
 */
 QDeclarativeContactNote*  QDeclarativeContact::note()
 {
-    return static_cast<QDeclarativeContactNote*>(d->detail(QDeclarativeContactDetail::Note).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Note == detail->detailType())
+        {
+            QDeclarativeContactNote* tempNote = static_cast<QDeclarativeContactNote *>(detail);
+            return tempNote;
+        }
+    }
+    return 0;
 }
 
 /*!
     \qmlproperty OnlineAccount Contact::onlineAccount
 
-    This property holds the onlineAccount detail of the Contact object.
+    This property holds the onlineAccount detail of the Contact object. In case a contact has several accounts then
+    the first one is returned.
 */
 QDeclarativeContactOnlineAccount*  QDeclarativeContact::onlineAccount()
 {
-    return static_cast<QDeclarativeContactOnlineAccount*>(d->detail(QDeclarativeContactDetail::OnlineAccount).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::OnlineAccount == detail->detailType())
+        {
+            QDeclarativeContactOnlineAccount* tempOnlineAccount = static_cast<QDeclarativeContactOnlineAccount *>(detail);
+            return tempOnlineAccount;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -449,17 +623,32 @@ QDeclarativeContactOnlineAccount*  QDeclarativeContact::onlineAccount()
 */
 QDeclarativeContactOrganization*  QDeclarativeContact::organization()
 {
-    return static_cast<QDeclarativeContactOrganization*>(d->detail(QDeclarativeContactDetail::Organization).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Organization == detail->detailType())
+        {
+            QDeclarativeContactOrganization* tempOrganization = static_cast<QDeclarativeContactOrganization *>(detail);
+            return tempOrganization;
+        }
+    }
+    return 0;
 }
 
 /*!
     \qmlproperty PhoneNumber Contact::phoneNumber
 
-    This property holds the phoneNumber detail of the Contact object.
+    This property holds the phoneNumber detail of the Contact object. In case a contact has several numbers then
+    the first one is returned.
 */
 QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
 {
-    return static_cast<QDeclarativeContactPhoneNumber*>(d->detail(QDeclarativeContactDetail::PhoneNumber).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::PhoneNumber == detail->detailType())
+        {
+            QDeclarativeContactPhoneNumber* tempPhoneNumber = static_cast<QDeclarativeContactPhoneNumber *>(detail);
+            return tempPhoneNumber;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -469,7 +658,14 @@ QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
 */
 QDeclarativeContactPresence*  QDeclarativeContact::presence()
 {
-    return static_cast<QDeclarativeContactPresence*>(d->detail(QDeclarativeContactDetail::Presence).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Presence == detail->detailType())
+        {
+            QDeclarativeContactPresence* tempPresence = static_cast<QDeclarativeContactPresence *>(detail);
+            return tempPresence;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -479,7 +675,14 @@ QDeclarativeContactPresence*  QDeclarativeContact::presence()
 */
 QDeclarativeContactRingtone*  QDeclarativeContact::ringtone()
 {
-    return static_cast<QDeclarativeContactRingtone*>(d->detail(QDeclarativeContactDetail::Ringtone).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Ringtone == detail->detailType())
+        {
+            QDeclarativeContactRingtone* tempRingtone = static_cast<QDeclarativeContactRingtone *>(detail);
+            return tempRingtone;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -489,7 +692,14 @@ QDeclarativeContactRingtone*  QDeclarativeContact::ringtone()
 */
 QDeclarativeContactSyncTarget*  QDeclarativeContact::syncTarget()
 {
-    return static_cast<QDeclarativeContactSyncTarget*>(d->detail(QDeclarativeContactDetail::SyncTarget).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::SyncTarget == detail->detailType())
+        {
+            QDeclarativeContactSyncTarget* tempSyncTarget = static_cast<QDeclarativeContactSyncTarget *>(detail);
+            return tempSyncTarget;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -499,7 +709,14 @@ QDeclarativeContactSyncTarget*  QDeclarativeContact::syncTarget()
 */
 QDeclarativeContactTag*  QDeclarativeContact::tag()
 {
-    return static_cast<QDeclarativeContactTag*>(d->detail(QDeclarativeContactDetail::Tag).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Tag == detail->detailType())
+        {
+            QDeclarativeContactTag* tempTag = static_cast<QDeclarativeContactTag *>(detail);
+            return tempTag;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -516,12 +733,23 @@ QUrl QDeclarativeContact::thumbnail() const
 //Only support local file
 void QDeclarativeContact::setThumbnail(const QUrl& url)
 {
-    QImage image(100, 50, QImage::Format_RGB32);
-    image.load(url.toLocalFile());
-    QContactThumbnail detail;
-    detail.setThumbnail(image);
-    d->m_contact.saveDetail(&detail);
-    emit detailsChanged();
+    bool found(false);
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Thumbnail == detail->detailType()) {
+            static_cast<QDeclarativeContactThumbnail *>(detail)->setThumbnail(url);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        QDeclarativeContactThumbnail *newThumbnail = new QDeclarativeContactThumbnail(this);
+        newThumbnail->setThumbnail(url);
+        m_details.append(newThumbnail);
+    }
+
+    m_modified = true;
+    emit contactChanged();
 }
 
 /*!
@@ -531,7 +759,14 @@ void QDeclarativeContact::setThumbnail(const QUrl& url)
 */
 QDeclarativeContactUrl*  QDeclarativeContact::url()
 {
-    return static_cast<QDeclarativeContactUrl*>(d->detail(QDeclarativeContactDetail::Url).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Url == detail->detailType())
+        {
+            QDeclarativeContactUrl* tempUrl = static_cast<QDeclarativeContactUrl *>(detail);
+            return tempUrl;
+        }
+    }
+    return 0;
 }
 
 
@@ -542,7 +777,14 @@ QDeclarativeContactUrl*  QDeclarativeContact::url()
 */
 QDeclarativeContactHobby*  QDeclarativeContact::hobby()
 {
-    return static_cast<QDeclarativeContactHobby*>(d->detail(QDeclarativeContactDetail::Hobby).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::Hobby == detail->detailType())
+        {
+            QDeclarativeContactHobby* tempHobby = static_cast<QDeclarativeContactHobby *>(detail);
+            return tempHobby;
+        }
+    }
+    return 0;
 }
 
 /*!
@@ -552,7 +794,66 @@ QDeclarativeContactHobby*  QDeclarativeContact::hobby()
 */
 QDeclarativeContactPersonId*  QDeclarativeContact::personid()
 {
-    return static_cast<QDeclarativeContactPersonId*>(d->detail(QDeclarativeContactDetail::PersonId).value<QDeclarativeContactDetail*>());
+    foreach (QDeclarativeContactDetail *detail, m_details) {
+        if (QDeclarativeContactDetail::PersonId == detail->detailType())
+        {
+            QDeclarativeContactPersonId* tempPersonId = static_cast<QDeclarativeContactPersonId *>(detail);
+            return tempPersonId;
+        }
+    }
+    return 0;
+}
+
+// call-back functions for list property
+/*!
+    \internal
+ */
+void QDeclarativeContact::_q_detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object)
+    {
+        object->m_details.append(value);
+        value->connect(value, SIGNAL(valueChanged()), SIGNAL(detailChanged()), Qt::UniqueConnection);
+        value->connect(value, SIGNAL(detailChanged()), object, SIGNAL(contactChanged()), Qt::UniqueConnection);
+    }
+}
+
+/*!
+    \internal
+ */
+QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QDeclarativeListProperty<QDeclarativeContactDetail> *property, int index)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object)
+        return object->m_details.at(index);
+    else
+        return 0;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeContact::_q_detail_clear(QDeclarativeListProperty<QDeclarativeContactDetail> *property)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object) {
+        foreach (QDeclarativeContactDetail *obj, object->m_details)
+            delete obj;
+        object->m_details.clear();
+    }
+}
+
+/*!
+    \internal
+ */
+int QDeclarativeContact::_q_detail_count(QDeclarativeListProperty<QDeclarativeContactDetail> *property)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object)
+        return object->m_details.size();
+    else
+        return 0;
 }
 
 #include "moc_qdeclarativecontact_p.cpp"

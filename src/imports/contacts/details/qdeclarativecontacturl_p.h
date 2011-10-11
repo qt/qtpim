@@ -52,8 +52,8 @@ class QDeclarativeContactUrl : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY fieldsChanged)
-    Q_PROPERTY(QVariant subType READ subType WRITE setSubType NOTIFY fieldsChanged)
+    Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY valueChanged)
+    Q_PROPERTY(QVariant subType READ subType WRITE setSubType NOTIFY valueChanged)
 
     Q_ENUMS(FieldType)
     Q_ENUMS(UrlSubType)
@@ -74,7 +74,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactUrl());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -124,7 +124,7 @@ public:
 
             if (st != detail().value(QContactUrl::FieldSubType)) {
                 detail().setValue(QContactUrl::FieldSubType, st);
-                emit fieldsChanged();
+                emit valueChanged();
             }
         }
     }
@@ -133,7 +133,7 @@ public:
         return detail().value(QContactUrl::FieldSubType);
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

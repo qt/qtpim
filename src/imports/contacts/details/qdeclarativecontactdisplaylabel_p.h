@@ -52,7 +52,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactDisplayLabel : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString label READ label NOTIFY fieldsChanged)
+    Q_PROPERTY(QString label READ label NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "label")
 public:
@@ -63,7 +63,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactDisplayLabel());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -87,7 +87,7 @@ public:
         return detail().value(QContactDisplayLabel::FieldLabel);
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

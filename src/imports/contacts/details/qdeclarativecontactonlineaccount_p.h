@@ -52,10 +52,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactOnlineAccount : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString accountUri READ accountUri WRITE setAccountUri NOTIFY fieldsChanged)
-    Q_PROPERTY(QString serviceProvider READ serviceProvider WRITE  setServiceProvider NOTIFY fieldsChanged)
-    Q_PROPERTY(QStringList capabilities READ capabilities WRITE  setCapabilities NOTIFY fieldsChanged)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE  setSubTypes NOTIFY fieldsChanged)
+    Q_PROPERTY(QString accountUri READ accountUri WRITE setAccountUri NOTIFY valueChanged)
+    Q_PROPERTY(QString serviceProvider READ serviceProvider WRITE  setServiceProvider NOTIFY valueChanged)
+    Q_PROPERTY(QStringList capabilities READ capabilities WRITE  setCapabilities NOTIFY valueChanged)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE  setSubTypes NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(OnlineAccountSubType)
 
@@ -80,7 +80,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactOnlineAccount());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -108,7 +108,7 @@ public:
     {
         if (!readOnly() && v != accountUri()) {
             detail().setValue(QContactOnlineAccount::FieldAccountUri, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString accountUri() const {return detail().value(QContactOnlineAccount::FieldAccountUri);}
@@ -117,7 +117,7 @@ public:
     {
         if (!readOnly() && v != serviceProvider()) {
             detail().setValue(QContactOnlineAccount::FieldServiceProvider, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString serviceProvider() const {return detail().value(QContactOnlineAccount::FieldServiceProvider);}
@@ -126,7 +126,7 @@ public:
     {
         if (!readOnly() && v.toSet() != capabilities().toSet()) {
             detail().setValue(QContactOnlineAccount::FieldCapabilities, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QStringList capabilities() const {return detail().value<QStringList>(QContactOnlineAccount::FieldCapabilities);}
@@ -158,7 +158,7 @@ public:
         QStringList oldList = detail().value<QStringList>(QContactOnlineAccount::FieldSubTypes);
         if (!readOnly() && oldList.toSet() != savedList.toSet()) {
             detail().setValue(QContactOnlineAccount::FieldSubTypes, savedList);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
@@ -168,7 +168,7 @@ public:
     }
 
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

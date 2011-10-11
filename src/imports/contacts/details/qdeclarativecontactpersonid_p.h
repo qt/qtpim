@@ -50,7 +50,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactPersonId : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString personid READ personid WRITE setPersonid NOTIFY fieldsChanged)
+    Q_PROPERTY(QString personid READ personid WRITE setPersonid NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "personid")
 public:
@@ -62,7 +62,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactPersonId());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -87,7 +87,7 @@ public:
     }
     QString personid() const {return detail().value(QContactPersonId::FieldPersonId);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

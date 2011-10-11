@@ -52,12 +52,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactGlobalPresence : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY fieldsChanged)
-    Q_PROPERTY(QString nickname READ nickname WRITE setNickname NOTIFY fieldsChanged)
-    Q_PROPERTY(QDeclarativeContactPresence::PresenceStateType state READ presenceState WRITE setPresenceState NOTIFY fieldsChanged)
-    Q_PROPERTY(QString stateText READ presenceStateText WRITE setPresenceStateText NOTIFY fieldsChanged)
-    Q_PROPERTY(QUrl imageUrl READ presenceStateImageUrl WRITE setPresenceStateImageUrl NOTIFY fieldsChanged)
-    Q_PROPERTY(QString customMessage READ customMessage WRITE setCustomMessage NOTIFY fieldsChanged)
+    Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY valueChanged)
+    Q_PROPERTY(QString nickname READ nickname WRITE setNickname NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContactPresence::PresenceStateType state READ presenceState WRITE setPresenceState NOTIFY valueChanged)
+    Q_PROPERTY(QString stateText READ presenceStateText WRITE setPresenceStateText NOTIFY valueChanged)
+    Q_PROPERTY(QUrl imageUrl READ presenceStateImageUrl WRITE setPresenceStateImageUrl NOTIFY valueChanged)
+    Q_PROPERTY(QString customMessage READ customMessage WRITE setCustomMessage NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "state")
     Q_ENUMS(FieldType)
 public:
@@ -74,7 +74,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactGlobalPresence());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -105,7 +105,7 @@ public:
     {
         if (!readOnly() && v != timestamp()) {
             detail().setValue(QContactGlobalPresence::FieldTimestamp, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime timestamp() const {return detail().value<QDateTime>(QContactGlobalPresence::FieldTimestamp);}
@@ -113,7 +113,7 @@ public:
     {
         if (!readOnly() && v != nickname()) {
             detail().setValue(QContactGlobalPresence::FieldNickname, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString nickname() const {return detail().value(QContactGlobalPresence::FieldNickname);}
@@ -121,7 +121,7 @@ public:
     {
         if (!readOnly() && v != presenceState()) {
             detail().setValue(QContactGlobalPresence::FieldPresenceState, static_cast<int>(v));
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
@@ -134,7 +134,7 @@ public:
     {
         if (!readOnly() && v != presenceStateText()) {
             detail().setValue(QContactGlobalPresence::FieldPresenceStateText, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString presenceStateText() const {return detail().value(QContactGlobalPresence::FieldPresenceStateText);}
@@ -142,7 +142,7 @@ public:
     {
         if (!readOnly() && v != presenceStateImageUrl())  {
             detail().setValue(QContactGlobalPresence::FieldPresenceStateImageUrl, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QUrl presenceStateImageUrl() const {return detail().value<QUrl>(QContactGlobalPresence::FieldPresenceStateImageUrl);}
@@ -150,12 +150,12 @@ public:
     {
         if (!readOnly() && v != customMessage()) {
             detail().setValue(QContactGlobalPresence::FieldCustomMessage, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString customMessage() const {return detail().value(QContactGlobalPresence::FieldCustomMessage);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

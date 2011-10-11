@@ -52,8 +52,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactFamily : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString spouse READ spouse WRITE setSpouse NOTIFY fieldsChanged)
-    Q_PROPERTY(QStringList children READ children WRITE setChildren NOTIFY fieldsChanged)
+    Q_PROPERTY(QString spouse READ spouse WRITE setSpouse NOTIFY valueChanged)
+    Q_PROPERTY(QStringList children READ children WRITE setChildren NOTIFY valueChanged)
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
@@ -64,7 +64,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactFamily());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -87,7 +87,7 @@ public:
     {
         if (!readOnly() && v != spouse()) {
             detail().setValue(QContactFamily::FieldSpouse, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString spouse() const {return detail().value(QContactFamily::FieldSpouse);}
@@ -95,12 +95,12 @@ public:
     {
         if (!readOnly() && v.toSet() != children().toSet()) {
             detail().setValue(QContactFamily::FieldChildren, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QStringList children() const {return detail().value<QStringList>(QContactFamily::FieldChildren);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

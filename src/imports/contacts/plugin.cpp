@@ -99,7 +99,9 @@ public:
         qmlRegisterType<QDeclarativeContactRingtone>(uri, major, minor, "Ringtone");
         qmlRegisterType<QDeclarativeContactSyncTarget>(uri, major, minor, "SyncTarget");
         qmlRegisterType<QDeclarativeContactTag>(uri, major, minor, "Tag");
+        qmlRegisterType<QDeclarativeContactThumbnail>(uri, major, minor, "Thumbnail");
         qmlRegisterType<QDeclarativeContactTimestamp>(uri, major, minor, "Timestamp");
+        qmlRegisterType<QDeclarativeContactType>(uri, major, minor, "Type");
         qmlRegisterType<QDeclarativeContactUrl>(uri, major, minor, "Url");
         qmlRegisterType<QDeclarativeContactHobby>(uri, major, minor, "Hobby");
         qmlRegisterType<QDeclarativeContactPersonId>(uri, major, minor, "Personid");

@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactEmailAddress : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString emailAddress READ emailAddress WRITE setEmailAddress NOTIFY fieldsChanged)
+    Q_PROPERTY(QString emailAddress READ emailAddress WRITE setEmailAddress NOTIFY valueChanged)
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
@@ -61,7 +61,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactEmailAddress());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -84,13 +84,13 @@ public:
     {
         if (!readOnly() && v != emailAddress()) {
             detail().setValue(QContactEmailAddress::FieldEmailAddress, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString emailAddress() const {return detail().value(QContactEmailAddress::FieldEmailAddress);}
 
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

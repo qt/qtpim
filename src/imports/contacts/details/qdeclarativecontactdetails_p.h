@@ -68,6 +68,8 @@
 #include "qdeclarativecontactsynctarget_p.h"
 #include "qdeclarativecontacttag_p.h"
 #include "qdeclarativecontacttimestamp_p.h"
+#include "qdeclarativecontactthumbnail_p.h"
+#include "qdeclarativecontacttype_p.h"
 #include "qdeclarativecontacturl_p.h"
 #include "qdeclarativecontacthobby_p.h"
 #include "qdeclarativecontactpersonid_p.h"

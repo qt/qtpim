@@ -50,7 +50,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactGender : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(GenderType gender READ gender WRITE setGender NOTIFY fieldsChanged)
+    Q_PROPERTY(GenderType gender READ gender WRITE setGender NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(GenderType)
     Q_CLASSINFO("DefaultProperty", "gender")
@@ -68,7 +68,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactGender());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -93,7 +93,7 @@ public:
             } else if (v == Female) {
                 detail().setValue(QContactGender::FieldGender, QContactGender::GenderFemale);
             }
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     GenderType gender() const
@@ -104,7 +104,7 @@ public:
         return Female;
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

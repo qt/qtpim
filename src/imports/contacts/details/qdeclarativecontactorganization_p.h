@@ -52,15 +52,15 @@ class QDeclarativeContactOrganization : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY fieldsChanged)
-    Q_PROPERTY(QUrl logoUrl READ logoUrl WRITE setLogoUrl NOTIFY fieldsChanged)
-    Q_PROPERTY(QStringList department READ department WRITE setDepartment NOTIFY fieldsChanged)
-    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY fieldsChanged)
-    Q_PROPERTY(QString role READ role WRITE setRole NOTIFY fieldsChanged)
-    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY fieldsChanged)
-    Q_PROPERTY(QString assistantName READ assistantName WRITE setAssistantName NOTIFY fieldsChanged)
-    Q_PROPERTY(QDateTime startDate READ startDate WRITE setStartDate NOTIFY fieldsChanged)
-    Q_PROPERTY(QDateTime endDate READ endDate WRITE setEndDate NOTIFY fieldsChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
+    Q_PROPERTY(QUrl logoUrl READ logoUrl WRITE setLogoUrl NOTIFY valueChanged)
+    Q_PROPERTY(QStringList department READ department WRITE setDepartment NOTIFY valueChanged)
+    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY valueChanged)
+    Q_PROPERTY(QString role READ role WRITE setRole NOTIFY valueChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY valueChanged)
+    Q_PROPERTY(QString assistantName READ assistantName WRITE setAssistantName NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDate READ startDate WRITE setStartDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime endDate READ endDate WRITE setEndDate NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "name")
     Q_ENUMS(FieldType)
 public:
@@ -80,7 +80,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactOrganization());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -117,7 +117,7 @@ public:
     {
         if (!readOnly() && v != name()) {
             detail().setValue(QContactOrganization::FieldName, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString name() const {return detail().value(QContactOrganization::FieldName);}
@@ -125,7 +125,7 @@ public:
     {
         if (!readOnly() && v != logoUrl()) {
             detail().setValue(QContactOrganization::FieldLogoUrl, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QUrl logoUrl() const {return detail().value(QContactOrganization::FieldLogoUrl);}
@@ -133,7 +133,7 @@ public:
     {
         if (!readOnly() && v.toSet() != department().toSet()) {
             detail().setValue(QContactOrganization::FieldDepartment, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QStringList department() const {return detail().value<QStringList>(QContactOrganization::FieldDepartment);}
@@ -141,7 +141,7 @@ public:
     {
         if (!readOnly() && v != location()) {
             detail().setValue(QContactOrganization::FieldLocation, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString location() const {return detail().value(QContactOrganization::FieldLocation);}
@@ -149,7 +149,7 @@ public:
     {
         if (!readOnly() && v != role()) {
             detail().setValue(QContactOrganization::FieldRole, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString role() const {return detail().value(QContactOrganization::FieldRole);}
@@ -157,7 +157,7 @@ public:
     {
         if (!readOnly() && v != title()) {
             detail().setValue(QContactOrganization::FieldTitle, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString title() const {return detail().value(QContactOrganization::FieldTitle);}
@@ -165,7 +165,7 @@ public:
     {
         if (!readOnly() && v != assistantName()) {
             detail().setValue(QContactOrganization::FieldAssistantName, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString assistantName() const {return detail().value(QContactOrganization::FieldAssistantName);}
@@ -173,7 +173,7 @@ public:
     {
         if (!readOnly() && v != startDate()) {
             detail().setValue(QContactOrganization::FieldStartDate, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime startDate() const {return detail().value<QDateTime>(QContactOrganization::FieldStartDate);}
@@ -181,12 +181,12 @@ public:
     {
         if (!readOnly() && v != endDate()) {
             detail().setValue(QContactOrganization::FieldEndDate, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime endDate() const {return detail().value<QDateTime>(QContactOrganization::FieldEndDate);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 
 };
 

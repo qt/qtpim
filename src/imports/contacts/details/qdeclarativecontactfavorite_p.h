@@ -51,8 +51,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactFavorite : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(bool favorite READ isFavorite WRITE setFavorite NOTIFY fieldsChanged)
-    Q_PROPERTY(int index READ index WRITE setIndex NOTIFY fieldsChanged)
+    Q_PROPERTY(bool favorite READ isFavorite WRITE setFavorite NOTIFY valueChanged)
+    Q_PROPERTY(int index READ index WRITE setIndex NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "index")
 public:
@@ -64,7 +64,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactFavorite());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -87,7 +87,7 @@ public:
     {
         if (!readOnly() && v != isFavorite()) {
             detail().setValue(QContactFavorite::FieldFavorite, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     bool isFavorite() const {return detail().variantValue(QContactFavorite::FieldFavorite).toBool();}
@@ -95,12 +95,12 @@ public:
     {
         if (!readOnly() && v != index()) {
             detail().setValue(QContactFavorite::FieldIndex, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     int index() const {return detail().variantValue(QContactFavorite::FieldIndex).toInt();}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

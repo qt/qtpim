@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the Qt Mobility Components.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,55 +39,61 @@
 **
 ****************************************************************************/
 
-#ifndef QDECLARATIVEOPENMETAOBJECT_H
-#define QDECLARATIVEOPENMETAOBJECT_H
+#ifndef QDECLARATIVECONTACTTHUMBNAIL_H
+#define QDECLARATIVECONTACTTHUMBNAIL_H
 
-#include <qcontact.h>
-#include <QtCore/QMetaObject>
-#include <QtCore/QObject>
+#include "qdeclarativecontactdetail_p.h"
+#include "qcontactthumbnail.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-// Copied from qobject_p.h
-struct QAbstractDynamicMetaObject : public QMetaObject
+class  QDeclarativeContactThumbnail : public QDeclarativeContactDetail
 {
-    virtual ~QAbstractDynamicMetaObject() {}
-    virtual int metaCall(QMetaObject::Call, int _id, void **) { return _id; }
-    virtual int createProperty(const char *, const char *) { return -1; }
-};
-
-
-class QDeclarativeOpenMetaObjectPrivate;
-class QDeclarativeOpenMetaObject : public QAbstractDynamicMetaObject
-{
+    Q_OBJECT
+    Q_ENUMS(FieldType)
 public:
-    QDeclarativeOpenMetaObject(QObject *);
+    enum FieldType {
+        Thumbnail
+    };
+    QDeclarativeContactThumbnail(QObject* parent = 0)
+        :QDeclarativeContactDetail(parent)
+    {
+        setDetail(QContactThumbnail());
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
+    }
+    void setThumbnail(const QUrl& v)
+    {
+        if (!readOnly()) {
+            QImage image(100, 50, QImage::Format_RGB32);
+            image.load(v.toLocalFile());
+            detail().setValue(QContactThumbnail::FieldThumbnail, image);
+            emit valueChanged();
+        }
+    }
 
-    ~QDeclarativeOpenMetaObject();
+    ContactDetailType detailType() const
+    {
+        return QDeclarativeContactDetail::Thumbnail;
+    }
 
-    virtual void getValue(int id, void **a);
-    virtual void setValue(int id, void **a);
+    static QString fieldNameFromFieldType(int fieldType)
+    {
+        switch (fieldType) {
+        case Thumbnail:
+            return QContactThumbnail::FieldThumbnail;
+        default:
+            break;
+        }
+        qmlInfo(0) << tr("Unknown field type.");
+        return QString();
+    }
+signals:
+    void valueChanged();
 
-    virtual int createProperty(const char *,  const char *);
-
-    QObject *object() const;
-    void setMetaObject(const QMetaObject& metaObject);
-
-protected:
-    virtual int metaCall(QMetaObject::Call _c, int _id, void **_a);
-
-    virtual void propertyRead(int);
-    virtual void propertyWrite(int);
-    virtual void propertyWritten(int);
-
-    QAbstractDynamicMetaObject *parent() const;
-
-private:
-
-    QDeclarativeOpenMetaObjectPrivate *d;
-    friend class QDeclarativeOpenMetaObjectType;
 };
 
 QTCONTACTS_END_NAMESPACE
 
-#endif // QDECLARATIVEOPENMETAOBJECT_H
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactThumbnail))
+
+#endif

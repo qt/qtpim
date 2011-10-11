@@ -40,57 +40,59 @@
 ****************************************************************************/
 #ifndef QDECLARATIVECONTACT_P_H
 #define QDECLARATIVECONTACT_P_H
-#include <qdeclarative.h>
-#include <QDeclarativeListProperty>
+
 #include <qcontact.h>
 #include <qcontactid.h>
 #include "qdeclarativecontactdetails_p.h"
+#include "qdeclarativecontacturl_p.h"
+#include "qdeclarativecontacthobby_p.h"
+#include "qdeclarativecontactpersonid_p.h"
+#include "qdeclarativecontactdetail_p.h"
+#include <QtDeclarative/qdeclarativelist.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QDeclarativeContactMetaObject;
-class QDeclarativeContactDetail;
 class QDeclarativeContact : public QObject
 {
     Q_OBJECT
+
+    // basic information
+    Q_PROPERTY (bool modified READ modified)
+
+    Q_PROPERTY(QDeclarativeContactType::ContactType type READ type WRITE setType NOTIFY contactChanged)
     Q_PROPERTY (QContactLocalId contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY managerChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactDetail> details READ details NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactAddress* address READ address NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactAnniversary* anniversary READ anniversary NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactAvatar* avatar READ avatar NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactBirthday*  birthday READ birthday NOTIFY detailsChanged)
-    Q_PROPERTY (QString  displayLabel READ displayLabel NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactEmailAddress*  email READ email NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactFamily*  family READ family NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactFavorite*  favorite READ favorite NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactGender*  gender READ gender NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactGeoLocation*  geolocation READ geolocation NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactGlobalPresence*  globalPresence READ globalPresence NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactGuid*  guid READ guid NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactName*  name READ name NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactNickname*  nickname READ nickname  NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactNote*  note READ note NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactOnlineAccount*  onlineAccount READ onlineAccount NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactOrganization*  organization READ organization  NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactPhoneNumber*  phoneNumber READ phoneNumber NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactPresence*  presence READ presence NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactRingtone*  ringtone READ ringtone NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactSyncTarget*  syncTarget READ syncTarget NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactTag*  tag READ tag NOTIFY detailsChanged)
-    Q_PROPERTY (QUrl thumbnail READ thumbnail WRITE setThumbnail NOTIFY detailsChanged)
-    Q_PROPERTY (ContactType  type READ type  WRITE setType NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY detailsChanged)
-    Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY detailsChanged)
-    Q_PROPERTY (bool modified READ modified)
-    Q_CLASSINFO("DefaultProperty", "details")
-    Q_ENUMS(ContactType)
+    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactAddress* address READ address NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactAnniversary* anniversary READ anniversary NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactAvatar* avatar READ avatar NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactBirthday*  birthday READ birthday NOTIFY contactChanged)
+    Q_PROPERTY (QString  displayLabel READ displayLabel NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactEmailAddress*  email READ email NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactFamily*  family READ family NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactFavorite*  favorite READ favorite NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactGender*  gender READ gender NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactGeoLocation*  geolocation READ geolocation NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactGlobalPresence*  globalPresence READ globalPresence NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactGuid*  guid READ guid NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactName*  name READ name NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactNickname*  nickname READ nickname  NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactNote*  note READ note NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactOnlineAccount*  onlineAccount READ onlineAccount NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactOrganization*  organization READ organization  NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactPhoneNumber*  phoneNumber READ phoneNumber NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactPresence*  presence READ presence NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactRingtone*  ringtone READ ringtone NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactSyncTarget*  syncTarget READ syncTarget NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactTag*  tag READ tag NOTIFY contactChanged)
+    Q_PROPERTY (QUrl thumbnail READ thumbnail WRITE setThumbnail NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
+    Q_CLASSINFO("DefaultProperty", "contactDetails")
+
 public:
-    enum ContactType {
-        Contact = 0,
-        Group
-    };
+
     explicit QDeclarativeContact(QObject *parent = 0);
     explicit QDeclarativeContact(const QContact& contact, const QMap<QString, QContactDetailDefinition>& defs, QObject *parent = 0);
     ~QDeclarativeContact();
@@ -99,18 +101,20 @@ public:
     QContact contact() const;
     bool modified() const;
 
-    void setType(ContactType type);
-    ContactType type() const;
+    // use int instead of QDeclarativeContactDetail::ContactType as a work-around for QTBUG-20639
+    void setType(int type);
+    QDeclarativeContactType::ContactType type() const;
 
     void setDetailDefinitions(const QMap<QString, QContactDetailDefinition>& defs);
     QMap<QString, QContactDetailDefinition> detailDefinitions() const;
 
-    QContactLocalId contactId() const;
+    QString contactId() const;
     QString manager() const;
-    QDeclarativeListProperty<QDeclarativeContactDetail> details();
+    QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails();
 
-    Q_INVOKABLE QDeclarativeContactDetail* detail(const QVariant& name);
-    Q_INVOKABLE QDeclarativeListProperty<QDeclarativeContactDetail> details(const QVariant& name);
+    // use int instead of QDeclarativeContactDetail::ContactType as a work-around for QTBUG-20639
+    Q_INVOKABLE QDeclarativeContactDetail* detail(int type);
+    Q_INVOKABLE QVariantList details(int type);
 
     Q_INVOKABLE bool removeDetail(QDeclarativeContactDetail* detail);
     Q_INVOKABLE bool addDetail(QDeclarativeContactDetail* detail);
@@ -143,18 +147,32 @@ public:
     QDeclarativeContactHobby*  hobby();
     QDeclarativeContactPersonId* personid();
 
+protected:
+    bool m_modified;
+    QContactId m_id;
+
+    // always create a copy of the detail for QML
+    // however, seems the garbage collection can't delete all of them (QTBUG-20377)
+    QList<QDeclarativeContactDetail *> m_details;
+
 public slots:
     void clearDetails();
     void save();
-private slots:
-    void setModified();
-signals:
+Q_SIGNALS:
     void contactIdChanged();
     void managerChanged();
-    void detailsChanged();
+    void contactChanged();
 private:
-    QDeclarativeContactMetaObject* d;
-    friend class QDeclarativeContactMetaObject;
+    Q_DISABLE_COPY(QDeclarativeContact)
+
+    QMap<QString, QContactDetailDefinition> m_defs;
+
+    // call-back functions for list property
+    static void _q_detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);
+    static QDeclarativeContactDetail *_q_detail_at(QDeclarativeListProperty<QDeclarativeContactDetail> *property, int index);
+    static void _q_detail_clear(QDeclarativeListProperty<QDeclarativeContactDetail> *property);
+    static int _q_detail_count(QDeclarativeListProperty<QDeclarativeContactDetail> *property);
+
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -50,7 +50,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactNote : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString note READ note WRITE setNote NOTIFY fieldsChanged)
+    Q_PROPERTY(QString note READ note WRITE setNote NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "note")
 public:
@@ -62,7 +62,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactNote());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -84,12 +84,12 @@ public:
     {
         if (!readOnly() && v != note()) {
             detail().setValue(QContactNote::FieldNote, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString note() const {return detail().value(QContactNote::FieldNote);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

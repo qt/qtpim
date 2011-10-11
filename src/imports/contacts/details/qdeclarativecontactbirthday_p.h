@@ -51,7 +51,7 @@ class  QDeclarativeContactBirthday : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDateTime birthday READ birthday WRITE setBirthday NOTIFY fieldsChanged)
+    Q_PROPERTY(QDateTime birthday READ birthday WRITE setBirthday NOTIFY valueChanged)
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
@@ -61,7 +61,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactBirthday());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -83,12 +83,12 @@ public:
     {
         if (!readOnly() && v != QDateTime()) {
             detail().setValue(QContactBirthday::FieldBirthday, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime birthday() const {return detail().value<QDateTime>(QContactBirthday::FieldBirthday);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -5,7 +5,6 @@ QT += contacts declarative versit
 DEFINES+=IGNORE_METAOBJECTBUILDER_EXPORT 
 
 HEADERS += ../../../src/import/contacts/qdeclarativecontactdetail_p.h\
-           ../../../src/import/contacts/qdeclarativecontactmetaobject_p.h\
            ../../../src/import/contacts/qdeclarativecontactrelationship_p.h\
            ../../../src/import/contacts/qdeclarativecontactfetchhint_p.h\
            ../../../src/import/contacts/qdeclarativecontactmodel_p.h\

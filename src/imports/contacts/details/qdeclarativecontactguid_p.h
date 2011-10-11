@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactGuid : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY fieldsChanged)
+    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "guid")
 public:
@@ -62,7 +62,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactGuid());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -84,12 +84,12 @@ public:
     {
         if (!readOnly() && v != guid()) {
             detail().setValue(QContactGuid::FieldGuid, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString guid() const {return detail().value(QContactGuid::FieldGuid);}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

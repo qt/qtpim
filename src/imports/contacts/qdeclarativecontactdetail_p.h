@@ -51,14 +51,14 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactDetail : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(ContactDetailType type READ detailType NOTIFY valueChanged)
-    Q_PROPERTY(QString definitionName READ definitionName NOTIFY valueChanged)
-    Q_PROPERTY(QStringList contexts READ contexts WRITE setContexts NOTIFY valueChanged)
-    Q_PROPERTY(QString detailUri READ detailUri WRITE setDetailUri NOTIFY valueChanged)
-    Q_PROPERTY(QStringList linkedDetailUris READ linkedDetailUris WRITE setLinkedDetailUris NOTIFY valueChanged)
-    Q_PROPERTY(QStringList fieldNames READ fieldNames NOTIFY valueChanged)
-    Q_PROPERTY(bool readOnly READ readOnly NOTIFY valueChanged)
-    Q_PROPERTY(bool removable READ removable NOTIFY valueChanged)
+    Q_PROPERTY(ContactDetailType type READ detailType NOTIFY detailChanged)
+    Q_PROPERTY(QString definitionName READ definitionName NOTIFY detailChanged)
+    Q_PROPERTY(QStringList contexts READ contexts WRITE setContexts NOTIFY detailChanged)
+    Q_PROPERTY(QString detailUri READ detailUri WRITE setDetailUri NOTIFY detailChanged)
+    Q_PROPERTY(QStringList linkedDetailUris READ linkedDetailUris WRITE setLinkedDetailUris NOTIFY detailChanged)
+    Q_PROPERTY(QStringList fieldNames READ fieldNames NOTIFY detailChanged)
+    Q_PROPERTY(bool readOnly READ readOnly NOTIFY detailChanged)
+    Q_PROPERTY(bool removable READ removable NOTIFY detailChanged)
     Q_ENUMS(ContactDetailType)
 public:
     QDeclarativeContactDetail(QObject* parent = 0);
@@ -87,12 +87,21 @@ public:
         Ringtone,
         SyncTarget,
         Tag,
+        Thumbnail,
         Timestamp,
+        Type,
         Url,
         Hobby,
         PersonId,
         Customized = 100
     };
+
+    ~QDeclarativeContactDetail();
+
+    // QML functions
+    Q_INVOKABLE QVariant value(const QString& key) const;
+    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value);
+    Q_INVOKABLE bool removeValue(const QString& key);
 
     QContactDetail& detail();
     const QContactDetail& detail() const;
@@ -113,17 +122,23 @@ public:
     virtual ContactDetailType detailType() const;
 
     QStringList fieldNames() const;
-    Q_INVOKABLE QVariant value(const QString& key) const;
-    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value);
 
     static QString definitionName(ContactDetailType type) ;
     static ContactDetailType detailType(const QString& definitionName) ;
     static QString fieldName(ContactDetailType detailType, int fieldType);
-signals:
-    void valueChanged();
+
+Q_SIGNALS:
+    void detailChanged();
 
 protected:
     QContactDetail m_detail;
+};
+
+class QDeclarativeContactDetailFactory
+{
+public:
+    static QDeclarativeContactDetail *createContactDetail(QDeclarativeContactDetail::ContactDetailType type);
+    static QDeclarativeContactDetail *createContactDetail(const QString &definitionName);
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -49,6 +49,9 @@ Item {
 
     property Contact myContact : Contact {
         id:myContact;
+        Name {
+            firstName: "";
+        }
         PhoneNumber {
             number: ""
         }
@@ -56,6 +59,9 @@ Item {
 
     property Contact mycontact2 : Contact {
         id:mycontact2
+        Name {
+            firstName: "";
+        }
         PhoneNumber {
             number: ""
             contexts:["Home"]
@@ -74,7 +80,7 @@ Item {
             var contactData = contactsData[index]
             myModel.myContact.name.firstName = contactData.firstName;
             myModel.myContact.name.lastName = contactData.lastName;
-            myModel.myContact.phoneNumbers[0].number = contactData.phoneNumber;
+            myModel.myContact.phoneNumber.number = contactData.phoneNumber;
             model.saveContact (myModel.myContact)
             contactsChangedSpy.wait();
         }

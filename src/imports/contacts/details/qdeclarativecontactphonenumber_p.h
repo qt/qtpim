@@ -53,8 +53,8 @@ class  QDeclarativeContactPhoneNumber : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString number READ number WRITE setNumber NOTIFY fieldsChanged)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY fieldsChanged)
+    Q_PROPERTY(QString number READ number WRITE setNumber NOTIFY valueChanged)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(PhoneNumberSubType)
 
@@ -85,7 +85,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactPhoneNumber());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -108,7 +108,7 @@ public:
     {
         if (!readOnly() && v != number()) {
             detail().setValue(QContactPhoneNumber::FieldNumber, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString number() const {return detail().value(QContactPhoneNumber::FieldNumber);}
@@ -169,7 +169,7 @@ public:
         QStringList oldList = detail().value<QStringList>(QContactPhoneNumber::FieldSubTypes);
         if (!readOnly() && oldList.toSet() != savedList.toSet()) {
             detail().setValue(QContactPhoneNumber::FieldSubTypes, savedList);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
@@ -179,7 +179,7 @@ public:
     }
 
 signals:
-    void fieldsChanged();
+    void valueChanged();
 
 };
 

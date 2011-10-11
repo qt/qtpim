@@ -1,4 +1,3 @@
-
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -53,6 +52,7 @@ property Contact testContact
 
     TestCase {
         name: "ContactsTests"
+
         // test data is handled by ContactsTestHelper.qml function addContacts(contacts_data)
         function test_detailFilters_data() {
             return [
@@ -296,7 +296,7 @@ property Contact testContact
                     "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
             var tmp = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "Contact {}", testHelper);
+                    "Contact {Name{}}", testHelper);
             var spy2 = Qt.createQmlObject("import QtTest 1.0;" +"SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
             contactsChangedSpy = spy2;
             contactsChangedSpy.target = model;
@@ -309,20 +309,29 @@ property Contact testContact
                                               "PhoneNumber {number: '99999999'}", testContact);
             var nick = Qt.createQmlObject("import QtContacts 5.0;" +
                                              "Nickname {nickname: 'jack'}", testContact);
+            var mail = Qt.createQmlObject("import QtContacts 5.0;" +
+                                             "EmailAddress {emailAddress: 'joe.john@ovi.com'}", testContact);
             testContact.name.firstName = "Joe"
             testContact.name.lastName = "John"
             testContact.addDetail(phone)
             testContact.addDetail(nick)
+            testContact.addDetail(mail)
             model.saveContact(testContact)
             waitForContactsChanged (contactsChangedSpy.count + 1)
+            testContact = model.contacts[0]
             compare(testContact.phoneNumber.number,"99999999")
             compare(testContact.nickname.nickname,"jack")
-            testContact.removeDetail(phone);
-            testContact.removeDetail(nick);
+            compare(testContact.email.emailAddress,"joe.john@ovi.com")
+            testContact.removeDetail(testContact.detail(ContactDetail.NickName));
+            testContact.removeDetail(testContact.detail(ContactDetail.PhoneNumber));
+            testContact.removeDetail(testContact.detail(ContactDetail.Email));
             model.saveContact(testContact)
             waitForContactsChanged (contactsChangedSpy.count + 1)
-            compare(testContact.phoneNumber.number,"")
-            compare(testContact.nickname.nickname,"")
+            testContact = model.contacts[0]
+            compare(testContact.nickname,null)
+            compare(testContact.phoneNumber,null)
+            compare(testContact.email,null)
+            compare(model.contacts.length, 1)
             testHelper.emptyContactsDb();
         }
 
@@ -341,5 +350,69 @@ property Contact testContact
             testHelper.destroy();
             component.destroy();
           }
+
+
+        Contact {
+            id: contact
+        }
+
+        function test_contact() {
+            // empty Contact
+            compare(contact.modified, false)
+
+            // access Type
+            console.log("type is: " + contact.type)
+            compare(contact.type, 0)  // Type is Contact and not Group
+
+            // access contactId
+            console.log("contactId is: " + JSON.stringify(contact.contactId) )
+            compare(contact.contactId, "")
+
+            // access manager
+            console.log("manager is: " + JSON.stringify(contact.manager))
+            compare(contact.manager, "")
+        }
+
+        Contact {
+            id: contact2
+        }
+
+        PhoneNumber {
+            id: phoneNumber
+            number: "99999999"
+        }
+
+        function test_contactAddDetail() {
+            // add new Detail
+            contact2.addDetail(phoneNumber)
+            compare(contact2.phoneNumber.number, "99999999")
+        }
+
+        Contact {
+            id: contact3
+            PhoneNumber {
+                id: phoneNumber3
+                number: "99999999"
+            }
+        }
+
+        function test_contactUpdateDetail() {
+            // update existing Detail
+            contact3.phoneNumber.number = "88888"
+            compare(contact3.phoneNumber.number, "88888")
+        }
+
+        Contact {
+            id: contact4
+            PhoneNumber {
+                id: phoneNumber4
+                number: "99999999"
+            }
+        }
+        function test_contactRemoveDetail() {
+            // delete one existing Detail
+            contact4.removeDetail(phoneNumber4);
+            compare(contact4.phoneNumber,null)
+        }
     }
 }

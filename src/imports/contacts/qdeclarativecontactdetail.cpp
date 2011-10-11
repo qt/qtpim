@@ -63,7 +63,11 @@ QDeclarativeContactDetail::QDeclarativeContactDetail(QObject* parent)
 {
     QDeclarativeContact* c = qobject_cast<QDeclarativeContact*>(parent);
     if (c)
-        connect(this, SIGNAL(valueChanged()), c, SIGNAL(detailsChanged()));
+        connect(this, SIGNAL(detailChanged()), c, SIGNAL(contactChanged()));
+}
+
+QDeclarativeContactDetail::~QDeclarativeContactDetail()
+{
 }
 
 QContactDetail& QDeclarativeContactDetail::detail()
@@ -79,6 +83,7 @@ const QContactDetail& QDeclarativeContactDetail::detail() const
 void QDeclarativeContactDetail::setDetail(const QContactDetail& detail)
 {
     m_detail = detail;
+    emit detailChanged();
 }
 
 /*!
@@ -194,7 +199,7 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
 */
 QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailType() const
 {
-    return QDeclarativeContactDetail::Customized;
+    return Customized;
 }
 
 /*!
@@ -222,9 +227,23 @@ bool QDeclarativeContactDetail::setValue(const QString& key, const QVariant& v)
          changed = m_detail.setValue(key, v);
 
     if (changed)
-        emit valueChanged();
+        emit detailChanged();
 
     return changed;
+}
+
+/*!
+    \qmlmethod bool Detail::removeValue(key)
+
+    Removes the value stored in this detail for the given \a key. Returns true if a value was stored for
+    the given key and the operation succeeded, and false otherwise.
+ */
+bool QDeclarativeContactDetail::removeValue(const QString &key)
+{
+    bool ok = m_detail.removeValue(key);
+    if (ok)
+        emit detailChanged();
+    return ok;
 }
 
 QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::ContactDetailType type)
@@ -284,7 +303,8 @@ QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::Con
     default:
         break;
     }
-    return "";
+    qmlInfo(0) << QString(tr("Can't find the detail definition name for detail type '%1'")).arg(type);
+    return QString();
 }
 
 QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailType(const QString& definitionName)
@@ -339,11 +359,11 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
         return QDeclarativeContactDetail::Url;
     if (definitionName == QContactPersonId::DefinitionName)
         return QDeclarativeContactDetail::PersonId;
-
+    qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
     return QDeclarativeContactDetail::Customized;
 }
 
-QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int fieldType)
+QString QDeclarativeContactDetail::fieldName(QDeclarativeContactDetail::ContactDetailType detailType, int fieldType)
 {
     switch (detailType) {
     case QDeclarativeContactDetail::Address:
@@ -400,9 +420,133 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
     default:
         break;
     }
-    return "";
+    qmlInfo(0) << QString(tr("Can't find the field name for detail type '%1' and field type '%2'")).arg(detailType).arg(fieldType);
+    return QString();
 }
 
+QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail(QDeclarativeContactDetail::ContactDetailType type)
+{
+    QDeclarativeContactDetail *contactDetail;
+    if (type == QDeclarativeContactDetail::Address)
+        contactDetail = new QDeclarativeContactAddress;
+    else if (type == QDeclarativeContactDetail::Anniversary)
+        contactDetail = new QDeclarativeContactAnniversary;
+    else if (type == QDeclarativeContactDetail::Avatar)
+        contactDetail = new QDeclarativeContactAvatar;
+    else if (type == QDeclarativeContactDetail::Birthday)
+        contactDetail = new QDeclarativeContactBirthday;
+    else if (type == QDeclarativeContactDetail::DisplayLabel)
+        contactDetail = new QDeclarativeContactDisplayLabel;
+    else if (type == QDeclarativeContactDetail::Email)
+        contactDetail = new QDeclarativeContactEmailAddress;
+    else if (type == QDeclarativeContactDetail::Family)
+        contactDetail = new QDeclarativeContactFamily;
+    else if (type == QDeclarativeContactDetail::Gender)
+        contactDetail = new QDeclarativeContactGender;
+    else if (type == QDeclarativeContactDetail::Geolocation)
+        contactDetail = new QDeclarativeContactGeoLocation;
+    else if (type == QDeclarativeContactDetail::GlobalPresence)
+        contactDetail = new QDeclarativeContactGlobalPresence;
+    else if (type == QDeclarativeContactDetail::Guid)
+        contactDetail = new QDeclarativeContactGuid;
+    else if (type == QDeclarativeContactDetail::Name)
+        contactDetail = new QDeclarativeContactName;
+    else if (type == QDeclarativeContactDetail::NickName)
+        contactDetail = new QDeclarativeContactNickname;
+    else if (type == QDeclarativeContactDetail::Note)
+        contactDetail = new QDeclarativeContactNote;
+    else if (type == QDeclarativeContactDetail::OnlineAccount)
+        contactDetail = new QDeclarativeContactOnlineAccount;
+    else if (type == QDeclarativeContactDetail::Organization)
+        contactDetail = new QDeclarativeContactOrganization;
+    else if (type == QDeclarativeContactDetail::PhoneNumber)
+        contactDetail = new QDeclarativeContactPhoneNumber;
+    else if (type == QDeclarativeContactDetail::Presence)
+        contactDetail = new QDeclarativeContactPresence;
+    else if (type == QDeclarativeContactDetail::Ringtone)
+        contactDetail = new QDeclarativeContactRingtone;
+    else if (type == QDeclarativeContactDetail::SyncTarget)
+        contactDetail = new QDeclarativeContactSyncTarget;
+    else if (type == QDeclarativeContactDetail::Tag)
+        contactDetail = new QDeclarativeContactTag;
+    else if (type == QDeclarativeContactDetail::Thumbnail)
+        contactDetail = new QDeclarativeContactThumbnail;
+    else if (type == QDeclarativeContactDetail::Timestamp)
+        contactDetail = new QDeclarativeContactTimestamp;
+    else if (type == QDeclarativeContactDetail::Type)
+        contactDetail = new QDeclarativeContactType;
+    else if (type == QDeclarativeContactDetail::Url)
+        contactDetail = new QDeclarativeContactUrl;
+    else if (type == QDeclarativeContactDetail::Hobby)
+        contactDetail = new QDeclarativeContactHobby;
+    else if (type == QDeclarativeContactDetail::PersonId)
+        contactDetail = new QDeclarativeContactPersonId;
+    else
+        contactDetail = new QDeclarativeContactDetail;
+    return contactDetail;
+}
+
+QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail(const QString &definitionName)
+{
+    QDeclarativeContactDetail *contactDetail;
+    if (definitionName == QContactAddress::DefinitionName)
+        contactDetail = new QDeclarativeContactAddress;
+    else if (definitionName == QContactAnniversary::DefinitionName)
+        contactDetail = new QDeclarativeContactAnniversary;
+    else if (definitionName == QContactAvatar::DefinitionName)
+        contactDetail = new QDeclarativeContactAvatar;
+    else if (definitionName == QContactBirthday::DefinitionName)
+        contactDetail = new QDeclarativeContactBirthday;
+    else if (definitionName == QContactDisplayLabel::DefinitionName)
+        contactDetail = new QDeclarativeContactDisplayLabel;
+    else if (definitionName == QContactEmailAddress::DefinitionName)
+        contactDetail = new QDeclarativeContactEmailAddress;
+    else if (definitionName == QContactFamily::DefinitionName)
+        contactDetail = new QDeclarativeContactFamily;
+    else if (definitionName == QContactGender::DefinitionName)
+        contactDetail = new QDeclarativeContactGender;
+    else if (definitionName == QContactGeoLocation::DefinitionName)
+        contactDetail = new QDeclarativeContactGeoLocation;
+    else if (definitionName == QContactGlobalPresence::DefinitionName)
+        contactDetail = new QDeclarativeContactGlobalPresence;
+    else if (definitionName == QContactGuid::DefinitionName)
+        contactDetail = new QDeclarativeContactGuid;
+    else if (definitionName == QContactName::DefinitionName)
+        contactDetail = new QDeclarativeContactName;
+    else if (definitionName == QContactNickname::DefinitionName)
+        contactDetail = new QDeclarativeContactNickname;
+    else if (definitionName == QContactNote::DefinitionName)
+        contactDetail = new QDeclarativeContactNote;
+    else if (definitionName == QContactOnlineAccount::DefinitionName)
+        contactDetail = new QDeclarativeContactOnlineAccount;
+    else if (definitionName == QContactOrganization::DefinitionName)
+        contactDetail = new QDeclarativeContactOrganization;
+    else if (definitionName == QContactPhoneNumber::DefinitionName)
+        contactDetail = new QDeclarativeContactPhoneNumber;
+    else if (definitionName == QContactPresence::DefinitionName)
+        contactDetail = new QDeclarativeContactPresence;
+    else if (definitionName == QContactRingtone::DefinitionName)
+        contactDetail = new QDeclarativeContactRingtone;
+    else if (definitionName == QContactSyncTarget::DefinitionName)
+        contactDetail = new QDeclarativeContactSyncTarget;
+    else if (definitionName == QContactTag::DefinitionName)
+        contactDetail = new QDeclarativeContactTag;
+    else if (definitionName == QContactThumbnail::DefinitionName)
+        contactDetail = new QDeclarativeContactThumbnail;
+    else if (definitionName == QContactTimestamp::DefinitionName)
+        contactDetail = new QDeclarativeContactTimestamp;
+    else if (definitionName == QContactType::DefinitionName)
+        contactDetail = new QDeclarativeContactType;
+    else if (definitionName == QContactUrl::DefinitionName)
+        contactDetail = new QDeclarativeContactUrl;
+    else if (definitionName == QContactHobby::DefinitionName)
+        contactDetail = new QDeclarativeContactHobby;
+    else if (definitionName == QContactPersonId::DefinitionName)
+        contactDetail = new QDeclarativeContactPersonId;
+    else
+        contactDetail = new QDeclarativeContactDetail;
+    return contactDetail;
+}
 
 /* ==================== QDeclarativeContactAddress ======================= */
 

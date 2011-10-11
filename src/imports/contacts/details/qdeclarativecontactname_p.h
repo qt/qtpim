@@ -51,12 +51,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactName : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix NOTIFY fieldsChanged)
-    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY fieldsChanged)
-    Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY fieldsChanged)
-    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY fieldsChanged)
-    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix NOTIFY fieldsChanged)
-    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY fieldsChanged)
+    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix NOTIFY valueChanged)
+    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY valueChanged)
+    Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY valueChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY valueChanged)
+    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix NOTIFY valueChanged)
+    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY valueChanged)
 
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "firstName")
@@ -74,7 +74,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactName());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -112,7 +112,7 @@ public:
     {
         if (!readOnly() && v != prefix()) {
             detail().setValue(QContactName::FieldPrefix, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
@@ -120,40 +120,40 @@ public:
     {
         if (!readOnly() && v != firstName()) {
             detail().setValue(QContactName::FieldFirstName, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     void setMiddleName(const QString& v)
     {
         if (!readOnly() && v != middleName()) {
             detail().setValue(QContactName::FieldMiddleName, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     void setLastName(const QString& v)
     {
         if (!readOnly() && v != lastName()) {
             detail().setValue(QContactName::FieldLastName, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     void setSuffix(const QString& v)
     {
         if (!readOnly() && v != suffix()) {
             detail().setValue(QContactName::FieldSuffix, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     void setCustomLabel(const QString& v)
     {
         if (!readOnly() && v != customLabel()) {
             detail().setValue(QContactName::FieldCustomLabel, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
 
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

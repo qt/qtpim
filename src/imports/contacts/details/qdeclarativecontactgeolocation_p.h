@@ -52,15 +52,15 @@ class QDeclarativeContactGeoLocation : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY fieldsChanged)
-    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY fieldsChanged)
-    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY fieldsChanged)
-    Q_PROPERTY(double accuracy READ accuracy WRITE setAccuracy NOTIFY fieldsChanged)
-    Q_PROPERTY(double altitude READ altitude WRITE setAltitude NOTIFY fieldsChanged)
-    Q_PROPERTY(double altitudeAccuracy READ altitudeAccuracy WRITE setAltitudeAccuracy NOTIFY fieldsChanged)
-    Q_PROPERTY(double heading READ heading WRITE setHeading NOTIFY fieldsChanged)
-    Q_PROPERTY(double speed READ speed WRITE setSpeed NOTIFY fieldsChanged)
-    Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY fieldsChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
+    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY valueChanged)
+    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY valueChanged)
+    Q_PROPERTY(double accuracy READ accuracy WRITE setAccuracy NOTIFY valueChanged)
+    Q_PROPERTY(double altitude READ altitude WRITE setAltitude NOTIFY valueChanged)
+    Q_PROPERTY(double altitudeAccuracy READ altitudeAccuracy WRITE setAltitudeAccuracy NOTIFY valueChanged)
+    Q_PROPERTY(double heading READ heading WRITE setHeading NOTIFY valueChanged)
+    Q_PROPERTY(double speed READ speed WRITE setSpeed NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "label")
     Q_ENUMS(FieldType)
 public:
@@ -80,7 +80,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactGeoLocation());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
     ContactDetailType detailType() const
     {
@@ -117,7 +117,7 @@ public:
     {
         if (!readOnly() && v != label()) {
             detail().setValue(QContactGeoLocation::FieldLabel, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString label() const {return detail().value(QContactGeoLocation::FieldLabel);}
@@ -125,7 +125,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, latitude())) {
             detail().setValue(QContactGeoLocation::FieldLatitude, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double latitude() const {return detail().variantValue(QContactGeoLocation::FieldLatitude).toDouble();}
@@ -133,7 +133,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, longitude())) {
             detail().setValue(QContactGeoLocation::FieldLongitude, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double longitude() const {return detail().variantValue(QContactGeoLocation::FieldLongitude).toDouble();}
@@ -141,7 +141,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, accuracy())) {
             detail().setValue(QContactGeoLocation::FieldAccuracy, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double accuracy() const {return detail().variantValue(QContactGeoLocation::FieldAccuracy).toDouble();}
@@ -149,7 +149,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, altitude())) {
             detail().setValue(QContactGeoLocation::FieldAltitude, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double altitude() const {return detail().variantValue(QContactGeoLocation::FieldAltitude).toDouble();}
@@ -157,7 +157,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, altitudeAccuracy())) {
             detail().setValue(QContactGeoLocation::FieldAltitudeAccuracy, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double altitudeAccuracy() const {return detail().variantValue(QContactGeoLocation::FieldAltitudeAccuracy).toDouble();}
@@ -165,7 +165,7 @@ public:
     {
         if (!readOnly() && v != heading()) {
             detail().setValue(QContactGeoLocation::FieldHeading, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double heading() const {return detail().variantValue(QContactGeoLocation::FieldHeading).toDouble();}
@@ -173,7 +173,7 @@ public:
     {
         if (!readOnly() && !qFuzzyCompare(v, speed())) {
             detail().setValue(QContactGeoLocation::FieldSpeed, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     double speed() const {return detail().variantValue(QContactGeoLocation::FieldSpeed).toDouble();}
@@ -181,12 +181,12 @@ public:
     {
         if (!readOnly() && v != timestamp()) {
             detail().setValue(QContactGeoLocation::FieldTimestamp, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime timestamp() const {return detail().variantValue(QContactGeoLocation::FieldTimestamp).toDateTime();}
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

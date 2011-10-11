@@ -51,11 +51,11 @@ class QDeclarativeContactAnniversary : public QDeclarativeContactDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString calendarId READ calendarId WRITE setCalendarId NOTIFY fieldsChanged)
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY fieldsChanged)
-    Q_PROPERTY(QDateTime originalDateTime READ originalDateTime WRITE setOriginalDateTime NOTIFY fieldsChanged)
-    Q_PROPERTY(QString event READ event WRITE setEvent NOTIFY fieldsChanged)
-    Q_PROPERTY(AnniversarySubType subType READ subType WRITE setSubType NOTIFY fieldsChanged)
+    Q_PROPERTY(QString calendarId READ calendarId WRITE setCalendarId NOTIFY valueChanged)
+    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime originalDateTime READ originalDateTime WRITE setOriginalDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QString event READ event WRITE setEvent NOTIFY valueChanged)
+    Q_PROPERTY(AnniversarySubType subType READ subType WRITE setSubType NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(AnniversarySubType)
 public:
@@ -79,7 +79,7 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactAnniversary());
-        connect(this, SIGNAL(fieldsChanged()), SIGNAL(valueChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
     ContactDetailType detailType() const
@@ -107,7 +107,7 @@ public:
     {
         if (!readOnly() && v != originalDate()) {
             detail().setValue(QContactAnniversary::FieldOriginalDate, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDate originalDate() const {return detail().value<QDate>(QContactAnniversary::FieldOriginalDate);}
@@ -115,7 +115,7 @@ public:
     {
         if (!readOnly() && v != originalDateTime()) {
             detail().setValue(QContactAnniversary::FieldOriginalDate, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QDateTime originalDateTime() const {return detail().value<QDateTime>(QContactAnniversary::FieldOriginalDate);}
@@ -124,7 +124,7 @@ public:
     {
         if (!readOnly() && v != calendarId()) {
             detail().setValue(QContactAnniversary::FieldCalendarId, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString calendarId() const {return detail().value(QContactAnniversary::FieldCalendarId);}
@@ -132,7 +132,7 @@ public:
     {
         if (!readOnly() && v != event()) {
             detail().setValue(QContactAnniversary::FieldEvent, v);
-            emit fieldsChanged();
+            emit valueChanged();
         }
     }
     QString event() const {return detail().value(QContactAnniversary::FieldEvent);}
@@ -181,7 +181,7 @@ public:
         return Unknown;
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -45,10 +45,12 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontacttype.h"
 
+QTCONTACTS_BEGIN_NAMESPACE
+
 class QDeclarativeContactType : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(ContactType type READ type WRITE setType NOTIFY fieldsChanged)
+    Q_PROPERTY(ContactType type READ type WRITE setType NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(ContactType)
     Q_CLASSINFO("DefaultProperty", "type")
@@ -57,11 +59,15 @@ public:
         TypeField = 0
     };
 
+    enum ContactType {
+        Contact = 0,
+        Group
+    };
 
 
     ContactDetailType detailType() const
     {
-        return QDeclarativeContactDetail::ContactType;
+        return QDeclarativeContactDetail::Type;
     }
     static QString fieldNameFromFieldType(int fieldType)
     {
@@ -77,15 +83,15 @@ public:
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactType());
-        connect(this, SIGNAL(valueChanged()), SIGNAL(fieldsChanged()));
+        connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    void setType(ContactType type)
+    void setType(ContactType newType)
     {
          if (!readOnly())  {
-            if (type == Contact)
+            if (newType == Contact)
                 detail().setValue(QContactType::FieldType, QContactType::TypeContact);
-            else if (type == Group)
+            else if (newType == Group)
                 detail().setValue(QContactType::FieldType, QContactType::TypeGroup);
          }
     }
@@ -97,8 +103,12 @@ public:
         return Group;
     }
 signals:
-    void fieldsChanged();
+    void valueChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeContactType)
+
+QTCONTACTS_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactType))
+
 #endif
 

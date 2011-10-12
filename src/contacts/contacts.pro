@@ -89,26 +89,8 @@ contains(QT_CONFIG, jsondb) {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb
 }
 
-maemo6|meego {
-    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=tracker
-}
-
 wince* {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=wince
-}
-
-symbian {
-    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=symbian
-
-    TARGET.EPOCALLOWDLLDATA = 1
-    TARGET.CAPABILITY = ALL -TCB
-    TARGET.UID3 = 0x2002AC7A
-
-    LIBS += -lefsrv
-
-    CONTACTS_DEPLOYMENT.sources = QtContacts.dll
-    CONTACTS_DEPLOYMENT.path = /sys/bin
-    DEPLOYMENT += CONTACTS_DEPLOYMENT
 }
 
 simulator {

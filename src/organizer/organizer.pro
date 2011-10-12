@@ -84,27 +84,6 @@ contains(QT_CONFIG, jsondb) {
     isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=jsondb
 }
 
-maemo6 {
-    isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=mkcal
-}
-
-symbian {
-    isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=symbian
-
-    TARGET.EPOCALLOWDLLDATA = 1
-    TARGET.CAPABILITY = ALL -TCB
-
-    TARGET.UID3 = 0x2002BFCD
-
-    LIBS += -lefsrv
-
-    # ## Organizer
-    # Main library
-    ORGANIZER_DEPLOYMENT.sources = QtOrganizer.dll
-    ORGANIZER_DEPLOYMENT.path = /sys/bin
-    DEPLOYMENT += ORGANIZER_DEPLOYMENT
-}
-
 simulator {
     isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=simulator
 }

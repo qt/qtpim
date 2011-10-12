@@ -63,25 +63,4 @@ SOURCES += \
     qversitcontactpluginloader_p.cpp \
     qversitutils.cpp
 
-symbian {
-    TARGET.UID3 = 0x2002BFBF
-    TARGET.EPOCALLOWDLLDATA = 1
-    TARGET.CAPABILITY = ALL -TCB
-
-    LIBS += -lefsrv
-
-    VERSIT_DEPLOYMENT.sources = QtVersit.dll
-    VERSIT_DEPLOYMENT.path = /sys/bin
-    DEPLOYMENT += VERSIT_DEPLOYMENT
-}
-
-maemo6 {
-    CONFIG += create_pc create_prl
-    QMAKE_PKGCONFIG_DESCRIPTION = Qt Mobility - Versit API
-    pkgconfig.path = $$QT_MOBILITY_LIB/pkgconfig
-    pkgconfig.files = QtVersit.pc
-
-    INSTALLS += pkgconfig
-}
-
 HEADERS += qtaddonversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

@@ -51,25 +51,25 @@ property SignalSpy contactsChangedSpy
         name: "ContactsSortingTests"
 
         Contact {
-            id: contact1;
+            id: contact1
             Name {
-                firstName: "A";
+                firstName: "A"
             }
         }
 
         Contact {
-            id: contact2;
+            id: contact2
             Name {
-                firstName: "B";
+                firstName: "B"
             }
         }
 
         function test_sortByFirstName()
         {
-            var component = Qt.createComponent("contactsTestHelper.qml")
-            var testHelper = component.createObject(top)
-            if (testHelper == undefined)
-            verify(testHelper != undefined, 'Unable to load component ' + name)
+            var component = Qt.createComponent("contactsTestHelper.qml");
+            var testHelper = component.createObject(top);
+            if (testHelper == undefined);
+            verify(testHelper != undefined, 'Unable to load component ' + name);
 
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
@@ -90,17 +90,20 @@ property SignalSpy contactsChangedSpy
 
             contactsChangedSpy = Qt.createQmlObject(
                 "import QtTest 1.0;" +
-                "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}",
+                "SignalSpy {" +
+                "   id: theSpy;" +
+                "   signalName: \"contactsChanged\";" +
+                "}",
                 testHelper);
             contactsChangedSpy.target = model;
-            contactsChangedSpy.clear()
+            contactsChangedSpy.clear();
 
             testHelper.emptyContactsDb();
 
             model.saveContact(contact2);
-            waitForContactsChanged()
+            waitForContactsChanged();
             model.saveContact(contact1);
-            waitForContactsChanged()
+            waitForContactsChanged();
 
             compareContactArrays(model.contacts, [contact1, contact2]);
 
@@ -109,26 +112,26 @@ property SignalSpy contactsChangedSpy
             component.destroy();
         }
 
-         Contact {
-            id: contactWithLastName1;
+        Contact {
+            id: contactWithLastName1
             Name {
-                lastName: "A";
+                lastName: "A"
             }
         }
 
         Contact {
-            id: contactWithLastName2;
+            id: contactWithLastName2
             Name {
-                lastName: "B";
+                lastName: "B"
             }
         }
 
         function test_sortByLastName()
         {
-            var component = Qt.createComponent("contactsTestHelper.qml")
-            var testHelper = component.createObject(top)
-            if (testHelper == undefined)
-            verify(testHelper != undefined, 'Unable to load component ' + name)
+            var component = Qt.createComponent("contactsTestHelper.qml");
+            var testHelper = component.createObject(top);
+            if (testHelper == undefined);
+            verify(testHelper != undefined, 'Unable to load component ' + name);
 
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
@@ -152,16 +155,78 @@ property SignalSpy contactsChangedSpy
                 "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}",
                 testHelper);
             contactsChangedSpy.target = model;
-            contactsChangedSpy.clear()
+            contactsChangedSpy.clear();
 
             testHelper.emptyContactsDb();
 
             model.saveContact(contactWithLastName2);
-            waitForContactsChanged()
+            waitForContactsChanged();
             model.saveContact(contactWithLastName1);
-            waitForContactsChanged()
+            waitForContactsChanged();
 
             compareContactArrays(model.contacts, [contactWithLastName1, contactWithLastName2]);
+
+            testHelper.emptyContactsDb();
+            testHelper.destroy();
+            component.destroy();
+        }
+
+        Contact {
+            id: contactWithEmailAddress1
+            EmailAddress {
+                emailAddress: "a@a"
+            }
+        }
+
+        Contact {
+            id: contactWithEmailAddress2
+            EmailAddress {
+                emailAddress: "b@b"
+            }
+        }
+
+        function test_sortByEmail()
+        {
+            var component = Qt.createComponent("contactsTestHelper.qml");
+            var testHelper = component.createObject(top);
+            if (testHelper == undefined);
+            verify(testHelper != undefined, 'Unable to load component ' + name);
+
+            var model = Qt.createQmlObject(
+                "import QtAddOn.contacts 2.0;" +
+                "ContactModel {" +
+                "   id:model;" +
+                "   manager:\"jsondb\";" +
+                "   autoUpdate:true;" +
+                "   sortOrders: [" +
+                "       SortOrder {" +
+                "           detail: ContactDetail.Email;" +
+                "           field: EmailAddress.EmailAddress;" +
+                "           direction: Qt.AscendingOrder;" +
+                "       }" +
+                "   ]" +
+                "}",
+                testHelper);
+            testHelper.model = model;
+
+            contactsChangedSpy = Qt.createQmlObject(
+                "import QtTest 1.0;" +
+                "SignalSpy {" +
+                "   id: theSpy;" +
+                "   signalName: \"contactsChanged\";" +
+                "}",
+                testHelper);
+            contactsChangedSpy.target = model;
+            contactsChangedSpy.clear();
+
+            testHelper.emptyContactsDb();
+
+            model.saveContact(contactWithEmailAddress2);
+            waitForContactsChanged();
+            model.saveContact(contactWithEmailAddress1);
+            waitForContactsChanged();
+
+            compareContactArrays(model.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
 
             testHelper.emptyContactsDb();
             testHelper.destroy();
@@ -171,7 +236,18 @@ property SignalSpy contactsChangedSpy
         function compareContactArrays(actual, expected) {
             compare(actual.length, expected.length, "length");
             for (var i = 0; i < expected.length; i++) {
-                compare(actual[i].name.firstName, expected[i].name.firstName, 'name.firstName');
+                compareContacts(actual[i], expected[i]);
+            }
+        }
+
+        function compareContacts(actual, expected) {
+            if (expected.name) {
+                compare(actual.name.firstName, expected.name.firstName, 'name.firstName');
+                compare(actual.name.lastName, expected.name.lastName, 'name.lastName');
+            }
+            if (expected.email) {
+                compare(actual.email.emailAddress, expected.email.emailAddress,
+                    'email.emailAddress');
             }
         }
 

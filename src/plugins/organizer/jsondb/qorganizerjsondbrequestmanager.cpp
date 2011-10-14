@@ -41,9 +41,6 @@
 #include <QMutexLocker>
 
 #include "qorganizerjsondbrequestmanager.h"
-#include "qorganizerjsondbid.h"
-#include "qorganizeritemsaverequest.h"
-#include "qorganizercollectionsaverequest.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -64,13 +61,7 @@ void QOrganizerJsonDbRequestManager::addRequest(QOrganizerAbstractRequest* req)
     if (!m_requests.contains(req)) {
         QOrganizerJsonDbRequestData* newData = new QOrganizerJsonDbRequestData();
         newData->m_status = QOrganizerJsonDbRequestManager::Inactive;
-        newData->m_latestError = QOrganizerManager::NoError;
         newData->m_waitCondition = 0;
-
-        if (req->type() == QOrganizerAbstractRequest::ItemSaveRequest)
-            newData->m_itemList = static_cast<QOrganizerItemSaveRequest*>(req)->items();
-        else if (req->type() == QOrganizerAbstractRequest::CollectionSaveRequest)
-            newData->m_collectionList = static_cast<QOrganizerCollectionSaveRequest*>(req)->collections();
         m_requests.insert(req, newData);
     }
 }
@@ -83,33 +74,6 @@ void QOrganizerJsonDbRequestManager::removeRequest(QOrganizerAbstractRequest* re
         delete m_requests.value(req);
         m_requests.remove(req);
     }
-}
-
-void QOrganizerJsonDbRequestManager::addTransaction(QOrganizerAbstractRequest* req, int trId, int index)
-{
-    QMutexLocker locker(m_operationMutex);
-
-    if (m_requests.contains(req)) {
-        m_requests.value(req)->m_transactionMap.insert(trId, index);
-    }
-}
-
-QOrganizerAbstractRequest* QOrganizerJsonDbRequestManager::removeTransaction(int trId, int& index)
-{
-    QMutexLocker locker(m_operationMutex);
-
-    QList<QOrganizerAbstractRequest*> reqList = m_requests.keys();
-    for (int i = 0; i < reqList.size(); i++) {
-        QOrganizerAbstractRequest* req = reqList.at(i);
-        QMap<int, int>* transactionMap = &(m_requests.value(req)->m_transactionMap);
-
-        if (transactionMap->contains(trId)) {
-            index = transactionMap->value(trId);
-            transactionMap->remove(trId);
-            return reqList.at(i);
-        }
-    }
-    return 0;
 }
 
 bool QOrganizerJsonDbRequestManager::setActive(QOrganizerAbstractRequest *req)
@@ -168,45 +132,6 @@ void QOrganizerJsonDbRequestManager::removeWaitCondition(QOrganizerAbstractReque
     }
 }
 
-bool QOrganizerJsonDbRequestManager::updateRequestData(QOrganizerAbstractRequest* req, QOrganizerManager::Error error, int index,
-                                                       QOrganizerItem item, QOrganizerCollection collection)
-{
-    QMutexLocker locker(m_operationMutex);
-
-    if (m_requests.contains(req)) {
-        QOrganizerJsonDbRequestData* reqData = m_requests.value(req);
-        if (req->type() == QOrganizerAbstractRequest::ItemSaveRequest)
-            reqData->m_itemList.replace(index, item);
-        else if (req->type() == QOrganizerAbstractRequest::CollectionSaveRequest)
-            reqData->m_collectionList.replace(index, collection);
-
-        if (error != QOrganizerManager::NoError) {
-            reqData->m_latestError = error;
-            reqData->m_errorMap.insert(index, error);
-        }
-        return true;
-    }
-    return false;
-}
-
-bool QOrganizerJsonDbRequestManager::requestData(QOrganizerAbstractRequest* req, QOrganizerManager::Error* latestError, QMap<int, QOrganizerManager::Error>* errorMap,
-                                                 QList<QOrganizerItem>* items, QList<QOrganizerCollection>* collections)
-{
-    QMutexLocker locker(m_operationMutex);
-
-    if (m_requests.contains(req)) {
-        QOrganizerJsonDbRequestData* reqData = m_requests.value(req);
-        *latestError = reqData->m_latestError;
-        *errorMap = reqData->m_errorMap;
-        if (items)
-            *items = reqData->m_itemList;
-        if (collections)
-            *collections = reqData->m_collectionList;
-        return true;
-    }
-    return false;
-}
-
 QOrganizerJsonDbRequestManager::HandlingStatus QOrganizerJsonDbRequestManager::requestStatus(QOrganizerAbstractRequest* req)
 {
     QMutexLocker locker(m_operationMutex);
@@ -218,15 +143,6 @@ QOrganizerJsonDbRequestManager::HandlingStatus QOrganizerJsonDbRequestManager::r
 }
 
 
-bool QOrganizerJsonDbRequestManager::isRequestCompleted(QOrganizerAbstractRequest* req)
-{
-    QMutexLocker locker(m_operationMutex);
-
-    if (m_requests.contains(req)) {
-        return m_requests.value(req)->m_transactionMap.isEmpty();
-    }
-    return true;
-}
 
 #include "moc_qorganizerjsondbrequestmanager.cpp"
 

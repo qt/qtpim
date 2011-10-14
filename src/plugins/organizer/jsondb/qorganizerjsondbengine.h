@@ -151,8 +151,6 @@ signals:
 private:
     QOrganizerJsonDbEngine();
     bool initEngine(QOrganizerManager::Error* error);
-    /*Initialize the default collection*/
-    void initCollection(QOrganizerManager::Error* error);
 
     QOrganizerJsonDbEngineData* d;
 

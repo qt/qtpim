@@ -49,20 +49,11 @@
 #include "qorganizer.h"
 #include "qorganizerjsondbconverter.h"
 
-#include <jsondb-error.h>
-#include <jsondb-global.h>
-
-Q_ADDON_JSONDB_BEGIN_NAMESPACE
-class JsonDbClient;
-class JsonDbConnection;
-Q_ADDON_JSONDB_END_NAMESPACE
-Q_USE_JSONDB_NAMESPACE
-
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbRequestManager;
 class QOrganizerJsonDbEngine;
-
+class QOrganizerJsonDbDataStorage;
 
 class QOrganizerJsonDbRequestThread : public QThread
 {
@@ -76,21 +67,17 @@ public:
     bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
     void requestDestroyed(QOrganizerAbstractRequest* req);
     QOrganizerCollection defaultCollection() const;
-    void setDefaultCollection(QOrganizerCollection collection);
-    virtual void run();
 
 public slots:
     void handleRequest(QOrganizerAbstractRequest* req);
-    void onNotified(const QString& notifyUuid, const QVariant& object, const QString& action);
-    void onResponse(int trId, const QVariant& object);
-    void onError(int trId, int errorCode, const QString& message);
 
 signals:
     void initialized();
 
-private:
-    void handleResponse(int trId, QOrganizerManager::Error error, const QVariant& object);
+protected:
+    virtual void run();
 
+private:
     void handleItemSaveRequest(QOrganizerItemSaveRequest* saveReq);
     void handleItemFetchRequest(QOrganizerItemFetchRequest* fetchReq);
     void handleItemIdFetchRequest(QOrganizerItemIdFetchRequest* idFetchReq);
@@ -99,39 +86,16 @@ private:
     void handleCollectionSaveRequest(QOrganizerCollectionSaveRequest* collectionSaveReq);
     void handleCollectionFetchRequest(QOrganizerCollectionFetchRequest* collectionFetchReq);
     void handleCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* collectionRemoveReq);
-
-    void handleItemSaveResponse(QOrganizerItemSaveRequest* saveReq, const QVariant &object, int index, QOrganizerManager::Error error);
-    void handleItemFetchResponse(QOrganizerItemFetchRequest* fetchReq, const QVariant &object, QOrganizerManager::Error error);
-    void handleItemIdFetchResponse(QOrganizerItemIdFetchRequest* idFetchReq, const QVariant &object, QOrganizerManager::Error error);
-    void handleItemFetchByIdResponse(QOrganizerItemFetchByIdRequest* fetchByIdReq, const QVariant &object, QOrganizerManager::Error error);
-    void handleItemRemoveResponse(QOrganizerItemRemoveRequest* removeReq, const QVariant &object, int index, QOrganizerManager::Error error);
-    void handleCollectionSaveResponse(QOrganizerCollectionSaveRequest* collectionSaveReq, const QVariant &object, int index, QOrganizerManager::Error error);
-    void handleCollectionFetchResponse(QOrganizerCollectionFetchRequest* collectionFetchReq, const QVariant &object, QOrganizerManager::Error error);
-    void handleCollectionRemoveResponse(QOrganizerCollectionRemoveRequest* collectionRemoveReq, const QVariant &object, int index, QOrganizerManager::Error error);
-
-    QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
-
-    //Interpret the filter to Jsondb query string, return true if filter is valid.
-    bool singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
-    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr);
-
-    //Get default collection ID from engine
-    QString defaultCollectionId() const;
+    void initDefaultCollection();
 
     // Member variables
     QOrganizerJsonDbEngine* m_engine;
-    QOrganizerJsonDbConverter m_converter;
-    JsonDbClient* m_jsonDb;
-    JsonDbConnection* m_jsonConnection;
+    QOrganizerJsonDbDataStorage* m_storage;
     QOrganizerJsonDbRequestManager* m_requestMgr;
     //Mutex to make the request state changes atomic
     QMutex* m_reqStateMutex;
     QOrganizerItemChangeSet m_ics;
     QOrganizerCollectionChangeSet m_ccs;
-    //Keep collection id list in memory for fast visit
-    QList<QOrganizerCollectionId> m_collectionsIdList;
-    //Default collection
-    QOrganizerCollection m_defaultCollection;
 };
 
 QTORGANIZER_END_NAMESPACE

@@ -58,8 +58,6 @@
 #include <QMutex>
 #include <QWaitCondition>
 
-#include "qorganizeritem.h"
-#include "qorganizercollection.h"
 #include "qorganizerabstractrequest.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -88,23 +86,13 @@ public:
     void addRequest(QOrganizerAbstractRequest* req);
     void removeRequest(QOrganizerAbstractRequest* req);
 
-    void addTransaction(QOrganizerAbstractRequest* req, int trId, int index = -1);
-    QOrganizerAbstractRequest* removeTransaction(int trId, int& index);
-
     bool setActive(QOrganizerAbstractRequest* req);
     bool setDeleted(QOrganizerAbstractRequest* req);
+    QOrganizerJsonDbRequestManager::HandlingStatus requestStatus(QOrganizerAbstractRequest* req);
 
     bool setWaitCondition(QOrganizerAbstractRequest* req, QWaitCondition* waitCondition);
     QWaitCondition* waitCondition(QOrganizerAbstractRequest* req);
     void removeWaitCondition(QOrganizerAbstractRequest* req);
-
-    bool updateRequestData(QOrganizerAbstractRequest* req, QOrganizerManager::Error error, int index,
-                           QOrganizerItem item = QOrganizerItem(), QOrganizerCollection collection = QOrganizerCollection());
-    bool requestData(QOrganizerAbstractRequest* req, QOrganizerManager::Error* latestError, QMap<int, QOrganizerManager::Error>* errorMap,
-                     QList<QOrganizerItem>* items = 0, QList<QOrganizerCollection>* collections = 0);
-
-    QOrganizerJsonDbRequestManager::HandlingStatus requestStatus(QOrganizerAbstractRequest* req);
-    bool isRequestCompleted(QOrganizerAbstractRequest* req);
 
 private:
     QMap<QOrganizerAbstractRequest*, QOrganizerJsonDbRequestData* > m_requests;
@@ -116,11 +104,6 @@ class QOrganizerJsonDbRequestData
     public:
 
     QOrganizerJsonDbRequestData() {}
-    QList<QOrganizerItem> m_itemList;
-    QList<QOrganizerCollection> m_collectionList;
-    QOrganizerManager::Error m_latestError;
-    QMap<int, QOrganizerManager::Error> m_errorMap;
-    QMap<int, int> m_transactionMap;
     QWaitCondition* m_waitCondition;
     QOrganizerJsonDbRequestManager::HandlingStatus m_status;
 };

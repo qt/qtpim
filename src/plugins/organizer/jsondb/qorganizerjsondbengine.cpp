@@ -50,11 +50,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbEngine *QOrganizerJsonDbEngine::createJsonDbEngine(QOrganizerManager::Error* error)
 {
-    QOrganizerJsonDbEngine* engine = new QOrganizerJsonDbEngine ();
-    if (engine) {
-        if (engine->initEngine (error))
-            engine->initCollection (error);
-    }
+    QOrganizerJsonDbEngine* engine = new QOrganizerJsonDbEngine();
+    if (engine)
+        engine->initEngine(error);
+
     return engine;
 }
 
@@ -103,32 +102,6 @@ bool QOrganizerJsonDbEngine::initEngine (QOrganizerManager::Error* error)
        *error = QOrganizerManager::OutOfMemoryError;
     }
     return ret;
-}
-
-void QOrganizerJsonDbEngine::initCollection(QOrganizerManager::Error* error)
-{
-    //Fetch the collection list
-    QOrganizerCollectionFetchRequest collectionFetchReq;
-    *error = QOrganizerManager::NoError;
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&collectionFetchReq);
-
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&collectionFetchReq, 0)) {
-        *error = collectionFetchReq.error();
-        //Check if we get default collection
-        if (defaultCollection(error).id().isNull()) {
-            //Create new default collection
-            QOrganizerCollectionSaveRequest collectionSaveReq;
-            QOrganizerCollection defaultCollection;
-            defaultCollection.setMetaData(QOrganizerCollection::KeyName, QOrganizerJsonDbStr::DefaultCollectionName);
-            collectionSaveReq.setCollection(defaultCollection);
-            const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&collectionSaveReq);
-            if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&collectionSaveReq, 0)) {
-                *error = collectionSaveReq.error();
-                if (*error == QOrganizerManager::NoError)
-                    d->m_requestHandlerThread->setDefaultCollection(collectionSaveReq.collections().at(0));
-            }
-        }
-    }
 }
 
 QString QOrganizerJsonDbEngine::managerName() const

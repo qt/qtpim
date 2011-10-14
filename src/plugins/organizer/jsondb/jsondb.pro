@@ -17,7 +17,8 @@ HEADERS += \
     qorganizerjsondbid.h \
     qorganizerjsondbrequestmanager.h \
     qorganizerjsondbstring_p.h \
-    qorganizerjsondbconverter.h
+    qorganizerjsondbconverter.h \
+    qorganizerjsondbdatastorage.h
 
 SOURCES += \
     qorganizerjsondbengine.cpp \
@@ -26,4 +27,5 @@ SOURCES += \
     qorganizerjsondbid.cpp \
     qorganizerjsondbrequestmanager.cpp \
     qorganizerjsondbstring.cpp \
-    qorganizerjsondbconverter.cpp
+    qorganizerjsondbconverter.cpp \
+    qorganizerjsondbdatastorage.cpp

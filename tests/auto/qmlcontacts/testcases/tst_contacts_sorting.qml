@@ -66,11 +66,6 @@ property SignalSpy contactsChangedSpy
 
         function test_sortByFirstName()
         {
-            var component = Qt.createComponent("contactsTestHelper.qml");
-            var testHelper = component.createObject(top);
-            if (testHelper == undefined);
-            verify(testHelper != undefined, 'Unable to load component ' + name);
-
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
                     "ContactModel {" +
@@ -108,8 +103,6 @@ property SignalSpy contactsChangedSpy
             compareContactArrays(model.contacts, [contact1, contact2]);
 
             testHelper.emptyContactsDb();
-            testHelper.destroy();
-            component.destroy();
         }
 
         Contact {
@@ -128,11 +121,6 @@ property SignalSpy contactsChangedSpy
 
         function test_sortByLastName()
         {
-            var component = Qt.createComponent("contactsTestHelper.qml");
-            var testHelper = component.createObject(top);
-            if (testHelper == undefined);
-            verify(testHelper != undefined, 'Unable to load component ' + name);
-
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
                     "ContactModel {" +
@@ -167,8 +155,6 @@ property SignalSpy contactsChangedSpy
             compareContactArrays(model.contacts, [contactWithLastName1, contactWithLastName2]);
 
             testHelper.emptyContactsDb();
-            testHelper.destroy();
-            component.destroy();
         }
 
         Contact {
@@ -187,11 +173,6 @@ property SignalSpy contactsChangedSpy
 
         function test_sortByEmail()
         {
-            var component = Qt.createComponent("contactsTestHelper.qml");
-            var testHelper = component.createObject(top);
-            if (testHelper == undefined);
-            verify(testHelper != undefined, 'Unable to load component ' + name);
-
             var model = Qt.createQmlObject(
                 "import QtAddOn.contacts 2.0;" +
                 "ContactModel {" +
@@ -229,8 +210,6 @@ property SignalSpy contactsChangedSpy
             compareContactArrays(model.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
 
             testHelper.emptyContactsDb();
-            testHelper.destroy();
-            component.destroy();
         }
 
         function compareContactArrays(actual, expected) {
@@ -253,6 +232,22 @@ property SignalSpy contactsChangedSpy
 
         function waitForContactsChanged() {
             contactsChangedSpy.wait();
+        }
+
+        property Component component
+        property ContactsTestHelper testHelper
+
+        function init() {
+            component = Qt.createComponent("ContactsTestHelper.qml");
+            testHelper = component.createObject(top);
+            if (testHelper == undefined)
+                console.log("Unable to load component from " + name +  " error is ", component.errorString())
+            verify(testHelper != undefined, 'Unable to load component ' + name);
+        }
+
+        function cleanup() {
+            testHelper.destroy();
+            component.destroy();
         }
    }
 }

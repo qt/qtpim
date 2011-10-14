@@ -53,7 +53,7 @@ property Contact testContact
 
     TestCase {
         name: "ContactsTests"
-        // test data is handled by contactsTestHelper.qml function addContacts(contacts_data)
+        // test data is handled by ContactsTestHelper.qml function addContacts(contacts_data)
         function test_detailFilters_data() {
             return [
                 {tag: "Contacts set 1",
@@ -107,8 +107,6 @@ property Contact testContact
 //data driven test as part of QtTest frame work
         function test_detailFilters(data)
         {
-            var component = Qt.createComponent("contactsTestHelper.qml")
-            var testHelper = component.createObject(top)
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
                     "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;}", testHelper);
@@ -116,9 +114,6 @@ property Contact testContact
                     "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
             contactsChangedSpy = spy;
             contactsChangedSpy.target = model;
-            if (testHelper == undefined)
-                console.log("Unable to load component from " + name +  " error is ", component.errorString())
-            verify(testHelper != undefined, 'Unable to load component ' + name)
 
             testHelper.model = model;
             //Let's wait for the model to be up-to-date
@@ -246,8 +241,6 @@ property Contact testContact
             model.filter = null;
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testHelper.emptyContactsDb();
-            testHelper.destroy()
-            component.destroy()
         }
         DetailFilter {
            id:firstNameFilter
@@ -270,10 +263,6 @@ property Contact testContact
         //data driven test as part of QtTest frame work
         function test_contactDetails(data)
         {
-            var component = Qt.createComponent("contactsTestHelper.qml")
-            var testHelper = component.createObject(top)
-            if (testHelper == undefined)
-            verify(testHelper != undefined, 'Unable to load component ' + name)
             var model2 = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
                     "ContactModel {id:model2;manager:\"jsondb\";autoUpdate:true;}", testHelper);
@@ -295,8 +284,6 @@ property Contact testContact
             compare (model2.contacts[0].phoneNumber.subTypes[0], data.organizations[0].phoneSubTypeString)
             compare (model2.contacts[0].phoneNumber.contexts[0],data.organizations[0].contexts)
             testHelper.emptyContactsDb();
-            testHelper.destroy();
-            component.destroy();
         }
 
         function test_addAndRemoveDetails()
@@ -304,8 +291,6 @@ property Contact testContact
             //TODO verify this test case when we remove dynamic properties from the Api
             //currently removing details from the contact is not updated in contact model
             //TODO add a test case to remove the same detail N times and remove a detail which doesnt exist etc...
-            var component = Qt.createComponent("contactsTestHelper.qml")
-            var testHelper = component.createObject(top)
             var model = Qt.createQmlObject(
                     "import QtAddOn.contacts 2.0;" +
                     "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
@@ -339,6 +324,20 @@ property Contact testContact
             compare(testContact.phoneNumber.number,"")
             compare(testContact.nickname.nickname,"")
             testHelper.emptyContactsDb();
+        }
+
+        property Component component
+        property ContactsTestHelper testHelper
+
+        function init() {
+            component = Qt.createComponent("ContactsTestHelper.qml");
+            testHelper = component.createObject(top);
+            if (testHelper == undefined)
+                console.log("Unable to load component from " + name +  " error is ", component.errorString())
+            verify(testHelper != undefined, 'Unable to load component ' + name);
+        }
+
+        function cleanup() {
             testHelper.destroy();
             component.destroy();
           }

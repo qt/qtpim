@@ -371,9 +371,15 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     if (item.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEvent event = static_cast<QOrganizerEvent>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Event);
-        object->insert(QOrganizerJsonDbStr::EventStartDateTime, event.startDateTime().toString(Qt::ISODate));
-        object->insert(QOrganizerJsonDbStr::EventEndDateTime, event.endDateTime().toString(Qt::ISODate));
-        object->insert(QOrganizerJsonDbStr::EventIsAllDay, event.isAllDay());
+
+        QOrganizerEventTime eventTime = event.detail(QOrganizerEventTime::DefinitionName);
+        if (eventTime.hasValue(QOrganizerEventTime::FieldStartDateTime))
+            object->insert(QOrganizerJsonDbStr::EventStartDateTime, eventTime.startDateTime().toString(Qt::ISODate));
+        if (eventTime.hasValue(QOrganizerEventTime::FieldEndDateTime))
+            object->insert(QOrganizerJsonDbStr::EventEndDateTime, eventTime.endDateTime().toString(Qt::ISODate));
+        if (eventTime.hasValue(QOrganizerEventTime::FieldAllDay))
+            object->insert(QOrganizerJsonDbStr::EventIsAllDay, eventTime.isAllDay());
+
         recurrenceRules = event.recurrenceRules();
         exceptionRules = event.exceptionRules();
         recurrenceDates = event.recurrenceDates();
@@ -381,13 +387,15 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     } else if (item.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodo todo = static_cast<QOrganizerTodo>(item);
         object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Todo);
-        object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todo.startDateTime().toString(Qt::ISODate));
 
-        QDateTime dueDateTime(todo.dueDateTime());
-        if (!dueDateTime.isNull())
-            object->insert(QOrganizerJsonDbStr::TodoDueDateTime, dueDateTime.toString(Qt::ISODate));
+        QOrganizerTodoTime todoTime = todo.detail(QOrganizerTodoTime::DefinitionName);
+        if (todoTime.hasValue(QOrganizerTodoTime::FieldStartDateTime))
+            object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todoTime.startDateTime().toString(Qt::ISODate));
+        if (todoTime.hasValue(QOrganizerTodoTime::FieldDueDateTime))
+            object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todoTime.dueDateTime().toString(Qt::ISODate));
+        if (todoTime.hasValue(QOrganizerTodoTime::FieldAllDay))
+            object->insert(QOrganizerJsonDbStr::TodoIsAllDay, todoTime.isAllDay());
 
-        object->insert(QOrganizerJsonDbStr::TodoIsAllDay, todo.isAllDay());
         recurrenceRules = todo.recurrenceRules();
         exceptionRules = todo.exceptionRules();
         recurrenceDates = todo.recurrenceDates();

@@ -44,11 +44,12 @@
 #include "tst_qversitorganizerexporter.h"
 #include <QtTest/QtTest>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
+QTVERSITORGANIZER_USE_NAMESPACE
 
-Q_DECLARE_METATYPE(QList<QOrganizerItem>);
-Q_DECLARE_METATYPE(QList<QOrganizerItemDetail>);
-Q_DECLARE_METATYPE(QList<QVersitProperty>);
+Q_DECLARE_METATYPE(QList<QOrganizerItem>)
+Q_DECLARE_METATYPE(QList<QOrganizerItemDetail>)
+Q_DECLARE_METATYPE(QList<QVersitProperty>)
 
 void tst_QVersitOrganizerExporter::testExport()
 {

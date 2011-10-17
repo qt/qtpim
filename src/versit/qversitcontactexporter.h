@@ -49,7 +49,7 @@
 
 #include <QImage>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitContactExporterPrivate;
 
@@ -57,11 +57,11 @@ class Q_VERSIT_EXPORT QVersitContactExporterDetailHandler
 {
 public:
     virtual ~QVersitContactExporterDetailHandler() {}
-    virtual bool preProcessDetail(const QContact& contact,
-                                  const QContactDetail& detail,
+    virtual bool preProcessDetail(const QTCONTACTS_PREPEND_NAMESPACE(QContact)& contact,
+                                  const QTCONTACTS_PREPEND_NAMESPACE(QContactDetail)& detail,
                                   QVersitDocument* document) = 0;
-    virtual bool postProcessDetail(const QContact& contact,
-                                   const QContactDetail& detail,
+    virtual bool postProcessDetail(const QTCONTACTS_PREPEND_NAMESPACE(QContact)& contact,
+                                   const QTCONTACTS_PREPEND_NAMESPACE(QContactDetail)& detail,
                                    bool alreadyProcessed,
                                    QVersitDocument* document) = 0;
 
@@ -72,13 +72,13 @@ class Q_VERSIT_EXPORT QVersitContactExporterDetailHandlerV2
 public:
     virtual ~QVersitContactExporterDetailHandlerV2() {}
 
-    virtual void detailProcessed(const QContact& contact,
-                                 const QContactDetail& detail,
+    virtual void detailProcessed(const QTCONTACTS_PREPEND_NAMESPACE(QContact)& contact,
+                                 const QTCONTACTS_PREPEND_NAMESPACE(QContactDetail)& detail,
                                  const QVersitDocument& document,
                                  QSet<QString>* processedFields,
                                  QList<QVersitProperty>* toBeRemoved,
                                  QList<QVersitProperty>* toBeAdded) = 0;
-    virtual void contactProcessed(const QContact& contact,
+    virtual void contactProcessed(const QTCONTACTS_PREPEND_NAMESPACE(QContact)& contact,
                                   QVersitDocument* document) = 0;
 };
 
@@ -96,7 +96,7 @@ public:
     explicit QVersitContactExporter(const QStringList& profile);
     ~QVersitContactExporter();
 
-    bool exportContacts(const QList<QContact>& contacts,
+    bool exportContacts(const QList<QTCONTACTS_PREPEND_NAMESPACE(QContact)>& contacts,
             QVersitDocument::VersitType versitType = QVersitDocument::VCard30Type);
     QList<QVersitDocument> documents() const;
     QMap<int, Error> errorMap() const;
@@ -115,6 +115,6 @@ private:
     QVersitContactExporterPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITCONTACTEXPORTER_H

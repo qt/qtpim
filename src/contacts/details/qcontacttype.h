@@ -47,7 +47,7 @@
 #include <qcontactsglobal.h>
 #include <qcontactdetail.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactType : public QContactDetail
@@ -69,7 +69,7 @@ public:
     QString type() const {return value(FieldType);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

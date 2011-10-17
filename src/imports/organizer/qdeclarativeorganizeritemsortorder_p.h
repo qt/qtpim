@@ -48,7 +48,7 @@
 #include "qdeclarativeorganizeritemdetail_p.h"
 #include <QDeclarativeParserStatus>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativeParserStatus
 {
@@ -178,7 +178,9 @@ private:
     QVariant m_detail;
     QOrganizerItemSortOrder d;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemSortOrder)
 
+QTORGANIZER_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemSortOrder))
 
 #endif

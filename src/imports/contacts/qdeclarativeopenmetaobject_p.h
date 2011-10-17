@@ -46,7 +46,7 @@
 #include <QtCore/QMetaObject>
 #include <QtCore/QObject>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 // Copied from qobject_p.h
 struct QAbstractDynamicMetaObject : public QMetaObject
@@ -88,6 +88,6 @@ private:
     friend class QDeclarativeOpenMetaObjectType;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif // QDECLARATIVEOPENMETAOBJECT_H

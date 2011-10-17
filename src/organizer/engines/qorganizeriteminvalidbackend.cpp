@@ -53,7 +53,7 @@
   \since 1.1
  */
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*! Constructs a new invalid organizeritems backend. */
 QOrganizerItemInvalidEngine::QOrganizerItemInvalidEngine()
@@ -68,4 +68,4 @@ QString QOrganizerItemInvalidEngine::managerName() const
     return QString(QLatin1String("invalid"));
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

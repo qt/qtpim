@@ -41,7 +41,7 @@
 
 #include "qorganizernote.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerNote
@@ -54,3 +54,5 @@ QTPIM_USE_NAMESPACE
   that has its type set to TypeNote.  It contains information which is
   not associated with a particular point in time.
  */
+
+QTORGANIZER_END_NAMESPACE

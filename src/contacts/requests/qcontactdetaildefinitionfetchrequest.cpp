@@ -42,7 +42,7 @@
 #include "qcontactdetaildefinitionfetchrequest.h"
 #include "qcontactrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactDetailDefinitionFetchRequest
@@ -156,4 +156,4 @@ QMap<int, QContactManager::Error> QContactDetailDefinitionFetchRequest::errorMap
 
 #include "moc_qcontactdetaildefinitionfetchrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

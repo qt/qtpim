@@ -45,7 +45,7 @@
 #include <qversitcontactimporter.h>
 #include <qversitcontactexporter.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 // qdoc seems to not find QVersitContactHandler if it is declared first.. ugh
 class QVersitContactHandler;
@@ -78,9 +78,9 @@ public:
     virtual ~QVersitContactHandler() {}
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
-#define QT_VERSIT_CONTACT_HANDLER_INTERFACE "com.nokia.qt.pim.versit.contacthandlerfactory/1.0"
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QVersitContactHandlerFactory, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
+#define QT_VERSIT_CONTACT_HANDLER_INTERFACE "com.nokia.qt.versit.contacthandlerfactory/1.0"
+Q_DECLARE_INTERFACE(QtVersit::QVersitContactHandlerFactory, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
 
 #endif

@@ -50,7 +50,7 @@
 #include <QList>
 #include <QMap>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerCollectionFetchRequestPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerCollectionFetchRequest : public QOrganizerAbstractRequest
@@ -73,6 +73,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerCollectionFetchRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

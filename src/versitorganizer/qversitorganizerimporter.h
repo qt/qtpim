@@ -45,14 +45,25 @@
 #include <qversitorganizerglobal.h>
 
 #include <qorganizeritem.h>
+#include <qversitdocument.h>
 
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
+class QOrganizerItem;
+QTORGANIZER_END_NAMESPACE
 
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitDocument;
-class QVersitOrganizerImporterPrivate;
 class QVersitProperty;
+QTVERSIT_END_NAMESPACE
+
+QTVERSIT_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
+
+QTVERSITORGANIZER_BEGIN_NAMESPACE
+
+class QVersitOrganizerImporterPrivate;
 
 class Q_VERSIT_ORGANIZER_EXPORT QVersitOrganizerImporterPropertyHandler
 {
@@ -91,6 +102,6 @@ private:
     QVersitOrganizerImporterPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif // QVERSITORGANIZERIMPORTER_H

@@ -52,7 +52,7 @@
 #include <qorganizeritemid.h>
 #include <qorganizercollectionid.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerManagerEngine;
 class QOrganizerCollectionData;
@@ -108,9 +108,9 @@ Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerCol
 Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection);
 #endif
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerCollection), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollection), Q_MOVABLE_TYPE);
 
 #endif
 

@@ -52,7 +52,7 @@
 # include <f32file.h>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 #if defined(Q_OS_SYMBIAN)
 static inline bool qSymbian_CheckDir(const QDir& dir, RFs& rfs)
@@ -169,6 +169,6 @@ inline QStringList mobilityPlugins(const QString& plugintype)
     return  plugins;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif // QVERSITORGANIZERPLUGINSEARCH_H

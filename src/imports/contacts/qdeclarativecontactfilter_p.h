@@ -45,7 +45,7 @@
 #include <QDeclarativeExtensionPlugin>
 #include <qcontactfilter.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactFilter : public QObject
 {
@@ -123,9 +123,9 @@ protected:
     QList<QDeclarativeContactFilter*> m_filters;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactFilter))
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactCompoundFilter))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactFilter))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactCompoundFilter))
 
 #endif

@@ -55,7 +55,7 @@
 
 #include "qcontactjsondbrequesthandler.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbEngineData : public QSharedData
 {
@@ -80,5 +80,6 @@ public:
     QContactJsonDbRequestHandler* m_requestHandler;
 };
 
+QTCONTACTS_END_NAMESPACE
 
 #endif // QCONTACTJSONDBENGINEDATA_H

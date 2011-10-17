@@ -54,7 +54,7 @@
 #include <private/qorganizeritemmemorybackend_p.h>
 #include "qorganizeritemengineid.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 // Eventually these will make it into qtestcase.h
 // but we might need to tweak the timeout values here.
 #ifndef QTRY_COMPARE

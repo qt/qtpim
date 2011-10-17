@@ -61,7 +61,7 @@
 
 #include "qorganizer.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemData : public QSharedData
 {
@@ -93,7 +93,7 @@ public:
     QList<QOrganizerItemDetail> m_details;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

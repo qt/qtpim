@@ -60,18 +60,20 @@
 #include "qorganizeritemengineid.h"
 #include "qorganizercollectionengineid.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbEngineFactory : public QObject, public QOrganizerManagerEngineFactory
 {
   Q_OBJECT
-  Q_INTERFACES(QtAddOn::Pim::QOrganizerManagerEngineFactory)
+  Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
   public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
     QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
     QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
     QString managerName() const;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

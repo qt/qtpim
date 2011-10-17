@@ -44,7 +44,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QVersitOrganizerImporter
@@ -220,3 +220,5 @@ void QVersitOrganizerImporter::setPropertyHandler(QVersitOrganizerImporterProper
 {
     d->mPropertyHandler = handler;
 }
+
+QTVERSITORGANIZER_END_NAMESPACE

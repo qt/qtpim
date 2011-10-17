@@ -53,7 +53,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactRelationshipPrivate;
 class QContact;
@@ -112,7 +112,7 @@ Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactRelati
 Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactRelationship& rel);
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

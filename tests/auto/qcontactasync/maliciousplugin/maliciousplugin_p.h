@@ -209,7 +209,7 @@ private:
 class MaliciousEngineFactory : public QObject, public QContactManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtAddOn::Pim::QContactManagerEngineFactory)
+    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
 
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);

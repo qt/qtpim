@@ -47,7 +47,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include <QDeclarativeParserStatus>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QDeclarativeParserStatus
 {
@@ -208,8 +208,8 @@ private:
 
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactDetailRangeFilter))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactDetailRangeFilter))
 
 #endif

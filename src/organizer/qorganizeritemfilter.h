@@ -51,7 +51,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Manual Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE macro */
 
@@ -124,9 +124,9 @@ protected:
 const Q_ORGANIZER_EXPORT QOrganizerItemFilter operator&(const QOrganizerItemFilter& left, const QOrganizerItemFilter& right);
 const Q_ORGANIZER_EXPORT QOrganizerItemFilter operator|(const QOrganizerItemFilter& left, const QOrganizerItemFilter& right);
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilter), Q_MOVABLE_TYPE);
-Q_DECLARE_OPERATORS_FOR_FLAGS(QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilter::MatchFlags))
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilter), Q_MOVABLE_TYPE);
+Q_DECLARE_OPERATORS_FOR_FLAGS(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilter::MatchFlags))
 
 #endif

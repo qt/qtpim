@@ -55,7 +55,7 @@
 #include <QtTest/QtTest>
 #include <qcontacts.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 class MyQVersitContactExporterDetailHandler : public QVersitContactExporterDetailHandler
 {
@@ -190,10 +190,6 @@ public:
 const static QByteArray SAMPLE_GIF(QByteArray::fromBase64(
         "R0lGODlhEgASAIAAAAAAAP///yH5BAEAAAEALAAAAAASABIAAAIdjI+py+0G"
         "wEtxUmlPzRDnzYGfN3KBaKGT6rDmGxQAOw=="));
-
-QTPIM_END_NAMESPACE
-
-QTPIM_USE_NAMESPACE
 
 const QString TEST_PHOTO_FILE(QLatin1String("versitTest001.jpg"));
 const QString TEST_AUDIO_FILE(QLatin1String("versitTest001.wav"));

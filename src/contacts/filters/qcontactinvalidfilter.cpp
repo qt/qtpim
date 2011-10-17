@@ -54,7 +54,7 @@
   This class provides a filter which will never match any contacts
  */
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactInvalidFilterPrivate : public QContactFilterPrivate
 {
@@ -119,4 +119,4 @@ QContactInvalidFilter::QContactInvalidFilter(const QContactFilter& other)
     Q_UNUSED(other);
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

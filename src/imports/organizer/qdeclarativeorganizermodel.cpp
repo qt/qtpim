@@ -52,6 +52,10 @@
 
 #include <qorganizeritemrequests.h>
 
+QTVERSITORGANIZER_USE_NAMESPACE
+
+QTORGANIZER_BEGIN_NAMESPACE
+
 static QString urlToLocalFileName(const QUrl& url)
 {
    if (!url.isValid()) {
@@ -1386,3 +1390,7 @@ QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QDecl
     }
     return collection;
 }
+
+#include "moc_qdeclarativeorganizermodel_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

@@ -51,7 +51,7 @@
 #include <QPair>
 #include <QString>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactRelationshipFetchRequestPrivate;
 class Q_CONTACTS_EXPORT QContactRelationshipFetchRequest : public QContactAbstractRequest
@@ -81,6 +81,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QContactRelationshipFetchRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

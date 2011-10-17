@@ -46,7 +46,7 @@
 #include "qscopedpointer.h"
 #include "qcontactmanager.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 class DummyEngine : public QContactManagerEngine
 {
@@ -220,7 +220,7 @@ public:
 class DummyEngineFactory : public QObject, public QContactManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtAddOn::Pim::QContactManagerEngineFactory)
+    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
         QString managerName() const;

@@ -54,6 +54,8 @@ Q_USE_JSONDB_NAMESPACE
 #include <QDebug>
 #include <QEventLoop>
 
+QTCONTACTS_BEGIN_NAMESPACE
+
 Q_DEFINE_LATIN1_CONSTANT (QContactJsonDbEngine::EngineName, "jsondb");
 
 /*!
@@ -665,3 +667,7 @@ bool qt_debug_jsondb_contacts()
 
     return debug_env != 0;
 }
+
+#include "moc_qcontactjsondbengine.cpp"
+
+QTCONTACTS_END_NAMESPACE

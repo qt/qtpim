@@ -61,7 +61,7 @@
 #include <QString>
 #include <QVariant>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemDetailRangeFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -160,6 +160,6 @@ public:
     QOrganizerItemDetailRangeFilter::RangeFlags m_rangeflags;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

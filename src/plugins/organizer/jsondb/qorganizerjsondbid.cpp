@@ -43,7 +43,7 @@
 #include "qorganizer.h"
 #include "qorganizerjsondbstring_p.h"
 
-//QTM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbItemId::QOrganizerJsonDbItemId()
     : QOrganizerItemEngineId()
@@ -210,4 +210,4 @@ void QOrganizerJsonDbCollectionId::setCollectionId(QString collectionId)
     m_collectionId = collectionId;
 }
 
-
+QTORGANIZER_END_NAMESPACE

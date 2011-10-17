@@ -45,7 +45,7 @@
 
 #include "qorganizeritemreminder.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemReminder
@@ -74,7 +74,7 @@ public:
     QStringList recipients() const {return value<QStringList>(FieldRecipients);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

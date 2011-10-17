@@ -47,7 +47,7 @@
 #include "qversitorganizerpluginloader_p.h"
 
 
-QTPIM_USE_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 QVersitOrganizerImporterPrivate::QVersitOrganizerImporterPrivate(const QString& profile) :
     mPropertyHandler(NULL),
@@ -985,3 +985,5 @@ TimeZonePhase QVersitOrganizerImporterPrivate::importTimeZonePhase(const QVersit
     }
     return phase;
 }
+
+QTVERSITORGANIZER_END_NAMESPACE

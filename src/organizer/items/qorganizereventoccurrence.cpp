@@ -41,7 +41,7 @@
 
 #include "qorganizereventoccurrence.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerEventOccurrence
@@ -193,3 +193,5 @@ void QOrganizerEventOccurrence::setLocation(const QString& location)
     ld.setLabel(location);
     saveDetail(&ld);
 }
+
+QTORGANIZER_END_NAMESPACE

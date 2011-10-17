@@ -78,7 +78,7 @@
             d_ptr = new Class##Private; \
     }
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerItemFilterPrivate : public QSharedData
 {
 public:
@@ -103,19 +103,19 @@ public:
     /* Helper functions for C++ protection rules */
     static const QSharedDataPointer<QOrganizerItemFilterPrivate>& extract_d(const QOrganizerItemFilter& other) {return other.d_ptr;}
 };
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 #if defined(Q_CC_MWERKS)
 // This results in multiple symbol definition errors on all other compilers
 // but not having a definition here results in an attempt to use the unspecialized
 // clone (which fails because of the pure virtuals above)
-template<> QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone()
+template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone()
 {
     return d->clone();
 }
 #else
-template<> QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone();
+template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone();
 #endif
 QT_END_NAMESPACE
 

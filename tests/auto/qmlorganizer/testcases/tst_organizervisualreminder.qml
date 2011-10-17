@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 Rectangle {
     id: test;
@@ -55,29 +55,29 @@ Rectangle {
         function test_visualReminder_data() {
             return [
                    { tag: " no properties",
-                     code: "import QtAddOn.organizer 2.0;"
+                     code: "import QtOrganizer 2.0;"
                         + "VisualReminder {"
                         + "}"
                     },
                     { tag: " 1 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "VisualReminder {"
                         + "    repetitionCount: 3; }"
                     },
                     { tag: " 2 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "VisualReminder {"
                         + "    repetitionCount: 3; "
                         + "    repetitionDelay: 30;}"
                     },
                     { tag: " 3 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "VisualReminder {"
                         + "    repetitionCount: -1; "
                         + "    secondsBeforeStart: 100;}"
                     },
                     { tag: " 4 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                          + "VisualReminder {"
                          + "    repetitionCount: 3; "
                          + "    repetitionDelay: 30; "
@@ -85,7 +85,7 @@ Rectangle {
                          + "    dataUrl: \"www.nokia.com\"  }"
                     },
                     { tag: " 5 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                          + "VisualReminder {"
                          + "    repetitionCount: 3; "
                          + "    repetitionDelay: 30; "
@@ -108,7 +108,7 @@ Rectangle {
                 var managerName = list[i];
                 console.log("VisualReminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
-                      "import QtAddOn.organizer 2.0;"
+                      "import QtOrganizer 2.0;"
                     + "OrganizerModel {"
                     + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
                     + "   startPeriod:'2009-01-01';"
@@ -117,7 +117,7 @@ Rectangle {
                     , test);
 
                 var visualReminderEvent = Qt.createQmlObject(
-                          "import QtAddOn.organizer 2.0;"
+                          "import QtOrganizer 2.0;"
                         + "Event { "
                         + "   id:event;"
                         + "   displayLabel: \"organizer qml reminder test event\"; "

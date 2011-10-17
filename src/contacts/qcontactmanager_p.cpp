@@ -70,7 +70,7 @@
 #include "qcontactinvalidbackend_p.h"
 #include "qcontactspluginsearch_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Shared QContactManager stuff here, default engine stuff below */
 QHash<QString, QContactManagerEngineFactory*> QContactManagerData::m_engines;
@@ -398,5 +398,5 @@ QContactManagerEngineV2* QContactManagerData::engine(const QContactManager* mana
     return 0;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 

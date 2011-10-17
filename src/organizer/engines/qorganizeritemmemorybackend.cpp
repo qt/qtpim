@@ -59,7 +59,7 @@
 #include <QStringBuilder>
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemMemoryEngine
@@ -1747,5 +1747,5 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 
 #include "moc_qorganizeritemmemorybackend_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 

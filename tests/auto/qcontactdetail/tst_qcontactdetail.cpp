@@ -48,7 +48,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 class tst_QContactDetail : public QObject
 {
 Q_OBJECT
@@ -713,7 +713,7 @@ void tst_QContactDetail::datastream()
 void tst_QContactDetail::traits()
 {
     QCOMPARE(sizeof(QContactDetail), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactDetail> ti;
+    QTypeInfo<QContactDetail> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

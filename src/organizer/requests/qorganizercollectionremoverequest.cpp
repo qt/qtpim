@@ -42,7 +42,7 @@
 #include "qorganizercollectionremoverequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerCollectionRemoveRequest
@@ -121,4 +121,4 @@ QMap<int, QOrganizerManager::Error> QOrganizerCollectionRemoveRequest::errorMap(
 
 #include "moc_qorganizercollectionremoverequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

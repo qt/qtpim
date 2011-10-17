@@ -49,7 +49,7 @@
 #include <qcontactmanager.h>
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactRelationshipFilter : public QDeclarativeContactFilter
 {
@@ -162,8 +162,8 @@ private:
 };
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactRelationshipFilter))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactRelationshipFilter))
 
 #endif

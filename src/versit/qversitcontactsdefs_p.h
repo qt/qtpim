@@ -57,7 +57,32 @@
 #include <qcontacts.h>
 #include "qversitdefs_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
+class QContactAddress;
+class QContactAnniversary;
+class QContactBirthday;
+class QContactDisplayLabel;
+class QContactEmailAddress;
+class QContactFamily;
+class QContactGender;
+class QContactGeoLocation;
+class QContactGuid;
+class QContactName;
+class QContactNickname;
+class QContactNote;
+class QContactOnlineAccount;
+class QContactOrganization;
+class QContactPhoneNumber;
+class QContactRingtone;
+class QContactTag;
+class QContactThumbnail;
+class QContactTimestamp;
+class QContactUrl;
+QTCONTACTS_END_NAMESPACE
+
+QTCONTACTS_USE_NAMESPACE
+
+QTVERSIT_BEGIN_NAMESPACE
 
 //! [Property name mappings]
 // Mappings from versit property names to Qt contact details
@@ -187,6 +212,6 @@ const VersitMapping versitSubTypeMappings[] = {
 };
 //! [Property type parameter mappings]
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITCONTACTSDEFS_P_H

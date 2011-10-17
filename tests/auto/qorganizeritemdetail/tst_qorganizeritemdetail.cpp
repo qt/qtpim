@@ -48,7 +48,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 class tst_QOrganizerItemDetail : public QObject
 {
 Q_OBJECT
@@ -675,7 +675,7 @@ void tst_QOrganizerItemDetail::datastream()
 void tst_QOrganizerItemDetail::traits()
 {
     QCOMPARE(sizeof(QOrganizerItemDetail), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerItemDetail> ti;
+    QTypeInfo<QOrganizerItemDetail> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

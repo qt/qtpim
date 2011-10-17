@@ -52,7 +52,7 @@
   This class provides a filter which will never match any organizeritems
  */
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemInvalidFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -121,4 +121,4 @@ QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter(const QOrganizerItemFil
     Q_UNUSED(other);
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

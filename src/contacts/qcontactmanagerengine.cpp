@@ -65,7 +65,7 @@
 
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 static bool validateActionFilter(const QContactFilter& filter);
 
@@ -3061,4 +3061,4 @@ void QContactManagerEngineV2::updateContactFetchByIdRequest(QContactFetchByIdReq
 
 #include "moc_qcontactmanagerengine.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

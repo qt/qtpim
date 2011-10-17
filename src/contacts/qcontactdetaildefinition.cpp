@@ -46,7 +46,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactDetailDefinition
@@ -244,4 +244,4 @@ void QContactDetailDefinition::removeField(const QString& key)
 }
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

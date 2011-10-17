@@ -44,10 +44,10 @@
 
 #include <QtCore/qglobal.h>
 
-#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-#define QTPIM_END_NAMESPACE } }
-#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QtVersitOrganizer::name
+#define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QtVersitOrganizer {
+#define QTVERSITORGANIZER_END_NAMESPACE }
+#define QTVERSITORGANIZER_USE_NAMESPACE using namespace QtVersitOrganizer;
 
 #if defined(Q_OS_WIN)
 #  if defined(QT_NODLL)

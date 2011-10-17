@@ -58,9 +58,7 @@
 #include <QMultiHash>
 #include "qorganizermanagerengine.h"
 
-QTPIM_USE_NAMESPACE
-
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class RequestController;
 
@@ -286,6 +284,6 @@ private:
     QMap<int, QOrganizerManager::Error> m_errorMap;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

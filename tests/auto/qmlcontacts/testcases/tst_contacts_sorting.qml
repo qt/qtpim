@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtAddOn.contacts 2.0
+import QtContacts 2.0
 
 Rectangle {
 
@@ -67,7 +67,7 @@ property SignalSpy contactsChangedSpy
         function test_sortByFirstName()
         {
             var model = Qt.createQmlObject(
-                    "import QtAddOn.contacts 2.0;" +
+                    "import QtContacts 2.0;" +
                     "ContactModel {" +
                     "id:model;" +
                     "manager:\"jsondb\";" +
@@ -122,7 +122,7 @@ property SignalSpy contactsChangedSpy
         function test_sortByLastName()
         {
             var model = Qt.createQmlObject(
-                    "import QtAddOn.contacts 2.0;" +
+                    "import QtContacts 2.0;" +
                     "ContactModel {" +
                     "id:model;" +
                     "manager:\"jsondb\";" +
@@ -174,7 +174,7 @@ property SignalSpy contactsChangedSpy
         function test_sortByEmail()
         {
             var model = Qt.createQmlObject(
-                "import QtAddOn.contacts 2.0;" +
+                "import QtContacts 2.0;" +
                 "ContactModel {" +
                 "   id:model;" +
                 "   manager:\"jsondb\";" +

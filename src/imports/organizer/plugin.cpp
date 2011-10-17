@@ -51,7 +51,7 @@
 #include "qdeclarativeorganizeritemsortorder_p.h"
 #include "qdeclarativeorganizercollection_p.h"
 
-QT_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerQmlPlugin : public QDeclarativeExtensionPlugin
 {
@@ -59,7 +59,7 @@ class QOrganizerQmlPlugin : public QDeclarativeExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("QtAddOn.organizer"));
+        Q_ASSERT(uri == QLatin1String("QtOrganizer"));
 
         int major = 2;
         int minor = 0;
@@ -118,4 +118,6 @@ public:
 
 #include "plugin.moc"
 
-Q_EXPORT_PLUGIN2(qorganizerqmlplugin, QOrganizerQmlPlugin)
+QTORGANIZER_END_NAMESPACE
+
+Q_EXPORT_PLUGIN2(qorganizerqmlplugin, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerQmlPlugin))

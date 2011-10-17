@@ -72,12 +72,12 @@
 #include <qorganizeritemengineid.h>
 #include <qorganizercollectionengineid.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemSkeletonFactory : public QObject, public QOrganizerManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtAddOn::Pim::QOrganizerManagerEngineFactory)
+    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
 
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
@@ -206,5 +206,7 @@ private:
 
     friend class QOrganizerItemSkeletonFactory;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif

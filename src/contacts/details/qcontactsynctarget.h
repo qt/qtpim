@@ -49,7 +49,7 @@
 #include "qcontactdetail.h"
 #include "qcontact.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactSyncTarget : public QContactDetail
@@ -67,7 +67,7 @@ public:
     QString syncTarget() const {return value(FieldSyncTarget);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

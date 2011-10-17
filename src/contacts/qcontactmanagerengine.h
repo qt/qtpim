@@ -58,7 +58,7 @@
 #include "qcontactrequests.h"
 #include "qcontactfetchhint.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactFilter;
 class QContactSortOrder;
@@ -205,8 +205,8 @@ public:
     static void updateContactFetchByIdRequest(QContactFetchByIdRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QContactManagerEngineV2, "com.nokia.qt.pim.contacts.engine/2.0")
+Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineV2, "com.nokia.qt.contacts.engine/2.0")
 
 #endif

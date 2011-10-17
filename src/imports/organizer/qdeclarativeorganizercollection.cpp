@@ -39,6 +39,8 @@
 **
 ****************************************************************************/
 #include "qdeclarativeorganizercollection_p.h"
+
+QTORGANIZER_BEGIN_NAMESPACE
 /*!
     \qmlclass Collection QDeclarativeOrganizerCollection
 
@@ -82,3 +84,7 @@
 
   This property holds the image url meta data of a collection.
   */
+
+#include "moc_qdeclarativeorganizercollection_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

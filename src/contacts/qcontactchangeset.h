@@ -50,7 +50,7 @@
 #include <QPair>
 #include <QSharedDataPointer>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactManagerEngine;
 class QContactChangeSetData;
@@ -102,6 +102,6 @@ private:
     QSharedDataPointer<QContactChangeSetData> d;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

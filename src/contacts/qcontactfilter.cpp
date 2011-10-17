@@ -104,13 +104,13 @@
  */
 
 #if !defined(Q_CC_MWERKS)
-template<> QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone()
+template<> QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone()
 {
     return d->clone();
 }
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*! Constructs an empty filter */
 QContactFilter::QContactFilter()
@@ -311,4 +311,4 @@ const QContactFilter operator|(const QContactFilter& left, const QContactFilter&
     nif << left << right;
     return nif;
 }
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

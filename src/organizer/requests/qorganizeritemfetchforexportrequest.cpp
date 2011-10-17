@@ -42,7 +42,7 @@
 #include "qorganizeritemfetchforexportrequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemFetchForExportRequest
@@ -207,4 +207,4 @@ QList<QOrganizerItem> QOrganizerItemFetchForExportRequest::items() const
 
 #include "moc_qorganizeritemfetchforexportrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

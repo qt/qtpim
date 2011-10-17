@@ -44,7 +44,7 @@
 
 #include "qorganizer.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_EXPORT QOrganizerJournal : public QOrganizerItem
 {
@@ -60,6 +60,6 @@ public:
     QDateTime dateTime() const;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

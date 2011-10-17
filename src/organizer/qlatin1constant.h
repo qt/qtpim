@@ -46,7 +46,7 @@
 
 #include <QtCore/qvariant.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*
  * QLatin1Constant
@@ -159,6 +159,6 @@ template<int N> bool operator!=(const QString& b, const QLatin1Constant<N>& a)
 #define Q_DECLARE_LATIN1_CONSTANT(varname, str) static const QLatin1Constant<sizeof(str)> varname;
 #define Q_DEFINE_LATIN1_CONSTANT(varname, str) const QLatin1Constant<sizeof(str)> varname = {str};
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

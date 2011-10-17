@@ -44,7 +44,7 @@
 
 #include <QTextCodec>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \class QVersitDocument
@@ -306,4 +306,4 @@ void QVersitDocument::clear()
     d->mComponentType.clear();
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

@@ -51,7 +51,7 @@
 #include <QTextCodec>
 #include <QBuffer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*! Constructs a writer. */
 QVersitWriterPrivate::QVersitWriterPrivate()
@@ -212,4 +212,4 @@ QVersitDocument::VersitType QVersitWriterPrivate::documentType() const
 }
 
 #include "moc_qversitwriter_p.cpp"
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

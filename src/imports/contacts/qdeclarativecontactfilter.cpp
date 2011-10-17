@@ -41,7 +41,7 @@
 
 #include "qdeclarativecontactfilter_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
    \qmlclass Filter QDeclarativeContactFilter
@@ -395,4 +395,4 @@ void QDeclarativeContactCompoundFilter::filters_clear(QDeclarativeListProperty<Q
 
 #include "moc_qdeclarativecontactfilter_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

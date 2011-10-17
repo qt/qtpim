@@ -137,7 +137,7 @@ public:
     int mItems;
 };
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 class tst_QContactMemUsage : public QObject
 {
 Q_OBJECT

@@ -44,10 +44,10 @@
 
 #include <QtCore/qglobal.h>
 
-#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-#define QTPIM_END_NAMESPACE } }
-#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTCONTACTS_PREPEND_NAMESPACE(name) ::QtContacts::name
+#define QTCONTACTS_BEGIN_NAMESPACE namespace QtContacts {
+#define QTCONTACTS_END_NAMESPACE }
+#define QTCONTACTS_USE_NAMESPACE using namespace QtContacts;
 
 #if defined(Q_OS_WIN)
 #  if defined(QT_NODLL)
@@ -75,11 +75,8 @@
 #  endif
 #endif
 
-#define QTCONTACTS_VERSION_NAME "com.nokia.qt.pim.contacts.api.version"
-#define QTCONTACTS_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.pim.contacts.implementation.version"
+#define QTCONTACTS_VERSION_NAME "com.nokia.qt.contacts.api.version"
+#define QTCONTACTS_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.contacts.implementation.version"
 #define QTCONTACTS_VERSION 1
-
-// Not needed since this is a typedef, and qglobal already does this for the base type
-// Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactLocalId), Q_PRIMITIVE_TYPE);
 
 #endif

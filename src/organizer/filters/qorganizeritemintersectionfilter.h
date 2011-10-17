@@ -44,7 +44,7 @@
 
 #include "qorganizeritemfilter.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemIntersectionFilterPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemIntersectionFilter : public QOrganizerItemFilter
@@ -70,6 +70,6 @@ private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIntersectionFilter)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

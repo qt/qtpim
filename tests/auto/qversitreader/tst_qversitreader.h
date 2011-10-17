@@ -46,12 +46,12 @@
 #include <QBuffer>
 #include <qversitreader.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitReaderPrivate;
 class LineReader;
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 // Poor man's QSignalSpy because I couldn't get QSignalSpy to work with the user type QVR::State.
 class SignalCatcher : public QObject

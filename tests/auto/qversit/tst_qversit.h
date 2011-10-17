@@ -45,12 +45,12 @@
 #include <QObject>
 #include <qversitdocument.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitContactImporter;
 class QVersitContactImporterPrivate;
 class QVersitReader;
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // tst_QVERSIT_H

@@ -41,6 +41,8 @@
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbenginefactory.h"
 
+QTCONTACTS_BEGIN_NAMESPACE
+
 QContactManagerEngine* QContactJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
     Q_UNUSED(parameters);
@@ -54,4 +56,8 @@ QString QContactJsonDbEngineFactory::managerName() const
     return QString(QContactJsonDbEngine::EngineName.latin1());
 }
 
-Q_EXPORT_PLUGIN2(qtcontacts_jsondb, QContactJsonDbEngineFactory);
+#include "moc_qcontactjsondbenginefactory.cpp"
+
+QTCONTACTS_END_NAMESPACE
+
+Q_EXPORT_PLUGIN2(qtcontacts_jsondb, QTCONTACTS_PREPEND_NAMESPACE(QContactJsonDbEngineFactory));

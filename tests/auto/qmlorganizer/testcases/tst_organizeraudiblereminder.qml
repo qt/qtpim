@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 Rectangle {
     id: test;
@@ -56,29 +56,29 @@ Rectangle {
         function test_audibleReminder_data() {
             return [
                    { tag: "  no properties",
-                     code: "import QtAddOn.organizer 2.0;"
+                     code: "import QtOrganizer 2.0;"
                         + "AudibleReminder {"
                         + "}"
                     },
                     { tag: "  1 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "AudibleReminder {"
                         + "    repetitionCount: 3; }"
                     },
                     { tag: "  2 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "AudibleReminder {"
                         + "    repetitionCount: 3; "
                         + "    repetitionDelay: 30;}"
                     },
                     { tag: "  3 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                         + "AudibleReminder {"
                         + "    repetitionCount: -1; "
                         + "    secondsBeforeStart: 100;}"
                     },
                     { tag: "  4 properties",
-                      code: "import QtAddOn.organizer 2.0;"
+                      code: "import QtOrganizer 2.0;"
                          + "AudibleReminder {"
                          + "    repetitionCount: 3; "
                          + "    repetitionDelay: 30; "
@@ -101,7 +101,7 @@ Rectangle {
                 var debugFlag = 1;
                 console.log("AudibleReminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
-                      "import QtAddOn.organizer 2.0;"
+                      "import QtOrganizer 2.0;"
                     + "OrganizerModel {"
                     + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
                     + "   startPeriod:'2009-01-01';"
@@ -110,7 +110,7 @@ Rectangle {
                     , test);
 
                 var event = Qt.createQmlObject(
-                          "import QtAddOn.organizer 2.0;"
+                          "import QtOrganizer 2.0;"
                         + "Event { "
                         + "   id:event;"
                         + "   displayLabel: \"organizer qml reminder test event\"; "

@@ -46,12 +46,12 @@
 #include <QtPlugin>
 #include <qversitcontacthandler.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class VCardPreserverFactory : public QObject, public QVersitContactHandlerFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtAddOn::Pim::QVersitContactHandlerFactory)
+    Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
 
 public:
     QSet<QString> profiles() const;
@@ -59,5 +59,7 @@ public:
     int index() const;
     QVersitContactHandler* createHandler() const;
 };
+
+QTVERSIT_END_NAMESPACE
 
 #endif

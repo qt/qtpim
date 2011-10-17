@@ -41,7 +41,7 @@
 
 #include <qversitorganizerhandler.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(QVersitOrganizerHandlerFactory::ProfileSync, "Sync");
 Q_DEFINE_LATIN1_CONSTANT(QVersitOrganizerHandlerFactory::ProfileBackup, "Backup");
@@ -130,3 +130,5 @@ Q_DEFINE_LATIN1_CONSTANT(QVersitOrganizerHandlerFactory::ProfileBackup, "Backup"
   \fn QVersitOrganizerHandler::~QVersitOrganizerHandler()
   Destroys this QVersitOrganizerHandler.
  */
+
+QTVERSITORGANIZER_END_NAMESPACE

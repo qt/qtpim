@@ -47,7 +47,7 @@
 #include <qversitdocument.h>
 #include <QtTest/QtTest>
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 void tst_QVersitProperty::init()
 {

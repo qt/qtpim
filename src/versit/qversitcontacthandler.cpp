@@ -41,7 +41,7 @@
 
 #include "qversitcontacthandler.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileSync, "Sync");
 Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
@@ -142,4 +142,4 @@ Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
   handler provided by this factory.
  */
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

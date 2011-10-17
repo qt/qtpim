@@ -44,7 +44,7 @@
 #include "qversitdefs_p.h"
 #include <QFile>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \class QVersitResourceHandler
@@ -160,4 +160,4 @@ bool QVersitDefaultResourceHandler::saveResource(const QByteArray& contents,
     return false;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

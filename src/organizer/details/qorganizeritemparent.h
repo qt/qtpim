@@ -49,7 +49,7 @@
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
@@ -73,7 +73,7 @@ public:
     QDate originalDate() const {return variantValue(FieldOriginalDate).toDate();}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

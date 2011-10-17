@@ -77,7 +77,7 @@
 #include "contactconnection_simulator_p.h"
 
 QT_BEGIN_HEADER
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactSimulatorEngine : public QContactMemoryEngine
 {
@@ -108,7 +108,7 @@ protected:
     friend class Simulator::ContactConnection;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 QT_END_HEADER
 
 #endif

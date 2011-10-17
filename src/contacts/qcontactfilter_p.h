@@ -78,7 +78,7 @@
             d_ptr = new Class##Private; \
     }
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 class QContactFilterPrivate : public QSharedData
 {
 public:
@@ -103,19 +103,19 @@ public:
     /* Helper functions for C++ protection rules */
     static const QSharedDataPointer<QContactFilterPrivate>& extract_d(const QContactFilter& other) {return other.d_ptr;}
 };
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 #if defined(Q_CC_MWERKS)
 // This results in multiple symbol definition errors on all other compilers
 // but not having a definition here results in an attempt to use the unspecialized
 // clone (which fails because of the pure virtuals above)
-template<> QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone()
+template<> QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone()
 {
     return d->clone();
 }
 #else
-template<> QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone();
+template<> QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate)>::clone();
 #endif
 QT_END_NAMESPACE
 

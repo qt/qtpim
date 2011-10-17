@@ -51,7 +51,7 @@
 #include "qorganizerrecurrencerule_p.h"
 #include "qorganizerrecurrencerule.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 
 /*!
@@ -627,5 +627,5 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule& rule)
 }
 #endif
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 

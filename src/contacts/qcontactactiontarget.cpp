@@ -46,7 +46,7 @@
 
 #include <QHash>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactActionTarget
@@ -239,4 +239,4 @@ QDebug& operator<<(QDebug dbg, const QContactActionTarget& target)
 }
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

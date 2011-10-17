@@ -41,7 +41,7 @@
 #include "qdeclarativecontactsortorder_p.h"
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
    \qmlclass SortOrder QDeclarativeContactSortOrder
@@ -197,4 +197,4 @@ void QDeclarativeContactSortOrder::setSortOrder(const QContactSortOrder& sortOrd
 
 #include "moc_qdeclarativecontactsortorder_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

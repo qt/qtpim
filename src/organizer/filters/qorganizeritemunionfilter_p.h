@@ -58,7 +58,7 @@
 
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemUnionFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -116,6 +116,6 @@ public:
     QList<QOrganizerItemFilter> m_filters;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

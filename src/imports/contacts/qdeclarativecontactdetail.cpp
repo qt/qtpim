@@ -56,7 +56,7 @@
     The ContactDetail element is part of the \bold{QtMobility.contacts 1.1} module.
  */
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 QDeclarativeContactDetail::QDeclarativeContactDetail(QObject* parent)
     :QObject(parent)
@@ -1331,4 +1331,4 @@ QString QDeclarativeContactDetail::fieldName(ContactDetailType detailType, int f
 
 #include "moc_qdeclarativecontactdetail_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

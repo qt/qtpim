@@ -47,7 +47,7 @@
 #include "qcontactglobalpresence.h"
 #include "qdeclarativecontactpresence_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactGlobalPresence : public QDeclarativeContactDetail
 {
@@ -158,9 +158,9 @@ signals:
     void fieldsChanged();
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactGlobalPresence))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactGlobalPresence))
 
 #endif
 

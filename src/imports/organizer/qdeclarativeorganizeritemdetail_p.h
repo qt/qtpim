@@ -45,7 +45,7 @@
 #include <qorganizeritemdetails.h>
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemDetail : public QObject
 {
@@ -121,7 +121,6 @@ protected:
 private:
     Q_DISABLE_COPY(QDeclarativeOrganizerItemDetail)
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemDetail)
 
 
 class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
@@ -151,7 +150,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerEventTime)
 
 
 class QDeclarativeOrganizerItemComment : public QDeclarativeOrganizerItemDetail
@@ -173,7 +171,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemComment)
 
 
 class QDeclarativeOrganizerItemDescription : public QDeclarativeOrganizerItemDetail
@@ -195,7 +192,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemDescription)
 
 
 class QDeclarativeOrganizerItemDisplayLabel : public QDeclarativeOrganizerItemDetail
@@ -217,7 +213,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemDisplayLabel)
 
 
 class QDeclarativeOrganizerItemGuid : public QDeclarativeOrganizerItemDetail
@@ -239,7 +234,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemGuid)
 
 
 class QDeclarativeOrganizerItemLocation : public QDeclarativeOrganizerItemDetail
@@ -269,7 +263,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemLocation)
 
 
 class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
@@ -295,7 +288,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemParent)
 
 
 class QDeclarativeOrganizerItemPriority : public QDeclarativeOrganizerItemDetail
@@ -332,7 +324,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemPriority)
 
 
 class QDeclarativeOrganizerItemRecurrence : public QDeclarativeOrganizerItemDetail
@@ -399,7 +390,6 @@ private:
     QList<QDeclarativeOrganizerRecurrenceRule*>   m_recurrenceRules;
     QList<QDeclarativeOrganizerRecurrenceRule*>   m_exceptionRules;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemRecurrence)
 
 
 class QDeclarativeOrganizerItemTag : public QDeclarativeOrganizerItemDetail
@@ -421,7 +411,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemTag)
 
 
 class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetail
@@ -447,7 +436,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemTimestamp)
 
 
 class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
@@ -481,7 +469,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemType)
 
 
 class QDeclarativeOrganizerJournalTime : public QDeclarativeOrganizerItemDetail
@@ -503,7 +490,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerJournalTime)
 
 
 class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
@@ -541,7 +527,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodoProgress)
 
 class QDeclarativeOrganizerTodoTime : public QDeclarativeOrganizerItemDetail
 {
@@ -569,7 +554,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodoTime)
 
 
 class QDeclarativeOrganizerItemReminder : public QDeclarativeOrganizerItemDetail
@@ -611,7 +595,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemReminder)
 
 
 class QDeclarativeOrganizerItemAudibleReminder : public QDeclarativeOrganizerItemReminder
@@ -633,7 +616,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemAudibleReminder)
 
 
 class QDeclarativeOrganizerItemEmailReminder : public QDeclarativeOrganizerItemReminder
@@ -667,7 +649,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemEmailReminder)
 
 
 class QDeclarativeOrganizerItemVisualReminder : public QDeclarativeOrganizerItemReminder
@@ -693,7 +674,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemVisualReminder)
 
 
 class QDeclarativeOrganizeritemCustomDetail : public QDeclarativeOrganizerItemDetail
@@ -719,7 +699,6 @@ public:
 Q_SIGNALS:
     void detailChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizeritemCustomDetail)
 
 
 class QDeclarativeOrganizerItemDetailFactory
@@ -728,5 +707,29 @@ public:
     static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type);
     static QDeclarativeOrganizerItemDetail *createItemDetail(const QString &definitionName);
 };
+
+QTORGANIZER_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetail))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventTime))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemComment))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDescription))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDisplayLabel))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemGuid))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemLocation))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemParent))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemPriority))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemRecurrence))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemTag))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemTimestamp))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemType))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerJournalTime))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerTodoProgress))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerTodoTime))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemReminder))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemAudibleReminder))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemEmailReminder))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVisualReminder))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizeritemCustomDetail))
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H

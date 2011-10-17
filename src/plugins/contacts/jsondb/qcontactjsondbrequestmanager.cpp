@@ -46,7 +46,7 @@
 
 #include "qcontactjsondbrequestmanager.h"
 
-//QTM_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 QContactJsonDbRequestManager::QContactJsonDbRequestManager()
 {
@@ -182,8 +182,12 @@ bool QContactJsonDbRequestManager::isRequestCompleted(QContactAbstractRequest* r
     return true;
 }
 
-bool QContactJsonDbRequestManager::contains(QtAddOn::Pim::QContactAbstractRequest *req) const
+bool QContactJsonDbRequestManager::contains(QContactAbstractRequest *req) const
 {
     QMutexLocker locker(m_operationMutex);
     return m_activeRequests.contains(req);// || m_inactiveRequests.contains(req);
 }
+
+#include "moc_qcontactjsondbrequestmanager.cpp"
+
+QTCONTACTS_END_NAMESPACE

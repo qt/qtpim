@@ -74,7 +74,7 @@
 #include <QHash>
 #include <QFile>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
  * Constructor.
@@ -959,4 +959,4 @@ QString QVersitContactImporterPrivate::synthesizedDisplayLabel(const QContact& c
     return QString();
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

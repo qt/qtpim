@@ -1,6 +1,6 @@
 load(qt_module)
 
-TARGET = QtAddOnContacts
+TARGET = QtContacts
 QPRO_PWD = $PWD
 
 CONFIG += module
@@ -102,4 +102,4 @@ simulator {
 
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 
-HEADERS += qtaddoncontactsversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += qtcontactsversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

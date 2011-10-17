@@ -48,7 +48,7 @@
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerTodoTime : public QOrganizerItemDetail
@@ -74,7 +74,7 @@ public:
     bool isAllDay() const {return value<bool>(FieldAllDay);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

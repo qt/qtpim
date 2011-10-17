@@ -59,7 +59,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerManager;
 class QOrganizerItemData;
@@ -224,9 +224,9 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem& organizer
     className(const QOrganizerItem& other) : QOrganizerItem(other, typeConstant.latin1()) {} \
     className& operator=(const QOrganizerItem& other) {assign(other, typeConstant.latin1()); return *this;}
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerItem), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItem), Q_MOVABLE_TYPE);
 
 
 #endif

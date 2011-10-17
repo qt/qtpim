@@ -49,7 +49,6 @@
 #include "qorganizer.h"
 #include "qorganizerjsondbconverter.h"
 
-QTPIM_USE_NAMESPACE
 #include <jsondb-error.h>
 #include <jsondb-global.h>
 
@@ -58,6 +57,8 @@ class JsonDbClient;
 class JsonDbConnection;
 Q_ADDON_JSONDB_END_NAMESPACE
 Q_USE_JSONDB_NAMESPACE
+
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbRequestManager;
 class QOrganizerJsonDbEngine;
@@ -132,5 +133,7 @@ private:
     //Default collection
     QOrganizerCollection m_defaultCollection;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif // QORGANIZERJSONDBREQUESTTHREAD_H

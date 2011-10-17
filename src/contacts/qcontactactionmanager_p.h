@@ -61,7 +61,7 @@
 #include <qcontact.h>
 #include <qcontactactiondescriptor.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactAction;
 class QContactActionFactory;
@@ -93,10 +93,10 @@ private:
     QContactActionManagerPlugin* m_plugin;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QContactActionManagerPlugin, "com.nokia.qt.pim.contacts.actionmanagerplugin/1.0")
+Q_DECLARE_INTERFACE(QtContacts::QContactActionManagerPlugin, "com.nokia.qt.contacts.actionmanagerplugin/1.0")
 QT_END_NAMESPACE
 
 #endif

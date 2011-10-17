@@ -54,7 +54,7 @@
 
 #include "dummyplugin.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 QContactManagerEngine* DummyEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {

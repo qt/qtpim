@@ -49,7 +49,7 @@
 #include "qcontactdetail.h"
 #include "qcontact.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactThumbnail : public QContactDetail
@@ -67,6 +67,6 @@ public:
     QImage thumbnail() const {return value<QImage>(FieldThumbnail);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

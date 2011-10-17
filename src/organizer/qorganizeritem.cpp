@@ -52,7 +52,7 @@
 
 #include "qorganizeritemdetails.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \macro Q_DECLARE_CUSTOM_ORGANIZER_ITEM
@@ -1062,4 +1062,4 @@ void QOrganizerItemData::removeOnly(const QSet<QString> &definitionNames)
     }
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

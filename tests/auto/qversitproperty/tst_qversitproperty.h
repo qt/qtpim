@@ -45,12 +45,11 @@
 #include <QObject>
 #include <qversitproperty.h>
 
-QTPIM_BEGIN_NAMESPACE
-
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitProperty;
+QTVERSIT_END_NAMESPACE
 
-QTPIM_END_NAMESPACE
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 class tst_QVersitProperty : public QObject
 {

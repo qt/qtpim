@@ -47,16 +47,18 @@
 #include <qcontact.h>
 #include <qversitproperty.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitContactExporter;
 class QVersitContactExporterPrivate;
 class QVersitDocument;
 class QVersitProperty;
+QTVERSIT_END_NAMESPACE
+
+QTCONTACTS_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
+
 class MyQVersitResourceHandler;
 class MyQVersitContactExporterDetailHandler;
-QTPIM_END_NAMESPACE
-
-QTPIM_USE_NAMESPACE
 
 class tst_QVersitContactExporter : public QObject
 {

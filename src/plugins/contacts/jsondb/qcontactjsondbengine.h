@@ -67,7 +67,7 @@
 
 #define QCONTACT_JSONDB_ENGINE_VERSION 0.1
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbEngine : public QContactManagerEngine
 {
@@ -137,5 +137,7 @@ public:
     QSharedDataPointer<QContactJsonDbEngineData> d;
     QThread* m_thread;
 };
+
+QTCONTACTS_END_NAMESPACE
 
 #endif // QCONTACTJSONDBENGINE_H

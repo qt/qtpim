@@ -63,7 +63,7 @@
 #include "qorganizeriteminvalidbackend_p.h"
 #include "qorganizerpluginsearch_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Shared QOrganizerManager stuff here, default engine stuff below */
 QHash<QString, QOrganizerManagerEngineFactory*> QOrganizerManagerData::m_engines;
@@ -334,5 +334,5 @@ QOrganizerManagerEngineV2* QOrganizerManagerData::engine(const QOrganizerManager
     return 0;
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 

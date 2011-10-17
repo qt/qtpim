@@ -49,7 +49,7 @@
 #include <qcontactdetail.h>
 #include <qcontactfilter.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactEmailAddress : public QContactDetail
@@ -70,7 +70,7 @@ public:
     static QContactFilter match(const QString& emailAddress);
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

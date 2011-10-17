@@ -45,7 +45,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QVersitOrganizerExporter
@@ -160,7 +160,7 @@ QVersitOrganizerExporter::~QVersitOrganizerExporter()
  */
 bool QVersitOrganizerExporter::exportItems(
     const QList<QOrganizerItem>& items,
-    QVersitDocument::VersitType versitType)
+    QtVersit::QVersitDocument::VersitType versitType)
 {
     int itemIndex = 0;
     d->mErrors.clear();
@@ -168,9 +168,9 @@ bool QVersitOrganizerExporter::exportItems(
     d->mResult.setType(versitType);
     d->mResult.setComponentType(QLatin1String("VCALENDAR"));
     bool ok = true;
-    QList<QVersitDocument> results;
+    QList<QTVERSIT_PREPEND_NAMESPACE(QVersitDocument)> results;
     foreach (const QOrganizerItem& item, items) {
-        QVersitDocument document;
+        QTVERSIT_PREPEND_NAMESPACE(QVersitDocument) document;
         document.setType(versitType);
         QVersitOrganizerExporter::Error error;
         if (d->exportItem(item, &document, &error)) {
@@ -191,7 +191,7 @@ bool QVersitOrganizerExporter::exportItems(
  *
  * \sa exportItems()
  */
-QVersitDocument QVersitOrganizerExporter::document() const
+QTVERSIT_PREPEND_NAMESPACE(QVersitDocument) QVersitOrganizerExporter::document() const
 {
     return d->mResult;
 }
@@ -222,3 +222,5 @@ void QVersitOrganizerExporter::setDetailHandler(QVersitOrganizerExporterDetailHa
 {
     d->mDetailHandler = handler;
 }
+
+QTVERSITORGANIZER_END_NAMESPACE

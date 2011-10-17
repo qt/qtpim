@@ -46,12 +46,12 @@
 #include "qversitcontacthandler.h"
 #include "qversitproperty.h"
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 class Plugin2 : public QObject, public QVersitContactHandlerFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtAddOn::Pim::QVersitContactHandlerFactory)
+    Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
 
 public:
     QString name() const;

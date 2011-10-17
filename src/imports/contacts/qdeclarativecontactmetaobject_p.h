@@ -46,7 +46,7 @@
 #include "qdeclarativeopenmetaobject_p.h"
 #include "qdeclarativecontactdetail_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 struct ContactDetailNameMap
 {
@@ -98,6 +98,6 @@ public:
     friend class QDeclarativeContact;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif // QDECLARATIVECONTACTMETAOBJECT_H

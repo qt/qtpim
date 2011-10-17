@@ -58,7 +58,7 @@
 
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactUnionFilterPrivate : public QContactFilterPrivate
 {
@@ -115,6 +115,6 @@ public:
     QList<QContactFilter> m_filters;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

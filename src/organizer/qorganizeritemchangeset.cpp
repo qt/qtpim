@@ -43,7 +43,7 @@
 #include "qorganizeritemchangeset_p.h"
 #include <qorganizermanagerengine.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
    \class QOrganizerItemChangeSet
@@ -272,4 +272,4 @@ void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine)
     }
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

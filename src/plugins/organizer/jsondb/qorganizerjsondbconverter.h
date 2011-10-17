@@ -48,9 +48,9 @@
 
 #include <jsondb-error.h>
 
-QTPIM_USE_NAMESPACE
 Q_USE_JSONDB_NAMESPACE
 
+QTORGANIZER_BEGIN_NAMESPACE
 
 struct QOrganizerJsonDbEnumConversionData
 {
@@ -87,5 +87,7 @@ private:
     void dataToMap(const QVariant &data, QVariantMap &map) const;
     void jsonDbObjectToCustomDetails(const QVariantMap &object, QList<QOrganizerItemCustomDetail> &customDetails) const;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif // QORGANIZERJSONDBCONVERTER_H

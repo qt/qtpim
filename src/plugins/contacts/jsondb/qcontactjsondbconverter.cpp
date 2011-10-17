@@ -73,6 +73,8 @@ Q_USE_JSONDB_NAMESPACE
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
 
+QTCONTACTS_BEGIN_NAMESPACE
+
 Q_DEFINE_LATIN1_CONSTANT(ContextHome, "home");
 Q_DEFINE_LATIN1_CONSTANT(ContextWork, "work");
 Q_DEFINE_LATIN1_CONSTANT(ContextOther, "other");
@@ -838,3 +840,5 @@ QDateTime QContactJsonDbConverter::toContactDate(const QString &dateString) cons
     QDateTime date = QDateTime::fromString(dateString.left(dateString.length()-1),Qt::ISODate);
     return date;
 }
+
+QTCONTACTS_END_NAMESPACE

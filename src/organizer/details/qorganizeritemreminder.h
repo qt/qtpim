@@ -52,7 +52,7 @@
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
@@ -106,7 +106,7 @@ protected:
 #define Q_IMPLEMENT_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, definitionNameString) \
     Q_DEFINE_LATIN1_CONSTANT(className::DefinitionName, definitionNameString)
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

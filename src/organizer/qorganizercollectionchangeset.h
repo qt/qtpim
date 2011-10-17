@@ -48,7 +48,7 @@
 
 #include <QtCore/qset.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerManagerEngine;
 class QOrganizerCollectionChangeSetData;
@@ -87,6 +87,6 @@ private:
     QSharedDataPointer<QOrganizerCollectionChangeSetData> d;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

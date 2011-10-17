@@ -59,7 +59,9 @@
 #include <QDir>
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_USE_NAMESPACE
+QTVERSITORGANIZER_USE_NAMESPACE
+
 class MyQVersitResourceHandler : public QVersitResourceHandler
 {
 public:
@@ -87,10 +89,6 @@ public:
     int mIndex;
     QMap<QString, QByteArray> mObjects;
 };
-
-QTPIM_END_NAMESPACE
-
-QTPIM_USE_NAMESPACE
 
 #ifndef TESTDATA_DIR
 #define TESTDATA_DIR "./"

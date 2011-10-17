@@ -47,11 +47,13 @@
 #include <qorganizerrecurrencerule.h>
 #include <qversitorganizerglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
+
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 //
 //  W A R N I N G
@@ -117,5 +119,7 @@ class TimeZones {
     private:
         QHash<QString, TimeZone> mTimeZones;
 };
+
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif

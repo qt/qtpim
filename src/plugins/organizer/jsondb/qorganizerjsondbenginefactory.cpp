@@ -45,7 +45,7 @@
 #include "qorganizerjsondbstring_p.h"
 #include "qorganizer.h"
 
-//QTM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerManagerEngine* QOrganizerJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
 {
@@ -77,5 +77,9 @@ QString QOrganizerJsonDbEngineFactory::managerName() const
 {
     return QOrganizerJsonDbStr::JsonDbEngineId;
 }
-Q_EXPORT_PLUGIN2(qtorganizer_jsondb, QOrganizerJsonDbEngineFactory);
 
+#include "moc_qorganizerjsondbenginefactory.cpp"
+
+QTORGANIZER_END_NAMESPACE
+
+Q_EXPORT_PLUGIN2(qtorganizer_jsondb, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerJsonDbEngineFactory));

@@ -42,10 +42,12 @@
 #ifndef QVCARDRESTOREHANDLER_P_H
 #define QVCARDRESTOREHANDLER_P_H
 
-#include <qlatin1constant.h>
+#include <qversitglobal.h>
 #include <qcontactdetail.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
+
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitProperty;
 
 // This is a map from Versit group names to the details that were generated from properties with the
@@ -89,6 +91,6 @@ private:
     DetailGroupMap mDetailGroupMap; // remembers which details came from which groups
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif

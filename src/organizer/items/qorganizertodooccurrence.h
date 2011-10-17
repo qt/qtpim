@@ -45,7 +45,7 @@
 #include "qorganizer.h"
 #include "qorganizertodoprogress.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_EXPORT QOrganizerTodoOccurrence : public QOrganizerItem
 {
@@ -79,6 +79,6 @@ public:
     QDateTime finishedDateTime() const;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

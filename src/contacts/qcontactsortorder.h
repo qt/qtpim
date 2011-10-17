@@ -48,7 +48,7 @@
 #include <QSharedData>
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactSortOrderPrivate;
 class Q_CONTACTS_EXPORT QContactSortOrder
@@ -99,9 +99,9 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactSortOrder& so
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactSortOrder& sortOrder);
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactSortOrder), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactSortOrder), Q_MOVABLE_TYPE);
 
 
 #endif

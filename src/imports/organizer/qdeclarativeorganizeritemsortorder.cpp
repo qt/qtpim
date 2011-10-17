@@ -41,6 +41,8 @@
 
 #include "qdeclarativeorganizeritemsortorder_p.h"
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
    \qmlclass SortOrder QDeclarativeOrganizerItemSortOrder
    \brief The SortOrder element defines how a list of organizer item should be ordered according to some criteria.
@@ -95,3 +97,7 @@
   \o Qt.CaseSensitive - (default)
   \endlist
   */
+
+#include "moc_qdeclarativeorganizeritemsortorder_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

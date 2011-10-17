@@ -42,7 +42,7 @@
 #include "qorganizeritemsaverequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemSaveRequest
@@ -165,4 +165,4 @@ QStringList QOrganizerItemSaveRequest::definitionMask() const
 
 #include "moc_qorganizeritemsaverequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

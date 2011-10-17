@@ -59,7 +59,7 @@
 #include <QString>
 #include <QVariant>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactDetailFilterPrivate : public QContactFilterPrivate
 {
@@ -130,6 +130,6 @@ public:
     QContactFilter::MatchFlags m_flags;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

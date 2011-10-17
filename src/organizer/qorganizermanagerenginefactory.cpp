@@ -42,7 +42,7 @@
 
 #include "qorganizermanagerenginefactory.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerManagerEngineFactory
@@ -154,4 +154,4 @@ QList<int> QOrganizerManagerEngineFactory::supportedImplementationVersions() con
   \since 1.1
  */
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

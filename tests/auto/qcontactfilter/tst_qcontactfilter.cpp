@@ -47,7 +47,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QContact)
 Q_DECLARE_METATYPE(QContactFilter)
@@ -1436,7 +1436,7 @@ void tst_QContactFilter::datastream_data()
 void tst_QContactFilter::traits()
 {
     QCOMPARE(sizeof(QContactFilter), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactFilter> ti;
+    QTypeInfo<QContactFilter> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -1450,7 +1450,7 @@ void tst_QContactFilter::traits()
 void tst_QContactFilter::sortTraits()
 {
     QCOMPARE(sizeof(QContactSortOrder), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactSortOrder> ti;
+    QTypeInfo<QContactSortOrder> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

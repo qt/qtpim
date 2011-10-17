@@ -50,7 +50,7 @@
 #include <QList>
 #include <QStringList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemFetchByIdRequestPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemFetchByIdRequest : public QOrganizerAbstractRequest
@@ -77,6 +77,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemFetchByIdRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

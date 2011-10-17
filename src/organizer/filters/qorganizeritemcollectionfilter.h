@@ -45,7 +45,7 @@
 #include "qorganizeritemfilter.h"
 #include "qorganizercollectionid.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemCollectionFilterPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemCollectionFilter : public QOrganizerItemFilter
@@ -65,6 +65,6 @@ private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemCollectionFilter)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

@@ -55,7 +55,7 @@
   The invalid engine may be used as a reference or test engine, but does nothing.
  */
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*! Constructs a new invalid contacts backend. */
 QContactInvalidEngine::QContactInvalidEngine()
@@ -70,4 +70,4 @@ QString QContactInvalidEngine::managerName() const
     return QString(QLatin1String("invalid"));
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

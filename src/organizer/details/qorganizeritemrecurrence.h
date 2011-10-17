@@ -49,7 +49,7 @@
 #include "qorganizeritem.h"
 #include "qorganizerrecurrencerule.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemRecurrence : public QOrganizerItemDetail
@@ -89,7 +89,7 @@ public:
     bool operator!=(const QOrganizerItemRecurrence& other) const {return !(other == *this);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

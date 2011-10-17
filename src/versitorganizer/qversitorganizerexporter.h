@@ -47,7 +47,20 @@
 
 #include <qorganizeritem.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
+class QOrganizerItem;
+class QOrganizerItemDetail;
+QTORGANIZER_END_NAMESPACE
+
+QTVERSIT_BEGIN_NAMESPACE
+class QVersitDocument;
+class QVersitProperty;
+QTVERSIT_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
+
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 class QVersitOrganizerExporterPrivate;
 
@@ -90,6 +103,6 @@ private:
     QVersitOrganizerExporterPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif // QVERSITORGANIZEREXPORTER_H

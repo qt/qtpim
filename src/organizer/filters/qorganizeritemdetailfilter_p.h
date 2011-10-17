@@ -59,7 +59,7 @@
 #include <QString>
 #include <QVariant>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -139,6 +139,6 @@ public:
     QOrganizerItemFilter::MatchFlags m_flags;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

@@ -1,5 +1,5 @@
 TARGET  = declarative_organizer
-TARGETPATH = QtAddOn/organizer
+TARGETPATH = QtOrganizer
 
 include(qorganizerimport.pri)
 target.path = $$[QT_INSTALL_IMPORTS]/$$TARGETPATH

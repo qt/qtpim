@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtAddOn.contacts 2.0
+import QtContacts 2.0
 import com.nokia.components 1.0
 import com.nokia.components.style 1.0
 
@@ -81,20 +81,20 @@ ApplicationWindow {
                 iconId: "clist.gadd"
                 onClicked: {
                     var tempContact = Qt.createQmlObject(
-                        "import QtAddOn.contacts 2.0;" +
+                        "import QtContacts 2.0;" +
                         "Contact {}", contactModel);
 
 // NOTE:    Following code is commented out, since with
 //          current approach in ContactView.qml (VisualItemModel),
 //          no pre-filling of contact details is needed in the tempContact variable.
 //
-//                    var phone = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                    var phone = Qt.createQmlObject("import QtContacts 2.0;" +
 //                                                   "PhoneNumber {contexts: ['Home']}", contactModel);
-//                    var email = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                    var email = Qt.createQmlObject("import QtContacts 2.0;" +
 //                                                   "EmailAddress {}", contactModel);
-//                    var address = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                    var address = Qt.createQmlObject("import QtContacts 2.0;" +
 //                                                     "Address {locality: \"\";street: \"\";country: \"\";postcode: \"\";}", contactModel);
-//                    var name = Qt.createQmlObject("import QtAddOn.contacts 2.0;" +
+//                    var name = Qt.createQmlObject("import QtContacts 2.0;" +
 //                                                  "Name {firstName: \"\";lastName: \"\"}", contactModel);
 //                    tempContact.addDetail(name)
 //                    tempContact.addDetail(phone)

@@ -43,7 +43,8 @@
 #include "qorganizeritemid.h"
 #include "qorganizermanager_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
+
 class QOrganizerItemObserverPrivate
 {
     public:
@@ -51,9 +52,6 @@ class QOrganizerItemObserverPrivate
         QWeakPointer<QOrganizerManager> m_manager;
         QOrganizerManagerData* m_managerPrivate;
 };
-QTPIM_END_NAMESPACE
-
-QTPIM_USE_NAMESPACE
 
 /*!
   \class QOrganizerItemObserver
@@ -115,3 +113,5 @@ QOrganizerItemId QOrganizerItemObserver::itemId() const {
  */
 
 #include "moc_qorganizeritemobserver.cpp"
+
+QTORGANIZER_END_NAMESPACE

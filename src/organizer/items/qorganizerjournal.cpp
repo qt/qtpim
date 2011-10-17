@@ -41,7 +41,7 @@
 
 #include "qorganizerjournal.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerJournal
@@ -73,3 +73,5 @@ QDateTime QOrganizerJournal::dateTime() const
     QOrganizerJournalTime jtr = detail<QOrganizerJournalTime>();
     return jtr.entryDateTime();
 }
+
+QTORGANIZER_END_NAMESPACE

@@ -47,7 +47,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 class tst_QOrganizerItemDetails : public QObject
 {
 Q_OBJECT

@@ -48,7 +48,7 @@
 #include <qcontactdetail.h>
 #include <qcontact.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactGender : public QContactDetail
@@ -72,7 +72,7 @@ public:
     QString gender() const {return value(FieldGender);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

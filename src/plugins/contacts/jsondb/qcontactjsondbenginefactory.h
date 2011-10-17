@@ -57,17 +57,18 @@
 #include "qcontact.h"
 #include "qcontactmanagerenginefactory.h"
 
-QTPIM_USE_NAMESPACE
-
+QTCONTACTS_BEGIN_NAMESPACE
 
 class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QObject, public QContactManagerEngineFactory
 {
   Q_OBJECT
-  Q_INTERFACES(QtAddOn::Pim::QContactManagerEngineFactory)
+  Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
   public:
     QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error*);
     QString managerName() const;
 };
+
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

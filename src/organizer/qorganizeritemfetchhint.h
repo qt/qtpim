@@ -50,7 +50,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemFetchHintPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemFetchHint {
@@ -87,6 +87,6 @@ Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerItemFetchH
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint);
 #endif
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

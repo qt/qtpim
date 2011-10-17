@@ -45,7 +45,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Initialise our static private data member */
 QAtomicInt QContactDetailPrivate::lastDetailKey(1);
@@ -821,4 +821,4 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
   \since 1.0
  */
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

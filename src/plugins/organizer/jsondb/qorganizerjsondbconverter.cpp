@@ -48,6 +48,8 @@
 
 Q_USE_JSONDB_NAMESPACE
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 const int enumMapEnd = -1212;
 static QOrganizerJsonDbEnumConversionData qt_organizerPriorityEnumMap[] = {
     {QOrganizerItemPriority::UnknownPriority,        QLatin1String("UnknownPriority")},
@@ -135,7 +137,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsondbErrorToOrganizerError(
         error = QOrganizerManager::DoesNotExistError;
         break;
 
-    case JsonDbError::MissingTYPE://Remove no-exist item get this error from jsondb
+    case JsonDbError::MissingType://Remove no-exist item get this error from jsondb
         error = QOrganizerManager::DoesNotExistError;
         break;
 
@@ -893,3 +895,4 @@ void QOrganizerJsonDbConverter::jsonDbObjectToCustomDetails(const QVariantMap &o
     }
 }
 
+QTORGANIZER_END_NAMESPACE

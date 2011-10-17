@@ -45,7 +45,7 @@
 #include <qversitorganizerglobal.h>
 #include <QDateTime>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 class Q_VERSIT_ORGANIZER_EXPORT QVersitTimeZoneHandler
 {
@@ -81,9 +81,9 @@ public:
     virtual QDateTime convertUtcToTimeZone(const QDateTime& datetime, const QString& timeZoneName) = 0;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
-#define QT_VERSIT_TIMEZONE_HANDLER_INTERFACE "com.nokia.qt.pim.versit.timezonehandler/1.0"
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QVersitTimeZoneHandler, QT_VERSIT_TIMEZONE_HANDLER_INTERFACE)
+#define QT_VERSIT_TIMEZONE_HANDLER_INTERFACE "com.nokia.qt.versitorganizer.timezonehandler/1.0"
+Q_DECLARE_INTERFACE(QtVersitOrganizer::QVersitTimeZoneHandler, QT_VERSIT_TIMEZONE_HANDLER_INTERFACE)
 
 #endif

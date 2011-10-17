@@ -58,7 +58,7 @@
 #include <QSharedData>
 #include <QStringList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemFetchHintPrivate : public QSharedData
 {
@@ -84,6 +84,6 @@ public:
     QOrganizerItemFetchHint::OptimizationHints m_optimizationHints;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

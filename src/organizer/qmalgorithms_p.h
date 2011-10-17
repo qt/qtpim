@@ -44,7 +44,7 @@
 
 #include <qorganizerglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*
   This performs a partial sort, examining the elements in the range [start, end-1] to place the
@@ -166,6 +166,6 @@ inline void qPartialSort(Container& container, int from, int to)
     qPartialSort(container.begin(), container.end(), container.begin()+from, container.begin()+to);
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

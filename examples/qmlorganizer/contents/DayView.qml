@@ -42,7 +42,7 @@
 
 import QtQuick 2.0
 
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 
 //    Rectangle {
@@ -171,7 +171,7 @@ import QtAddOn.organizer 2.0
 
 import QtQuick 2.0
 
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 Flickable
 {

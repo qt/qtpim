@@ -61,7 +61,7 @@
 #include <QVariant>
 #include <QSet>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemCollectionFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -116,6 +116,6 @@ public:
     QSet<QOrganizerCollectionId> m_ids;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

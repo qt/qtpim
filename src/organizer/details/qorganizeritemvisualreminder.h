@@ -45,7 +45,7 @@
 
 #include "qorganizeritemreminder.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemVisualReminder : public QOrganizerItemReminder
@@ -68,7 +68,7 @@ public:
     QUrl dataUrl() const {return value<QUrl>(FieldDataUrl);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

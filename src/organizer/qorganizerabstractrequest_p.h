@@ -65,7 +65,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerAbstractRequestPrivate
 {
@@ -114,6 +114,6 @@ public:
     mutable QMutex m_mutex;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

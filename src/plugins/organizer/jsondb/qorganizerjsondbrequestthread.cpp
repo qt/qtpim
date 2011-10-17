@@ -54,6 +54,8 @@
 #include <jsondb-error.h>
 Q_USE_JSONDB_NAMESPACE
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 #include <QDebug>
 
 
@@ -1081,3 +1083,6 @@ bool QOrganizerJsonDbRequestThread::singleFilterToJsondbQuery(const QOrganizerIt
     return isValidFilter;
 }
 
+#include "moc_qorganizerjsondbrequestthread.cpp"
+
+QTORGANIZER_END_NAMESPACE

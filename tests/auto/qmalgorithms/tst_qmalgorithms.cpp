@@ -44,7 +44,7 @@
 
 #include <private/qmalgorithms_p.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 class tst_QMAlgorithms : public QObject
 {

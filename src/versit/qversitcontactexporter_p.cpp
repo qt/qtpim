@@ -46,33 +46,14 @@
 #include "qversitutils_p.h"
 
 #include <qcontact.h>
-#include <qcontactdetail.h>
-#include <qcontactname.h>
-#include <qcontactemailaddress.h>
-#include <qcontactphonenumber.h>
-#include <qcontactaddress.h>
-#include <qcontacturl.h>
-#include <qcontactguid.h>
-#include <qcontactorganization.h>
-#include <qcontacttimestamp.h>
-#include <qcontactbirthday.h>
-#include <qcontactnote.h>
-#include <qcontactgeolocation.h>
-#include <qcontactavatar.h>
-#include <qcontactgender.h>
-#include <qcontactnickname.h>
-#include <qcontactanniversary.h>
-#include <qcontactonlineaccount.h>
-#include <qcontactfamily.h>
-#include <qcontactdisplaylabel.h>
-#include <qcontactthumbnail.h>
+#include <qcontactdetails.h>
 #include "qversitcontacthandler.h"
 #include "qversitcontactpluginloader_p.h"
 
 #include <QUrl>
 #include <QBuffer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
  * Constructor.
@@ -839,4 +820,4 @@ bool QVersitContactExporterPrivate::encodeContentFromFile(const QString& resourc
     return encodeContent;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

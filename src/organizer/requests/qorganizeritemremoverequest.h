@@ -48,7 +48,7 @@
 
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemRemoveRequestPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemRemoveRequest : public QOrganizerAbstractRequest
@@ -73,6 +73,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemRemoveRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

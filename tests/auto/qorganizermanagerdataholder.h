@@ -62,8 +62,8 @@
 // We mean it.
 //
 
-QTPIM_BEGIN_NAMESPACE
-class QOrganizerItem;
+QTORGANIZER_USE_NAMESPACE
+
 class QOrganizerManagerDataHolder
 {
 public:
@@ -107,8 +107,6 @@ public:
 private:
     QMap<QString, QList<QOrganizerItem> > savedItems;
 };
-
-QTPIM_END_NAMESPACE
 
 #endif
 

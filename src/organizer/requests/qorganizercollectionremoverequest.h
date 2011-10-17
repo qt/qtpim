@@ -49,7 +49,7 @@
 #include <QList>
 #include <QStringList>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerCollectionRemoveRequestPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerCollectionRemoveRequest : public QOrganizerAbstractRequest
@@ -74,6 +74,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerCollectionRemoveRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

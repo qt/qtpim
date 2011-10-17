@@ -48,7 +48,7 @@
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
@@ -66,7 +66,7 @@ public:
     QDateTime entryDateTime() const {return value<QDateTime>(FieldEntryDateTime);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

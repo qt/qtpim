@@ -41,6 +41,8 @@
 
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
     \qmlclass RecurrenceRule QDeclarativeOrganizerRecurrenceRule
 
@@ -137,3 +139,7 @@
   \o Qt.Sunday
   \endlist
   */
+
+#include "moc_qdeclarativeorganizerrecurrencerule_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

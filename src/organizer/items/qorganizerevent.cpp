@@ -42,7 +42,7 @@
 #include "qorganizerevent.h"
 #include "qorganizer.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerEvent
@@ -313,3 +313,5 @@ void QOrganizerEvent::setLocation(const QString& location)
     ld.setLabel(location);
     saveDetail(&ld);
 }
+
+QTORGANIZER_END_NAMESPACE

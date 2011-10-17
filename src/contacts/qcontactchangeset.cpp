@@ -44,7 +44,7 @@
 #include "qcontactchangeset_p.h"
 #include "qcontactmanagerengine.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
    \class QContactChangeSet
@@ -389,4 +389,4 @@ void QContactChangeSet::emitSignals(QContactManagerEngine *engine)
 }
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

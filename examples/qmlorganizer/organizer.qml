@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 import "contents"
 
 Rectangle {
@@ -274,15 +274,15 @@ Rectangle {
         function createEmptyItem(type)
         {
             if (type == "Event") {
-                return Qt.createQmlObject("import QtAddOn.organizer 2.0; Event { }", organizer);
+                return Qt.createQmlObject("import QtOrganizer 2.0; Event { }", organizer);
             } else if (type == "Todo") {
-                return Qt.createQmlObject("import QtAddOn.organizer 2.0; Todo { }", organizer);
+                return Qt.createQmlObject("import QtOrganizer 2.0; Todo { }", organizer);
     //        } else if (type == "EventOccurrence") {
-    //            return Qt.createQmlObject("import QtAddOn.organizer 2.0; EventOccurrence { }", organizer);
+    //            return Qt.createQmlObject("import QtOrganizer 2.0; EventOccurrence { }", organizer);
     //        } else if (type == "TodoOccurrence") {
-    //            return Qt.createQmlObject("import QtAddOn.organizer 2.0; TodoOccurrence { }", organizer);
+    //            return Qt.createQmlObject("import QtOrganizer 2.0; TodoOccurrence { }", organizer);
             } else {
-                return Qt.createQmlObject("import QtAddOn.organizer 2.0; Event { }", organizer);
+                return Qt.createQmlObject("import QtOrganizer 2.0; Event { }", organizer);
             }
         }
 

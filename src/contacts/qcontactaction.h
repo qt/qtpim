@@ -52,7 +52,7 @@
 
 #include <QObject>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactActionDescriptor;
 class QContactActionData;
@@ -126,6 +126,6 @@ public:
     static QContactAction* action(const QContactActionDescriptor& descriptor);
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

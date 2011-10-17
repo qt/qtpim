@@ -56,7 +56,7 @@
 
 #include <qversitglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 // Mapping between a string in versit specifications and Qt contacts
 struct VersitMapping {
@@ -196,6 +196,6 @@ const VersitMapping versitFileExtensionMappings[] = {
 };
 //! [File extension mappings]
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITDEFS_P_H

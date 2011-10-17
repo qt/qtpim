@@ -1,6 +1,6 @@
 load(qt_module)
 
-TARGET = QtAddOnVersitOrganizer
+TARGET = QtVersitOrganizer
 QPRO_PWD = $PWD
 
 CONFIG += module
@@ -37,4 +37,4 @@ SOURCES += \
     qversitorganizerpluginloader_p.cpp \
     qtimezones_p.cpp
 
-HEADERS += qtaddonversitorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += qtversitorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

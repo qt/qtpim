@@ -51,7 +51,7 @@ class QIODevice;
 class QTextCodec;
 QT_END_NAMESPACE
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitReaderPrivate;
 
@@ -110,8 +110,8 @@ private: // data
     QVersitReaderPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QVersitReader::State))
+Q_DECLARE_METATYPE(QTVERSIT_PREPEND_NAMESPACE(QVersitReader::State))
 
 #endif // QVERSITREADER_H

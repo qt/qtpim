@@ -53,14 +53,14 @@
 #include <qcontact.h>
 #include <qcontactchangeset.h>
 
-QTPIM_USE_NAMESPACE
-
 #include <jsondb-global.h>
 Q_ADDON_JSONDB_BEGIN_NAMESPACE
 class JsonDbClient;
 class JsonDbConnection;
 Q_ADDON_JSONDB_END_NAMESPACE
 Q_USE_JSONDB_NAMESPACE
+
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbRequestManager;
 class QContactJsonDbEngine;
@@ -104,5 +104,7 @@ private:
     QContactChangeSet m_ccs;
 
 };
+
+QTCONTACTS_END_NAMESPACE
 
 #endif // QCONTACTJSONDBREQUESTHANDLER_H

@@ -72,7 +72,7 @@
 #include "qcontactabstractrequest.h"
 #include "qcontactchangeset.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactAbstractRequest;
 class QContactManagerEngine;
@@ -228,7 +228,7 @@ private:
     friend class QContactMemoryEngineData;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

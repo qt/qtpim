@@ -47,7 +47,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 class tst_QContactDetailDefinition: public QObject
 {
 Q_OBJECT
@@ -277,7 +277,7 @@ void tst_QContactDetailDefinition::testEquality()
 void tst_QContactDetailDefinition::traits()
 {
     QCOMPARE(sizeof(QContactDetailDefinition), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactDetailDefinition> ti;
+    QTypeInfo<QContactDetailDefinition> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -288,7 +288,7 @@ void tst_QContactDetailDefinition::traits()
 void tst_QContactDetailDefinition::fieldTraits()
 {
     QCOMPARE(sizeof(QContactDetailFieldDefinition), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactDetailFieldDefinition> ti;
+    QTypeInfo<QContactDetailFieldDefinition> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

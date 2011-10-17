@@ -50,7 +50,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 class tst_QOrganizerCollection: public QObject
 {
 Q_OBJECT
@@ -428,7 +428,7 @@ void tst_QOrganizerCollection::datastream()
 void tst_QOrganizerCollection::traits()
 {
     QVERIFY(sizeof(QOrganizerCollection) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerCollection> ti;
+    QTypeInfo<QOrganizerCollection> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -439,7 +439,7 @@ void tst_QOrganizerCollection::traits()
 void tst_QOrganizerCollection::idTraits()
 {
     QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerCollectionId> ti;
+    QTypeInfo<QOrganizerCollectionId> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -450,7 +450,7 @@ void tst_QOrganizerCollection::idTraits()
 void tst_QOrganizerCollection::localIdTraits()
 {
     QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerCollectionId> ti;
+    QTypeInfo<QOrganizerCollectionId> ti;
     QVERIFY(ti.isComplex); // unlike QContactLocalId (int typedef), we have a ctor
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

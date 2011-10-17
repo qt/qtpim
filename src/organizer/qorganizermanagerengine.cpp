@@ -56,7 +56,7 @@
 #include "qorganizeritem_p.h"
 #include "qorganizeritemdetail_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerManagerEngine
@@ -1911,4 +1911,4 @@ void QOrganizerManagerEngineV2::updateItemFetchByIdRequest(QOrganizerItemFetchBy
 
 #include "moc_qorganizermanagerengine.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

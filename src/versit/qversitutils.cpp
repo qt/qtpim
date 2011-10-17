@@ -47,7 +47,7 @@
 #include <QTextCodec>
 #include <QScopedPointer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 QTextCodec* VersitUtils::m_previousCodec = 0;
 QList<QByteArrayMatcher>* VersitUtils::m_newlineList = 0;
@@ -199,4 +199,4 @@ bool VersitUtils::isValidUtf8(const QByteArray& bytes) {
     return continuation == 0;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

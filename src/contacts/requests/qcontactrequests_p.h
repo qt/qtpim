@@ -62,7 +62,7 @@
 #include <QStringList>
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactSaveRequestPrivate : public QContactAbstractRequestPrivate
 {
@@ -448,6 +448,6 @@ public:
     QMap<int, QContactManager::Error> m_errors;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

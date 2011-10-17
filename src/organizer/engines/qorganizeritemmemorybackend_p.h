@@ -80,7 +80,7 @@
 #define Q_ORGANIZER_MEMORYENGINE_EXPORT
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryEngineId : public QOrganizerItemEngineId
 {
@@ -277,7 +277,7 @@ private:
     static QMap<QString, QOrganizerItemMemoryEngineData*> engineDatas;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

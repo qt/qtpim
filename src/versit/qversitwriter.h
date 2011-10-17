@@ -47,7 +47,7 @@
 #include <QObject>
 #include <QIODevice>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitWriterPrivate;
 
@@ -104,8 +104,8 @@ private: // data
     QVersitWriterPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QVersitWriter::State))
+Q_DECLARE_METATYPE(QTVERSIT_PREPEND_NAMESPACE(QVersitWriter::State))
 
 #endif // QVERSITWRITER_H

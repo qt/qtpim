@@ -47,7 +47,7 @@
 #include <QString>
 #include <QByteArray>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitDefaultResourceHandlerPrivate;
 class QVersitProperty;
@@ -74,6 +74,6 @@ protected:
     QVersitDefaultResourceHandlerPrivate* d;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITRESOURCEHANDLER_H

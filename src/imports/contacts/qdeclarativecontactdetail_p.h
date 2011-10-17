@@ -46,7 +46,7 @@
 #include "qcontact.h"
 #include "qcontactdetail.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactDetail : public QObject
 {
@@ -126,8 +126,8 @@ protected:
     QContactDetail m_detail;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactDetail))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactDetail))
 
 #endif // QDECLARATIVECONTACTDETAIL_P_H

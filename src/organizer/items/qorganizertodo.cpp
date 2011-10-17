@@ -42,7 +42,7 @@
 #include "qorganizertodo.h"
 #include "qorganizer.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerTodo
@@ -360,3 +360,5 @@ QDateTime QOrganizerTodo::finishedDateTime() const
     QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
     return tp.finishedDateTime();
 }
+
+QTORGANIZER_END_NAMESPACE

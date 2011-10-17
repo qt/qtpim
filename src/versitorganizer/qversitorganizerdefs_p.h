@@ -57,7 +57,7 @@
 #include <private/qversitdefs_p.h>
 #include <qorganizer.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 // Only put simple mappings in this table; ie. where a Versit property maps to a specific detail's
 // specific field (and that detail has no other fields of interest)
@@ -70,6 +70,6 @@ const VersitDetailMapping versitOrganizerDetailMappings[] = {
                       QOrganizerItemGuid::FieldGuid.latin1()}
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif

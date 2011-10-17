@@ -60,7 +60,7 @@
 #include "qcontact.h"
 #include "qcontactabstractrequest.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactRequestData
 {
@@ -104,4 +104,7 @@ private:
     QMap<QContactAbstractRequest*, QWaitCondition* > m_inactiveRequests;
     QMutex* m_operationMutex;
 };
+
+QTCONTACTS_END_NAMESPACE
+
 #endif // QCONTACTJSONDBREQUESTMANAGER_H

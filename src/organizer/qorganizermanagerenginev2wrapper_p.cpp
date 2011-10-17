@@ -46,6 +46,8 @@
 #include "qorganizeritem_p.h"
 #include "qmalgorithms_p.h"
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 QOrganizerManagerEngineV2Wrapper::QOrganizerManagerEngineV2Wrapper(QOrganizerManagerEngine *wrappee)
     : m_engine(wrappee)
 {
@@ -517,3 +519,7 @@ void PartialSaveRequestController::handleFinishedSubRequest(QOrganizerAbstractRe
         Q_ASSERT(false);
     }
 }
+
+#include "moc_qorganizermanagerenginev2wrapper_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

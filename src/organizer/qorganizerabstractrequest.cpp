@@ -49,7 +49,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerAbstractRequest
@@ -316,5 +316,5 @@ QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest& request)
 
 #include "moc_qorganizerabstractrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 

@@ -60,7 +60,7 @@
 #include <QMap>
 #include <QString>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactInvalidEngine : public QContactManagerEngineV2
 {
@@ -86,7 +86,7 @@ public:
     }
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif
 

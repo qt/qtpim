@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactLocalIdFilter
@@ -130,4 +130,4 @@ QList<QContactLocalId> QContactLocalIdFilter::ids() const
     return d->m_ids;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

@@ -48,7 +48,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerItem)
 Q_DECLARE_METATYPE(QOrganizerItemFilter)
@@ -1331,7 +1331,7 @@ void tst_QOrganizerItemFilter::datastream_data()
 void tst_QOrganizerItemFilter::traits()
 {
     QCOMPARE(sizeof(QOrganizerItemFilter), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerItemFilter> ti;
+    QTypeInfo<QOrganizerItemFilter> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -1342,7 +1342,7 @@ void tst_QOrganizerItemFilter::traits()
 void tst_QOrganizerItemFilter::sortTraits()
 {
     QCOMPARE(sizeof(QOrganizerItemSortOrder), sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QOrganizerItemSortOrder> ti;
+    QTypeInfo<QOrganizerItemSortOrder> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

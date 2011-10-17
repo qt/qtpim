@@ -42,7 +42,7 @@
 #include "qorganizeritemidfetchrequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemIdFetchRequest
@@ -184,4 +184,4 @@ QList<QOrganizerItemId> QOrganizerItemIdFetchRequest::itemIds() const
 
 #include "moc_qorganizeritemidfetchrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

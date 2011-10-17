@@ -48,7 +48,7 @@
 #include "qcontactdetail.h"
 #include "qcontact.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactRingtone : public QContactDetail
@@ -76,6 +76,6 @@ public:
     QUrl vibrationRingtoneUrl() const {return value(FieldVibrationRingtoneUrl);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

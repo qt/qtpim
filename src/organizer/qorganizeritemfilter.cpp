@@ -98,13 +98,13 @@
  */
 
 #if !defined(Q_CC_MWERKS)
-template<> QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone()
+template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate)>::clone()
 {
     return d->clone();
 }
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*! Constructs an empty filter */
 QOrganizerItemFilter::QOrganizerItemFilter()
@@ -312,4 +312,4 @@ const QOrganizerItemFilter operator|(const QOrganizerItemFilter& left, const QOr
     nif << left << right;
     return nif;
 }
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

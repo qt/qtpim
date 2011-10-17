@@ -46,7 +46,7 @@
 #include <qcontact.h>
 #include <qcontactdetail.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \deprecated
@@ -272,14 +272,14 @@ QVersitContactExporter::~QVersitContactExporter()
  * \sa documents(), errorMap()
  */
 bool QVersitContactExporter::exportContacts(
-    const QList<QContact>& contacts,
+    const QList<QTCONTACTS_PREPEND_NAMESPACE(QContact)>& contacts,
     QVersitDocument::VersitType versitType)
 {
     int contactIndex = 0;
     d->mDocuments.clear();
     d->mErrors.clear();
     bool ok = true;
-    foreach (const QContact& contact, contacts) {
+    foreach (const QTCONTACTS_PREPEND_NAMESPACE(QContact)& contact, contacts) {
         if (contact.isEmpty()) {
             d->mErrors[contactIndex] = EmptyContactError;
             ok = false;
@@ -390,4 +390,4 @@ QVersitResourceHandler* QVersitContactExporter::resourceHandler() const
     return d->mResourceHandler;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

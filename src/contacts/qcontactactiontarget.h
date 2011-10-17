@@ -52,7 +52,7 @@
 #include <QString>
 #include <QSharedDataPointer>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 // MSVC needs the function declared before the friend declaration
 class QContactActionTarget;
@@ -103,8 +103,8 @@ private:
     QSharedDataPointer<QContactActionTargetPrivate> d;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactActionTarget), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactActionTarget), Q_MOVABLE_TYPE);
 
 #endif

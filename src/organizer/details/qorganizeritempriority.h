@@ -51,7 +51,7 @@
 #include "qorganizeritem.h"
 #include "qorganizeritemfilter.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
@@ -86,7 +86,7 @@ public:
     static QOrganizerItemFilter match(Priority priority);
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

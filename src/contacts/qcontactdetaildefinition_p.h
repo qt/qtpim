@@ -61,7 +61,7 @@
 #include <QString>
 #include <QVariant>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactDetailDefinitionData : public QSharedData
 {
@@ -86,6 +86,6 @@ public:
     QMap<QString, QContactDetailFieldDefinition> m_fields;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

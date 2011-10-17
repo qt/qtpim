@@ -45,7 +45,7 @@
 #include <qorganizerglobal.h>
 #include <qlatin1constant.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 //query [?_type in ["com.nokia.mp.organizer.Event", "com.nokia.mp.organizer.Todo"]]
 #define ALL_ITEM_QUERY_STRING      "[?" + JsonDbString::kTypeStr + " in [\"" + QOrganizerJsonDbStr::Event + "\", \"" + QOrganizerJsonDbStr::Todo + "\"]]"
@@ -158,6 +158,8 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(WarningDefaultCollectionCreate, "Same name as default collection!");
 
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif // QORGANIZERJSONDBSTRING_H
 

@@ -45,7 +45,7 @@
 #include <QStringList>
 #include <QTextCodec>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \class QVersitProperty
@@ -370,4 +370,4 @@ void QVersitProperty::clear()
     d->mValueType = QVersitProperty::PlainType;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

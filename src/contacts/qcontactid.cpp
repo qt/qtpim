@@ -45,7 +45,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactId
@@ -231,4 +231,4 @@ void QContactId::setLocalId(const QContactLocalId& id)
     d->m_localId = id;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

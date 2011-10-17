@@ -45,7 +45,7 @@
 #include <qorganizeritems.h>
 #include <qorganizermanager.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 class tst_QOrganizerE2E : public QObject
 {

@@ -47,7 +47,7 @@
 
 #include <QtDeclarative/qdeclarativelist.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItem : public QObject
 {
@@ -149,7 +149,6 @@ private:
     static void _q_detail_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property);
     static int _q_detail_count(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property);
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItem)
 
 
 class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
@@ -186,7 +185,6 @@ public:
 Q_SIGNALS:
     void itemChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerEvent)
 
 
 class QDeclarativeOrganizerEventOccurrence : public QDeclarativeOrganizerItem
@@ -224,7 +222,6 @@ public:
 Q_SIGNALS:
     void itemChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerEventOccurrence)
 
 
 class QDeclarativeOrganizerJournal : public QDeclarativeOrganizerItem
@@ -242,7 +239,6 @@ public:
 Q_SIGNALS:
     void itemChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerJournal)
 
 
 class QDeclarativeOrganizerNote : public QDeclarativeOrganizerItem
@@ -252,7 +248,6 @@ class QDeclarativeOrganizerNote : public QDeclarativeOrganizerItem
 public:
     explicit QDeclarativeOrganizerNote(QObject *parent = 0);
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerNote)
 
 
 class QDeclarativeOrganizerTodo : public QDeclarativeOrganizerItem
@@ -297,7 +292,6 @@ public:
 Q_SIGNALS:
     void itemChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodo)
 
 
 class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
@@ -343,6 +337,15 @@ public:
 Q_SIGNALS:
     void itemChanged();
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerTodoOccurrence)
+
+QTORGANIZER_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItem))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEvent))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventOccurrence))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerJournal))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerNote))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerTodo))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerTodoOccurrence))
 
 #endif // QDECLARATIVEORGANIZERITEM_H

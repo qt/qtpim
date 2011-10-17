@@ -123,10 +123,10 @@ translations/*.qm
 translations/*_untranslated.ts
 qrc_*.cpp
 
-src/contacts/qtaddoncontactsversion.h
-src/organizer/qtaddonorganizerversion.h
-src/versit/qtaddonversitversion.h
-src/versitorganizer/qtaddonversitorganizerversion.h
+src/contacts/qtcontactsversion.h
+src/organizer/qtorganizerversion.h
+src/versit/qtversitversion.h
+src/versitorganizer/qtversitorganizerversion.h
 
 # Test generated files
 QObject.log

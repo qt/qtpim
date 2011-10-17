@@ -44,7 +44,7 @@
 #include "qorganizeritemfilter_p.h"
 #include "qorganizermanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemIntersectionFilter
@@ -151,4 +151,4 @@ QList<QOrganizerItemFilter> QOrganizerItemIntersectionFilter::filters() const
     return d->m_filters;
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

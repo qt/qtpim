@@ -56,7 +56,14 @@
 #include "qdeclarativeorganizeritemfilter_p.h"
 #include "qdeclarativeorganizercollection_p.h"
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
+class QVersitReader;
+class QVersitWriter;
+QTVERSIT_END_NAMESPACE
+
+QTVERSIT_USE_NAMESPACE
+
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerModelPrivate;
 class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativeParserStatus
@@ -209,5 +216,7 @@ private:
 
     QDeclarativeOrganizerModelPrivate* d;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif // QDECLARATIVEORGANIZERMODEL_H

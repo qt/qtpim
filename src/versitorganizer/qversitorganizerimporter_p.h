@@ -59,11 +59,7 @@
 #include <qversittimezonehandler.h>
 #include "qtimezones_p.h"
 
-QTPIM_BEGIN_NAMESPACE
-class QOrganizerItem;
-class QOrganizerItemDetail;
-class QVersitProperty;
-class QVersitDocument;
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 class Duration
 {
@@ -212,6 +208,6 @@ private:
     TimeZones mTimeZones;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif

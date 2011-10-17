@@ -48,7 +48,7 @@
 #include <QSet>
 #include <QString>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 QContactAction::~QContactAction()
 {
@@ -301,4 +301,4 @@ QContactAction* QContactAction::action(const QContactActionDescriptor& descripto
 
 #include "moc_qcontactaction.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

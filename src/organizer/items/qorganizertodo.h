@@ -46,7 +46,7 @@
 #include "qorganizeritemrecurrence.h"
 #include "qorganizertodoprogress.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_EXPORT QOrganizerTodo : public QOrganizerItem
 {
@@ -94,6 +94,6 @@ public:
     QDateTime finishedDateTime() const;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

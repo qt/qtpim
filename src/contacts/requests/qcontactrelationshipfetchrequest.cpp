@@ -44,7 +44,7 @@
 #include "qcontactrelationshipfilter.h"
 #include "qcontactrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactRelationshipFetchRequest
@@ -159,4 +159,4 @@ QList<QContactRelationship> QContactRelationshipFetchRequest::relationships() co
 
 #include "moc_qcontactrelationshipfetchrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

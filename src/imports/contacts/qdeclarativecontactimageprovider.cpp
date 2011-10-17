@@ -48,7 +48,7 @@
 #include <qcontactdetails.h>
 #include "qdeclarativecontactimageprovider_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 // This is run in a low priority thread.
 QImage ContactThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &req_size)
@@ -112,4 +112,4 @@ ContactThumbnailImageProvider::~ContactThumbnailImageProvider()
     m_managers.clear();
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

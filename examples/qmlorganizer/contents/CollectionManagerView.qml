@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 Item {
     anchors.centerIn: parent
@@ -122,7 +122,7 @@ Item {
     }
 
     function addCollection() {
-        collectionEditorView.collection = Qt.createQmlObject('import QtQuick 2.0; import QtAddOn.organizer 2.0; Collection {}',organizer);
+        collectionEditorView.collection = Qt.createQmlObject('import QtQuick 2.0; import QtOrganizer 2.0; Collection {}',organizer);
         calendar.state = "CollectionEditorView";
     }
 

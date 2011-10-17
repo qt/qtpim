@@ -46,7 +46,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactSortOrder
@@ -285,4 +285,4 @@ void QContactSortOrder::setCaseSensitivity(Qt::CaseSensitivity sensitivity)
     d->m_sensitivity = sensitivity;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

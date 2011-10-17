@@ -46,7 +46,7 @@
 
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerCollection
@@ -286,4 +286,4 @@ QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection)
 }
 #endif
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

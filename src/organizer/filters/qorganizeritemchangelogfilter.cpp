@@ -44,7 +44,7 @@
 #include "qorganizeritemfilter_p.h"
 #include "qorganizermanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemChangeLogFilter
@@ -127,4 +127,4 @@ QOrganizerItemChangeLogFilter::EventType QOrganizerItemChangeLogFilter::eventTyp
     return d->m_eventType;
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

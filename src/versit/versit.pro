@@ -1,6 +1,6 @@
 load(qt_module)
 
-TARGET = QtAddOnVersit
+TARGET = QtVersit
 QPRO_PWD = $PWD
 
 CONFIG += module
@@ -22,8 +22,7 @@ PUBLIC_HEADERS += \
     qversitcontactexporter.h \
     qversitcontactimporter.h \
     qversitcontacthandler.h \
-    qversitresourcehandler.h \
-    qlatin1constant.h
+    qversitresourcehandler.h
 
 PRIVATE_HEADERS += \
     qversitdocument_p.h \
@@ -63,4 +62,4 @@ SOURCES += \
     qversitcontactpluginloader_p.cpp \
     qversitutils.cpp
 
-HEADERS += qtaddonversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += qtversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

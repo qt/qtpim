@@ -48,8 +48,7 @@
 #include <QColor>
 #include <QUrl>
 
-QTPIM_USE_NAMESPACE
-
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerCollection : public QObject
 {
@@ -144,6 +143,10 @@ signals:
 private:
     QOrganizerCollection d;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerCollection)
+
+QTORGANIZER_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerCollection))
+
 #endif
 

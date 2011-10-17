@@ -1,5 +1,5 @@
 TARGET  = declarative_contacts
-TARGETPATH = QtAddOn/contacts
+TARGETPATH = QtContacts
 
 include(qcontactsimport.pri)
 target.path = $$[QT_INSTALL_IMPORTS]/$$TARGETPATH

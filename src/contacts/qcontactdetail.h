@@ -52,7 +52,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactActionDescriptor;
 class QContactDetailPrivate;
@@ -238,9 +238,9 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetail::AccessConstraints)
 #define Q_IMPLEMENT_CUSTOM_CONTACT_DETAIL(className, definitionNameString) \
     Q_DEFINE_LATIN1_CONSTANT(className::DefinitionName, definitionNameString)
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactDetail), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactDetail), Q_MOVABLE_TYPE);
 
 #endif
 

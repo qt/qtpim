@@ -50,7 +50,7 @@
 #include <QtTest/QtTest>
 #include <QDir>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 class MyQVersitContactImporterPropertyHandler : public QVersitContactImporterPropertyHandler
 {
 public:
@@ -149,10 +149,6 @@ const static QByteArray NOKIA_GIF(QByteArray::fromBase64(
         "apMmA3Qajppav6tr8TqUp0DqEIwtqsmRR/Kl2A4RfFKCcnBMbYR+Uw5xg2lAjIlLCS88dyYNLn1S"
         "TYwvk3NmkXSQLgVvXmQuBCcQXlI7Io9MpyWCbKgublgCNgxfP0eOs6dvUgsPyMgvEAUAeCafUWhe"
         "bpI2LQMFenuhZy8hADs="));
-
-QTPIM_END_NAMESPACE
-
-QTPIM_USE_NAMESPACE
 
 void tst_QVersitContactImporter::init()
 {

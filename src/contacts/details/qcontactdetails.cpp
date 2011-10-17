@@ -47,7 +47,7 @@
 #include <qcontacts.h>
 #include <qcontactdetails.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 
 /* template docs:
@@ -3087,4 +3087,4 @@ QContactFilter QContactPhoneNumber::match(const QString &number)
 }
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

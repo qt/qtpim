@@ -63,7 +63,7 @@
 #include <QStringList>
 #include <QMultiHash>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitDocument;
 class QVersitProperty;
 
@@ -89,6 +89,6 @@ private:
     static QList<QByteArrayMatcher>* m_newlineList;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITUTILS_P_H

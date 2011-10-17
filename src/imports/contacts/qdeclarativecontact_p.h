@@ -46,7 +46,7 @@
 #include <qcontactid.h>
 #include "qdeclarativecontactdetails_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactMetaObject;
 class QDeclarativeContactDetail;
@@ -157,10 +157,10 @@ private:
     friend class QDeclarativeContactMetaObject;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QContactLocalId))
+Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactLocalId))
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContact))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContact))
 
 #endif // QDECLARATIVECONTACT_P_H

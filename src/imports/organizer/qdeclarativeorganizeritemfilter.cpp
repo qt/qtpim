@@ -44,6 +44,8 @@
 #include "qorganizeritemid.h"
 #include "qorganizercollectionid.h"
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
    \qmlclass Filter QDeclarativeOrganizerItemFilter
    \brief The Filter element is used as a property of OrganizerModel, to allow
@@ -402,3 +404,7 @@ void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QDeclarativeListProp
         emit filter->valueChanged();
     }
 }
+
+#include "moc_qdeclarativeorganizeritemfilter_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

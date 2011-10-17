@@ -58,7 +58,7 @@
 
 #include <qcontactsglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactIdPrivate : public QSharedData
 {
@@ -82,6 +82,6 @@ public:
     QContactLocalId m_localId;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

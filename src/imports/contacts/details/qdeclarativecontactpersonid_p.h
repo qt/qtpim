@@ -45,7 +45,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include <qcontactpersonid.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactPersonId : public QDeclarativeContactDetail
 {
@@ -90,8 +90,8 @@ signals:
     void fieldsChanged();
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QtAddOn::Pim::QDeclarativeContactPersonId)
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactPersonId))
 
 #endif // QDECLARATIVECONTACTPERSONID_H

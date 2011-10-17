@@ -48,7 +48,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemFetchHint
@@ -221,4 +221,4 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint)
 }
 #endif
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactDetailFilter
@@ -160,4 +160,4 @@ QVariant QContactDetailFilter::value() const
     return d->m_exactValue;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

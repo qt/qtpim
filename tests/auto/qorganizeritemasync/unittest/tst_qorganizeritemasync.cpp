@@ -47,7 +47,7 @@
 #include <qorganizer.h>
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 /* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
 #define FILL_QUEUE_WITH_FETCH_REQUESTS(manager) QOrganizerItemFetchRequest fqifr1, fqifr2, fqifr3; \

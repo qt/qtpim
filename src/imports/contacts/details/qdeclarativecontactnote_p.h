@@ -45,7 +45,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactnote.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactNote : public QDeclarativeContactDetail
 {
@@ -92,9 +92,9 @@ signals:
     void fieldsChanged();
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactNote))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactNote))
 
 #endif
 

@@ -44,10 +44,10 @@
 
 #include <QtCore/qglobal.h>
 
-#define QTPIM_PREPEND_NAMESPACE(name) ::QtAddOn::Pim::name
-#define QTPIM_BEGIN_NAMESPACE namespace QtAddOn { namespace Pim {
-#define QTPIM_END_NAMESPACE } }
-#define QTPIM_USE_NAMESPACE using namespace QtAddOn::Pim;
+#define QTORGANIZER_PREPEND_NAMESPACE(name) ::QtOrganizer::name
+#define QTORGANIZER_BEGIN_NAMESPACE namespace QtOrganizer {
+#define QTORGANIZER_END_NAMESPACE }
+#define QTORGANIZER_USE_NAMESPACE using namespace QtOrganizer;
 
 #if defined(Q_OS_WIN)
 #  if defined(QT_NODLL)
@@ -75,8 +75,8 @@
 #  endif
 #endif
 
-#define QTORGANIZER_VERSION_NAME "com.nokia.qt.pim.organizer.api.version"
-#define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.pim.organizer.implementation.version"
+#define QTORGANIZER_VERSION_NAME "com.nokia.qt.organizer.api.version"
+#define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.organizer.implementation.version"
 #define QTORGANIZER_VERSION 1
 
 #endif

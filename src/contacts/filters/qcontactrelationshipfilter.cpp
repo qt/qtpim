@@ -43,7 +43,7 @@
 #include "qcontactrelationshipfilter_p.h"
 #include "qcontactmanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactRelationshipFilter
@@ -158,4 +158,4 @@ QContactRelationship::Role QContactRelationshipFilter::relatedContactRole() cons
 }
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

@@ -44,7 +44,7 @@
 
 #include "qorganizeritemfilter.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemInvalidFilterPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemInvalidFilter : public QOrganizerItemFilter
@@ -54,6 +54,6 @@ public:
     QOrganizerItemInvalidFilter(const QOrganizerItemFilter& other);
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

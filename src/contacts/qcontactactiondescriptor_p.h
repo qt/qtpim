@@ -57,7 +57,7 @@
 #include <QString>
 #include <QVariantMap>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactActionFactory;
 class QContactActionDescriptorPrivate : public QSharedData
@@ -92,6 +92,6 @@ public:
     const QContactActionFactory* m_factory;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

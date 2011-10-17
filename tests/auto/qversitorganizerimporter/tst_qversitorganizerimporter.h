@@ -48,9 +48,6 @@
 #include "qversitproperty.h"
 #include "qorganizer.h"
 
-QTPIM_BEGIN_NAMESPACE
-QTPIM_END_NAMESPACE
-
 class tst_QVersitOrganizerImporter : public QObject
 {
     Q_OBJECT

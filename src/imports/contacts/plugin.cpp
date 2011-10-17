@@ -54,7 +54,7 @@
 #include "qdeclarativecontactfetchhint_p.h"
 #include "qdeclarativecontactfilters_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactQmlPlugin : public QDeclarativeExtensionPlugin
 {
@@ -63,7 +63,7 @@ class QContactQmlPlugin : public QDeclarativeExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("QtAddOn.contacts"));
+        Q_ASSERT(uri == QLatin1String("QtContacts"));
 
         int major = 2;
         int minor = 0;
@@ -127,6 +127,6 @@ public:
 
 #include "plugin.moc"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_EXPORT_PLUGIN2(qcontactqmlplugin, QTPIM_PREPEND_NAMESPACE(QContactQmlPlugin))
+Q_EXPORT_PLUGIN2(qcontactqmlplugin, QTCONTACTS_PREPEND_NAMESPACE(QContactQmlPlugin))

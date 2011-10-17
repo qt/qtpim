@@ -48,7 +48,7 @@
 
 #include <qcontactsglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactDetailFieldDefinitionPrivate;
 class Q_CONTACTS_EXPORT QContactDetailFieldDefinition
@@ -82,8 +82,8 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactDetailFieldDe
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactDetailFieldDefinition& definition);
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactDetailFieldDefinition), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactDetailFieldDefinition), Q_MOVABLE_TYPE);
 
 #endif

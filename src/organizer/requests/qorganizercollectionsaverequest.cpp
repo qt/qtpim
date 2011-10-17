@@ -42,7 +42,7 @@
 #include "qorganizercollectionsaverequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerCollectionSaveRequest
@@ -122,4 +122,4 @@ QMap<int, QOrganizerManager::Error> QOrganizerCollectionSaveRequest::errorMap() 
 
 #include "moc_qorganizercollectionsaverequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

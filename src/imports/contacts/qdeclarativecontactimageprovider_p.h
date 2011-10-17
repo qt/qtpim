@@ -43,7 +43,7 @@
 #include <QMap>
 #include "qcontactmanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class ContactThumbnailImageProvider : public QDeclarativeImageProvider
 {
@@ -58,4 +58,4 @@ private:
     QMap<QString, QImage> m_thumbnails;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

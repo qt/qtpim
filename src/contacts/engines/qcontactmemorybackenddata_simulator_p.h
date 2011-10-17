@@ -74,7 +74,7 @@
 
 QT_BEGIN_HEADER
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 void qt_registerContactsTypes();
 
@@ -107,7 +107,7 @@ struct SaveRelationshipReply
 
 } // namespace Simulator
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QtPIM::QContact)
 Q_DECLARE_METATYPE(QtPIM::QContactRelationship)

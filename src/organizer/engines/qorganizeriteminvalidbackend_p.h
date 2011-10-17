@@ -60,7 +60,7 @@
 #include <QMap>
 #include <QString>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemInvalidEngine : public QOrganizerManagerEngineV2
 {
@@ -79,7 +79,7 @@ public:
     }
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

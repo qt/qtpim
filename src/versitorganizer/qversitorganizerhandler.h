@@ -45,7 +45,7 @@
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 // qdoc seems to not find QVersitOrganizerHandler if it is declared first, hence this forward
 // declaration
@@ -76,9 +76,9 @@ public:
     virtual ~QVersitOrganizerHandler() {}
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
-#define QT_VERSIT_ORGANIZER_HANDLER_INTERFACE "com.nokia.qt.pim.versit.organizerhandlerfactory/1.0"
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QVersitOrganizerHandlerFactory, QT_VERSIT_ORGANIZER_HANDLER_INTERFACE)
+#define QT_VERSIT_ORGANIZER_HANDLER_INTERFACE "com.nokia.qt.versitorganizerhandlerfactory/1.0"
+Q_DECLARE_INTERFACE(QtVersitOrganizer::QVersitOrganizerHandlerFactory, QT_VERSIT_ORGANIZER_HANDLER_INTERFACE)
 
 #endif

@@ -51,8 +51,8 @@
 #include <QDeclarativeParserStatus>
 
 #include "qdeclarativeorganizeritemdetail_p.h"
-QTPIM_USE_NAMESPACE
 
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemFilter : public QObject
 {
@@ -109,7 +109,6 @@ signals:
     void filterChanged();
 };
 
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemFilter)
 
 class QDeclarativeOrganizerItemCompoundFilter : public QDeclarativeOrganizerItemFilter
 {
@@ -138,7 +137,6 @@ signals:
 protected:
     QList<QDeclarativeOrganizerItemFilter*> m_filters;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemCompoundFilter)
 
 //changelog filter
 class QDeclarativeOrganizerItemChangeLogFilter : public QDeclarativeOrganizerItemFilter
@@ -192,7 +190,6 @@ private:
     QOrganizerItemChangeLogFilter d;
 
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemChangeLogFilter)
 
 //collection filter
 class QDeclarativeOrganizerItemCollectionFilter : public QDeclarativeOrganizerItemFilter
@@ -238,7 +235,6 @@ signals:
 private:
     QStringList m_ids;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemCollectionFilter)
 
 //detail filter
 class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QDeclarativeParserStatus
@@ -349,7 +345,6 @@ private:
     QOrganizerItemDetailFilter d;
 
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemDetailFilter)
 
 
 //detail range filter
@@ -498,7 +493,6 @@ private:
     QOrganizerItemDetailRangeFilter d;
 
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemDetailRangeFilter)
 
 
 //id filter
@@ -545,7 +539,6 @@ signals:
 private:
     QVariantList m_ids;
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemIdFilter)
 
 
 //intersection filter
@@ -569,7 +562,6 @@ public:
         return f;
     }
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemIntersectionFilter)
 
 
 //union filter
@@ -593,7 +585,6 @@ public:
         return f;
     }
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemUnionFilter)
 
 //invalid filter
 class QDeclarativeOrganizerItemInvalidFilter : public QDeclarativeOrganizerItemFilter
@@ -612,6 +603,18 @@ public:
     }
 
 };
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemInvalidFilter)
+
+QTORGANIZER_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCompoundFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemChangeLogFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCollectionFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailRangeFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIdFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIntersectionFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemUnionFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemInvalidFilter))
 
 #endif

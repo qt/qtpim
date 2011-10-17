@@ -40,7 +40,7 @@
 
 import QtQuick 2.0
 import com.nokia.components 1.0
-import QtAddOn.contacts 2.0
+import QtContacts 2.0
 
 Rectangle {
     id: fieldEdit

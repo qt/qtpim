@@ -75,7 +75,7 @@
 #include "qorganizerjsondbrequestthread.h"
 
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 
 class QOrganizerJsonDbEngineData : public QSharedData
@@ -159,5 +159,6 @@ private:
     friend class QOrganizerJsonDbEngineFactory;
 };
 
-#endif
+QTORGANIZER_END_NAMESPACE
 
+#endif

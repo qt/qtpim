@@ -50,7 +50,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactRelationship
@@ -295,4 +295,4 @@ void QContactRelationship::setRelationshipType(const QString& relationshipType)
     d->m_relationshipType = relationshipType;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

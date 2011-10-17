@@ -1,28 +1,28 @@
 %modules = ( # path to module name map
-    "QtAddOnContacts" => "$basedir/src/contacts",
-    "QtAddOnOrganizer" => "$basedir/src/organizer",
-    "QtAddOnVersit" => "$basedir/src/versit",
-    "QtAddOnVersitOrganizer" => "$basedir/src/versitorganizer",
+    "QtContacts" => "$basedir/src/contacts",
+    "QtOrganizer" => "$basedir/src/organizer",
+    "QtVersit" => "$basedir/src/versit",
+    "QtVersitOrganizer" => "$basedir/src/versitorganizer",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
-    "qtaddoncontactsversion.h" => "QtAddOnContactsVersion",
-    "qtaddonorganizerversion.h" => "QtAddOnOrganizerVersion",
-    "qtaddonversitversion.h" => "QtAddOnVersitVersion",
-    "qtaddonversitorganizerversion.h" => "QtAddOnVersitOrganizerVersion",
+    "qtcontactsversion.h" => "QtContactsVersion",
+    "qtorganizerversion.h" => "QtOrganizerVersion",
+    "qtversitversion.h" => "QtVersitVersion",
+    "qtversitorganizerversion.h" => "QtVersitOrganizerVersion",
 );
 %mastercontent = (
-    "contacts" => "#include <QtAddOnContacts/QtAddOnContacts>\n",
-    "organizer" => "#include <QtAddOnOrganizer/QtAddOnOrganizer>\n",
-    "versit" => "#include <QtAddOnVersit/QtAddOnVersit>\n",
-    "versitorganizer" => "#include <QtAddOnVersitOrganizer/QtAddOnVersitOrganizer>\n",
+    "contacts" => "#include <QtContacts/QtContacts>\n",
+    "organizer" => "#include <QtOrganizer/QtOrganizer>\n",
+    "versit" => "#include <QtVersit/QtVersit>\n",
+    "versitorganizer" => "#include <QtVersitOrganizer/QtVersitOrganizer>\n",
 );
 %modulepris = (
-    "QtAddOnContacts" => "$basedir/modules/qt_contacts.pri",
-    "QtAddOnOrganizer" => "$basedir/modules/qt_organizer.pri",
-    "QtAddOnVersit" => "$basedir/modules/qt_versit.pri",
-    "QtAddOnVersitOrganizer" => "$basedir/modules/qt_versitorganizer.pri",
+    "QtContacts" => "$basedir/modules/qt_contacts.pri",
+    "QtOrganizer" => "$basedir/modules/qt_organizer.pri",
+    "QtVersit" => "$basedir/modules/qt_versit.pri",
+    "QtVersitOrganizer" => "$basedir/modules/qt_versitorganizer.pri",
 );
 # Module dependencies.
 # Every module that is required to build this module should have one entry.

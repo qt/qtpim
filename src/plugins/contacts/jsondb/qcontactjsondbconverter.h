@@ -49,7 +49,7 @@
 #include "qcontactabstractrequest.h"
 #include "qcontactfilter.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbConverter
 {
@@ -77,4 +77,7 @@ private:
     QString toJsonDate(const QDateTime& date) const;
     QDateTime toContactDate(const QString& dateString) const;
 };
+
+QTCONTACTS_END_NAMESPACE
+
 #endif // QCONTACTJSONDBCONVERTER_H

@@ -62,7 +62,7 @@
 #include "qorganizercollection.h"
 #include "qorganizerabstractrequest.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbRequestData;
 
@@ -125,5 +125,6 @@ class QOrganizerJsonDbRequestData
     QOrganizerJsonDbRequestManager::HandlingStatus m_status;
 };
 
+QTORGANIZER_END_NAMESPACE
 
 #endif // QORGANIZERJSONDBREQUESTMANAGER_H

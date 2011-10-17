@@ -50,7 +50,7 @@
 #include <QPair>
 #include <QSet>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerManager
@@ -870,4 +870,4 @@ QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem
 
 #include "moc_qorganizermanager.cpp"
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

@@ -55,7 +55,7 @@
 #include <QSharedData>
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactMemoryEngine
@@ -1008,5 +1008,5 @@ QContactMemoryEngineData* QContactMemoryEngineData::data(QContactMemoryEngine* e
 
 #include "moc_qcontactmemorybackend_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 

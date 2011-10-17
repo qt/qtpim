@@ -47,7 +47,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactringtone.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactRingtone : public QDeclarativeContactDetail
 {
@@ -121,8 +121,8 @@ signals:
 
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactRingtone))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactRingtone))
 
 #endif

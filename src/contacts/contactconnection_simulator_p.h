@@ -63,7 +63,7 @@ QT_BEGIN_HEADER
 
 class QLocalSocket;
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 struct QContactSimulatorData;
 class QContactSimulatorEngine;
@@ -102,7 +102,7 @@ private:
 
 } // namespace Simulator
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 QT_END_HEADER
 
 #endif // CONTACTCONNECTION_SIMUATOR_P_H

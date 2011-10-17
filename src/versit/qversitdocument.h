@@ -53,7 +53,7 @@ QT_BEGIN_NAMESPACE
 class QTextCodec;
 QT_END_NAMESPACE
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class QVersitDocumentPrivate;
 class QVersitProperty;
@@ -112,8 +112,8 @@ Q_VERSIT_EXPORT uint qHash(const QVersitDocument& key);
 Q_VERSIT_EXPORT QDebug operator<<(QDebug dbg, const QVersitDocument& property);
 #endif
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QVersitDocument))
+Q_DECLARE_METATYPE(QTVERSIT_PREPEND_NAMESPACE(QVersitDocument))
 
 #endif // QVERSITDOCUMENT_H

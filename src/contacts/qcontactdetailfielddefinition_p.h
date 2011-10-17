@@ -61,7 +61,7 @@
 #include <QVariant>
 #include <QList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactDetailFieldDefinitionPrivate : public QSharedData
 {
@@ -87,6 +87,6 @@ public:
     QVariant::Type m_dataType;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

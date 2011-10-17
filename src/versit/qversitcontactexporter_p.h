@@ -59,9 +59,14 @@
 #include <QHash>
 #include <QObject>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 class QContact;
 class QContactDetail;
+QTCONTACTS_END_NAMESPACE
+
+QTCONTACTS_USE_NAMESPACE
+
+QTVERSIT_BEGIN_NAMESPACE
 class QVersitContactHandler;
 
 class QVersitContactExporterPrivate
@@ -186,6 +191,6 @@ public: // Data
     QHash<QString,QString> mParameterMappings;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVERSITCONTACTEXPORTER_P_H

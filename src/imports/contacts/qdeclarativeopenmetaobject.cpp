@@ -43,7 +43,7 @@
 #include "qmetaobjectbuilder_p.h"
 #include <qdebug.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeOpenMetaObjectPrivate
 {
@@ -210,4 +210,4 @@ QObject *QDeclarativeOpenMetaObject::object() const
     return d->object;
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

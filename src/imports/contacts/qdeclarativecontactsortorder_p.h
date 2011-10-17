@@ -48,7 +48,7 @@
 #include "qcontactsortorder.h"
 #include "qdeclarativecontactdetail_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactSortOrder :public QObject, public QDeclarativeParserStatus
 {
@@ -99,8 +99,8 @@ private:
     QContactSortOrder m_sortOrder;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactSortOrder))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactSortOrder))
 
 #endif

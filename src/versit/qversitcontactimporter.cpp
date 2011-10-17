@@ -45,7 +45,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \deprecated
@@ -363,4 +363,4 @@ QVersitResourceHandler* QVersitContactImporter::resourceHandler() const
     return d->mResourceHandler;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

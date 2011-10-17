@@ -49,7 +49,7 @@
 #include <QList>
 #include <QStringList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactDetailDefinitionFetchRequestPrivate;
 class Q_CONTACTS_EXPORT QContactDetailDefinitionFetchRequest : public QContactAbstractRequest
@@ -77,6 +77,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QContactDetailDefinitionFetchRequest)
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

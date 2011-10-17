@@ -49,7 +49,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 
 /* See QVersitContactImporter::createBackupHandler() */
@@ -249,3 +249,5 @@ void BackupVCardHandler::contactProcessed(
     Q_UNUSED(document)
     mDetailNumber = 0;
 }
+
+QTVERSIT_END_NAMESPACE

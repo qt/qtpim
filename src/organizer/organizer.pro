@@ -1,6 +1,6 @@
 load(qt_module)
 
-TARGET = QtAddOnOrganizer
+TARGET = QtOrganizer
 QPRO_PWD = $PWD
 
 CONFIG += module
@@ -90,4 +90,4 @@ simulator {
 
 !isEmpty(ORGANIZER_DEFAULT_ENGINE): DEFINES += Q_ORGANIZER_DEFAULT_ENGINE=$$ORGANIZER_DEFAULT_ENGINE
 
-HEADERS += qtaddonorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += qtorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

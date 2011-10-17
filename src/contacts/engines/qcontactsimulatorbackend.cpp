@@ -58,7 +58,7 @@
 #include <QUuid>
 #include <QSharedData>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 using namespace QtSimulatorPrivate;
 using namespace Simulator;
@@ -223,4 +223,4 @@ bool QContactSimulatorEngine::removeRelationship(const QContactRelationship& rel
 
 #include "moc_qcontactsimulatorbackend_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

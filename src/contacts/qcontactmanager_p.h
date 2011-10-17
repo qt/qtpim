@@ -64,7 +64,7 @@
 #include "qcontactactionmanager_p.h"
 #include "qcontactobserver.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactManagerEngineFactory;
 
@@ -153,6 +153,6 @@ public:
     QMap<int, QContactManager::Error> *userError;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

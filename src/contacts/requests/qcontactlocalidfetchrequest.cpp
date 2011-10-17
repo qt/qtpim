@@ -42,7 +42,7 @@
 #include "qcontactlocalidfetchrequest.h"
 #include "qcontactrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactLocalIdFetchRequest
@@ -129,4 +129,4 @@ QList<QContactLocalId> QContactLocalIdFetchRequest::ids() const
 
 #include "moc_qcontactlocalidfetchrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

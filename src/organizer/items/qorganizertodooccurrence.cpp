@@ -41,7 +41,7 @@
 
 #include "qorganizertodooccurrence.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerTodoOccurrence
@@ -236,3 +236,5 @@ QDateTime QOrganizerTodoOccurrence::finishedDateTime() const
     QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
     return tp.finishedDateTime();
 }
+
+QTORGANIZER_END_NAMESPACE

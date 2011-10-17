@@ -45,7 +45,7 @@
 #include "qorganizer.h"
 #include "qorganizeritempriority.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_EXPORT QOrganizerEventOccurrence : public QOrganizerItem
 {
@@ -74,6 +74,6 @@ public:
     void setLocation(const QString& location);
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

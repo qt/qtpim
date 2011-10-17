@@ -72,7 +72,7 @@
 */
 
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 QDeclarativeContact::QDeclarativeContact(QObject *parent)
     :QObject(parent),
@@ -556,4 +556,4 @@ QDeclarativeContactPersonId*  QDeclarativeContact::personid()
 
 #include "moc_qdeclarativecontact_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

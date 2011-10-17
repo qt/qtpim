@@ -46,8 +46,15 @@
 #include <qorganizerrecurrencerule.h>
 #include <qversitorganizerhandler.h>
 #include <qversittimezonehandler.h>
+#include <qversitdocument.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
+class QVersitDocument;
+QTVERSIT_END_NAMESPACE
+
+QTVERSIT_USE_NAMESPACE
+
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 class QVersitOrganizerExporterPrivate
 {
@@ -154,6 +161,6 @@ private:
     QMap<QString, QPair<QString, QString> > mPropertyMappings;
 };
 
-QTPIM_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif // QVERSITORGANIZEREXPORTER_P_H

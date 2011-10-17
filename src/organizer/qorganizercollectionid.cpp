@@ -46,13 +46,13 @@
 #include <QDebug>
 
 #if !defined(Q_CC_MWERKS)
-template<> QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionEngineId) *QSharedDataPointer<QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionEngineId)>::clone()
+template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId)>::clone()
 {
     return d ? d->clone() : 0;
 }
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerCollectionId
@@ -372,4 +372,4 @@ QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString& idStrin
     return QOrganizerCollectionId(engineId);
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

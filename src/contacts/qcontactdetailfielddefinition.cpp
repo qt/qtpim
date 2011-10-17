@@ -46,7 +46,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactDetailFieldDefinition
@@ -200,4 +200,4 @@ QDebug operator<<(QDebug dbg, const QContactDetailFieldDefinition& definition)
 }
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

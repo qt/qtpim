@@ -59,7 +59,7 @@
 #include "qorganizeritemfetchhint.h"
 #include "qorganizeritemrequests.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemFilter;
 class QOrganizerItemSortOrder;
@@ -187,6 +187,6 @@ public:
     // TODO async function
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

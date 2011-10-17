@@ -42,7 +42,7 @@
 #include "qorganizeritemdetails.h"
 #include "qorganizeritemdetailfilter.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 
 
@@ -1523,4 +1523,4 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::FieldCustomDetailData, "Cus
     Gets the data of this custom detail.
  */
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

@@ -47,7 +47,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qdeclarativecontactmetaobject_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 static ContactDetailNameMap qt_contactDetailNameMap[] = {
     {QDeclarativeContactDetail::Address,        "address",        QContactAddress::DefinitionName.latin1(),  false},
@@ -436,4 +436,4 @@ QDeclarativeContactDetail* QDeclarativeContactMetaObject::createContactDetail(QD
     return new QDeclarativeContactDetail(parent);
 }
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

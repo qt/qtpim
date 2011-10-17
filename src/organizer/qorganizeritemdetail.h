@@ -52,7 +52,7 @@
 
 class QDataStream;
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemDetailPrivate;
 
@@ -180,9 +180,9 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemDetail::AccessConstraints)
 #define Q_IMPLEMENT_CUSTOM_ORGANIZER_DETAIL(className, definitionNameString) \
     Q_DEFINE_LATIN1_CONSTANT(className::DefinitionName, definitionNameString)
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerItemDetail), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemDetail), Q_MOVABLE_TYPE);
 
 #endif
 

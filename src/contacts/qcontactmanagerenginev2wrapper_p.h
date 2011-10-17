@@ -57,7 +57,7 @@
 #include <QScopedPointer>
 #include "qcontactmanagerengine.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class RequestController;
 
@@ -201,6 +201,6 @@ private:
     QMap<int, QContactManager::Error> m_errorMap;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

@@ -44,10 +44,12 @@
 #include "tst_qversitorganizerimporter.h"
 #include <QtTest/QtTest>
 
-QTPIM_USE_NAMESPACE
-Q_DECLARE_METATYPE(QList<QOrganizerItem>);
-Q_DECLARE_METATYPE(QList<QOrganizerItemDetail>);
-Q_DECLARE_METATYPE(QList<QVersitProperty>);
+QTORGANIZER_USE_NAMESPACE
+QTVERSITORGANIZER_USE_NAMESPACE
+
+Q_DECLARE_METATYPE(QList<QOrganizerItem>)
+Q_DECLARE_METATYPE(QList<QOrganizerItemDetail>)
+Q_DECLARE_METATYPE(QList<QVersitProperty>)
 
 void tst_QVersitOrganizerImporter::testImport()
 {

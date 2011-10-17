@@ -40,6 +40,9 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizeritemfetchhint_p.h"
+
+QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
    \qmlclass FetchHint QDeclarativeOrganizerItemFetchHint
    \brief The FetchHint element provides hints to the manager about which organizer item
@@ -60,3 +63,7 @@
   These hints may be ignored by the backend, in which case it will return
   the full set of information accessible in a organizer item.
   */
+
+#include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

@@ -48,7 +48,7 @@
 #include <QMutexLocker>
 #include <QBuffer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
   \class QVersitReader
@@ -277,4 +277,4 @@ QList<QVersitDocument> QVersitReader::results() const
 }
 
 #include "moc_qversitreader.cpp"
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

@@ -57,7 +57,7 @@
 
 #include <QSharedData>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemSortOrderPrivate : public QSharedData
 {
@@ -81,6 +81,6 @@ public:
     QString m_fieldName;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

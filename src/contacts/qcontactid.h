@@ -48,7 +48,7 @@
 #include <qcontactsglobal.h>
 
 class QDataStream;
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 typedef QString QContactLocalId;
 
@@ -85,9 +85,9 @@ Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactId& id
 Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactId& id);
 #endif
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QContactId), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactId), Q_MOVABLE_TYPE);
 
 
 #endif

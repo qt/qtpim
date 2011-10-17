@@ -56,7 +56,7 @@
 #include "qorganizeritemengineid.h"
 #include "qorganizercollectionengineid.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbItemId : public QOrganizerItemEngineId
 {
@@ -110,6 +110,8 @@ public:
 private:
     QString m_collectionId;
 };
+
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

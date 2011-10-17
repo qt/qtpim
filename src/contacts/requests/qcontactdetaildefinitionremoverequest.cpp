@@ -42,7 +42,7 @@
 #include "qcontactdetaildefinitionremoverequest.h"
 #include "qcontactrequests_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactDetailDefinitionRemoveRequest
@@ -153,4 +153,4 @@ QMap<int, QContactManager::Error> QContactDetailDefinitionRemoveRequest::errorMa
 
 #include "moc_qcontactdetaildefinitionremoverequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

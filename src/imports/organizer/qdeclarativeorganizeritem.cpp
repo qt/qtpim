@@ -44,6 +44,8 @@
 
 #include <QtDeclarative/qdeclarativeengine.h>
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
     \qmlclass OrganizerItem QDeclarativeOrganizerItem
 
@@ -59,7 +61,7 @@
 
     \sa Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerManager}, {QOrganizerItem}
 
-    The OrganizerItem element is part of the \bold{QtAddOn.Organizer 2.0} module.
+    The OrganizerItem element is part of the \bold{QtOrganizer 2.0} module.
  */
 
 /*!
@@ -611,7 +613,7 @@ bool QDeclarativeOrganizerItem::isOccurrence() const
     \brief The Event element provides an event in time which may reoccur.
     \ingroup qml-organizer
 
-    The Event element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The Event element is part of the \bold{QtOrganizer 2.0} module.
 
     \sa OrganizerItem, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerEvent}
 */
@@ -835,7 +837,7 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
     \brief The EventOccurrence element provides an occurrence of an event.
     \ingroup qml-organizer
 
-    The EventOccurrence element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The EventOccurrence element is part of the \bold{QtOrganizer 2.0} module.
     \sa OrganizerItem, Event, Journal, Todo, TodoOccurrence, Note, {QOrganizerEventOccurrence}
  */
 
@@ -1076,7 +1078,7 @@ QString QDeclarativeOrganizerEventOccurrence::parentId() const
     \brief The Journal element provides a journal which is associated with a particular point in time.
     \ingroup qml-organizer
 
-    The Journal element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The Journal element is part of the \bold{QtOrganizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Todo, TodoOccurrence, Note, {QOrganizerJournal}
  */
 
@@ -1130,7 +1132,7 @@ QDateTime QDeclarativeOrganizerJournal::dateTime() const
     \brief The Note element provides a note which is not associated with any particular point in time.
     \ingroup qml-organizer
 
-    The Note element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The Note element is part of the \bold{QtOrganizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, TodoOccurrence, {QOrganizerNote}
  */
 
@@ -1149,7 +1151,7 @@ QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
     \brief The Todo element provides a task which should be completed.
     \ingroup qml-organizer
 
-    The Todo element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The Todo element is part of the \bold{QtOrganizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, TodoOccurrence, Note, {QOrganizerTodo}
 */
 
@@ -1446,7 +1448,7 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
     \brief The TodoOccurrence element provides an occurrence of an event.
     \ingroup qml-organizer
 
-    The TodoOccurrence element is part of the \bold{QtAddOn.organizer 2.0} module.
+    The TodoOccurrence element is part of the \bold{QtOrganizer 2.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}
  */
 QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject *parent)
@@ -1750,3 +1752,7 @@ QString QDeclarativeOrganizerTodoOccurrence::parentId() const
     }
     return QString::null;
 }
+
+#include "moc_qdeclarativeorganizeritem_p.cpp"
+
+QTORGANIZER_END_NAMESPACE

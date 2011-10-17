@@ -60,7 +60,7 @@
 #include <QtCore/qset.h>
 #include <QtCore/qshareddata.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemChangeSetData : public QSharedData
 {
@@ -90,6 +90,6 @@ public:
     QSet<QOrganizerItemId> m_removedItems;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

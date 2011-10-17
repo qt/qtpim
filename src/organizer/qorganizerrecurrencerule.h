@@ -53,7 +53,7 @@
 #include <QtCore/qdebug.h>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerRecurrenceRulePrivate;
 
 class Q_ORGANIZER_EXPORT QOrganizerRecurrenceRule
@@ -153,7 +153,7 @@ inline uint qHash(QOrganizerRecurrenceRule::Month month)
     return static_cast<uint>(month);
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 inline uint qHash(const QDate &date)
 {
@@ -161,9 +161,9 @@ inline uint qHash(const QDate &date)
 }
 
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule));
-Q_DECLARE_METATYPE(QSet<QTPIM_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>);
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule));
+Q_DECLARE_METATYPE(QSet<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>);
 Q_DECLARE_METATYPE(QSet<QDate>);
 
 #endif

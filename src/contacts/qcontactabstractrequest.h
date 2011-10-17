@@ -45,7 +45,7 @@
 #include <qcontactmanager.h>
 #include <QObject>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactManagerEngine;
 class QContactAbstractRequestPrivate;
@@ -124,6 +124,6 @@ private:
 };
 
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

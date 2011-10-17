@@ -45,7 +45,7 @@
 #include <qorganizerglobal.h>
 #include <qorganizeritemdetail.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemCustomDetail : public QOrganizerItemDetail
@@ -68,6 +68,6 @@ public:
     QVariant data() const { return variantValue(FieldCustomDetailData); }
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif // QORGANIZERITEMCUSTOMDETAIL_H

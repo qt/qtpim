@@ -42,7 +42,7 @@
 #include "qdeclarativecontactrelationship_p.h"
 #include <QDebug>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
    \qmlclass Relationship QDeclarativeContactRelationship
@@ -166,4 +166,4 @@ void QDeclarativeContactRelationship::setRelationship(const QContactRelationship
 
 #include "moc_qdeclarativecontactrelationship_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

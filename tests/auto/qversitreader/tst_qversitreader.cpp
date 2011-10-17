@@ -74,10 +74,10 @@ const static QByteArray SAMPLE_GIF_BASE64(QByteArray(
 
 const static QByteArray SAMPLE_GIF(QByteArray::fromBase64(SAMPLE_GIF_BASE64));
 
-Q_DECLARE_METATYPE(QtAddOn::Pim::QVersitDocument::VersitType)
-Q_DECLARE_METATYPE(QtAddOn::Pim::QVersitProperty)
+Q_DECLARE_METATYPE(QTVERSIT_PREPEND_NAMESPACE(QVersitDocument::VersitType))
+Q_DECLARE_METATYPE(QTVERSIT_PREPEND_NAMESPACE(QVersitProperty))
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 void tst_QVersitReader::init()
 {

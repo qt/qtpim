@@ -46,7 +46,7 @@
 #include <QObject>
 #include <QtTest/QtTest>
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 class TestFactory1 : public QVersitContactHandlerFactory
 {

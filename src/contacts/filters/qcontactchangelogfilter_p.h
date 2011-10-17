@@ -58,7 +58,7 @@
 
 #include <QDateTime>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactChangeLogFilterPrivate : public QContactFilterPrivate
 {
@@ -122,6 +122,6 @@ public:
     QDateTime m_since;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

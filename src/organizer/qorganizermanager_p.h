@@ -63,7 +63,7 @@
 #include "qorganizermanagerengine.h"
 #include "qorganizeritemobserver.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerManagerEngineFactory;
 
@@ -143,6 +143,6 @@ public:
     QMap<int, QOrganizerManager::Error> *userError;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

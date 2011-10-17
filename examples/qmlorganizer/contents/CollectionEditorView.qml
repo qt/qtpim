@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtAddOn.organizer 2.0
+import QtOrganizer 2.0
 
 Item {
     anchors.centerIn: parent
@@ -102,7 +102,7 @@ Item {
 
 
     function saveCollection() {
-        var newCollection = Qt.createQmlObject('import QtQuick 2.0; import QtAddOn.organizer 2.0; Collection {}',organizer);
+        var newCollection = Qt.createQmlObject('import QtQuick 2.0; import QtOrganizer 2.0; Collection {}',organizer);
         newCollection.name = nameRow.newValue;
         newCollection.collectionId = collection.collectionId;
         newCollection.description = descRow.newValue;

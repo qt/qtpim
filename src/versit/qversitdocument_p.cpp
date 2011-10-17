@@ -41,7 +41,7 @@
 
 #include "qversitdocument_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 QVersitDocumentPrivate::QVersitDocumentPrivate()
     : QSharedData(),
@@ -58,4 +58,4 @@ QVersitDocumentPrivate::QVersitDocumentPrivate(const QVersitDocumentPrivate& oth
 {
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

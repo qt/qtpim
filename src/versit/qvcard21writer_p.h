@@ -55,7 +55,7 @@
 
 #include "qversitdocumentwriter_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class Q_VERSIT_EXPORT QVCard21Writer : public QVersitDocumentWriter
 {
@@ -75,6 +75,6 @@ private:
     static QTextEncoder* utf8Encoder();
 };
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE
 
 #endif // QVCARD21WRITER_P_H

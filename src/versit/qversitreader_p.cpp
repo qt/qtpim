@@ -47,7 +47,7 @@
 #include <QVariant>
 #include <QBuffer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 // Some big enough value for nested versit documents to prevent infinite recursion
 #define MAX_VERSIT_DOCUMENT_NESTING_DEPTH 20
@@ -1169,4 +1169,4 @@ void QVersitReaderPrivate::removeBackSlashEscaping(QString* text)
 }
 
 #include "moc_qversitreader_p.cpp"
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

@@ -42,7 +42,7 @@
 #include "vcardpreserver.h"
 #include <qversitproperty.h>
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 class VCardPreserver : public QVersitContactHandler
 {
@@ -157,3 +157,7 @@ void VCardPreserver::contactProcessed(const QContact& contact,
     Q_UNUSED(contact)
     Q_UNUSED(document)
 }
+
+#include "moc_vcardpreserver.cpp"
+
+QTVERSIT_END_NAMESPACE

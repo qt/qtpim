@@ -43,6 +43,8 @@
 #include <qorganizer.h>
 #include <QDateTime>
 
+QTVERSITORGANIZER_BEGIN_NAMESPACE
+
 QOrganizerManager* TimeZone::getManager()
 {
     // We use the memory engine to do time zone recurrence calculations
@@ -88,3 +90,5 @@ QDateTime TimeZones::convert(const QDateTime& dateTime, const QString& tzid) con
         return QDateTime();
     return tz.convert(dateTime);
 }
+
+QTVERSITORGANIZER_END_NAMESPACE

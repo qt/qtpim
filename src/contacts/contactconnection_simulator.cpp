@@ -49,7 +49,7 @@
 
 #include <QtNetwork/QLocalSocket>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 using namespace QtSimulatorPrivate;
 
@@ -219,4 +219,4 @@ void ContactConnection::setRelationships(uint id, const QVariantList &relationsh
 
 #include "moc_contactconnection_simulator_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

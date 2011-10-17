@@ -49,7 +49,7 @@
 
 #include "qorganizermanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 /* Backend plugin API interface, creates engines for us */
 class QOrganizerManagerEngine;
 class QOrganizerCollectionEngineId;
@@ -64,11 +64,11 @@ public:
     virtual QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const = 0;
     virtual QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const = 0;
 };
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-#define QT_ORGANIZER_BACKEND_INTERFACE "com.nokia.qt.mobility.organizeritems.enginefactory/1.0"
-Q_DECLARE_INTERFACE(QtAddOn::Pim::QOrganizerManagerEngineFactory, QT_ORGANIZER_BACKEND_INTERFACE);
+#define QT_ORGANIZER_BACKEND_INTERFACE "com.nokia.qt.organizer.enginefactory/1.0"
+Q_DECLARE_INTERFACE(QtOrganizer::QOrganizerManagerEngineFactory, QT_ORGANIZER_BACKEND_INTERFACE)
 QT_END_NAMESPACE
 
 #endif

@@ -49,7 +49,7 @@
 #include <qcontactdetail.h>
 #include <qcontact.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactAvatar : public QContactDetail
@@ -73,6 +73,6 @@ public:
     QUrl videoUrl() const {return value<QUrl>(FieldVideoUrl);}
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

@@ -57,6 +57,8 @@ Q_USE_JSONDB_NAMESPACE
 #include <QString>
 #include <QMap>
 
+QTCONTACTS_BEGIN_NAMESPACE
+
 QContactJsonDbRequestHandler::QContactJsonDbRequestHandler()
     : m_engine(0)
 {
@@ -97,7 +99,7 @@ void QContactJsonDbRequestHandler::setEngine(QContactJsonDbEngine *engine)
     m_engine = engine;
 }
 
-bool QContactJsonDbRequestHandler::waitForRequestFinished(QtAddOn::Pim::QContactAbstractRequest *req, int msecs)
+bool QContactJsonDbRequestHandler::waitForRequestFinished(QContactAbstractRequest *req, int msecs)
 {
     // This function is called by the QContactJsonDbEngine thread (main thread)
 
@@ -573,3 +575,7 @@ void QContactJsonDbRequestHandler::handleContactRemoveResponse(QContactRemoveReq
             waitCondition->wakeAll();
     }
 }
+
+#include "moc_qcontactjsondbrequesthandler.cpp"
+
+QTCONTACTS_END_NAMESPACE

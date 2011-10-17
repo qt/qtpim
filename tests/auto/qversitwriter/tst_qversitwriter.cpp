@@ -65,7 +65,7 @@
     } while(0)
 #endif
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 void tst_QVersitWriter::init()
 {

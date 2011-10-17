@@ -46,7 +46,7 @@
 #include <QDateTime>
 #include <QUrl>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::PropertyName, "X-NOKIA-QCONTACTFIELD");
 Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DetailDefinitionParameter, "DETAIL");
@@ -198,4 +198,4 @@ void QVCardRestoreHandler::documentProcessed()
     mDetailGroupMap.clear();
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

@@ -45,7 +45,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactavatar.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class  QDeclarativeContactAvatar : public QDeclarativeContactDetail
 {
@@ -105,8 +105,8 @@ signals:
 
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTPIM_PREPEND_NAMESPACE(QDeclarativeContactAvatar))
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactAvatar))
 
 #endif

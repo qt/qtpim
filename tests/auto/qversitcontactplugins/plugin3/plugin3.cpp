@@ -42,7 +42,7 @@
 #include <QtPlugin>
 #include "plugin3.h"
 
-QTPIM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 class ContactHandler3 : public QVersitContactHandler
 {
@@ -112,4 +112,4 @@ QSet<QString> Plugin3::profiles() const
     return QSet<QString>() << "Test";
 }
 
-Q_EXPORT_PLUGIN2(versit_plugin3, Plugin3);
+Q_EXPORT_PLUGIN2(versit_plugin3, Plugin3)

@@ -53,7 +53,7 @@
 Q_DECLARE_METATYPE(QtPIM::QContactData)
 Q_DECLARE_METATYPE(QtPIM::QContactRelationshipPrivate)
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 #ifdef SIMULATOR_APPLICATION
 // Workaround for non-exported symbol that is used by this file.
@@ -150,4 +150,4 @@ QDataStream &operator>>(QDataStream &in, SaveRelationshipReply &s)
 
 } // namespace Simulator
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

@@ -80,7 +80,7 @@
     \sa RelationshipModel, Contact, {QContactManager}
 */
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactModelPrivate
 {
@@ -790,4 +790,4 @@ void  QDeclarativeContactModel::sortOrder_clear(QDeclarativeListProperty<QDeclar
 
 #include "moc_qdeclarativecontactmodel_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

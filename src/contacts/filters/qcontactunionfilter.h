@@ -44,7 +44,7 @@
 
 #include "qcontactfilter.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactUnionFilterPrivate;
 class Q_CONTACTS_EXPORT QContactUnionFilter : public QContactFilter
@@ -70,6 +70,6 @@ private:
     Q_DECLARE_CONTACTFILTER_PRIVATE(QContactUnionFilter)
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

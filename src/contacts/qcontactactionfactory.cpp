@@ -42,7 +42,7 @@
 #include "qcontactactionfactory.h"
 #include "qcontactactiondescriptor_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
   \class QContactActionFactory
@@ -140,4 +140,4 @@ QContactActionDescriptor QContactActionFactory::createDescriptor(const QString& 
 
 #include "moc_qcontactactionfactory.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

@@ -46,7 +46,7 @@
 #include "qorganizerjsondbstring_p.h"
 #include "qorganizer.h"
 
-//QTM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbEngine *QOrganizerJsonDbEngine::createJsonDbEngine(QOrganizerManager::Error* error)
 {
@@ -552,8 +552,9 @@ QStringList QOrganizerJsonDbEngine::supportedItemTypes() const
     return  ret;
 }
 
+#include "moc_qorganizerjsondbengine.cpp"
 
-Q_DECLARE_METATYPE(QOrganizerAbstractRequest::State)
-Q_DECLARE_METATYPE(QList<QOrganizerItemId>)
+QTORGANIZER_END_NAMESPACE
 
-
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
+Q_DECLARE_METATYPE(QList<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId)>)

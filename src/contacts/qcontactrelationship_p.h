@@ -61,7 +61,7 @@
 #include <qcontactsglobal.h>
 #include <qcontact.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactRelationshipPrivate : public QSharedData
 {
@@ -88,6 +88,6 @@ public:
     QString m_relationshipType;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

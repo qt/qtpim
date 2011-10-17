@@ -44,7 +44,7 @@
 #include <QTextCodec>
 #include <QBuffer>
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*! Constructs a writer. */
 QVCard30Writer::QVCard30Writer(QVersitDocument::VersitType type) : QVersitDocumentWriter(type)
@@ -179,4 +179,4 @@ void QVCard30Writer::backSlashEscape(QString* text)
     text->replace(QRegExp(m2), r2);
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

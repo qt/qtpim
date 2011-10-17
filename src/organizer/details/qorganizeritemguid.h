@@ -49,7 +49,7 @@
 #include "qorganizeritemdetail.h"
 #include "qorganizeritem.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemGuid : public QOrganizerItemDetail
@@ -67,7 +67,7 @@ public:
     QString guid() const {return value(FieldGuid);}
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif
 

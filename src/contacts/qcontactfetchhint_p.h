@@ -58,7 +58,7 @@
 #include <QSharedData>
 #include <QStringList>
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactFetchHintPrivate : public QSharedData
 {
@@ -90,6 +90,6 @@ public:
     int m_maxCount;
 };
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE
 
 #endif

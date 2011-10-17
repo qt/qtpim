@@ -52,7 +52,7 @@
 #include <QDebug>
 #endif
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 /*!
   \class QContactAbstractRequest
 
@@ -377,4 +377,4 @@ QDebug operator<<(QDebug dbg, const QContactAbstractRequest& request)
 
 #include "moc_qcontactabstractrequest.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

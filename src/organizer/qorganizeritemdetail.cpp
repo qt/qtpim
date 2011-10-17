@@ -46,7 +46,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /* Initialise our static private data member */
 QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
@@ -683,4 +683,4 @@ QOrganizerItemDetail::AccessConstraints QOrganizerItemDetail::accessConstraints(
 }
 
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

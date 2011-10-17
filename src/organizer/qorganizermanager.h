@@ -61,7 +61,7 @@
 #include "qorganizercollection.h"
 #include "qorganizercollectionid.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerManagerData;
 
@@ -171,6 +171,6 @@ private:
     QOrganizerManagerData* d;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

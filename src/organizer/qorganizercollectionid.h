@@ -47,7 +47,7 @@
 #include <QtCore/qmetatype.h>
 #include <QtCore/qshareddata.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 // MSVC needs the function declared before the friend declaration
 class QOrganizerCollectionId;
@@ -94,10 +94,10 @@ private:
     friend class QOrganizerManagerEngine;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
-Q_DECLARE_TYPEINFO(QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionId), Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionId), Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE(QTPIM_PREPEND_NAMESPACE(QOrganizerCollectionId));
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionId));
 
 #endif

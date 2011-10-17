@@ -44,7 +44,7 @@
 #include "qorganizeritemfilter_p.h"
 #include "qorganizermanager.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
   \class QOrganizerItemDetailFilter
@@ -152,4 +152,4 @@ QVariant QOrganizerItemDetailFilter::value() const
     return d->m_exactValue;
 }
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE

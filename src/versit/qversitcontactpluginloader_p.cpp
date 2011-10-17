@@ -44,7 +44,7 @@
 #include "qversitcontactpluginloader_p.h"
 #include "qversitpluginsearch_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTVERSIT_BEGIN_NAMESPACE
 
 /*!
    A less-than function for factory indices (see QVersitContactHandlerFactory::index()).
@@ -137,4 +137,4 @@ QList<QVersitContactHandler*> QVersitContactPluginLoader::createContactHandlers(
     return handlers;
 }
 
-QTPIM_END_NAMESPACE
+QTVERSIT_END_NAMESPACE

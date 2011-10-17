@@ -59,7 +59,7 @@
 
 #include <QtCore/qset.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerCollectionChangeSetData : public QSharedData
 {
@@ -89,6 +89,6 @@ public:
     QSet<QOrganizerCollectionId> m_removedCollections;
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

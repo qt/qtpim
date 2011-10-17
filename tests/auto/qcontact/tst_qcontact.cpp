@@ -48,7 +48,7 @@
 //TESTED_CLASS=
 //TESTED_FILES=
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 class tst_QContact: public QObject
 {
@@ -716,7 +716,7 @@ void tst_QContact::datastream()
 void tst_QContact::traits()
 {
     QVERIFY(sizeof(QContact) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContact> ti;
+    QTypeInfo<QContact> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -727,7 +727,7 @@ void tst_QContact::traits()
 void tst_QContact::idTraits()
 {
     QVERIFY(sizeof(QContactId) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactId> ti;
+    QTypeInfo<QContactId> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);
@@ -738,7 +738,7 @@ void tst_QContact::idTraits()
 void tst_QContact::localIdTraits()
 {
     QVERIFY(sizeof(QContactId) == sizeof(void *));
-    QTypeInfo<QtAddOn::Pim::QContactLocalId> ti;
+    QTypeInfo<QContactLocalId> ti;
     QVERIFY(ti.isComplex);
     QVERIFY(!ti.isStatic);
     QVERIFY(!ti.isLarge);

@@ -41,6 +41,8 @@
 
 #include <qorganizerjsondbstring_p.h>
 
+QTORGANIZER_BEGIN_NAMESPACE
+
 //Jsondb manager name
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ManagerName,    "qtorganizer:jsondb::");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ManagerUri,     "qtorganizer:jsondb:");
@@ -135,3 +137,5 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningCollectionRemove, " Number 
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionRemove, "Default collection can not be removed!");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionChange, "Default collection can not be changed!");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionCreate, "Same name as default collection!");
+
+QTORGANIZER_END_NAMESPACE

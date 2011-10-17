@@ -46,7 +46,7 @@
 
 #include <QDateTime>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemChangeLogFilterPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemChangeLogFilter: public QOrganizerItemFilter
@@ -71,6 +71,6 @@ private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemChangeLogFilter)
 };
 
-QTPIM_END_NAMESPACE
+QTORGANIZER_END_NAMESPACE
 
 #endif

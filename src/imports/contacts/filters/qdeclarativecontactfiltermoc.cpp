@@ -41,7 +41,7 @@
 
 #include "qdeclarativecontactfilters_p.h"
 
-QTPIM_BEGIN_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 #include "moc_qdeclarativecontactactionfilter_p.cpp"
 #include "moc_qdeclarativecontactchangelogfilter_p.cpp"
@@ -53,4 +53,4 @@ QTPIM_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontactrelationshipfilter_p.cpp"
 #include "moc_qdeclarativecontactunionfilter_p.cpp"
 
-QTPIM_END_NAMESPACE
+QTCONTACTS_END_NAMESPACE

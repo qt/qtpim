@@ -45,7 +45,7 @@
 #include "qorganizeritemsaverequest.h"
 #include "qorganizercollectionsaverequest.h"
 
-//QTM_USE_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbRequestManager::QOrganizerJsonDbRequestManager()
 {
@@ -228,5 +228,6 @@ bool QOrganizerJsonDbRequestManager::isRequestCompleted(QOrganizerAbstractReques
     return true;
 }
 
+#include "moc_qorganizerjsondbrequestmanager.cpp"
 
-
+QTORGANIZER_END_NAMESPACE

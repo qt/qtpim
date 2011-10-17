@@ -49,6 +49,7 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qdeclarativecontactimageprovider_p.h"
 #include "qdeclarativecontactsortorder_p.h"
+#include "qdeclarativecontactrelationshipmodel_p.h"
 #include "qdeclarativecontactrelationship_p.h"
 #include "qdeclarativecontactfetchhint_p.h"
 #include "qdeclarativecontactfilters_p.h"
@@ -70,6 +71,7 @@ public:
         qmlRegisterType<QDeclarativeContactModel>(uri, major, minor, "ContactModel");
         qmlRegisterType<QDeclarativeContact>(uri, major, minor, "Contact");
         qmlRegisterType<QDeclarativeContactFetchHint>(uri, major, minor, "FetchHint");
+        qmlRegisterType<QDeclarativeContactRelationshipModel>(uri, major, minor, "RelationshipModel");
         qmlRegisterType<QDeclarativeContactRelationship>(uri, major, minor, "Relationship");
         qmlRegisterType<QDeclarativeContactSortOrder>(uri, major, minor, "SortOrder");
 

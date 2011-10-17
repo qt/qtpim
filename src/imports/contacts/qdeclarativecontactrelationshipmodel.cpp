@@ -43,7 +43,6 @@
 #include "qcontactmanager.h"
 #include "qcontactrequests.h"
 
-#include <QDebug>
 #include <QPixmap>
 
 QTPIM_BEGIN_NAMESPACE
@@ -100,7 +99,6 @@ QDeclarativeContactRelationshipModel::QDeclarativeContactRelationshipModel(QObje
     roleNames = QAbstractItemModel::roleNames();
     roleNames.insert(RelationshipRole, "relationship");
     setRoleNames(roleNames);
-
     connect(this, SIGNAL(managerChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(participantChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(relationshipTypeChanged()), SLOT(fetchAgain()));
@@ -287,19 +285,16 @@ void QDeclarativeContactRelationshipModel::fetchAgain()
     if (d->m_manager) {
         QContactRelationshipFetchRequest* req = new QContactRelationshipFetchRequest(this);
         req->setManager(d->m_manager);
-
-        QContact contact (d->m_participant->contact());
-        if (d->m_role == QDeclarativeContactRelationship::First || d->m_role == QDeclarativeContactRelationship::Either)
-            req->setFirst(contact);
-
-        if (d->m_role == QDeclarativeContactRelationship::Second || d->m_role == QDeclarativeContactRelationship::Either)
-            req->setSecond(contact);
-
-
-        req->setRelationshipType(d->m_relationshipTypeHolder.relationship().relationshipType());
-        connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
-
-        req->start();
+        if (d->m_participant) {
+            QContact contact (d->m_participant->contact());
+            if (d->m_role == QDeclarativeContactRelationship::First || d->m_role == QDeclarativeContactRelationship::Either)
+                req->setFirst(contact);
+            if (d->m_role == QDeclarativeContactRelationship::Second || d->m_role == QDeclarativeContactRelationship::Either)
+                req->setSecond(contact);
+            req->setRelationshipType(d->m_relationshipTypeHolder.relationship().relationshipType());
+            connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
+            req->start();
+        }
     }
 }
 
@@ -338,7 +333,6 @@ void QDeclarativeContactRelationshipModel::removeRelationship(QDeclarativeContac
 void QDeclarativeContactRelationshipModel::requestUpdated()
 {
     QContactRelationshipFetchRequest* req = qobject_cast<QContactRelationshipFetchRequest*>(sender());
-
     if (req->isFinished() && req->error() == QContactManager::NoError) {
 
         QList<QContactRelationship> relationships = req->relationships();
@@ -352,7 +346,6 @@ void QDeclarativeContactRelationshipModel::requestUpdated()
         d->m_declarativeRelationships.clear();
         d->m_relationships.clear();
 
-
         foreach (const QContactRelationship& cr, relationships) {
             QDeclarativeContactRelationship* dcr = new QDeclarativeContactRelationship(this);
             dcr->setRelationship(cr);
@@ -360,7 +353,6 @@ void QDeclarativeContactRelationshipModel::requestUpdated()
             d->m_relationships.append(cr);
         }
         endInsertRows();
-
         req->deleteLater();
         emit relationshipsChanged();
     }

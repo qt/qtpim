@@ -855,28 +855,8 @@ void QDeclarativeOrganizerModel::itemsSaved()
 {
     QOrganizerItemSaveRequest* req = qobject_cast<QOrganizerItemSaveRequest*>(QObject::sender());
     if (req->isFinished()) {
-        if (req->error() == QOrganizerManager::NoError) {
-            QList<QOrganizerItem> items = req->items();
-            QDeclarativeOrganizerItem* di;
-            foreach (const QOrganizerItem& item, items) {
-                QString itemId = item.id().toString();
-                if (d->m_itemMap.contains(itemId)) {
-                    di = d->m_itemMap.value(itemId);
-                    di->setItem(item);
-                } else {
-                    //new saved item
-                    di = createItem(item);
-                    d->m_itemMap.insert(itemId, di);
-                    beginInsertRows(QModelIndex(), d->m_items.count(), d->m_items.count());
-                    d->m_items.append(di);
-                    endInsertRows();
-                }
-                addSorted(di);
-            }
-        }
         checkError(req);
         req->deleteLater();
-        emit errorChanged();
     }
 }
 
@@ -945,16 +925,7 @@ void QDeclarativeOrganizerModel::itemsRemoved()
         QOrganizerItemRemoveRequest* req = qobject_cast<QOrganizerItemRemoveRequest*>(QObject::sender());
 
         if (req->isFinished()) {
-            QList<QOrganizerItemId> ids = req->itemIds();
-            QList<int> errorIds = req->errorMap().keys();
-            QList<QOrganizerItemId> removedIds;
-            for (int i = 0; i < ids.count(); i++) {
-                if (!errorIds.contains(i))
-                    removedIds << ids.at(i);
-            }
             checkError(req);
-            if (!removedIds.isEmpty())
-                itemsRemoved(removedIds);
             req->deleteLater();
         }
     }
@@ -981,7 +952,6 @@ void QDeclarativeOrganizerModel::removeItemsFromModel(const QList<QString>& ids)
             }
         }
     }
-    emit errorChanged();
     if (emitSignal)
         emit modelChanged();
 }

@@ -98,6 +98,7 @@ Rectangle {
             //Test all manager backends
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
+                var debugFlag = 1;
                 console.log("AudibleReminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
                       "import QtAddOn.organizer 2.0;"
@@ -129,6 +130,7 @@ Rectangle {
                 utility.spy = organizerChangedSpy;
                 utility.empty_calendar();
                 //------Create and save the detail test------//
+                utility.debug("Create and save the detail test", debugFlag);
                 audibleReminderDetail.dataUrl = "http://www.test0.com";
                 event.addDetail(audibleReminderDetail);
                 model.saveItem(event);
@@ -169,10 +171,10 @@ Rectangle {
                 var updatedEvent = fetchlist[0];
                 var updatedEventDetail = updatedEvent.detail(Detail.AudibleReminder);
                 verify(updatedEvent != undefined);
-                utility.compareEvent(savedEvent, updatedEvent);
                 utility.compareReminderDetails(audibleReminderDetail, updatedEventDetail);
 
                 //------remove the detail test------//
+                utility.debug("Remove the detail test", debugFlag);
                 var removeEventDetail = updatedEvent.detail(Detail.AudibleReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);

@@ -185,7 +185,6 @@ Rectangle {
                 var updatedEventDetail = updatedEvent.detail(Detail.EmailReminder);
                 verify(updatedEvent != undefined)
                 verify(updatedEventDetail != undefined)
-                utility.compareEvent(savedEvent, updatedEvent);
                 utility.compareReminderDetails(emailReminderDetail, updatedEventDetail);
 
                 //------remove the detail test------//

@@ -50,7 +50,32 @@ TestCase {
 
     function debug(string, flag) {
         if (flag == 1)
-            console.log (string);
+            console.log(string);
+    }
+
+    function create_testobject(ctorString, parent) {
+        var newObject = Qt.createQmlObject(ctorString, parent);
+        verify(newObject != undefined, 'Object creation failed');
+        return newObject;
+    }
+
+    function waiting_model_signal(expect_count) {
+        var count = 0;
+        if (model.itemCount < expect_count) {
+            do {
+                spy.wait(200);
+                count ++;
+                verify(model.itemCount <= expect_count)
+                verify(count <= 10)
+            } while (model.itemCount < expect_count)
+        } else if (model.itemCount > expect_count) {
+            do {
+                spy.wait(500);
+                count ++;
+                verify(model.itemCount >= expect_count)
+                verify(count <= 10)
+            } while (model.itemCount > expect_count)
+        }
     }
 
     function test_managerdata() {
@@ -84,7 +109,7 @@ TestCase {
             else
                 wait(100);
         }
-        model.update ();
+        model.update();
 
         if (model.itemCount >0) {
             if (log != undefined)

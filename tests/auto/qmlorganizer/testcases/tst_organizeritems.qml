@@ -46,6 +46,11 @@ import QtAddOn.organizer 2.0
 
 
 Rectangle {
+    id: test;
+
+    QOrganizerTestUtility {
+        id: utility
+    }
 
     OrganizerModel {
         id:model
@@ -54,7 +59,7 @@ Rectangle {
         endPeriod:'2012-12-31'
         autoUpdate:false
         Component.onCompleted: {
-            model.update ();
+            model.update();
             model.autoUpdate = true;
             console.log("model is created!");
         }
@@ -82,81 +87,70 @@ Rectangle {
     TestCase {
         name: "OrganizerItemTests"
         when: model.autoUpdate
-        //long enough for emulator, May need longer time on real HW
-        property int wait_time: 100
+        function test_addRemoveEvent() {
+            var list = utility.test_managerdata();
+            if (list.length < 0) {
+                console.log("No manager to test");
+                return;
+            }
+            //Test all manager backends
+            for (var i = 0; i < list.length; i ++) {
+                var managerName = list[i];
+                var debugFlag = 0;
+                console.log("test_addRemoveEvents test start! :" + managerName);
 
-        //Empty calendar data
-        function empty_calendar () {
-            //wait for the model item update, May need longer time on real HW
-            wait(wait_time);
-            console.log(model.itemCount);
+                var organizerChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                         + "SignalSpy {id : organizerChangedSpy;}"
+                         , test);
 
-            var ids = model.itemIds();
-            //why model.removeItems (ids); does not work?
-            //remove all the exist items
-            for (var i = 0; i < model.itemCount; i++)
-                model.removeItem (ids[i]);
+                organizerChangedSpy.target = model;
+                organizerChangedSpy.signalName = "modelChanged";
+                utility.model = model
+                utility.spy = organizerChangedSpy
+                utility.empty_calendar()
 
-            wait(wait_time);
-            verify(model.itemCount === 0);
+                //------model save event------//
+                model.saveItem(newEvent1);
+                //make sure event is saved
+                utility.waiting_model_signal(1);
+                verify(model.itemCount === 1);
+
+                var ids = model.itemIds();
+                verify(ids.length === 1);
+                var item = model.item(ids[0]);
+                //verify DisplayLabel and description
+                verify(item.displayLabel === "NewEvent1");
+                verify(item.description === "This is a new created event 1");
+
+                //------modify saved event------//
+                item.displayLabel = "EditedEvent1";
+                model.saveItem(item);
+                //make sure exist event saved/updated and no duplicated items saved
+                utility.waiting_model_signal(1);
+                //console.log(model.itemCount);
+                verify(model.itemCount === 1);
+                var item2 = model.item(ids[0]);
+                verify(item2.displayLabel === "EditedEvent1");
+
+                //------delete event------//
+                model.removeItem(ids[0]);
+                utility.waiting_model_signal(0);
+                verify(model.itemCount === 0);
+
+                //delete invalid items and no crash
+                model.removeItem(ids[0]);
+                utility.waiting_model_signal(0);
+                verify(model.itemCount === 0);
+
+                //remove a list of event
+                model.saveItem(newEvent2);
+                utility.waiting_model_signal(1);
+                model.saveItem(newEvent1);
+                utility.waiting_model_signal(2);
+                var deletList = model.itemIds();
+                model.removeItems(deletList);
+                utility.waiting_model_signal(0);
+            }
         }
-
-        function test_event() {
-            console.log("Test start!");
-            empty_calendar ();
-            //event property test
-            verify(!event.modified);
-            verify(event.type == "Event");
-            event.startDateTime = new Date();
-            verify(event.startDateTime, new Date());
-            event.endDateTime = new Date();
-            verify(event.endDateTime, new Date());
-            verify(!event.allDay);
-            event.allDay = true;
-            verify(event.allDay);
-
-            //save event test
-            model.saveItem(newEvent1) ;
-            //make sure event is saved
-            wait(wait_time);
-            verify(model.itemCount === 1);
-            var ids = model.itemIds();
-            verify(ids.length === 1);
-            var item = model.item(ids[0]);
-            //verify DisplayLabel and description
-            verify(item.displayLabel === "NewEvent1");
-            verify(item.description === "This is a new created event 1");
-
-//            //modify event test
-//            item.displayLabel = "EditedEvent1";
-//            model.saveItem(item);
-//            //make sure exist event saved/updated and no duplicated items saved
-//            wait(wait_time);
-//            console.log(model.itemCount);
-//            // verify(model.itemCount === 1);
-//            var item2 = model.item(ids[0]);
-//            console.log(item2.displayLabel);
-//            //verify(item2.displayLabel === "EditedEvent1");
-
-            //delete test
-            console.log(model.itemCount);
-            console.log(ids[0]);
-            model.removeItem (ids[0]);
-            wait(100);
-            console.log(model.itemCount);
-            verify(model.itemCount === 0);
-
-            //delete invalid items and no crash
-            model.removeItem (ids[0]);
-            wait(100);
-            verify(model.itemCount === 0);
-
-            //delete invalid items and no crash
-            console.log();
-            model.removeItem (ids[0]);
-            wait(100);
-            verify(model.itemCount === 0);
-        }
-
     }
 }

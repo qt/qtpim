@@ -49,6 +49,10 @@ TestCase {
     name: "ModelTests"
     id:modelTests
 
+    QOrganizerTestUtility {
+        id: utility
+    }
+
     property Rectangle rect: Rectangle {
         id:myRectangle
     }
@@ -80,8 +84,7 @@ TestCase {
                    + "     }\n"
                 },
                 {tag: "With filter",
-                 code: "import QtQuick 2.0\n"
-                   + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                    + "OrganizerModel {\n"
                    + "    id:organizerModelId\n"
                    + "    filter:DetailFilter{\n"
@@ -92,8 +95,7 @@ TestCase {
                    + "}\n"
                 },
                 {tag: "With invalid filter",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:InvalidFilter{\n"
@@ -102,8 +104,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With range filter",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:DetailRangeFilter{\n"
@@ -115,8 +116,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With changelog filter",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:ChangeLogFilter{\n"
@@ -129,8 +129,7 @@ TestCase {
                 // Reserved for future use
                 /*
                 {tag: "With action filter",
-                code: "import Qt 4.7\n"
-                   + "import QtAddOn.organizer 2.0\n"
+                code:"import QtAddOn.organizer 2.0\n"
                    + "OrganizerModel {\n"
                    + "   id:organizerModelId\n"
                    + "   filter:ActionFilter{\n"
@@ -141,8 +140,7 @@ TestCase {
                 },
                 */
                 {tag: "With collection filter",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:CollectionFilter{\n"
@@ -152,8 +150,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With intersection filter",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:IntersectionFilter {\n"
@@ -175,8 +172,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With fetchHint",
-                 code: "import Qt 4.7 \n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerModel {\n"
                     + "    id:organizerModelId\n"
                     + "    fetchHint:FetchHint {\n"
@@ -188,21 +184,18 @@ TestCase {
 
                 // Organizer Items
                 {tag: "Base organizer item",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: only id",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: Valuetype properties",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    displayLabel:'test item'\n"
@@ -210,9 +203,9 @@ TestCase {
                     + "    guid:'1112232133'\n"
                     + "}\n"
                 },
+
                 {tag: "Base organizer item: default property",
-                 code: "import Qt 4.7\n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    DisplayLabel {\n"
@@ -229,14 +222,12 @@ TestCase {
 
                 //Event
                 {tag: "Organizer event",
-                 code: "import Qt 4.7 \n"
-                    + "import QtAddOn.organizer 2.0\n"
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "Event {\n"
                     + "}\n"
                 },
-                {tag: "Organizer event:Valuetype properties",
-                 code: "import Qt 4.7 \n"
-                    + "import QtAddOn.organizer 2.0\n"
+                /*{tag: "Organizer event:Valuetype properties",
+                 code: "import QtAddOn.organizer 2.0\n"
                     + "Event {\n"
                     + "    id:organizerEvent\n"
                     + "    displayLabel:'meeting'\n"
@@ -257,7 +248,7 @@ TestCase {
                     + "    recurrence.recurrenceDates:[]\n"
                     + "    recurrence.exceptionDates:[]\n"
                     + "}\n"
-                },
+                },*/
                 /*
                 {tag: "",
                  code: ""
@@ -406,11 +397,11 @@ TestCase {
     function test_organizermodel_error(data) {
         var spyWaitDelay = 200;
         // Create and check that backend for the tests is available
-        var organizerModel = create_testobject("import QtQuick 2.0\n"
+        var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtAddOn.organizer 2.0\n"
             + "OrganizerModel {\n"
             + "  manager: '" + data.managerToBeTested + "'\n"
-            + "}\n");
+            + "}\n", modelTests);
         wait(500);//needed so that OrganizerModel is initialised properly
 
         organizerModel.removeCollection(organizerModel.defaultCollection().collectionId);

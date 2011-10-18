@@ -73,6 +73,7 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(QDateTime itemStartTime READ itemStartTime NOTIFY itemChanged)
     Q_PROPERTY(QDateTime itemEndTime READ itemEndTime NOTIFY itemChanged)
     Q_PROPERTY(QString type READ type NOTIFY itemChanged)
+    Q_CLASSINFO("DefaultProperty", "itemDetails")
 
 public:
     explicit QDeclarativeOrganizerItem(QObject *parent = 0);

@@ -181,7 +181,6 @@ Rectangle {
                 verify(updatedEvent.detail(Detail.VisualReminder) != undefined);
                 var updatedEventDetail = updatedEvent.detail(Detail.VisualReminder);
                 utility.compareReminderDetails(savedEventDetail, updatedEventDetail);
-                utility.compareEvent(savedVisualEvent, updatedEvent);
                 utility.compareReminderDetails(visualReminderDetail, updatedEventDetail);
 
                 //------remove the details test------//

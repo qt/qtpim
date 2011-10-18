@@ -159,7 +159,7 @@ void QDeclarativeOrganizerItem::setCollectionId(const QString &collectionId)
     if (newCollectionId.toString() == collectionId && m_collectionId.toString() != collectionId) {
         m_collectionId = newCollectionId;
         m_modified = true;
-        Q_EMIT itemChanged();
+        emit itemChanged();
     }
 }
 
@@ -196,7 +196,7 @@ void QDeclarativeOrganizerItem::setDescription(const QString &description)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 /*!
@@ -231,7 +231,7 @@ void QDeclarativeOrganizerItem::setDisplayLabel(const QString &label)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 /*!
@@ -266,7 +266,7 @@ void QDeclarativeOrganizerItem::setGuid(const QString &guid)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 // functions
@@ -333,7 +333,7 @@ void QDeclarativeOrganizerItem::setDetail(QDeclarativeOrganizerItemDetail *detai
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 /*!
@@ -370,7 +370,7 @@ void QDeclarativeOrganizerItem::clearDetails()
         delete detail;
     m_details.clear();
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 /*!
@@ -411,7 +411,7 @@ void QDeclarativeOrganizerItem::setItem(const QOrganizerItem &item)
     }
 
     m_modified = false;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 /*!
@@ -592,7 +592,7 @@ bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail *detai
     m_details.append(itemDetail);
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
     return true;
 }
 
@@ -650,7 +650,7 @@ void QDeclarativeOrganizerEvent::setAllDay(bool allDay)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 bool QDeclarativeOrganizerEvent::isAllDay() const
@@ -685,7 +685,7 @@ void QDeclarativeOrganizerEvent::setStartDateTime(const QDateTime &datetime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEvent::startDateTime() const
@@ -720,7 +720,7 @@ void QDeclarativeOrganizerEvent::setEndDateTime(const QDateTime& datetime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEvent::endDateTime() const
@@ -767,7 +767,7 @@ void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEvent::priority() const
@@ -803,7 +803,7 @@ void QDeclarativeOrganizerEvent::setLocation(const QString &location)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QString QDeclarativeOrganizerEvent::location() const
@@ -871,7 +871,7 @@ void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate &date)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDate QDeclarativeOrganizerEventOccurrence::originalDate() const
@@ -906,7 +906,7 @@ void QDeclarativeOrganizerEventOccurrence::setStartDateTime(const QDateTime &dat
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEventOccurrence::startDateTime() const
@@ -941,7 +941,7 @@ void QDeclarativeOrganizerEventOccurrence::setEndDateTime(const QDateTime &dateT
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerEventOccurrence::endDateTime() const
@@ -988,7 +988,7 @@ void QDeclarativeOrganizerEventOccurrence::setPriority(QDeclarativeOrganizerItem
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEventOccurrence::priority() const
@@ -1023,7 +1023,7 @@ void QDeclarativeOrganizerEventOccurrence::setLocation(const QString &location)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QString QDeclarativeOrganizerEventOccurrence::location() const
@@ -1058,7 +1058,7 @@ void QDeclarativeOrganizerEventOccurrence::setParentId(const QString &parentId)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QString QDeclarativeOrganizerEventOccurrence::parentId() const
@@ -1112,7 +1112,7 @@ void QDeclarativeOrganizerJournal::setDateTime(const QDateTime &dateTime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerJournal::dateTime() const
@@ -1187,7 +1187,7 @@ void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 bool QDeclarativeOrganizerTodo::isAllDay() const
@@ -1222,7 +1222,7 @@ void QDeclarativeOrganizerTodo::setProgressPercentage(int percentage)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 int QDeclarativeOrganizerTodo::progressPercentage() const
@@ -1257,7 +1257,7 @@ void QDeclarativeOrganizerTodo::setStartDateTime(const QDateTime &dateTime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodo::startDateTime() const
@@ -1292,7 +1292,7 @@ void QDeclarativeOrganizerTodo::setDueDateTime(const QDateTime &dateTime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodo::dueDateTime() const
@@ -1327,7 +1327,7 @@ void QDeclarativeOrganizerTodo::setFinishedDateTime(const QDateTime &dateTime)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodo::finishedDateTime() const
@@ -1374,7 +1374,7 @@ void QDeclarativeOrganizerTodo::setPriority(QDeclarativeOrganizerItemPriority::P
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodo::priority() const
@@ -1414,7 +1414,7 @@ void QDeclarativeOrganizerTodo::setStatus(QDeclarativeOrganizerTodoProgress::Sta
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodo::status() const
@@ -1478,7 +1478,7 @@ void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 int QDeclarativeOrganizerTodoOccurrence::progressPercentage() const
@@ -1513,7 +1513,7 @@ void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDate QDeclarativeOrganizerTodoOccurrence::originalDate() const
@@ -1548,7 +1548,7 @@ void QDeclarativeOrganizerTodoOccurrence::setStartDateTime(const QDateTime &date
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodoOccurrence::startDateTime() const
@@ -1582,7 +1582,7 @@ void QDeclarativeOrganizerTodoOccurrence::setDueDateTime(const QDateTime &dateTi
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodoOccurrence::dueDateTime() const
@@ -1617,7 +1617,7 @@ void QDeclarativeOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime &d
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDateTime QDeclarativeOrganizerTodoOccurrence::finishedDateTime() const
@@ -1664,7 +1664,7 @@ void QDeclarativeOrganizerTodoOccurrence::setPriority(QDeclarativeOrganizerItemP
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodoOccurrence::priority() const
@@ -1704,7 +1704,7 @@ void QDeclarativeOrganizerTodoOccurrence::setStatus(QDeclarativeOrganizerTodoPro
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoOccurrence::status() const
@@ -1739,7 +1739,7 @@ void QDeclarativeOrganizerTodoOccurrence::setParentId(const QString &parentId)
     }
 
     m_modified = true;
-    Q_EMIT itemChanged();
+    emit itemChanged();
 }
 
 QString QDeclarativeOrganizerTodoOccurrence::parentId() const

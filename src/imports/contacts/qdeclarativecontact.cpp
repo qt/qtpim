@@ -74,6 +74,50 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
+
+// call-back function templates for list properties
+/*!
+    \internal
+ */
+template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+static void list_property_append(QDeclarativeListProperty<T> *, T *)
+{
+}
+
+/*!
+    \internal
+ */
+template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+static int list_property_count(QDeclarativeListProperty<T> *property)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object)
+        return object->details(detailType).size();
+    else
+        return 0;
+}
+
+/*!
+    \internal
+ */
+template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
+{
+    QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
+    if (object)
+        return qobject_cast<T *>(qvariant_cast<QObject*>(object->details(detailType).at(index)));
+    else
+        return 0;
+}
+
+/*!
+    \internal
+ */
+template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+static void list_property_clear(QDeclarativeListProperty<T> *)
+{
+}
+
 QDeclarativeContact::QDeclarativeContact(QObject *parent)
     :QObject(parent)
     , m_modified(false)
@@ -358,6 +402,21 @@ QDeclarativeContactAddress* QDeclarativeContact::address()
     return 0;
 }
 
+/*!
+    \qmlproperty list<Address> Contact::addresses
+
+    This property holds the address details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactAddress> QDeclarativeContact::addresses()
+{
+    return QDeclarativeListProperty<QDeclarativeContactAddress>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
+                &list_property_count<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
+                &list_property_at<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
+                &list_property_clear<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>);
+}
 
 /*!
     \qmlproperty Anniversary Contact::anniversary
@@ -443,6 +502,22 @@ QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
         }
     }
     return 0;
+}
+
+/*!
+    \qmlproperty list<EmailAddress> Contact::emails
+
+    This property holds the email details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
+{
+    return QDeclarativeListProperty<QDeclarativeContactEmailAddress>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
+                &list_property_count<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
+                &list_property_at<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
+                &list_property_clear<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>);
 }
 
 /*!
@@ -634,6 +709,22 @@ QDeclarativeContactOrganization*  QDeclarativeContact::organization()
 }
 
 /*!
+    \qmlproperty list<Organization> Contact::organizations
+
+    This property holds the organization details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactOrganization> QDeclarativeContact::organizations()
+{
+    return QDeclarativeListProperty<QDeclarativeContactOrganization>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
+                &list_property_count<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
+                &list_property_at<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
+                &list_property_clear<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>);
+}
+
+/*!
     \qmlproperty PhoneNumber Contact::phoneNumber
 
     This property holds the phoneNumber detail of the Contact object. In case a contact has several numbers then
@@ -649,6 +740,22 @@ QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
         }
     }
     return 0;
+}
+
+/*!
+    \qmlproperty list<PhoneNumber> Contact::phoneNumbers
+
+    This property holds the phone number details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactPhoneNumber> QDeclarativeContact::phoneNumbers()
+{
+    return QDeclarativeListProperty<QDeclarativeContactPhoneNumber>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
+                &list_property_count<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
+                &list_property_at<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
+                &list_property_clear<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>);
 }
 
 /*!
@@ -769,6 +876,21 @@ QDeclarativeContactUrl*  QDeclarativeContact::url()
     return 0;
 }
 
+/*!
+    \qmlproperty list<Url> Contact::urls
+
+    This property holds the url details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
+{
+    return QDeclarativeListProperty<QDeclarativeContactUrl>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
+                &list_property_count<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
+                &list_property_at<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
+                &list_property_clear<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>);
+}
 
 /*!
     \qmlproperty Hobby Contact::hobby
@@ -804,7 +926,7 @@ QDeclarativeContactPersonId*  QDeclarativeContact::personid()
     return 0;
 }
 
-// call-back functions for list property
+// call-back functions for list property contactDetails
 /*!
     \internal
  */

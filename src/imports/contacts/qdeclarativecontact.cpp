@@ -167,13 +167,14 @@ QDeclarativeContact::ContactType QDeclarativeContact::type() const
 
 bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
 {
-    if (detail->removable()) {
-        d->m_details.removeAll(detail);
-        emit detailsChanged();
-        return true;
+    if (detail) {
+        if (detail->removable()) {
+            d->m_details.removeAll(detail);
+            emit detailsChanged();
+            return true;
+        }
     }
     return false;
-
 }
 
 /*!

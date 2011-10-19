@@ -3,6 +3,8 @@ CONFIG += plugin testplugin
 TARGET = $$qtLibraryTarget(contacts_testdummycopy)
 PLUGIN_TYPE=contacts
 
+!include(../qcontactmanagerplugins.pri):error(missing qcontactmanagerplugins.pri)
+
 DESTDIR = $$QT.contacts.plugins/contacts
 QT += contacts
 
@@ -15,4 +17,3 @@ HEADERS += ../dummyplugin/dummyplugin.h
 # Enable installation of plugin in "make install"
 target.path += $$[QT_INSTALL_PLUGINS]/contacts
 INSTALLS += target
-

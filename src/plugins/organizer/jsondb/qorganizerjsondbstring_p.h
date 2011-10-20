@@ -111,7 +111,7 @@ public:
     //To-do item
     Q_DECLARE_LATIN1_CONSTANT(Todo, "com.nokia.mp.organizer.Todo");
     Q_DECLARE_LATIN1_CONSTANT(TodoStartDateTime, "startDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(TodoDueDateTime,   "endDateTime");
+    Q_DECLARE_LATIN1_CONSTANT(TodoDueDateTime,   "dueDateTime");
     Q_DECLARE_LATIN1_CONSTANT(TodoIsAllDay,      "isAllDay");
 
     //Collection properties

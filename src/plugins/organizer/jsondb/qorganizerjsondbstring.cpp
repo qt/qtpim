@@ -93,7 +93,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventAttendees,      "");
 //To-do item
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::Todo, "com.nokia.mp.organizer.Todo");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoStartDateTime, "startDateTime");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoDueDateTime,   "endDateTime");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoDueDateTime,   "dueDateTime");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoIsAllDay,      "isAllDay");
 
 //Collection properties

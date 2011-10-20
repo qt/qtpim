@@ -178,13 +178,32 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
     QList<QContact> contacts = req->contacts();
     QContactManagerEngine::updateContactSaveRequest(req, contacts, error, errorMap, QContactAbstractRequest::ActiveState);
     m_requestMgr->addRequest(req, contacts);
-    bool doesContactExist = false;
+    bool contactExist = false;
     for (int i = 0; i < contacts.size(); i++) {
         QContact contact = contacts.at(i);
         QVariantMap newJsonDbItem;
-        error = QContactManager::NoError;
-        doesContactExist = !(contact.id().localId().isEmpty() || contact.id().managerUri().isEmpty());
+        contactExist = !(contact.id().localId().isEmpty() || contact.id().managerUri().isEmpty());
 
+        // Quickfix that fetches complete contact data from jsondb to the newJsonDbItem.
+        // This way we preserve possible extra fields in jsondb contact object as.
+        if (contactExist) {
+            QContactLocalIdFilter localIdFilter;
+            localIdFilter.add(contact.localId());
+            QContactFetchRequest fetchRequest;
+            fetchRequest.setFilter(localIdFilter);
+            QString query = m_converter->queryFromRequest(&fetchRequest);
+            QVariantMap jsonDbItem = JsonDbConnection::makeQueryRequest(query);
+            jsonDbItem = JsonDbConnection::instance()->sync(jsonDbItem).value<QVariantMap>();
+            if (!jsonDbItem.isEmpty()) {
+                QVariantList jsonDbObjectList = jsonDbItem.value("data").toList();
+                if (!jsonDbObjectList.isEmpty()) {
+                    newJsonDbItem = jsonDbObjectList.at(0).toMap();
+                }
+            }
+        }
+        // End of Quickfix
+
+        error = QContactManager::NoError;
         if (!m_engine->validateContact(contact, &error)) {
             error = QContactManager::InvalidContactTypeError;
             errorMap.insert(i,error);
@@ -193,7 +212,7 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
         if (error == QContactManager::NoError) {
             if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
                 int trId;
-                if (doesContactExist) {
+                if (contactExist) {
                     trId = m_jsonDb->update(newJsonDbItem);
                 } else {
                     trId = m_jsonDb->create(newJsonDbItem);

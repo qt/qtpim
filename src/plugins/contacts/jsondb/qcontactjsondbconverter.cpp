@@ -380,6 +380,29 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
     QVariantList addresses;
     QVariantMap embeddedDetailsMap;
 
+    // Quickfix for preserving possible extra fields in jsondb contact.
+    // Wipe QContact fields that may be empty/deleted, preserve all other data.
+    if (!object->empty()) {
+        object->remove(detailsToJsonMapping.value(QContactName::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactPersonId::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactGender::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactOrganization::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactEmailAddress::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactPhoneNumber::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactAddress::DefinitionName));
+        object->remove(detailsToJsonMapping.value(QContactUrl::DefinitionName));
+        embeddedDetailsMap = object->value(ContactDetails).toMap();
+        object->remove(ContactDetails);
+        embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactBirthday::DefinitionName));
+        embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactAvatar::DefinitionName));
+        embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactRingtone::DefinitionName));
+        embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactNickname::DefinitionName));
+        embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactNote::DefinitionName));
+        //  Preseserve possible extra contact details jsondb contact object may have.
+        object->insert(ContactDetails, embeddedDetailsMap);
+    }
+    // End of Quickfix
+
     for(int i = 0; i < details.size(); ++i) {
         detail = details.at(i);
         // name

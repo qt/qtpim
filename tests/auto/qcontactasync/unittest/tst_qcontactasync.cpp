@@ -47,7 +47,8 @@
 #include <qtcontacts.h>
 #include "../../qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
+
 /* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
 #define FILL_QUEUE_WITH_FETCH_REQUESTS() QContactFetchRequest fqcfr1, fqcfr2, fqcfr3; \
                                          QContactDetailDefinitionFetchRequest fqdfr1, fqdfr2, fqdfr3; \

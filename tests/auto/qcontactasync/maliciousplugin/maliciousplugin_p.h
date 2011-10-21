@@ -60,7 +60,7 @@
 #include <QObject>
 #include <QString>
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 class QThread;
 class MaliciousThreadObject;

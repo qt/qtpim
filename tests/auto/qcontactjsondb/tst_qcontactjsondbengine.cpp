@@ -47,6 +47,8 @@
 #include "qcontactjsondbglobal.h"
 
 
+QTCONTACTS_USE_NAMESPACE
+
 class tst_QContactJsondbEngine : public QObject
 {
     Q_OBJECT

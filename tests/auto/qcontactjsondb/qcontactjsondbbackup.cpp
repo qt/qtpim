@@ -46,6 +46,8 @@
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbconverter.h"
 
+QTCONTACTS_USE_NAMESPACE
+
 QContactJsonDbBackup::QContactJsonDbBackup()
 {
 //qDebug() << "INITIAL data: " << m_backupData;

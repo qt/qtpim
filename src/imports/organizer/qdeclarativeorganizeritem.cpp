@@ -624,6 +624,7 @@ bool QDeclarativeOrganizerItem::isOccurrence() const
 QDeclarativeOrganizerEvent::QDeclarativeOrganizerEvent(QObject *parent)
     : QDeclarativeOrganizerItem(parent)
 {
+    connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
     setItem(QOrganizerEvent());
 }
 
@@ -652,7 +653,7 @@ void QDeclarativeOrganizerEvent::setAllDay(bool allDay)
     }
 
     m_modified = true;
-    emit itemChanged();
+    emit valueChanged();
 }
 
 bool QDeclarativeOrganizerEvent::isAllDay() const
@@ -687,7 +688,7 @@ void QDeclarativeOrganizerEvent::setStartDateTime(const QDateTime &datetime)
     }
 
     m_modified = true;
-    emit itemChanged();
+    emit valueChanged();
 }
 
 QDateTime QDeclarativeOrganizerEvent::startDateTime() const
@@ -722,7 +723,7 @@ void QDeclarativeOrganizerEvent::setEndDateTime(const QDateTime& datetime)
     }
 
     m_modified = true;
-    emit itemChanged();
+    emit valueChanged();
 }
 
 QDateTime QDeclarativeOrganizerEvent::endDateTime() const
@@ -769,7 +770,7 @@ void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::
     }
 
     m_modified = true;
-    emit itemChanged();
+    emit valueChanged();
 }
 
 QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEvent::priority() const
@@ -805,7 +806,7 @@ void QDeclarativeOrganizerEvent::setLocation(const QString &location)
     }
 
     m_modified = true;
-    emit itemChanged();
+    emit valueChanged();
 }
 
 QString QDeclarativeOrganizerEvent::location() const

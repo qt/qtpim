@@ -68,7 +68,7 @@ OrganizerModel {
                 myReccuranceRule.frequency = event.repeat
                 myReccuranceRule.limit = event.repeatCount
                 myReccuranceRule.daysOfWeek = event.repeatDays
-                myModel.myEvent.recurrence.recurrenceRules = [myReccuranceRule]
+                //myModel.myEvent.recurrence.recurrenceRules = [myReccuranceRule]
             }
 
             // TODO verify that the OrganizerModel::itemsSaved() signal is fired

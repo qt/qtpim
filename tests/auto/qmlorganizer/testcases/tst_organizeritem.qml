@@ -91,17 +91,21 @@ TestCase {
         todoOccurrence.progressPercentage = 89
         compare(todoOccurrence.progressPercentage, 89)
 
-        todoOccurrence.originalDate = "2008-12-28"
-        compare(todoOccurrence.originalDate, "2008-12-28")
+        var originalDate = new Date("2008-12-28")
+        todoOccurrence.originalDate = originalDate
+        compare(todoOccurrence.originalDate, originalDate)
 
-        todoOccurrence.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(todoOccurrence.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
+        todoOccurrence.startDateTime = startDateTime
+        compare(todoOccurrence.startDateTime, startDateTime)
 
-        todoOccurrence.dueDateTime = "2008-12-28 15:22:33 GMT+0300"
-        compare(todoOccurrence.dueDateTime, "2008-12-28 15:22:33 GMT+0300")
+        var dueDateTime = new Date("2008-12-28 15:22:33 GMT+0300")
+        todoOccurrence.dueDateTime = dueDateTime
+        compare(todoOccurrence.dueDateTime, dueDateTime)
 
-        todoOccurrence.finishedDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(todoOccurrence.finishedDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var finishedDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        todoOccurrence.finishedDateTime = finishedDateTime
+        compare(todoOccurrence.finishedDateTime, finishedDateTime)
 
         todoOccurrence.priority = Priority.VeryHigh
         compare(todoOccurrence.priority, Priority.VeryHigh)
@@ -122,14 +126,17 @@ TestCase {
         todo.progressPercentage = 64
         compare(todo.progressPercentage, 64)
 
-        todo.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(todo.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        todo.startDateTime = startDateTime
+        compare(todo.startDateTime, startDateTime)
 
-        todo.dueDateTime = "2008-12-28 15:22:33 GMT+0300"
-        compare(todo.dueDateTime, "2008-12-28 15:22:33 GMT+0300")
+        var dueDateTime = new Date("2008-12-28 15:22:33 GMT+0300")
+        todo.dueDateTime = dueDateTime
+        compare(todo.dueDateTime, dueDateTime)
 
-        todo.finishedDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(todo.finishedDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var finishedDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        todo.finishedDateTime = finishedDateTime
+        compare(todo.finishedDateTime, finishedDateTime)
 
         todo.priority = Priority.VeryHigh
         compare(todo.priority, Priority.VeryHigh)
@@ -145,21 +152,25 @@ TestCase {
     function test_journal() {
         compare(journal.itemType, Type.Journal)
 
-        journal.dateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(journal.dateTime, "1991-08-25 20:57:08 GMT+0000")
+        var dateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        journal.dateTime = dateTime
+        compare(journal.dateTime, dateTime)
     }
 
     function test_eventOccurrence() {
         compare(eventOccurrence.itemType, Type.EventOccurrence)
 
-        eventOccurrence.originalDate = "2008-12-28"
-        compare(eventOccurrence.originalDate, "2008-12-28")
+        var originalDate = new Date("2008-12-28")
+        eventOccurrence.originalDate = originalDate
+        compare(eventOccurrence.originalDate, originalDate)
 
-        eventOccurrence.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(eventOccurrence.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        eventOccurrence.startDateTime = startDateTime
+        compare(eventOccurrence.startDateTime, startDateTime)
 
-        eventOccurrence.endDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(eventOccurrence.endDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        eventOccurrence.endDateTime = endDateTime
+        compare(eventOccurrence.endDateTime, endDateTime)
 
         eventOccurrence.priority = Priority.VeryHigh
         compare(eventOccurrence.priority, Priority.VeryHigh)
@@ -177,11 +188,15 @@ TestCase {
         event.allDay = true;
         compare(event.allDay, true)
 
-        event.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(event.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        //Following format does not work
+        //event.startDateTime = "1991-08-25 20:57:08 GMT+0000"
+        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        event.startDateTime = startDateTime
+        compare(event.startDateTime, startDateTime)
 
-        event.endDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(event.endDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        event.endDateTime = endDateTime
+        compare(event.endDateTime, endDateTime)
 
         event.priority = Priority.VeryHigh
         compare(event.priority, Priority.VeryHigh)
@@ -214,9 +229,9 @@ TestCase {
 
         // add new Detail
         item.setDetail(comment)
-        compare(item.detail(Detail.Comment).comment)
-        compare(item.details(Detail.Comment).length)
-        compare(item.itemDetails.length)
+        compare(item.detail(Detail.Comment).comment, "Code Less")
+        compare(item.details(Detail.Comment).length, 1)
+        compare(item.itemDetails.length, 4)
 
         // update existing Detail
         comment.comment = "Create More"
@@ -229,6 +244,7 @@ TestCase {
         compare(item.details(Detail.Comment).length, 0)
 
         // remove all existing Details
+        item.clearDetails();
         compare(item.itemDetails.length, 0)
 
         // custom detail

@@ -155,12 +155,12 @@ class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemRecurrence *recurrence READ recurrence NOTIFY itemChanged)
-    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY itemChanged)
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemRecurrence *recurrence READ recurrence NOTIFY valueChanged)
+    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerEvent(QObject *parent = 0);
@@ -183,7 +183,7 @@ public:
     QDeclarativeOrganizerItemRecurrence *recurrence();
 
 Q_SIGNALS:
-    void itemChanged();
+    void valueChanged();
 };
 
 

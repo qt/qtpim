@@ -86,8 +86,8 @@ TestCase {
         id: tag
     }
 
-    Timestamp {
-        id: timestamp
+    Timestamp {//id "timestamp" conflict something
+        id: timestamp1
     }
 
     Type {
@@ -134,11 +134,8 @@ TestCase {
         compare(customDetail.name, "")
         customDetail.name = "my custom detail"
         compare(customDetail.name, "my custom detail")
-
-        customDetail.setDetailValue("my key1", 1234)
-        compare(customDetail.detailValue("my key1"), 1234)
-        customDetail.setDetailValue("asdf", "bla bla bla")
-        compare(customDetail.detailValue("asdf"), "bla bla bla")
+        customDetail.data = "asdf"
+        compare(customDetail.data, "asdf");
     }
 
     function test_recurrence() {
@@ -196,7 +193,7 @@ TestCase {
         compare(emailReminder.subject, "Qt!")
 
         emailReminder.recipients = ["Berlin", "Brisbane", "Oslo", "Tampere"]
-        compare(emailReminder.recipients.length, 3)
+        compare(emailReminder.recipients.length, 4)
 
         emailReminder.attachments = [1, 2, "345"]
         compare(emailReminder.attachments.length, 3)
@@ -247,18 +244,21 @@ TestCase {
         todoTime.allDay = true
         compare(todoTime.allDay, true)
 
-        todoTime.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(todoTime.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        todoTime.startDateTime = startDateTime
+        compare(todoTime.startDateTime, startDateTime)
 
-        todoTime.dueDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(todoTime.dueDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var dueDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        todoTime.dueDateTime = dueDateTime
+        compare(todoTime.dueDateTime, dueDateTime)
     }
 
     function test_todoProgress() {
         compare(todoProgress.type, Detail.TodoProgress)
 
-        todoProgress.finishedDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(todoProgress.finishedDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var finishedDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        todoProgress.finishedDateTime = finishedDateTime
+        compare(todoProgress.finishedDateTime, finishedDateTime)
 
         todoProgress.percentage = 64
         compare(todoProgress.percentage, 64)
@@ -270,8 +270,9 @@ TestCase {
     function test_journalTime() {
         compare(journalTime.type, Detail.JournalTime)
 
-        journalTime.entryDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(journalTime.entryDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var entryDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        journalTime.entryDateTime = entryDateTime
+        compare(journalTime.entryDateTime, entryDateTime)
     }
 
     function test_type() {
@@ -282,13 +283,15 @@ TestCase {
     }
 
     function test_timestamp() {
-        compare(timestamp.type, Detail.Timestamp)
+        compare(timestamp1.type, Detail.Timestamp)
 
-        timestamp.created = "1991-08-25 20:57:08 GMT+0000"
-        compare(timestamp.created, "1991-08-25 20:57:08 GMT+0000")
+        var timestamp = new Date("1991-08-25 20:57:08 GMT+0000")
+        timestamp.created = timestamp
+        compare(timestamp.created, timestamp)
 
-        timestamp.lastModified = "1995-05-20 11:22:33 GMT+0200"
-        compare(timestamp.lastModified, "1995-05-20 11:22:33 GMT+0200")
+        var lastModified = new Date("1995-05-20 11:22:33 GMT+0200")
+        timestamp.lastModified = lastModified
+        compare(timestamp.lastModified, lastModified)
     }
 
     function test_tag() {
@@ -308,8 +311,9 @@ TestCase {
     function test_parent() {
         compare(parent.type, Detail.Parent)
 
-        parent.originalDate = "2008-12-28"
-        compare(parent.originalDate, "2008-12-28")
+        var originalDate = new Date("2008-12-28")
+        parent.originalDate = originalDate
+        compare(parent.originalDate, originalDate)
     }
 
     function test_location() {
@@ -359,11 +363,13 @@ TestCase {
         eventTime.isAllDay = true
         compare(eventTime.isAllDay, true)
 
-        eventTime.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        compare(eventTime.startDateTime, "1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        eventTime.startDateTime = startDateTime
+        compare(eventTime.startDateTime, startDateTime)
 
-        eventTime.endDateTime = "1995-05-20 11:22:33 GMT+0200"
-        compare(eventTime.endDateTime, "1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        eventTime.endDateTime = endDateTime
+        compare(eventTime.endDateTime, endDateTime)
     }
 
     function test_emptyDetail() {

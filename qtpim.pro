@@ -12,7 +12,7 @@ module_qtpim_tests.depends = module_qtpim_src
 }
 
 module_qtpim_examples.subdir = examples
-module_qtpim_examples.target = module-qtpim-exampels
+module_qtpim_examples.target = module-qtpim-examples
 module_qtpim_examples.depends = module_qtpim_src
 !contains(QT_BUILD_PARTS,examples) {
     module_qtpim_examples.CONFIG = no_default_target no_default_install

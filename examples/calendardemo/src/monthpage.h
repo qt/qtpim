@@ -45,11 +45,12 @@
 #include <QDate>
 #include <qorganizerglobal.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
 class QOrganizerItem;
-QTPIM_END_NAMESPACE
-QTPIM_USE_NAMESPACE
+QTORGANIZER_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
 
 class QComboBox;
 class QCalendarWidget;
@@ -66,10 +67,6 @@ public:
     MonthPage(QWidget *parent = 0);
     ~MonthPage();
     void init();
-
-#ifdef Q_OS_SYMBIAN
-    void setMenu(QMenu *menu);
-#endif
 
 private Q_SLOTS:
     void backendChanged(const QString &managerName);

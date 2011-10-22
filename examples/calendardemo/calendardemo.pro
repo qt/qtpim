@@ -23,9 +23,3 @@ HEADERS += src/calendardemo.h \
            src/eventoccurrenceeditpage.h \
            src/addcalendarpage.h \
            src/editcalendarspage.h
-
-#symbian: {
-#    TARGET.CAPABILITY = ReadUserData \
-#                        WriteUserData \
-#                        ReadDeviceData
-#}

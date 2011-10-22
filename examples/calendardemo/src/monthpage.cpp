@@ -45,7 +45,7 @@
 #include "monthpage.h"
 #include "calendardemo.h"
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerItem)
 
@@ -75,7 +75,7 @@ MonthPage::MonthPage(QWidget *parent)
     m_calendarWidget = new QCalendarWidget(this);
     m_calendarWidget->setGridVisible(true);
     m_calendarWidget->setHorizontalHeaderFormat(QCalendarWidget::SingleLetterDayNames);
-    m_calendarWidget->setHeaderVisible(false);
+    m_calendarWidget->setNavigationBarVisible(false);
     mainlayout->addRow(m_calendarWidget);
     connect(m_calendarWidget, SIGNAL(selectionChanged()), this, SLOT(refreshDayItems()));
     connect(m_calendarWidget, SIGNAL(currentPageChanged(int, int)), this, SLOT(currentMonthChanged()));
@@ -86,11 +86,7 @@ MonthPage::MonthPage(QWidget *parent)
     m_itemList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_itemList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_itemList->setFocusPolicy(Qt::NoFocus);
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-    m_itemList->setVisible(false);
-#else
     mainlayout->addRow(m_itemList);
-#endif
     connect(m_itemList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemDoubleClicked(QListWidgetItem*)));
 
     setLayout(mainlayout);
@@ -107,17 +103,6 @@ MonthPage::~MonthPage()
 {
 
 }
-
-#ifdef Q_OS_SYMBIAN
-void MonthPage::setMenu(QMenu *menu)
-{
-    // Add softkey for symbian
-    QAction* optionsSoftKey = new QAction("Options", this);
-    optionsSoftKey->setSoftKeyRole(QAction::PositiveSoftKey);
-    optionsSoftKey->setMenu(menu);
-    addAction(optionsSoftKey);
-}
-#endif
 
 void MonthPage::backendChanged(const QString &managerName)
 {
@@ -233,14 +218,9 @@ void MonthPage::refresh()
         m_calendarWidget->setDateTextFormat(date, cf);
     }
 
-#if !defined(Q_WS_MAEMO_5) && !defined(Q_WS_MAEMO_6)
     // As the day item list is not showed do not refresh
     // the day items in Maemo5 or Maemo6 to improve performance
     refreshDayItems();
-#else
-    // We still need to emit this
-    emit currentDayChanged(m_calendarWidget->selectedDate());
-#endif
 }
 
 void MonthPage::refreshDayItems()

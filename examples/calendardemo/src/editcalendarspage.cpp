@@ -43,7 +43,7 @@
 #include <QtWidgets>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerCollection)
 
@@ -54,7 +54,6 @@ EditCalendarsPage::EditCalendarsPage(QWidget *parent)
     m_calendarList = new QListWidget(this);
     connect(m_calendarList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(itemDoubleClicked(QListWidgetItem *)));
 
-#ifndef Q_OS_SYMBIAN
     // Add push buttons for non-Symbian platforms as they do not support soft keys
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *addButton = new QPushButton("Add new", this);
@@ -69,14 +68,10 @@ EditCalendarsPage::EditCalendarsPage(QWidget *parent)
     QPushButton *backButton = new QPushButton("Back", this);
     connect(backButton,SIGNAL(clicked()),this,SLOT(backClicked()));
     hbLayout->addWidget(backButton);
-#endif
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(m_calendarList);
-
-#ifndef Q_OS_SYMBIAN
     scrollAreaLayout->addLayout(hbLayout);
-#endif
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);

@@ -42,38 +42,12 @@
 #include <QtWidgets>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 AddCalendarPage::AddCalendarPage(QWidget *parent)
     :QWidget(parent),
     m_manager(0)
 {
-#if defined(Q_WS_MAEMO_5)
-    // Maemo5 calendar features
-    QLabel *nameLabel = new QLabel("Name:", this);
-    m_nameEdit = new QLineEdit(this);
-
-    QLabel *colorLabel = new QLabel("Color:", this);
-    m_colorComboBox = new QComboBox(this); // must be filled later
-    connect(m_colorComboBox, SIGNAL(currentIndexChanged(const QString&)),
-            this, SLOT(colorChanged(const QString&)));
-
-    QLabel *typeLabel = new QLabel("Type:", this);
-    m_typeComboBox = new QComboBox(this); // must be filled later
-    connect(m_typeComboBox, SIGNAL(currentIndexChanged(const QString&)),
-            this, SLOT(typeChanged(const QString&)));
-
-    m_visibleCheckBox = new QCheckBox("Visible", this);
-    connect(m_visibleCheckBox, SIGNAL(stateChanged(int)),
-            this, SLOT(visibilityChanged(int)));
-
-    m_readonlyCheckBox = new QCheckBox("Readonly", this);
-    connect(m_readonlyCheckBox, SIGNAL(stateChanged(int)),
-            this, SLOT(readonlyChanged(int)));
-#endif
-
-#ifndef Q_OS_SYMBIAN
-    // Add push buttons for non-Symbian platforms as they do not support soft keys
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Save", this);
     connect(okButton,SIGNAL(clicked()),this,SLOT(saveClicked()));
@@ -81,29 +55,10 @@ AddCalendarPage::AddCalendarPage(QWidget *parent)
     QPushButton *cancelButton = new QPushButton("Cancel", this);
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelClicked()));
     hbLayout->addWidget(cancelButton);
-#endif
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
-
-#if defined(Q_WS_MAEMO_5)
-    scrollAreaLayout->addWidget(nameLabel);
-    scrollAreaLayout->addWidget(m_nameEdit);
-    scrollAreaLayout->addWidget(colorLabel);
-    scrollAreaLayout->addWidget(m_colorComboBox);
-    scrollAreaLayout->addWidget(typeLabel);
-    scrollAreaLayout->addWidget(m_typeComboBox);
-
-    QHBoxLayout *checkBoxLayout = new QHBoxLayout();
-    checkBoxLayout->addWidget(m_visibleCheckBox);
-    checkBoxLayout->addWidget(m_readonlyCheckBox);
-    scrollAreaLayout->addLayout(checkBoxLayout);
-#endif
-
     scrollAreaLayout->addStretch();
-
-#ifndef Q_OS_SYMBIAN
     scrollAreaLayout->addLayout(hbLayout);
-#endif
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
@@ -139,10 +94,6 @@ void AddCalendarPage::cancelClicked()
 
 void AddCalendarPage::saveClicked()
 {
-#if defined(Q_WS_MAEMO_5)
-    m_collection.setMetaData("Name", m_nameEdit->text());
-#endif
-
     m_manager->saveCollection(&m_collection);
     if (m_manager->error())
         QMessageBox::warning(this, "Failed!", QString("Failed to save calendar!\n(error code %1)").arg(m_manager->error()));
@@ -155,68 +106,4 @@ void AddCalendarPage::calendarChanged(QOrganizerManager *manager, QOrganizerColl
     m_manager = manager;
     m_collection = calendar;
     window()->setWindowTitle(!calendar.id().isNull() ? "Edit calendar" : "Add calendar");
-
-#if defined(Q_WS_MAEMO_5)
-    // Maemo5 calendar features
-    QVariant calendarName = calendar.metaData("Name");
-    if (calendarName.canConvert(QVariant::String))
-        m_nameEdit->setText(calendarName.toString());
-
-    QVariant colorList = calendar.metaData("Available colors");
-    QStringList availableColors;
-    if (colorList.canConvert(QVariant::StringList))
-        availableColors = colorList.toStringList();
-
-    int index = 0;
-    foreach(QString color, availableColors) {
-        m_colorComboBox->addItem(color);
-        if (calendar.metaData("Color").toString() == color)
-            m_colorComboBox->setCurrentIndex(index);
-        ++index;
-    }
-
-    QVariant typeList = calendar.metaData("Available types");
-    QStringList availableTypes;
-    if (typeList.canConvert(QVariant::StringList))
-        availableTypes = typeList.toStringList();
-
-    index = 0;
-    foreach(QString type, availableTypes) {
-        m_typeComboBox->addItem(type);
-        if (calendar.metaData("Type").toString() == type)
-            m_typeComboBox->setCurrentIndex(index);
-        ++index;
-    }
-
-    QVariant visible = calendar.metaData("Visible");
-    if (visible.canConvert(QVariant::Bool))
-        m_visibleCheckBox->setCheckState(visible.toBool() ? Qt::Checked : Qt::Unchecked);
-
-    QVariant readonly = calendar.metaData("Readonly");
-    if (readonly.canConvert(QVariant::Bool))
-        m_readonlyCheckBox->setCheckState(readonly.toBool() ? Qt::Checked : Qt::Unchecked);
-#endif
 }
-
-#if defined(Q_WS_MAEMO_5)
-void AddCalendarPage::colorChanged(const QString& color)
-{
-    m_collection.setMetaData("Color", color);
-}
-
-void AddCalendarPage::typeChanged(const QString& type)
-{
-    m_collection.setMetaData("Type", type);
-}
-
-void AddCalendarPage::visibilityChanged(int visibility)
-{
-    m_collection.setMetaData("Visible", (visibility == Qt::Checked));
-}
-
-void AddCalendarPage::readonlyChanged(int readonly)
-{
-    m_collection.setMetaData("Readonly", (readonly == Qt::Checked));
-}
-
-#endif

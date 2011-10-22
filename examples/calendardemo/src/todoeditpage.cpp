@@ -43,7 +43,7 @@
 #include <QComboBox>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 TodoEditPage::TodoEditPage(QWidget *parent)
     :QWidget(parent),
@@ -86,7 +86,6 @@ TodoEditPage::TodoEditPage(QWidget *parent)
     m_calendarComboBox = new QComboBox(this);
     // the calendar names are not know here, fill the combo box later...
 
-#ifndef Q_OS_SYMBIAN
     // Add push buttons for non-Symbian platforms as they do not support soft keys
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Save", this);
@@ -95,11 +94,10 @@ TodoEditPage::TodoEditPage(QWidget *parent)
     QPushButton *cancelButton = new QPushButton("Cancel", this);
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelClicked()));
     hbLayout->addWidget(cancelButton);
-#endif
 
     // check to see whether we support alarms.
     QOrganizerManager defaultManager;
-    QStringList supportedDefinitionNames = defaultManager.detailDefinitions(QOrganizerItemType::TypeTodo).keys();
+    QStringList supportedDefinitionNames = defaultManager.supportedItemDetails(QOrganizerItemType::TypeTodo);
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(subjectLabel);
@@ -119,9 +117,7 @@ TodoEditPage::TodoEditPage(QWidget *parent)
     scrollAreaLayout->addWidget(calendarLabel);
     scrollAreaLayout->addWidget(m_calendarComboBox);
     scrollAreaLayout->addStretch();
-#ifndef Q_OS_SYMBIAN
     scrollAreaLayout->addLayout(hbLayout);
-#endif
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
@@ -270,7 +266,7 @@ void TodoEditPage::showEvent(QShowEvent *event)
 
 void TodoEditPage::handleAlarmIndexChanged(const QString time)
 {
-    bool noVisualReminders = m_manager->detailDefinition(QOrganizerItemVisualReminder::DefinitionName, m_organizerTodo.type()).isEmpty();
+    bool noVisualReminders = !m_manager->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemVisualReminder::DefinitionName);
 
         QScopedPointer<QOrganizerItemReminder> reminder;
         if (noVisualReminders) {

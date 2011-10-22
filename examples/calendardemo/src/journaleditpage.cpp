@@ -43,7 +43,7 @@
 #include <QComboBox>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 JournalEditPage::JournalEditPage(QWidget *parent)
     :QWidget(parent),
@@ -76,7 +76,6 @@ JournalEditPage::JournalEditPage(QWidget *parent)
     m_calendarComboBox = new QComboBox(this);
     // the calendar names are not know here, fill the combo box later...
 
-#ifndef Q_OS_SYMBIAN
     // Add push buttons for Maemo as it does not support soft keys
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Ok", this);
@@ -85,11 +84,10 @@ JournalEditPage::JournalEditPage(QWidget *parent)
     QPushButton *cancelButton = new QPushButton("Cancel", this);
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelClicked()));
     hbLayout->addWidget(cancelButton);
-#endif
 
     // check to see whether we support alarms.
     QOrganizerManager defaultManager;
-    QStringList supportedDefinitionNames = defaultManager.detailDefinitions(QOrganizerItemType::TypeJournal).keys();
+    QStringList supportedDefinitionNames = defaultManager.supportedItemDetails(QOrganizerItemType::TypeJournal);
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(subjectLabel);
@@ -103,10 +101,7 @@ JournalEditPage::JournalEditPage(QWidget *parent)
     scrollAreaLayout->addWidget(calendarLabel);
     scrollAreaLayout->addWidget(m_calendarComboBox);
     scrollAreaLayout->addStretch();
-
-#ifndef Q_OS_SYMBIAN
     scrollAreaLayout->addLayout(hbLayout);
-#endif
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);

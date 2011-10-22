@@ -45,13 +45,14 @@
 #include <qorganizeritemid.h>
 #include <qorganizerevent.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
 class QOrganizerItemSaveRequest;
 class QOrganizerEvent;
 class QOrganizerItem;
-QTPIM_END_NAMESPACE
-QTPIM_USE_NAMESPACE
+QTORGANIZER_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
 
 class QComboBox;
 class QLineEdit;

@@ -43,11 +43,12 @@
 #include <QWidget>
 #include <qorganizercollection.h>
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
 class QOrganizerCollection;
-QTPIM_END_NAMESPACE
-QTPIM_USE_NAMESPACE
+QTORGANIZER_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
 
 class QComboBox;
 class QLineEdit;
@@ -68,13 +69,6 @@ public Q_SLOTS:
     void saveClicked();
     void calendarChanged(QOrganizerManager *manager, QOrganizerCollection& calendar);
 
-#if defined(Q_WS_MAEMO_5)
-    void colorChanged(const QString&);
-    void typeChanged(const QString&);
-    void visibilityChanged(int);
-    void readonlyChanged(int);
-#endif
-
 Q_SIGNALS:
     void showPreviousPage();
 
@@ -82,14 +76,6 @@ private:
     QOrganizerManager *m_manager;
     QOrganizerCollection m_collection;
     QAction *m_saveOrNextSoftKey;
-
-#if defined(Q_WS_MAEMO_5)
-    QLineEdit *m_nameEdit;
-    QComboBox *m_colorComboBox;
-    QComboBox *m_typeComboBox;
-    QCheckBox *m_visibleCheckBox;
-    QCheckBox *m_readonlyCheckBox;
-#endif
 };
 
 #endif // ADDCALENDARPAGE_H

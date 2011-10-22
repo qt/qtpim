@@ -58,7 +58,7 @@
 #include <QDesktopServices>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 CalendarDemo::CalendarDemo(QWidget *parent)
     :QMainWindow(parent),
@@ -139,15 +139,13 @@ CalendarDemo::~CalendarDemo()
 void CalendarDemo::buildMenu()
 {
     // Build Options menu
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WINCE)
     // These platforms need their menu items added directly to the menu bar.
     QMenuBar *optionsMenu = menuBar();
 #else
     QMenu *optionsMenu = new QMenu("&Options", this);
-    #ifndef Q_OS_SYMBIAN
     // We add the options menu to the softkey manually later
     menuBar()->addMenu(optionsMenu);
-    #endif
 #endif
     // Add editing options in the menu for Symbian (other platforms get buttons)
     QOrganizerManager defaultManager;
@@ -185,19 +183,11 @@ void CalendarDemo::buildMenu()
     connect(addCalendar, SIGNAL(triggered(bool)), this, SLOT(addCalendar()));
     QAction* editCalendar = optionsMenu->addAction("Edit calendars");
     connect(editCalendar, SIGNAL(triggered(bool)), this, SLOT(editCalendar()));
-
-#ifdef Q_OS_SYMBIAN
-    // add the menu to the softkey for these pages
-    m_monthPage->setMenu(optionsMenu);
-    m_dayPage->setMenu(optionsMenu);
-#endif
 }
 
 void CalendarDemo::activateMonthPage()
 {
-#if !(defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6))
     menuBar()->setVisible(true);
-#endif
     m_monthPage->refresh();
     m_stackedWidget->setCurrentWidget(m_monthPage);
     m_switchViewAction->setText("&Open Day");
@@ -205,9 +195,7 @@ void CalendarDemo::activateMonthPage()
 
 void CalendarDemo::activateDayPage()
 {
-#if !(defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6))
     menuBar()->setVisible(true);
-#endif
     m_dayPage->refresh();
     m_stackedWidget->setCurrentWidget(m_dayPage);
     m_switchViewAction->setText("View &Month");
@@ -216,9 +204,7 @@ void CalendarDemo::activateDayPage()
 void CalendarDemo::activateEditPage(const QOrganizerItem &item)
 {
     m_previousItem = item;
-#if !(defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6))
     menuBar()->setVisible(false);
-#endif
     if (item.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEvent event = static_cast<QOrganizerEvent>(item);
         m_dayPage->dayChanged(event.startDateTime().date()); // edit always comes back to day page
@@ -518,9 +504,6 @@ void CalendarDemo::addCalendar()
 
     QOrganizerCollection newCollection = defaultCollection;
     newCollection.setId(QOrganizerCollectionId()); // reset collection id
-#if defined(Q_WS_MAEMO_5)
-    newCollection.setMetaData("Name", "New calendar");
-#endif
     m_addCalendarPage->calendarChanged(m_manager, newCollection);
 
     m_previousPage = m_stackedWidget->currentIndex();

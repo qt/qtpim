@@ -47,11 +47,12 @@
 #include <qorganizeritemremoverequest.h>
 class QProgressDialog;
 
-QTPIM_BEGIN_NAMESPACE
+QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
 class QOrganizerItem;
-QTPIM_END_NAMESPACE
-QTPIM_USE_NAMESPACE
+QTORGANIZER_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
 
 #define ORGANIZER_ITEM_ROLE Qt::UserRole+1
 #define ORGANIZER_CALENDAR_ROLE Qt::UserRole+2

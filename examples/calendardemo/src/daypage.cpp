@@ -44,7 +44,7 @@
 #include <QtWidgets>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerItem)
 
@@ -62,11 +62,10 @@ DayPage::DayPage(QWidget *parent)
     m_dateLabel->setAlignment(Qt::AlignCenter);
     dateLayout->addWidget(m_dateLabel);
     dateLayout->addStretch();
-#ifndef Q_OS_SYMBIAN
+
     QPushButton* backButton = new QPushButton("View Month",this);
     connect(backButton,SIGNAL(clicked()),this,SLOT(viewMonthClicked()));
     dateLayout->addWidget(backButton);
-#endif
     mainLayout->addLayout(dateLayout);
 
     m_itemList = new QListWidget(this);
@@ -81,33 +80,12 @@ DayPage::DayPage(QWidget *parent)
     connect(removeEventButton,SIGNAL(clicked()),this,SLOT(removeItem()));
     hbLayout->addWidget(removeEventButton);
     mainLayout->addLayout(hbLayout);
-
-#ifdef Q_OS_SYMBIAN
-    // Add softkey for symbian
-    QAction* backSoftKey = new QAction("View Month", this);
-    backSoftKey->setSoftKeyRole(QAction::NegativeSoftKey);
-    addAction(backSoftKey);
-    connect(backSoftKey, SIGNAL(triggered(bool)), this, SLOT(viewMonthClicked()));
-#endif
-
     setLayout(mainLayout);
 }
 
 DayPage::~DayPage()
 {
-
 }
-
-#ifdef Q_OS_SYMBIAN
-void DayPage::setMenu(QMenu *menu)
-{
-    // Add softkey for symbian
-    QAction* optionsSoftKey = new QAction("Options", this);
-    optionsSoftKey->setSoftKeyRole(QAction::PositiveSoftKey);
-    optionsSoftKey->setMenu(menu);
-    addAction(optionsSoftKey);
-}
-#endif
 
 void DayPage::refresh()
 {

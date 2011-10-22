@@ -42,7 +42,7 @@
 #include <QtWidgets>
 #include <qorganizer.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 EventOccurrenceEditPage::EventOccurrenceEditPage(QWidget *parent)
     :QWidget(parent),
@@ -65,7 +65,6 @@ EventOccurrenceEditPage::EventOccurrenceEditPage(QWidget *parent)
     m_endTimeEdit = new QDateTimeEdit(this);
     m_endTimeEdit->setDisplayFormat(QString("yyyy-MM-dd hh:mm:ss AP"));
 
-#ifndef Q_OS_SYMBIAN
     // Add push buttons for Maemo as it does not support soft keys
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Ok", this);
@@ -74,7 +73,6 @@ EventOccurrenceEditPage::EventOccurrenceEditPage(QWidget *parent)
     QPushButton *cancelButton = new QPushButton("Cancel", this);
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelClicked()));
     hbLayout->addWidget(cancelButton);
-#endif
 
     scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(subjectLabel);
@@ -84,10 +82,7 @@ EventOccurrenceEditPage::EventOccurrenceEditPage(QWidget *parent)
     scrollAreaLayout->addWidget(endTimeLabel);
     scrollAreaLayout->addWidget(m_endTimeEdit);
     scrollAreaLayout->addStretch();
-
-#ifndef Q_OS_SYMBIAN
     scrollAreaLayout->addLayout(hbLayout);
-#endif
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);

@@ -42,16 +42,11 @@
 #ifndef QORGANIZERITEMTYPE_H
 #define QORGANIZERITEMTYPE_H
 
-#include <QString>
-#include "qlatin1constant.h"
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <qlatin1constant.h>
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemType : public QOrganizerItemDetail
 {
 public:
@@ -66,19 +61,18 @@ public:
     static const QLatin1Constant TypeEventOccurrence;
     static const QLatin1Constant TypeTodoOccurrence;
 #else
-    Q_DECLARE_LATIN1_CONSTANT(TypeEvent, "Event");
-    Q_DECLARE_LATIN1_CONSTANT(TypeEventOccurrence, "EventOccurrence");
-    Q_DECLARE_LATIN1_CONSTANT(TypeTodo, "Todo");
-    Q_DECLARE_LATIN1_CONSTANT(TypeTodoOccurrence, "TodoOccurrence");
-    Q_DECLARE_LATIN1_CONSTANT(TypeJournal, "Journal");
-    Q_DECLARE_LATIN1_CONSTANT(TypeNote, "Note");
+    Q_DECLARE_LATIN1_CONSTANT(TypeEvent, "Event")
+    Q_DECLARE_LATIN1_CONSTANT(TypeEventOccurrence, "EventOccurrence")
+    Q_DECLARE_LATIN1_CONSTANT(TypeTodo, "Todo")
+    Q_DECLARE_LATIN1_CONSTANT(TypeTodoOccurrence, "TodoOccurrence")
+    Q_DECLARE_LATIN1_CONSTANT(TypeJournal, "Journal")
+    Q_DECLARE_LATIN1_CONSTANT(TypeNote, "Note")
 #endif
 
-    void setType(const QString& type) {setValue(FieldType, type);}
-    QString type() const {return value(FieldType).toString();}
+    void setType(const QString &type);
+    QString type() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMTYPE_H

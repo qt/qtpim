@@ -42,26 +42,22 @@
 #ifndef QORGANIZERJOURNALTIME_H
 #define QORGANIZERJOURNALTIME_H
 
-#include <QString>
+#include <qorganizeritemdetail.h>
 
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime, "JournalTime")
     const static QString FieldEntryDateTime;
 
-    void setEntryDateTime(const QDateTime& entryDateTime) {setValue(FieldEntryDateTime, entryDateTime);}
-    QDateTime entryDateTime() const {return value<QDateTime>(FieldEntryDateTime);}
+    void setEntryDateTime(const QDateTime &entryDateTime);
+    QDateTime entryDateTime() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERJOURNALTIME_H

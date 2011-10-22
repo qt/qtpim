@@ -39,19 +39,16 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMPARENT_H
 #define QORGANIZERITEMPARENT_H
 
-#include <QString>
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemid.h>
 
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {
 public:
@@ -59,15 +56,13 @@ public:
     const static QString FieldParentId;
     const static QString FieldOriginalDate;
 
-    void setParentId(const QOrganizerItemId& parentId) {setValue(FieldParentId, QVariant::fromValue(parentId));}
-    QOrganizerItemId parentId() const {return value(FieldParentId).value<QOrganizerItemId>();}
+    void setParentId(const QOrganizerItemId &parentId);
+    QOrganizerItemId parentId() const;
 
-
-    void setOriginalDate(const QDate& date) {setValue(FieldOriginalDate, date);}
-    QDate originalDate() const {return value(FieldOriginalDate).toDate();}
+    void setOriginalDate(const QDate &date);
+    QDate originalDate() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMPARENT_H

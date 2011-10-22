@@ -39,22 +39,13 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMREMINDER_H
 #define QORGANIZERITEMREMINDER_H
 
-#include <QString>
-#include <QUrl>
-#include <QList>
-#include <QVariantList>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
@@ -76,26 +67,24 @@ public:
 
     ReminderType reminderType() const;
 
-    void setSecondsBeforeStart(int seconds) {setValue(FieldSecondsBeforeStart, seconds);}
-    int secondsBeforeStart() const {return value<int>(FieldSecondsBeforeStart);}
+    void setSecondsBeforeStart(int seconds);
+    int secondsBeforeStart() const;
 
-    // duration/repetition
-    void setRepetition(int count, int delaySeconds) {setValue(FieldRepetitionCount, count); setValue(FieldRepetitionDelay, delaySeconds);}
-    int repetitionDelay() const {return value<int>(FieldRepetitionDelay);}
-    int repetitionCount() const {return value<int>(FieldRepetitionCount);}
+    void setRepetition(int count, int delaySeconds);
+    int repetitionDelay() const;
+    int repetitionCount() const;
 
 protected:
     QOrganizerItemReminder(const QString &definitionName) : QOrganizerItemDetail(definitionName) {}
-    QOrganizerItemReminder(const QOrganizerItemDetail& detail, const QString &definitionName) : QOrganizerItemDetail(detail, definitionName) {}
+    QOrganizerItemReminder(const QOrganizerItemDetail &detail, const QString &definitionName) : QOrganizerItemDetail(detail, definitionName) {}
 };
 
 #define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, definitionNameString) \
     className() : QOrganizerItemReminder(DefinitionName) {} \
-    className(const QOrganizerItemDetail& field) : QOrganizerItemReminder(field, DefinitionName) {} \
-    className& operator=(const QOrganizerItemDetail& other) {assign(other, DefinitionName); return *this;} \
+    className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, DefinitionName) {} \
+    className& operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
     const static QString DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMREMINDER_H

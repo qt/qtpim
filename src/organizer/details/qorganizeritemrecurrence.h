@@ -42,16 +42,11 @@
 #ifndef QORGANIZERITEMRECURRENCE_H
 #define QORGANIZERITEMRECURRENCE_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
-#include "qorganizerrecurrencerule.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizerrecurrencerule.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemRecurrence : public QOrganizerItemDetail
 {
 public:
@@ -61,27 +56,22 @@ public:
     const static QString FieldRecurrenceDates;
     const static QString FieldExceptionDates;
 
-    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules);
-
+    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule> &rrules);
     QSet<QOrganizerRecurrenceRule> recurrenceRules() const;
 
-    void setRecurrenceDates(const QSet<QDate>& rdates);
-
+    void setRecurrenceDates(const QSet<QDate> &rdates);
     QSet<QDate> recurrenceDates() const;
 
-    void setExceptionRules(const QSet<QOrganizerRecurrenceRule>& xrules);
-
+    void setExceptionRules(const QSet<QOrganizerRecurrenceRule> &xrules);
     QSet<QOrganizerRecurrenceRule> exceptionRules() const;
 
-    void setExceptionDates(const QSet<QDate>& xdates);
-
+    void setExceptionDates(const QSet<QDate> &xdates);
     QSet<QDate> exceptionDates() const;
 
-    bool operator==(const QOrganizerItemRecurrence& other) const;
-    bool operator!=(const QOrganizerItemRecurrence& other) const {return !(other == *this);}
+    bool operator==(const QOrganizerItemRecurrence &other) const;
+    bool operator!=(const QOrganizerItemRecurrence &other) const {return !(other == *this);}
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMRECURRENCE_H

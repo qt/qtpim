@@ -42,12 +42,10 @@
 #ifndef QORGANIZERITEMCUSTOMDETAIL_H
 #define QORGANIZERITEMCUSTOMDETAIL_H
 
-#include <qorganizerglobal.h>
 #include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemCustomDetail : public QOrganizerItemDetail
 {
 public:
@@ -55,11 +53,11 @@ public:
     const static QString FieldCustomDetailName;
     const static QString FieldCustomDetailData;
 
-    void setName(const QString &name) { setValue(FieldCustomDetailName, name); }
-    QString name() const { return value(FieldCustomDetailName).toString(); }
+    void setName(const QString &name);
+    QString name() const;
 
-    void setData(const QVariant &data) { setValue(FieldCustomDetailData, data); }
-    QVariant data() const { return value(FieldCustomDetailData); }
+    void setData(const QVariant &data);
+    QVariant data() const;
 };
 
 QTORGANIZER_END_NAMESPACE

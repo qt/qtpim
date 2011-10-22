@@ -39,15 +39,13 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMVISUALREMINDER_H
 #define QORGANIZERITEMVISUALREMINDER_H
 
-#include "qorganizeritemreminder.h"
+#include <qorganizeritemreminder.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemVisualReminder : public QOrganizerItemReminder
 {
 public:
@@ -55,14 +53,13 @@ public:
     const static QString FieldMessage;
     const static QString FieldDataUrl;
 
-    // message and visual data to be displayed if visual notification.
-    void setMessage(const QString& message) {setValue(FieldMessage, message);}
-    QString message() const {return value<QString>(FieldMessage);}
-    void setDataUrl(const QUrl& dataUrl) {setValue(FieldDataUrl, dataUrl);}
-    QUrl dataUrl() const {return value<QUrl>(FieldDataUrl);}
+    void setMessage(const QString &message);
+    QString message() const;
+
+    void setDataUrl(const QUrl &dataUrl);
+    QUrl dataUrl() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMVISUALREMINDER_H

@@ -39,30 +39,23 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMGUID_H
 #define QORGANIZERITEMGUID_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemGuid : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemGuid, "Guid")
     const static QString FieldGuid;
 
-    void setGuid(const QString& guid) {setValue(FieldGuid, guid);}
-    QString guid() const {return value(FieldGuid).toString();}
+    void setGuid(const QString &guid);
+    QString guid() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMGUID_H

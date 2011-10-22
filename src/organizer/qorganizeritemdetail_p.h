@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMDETAIL_P_H
 #define QORGANIZERITEMDETAIL_P_H
 
@@ -54,11 +53,9 @@
 // We mean it.
 //
 
-#include "qorganizeritemdetail.h"
+#include <qorganizeritemdetail.h>
 
-#include <QSharedData>
-#include <QString>
-#include <QHash>
+#include <QtCore/qhash.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -68,18 +65,18 @@ class QOrganizerItemDetailPrivate : public QSharedData
 {
 public:
     QOrganizerItemDetailPrivate()
-        : QSharedData(),
-        m_id(lastDetailKey.fetchAndAddOrdered(1)),
-        m_access(QOrganizerItemDetail::NoConstraint)
+        : QSharedData()
+        , m_id(lastDetailKey.fetchAndAddOrdered(1))
+        , m_access(QOrganizerItemDetail::NoConstraint)
     {
     }
 
-    QOrganizerItemDetailPrivate(const QOrganizerItemDetailPrivate& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_definitionName(other.m_definitionName),
-        m_values(other.m_values),
-        m_access(other.m_access)
+    QOrganizerItemDetailPrivate(const QOrganizerItemDetailPrivate &other)
+        : QSharedData(other)
+        , m_id(other.m_id)
+        , m_definitionName(other.m_definitionName)
+        , m_values(other.m_values)
+        , m_access(other.m_access)
     {
     }
 
@@ -99,7 +96,7 @@ public:
         d->d->m_access = constraint;
     }
 
-    static const QOrganizerItemDetailPrivate* detailPrivate(const QOrganizerItemDetail& detail)
+    static const QOrganizerItemDetailPrivate *detailPrivate(const QOrganizerItemDetail &detail)
     {
         return detail.d.constData();
     }
@@ -107,4 +104,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDETAIL_P_H

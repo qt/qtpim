@@ -42,30 +42,27 @@
 #ifndef QORGANIZERITEMDETAILS_H
 #define QORGANIZERITEMDETAILS_H
 
-// this file includes all of the leaf detail classes
-// provided by the Qt Organizer API.
+#include <qorganizereventtime.h>
+#include <qorganizeritemcomment.h>
+#include <qorganizeritemdescription.h>
+#include <qorganizeritemdisplaylabel.h>
+#include <qorganizeritemguid.h>
+#include <qorganizeritemlocation.h>
+#include <qorganizeritemparent.h>
+#include <qorganizeritempriority.h>
+#include <qorganizeritemrecurrence.h>
+#include <qorganizeritemtag.h>
+#include <qorganizeritemtimestamp.h>
+#include <qorganizeritemtype.h>
+#include <qorganizerjournaltime.h>
+#include <qorganizertodoprogress.h>
+#include <qorganizertodotime.h>
 
-#include "qorganizereventtime.h"
-#include "qorganizeritemcomment.h"
-#include "qorganizeritemdescription.h"
-#include "qorganizeritemdisplaylabel.h"
-#include "qorganizeritemguid.h"
-#include "qorganizeritemlocation.h"
-#include "qorganizeritemparent.h"
-#include "qorganizeritempriority.h"
-#include "qorganizeritemrecurrence.h"
-#include "qorganizeritemtag.h"
-#include "qorganizeritemtimestamp.h"
-#include "qorganizeritemtype.h"
-#include "qorganizerjournaltime.h"
-#include "qorganizertodoprogress.h"
-#include "qorganizertodotime.h"
+#include <qorganizeritemreminder.h>
+#include <qorganizeritemaudiblereminder.h>
+#include <qorganizeritememailreminder.h>
+#include <qorganizeritemvisualreminder.h>
 
-#include "qorganizeritemreminder.h"
-#include "qorganizeritemaudiblereminder.h"
-#include "qorganizeritememailreminder.h"
-#include "qorganizeritemvisualreminder.h"
+#include <qorganizeritemcustomdetail.h>
 
-#include "qorganizeritemcustomdetail.h"
-
-#endif
+#endif // QORGANIZERITEMDETAILS_H

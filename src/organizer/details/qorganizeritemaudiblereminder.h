@@ -39,26 +39,25 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMAUDIBLEREMINDER_H
 #define QORGANIZERITEMAUDIBLEREMINDER_H
 
-#include "qorganizeritemreminder.h"
+#include <qorganizeritemreminder.h>
+
+#include <QtCore/qurl.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemAudibleReminder : public QOrganizerItemReminder
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemAudibleReminder, "AudibleReminder")
     const static QString FieldDataUrl;
 
-    // audio data to be played if audible notification.
-    void setDataUrl(const QUrl& dataUrl) {setValue(FieldDataUrl, dataUrl);}
-    QUrl dataUrl() const {return value<QUrl>(FieldDataUrl);}
+    void setDataUrl(const QUrl &dataUrl);
+    QUrl dataUrl() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMAUDIBLEREMINDER_H

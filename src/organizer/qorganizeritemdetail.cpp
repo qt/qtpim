@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemdetail.h"
-#include "qorganizeritemdetail_p.h"
-#include "qorganizermanager.h"
-#include "qorganizeritemrecurrence.h" //customized operator==() for recurrence detail
-#include <QDebug>
-#include <QDataStream>
+#include <qorganizeritemdetail.h>
+#include <private/qorganizeritemdetail_p.h>
+#include <qorganizeritemrecurrence.h>
+
+#include <qdebug.h>
+#include <qdatastream.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -52,111 +52,108 @@ QTORGANIZER_BEGIN_NAMESPACE
 QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
 
 /*!
-  \class QOrganizerItemDetail
+    \class QOrganizerItemDetail
 
-  \brief The QOrganizerItemDetail class represents a single, complete detail about an organizer item.
-  \inmodule QtOrganizer
-  \ingroup organizer-main
-  \since 1.1
+    \brief The QOrganizerItemDetail class represents a single, complete detail about an organizer item.
+    \inmodule QtOrganizer
+    \ingroup organizer-main
 
-  All of the information for an organizer item is stored in one or more QOrganizerItemDetail objects.
+    All of the information for an organizer item is stored in one or more QOrganizerItemDetail objects.
 
-  A detail is a group of logically related bits of data - for example, a QOrganizerItemTimestamp is a single
-  detail that has multiple fields (timestamp of creation, timestamp of last update, etc).
-  Every QOrganizerItemDetail has the name of an associated QOrganizerItemDetailDefinition that describes the
-  fields, their data type, and any restrictions on their values.  Different organizer item managers might have
-  different detail definitions for the same name, depending on their capabilities.
-  For example, some managers might not support the last update timestamp field of the QOrganizerTimestamp detail,
-  while a different manager may add an extra field for storing specific extra information not present in the
-  default schema (e.g., a last accessed timestamp).
+    A detail is a group of logically related bits of data - for example, a QOrganizerItemTimestamp is a single
+    detail that has multiple fields (timestamp of creation, timestamp of last update, etc).
+    Every QOrganizerItemDetail has the name of an associated QOrganizerItemDetailDefinition that describes the
+    fields, their data type, and any restrictions on their values.  Different organizer item managers might have
+    different detail definitions for the same name, depending on their capabilities.
+    For example, some managers might not support the last update timestamp field of the QOrganizerTimestamp detail,
+    while a different manager may add an extra field for storing specific extra information not present in the
+    default schema (e.g., a last accessed timestamp).
 
-  Both the names of all the fields, and the name of the associated QOrganizerItemDetailDefinition are stored
-  as 8-bit strings encoded in Latin 1 for memory conservation.  Note, however, that the values stored
-  in each field are not constrained in this way, and full unicode QStrings or QVariant data can be stored.
+    Both the names of all the fields, and the name of the associated QOrganizerItemDetailDefinition are stored
+    as 8-bit strings encoded in Latin 1 for memory conservation.  Note, however, that the values stored
+    in each field are not constrained in this way, and full unicode QStrings or QVariant data can be stored.
 
-  When a QOrganizerItemDetail has been retrieved in a QOrganizerItem from a QOrganizerManager, it may have certain
-  access constraints provided with it, like \l ReadOnly or \l Irremovable.  This might mean that the
-  supplied detail is calculated or otherwise not modifiable by the user.
-  Also, some details may be marked \l Irremovable.  These are typically things that
-  an organizer item has to have - like a QOrganizerItemType.
+    When a QOrganizerItemDetail has been retrieved in a QOrganizerItem from a QOrganizerManager, it may have certain
+    access constraints provided with it, like \l ReadOnly or \l Irremovable.  This might mean that the
+    supplied detail is calculated or otherwise not modifiable by the user.
+    Also, some details may be marked \l Irremovable.  These are typically things that
+    an organizer item has to have - like a QOrganizerItemType.
 
-  It is possible to inherit from QOrganizerItemDetail to provide convenience or
-  standardized access to values.  For example, \l QOrganizerEventTime provides
-  a convenient API for manipulating a QOrganizerItemDetail to describe the start and end time
-  of an event, according to the schema.
+    It is possible to inherit from QOrganizerItemDetail to provide convenience or
+    standardized access to values.  For example, \l QOrganizerEventTime provides
+    a convenient API for manipulating a QOrganizerItemDetail to describe the start and end time
+    of an event, according to the schema.
 
-  In general, QOrganizerItemDetail and the built in subclasses (like \l QOrganizerEventTime) provide
-  constants for the names of fields (like \l QOrganizerEventTime::FieldStartDateTime).
-  Typically the constants for field names start with \c Field, and the constants for predefined values
-    of a field start with the name of that field
-  (e.g. \c TypeEvent is a predefined constant for \c FieldType).
+    In general, QOrganizerItemDetail and the built in subclasses (like \l QOrganizerEventTime) provide
+    constants for the names of fields (like \l QOrganizerEventTime::FieldStartDateTime).
+    Typically the constants for field names start with \c Field, and the constants for predefined values
+    of a field start with the name of that field (e.g. \c TypeEvent is a predefined constant for \c FieldType).
 
-  If you wish to create your own, customized organizer item detail, you should use
-  the \l Q_DECLARE_CUSTOM_ORGANIZER_DETAIL macro in order to ensure proper
-  operation, and declare your own field constants with \l Q_DECLARE_LATIN1_CONSTANT.
-  See the predefined detail subclasses (like \l QOrganizerEventTime,
-  \l QOrganizerItemType) for more information.
+    If you wish to create your own, customized organizer item detail, you should use
+    the \l Q_DECLARE_CUSTOM_ORGANIZER_DETAIL macro in order to ensure proper
+    operation, and declare your own field constants with \l Q_DECLARE_LATIN1_CONSTANT.
+    See the predefined detail subclasses (like \l QOrganizerEventTime,
+    \l QOrganizerItemType) for more information.
 
-  QOrganizerItemDetail objects act like type checked values.  In general, you can assign them
-  to and fro and have reasonable behaviour, like the following example.
+    QOrganizerItemDetail objects act like type checked values.  In general, you can assign them
+    to and fro and have reasonable behaviour, like the following example.
 
-  \code
+    \code
+    QOrganizerItemDescription description;
+    description.setDescription("Some descriptive text");
+    // description.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
+    // description.definitionName() == QOrganizerItemDescription::DefinitionName
 
-  QOrganizerItemDescription description;
-  description.setDescription("Some descriptive text");
-  // description.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
-  // description.definitionName() == QOrganizerItemDescription::DefinitionName
+    QOrganizerItemDetail detail = description;
+    // detail.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
+    // detail.definitionName() == QOrganizerItemDescription::DefinitionName
 
-  QOrganizerItemDetail detail = description;
-  // detail.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
-  // detail.definitionName() == QOrganizerItemDescription::DefinitionName
+    QOrganizerItemDescription otherDescription = detail;
+    // otherDescription.description() == "Some descriptive text";
+    // otherDescription.definitionName() == QOrganizerItemDescription::DefinitionName
 
-  QOrganizerItemDescription otherDescription = detail;
-  // otherDescription.description() == "Some descriptive text";
-  // otherDescription.definitionName() == QOrganizerItemDescription::DefinitionName
+    QOrganizerItemDisplayLabel label = detail;
+    // label is now a default constructed QOrganizerItemDisplayLabel
+    // label.value(QOrganizerItemDescription::FieldDescription) is empty
+    // label.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
 
-  QOrganizerItemDisplayLabel label = detail;
-  // label is now a default constructed QOrganizerItemDisplayLabel
-  // label.value(QOrganizerItemDescription::FieldDescription) is empty
-  // label.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
+    QOrganizerItemDisplayLabel otherLabel = description;
+    // otherLabel is now a default constructed QOrganizerItemDisplayLabel
+    // otherLabel.value(QOrganizerItemDescription::FieldDescription) is empty
+    // otherLabel.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
+    \endcode
 
-  QOrganizerItemDisplayLabel otherLabel = description;
-  // otherLabel is now a default constructed QOrganizerItemDisplayLabel
-  // otherLabel.value(QOrganizerItemDescription::FieldDescription) is empty
-  // otherLabel.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
-  \endcode
-
-  \sa QOrganizerItem, QOrganizerItemDetailDefinition, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter, Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
+    \sa QOrganizerItem, QOrganizerItemDetailDefinition, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter, Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
  */
 
 /*!
-  \macro Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
-  \relates QOrganizerItemDetail
+    \macro Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
+    \relates QOrganizerItemDetail
 
-  Macro for simplifying declaring custom (leaf) detail classes.
+    Macro for simplifying declaring custom (leaf) detail classes.
 
-  The first argument is the name of the class, and the second argument
-  is a Latin-1 string literal naming the detail type.
+    The first argument is the name of the class, and the second argument
+    is a Latin-1 string literal naming the detail type.
 
-  If you are creating a convenience class for a type of QOrganizerItemDetail,
-  you should use this macro when declaring your class to ensure that
-  it interoperates with other organizer item functionality.
+    If you are creating a convenience class for a type of QOrganizerItemDetail,
+    you should use this macro when declaring your class to ensure that
+    it interoperates with other organizer item functionality.
 
-  Here is an example of a class (\l QOrganizerItemDescription) using this macro.
-  Note that the class provides some predefined constants
-  and some convenience methods that return values associated with schema
-  fields.
+    Here is an example of a class (\l QOrganizerItemDescription) using this macro.
+    Note that the class provides some predefined constants
+    and some convenience methods that return values associated with schema
+    fields.
  */
 
 
 /*!
-  \fn QOrganizerItemDetail::operator!=(const QOrganizerItemDetail& other) const
-  Returns true if the values or id of this detail is different to those of the \a other detail
-  \since 1.1
+    \fn bool QOrganizerItemDetail::operator!=(const QOrganizerItemDetail &other) const
+
+    Returns true if the values or id of this detail is different to those of the \a other detail
  */
 
 /*!
-  Constructs a new, empty detail
+    Constructs a new, empty detail.
  */
 QOrganizerItemDetail::QOrganizerItemDetail()
     : d(new QOrganizerItemDetailPrivate)
@@ -166,16 +163,17 @@ QOrganizerItemDetail::QOrganizerItemDetail()
 /*!
     Constructs a new, empty detail of the definition identified by \a thisDefinitionId.
     The definitionId must be restricted to the Latin 1 character set.
-    \since 1.1
  */
-QOrganizerItemDetail::QOrganizerItemDetail(const QString& thisDefinitionId)
+QOrganizerItemDetail::QOrganizerItemDetail(const QString &thisDefinitionId)
     : d(new QOrganizerItemDetailPrivate)
 {
     d->m_definitionName = thisDefinitionId;
 }
 
-/*! Constructs a detail that is a copy of \a other */
-QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other)
+/*!
+    Constructs a detail that is a copy of \a other.
+ */
+QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other)
     : d(other.d)
 {
 }
@@ -185,10 +183,9 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other)
 
     Constructs a detail that is a copy of \a other if \a other is of the expected definition
     identified by \a expectedDefinitionId, else constructs a new, empty detail of the
-    definition identified by the \a expectedDefinitionId
-    \since 1.1
+    definition identified by the \a expectedDefinitionId.
 */
-QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other, const QString& expectedDefinitionId)
+QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other, const QString &expectedDefinitionId)
 {
     if (other.d->m_definitionName == expectedDefinitionId) {
         d = other.d;
@@ -198,10 +195,10 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other, co
     }
 }
 
-/*! Assigns this detail to \a other
-    \since 1.1
-*/
-QOrganizerItemDetail& QOrganizerItemDetail::operator=(const QOrganizerItemDetail& other)
+/*!
+    Assigns this detail to \a other.
+ */
+QOrganizerItemDetail &QOrganizerItemDetail::operator=(const QOrganizerItemDetail &other)
 {
     if (this != &other)
         d = other.d;
@@ -213,10 +210,9 @@ QOrganizerItemDetail& QOrganizerItemDetail::operator=(const QOrganizerItemDetail
 
     Assigns this detail to \a other if the definition of \a other is that identified
     by the given \a expectedDefinitionId, else assigns this detail to be a new, empty
-    detail of the definition identified by the given \a expectedDefinitionId
-    \since 1.1
-*/
-QOrganizerItemDetail& QOrganizerItemDetail::assign(const QOrganizerItemDetail& other, const QString& expectedDefinitionId)
+    detail of the definition identified by the given \a expectedDefinitionId.
+ */
+QOrganizerItemDetail &QOrganizerItemDetail::assign(const QOrganizerItemDetail &other, const QString &expectedDefinitionId)
 {
     if (this != &other) {
         if (other.d->m_definitionName == expectedDefinitionId) {
@@ -229,7 +225,9 @@ QOrganizerItemDetail& QOrganizerItemDetail::assign(const QOrganizerItemDetail& o
     return *this;
 }
 
-/*! Frees the memory used by this detail */
+/*!
+    Frees the memory used by this detail.
+ */
 QOrganizerItemDetail::~QOrganizerItemDetail()
 {
 }
@@ -237,7 +235,6 @@ QOrganizerItemDetail::~QOrganizerItemDetail()
 /*!
     Returns the (unique) name of the definition which defines the semantics and structure of this detail.
     The actual QOrganizerItemDetailDefinition should be retrieved from the relevant QOrganizerManager using this name.
-    \since 1.1
  */
 QString QOrganizerItemDetail::definitionName() const
 {
@@ -248,20 +245,18 @@ QString QOrganizerItemDetail::definitionName() const
     Compares this detail to \a other.  Returns true if the definition, access constraints and values of \a other are equal to those of this detail.
     The keys of each detail are not considered during the comparison, in order to allow details from different organizer items to
     be compared according to their values.
-    \since 1.1
  */
-bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail& other) const
+bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 {
-    if (! (d.constData()->m_definitionName == other.d.constData()->m_definitionName))
+    if (!(d.constData()->m_definitionName == other.d.constData()->m_definitionName))
         return false;
 
     if (d.constData()->m_access != other.d.constData()->m_access)
         return false;
 
     // QVariant doesn't support == on QOrganizerItemRecurrence - do it manually
-    if (d.constData()->m_definitionName == QOrganizerItemRecurrence::DefinitionName) {
+    if (d.constData()->m_definitionName == QOrganizerItemRecurrence::DefinitionName)
         return static_cast<QOrganizerItemRecurrence>(*this) == static_cast<QOrganizerItemRecurrence>(other);
-    }
 
     if (d.constData()->m_values != other.d.constData()->m_values)
         return false;
@@ -274,43 +269,39 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
     return (one.definitionName() < other.definitionName());
 }
 
-/*! Returns the hash value for \a key.
-    \since 1.1
-*/
+/*!
+    Returns the hash value for \a key.
+ */
 uint qHash(const QOrganizerItemDetail &key)
 {
-    const QOrganizerItemDetailPrivate* dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
-    uint hash = qHash(dptr->m_definitionName)
-                + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
+    const QOrganizerItemDetailPrivate *dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
+    uint hash = qHash(dptr->m_definitionName) + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
     QHash<QString, QVariant>::const_iterator it = dptr->m_values.constBegin();
-    while(it != dptr->m_values.constEnd()) {
-        hash += qHash(it.key())
-                + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
+    while (it != dptr->m_values.constEnd()) {
+        hash += qHash(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
         ++it;
     }
     return hash;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const QOrganizerItemDetail& detail)
+QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 {
     dbg.nospace() << "QOrganizerItemDetail(name=" << detail.definitionName() << ", key=" << detail.key();
     QVariantMap fields = detail.values();
     QVariantMap::const_iterator it;
-    for (it = fields.constBegin(); it != fields.constEnd(); ++it) {
+    for (it = fields.constBegin(); it != fields.constEnd(); ++it)
         dbg.nospace() << ", " << it.key() << '=' << it.value();
-    }
     dbg.nospace() << ')';
     return dbg.maybeSpace();
 }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 #ifndef QT_NO_DATASTREAM
 /*!
- * Writes \a detail to the stream \a out.
-    \since 1.1
+    Writes \a detail to the stream \a out.
  */
-QDataStream& operator<<(QDataStream& out, const QOrganizerItemDetail& detail)
+QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetail
     return out << formatVersion
@@ -320,10 +311,9 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerItemDetail& detail)
 }
 
 /*!
- * Reads aan organizer item detail from stream \a in into \a detail.
-    \since 1.1
+    Reads aan organizer item detail from stream \a in into \a detail.
  */
-QDataStream& operator>>(QDataStream& in, QOrganizerItemDetail& detail)
+QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
 {
     quint8 formatVersion;
     in >> formatVersion;
@@ -347,61 +337,57 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItemDetail& detail)
     }
     return in;
 }
-#endif
+#endif // QT_NO_DATASTREAM
 
 /*!
     Returns true if no values are contained in this detail.  Note that context is stored as a value; hence, if a context is set, this function will return false.
-    \since 1.1
  */
 bool QOrganizerItemDetail::isEmpty() const
 {
-    if (d.constData()->m_values.isEmpty())
-        return true;
-    return false;
+    return (d.constData()->m_values.isEmpty());
 }
 
-/*! Returns the key of this detail.
-    \since 1.1
-*/
+/*!
+    Returns the key of this detail.
+ */
 int QOrganizerItemDetail::key() const
 {
     return d->m_id;
 }
 
-/*! Causes the implicitly-shared detail to be detached from any other copies, and generates a new key for it.
+/*!
+    Causes the implicitly-shared detail to be detached from any other copies, and generates a new key for it.
     This ensures that calling QOrganizerItem::saveDetail() will result in a new detail being saved, rather than
     another detail being updated.
-    \since 1.1
-*/
+ */
 void QOrganizerItemDetail::resetKey()
 {
     d->m_id = QOrganizerItemDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
 }
 
-/*! Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
-    \since 1.1
-*/
-QVariant QOrganizerItemDetail::value(const QString& key) const
+/*!
+    Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
+ */
+QVariant QOrganizerItemDetail::value(const QString &key) const
 {
     return d.constData()->m_values.value(key);
 }
 
 /*!
-  Returns true if this detail has a field with the given \a key, or false otherwise.
-  \since 1.1
+    Returns true if this detail has a field with the given \a key, or false otherwise.
  */
-bool QOrganizerItemDetail::hasValue(const QString& key) const
+bool QOrganizerItemDetail::hasValue(const QString &key) const
 {
     return d.constData()->m_values.contains(key);
 }
 
-/*! Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
+/*!
+    Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
     removes the field with the given \a key from the detail.  Returns true if the given \a value was set
     for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid)
-    \since 1.1
-*/
-bool QOrganizerItemDetail::setValue(const QString& key, const QVariant& value)
+    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid).
+ */
+bool QOrganizerItemDetail::setValue(const QString &key, const QVariant &value)
 {
     if (!value.isValid())
         return removeValue(key);
@@ -413,24 +399,20 @@ bool QOrganizerItemDetail::setValue(const QString& key, const QVariant& value)
 /*!
     Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
     for the given \a key and the operation succeeded, and false otherwise.
-    \since 1.1
-*/
-bool QOrganizerItemDetail::removeValue(const QString& key)
+ */
+bool QOrganizerItemDetail::removeValue(const QString &key)
 {
-    if(d->m_values.remove(key))
-        return true;
-    return false;
+    return d->m_values.remove(key);
 }
 
 /*!
-  Returns the values stored in this detail as a map from value key to value
-    \since 1.1
+    Returns the values stored in this detail as a map from value key to value.
  */
 QVariantMap QOrganizerItemDetail::values() const
 {
     QVariantMap ret;
     QHash<QString, QVariant>::const_iterator it = d.constData()->m_values.constBegin();
-    while(it != d.constData()->m_values.constEnd()) {
+    while (it != d.constData()->m_values.constEnd()) {
         ret.insert(it.key(), it.value());
         ++it;
     }
@@ -438,38 +420,33 @@ QVariantMap QOrganizerItemDetail::values() const
     return ret;
 }
 
-
 /*!
-    \fn T QOrganizerItemDetail::value(const QString& key) const
-    Returns the value of the template type associated with the given \a key
-    \since 1.1
+    \fn T QOrganizerItemDetail::value(const QString &key) const
+    Returns the value of the template type associated with the given \a key.
  */
 
 /*!
-  \enum QOrganizerItemDetail::AccessConstraint
+    \enum QOrganizerItemDetail::AccessConstraint
 
-  This enum defines the access constraints for a detail.  This information is typically provided by
-  the manager when an organizer item is retrieved.
+    This enum defines the access constraints for a detail.  This information is typically provided by
+    the manager when an organizer item is retrieved.
 
-  \value NoConstraint Users can read, write, and otherwise modify this detail in any manner.
-  \value ReadOnly Users cannot write or modify values in this detail.
-  \value Irremovable Users cannot remove this detail from an organizer item.
+    \value NoConstraint Users can read, write, and otherwise modify this detail in any manner.
+    \value ReadOnly Users cannot write or modify values in this detail.
+    \value Irremovable Users cannot remove this detail from an organizer item.
  */
 
-
 /*!
-  Returns the access constraints associated with the detail.
+    Returns the access constraints associated with the detail.
 
-  Some details may not be written to, while other details may
-  not be removed from an organizer item.
+    Some details may not be written to, while other details may
+    not be removed from an organizer item.
 
-    \since 1.1
-  \sa QOrganizerItemDetail::AccessConstraints
+    \sa QOrganizerItemDetail::AccessConstraints
  */
 QOrganizerItemDetail::AccessConstraints QOrganizerItemDetail::accessConstraints() const
 {
     return d.constData()->m_access;
 }
-
 
 QTORGANIZER_END_NAMESPACE

@@ -39,15 +39,15 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMEMAILREMINDER_H
 #define QORGANIZERITEMEMAILREMINDER_H
 
-#include "qorganizeritemreminder.h"
+#include <qorganizeritemreminder.h>
+
+#include <QtCore/qstringlist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemReminder
 {
 public:
@@ -57,16 +57,15 @@ public:
     const static QString FieldAttachments;
     const static QString FieldRecipients;
 
-    // email data if email notification.
-    void setContents(const QString& subject, const QString& body, const QVariantList& attachments) {setValue(FieldSubject, subject); setValue(FieldBody, body); setValue(FieldAttachments, attachments);}
-    QString subject() const {return value(FieldSubject).toString();}
-    QString body() const {return value(FieldBody).toString();}
-    QVariantList attachments() const {return value<QVariantList>(FieldAttachments);} // mime data type?
-    void setRecipients(const QStringList& recipients) {setValue(FieldRecipients, recipients);}
-    QStringList recipients() const {return value<QStringList>(FieldRecipients);}
+    void setContents(const QString &subject, const QString &body, const QVariantList &attachments);
+    QString subject() const;
+    QString body() const;
+    QVariantList attachments() const;
+
+    void setRecipients(const QStringList &recipients);
+    QStringList recipients() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMEMAILREMINDER_H

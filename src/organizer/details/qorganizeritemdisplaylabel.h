@@ -39,32 +39,27 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMDISPLAYLABEL_H
 #define QORGANIZERITEMDISPLAYLABEL_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemDisplayLabel : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDisplayLabel, "DisplayLabel")
     const static QString FieldLabel;
 
-    void setLabel(const QString& label) {setValue(FieldLabel, label);}
-    QString label() const {return value(FieldLabel).toString();}
+    void setLabel(const QString &label);
+    QString label() const;
 
     // Convenience filter
-    static QOrganizerItemFilter match(const QString& substring);
+    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDISPLAYLABEL_H

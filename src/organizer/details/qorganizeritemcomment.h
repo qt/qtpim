@@ -42,30 +42,24 @@
 #ifndef QORGANIZERITEMCOMMENT_H
 #define QORGANIZERITEMCOMMENT_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemComment : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment, "Comment")
     const static QString FieldComment;
 
-    void setComment(const QString& comment) {setValue(FieldComment, comment);}
-    QString comment() const {return value(FieldComment).toString();}
+    void setComment(const QString &comment);
+    QString comment() const;
 
     // Convenience filter
-    static QOrganizerItemFilter match(const QString& substring);
+    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMCOMMENT_H

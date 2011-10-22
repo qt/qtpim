@@ -42,15 +42,12 @@
 #ifndef QORGANIZEREVENTTIME_H
 #define QORGANIZEREVENTTIME_H
 
-#include <QString>
+#include <qorganizeritemdetail.h>
 
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerEventTime : public QOrganizerItemDetail
 {
 public:
@@ -59,15 +56,16 @@ public:
     const static QString FieldEndDateTime;
     const static QString FieldAllDay;
 
-    void setStartDateTime(const QDateTime& startDateTime) {setValue(FieldStartDateTime, startDateTime);}
-    QDateTime startDateTime() const {return value<QDateTime>(FieldStartDateTime);}
-    void setEndDateTime(const QDateTime& endDateTime) {setValue(FieldEndDateTime, endDateTime);}
-    QDateTime endDateTime() const {return value<QDateTime>(FieldEndDateTime);}
-    void setAllDay(bool isAllDay) {setValue(FieldAllDay, isAllDay);}
-    bool isAllDay() const {return value<bool>(FieldAllDay);}
+    void setStartDateTime(const QDateTime &startDateTime);
+    QDateTime startDateTime() const;
+
+    void setEndDateTime(const QDateTime &endDateTime);
+    QDateTime endDateTime() const;
+
+    void setAllDay(bool isAllDay);
+    bool isAllDay() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZEREVENTTIME_H

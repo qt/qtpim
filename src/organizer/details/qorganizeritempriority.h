@@ -39,21 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMPRIORITY_H
 #define QORGANIZERITEMPRIORITY_H
 
-#include <QtDebug>
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
 {
 public:
@@ -74,8 +67,8 @@ public:
         LowestPriority = 9
     };
 
-    void setPriority(Priority priority) {setValue(FieldPriority, static_cast<int>(priority));}
-    Priority priority() const {return static_cast<Priority>(value<int>(FieldPriority));}
+    void setPriority(Priority priority);
+    Priority priority() const;
 
     // Convenience filter
     static QOrganizerItemFilter match(Priority priority);
@@ -83,5 +76,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMPRIORITY_H

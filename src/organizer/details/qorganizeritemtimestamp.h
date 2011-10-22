@@ -42,15 +42,12 @@
 #ifndef QORGANIZERITEMTIMESTAMP_H
 #define QORGANIZERITEMTIMESTAMP_H
 
-#include <QString>
+#include <qorganizeritemdetail.h>
 
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemTimestamp : public QOrganizerItemDetail
 {
 public:
@@ -58,12 +55,13 @@ public:
     const static QString FieldModificationTimestamp;
     const static QString FieldCreationTimestamp;
 
-    void setLastModified(const QDateTime& timestamp) {setValue(FieldModificationTimestamp, timestamp);}
-    QDateTime lastModified() const {return value<QDateTime>(FieldModificationTimestamp);}
-    void setCreated(const QDateTime& timestamp) {setValue(FieldCreationTimestamp, timestamp);}
-    QDateTime created() const {return value<QDateTime>(FieldCreationTimestamp);}
+    void setLastModified(const QDateTime &timestamp);
+    QDateTime lastModified() const;
+
+    void setCreated(const QDateTime &timestamp);
+    QDateTime created() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMTIMESTAMP_H

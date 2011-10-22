@@ -42,26 +42,20 @@
 #ifndef QORGANIZERITEMDESCRIPTION_H
 #define QORGANIZERITEMDESCRIPTION_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemDescription : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDescription, "Description")
     const static QString FieldDescription;
 
-    void setDescription(const QString& description) {setValue(FieldDescription, description);}
-    QString description() const {return value(FieldDescription).toString();}
+    void setDescription(const QString &description);
+    QString description() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMDESCRIPTION_H

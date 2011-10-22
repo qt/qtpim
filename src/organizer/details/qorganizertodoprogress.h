@@ -42,45 +42,37 @@
 #ifndef QORGANIZERTODOPROGRESS_H
 #define QORGANIZERTODOPROGRESS_H
 
-#include <QString>
+#include <qorganizeritemdetail.h>
 
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerTodoProgress : public QOrganizerItemDetail
 {
 public:
+    enum Status {
+        // what about: waited/blocked, and deferred?
+        StatusNotStarted,
+        StatusInProgress,
+        StatusComplete
+    };
+
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress, "TodoProgress")
     const static QString FieldFinishedDateTime;
     const static QString FieldPercentageComplete;
     const static QString FieldStatus;
 
-    void setFinishedDateTime(const QDateTime& finishedDateTime) {setValue(FieldFinishedDateTime, finishedDateTime);}
-    QDateTime finishedDateTime() const {return value<QDateTime>(FieldFinishedDateTime);}
+    void setFinishedDateTime(const QDateTime &finishedDateTime);
+    QDateTime finishedDateTime() const;
 
-    void setPercentageComplete(int percentage)
-    {
-        if (percentage >=0 && percentage <= 100)
-            setValue(FieldPercentageComplete, percentage);
-    }
-    int percentageComplete() const {return value<int>(FieldPercentageComplete);}
+    void setPercentageComplete(int percentage);
+    int percentageComplete() const;
 
-    enum Status {
-        // what about: waited/blocked, and deferred?
-        StatusNotStarted,
-        StatusInProgress,
-        StatusComplete,
-    };
-
-    void setStatus(Status status) {setValue(FieldStatus, (int) status);}
-    Status status() const {return (Status) value<int>(FieldStatus);}
+    void setStatus(Status status);
+    Status status() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERTODOPROGRESS_H

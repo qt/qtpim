@@ -42,30 +42,24 @@
 #ifndef QORGANIZERITEMTAG_H
 #define QORGANIZERITEMTAG_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemTag : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, "Tag")
     const static QString FieldTag;
 
-    void setTag(const QString& tag) {setValue(FieldTag, tag);}
-    QString tag() const {return value(FieldTag).toString();}
+    void setTag(const QString &tag);
+    QString tag() const;
 
     // Convenience filter
-    static QOrganizerItemFilter match(const QString& substring);
+    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMTAG_H

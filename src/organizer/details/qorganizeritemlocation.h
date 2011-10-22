@@ -39,20 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMLOCATION_H
 #define QORGANIZERITEMLOCATION_H
 
-#include <QString>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritemdetail.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetail.h>
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Leaf class */
 class Q_ORGANIZER_EXPORT QOrganizerItemLocation : public QOrganizerItemDetail
 {
 public:
@@ -61,18 +55,19 @@ public:
     const static QString FieldLongitude;
     const static QString FieldLabel;
 
-    void setLatitude(double latitude) {setValue(FieldLatitude, latitude);}
-    double latitude() const {return value<double>(FieldLatitude);}
-    void setLongitude(double longitude) {setValue(FieldLongitude, longitude);}
-    double longitude() const {return value<double>(FieldLongitude);}
-    void setLabel(const QString& label) {setValue(FieldLabel, label);}
-    QString label() const {return value(FieldLabel).toString();}
+    void setLatitude(double latitude);
+    double latitude() const;
+
+    void setLongitude(double longitude);
+    double longitude() const;
+
+    void setLabel(const QString &label);
+    QString label() const;
 
     // Convenience filter
-    static QOrganizerItemFilter match(const QString& substring);
+    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEMLOCATION_H

@@ -45,7 +45,7 @@
 
 #include <qorganizertodo.h>
 
-QTPIM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 class QDateTimeEdit;
 class QComboBox;

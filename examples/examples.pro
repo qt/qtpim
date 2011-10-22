@@ -3,4 +3,4 @@ SUBDIRS = \
 #    qmlcontacts \
 #    qmlorganizer \
 #    calendardemo \
-#    todo \
+    todo

@@ -135,7 +135,7 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
  */
 QStringList QDeclarativeOrganizerItemDetail::fieldNames() const
 {
-    return m_detail.variantValues().keys();
+    return m_detail.values().keys();
 }
 
 /*!
@@ -145,7 +145,7 @@ QStringList QDeclarativeOrganizerItemDetail::fieldNames() const
  */
 QVariant QDeclarativeOrganizerItemDetail::value(const QString &key) const
 {
-    return m_detail.variantValue(key);
+    return m_detail.value(key);
 }
 
 /*!
@@ -458,7 +458,7 @@ void QDeclarativeOrganizerItemComment::setComment(const QString &newComment)
 
 QString QDeclarativeOrganizerItemComment::comment() const
 {
-    return m_detail.value(QOrganizerItemComment::FieldComment);
+    return m_detail.value(QOrganizerItemComment::FieldComment).toString();
 }
 
 
@@ -495,7 +495,7 @@ void QDeclarativeOrganizerItemDescription::setDescription(const QString &desc)
 
 QString QDeclarativeOrganizerItemDescription::description() const
 {
-    return m_detail.value(QOrganizerItemDescription::FieldDescription);
+    return m_detail.value(QOrganizerItemDescription::FieldDescription).toString();
 }
 
 
@@ -532,7 +532,7 @@ void QDeclarativeOrganizerItemDisplayLabel::setLabel(const QString &newLabel)
 
 QString QDeclarativeOrganizerItemDisplayLabel::label() const
 {
-    return m_detail.value(QOrganizerItemDisplayLabel::FieldLabel);
+    return m_detail.value(QOrganizerItemDisplayLabel::FieldLabel).toString();
 }
 
 
@@ -569,7 +569,7 @@ void QDeclarativeOrganizerItemGuid::setGuid(const QString &newGuid)
 
 QString QDeclarativeOrganizerItemGuid::guid() const
 {
-    return m_detail.value(QOrganizerItemGuid::FieldGuid);
+    return m_detail.value(QOrganizerItemGuid::FieldGuid).toString();
 }
 
 
@@ -642,7 +642,7 @@ void QDeclarativeOrganizerItemLocation::setLabel(const QString &newLabel)
 
 QString QDeclarativeOrganizerItemLocation::label() const
 {
-    return m_detail.value(QOrganizerItemLocation::FieldLabel);
+    return m_detail.value(QOrganizerItemLocation::FieldLabel).toString();
 }
 
 
@@ -679,7 +679,7 @@ void QDeclarativeOrganizerItemParent::setOriginalDate(const QDate &date)
 
 QDate QDeclarativeOrganizerItemParent::originalDate() const
 {
-    return m_detail.variantValue(QOrganizerItemParent::FieldOriginalDate).toDate();
+    return m_detail.value(QOrganizerItemParent::FieldOriginalDate).toDate();
 }
 
 /*!
@@ -698,7 +698,7 @@ void QDeclarativeOrganizerItemParent::setParentId(const QString &newParentId)
 
 QString QDeclarativeOrganizerItemParent::parentId() const
 {
-    return m_detail.variantValue(QOrganizerItemParent::FieldParentId).value<QOrganizerItemId>().toString();
+    return m_detail.value(QOrganizerItemParent::FieldParentId).value<QOrganizerItemId>().toString();
 }
 
 
@@ -782,7 +782,7 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemRecurre
  */
 QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::recurrenceRules()
 {
-    QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
+    QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.value(QOrganizerItemRecurrence::FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
     if (m_recurrenceRules.isEmpty() && !ruleSet.isEmpty()) {
         foreach (QOrganizerRecurrenceRule rule, ruleSet) {
             QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
@@ -803,7 +803,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrgani
  */
 QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::exceptionRules()
 {
-    QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
+    QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.value(QOrganizerItemRecurrence::FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
     if (m_exceptionRules.isEmpty() && !ruleSet.isEmpty()) {
         foreach (QOrganizerRecurrenceRule rule, ruleSet) {
             QDeclarativeOrganizerRecurrenceRule* drule = new QDeclarativeOrganizerRecurrenceRule(this);
@@ -837,7 +837,7 @@ void QDeclarativeOrganizerItemRecurrence::setRecurrenceDates(const QVariantList 
 
 QVariantList QDeclarativeOrganizerItemRecurrence::recurrenceDates() const
 {
-    QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldRecurrenceDates);
+    QVariant dateSetVariant = m_detail.value(QOrganizerItemRecurrence::FieldRecurrenceDates);
     QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
     QVariantList dates;
     foreach (QDate date, dateSet)
@@ -867,7 +867,7 @@ void QDeclarativeOrganizerItemRecurrence::setExceptionDates(const QVariantList& 
 
 QVariantList QDeclarativeOrganizerItemRecurrence::exceptionDates() const
 {
-    QVariant dateSetVariant = m_detail.variantValue(QOrganizerItemRecurrence::FieldExceptionDates);
+    QVariant dateSetVariant = m_detail.value(QOrganizerItemRecurrence::FieldExceptionDates);
     QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
     QVariantList dates;
     foreach (QDate date, dateSet)
@@ -949,7 +949,7 @@ void QDeclarativeOrganizerItemTag::setTag(const QString &newTag)
 
 QString QDeclarativeOrganizerItemTag::tag() const
 {
-    return m_detail.value(QOrganizerItemTag::FieldTag);
+    return m_detail.value(QOrganizerItemTag::FieldTag).toString();
 }
 
 
@@ -1071,7 +1071,7 @@ void QDeclarativeOrganizerItemType::setItemType(OrganizerItemType newType)
 
 QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItemType::itemType() const
 {
-    QString typeString = m_detail.value(QOrganizerItemType::FieldType);
+    QString typeString = m_detail.value(QOrganizerItemType::FieldType).toString();
     if (typeString == QOrganizerItemType::TypeEvent)
         return Event;
     else if (typeString == QOrganizerItemType::TypeEventOccurrence)
@@ -1449,7 +1449,7 @@ void QDeclarativeOrganizerItemEmailReminder::setBody(const QString &newBody)
 
 QString QDeclarativeOrganizerItemEmailReminder::body() const
 {
-    return m_detail.value(QOrganizerItemEmailReminder::FieldBody);
+    return m_detail.value(QOrganizerItemEmailReminder::FieldBody).toString();
 }
 
 /*!
@@ -1467,7 +1467,7 @@ void QDeclarativeOrganizerItemEmailReminder::setSubject(const QString &newSubjec
 
 QString QDeclarativeOrganizerItemEmailReminder::subject() const
 {
-    return m_detail.value(QOrganizerItemEmailReminder::FieldSubject);
+    return m_detail.value(QOrganizerItemEmailReminder::FieldSubject).toString();
 }
 
 
@@ -1597,7 +1597,7 @@ void QDeclarativeOrganizeritemCustomDetail::setName(const QString &newDetailName
 
 QString QDeclarativeOrganizeritemCustomDetail::name() const
 {
-    return m_detail.value(QOrganizerItemCustomDetail::FieldCustomDetailName);
+    return m_detail.value(QOrganizerItemCustomDetail::FieldCustomDetailName).toString();
 }
 
 /*!
@@ -1615,7 +1615,7 @@ void QDeclarativeOrganizeritemCustomDetail::setData(const QVariant &data)
 
 QVariant QDeclarativeOrganizeritemCustomDetail::data() const
 {
-    return m_detail.variantValue(QOrganizerItemCustomDetail::FieldCustomDetailData);
+    return m_detail.value(QOrganizerItemCustomDetail::FieldCustomDetailData);
 }
 
 

@@ -54,17 +54,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerEventTime : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldStartDateTime;
-    static const QLatin1Constant FieldEndDateTime;
-    static const QLatin1Constant FieldAllDay;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventTime, "EventTime")
-    Q_DECLARE_LATIN1_CONSTANT(FieldStartDateTime, "StartDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(FieldEndDateTime, "EndDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAllDay, "AllDay");
-#endif
+    const static QString FieldStartDateTime;
+    const static QString FieldEndDateTime;
+    const static QString FieldAllDay;
 
     void setStartDateTime(const QDateTime& startDateTime) {setValue(FieldStartDateTime, startDateTime);}
     QDateTime startDateTime() const {return value<QDateTime>(FieldStartDateTime);}

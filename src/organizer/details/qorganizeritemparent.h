@@ -55,22 +55,16 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldParentId;
-    static const QLatin1Constant FieldOriginalDate;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemParent, "Parent")
-    Q_DECLARE_LATIN1_CONSTANT(FieldParentId, "ParentId");
-    Q_DECLARE_LATIN1_CONSTANT(FieldOriginalDate, "OriginalDate");
-#endif
+    const static QString FieldParentId;
+    const static QString FieldOriginalDate;
 
     void setParentId(const QOrganizerItemId& parentId) {setValue(FieldParentId, QVariant::fromValue(parentId));}
-    QOrganizerItemId parentId() const {return variantValue(FieldParentId).value<QOrganizerItemId>();}
+    QOrganizerItemId parentId() const {return value(FieldParentId).value<QOrganizerItemId>();}
 
 
     void setOriginalDate(const QDate& date) {setValue(FieldOriginalDate, date);}
-    QDate originalDate() const {return variantValue(FieldOriginalDate).toDate();}
+    QDate originalDate() const {return value(FieldOriginalDate).toDate();}
 };
 
 QTORGANIZER_END_NAMESPACE

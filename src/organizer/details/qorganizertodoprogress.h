@@ -54,17 +54,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerTodoProgress : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldFinishedDateTime;
-    static const QLatin1Constant FieldPercentageComplete;
-    static const QLatin1Constant FieldStatus;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress, "TodoProgress")
-    Q_DECLARE_LATIN1_CONSTANT(FieldFinishedDateTime, "FinishedDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(FieldPercentageComplete, "PercentageComplete");
-    Q_DECLARE_LATIN1_CONSTANT(FieldStatus, "Status");
-#endif
+    const static QString FieldFinishedDateTime;
+    const static QString FieldPercentageComplete;
+    const static QString FieldStatus;
 
     void setFinishedDateTime(const QDateTime& finishedDateTime) {setValue(FieldFinishedDateTime, finishedDateTime);}
     QDateTime finishedDateTime() const {return value<QDateTime>(FieldFinishedDateTime);}

@@ -55,16 +55,11 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemTag : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldTag;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, "Tag")
-    Q_DECLARE_LATIN1_CONSTANT(FieldTag, "Tag");
-#endif
+    const static QString FieldTag;
 
     void setTag(const QString& tag) {setValue(FieldTag, tag);}
-    QString tag() const {return value(FieldTag);}
+    QString tag() const {return value(FieldTag).toString();}
 
     // Convenience filter
     static QOrganizerItemFilter match(const QString& substring);

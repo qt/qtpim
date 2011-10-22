@@ -54,15 +54,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemTimestamp : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldModificationTimestamp;
-    static const QLatin1Constant FieldCreationTimestamp;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTimestamp, "Timestamp")
-    Q_DECLARE_LATIN1_CONSTANT(FieldModificationTimestamp, "ModificationTimestamp");
-    Q_DECLARE_LATIN1_CONSTANT(FieldCreationTimestamp, "CreationTimestamp");
-#endif
+    const static QString FieldModificationTimestamp;
+    const static QString FieldCreationTimestamp;
 
     void setLastModified(const QDateTime& timestamp) {setValue(FieldModificationTimestamp, timestamp);}
     QDateTime lastModified() const {return value<QDateTime>(FieldModificationTimestamp);}

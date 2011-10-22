@@ -62,12 +62,10 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
 // Only put simple mappings in this table; ie. where a Versit property maps to a specific detail's
 // specific field (and that detail has no other fields of interest)
 const VersitDetailMapping versitOrganizerDetailMappings[] = {
-    {"SUMMARY",       QOrganizerItemDisplayLabel::DefinitionName.latin1(),
-                      QOrganizerItemDisplayLabel::FieldLabel.latin1()},
-    {"DESCRIPTION",   QOrganizerItemDescription::DefinitionName.latin1(),
-                      QOrganizerItemDescription::FieldDescription.latin1()},
-    {"UID",           QOrganizerItemGuid::DefinitionName.latin1(),
-                      QOrganizerItemGuid::FieldGuid.latin1()}
+    // FIXME
+    {"SUMMARY", "DisplayLabel", "Label"},
+    {"DESCRIPTION", "Description", "Description"},
+    {"UID", "Guid", "Guid"}
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

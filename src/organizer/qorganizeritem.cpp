@@ -462,78 +462,6 @@ QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionNam
 }
 
 /*!
-    \internal
-    Returns the first detail stored in the organizer item which with the given \a definitionName
-    \since 1.1
-*/
-QOrganizerItemDetail QOrganizerItem::detail(const char* definitionName) const
-{
-    if (definitionName == 0)
-        return d->m_details.first();
-
-    // build the sub-list of matching details.
-    for (int i = 0; i < d->m_details.size(); i++) {
-        const QOrganizerItemDetail& existing = d->m_details.at(i);
-        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-            return existing;
-        }
-    }
-
-    return QOrganizerItemDetail();
-}
-
-/*!
-    \internal
-    Returns a list of details with the given \a definitionName
-    \since 1.1
-*/
-QList<QOrganizerItemDetail> QOrganizerItem::details(const char* definitionName) const
-{
-    // build the sub-list of matching details.
-    QList<QOrganizerItemDetail> sublist;
-
-    // special case
-    if (definitionName == 0) {
-        sublist = d->m_details;
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QOrganizerItemDetail& existing = d->m_details.at(i);
-            if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
-    \internal
-    Returns a list of details with the given \a definitionName, \a fieldName and field \a value
-    \since 1.1
-*/
-QList<QOrganizerItemDetail> QOrganizerItem::details(const char* definitionName, const char* fieldName, const QString& value) const
-{
-    // build the sub-list of matching details.
-    QList<QOrganizerItemDetail> sublist;
-
-    // special case
-    if (fieldName == 0) {
-        sublist = details(definitionName);
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QOrganizerItemDetail& existing = d->m_details.at(i);
-            if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName
-                && existing.hasValue(fieldName) && value == existing.value(fieldName)) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
  * Saves the given \a detail in the list of stored details, and sets the detail's id.
  * If another detail of the same type and id has been previously saved in
  * this organizer item, that detail is overwritten.  Otherwise, a new id is generated
@@ -563,7 +491,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
         return false;
 
     /* Also handle organizer item type specially - only one of them. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName.latin1()) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             QOrganizerItemDetail curr = d->m_details.at(i);
             if (detail->d->m_definitionName == curr.d->m_definitionName) {
@@ -579,7 +507,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     }
 
     /* And description */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName.latin1()) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             QOrganizerItemDetail curr = d->m_details.at(i);
             if (detail->d->m_definitionName == curr.d->m_definitionName) {
@@ -595,7 +523,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     }
 
     /* And display label.. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName.latin1()) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             QOrganizerItemDetail curr = d->m_details.at(i);
             if (detail->d->m_definitionName == curr.d->m_definitionName) {

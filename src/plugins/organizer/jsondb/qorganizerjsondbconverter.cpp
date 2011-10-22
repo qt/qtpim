@@ -749,12 +749,12 @@ void QOrganizerJsonDbConverter::itemReminderDetailToJsonDbObject(const QOrganize
         if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldMessage))
             reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderMessage, itemReminder.value(QOrganizerItemVisualReminder::FieldMessage));
         if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldDataUrl))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderDataUrl, itemReminder.value(QOrganizerItemVisualReminder::FieldDataUrl));
+            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderDataUrl, itemReminder.value(QOrganizerItemVisualReminder::FieldDataUrl).toString());
         break;
     }
     case QOrganizerItemReminder::AudibleReminder : {
         if (itemReminder.hasValue(QOrganizerItemAudibleReminder::FieldDataUrl))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl, itemReminder.value(QOrganizerItemAudibleReminder::FieldDataUrl));
+            reminderObject.insert(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl, itemReminder.value(QOrganizerItemAudibleReminder::FieldDataUrl).toString());
         break;
     }
     case QOrganizerItemReminder::EmailReminder : {
@@ -763,9 +763,9 @@ void QOrganizerJsonDbConverter::itemReminderDetailToJsonDbObject(const QOrganize
         if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldBody))
             reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderBody, itemReminder.value(QOrganizerItemEmailReminder::FieldBody));
         if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldAttachments))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderAttachments, itemReminder.variantValue(QOrganizerItemEmailReminder::FieldAttachments));//QVariantList
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderAttachments, itemReminder.value(QOrganizerItemEmailReminder::FieldAttachments));//QVariantList
         if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldRecipients))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderRecipients, itemReminder.variantValue(QOrganizerItemEmailReminder::FieldRecipients));//QStringList
+            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderRecipients, itemReminder.value(QOrganizerItemEmailReminder::FieldRecipients));//QStringList
         break;
     }
     }

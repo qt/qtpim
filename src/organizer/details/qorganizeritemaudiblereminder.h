@@ -51,13 +51,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemAudibleReminder : public QOrganizerItemReminder
 {
 public:
-#ifdef Q_QDOC
-    const char* DefinitionName;
-    const char* FieldDataUrl;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemAudibleReminder, "AudibleReminder")
-    Q_DECLARE_LATIN1_CONSTANT(FieldDataUrl, "DataUrl");
-#endif
+    const static QString FieldDataUrl;
 
     // audio data to be played if audible notification.
     void setDataUrl(const QUrl& dataUrl) {setValue(FieldDataUrl, dataUrl);}

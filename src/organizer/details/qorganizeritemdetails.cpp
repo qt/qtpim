@@ -64,7 +64,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \variable QOrganizerItemDescription::DefinitionName
    The constant string which identifies the definition of details which are long descriptions.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDescription::DefinitionName, "Description");
+const QString QOrganizerItemDescription::DefinitionName(QStringLiteral("Description"));
 
 /*!
    \variable QOrganizerItemDescription::FieldDescription
@@ -72,7 +72,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDescription::DefinitionName, "Description
    The constant key for which the description value is stored in details of
    the QOrganizerItemDescription type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDescription::FieldDescription, "Description");
+const QString QOrganizerItemDescription::FieldDescription(QStringLiteral("Description"));
 
 /*!
    \fn QOrganizerItemDescription::setDescription(const QString& description)
@@ -135,7 +135,7 @@ QOrganizerItemFilter QOrganizerItemDisplayLabel::match(const QString &substring)
    The constant string which identifies the definition of details
    which contain a display label of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDisplayLabel::DefinitionName, "DisplayLabel");
+const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
 
 /*!
    \variable QOrganizerItemDisplayLabel::FieldLabel
@@ -143,7 +143,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDisplayLabel::DefinitionName, "DisplayLab
    The constant key for which the display label value is stored in
    details of the QOrganizerItemDisplayLabel type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDisplayLabel::FieldLabel, "Label");
+const QString QOrganizerItemDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
 
 
@@ -167,7 +167,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemDisplayLabel::FieldLabel, "Label");
    The constant string which identifies the definition of details
    which contain a start and end timestamps of an event series or event occurrence.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::DefinitionName, "EventTime");
+const QString QOrganizerEventTime::DefinitionName(QStringLiteral("EventTime"));
 
 /*!
    \variable QOrganizerEventTime::FieldEndDateTime
@@ -175,7 +175,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::DefinitionName, "EventTime");
    The constant key for which the end date and time value is stored in
    details of the QOrganizerEventTime type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldEndDateTime, "EndDateTime");
+const QString QOrganizerEventTime::FieldEndDateTime(QStringLiteral("EndDateTime"));
 
 /*!
    \variable QOrganizerEventTime::FieldStartDateTime
@@ -183,7 +183,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldEndDateTime, "EndDateTime");
    The constant key for which the start date and time value is stored in
    details of the QOrganizerEventTime type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldStartDateTime, "StartDateTime");
+const QString QOrganizerEventTime::FieldStartDateTime(QStringLiteral("StartDateTime"));
 
 /*!
    \variable QOrganizerEventTime::FieldAllDay
@@ -191,7 +191,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldStartDateTime, "StartDateTime
    The constant key for the specification of whether the time is significant in the
    start datetime of the QOrganizerEventTime type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldAllDay, "AllDay");
+const QString QOrganizerEventTime::FieldAllDay(QStringLiteral("AllDay"));
 
 
 /*!
@@ -258,7 +258,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerEventTime::FieldAllDay, "AllDay");
    \variable QOrganizerItemGuid::DefinitionName
    The constant string which identifies the definition of details which are globally unique identifiers.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemGuid::DefinitionName, "Guid");
+const QString QOrganizerItemGuid::DefinitionName(QStringLiteral("Guid"));
 
 /*!
    \variable QOrganizerItemGuid::FieldGuid
@@ -266,7 +266,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemGuid::DefinitionName, "Guid");
    The constant key for which the globally unique identifier value is
    stored in details of the QOrganizerItemGuid type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemGuid::FieldGuid, "Guid");
+const QString QOrganizerItemGuid::FieldGuid(QStringLiteral("Guid"));
 
 /*!
    \fn QOrganizerItemGuid::guid() const
@@ -300,7 +300,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemGuid::FieldGuid, "Guid");
    The constant string which identifies the definition of details which contain information which identifies
    the recurrent event of which the organizer item is a particular instance or exception of.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::DefinitionName, "Parent");
+const QString QOrganizerItemParent::DefinitionName(QStringLiteral("Parent"));
 
 /*!
    \variable QOrganizerItemParent::FieldParentId
@@ -308,7 +308,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::DefinitionName, "Parent");
    The constant key for the field in which the id of the parent recurrent event
    is stored in details of the QOrganizerItemParent type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::FieldParentId, "ParentId");
+const QString QOrganizerItemParent::FieldParentId(QStringLiteral("ParentId"));
 
 
 /*!
@@ -317,7 +317,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::FieldParentId, "ParentId");
    The constant key for the field in which the original date of this instance
    or exception according to the recurrent series of the parent item is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::FieldOriginalDate, "OriginalDate");
+const QString QOrganizerItemParent::FieldOriginalDate(QStringLiteral("OriginalDate"));
 
 /*!
    \fn QOrganizerItemParent::parentId() const
@@ -362,7 +362,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemParent::FieldOriginalDate, "OriginalDate"
 The constant string which identifies the definition of details
 which describe the date and time associated with a journal item.
 */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJournalTime::DefinitionName, "JournalTime");
+const QString QOrganizerJournalTime::DefinitionName(QStringLiteral("JournalTime"));
 
 /*!
    \variable QOrganizerJournalTime::FieldEntryDateTime
@@ -370,7 +370,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJournalTime::DefinitionName, "JournalTime");
    The constant key for which the date and time of value for a journal entry is
    stored in details of the QOrganizerJournalTime type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJournalTime::FieldEntryDateTime, "EntryDateTime");
+const QString QOrganizerJournalTime::FieldEntryDateTime(QStringLiteral("EntryDateTime"));
 
 /*!
    \fn QOrganizerJournalTime::entryDateTime() const
@@ -418,7 +418,7 @@ QOrganizerItemFilter QOrganizerItemLocation::match(const QString &substring)
 The constant string which identifies the definition of details
 which describe a location associated with an organizer item.
 */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::DefinitionName, "Location");
+const QString QOrganizerItemLocation::DefinitionName(QStringLiteral("Location"));
 
 /*!
    \variable QOrganizerItemLocation::FieldLatitude
@@ -426,7 +426,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::DefinitionName, "Location");
    The constant key for which the location latitude value is
    stored in details of the QOrganizerItemLocation type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::FieldLatitude, "Latitude");
+const QString QOrganizerItemLocation::FieldLatitude(QStringLiteral("Latitude"));
 
 /*!
    \variable QOrganizerItemLocation::FieldLongitude
@@ -434,7 +434,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::FieldLatitude, "Latitude");
    The constant key for which the location longitude value is
    stored in details of the QOrganizerItemLocation type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::FieldLongitude, "Longitude");
+const QString QOrganizerItemLocation::FieldLongitude(QStringLiteral("Longitude"));
 
 /*!
    \variable QOrganizerItemLocation::FieldLabel
@@ -442,7 +442,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::FieldLongitude, "Longitude");
    The constant key for which the location label value is
    stored in details of the QOrganizerItemLocation type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemLocation::FieldLabel, "Label");
+const QString QOrganizerItemLocation::FieldLabel(QStringLiteral("Label"));
 
 /*!
     \fn QOrganizerItemLocation::latitude() const
@@ -509,7 +509,7 @@ QOrganizerItemFilter QOrganizerItemComment::match(const QString &substring)
    \variable QOrganizerItemComment::DefinitionName
    The constant string which identifies the definition of details which are comments.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemComment::DefinitionName, "Comment");
+const QString QOrganizerItemComment::DefinitionName(QStringLiteral("Comment"));
 
 /*!
    \variable QOrganizerItemComment::FieldComment
@@ -517,7 +517,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemComment::DefinitionName, "Comment");
    The constant key for which the comment value is stored in details of
    the QOrganizerItemComment type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemComment::FieldComment, "Comment");
+const QString QOrganizerItemComment::FieldComment(QStringLiteral("Comment"));
 
 /*!
    \fn QOrganizerItemComment::setComment(const QString& comment)
@@ -574,7 +574,7 @@ QOrganizerItemFilter QOrganizerItemPriority::match(QOrganizerItemPriority::Prior
    \variable QOrganizerItemPriority::DefinitionName
    The constant string which identifies the definition of details which contain the priority of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemPriority::DefinitionName, "Priority");
+const QString QOrganizerItemPriority::DefinitionName(QStringLiteral("Priority"));
 
 /*!
    \variable QOrganizerItemPriority::FieldPriority
@@ -582,7 +582,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemPriority::DefinitionName, "Priority");
    The constant key for which the priority value is stored in details of
    the QOrganizerItemPriority type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemPriority::FieldPriority, "Priority");
+const QString QOrganizerItemPriority::FieldPriority(QStringLiteral("Priority"));
 
 /*!
    \fn QOrganizerItemPriority::setPriority(Priority priority)
@@ -616,7 +616,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemPriority::FieldPriority, "Priority");
    \variable QOrganizerItemRecurrence::DefinitionName
    The constant string which identifies the definition of details which are organizer item recurrence specifications.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::DefinitionName, "Recurrence");
+const QString QOrganizerItemRecurrence::DefinitionName(QStringLiteral("Recurrence"));
 
 /*!
   Returns true if the \a other recurrence detail is equal to this detail; otherwise, false.
@@ -655,7 +655,7 @@ bool QOrganizerItemRecurrence::operator==(const QOrganizerItemRecurrence& other)
    When multiple rules are specified, the list of recurrence dates are
    calculated separately for each rule and the results are unioned.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldRecurrenceRules, "RecurrenceRules");
+const QString QOrganizerItemRecurrence::FieldRecurrenceRules(QStringLiteral("RecurrenceRules"));
 
 /*!
    \variable QOrganizerItemRecurrence::FieldRecurrenceDates
@@ -664,7 +664,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldRecurrenceRules, "Recurr
    QOrganizerItemRecurrence type which describes the dates on which an
    item should recur.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldRecurrenceDates, "RecurrenceDates");
+const QString QOrganizerItemRecurrence::FieldRecurrenceDates(QStringLiteral("RecurrenceDates"));
 
 /*!
    \variable QOrganizerItemRecurrence::FieldExceptionRules
@@ -677,7 +677,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldRecurrenceDates, "Recurr
    particular date and any of the exception rules include that date, the item should not occur on
    that date.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldExceptionRules, "ExceptionRules");
+const QString QOrganizerItemRecurrence::FieldExceptionRules(QStringLiteral("ExceptionRules"));
 
 /*!
    \variable QOrganizerItemRecurrence::FieldExceptionDates
@@ -690,7 +690,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldExceptionRules, "Excepti
    particular date and that date appears in the exception dates list, the item should not occur on
    that date.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldExceptionDates, "ExceptionDates");
+const QString QOrganizerItemRecurrence::FieldExceptionDates(QStringLiteral("ExceptionDates"));
 
 /*!
    Returns the set of recurrence dates.
@@ -698,7 +698,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemRecurrence::FieldExceptionDates, "Excepti
  */
 QSet<QDate> QOrganizerItemRecurrence::recurrenceDates() const
 {
-    return variantValue(FieldRecurrenceDates).value< QSet<QDate> >();
+    return value(FieldRecurrenceDates).value< QSet<QDate> >();
 }
 
 /*!
@@ -716,7 +716,7 @@ void QOrganizerItemRecurrence::setRecurrenceDates(const QSet<QDate>& rdates)
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerItemRecurrence::exceptionRules() const
 {
-    return variantValue(FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
+    return value(FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
 }
 /*!
    Sets the set of exception rules to \a xrules.
@@ -732,7 +732,7 @@ void QOrganizerItemRecurrence::setExceptionRules(const QSet<QOrganizerRecurrence
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerItemRecurrence::recurrenceRules() const
 {
-    return variantValue(FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
+    return value(FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
 }
 
 
@@ -750,7 +750,7 @@ void QOrganizerItemRecurrence::setRecurrenceRules(const QSet<QOrganizerRecurrenc
  */
 QSet<QDate> QOrganizerItemRecurrence::exceptionDates() const
 {
-    return variantValue(FieldExceptionDates).value< QSet<QDate> >();
+    return value(FieldExceptionDates).value< QSet<QDate> >();
 }
 
 /*!
@@ -802,7 +802,7 @@ void QOrganizerItemRecurrence::setExceptionDates(const QSet<QDate>& xdates)
    \variable QOrganizerItemReminder::DefinitionName
    The constant string which identifies the definition of details which contain reminder information of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::DefinitionName, "Reminder");
+const QString QOrganizerItemReminder::DefinitionName(QStringLiteral("Reminder"));
 
 /*!
    \variable QOrganizerItemReminder::FieldSecondsBeforeStart
@@ -810,7 +810,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::DefinitionName, "Reminder");
    The constant key for which time delta (in seconds prior to the item activation time)
    at which the user should be reminded of the item is stored in details of the QOrganizerItemReminder type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::FieldSecondsBeforeStart, "SecondsBeforeStart");
+const QString QOrganizerItemReminder::FieldSecondsBeforeStart(QStringLiteral("SecondsBeforeStart"));
 
 /*!
    \variable QOrganizerItemReminder::FieldRepetitionCount
@@ -818,7 +818,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::FieldSecondsBeforeStart, "Secon
    The constant key for which the number of repetitions of the reminder
    is stored in details of the QOrganizerItemReminder type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::FieldRepetitionCount, "RepetitionCount");
+const QString QOrganizerItemReminder::FieldRepetitionCount(QStringLiteral("RepetitionCount"));
 
 /*!
    \variable QOrganizerItemReminder::FieldRepetitionDelay
@@ -826,7 +826,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::FieldRepetitionCount, "Repetiti
    The constant key for which the delay (in seconds) between repetitions of the reminder
    is stored in details of the QOrganizerItemReminder type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemReminder::FieldRepetitionDelay, "RepetitionDelay");
+const QString QOrganizerItemReminder::FieldRepetitionDelay(QStringLiteral("RepetitionDelay"));
 
 /*!
    Returns the reminder type of this reminder for an organizer item.
@@ -935,13 +935,13 @@ QOrganizerItemReminder::ReminderType QOrganizerItemReminder::reminderType() cons
    \variable QOrganizerItemAudibleReminder::DefinitionName
    The constant string which identifies the definition of details which contain audible reminder information of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemAudibleReminder::DefinitionName, "AudibleReminder");
+const QString QOrganizerItemAudibleReminder::DefinitionName(QStringLiteral("AudibleReminder"));
 
 /*!
    \variable QOrganizerItemAudibleReminder::FieldDataUrl
    The constant key for which the value of the sound data url is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemAudibleReminder::FieldDataUrl, "DataUrl");
+const QString QOrganizerItemAudibleReminder::FieldDataUrl(QStringLiteral("DataUrl"));
 
 /*!
    \fn QOrganizerItemAudibleReminder::setDataUrl(const QUrl& dataUrl)
@@ -979,31 +979,31 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemAudibleReminder::FieldDataUrl, "DataUrl")
    \variable QOrganizerItemEmailReminder::DefinitionName
    The constant string which identifies the definition of details which contain email reminder information of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::DefinitionName, "EmailReminder");
+const QString QOrganizerItemEmailReminder::DefinitionName(QStringLiteral("EmailReminder"));
 
 /*!
    \variable QOrganizerItemEmailReminder::FieldSubject
    The constant key for which the subject field of the email which the user wishes to be sent as a reminder, is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::FieldSubject, "Subject");
+const QString QOrganizerItemEmailReminder::FieldSubject(QStringLiteral("Subject"));
 
 /*!
    \variable QOrganizerItemEmailReminder::FieldBody
    The constant key for which the body field of the email which the user wishes to be sent as a reminder, is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::FieldBody, "Body");
+const QString QOrganizerItemEmailReminder::FieldBody(QStringLiteral("Body"));
 
 /*!
    \variable QOrganizerItemEmailReminder::FieldAttachments
    The constant key for which the attachments of the email which the user wishes to be sent as a reminder, is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::FieldAttachments, "Attachments");
+const QString QOrganizerItemEmailReminder::FieldAttachments(QStringLiteral("Attachments"));
 
 /*!
    \variable QOrganizerItemEmailReminder::FieldRecipients
    The constant key for which the recipients field of the email which the user wishes to be sent as a reminder, is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::FieldRecipients, "Recipients");
+const QString QOrganizerItemEmailReminder::FieldRecipients(QStringLiteral("Recipients"));
 
 /*!
    \fn QOrganizerItemEmailReminder::setContents(const QString& subject, const QString& body, const QVariantList& attachments)
@@ -1068,19 +1068,19 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemEmailReminder::FieldRecipients, "Recipien
    \variable QOrganizerItemVisualReminder::DefinitionName
    The constant string which identifies the definition of details which contain visual reminder information of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemVisualReminder::DefinitionName, "VisualReminder");
+const QString QOrganizerItemVisualReminder::DefinitionName(QStringLiteral("VisualReminder"));
 
 /*!
    \variable QOrganizerItemVisualReminder::FieldMessage
    The constant key for which the value of the message to be displayed is stored in details of the QOrganizerItemVisualReminder type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemVisualReminder::FieldMessage, "Message");
+const QString QOrganizerItemVisualReminder::FieldMessage(QStringLiteral("Message"));
 
 /*!
    \variable QOrganizerItemVisualReminder::FieldDataUrl
    The constant key for which the value of the visual data url is stored.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemVisualReminder::FieldDataUrl, "DataUrl");
+const QString QOrganizerItemVisualReminder::FieldDataUrl(QStringLiteral("DataUrl"));
 
 /*!
    \fn QOrganizerItemVisualReminder::setMessage(const QString& message)
@@ -1140,7 +1140,7 @@ QOrganizerItemFilter QOrganizerItemTag::match(const QString &substring)
    \variable QOrganizerItemTag::DefinitionName
    The constant string which identifies the definition of details which are tags.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTag::DefinitionName, "Tag");
+const QString QOrganizerItemTag::DefinitionName(QStringLiteral("Tag"));
 
 /*!
    \variable QOrganizerItemTag::FieldTag
@@ -1148,7 +1148,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTag::DefinitionName, "Tag");
    The constant key for which the tag value is stored in details of
    the QOrganizerItemTag type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTag::FieldTag, "Tag");
+const QString QOrganizerItemTag::FieldTag(QStringLiteral("Tag"));
 
 /*!
    \fn QOrganizerItemTag::setTag(const QString& tag)
@@ -1177,7 +1177,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTag::FieldTag, "Tag");
    \variable QOrganizerItemTimestamp::DefinitionName
    The constant string which identifies the definition of details which are organizer synchronisation timestamps.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::DefinitionName, "Timestamp");
+const QString QOrganizerItemTimestamp::DefinitionName(QStringLiteral("Timestamp"));
 
 /*!
    \variable QOrganizerItemTimestamp::FieldModificationTimestamp
@@ -1186,7 +1186,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::DefinitionName, "Timestamp");
    QOrganizerItemTimestamp type which describes the last modification date
    and time of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::FieldModificationTimestamp, "ModificationTimestamp");
+const QString QOrganizerItemTimestamp::FieldModificationTimestamp(QStringLiteral("ModificationTimestamp"));
 
 /*!
    \variable QOrganizerItemTimestamp::FieldCreationTimestamp
@@ -1195,7 +1195,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::FieldModificationTimestamp, "M
    QOrganizerItemTimestamp type which describes the creation date and time
    of an organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::FieldCreationTimestamp, "CreationTimestamp");
+const QString QOrganizerItemTimestamp::FieldCreationTimestamp(QStringLiteral("CreationTimestamp"));
 
 /*!
    \fn QOrganizerItemTimestamp::created() const
@@ -1238,7 +1238,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemTimestamp::FieldCreationTimestamp, "Creat
    \variable QOrganizerTodoProgress::DefinitionName
    The constant string which identifies the definition of details which contain progress information about a todo item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::DefinitionName, "TodoProgress");
+const QString QOrganizerTodoProgress::DefinitionName(QStringLiteral("TodoProgress"));
 
 /*!
    \variable QOrganizerTodoProgress::FieldStatus
@@ -1246,7 +1246,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::DefinitionName, "TodoProgress")
    The constant key of the value which describes the current completion status of the
    todo item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldStatus, "Status");
+const QString QOrganizerTodoProgress::FieldStatus(QStringLiteral("Status"));
 
 /*!
    \variable QOrganizerTodoProgress::FieldPercentageComplete
@@ -1254,7 +1254,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldStatus, "Status");
    The constant key of the value which contains the current completion percentage of the
    todo item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldPercentageComplete, "PercentageComplete");
+const QString QOrganizerTodoProgress::FieldPercentageComplete(QStringLiteral("PercentageComplete"));
 
 /*!
    \variable QOrganizerTodoProgress::FieldFinishedDateTime
@@ -1262,7 +1262,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldPercentageComplete, "Perce
    The constant key of the date time value which contains the date and time at which the
    todo item was completed.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldFinishedDateTime, "FinishedDateTime");
+const QString QOrganizerTodoProgress::FieldFinishedDateTime(QStringLiteral("FinishedDateTime"));
 
 /*!
   \enum QOrganizerTodoProgress::Status
@@ -1320,7 +1320,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoProgress::FieldFinishedDateTime, "Finishe
    \variable QOrganizerTodoTime::DefinitionName
    The constant string which identifies the definition of details which contain time-range information about a todo item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::DefinitionName, "TodoTime");
+const QString QOrganizerTodoTime::DefinitionName(QStringLiteral("TodoTime"));
 
 /*!
    \variable QOrganizerTodoTime::FieldStartDateTime
@@ -1328,7 +1328,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::DefinitionName, "TodoTime");
    The constant key of the date time value which describes the date at which
    the todo should be started.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldStartDateTime, "StartDateTime");
+const QString QOrganizerTodoTime::FieldStartDateTime(QStringLiteral("StartDateTime"));
 
 /*!
    \variable QOrganizerTodoTime::FieldDueDateTime
@@ -1336,7 +1336,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldStartDateTime, "StartDateTime"
    The constant key of the date time value which describes the latest date at which
    the todo should be completed.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldDueDateTime, "DueDateTime");
+const QString QOrganizerTodoTime::FieldDueDateTime(QStringLiteral("DueDateTime"));
 
 /*!
    \variable QOrganizerTodoTime::FieldAllDay
@@ -1344,7 +1344,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldDueDateTime, "DueDateTime");
    The constant key for the specification of whether the time is significant in the
    start datetime of the QOrganizerTodoTime type.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldAllDay, "AllDay");
+const QString QOrganizerTodoTime::FieldAllDay(QStringLiteral("AllDay"));
 
 /*!
     \fn QOrganizerTodoTime::startDateTime() const
@@ -1403,7 +1403,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerTodoTime::FieldAllDay, "AllDay");
    \variable QOrganizerItemType::DefinitionName
    The constant string which identifies the definition of details which identify the type of the organizer item.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::DefinitionName, "Type");
+const QString QOrganizerItemType::DefinitionName(QStringLiteral("Type"));
 
 /*!
    \variable QOrganizerItemType::FieldType
@@ -1411,49 +1411,49 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::DefinitionName, "Type");
    The constant key for the type value which is stored in details of
    the QOrganizerItemType definition.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::FieldType, "Type");
+const QString QOrganizerItemType::FieldType(QStringLiteral("Type"));
 
 /*!
    \variable QOrganizerItemType::TypeEvent
 
    The constant attribute value which describes the organizer item as being an event.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEvent, "Event");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEvent, "Event")
 
 /*!
    \variable QOrganizerItemType::TypeEventOccurrence
 
    The constant attribute value which describes the organizer item as being an occurrence of an event.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEventOccurrence, "EventOccurrence");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEventOccurrence, "EventOccurrence")
 
 /*!
    \variable QOrganizerItemType::TypeJournal
 
    The constant attribute value which describes the organizer item as being a journal.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeJournal, "Journal");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeJournal, "Journal")
 
 /*!
    \variable QOrganizerItemType::TypeNote
 
    The constant attribute value which describes the organizer item as being a note.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeNote, "Note");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeNote, "Note")
 
 /*!
    \variable QOrganizerItemType::TypeTodo
 
    The constant attribute value which describes the organizer item as being a todo.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodo, "Todo");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodo, "Todo")
 
 /*!
    \variable QOrganizerItemType::TypeTodoOccurrence
 
    The constant attribute value which describes the organizer item as being an occurrence of a todo.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodoOccurrence, "TodoOccurrence");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodoOccurrence, "TodoOccurrence")
 
 /*!
    \fn QOrganizerItemType::type() const
@@ -1483,21 +1483,21 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodoOccurrence, "TodoOccurrence
 
     The constant string which identifies the definition of details which are custom details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::DefinitionName, "CustomDetail");
+const QString QOrganizerItemCustomDetail::DefinitionName(QStringLiteral("CustomDetail"));
 
 /*!
     \variable QOrganizerItemCustomDetail::FieldDetailName
 
     Contains the name of the custom detail.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::FieldCustomDetailName, "CustomDetailName");
+const QString QOrganizerItemCustomDetail::FieldCustomDetailName(QStringLiteral("CustomDetailName"));
 
 /*!
     \variable QOrganizerItemCustomDetail::FieldCustomDetailData
 
     Contains the data this custom detail.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemCustomDetail::FieldCustomDetailData, "CustomDetailData");
+const QString QOrganizerItemCustomDetail::FieldCustomDetailData(QStringLiteral("CustomDetailData"));
 
 /*!
     \fn void QOrganizerItemCustomDetail::setName(const QString &name)

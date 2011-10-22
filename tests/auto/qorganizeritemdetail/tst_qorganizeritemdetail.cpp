@@ -330,7 +330,7 @@ void tst_QOrganizerItemDetail::values()
 {
     QOrganizerItemDetail p;
 
-    QCOMPARE(p.variantValues(), QVariantMap());
+    QCOMPARE(p.values(), QVariantMap());
 
     QDateTime dt = QDateTime::currentDateTime();
     QTime t = dt.time();
@@ -362,7 +362,7 @@ void tst_QOrganizerItemDetail::values()
     QVERIFY(p.hasValue("stringdate"));
     QVERIFY(p.hasValue("stringdatetime"));
     QVERIFY(p.hasValue("stringint"));
-    QVERIFY(p.hasValue(QOrganizerItemPriority::FieldPriority.latin1()));
+    QVERIFY(p.hasValue(QOrganizerItemPriority::FieldPriority));
     QVERIFY(!p.hasValue("non existent field"));
 
     /* QLatin1Constant version */
@@ -377,54 +377,54 @@ void tst_QOrganizerItemDetail::values()
     QVERIFY(p.hasValue(QLatin1String("stringdate")));
     QVERIFY(p.hasValue(QLatin1String("stringdatetime")));
     QVERIFY(p.hasValue(QLatin1String("stringint")));
-    QVERIFY(p.hasValue(QString(QLatin1String(QOrganizerItemPriority::FieldPriority))));
+    QVERIFY(p.hasValue(QString(QOrganizerItemPriority::FieldPriority)));
     QVERIFY(!p.hasValue(QLatin1String("non existent field")));
 
     /* string accessors with const char* key */
-    QCOMPARE(p.value("string"), QString("This is a string"));
-    QCOMPARE(p.value("date"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("datetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("int"), QString("6"));
-    QCOMPARE(p.value("stringdate"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringdatetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringint"), QString("123"));
-    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority.latin1()), QString::number(static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority)));
+    QCOMPARE(p.value("string").toString(), QString("This is a string"));
+    QCOMPARE(p.value("date").toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value("datetime").toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value("int").toString(), QString("6"));
+    QCOMPARE(p.value("stringdate").toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value("stringdatetime").toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value("stringint").toString(), QString("123"));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toString(), QString::number(static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority)));
 
     /* string accessor with QL1C key */
-    QCOMPARE(p.variantValue(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
 
     /* string accessors with QString key */
-    QCOMPARE(p.value(QLatin1String("string")), QString("This is a string"));
-    QCOMPARE(p.value(QLatin1String("date")), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("datetime")), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("int")), QString("6"));
-    QCOMPARE(p.value(QLatin1String("stringdate")), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("stringdatetime")), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("stringint")), QString("123"));
-    QCOMPARE(p.value(QString(QLatin1String(QOrganizerItemPriority::FieldPriority))), QString::number(static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority)));
+    QCOMPARE(p.value(QLatin1String("string")).toString(), QString("This is a string"));
+    QCOMPARE(p.value(QLatin1String("date")).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QLatin1String("datetime")).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QLatin1String("int")).toString(), QString("6"));
+    QCOMPARE(p.value(QLatin1String("stringdate")).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QLatin1String("stringdatetime")).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QLatin1String("stringint")).toString(), QString("123"));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toString(), QString::number(static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority)));
 
     /* Variant accessor with const char * key */
-    QCOMPARE(p.variantValue("string"), QVariant(QString("This is a string")));
-    QCOMPARE(p.variantValue("date"), QVariant(d));
-    QCOMPARE(p.variantValue("datetime"), QVariant(dt));
-    QCOMPARE(p.variantValue("int"), QVariant((int)6));
-    QCOMPARE(p.variantValue("stringdate"), QVariant(d.toString(Qt::ISODate)));
-    QCOMPARE(p.variantValue("stringdatetime"), QVariant(dt.toString(Qt::ISODate)));
-    QCOMPARE(p.variantValue("stringint"), QVariant(QString("123")));
-    QCOMPARE(p.variantValue(QOrganizerItemPriority::FieldPriority.latin1()).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value("string"), QVariant(QString("This is a string")));
+    QCOMPARE(p.value("date"), QVariant(d));
+    QCOMPARE(p.value("datetime"), QVariant(dt));
+    QCOMPARE(p.value("int"), QVariant((int)6));
+    QCOMPARE(p.value("stringdate"), QVariant(d.toString(Qt::ISODate)));
+    QCOMPARE(p.value("stringdatetime"), QVariant(dt.toString(Qt::ISODate)));
+    QCOMPARE(p.value("stringint"), QVariant(QString("123")));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
 
     /* Variant accessor with QL1C key */
-    QCOMPARE(p.variantValue(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
 
     /* Variant accessor with QString key */
-    QCOMPARE(p.variantValue(QLatin1String("string")), QVariant(QString("This is a string")));
-    QCOMPARE(p.variantValue(QLatin1String("date")), QVariant(d));
-    QCOMPARE(p.variantValue(QLatin1String("datetime")), QVariant(dt));
-    QCOMPARE(p.variantValue(QLatin1String("int")), QVariant((int)6));
-    QCOMPARE(p.variantValue(QLatin1String("stringdate")), QVariant(d.toString(Qt::ISODate)));
-    QCOMPARE(p.variantValue(QLatin1String("stringdatetime")), QVariant(dt.toString(Qt::ISODate)));
-    QCOMPARE(p.variantValue(QLatin1String("stringint")), QVariant(QString("123")));
-    QCOMPARE(p.variantValue(QLatin1String(QOrganizerItemPriority::FieldPriority)).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value(QLatin1String("string")), QVariant(QString("This is a string")));
+    QCOMPARE(p.value(QLatin1String("date")), QVariant(d));
+    QCOMPARE(p.value(QLatin1String("datetime")), QVariant(dt));
+    QCOMPARE(p.value(QLatin1String("int")), QVariant((int)6));
+    QCOMPARE(p.value(QLatin1String("stringdate")), QVariant(d.toString(Qt::ISODate)));
+    QCOMPARE(p.value(QLatin1String("stringdatetime")), QVariant(dt.toString(Qt::ISODate)));
+    QCOMPARE(p.value(QLatin1String("stringint")), QVariant(QString("123")));
+    QCOMPARE(p.value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
 
     /* Typed accessors, string first, const char* key */
     QCOMPARE(p.value<QString>("string"), QString("This is a string"));
@@ -434,7 +434,7 @@ void tst_QOrganizerItemDetail::values()
     QCOMPARE(p.value<QString>("stringdate"), d.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>("stringdatetime"), dt.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>("stringint"), QString("123"));
-    QCOMPARE(p.value<int>(QOrganizerItemPriority::FieldPriority.latin1()), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value<int>(QOrganizerItemPriority::FieldPriority), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
 
     /* Now individual original types */
     QCOMPARE(p.value<QDate>("date"), d);
@@ -452,7 +452,7 @@ void tst_QOrganizerItemDetail::values()
     QCOMPARE(p.value<QString>(QLatin1String("stringdate")), d.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>(QLatin1String("stringdatetime")), dt.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>(QLatin1String("stringint")), QString("123"));
-    QCOMPARE(p.value<int>(QLatin1String(QOrganizerItemPriority::FieldPriority)), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
+    QCOMPARE(p.value<int>(QOrganizerItemPriority::FieldPriority), static_cast<int>(QOrganizerItemPriority::ExtremelyHighPriority));
     QCOMPARE(p.value<QDate>(QLatin1String("date")), d);
     QCOMPARE(p.value<QDateTime>(QLatin1String("datetime")), dt);
     QCOMPARE(p.value<int>(QLatin1String("int")), 6);
@@ -483,13 +483,13 @@ void tst_QOrganizerItemDetail::values()
 
     /* Now set everything again */
     QVariantMap emptyValues;
-    QVariantMap values = p.variantValues();
+    QVariantMap values = p.values();
     QStringList keys = values.keys();
     foreach (const QString& key, keys)
         QVERIFY(p.setValue(key, QVariant()));
 
-    QCOMPARE(p.variantValues(), emptyValues);
-    QVERIFY(p.variantValues().count() == 0);
+    QCOMPARE(p.values(), emptyValues);
+    QVERIFY(p.values().count() == 0);
     QVERIFY(!p.hasValue("string"));
     QVERIFY(!p.hasValue("date"));
     QVERIFY(!p.hasValue("datetime"));
@@ -499,8 +499,8 @@ void tst_QOrganizerItemDetail::values()
     QVERIFY(!p.hasValue("stringint"));
     QVERIFY(!p.hasValue("non existent field"));
 
-    QVERIFY(p.value("string") == QString());
-    QVERIFY(p.variantValue("string") == QVariant());
+    QVERIFY(p.value("string").toString() == QString());
+    QVERIFY(p.value("string") == QVariant());
 
     values.insert("string", "This is a string");
     values.insert("date", d);
@@ -528,13 +528,13 @@ void tst_QOrganizerItemDetail::values()
     QVERIFY(!p.hasValue("non existent field"));
 
     /* String accessors */
-    QCOMPARE(p.value("string"), QString("This is a string"));
-    QCOMPARE(p.value("date"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("datetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("int"), QString("6"));
-    QCOMPARE(p.value("stringdate"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringdatetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringint"), QString("123"));
+    QCOMPARE(p.value("string").toString(), QString("This is a string"));
+    QCOMPARE(p.value("date").toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value("datetime").toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value("int").toString(), QString("6"));
+    QCOMPARE(p.value("stringdate").toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value("stringdatetime").toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value("stringint").toString(), QString("123"));
 
     /* Typed accessors, string first */
     QCOMPARE(p.value<QString>("string"), QString("This is a string"));
@@ -573,17 +573,17 @@ void tst_QOrganizerItemDetail::values()
     QCOMPARE(p.value<QDateTime>("stringdate"), ddt);
 
     /* Reset again */
-    values = p.variantValues();
+    values = p.values();
     keys = values.keys();
     foreach (const QString& key, keys)
         QVERIFY(p.setValue(key, QVariant()));
-    QCOMPARE(p.variantValues(), emptyValues);
+    QCOMPARE(p.values(), emptyValues);
 
     /* Check that we can add a null variant */
     //QVERIFY(p.setValue("nullvariant", QVariant()));
     //QVERIFY(p.hasValue("nullvariant"));
     //QCOMPARE(p.value("nullvariant"), QString());
-    //QCOMPARE(p.variantValue("nullvariant"), QVariant());
+    //QCOMPARE(p.value("nullvariant"), QVariant());
     //QVERIFY(p.removeValue("nullvariant"));
     //QVERIFY(p.values().count() == 0);
 
@@ -609,20 +609,20 @@ void tst_QOrganizerItemDetail::values()
 
     /* Check adding a null value removes the field */
     p.setValue("string", "stringvalue");
-    QVERIFY(p.variantValues().contains("string"));
+    QVERIFY(p.values().contains("string"));
     QVERIFY(p.value("string") == QString("stringvalue"));
     p.setValue("string", QVariant());
-    QVERIFY(!p.variantValues().contains("string"));
+    QVERIFY(!p.values().contains("string"));
 
     /* Check adding a field whose value is an empty string */
     p.setValue("string", "");
-    QVERIFY(p.variantValues().contains("string"));
+    QVERIFY(p.values().contains("string"));
     QVERIFY(p.value("string") == QString(""));
 
     /* Check accessing a missing value */
-    QCOMPARE(p.value("nonexistent"), QString());
+    QCOMPARE(p.value("nonexistent").toString(), QString());
     QVERIFY(p.setValue("nonexistent", "changed my mind"));
-    QCOMPARE(p.value("nonexistent"), QString("changed my mind"));
+    QCOMPARE(p.value("nonexistent").toString(), QString("changed my mind"));
 
     /* Check removing a missing value */
     QVERIFY(!p.removeValue("does not exist"));

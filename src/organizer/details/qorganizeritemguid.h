@@ -55,16 +55,11 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemGuid : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldGuid;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemGuid, "Guid")
-    Q_DECLARE_LATIN1_CONSTANT(FieldGuid, "Guid");
-#endif
+    const static QString FieldGuid;
 
     void setGuid(const QString& guid) {setValue(FieldGuid, guid);}
-    QString guid() const {return value(FieldGuid);}
+    QString guid() const {return value(FieldGuid).toString();}
 };
 
 QTORGANIZER_END_NAMESPACE

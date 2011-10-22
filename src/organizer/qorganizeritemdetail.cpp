@@ -51,24 +51,6 @@ QTORGANIZER_BEGIN_NAMESPACE
 /* Initialise our static private data member */
 QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
 
-/* Storage */
-QHash<QString, char*> QOrganizerItemStringHolder::s_allocated;
-QHash<const char *, QString> QOrganizerItemStringHolder::s_qstrings;
-
-/* Dtor function */
-static int qClearAllocatedStringHash()
-{
-    QHash<QString, char*>::const_iterator it = QOrganizerItemStringHolder::s_allocated.constBegin();
-    while (it != QOrganizerItemStringHolder::s_allocated.constEnd()) {
-        delete[] it.value();
-        it++;
-    }
-    QOrganizerItemStringHolder::s_allocated.clear();
-    QOrganizerItemStringHolder::s_qstrings.clear();
-    return 1;
-}
-Q_DESTRUCTOR_FUNCTION(qClearAllocatedStringHash)
-
 /*!
   \class QOrganizerItemDetail
 
@@ -192,44 +174,10 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QString& thisDefinitionId)
     d->m_definitionName = thisDefinitionId;
 }
 
-/*!
-    Constructs a new, empty detail of the definition identified by \a thisDefinitionId
-
-    The supplied pointer must be valid for the lifetime of the program.  In general
-    this means it should be a constant, and not allocated on the stack.  If you cannot
-    meet this requirement, use the alternative constructor that takes a QString instead.
-    \since 1.1
-*/
-QOrganizerItemDetail::QOrganizerItemDetail(const char* thisDefinitionId)
-    : d(new QOrganizerItemDetailPrivate)
-{
-    d->m_definitionName = thisDefinitionId;
-}
-
 /*! Constructs a detail that is a copy of \a other */
 QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other)
     : d(other.d)
 {
-}
-
-/*!
-    \internal
-
-    Constructs a detail that is a copy of \a other if \a other is of the expected definition
-    identified by \a expectedDefinitionId, else constructs a new, empty detail of the
-    definition identified by the \a expectedDefinitionId.
-
-    The \a expectedDefinitionId pointer must be valid for the lifetime of the program.
-    \since 1.1
-*/
-QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail& other, const char* expectedDefinitionId)
-{
-    if (other.d->m_definitionName == expectedDefinitionId) {
-        d = other.d;
-    } else {
-        d = new QOrganizerItemDetailPrivate;
-        d->m_definitionName = expectedDefinitionId;
-    }
 }
 
 /*!
@@ -268,27 +216,6 @@ QOrganizerItemDetail& QOrganizerItemDetail::operator=(const QOrganizerItemDetail
     detail of the definition identified by the given \a expectedDefinitionId
     \since 1.1
 */
-QOrganizerItemDetail& QOrganizerItemDetail::assign(const QOrganizerItemDetail& other, const char* expectedDefinitionId)
-{
-    if (this != &other) {
-        if (other.d->m_definitionName == expectedDefinitionId) {
-            d = other.d;
-        } else {
-            d = new QOrganizerItemDetailPrivate;
-            d->m_definitionName = expectedDefinitionId;
-        }
-    }
-    return *this;
-}
-
-/*!
-    \internal
-
-    Assigns this detail to \a other if the definition of \a other is that identified
-    by the given \a expectedDefinitionId, else assigns this detail to be a new, empty
-    detail of the definition identified by the given \a expectedDefinitionId
-    \since 1.1
-*/
 QOrganizerItemDetail& QOrganizerItemDetail::assign(const QOrganizerItemDetail& other, const QString& expectedDefinitionId)
 {
     if (this != &other) {
@@ -314,7 +241,7 @@ QOrganizerItemDetail::~QOrganizerItemDetail()
  */
 QString QOrganizerItemDetail::definitionName() const
 {
-    return d.constData()->m_definitionName.toQString();
+    return d.constData()->m_definitionName;
 }
 
 /*!
@@ -347,23 +274,6 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
     return (one.definitionName() < other.definitionName());
 }
 
-uint qHash(const QOrganizerItemStringHolder& key)
-{
-    if (!key.m_str)
-        return 0;
-    uint h = 0;
-    uint g;
-    const register uchar*p = (const uchar*)key.m_str;
-
-    while (*p) {
-        h = (h << 4) + *p++;
-        if ((g = (h & 0xf0000000)) != 0)
-            h ^= g >> 23;
-        h &= ~g;
-    }
-    return h;
-}
-
 /*! Returns the hash value for \a key.
     \since 1.1
 */
@@ -372,7 +282,7 @@ uint qHash(const QOrganizerItemDetail &key)
     const QOrganizerItemDetailPrivate* dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
     uint hash = qHash(dptr->m_definitionName)
                 + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
-    QHash<QOrganizerItemStringHolder, QVariant>::const_iterator it = dptr->m_values.constBegin();
+    QHash<QString, QVariant>::const_iterator it = dptr->m_values.constBegin();
     while(it != dptr->m_values.constEnd()) {
         hash += qHash(it.key())
                 + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
@@ -385,7 +295,7 @@ uint qHash(const QOrganizerItemDetail &key)
 QDebug operator<<(QDebug dbg, const QOrganizerItemDetail& detail)
 {
     dbg.nospace() << "QOrganizerItemDetail(name=" << detail.definitionName() << ", key=" << detail.key();
-    QVariantMap fields = detail.variantValues();
+    QVariantMap fields = detail.values();
     QVariantMap::const_iterator it;
     for (it = fields.constBegin(); it != fields.constEnd(); ++it) {
         dbg.nospace() << ", " << it.key() << '=' << it.value();
@@ -406,7 +316,7 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerItemDetail& detail)
     return out << formatVersion
                << detail.definitionName()
                << static_cast<quint32>(detail.accessConstraints())
-               << detail.variantValues();
+               << detail.values();
 }
 
 /*!
@@ -468,49 +378,10 @@ void QOrganizerItemDetail::resetKey()
     d->m_id = QOrganizerItemDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
 }
 
-/*! \overload
-  Returns the value stored in this detail for the given \a key as a QString, or an empty QString if
-  no value for the given \a key exists
-  \since 1.1
-*/
-QString QOrganizerItemDetail::value(const QString& key) const
-{
-    return d.constData()->m_values.value(QOrganizerItemStringHolder(key)).toString();
-}
-
-/*!
-    \internal
-    \overload
-    Returns the value stored in this detail for the given \a key as a QString, or an empty QString if
-    no value for the given \a key exists
-    \since 1.1
-*/
-QString QOrganizerItemDetail::value(const char* key) const
-{
-    return d.constData()->m_values.value(key).toString();
-}
-
-/*!
-    \fn T QOrganizerItemDetail::value(const char* key) const
-    \internal
-    \overload
-    \since 1.1
-*/
-
 /*! Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
     \since 1.1
 */
-QVariant QOrganizerItemDetail::variantValue(const QString& key) const
-{
-    return d.constData()->m_values.value(QOrganizerItemStringHolder(key));
-}
-
-/*!
-    \internal
-    Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
-    \since 1.1
- */
-QVariant QOrganizerItemDetail::variantValue(const char* key) const
+QVariant QOrganizerItemDetail::value(const QString& key) const
 {
     return d.constData()->m_values.value(key);
 }
@@ -520,16 +391,6 @@ QVariant QOrganizerItemDetail::variantValue(const char* key) const
   \since 1.1
  */
 bool QOrganizerItemDetail::hasValue(const QString& key) const
-{
-    return d.constData()->m_values.contains(QOrganizerItemStringHolder(key));
-}
-
-/*!
-  \internal
-  Returns true if this detail has a field with the given \a key, or false otherwise.
-  \since 1.1
- */
-bool QOrganizerItemDetail::hasValue(const char * key) const
 {
     return d.constData()->m_values.contains(key);
 }
@@ -545,24 +406,6 @@ bool QOrganizerItemDetail::setValue(const QString& key, const QVariant& value)
     if (!value.isValid())
         return removeValue(key);
 
-    d->m_values.insert(QOrganizerItemStringHolder(key), value);
-    return true;
-}
-
-/*!
-    \internal
-
-    Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
-    removes the field with the given \a key from the detail.  Returns true if the given \a value was set
-    for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid)
-    \since 1.1
-*/
-bool QOrganizerItemDetail::setValue(const char* key, const QVariant& value)
-{
-    if (!value.isValid())
-        return removeValue(key);
-
     d->m_values.insert(key, value);
     return true;
 }
@@ -574,19 +417,6 @@ bool QOrganizerItemDetail::setValue(const char* key, const QVariant& value)
 */
 bool QOrganizerItemDetail::removeValue(const QString& key)
 {
-    if(d->m_values.remove(QOrganizerItemStringHolder(key)))
-        return true;
-    return false;
-}
-
-/*!
-    \internal
-    Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
-    for the given \a key and the operation succeeded, and false otherwise.
-    \since 1.1
-*/
-bool QOrganizerItemDetail::removeValue(const char * key)
-{
     if(d->m_values.remove(key))
         return true;
     return false;
@@ -596,12 +426,12 @@ bool QOrganizerItemDetail::removeValue(const char * key)
   Returns the values stored in this detail as a map from value key to value
     \since 1.1
  */
-QVariantMap QOrganizerItemDetail::variantValues() const
+QVariantMap QOrganizerItemDetail::values() const
 {
     QVariantMap ret;
-    QHash<QOrganizerItemStringHolder, QVariant>::const_iterator it = d.constData()->m_values.constBegin();
+    QHash<QString, QVariant>::const_iterator it = d.constData()->m_values.constBegin();
     while(it != d.constData()->m_values.constEnd()) {
-        ret.insert(it.key().toQString(), it.value());
+        ret.insert(it.key(), it.value());
         ++it;
     }
 
@@ -609,47 +439,6 @@ QVariantMap QOrganizerItemDetail::variantValues() const
 }
 
 
-/*!
-    \fn bool QOrganizerItemDetail::setValue(const QLatin1Constant& key, const QVariant& value)
-
-    Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
-    removes the field with the given \a key from the detail.  Returns true if the given \a value was set
-    for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid)
-    \since 1.1
-*/
-/*!
-    \fn bool QOrganizerItemDetail::removeValue(const QLatin1Constant& key)
-
-    Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
-    for the given \a key and the operation succeeded, and false otherwise.
-    \since 1.1
-*/
-
-/*!
-    \fn bool QOrganizerItemDetail::hasValue(const QLatin1Constant& key) const
-    Returns true if this detail has a field with the given \a key, or false otherwise.
-    \since 1.1
- */
-
-/*!
-    \fn QVariant QOrganizerItemDetail::variantValue(const QLatin1Constant& key) const
-    Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
-    \since 1.1
- */
-
-/*!
-    \fn T QOrganizerItemDetail::value(const QLatin1Constant& key) const
-    \overload
-    Returns the value of the template type associated with the given \a key
-    \since 1.1
- */
-/*!
-    \fn QString QOrganizerItemDetail::value(const QLatin1Constant& key) const
-    Returns the value stored in this detail for the given \a key as a QString, or an empty QString if
-    no value for the given \a key exists
-    \since 1.1
-*/
 /*!
     \fn T QOrganizerItemDetail::value(const QString& key) const
     Returns the value of the template type associated with the given \a key

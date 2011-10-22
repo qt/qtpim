@@ -58,17 +58,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldSecondsBeforeStart;
-    static const QLatin1Constant FieldRepetitionCount;
-    static const QLatin1Constant FieldRepetitionDelay;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder, "Reminder")
-    Q_DECLARE_LATIN1_CONSTANT(FieldSecondsBeforeStart, "SecondsBeforeStart");
-    Q_DECLARE_LATIN1_CONSTANT(FieldRepetitionCount, "RepetitionCount");
-    Q_DECLARE_LATIN1_CONSTANT(FieldRepetitionDelay, "RepetitionDelay");
-#endif
+    const static QString FieldSecondsBeforeStart;
+    const static QString FieldRepetitionCount;
+    const static QString FieldRepetitionDelay;
 
     enum ReminderType {
         NoReminder = 0,
@@ -92,19 +85,15 @@ public:
     int repetitionCount() const {return value<int>(FieldRepetitionCount);}
 
 protected:
-    QOrganizerItemReminder(const char* definitionName) : QOrganizerItemDetail(definitionName) {}
-    QOrganizerItemReminder(const QOrganizerItemDetail& detail, const char* definitionName) : QOrganizerItemDetail(detail, definitionName) {}
+    QOrganizerItemReminder(const QString &definitionName) : QOrganizerItemDetail(definitionName) {}
+    QOrganizerItemReminder(const QOrganizerItemDetail& detail, const QString &definitionName) : QOrganizerItemDetail(detail, definitionName) {}
 };
 
 #define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, definitionNameString) \
-    className() : QOrganizerItemReminder(DefinitionName.latin1()) {} \
-    className(const QOrganizerItemDetail& field) : QOrganizerItemReminder(field, DefinitionName.latin1()) {} \
-    className& operator=(const QOrganizerItemDetail& other) {assign(other, DefinitionName.latin1()); return *this;} \
-    \
-    Q_DECLARE_LATIN1_CONSTANT(DefinitionName, definitionNameString);
-
-#define Q_IMPLEMENT_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, definitionNameString) \
-    Q_DEFINE_LATIN1_CONSTANT(className::DefinitionName, definitionNameString)
+    className() : QOrganizerItemReminder(DefinitionName) {} \
+    className(const QOrganizerItemDetail& field) : QOrganizerItemReminder(field, DefinitionName) {} \
+    className& operator=(const QOrganizerItemDetail& other) {assign(other, DefinitionName); return *this;} \
+    const static QString DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 

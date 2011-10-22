@@ -131,10 +131,10 @@ void tst_QOrganizerItem::details()
     QCOMPARE(oi.details<QOrganizerItemLocation>().count(), 0);
     QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName.latin1()).count(), 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName.latin1()).isEmpty());
-    QCOMPARE(oi.details(QLatin1String(QOrganizerItemLocation::DefinitionName)).count(), 0);
-    QVERIFY(oi.detail(QLatin1String(QOrganizerItemLocation::DefinitionName)).isEmpty());
+    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
+    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
 
     // Test retrieving the default details (type)
     QList<QOrganizerItemDetail> details = oi.details(QString());
@@ -162,17 +162,17 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
 
-    QVERIFY(oi.details(QLatin1String(QOrganizerItemLocation::DefinitionName)).count() == 1);
-    QVERIFY(oi.details(QLatin1String(QOrganizerItemLocation::DefinitionName), QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QLatin1String(QOrganizerItemLocation::DefinitionName), QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
 
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName.latin1()).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName.latin1(), QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName.latin1(), QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
 
     QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel.latin1(), QString("another test address label")).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>(QLatin1String(QOrganizerItemLocation::FieldLabel), QString("another test address label")).count() == 1);
+    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
+    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
 
     QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
     QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
@@ -383,7 +383,7 @@ void tst_QOrganizerItem::details()
     four.setLabel("");
     oi.saveDetail(&four);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 2);
-    QVERIFY(!four.variantValues().isEmpty()); // an empty qstring is not invalid; make sure it exists in the detail.
+    QVERIFY(!four.values().isEmpty()); // an empty qstring is not invalid; make sure it exists in the detail.
 
     // ensure that clearing a contact's details works correctly
     QOrganizerItemPriority priorityDetail;
@@ -395,7 +395,7 @@ void tst_QOrganizerItem::details()
     QOrganizerItemId oldId = oi.id();
     oi.clearDetails();
     QCOMPARE(oi.details().size(), 1); // always has an item type.
-    QCOMPARE(oi.detail(QOrganizerItemPriority::DefinitionName).value(QOrganizerItemPriority::FieldPriority), QString());
+    QCOMPARE(oi.detail(QOrganizerItemPriority::DefinitionName).value(QOrganizerItemPriority::FieldPriority).toString(), QString());
     QVERIFY(oi.isEmpty());
     QCOMPARE(oi.id(), oldId); // id shouldn't change.
 }

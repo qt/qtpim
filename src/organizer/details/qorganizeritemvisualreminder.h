@@ -51,15 +51,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemVisualReminder : public QOrganizerItemReminder
 {
 public:
-#ifdef Q_QDOC
-    const char* DefinitionName;
-    const char* FieldMessage;
-    const char* FieldDataUrl;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemVisualReminder, "VisualReminder")
-    Q_DECLARE_LATIN1_CONSTANT(FieldMessage, "Message");
-    Q_DECLARE_LATIN1_CONSTANT(FieldDataUrl, "DataUrl");
-#endif
+    const static QString FieldMessage;
+    const static QString FieldDataUrl;
 
     // message and visual data to be displayed if visual notification.
     void setMessage(const QString& message) {setValue(FieldMessage, message);}

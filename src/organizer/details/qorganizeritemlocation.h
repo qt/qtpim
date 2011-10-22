@@ -56,24 +56,17 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemLocation : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldLatitude;
-    static const QLatin1Constant FieldLongitude;
-    static const QLatin1Constant FieldLabel;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemLocation, "Location")
-    Q_DECLARE_LATIN1_CONSTANT(FieldLatitude, "Latitude");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLongitude, "Longitude");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLabel, "Label");
-#endif
+    const static QString FieldLatitude;
+    const static QString FieldLongitude;
+    const static QString FieldLabel;
 
     void setLatitude(double latitude) {setValue(FieldLatitude, latitude);}
     double latitude() const {return value<double>(FieldLatitude);}
     void setLongitude(double longitude) {setValue(FieldLongitude, longitude);}
     double longitude() const {return value<double>(FieldLongitude);}
     void setLabel(const QString& label) {setValue(FieldLabel, label);}
-    QString label() const {return value(FieldLabel);}
+    QString label() const {return value(FieldLabel).toString();}
 
     // Convenience filter
     static QOrganizerItemFilter match(const QString& substring);

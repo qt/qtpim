@@ -381,12 +381,12 @@ void tst_QOrganizerManager::dumpOrganizerItemDifferences(const QOrganizerItem& c
     bDetails = b.details();
     foreach(QOrganizerItemDetail d, aDetails) {
         if (d.definitionName() != QOrganizerItemDisplayLabel::DefinitionName && d.definitionName() != QOrganizerItemType::DefinitionName)
-            qDebug() << "A item had extra detail:" << d.definitionName() << d.variantValues();
+            qDebug() << "A item had extra detail:" << d.definitionName() << d.values();
     }
     // and same for B
     foreach(QOrganizerItemDetail d, bDetails) {
         if (d.definitionName() != QOrganizerItemDisplayLabel::DefinitionName && d.definitionName() != QOrganizerItemType::DefinitionName)
-            qDebug() << "B item had extra detail:" << d.definitionName() << d.variantValues();
+            qDebug() << "B item had extra detail:" << d.definitionName() << d.values();
     }
 
     // now test specifically the display label and the type
@@ -432,7 +432,7 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
         foreach (QOrganizerItemDetail d2, bDetails) {
             if (d.definitionName() == d2.definitionName()) {
                 bool canRemove = true;
-                QMap<QString, QVariant> d2map = d2.variantValues();
+                QMap<QString, QVariant> d2map = d2.values();
                 foreach (QString key, d2map.keys()) {
                     if (d.value(key) != d2.value(key)) {
                         // d can have _more_ keys than d2,
@@ -474,7 +474,7 @@ void tst_QOrganizerManager::dumpOrganizerItem(const QOrganizerItem& item)
     QList<QOrganizerItemDetail> details = item.details();
     foreach(QOrganizerItemDetail d, details) {
         qDebug() << "  " << d.definitionName() << ":";
-        qDebug() << "    Vals:" << d.variantValues();
+        qDebug() << "    Vals:" << d.values();
     }
 }
 

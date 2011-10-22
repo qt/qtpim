@@ -867,7 +867,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                         const QOrganizerItemDetail& detail = details.at(j);
 
                         /* Check that the field is present and has a non-empty value */
-                        if (detail.variantValues().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isEmpty())
+                        if (detail.values().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isNull())
                             return true;
                     }
                     return false;
@@ -886,7 +886,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Value equality test */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName());
+                        const QString& var = detail.value(cdf.detailFieldName()).toString();
                         const QString& needle = cdf.value().toString();
                         if (matchStarts && var.startsWith(needle, cs))
                             return true;
@@ -903,7 +903,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Value equality test */
                     for(int j = 0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QVariant& var = detail.variantValue(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailFieldName());
                         if (!var.isNull() && compareVariant(var, cdf.value(), cs) == 0)
                             return true;
                     }
@@ -931,7 +931,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                 if (!cdf.minValue().isValid() && !cdf.maxValue().isValid()) {
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        if (detail.variantValues().contains(cdf.detailFieldName()))
+                        if (detail.values().contains(cdf.detailFieldName()))
                             return true;
                     }
                     return false;
@@ -966,7 +966,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Starts with is the normal compare case, endsWith is a bit trickier */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName());
+                        const QString& var = detail.value(cdf.detailFieldName()).toString();
                         if (!matchEnds) {
                             // MatchStarts or MatchFixedString
                             if (testMin && QString::compare(var, minVal, cs) < minComp)
@@ -989,7 +989,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Nope, testing the values as a variant */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QVariant& var = detail.variantValue(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailFieldName());
 
                         if (testMin && compareVariant(var, cdf.minValue(), cs) < minComp)
                             continue;
@@ -1207,8 +1207,8 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
             break;
 
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).variantValue(sortOrder.detailFieldName());
-        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).variantValue(sortOrder.detailFieldName());
+        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
+        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
 
         bool aIsNull = false;
         bool bIsNull = false;

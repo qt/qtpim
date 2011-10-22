@@ -57,13 +57,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldPriority;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority, "Priority")
-    Q_DECLARE_LATIN1_CONSTANT(FieldPriority, "Priority");
-#endif
+    const static QString FieldPriority;
 
     // time vs impact priority?  greater granularity?
     enum Priority {

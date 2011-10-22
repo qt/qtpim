@@ -54,13 +54,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldEntryDateTime;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime, "JournalTime")
-    Q_DECLARE_LATIN1_CONSTANT(FieldEntryDateTime, "EntryDateTime");
-#endif
+    const static QString FieldEntryDateTime;
 
     void setEntryDateTime(const QDateTime& entryDateTime) {setValue(FieldEntryDateTime, entryDateTime);}
     QDateTime entryDateTime() const {return value<QDateTime>(FieldEntryDateTime);}

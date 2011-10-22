@@ -54,16 +54,11 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemDescription : public QOrganizerItemDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldDescription;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDescription, "Description")
-    Q_DECLARE_LATIN1_CONSTANT(FieldDescription, "Description");
-#endif
+    const static QString FieldDescription;
 
     void setDescription(const QString& description) {setValue(FieldDescription, description);}
-    QString description() const {return value(FieldDescription);}
+    QString description() const {return value(FieldDescription).toString();}
 };
 
 QTORGANIZER_END_NAMESPACE

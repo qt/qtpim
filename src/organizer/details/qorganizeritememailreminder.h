@@ -51,24 +51,16 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemReminder
 {
 public:
-#ifdef Q_QDOC
-    const char* DefinitionName;
-    const char* FieldSubject;
-    const char* FieldBody;
-    const char* FieldAttachments;
-    const char* FieldRecipients;
-#else
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemEmailReminder, "EmailReminder")
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubject, "Subject");
-    Q_DECLARE_LATIN1_CONSTANT(FieldBody, "Body");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAttachments, "Attachments");
-    Q_DECLARE_LATIN1_CONSTANT(FieldRecipients, "Recipients");
-#endif
+    const static QString FieldSubject;
+    const static QString FieldBody;
+    const static QString FieldAttachments;
+    const static QString FieldRecipients;
 
     // email data if email notification.
     void setContents(const QString& subject, const QString& body, const QVariantList& attachments) {setValue(FieldSubject, subject); setValue(FieldBody, body); setValue(FieldAttachments, attachments);}
-    QString subject() const {return value(FieldSubject);}
-    QString body() const {return value(FieldBody);}
+    QString subject() const {return value(FieldSubject).toString();}
+    QString body() const {return value(FieldBody).toString();}
     QVariantList attachments() const {return value<QVariantList>(FieldAttachments);} // mime data type?
     void setRecipients(const QStringList& recipients) {setValue(FieldRecipients, recipients);}
     QStringList recipients() const {return value<QStringList>(FieldRecipients);}

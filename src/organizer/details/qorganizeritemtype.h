@@ -43,6 +43,7 @@
 #define QORGANIZERITEMTYPE_H
 
 #include <QString>
+#include "qlatin1constant.h"
 
 #include "qorganizerglobal.h"
 #include "qorganizeritemdetail.h"
@@ -54,9 +55,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemType : public QOrganizerItemDetail
 {
 public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, "Type")
+    const static QString FieldType;
+
 #ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldType;
     static const QLatin1Constant TypeEvent;
     static const QLatin1Constant TypeTodo;
     static const QLatin1Constant TypeJournal;
@@ -64,8 +66,6 @@ public:
     static const QLatin1Constant TypeEventOccurrence;
     static const QLatin1Constant TypeTodoOccurrence;
 #else
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, "Type")
-    Q_DECLARE_LATIN1_CONSTANT(FieldType, "Type");
     Q_DECLARE_LATIN1_CONSTANT(TypeEvent, "Event");
     Q_DECLARE_LATIN1_CONSTANT(TypeEventOccurrence, "EventOccurrence");
     Q_DECLARE_LATIN1_CONSTANT(TypeTodo, "Todo");
@@ -75,7 +75,7 @@ public:
 #endif
 
     void setType(const QString& type) {setValue(FieldType, type);}
-    QString type() const {return value(FieldType);}
+    QString type() const {return value(FieldType).toString();}
 };
 
 QTORGANIZER_END_NAMESPACE

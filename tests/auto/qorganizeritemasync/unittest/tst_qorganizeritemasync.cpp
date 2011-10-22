@@ -397,7 +397,7 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
             }
 
             // equality without checking the detail key values.
-            if (d.definitionName() == d2.definitionName() && d.accessConstraints() == d2.accessConstraints() && d.variantValues() == d2.variantValues()) {
+            if (d.definitionName() == d2.definitionName() && d.accessConstraints() == d2.accessConstraints() && d.values() == d2.values()) {
                 a.removeDetail(&d);
                 b.removeDetail(&d2);
                 break;
@@ -422,12 +422,12 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
     foreach (QOrganizerItemDetail d, aDetails) {
         bool foundCurrentDetail = false;
         foreach (QOrganizerItemDetail d2, bDetails) {
-            if (d.definitionName() == d2.definitionName() && d.accessConstraints() == d2.accessConstraints() && d.variantValues() == d2.variantValues()) {
+            if (d.definitionName() == d2.definitionName() && d.accessConstraints() == d2.accessConstraints() && d.values() == d2.values()) {
                 foundCurrentDetail = true;
             }
 
             if (d.definitionName() == d2.definitionName() && d.accessConstraints() == d2.accessConstraints() && d.definitionName() == QOrganizerItemParent::DefinitionName) {
-                // XXX TODO: fix this properly in code.  At the moment, doing d.variantValues() == d2.variantValues() doesn't work for ParentItem details.
+                // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
                 QOrganizerItemParent p1 = d;
                 QOrganizerItemParent p2 = d2;
                 if (p1.parentId() == p2.parentId()) {
@@ -452,12 +452,12 @@ bool tst_QOrganizerItemAsync::detailListContainsDetailIgnoringDetailKeys(const Q
             foundCurrentDetail = true;
         }
 
-        if (det.definitionName() == d2.definitionName() && det.accessConstraints() == d2.accessConstraints() && det.variantValues() == d2.variantValues()) {
+        if (det.definitionName() == d2.definitionName() && det.accessConstraints() == d2.accessConstraints() && det.values() == d2.values()) {
             foundCurrentDetail = true;
         }
 
         if (det.definitionName() == d2.definitionName() && det.accessConstraints() == d2.accessConstraints() && det.definitionName() == QOrganizerItemParent::DefinitionName) {
-            // XXX TODO: fix this properly in code.  At the moment, doing d.variantValues() == d2.variantValues() doesn't work for ParentItem details.
+            // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
             QOrganizerItemParent p1 = det;
             QOrganizerItemParent p2 = d2;
             if (p1.parentId() == p2.parentId()) {

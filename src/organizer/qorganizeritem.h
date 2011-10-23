@@ -100,22 +100,10 @@ public:
     QOrganizerItemDetail detail(const QString& definitionId) const;
     QList<QOrganizerItemDetail> details(const QString& definitionId = QString()) const;
 
-    QList<QOrganizerItemDetail> details(const QString& definitionName, const QString& fieldName, const QString& value) const;
-
     /* Templated (type-specific) detail retrieval */
     template<typename T> QList<T> details() const
     {
         QList<QOrganizerItemDetail> props = details(T::DefinitionName);
-        QList<T> ret;
-        for (int i = 0; i < props.count(); i++)
-            ret.append(T(props.at(i)));
-        return ret;
-    }
-
-    /* Templated (type-specific) detail retrieval base on given detail field name and field value */
-    template<typename T> QList<T> details(const QString& fieldName, const QString& value) const
-    {
-        QList<QOrganizerItemDetail> props = details(T::DefinitionName, fieldName, value);
         QList<T> ret;
         for (int i = 0; i < props.count(); i++)
             ret.append(T(props.at(i)));

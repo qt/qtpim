@@ -114,13 +114,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
- * \fn QList<T> QOrganizerItem::details(const QString& fieldName, const QString& value) const
- * Returns a list of details of the template parameter type which have field called \a fieldName, with matching \a value.
- * The type must be a subclass of QOrganizerItemDetail.
-   \since 1.1
- */
-
-/*!
  * \fn T QOrganizerItem::detail() const
  * Returns the first detail of the template parameter type, as returned by the template details() function.
  * The type must be a subclass of QOrganizerItemDetail.
@@ -372,20 +365,6 @@ void QOrganizerItem::setId(const QOrganizerItemId& id)
 */
 
 /*!
-    \fn QList<QOrganizerItemDetail> QOrganizerItem::details(const QLatin1Constant& definitionName, const QLatin1Constant& fieldName, const QString& value)
-    Returns a list of details of the given \a definitionName, with fields named \a fieldName and with value \a value.
-    \since 1.1
-*/
-
-/*!
-    \fn QList<T> QOrganizerItem::details(const char* fieldName, const QString& value) const
-    \internal
-
-    Returns a list of details of the template type which match the \a fieldName and \a value criteria
-    \since 1.1
-*/
-
-/*!
     Returns the first detail stored in the organizer item with the given \a definitionName
     \since 1.1
 */
@@ -424,35 +403,6 @@ QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionNam
         for (int i = 0; i < d->m_details.size(); i++) {
             const QOrganizerItemDetail& existing = d->m_details.at(i);
             if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
-    Returns a list of details of the given \a definitionName, with fields named \a fieldName and with value \a value.
-    The definitionName string can be determined by the DefinitionName attribute
-    of defined objects (e.g. QOrganizerItemPhoneNumber::DefinitionName) or by
-    requesting a list of all the definition names using
-    \l {QOrganizerManager::detailDefinitions()}{detailDefinitions()}.
-    \since 1.1
-*/
-QList<QOrganizerItemDetail> QOrganizerItem::details(const QString& definitionName, const QString& fieldName, const QString& value) const
-{
-    // build the sub-list of matching details.
-    QList<QOrganizerItemDetail> sublist;
-
-    // special case
-    if (fieldName.isEmpty()) {
-        sublist = details(definitionName);
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QOrganizerItemDetail& existing = d->m_details.at(i);
-            if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName
-                && existing.hasValue(fieldName) && value == existing.value(fieldName)) {
                 sublist.append(existing);
             }
         }

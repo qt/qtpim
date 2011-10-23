@@ -159,21 +159,6 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi.details().count() == 2);
 
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
-
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
-
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
-
-    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>(QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-
     QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
     QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
@@ -184,8 +169,6 @@ void tst_QOrganizerItem::details()
     QCOMPARE(oi.details().count(), 1);
     QVERIFY(oi.isEmpty() == true);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
     QCOMPARE(oi.details<QOrganizerItemLocation>().count(), 0);
     QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
@@ -204,8 +187,6 @@ void tst_QOrganizerItem::details()
     QCOMPARE(oi.details().count(), 1);
     QVERIFY(oi.isEmpty() == true);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
     QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
     QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
@@ -221,8 +202,6 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi.removeDetail(&a3));
     QCOMPARE(oi.details().count(), 1);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 0);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
     QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
     QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
@@ -237,8 +216,6 @@ void tst_QOrganizerItem::details()
     oi.saveDetail(&a2);
     QCOMPARE(oi.details().count(), 3);
     QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 2);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel, QString("another test address label")).count() == 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName, QString(), QString("another test address label")).count() == oi.details(QOrganizerItemLocation::DefinitionName).count());
     QVERIFY(oi.details<QOrganizerItemLocation>().count() == 2);
     QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
     QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());

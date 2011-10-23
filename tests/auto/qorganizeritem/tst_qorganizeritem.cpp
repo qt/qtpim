@@ -395,7 +395,7 @@ void tst_QOrganizerItem::displayLabel()
 
     QOrganizerItemDisplayLabel displayLabel;
     displayLabel.setLabel("test label");
-    oi.setDisplayLabel(displayLabel);
+    oi.setDisplayLabel(displayLabel.label());
     QVERIFY(oi.displayLabel() == displayLabel.label());
 
     /* Test self assign */
@@ -423,7 +423,7 @@ void tst_QOrganizerItem::description()
 
     QOrganizerItemDescription descr;
     descr.setDescription("test description");
-    oi.setDescription(descr);
+    oi.setDescription(descr.description());
     QVERIFY(oi.description() == descr.description());
 
     /* Test self assign */
@@ -539,7 +539,7 @@ void tst_QOrganizerItem::type()
     // now set it to be an event via the type mutator, and test that it works
     QOrganizerItemType eventType;
     eventType.setType(QString(QLatin1String(QOrganizerItemType::TypeEvent)));
-    oi.setType(eventType);
+    oi.setType(eventType.type());
     QVERIFY(oi.type() == QString(QLatin1String(QOrganizerItemType::TypeEvent)));
 
     // set it back to a note, via the string mutator

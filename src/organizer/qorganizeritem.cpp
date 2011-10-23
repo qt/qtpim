@@ -664,19 +664,6 @@ void QOrganizerItem::setType(const QString& type)
 }
 
 /*!
- * Sets the type of the organizer item to the given \a type detail.
-   \since 1.1
- */
-void QOrganizerItem::setType(const QOrganizerItemType& type)
-{
-    // XXX TODO: may need to copy in _all_ fields, not just the type field?
-    QOrganizerItemType newType = detail<QOrganizerItemType>();
-    newType.setType(type.type());
-    newType.d->m_access = QOrganizerItemDetail::Irremovable;
-    saveDetail(&newType);
-}
-
-/*!
  * Returns the display label of the item
    \since 1.1
  */
@@ -696,17 +683,6 @@ void QOrganizerItem::setDisplayLabel(const QString& label)
 {
     QOrganizerItemDisplayLabel dl = detail<QOrganizerItemDisplayLabel>();
     dl.setLabel(label);
-    saveDetail(&dl);
-}
-
-/*!
- * Sets the display label of the item to \a label
-   \since 1.1
- */
-void QOrganizerItem::setDisplayLabel(const QOrganizerItemDisplayLabel& label)
-{
-    QOrganizerItemDisplayLabel dl = detail<QOrganizerItemDisplayLabel>();
-    dl.setLabel(label.label());
     saveDetail(&dl);
 }
 
@@ -732,17 +708,6 @@ void QOrganizerItem::setDescription(const QString& description)
 {
     QOrganizerItemDescription descr = detail<QOrganizerItemDescription>();
     descr.setDescription(description);
-    saveDetail(&descr);
-}
-
-/*!
- * Sets the human-readable description of the item to \a description
-   \since 1.1
- */
-void QOrganizerItem::setDescription(const QOrganizerItemDescription& description)
-{
-    QOrganizerItemDescription descr = detail<QOrganizerItemDescription>();
-    descr.setDescription(description.description());
     saveDetail(&descr);
 }
 

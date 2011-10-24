@@ -362,11 +362,11 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(const QString &definitionNa
     } else if (definitionName == QOrganizerItemTag::DefinitionName) {
         QOrganizerItemTag tag;
         tag.setTag(QStringLiteral("Qt Open Governance"));
-    } else if (definitionName == QOrganizerItemCustomDetail::DefinitionName) {
-        QOrganizerItemCustomDetail customDetail;
-        customDetail.setName(QStringLiteral("My-Stupid-Custom-Detail"));
-        customDetail.setData(QVariantList() << QStringLiteral("Code once") << QStringLiteral("Create more") << QStringLiteral("Deploy everywhere"));
-        return customDetail;
+    } else if (definitionName == QOrganizerItemExtendedDetail::DefinitionName) {
+        QOrganizerItemExtendedDetail extendedDetail;
+        extendedDetail.setName(QStringLiteral("My-Stupid-Extended-Detail"));
+        extendedDetail.setData(QVariantList() << QStringLiteral("Code once") << QStringLiteral("Create more") << QStringLiteral("Deploy everywhere"));
+        return extendedDetail;
     }
 
     return QOrganizerItemDetail();

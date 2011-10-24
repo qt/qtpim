@@ -847,14 +847,14 @@ void QOrganizerItem::setGuid(const QString& guid)
 /*!
     Returns the data of the custom detail with the given \a name.
  */
-QVariant QOrganizerItem::customDetailData(const QString &name) const
+QVariant QOrganizerItem::extendedDetailData(const QString &name) const
 {
-    QList<QOrganizerItemCustomDetail> customDetails = details<QOrganizerItemCustomDetail>();
-    if (customDetails.size() > 0) {
+    QList<QOrganizerItemExtendedDetail> extendedDetails = details<QOrganizerItemExtendedDetail>();
+    if (extendedDetails.size() > 0) {
         if (name.isEmpty())
-            return customDetails.at(0).data();
+            return extendedDetails.at(0).data();
 
-        foreach (const QOrganizerItemCustomDetail &detail, customDetails) {
+        foreach (const QOrganizerItemExtendedDetail &detail, extendedDetails) {
             if (name == detail.name())
                 return detail.data();
         }
@@ -865,16 +865,16 @@ QVariant QOrganizerItem::customDetailData(const QString &name) const
 /*!
     Sets the \a data of a custom detail with the given \a name.
  */
-void QOrganizerItem::setCustomDetailData(const QString &name, const QVariant &data)
+void QOrganizerItem::setExtendedDetailData(const QString &name, const QVariant &data)
 {
-    QList<QOrganizerItemCustomDetail> customDetails = details<QOrganizerItemCustomDetail>();
-    foreach (QOrganizerItemCustomDetail detail, customDetails) {
+    QList<QOrganizerItemExtendedDetail> extendedDetails = details<QOrganizerItemExtendedDetail>();
+    foreach (QOrganizerItemExtendedDetail detail, extendedDetails) {
         if (name == detail.name()) {
             detail.setData(data);
             return;
         }
     }
-    QOrganizerItemCustomDetail newDetail;
+    QOrganizerItemExtendedDetail newDetail;
     newDetail.setName(name);
     newDetail.setData(data);
     saveDetail(&newDetail);

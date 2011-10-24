@@ -63,6 +63,6 @@
 #include <qorganizeritememailreminder.h>
 #include <qorganizeritemvisualreminder.h>
 
-#include <qorganizeritemcustomdetail.h>
+#include <qorganizeritemextendeddetail.h>
 
 #endif // QORGANIZERITEMDETAILS_H

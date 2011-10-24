@@ -1639,74 +1639,74 @@ void QOrganizerItemType::setType(const QString &type)
 
 
 /*!
-    \class QOrganizerItemCustomDetail
-    \brief The QOrganizerItemCustomDetail class provides the possibility to save custom details to the organizer item.
+    \class QOrganizerItemExtendedDetail
+    \brief The QOrganizerItemExtendedDetail class provides the possibility to save extended details to the organizer item.
     \inmodule QtOrganizer
     \ingroup organizer-details
 
-    Different back-end engines may or may not support custom details for different item types. Even
+    Different back-end engines may or may not support extended details for different item types. Even
     if supported, they may accept different QVariant types as the data.
  */
 
 /*!
-    \variable QOrganizerItemCustomDetail::DefinitionName
+    \variable QOrganizerItemExtendedDetail::DefinitionName
 
-    The constant string which identifies the definition of details which are custom details.
+    The constant string which identifies the definition of details which are extended details.
  */
-const QString QOrganizerItemCustomDetail::DefinitionName(QStringLiteral("CustomDetail"));
+const QString QOrganizerItemExtendedDetail::DefinitionName(QStringLiteral("ExtendedDetail"));
 
 /*!
-    \variable QOrganizerItemCustomDetail::FieldDetailName
+    \variable QOrganizerItemExtendedDetail::FieldDetailName
 
-    Contains the name of the custom detail.
+    Contains the name of the extended detail.
  */
-const QString QOrganizerItemCustomDetail::FieldCustomDetailName(QStringLiteral("CustomDetailName"));
+const QString QOrganizerItemExtendedDetail::FieldExtendedDetailName(QStringLiteral("ExtendedDetailName"));
 
 /*!
-    \variable QOrganizerItemCustomDetail::FieldCustomDetailData
+    \variable QOrganizerItemExtendedDetail::FieldExtendedDetailData
 
-    Contains the data this custom detail.
+    Contains the data this extended detail.
  */
-const QString QOrganizerItemCustomDetail::FieldCustomDetailData(QStringLiteral("CustomDetailData"));
+const QString QOrganizerItemExtendedDetail::FieldExtendedDetailData(QStringLiteral("ExtendedDetailData"));
 
 /*!
-    \fn void QOrganizerItemCustomDetail::setName(const QString &name)
+    \fn void QOrganizerItemExtendedDetail::setName(const QString &name)
 
-    Sets the \a name of this custom detail.
+    Sets the \a name of this extended detail.
  */
-void QOrganizerItemCustomDetail::setName(const QString &name)
+void QOrganizerItemExtendedDetail::setName(const QString &name)
 {
-    setValue(FieldCustomDetailName, name);
+    setValue(FieldExtendedDetailName, name);
 }
 
 /*!
-    \fn QString QOrganizerItemCustomDetail::name() const
+    \fn QString QOrganizerItemExtendedDetail::name() const
 
-    Gets the name of this custom detail.
+    Gets the name of this extended detail.
  */
-QString QOrganizerItemCustomDetail::name() const
+QString QOrganizerItemExtendedDetail::name() const
 {
-    return value(FieldCustomDetailName).toString();
+    return value(FieldExtendedDetailName).toString();
 }
 
 /*!
     \fn void setDetailData(const QVariant &data)
 
-    Sets the \a data of the custom detail.
+    Sets the \a data of the extended detail.
  */
-void QOrganizerItemCustomDetail::setData(const QVariant &data)
+void QOrganizerItemExtendedDetail::setData(const QVariant &data)
 {
-    setValue(FieldCustomDetailData, data);
+    setValue(FieldExtendedDetailData, data);
 }
 
 /*!
     \fn QVariant data() const
 
-    Gets the data of this custom detail.
+    Gets the data of this extended detail.
  */
-QVariant QOrganizerItemCustomDetail::data() const
+QVariant QOrganizerItemExtendedDetail::data() const
 {
-    return value(FieldCustomDetailData);
+    return value(FieldExtendedDetailData);
 }
 
 QTORGANIZER_END_NAMESPACE

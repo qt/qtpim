@@ -275,12 +275,12 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         item->saveDetail(&emailReminder);
     }
 
-    // custom details
-    QMap<QString, QVariant> customDetailsMap = object.value(QOrganizerJsonDbStr::ItemCustomFields).toMap();
-    if (!customDetailsMap.isEmpty()) {
-        QList<QOrganizerItemCustomDetail> customDetails;
-        jsonDbObjectToCustomDetails(customDetailsMap, customDetails);
-        foreach (QOrganizerItemCustomDetail detail, customDetails)
+    // extended details
+    QMap<QString, QVariant> extendedDetailsMap = object.value(QOrganizerJsonDbStr::ItemCustomFields).toMap();
+    if (!extendedDetailsMap.isEmpty()) {
+        QList<QOrganizerItemExtendedDetail> extendedDetails;
+        jsonDbObjectToExtendedDetails(extendedDetailsMap, extendedDetails);
+        foreach (QOrganizerItemExtendedDetail detail, extendedDetails)
             item->saveDetail(&detail);
     }
 
@@ -502,11 +502,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::ItemExceptioneDates, exceptionDatesList);
     }
 
-    // custom details
-    QList<QOrganizerItemCustomDetail> customDetails = item.details<QOrganizerItemCustomDetail>();
-    if (!customDetails.isEmpty()) {
+    // extended details
+    QList<QOrganizerItemExtendedDetail> extendedDetails = item.details<QOrganizerItemExtendedDetail>();
+    if (!extendedDetails.isEmpty()) {
         QVariantMap map;
-        customDetailsToJsonDbObject(customDetails, map);
+        extendedDetailsToJsonDbObject(extendedDetails, map);
         if (!map.isEmpty())
             object->insert(QOrganizerJsonDbStr::ItemCustomFields, map);
     }
@@ -813,21 +813,21 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
     return conversionData[0].enumStr;
 }
 
-void QOrganizerJsonDbConverter::customDetailsToJsonDbObject(const QList<QOrganizerItemCustomDetail> &customDetails, QVariantMap &object) const
+void QOrganizerJsonDbConverter::extendedDetailsToJsonDbObject(const QList<QOrganizerItemExtendedDetail> &extendedDetails, QVariantMap &object) const
 {
-    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
-        if (customDetail.name().isEmpty() || customDetail.data().isNull())
+    foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
+        if (extendedDetail.name().isEmpty() || extendedDetail.data().isNull())
             continue;
-        if (customDetail.data().canConvert(QVariant::String)) {
-            object.insert(customDetail.name(), customDetail.data().toString());
-        } else if (customDetail.data().type() == QVariant::List) {
+        if (extendedDetail.data().canConvert(QVariant::String)) {
+            object.insert(extendedDetail.name(), extendedDetail.data().toString());
+        } else if (extendedDetail.data().type() == QVariant::List) {
             QVariantList variantList;
-            dataToList(customDetail.data(), variantList);
-            object.insert(customDetail.name(), variantList);
-        } else if (customDetail.data().type() == QVariant::Map) {
+            dataToList(extendedDetail.data(), variantList);
+            object.insert(extendedDetail.name(), variantList);
+        } else if (extendedDetail.data().type() == QVariant::Map) {
             QVariantMap variantMap;
-            dataToMap(customDetail.data(), variantMap);
-            object.insert(customDetail.name(), variantMap);
+            dataToMap(extendedDetail.data(), variantMap);
+            object.insert(extendedDetail.name(), variantMap);
         } else {
             continue;
         }
@@ -881,15 +881,15 @@ void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map
     }
 }
 
-void QOrganizerJsonDbConverter::jsonDbObjectToCustomDetails(const QVariantMap &object, QList<QOrganizerItemCustomDetail> &customDetails) const
+void QOrganizerJsonDbConverter::jsonDbObjectToExtendedDetails(const QVariantMap &object, QList<QOrganizerItemExtendedDetail> &extendedDetails) const
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
     while (i != object.constEnd()) {
         if (!i.key().isNull() && !i.value().isNull()) {
-            QOrganizerItemCustomDetail customDetail;
-            customDetail.setName(i.key());
-            customDetail.setData(i.value());
-            customDetails.append(customDetail);
+            QOrganizerItemExtendedDetail extendedDetail;
+            extendedDetail.setName(i.key());
+            extendedDetail.setData(i.value());
+            extendedDetails.append(extendedDetail);
         }
         ++i;
     }

@@ -464,7 +464,7 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                      << QOrganizerItemDescription::DefinitionName
                      << QOrganizerItemComment::DefinitionName
                      << QOrganizerItemTag::DefinitionName
-                     << QOrganizerItemCustomDetail::DefinitionName;
+                     << QOrganizerItemExtendedDetail::DefinitionName;
 
     if (itemType == QOrganizerItemType::TypeEvent) {
         supportedDetails << QOrganizerItemRecurrence::DefinitionName

@@ -1477,7 +1477,7 @@ QStringList QOrganizerItemMemoryEngine::supportedItemDetails(const QString &item
                      << QOrganizerItemDescription::DefinitionName
                      << QOrganizerItemComment::DefinitionName
                      << QOrganizerItemTag::DefinitionName
-                     << QOrganizerItemCustomDetail::DefinitionName;
+                     << QOrganizerItemExtendedDetail::DefinitionName;
 
     if (itemType == QOrganizerItemType::TypeEvent) {
         supportedDetails << QOrganizerItemRecurrence::DefinitionName

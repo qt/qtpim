@@ -239,7 +239,7 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
     case QDeclarativeOrganizerItemDetail::Type:
         return QDeclarativeOrganizerItemType::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
-        return QDeclarativeOrganizeritemCustomDetail::fieldNameFromFieldType(fieldType);
+        return QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
         break;
     }
@@ -290,7 +290,7 @@ QString QDeclarativeOrganizerItemDetail::definitionName(QDeclarativeOrganizerIte
     case QDeclarativeOrganizerItemDetail::Type:
         return QOrganizerItemType::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Customized:
-        return QOrganizerItemCustomDetail::DefinitionName;
+        return QOrganizerItemExtendedDetail::DefinitionName;
     default:
         break;
     }
@@ -339,7 +339,7 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
         return QDeclarativeOrganizerItemDetail::Timestamp;
     if (definitionName == QOrganizerItemType::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Type;
-    if (definitionName == QOrganizerItemCustomDetail::DefinitionName)
+    if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Customized;
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
     return QDeclarativeOrganizerItemDetail::Customized;
@@ -1565,57 +1565,57 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
 
 
 /*!
-    \qmlclass Comment QDeclarativeOrganizeritemCustomDetail
-    \brief The Comment element contains a custom detail of an organizer item.
+    \qmlclass ExtendedDetail QDeclarativeOrganizeritemExtendedDetail
+    \brief The ExtendedDetail element contains a extended detail of an organizer item.
     \ingroup qml-organizer
 
     This element is part of the \bold{QtOrganizer 2.0} module.
  */
-QDeclarativeOrganizeritemCustomDetail::QDeclarativeOrganizeritemCustomDetail(QObject *parent)
+QDeclarativeOrganizeritemExtendedDetail::QDeclarativeOrganizeritemExtendedDetail(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
-    setDetail(QOrganizerItemCustomDetail());
+    setDetail(QOrganizerItemExtendedDetail());
 }
 
-QDeclarativeOrganizeritemCustomDetail::ItemDetailType QDeclarativeOrganizeritemCustomDetail::type() const
+QDeclarativeOrganizeritemExtendedDetail::ItemDetailType QDeclarativeOrganizeritemExtendedDetail::type() const
 {
     return QDeclarativeOrganizerItemDetail::Customized;
 }
 
 /*!
-    \qmlproperty string CustomDetail::name
+    \qmlproperty string ExtendedDetail::name
 
-    This property holds the name of the custom detail.
+    This property holds the name of the extended detail.
  */
-void QDeclarativeOrganizeritemCustomDetail::setName(const QString &newDetailName)
+void QDeclarativeOrganizeritemExtendedDetail::setName(const QString &newDetailName)
 {
     if (newDetailName != name() && !readOnly()) {
-        m_detail.setValue(QOrganizerItemCustomDetail::FieldCustomDetailName, newDetailName);
+        m_detail.setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailName, newDetailName);
         emit detailChanged();
     }
 }
 
-QString QDeclarativeOrganizeritemCustomDetail::name() const
+QString QDeclarativeOrganizeritemExtendedDetail::name() const
 {
-    return m_detail.value(QOrganizerItemCustomDetail::FieldCustomDetailName).toString();
+    return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
 }
 
 /*!
-    \qmlproperty variant CustomDetail::data
+    \qmlproperty variant ExtendedDetail::data
 
-    This property holds the data of the custom detail.
+    This property holds the data of the extended detail.
  */
-void QDeclarativeOrganizeritemCustomDetail::setData(const QVariant &data)
+void QDeclarativeOrganizeritemExtendedDetail::setData(const QVariant &data)
 {
     if (!readOnly()) {
-        setValue(QOrganizerItemCustomDetail::FieldCustomDetailData, data);
+        setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailData, data);
         emit detailChanged();
     }
 }
 
-QVariant QDeclarativeOrganizeritemCustomDetail::data() const
+QVariant QDeclarativeOrganizeritemExtendedDetail::data() const
 {
-    return m_detail.value(QOrganizerItemCustomDetail::FieldCustomDetailData);
+    return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
 }
 
 
@@ -1661,7 +1661,7 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
     else if (type == QDeclarativeOrganizerItemDetail::TodoTime)
         itemDetail = new QDeclarativeOrganizerTodoTime;
     else if (type == QDeclarativeOrganizerItemDetail::Customized)
-        itemDetail = new QDeclarativeOrganizeritemCustomDetail;
+        itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -1708,8 +1708,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerTodoProgress;
     else if (definitionName == QOrganizerTodoTime::DefinitionName)
         itemDetail = new QDeclarativeOrganizerTodoTime;
-    else if (definitionName == QOrganizerItemCustomDetail::DefinitionName)
-        itemDetail = new QDeclarativeOrganizeritemCustomDetail;
+    else if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
+        itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -1948,13 +1948,13 @@ QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
     return QString();
 }
 
-QString QDeclarativeOrganizeritemCustomDetail::fieldNameFromFieldType(int type)
+QString QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(int type)
 {
     switch (type) {
     case 0:
-        return QOrganizerItemCustomDetail::FieldCustomDetailName;
+        return QOrganizerItemExtendedDetail::FieldExtendedDetailName;
     case 1:
-        return QOrganizerItemCustomDetail::FieldCustomDetailData;
+        return QOrganizerItemExtendedDetail::FieldExtendedDetailData;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
     return QString();

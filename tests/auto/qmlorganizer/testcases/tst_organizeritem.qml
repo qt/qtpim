@@ -85,9 +85,9 @@ TestCase {
         comment: "Code Less"
     }
 
-    CustomDetail {
-        id: customDetail
-        name: "customDetail1"
+    ExtendedDetail {
+        id: extendedDetail
+        name: "extendedDetail1"
         data: "data 1"
     }
 
@@ -340,11 +340,10 @@ TestCase {
         compare(item.itemDetails.length, 0)
         compare(itemChangedSpy.count, count)
 
-        // custom detail
-        item.setDetail(customDetail)
-        itemChangedSpy.wait(waitTime);
+        // extended detail
+        item.setDetail(extendedDetail)
         compare(item.details(Detail.Customized).length, 1)
-        compare(item.detail(Detail.Customized).name, "customDetail1")
+        compare(item.detail(Detail.Customized).name, "extendedDetail1")
         compare(item.detail(Detail.Customized).data, "data 1")
         compare(itemChangedSpy.count, ++count)
     }

@@ -82,10 +82,10 @@ private:
     int stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
 
-    void customDetailsToJsonDbObject(const QList<QOrganizerItemCustomDetail> &customDetails, QVariantMap& object) const;
+    void extendedDetailsToJsonDbObject(const QList<QOrganizerItemExtendedDetail> &extendedDetails, QVariantMap& object) const;
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
-    void jsonDbObjectToCustomDetails(const QVariantMap &object, QList<QOrganizerItemCustomDetail> &customDetails) const;
+    void jsonDbObjectToExtendedDetails(const QVariantMap &object, QList<QOrganizerItemExtendedDetail> &extendedDetails) const;
 };
 
 QTORGANIZER_END_NAMESPACE

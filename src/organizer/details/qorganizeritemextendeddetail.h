@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMCUSTOMDETAIL_H
-#define QORGANIZERITEMCUSTOMDETAIL_H
+#ifndef QORGANIZERITEMEXTENDEDDETAIL_H
+#define QORGANIZERITEMEXTENDEDDETAIL_H
 
 #include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class Q_ORGANIZER_EXPORT QOrganizerItemCustomDetail : public QOrganizerItemDetail
+class Q_ORGANIZER_EXPORT QOrganizerItemExtendedDetail : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemCustomDetail, "CustomDetail")
-    const static QString FieldCustomDetailName;
-    const static QString FieldCustomDetailData;
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemExtendedDetail, "ExtendedDetail")
+    const static QString FieldExtendedDetailName;
+    const static QString FieldExtendedDetailData;
 
     void setName(const QString &name);
     QString name() const;
@@ -62,4 +62,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif // QORGANIZERITEMCUSTOMDETAIL_H
+#endif // QORGANIZERITEMEXTENDEDDETAIL_H

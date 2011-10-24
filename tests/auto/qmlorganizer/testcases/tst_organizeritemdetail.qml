@@ -126,16 +126,16 @@ TestCase {
         id: recurrence
     }
 
-    CustomDetail {
-        id: customDetail
+    ExtendedDetail {
+        id: extendedDetail
     }
 
-    function test_customDetail() {
-        compare(customDetail.name, "")
-        customDetail.name = "my custom detail"
-        compare(customDetail.name, "my custom detail")
-        customDetail.data = "asdf"
-        compare(customDetail.data, "asdf");
+    function test_extendedDetail() {
+        compare(extendedDetail.name, "")
+        extendedDetail.name = "my extended detail"
+        compare(extendedDetail.name, "my extended detail")
+        extendedDetail.data = "asdf"
+        compare(extendedDetail.data, "asdf");
     }
 
     function test_recurrence() {

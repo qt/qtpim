@@ -147,8 +147,8 @@ public:
     QString guid() const;
     void setGuid(const QString& guid);
 
-    QVariant customDetailData(const QString &name) const;
-    void setCustomDetailData(const QString &name, const QVariant &data);
+    QVariant extendedDetailData(const QString &name) const;
+    void setExtendedDetailData(const QString &name, const QVariant &data);
 
 protected:
     explicit QOrganizerItem(const char* type);

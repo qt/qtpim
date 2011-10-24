@@ -249,8 +249,8 @@ private slots:
     void testTags_data() { addManagers(); }
     void testTags();
 
-    void testCustomDetail_data() { addManagers(); }
-    void testCustomDetail();
+    void testExtendedDetail_data() { addManagers(); }
+    void testExtendedDetail();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -4467,26 +4467,26 @@ void tst_QOrganizerManager::testTags()
     QVERIFY(item2.tags().contains(QString::fromAscii("Tag4")));
 }
 
-void tst_QOrganizerManager::testCustomDetail()
+void tst_QOrganizerManager::testExtendedDetail()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
     QOrganizerEvent event;
 
     // simple string
-    QOrganizerItemCustomDetail basicString;
+    QOrganizerItemExtendedDetail basicString;
     basicString.setName(QStringLiteral("basic-string"));
     basicString.setData(QString(QStringLiteral("Qt Everywhere")));
     event.saveDetail(&basicString);
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    basicString = event.detail<QOrganizerItemCustomDetail>();
+    basicString = event.detail<QOrganizerItemExtendedDetail>();
     QCOMPARE(basicString.name(), QLatin1String("basic-string"));
     QCOMPARE(basicString.data().toString(), QLatin1String("Qt Everywhere"));
 
     // simple list
-    QOrganizerItemCustomDetail basicList;
+    QOrganizerItemExtendedDetail basicList;
     basicList.setName(QStringLiteral("basic-list"));
     QVariantList basicListData;
     basicListData << QString(QStringLiteral("data 1"))
@@ -4497,11 +4497,11 @@ void tst_QOrganizerManager::testCustomDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    QList<QOrganizerItemCustomDetail> customDetails = event.details<QOrganizerItemCustomDetail>();
-    QCOMPARE(customDetails.size(), 2);
-    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
-        if (customDetail.name() == QStringLiteral("basic-list")) {
-            QVariantList data = customDetail.data().toList();
+    QList<QOrganizerItemExtendedDetail> extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    QCOMPARE(extendedDetails.size(), 2);
+    foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
+        if (extendedDetail.name() == QStringLiteral("basic-list")) {
+            QVariantList data = extendedDetail.data().toList();
             QCOMPARE(data.size(), 3);
             QCOMPARE(data.at(0).toString(), QLatin1String("data 1"));
             QCOMPARE(data.at(1).toString(), QLatin1String("data 2"));
@@ -4511,7 +4511,7 @@ void tst_QOrganizerManager::testCustomDetail()
     }
 
     // simple map
-    QOrganizerItemCustomDetail basicMap;
+    QOrganizerItemExtendedDetail basicMap;
     basicMap.setName(QStringLiteral("basic map"));
     QVariantMap basicMapData;
     basicMapData.insert(QString(QStringLiteral("key1")), QString(QStringLiteral("data-1")));
@@ -4522,11 +4522,11 @@ void tst_QOrganizerManager::testCustomDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    customDetails = event.details<QOrganizerItemCustomDetail>();
-    QCOMPARE(customDetails.size(), 3);
-    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
-        if (customDetail.name() == QStringLiteral("basic map")) {
-            QVariantMap data = customDetail.data().toMap();
+    extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    QCOMPARE(extendedDetails.size(), 3);
+    foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
+        if (extendedDetail.name() == QStringLiteral("basic map")) {
+            QVariantMap data = extendedDetail.data().toMap();
             QCOMPARE(data.size(), 3);
             QCOMPARE(data.value(QStringLiteral("key1")).toString(), QLatin1String("data-1"));
             QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QLatin1String("data2"));
@@ -4536,18 +4536,18 @@ void tst_QOrganizerManager::testCustomDetail()
     }
 
     // map inside a list
-    QOrganizerItemCustomDetail mapInList;
+    QOrganizerItemExtendedDetail mapInList;
     mapInList.setName(QStringLiteral("map in list"));
     mapInList.setData(QVariantList() << QString(QStringLiteral("Qt is cute")) << basicMapData);
     event.saveDetail(&mapInList);
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    customDetails = event.details<QOrganizerItemCustomDetail>();
-    QCOMPARE(customDetails.size(), 4);
-    foreach (const QOrganizerItemCustomDetail &customDetail, customDetails) {
-        if (customDetail.name() == QStringLiteral("map in list")) {
-            QVariantList data = customDetail.data().toList();
+    extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    QCOMPARE(extendedDetails.size(), 4);
+    foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
+        if (extendedDetail.name() == QStringLiteral("map in list")) {
+            QVariantList data = extendedDetail.data().toList();
             QCOMPARE(data.size(), 2);
             QCOMPARE(data.at(0).toString(), QLatin1String("Qt is cute"));
 

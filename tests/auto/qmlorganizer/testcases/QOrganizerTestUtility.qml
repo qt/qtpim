@@ -87,7 +87,12 @@ TestCase {
         var idx = managerlist.indexOf("invalid"); // Find the index
         if (idx != -1)
             managerlist.splice(idx, 1); // Remove it if really found!
-        //console.log ("Manger list:  " + managerlist);
+
+        idx = managerlist.indexOf("skeleton"); // Find the index
+        if (idx != -1)
+            managerlist.splice(idx, 1); // Remove it if really found!
+
+        //console.log ("Manager list:  " + managerlist);
         return managerlist;
     }
 

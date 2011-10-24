@@ -141,7 +141,7 @@ Rectangle {
                 //Wait for the model to be up-to-date
                 var count = 0;
                 do {
-                   organizerChangedSpy.wait(100);
+                   organizerChangedSpy.wait(200);
                    count ++;
                    verify(model.itemCount <= 1)
                    verify(count <= 10)
@@ -178,6 +178,7 @@ Rectangle {
                 model.saveItem(savedEvent);
                 organizerChangedSpy.wait();
                 model.update();
+                organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
@@ -193,6 +194,7 @@ Rectangle {
                 model.saveItem(updatedEvent);
                 organizerChangedSpy.wait();
                 model.update();
+                organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchlist = model.items;

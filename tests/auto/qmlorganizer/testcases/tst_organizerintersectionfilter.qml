@@ -135,7 +135,7 @@ Rectangle {
                 model.saveItem(event);
                 count = 0;
                 do {
-                    organizerChangedSpy.wait(100);
+                    organizerChangedSpy.wait(200);
                     count ++;
                     verify(model.itemCount <= 1)
                     verify(count <= 10)
@@ -149,7 +149,7 @@ Rectangle {
                 model.saveItem(event);
                 count = 0;
                 do {
-                    organizerChangedSpy.wait(100);
+                    organizerChangedSpy.wait(200);
                     count ++;
                     verify(model.itemCount <= 2)
                     verify(count <= 10)

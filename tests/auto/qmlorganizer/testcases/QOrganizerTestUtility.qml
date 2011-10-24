@@ -63,7 +63,7 @@ TestCase {
         var count = 0;
         if (model.itemCount < expect_count) {
             do {
-                spy.wait(200);
+                spy.wait(400);
                 count ++;
                 verify(model.itemCount <= expect_count)
                 verify(count <= 10)

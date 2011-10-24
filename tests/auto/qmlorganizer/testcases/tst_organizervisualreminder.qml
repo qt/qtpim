@@ -143,7 +143,7 @@ Rectangle {
                 //Let's wait for the model to be up-to-date
                 var count = 0;
                 do {
-                   organizerChangedSpy.wait(100);
+                   organizerChangedSpy.wait(200);
                    count ++;
                    verify(model.itemCount <= 1)
                    verify(count <= 10)

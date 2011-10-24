@@ -47,6 +47,33 @@ TestCase {
     name: "CollectionTests"
     id: collectionTests
 
+    // UTILITIES
+
+    function empty_calendar(organizerModel) {
+
+        var modelChangedSpy = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
+        modelChangedSpy.target = organizerModel;
+        modelChangedSpy.signalName= "modelChanged";
+
+        var ids = organizerModel.itemIds();
+        if (ids.length > 0) {
+            organizerModel.removeItems(ids);
+            modelChangedSpy.wait(200);
+        }
+        organizerModel.autoUpdate = false;
+        for (var i = 0; i < organizerModel.collections.length; ++i) {
+            var collId = organizerModel.collections[i].collectionId;
+            if (collId != organizerModel.defaultCollection().collectionId) {
+                organizerModel.removeCollection(collId);
+                wait(300);
+            }
+        }
+        organizerModel.autoUpdate = true;
+
+        organizerModel.update();
+        wait(300);
+    }
+
     // COLLECTION ELEMENT API
 
     function create_collection() {
@@ -243,6 +270,7 @@ TestCase {
           + "}\n");
         verify(backend_plugin_available(organizerModel, data.managerToBeTested),
                "Cannot run tests for " + data.managerToBeTested + " backend. No plugin available!");
+        empty_calendar(organizerModel);
         wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
 
         // There is currently some problem with static
@@ -310,10 +338,7 @@ TestCase {
         }
 
         // cleanup
-        organizerModel.removeItem(savedEvent.itemId);
-        modelChangedSpy.wait(spyWaitDelay);
-        organizerModel.removeCollection(savedCollection.collectionId);
-        collectionsChangedSpy.wait(spyWaitDelay);
+        empty_calendar(organizerModel);
     }
 
     // MODEL COLLECTION API
@@ -326,7 +351,7 @@ TestCase {
     }
     function test_model_api(data) {
         console.log("");//to print out test tags for every data set
-        var spyWaitDelay = 200;
+        var spyWaitDelay = 250;
         // Create and check that backend for the tests is available
         var organizerModel = create_testobject("import QtQuick 2.0\n"
           + "import QtOrganizer 2.0\n"
@@ -337,6 +362,8 @@ TestCase {
           + "}\n");
         verify(backend_plugin_available(organizerModel, data.managerToBeTested),
                "Cannot run tests for " + data.managerToBeTested + " backend. No plugin available!");
+        empty_calendar(organizerModel);
+        wait(spyWaitDelay);
 
         // There is currently some problem with static
         // SignalSpy and changing the target (QTBUG-21083).
@@ -344,7 +371,6 @@ TestCase {
         var collectionsChangedSpy = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
         collectionsChangedSpy.target = organizerModel;
         collectionsChangedSpy.signalName = "collectionsChanged"
-        collectionsChangedSpy.wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
         collectionsChangedSpy.clear();
 
         var originalAmountOfCollections = organizerModel.collections.length;
@@ -414,7 +440,7 @@ TestCase {
           + "}\n");
         coll3.name = "My empty collection";
         organizerModel.saveCollection(coll3);
-        collectionsChangedSpy.wait(spyWaitDelay);
+        collectionsChangedSpy.wait(spyWaitDelay+200);
         compare(organizerModel.collections.length, amountBeforeSavingAgain+1);
         compare(collectionsChangedSpy.count, 4);
         var savedEmptyCollection = organizerModel.collections[organizerModel.collections.length - 1];
@@ -469,7 +495,7 @@ TestCase {
         organizerModel.removeCollection(toBeDeletedCollection.collectionId);
         collectionsChangedSpy.wait(spyWaitDelay);
         modelChangedSpy.wait(spyWaitDelay);
-        wait(200);//waiting for asyncronous operations to finish on backend side
+        wait(250);//waiting for asyncronous operations to finish on backend side
         verify(!organizerModel.item(eventItemId));
         compare(collectionsChangedSpy.count, 7);// item addition caused one and collection removal second
         // - remove non-existing
@@ -485,7 +511,9 @@ TestCase {
 
         // after all the modifications to collections, default should still be the same
         compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);
-    }
 
+        empty_calendar(organizerModel);
+        wait(spyWaitDelay);
+    }
 }
 

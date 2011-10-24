@@ -829,7 +829,10 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
         if (QDeclarativeOrganizerItemDetail::Recurrence == detail->type())
             return static_cast<QDeclarativeOrganizerItemRecurrence *>(detail);
     }
-    return 0;
+
+    QDeclarativeOrganizerItemRecurrence *detail = new QDeclarativeOrganizerItemRecurrence;
+    m_details.append(detail);
+    return detail;
 }
 
 
@@ -1440,7 +1443,10 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
         if (QDeclarativeOrganizerItemDetail::Recurrence == detail->type())
             return static_cast<QDeclarativeOrganizerItemRecurrence *>(detail);
     }
-    return 0;
+
+    QDeclarativeOrganizerItemRecurrence *detail = new QDeclarativeOrganizerItemRecurrence;
+    m_details.append(detail);
+    return detail;
 }
 
 

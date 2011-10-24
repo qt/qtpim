@@ -143,6 +143,15 @@ TestCase {
 
         todo.status = TodoProgress.InProgress
         compare(todo.status, TodoProgress.InProgress)
+
+        // recurrence
+        var recurrenceDates = new Array()
+        recurrenceDates[0] = new Date("2005-06-28")
+        recurrenceDates[1] = new Date("2005-12-19")
+        compare(todo.details(Detail.Recurrence).length, 0)
+        todo.recurrence.recurrenceDates = recurrenceDates
+        compare(todo.details(Detail.Recurrence).length, 1)
+        compare(todo.recurrence.recurrenceDates.length, 2)
     }
 
     function test_note() {
@@ -203,6 +212,15 @@ TestCase {
 
         event.location = "Tampere"
         compare(event.location, "Tampere")
+
+        // recurrence
+        var recurrenceDates = new Array()
+        recurrenceDates[0] = new Date("2005-06-28")
+        recurrenceDates[1] = new Date("2005-12-19")
+        compare(event.details(Detail.Recurrence).length, 0)
+        event.recurrence.recurrenceDates = recurrenceDates
+        compare(event.details(Detail.Recurrence).length, 1)
+        compare(event.recurrence.recurrenceDates.length, 2)
     }
 
     function test_item() {

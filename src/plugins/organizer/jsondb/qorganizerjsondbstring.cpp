@@ -52,7 +52,6 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::JsonDbEngineId, "jsondb");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemName,         "displayName");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCollectionId, "collectionId");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemDescription,  "description");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFields, "customFields");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemComments,     "comments");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocation,     "location");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriority,     "Priority");
@@ -125,10 +124,6 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfMonth,"daysOfMonth");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfYear,"daysOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleWeeksOfYear,"weeksOfYear");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleMonthsOfYear,"monthsOfYear");
-
-// Custom fields
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFieldName, "fieldName");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCustomFieldData, "fieldData");
 
 //warning string
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningMoreItemDelete, "Items are delete from jsondb!!");

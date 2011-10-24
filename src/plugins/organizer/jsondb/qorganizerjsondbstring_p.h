@@ -70,7 +70,6 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemName,         "displayName");
     Q_DECLARE_LATIN1_CONSTANT(ItemCollectionId, "collectionId");
     Q_DECLARE_LATIN1_CONSTANT(ItemDescription,  "description");
-    Q_DECLARE_LATIN1_CONSTANT(ItemCustomFields, "customFields");
     Q_DECLARE_LATIN1_CONSTANT(ItemComments,     "comments");
     Q_DECLARE_LATIN1_CONSTANT(ItemLocation,     "location");
     Q_DECLARE_LATIN1_CONSTANT(ItemPriority,     "Priority");
@@ -144,10 +143,6 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(RuleDaysOfYear,"daysOfYear");
     Q_DECLARE_LATIN1_CONSTANT(RuleWeeksOfYear,"weeksOfYear");
     Q_DECLARE_LATIN1_CONSTANT(RuleMonthsOfYear,"monthsOfYear");
-
-    // Custom fields
-    Q_DECLARE_LATIN1_CONSTANT(ItemCustomFieldName, "fieldName");
-    Q_DECLARE_LATIN1_CONSTANT(ItemCustomFieldData, "fieldData");
 
     //warning string
     Q_DECLARE_LATIN1_CONSTANT(WarningMoreItemDelete, "Items are delete from jsondb!!");

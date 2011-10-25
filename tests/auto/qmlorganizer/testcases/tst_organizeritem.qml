@@ -45,6 +45,12 @@ import QtOrganizer 2.0
 
 TestCase {
     name: "OrganizerItemTests"
+    id: organizerItemTests
+    property int waitTime : 200
+
+    QOrganizerTestUtility {
+        id: utility
+    }
 
     OrganizerItem {
         id: item
@@ -167,51 +173,87 @@ TestCase {
     }
 
     function test_eventOccurrence() {
+        var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {id : organizerChangedSpy;}"
+                 , organizerItemTests);
+        itemChangedSpy.target = eventOccurrence;
+        itemChangedSpy.signalName = "itemChanged";
+        var count = 0;
+
         compare(eventOccurrence.itemType, Type.EventOccurrence)
 
         var originalDate = new Date("2008-12-28")
         eventOccurrence.originalDate = originalDate
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.originalDate, originalDate)
+        compare(itemChangedSpy.count, ++count)
 
         var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
         eventOccurrence.startDateTime = startDateTime
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.startDateTime, startDateTime)
+        compare(itemChangedSpy.count, ++count)
 
         var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
         eventOccurrence.endDateTime = endDateTime
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.endDateTime, endDateTime)
+        compare(itemChangedSpy.count, ++count)
 
         eventOccurrence.priority = Priority.VeryHigh
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.priority, Priority.VeryHigh)
+        compare(itemChangedSpy.count, ++count)
 
         eventOccurrence.location = "Tampere"
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.location, "Tampere")
+        compare(itemChangedSpy.count, ++count)
 
         eventOccurrence.parentId = event.itemId
+        itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.parentId, event.itemId)
+        compare(itemChangedSpy.count, ++count)
     }
 
     function test_event() {
-        compare(event.itemType, Type.Event)
+        var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {id : organizerChangedSpy;}"
+                 , organizerItemTests);
+        itemChangedSpy.target = event;
+        itemChangedSpy.signalName = "itemChanged";
+        var count = 0;
+
+        compare(event.itemType, Type.Event);
 
         event.allDay = true;
+        itemChangedSpy.wait(waitTime);
         compare(event.allDay, true)
+        compare(itemChangedSpy.count, ++count)
 
-        //Following format does not work
+        //Following format does not work: GMT+0000 is not accepted by javascript
         //event.startDateTime = "1991-08-25 20:57:08 GMT+0000"
         var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
         event.startDateTime = startDateTime
+        itemChangedSpy.wait(waitTime);
         compare(event.startDateTime, startDateTime)
+        compare(itemChangedSpy.count, ++count)
 
         var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
         event.endDateTime = endDateTime
+        itemChangedSpy.wait(waitTime);
         compare(event.endDateTime, endDateTime)
+        compare(itemChangedSpy.count, ++count)
 
         event.priority = Priority.VeryHigh
+        itemChangedSpy.wait(waitTime);
         compare(event.priority, Priority.VeryHigh)
+        compare(itemChangedSpy.count, ++count)
 
         event.location = "Tampere"
+        itemChangedSpy.wait(waitTime);
         compare(event.location, "Tampere")
+        compare(itemChangedSpy.count, ++count)
 
         // recurrence
         var recurrenceDates = new Array()
@@ -219,56 +261,91 @@ TestCase {
         recurrenceDates[1] = new Date("2005-12-19")
         compare(event.details(Detail.Recurrence).length, 0)
         event.recurrence.recurrenceDates = recurrenceDates
+        //itemChangedSpy.wait(waitTime);
         compare(event.details(Detail.Recurrence).length, 1)
         compare(event.recurrence.recurrenceDates.length, 2)
+        //compare(itemChangedSpy.count, ++count)
     }
 
     function test_item() {
+        var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {id : organizerChangedSpy;}"
+                 , organizerItemTests);
+        itemChangedSpy.target = item;
+        itemChangedSpy.signalName = "itemChanged";
+        var count = 0;
+
         // empty OrganizerItem
         compare(item.modified, false)
 
         // access Description
         item.description = "Qt Open Governance"
+        itemChangedSpy.wait(waitTime);
         compare(item.description, "Qt Open Governance")
         compare(item.detail(Detail.Description).description, "Qt Open Governance")
         compare(item.details(Detail.Description).length, 1)
+        compare(itemChangedSpy.count, ++count)
 
         // access DisplayLabel
         item.displayLabel = "http://qt-project.org/"
+        itemChangedSpy.wait(waitTime);
         compare(item.displayLabel, "http://qt-project.org/")
         compare(item.detail(Detail.DisplayLabel).label, "http://qt-project.org/")
         compare(item.details(Detail.DisplayLabel).length, 1)
+        compare(itemChangedSpy.count, ++count)
 
         // access Guid
         item.guid = "b7dd2d61-fcb3-1170-e314-899ac5e91c7c"
+        itemChangedSpy.wait(waitTime);
         compare(item.guid, "b7dd2d61-fcb3-1170-e314-899ac5e91c7c")
         compare(item.detail(Detail.Guid).guid, "b7dd2d61-fcb3-1170-e314-899ac5e91c7c")
         compare(item.details(Detail.Guid).length, 1)
+        compare(itemChangedSpy.count, ++count)
 
         // add new Detail
         item.setDetail(comment)
+        itemChangedSpy.wait(waitTime);
         compare(item.detail(Detail.Comment).comment, "Code Less")
         compare(item.details(Detail.Comment).length, 1)
         compare(item.itemDetails.length, 4)
+        compare(itemChangedSpy.count, ++count)
 
         // update existing Detail
         comment.comment = "Create More"
         item.setDetail(comment)
+        itemChangedSpy.wait(waitTime);
         compare(item.detail(Detail.Comment).comment, "Create More")
         compare(item.details(Detail.Comment).length, 1)
+        compare(itemChangedSpy.count, ++count)
 
         // delete one existing Detail
         item.removeDetail(comment)
+        itemChangedSpy.wait(waitTime);
         compare(item.details(Detail.Comment).length, 0)
+        compare(itemChangedSpy.count, ++count)
+
+        // delete one no-existing Detail
+        item.removeDetail(comment)
+        compare(item.details(Detail.Comment).length, 0)
+        compare(itemChangedSpy.count, count)
 
         // remove all existing Details
         item.clearDetails();
+        itemChangedSpy.wait(waitTime);
         compare(item.itemDetails.length, 0)
+        compare(itemChangedSpy.count, ++count)
+
+        // remove all existing Details again will not get any signal
+        item.clearDetails();
+        compare(item.itemDetails.length, 0)
+        compare(itemChangedSpy.count, count)
 
         // custom detail
         item.setDetail(customDetail)
+        itemChangedSpy.wait(waitTime);
         compare(item.details(Detail.Customized).length, 1)
         compare(item.detail(Detail.Customized).name, "customDetail1")
         compare(item.detail(Detail.Customized).data, "data 1")
+        compare(itemChangedSpy.count, ++count)
     }
 }

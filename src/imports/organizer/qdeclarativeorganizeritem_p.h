@@ -191,12 +191,12 @@ class QDeclarativeOrganizerEventOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY itemChanged)
-    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY itemChanged)
-    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY itemChanged)
+    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
+    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY valueChanged)
+    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerEventOccurrence(QObject *parent = 0);
@@ -220,7 +220,7 @@ public:
     QString parentId() const;
 
 Q_SIGNALS:
-    void itemChanged();
+    void valueChanged();
 };
 
 
@@ -228,7 +228,7 @@ class QDeclarativeOrganizerJournal : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDateTime dateTime READ dateTime WRITE setDateTime NOTIFY itemChanged)
+    Q_PROPERTY(QDateTime dateTime READ dateTime WRITE setDateTime NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerJournal(QObject *parent = 0);
@@ -237,7 +237,7 @@ public:
     QDateTime dateTime() const;
 
 Q_SIGNALS:
-    void itemChanged();
+    void valueChanged();
 };
 
 
@@ -254,14 +254,14 @@ class QDeclarativeOrganizerTodo : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY itemChanged)
-    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerTodoProgress::StatusType status READ status WRITE setStatus NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemRecurrence* recurrence READ recurrence NOTIFY itemChanged)
+    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerTodoProgress::StatusType status READ status WRITE setStatus NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemRecurrence* recurrence READ recurrence NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerTodo(QObject *parent = 0);
@@ -290,7 +290,7 @@ public:
     QDeclarativeOrganizerItemRecurrence *recurrence();
 
 Q_SIGNALS:
-    void itemChanged();
+    void valueChanged();
 };
 
 
@@ -298,14 +298,14 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY itemChanged)
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeOrganizerTodoProgress::StatusType status READ status WRITE setStatus NOTIFY itemChanged)
-    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY itemChanged)
+    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY valueChanged)
+    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerTodoProgress::StatusType status READ status WRITE setStatus NOTIFY valueChanged)
+    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerTodoOccurrence(QObject *parent = 0);
@@ -335,7 +335,7 @@ public:
     void setParentId(const QString &parentId);
 
 Q_SIGNALS:
-    void itemChanged();
+    void valueChanged();
 };
 
 QTORGANIZER_END_NAMESPACE

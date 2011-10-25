@@ -49,6 +49,8 @@
 #include "qorganizerjsondbstring_p.h"
 #include "qorganizer.h"
 
+#include <QtCore/quuid.h>
+
 QTORGANIZER_BEGIN_NAMESPACE
 
 #include <QDebug>
@@ -228,6 +230,11 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         } else {
             item.setCollectionId(m_storage->defaultCollection().id());
         }
+
+        // generate GUID if needed
+        if (item.guid().isEmpty())
+            item.setGuid(QUuid::createUuid().toString());
+
         if (errorFound) {
             errorMap.insert(i, latestError);
         } else {

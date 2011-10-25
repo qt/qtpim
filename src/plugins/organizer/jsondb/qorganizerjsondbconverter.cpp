@@ -152,12 +152,15 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
 {
     // first handle mandatory fields
 
-    // TODO separate item ID and GUID
     QString jsonDbUuid = object.value(JsonDbString::kUuidStr).toString();
     if (jsonDbUuid.isEmpty())
         return false;
     item->setId(QOrganizerItemId(new QOrganizerJsonDbItemId(jsonDbUuid)));
-    item->setGuid(jsonDbUuid);
+
+    QString guid = object.value(QOrganizerJsonDbStr::ItemGuid).toString();
+    if (guid.isEmpty())
+        return false;
+    item->setGuid(guid);
 
     QString jsonDbType = object.value(JsonDbString::kTypeStr).toString();
     if (jsonDbType == QOrganizerJsonDbStr::Event)
@@ -295,7 +298,8 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
             // TODO implement them properly when schema gets frozen
         } else if (i.key() == JsonDbString::kUuidStr
             || i.key() == JsonDbString::kTypeStr
-            || i.key() == QOrganizerJsonDbStr::ItemCollectionId) {
+            || i.key() == QOrganizerJsonDbStr::ItemCollectionId
+            || i.key() == QOrganizerJsonDbStr::ItemGuid) {
             // skip the mandatory fields, as they're already parsed
         } else if (i.key().at(0) == QChar('_')) {
             // skip as it's used internally
@@ -427,6 +431,10 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     }
     object->insert(QOrganizerJsonDbStr::ItemCollectionId,
                    item.collectionId().toString().remove(QOrganizerJsonDbStr::ManagerName));
+
+    if (item.guid().isEmpty())
+        return false;
+    object->insert(QOrganizerJsonDbStr::ItemGuid, item.guid());
 
     QString displayLabel(item.displayLabel());
     if (!displayLabel.isEmpty())

@@ -49,6 +49,7 @@
 #include <private/jsondb-connection_p.h>
 #include <private/jsondb-strings_p.h>
 #include <jsondb-error.h>
+
 Q_USE_JSONDB_NAMESPACE
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -297,13 +298,11 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
 void QOrganizerJsonDbDataStorage::handleSaveItemsRequest()
 {
     bool requestSent = false;
-    QMapIterator<int, QOrganizerItem> i(*m_resultItems);
-    while (i.hasNext()) {
-        i.next();
-        QOrganizerItem item = i.value();
-        bool itemIsNew = item.id().isNull();
+    QMap<int, QOrganizerItem>::iterator i = m_resultItems->begin();
+    while (i != m_resultItems->end()) {
+        bool itemIsNew = i.value().id().isNull();
         QVariantMap jsonDbItem;
-        if (m_converter.itemToJsonDbObject(item, &jsonDbItem)) {
+        if (m_converter.itemToJsonDbObject(i.value(), &jsonDbItem)) {
             int trId;
             if (itemIsNew)
                 trId = m_jsonDb->create(jsonDbItem);
@@ -315,6 +314,8 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsRequest()
             *m_error = QOrganizerManager::InvalidItemTypeError;
             m_errorMap->insert(i.key(), *m_error);
         }
+
+        ++i;
     }
     if (!requestSent)
         m_syncWaitCondition.wakeAll();
@@ -331,8 +332,6 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsResponse(int index, QOrganizerM
                 QOrganizerJsonDbItemId* itemId = new QOrganizerJsonDbItemId;
                 itemId->setItemId(jsonUuid);
                 item.setId(QOrganizerItemId(itemId));
-                //set globally unique identifier
-                item.setGuid(jsonUuid);
             }
         }
         m_resultItems->insert(index, item);

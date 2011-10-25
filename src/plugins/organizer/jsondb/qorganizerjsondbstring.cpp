@@ -59,6 +59,7 @@ Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemTags,         "tags");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminder, "visualReminder");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminder,"audibleReminder");
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminder,  "emailReminder");
+Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemGuid,         "guid");
 
 //Location sub properties
 Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLabel,    "label");

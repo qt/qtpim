@@ -77,6 +77,7 @@ public:
     Q_DECLARE_LATIN1_CONSTANT(ItemAudibleReminder,"audibleReminder");
     Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminder,  "emailReminder");
     Q_DECLARE_LATIN1_CONSTANT(ItemTags,         "tags");
+    Q_DECLARE_LATIN1_CONSTANT(ItemGuid,         "guid");
 
     //Location sub properties
     Q_DECLARE_LATIN1_CONSTANT(ItemLocationLabel,    "label");

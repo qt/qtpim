@@ -17,7 +17,7 @@ HEADERS += ../../qcontactmanagerdataholder.h
 
 #T += contacts
 
-#INCLUDEPATH += ../../
+INCLUDEPATH += ../../
 
 
 #QCONTACTASYNC_PLUGINS_DEPLOY.path = ./plugins/contacts

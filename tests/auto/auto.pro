@@ -8,7 +8,7 @@ SUBDIRS += \
 # contacts
 SUBDIRS += \
     qcontact \
-#    qcontactasync \
+    qcontactasync \
     qcontactdetail \
     qcontactdetaildefinition \
     qcontactdetails \

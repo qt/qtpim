@@ -44,7 +44,27 @@
 #include <QCoreApplication>
 #include <QScopedPointer>
 
-#include <qtcontacts.h>
+#include <QContact>
+#include <QContactName>
+#include <QContactAbstractRequest>
+#include <QContactManager>
+#include <QContactFetchRequest>
+#include <QContactAbstractRequest>
+#include <QContactDetailFilter>
+#include <QContactUrl>
+#include <QContactPhoneNumber>
+#include <QContactFetchHint>
+#include <QContactFetchByIdRequest>
+#include <QContactSaveRequest>
+#include <QContactDetailDefinitionFetchRequest>
+#include <QContactEmailAddress>
+#include <QContactOnlineAccount>
+#include <QContactRemoveRequest>
+#include <QContactRelationship>
+#include <QContactTimestamp>
+#include <QContactTag>
+#include <QContactOrganization>
+
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
@@ -1484,32 +1504,32 @@ QContactManager* tst_QContactJsonDbAsync::prepareModel(const QString& managerUri
     }
 
     QContactRelationship arb;
-    arb.setFirst(a.id());
-    arb.setSecond(b.id());
+    arb.setFirst(a);
+    arb.setSecond(b);
     arb.setRelationshipType(QContactRelationship::HasManager);
     cm->saveRelationship(&arb);
 
     QContactRelationship brc;
-    brc.setFirst(b.id());
-    brc.setSecond(c.id());
+    brc.setFirst(b);
+    brc.setSecond(c);
     brc.setRelationshipType(QContactRelationship::HasAssistant);
     cm->saveRelationship(&brc);
 
     QContactRelationship cra;
-    cra.setFirst(c.id());
-    cra.setSecond(a.id());
+    cra.setFirst(c);
+    cra.setSecond(a);
     cra.setRelationshipType(QContactRelationship::HasSpouse);
     cm->saveRelationship(&cra);
 
     QContactRelationship arc;
-    arc.setFirst(a.id());
-    arc.setSecond(c.id());
+    arc.setFirst(a);
+    arc.setSecond(c);
     arc.setRelationshipType(QContactRelationship::HasAssistant);
     cm->saveRelationship(&arc);
 
     QContactRelationship crb;
-    crb.setFirst(c.id());
-    crb.setSecond(b.id());
+    crb.setFirst(c);
+    crb.setSecond(b);
     crb.setRelationshipType(QContactRelationship::IsSameAs);
     cm->saveRelationship(&crb);
 

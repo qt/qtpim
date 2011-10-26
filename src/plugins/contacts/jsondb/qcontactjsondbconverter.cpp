@@ -616,9 +616,10 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
         case QContactFilter::ContactDetailFilter: {
             QContactDetailFilter detailFilter;
             detailFilter = (QContactDetailFilter) filter;
-            if (detailFilter.detailDefinitionName().isEmpty())
-            //If definitionName is empty, the detail filter will match no contacts
+            if (detailFilter.detailDefinitionName().isEmpty()) {
+                //If definitionName is empty, the detail filter will match no contacts
                 return "";
+            }
             if (detailFilter.detailFieldName().isEmpty()) {
                 //If fieldName is empty, the detail filter acts like a "detail exists" filter
                 newJsonDbQuery.append("[?"

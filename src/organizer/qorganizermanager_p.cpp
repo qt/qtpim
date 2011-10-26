@@ -59,7 +59,6 @@
 # include <f32file.h>
 #endif
 
-#include "qorganizeritemmemorybackend_p.h"
 #include "qorganizeriteminvalidbackend_p.h"
 #include "qorganizerpluginsearch_p.h"
 
@@ -100,65 +99,60 @@ void QOrganizerManagerData::createEngine(const QString& managerName, const QMap<
     m_engine = 0;
 
     QString builtManagerName = managerName.isEmpty() ? QOrganizerManager::availableManagers().value(0) : managerName;
-    if (builtManagerName == QLatin1String("memory")) {
-        m_engine = new QOrganizerManagerEngineV2Wrapper(
-            QOrganizerItemMemoryEngine::createMemoryEngine(parameters));
-    } else {
-        int implementationVersion = parameterValue(parameters, QTORGANIZER_IMPLEMENTATION_VERSION_NAME, -1);
 
-        bool found = false;
-        bool loadedDynamic = false;
+    int implementationVersion = parameterValue(parameters, QTORGANIZER_IMPLEMENTATION_VERSION_NAME, -1);
 
-        /* First check static factories */
-        loadStaticFactories();
+    bool found = false;
+    bool loadedDynamic = false;
 
-        /* See if we got a fast hit */
-        QList<QOrganizerManagerEngineFactory*> factories = m_engines.values(builtManagerName);
-        m_lastError = QOrganizerManager::NoError;
+    /* First check static factories */
+    loadStaticFactories();
 
-        while(!found) {
-            foreach (QOrganizerManagerEngineFactory* f, factories) {
-                QList<int> versions = f->supportedImplementationVersions();
-                if (implementationVersion == -1 ||//no given implementation version required
-                        versions.isEmpty() || //the manager engine factory does not report any version
-                        versions.contains(implementationVersion)) {
-                    QOrganizerManagerEngine* engine = f->engine(parameters, &m_lastError);
-                    // if it's a V2, use it
-                    m_engine = qobject_cast<QOrganizerManagerEngineV2*>(engine);
-                    if (!m_engine && engine) {
-                        // Nope, v1, so wrap it
-                        m_engine = new QOrganizerManagerEngineV2Wrapper(engine);
-                    }
-                    found = true;
-                    break;
+    /* See if we got a fast hit */
+    QList<QOrganizerManagerEngineFactory*> factories = m_engines.values(builtManagerName);
+    m_lastError = QOrganizerManager::NoError;
+
+    while (!found) {
+        foreach (QOrganizerManagerEngineFactory* f, factories) {
+            QList<int> versions = f->supportedImplementationVersions();
+            if (implementationVersion == -1 ||//no given implementation version required
+                    versions.isEmpty() || //the manager engine factory does not report any version
+                    versions.contains(implementationVersion)) {
+                QOrganizerManagerEngine* engine = f->engine(parameters, &m_lastError);
+                // if it's a V2, use it
+                m_engine = qobject_cast<QOrganizerManagerEngineV2*>(engine);
+                if (!m_engine && engine) {
+                    // Nope, v1, so wrap it
+                    m_engine = new QOrganizerManagerEngineV2Wrapper(engine);
                 }
-            }
-
-            // Break if found or if this is the second time through
-            if (loadedDynamic || found)
+                found = true;
                 break;
-
-            // otherwise load dynamic factories and reloop
-            loadFactories();
-            factories = m_engines.values(builtManagerName);
-            loadedDynamic = true;
+            }
         }
 
-        // XXX remove this
-        // the engine factory could lie to us, so check the real implementation version
-        if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
-            m_lastError = QOrganizerManager::VersionMismatchError;
-            m_engine = 0;
-        }
+        // Break if found or if this is the second time through
+        if (loadedDynamic || found)
+            break;
 
-        if (!m_engine) {
-            if (m_lastError == QOrganizerManager::NoError)
-                m_lastError = QOrganizerManager::DoesNotExistError;
-            m_engine = new QOrganizerItemInvalidEngine();
-        }
+        // otherwise load dynamic factories and reloop
+        loadFactories();
+        factories = m_engines.values(builtManagerName);
+        loadedDynamic = true;
+    }
+
+    // XXX remove this
+    // the engine factory could lie to us, so check the real implementation version
+    if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
+        m_lastError = QOrganizerManager::VersionMismatchError;
+        m_engine = 0;
+    }
+
+    if (!m_engine) {
+        if (m_lastError == QOrganizerManager::NoError)
+            m_lastError = QOrganizerManager::DoesNotExistError;
+        m_engine = new QOrganizerItemInvalidEngine();
     }
 }
-
 
 void QOrganizerManagerData::loadStaticFactories()
 {
@@ -182,7 +176,7 @@ void QOrganizerManagerData::loadStaticFactories()
                 if (showDebug)
                     qDebug() << "Static: found an engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("memory") && name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
                         qWarning() << "Static organizeritems plugin" << name << "has the same name as a currently loaded plugin; ignored";
@@ -225,7 +219,7 @@ void QOrganizerManagerData::loadFactories()
                 if (showDebug)
                     qDebug() << "Dynamic: found a organizer engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("memory") && name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
                         qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";
@@ -267,9 +261,6 @@ void QOrganizerManagerData::loadFactories()
 /* Caller takes ownership of the id */
 QOrganizerItemEngineId* QOrganizerManagerData::createEngineItemId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
 {
-    if (managerName == QLatin1String("memory"))
-        return new QOrganizerItemMemoryEngineId(engineIdString);
-
     loadFactories();
     QOrganizerManagerEngineFactory *engineFactory = m_engines.value(managerName);
     return engineFactory ? engineFactory->createItemEngineId(parameters, engineIdString) : NULL;
@@ -278,9 +269,6 @@ QOrganizerItemEngineId* QOrganizerManagerData::createEngineItemId(const QString&
 /* Caller takes ownership of the id */
 QOrganizerCollectionEngineId* QOrganizerManagerData::createEngineCollectionId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
 {
-    if (managerName == QLatin1String("memory"))
-        return new QOrganizerCollectionMemoryEngineId(engineIdString);
-
     loadFactories();
     QOrganizerManagerEngineFactory *engineFactory = m_engines.value(managerName);
     return engineFactory ? engineFactory->createCollectionEngineId(parameters, engineIdString) : NULL;

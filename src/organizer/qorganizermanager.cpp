@@ -137,7 +137,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 QStringList QOrganizerManager::availableManagers()
 {
     QStringList ret;
-    ret << QLatin1String("memory") << QLatin1String("invalid");
+    ret << QLatin1String("invalid");
     QOrganizerManagerData::loadFactories();
     ret.append(QOrganizerManagerData::m_engines.keys());
 

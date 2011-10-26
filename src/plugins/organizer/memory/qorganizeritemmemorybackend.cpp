@@ -39,27 +39,44 @@
 **
 ****************************************************************************/
 
-#include "qorganizermanager.h"
-
-#include "qorganizermanagerengine.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemrequests.h"
-#include "qorganizeritemchangeset.h"
-#include "qorganizeritemdetails.h"
-#include "qorganizerevent.h"
-#include "qorganizereventoccurrence.h"
-#include "qorganizertodo.h"
-#include "qorganizertodooccurrence.h"
-
 #include "qorganizeritemmemorybackend_p.h"
+#include <qorganizeritemrecurrence.h>
+#include <qorganizerevent.h>
+#include <qorganizertodo.h>
 
-#include <QTimer>
-#include <QUuid>
-#include <QSharedData>
-#include <QStringBuilder>
-#include <QDebug>
+#include <QtCore/qdebug.h>
+#include <QtCore/qstringbuilder.h>
+#include <QtCore/quuid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
+
+QOrganizerManagerEngine* QOrganizerItemMemoryFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
+{
+    Q_UNUSED(error);
+
+    QOrganizerItemMemoryEngine *ret = QOrganizerItemMemoryEngine::createMemoryEngine(parameters);
+    return ret;
+}
+
+QOrganizerItemEngineId* QOrganizerItemMemoryFactory::createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
+{
+    Q_UNUSED(parameters);
+    QOrganizerItemMemoryEngineId *retn = new QOrganizerItemMemoryEngineId(idString);
+    return retn;
+}
+
+QOrganizerCollectionEngineId* QOrganizerItemMemoryFactory::createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
+{
+    Q_UNUSED(parameters);
+    QOrganizerCollectionMemoryEngineId *retn = new QOrganizerCollectionMemoryEngineId(idString);
+    return retn;
+}
+
+QString QOrganizerItemMemoryFactory::managerName() const
+{
+    return QString::fromAscii("memory");
+}
+Q_EXPORT_PLUGIN2(qtorganizer_memory, QOrganizerItemMemoryFactory)
 
 /*!
   \class QOrganizerItemMemoryEngine

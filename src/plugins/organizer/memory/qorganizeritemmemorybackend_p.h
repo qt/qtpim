@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMEMORYBACKEND_P_H
 #define QCONTACTMEMORYBACKEND_P_H
 
@@ -54,25 +53,12 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QQueue>
-#include <QPair>
-#include <QSet>
-#include <QDateTime>
-#include <QString>
-#include <QObject>
-
-#include "qorganizeritem.h"
-#include "qorganizermanager.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemchangeset.h"
-#include "qorganizerrecurrencerule.h"
-#include "qorganizeritemengineid.h"
-#include "qorganizercollectionengineid.h"
+#include <qorganizeritemengineid.h>
+#include <qorganizercollectionengineid.h>
+#include <qorganizermanagerengine.h>
+#include <qorganizermanagerenginefactory.h>
+#include <qorganizeritemchangeset.h>
+#include <qorganizerrecurrencerule.h>
 
 #ifdef QT_SIMULATOR
 #define Q_ORGANIZER_MEMORYENGINE_EXPORT Q_ORGANIZER_EXPORT
@@ -81,6 +67,17 @@
 #endif
 
 QTORGANIZER_BEGIN_NAMESPACE
+
+class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryFactory : public QObject, public QOrganizerManagerEngineFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
+public:
+    QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
+    QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
+    QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
+    QString managerName() const;
+};
 
 class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryEngineId : public QOrganizerItemEngineId
 {
@@ -280,4 +277,3 @@ private:
 QTORGANIZER_END_NAMESPACE
 
 #endif
-

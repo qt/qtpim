@@ -48,6 +48,19 @@ TestCase {
 
     property SignalSpy contactsChangedSpy
 
+    ContactModel {
+        id: modelSortedByFirstName
+        manager: "jsondb"
+        autoUpdate:true
+        sortOrders: [
+            SortOrder {
+                detail: ContactDetail.Name
+                field: Name.FirstName
+                direction: Qt.AscendingOrder
+            }
+        ]
+    }
+
     Contact {
         id: contact1
         Name {
@@ -64,43 +77,34 @@ TestCase {
 
     function test_sortByFirstName()
     {
-        var model = Qt.createQmlObject(
-                "import QtContacts 2.0;" +
-                "ContactModel {" +
-                "id:model;" +
-                "manager:\"jsondb\";" +
-                "autoUpdate:true;" +
-                "sortOrders: [" +
-                "    SortOrder {" +
-                "        detail: ContactDetail.Name;" +
-                "        field: Name.FirstName;" +
-                "        direction: Qt.AscendingOrder;" +
-                "    }" +
-                "]" +
-                "}",
-                testHelper);
-        testHelper.model = model;
+        testHelper.model = modelSortedByFirstName;
 
-        contactsChangedSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "   id: theSpy;" +
-                    "   signalName: \"contactsChanged\";" +
-                    "}",
-                    testHelper);
-        contactsChangedSpy.target = model;
+        contactsChangedSpy.target = modelSortedByFirstName;
         contactsChangedSpy.clear();
 
         testHelper.emptyContactsDb();
 
-        model.saveContact(contact2);
+        modelSortedByFirstName.saveContact(contact2);
         waitForContactsChanged();
-        model.saveContact(contact1);
+        modelSortedByFirstName.saveContact(contact1);
         waitForContactsChanged();
 
-        compareContactArrays(model.contacts, [contact1, contact2]);
+        compareContactArrays(modelSortedByFirstName.contacts, [contact1, contact2]);
 
         testHelper.emptyContactsDb();
+    }
+
+    ContactModel {
+        id: modelSortedByLastName
+        manager: "jsondb"
+        autoUpdate:true
+        sortOrders: [
+            SortOrder {
+                detail: ContactDetail.Name
+                field: Name.LastName
+                direction: Qt.AscendingOrder
+            }
+        ]
     }
 
     Contact {
@@ -119,40 +123,34 @@ TestCase {
 
     function test_sortByLastName()
     {
-        var model = Qt.createQmlObject(
-                "import QtContacts 2.0;" +
-                "ContactModel {" +
-                "id:model;" +
-                "manager:\"jsondb\";" +
-                "autoUpdate:true;" +
-                "sortOrders: [" +
-                "    SortOrder {" +
-                "        detail: ContactDetail.Name;" +
-                "        field: Name.LastName;" +
-                "        direction: Qt.AscendingOrder;" +
-                "    }" +
-                "]" +
-                "}",
-                testHelper);
-        testHelper.model = model;
+        testHelper.model = modelSortedByLastName;
 
-        contactsChangedSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}",
-                    testHelper);
-        contactsChangedSpy.target = model;
+        contactsChangedSpy.target = modelSortedByLastName;
         contactsChangedSpy.clear();
 
         testHelper.emptyContactsDb();
 
-        model.saveContact(contactWithLastName2);
+        modelSortedByLastName.saveContact(contactWithLastName2);
         waitForContactsChanged();
-        model.saveContact(contactWithLastName1);
+        modelSortedByLastName.saveContact(contactWithLastName1);
         waitForContactsChanged();
 
-        compareContactArrays(model.contacts, [contactWithLastName1, contactWithLastName2]);
+        compareContactArrays(modelSortedByLastName.contacts, [contactWithLastName1, contactWithLastName2]);
 
         testHelper.emptyContactsDb();
+    }
+
+    ContactModel {
+        id: modelSortedByEmailAddress
+        manager: "jsondb"
+        autoUpdate:true
+        sortOrders: [
+            SortOrder {
+                detail: ContactDetail.Email
+                field: EmailAddress.EmailAddress
+                direction: Qt.AscendingOrder
+            }
+        ]
     }
 
     Contact {
@@ -171,41 +169,19 @@ TestCase {
 
     function test_sortByEmail()
     {
-        var model = Qt.createQmlObject(
-                "import QtContacts 2.0;" +
-                "ContactModel {" +
-                "   id:model;" +
-                "   manager:\"jsondb\";" +
-                "   autoUpdate:true;" +
-                "   sortOrders: [" +
-                "       SortOrder {" +
-                "           detail: ContactDetail.Email;" +
-                "           field: EmailAddress.EmailAddress;" +
-                "           direction: Qt.AscendingOrder;" +
-                "       }" +
-                "   ]" +
-                "}",
-                testHelper);
-        testHelper.model = model;
+        testHelper.model = modelSortedByEmailAddress;
 
-        contactsChangedSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "   id: theSpy;" +
-                    "   signalName: \"contactsChanged\";" +
-                    "}",
-                    testHelper);
-        contactsChangedSpy.target = model;
+        contactsChangedSpy.target = modelSortedByEmailAddress;
         contactsChangedSpy.clear();
 
         testHelper.emptyContactsDb();
 
-        model.saveContact(contactWithEmailAddress2);
+        modelSortedByEmailAddress.saveContact(contactWithEmailAddress2);
         waitForContactsChanged();
-        model.saveContact(contactWithEmailAddress1);
+        modelSortedByEmailAddress.saveContact(contactWithEmailAddress1);
         waitForContactsChanged();
 
-        compareContactArrays(model.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
+        compareContactArrays(modelSortedByEmailAddress.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
 
         testHelper.emptyContactsDb();
     }
@@ -241,6 +217,14 @@ TestCase {
         if (testHelper == undefined)
             console.log("Unable to load component from " + name +  " error is ", component.errorString())
         verify(testHelper != undefined, 'Unable to load component ' + name);
+
+        contactsChangedSpy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "   id: theSpy;" +
+                    "   signalName: \"contactsChanged\";" +
+                    "}",
+                    testHelper);
     }
 
     function cleanup() {

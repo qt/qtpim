@@ -77,7 +77,7 @@ QOrganizerItemSaveRequest::~QOrganizerItemSaveRequest()
   Sets the organizer item to be saved to \a organizeritem.
   Equivalent to calling:
   \code
-      setOrganizerItems(QList<QOrganizerItem>() << organizeritem);
+      setItems(QList<QOrganizerItem>() << organizeritem);
   \endcode
   \since 1.1
  */

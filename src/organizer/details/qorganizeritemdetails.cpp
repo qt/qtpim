@@ -1245,6 +1245,13 @@ const QString QOrganizerItemTag::DefinitionName(QStringLiteral("Tag"));
 const QString QOrganizerItemTag::FieldTag(QStringLiteral("Tag"));
 
 /*!
+    \variable QOrganizerItemTag::Anniversary
+
+    The constant string for anniversary and birthday tag.
+*/
+const QString QOrganizerItemTag::Anniversary(QStringLiteral("Anniversary"));
+
+/*!
     \fn QOrganizerItemTag::setTag(const QString &tag)
 
     Sets a tag associated with an organizer item to \a tag.

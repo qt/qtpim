@@ -53,6 +53,8 @@ public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, "Tag")
     const static QString FieldTag;
 
+    const static QString Anniversary;
+
     void setTag(const QString &tag);
     QString tag() const;
 

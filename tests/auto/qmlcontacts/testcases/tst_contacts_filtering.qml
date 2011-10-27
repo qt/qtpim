@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtContacts 2.0
+import QtContacts 5.0
 
 TestCase {
 
@@ -118,7 +118,7 @@ TestCase {
     function test_dynamicIdFilterConstruction() {
 
         var newFilter = Qt.createQmlObject(
-                "import QtContacts 2.0;" +
+                "import QtContacts 5.0;" +
                     "IdFilter { ids: ['" + model.contacts[0].contactId + "']" +
                 "}",
                 this);

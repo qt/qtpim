@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 Rectangle {
     id: test;
@@ -62,7 +62,7 @@ Rectangle {
         function test_collectionFilter_data() {
             return [
                         { tag:  "properties",
-                            code: "import QtOrganizer 2.0;"
+                            code: "import QtOrganizer 5.0;"
                                   + "CollectionFilter{\n"
                                   + "    id:collectionfilter\n"
                                   + "}\n"
@@ -83,7 +83,7 @@ Rectangle {
                 var debugFlag = 0;
                 console.log("test_collectionFilter test start! :" + managerName);
                 var model = Qt.createQmlObject(
-                        "import QtOrganizer 2.0;"
+                        "import QtOrganizer 5.0;"
                         + "OrganizerModel {"
                         + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
                         + "   startPeriod:'2009-01-01';"
@@ -94,7 +94,7 @@ Rectangle {
                 var collectionFilter = Qt.createQmlObject(data.code, test);
 
                 var event = Qt.createQmlObject(
-                        "import QtOrganizer 2.0;"
+                        "import QtOrganizer 5.0;"
                         + "Event { "
                         + "   id:event;"
                         + "   displayLabel: \"organizer collection filter test event\"; "

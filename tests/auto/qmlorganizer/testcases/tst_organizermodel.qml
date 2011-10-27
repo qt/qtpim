@@ -43,7 +43,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 TestCase {
     name: "ModelTests"
@@ -62,20 +62,20 @@ TestCase {
                 // OrganizerModel
                 {tag: "No properties",
                  code: "import QtQuick 2.0\n"
-                    + "import QtOrganizer 2.0 \n"
+                    + "import QtOrganizer 5.0 \n"
                     + "   OrganizerModel {\n"
                     + "   }"
                 },
                 {tag: "Only id property",
                  code: "import QtQuick 2.0\n"
-                   + "import QtOrganizer 2.0\n"
+                   + "import QtOrganizer 5.0\n"
                    + "    OrganizerModel {\n"
                    + "        id:organizerModelId\n"
                    + "     }\n"
                 },
                 {tag: "Valuetype properties",
                  code: "import QtQuick 2.0\n"
-                   + "import QtOrganizer 2.0\n"
+                   + "import QtOrganizer 5.0\n"
                    + "    OrganizerModel {\n"
                    + "        id:organizerModelId\n"
                    + "        manager:'memory'\n"
@@ -84,7 +84,7 @@ TestCase {
                    + "     }\n"
                 },
                 {tag: "With filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                    + "OrganizerModel {\n"
                    + "    id:organizerModelId\n"
                    + "    filter:DetailFilter{\n"
@@ -95,7 +95,7 @@ TestCase {
                    + "}\n"
                 },
                 {tag: "With invalid filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:InvalidFilter{\n"
@@ -104,7 +104,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With range filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:DetailRangeFilter{\n"
@@ -116,7 +116,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With changelog filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:ChangeLogFilter{\n"
@@ -129,7 +129,7 @@ TestCase {
                 // Reserved for future use
                 /*
                 {tag: "With action filter",
-                code:"import QtOrganizer 2.0\n"
+                code:"import QtOrganizer 5.0\n"
                    + "OrganizerModel {\n"
                    + "   id:organizerModelId\n"
                    + "   filter:ActionFilter{\n"
@@ -140,7 +140,7 @@ TestCase {
                 },
                 */
                 {tag: "With collection filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:CollectionFilter{\n"
@@ -150,7 +150,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With intersection filter",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "   id:organizerModelId\n"
                     + "   filter:IntersectionFilter {\n"
@@ -172,7 +172,7 @@ TestCase {
                     + "}\n"
                 },
                 {tag: "With fetchHint",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"
                     + "    id:organizerModelId\n"
                     + "    fetchHint:FetchHint {\n"
@@ -184,18 +184,18 @@ TestCase {
 
                 // Organizer Items
                 {tag: "Base organizer item",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerItem {\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: only id",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "}\n"
                 },
                 {tag: "Base organizer item: Valuetype properties",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    displayLabel:'test item'\n"
@@ -205,7 +205,7 @@ TestCase {
                 },
 
                 {tag: "Base organizer item: default property",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "OrganizerItem {\n"
                     + "    id:organizerItem\n"
                     + "    DisplayLabel {\n"
@@ -222,12 +222,12 @@ TestCase {
 
                 //Event
                 {tag: "Organizer event",
-                 code: "import QtOrganizer 2.0\n"
+                 code: "import QtOrganizer 5.0\n"
                     + "Event {\n"
                     + "}\n"
                 },
                 /*{tag: "Organizer event:Valuetype properties",
-                 code: "import QtOrganizer 2.0 \n"
+                 code: "import QtOrganizer 5.0 \n"
                     + "Event {\n"
                     + "    id:organizerEvent\n"
                     + "    displayLabel:'meeting'\n"
@@ -398,7 +398,7 @@ TestCase {
         var spyWaitDelay = 200;
         // Create and check that backend for the tests is available
         var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
-            + "import QtOrganizer 2.0\n"
+            + "import QtOrganizer 5.0\n"
             + "OrganizerModel {\n"
             + "  manager: '" + data.managerToBeTested + "'\n"
             + "}\n", modelTests);

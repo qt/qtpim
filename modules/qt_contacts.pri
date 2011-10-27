@@ -1,5 +1,5 @@
-QT.contacts.VERSION = 2.0.0
-QT.contacts.MAJOR_VERSION = 2
+QT.contacts.VERSION = 5.0.0
+QT.contacts.MAJOR_VERSION = 5
 QT.contacts.MINOR_VERSION = 0
 QT.contacts.PATCH_VERSION = 0
 

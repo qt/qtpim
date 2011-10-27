@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 Rectangle {
     id: test;
@@ -67,7 +67,7 @@ Rectangle {
         function test_unionFilter_data() {
             return [
                         { tag:  "properties",
-                            code: "import QtOrganizer 2.0;"
+                            code: "import QtOrganizer 5.0;"
                                   + "UnionFilter{\n"
                                   + "    id:unionFilter"
                                   + "}\n"
@@ -87,7 +87,7 @@ Rectangle {
                 var debugFlag = 0;
                 console.log("test_unionFilter test start! :" + managerName);
                 var model = Qt.createQmlObject(
-                        "import QtOrganizer 2.0;"
+                        "import QtOrganizer 5.0;"
                         + "OrganizerModel {"
                         + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
                         + "   startPeriod:'2009-01-01';"
@@ -98,7 +98,7 @@ Rectangle {
                 var unionFilter = Qt.createQmlObject(data.code, test);
 
                 var event = Qt.createQmlObject(
-                        "import QtOrganizer 2.0;"
+                        "import QtOrganizer 5.0;"
                         + "Event { "
                         + "   id:event;"
                         + "   displayLabel: \"organizer union filter test event\"; "

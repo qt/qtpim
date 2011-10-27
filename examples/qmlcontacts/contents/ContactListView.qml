@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtContacts 2.0
+import QtContacts 5.0
 
 Item {
     id: mainItem

@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtContacts 2.0
+import QtContacts 5.0
 
 Item {
     id:myModel;

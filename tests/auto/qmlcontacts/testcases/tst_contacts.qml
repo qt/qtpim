@@ -42,7 +42,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtContacts 2.0
+import QtContacts 5.0
 
 Rectangle {
 
@@ -108,7 +108,7 @@ property Contact testContact
         function test_detailFilters(data)
         {
             var model = Qt.createQmlObject(
-                    "import QtContacts 2.0;" +
+                    "import QtContacts 5.0;" +
                     "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;}", testHelper);
             var spy = Qt.createQmlObject("import QtTest 1.0;" +
                     "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
@@ -264,7 +264,7 @@ property Contact testContact
         function test_contactDetails(data)
         {
             var model2 = Qt.createQmlObject(
-                    "import QtContacts 2.0;" +
+                    "import QtContacts 5.0;" +
                     "ContactModel {id:model2;manager:\"jsondb\";autoUpdate:true;}", testHelper);
             var spy2 = Qt.createQmlObject("import QtTest 1.0;" +
                     "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
@@ -292,10 +292,10 @@ property Contact testContact
             //currently removing details from the contact is not updated in contact model
             //TODO add a test case to remove the same detail N times and remove a detail which doesnt exist etc...
             var model = Qt.createQmlObject(
-                    "import QtContacts 2.0;" +
+                    "import QtContacts 5.0;" +
                     "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
             var tmp = Qt.createQmlObject(
-                    "import QtContacts 2.0;" +
+                    "import QtContacts 5.0;" +
                     "Contact {}", testHelper);
             var spy2 = Qt.createQmlObject("import QtTest 1.0;" +"SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
             contactsChangedSpy = spy2;
@@ -305,9 +305,9 @@ property Contact testContact
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testHelper.emptyContactsDb();
             testContact = tmp;
-            var phone = Qt.createQmlObject("import QtContacts 2.0;" +
+            var phone = Qt.createQmlObject("import QtContacts 5.0;" +
                                               "PhoneNumber {number: '99999999'}", testContact);
-            var nick = Qt.createQmlObject("import QtContacts 2.0;" +
+            var nick = Qt.createQmlObject("import QtContacts 5.0;" +
                                              "Nickname {nickname: 'jack'}", testContact);
             testContact.name.firstName = "Joe"
             testContact.name.lastName = "John"

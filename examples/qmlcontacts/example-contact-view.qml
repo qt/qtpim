@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtMobility.contacts 1.1
+import QtContacts 5.0
 import "contents"
 
 Rectangle {

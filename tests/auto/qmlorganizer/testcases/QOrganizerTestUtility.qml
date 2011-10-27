@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 TestCase {
     id: testUtility
@@ -80,7 +80,7 @@ TestCase {
 
     function test_managerdata() {
         var model = Qt.createQmlObject(
-                "import QtOrganizer 2.0; OrganizerModel {}"
+                "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
         wait (100);
         var managerlist = model.availableManagers;

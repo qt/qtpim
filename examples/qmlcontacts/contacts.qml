@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtContacts 2.0
+import QtContacts 5.0
 import "contents"
 Item {
     id: screen; width: 360; height: 640
@@ -90,7 +90,7 @@ Item {
                     }
             onNewContact: {
                     var contact = Qt.createQmlObject(
-                        "import QtContacts 2.0;" +
+                        "import QtContacts 5.0;" +
                         "Contact {}", contactModel);
                     screen.showContact = true;
                     contactView.contact = contact;

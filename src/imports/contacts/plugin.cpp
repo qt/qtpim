@@ -65,7 +65,7 @@ public:
     {
         Q_ASSERT(uri == QLatin1String("QtContacts"));
 
-        int major = 2;
+        int major = 5;
         int minor = 0;
         qRegisterMetaType<QContactLocalId>("QContactLocalId");
         qmlRegisterType<QDeclarativeContactModel>(uri, major, minor, "ContactModel");

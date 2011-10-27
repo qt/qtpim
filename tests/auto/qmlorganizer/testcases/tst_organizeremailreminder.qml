@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 Rectangle {
     id: test;
@@ -57,30 +57,30 @@ Rectangle {
         function test_emailReminder_data() {
             return [
                    { tag: " no properties",
-                     code: "import QtOrganizer 2.0;"
+                     code: "import QtOrganizer 5.0;"
                         + "EmailReminder {"
                         + "}"
                     },
                     { tag: " 1 properties",
-                      code: "import QtOrganizer 2.0;"
+                      code: "import QtOrganizer 5.0;"
                         + "EmailReminder {"
                         + "    repetitionCount: 3; }"
                     },
                     { tag: " 2 properties",
-                      code: "import QtOrganizer 2.0;"
+                      code: "import QtOrganizer 5.0;"
                         + "EmailReminder {"
                         + "    repetitionCount: 3; "
                         + "    repetitionDelay: 30;}"
                     },
                     { tag: " 3 properties",
-                      code: "import QtOrganizer 2.0;"
+                      code: "import QtOrganizer 5.0;"
                         + "EmailReminder {"
                         + "    repetitionCount: -1; "
                         + "    secondsBeforeStart: 100;"
                         + "    attachments : [\"1attachments\", \"2attachments\", \"3attachments\"];}"
                     },
                     { tag: " 6 properties",
-                      code: "import QtOrganizer 2.0;"
+                      code: "import QtOrganizer 5.0;"
                          + "EmailReminder {"
                          + "    repetitionCount: 3; "
                          + "    repetitionDelay: 30; "
@@ -106,7 +106,7 @@ Rectangle {
                 var managerName = list[i];
                 console.log("Email reminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
-                      "import QtOrganizer 2.0;"
+                      "import QtOrganizer 5.0;"
                     + "OrganizerModel {"
                     + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
                     + "   startPeriod:'2009-01-01';"
@@ -115,7 +115,7 @@ Rectangle {
                     , test);
 
                 var event = Qt.createQmlObject(
-                        "import QtOrganizer 2.0;"
+                        "import QtOrganizer 5.0;"
                         + "Event { "
                         + "   id:event;"
                         + "   displayLabel: \"organizer qml reminder test event\"; "

@@ -52,7 +52,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 
     \sa QOrganizerItemDetail
 
-    The Detail element is part of the \bold{QtOrganizer 2.0} module.
+    The Detail element is part of the \bold{QtOrganizer 5.0} module.
  */
 
 /*!
@@ -357,7 +357,7 @@ QString QDeclarativeOrganizerItemDetail::definitionName() const
     \brief The EventTime element contains the start and end dates and times of a recurring event series, or occurrence of an event.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerEventTime::QDeclarativeOrganizerEventTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -430,7 +430,7 @@ QDateTime QDeclarativeOrganizerEventTime::endDateTime() const
     \brief The Comment element contains the comment text of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemComment::QDeclarativeOrganizerItemComment(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -467,7 +467,7 @@ QString QDeclarativeOrganizerItemComment::comment() const
     \brief The Description element contains the description text of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemDescription::QDeclarativeOrganizerItemDescription(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -504,7 +504,7 @@ QString QDeclarativeOrganizerItemDescription::description() const
     \brief The DisplayLabel element contains the display label of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemDisplayLabel::QDeclarativeOrganizerItemDisplayLabel(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -541,7 +541,7 @@ QString QDeclarativeOrganizerItemDisplayLabel::label() const
     \brief The Guid element contains the GUID string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemGuid::QDeclarativeOrganizerItemGuid(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -578,7 +578,7 @@ QString QDeclarativeOrganizerItemGuid::guid() const
     \brief The Location element contains information about a location which is related to the organizer item in some manner.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemLocation::QDeclarativeOrganizerItemLocation(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -651,7 +651,7 @@ QString QDeclarativeOrganizerItemLocation::label() const
     \brief The Parent element contains information about the event or todo that generated this item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemParent::QDeclarativeOrganizerItemParent(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -707,7 +707,7 @@ QString QDeclarativeOrganizerItemParent::parentId() const
     \brief The Priority element contains the priority of the organizer item, which may be used to resolve scheduling conflicts.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemPriority::QDeclarativeOrganizerItemPriority(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -758,7 +758,7 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerItemPriority::p
            and a list of rules and dates on which exceptions occur.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemRecurrence::QDeclarativeOrganizerItemRecurrence(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -921,7 +921,7 @@ void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<Q
     \brief The Tag element contains the tag string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemTag::QDeclarativeOrganizerItemTag(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -958,7 +958,7 @@ QString QDeclarativeOrganizerItemTag::tag() const
     \brief The Timestamp element contains the created and last modified timestamp of an organizer item's creating date and time.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemTimestamp::QDeclarativeOrganizerItemTimestamp(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1013,7 +1013,7 @@ QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
     \brief The Type element contains the type string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemType::QDeclarativeOrganizerItemType(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1093,7 +1093,7 @@ QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItemType::
     \brief The JournalTime element contains the entry date and time of a journal item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerJournalTime::QDeclarativeOrganizerJournalTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1129,7 +1129,7 @@ QDateTime QDeclarativeOrganizerJournalTime::entryDateTime() const
     \brief The TodoProgress element contains information about the progress of a todo item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerTodoProgress::QDeclarativeOrganizerTodoProgress(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1212,7 +1212,7 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoProgress:
     \brief The TodoTime element contains the start and due dates and times of a recurring todo series, or occurrence of an todo item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerTodoTime::QDeclarativeOrganizerTodoTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1285,7 +1285,7 @@ QDateTime QDeclarativeOrganizerTodoTime::dueDateTime() const
     \brief The Reminder element contains information about when and how the user wants to reminded of the item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemReminder::QDeclarativeOrganizerItemReminder(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1383,7 +1383,7 @@ int QDeclarativeOrganizerItemReminder::secondsBeforeStart() const
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemAudibleReminder::QDeclarativeOrganizerItemAudibleReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1421,7 +1421,7 @@ QUrl QDeclarativeOrganizerItemAudibleReminder::dataUrl() const
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemEmailReminder::QDeclarativeOrganizerItemEmailReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1514,7 +1514,7 @@ QVariantList QDeclarativeOrganizerItemEmailReminder::attachments()
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizerItemVisualReminder::QDeclarativeOrganizerItemVisualReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1569,7 +1569,7 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
     \brief The ExtendedDetail element contains a extended detail of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 2.0} module.
+    This element is part of the \bold{QtOrganizer 5.0} module.
  */
 QDeclarativeOrganizeritemExtendedDetail::QDeclarativeOrganizeritemExtendedDetail(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)

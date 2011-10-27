@@ -41,7 +41,7 @@
 
 import QtQuick 2.0
 import QtTest 1.0
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 TestCase {
     name: "CollectionTests"
@@ -79,7 +79,7 @@ TestCase {
     function create_collection() {
         console.log("");//to print out test tags for every data set
         var ctorString = "import QtQuick 2.0 \n"
-            + "import QtOrganizer 2.0\n"
+            + "import QtOrganizer 5.0\n"
             + "Collection {\n"
             + "}\n"
         var newCollection = Qt.createQmlObject(ctorString, collectionTests);
@@ -107,13 +107,13 @@ TestCase {
         return [
                     {tag: "empty definition",
                      code: "import QtQuick 2.0 \n"
-                        + "import QtOrganizer 2.0\n"
+                        + "import QtOrganizer 5.0\n"
                         + "Collection {\n"
                         + "}\n"
                 },
                     {tag: "full definition",
                      code: "import QtQuick 2.0 \n"
-                        + "import QtOrganizer 2.0\n"
+                        + "import QtOrganizer 5.0\n"
                         + "Collection {\n"
                         + "id: testCollection\n"
                         + "collectionId: 'my collection id (setting might not be supported by the backend)'\n"
@@ -262,7 +262,7 @@ TestCase {
         var spyWaitDelay = 150;
         // Create and check that backend for the tests is available
         var organizerModel = create_testobject("import QtQuick 2.0\n"
-          + "import QtOrganizer 2.0\n"
+          + "import QtOrganizer 5.0\n"
           + "OrganizerModel {\n"
           + "  manager: '" + data.managerToBeTested + "'\n"
           + "  startPeriod:'2009-01-01'\n"
@@ -278,14 +278,14 @@ TestCase {
         // As a workaround recreating the spy dynamicly.
         var spy = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
 
-        var event = create_testobject("import QtTest 1.0\nimport QtOrganizer 2.0\n"
+        var event = create_testobject("import QtTest 1.0\nimport QtOrganizer 5.0\n"
           + "Event{\n"
           + "  startDateTime: '2010-12-12'\n"
           + "  endDateTime: '2010-12-13'\n"
           + "}\n");
 
         // preparations for collection and event
-        var collection = create_testobject("import QtQuick 2.0\nimport QtOrganizer 2.0\n"
+        var collection = create_testobject("import QtQuick 2.0\nimport QtOrganizer 5.0\n"
           + "Collection {name: 'myTestCollection';}\n");
         var collectionsChangedSpy = create_testobject("import QtTest 1.0 \nSignalSpy {}");
         collectionsChangedSpy.target = organizerModel;
@@ -354,7 +354,7 @@ TestCase {
         var spyWaitDelay = 250;
         // Create and check that backend for the tests is available
         var organizerModel = create_testobject("import QtQuick 2.0\n"
-          + "import QtOrganizer 2.0\n"
+          + "import QtOrganizer 5.0\n"
           + "OrganizerModel {\n"
           + "  manager: '" + data.managerToBeTested + "'\n"
           + "  startPeriod:'2009-01-01'\n"
@@ -383,7 +383,7 @@ TestCase {
         // - autoupdate disabled
         organizerModel.autoUpdate = false
         var coll1 = create_testobject("import QtQuick 2.0 \n"
-          + "import QtOrganizer 2.0\n"
+          + "import QtOrganizer 5.0\n"
           + "Collection {\n"
           + "id: coll1\n"
           + "}\n");
@@ -398,7 +398,7 @@ TestCase {
         // -autoupdate enabled
         organizerModel.autoUpdate = true
         var coll2 = create_testobject("import QtQuick 2.0 \n"
-          + "import QtOrganizer 2.0\n"
+          + "import QtOrganizer 5.0\n"
           + "Collection{}\n");
         coll2.name = "My collection";
         coll2.description = "My description";
@@ -435,7 +435,7 @@ TestCase {
         compare(resavedCollection.metaData("MyKey").toString(), modifiableCollection.metaData("MyKey").toString());
         // -save new collection with empty content data
         var coll3 = create_testobject("import QtQuick 2.0 \n"
-          + "import QtOrganizer 2.0\n"
+          + "import QtOrganizer 5.0\n"
           + "Collection {\n"
           + "}\n");
         coll3.name = "My empty collection";
@@ -451,7 +451,7 @@ TestCase {
         // verify we can see same collections on different OrganizerModel element
         if (data.managerToBeTested == "jsondb") {
             var organizerModel2 = create_testobject("import QtQuick 2.0\n"
-              + "import QtOrganizer 2.0\n"
+              + "import QtOrganizer 5.0\n"
               + "OrganizerModel {\n"
               + "  manager: '" + data.managerToBeTested + "'\n"
               + "  startPeriod:'2009-01-01'\n"
@@ -479,7 +479,7 @@ TestCase {
         compare(collectionsChangedSpy.count, 5);
         // - remove collection with items
         var toBeDeletedCollection = organizerModel.collections[organizerModel.collections.length - 1];
-        var event = create_testobject("import QtTest 1.0\nimport QtOrganizer 2.0\n"
+        var event = create_testobject("import QtTest 1.0\nimport QtOrganizer 5.0\n"
           + "Event{\n"
           + "  startDateTime: '2010-12-12'\n"
           + "  endDateTime: '2010-12-13'\n"

@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtContacts 2.0} module.
+   This element is part of the \bold{QtContacts 5.0} module.
 
    \sa QContactRelationship
    \sa RelationshipModel

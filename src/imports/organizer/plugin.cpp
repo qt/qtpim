@@ -61,7 +61,7 @@ public:
     {
         Q_ASSERT(uri == QLatin1String("QtOrganizer"));
 
-        int major = 2;
+        int major = 5;
         int minor = 0;
         qmlRegisterType<QDeclarativeOrganizerModel>(uri, major, minor, "OrganizerModel");
         qmlRegisterType<QDeclarativeOrganizerRecurrenceRule>(uri, major, minor, "RecurrenceRule");

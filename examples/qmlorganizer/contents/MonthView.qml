@@ -40,7 +40,7 @@
 
 import QtQuick 2.0
 import "month.js" as Month
-import QtOrganizer 2.0
+import QtOrganizer 5.0
 
 Rectangle  {
     id:monthView

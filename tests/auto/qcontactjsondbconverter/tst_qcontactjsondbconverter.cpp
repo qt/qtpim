@@ -150,8 +150,8 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("role", "Superhero");
     jsonData.insert("assistantName", "Daisy Duck");
     jsonData.insert("logoUrl", "http://www.acme.com/logo.jpg");
-    jsonData.insert("startDate","Thu Jan 1 00:01:02 1998");
-    jsonData.insert("endDate","Thu Jan 1 00:01:02 1998");
+    jsonData.insert("startDate","1970-01-01T00:00:00Z");
+    jsonData.insert("endDate","2038-01-19T03:14:08Z");
     jsonContact.insert("organization", QVariantList() << jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactOrganization::DefinitionName);
@@ -164,8 +164,8 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(org->role(), QString("Superhero"));
     QCOMPARE(org->assistantName(), QString("Daisy Duck"));
     QCOMPARE(org->logoUrl(), QUrl("http://www.acme.com/logo.jpg"));
-    QCOMPARE(org->startDate(),QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
-    QCOMPARE(org->endDate(),QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
+    QCOMPARE(org->startDate(),QDateTime::fromString("Thu Jan 1 00:00:00 1970"));
+    QCOMPARE(org->endDate(),QDateTime::fromString("Tue Jan 19 03:14:08 2038"));
     // cleanup
     jsonData.clear();
     contact.clearDetails();
@@ -448,8 +448,8 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testFields.insert("role", "Superhero");
     testFields.insert("assistantName", "Daisy Duck");
     testFields.insert("logoUrl", "http://www.acme.com/logo.jpg");
-    testFields.insert("startDate", "1998-01-01T00:01:02");
-    testFields.insert("endDate", "1998-01-01T00:01:02");
+    testFields.insert("startDate", "1998-01-01T00:01:02Z");
+    testFields.insert("endDate", "1998-01-01T00:01:02Z");
     testFields.insert("context", "test context");
     // test fields
     testJsonDetailItems(jsonContact, "organization", testFields);

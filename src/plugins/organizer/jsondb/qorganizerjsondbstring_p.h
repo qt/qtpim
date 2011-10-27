@@ -62,96 +62,96 @@ class QOrganizerJsonDbStr
 {
 public:
     //Jsondb manager name
-    Q_DECLARE_LATIN1_CONSTANT(ManagerName,    "qtorganizer:jsondb::");
-    Q_DECLARE_LATIN1_CONSTANT(ManagerUri,     "qtorganizer:jsondb:");
-    Q_DECLARE_LATIN1_CONSTANT(JsonDbEngineId, "jsondb");
+    const static QString ManagerName;
+    const static QString ManagerUri;
+    const static QString JsonDbEngineId;
 
     //Organizer item string
-    Q_DECLARE_LATIN1_CONSTANT(ItemName,         "displayName");
-    Q_DECLARE_LATIN1_CONSTANT(ItemCollectionId, "collectionId");
-    Q_DECLARE_LATIN1_CONSTANT(ItemDescription,  "description");
-    Q_DECLARE_LATIN1_CONSTANT(ItemComments,     "comments");
-    Q_DECLARE_LATIN1_CONSTANT(ItemLocation,     "location");
-    Q_DECLARE_LATIN1_CONSTANT(ItemPriority,     "Priority");
-    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminder, "visualReminder");
-    Q_DECLARE_LATIN1_CONSTANT(ItemAudibleReminder,"audibleReminder");
-    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminder,  "emailReminder");
-    Q_DECLARE_LATIN1_CONSTANT(ItemTags,         "tags");
-    Q_DECLARE_LATIN1_CONSTANT(ItemGuid,         "guid");
+    const static QString ItemName;
+    const static QString ItemCollectionId;
+    const static QString ItemDescription;
+    const static QString ItemComments;
+    const static QString ItemLocation;
+    const static QString ItemPriority;
+    const static QString ItemVisualReminder;
+    const static QString ItemAudibleReminder;
+    const static QString ItemEmailReminder;
+    const static QString ItemTags;
+    const static QString ItemGuid;
 
     //Location sub properties
-    Q_DECLARE_LATIN1_CONSTANT(ItemLocationLabel,    "label");
-    Q_DECLARE_LATIN1_CONSTANT(ItemLocationLatitude, "latitude");
-    Q_DECLARE_LATIN1_CONSTANT(ItemLocationLongitude,"longitude");
+    const static QString ItemLocationLabel;
+    const static QString ItemLocationLatitude;
+    const static QString ItemLocationLongitude;
 
     //Item reminder properties
-    Q_DECLARE_LATIN1_CONSTANT(ItemReminderSecBeforeStart,  "secondsBeforeStart"); //SecondsBeforeStart
-    Q_DECLARE_LATIN1_CONSTANT(ItemReminderRepCount,        "repetitionCount"); //RepetitionCount
-    Q_DECLARE_LATIN1_CONSTANT(ItemReminderRepDelay,        "repetitionDelay"); //RepetitionDelay
+    const static QString ItemReminderSecBeforeStart;
+    const static QString ItemReminderRepCount;
+    const static QString ItemReminderRepDelay;
     //Item audible remibder
-    Q_DECLARE_LATIN1_CONSTANT(ItemAudibleReminderDataUrl,  "dataUrl");
+    const static QString ItemAudibleReminderDataUrl;
     //Item email reminder
-    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderSubject,    "subject");
-    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderBody,       "body");
-    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderAttachments,"attachments");
-    Q_DECLARE_LATIN1_CONSTANT(ItemEmailReminderRecipients, "recipients");
+    const static QString ItemEmailReminderSubject;
+    const static QString ItemEmailReminderBody;
+    const static QString ItemEmailReminderAttachments;
+    const static QString ItemEmailReminderRecipients;
     //Item visual reminder
-    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminderMessage,   "message");
-    Q_DECLARE_LATIN1_CONSTANT(ItemVisualReminderDataUrl,   "dataUrl");
+    const static QString ItemVisualReminderMessage;
+    const static QString ItemVisualReminderDataUrl;
 
     //Event item
-    Q_DECLARE_LATIN1_CONSTANT(Event, "com.nokia.mp.organizer.Event");
-    Q_DECLARE_LATIN1_CONSTANT(EventStartDateTime,  "startDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(EventEndDateTime,    "endDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(EventIsAllDay,       "isAllDay");
-    Q_DECLARE_LATIN1_CONSTANT(EventLocation,       "");
-    Q_DECLARE_LATIN1_CONSTANT(EventInviter,        "");
-    Q_DECLARE_LATIN1_CONSTANT(EventAttendees,      "");
+    const static QString Event;
+    const static QString EventStartDateTime;
+    const static QString EventEndDateTime;
+    const static QString EventIsAllDay;
+    const static QString EventLocation;
+    const static QString EventInviter;
+    const static QString EventAttendees;
 
     //To-do item
-    Q_DECLARE_LATIN1_CONSTANT(Todo, "com.nokia.mp.organizer.Todo");
-    Q_DECLARE_LATIN1_CONSTANT(TodoStartDateTime, "startDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(TodoDueDateTime,   "dueDateTime");
-    Q_DECLARE_LATIN1_CONSTANT(TodoIsAllDay,      "isAllDay");
+    const static QString Todo;
+    const static QString TodoStartDateTime;
+    const static QString TodoDueDateTime;
+    const static QString TodoIsAllDay;
 
     //Collection properties
-    Q_DECLARE_LATIN1_CONSTANT(Collection, "com.nokia.mp.organizer.Collection");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionDefaultFlag,  "isDefaultCollection");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionName,         "displayName");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionDescription,  "description");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionColor,        "color");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionImage,        "image");
-    Q_DECLARE_LATIN1_CONSTANT(CollectionCustomFields, "customFields");
+    const static QString Collection;
+    const static QString CollectionDefaultFlag;
+    const static QString CollectionName;
+    const static QString CollectionDescription;
+    const static QString CollectionColor;
+    const static QString CollectionImage;
+    const static QString CollectionCustomFields;
 
-    Q_DECLARE_LATIN1_CONSTANT(DefaultCollectionName, "defaultCollection");
+    const static QString DefaultCollectionName;
 
     // Recurrence sub properties
-    Q_DECLARE_LATIN1_CONSTANT(ItemRecurrenceDates,"recurrenceDates");
-    Q_DECLARE_LATIN1_CONSTANT(ItemExceptioneDates,"exceptionDates");
-    Q_DECLARE_LATIN1_CONSTANT(ItemExceptionRules, "exceptionRules");
-    Q_DECLARE_LATIN1_CONSTANT(ItemRecurrenceRules,"recurrenceRules");
+    const static QString ItemRecurrenceDates;
+    const static QString ItemExceptioneDates;
+    const static QString ItemExceptionRules;
+    const static QString ItemRecurrenceRules;
 
 
     // Recurrence rule properties
-    Q_DECLARE_LATIN1_CONSTANT(RuleFirstDayOfWeek,"firstDayOfWeek");
-    Q_DECLARE_LATIN1_CONSTANT(RuleFrequency,"frequency");
-    Q_DECLARE_LATIN1_CONSTANT(RuleInterval, "interval");
-    Q_DECLARE_LATIN1_CONSTANT(RuleLimitCount,"limitCount");
-    Q_DECLARE_LATIN1_CONSTANT(RuleLimitDate,"limitDate");
-    Q_DECLARE_LATIN1_CONSTANT(RulePositions,"positions");
-    Q_DECLARE_LATIN1_CONSTANT(RuleDaysOfWeek,"daysOfWeek");
-    Q_DECLARE_LATIN1_CONSTANT(RuleDaysOfMonth,"daysOfMonth");
-    Q_DECLARE_LATIN1_CONSTANT(RuleDaysOfYear,"daysOfYear");
-    Q_DECLARE_LATIN1_CONSTANT(RuleWeeksOfYear,"weeksOfYear");
-    Q_DECLARE_LATIN1_CONSTANT(RuleMonthsOfYear,"monthsOfYear");
+    const static QString RuleFirstDayOfWeek;
+    const static QString RuleFrequency;
+    const static QString RuleInterval;
+    const static QString RuleLimitCount;
+    const static QString RuleLimitDate;
+    const static QString RulePositions;
+    const static QString RuleDaysOfWeek;
+    const static QString RuleDaysOfMonth;
+    const static QString RuleDaysOfYear;
+    const static QString RuleWeeksOfYear;
+    const static QString RuleMonthsOfYear;
 
     //warning string
-    Q_DECLARE_LATIN1_CONSTANT(WarningMoreItemDelete, "Items are delete from jsondb!!");
-    Q_DECLARE_LATIN1_CONSTANT(WarningCollectionMissing, "No default collection! error code:");
-    Q_DECLARE_LATIN1_CONSTANT(WarningCollectionRemove, " Number of items deleted from jsondb is not equal to request !!");
-    Q_DECLARE_LATIN1_CONSTANT(WarningDefaultCollectionRemove, "Default collection can not be removed!");
-    Q_DECLARE_LATIN1_CONSTANT(WarningDefaultCollectionChange, "Default collection can not be changed!");
-    Q_DECLARE_LATIN1_CONSTANT(WarningDefaultCollectionCreate, "Same name as default collection!");
+    const static QString WarningMoreItemDelete;
+    const static QString WarningCollectionMissing;
+    const static QString WarningCollectionRemove;
+    const static QString WarningDefaultCollectionRemove;
+    const static QString WarningDefaultCollectionChange;
+    const static QString WarningDefaultCollectionCreate;
 
 };
 

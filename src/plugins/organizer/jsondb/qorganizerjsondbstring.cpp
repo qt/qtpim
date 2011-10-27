@@ -44,94 +44,95 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 //Jsondb manager name
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ManagerName,    "qtorganizer:jsondb::");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ManagerUri,     "qtorganizer:jsondb:");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::JsonDbEngineId, "jsondb");
+const QString QOrganizerJsonDbStr::ManagerName(QStringLiteral("qtorganizer:jsondb::"));
+const QString QOrganizerJsonDbStr::ManagerUri(QStringLiteral("qtorganizer:jsondb:"));
+const QString QOrganizerJsonDbStr::JsonDbEngineId(QStringLiteral("jsondb"));
 
 //Organizer item string
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemName,         "displayName");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemCollectionId, "collectionId");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemDescription,  "description");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemComments,     "comments");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocation,     "location");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemPriority,     "Priority");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemTags,         "tags");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminder, "visualReminder");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminder,"audibleReminder");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminder,  "emailReminder");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemGuid,         "guid");
+const QString QOrganizerJsonDbStr::ItemName(QStringLiteral("displayName"));
+const QString QOrganizerJsonDbStr::ItemCollectionId(QStringLiteral("collectionId"));
+const QString QOrganizerJsonDbStr::ItemDescription(QStringLiteral("description"));
+const QString QOrganizerJsonDbStr::ItemComments(QStringLiteral("comments"));
+const QString QOrganizerJsonDbStr::ItemLocation(QStringLiteral("location"));
+const QString QOrganizerJsonDbStr::ItemPriority(QStringLiteral("Priority"));
+const QString QOrganizerJsonDbStr::ItemTags(QStringLiteral("tags"));
+const QString QOrganizerJsonDbStr::ItemVisualReminder(QStringLiteral("visualReminder"));
+const QString QOrganizerJsonDbStr::ItemAudibleReminder(QStringLiteral("audibleReminder"));
+const QString QOrganizerJsonDbStr::ItemEmailReminder(QStringLiteral("emailReminder"));
+const QString QOrganizerJsonDbStr::ItemGuid(QStringLiteral("guid"));
 
 //Location sub properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLabel,    "label");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLatitude, "latitude");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemLocationLongitude,"longitude");
+const QString QOrganizerJsonDbStr::ItemLocationLabel(QStringLiteral("label"));
+const QString QOrganizerJsonDbStr::ItemLocationLatitude(QStringLiteral("latitude"));
+const QString QOrganizerJsonDbStr::ItemLocationLongitude(QStringLiteral("longitude"));
 
 //Item reminder properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderSecBeforeStart,  "secondsBeforeStart");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderRepCount,        "repetitionCount");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemReminderRepDelay,        "repetitionDelay");
+const QString QOrganizerJsonDbStr::ItemReminderSecBeforeStart(QStringLiteral("secondsBeforeStart"));
+const QString QOrganizerJsonDbStr::ItemReminderRepCount(QStringLiteral("repetitionCount"));
+const QString QOrganizerJsonDbStr::ItemReminderRepDelay(QStringLiteral("repetitionDelay"));
 //Item audible remibder
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl,  "dataUrl");
+const QString QOrganizerJsonDbStr::ItemAudibleReminderDataUrl(QStringLiteral("dataUrl"));
 //Item email reminder
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderSubject,    "subject");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderBody,       "body");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderAttachments,"attachments");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemEmailReminderRecipients, "recipients");
+const QString QOrganizerJsonDbStr::ItemEmailReminderSubject(QStringLiteral("subject"));
+const QString QOrganizerJsonDbStr::ItemEmailReminderBody(QStringLiteral("body"));
+const QString QOrganizerJsonDbStr::ItemEmailReminderAttachments(QStringLiteral("attachments"));
+const QString QOrganizerJsonDbStr::ItemEmailReminderRecipients(QStringLiteral("recipients"));
 //Item visual reminder
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminderMessage,   "message");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemVisualReminderDataUrl,   "dataUrl");
+const QString QOrganizerJsonDbStr::ItemVisualReminderMessage(QStringLiteral("message"));
+const QString QOrganizerJsonDbStr::ItemVisualReminderDataUrl(QStringLiteral("dataUrl"));
 
 //Event item
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::Event, "com.nokia.mp.organizer.Event");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventStartDateTime,  "startDateTime");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventEndDateTime,    "endDateTime");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventIsAllDay,       "isAllDay");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventLocation,       "");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventInviter,        "");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::EventAttendees,      "");
+const QString QOrganizerJsonDbStr::Event(QStringLiteral("com.nokia.mp.organizer.Event"));
+const QString QOrganizerJsonDbStr::EventStartDateTime(QStringLiteral("startDateTime"));
+const QString QOrganizerJsonDbStr::EventEndDateTime(QStringLiteral("endDateTime"));
+const QString QOrganizerJsonDbStr::EventIsAllDay(QStringLiteral("isAllDay"));
+const QString QOrganizerJsonDbStr::EventLocation(QStringLiteral(""));
+const QString QOrganizerJsonDbStr::EventInviter(QStringLiteral(""));
+const QString QOrganizerJsonDbStr::EventAttendees(QStringLiteral(""));
 
 //To-do item
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::Todo, "com.nokia.mp.organizer.Todo");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoStartDateTime, "startDateTime");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoDueDateTime,   "dueDateTime");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::TodoIsAllDay,      "isAllDay");
+const QString QOrganizerJsonDbStr::Todo(QStringLiteral("com.nokia.mp.organizer.Todo"));
+const QString QOrganizerJsonDbStr::TodoStartDateTime(QStringLiteral("startDateTime"));
+const QString QOrganizerJsonDbStr::TodoDueDateTime(QStringLiteral("dueDateTime"));
+const QString QOrganizerJsonDbStr::TodoIsAllDay(QStringLiteral("isAllDay"));
 
 //Collection properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::Collection, "com.nokia.mp.organizer.Collection");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionDefaultFlag,  "isDefaultCollection");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionName,         "displayName");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionDescription,  "description");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionColor,        "color");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionImage,        "image");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::CollectionCustomFields, "customFields");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::DefaultCollectionName, "defaultCollection");
+const QString QOrganizerJsonDbStr::Collection(QStringLiteral("com.nokia.mp.organizer.Collection"));
+const QString QOrganizerJsonDbStr::CollectionDefaultFlag(QStringLiteral("isDefaultCollection"));
+const QString QOrganizerJsonDbStr::CollectionName(QStringLiteral("displayName"));
+const QString QOrganizerJsonDbStr::CollectionDescription(QStringLiteral("description"));
+const QString QOrganizerJsonDbStr::CollectionColor(QStringLiteral("color"));
+const QString QOrganizerJsonDbStr::CollectionImage(QStringLiteral("image"));
+const QString QOrganizerJsonDbStr::CollectionCustomFields(QStringLiteral("customFields"));
+const QString QOrganizerJsonDbStr::DefaultCollectionName(QStringLiteral("defaultCollection"));
 
 // Recurrence sub properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemRecurrenceDates,"recurrenceDates");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemExceptioneDates,"exceptionDates");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemExceptionRules, "exceptionRules");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::ItemRecurrenceRules,"recurrenceRules");
+const QString QOrganizerJsonDbStr::ItemRecurrenceDates(QStringLiteral("recurrenceDates"));
+const QString QOrganizerJsonDbStr::ItemExceptioneDates(QStringLiteral("exceptionDates"));
+const QString QOrganizerJsonDbStr::ItemExceptionRules(QStringLiteral("exceptionRules"));
+const QString QOrganizerJsonDbStr::ItemRecurrenceRules(QStringLiteral("recurrenceRules"));
 
 
 // Recurrence rule properties
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleFirstDayOfWeek,"firstDayOfWeek");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleFrequency,"frequency");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleInterval, "interval");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleLimitCount,"limitCount");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleLimitDate,"limitDate");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RulePositions,"positions");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfWeek,"daysOfWeek");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfMonth,"daysOfMonth");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleDaysOfYear,"daysOfYear");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleWeeksOfYear,"weeksOfYear");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::RuleMonthsOfYear,"monthsOfYear");
+const QString QOrganizerJsonDbStr::RuleFirstDayOfWeek(QStringLiteral("firstDayOfWeek"));
+const QString QOrganizerJsonDbStr::RuleFrequency(QStringLiteral("frequency"));
+const QString QOrganizerJsonDbStr::RuleInterval(QStringLiteral("interval"));
+const QString QOrganizerJsonDbStr::RuleLimitCount(QStringLiteral("limitCount"));
+const QString QOrganizerJsonDbStr::RuleLimitDate(QStringLiteral("limitDate"));
+const QString QOrganizerJsonDbStr::RulePositions(QStringLiteral("positions"));
+const QString QOrganizerJsonDbStr::RuleDaysOfWeek(QStringLiteral("daysOfWeek"));
+const QString QOrganizerJsonDbStr::RuleDaysOfMonth(QStringLiteral("daysOfMonth"));
+const QString QOrganizerJsonDbStr::RuleDaysOfYear(QStringLiteral("daysOfYear"));
+const QString QOrganizerJsonDbStr::RuleWeeksOfYear(QStringLiteral("weeksOfYear"));
+const QString QOrganizerJsonDbStr::RuleMonthsOfYear(QStringLiteral("monthsOfYear"));
+
 
 //warning string
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningMoreItemDelete, "Items are delete from jsondb!!");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningCollectionMissing, "No default collection! error code:");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningCollectionRemove, " Number of items deleted from jsondb is not equal to request !!");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionRemove, "Default collection can not be removed!");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionChange, "Default collection can not be changed!");
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerJsonDbStr::WarningDefaultCollectionCreate, "Same name as default collection!");
+const QString QOrganizerJsonDbStr::WarningMoreItemDelete(QStringLiteral("Items are delete from jsondb!!"));
+const QString QOrganizerJsonDbStr::WarningCollectionMissing(QStringLiteral("No default collection! error code:"));
+const QString QOrganizerJsonDbStr::WarningCollectionRemove(QStringLiteral(" Number of items deleted from jsondb is not equal to request !!"));
+const QString QOrganizerJsonDbStr::WarningDefaultCollectionRemove(QStringLiteral("Default collection can not be removed!"));
+const QString QOrganizerJsonDbStr::WarningDefaultCollectionChange(QStringLiteral("Default collection can not be changed!"));
+const QString QOrganizerJsonDbStr::WarningDefaultCollectionCreate(QStringLiteral("Same name as default collection!"));
 
 QTORGANIZER_END_NAMESPACE

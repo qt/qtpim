@@ -42,8 +42,7 @@ SUBDIRS += \
     qorganizeritemfilter \
     qorganizermanager \
     qorganizermanagerdetails \
-    qorganizere2e \
-#    qdeclarativeorganizer
+    qorganizere2e
 
 # versit
 SUBDIRS += \

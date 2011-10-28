@@ -48,7 +48,6 @@
 #include <QList>
 #include <QSharedDataPointer>
 
-#include <qlatin1constant.h>
 #include <qorganizeritemid.h>
 #include <qorganizercollectionid.h>
 
@@ -80,18 +79,10 @@ public:
     QVariant metaData(const QString& key) const;
 
     /* Default meta data keys */
-#ifdef Q_QDOC
-    static const QLatin1Constant KeyName;
-    static const QLatin1Constant KeyDescription;
-    static const QLatin1Constant KeyColor;
-    static const QLatin1Constant KeyImage;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(KeyName, "Name");
-    Q_DECLARE_LATIN1_CONSTANT(KeyDescription, "Description");
-    Q_DECLARE_LATIN1_CONSTANT(KeyColor, "Color");
-    Q_DECLARE_LATIN1_CONSTANT(KeyImage, "Image");
-#endif
-
+    const static QString KeyName;
+    const static QString KeyDescription;
+    const static QString KeyColor;
+    const static QString KeyImage;
 
 private:
     friend class QOrganizerManagerEngine;

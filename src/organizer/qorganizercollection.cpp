@@ -76,25 +76,25 @@ QTORGANIZER_BEGIN_NAMESPACE
   \variable QOrganizerCollection::KeyName
   The constant key value which identifies the name meta data of a collection.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerCollection::KeyName, "Name");
+const QString QOrganizerCollection::KeyName(QStringLiteral("Name"));
 
 /*!
   \variable QOrganizerCollection::KeyDescription
   The constant key value which identifies the description meta data of a collection.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerCollection::KeyDescription, "Description");
+const QString QOrganizerCollection::KeyDescription(QStringLiteral("Description"));
 
 /*!
   \variable QOrganizerCollection::KeyColor
   The constant key value which identifies the color meta data of a collection.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerCollection::KeyColor, "Color");
+const QString QOrganizerCollection::KeyColor(QStringLiteral("Color"));
 
 /*!
   \variable QOrganizerCollection::KeyImage
   The constant key value which identifies the image meta data of a collection.
  */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerCollection::KeyImage, "Image");
+const QString QOrganizerCollection::KeyImage(QStringLiteral("Image"));
 
 /*!
   Constructs a new collection

@@ -982,7 +982,7 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
         }
     }
     if (!foundParent) {
-        QSKIP("Manager has no valid recurring events; skipping.", SkipSingle);
+        QSKIP("Manager has no valid recurring events; skipping.");
     }
 
     // initial state - not started, no manager.
@@ -1544,12 +1544,12 @@ void tst_QOrganizerItemAsync::itemRemove()
 //            irr.waitForFinished();
 //            temp.setId(QOrganizerItemId());
 //            if (!oim->saveItem(&temp)) {
-//                QSKIP("Unable to save temporary item for remove request cancellation test!", SkipSingle);
+//                QSKIP("Unable to save temporary item for remove request cancellation test!");
 //            }
 //            irr.setItemIds(oim->itemIds());
 //            bailoutCount -= 1;
 //            if (!bailoutCount) {
-////                QSKIP("Unable to test cancelling due to thread scheduling!", SkipSingle);
+////                QSKIP("Unable to test cancelling due to thread scheduling!");
 //                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
 //                break;
 //            }
@@ -1701,7 +1701,7 @@ void tst_QOrganizerItemAsync::itemSave()
             isr.waitForFinished();
             saveList = isr.items();
             if (oim->itemIds().size() > (originalCount + 1) && !oim->removeItem(saveList.at(0).id())) {
-                QSKIP("Unable to remove saved item to test cancellation of item save request", SkipSingle);
+                QSKIP("Unable to remove saved item to test cancellation of item save request");
             }
             saveList.clear();
             saveList << temp;
@@ -1744,7 +1744,7 @@ void tst_QOrganizerItemAsync::itemSave()
             isr.waitForFinished();
             saveList = isr.items();
             if (oim->itemIds().size() > (originalCount + 1) && !oim->removeItem(saveList.at(0).id())) {
-                QSKIP("Unable to remove saved item to test cancellation of item save request", SkipSingle);
+                QSKIP("Unable to remove saved item to test cancellation of item save request");
             }
             saveList.clear();
             saveList << temp;
@@ -2220,7 +2220,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
             crr.waitForFinished();
             temp.setId(QOrganizerCollectionId());
             if (!oim->saveCollection(&temp)) {
-                QSKIP("Unable to save temporary item for remove request cancellation test!", SkipSingle);
+                QSKIP("Unable to save temporary item for remove request cancellation test!");
             }
             crr.setCollectionId(temp.id());
             bailoutCount -= 1;
@@ -2258,7 +2258,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
             crr.waitForFinished();
             temp.setId(QOrganizerCollectionId());
             if (!oim->saveCollection(&temp)) {
-                QSKIP("Unable to save temporary item for remove request cancellation test!", SkipSingle);
+                QSKIP("Unable to save temporary item for remove request cancellation test!");
             }
             crr.setCollectionId(temp.id());
             bailoutCount -= 1;
@@ -2390,7 +2390,7 @@ void tst_QOrganizerItemAsync::collectionSave()
             csr.waitForFinished();
             saveList = csr.collections();
             if (oim->collections().size() > (originalCount + 1) && !oim->removeCollection(saveList.at(0).id())) {
-                QSKIP("Unable to remove saved collection to test cancellation of collection save request", SkipSingle);
+                QSKIP("Unable to remove saved collection to test cancellation of collection save request");
             }
             saveList.clear();
             saveList << temp;
@@ -2430,7 +2430,7 @@ void tst_QOrganizerItemAsync::collectionSave()
             csr.waitForFinished();
             saveList = csr.collections();
             if (oim->collections().size() > (originalCount + 1) && !oim->removeCollection(saveList.at(0).id())) {
-                QSKIP("Unable to remove saved item to test cancellation of item save request", SkipSingle);
+                QSKIP("Unable to remove saved item to test cancellation of item save request");
             }
             saveList.clear();
             saveList << temp;
@@ -2529,7 +2529,7 @@ void tst_QOrganizerItemAsync::threadDelivery()
         // break after 30 seconds.
         if (totalWaitTime > 30000) {
             delete req;
-            QSKIP("Asynchronous request not complete after 30 seconds!", SkipSingle);
+            QSKIP("Asynchronous request not complete after 30 seconds!");
         }
     }
 

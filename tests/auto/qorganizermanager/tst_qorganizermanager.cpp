@@ -819,7 +819,7 @@ void tst_QOrganizerManager::add()
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
-        QSKIP("This manager does not support note or todo item", SkipSingle);
+        QSKIP("This manager does not support note or todo item");
 
     QOrganizerItem item;
     item.setType(type);
@@ -1373,7 +1373,7 @@ void tst_QOrganizerManager::update()
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
-        QSKIP("This manager does not support note or todo item", SkipSingle);
+        QSKIP("This manager does not support note or todo item");
 
     // Save a new item first
     QOrganizerItem item;
@@ -1475,7 +1475,7 @@ void tst_QOrganizerManager::remove()
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
-        QSKIP("This manager does not support note or todo item", SkipSingle);
+        QSKIP("This manager does not support note or todo item");
 
     // Save a new item first
     QOrganizerItem item;
@@ -1574,7 +1574,7 @@ void tst_QOrganizerManager::batch()
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
         type = QLatin1String(QOrganizerItemType::TypeTodo);
     else
-        QSKIP("This manager does not support note or todo item", SkipSingle);
+        QSKIP("This manager does not support note or todo item");
     
     QOrganizerItem a;
     QOrganizerItem b;
@@ -3507,7 +3507,7 @@ void tst_QOrganizerManager::idComparison()
 
     // Can we run this test?
     if (!cm->supportedItemTypes().contains(QOrganizerItemType::TypeJournal)) {
-        QSKIP("Backend not compatible with this test", SkipSingle);
+        QSKIP("Backend not compatible with this test");
         // For example symbian backend does not support Journal items and comment details at all..
         // TODO: The test should be refactored so it could run on all platforms
     }
@@ -3864,10 +3864,10 @@ void tst_QOrganizerManager::detailOrders()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
     if (cm->managerName() == "symbian")
-        QSKIP("symbian manager does not support detail ordering", SkipSingle);
+        QSKIP("symbian manager does not support detail ordering");
 
     if (cm->managerName() == "maemo5")
-        QSKIP("maemo5 manager does not support detail ordering", SkipSingle);
+        QSKIP("maemo5 manager does not support detail ordering");
 
     QOrganizerEvent a;
 

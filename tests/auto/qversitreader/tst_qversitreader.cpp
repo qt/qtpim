@@ -504,7 +504,7 @@ void tst_QVersitReader::testResult()
 void tst_QVersitReader::testParseNextVersitProperty()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QFETCH(QVersitDocument::VersitType, documentType);
     QFETCH(QByteArray, input);
@@ -1090,7 +1090,7 @@ void tst_QVersitReader::testParseVersitDocument_data()
 void tst_QVersitReader::testDecodeQuotedPrintable()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QFETCH(QByteArray, encoded);
 
@@ -1151,7 +1151,7 @@ void tst_QVersitReader::testDecodeQuotedPrintable_data()
 void tst_QVersitReader::testParamName()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     // Empty value
     QByteArray param;
@@ -1185,7 +1185,7 @@ void tst_QVersitReader::testParamName()
 void tst_QVersitReader::testParamValue()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     // Empty value
     QByteArray param;
@@ -1225,7 +1225,7 @@ void tst_QVersitReader::testParamValue()
 void tst_QVersitReader::testExtractPart()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QByteArray originalStr;
 
@@ -1261,7 +1261,7 @@ void tst_QVersitReader::testExtractPart()
 void tst_QVersitReader::testExtractParts()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QList<QByteArray> parts;
 
@@ -1326,7 +1326,7 @@ void tst_QVersitReader::testExtractParts()
 void tst_QVersitReader::testExtractPropertyGroupsAndName()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QPair<QStringList,QString> groupsAndName;
 
@@ -1419,7 +1419,7 @@ void tst_QVersitReader::testExtractPropertyGroupsAndName()
 void tst_QVersitReader::testExtractVCard21PropertyParams()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     // No parameters
     LByteArray cursor(QByteArray(":123"));
@@ -1495,7 +1495,7 @@ void tst_QVersitReader::testExtractVCard21PropertyParams()
 void tst_QVersitReader::testExtractVCard30PropertyParams()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     // No parameters
     LByteArray cursor(QByteArray(":123"));
@@ -1579,7 +1579,7 @@ void tst_QVersitReader::testExtractVCard30PropertyParams()
 void tst_QVersitReader::testExtractParams()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     LByteArray cursor;
     QByteArray data = ":123";
@@ -1616,7 +1616,7 @@ Q_DECLARE_METATYPE(QList<QString>)
 void tst_QVersitReader::testReadLine()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     QFETCH(QByteArray, codecName);
     QFETCH(QString, data);
@@ -1795,7 +1795,7 @@ void tst_QVersitReader::testByteArrayInput()
 void tst_QVersitReader::testRemoveBackSlashEscaping()
 {
 #ifndef QT_BUILD_INTERNAL
-    QSKIP("Testing private API", SkipSingle);
+    QSKIP("Testing private API");
 #else
     // Empty string
     QString input;

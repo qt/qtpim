@@ -196,7 +196,7 @@ void tst_QContactManagerDetails::testAddress()
             || !def.fields().contains(QContactAddress::FieldPostcode)
             || !def.fields().contains(QContactAddress::FieldCountry)
             || !def.fields().contains(QContactAddress::FieldPostOfficeBox))
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     // general address
     {
@@ -215,7 +215,7 @@ void tst_QContactManagerDetails::testAddress()
     }
 
     if (def.isUnique())
-        QSKIP("This backend does not support more than one of this detail", SkipSingle);
+        QSKIP("This backend does not support more than one of this detail");
 
     // general address *2
     {
@@ -249,7 +249,7 @@ void tst_QContactManagerDetails::testAddress()
     }
 
     if (!def.fields().contains(QContactDetail::FieldContext)) {
-        QSKIP("This backend does not support contexts", SkipSingle);
+        QSKIP("This backend does not support contexts");
     }
 
     // general + home + work address
@@ -282,7 +282,7 @@ void tst_QContactManagerDetails::testAnniversary()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactAnniversary::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -299,7 +299,7 @@ void tst_QContactManagerDetails::testAvatar()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactAvatar::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -316,7 +316,7 @@ void tst_QContactManagerDetails::testBirthday()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactBirthday::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -333,7 +333,7 @@ void tst_QContactManagerDetails::testEmailAddress()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactEmailAddress::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -357,7 +357,7 @@ void tst_QContactManagerDetails::testName()
             || !def.fields().contains(QContactName::FieldMiddleName)
             || !def.fields().contains(QContactName::FieldLastName)
             || !def.fields().contains(QContactName::FieldSuffix))
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContactName n;
     n.setPrefix( "prefix" );
@@ -376,7 +376,7 @@ void tst_QContactManagerDetails::testNickName()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactNickname::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -399,7 +399,7 @@ void tst_QContactManagerDetails::testOrganisation()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactOrganization::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -418,7 +418,7 @@ void tst_QContactManagerDetails::testOnlineAccount()
 
     QContactDetailDefinition def = cm->detailDefinition(QContactOnlineAccount::DefinitionName);
     if (def.isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -458,7 +458,7 @@ void tst_QContactManagerDetails::testPhoneNumber()
     if (def.isUnique()
             || !def.fields().contains(QContactPhoneNumber::FieldSubTypes)
             || !def.fields().contains(QContactDetail::FieldContext))
-        QSKIP("This backend does not support multiple, subtyped or contexted phone numbers", SkipSingle);
+        QSKIP("This backend does not support multiple, subtyped or contexted phone numbers");
 
     // home mobile number + work landline number
     {
@@ -490,7 +490,7 @@ void tst_QContactManagerDetails::testUrl()
     QContactDetailDefinition def = cm->detailDefinition(QContactUrl::DefinitionName);
 
     if (cm->detailDefinition(QContactUrl::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -511,7 +511,7 @@ void tst_QContactManagerDetails::testRingtone()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (cm->detailDefinition(QContactRingtone::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!", SkipSingle);
+        QSKIP("This backend does not support the required detail!");
 
 #if defined(Q_OS_SYMBIAN)
     QUrl rtUrl(QUrl::fromLocalFile("C:\\data\\Sounds\\sample1.wav"));

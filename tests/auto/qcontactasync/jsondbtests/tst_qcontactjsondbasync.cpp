@@ -731,7 +731,7 @@ void tst_QContactJsonDbAsync::contactSave()
             csr.waitForFinished();
             saveList = csr.contacts();
             if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
-                QSKIP("Unable to remove saved contact to test cancellation of contact save request", SkipSingle);
+                QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
             saveList << temp;
@@ -774,7 +774,7 @@ void tst_QContactJsonDbAsync::contactSave()
             csr.waitForFinished();
             saveList = csr.contacts();
             if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
-                QSKIP("Unable to remove saved contact to test cancellation of contact save request", SkipSingle);
+                QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
             saveList << temp;

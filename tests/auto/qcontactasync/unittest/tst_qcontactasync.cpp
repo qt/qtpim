@@ -914,7 +914,7 @@ void tst_QContactAsync::contactRemove()
             crr.setContactIds(cm->contactIds(dfil));
             temp.setId(QContactId());
             if (!cm->saveContact(&temp)) {
-                QSKIP("Unable to save temporary contact for remove request cancellation test!", SkipSingle);
+                QSKIP("Unable to save temporary contact for remove request cancellation test!");
             }
             bailoutCount -= 1;
             if (!bailoutCount) {
@@ -1072,7 +1072,7 @@ void tst_QContactAsync::contactSave()
             csr.waitForFinished();
             saveList = csr.contacts();
             if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
-                QSKIP("Unable to remove saved contact to test cancellation of contact save request", SkipSingle);
+                QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
             saveList << temp;
@@ -1115,7 +1115,7 @@ void tst_QContactAsync::contactSave()
             csr.waitForFinished();
             saveList = csr.contacts();
             if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
-                QSKIP("Unable to remove saved contact to test cancellation of contact save request", SkipSingle);
+                QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
             saveList << temp;
@@ -1506,7 +1506,7 @@ void tst_QContactAsync::definitionRemove()
 
     QScopedPointer<QContactManager> cm(prepareModel(uri));
     if (!cm->hasFeature(QContactManager::MutableDefinitions)) {
-       QSKIP("This contact manager does not support mutable definitions, can't remove a definition!", SkipSingle);
+       QSKIP("This contact manager does not support mutable definitions, can't remove a definition!");
     }
     QContactDetailDefinitionRemoveRequest drr;
     QVERIFY(drr.type() == QContactAbstractRequest::DetailDefinitionRemoveRequest);
@@ -1676,7 +1676,7 @@ void tst_QContactAsync::definitionSave()
 
     if (!cm->hasFeature(QContactManager::MutableDefinitions)) {
 
-       QSKIP("This contact manager does not support mutable definitions, can't save a definition!", SkipSingle);
+       QSKIP("This contact manager does not support mutable definitions, can't save a definition!");
     }
     
     QContactDetailDefinitionSaveRequest dsr;
@@ -1841,11 +1841,11 @@ void tst_QContactAsync::relationshipFetch()
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
     if (!cm->hasFeature(QContactManager::Relationships)) {
-       QSKIP("This contact manager does not support relationships!", SkipSingle);
+       QSKIP("This contact manager does not support relationships!");
     }
     
     if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!", SkipSingle);
+        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }
     
     QContactRelationshipFetchRequest rfr;
@@ -2048,11 +2048,11 @@ void tst_QContactAsync::relationshipRemove()
     QScopedPointer<QContactManager> cm(prepareModel(uri));
     
     if (!cm->hasFeature(QContactManager::Relationships)) {
-       QSKIP("This contact manager does not support relationships!", SkipSingle);
+       QSKIP("This contact manager does not support relationships!");
     }
     
     if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!", SkipSingle);
+        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }
     
     QContactRelationshipRemoveRequest rrr;
@@ -2206,11 +2206,11 @@ void tst_QContactAsync::relationshipSave()
     QScopedPointer<QContactManager> cm(prepareModel(uri));
     
     if (!cm->hasFeature(QContactManager::Relationships)) {
-       QSKIP("This contact manager does not support relationships!", SkipSingle);
+       QSKIP("This contact manager does not support relationships!");
     }
     
     if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!", SkipSingle);
+        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }    
     
     QContactRelationshipSaveRequest rsr;
@@ -2513,7 +2513,7 @@ void tst_QContactAsync::threadDelivery()
         // break after 30 seconds.
         if (totalWaitTime > 30000) {
             delete req;
-            QSKIP("Asynchronous request not complete after 30 seconds!", SkipSingle);
+            QSKIP("Asynchronous request not complete after 30 seconds!");
         }
     }
 

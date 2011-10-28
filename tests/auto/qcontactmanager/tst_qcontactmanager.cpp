@@ -1377,7 +1377,7 @@ void tst_QContactManager::batch()
         if(def.fields().contains(QContactName::FieldCustomLabel))
             nameField = QLatin1String(QContactName::FieldCustomLabel);
         else
-            QSKIP("This backend does not support the required name field!", SkipSingle);
+            QSKIP("This backend does not support the required name field!");
     }
 
     /* Now add 3 contacts, all valid */
@@ -2988,7 +2988,7 @@ void tst_QContactManager::actionPreferences()
 
     // early out if the manager doesn't support action preference saving.
     if (!cm->hasFeature(QContactManager::ActionPreferences)) {
-        QSKIP("Manager does not support action preferences", SkipSingle);
+        QSKIP("Manager does not support action preferences");
     }
 
     // create a sample contact
@@ -3140,7 +3140,7 @@ void tst_QContactManager::selfContactId()
         QVERIFY(cm->error() == QContactManager::DoesNotExistError);
         QVERIFY(!cm->setSelfContactId(QContactLocalId(123)));
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        QSKIP("Manager does not support the concept of a self-contact", SkipSingle);
+        QSKIP("Manager does not support the concept of a self-contact");
     }
 
     // create a new "self" contact and retrieve its Id
@@ -3150,7 +3150,7 @@ void tst_QContactManager::selfContactId()
     selfPhn.setNumber("12345");
     self.saveDetail(&selfPhn);
     if (!cm->saveContact(&self)) {
-        QSKIP("Unable to save the generated self contact", SkipSingle);
+        QSKIP("Unable to save the generated self contact");
     }
     QContactLocalId newSelfContact = self.localId();
 
@@ -3172,7 +3172,7 @@ void tst_QContactManager::selfContactId()
 
     // Remove self contact
     if(!cm->removeContact(self.localId())) {
-        QSKIP("Unable to remove self contact", SkipSingle);
+        QSKIP("Unable to remove self contact");
     }
     QTRY_VERIFY(spy.count() == 2);
     QVERIFY(spy.at(1).count() == 2);
@@ -3203,7 +3203,7 @@ void tst_QContactManager::detailOrders()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (!cm->hasFeature(QContactManager::DetailOrdering))
-        QSKIP("Skipping: This manager does not support detail ordering!", SkipSingle);
+        QSKIP("Skipping: This manager does not support detail ordering!");
 
     QContact a;
     //phone numbers
@@ -3768,7 +3768,7 @@ void tst_QContactManager::contactType()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     if (!cm->hasFeature(QContactManager::Groups))
-        QSKIP("Skipping: This manager does not support group contacts!", SkipSingle);
+        QSKIP("Skipping: This manager does not support group contacts!");
 
     QContact g1, g2, c;
     g1.setType(QContactType::TypeGroup);

@@ -851,7 +851,7 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     returnValue = cm.removeContacts(invalidList);
     QVERIFY(returnValue == false);
 
-    QSKIP("TODO: Gives now unspecified error which is waiting fix in the backend", SkipSingle);
+    QSKIP("TODO: Gives now unspecified error which is waiting fix in the backend");
     QVERIFY(cm.error() == 1); // Check whether the generated error code is in fact "DoesNotExistError"
 
     // Remove only two contacts

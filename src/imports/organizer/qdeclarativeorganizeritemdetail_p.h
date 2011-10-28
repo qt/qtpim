@@ -127,9 +127,9 @@ class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY detailChanged)
+    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerEventTime(QObject *parent = 0);
@@ -148,7 +148,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -156,7 +156,7 @@ class QDeclarativeOrganizerItemComment : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY detailChanged)
+    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemComment(QObject *parent = 0);
@@ -169,7 +169,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -177,7 +177,7 @@ class QDeclarativeOrganizerItemDescription : public QDeclarativeOrganizerItemDet
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY detailChanged)
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemDescription(QObject *parent = 0);
@@ -190,7 +190,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -198,7 +198,7 @@ class QDeclarativeOrganizerItemDisplayLabel : public QDeclarativeOrganizerItemDe
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY detailChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemDisplayLabel(QObject *parent = 0);
@@ -211,7 +211,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -219,7 +219,7 @@ class QDeclarativeOrganizerItemGuid : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY detailChanged)
+    Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemGuid(QObject *parent = 0);
@@ -232,7 +232,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -240,9 +240,9 @@ class QDeclarativeOrganizerItemLocation : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY detailChanged)
-    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY detailChanged)
-    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY detailChanged)
+    Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY valueChanged)
+    Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY valueChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemLocation(QObject *parent = 0);
@@ -261,7 +261,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -269,8 +269,8 @@ class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY detailChanged)
-    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY detailChanged)
+    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
+    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemParent(QObject *parent = 0);
@@ -286,7 +286,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -296,7 +296,7 @@ class QDeclarativeOrganizerItemPriority : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(Priority)
 
-    Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY detailChanged)
+    Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
 
 public:
     enum Priority {
@@ -322,7 +322,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -332,8 +332,8 @@ class QDeclarativeOrganizerItemRecurrence : public QDeclarativeOrganizerItemDeta
 
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules READ recurrenceRules NOTIFY recurrenceRulesChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules READ exceptionRules NOTIFY exceptionRulesChanged)
-    Q_PROPERTY(QVariantList recurrenceDates READ recurrenceDates WRITE setRecurrenceDates NOTIFY detailChanged)
-    Q_PROPERTY(QVariantList exceptionDates  READ exceptionDates WRITE setExceptionDates NOTIFY detailChanged)
+    Q_PROPERTY(QVariantList recurrenceDates READ recurrenceDates WRITE setRecurrenceDates NOTIFY valueChanged)
+    Q_PROPERTY(QVariantList exceptionDates  READ exceptionDates WRITE setExceptionDates NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemRecurrence(QObject *parent = 0);
@@ -355,7 +355,7 @@ public:
 Q_SIGNALS:
     void recurrenceRulesChanged();
     void exceptionRulesChanged();
-    void detailChanged();
+    void valueChanged();
 
 private Q_SLOTS:
     void _saveRecurrenceRules()
@@ -365,7 +365,7 @@ private Q_SLOTS:
             rules << r->rule();
         }
         m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceRules, QVariant::fromValue(rules));
-        emit detailChanged();
+        emit valueChanged();
     }
 
     void _saveExceptionRules()
@@ -376,7 +376,7 @@ private Q_SLOTS:
         }
         m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionRules, QVariant::fromValue(rules));
 
-        emit detailChanged();
+        emit valueChanged();
     }
 
 private:
@@ -396,7 +396,7 @@ class QDeclarativeOrganizerItemTag : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY detailChanged)
+    Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemTag(QObject *parent = 0);
@@ -409,7 +409,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -417,8 +417,8 @@ class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetai
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDateTime created READ created WRITE setCreated NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime lastModified READ lastModified WRITE setLastModified NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime created READ created WRITE setCreated NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime lastModified READ lastModified WRITE setLastModified NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemTimestamp(QObject *parent = 0);
@@ -434,7 +434,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -444,7 +444,7 @@ class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(OrganizerItemType)
 
-    Q_PROPERTY(OrganizerItemType itemType READ itemType WRITE setItemType NOTIFY detailChanged)
+    Q_PROPERTY(OrganizerItemType itemType READ itemType WRITE setItemType NOTIFY valueChanged)
 
 public:
     enum OrganizerItemType {
@@ -467,7 +467,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -475,7 +475,7 @@ class QDeclarativeOrganizerJournalTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDateTime entryDateTime READ entryDateTime WRITE setEntryDateTime NOTIFY detailChanged)
+    Q_PROPERTY(QDateTime entryDateTime READ entryDateTime WRITE setEntryDateTime NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerJournalTime(QObject *parent = 0);
@@ -488,7 +488,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -498,9 +498,9 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(StatusType)
 
-    Q_PROPERTY(int percentage READ percentage WRITE setPercentage NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY detailChanged)
-    Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY detailChanged)
+    Q_PROPERTY(int percentage READ percentage WRITE setPercentage NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
+    Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY valueChanged)
 
 public:
     enum StatusType {
@@ -525,15 +525,15 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 class QDeclarativeOrganizerTodoTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY detailChanged)
-    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY detailChanged)
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerTodoTime(QObject *parent = 0);
@@ -552,7 +552,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -562,10 +562,10 @@ class QDeclarativeOrganizerItemReminder : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(ReminderType)
 
-    Q_PROPERTY(ReminderType reminderType READ reminderType NOTIFY detailChanged)
-    Q_PROPERTY(int repetitionCount READ repetitionCount WRITE setRepetitionCount NOTIFY detailChanged)
-    Q_PROPERTY(int repetitionDelay READ repetitionDelay WRITE setRepetitionDelay NOTIFY detailChanged)
-    Q_PROPERTY(int secondsBeforeStart READ secondsBeforeStart WRITE setSecondsBeforeStart NOTIFY detailChanged)
+    Q_PROPERTY(ReminderType reminderType READ reminderType NOTIFY reminderChanged)
+    Q_PROPERTY(int repetitionCount READ repetitionCount WRITE setRepetitionCount NOTIFY reminderChanged)
+    Q_PROPERTY(int repetitionDelay READ repetitionDelay WRITE setRepetitionDelay NOTIFY reminderChanged)
+    Q_PROPERTY(int secondsBeforeStart READ secondsBeforeStart WRITE setSecondsBeforeStart NOTIFY reminderChanged)
 
 public:
     enum ReminderType {
@@ -593,7 +593,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void reminderChanged();
 };
 
 
@@ -601,7 +601,7 @@ class QDeclarativeOrganizerItemAudibleReminder : public QDeclarativeOrganizerIte
 {
     Q_OBJECT
 
-    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY detailChanged)
+    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemAudibleReminder(QObject *parent = 0);
@@ -614,7 +614,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -622,10 +622,10 @@ class QDeclarativeOrganizerItemEmailReminder : public QDeclarativeOrganizerItemR
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString body READ body WRITE setBody NOTIFY detailChanged)
-    Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY detailChanged)
-    Q_PROPERTY(QStringList recipients READ recipients WRITE setRecipients NOTIFY detailChanged)
-    Q_PROPERTY(QVariantList attachments READ attachments WRITE setAttachments NOTIFY detailChanged)
+    Q_PROPERTY(QString body READ body WRITE setBody NOTIFY valueChanged)
+    Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY valueChanged)
+    Q_PROPERTY(QStringList recipients READ recipients WRITE setRecipients NOTIFY valueChanged)
+    Q_PROPERTY(QVariantList attachments READ attachments WRITE setAttachments NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemEmailReminder(QObject *parent = 0);
@@ -647,7 +647,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -655,8 +655,8 @@ class QDeclarativeOrganizerItemVisualReminder : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY detailChanged)
-    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY detailChanged)
+    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY valueChanged)
+    Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizerItemVisualReminder(QObject *parent = 0);
@@ -672,7 +672,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 
@@ -680,8 +680,8 @@ class QDeclarativeOrganizeritemExtendedDetail : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY detailChanged)
-    Q_PROPERTY(QVariant data READ data WRITE setData NOTIFY detailChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
+    Q_PROPERTY(QVariant data READ data WRITE setData NOTIFY valueChanged)
 
 public:
     QDeclarativeOrganizeritemExtendedDetail(QObject *parent = 0);
@@ -697,7 +697,7 @@ public:
     static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
-    void detailChanged();
+    void valueChanged();
 };
 
 

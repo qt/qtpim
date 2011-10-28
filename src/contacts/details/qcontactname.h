@@ -51,6 +51,7 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
+/* Leaf class */
 class Q_CONTACTS_EXPORT QContactName : public QContactDetail
 {
 public:

@@ -779,13 +779,7 @@ void tst_QOrganizerManager::ctors()
 
 
     // Finally test the platform specific engines are actually the defaults
-#if defined(Q_OS_SYMBIAN)
-    QCOMPARE(defaultStore, QString("symbian"));
-#elif defined(Q_WS_MAEMO_6)
-    QCOMPARE(defaultStore, QString("mkcal"));
-#elif defined(Q_WS_MAEMO_5)
-    QCOMPARE(defaultStore, QString("maemo5"));
-#elif defined(Q_OS_WINCE)
+#if defined(Q_OS_WINCE)
     QCOMPARE(defaultStore, QString("wince"));
 #elif !defined(QT_NO_JSONDB)
     QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
@@ -974,8 +968,10 @@ void tst_QOrganizerManager::saveRecurrence()
             << QOrganizerRecurrenceRule::February);
     rrule.setWeeksOfYear(QSet<int>() << 1 << 2);
     rrule.setFirstDayOfWeek(Qt::Tuesday);
-    // this is disabled because mkcal doesn't support it:
+
+    //this is disabled because certain backend doesn't support it.
     //rrule.setPositions(QSet<int>() << 1 << 2);
+
     event.setRecurrenceRule(rrule);
     event.setExceptionRule(rrule);
     QSet<QDate> rdates;
@@ -3091,7 +3087,6 @@ void tst_QOrganizerManager::todoItemFetch()
 
     items = cm->items(QDateTime(QDate(2011, 3, 26), QTime(11, 0, 0)),
                       QDateTime(QDate(2011, 3, 28), QTime(11, 0, 0)));
-    QEXPECT_FAIL("mgr='mkcal'", "Needs NB#238116 fixed", Continue);
     QCOMPARE(items.count(), 1);
 
     items = cm->items(QDateTime(QDate(2011, 3, 28), QTime(11, 0, 0)),
@@ -3100,7 +3095,6 @@ void tst_QOrganizerManager::todoItemFetch()
 
     items = cm->items(QDateTime(QDate(2011, 3, 28), QTime(11, 0, 0)),
                       QDateTime(QDate(2011, 3, 28), QTime(11, 0, 0)));
-    QEXPECT_FAIL("mgr='mkcal'", "Needs NB#238116 fixed", Continue);
     QCOMPARE(items.count(), 1);
 
 
@@ -3508,7 +3502,6 @@ void tst_QOrganizerManager::idComparison()
     // Can we run this test?
     if (!cm->supportedItemTypes().contains(QOrganizerItemType::TypeJournal)) {
         QSKIP("Backend not compatible with this test");
-        // For example symbian backend does not support Journal items and comment details at all..
         // TODO: The test should be refactored so it could run on all platforms
     }
 
@@ -3863,47 +3856,38 @@ void tst_QOrganizerManager::detailOrders()
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
-    if (cm->managerName() == "symbian")
-        QSKIP("symbian manager does not support detail ordering");
-
-    if (cm->managerName() == "maemo5")
-        QSKIP("maemo5 manager does not support detail ordering");
-
     QOrganizerEvent a;
 
-    // comments are not supported in mkcal
-    if (cm->managerName() != "mkcal") {
-        // comments
-        QOrganizerItemComment comment1, comment2, comment3;
+    // comments
+    QOrganizerItemComment comment1, comment2, comment3;
 
-        comment1.setComment("11111111");
-        comment2.setComment("22222222");
-        comment3.setComment("33333333");
+    comment1.setComment("11111111");
+    comment2.setComment("22222222");
+    comment3.setComment("33333333");
 
-        a.saveDetail(&comment1);
-        a.saveDetail(&comment2);
-        a.saveDetail(&comment3);
+    a.saveDetail(&comment1);
+    a.saveDetail(&comment2);
+    a.saveDetail(&comment3);
 
-        QVERIFY(cm->saveItem(&a));
-        a = cm->item(a.id());
+    QVERIFY(cm->saveItem(&a));
+    a = cm->item(a.id());
 
-        QList<QOrganizerItemDetail> details = a.details(QOrganizerItemComment::DefinitionName);
-        QVERIFY(details.count() == 3);
+    QList<QOrganizerItemDetail> details = a.details(QOrganizerItemComment::DefinitionName);
+    QVERIFY(details.count() == 3);
 
-        comment2 = a.details(QOrganizerItemComment::DefinitionName).at(1);
-        QVERIFY(a.removeDetail(&comment2));
-        QVERIFY(cm->saveItem(&a));
-        a = cm->item(a.id());
-        details = a.details(QOrganizerItemComment::DefinitionName);
-        QVERIFY(details.count() == 2);
+    comment2 = a.details(QOrganizerItemComment::DefinitionName).at(1);
+    QVERIFY(a.removeDetail(&comment2));
+    QVERIFY(cm->saveItem(&a));
+    a = cm->item(a.id());
+    details = a.details(QOrganizerItemComment::DefinitionName);
+    QVERIFY(details.count() == 2);
 
-        a.saveDetail(&comment2);
-        QVERIFY(cm->saveItem(&a));
-        a = cm->item(a.id());
+    a.saveDetail(&comment2);
+    QVERIFY(cm->saveItem(&a));
+    a = cm->item(a.id());
 
-        details = a.details(QOrganizerItemComment::DefinitionName);
-        QVERIFY(details.count() == 3);
-    }
+    details = a.details(QOrganizerItemComment::DefinitionName);
+    QVERIFY(details.count() == 3);
 
     //addresses
     {

@@ -14,16 +14,8 @@ SOURCES += tst_qcontactmanagerplugins.cpp
 #    $$mobilityDeployFilename(contacts_testdummymemory)
 
 # App local deployment
-#symbian|wince* {
-#    symbian:QCONTACTMANAGER_PLUGINS_DEPLOY.sources = $$join(TESTDLLS, ".dll ", " ", ".dll")
-#    wince*:QCONTACTMANAGER_PLUGINS_DEPLOY.sources = $$join(TESTDLLS, ".dll $$OUTPUT_DIR/build/tests/bin/plugins/contacts/", "$$OUTPUT_DIR/build/tests/bin/plugins/contacts/", ".dll")
+#wince* {
+#    QCONTACTMANAGER_PLUGINS_DEPLOY.sources = $$join(TESTDLLS, ".dll $$OUTPUT_DIR/build/tests/bin/plugins/contacts/", "$$OUTPUT_DIR/build/tests/bin/plugins/contacts/", ".dll")
 #    QCONTACTMANAGER_PLUGINS_DEPLOY.path = ./plugins/contacts
 #    DEPLOYMENT += QCONTACTMANAGER_PLUGINS_DEPLOY
-#}
-
-# all else, we need to copy and install the DLLs to the right place (in a subdir for this test)
-
-#symbian: {
-#    TARGET.CAPABILITY = ReadUserData \
-#                        WriteUserData
 #}

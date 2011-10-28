@@ -182,21 +182,21 @@ QString QDeclarativeOrganizerItem::description() const
 
 void QDeclarativeOrganizerItem::setDescription(const QString &description)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Description == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemDescription *>(detail)->setDescription(description);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemDescription *desc = static_cast<QDeclarativeOrganizerItemDescription *>(detail);
+            if (desc->description() != description) {
+                desc->setDescription(description);
+                m_modified = true;
+                emit itemChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemDescription *desc = new QDeclarativeOrganizerItemDescription(this);
-        desc->setDescription(description);
-        m_details.append(desc);
-    }
-
+    QDeclarativeOrganizerItemDescription *desc = new QDeclarativeOrganizerItemDescription(this);
+    desc->setDescription(description);
+    m_details.append(desc);
     m_modified = true;
     emit itemChanged();
 }
@@ -217,21 +217,21 @@ QString QDeclarativeOrganizerItem::displayLabel() const
 
 void QDeclarativeOrganizerItem::setDisplayLabel(const QString &label)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::DisplayLabel == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemDisplayLabel *>(detail)->setLabel(label);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemDisplayLabel *displayLabel = static_cast<QDeclarativeOrganizerItemDisplayLabel *>(detail);
+            if (displayLabel->label() != label) {
+                displayLabel->setLabel(label);
+                m_modified = true;
+                emit itemChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemDisplayLabel *displayLabel = new QDeclarativeOrganizerItemDisplayLabel(this);
-        displayLabel->setLabel(label);
-        m_details.append(displayLabel);
-    }
-
+    QDeclarativeOrganizerItemDisplayLabel *displayLabel = new QDeclarativeOrganizerItemDisplayLabel(this);
+    displayLabel->setLabel(label);
+    m_details.append(displayLabel);
     m_modified = true;
     emit itemChanged();
 }
@@ -252,21 +252,21 @@ QString QDeclarativeOrganizerItem::guid() const
 
 void QDeclarativeOrganizerItem::setGuid(const QString &guid)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Guid == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemGuid *>(detail)->setGuid(guid);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemGuid *itemGuid = static_cast<QDeclarativeOrganizerItemGuid *>(detail);
+            if (itemGuid->guid() != guid) {
+                itemGuid->setGuid(guid);
+                m_modified = true;
+                emit itemChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemGuid *itemGuid = new QDeclarativeOrganizerItemGuid(this);
-        itemGuid->setGuid(guid);
-        m_details.append(itemGuid);
-    }
-
+    QDeclarativeOrganizerItemGuid *itemGuid = new QDeclarativeOrganizerItemGuid(this);
+    itemGuid->setGuid(guid);
+    m_details.append(itemGuid);
     m_modified = true;
     emit itemChanged();
 }
@@ -788,21 +788,21 @@ int QDeclarativeOrganizerEvent::_q_attendee_count(QDeclarativeListProperty<QDecl
  */
 void QDeclarativeOrganizerEvent::setAllDay(bool allDay)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setAllDay(allDay);
-            found = true;
-            break;
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->isAllDay() != allDay) {
+                eventTime->setAllDay(allDay);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
-        detail->setAllDay(allDay);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setAllDay(allDay);
+    m_details.append(eventTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -823,21 +823,21 @@ bool QDeclarativeOrganizerEvent::isAllDay() const
  */
 void QDeclarativeOrganizerEvent::setStartDateTime(const QDateTime &datetime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setStartDateTime(datetime);
-            found = true;
-            break;
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->startDateTime() != datetime) {
+                eventTime->setStartDateTime(datetime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
-        detail->setStartDateTime(datetime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setStartDateTime(datetime);
+    m_details.append(eventTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -858,21 +858,21 @@ QDateTime QDeclarativeOrganizerEvent::startDateTime() const
  */
 void QDeclarativeOrganizerEvent::setEndDateTime(const QDateTime& datetime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setEndDateTime(datetime);
-            found = true;
-            break;
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->endDateTime() != datetime) {
+                eventTime->setEndDateTime(datetime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
-        detail->setEndDateTime(datetime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setEndDateTime(datetime);
+    m_details.append(eventTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -905,21 +905,21 @@ QDateTime QDeclarativeOrganizerEvent::endDateTime() const
  */
 void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemPriority *itemPriority = static_cast<QDeclarativeOrganizerItemPriority *>(detail);
+            if (itemPriority->priority() != priority) {
+                itemPriority->setPriority(priority);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
-        detail->setPriority(priority);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemPriority *itemPriority = new QDeclarativeOrganizerItemPriority(this);
+    itemPriority->setPriority(priority);
+    m_details.append(itemPriority);
     m_modified = true;
     emit valueChanged();
 }
@@ -941,21 +941,21 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEvent::priority
 
 void QDeclarativeOrganizerEvent::setLocation(const QString &location)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Location == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemLocation *>(detail)->setLabel(location);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemLocation *itemLocation = static_cast<QDeclarativeOrganizerItemLocation *>(detail);
+            if (itemLocation->label() != location) {
+                itemLocation->setLabel(location);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemLocation *detail = new QDeclarativeOrganizerItemLocation;
-        detail->setLabel(location);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemLocation *itemLocation = new QDeclarativeOrganizerItemLocation(this);
+    itemLocation->setLabel(location);
+    m_details.append(itemLocation);
     m_modified = true;
     emit valueChanged();
 }
@@ -1013,21 +1013,21 @@ QDeclarativeOrganizerEventOccurrence::QDeclarativeOrganizerEventOccurrence(QObje
  */
 void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate &date)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setOriginalDate(date);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemParent *parent = static_cast<QDeclarativeOrganizerItemParent *>(detail);
+            if (parent->originalDate() != date) {
+                parent->setOriginalDate(date);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
-        detail->setOriginalDate(date);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemParent *parent = new QDeclarativeOrganizerItemParent(this);
+    parent->setOriginalDate(date);
+    m_details.append(parent);
     m_modified = true;
     emit valueChanged();
 }
@@ -1046,23 +1046,23 @@ QDate QDeclarativeOrganizerEventOccurrence::originalDate() const
 
     This property holds the start date time of the event occurrence.
  */
-void QDeclarativeOrganizerEventOccurrence::setStartDateTime(const QDateTime &dateTime)
+void QDeclarativeOrganizerEventOccurrence::setStartDateTime(const QDateTime &datetime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setStartDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->startDateTime() != datetime) {
+                eventTime->setStartDateTime(datetime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
-        detail->setStartDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setStartDateTime(datetime);
+    m_details.append(eventTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1081,23 +1081,23 @@ QDateTime QDeclarativeOrganizerEventOccurrence::startDateTime() const
 
     This property holds the date time at which the event occurrence ends.
  */
-void QDeclarativeOrganizerEventOccurrence::setEndDateTime(const QDateTime &dateTime)
+void QDeclarativeOrganizerEventOccurrence::setEndDateTime(const QDateTime &datetime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerEventTime *>(detail)->setEndDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->endDateTime() != datetime) {
+                eventTime->setEndDateTime(datetime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerEventTime *detail = new QDeclarativeOrganizerEventTime;
-        detail->setEndDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setEndDateTime(datetime);
+    m_details.append(eventTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1130,21 +1130,21 @@ QDateTime QDeclarativeOrganizerEventOccurrence::endDateTime() const
  */
 void QDeclarativeOrganizerEventOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemPriority *itemPriority = static_cast<QDeclarativeOrganizerItemPriority *>(detail);
+            if (itemPriority->priority() != priority) {
+                itemPriority->setPriority(priority);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
-        detail->setPriority(priority);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemPriority *itemPriority = new QDeclarativeOrganizerItemPriority(this);
+    itemPriority->setPriority(priority);
+    m_details.append(itemPriority);
     m_modified = true;
     emit valueChanged();
 }
@@ -1165,21 +1165,21 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerEventOccurrence
  */
 void QDeclarativeOrganizerEventOccurrence::setLocation(const QString &location)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Location == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemLocation *>(detail)->setLabel(location);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemLocation *itemLocation = static_cast<QDeclarativeOrganizerItemLocation *>(detail);
+            if (itemLocation->label() != location) {
+                itemLocation->setLabel(location);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemLocation *detail = new QDeclarativeOrganizerItemLocation;
-        detail->setLabel(location);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemLocation *itemLocation = new QDeclarativeOrganizerItemLocation(this);
+    itemLocation->setLabel(location);
+    m_details.append(itemLocation);
     m_modified = true;
     emit valueChanged();
 }
@@ -1200,21 +1200,21 @@ QString QDeclarativeOrganizerEventOccurrence::location() const
  */
 void QDeclarativeOrganizerEventOccurrence::setParentId(const QString &parentId)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setParentId(parentId);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemParent *parent = static_cast<QDeclarativeOrganizerItemParent *>(detail);
+            if (parent->parentId() != parentId) {
+                parent->setParentId(parentId);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
-        detail->setParentId(parentId);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemParent *parent = new QDeclarativeOrganizerItemParent(this);
+    parent->setParentId(parentId);
+    m_details.append(parent);
     m_modified = true;
     emit valueChanged();
 }
@@ -1255,21 +1255,21 @@ QDeclarativeOrganizerJournal::QDeclarativeOrganizerJournal(QObject *parent)
  */
 void QDeclarativeOrganizerJournal::setDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::JournalTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerJournalTime *>(detail)->setEntryDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerJournalTime *journalTime = static_cast<QDeclarativeOrganizerJournalTime *>(detail);
+            if (journalTime->entryDateTime() != dateTime) {
+                journalTime->setEntryDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerJournalTime *detail = new QDeclarativeOrganizerJournalTime;
-        detail->setEntryDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerJournalTime *journalTime = new QDeclarativeOrganizerJournalTime(this);
+    journalTime->setEntryDateTime(dateTime);
+    m_details.append(journalTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1332,21 +1332,21 @@ QDeclarativeOrganizerTodo::QDeclarativeOrganizerTodo(QObject *parent)
  */
 void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setAllDay(allDay);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->isAllDay() != allDay) {
+                todoTime->setAllDay(allDay);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
-        detail->setAllDay(allDay);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setAllDay(allDay);
+    m_details.append(todoTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1367,21 +1367,21 @@ bool QDeclarativeOrganizerTodo::isAllDay() const
  */
 void QDeclarativeOrganizerTodo::setProgressPercentage(int percentage)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setPercentage(percentage);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->percentage() != percentage) {
+                todoProgress->setPercentage(percentage);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setPercentage(percentage);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setPercentage(percentage);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1402,21 +1402,21 @@ int QDeclarativeOrganizerTodo::progressPercentage() const
  */
 void QDeclarativeOrganizerTodo::setStartDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setStartDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->startDateTime() != dateTime) {
+                todoTime->setStartDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
-        detail->setStartDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setStartDateTime(dateTime);
+    m_details.append(todoTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1437,21 +1437,21 @@ QDateTime QDeclarativeOrganizerTodo::startDateTime() const
  */
 void QDeclarativeOrganizerTodo::setDueDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setDueDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->dueDateTime() != dateTime) {
+                todoTime->setDueDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
-        detail->setDueDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setDueDateTime(dateTime);
+    m_details.append(todoTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1472,21 +1472,21 @@ QDateTime QDeclarativeOrganizerTodo::dueDateTime() const
  */
 void QDeclarativeOrganizerTodo::setFinishedDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setFinishedDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->finishedDateTime() != dateTime) {
+                todoProgress->setFinishedDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setFinishedDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setFinishedDateTime(dateTime);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1519,21 +1519,21 @@ QDateTime QDeclarativeOrganizerTodo::finishedDateTime() const
  */
 void QDeclarativeOrganizerTodo::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemPriority *itemPriority = static_cast<QDeclarativeOrganizerItemPriority *>(detail);
+            if (itemPriority->priority() != priority) {
+                itemPriority->setPriority(priority);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
-        detail->setPriority(priority);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemPriority *itemPriority = new QDeclarativeOrganizerItemPriority(this);
+    itemPriority->setPriority(priority);
+    m_details.append(itemPriority);
     m_modified = true;
     emit valueChanged();
 }
@@ -1559,21 +1559,21 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodo::priority(
  */
 void QDeclarativeOrganizerTodo::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setStatus(status);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->status() != status) {
+                todoProgress->setStatus(status);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setStatus(status);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setStatus(status);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1627,21 +1627,21 @@ QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject
  */
 void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setPercentage(percentage);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->percentage() != percentage) {
+                todoProgress->setPercentage(percentage);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setPercentage(percentage);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setPercentage(percentage);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1662,21 +1662,21 @@ int QDeclarativeOrganizerTodoOccurrence::progressPercentage() const
  */
 void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setOriginalDate(date);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemParent *parent = static_cast<QDeclarativeOrganizerItemParent *>(detail);
+            if (parent->originalDate() != date) {
+                parent->setOriginalDate(date);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
-        detail->setOriginalDate(date);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemParent *parent = new QDeclarativeOrganizerItemParent(this);
+    parent->setOriginalDate(date);
+    m_details.append(parent);
     m_modified = true;
     emit valueChanged();
 }
@@ -1697,21 +1697,21 @@ QDate QDeclarativeOrganizerTodoOccurrence::originalDate() const
  */
 void QDeclarativeOrganizerTodoOccurrence::setStartDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setStartDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->startDateTime() != dateTime) {
+                todoTime->setStartDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
-        detail->setStartDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setStartDateTime(dateTime);
+    m_details.append(todoTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1731,21 +1731,21 @@ QDateTime QDeclarativeOrganizerTodoOccurrence::startDateTime() const
  */
 void QDeclarativeOrganizerTodoOccurrence::setDueDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoTime *>(detail)->setDueDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->dueDateTime() != dateTime) {
+                todoTime->setDueDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoTime *detail = new QDeclarativeOrganizerTodoTime;
-        detail->setDueDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setDueDateTime(dateTime);
+    m_details.append(todoTime);
     m_modified = true;
     emit valueChanged();
 }
@@ -1766,21 +1766,21 @@ QDateTime QDeclarativeOrganizerTodoOccurrence::dueDateTime() const
  */
 void QDeclarativeOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime &dateTime)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setFinishedDateTime(dateTime);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->finishedDateTime() != dateTime) {
+                todoProgress->setFinishedDateTime(dateTime);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setFinishedDateTime(dateTime);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setFinishedDateTime(dateTime);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1813,21 +1813,21 @@ QDateTime QDeclarativeOrganizerTodoOccurrence::finishedDateTime() const
  */
 void QDeclarativeOrganizerTodoOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Priority == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemPriority *>(detail)->setPriority(priority);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemPriority *itemPriority = static_cast<QDeclarativeOrganizerItemPriority *>(detail);
+            if (itemPriority->priority() != priority) {
+                itemPriority->setPriority(priority);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemPriority *detail = new QDeclarativeOrganizerItemPriority;
-        detail->setPriority(priority);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemPriority *itemPriority = new QDeclarativeOrganizerItemPriority(this);
+    itemPriority->setPriority(priority);
+    m_details.append(itemPriority);
     m_modified = true;
     emit valueChanged();
 }
@@ -1853,21 +1853,21 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodoOccurrence:
  */
 void QDeclarativeOrganizerTodoOccurrence::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
-            static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->setStatus(status);
-            found = true;
-            break;
+            QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
+            if (todoProgress->status() != status) {
+                todoProgress->setStatus(status);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerTodoProgress *detail = new QDeclarativeOrganizerTodoProgress;
-        detail->setStatus(status);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
+    todoProgress->setStatus(status);
+    m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
@@ -1888,21 +1888,21 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoOccurrenc
  */
 void QDeclarativeOrganizerTodoOccurrence::setParentId(const QString &parentId)
 {
-    bool found(false);
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
-            static_cast<QDeclarativeOrganizerItemParent *>(detail)->setParentId(parentId);
-            found = true;
-            break;
+            QDeclarativeOrganizerItemParent *parent = static_cast<QDeclarativeOrganizerItemParent *>(detail);
+            if (parent->parentId() != parentId) {
+                parent->setParentId(parentId);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
         }
     }
 
-    if (!found) {
-        QDeclarativeOrganizerItemParent *detail = new QDeclarativeOrganizerItemParent;
-        detail->setParentId(parentId);
-        m_details.append(detail);
-    }
-
+    QDeclarativeOrganizerItemParent *parent = new QDeclarativeOrganizerItemParent(this);
+    parent->setParentId(parentId);
+    m_details.append(parent);
     m_modified = true;
     emit valueChanged();
 }

@@ -43,7 +43,8 @@
 #define QORGANIZERJSONDBSTRING_H
 
 #include <qorganizerglobal.h>
-#include <qlatin1constant.h>
+
+#include <QtCore/qstring.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

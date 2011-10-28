@@ -343,28 +343,6 @@ void QOrganizerItem::setId(const QOrganizerItemId& id)
 }
 
 /*!
-    \fn QOrganizerItemDetail QOrganizerItem::detail(const QLatin1Constant& definitionName) const
-    Returns the first detail stored in the organizer item which with the given \a definitionName.
-    The \a definitionName argument is typically the detail name constant provided by a
-    specific subclass of QOrganizerItemDetail.
-
-    It would usually be more convenient to use the template version of this function.
-
-    \since 1.1
-*/
-
-/*!
-    \fn QList<QOrganizerItemDetail> QOrganizerItem::details(const QLatin1Constant& definitionName) const
-    Returns a list of details of the given \a definitionName.
-
-    The \a definitionName argument is typically the detail name constant provided by a
-    specific subclass of QOrganizerItemDetail.
-
-    It would usually be more convenient to use the template version of this function.
-    \since 1.1
-*/
-
-/*!
     Returns the first detail stored in the organizer item with the given \a definitionName
     \since 1.1
 */

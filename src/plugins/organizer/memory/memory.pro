@@ -1,6 +1,6 @@
 load(qt_module)
 
-QT = core organizer
+QT = core organizer organizer-private
 
 TARGET = qtorganizer_memory
 target.path += $$[QT_INSTALL_PLUGINS]/organizer

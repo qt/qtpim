@@ -62,7 +62,7 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerItemInvalidEngine : public QOrganizerManagerEngineV2
+class QOrganizerItemInvalidEngine : public QOrganizerManagerEngine
 {
 public:
     QOrganizerItemInvalidEngine();

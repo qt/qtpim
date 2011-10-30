@@ -2,8 +2,7 @@ TEMPLATE = subdirs
 
 # common
 SUBDIRS += \
-    qlatin1constant \
-    qmalgorithms
+    qlatin1constant
 
 # contacts
 SUBDIRS += \

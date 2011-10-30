@@ -309,7 +309,7 @@ void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFet
     QList<QOrganizerItem> items = m_storage->itemsById(fetchByIdReq->ids(), &errorMap, &latestError);
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchByIdReq);
     m_requestMgr->removeRequest(fetchByIdReq);
-    QOrganizerManagerEngineV2::updateItemFetchByIdRequest(fetchByIdReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+    QOrganizerManagerEngine::updateItemFetchByIdRequest(fetchByIdReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
     if (waitCondition)
         waitCondition->wakeAll();
 }

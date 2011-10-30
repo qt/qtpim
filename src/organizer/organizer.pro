@@ -43,7 +43,6 @@ PUBLIC_HEADERS += \
     qlatin1constant.h
 
 PRIVATE_HEADERS += \
-    qmalgorithms_p.h \
     qorganizerpluginsearch_p.h \
     qorganizercollection_p.h \
     qorganizercollectionchangeset_p.h \
@@ -54,7 +53,6 @@ PRIVATE_HEADERS += \
     qorganizeritemfilter_p.h \
     qorganizeritemfetchhint_p.h \
     qorganizermanager_p.h \
-    qorganizermanagerenginev2wrapper_p.h \
     qorganizerrecurrencerule_p.h \
     qorganizeritemsortorder_p.h
 
@@ -75,7 +73,6 @@ SOURCES += \
     qorganizermanager.cpp \
     qorganizermanagerengine.cpp \
     qorganizermanagerenginefactory.cpp \
-    qorganizermanagerenginev2wrapper_p.cpp \
     qorganizerrecurrencerule.cpp \
     qorganizeritemsortorder.cpp \
     qorganizermanager_p.cpp

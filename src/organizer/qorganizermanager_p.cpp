@@ -43,7 +43,6 @@
 #include "qorganizermanager_p.h"
 #include "qorganizermanagerengine.h"
 #include "qorganizermanagerenginefactory.h"
-#include "qorganizermanagerenginev2wrapper_p.h"
 
 #include "qorganizeritem_p.h"
 
@@ -118,13 +117,7 @@ void QOrganizerManagerData::createEngine(const QString& managerName, const QMap<
             if (implementationVersion == -1 ||//no given implementation version required
                     versions.isEmpty() || //the manager engine factory does not report any version
                     versions.contains(implementationVersion)) {
-                QOrganizerManagerEngine* engine = f->engine(parameters, &m_lastError);
-                // if it's a V2, use it
-                m_engine = qobject_cast<QOrganizerManagerEngineV2*>(engine);
-                if (!m_engine && engine) {
-                    // Nope, v1, so wrap it
-                    m_engine = new QOrganizerManagerEngineV2Wrapper(engine);
-                }
+                m_engine = f->engine(parameters, &m_lastError);
                 found = true;
                 break;
             }
@@ -315,7 +308,7 @@ QOrganizerManagerData* QOrganizerManagerData::get(const QOrganizerManager* manag
     return manager->d;
 }
 
-QOrganizerManagerEngineV2* QOrganizerManagerData::engine(const QOrganizerManager* manager)
+QOrganizerManagerEngine* QOrganizerManagerData::engine(const QOrganizerManager* manager)
 {
     if (manager)
         return manager->d->m_engine;

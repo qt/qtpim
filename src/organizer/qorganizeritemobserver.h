@@ -61,7 +61,6 @@ signals:
 
 private:
     Q_DISABLE_COPY(QOrganizerItemObserver)
-    friend class QOrganizerManagerEngineV2;
     QOrganizerItemObserverPrivate* d;
 };
 

@@ -123,162 +123,186 @@ TestCase {
 
     function test_contact_address_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.address.street = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_anniversary_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.anniversary.originalDate = "2011-10-27";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_avatar_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.avatar.imageUrl = "http://new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_birthday_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.birthday.birthday = "2010-10-27";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_email_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.email.emailAddress = "b@b";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_favorite_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.favorite.favorite = true;
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_geolocation_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.geolocation.latitude = 1.0;
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_globalpresence_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.globalPresence.state = Presence.Available;
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_guid_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.guid.guid = "1111";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_hobby_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.hobby.hobby = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_name_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.name.firstName = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_nickname_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.nickname.nickname = "new";
         expectFail("", "Nickname does not emit change signal");
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_note_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.note.note = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_onlineaccount_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.onlineAccount.accountUri = "http://new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_organization_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.organization.name = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_personid_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.personid.personid = "new";
         expectFail("", "Personid does not emit change signal");
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_phonenumber_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.phoneNumber.number = "5678";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_presence_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.presence.state = Presence.Available;
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_ringtone_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.ringtone.audioRingtoneUrl = "http://new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_synctarget_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.syncTarget.syncTarget = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_tag_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.tag.tag = "new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_thumbnail_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.thumbnail = "http://new";
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_type_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.type = Contact.Group;
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     function test_contact_url_change_emits_signal()
     {
+        expectSignalFromObject("detailsChanged", contact1);
         contact1.url.url = "http://new";
         expectFail("", "Url does not emit change signal");
-        verify_signal_received();
+        verifySignalReceived();
     }
 
     SignalSpy {
         id: spy
     }
 
-    function init() {
-        spy.target = contact1;
-        spy.signalName = "detailsChanged";
+    function expectSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
         spy.clear();
     }
 
-    function verify_signal_received() {
+    function verifySignalReceived() {
         spy.wait();
     }
 }

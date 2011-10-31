@@ -2966,6 +2966,62 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::FieldPersonId, "Personid");
  */
 
 
+/* ==================== QContactExtendedDetail ======================= */
+/*!
+    \class QContactExtendedDetail
+    \brief The QContactExtendedDetail class provides the possibility to save extended details to QContact objects.
+    \inmodule QtContacts
+    \ingroup contacts-details
+
+    Different back-end engines may or may not support extended details for different contact types. Even
+    if supported, they may accept different QVariant types as the data.
+ */
+
+/*!
+    \variable QContactExtendedDetail::DefinitionName
+
+    The constant string which identifies the definition of details which are extended details.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::DefinitionName, "ExtendedDetail");
+
+/*!
+    \variable QContactExtendedDetail::FieldDetailName
+
+    Contains the name of the extended detail.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::FieldName, "Name");
+
+/*!
+    \variable QContactExtendedDetail::FieldData
+
+    Contains the data this extended detail.
+ */
+Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::FieldData, "Data");
+
+/*!
+    \fn void QContactExtendedDetail::setName(const QString &name)
+
+    Sets the \a name of this extended detail.
+ */
+
+/*!
+    \fn QString QContactExtendedDetail::name() const
+
+    Gets the name of this extended detail.
+ */
+
+/*!
+    \fn void QContactExtendedDetail::setDetailData(const QVariant &data)
+
+    Sets the \a data of the extended detail.
+ */
+
+/*!
+    \fn QVariant QContactExtendedDetail::data() const
+
+    Gets the data of this extended detail.
+ */
+
 /* ==================== Convenience Filters ======================= */
 
 /*!

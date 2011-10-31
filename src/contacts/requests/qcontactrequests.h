@@ -45,10 +45,6 @@
 // this file includes all of the asynchronous request
 // leaf classes that are included in the public API
 
-#include "qcontactdetaildefinitionfetchrequest.h"
-#include "qcontactdetaildefinitionremoverequest.h"
-#include "qcontactdetaildefinitionsaverequest.h"
-
 #include "qcontactrelationshipfetchrequest.h"
 #include "qcontactrelationshipremoverequest.h"
 #include "qcontactrelationshipsaverequest.h"

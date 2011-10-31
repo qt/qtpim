@@ -366,29 +366,4 @@ The equivalent code using the synchronous API looks like:
 Alternatively, when a contact which is involved in a relationship is removed,
 any relationships in which it is involved will be removed also.
 
-\section2 Querying the schema supported by a manager
-
-The client queries the schema supported by a manager, and checks to see if a
-particular detail definition supports a certain field.
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsampleasync.cpp Querying the schema supported by a manager
-
-The equivalent code using the synchronous API looks like:
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Synchronously querying the schema supported by a manager
-
-\section2 Modifying the schema supported by a manager
-
-The client attempts to modify a particular detail definition by extending it
-so that it supports an extra field.
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsampleasync.cpp Modifying the schema supported by a manager
-
-The equivalent code using the synchronous API looks like:
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Synchronously modifying the schema supported by a manager
-
-Note that some managers do not support mutable definitions, and hence
-attempting to modify or remove detail definitions in those managers will fail.
-
 */

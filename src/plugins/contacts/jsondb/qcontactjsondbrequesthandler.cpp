@@ -154,12 +154,6 @@ void QContactJsonDbRequestHandler::handleRequest(QContactAbstractRequest *req)
         handleContactFetchRequest(fetchReq);
         break;
     }
-    case QContactAbstractRequest::DetailDefinitionFetchRequest:
-    {
-      QContactDetailDefinitionFetchRequest* r = static_cast<QContactDetailDefinitionFetchRequest*>(req);
-      handleDetailDefinitionFetchRequest(r);
-      break;
-    }
     case QContactAbstractRequest::ContactRemoveRequest: {
         QContactRemoveRequest* removeReq = static_cast<QContactRemoveRequest*>(req);
         handleContactRemoveRequest(removeReq);
@@ -243,36 +237,6 @@ void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchReques
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
     int trId = m_jsonDb->query(newJsonDbQuery);
     m_requestMgr->addTransaction(req, trId);
-}
-
-void QContactJsonDbRequestHandler::handleDetailDefinitionFetchRequest(QContactDetailDefinitionFetchRequest* req) {
-    QContactManager::Error operationError = QContactManager::NoError;
-    QMap<int, QContactManager::Error> errorMap;
-    QMap<QString, QContactDetailDefinition> requestedDefinitions;
-    m_requestMgr->addRequest(req);
-
-    QStringList names = req->definitionNames();
-    if (names.isEmpty())
-        names = m_engine->detailDefinitions(req->contactType(), &operationError).keys(); // all definitions.
-
-    QContactManager::Error tempError;
-    for (int i = 0; i < names.size(); i++) {
-        QContactDetailDefinition current = m_engine->detailDefinition(names.at(i), req->contactType(), &tempError);
-        requestedDefinitions.insert(names.at(i), current);
-
-        errorMap.insert(i, tempError);
-        if (tempError != QContactManager::NoError) {
-            operationError = tempError;
-        }
-    }
-    if (m_requestMgr->isRequestCompleted(req)) {
-        m_engine->updateDefinitionFetchRequest(req, requestedDefinitions, operationError, errorMap, QContactAbstractRequest::FinishedState);
-        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
-        if (waitCondition) {
-            waitCondition->wakeAll();
-            m_requestMgr->removeRequest(req);
-        }
-    }
 }
 
 void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequest* req) {

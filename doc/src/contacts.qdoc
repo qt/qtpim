@@ -60,15 +60,12 @@ applications.
 
 Contact information is stored in datastores whose functionality is exposed
 via a \l{QContactManager}{manager}.  The Contacts API models a
-\l{QContact}{contact} as a collection of distinct details.  Each
-\l{QContactDetail}{detail} conforms to a particular
-\l{QContactDetailDefinition}{definition} (or template), which may be
-extensible or otherwise modifiable by clients.  Individual contacts may be
-related to one other, and these \l{QContactRelationship}{relationships} are
+\l{QContact}{contact} as a collection of distinct details. Individual contacts
+may be related to one other, and these \l{QContactRelationship}{relationships} are
 stored separately from contacts themselves and may be manipulated directly by
 clients.
 
-\l{QContact}{Contact}, \l{QContactDetailDefinition}{detail definition}, and
+\l{QContact}{Contact}, and
 \l{QContactRelationship}{relationship} information may all be
 retrieved, modified or deleted by clients using either
 \l{Contacts Asynchronous API}{synchronous} or
@@ -80,7 +77,7 @@ A full list of classes can be found in the specific \l{Contacts c++ Classes} sec
 \section1 Client-Facing API
 
 The client-facing API allows retrieval, modification and deletion of contacts,
-detail definitions and relationships, and access to manager meta data and
+and relationships, as well as access to manager meta data and
 capability reporting.
 
 \section2 Container Classes
@@ -117,40 +114,20 @@ QContactId documentation for more information.
 
 A \l{QContactDetail}{detail} is a single, cohesive unit of information that is
 stored in a contact.  As explained previously, it is valid for a particular
-context or set of contexts, and conforms to a particular definition.  A detail
-may have specific metadata associated with it, such as its sub-type, context,
-and arbitrary, user-defined metadata, as well as access constraints which may
-apply to the the detail (such as read-only, irremovable, etc).
+context or set of contexts.  A detail
+may have specific metadata associated with it, such as its sub-type or context,
+as well as access constraints which may apply to the the detail
+(such as read-only, irremovable, etc).
 
 There are a number of common details defined in the API which are intended
 for use by clients, as listed \l{"Contact Details" Leaf Classes}{here}.
-
-\section3 \bold{Detail Definition}
-
-Each detail stored in a contact has defined semantics of usage and storage.
-The Qt Contacts API allows per-datastore contact
-\l{QContactDetailDefinition}{detail definitions}, allowing a manager to
-provide clients with this information on demand, and allowing third-party
-developers to register detail definitions for use by clients.  A detail
-definition includes the fields (and value-types of those fields) which make up
-the detail, and per-contact uniqueness constraints on details of the
-definition.
-
-Most clients can safely ignore this class entirely, since they will most
-likely want to use the predefined details listed
-\l{"Contact Details" Leaf Classes}{here}.  In some cases, however, a manager
-will not support all of the fields of a particular predefined detail leaf
-class; in that case, it may be necessary for the client to inspect the
-supported detail definition for that leaf class and modify its behavior
-accordingly (for example, if the \c CustomLabel field of the QContactName
-leaf detail is not supported in a particular manager).
 
 \section3 \bold{Relationships}
 
 Contacts may participate in \l{QContactRelationship}{relationships} with other
 contacts.  The details of any such relationship is stored by the manager which
 contains the contact.  There are several standard relationship types supported
-by the default  schema, and arbitrary relationship types are also allowed if
+by default, and arbitrary relationship types are also allowed if
 the manager supports that feature.  One important relationship is that of
 group membership; membership of a contact in a group can be modeled as that
 group contact participating in a \c HasMember relationship with the contact.
@@ -161,10 +138,10 @@ Access to contacts is provided by implementations of the Qt Contacts
 \l{QContactManager}{manager} API. A manager provides access to zero or more
 platform-specific datastores.  Each datastore may support different
 capabilities (for example, the ability to store certain datatypes, the ability
-to natively filter on different details or details of different definitions,
+to natively filter on different details,
 the provision of locking mechanisms, the provision of changelog information,
 etc) which are reported by the manager on request.  The manager therefore
-provides access to detail definitions, contacts, and relationships stored in
+provides access to contacts and relationships stored in
 different datastores, in a platform and datastore independent manner.
 
 \section3 \bold{Meta Data API}
@@ -225,13 +202,11 @@ applications that the asynchronous API be used where possible.
 The asynchronous API is offered through various classes derived from the
 QContactAbstractRequest class, including QContactLocalIdFetchRequest,
 QContactFetchRequest, QContactSaveRequest, QContactRemoveRequest,
-QContactDetailDefinitionFetchRequest, QContactDetailDefinitionSaveRequest,
-QContactDetailDefinitionRemoveRequest, QContactRelationshipFetchRequest,
-QContactRelationshipSaveRequest, and QContactRelationshipRemoveRequest.
+QContactRelationshipFetchRequest, QContactRelationshipSaveRequest,
+and QContactRelationshipRemoveRequest.
 
-The asynchronous API allows manipulation of \l{QContact}{contacts},
-\l{QContactRelationship}{contact relationships}, and
-\l{QContactDetailDefinition}{schema definitions}, but does not provide manager
+The asynchronous API allows manipulation of \l{QContact}{contacts} and
+\l{QContactRelationship}{contact relationships}, but does not provide manager
 capability or meta data information reporting.
 
 For more detailed documentation on the asynchronous API, see the \l{Contacts Asynchronous API}.
@@ -246,9 +221,8 @@ local, high-speed datastores, or for applications which do not require a
 responsive user interface.
 
 The synchronous API is offered through the QContactManager class, and includes
-manipulation of \l{QContact}{contacts},
-\l{QContactRelationship}{contact relationships}, and
-\l{QContactDetailDefinition}{schema definitions}.  As previously described,
+manipulation of \l{QContact}{contacts} and
+\l{QContactRelationship}{contact relationships}.  As previously described,
 the meta data reporting and manipulation functions are also provided via
 synchronous API only.
 
@@ -321,7 +295,7 @@ they may offer their own which provide similar functionality.
 \annotatedlist contacts-details
 
 Each of these subclasses provide access to information stored in fields which
-may have certain constraints, as listed in the \l{Qt Contacts Schema}{schema}.
+may have certain constraints, documented in each subclass documentation.
 
 \section2 Asynchronous Requests
 

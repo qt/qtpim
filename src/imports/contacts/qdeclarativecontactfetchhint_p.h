@@ -44,6 +44,7 @@
 #include <QVariant>
 #include <QList>
 #include <QSize>
+#include <QStringList>
 
 #include <qdeclarative.h>
 #include <QDeclarativeExtensionPlugin>

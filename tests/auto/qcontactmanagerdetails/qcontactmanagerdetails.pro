@@ -1,6 +1,6 @@
 include(../auto.pri)
 
-QT += contacts
+QT += contacts contacts-private
 
 HEADERS += ../qcontactmanagerdataholder.h
 

@@ -160,17 +160,10 @@ public:
     bool removeRelationship(const QContactRelationship& relationship);
     bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap = 0);
 
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType = QContactType::TypeContact) const;
-    QContactDetailDefinition detailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact) const;
-    bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType = QContactType::TypeContact);
-    bool removeDetailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact);
-
     /* Functionality reporting */
     enum ManagerFeature {
         Groups = 0,               // backend supports QContactType::TypeGroup type contacts (convenience for clients)
         ActionPreferences,        // per-contact action preferences
-        MutableDefinitions,
         Relationships,
         ArbitraryRelationshipTypes,
         DetailOrdering,

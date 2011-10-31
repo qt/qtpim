@@ -129,10 +129,7 @@ Q_DESTRUCTOR_FUNCTION(qClearAllocatedStringHash)
   (e.g. \c ContextHome is a predefined constant for \c FieldContext).
 
   If you wish to create your own, customized contact detail, you should use
-  the \l Q_DECLARE_CUSTOM_CONTACT_DETAIL macro in order to ensure proper
-  operation, and declare your own field constants with \l Q_DECLARE_LATIN1_CONSTANT.
-  See the predefined detail subclasses (like \l QContactPhoneNumber,
-  \l QContactAddress) for more information.
+  the \l QContactExtendedDetail detail.
 
   QContactDetail objects act like type checked values.  In general, you can assign them
   to and fro and have reasonable behaviour, like the following example.

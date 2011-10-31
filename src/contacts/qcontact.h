@@ -55,7 +55,6 @@
 #include <qcontactid.h>
 #include <qcontactrelationship.h>
 
-#include <qcontactdetaildefinition.h>
 #include <qcontactdisplaylabel.h>
 #include <qcontactrelationshipfilter.h>
 #include <qcontacttype.h>

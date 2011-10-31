@@ -68,6 +68,7 @@ private slots:
     void birthday();
     void displayLabel();
     void emailAddress();
+    void extendedDetail();
     void family();
     void favorite();
     void gender();
@@ -393,6 +394,46 @@ void tst_QContactDetails::emailAddress()
     QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 0);
     QVERIFY(c.removeDetail(&e2) == false);
     QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 0);
+}
+
+void tst_QContactDetails::extendedDetail()
+{
+    QContact c;
+    QContactExtendedDetail extD1, extD2;
+    QVariant v1;
+    // test property set
+    v1.setValue(1);
+    extD1.setName("detail1");
+    extD1.setData(v1);
+
+    QCOMPARE(extD1.name(), QString("detail1"));
+    QCOMPARE(extD1.data(), v1);
+
+    // test property add
+    QVERIFY(c.saveDetail(&extD1));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 1);
+    QCOMPARE(QContactExtendedDetail(c.details(QContactExtendedDetail::DefinitionName).value(0)).name(), extD1.name());
+
+    // test property update
+    extD1.setValue("label","label1");
+    extD1.setName("newDetail1");
+    extD1.setValue("variantField", v1);
+    QVERIFY(c.saveDetail(&extD1));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("variantField").toInt(), v1.toInt());
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value(QContactExtendedDetail::FieldName), QString("newDetail1"));
+
+    // test property remove
+    QVERIFY(c.removeDetail(&extD1));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
+    extD2 = extD1;
+
+    QVERIFY(c.saveDetail(&extD2));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 1);
+    QVERIFY(c.removeDetail(&extD2));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
+    QVERIFY(c.removeDetail(&extD2) == false);
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
 }
 
 void tst_QContactDetails::family()

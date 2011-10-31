@@ -67,6 +67,7 @@ class QContact;
 QTCONTACTS_END_NAMESPACE
 
 QTCONTACTS_USE_NAMESPACE
+
 class QContactManagerDataHolder
 {
 public:

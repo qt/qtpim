@@ -548,9 +548,13 @@ void QDeclarativeContactModel::requestUpdated()
         if (d->m_contacts.isEmpty()) {
             QList<QDeclarativeContact*> dcs;
             foreach (QContact c, contacts) {
-                QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()), this);
-                dcs.append(dc);
-                d->m_contactMap.insert(c.localId(), dc);
+                QDeclarativeContact* dc = new QDeclarativeContact(this);
+                if (dc) {
+                    dc->setContact(c);
+                    dcs.append(dc);
+                    d->m_contactMap.insert(c.localId(), dc);
+                }
+
             }
 
             reset();
@@ -566,9 +570,12 @@ void QDeclarativeContactModel::requestUpdated()
                 if (d->m_contactMap.contains(c.localId())) {
                     d->m_contactMap.value(c.localId())->setContact(c);
                 } else {
-                    QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()), this);
-                    dcs.append(dc);
-                    d->m_contactMap.insert(c.localId(), dc);
+                    QDeclarativeContact* dc = new QDeclarativeContact(this);
+                    if (dc) {
+                        dc->setContact(c);
+                        dcs.append(dc);
+                        d->m_contactMap.insert(c.localId(), dc);
+                    }
                 }
             }
         }
@@ -612,11 +619,14 @@ void QDeclarativeContactModel::contactsSaved()
                     d->m_contactMap.value(c.localId())->setContact(c);
                 } else {
                     //new saved contact
-                    QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()) , this);
-                    d->m_contactMap.insert(c.localId(), dc);
-                    beginInsertRows(QModelIndex(), d->m_contacts.count(), d->m_contacts.count());
-                    d->m_contacts.append(dc);
-                    endInsertRows();
+                    QDeclarativeContact* dc = new QDeclarativeContact(this);
+                    if (dc) {
+                        dc->setContact(c);
+                        d->m_contactMap.insert(c.localId(), dc);
+                        beginInsertRows(QModelIndex(), d->m_contacts.count(), d->m_contacts.count());
+                        d->m_contacts.append(dc);
+                        endInsertRows();
+                    }
                 }
             }
         }

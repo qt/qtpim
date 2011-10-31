@@ -94,12 +94,12 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
 
     explicit QDeclarativeContact(QObject *parent = 0);
-    explicit QDeclarativeContact(const QContact& contact, const QMap<QString, QContactDetailDefinition>& defs, QObject *parent = 0);
     ~QDeclarativeContact();
 
     void setContact(const QContact& c);
@@ -110,10 +110,7 @@ public:
     void setType(int type);
     QDeclarativeContactType::ContactType type() const;
 
-    void setDetailDefinitions(const QMap<QString, QContactDetailDefinition>& defs);
-    QMap<QString, QContactDetailDefinition> detailDefinitions() const;
-
-    QString contactId() const;
+    QContactLocalId contactId() const;
     QString manager() const;
     QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails();
 
@@ -156,6 +153,7 @@ public:
     QDeclarativeListProperty<QDeclarativeContactUrl>  urls();
     QDeclarativeContactHobby*  hobby();
     QDeclarativeContactPersonId* personid();
+    QDeclarativeContactExtendedDetail*  extendedDetail();
 
 protected:
     bool m_modified;
@@ -178,8 +176,6 @@ private slots:
 
 private:
     Q_DISABLE_COPY(QDeclarativeContact)
-
-    QMap<QString, QContactDetailDefinition> m_defs;
 
     template<typename T> T* getDetail(const QDeclarativeContactDetail::ContactDetailType &definitionName)
     {

@@ -51,6 +51,7 @@
 #include "qdeclarativecontactbirthday_p.h"
 #include "qdeclarativecontactdisplaylabel_p.h"
 #include "qdeclarativecontactemailaddress_p.h"
+#include "qdeclarativecontactextendeddetail_p.h"
 #include "qdeclarativecontactfamily_p.h"
 #include "qdeclarativecontactfavorite_p.h"
 #include "qdeclarativecontactgender_p.h"

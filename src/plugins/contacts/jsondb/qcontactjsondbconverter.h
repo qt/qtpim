@@ -76,6 +76,9 @@ private:
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "");
     QString toJsonDate(const QDateTime& date) const;
     QDateTime toContactDate(const QString& dateString) const;
+    void extendedDetailToJsonDbProperty(const QContactExtendedDetail &extendedDetail, QVariant& property) const;
+    void dataToList(const QVariant &data, QVariantList &list) const;
+    void dataToMap(const QVariant &data, QVariantMap &map) const;
 };
 
 QTCONTACTS_END_NAMESPACE

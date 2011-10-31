@@ -38,21 +38,20 @@
 \section1 Introduction
 
 The Contacts Asynchronous API enables a client to asynchronously fetch, update, or remove
-contact, relationship or schema data from a contact manager.  Use of the asynchronous API
+contact and relationship data from a contact manager.  Use of the asynchronous API
 offers the programmer greater flexibility when requesting information from remote or
 slow local datastores.
 
 \section1 Using the API
 
 The asynchronous API offered by the Contacts module is available through classes
-derived from the QContactAbstractRequest class.  It consists of three major sections:
+derived from the QContactAbstractRequest class.  It consists of two major sections:
 \list
   \o Contact Manipulation
   \o Relationship Manipulation
-  \o Schema Manipulation
 \endlist
 
-The functionality offered by the synchronous API in these three categories is also
+The functionality offered by the synchronous API in these two categories is also
 available through the asynchronous API.  There is one category of functionality
 which is not provided by the asynchronous API which is provided by the synchronous
 API: some information and reporting functionality is only provided through the
@@ -115,31 +114,6 @@ consists of the following functions:
   \o saveRelationships(QList<QContactRelationship>* relationships);
   \o removeRelationship(const QContactRelationship& relationship);
   \o removeRelationships(const QList<QContactRelationship>& relationships);
-\endlist
-
-\section2 Schema Manipulation
-
-The schema supported by a plugin is the list of detail definitions which are supported by the plugin.
-For in-depth information about the schema, please refer to the \l{Contacts Synchronous API}.
-
-There are three different types of operation which are supported by the asynchronous API:
-\list
-  \o Fetch detail definitions
-  \o Save detail definitions (create or update, if supported by the backend)
-  \o Remove detail definitions (if supported by the backend)
-\endlist
-
-These operations are supported via the the QContactDetailDefinitionFetchRequest,
-QContactDetailDefinitionSaveRequest and QContactDetailDefinitionRemoveRequest classes,
-respectively.
-
-The synchronous API offered by the QContactManager class to allow manipulation of the schema consists
-of the following functions:
-\list
-  \o detailDefinitions(const QString& contactType = QContactType::TypeContact) const
-  \o detailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact) const
-  \o saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType = QContactType::TypeContact)
-  \o removeDetailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact)
 \endlist
 
 \section1 Examples Of Usage

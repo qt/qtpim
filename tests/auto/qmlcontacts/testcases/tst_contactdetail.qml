@@ -79,6 +79,10 @@ TestCase {
         id: emailAddress
     }
 
+    ExtendedDetail {
+        id: extendedDetail;
+    }
+
     Family {
         id: family
     }
@@ -168,6 +172,9 @@ TestCase {
     }
 
     property url myUrl: "http://nokia.com"
+    property variant myEmptyVariant
+    property variant myStringVariant: "String data in a variant"
+    property variant myListVariant: [ 0, 1, 2, 3, 4, 5, 6, 7, "eight", "nine", "ten"]
 
 
     function test_address() {
@@ -242,7 +249,7 @@ TestCase {
 
 
     function test_detail_common_properties() {
-        compare(detailCommon.type, ContactDetail.Customized, "type");
+        compare(detailCommon.type, ContactDetail.Unknown, "type");
         compare(detailCommon.detailUri, "", "detailUri");
         compare(detailCommon.linkedDetailUris, [], "linkedDetailUris");
         compare(detailCommon.fieldNames, [], "fieldNames");
@@ -265,6 +272,40 @@ TestCase {
         compare(emailAddress.emailAddress, "")
         emailAddress.emailAddress = "ns@ovi.com";
         compare(emailAddress.emailAddress, "ns@ovi.com")
+    }
+
+
+    function test_extendedDetail() {
+
+        compare(extendedDetail.name, "", "Empty name")
+        verify(!extendedDetail.data, "Empty data")
+
+        extendedDetail.name = "MyDetail";
+        extendedDetail.data = "MyData";
+        compare(extendedDetail.name, "MyDetail", "Valid name (string data)")
+        compare(extendedDetail.data, "MyData", "Valid data (string data)")
+
+        extendedDetail.name = "MyNumber";
+        extendedDetail.data = 1;
+        compare(extendedDetail.name, "MyNumber", "Valid name (int data)")
+        compare(extendedDetail.data, 1, "Valid data (int data)")
+
+        extendedDetail.name = "MyVariant";
+        extendedDetail.data = myStringVariant;
+        compare(extendedDetail.name, "MyVariant", "Valid name (string variant data)")
+        compare(extendedDetail.data, myStringVariant, "Valid data (string variant data)")
+
+        extendedDetail.name = "MyListVariant";
+        extendedDetail.data = myListVariant;
+        compare(extendedDetail.name, "MyListVariant", "Valid name (list variant data)")
+
+        var actualData = extendedDetail.data;
+        var expectedData = myListVariant;
+        for (var j=0; j < expectedData.length;j++) {
+            var actualItem = actualData[j];
+            var expectedItem = expectedData[j];
+            compare(actualItem, expectedItem, "Valid data (list variant), item #" + j)
+        }
     }
 
 

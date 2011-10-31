@@ -123,7 +123,6 @@ void queryManagerCapabilities()
     qDebug() << "The default manager for the platform is:" << cm.managerName();
     qDebug() << "It" << (cm.isRelationshipTypeSupported(QContactRelationship::HasAssistant) ? "supports" : "does not support") << "assistant relationships.";
     qDebug() << "It" << (cm.supportedContactTypes().contains(QContactType::TypeGroup) ? "supports" : "does not support") << "groups.";
-    qDebug() << "It" << (cm.hasFeature(QContactManager::MutableDefinitions) ? "supports" : "does not support") << "mutable detail definitions.";
 //! [Querying a manager for capabilities]
 }
 
@@ -253,26 +252,6 @@ void contactManipulation()
 //! [Synchronously removing a relationship]
     m_manager.removeRelationship(groupRelationship);
 //! [Synchronously removing a relationship]
-
-//! [Synchronously querying the schema supported by a manager]
-    QMap<QString, QContactDetailDefinition> definitions = m_manager.detailDefinitions();
-    qDebug() << "This manager"
-             << (definitions.value(QContactName::DefinitionName).fields().contains(QContactName::FieldCustomLabel) ? "supports" : "does not support")
-             << "the custom label field of QContactName";
-//! [Synchronously querying the schema supported by a manager]
-
-//! [Synchronously modifying the schema supported by a manager]
-    // modify the name definition, adding a patronym field
-    QContactDetailDefinition nameDefinition = definitions.value(QContactName::DefinitionName);
-    QContactDetailFieldDefinition fieldPatronym;
-    fieldPatronym.setDataType(QVariant::String);
-    nameDefinition.insertField("Patronym", fieldPatronym);
-
-    // save the updated definition in the manager if supported...
-    if (m_manager.hasFeature(QContactManager::MutableDefinitions)) {
-        m_manager.saveDetailDefinition(nameDefinition, QContactType::TypeContact);
-    }
-//! [Synchronously modifying the schema supported by a manager]
 }
 
 //! [Creating a new contact]
@@ -375,8 +354,7 @@ void viewDetails(QContactManager* cm)
     QList<QContactDetail> allDetails = a.details();
     for (int i = 0; i < allDetails.size(); i++) {
         QContactDetail detail = allDetails.at(i);
-        QContactDetailDefinition currentDefinition = cm->detailDefinition(detail.definitionName());
-        QMap<QString, QContactDetailFieldDefinition> fields = currentDefinition.fields();
+        QVariantMap fields = detail.variantValues();
 
         qDebug("\tDetail #%d (%s):", i, detail.definitionName().toAscii().constData());
         foreach (const QString& fieldKey, fields.keys()) {
@@ -458,30 +436,6 @@ void detailSharing(QContactManager* cm)
                                : qDebug() << "\tFailed to remove the temporary detail.\n";
 }
 //! [Demonstration of detail sharing semantics]
-
-//! [Installing a plugin which modifies a definition]
-void addPlugin(QContactManager* cm)
-{
-    /* Find the definition that we are modifying */
-    QMap<QString, QContactDetailDefinition> definitions = cm->detailDefinitions();
-    QContactDetailDefinition modified = definitions.value(QContactEmailAddress::DefinitionName);
-
-    /* Make our modifications: we add a "Label" field to email addresses */
-    QContactDetailFieldDefinition newField;
-    newField.setDataType(QVariant::String);
-    QMap<QString, QContactDetailFieldDefinition> fields = modified.fields();
-    fields.insert("Label", newField);
-
-    /* Update the definition with the new field included */
-    modified.setFields(fields);
-
-    /* Save the definition back to the manager */
-    if (cm->saveDetailDefinition(modified))
-        qDebug() << "Successfully modified the detail definition!";
-    else
-        qDebug() << "This backend could not support our modifications!";
-}
-//! [Installing a plugin which modifies a definition]
 
 //! [Modifying an existing contact]
 void editView(QContactManager* cm)

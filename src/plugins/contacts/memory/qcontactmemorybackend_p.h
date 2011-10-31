@@ -58,7 +58,6 @@
 #include <QContactManager>
 #include <QContactManagerEngine>
 #include <QContactManagerEngineFactory>
-#include <QContactDetailDefinition>
 #include <QContactAbstractRequest>
 #include <QContactChangeSet>
 
@@ -113,7 +112,6 @@ public:
     QList<QContactRelationship> m_relationships;   // list of contact relationships
     QMap<QContactLocalId, QList<QContactRelationship> > m_orderedRelationships; // map of ordered lists of contact relationships
     QList<QString> m_definitionIds;                // list of definition types (id's)
-    mutable QMap<QString, QMap<QString, QContactDetailDefinition> > m_definitions; // map of contact type to map of definition name to definitions.
     QContactLocalId m_nextContactId;
     bool m_anonymous;                              // Is this backend ever shared?
 
@@ -174,21 +172,6 @@ public:
     {
         return QContactManagerEngine::validateContact(contact, error);
     }
-    /*! \reimp */
-    virtual bool validateDefinition(const QContactDetailDefinition& def, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::validateDefinition(def, error);
-    }
-
-    /* Definitions - Accessors and Mutators */
-    virtual QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType, QContactManager::Error* error) const;
-    /*! \reimp */
-    virtual QContactDetailDefinition detailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::detailDefinition(definitionId, contactType, error);
-    }
-    virtual bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error);
 
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QContactAbstractRequest* req);
@@ -214,8 +197,6 @@ protected:
     /* Implement "signal coalescing" for batch functions via change set */
     virtual bool saveContact(QContact* theContact, QContactChangeSet& changeSet, QContactManager::Error* error);
     virtual bool removeContact(const QContactLocalId& contactId, QContactChangeSet& changeSet, QContactManager::Error* error);
-    virtual bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactChangeSet& changeSet, QContactManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactChangeSet& changeSet, QContactManager::Error* error);
     virtual bool saveRelationship(QContactRelationship* relationship, QContactChangeSet& changeSet, QContactManager::Error* error);
     virtual bool removeRelationship(const QContactRelationship& relationship, QContactChangeSet& changeSet, QContactManager::Error* error);
 

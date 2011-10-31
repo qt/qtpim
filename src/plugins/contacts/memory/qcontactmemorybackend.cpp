@@ -41,7 +41,6 @@
 
 #include "qcontactmanager.h"
 
-#include <QContactDetailDefinition>
 #include <QContactManagerEngine>
 #include <QContactAbstractRequest>
 #include <QContactChangeSet>
@@ -595,83 +594,6 @@ bool QContactMemoryEngine::removeRelationships(const QList<QContactRelationship>
 }
 
 /*! \reimp */
-QMap<QString, QContactDetailDefinition> QContactMemoryEngine::detailDefinitions(const QString& contactType, QContactManager::Error* error) const
-{
-    // lazy initialisation of schema definitions.
-    if (d->m_definitions.isEmpty()) {
-        d->m_definitions = QContactManagerEngine::schemaDefinitions();
-    }
-
-    *error = QContactManager::NoError;
-    return d->m_definitions.value(contactType);
-}
-
-/*! Saves the given detail definition \a def, storing any error to \a error and
-    filling the \a changeSet with ids of changed contacts as required
-    Returns true if the operation was successful otherwise false.
-*/
-bool QContactMemoryEngine::saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactChangeSet& changeSet, QContactManager::Error* error)
-{
-    // we should check for changes to the database in this function, and add ids of changed data to changeSet. TODO.
-    Q_UNUSED(changeSet);
-
-    if (!validateDefinition(def, error)) {
-        return false;
-    }
-
-    detailDefinitions(contactType, error); // just to populate the definitions if we haven't already.
-    QMap<QString, QContactDetailDefinition> defsForThisType = d->m_definitions.value(contactType);
-    defsForThisType.insert(def.name(), def);
-    d->m_definitions.insert(contactType, defsForThisType);
-
-    *error = QContactManager::NoError;
-    return true;
-}
-
-/*! \reimp */
-bool QContactMemoryEngine::saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactManager::Error* error)
-{
-    QContactChangeSet changeSet;
-    bool retn = saveDetailDefinition(def, contactType, changeSet, error);
-    d->emitSharedSignals(&changeSet);
-    return retn;
-}
-
-/*! Removes the detail definition identified by \a definitionId, storing any error to \a error and
-    filling the \a changeSet with ids of changed contacts as required */
-bool QContactMemoryEngine::removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactChangeSet& changeSet, QContactManager::Error* error)
-{
-    // we should check for changes to the database in this function, and add ids of changed data to changeSet...
-    // we should also check to see if the changes have invalidated any contact data, and add the ids of those contacts
-    // to the change set.  TODO!
-    Q_UNUSED(changeSet);
-
-    if (definitionId.isEmpty()) {
-        *error = QContactManager::BadArgumentError;
-        return false;
-    }
-
-    detailDefinitions(contactType, error); // just to populate the definitions if we haven't already.
-    QMap<QString, QContactDetailDefinition> defsForThisType = d->m_definitions.value(contactType);
-    bool success = defsForThisType.remove(definitionId);
-    d->m_definitions.insert(contactType, defsForThisType);
-    if (success)
-        *error = QContactManager::NoError;
-    else
-        *error = QContactManager::DoesNotExistError;
-    return success;
-}
-
-/*! \reimp */
-bool QContactMemoryEngine::removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error)
-{
-    QContactChangeSet changeSet;
-    bool retn = removeDetailDefinition(definitionId, contactType, changeSet, error);
-    d->emitSharedSignals(&changeSet);
-    return retn;
-}
-
-/*! \reimp */
 void QContactMemoryEngine::requestDestroyed(QContactAbstractRequest* req)
 {
     Q_UNUSED(req);
@@ -796,82 +718,6 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
         }
         break;
 
-        case QContactAbstractRequest::DetailDefinitionFetchRequest:
-        {
-            QContactDetailDefinitionFetchRequest* r = static_cast<QContactDetailDefinitionFetchRequest*>(currentRequest);
-            QContactManager::Error operationError = QContactManager::NoError;
-            QMap<int, QContactManager::Error> errorMap;
-            QMap<QString, QContactDetailDefinition> requestedDefinitions;
-            QStringList names = r->definitionNames();
-            if (names.isEmpty())
-                names = detailDefinitions(r->contactType(), &operationError).keys(); // all definitions.
-
-            QContactManager::Error tempError;
-            for (int i = 0; i < names.size(); i++) {
-                QContactDetailDefinition current = detailDefinition(names.at(i), r->contactType(), &tempError);
-                requestedDefinitions.insert(names.at(i), current);
-
-                if (tempError != QContactManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            if (!errorMap.isEmpty() || !requestedDefinitions.isEmpty() || operationError != QContactManager::NoError)
-                updateDefinitionFetchRequest(r, requestedDefinitions, operationError, errorMap, QContactAbstractRequest::FinishedState);
-            else
-                updateRequestState(currentRequest, QContactAbstractRequest::FinishedState);
-        }
-        break;
-
-        case QContactAbstractRequest::DetailDefinitionSaveRequest:
-        {
-            QContactDetailDefinitionSaveRequest* r = static_cast<QContactDetailDefinitionSaveRequest*>(currentRequest);
-            QContactManager::Error operationError = QContactManager::NoError;
-            QMap<int, QContactManager::Error> errorMap;
-            QList<QContactDetailDefinition> definitions = r->definitions();
-            QList<QContactDetailDefinition> savedDefinitions;
-
-            QContactManager::Error tempError;
-            for (int i = 0; i < definitions.size(); i++) {
-                QContactDetailDefinition current = definitions.at(i);
-                saveDetailDefinition(current, r->contactType(), changeSet, &tempError);
-                savedDefinitions.append(current);
-
-                if (tempError != QContactManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            // update the request with the results.
-            updateDefinitionSaveRequest(r, savedDefinitions, operationError, errorMap, QContactAbstractRequest::FinishedState);
-        }
-        break;
-
-        case QContactAbstractRequest::DetailDefinitionRemoveRequest:
-        {
-            QContactDetailDefinitionRemoveRequest* r = static_cast<QContactDetailDefinitionRemoveRequest*>(currentRequest);
-            QStringList names = r->definitionNames();
-
-            QContactManager::Error operationError = QContactManager::NoError;
-            QMap<int, QContactManager::Error> errorMap;
-
-            for (int i = 0; i < names.size(); i++) {
-                QContactManager::Error tempError;
-                removeDetailDefinition(names.at(i), r->contactType(), changeSet, &tempError);
-
-                if (tempError != QContactManager::NoError) {
-                    errorMap.insert(i, tempError);
-                    operationError = tempError;
-                }
-            }
-
-            // there are no results, so just update the status with the error.
-            updateDefinitionRemoveRequest(r, operationError, errorMap, QContactAbstractRequest::FinishedState);
-        }
-        break;
-
         case QContactAbstractRequest::RelationshipFetchRequest:
         {
             QContactRelationshipFetchRequest* r = static_cast<QContactRelationshipFetchRequest*>(currentRequest);
@@ -951,7 +797,6 @@ bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, c
         case QContactManager::ActionPreferences:
         case QContactManager::Relationships:
         case QContactManager::ArbitraryRelationshipTypes:
-        case QContactManager::MutableDefinitions:
             return true;
         case QContactManager::Anonymous:
             return d->m_anonymous;

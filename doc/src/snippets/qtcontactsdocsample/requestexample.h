@@ -78,9 +78,6 @@ private slots:
     void relationshipFetchRequestStateChanged(QContactAbstractRequest::State newState);
     void relationshipSaveRequestStateChanged(QContactAbstractRequest::State newState);
     void relationshipRemoveRequestStateChanged(QContactAbstractRequest::State newState);
-    void definitionFetchRequestStateChanged(QContactAbstractRequest::State newState);
-    void definitionSaveRequestStateChanged(QContactAbstractRequest::State newState);
-    void definitionRemoveRequestStateChanged(QContactAbstractRequest::State newState);
 
 private:
     QContactManager *m_manager;
@@ -90,9 +87,6 @@ private:
     QContactRelationshipFetchRequest m_relationshipFetchRequest;
     QContactRelationshipSaveRequest m_relationshipSaveRequest;
     QContactRelationshipRemoveRequest m_relationshipRemoveRequest;
-    QContactDetailDefinitionFetchRequest m_definitionFetchRequest;
-    QContactDetailDefinitionSaveRequest m_definitionSaveRequest;
-    QContactDetailDefinitionRemoveRequest m_definitionRemoveRequest;
 };
 //! [Class setup]
 

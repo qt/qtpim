@@ -121,30 +121,6 @@ void AsyncRequestExample::relationshipRemoveRequestStateChanged(QContactAbstract
         qDebug() << "Remove operation canceled!";
 }
 
-void AsyncRequestExample::definitionFetchRequestStateChanged(QContactAbstractRequest::State newState)
-{
-    if (newState == QContactAbstractRequest::FinishedState)
-        qDebug() << "Finished fetching the contacts!";
-    else if (newState == QContactAbstractRequest::CanceledState)
-        qDebug() << "Fetch operation canceled!";
-}
-
-void AsyncRequestExample::definitionSaveRequestStateChanged(QContactAbstractRequest::State newState)
-{
-    if (newState == QContactAbstractRequest::FinishedState)
-        qDebug() << "Finished saving the contacts!";
-    else if (newState == QContactAbstractRequest::CanceledState)
-        qDebug() << "Save operation canceled!";
-}
-
-void AsyncRequestExample::definitionRemoveRequestStateChanged(QContactAbstractRequest::State newState)
-{
-    if (newState == QContactAbstractRequest::FinishedState)
-        qDebug() << "Finished removing the contacts!";
-    else if (newState == QContactAbstractRequest::CanceledState)
-        qDebug() << "Remove operation canceled!";
-}
-
 void AsyncRequestExample::performRequests()
 {
 //! [Creating a new contact in a manager]
@@ -280,36 +256,6 @@ void AsyncRequestExample::performRequests()
     m_relationshipRemoveRequest.setRelationships(QList<QContactRelationship>() << groupRelationship);
     m_relationshipRemoveRequest.start();
 //! [Removing a relationship]
-
-    connect(&m_definitionFetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(definitionFetchRequestStateChanged(QContactAbstractRequest::State)));
-//! [Querying the schema supported by a manager]
-    m_definitionFetchRequest.setManager(m_manager);
-    m_definitionFetchRequest.setDefinitionNames(QStringList(QContactName::DefinitionName));
-    m_definitionFetchRequest.start();
-    m_definitionFetchRequest.waitForFinished();
-    QMap<QString, QContactDetailDefinition> definitions = m_definitionFetchRequest.definitions();
-    qDebug() << "This manager"
-             << (definitions.value(QContactName::DefinitionName).fields().contains(QContactName::FieldCustomLabel) ? "supports" : "does not support")
-             << "the custom label field of QContactName";
-//! [Querying the schema supported by a manager]
-
-    connect(&m_definitionSaveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(definitionSaveRequestStateChanged(QContactAbstractRequest::State)));
-    connect(&m_definitionRemoveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(definitionRemoveRequestStateChanged(QContactAbstractRequest::State)));
-//! [Modifying the schema supported by a manager]
-    // modify the name definition, adding a patronym field
-    QContactDetailDefinition nameDefinition = definitions.value(QContactName::DefinitionName);
-    QContactDetailFieldDefinition fieldPatronym;
-    fieldPatronym.setDataType(QVariant::String);
-    nameDefinition.insertField("Patronym", fieldPatronym);
-
-    // save the updated definition in the manager if supported...
-    if (m_manager->hasFeature(QContactManager::MutableDefinitions)) {
-        m_definitionSaveRequest.setManager(m_manager);
-        m_definitionSaveRequest.setContactType(QContactType::TypeContact);
-        m_definitionSaveRequest.setDefinitions(QList<QContactDetailDefinition>() << nameDefinition);
-        m_definitionSaveRequest.start();
-    }
-//! [Modifying the schema supported by a manager]
 
     QCoreApplication::exit(0);
 }

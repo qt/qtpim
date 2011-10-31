@@ -52,7 +52,6 @@
 #include <QObject>
 
 #include "qcontact.h"
-#include "qcontactdetaildefinition.h"
 #include "qcontactmanager.h"
 #include "qcontactabstractrequest.h"
 #include "qcontactrequests.h"
@@ -107,14 +106,7 @@ public:
     virtual bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error);
 
     /* Validation for saving */
-    virtual bool validateContact(const QContact& contact, QContactManager::Error* error) const;
-    virtual bool validateDefinition(const QContactDetailDefinition& def, QContactManager::Error* error) const;
-
-    /* Definitions - Accessors and Mutators */
-    virtual QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType, QContactManager::Error* error) const;
-    virtual QContactDetailDefinition detailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error) const;
-    virtual bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactManager::Error* error);
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error);
+    virtual bool validateContact(const QContact &contact, QContactManager::Error *error) const;
 
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QContactAbstractRequest* req);
@@ -128,10 +120,6 @@ public:
     virtual bool isFilterSupported(const QContactFilter& filter) const;
     virtual QList<QVariant::Type> supportedDataTypes() const;
     virtual QStringList supportedContactTypes() const;
-
-    /* Reports the built-in definitions from the schema */
-    static QMap<QString, QMap<QString, QContactDetailDefinition> > schemaDefinitions(); // returns version 1 of the schema
-    static QMap<QString, QMap<QString, QContactDetailDefinition> > schemaDefinitions(int schemaVersion); // returns schema of the specified version
 
 Q_SIGNALS:
     void dataChanged();
@@ -150,9 +138,6 @@ public:
     static void updateContactFetchRequest(QContactFetchRequest* req, const QList<QContact>& result, QContactManager::Error error, QContactAbstractRequest::State);
     static void updateContactRemoveRequest(QContactRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
     static void updateContactSaveRequest(QContactSaveRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateDefinitionSaveRequest(QContactDetailDefinitionSaveRequest* req, const QList<QContactDetailDefinition>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateDefinitionRemoveRequest(QContactDetailDefinitionRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateDefinitionFetchRequest(QContactDetailDefinitionFetchRequest* req, const QMap<QString, QContactDetailDefinition>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
     static void updateRelationshipSaveRequest(QContactRelationshipSaveRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
     static void updateRelationshipRemoveRequest(QContactRelationshipRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
     static void updateRelationshipFetchRequest(QContactRelationshipFetchRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, QContactAbstractRequest::State);

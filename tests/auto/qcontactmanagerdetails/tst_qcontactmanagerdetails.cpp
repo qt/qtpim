@@ -42,6 +42,7 @@
 #include <QtTest/QtTest>
 #include <QDateTime>
 #include <QtContacts>
+
 #include "../qcontactmanagerdataholder.h"
 
 QTCONTACTS_USE_NAMESPACE
@@ -89,6 +90,10 @@ private slots:
     void testBirthday_data() {addManagers();}
     void testEmailAddress();
     void testEmailAddress_data() {addManagers();}
+    void testEmptyExtendedDetail();
+    void testEmptyExtendedDetail_data() {addManagers();}
+    void testExtendedDetail();
+    void testExtendedDetail_data() {addManagers();}
     void testName();
     void testName_data() {addManagers();}
     void testNickName();
@@ -188,94 +193,68 @@ void tst_QContactManagerDetails::testAddress()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContactDetailDefinition def = cm->detailDefinition(QContactAddress::DefinitionName);
-    if (def.isEmpty()
-            || !def.fields().contains(QContactAddress::FieldStreet)
-            || !def.fields().contains(QContactAddress::FieldLocality)
-            || !def.fields().contains(QContactAddress::FieldRegion)
-            || !def.fields().contains(QContactAddress::FieldPostcode)
-            || !def.fields().contains(QContactAddress::FieldCountry)
-            || !def.fields().contains(QContactAddress::FieldPostOfficeBox))
-        QSKIP("This backend does not support the required detail!");
+    QContact c;
 
-    // general address
-    {
-        QContact c;
+    QContactAddress a;
+    a.setStreet("street");
+    a.setLocality("locality");
+    a.setRegion("region");
+    a.setPostcode("postcode");
+    a.setCountry("country");
+    a.setPostOfficeBox("POBox");
+    c.saveDetail( &a );
 
-        QContactAddress a;
-        a.setStreet("street");
-        a.setLocality("locality");
-        a.setRegion("region");
-        a.setPostcode("postcode");
-        a.setCountry("country");
-        a.setPostOfficeBox("POBox");
-        c.saveDetail( &a );
+    saveAndVerifyContact( cm.data(), c );
+    QContact c1;
 
-        saveAndVerifyContact( cm.data(), c );
-    }
+    QContactAddress a1;
+    a1.setStreet("street1");
+    a1.setLocality("locality1");
+    a1.setRegion("region1");
+    a1.setPostcode("postcode1");
+    a1.setCountry("country1");
+    a1.setPostOfficeBox("POBox1");
+    c1.saveDetail( &a1 );
 
-    if (def.isUnique())
-        QSKIP("This backend does not support more than one of this detail");
+    QContactAddress a2;
+    a2.setStreet("street2");
+    a2.setLocality("locality2");
+    a2.setRegion("region2");
+    a2.setPostcode("postcode2");
+    a2.setCountry("country2");
+    a2.setPostOfficeBox("POBox2");
+    c1.saveDetail( &a2 );
 
-    // general address *2
-    {
-        QContact c1;
+    QContact c2;
+    saveAndLoadContact( cm.data(), c1, c2 );
 
-        QContactAddress a1;
-        a1.setStreet("street1");
-        a1.setLocality("locality1");
-        a1.setRegion("region1");
-        a1.setPostcode("postcode1");
-        a1.setCountry("country1");
-        a1.setPostOfficeBox("POBox1");
-        c1.saveDetail( &a1 );
+    QList<QContactAddress> addresses = c2.details<QContactAddress>();
+    QVERIFY( addresses.count() == 2 );
+    QVERIFY( a1 == addresses[0] );
+    QVERIFY( a2 == addresses[1] );
 
-        QContactAddress a2;
-        a2.setStreet("street2");
-        a2.setLocality("locality2");
-        a2.setRegion("region2");
-        a2.setPostcode("postcode2");
-        a2.setCountry("country2");
-        a2.setPostOfficeBox("POBox2");
-        c1.saveDetail( &a2 );
+    QContact c3;
 
-        QContact c2;
-        saveAndLoadContact( cm.data(), c1, c2 );
+    // General address
+    QContactAddress a3;
+    a3.setStreet("street1");
+    c3.saveDetail( &a3 );
 
-        QList<QContactAddress> addresses = c2.details<QContactAddress>();
-        QVERIFY( addresses.count() == 2 );
-        QVERIFY( a1 == addresses[0] );
-        QVERIFY( a2 == addresses[1] );
-    }
+    // home address
+    QContactAddress a4;
+    a4.setStreet("street2");
+    a4.setContexts( QContactDetail::ContextHome );
+    c3.saveDetail( &a4 );
 
-    if (!def.fields().contains(QContactDetail::FieldContext)) {
-        QSKIP("This backend does not support contexts");
-    }
+    // work address
+    QContactAddress a5;
+    a5.setStreet("street3");
+    a5.setContexts( QContactDetail::ContextWork );
+    c3.saveDetail( &a5 );
 
-    // general + home + work address
-    {
-        QContact c;
-
-        // General address
-        QContactAddress a1;
-        a1.setStreet("street1");
-        c.saveDetail( &a1 );
-
-        // home address
-        QContactAddress a2;
-        a2.setStreet("street2");
-        a2.setContexts( QContactDetail::ContextHome );
-        c.saveDetail( &a2 );
-
-        // work address
-        QContactAddress a3;
-        a3.setStreet("street3");
-        a3.setContexts( QContactDetail::ContextWork );
-        c.saveDetail( &a3 );
-
-        saveAndVerifyContact( cm.data(), c );
-    }
+    saveAndVerifyContact( cm.data(), c3 );
 }
+
 void tst_QContactManagerDetails::testAnniversary()
 {
     QFETCH(QString, uri);
@@ -283,10 +262,9 @@ void tst_QContactManagerDetails::testAnniversary()
         QSKIP("JsonDb backend does not support QContactAnniversary detail!");
     } else {
         QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-        if (cm->detailDefinition(QContactAnniversary::DefinitionName).isEmpty())
-            QSKIP("This backend does not support the required detail!");
         QContact c;
         QContactAnniversary a;
+
         a.setOriginalDate( QDate(2009,9,9) );
         c.saveDetail( &a );
         saveAndVerifyContact( cm.data(), c );
@@ -297,9 +275,6 @@ void tst_QContactManagerDetails::testAvatar()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-    if (cm->detailDefinition(QContactAvatar::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -315,9 +290,6 @@ void tst_QContactManagerDetails::testBirthday()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->detailDefinition(QContactBirthday::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
-
     QContact c;
 
     QContactBirthday b;
@@ -331,9 +303,6 @@ void tst_QContactManagerDetails::testEmailAddress()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-    if (cm->detailDefinition(QContactEmailAddress::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -350,15 +319,6 @@ void tst_QContactManagerDetails::testName()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
     QContact c;
 
-    QContactDetailDefinition def = cm->detailDefinition(QContactName::DefinitionName);
-    if (def.isEmpty()
-            || !def.fields().contains(QContactName::FieldPrefix)
-            || !def.fields().contains(QContactName::FieldFirstName)
-            || !def.fields().contains(QContactName::FieldMiddleName)
-            || !def.fields().contains(QContactName::FieldLastName)
-            || !def.fields().contains(QContactName::FieldSuffix))
-        QSKIP("This backend does not support the required detail!");
-
     QContactName n;
     n.setPrefix( "prefix" );
     n.setFirstName( "first" );
@@ -374,9 +334,6 @@ void tst_QContactManagerDetails::testNickName()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-    if (cm->detailDefinition(QContactNickname::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
 
     QContact c;
 
@@ -398,9 +355,6 @@ void tst_QContactManagerDetails::testOrganisation()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->detailDefinition(QContactOrganization::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
-
     QContact c;
 
     QContactOrganization o;
@@ -418,23 +372,12 @@ void tst_QContactManagerDetails::testOnlineAccount()
         QSKIP("JsonDb backend does not support QContactOnlineAccount detail!");
     } else {
         QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-        QContactDetailDefinition def = cm->detailDefinition(QContactOnlineAccount::DefinitionName);
-        if (def.isEmpty())
-            QSKIP("This backend does not support the required detail!");
-
         QContact c;
 
         QContactOnlineAccount o;
         o.setAccountUri( "john@example.com" );
-
-        if (def.fields().contains(QContactOnlineAccount::FieldProtocol))
-            o.setProtocol(QContactOnlineAccount::ProtocolJabber);
-        else
-            qDebug() << "Manager doesn't support Protocol";
-
+        o.setProtocol(QContactOnlineAccount::ProtocolJabber);
         c.saveDetail( &o );
-
         saveAndVerifyContact( cm.data(), c );
     }
 }
@@ -443,47 +386,33 @@ void tst_QContactManagerDetails::testPhoneNumber()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    QContact c;
 
-    QContactDetailDefinition def = cm->detailDefinition(QContactPhoneNumber::DefinitionName);
+    // General landline number
+    QContactPhoneNumber n2;
+    n2.setNumber( "2" );
+    n2.setSubTypes( QContactPhoneNumber::SubTypeLandline );
+    c.saveDetail( &n2 );
 
-    // general landline number
-    {
-        QContact c;
+    saveAndVerifyContact( cm.data(), c );
 
-        // General landline number
-        QContactPhoneNumber n2;
-        n2.setNumber( "2" );
-        n2.setSubTypes( QContactPhoneNumber::SubTypeLandline );
-        c.saveDetail( &n2 );
+    QContact c2;
 
-        saveAndVerifyContact( cm.data(), c );
-    }
+    // home mobile number
+    QContactPhoneNumber n1;
+    n1.setNumber( "1" );
+    n1.setSubTypes( QContactPhoneNumber::SubTypeMobile );
+    n1.setContexts( QContactDetail::ContextHome );
+    c2.saveDetail( &n1 );
 
-    if (def.isUnique()
-            || !def.fields().contains(QContactPhoneNumber::FieldSubTypes)
-            || !def.fields().contains(QContactDetail::FieldContext))
-        QSKIP("This backend does not support multiple, subtyped or contexted phone numbers");
+    // work landline number
+    QContactPhoneNumber n3;
+    n3.setNumber( "3" );
+    n3.setSubTypes( QContactPhoneNumber::SubTypeLandline );
+    n3.setContexts( QContactDetail::ContextWork );
+    c2.saveDetail( &n3 );
 
-    // home mobile number + work landline number
-    {
-        QContact c;
-
-        // home mobile number
-        QContactPhoneNumber n1;
-        n1.setNumber( "1" );
-        n1.setSubTypes( QContactPhoneNumber::SubTypeMobile );
-        n1.setContexts( QContactDetail::ContextHome );
-        c.saveDetail( &n1 );
-
-        // work landline number
-        QContactPhoneNumber n2;
-        n2.setNumber( "2" );
-        n2.setSubTypes( QContactPhoneNumber::SubTypeLandline );
-        n2.setContexts( QContactDetail::ContextWork );
-        c.saveDetail( &n2 );
-
-        saveAndVerifyContact( cm.data(), c );
-    }
+    saveAndVerifyContact( cm.data(), c2 );
 }
 
 void tst_QContactManagerDetails::testUrl()
@@ -491,19 +420,11 @@ void tst_QContactManagerDetails::testUrl()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContactDetailDefinition def = cm->detailDefinition(QContactUrl::DefinitionName);
-
-    if (cm->detailDefinition(QContactUrl::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
-
     QContact c;
 
     QContactUrl u;
     u.setUrl("http://failblog.org");
-    if (def.fields().value(QContactUrl::FieldSubType).allowableValues()
-            .contains(QLatin1String(QContactUrl::SubTypeHomePage))) {
-        u.setSubType(QContactUrl::SubTypeHomePage);
-    }
+    u.setSubType(QContactUrl::SubTypeHomePage);
     c.saveDetail( &u );
 
     saveAndVerifyContact( cm.data(), c );
@@ -514,14 +435,7 @@ void tst_QContactManagerDetails::testRingtone()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->detailDefinition(QContactRingtone::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
-
-#if defined(Q_OS_SYMBIAN)
-    QUrl rtUrl(QUrl::fromLocalFile("C:\\data\\Sounds\\sample1.wav"));
-#else
     QUrl rtUrl(QUrl::fromLocalFile("/home/user/sample.wav"));
-#endif
 
     QContact c;
     QContactRingtone rt;
@@ -530,5 +444,55 @@ void tst_QContactManagerDetails::testRingtone()
 
     saveAndVerifyContact( cm.data(), c );
 }
+
+void tst_QContactManagerDetails::testEmptyExtendedDetail()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    QContact c;
+
+    // Adding an empty extended detail
+    QContactExtendedDetail emptyDetail;
+    QVERIFY(c.saveDetail(&emptyDetail));
+    if (uri == "qtcontacts:jsondb:") {
+        QSKIP("This manager does not store empty extended details, so skipping empty extended detail test!", SkipSingle);
+    } else {
+        saveAndVerifyContact(cm.data(), c);
+    }
+}
+
+void tst_QContactManagerDetails::testExtendedDetail()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    QContact c;
+
+    QContactExtendedDetail extendedDetail1, extendedDetail2;
+    extendedDetail1.setName("testExtDetailVariantList");
+    extendedDetail1.setData(QVariantList() << QString("QString in the QVariantlist detail.")
+              << QVariant(1)
+              << QString("Another QString in the QVariantlist detail.")
+              << 2);
+    QVERIFY(c.saveDetail(&extendedDetail1));
+    saveAndVerifyContact(cm.data(), c);
+
+    // Adding two extended details to same contact
+    QContact c2;
+    extendedDetail2.setName("testExtDetailInt");
+    extendedDetail2.setData(2);
+    QVERIFY (c2.saveDetail(&extendedDetail2));
+    QVERIFY (c2.saveDetail(&extendedDetail1));
+    saveAndVerifyContact(cm.data(), c2);
+
+    QSKIP("TODO: skipping random order extended detail saving due to an issue in QContact comparison operator", SkipSingle);
+    // Adding same details but in different order
+    QContact c3;
+    QVERIFY (c3.saveDetail(&extendedDetail1));
+    QVERIFY (c3.saveDetail(&extendedDetail2));
+    saveAndVerifyContact(cm.data(), c3);
+}
+
 QTEST_MAIN(tst_QContactManagerDetails)
 #include "tst_qcontactmanagerdetails.moc"

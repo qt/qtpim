@@ -56,7 +56,6 @@
 #include <QContactFetchHint>
 #include <QContactFetchByIdRequest>
 #include <QContactSaveRequest>
-#include <QContactDetailDefinitionFetchRequest>
 #include <QContactEmailAddress>
 #include <QContactOnlineAccount>
 #include <QContactRemoveRequest>
@@ -71,13 +70,9 @@ QTCONTACTS_USE_NAMESPACE
 
 /* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
 #define FILL_QUEUE_WITH_FETCH_REQUESTS() QContactFetchRequest fqcfr1, fqcfr2, fqcfr3; \
-                                         QContactDetailDefinitionFetchRequest fqdfr1, fqdfr2, fqdfr3; \
                                          fqcfr1.start(); \
                                          fqcfr2.start(); \
-                                         fqcfr3.start(); \
-                                         fqdfr1.start(); \
-                                         fqdfr2.start(); \
-                                         fqdfr3.start();
+                                         fqcfr3.start();
 
 //TESTED_COMPONENT=src/contacts
 //TESTED_CLASS=
@@ -224,7 +219,6 @@ private slots:
     void contactRemoveErrorHandling();
     void contactRemoveErrorHandling_data() {addManagers();}
 
-    void definitionFetch();
     void testQuickDestruction();
     void testQuickDestruction_data() { addManagers(QStringList(QString("maliciousplugin"))); }
 protected slots:
@@ -1351,45 +1345,6 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
     // Check that all the contacts have been removed
     QList<QContactLocalId> contactsLeft = cm.data()->contactIds();
     QVERIFY(contactsLeft.isEmpty());
-}
-
-
-
-void tst_QContactJsonDbAsync::definitionFetch()
-{
-    //QFETCH(QString, uri);
-    QString uri = "qtcontacts:jsondb:";
-    QScopedPointer<QContactManager> cm(prepareModel(uri));
-    QContactDetailDefinitionFetchRequest dfr;
-    QVERIFY(dfr.type() == QContactAbstractRequest::DetailDefinitionFetchRequest);
-    QVERIFY(dfr.contactType() == QString(QLatin1String(QContactType::TypeContact))); // ensure ctor sets contact type correctly.
-    dfr.setContactType(QContactType::TypeContact);
-    QVERIFY(dfr.contactType() == QString(QLatin1String(QContactType::TypeContact)));
-
-    // initial state - not started, no manager.
-    QVERIFY(!dfr.isActive());
-    QVERIFY(!dfr.isFinished());
-    QVERIFY(!dfr.start());
-    QVERIFY(!dfr.cancel());
-    QVERIFY(!dfr.waitForFinished());
-
-    // "all definitions" retrieval
-    dfr.setManager(cm.data());
-    QCOMPARE(dfr.manager(), cm.data());
-    QVERIFY(!dfr.isActive());
-    QVERIFY(!dfr.isFinished());
-    QVERIFY(!dfr.cancel());
-    QVERIFY(!dfr.waitForFinished());
-    qRegisterMetaType<QContactDetailDefinitionFetchRequest*>("QContactDetailDefinitionFetchRequest*");
-    QThreadSignalSpy spy(&dfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
-    dfr.setDefinitionNames(QStringList());
-    QVERIFY(!dfr.cancel()); // not started
-    QVERIFY(dfr.start());
-    QVERIFY((dfr.isActive() && dfr.state() == QContactAbstractRequest::ActiveState) || dfr.isFinished());
-    QVERIFY(dfr.waitForFinished());
-    QVERIFY(dfr.isFinished());
-    QVERIFY(spy.count() >= 1);
-    spy.clear();
 }
 
 void tst_QContactJsonDbAsync::testQuickDestruction()

@@ -50,8 +50,6 @@ PRIVATE_HEADERS += \
     qcontactactiontarget_p.h \
     qcontactchangeset_p.h \
     qcontactdetail_p.h \
-    qcontactdetaildefinition_p.h \
-    qcontactdetailfielddefinition_p.h \
     qcontactfetchhint_p.h \
     qcontactfilter_p.h \
     qcontactid_p.h \
@@ -71,8 +69,6 @@ SOURCES += \
     qcontactactiontarget.cpp \
     qcontactchangeset.cpp \
     qcontactdetail.cpp \
-    qcontactdetaildefinition.cpp \
-    qcontactdetailfielddefinition.cpp \
     qcontactfetchhint.cpp \
     qcontactfilter.cpp \
     qcontactid.cpp \

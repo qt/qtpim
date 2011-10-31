@@ -188,6 +188,42 @@ TestCase {
     }
 
     Contact {
+        id: contactWithExtendedDetail1
+        ExtendedDetail {
+            name: "extended1"
+            data: "originaldata1"
+        }
+    }
+
+    function test_contact_extended_detail_change_name_emits_signal()
+    {
+        listenToSignalFromObject("contactChanged", contactWithExtendedDetail1);
+        contactWithExtendedDetail1.extendedDetail.name = "new name";
+        verifySignalReceived();
+    }
+
+    function test_contact_extended_detail_change_data_emits_signal()
+    {
+        expectSignalFromObject("contactChanged", contactWithExtendedDetail1);
+        contactWithExtendedDetail1.extendedDetail.data = "new data";
+        verifySignalReceived();
+    }
+
+    function test_contact_extended_detail_emits_no_signal_when_name_does_not_change()
+    {
+        listenToSignalFromObject("contactChanged", contactWithExtendedDetail1);
+        contactWithExtendedDetail1.extendedDetail.name = contactWithExtendedDetail1.extendedDetail.name;
+        verifyNoSignalReceived();
+    }
+
+    function test_contact_extended_detail_emits_no_signal_when_data_does_not_change()
+    {
+        listenToSignalFromObject("contactChanged", contactWithExtendedDetail1);
+        contactWithExtendedDetail1.extendedDetail.data = contactWithExtendedDetail1.extendedDetail.data;
+        verifyNoSignalReceived();
+    }
+
+    Contact {
         id: contactWithFavorite1
         Favorite {
             favorite: false

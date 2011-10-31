@@ -143,32 +143,6 @@ public:
         return QContactManagerEngine::validateContact(contact, error);
     }
 
-    bool validateDefinition(const QContactDetailDefinition& def, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::validateDefinition(def, error);
-    }
-
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::detailDefinitions(contactType, error);
-    }
-
-    QContactDetailDefinition detailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::detailDefinition(definitionId, contactType, error);
-    }
-
-    bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactManager::Error* error)
-    {
-        return QContactManagerEngine::saveDetailDefinition(def, contactType, error);
-    }
-
-    bool removeDetailDefinition(const QString& defName, const QString& contactType, QContactManager::Error* error)
-    {
-        return QContactManagerEngine::removeDetailDefinition(defName, contactType, error);
-    }
-
     /* Asynchronous Request Support */
     void requestDestroyed(QContactAbstractRequest* req);
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs) {return QContactManagerEngine::waitForRequestFinished(req, msecs);}

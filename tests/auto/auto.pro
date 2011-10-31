@@ -9,7 +9,6 @@ SUBDIRS += \
     qcontact \
     qcontactasync \
     qcontactdetail \
-    qcontactdetaildefinition \
     qcontactdetails \
     qcontactfilter \
 #    qcontactmanager \

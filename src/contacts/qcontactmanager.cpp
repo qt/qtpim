@@ -43,7 +43,6 @@
 
 #include "qcontact_p.h"
 #include "qcontactfilter.h"
-#include "qcontactdetaildefinition.h"
 #include "qcontactmanager_p.h"
 #include "qcontactfetchhint.h"
 
@@ -61,8 +60,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   \ingroup contacts-main
 
   This class provides an abstraction of a datastore or aggregation of datastores which contains contact information.
-  It provides methods to retrieve and manipulate contact information, contact relationship information, and
-  supported schema definitions.  It also provides metadata and error information reporting.
+  It provides methods to retrieve and manipulate contact information and contact relationship information.
+  It also provides metadata and error information reporting.
 
   The functions provided by QContactManager are purely synchronous; to access the same functionality in an
   asynchronous manner, clients should use the use-case-specific classes derived from QContactAbstractRequest.
@@ -402,8 +401,8 @@ Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterValueOnlyOtherProcesses, "Onl
   This enum specifies an error that occurred during the most recent operation:
 
   \value NoError The most recent operation was successful
-  \value DoesNotExistError The most recent operation failed because the requested contact or detail definition does not exist
-  \value AlreadyExistsError The most recent operation failed because the specified contact or detail definition already exists
+  \value DoesNotExistError The most recent operation failed because the requested contact does not exist
+  \value AlreadyExistsError The most recent operation failed because the specified contact  already exists
   \value InvalidDetailError The most recent operation failed because the specified contact contains details which do not conform to their definition
   \value InvalidRelationshipError The most recent operation failed because the specified relationship is circular or references an invalid local contact
   \value InvalidContactTypeError The most recent operation failed because the contact type specified was not valid for the operation
@@ -893,63 +892,6 @@ bool QContactManager::removeRelationships(const QList<QContactRelationship>& rel
 }
 
 /*!
-  Returns a map of identifier to detail definition for the registered detail definitions which are valid for contacts whose type is the given \a contactType
-  which are valid for the contacts in this store
-  \since 2.0
- */
-QMap<QString, QContactDetailDefinition> QContactManager::detailDefinitions(const QString& contactType) const
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    if (!supportedContactTypes().contains(contactType)) {
-        h.error = QContactManager::InvalidContactTypeError;
-        return QMap<QString, QContactDetailDefinition>();
-    }
-
-    return d->m_engine->detailDefinitions(contactType, &h.error);
-}
-
-/*! Returns the definition identified by the given \a definitionName that is valid for the contacts whose type is the given \a contactType in this store, or a default-constructed QContactDetailDefinition if no such definition exists
-  \since 2.0
-*/
-QContactDetailDefinition QContactManager::detailDefinition(const QString& definitionName, const QString& contactType) const
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    if (!supportedContactTypes().contains(contactType)) {
-        h.error = QContactManager::InvalidContactTypeError;
-        return QContactDetailDefinition();
-    }
-
-    return d->m_engine->detailDefinition(definitionName, contactType, &h.error);
-}
-
-/*! Persists the given definition \a def in the database, which is valid for contacts whose type is the given \a contactType.  Returns true if the definition was saved successfully, otherwise returns false
-  \since 2.0
-*/
-bool QContactManager::saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType)
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    if (!supportedContactTypes().contains(contactType)) {
-        h.error = QContactManager::InvalidContactTypeError;
-        return false;
-    }
-
-    return d->m_engine->saveDetailDefinition(def, contactType, &h.error);
-}
-
-/*! Removes the detail definition identified by \a definitionName from the database, which is valid for contacts whose type is the given \a contactType.  Returns true if the definition was removed successfully, otherwise returns false   \since 2.0
-*/
-bool QContactManager::removeDetailDefinition(const QString& definitionName, const QString& contactType)
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    if (!supportedContactTypes().contains(contactType)) {
-        h.error = QContactManager::InvalidContactTypeError;
-        return false;
-    }
-
-    return d->m_engine->removeDetailDefinition(definitionName, contactType, &h.error);
-}
-
-/*!
   \enum QContactManager::ManagerFeature
   This enum describes the possible features that a particular manager may support
   \value Groups The manager supports saving contacts of the \c QContactType::TypeGroup type
@@ -957,7 +899,6 @@ bool QContactManager::removeDetailDefinition(const QString& definitionName, cons
   \value DetailOrdering When a contact is retrieved, the manager will return the details in the same order in which they were saved
   \value Relationships The manager supports at least some types of relationships between contacts
   \value ArbitraryRelationshipTypes The manager supports relationships of arbitrary types between contacts
-  \value MutableDefinitions The manager supports saving, updating or removing detail definitions.  Some built-in definitions may still be immutable
   \value SelfContact The manager supports the concept of saving a contact which represents the current user
   \value ChangeLogs The manager supports reporting of timestamps of changes, and filtering and sorting by those timestamps
   \value Anonymous The manager is isolated from other managers

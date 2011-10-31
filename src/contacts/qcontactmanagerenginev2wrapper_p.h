@@ -102,11 +102,6 @@ public:
     virtual bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->saveRelationships(relationships, errorMap, error);}
     virtual bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeRelationships(relationships, errorMap, error);}
     virtual bool validateContact(const QContact& contact, QContactManager::Error* error) const {return m_engine->validateContact(contact, error);}
-    virtual bool validateDefinition(const QContactDetailDefinition& def, QContactManager::Error* error) const {return m_engine->validateDefinition(def, error);}
-    virtual QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType, QContactManager::Error* error) const {return m_engine->detailDefinitions(contactType, error);}
-    virtual QContactDetailDefinition detailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error) const {return m_engine->detailDefinition(definitionId, contactType, error);}
-    virtual bool saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType, QContactManager::Error* error) {return m_engine->saveDetailDefinition(def, contactType, error);}
-    virtual bool removeDetailDefinition(const QString& definitionId, const QString& contactType, QContactManager::Error* error) {return m_engine->removeDetailDefinition(definitionId, contactType, error);}
     virtual bool hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const {return m_engine->hasFeature(feature, contactType);}
     virtual bool isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType) const {return m_engine->isRelationshipTypeSupported(relationshipType, contactType);}
     virtual bool isFilterSupported(const QContactFilter& filter) const {return m_engine->isFilterSupported(filter);}

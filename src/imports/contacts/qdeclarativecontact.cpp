@@ -127,27 +127,9 @@ QDeclarativeContact::QDeclarativeContact(QObject *parent)
     connect(this, SIGNAL(contactChanged()), SLOT(setModified()));
 }
 
-QDeclarativeContact::QDeclarativeContact(const QContact& contact, const QMap<QString, QContactDetailDefinition>& defs, QObject *parent)
-    :QObject(parent)
-{
-    setContact(contact);
-    setDetailDefinitions(defs);
-    connect(this, SIGNAL(contactChanged()), SLOT(setModified()));
-}
-
 QDeclarativeContact::~QDeclarativeContact()
 {
     clearDetails();
-}
-
-void QDeclarativeContact::setDetailDefinitions(const QMap<QString, QContactDetailDefinition>& defs)
-{
-    m_defs = defs;
-}
-
-QMap<QString, QContactDetailDefinition> QDeclarativeContact::detailDefinitions() const
-{
-    return m_defs;
 }
 
 void QDeclarativeContact::setContact(const QContact& contact)
@@ -759,7 +741,19 @@ QDeclarativeContactPersonId*  QDeclarativeContact::personid()
     return getDetail<QDeclarativeContactPersonId>(QDeclarativeContactDetail::PersonId);
 }
 
-// call-back functions for list property contactDetails
+/*!
+    \qmlproperty ExtendedDetail Contact::extendedDetail
+
+    This property holds the extended detail of the Contact object. In case a contact has several extended
+    details then the first one is returned.
+*/
+QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
+{
+    return getDetail<QDeclarativeContactExtendedDetail>(QDeclarativeContactDetail::ExtendedDetail);
+}
+
+// call-back functions for list property
+
 /*!
     \internal
  */

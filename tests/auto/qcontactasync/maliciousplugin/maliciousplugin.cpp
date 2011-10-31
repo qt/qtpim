@@ -80,8 +80,6 @@ public slots:
         QMap<int, QContactManager::Error> errorsResult;
         QList<QContactLocalId> idResult;
         QList<QContact> contactResult;
-        QList<QContactDetailDefinition> defResult;
-        QMap<QString, QContactDetailDefinition> defMapResult;
         QList<QContactRelationship> relResult;
 
         mutex.lock();
@@ -95,17 +93,6 @@ public slots:
                     QContactManagerEngine::updateContactFetchRequest(static_cast<QContactFetchRequest*>(req), contactResult, errorResult, QContactAbstractRequest::FinishedState);
                     break;
 
-                case QContactAbstractRequest::DetailDefinitionSaveRequest:
-                    QContactManagerEngine::updateDefinitionSaveRequest(static_cast<QContactDetailDefinitionSaveRequest*>(req), defResult, errorResult, errorsResult, QContactAbstractRequest::FinishedState);
-                    break;
-
-                case QContactAbstractRequest::DetailDefinitionFetchRequest:
-                    QContactManagerEngine::updateDefinitionFetchRequest(static_cast<QContactDetailDefinitionFetchRequest*>(req), defMapResult, errorResult, errorsResult, QContactAbstractRequest::FinishedState);
-                    break;
-
-                case QContactAbstractRequest::DetailDefinitionRemoveRequest:
-                    QContactManagerEngine::updateDefinitionRemoveRequest(static_cast<QContactDetailDefinitionRemoveRequest*>(req), errorResult, errorsResult, QContactAbstractRequest::FinishedState);
-                    break;
                 default:
                     QContactManagerEngine::updateRequestState(req, QContactAbstractRequest::FinishedState);
                     break;

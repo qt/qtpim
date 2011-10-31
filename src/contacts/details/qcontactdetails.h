@@ -51,6 +51,7 @@
 #include <qcontactbirthday.h>
 #include <qcontactdisplaylabel.h>
 #include <qcontactemailaddress.h>
+#include <qcontactextendeddetail.h>
 #include <qcontactfamily.h>
 #include <qcontactfavorite.h>
 #include <qcontactgender.h>

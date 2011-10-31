@@ -39,41 +39,48 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTDETAILDEFINITIONREMOVEREQUEST_H
-#define QCONTACTDETAILDEFINITIONREMOVEREQUEST_H
+#ifndef QCONTACTEXTENDEDDETAIL_H
+#define QCONTACTEXTENDEDDETAIL_H
 
-#include <qcontactsglobal.h>
-#include <qcontactabstractrequest.h>
-
-#include <QStringList>
+#include <qcontactdetail.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactDetailDefinitionRemoveRequestPrivate;
-class Q_CONTACTS_EXPORT QContactDetailDefinitionRemoveRequest : public QContactAbstractRequest
+/* Leaf class */
+class Q_CONTACTS_EXPORT QContactExtendedDetail : public QContactDetail
 {
-    Q_OBJECT
-
 public:
-    QContactDetailDefinitionRemoveRequest(QObject* parent = 0);
-    ~QContactDetailDefinitionRemoveRequest();
+#ifdef Q_QDOC
+    static const QLatin1Constant DefinitionName;
+    static const QLatin1Constant FieldName;
+    static const QLatin1Constant FieldData;
+#else
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactExtendedDetail, "ExtendedDetail")
+    Q_DECLARE_LATIN1_CONSTANT(FieldName, "Name");
+    Q_DECLARE_LATIN1_CONSTANT(FieldData, "Data");
+#endif
 
-    /* Selection */
-    void setDefinitionName(const QString& definitionName);
-    void setDefinitionNames(const QStringList& names);
-    QStringList definitionNames() const;
-    void setContactType(const QString& contactType);
-    QString contactType() const;
+    void setName(const QString &name)
+    {
+        setValue(FieldName, name);
+    }
 
-    /* Results */
-    QMap<int, QContactManager::Error> errorMap() const;
+    QString name() const
+    {
+        return value(FieldName);
+    }
 
-private:
-    Q_DISABLE_COPY(QContactDetailDefinitionRemoveRequest)
-    friend class QContactManagerEngine;
-    Q_DECLARE_PRIVATE_D(d_ptr, QContactDetailDefinitionRemoveRequest)
+    void setData(const QVariant &data)
+    {
+        setValue(FieldData, data);
+    }
+
+    QVariant data() const
+    {
+        return variantValue(FieldData);
+    }
 };
 
 QTCONTACTS_END_NAMESPACE
 
-#endif
+#endif // QCONTACTEXTENDEDDETAIL_H

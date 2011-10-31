@@ -46,8 +46,7 @@
 #include <QList>
 #include <QSharedData>
 #include <QSize>
-
-#include <qcontactdetaildefinition.h>
+#include "qcontactsglobal.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 

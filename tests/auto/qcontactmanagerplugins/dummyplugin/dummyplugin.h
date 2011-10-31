@@ -157,37 +157,6 @@ public:
         return false;
     }
 
-    virtual bool validateDefinition(const QContactDetailDefinition&, QContactManager::Error* error) const
-    {
-        *error = QContactManager::NotSupportedError;
-        return false;
-    }
-
-    /* Definitions - Accessors and Mutators */
-    virtual QMap<QString, QContactDetailDefinition> detailDefinitions(const QString&, QContactManager::Error* error) const
-    {
-        *error = QContactManager::NotSupportedError;
-        return QMap<QString, QContactDetailDefinition>();
-    }
-
-    virtual QContactDetailDefinition detailDefinition(const QString&, const QString&, QContactManager::Error* error) const
-    {
-        *error = QContactManager::NotSupportedError;
-        return QContactDetailDefinition();
-    }
-
-    virtual bool saveDetailDefinition(const QContactDetailDefinition&, const QString&, QContactManager::Error* error)
-    {
-        *error = QContactManager::NotSupportedError;
-        return false;
-    }
-
-    virtual bool removeDetailDefinition(const QString&, const QString&, QContactManager::Error* error)
-    {
-        *error = QContactManager::NotSupportedError;
-        return false;
-    }
-
     /* Asynchronous Request Support */
     virtual void requestDestroyed(QContactAbstractRequest*) {}
     virtual bool startRequest(QContactAbstractRequest*) {return false;}

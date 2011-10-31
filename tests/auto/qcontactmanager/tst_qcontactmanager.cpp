@@ -171,9 +171,8 @@ private:
     bool isSuperset(const QContact& ca, const QContact& cb);
     QList<QContactDetail> removeAllDefaultDetails(const QList<QContactDetail>& details);
     void addManagers(); // add standard managers to the data
-    QContact createContact(QContactDetailDefinition nameDef, QString firstName, QString lastName, QString phoneNumber);
-    void saveContactName(QContact *contact, QContactDetailDefinition nameDef, QContactName *contactName, const QString &name) const;
-    void validateDefinitions(const QMap<QString, QContactDetailDefinition>& defs) const;
+    QContact createContact(QString firstName, QString lastName, QString phoneNumber);
+    void saveContactName(QContact *contact,QContactName *contactName, const QString &name) const;
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
@@ -184,9 +183,6 @@ private slots:
 
     void doDump();
     void doDump_data() {addManagers();}
-
-    void doDumpSchema();
-    void doDumpSchema_data() {addManagers();}
 
     /* Special test with special data */
     void uriParsing();
@@ -208,7 +204,6 @@ private slots:
     void batch();
     void observerDeletion();
     void signalEmission();
-    void detailDefinitions();
     void displayName();
     void actionPreferences();
     void selfContactId();
@@ -224,15 +219,12 @@ private slots:
 #endif
 
     /* Tests that take no data */
-    void contactValidation();
     void errorStayingPut();
     void ctors();
     void invalidManager();
     void memoryManager();
     void changeSet();
     void fetchHint();
-    void engineDefaultSchema();
-    void errorSemantics();
     void lazyConnections();
 
     /* Special test with special data */
@@ -249,7 +241,6 @@ private slots:
     void remove_data() {addManagers();}
     void batch_data() {addManagers();}
     void signalEmission_data() {addManagers();}
-    void detailDefinitions_data() {addManagers();}
     void displayName_data() {addManagers();}
     void actionPreferences_data() {addManagers();}
     void selfContactId_data() {addManagers();}
@@ -625,31 +616,23 @@ void tst_QContactManager::addManagers()
 
 /*
  * Helper method for creating a QContact instance with name and phone number
- * details. Name is generated according to the detail definition assuming that
- * either first and last name or custom label is supported.
+ * details.
  */
 QContact tst_QContactManager::createContact(
-    QContactDetailDefinition nameDef,
     QString firstName,
     QString lastName,
     QString phoneNumber)
 {
     QContact contact;
+    QContactName n;
 
-    if(!firstName.isEmpty() || !lastName.isEmpty()) {
-        QContactName n;
-
-        if(nameDef.fields().contains(QContactName::FieldFirstName)
-            && nameDef.fields().contains(QContactName::FieldFirstName)) {
-            n.setFirstName(firstName);
-            n.setLastName(lastName);
-        } else if(nameDef.fields().contains(QContactName::FieldCustomLabel)) {
-            n.setCustomLabel(firstName + " " + lastName);
-        } else {
-            // assume that either first and last name or custom label is supported
-            QWARN("Neither custom label nor first name/last name supported!");
-            return QContact();
-        }
+    if (!firstName.isEmpty()) {
+        n.setFirstName(firstName);
+    };
+    if (!lastName.isEmpty()) {
+        n.setLastName(lastName);
+    }
+    if (!n.isEmpty()) {
         contact.saveDetail(&n);
     }
 
@@ -662,21 +645,12 @@ QContact tst_QContactManager::createContact(
     return contact;
 }
 
-void tst_QContactManager::saveContactName(QContact *contact, QContactDetailDefinition nameDef, QContactName *contactName, const QString &name) const
+void tst_QContactManager::saveContactName(QContact *contact, QContactName *contactName, const QString &name) const
 {
-    // check which name fields are supported in the following order:
-    // 1. custom label, 2. first name, 3. last name
-    if(nameDef.fields().contains(QContactName::FieldCustomLabel)) {
-        contactName->setCustomLabel(name);
-    } else if(nameDef.fields().contains(QContactName::FieldFirstName)) {
-        contactName->setFirstName(name);
-    } else if(nameDef.fields().contains(QContactName::FieldLastName)) {
-        contactName->setLastName(name);
-    } else {
-        // Assume that at least one of the above name fields is supported by the backend
-        QVERIFY(false);
-    }
-    contact->saveDetail(contactName);
+    contactName->setCustomLabel(name);
+    contactName->setFirstName(name);
+    contactName->setLastName(name);
+     contact->saveDetail(contactName);
 }
 
 void tst_QContactManager::metadata()
@@ -878,62 +852,13 @@ void tst_QContactManager::doDump()
 
 Q_DECLARE_METATYPE(QVariant)
 
-void tst_QContactManager::doDumpSchema()
-{
-    // Only do this if it has been explicitly selected
-    if (QCoreApplication::arguments().contains("doDumpSchema")) {
-        QFETCH(QString, uri);
-        QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-        // Get the schema for each supported type
-        foreach(QString type, cm->supportedContactTypes()) {
-            QMap<QString, QContactDetailDefinition> defs = cm->detailDefinitions(type);
-
-            foreach(QContactDetailDefinition def, defs.values()) {
-                if (def.isUnique())
-                    qDebug() << QString("%2::%1 (Unique) {").arg(def.name()).arg(type).toAscii().constData();
-                else
-                    qDebug() << QString("%2::%1 {").arg(def.name()).arg(type).toAscii().constData();
-                QMap<QString, QContactDetailFieldDefinition> fields = def.fields();
-
-                foreach(QString fname, fields.keys()) {
-                    QContactDetailFieldDefinition field = fields.value(fname);
-
-                    if (field.allowableValues().count() > 0) {
-                        // Make some pretty output
-                        QStringList allowedList;
-                        foreach(QVariant var, field.allowableValues()) {
-                            QString allowed;
-                            if (var.type() == QVariant::String)
-                                allowed = QString("'%1'").arg(var.toString());
-                            else if (var.type() == QVariant::StringList)
-                                allowed = QString("'%1'").arg(var.toStringList().join(","));
-                            else {
-                                // use the textstream <<
-                                QDebug dbg(&allowed);
-                                dbg << var;
-                            }
-                            allowedList.append(allowed);
-                        }
-
-                        qDebug() << QString("   %2 %1 {%3}").arg(fname).arg(QMetaType::typeName(field.dataType())).arg(allowedList.join(",")).toAscii().constData();
-                    } else
-                        qDebug() << QString("   %2 %1").arg(fname).arg(QMetaType::typeName(field.dataType())).toAscii().constData();
-                }
-
-                qDebug() << "}";
-            }
-        }
-    }
-}
 
 void tst_QContactManager::add()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContactDetailDefinition nameDef = cm->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact);
-    QContact alice = createContact(nameDef, "Alice", "inWonderland", "1234567");
+    QContact alice = createContact("Alice", "inWonderland", "1234567");
     int currCount = cm->contactIds().count();
     QVERIFY(cm->saveContact(&alice));
     QVERIFY(cm->error() == QContactManager::NoError);
@@ -961,7 +886,7 @@ void tst_QContactManager::add()
         // in a single transaction.
         QWARN("The tracker backend does not support checking for existance of a contact. Skipping this test step.");
     } else {
-        QContact nonexistent = createContact(nameDef, "nonexistent", "contact", "");
+        QContact nonexistent = createContact("nonexistent", "contact", "");
         QVERIFY(cm->saveContact(&nonexistent));       // should work
         QVERIFY(cm->removeContact(nonexistent.id().localId())); // now nonexistent has an id which does not exist
         QVERIFY(!cm->saveContact(&nonexistent));      // hence, should fail
@@ -971,136 +896,11 @@ void tst_QContactManager::add()
         QVERIFY(cm->removeContact(nonexistent.id().localId()));
     }
 
-    // now try adding a "megacontact"
-    // - get list of all definitions supported by the manager
-    // - add one detail of each definition to a contact
-    // - save the contact
-    // - read it back
-    // - ensure that it's the same.
-    QContact megacontact;
-    QMap<QString, QContactDetailDefinition> defmap = cm->detailDefinitions();
-    QList<QContactDetailDefinition> defs = defmap.values();
-    foreach (const QContactDetailDefinition def, defs) {
-
-        // Leave these warnings here - might need an API for this
-        // XXX FIXME: access constraint reporting as moved to the detail itself
-        //if (def.accessConstraint() == QContactDetailDefinition::ReadOnly) {
-        //    continue;
-        //}
-
-        if (cm->managerName() == "maemo5") {
-            // The maemo5 backend only supports reading of Guid and QCOA
-            if (def.name() == QContactGuid::DefinitionName)
-                continue;
-            if (def.name() == QContactOnlineAccount::DefinitionName)
-                continue;
-	    if (def.name() == QContactPresence::DefinitionName)
-                continue;
-        }
-        if (cm->managerName() == QLatin1String("tracker")) {
-            // Some subtypes automatically imply/add other subtypes, due to the RDF nature of the tracker database
-            if (def.name() == QContactPhoneNumber::DefinitionName)
-                continue;
-            // OnlineAccount and Presence details get corrected on non-conforming data
-            // or are readonly because the content is feeded to the database by another process.
-            if (def.name() == QContactOnlineAccount::DefinitionName)
-                continue;
-            if (def.name() == QContactPresence::DefinitionName)
-                continue;
-            if (def.name() == QContactGlobalPresence::DefinitionName)
-                continue;
-            // The tracker specific detail relevance is changed by another process usually.
-            if (def.name() == QLatin1String("Relevance")) {
-                continue;
-            }
-        }
-
-        // This is probably read-only
-        if (def.name() == QContactTimestamp::DefinitionName)
-            continue;
-
-        // otherwise, create a new detail of the given type and save it to the contact
-        QContactDetail det(def.name());
-        QMap<QString, QContactDetailFieldDefinition> fieldmap = def.fields();
-        QStringList fieldKeys = fieldmap.keys();
-        foreach (const QString& fieldKey, fieldKeys) {
-            // get the field, and check to see that it's not constrained.
-            QContactDetailFieldDefinition currentField = fieldmap.value(fieldKey);
-            
-            // Don't test detail uris as these are manager specific
-            if (fieldKey == QContactDetail::FieldDetailUri)
-                continue;
-
-            // Special case: phone number.
-            if (def.name() == QContactPhoneNumber::DefinitionName &&
-                fieldKey == QContactPhoneNumber::FieldNumber) {
-                det.setValue(fieldKey, "+3581234567890");
-                continue;
-            }
-
-            // Attempt to create a worthy value
-            if (!currentField.allowableValues().isEmpty()) {
-                // we want to save a value that will be accepted.
-                if (currentField.dataType() == QVariant::StringList)
-                    det.setValue(fieldKey, QStringList() << currentField.allowableValues().first().toString());
-                else if (currentField.dataType() == QVariant::List)
-                    det.setValue(fieldKey, QVariantList() << currentField.allowableValues().first());
-                else
-                    det.setValue(fieldKey, currentField.allowableValues().first());
-            } else {
-                // any value of the correct type will be accepted
-                bool savedSuccessfully = false;
-                QVariant dummyValue = QVariant(fieldKey); // try to get some unique string data
-                if (dummyValue.canConvert(currentField.dataType())) {
-                    savedSuccessfully = dummyValue.convert(currentField.dataType());
-                    if (savedSuccessfully) {
-                        // we have successfully created a (supposedly) valid field for this detail.
-                        det.setValue(fieldKey, dummyValue);
-                        continue;
-                    }
-                }
-
-                // nope, couldn't save the string value (test); try a date.
-                dummyValue = QVariant(QDate::currentDate());
-                if (dummyValue.canConvert(currentField.dataType())) {
-                    savedSuccessfully = dummyValue.convert(currentField.dataType());
-                    if (savedSuccessfully) {
-                        // we have successfully created a (supposedly) valid field for this detail.
-                        det.setValue(fieldKey, dummyValue);
-                        continue;
-                    }
-                }
-
-                // nope, couldn't convert a string or a date - try the integer value (42)
-                dummyValue = QVariant(42);
-                if (dummyValue.canConvert(currentField.dataType())) {
-                    savedSuccessfully = dummyValue.convert(currentField.dataType());
-                    if (savedSuccessfully) {
-                        // we have successfully created a (supposedly) valid field for this detail.
-                        det.setValue(fieldKey, dummyValue);
-                        continue;
-                    }
-                }
-
-                // if we get here, we don't know what sort of value can be saved...
-            }
-        }
-        if (!det.isEmpty())
-            megacontact.saveDetail(&det);
-    }
-
-    QVERIFY(cm->saveContact(&megacontact)); // must be able to save since built from definitions.
-    QContact retrievedMegacontact = cm->contact(megacontact.id().localId());
-    if (!isSuperset(retrievedMegacontact, megacontact)) {
-        dumpContactDifferences(retrievedMegacontact, megacontact);
-        QEXPECT_FAIL("mgr='wince'", "Address Display Label mismatch", Continue);
-        QCOMPARE(megacontact, retrievedMegacontact);
-    }
 
     // now a contact with many details of a particular definition
     // if the detail is not unique it should then support minimum of two of the same kind
     const int nrOfdetails = 2;
-    QContact veryContactable = createContact(nameDef, "Very", "Contactable", "");
+    QContact veryContactable = createContact("Very", "Contactable", "");
     for (int i = 0; i < nrOfdetails; i++) {
         QString phnStr = QString::number(i);
         QContactPhoneNumber vcphn;
@@ -1112,20 +912,14 @@ void tst_QContactManager::add()
     QVERIFY(veryContactable.details(QContactPhoneNumber::DefinitionName).size() == nrOfdetails);
     
     // check if it can be saved
-    QContactDetailDefinition def = cm->detailDefinition(QContactPhoneNumber::DefinitionName);
-    if (def.isUnique()) {    
-        QVERIFY(!cm->saveContact(&veryContactable));
-    }
-    else {
-        QVERIFY(cm->saveContact(&veryContactable));
-        
-        // verify save
-        QContact retrievedContactable = cm->contact(veryContactable.id().localId());
-        if (!isSuperset(retrievedContactable, veryContactable)) {
-            dumpContactDifferences(veryContactable, retrievedContactable);
-            QEXPECT_FAIL("mgr='wince'", "Number of phones supported mismatch", Continue);
-            QCOMPARE(veryContactable, retrievedContactable);
-        }
+    QVERIFY(cm->saveContact(&veryContactable));
+
+    // verify save
+    QContact retrievedContactable = cm->contact(veryContactable.id().localId());
+    if (!isSuperset(retrievedContactable, veryContactable)) {
+        dumpContactDifferences(veryContactable, retrievedContactable);
+        QEXPECT_FAIL("mgr='wince'", "Number of phones supported mismatch", Continue);
+        QCOMPARE(veryContactable, retrievedContactable);
     }
 }
 
@@ -1246,8 +1040,7 @@ void tst_QContactManager::update()
 
     /* Save a new contact first */
     int contactCount = cm->contacts().size();
-    QContactDetailDefinition nameDef = cm->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact);
-    QContact alice = createContact(nameDef, "Alice", "inWonderland", "1234567");
+    QContact alice = createContact("Alice", "inWonderland", "1234567");
     QVERIFY(cm->saveContact(&alice));
     QVERIFY(cm->error() == QContactManager::NoError);
     contactCount += 1; // added a new contact.
@@ -1255,10 +1048,10 @@ void tst_QContactManager::update()
 
     /* Update name */
     QContactName name = alice.detail(QContactName::DefinitionName);
-    saveContactName(&alice, nameDef, &name, "updated");
+    saveContactName(&alice, &name, "updated");
     QVERIFY(cm->saveContact(&alice));
     QVERIFY(cm->error() == QContactManager::NoError);
-    saveContactName(&alice, nameDef, &name, "updated2");
+    saveContactName(&alice, &name, "updated2");
     QVERIFY(cm->saveContact(&alice));
     QVERIFY(cm->error() == QContactManager::NoError);
     alice = cm->contact(alice.localId()); // force reload of (persisted) alice
@@ -1324,7 +1117,7 @@ void tst_QContactManager::update()
         QVERIFY(cm->error() == QContactManager::AlreadyExistsError);
 
         // from group -> contact
-        QContact jabberwock = createContact(nameDef, "", "", "1234567890");
+        QContact jabberwock = createContact("", "", "1234567890");
         jabberwock.setType(QContactType::TypeGroup);
         QVERIFY(cm->saveContact(&jabberwock));
         jabberwock.setType(QContactType::TypeContact);
@@ -1339,8 +1132,7 @@ void tst_QContactManager::remove()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     /* Save a new contact first */
-    QContactDetailDefinition nameDef = cm->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact);
-    QContact alice = createContact(nameDef, "Alice", "inWonderland", "1234567");
+    QContact alice = createContact("Alice", "inWonderland", "1234567");
     QVERIFY(cm->saveContact(&alice));
     QVERIFY(cm->error() == QContactManager::NoError);
     QVERIFY(alice.id() != QContactId());
@@ -1366,14 +1158,7 @@ void tst_QContactManager::batch()
     QVERIFY(cm->error() == QContactManager::BadArgumentError);
     
     // Get supported name field
-    QString nameField = QContactName::FieldFirstName;
-    QContactDetailDefinition def = cm->detailDefinition(QContactName::DefinitionName);
-    if (!def.fields().contains(QContactName::FieldFirstName)) {
-        if(def.fields().contains(QContactName::FieldCustomLabel))
-            nameField = QLatin1String(QContactName::FieldCustomLabel);
-        else
-            QSKIP("This backend does not support the required name field!");
-    }
+    QString nameField = QContactName::FieldCustomLabel;
 
     /* Now add 3 contacts, all valid */
     QContact a;
@@ -1526,7 +1311,7 @@ void tst_QContactManager::batch()
     QVERIFY(cm->contact(c.id().localId()).isEmpty());
     QVERIFY(cm->error() == QContactManager::DoesNotExistError);
 
-    if (cm->managerName() == QLatin1String("tracker")) {
+    if (cm->managerName() == QStringLiteral("tracker")) {
         QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test .");
         return;
     }
@@ -1707,35 +1492,6 @@ void tst_QContactManager::invalidManager()
     QVERIFY(errorMap.count() == 0);
     QVERIFY(manager.error() == QContactManager::NotSupportedError);
 
-    /* Detail definitions */
-    QVERIFY(manager.detailDefinitions().count() == 0);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-
-    QContactDetailDefinition def;
-    def.setUnique(true);
-    def.setName("new field");
-    QMap<QString, QContactDetailFieldDefinition> fields;
-    QContactDetailFieldDefinition currField;
-    currField.setDataType(QVariant::String);
-    fields.insert("value", currField);
-    def.setFields(fields);
-
-    QVERIFY(manager.saveDetailDefinition(def, QContactType::TypeContact) == false);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.saveDetailDefinition(def) == false);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.detailDefinitions().count(QContactType::TypeContact) == 0);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.detailDefinitions().count() == 0);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.detailDefinition("new field").name() == QString());
-    QVERIFY(manager.removeDetailDefinition(def.name(), QContactType::TypeContact) == false);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.removeDetailDefinition(def.name()) == false);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-    QVERIFY(manager.detailDefinitions().count() == 0);
-    QVERIFY(manager.error() == QContactManager::NotSupportedError || manager.error() == QContactManager::InvalidContactTypeError);
-
     /* Self contact id */
     QVERIFY(!manager.setSelfContactId(QContactLocalId(12)));
     QVERIFY(manager.error() == QContactManager::NotSupportedError);
@@ -1761,7 +1517,6 @@ void tst_QContactManager::invalidManager()
     /* Capabilities */
     QVERIFY(manager.supportedDataTypes().count() == 0);
     QVERIFY(!manager.hasFeature(QContactManager::ActionPreferences));
-    QVERIFY(!manager.hasFeature(QContactManager::MutableDefinitions));
 }
 
 void tst_QContactManager::memoryManager()
@@ -1777,7 +1532,6 @@ void tst_QContactManager::memoryManager()
     QContactManager m5("memory", params); // should be another anonymous
 
     QVERIFY(m1.hasFeature(QContactManager::ActionPreferences));
-    QVERIFY(m1.hasFeature(QContactManager::MutableDefinitions));
     QVERIFY(m1.hasFeature(QContactManager::Anonymous));
 
     // add a contact to each of m1, m2, m3
@@ -2148,8 +1902,9 @@ void tst_QContactManager::compatibleContact_data()
     QTest::addColumn<QContactManager::Error>("error");
 
     QContact baseContact;
+    QContact emptyContact;
     QContactName name;
-    name.setFirstName(QLatin1String("First"));
+    name.setFirstName(QStringLiteral("First"));
     baseContact.saveDetail(&name);
 
     {
@@ -2158,87 +1913,21 @@ void tst_QContactManager::compatibleContact_data()
 
     {
         QContact contact(baseContact);
-        QContactDetail detail("UnknownDetail");
-        detail.setValue("Key", QLatin1String("Value"));
-        contact.saveDetail(&detail);
-        QTest::newRow("unknown detail") << contact << baseContact << QContactManager::NoError;
+        QString unknownType("UnknownType");
+        contact.setType(unknownType);
+        QTest::newRow("unknown type") << contact << emptyContact << QContactManager::InvalidContactTypeError;
     }
 
     {
         QContact contact(baseContact);
-        QContactType type1;
-        type1.setType(QContactType::TypeContact);
-        contact.saveDetail(&type1);
-        QContactType type2;
-        type2.setType(QContactType::TypeGroup);
-        contact.saveDetail(&type2);
-        QContact expected(baseContact);
-        expected.saveDetail(&type2);
-        QTest::newRow("duplicate unique field") << contact << expected << QContactManager::NoError;
+        contact.setType(QContactType::TypeContact);
+        QTest::newRow("\"Contact\" type") << contact << contact << QContactManager::NoError;
     }
 
     {
         QContact contact(baseContact);
-        QContactPhoneNumber phoneNumber;
-        phoneNumber.setValue("UnknownKey", "Value");
-        contact.saveDetail(&phoneNumber);
-        QTest::newRow("unknown field") << contact << baseContact << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        QContactDisplayLabel displayLabel;
-        displayLabel.setValue(QContactDisplayLabel::FieldLabel, QStringList("Value"));
-        contact.saveDetail(&displayLabel);
-        QTest::newRow("wrong type") << contact << baseContact << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        QContactPhoneNumber phoneNumber1;
-        phoneNumber1.setNumber(QLatin1String("1234"));
-        phoneNumber1.setSubTypes(QStringList()
-                                << QContactPhoneNumber::SubTypeMobile
-                                << QContactPhoneNumber::SubTypeVoice
-                                << QLatin1String("InvalidSubtype"));
-        contact.saveDetail(&phoneNumber1);
-        QContact expected(baseContact);
-        QContactPhoneNumber phoneNumber2;
-        phoneNumber2.setNumber(QLatin1String("1234"));
-        phoneNumber2.setSubTypes(QStringList()
-                                << QContactPhoneNumber::SubTypeMobile
-                                << QContactPhoneNumber::SubTypeVoice);
-        expected.saveDetail(&phoneNumber2);
-        QTest::newRow("bad value (list)") << contact << expected << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        QContactPhoneNumber phoneNumber1;
-        phoneNumber1.setNumber(QLatin1String("1234"));
-        phoneNumber1.setSubTypes(QStringList(QLatin1String("InvalidSubtype")));
-        contact.saveDetail(&phoneNumber1);
-        QContact expected(baseContact);
-        QContactPhoneNumber phoneNumber2;
-        phoneNumber2.setNumber(QLatin1String("1234"));
-        expected.saveDetail(&phoneNumber2);
-        QTest::newRow("all bad value (list)") << contact << expected << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        QContactGender gender;
-        gender.setGender(QLatin1String("UnknownGender"));
-        contact.saveDetail(&gender);
-        QTest::newRow("bad value (string)") << contact << baseContact << QContactManager::NoError;
-    }
-
-    {
-        QContact contact;
-        QContactGender gender;
-        gender.setGender(QLatin1String("UnknownGender"));
-        contact.saveDetail(&gender);
-        QTest::newRow("bad value (string)") << contact << QContact() << QContactManager::DoesNotExistError;
+        contact.setType(QContactType::TypeGroup);
+        QTest::newRow("\"Group\" type") << contact << contact << QContactManager::NoError;
     }
 }
 
@@ -2253,106 +1942,6 @@ void tst_QContactManager::compatibleContact()
     QCOMPARE(cm.error(), error);
 }
 
-void tst_QContactManager::contactValidation()
-{
-    /* Use the memory engine as a reference (validation is not engine specific) */
-    QScopedPointer<QContactManager> cm(new QContactManager("memory"));
-    QContact c;
-
-    /*
-     * Add some definitions for testing:
-     *
-     * 1) a unique detail
-     * 2) a detail with restricted values
-     * 3) a create only detail
-     * 4) a unique create only detail
-     */
-    QContactDetailDefinition uniqueDef;
-    QMap<QString, QContactDetailFieldDefinition> fields;
-    QContactDetailFieldDefinition field;
-    field.setDataType(QVariant::String);
-    fields.insert("value", field);
-
-    uniqueDef.setName("UniqueDetail");
-    uniqueDef.setFields(fields);
-    uniqueDef.setUnique(true);
-
-    QVERIFY(cm->saveDetailDefinition(uniqueDef));
-
-    QContactDetailDefinition restrictedDef;
-    restrictedDef.setName("RestrictedDetail");
-    fields.clear();
-    field.setAllowableValues(QVariantList() << "One" << "Two" << "Three");
-    fields.insert("value", field);
-    restrictedDef.setFields(fields);
-
-    QVERIFY(cm->saveDetailDefinition(restrictedDef));
-
-    // first, test an invalid definition
-    QContactDetail d1 = QContactDetail("UnknownDefinition");
-    d1.setValue("test", "test");
-    c.saveDetail(&d1);
-    QVERIFY(!cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::InvalidDetailError);
-    c.removeDetail(&d1);
-
-    // second, test an invalid uniqueness constraint
-    QContactDetail d2 = QContactDetail("UniqueDetail");
-    d2.setValue("value", "test");
-    c.saveDetail(&d2);
-
-    // One unique should be ok
-    QVERIFY(cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::NoError);
-
-    // Two uniques should not be ok
-    QContactDetail d3 = QContactDetail("UniqueDetail");
-    d3.setValue("value", "test2");
-    c.saveDetail(&d3);
-    QVERIFY(!cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::AlreadyExistsError);
-    c.removeDetail(&d3);
-    c.removeDetail(&d2);
-
-    // third, test an invalid field name
-    QContactDetail d4 = QContactDetail(QContactPhoneNumber::DefinitionName);
-    d4.setValue("test", "test");
-    c.saveDetail(&d4);
-    QVERIFY(!cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::InvalidDetailError);
-    c.removeDetail(&d4);
-
-    // fourth, test an invalid field data type
-    QContactDetail d5 = QContactDetail(QContactPhoneNumber::DefinitionName);
-    d5.setValue(QContactPhoneNumber::FieldNumber, QDateTime::currentDateTime());
-    c.saveDetail(&d5);
-    QVERIFY(!cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::InvalidDetailError);
-    c.removeDetail(&d5);
-
-    // fifth, test an invalid field value (not in the allowed list)
-    QContactDetail d6 = QContactDetail("RestrictedDetail");
-    d6.setValue("value", "Seven"); // not in One, Two or Three
-    c.saveDetail(&d6);
-    QVERIFY(!cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::InvalidDetailError);
-    c.removeDetail(&d6);
-
-    /* Now a valid value */
-    d6.setValue("value", "Two");
-    c.saveDetail(&d6);
-    QVERIFY(cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::NoError);
-    c.removeDetail(&d6);
-
-    // Test a completely valid one.
-    QContactDetail d7 = QContactDetail(QContactPhoneNumber::DefinitionName);
-    d7.setValue(QContactPhoneNumber::FieldNumber, "0123456");
-    c.saveDetail(&d7);
-    QVERIFY(cm->saveContact(&c));
-    QCOMPARE(cm->error(), QContactManager::NoError);
-    c.removeDetail(&d7);
-}
 
 void tst_QContactManager::observerDeletion()
 {
@@ -2394,11 +1983,9 @@ void tst_QContactManager::signalEmission()
     int modSigCount = 0;
     int remSigCount = 0;
 
-    QContactDetailDefinition nameDef = m1->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact);
-
     // verify add emits signal added
     QContactName nc;
-    saveContactName(&c, nameDef, &nc, "John");
+    saveContactName(&c, &nc, "John");
     QVERIFY(m1->saveContact(&c));
     QContactLocalId cid = c.id().localId();
     addSigCount += 1;
@@ -2414,7 +2001,7 @@ void tst_QContactManager::signalEmission()
     QScopedPointer<QSignalSpy> spyCOR1(new QSignalSpy(c1Observer.data(), SIGNAL(contactRemoved())));
 
     // verify save modified emits signal changed
-    saveContactName(&c, nameDef, &nc, "Citizen");
+    saveContactName(&c, &nc, "Citizen");
     QVERIFY(m1->saveContact(&c));
     modSigCount += 1;
     QTRY_COMPARE(spyCM.count(), modSigCount);
@@ -2439,8 +2026,8 @@ void tst_QContactManager::signalEmission()
     // verify multiple adds works as advertised
     QContact c2, c3;
     QContactName nc2, nc3;
-    saveContactName(&c2, nameDef, &nc2, "Mark");
-    saveContactName(&c3, nameDef, &nc3, "Garry");
+    saveContactName(&c2, &nc2, "Mark");
+    saveContactName(&c3, &nc3, "Garry");
 #if defined(Q_OS_SYMBIAN)
     // TODO: symbiansim backend fails this test currently. Commented out for
     // now. Will be fixed later.
@@ -2452,7 +2039,7 @@ void tst_QContactManager::signalEmission()
     addSigCount += 1;
     QVERIFY(m1->saveContact(&c3));
     addSigCount += 1;
-    if(uri.contains(QLatin1String("tracker"))) {
+    if (uri.contains(QStringLiteral("tracker"))) {
         // tracker backend coalesces signals for performance reasons
         QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCM, modSigCount);
         QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCA, addSigCount);
@@ -2471,20 +2058,20 @@ void tst_QContactManager::signalEmission()
     QScopedPointer<QSignalSpy> spyCOR3(new QSignalSpy(c3Observer.data(), SIGNAL(contactRemoved())));
 
     // verify multiple modifies works as advertised
-    saveContactName(&c2, nameDef, &nc2, "M.");
+    saveContactName(&c2, &nc2, "M.");
     QVERIFY(m1->saveContact(&c2));
     modSigCount += 1;
-    if(uri.contains(QLatin1String("tracker"))) {
+    if (uri.contains(QStringLiteral("tracker"))) {
         // tracker backend coalesces signals for performance reasons, so wait a little
          QTest::qWait(1000);
     }
-    saveContactName(&c2, nameDef, &nc2, "Mark");
-    saveContactName(&c3, nameDef, &nc3, "G.");
+    saveContactName(&c2, &nc2, "Mark");
+    saveContactName(&c3, &nc3, "G.");
     QVERIFY(m1->saveContact(&c2));
     modSigCount += 1;
     QVERIFY(m1->saveContact(&c3));
     modSigCount += 1;
-    if(uri.contains(QLatin1String("tracker"))) {
+    if (uri.contains(QStringLiteral("tracker"))) {
         // tracker backend coalesces signals for performance reasons
         QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCM, modSigCount);
     } else {
@@ -2499,7 +2086,7 @@ void tst_QContactManager::signalEmission()
     remSigCount += 1;
     m1->removeContact(c2.id().localId());
     remSigCount += 1;
-    if(uri.contains(QLatin1String("tracker"))) {
+    if (uri.contains(QStringLiteral("tracker"))) {
         // tracker backend coalesces signals for performance reasons
         QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCR, remSigCount);
     } else {
@@ -2509,7 +2096,7 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCOR3->count(), 1);
     QCOMPARE(spyCOR1->count(), 0);
 
-    if(! uri.contains(QLatin1String("tracker"))) {
+    if (! uri.contains(QStringLiteral("tracker"))) {
         // The tracker backend does not support checking for existance of a contact.
         QVERIFY(!m1->removeContact(c.id().localId())); // not saved.
     }
@@ -2551,11 +2138,11 @@ void tst_QContactManager::signalEmission()
 
     /* Batch modifies */
     QContactName modifiedName = c.detail(QContactName::DefinitionName);
-    saveContactName(&c, nameDef, &modifiedName, "Modified number 1");
+    saveContactName(&c, &modifiedName, "Modified number 1");
     modifiedName = c2.detail(QContactName::DefinitionName);
-    saveContactName(&c2, nameDef, &modifiedName, "Modified number 2");
+    saveContactName(&c2, &modifiedName, "Modified number 2");
     modifiedName = c3.detail(QContactName::DefinitionName);
-    saveContactName(&c3, nameDef, &modifiedName, "Modified number 3");
+    saveContactName(&c3, &modifiedName, "Modified number 3");
 
     batchAdd.clear();
     batchAdd << c << c2 << c3;
@@ -2603,10 +2190,10 @@ void tst_QContactManager::signalEmission()
     if (!m1->hasFeature(QContactManager::Anonymous)) {
         // verify that signals are emitted for modifications made to other managers (same id).
         QContactName ncs = c.detail(QContactName::DefinitionName);
-        saveContactName(&c, nameDef, &ncs, "Test");
+        saveContactName(&c, &ncs, "Test");
         c.setId(QContactId()); // reset id so save can succeed.
         QVERIFY(m2->saveContact(&c));
-        saveContactName(&c, nameDef, &ncs, "Test2");
+        saveContactName(&c, &ncs, "Test2");
         QVERIFY(m2->saveContact(&c));
         QTRY_COMPARE(spyCA.count(), 1); // check that we received the update signals.
         QTRY_COMPARE(spyCM.count(), 1); // check that we received the update signals.
@@ -2649,275 +2236,6 @@ void tst_QContactManager::errorStayingPut()
     QVERIFY(m2.error() == QContactManager::BadArgumentError);
 }
 
-void tst_QContactManager::validateDefinitions(const QMap<QString, QContactDetailDefinition>& defs) const
-{
-
-    // Do some sanity checking on the definitions first
-    if (defs.keys().count() != defs.uniqueKeys().count()) {
-        qDebug() << "ERROR - duplicate definitions with the same name:";
-
-        QList<QString> defkeys = defs.keys();
-        foreach(QString uniq, defs.uniqueKeys()) {
-            if (defkeys.count(uniq) > 1) {
-                qDebug() << QString(" %1").arg(uniq).toAscii().constData();
-                defkeys.removeAll(uniq);
-            }
-        }
-        QVERIFY(defs.keys().count() == defs.uniqueKeys().count());
-    }
-
-    foreach(QContactDetailDefinition def, defs.values()) {
-        QMap<QString, QContactDetailFieldDefinition> fields = def.fields();
-
-        // Again some sanity checking
-        if (fields.keys().count() != fields.uniqueKeys().count()) {
-            qDebug() << "ERROR - duplicate fields with the same name:";
-
-            QList<QString> defkeys = fields.keys();
-            foreach(QString uniq, fields.uniqueKeys()) {
-                if (defkeys.count(uniq) > 1) {
-                    qDebug() << QString(" %2::%1").arg(uniq).arg(def.name()).toAscii().constData();
-                    defkeys.removeAll(uniq);
-                }
-            }
-            QVERIFY(fields.keys().count() == fields.uniqueKeys().count());
-        }
-
-        foreach(QContactDetailFieldDefinition field, def.fields().values()) {
-            // Sanity check the allowed values
-            if (field.allowableValues().count() > 0) {
-                if (field.dataType() == QVariant::StringList) {
-                    // We accept QString or QStringList allowed values
-                    foreach(QVariant var, field.allowableValues()) {
-                        if (var.type() != QVariant::String && var.type() != QVariant::StringList) {
-                            QString foo;
-                            QDebug dbg(&foo);
-                            dbg.nospace() << var;
-                            qDebug().nospace() << "Field " << QString("%1::%2").arg(def.name()).arg(def.fields().key(field)).toAscii().constData() << " allowable value '" << foo.simplified().toAscii().constData() << "' not supported for field type " << QMetaType::typeName(field.dataType());
-                        }
-                        QVERIFY(var.type() == QVariant::String || var.type() == QVariant::StringList);
-                    }
-                } else if (field.dataType() == QVariant::List || field.dataType() == QVariant::Map || field.dataType() == (QVariant::Type) qMetaTypeId<QVariant>()) {
-                    // Well, anything goes
-                } else {
-                    // The type of each allowed value must match the data type
-                    foreach(QVariant var, field.allowableValues()) {
-                        if (var.type() != field.dataType()) {
-                            QString foo;
-                            QDebug dbg(&foo);
-                            dbg.nospace() << var;
-                            qDebug().nospace() << "Field " << QString("%1::%2").arg(def.name()).arg(def.fields().key(field)).toAscii().constData() << " allowable value '" << foo.simplified().toAscii().constData() << "' not supported for field type " << QMetaType::typeName(field.dataType());
-                        }
-                        QVERIFY(var.type() == field.dataType());
-                    }
-                }
-            }
-        }
-    }
-}
-
-void tst_QContactManager::engineDefaultSchema()
-{
-    /* Test the default schemas - mostly just that they are valid, and v2 has certain changes */
-    QMap<QString, QMap<QString, QContactDetailDefinition> > v1defaultSchemas = QContactManagerEngine::schemaDefinitions();
-    QMap<QString, QMap<QString, QContactDetailDefinition> > v1Schemas = QContactManagerEngine::schemaDefinitions(1);
-    QMap<QString, QMap<QString, QContactDetailDefinition> > v2Schemas = QContactManagerEngine::schemaDefinitions(2);
-
-    QVERIFY(v1Schemas == v1defaultSchemas);
-    QVERIFY(v1Schemas != v2Schemas);
-
-    QCOMPARE(v1Schemas.keys().count(), v1Schemas.uniqueKeys().count());
-    QCOMPARE(v2Schemas.keys().count(), v2Schemas.uniqueKeys().count());
-
-    foreach(const QString& type, v1Schemas.keys()) {
-        validateDefinitions(v1Schemas.value(type));
-    }
-
-    foreach(const QString& type, v2Schemas.keys()) {
-        validateDefinitions(v2Schemas.value(type));
-    }
-
-    /* Make sure that birthdays do not have calendar ids in v1, but do in v2*/
-    QVERIFY(!v1Schemas.value(QContactType::TypeContact).value(QContactBirthday::DefinitionName).fields().contains(QContactBirthday::FieldCalendarId));
-    QVERIFY(!v1Schemas.value(QContactType::TypeGroup).value(QContactBirthday::DefinitionName).fields().contains(QContactBirthday::FieldCalendarId));
-    QVERIFY(v2Schemas.value(QContactType::TypeContact).value(QContactBirthday::DefinitionName).fields().contains(QContactBirthday::FieldCalendarId));
-    QVERIFY(v2Schemas.value(QContactType::TypeGroup).value(QContactBirthday::DefinitionName).fields().contains(QContactBirthday::FieldCalendarId));
-
-    /* Urls can be blogs in v2 but not b1 */
-    QVERIFY(!v1Schemas.value(QContactType::TypeContact).value(QContactUrl::DefinitionName).fields().value(QContactUrl::FieldSubType).allowableValues().contains(QString(QLatin1String(QContactUrl::SubTypeBlog))));
-    QVERIFY(!v1Schemas.value(QContactType::TypeGroup).value(QContactUrl::DefinitionName).fields().value(QContactUrl::FieldSubType).allowableValues().contains(QString(QLatin1String(QContactUrl::SubTypeBlog))));
-    QVERIFY(v2Schemas.value(QContactType::TypeContact).value(QContactUrl::DefinitionName).fields().value(QContactUrl::FieldSubType).allowableValues().contains(QString(QLatin1String(QContactUrl::SubTypeBlog))));
-    QVERIFY(v2Schemas.value(QContactType::TypeGroup).value(QContactUrl::DefinitionName).fields().value(QContactUrl::FieldSubType).allowableValues().contains(QString(QLatin1String(QContactUrl::SubTypeBlog))));
-
-    /* Make sure family, favorite and hobby are not in v1, but are in v2 */
-    QVERIFY(!v1Schemas.value(QContactType::TypeContact).contains(QContactFamily::DefinitionName));
-    QVERIFY(!v1Schemas.value(QContactType::TypeGroup).contains(QContactFamily::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeContact).contains(QContactFamily::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeGroup).contains(QContactFamily::DefinitionName));
-
-    QVERIFY(!v1Schemas.value(QContactType::TypeContact).contains(QContactFavorite::DefinitionName));
-    QVERIFY(!v1Schemas.value(QContactType::TypeGroup).contains(QContactFavorite::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeContact).contains(QContactFavorite::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeGroup).contains(QContactFavorite::DefinitionName));
-
-    QVERIFY(!v1Schemas.value(QContactType::TypeContact).contains(QContactHobby::DefinitionName));
-    QVERIFY(!v1Schemas.value(QContactType::TypeGroup).contains(QContactHobby::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeContact).contains(QContactHobby::DefinitionName));
-    QVERIFY(v2Schemas.value(QContactType::TypeGroup).contains(QContactHobby::DefinitionName));
-}
-
-void tst_QContactManager::detailDefinitions()
-{
-    QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-    QMap<QString, QContactDetailDefinition> defs = cm->detailDefinitions();
-
-    /* Validate the existing definitions */
-    foreach(const QString& contactType, cm->supportedContactTypes()) {
-        validateDefinitions(cm->detailDefinitions(contactType));
-    }
-
-    /* Try to make a credible definition */
-    QContactDetailDefinition newDef;
-    QContactDetailFieldDefinition field;
-    QMap<QString, QContactDetailFieldDefinition> fields;
-    field.setDataType(cm->supportedDataTypes().value(0));
-    fields.insert("New Value", field);
-    newDef.setName("New Definition");
-    newDef.setFields(fields);
-
-    /* Updated version of an existing definition */
-    QContactDetailDefinition updatedDef = defs.begin().value(); // XXX TODO Fixme
-    fields = updatedDef.fields();
-    fields.insert("New Value", field);
-    updatedDef.setFields(fields);
-
-    /* A detail definition with valid allowed values (or really just one) */
-    QContactDetailDefinition allowedDef = newDef;
-    field.setAllowableValues(field.allowableValues() << (QVariant(field.dataType())));
-    fields.clear();
-    fields.insert("Restricted value", field);
-    allowedDef.setFields(fields);
-
-    /* Many invalid definitions */
-    QContactDetailDefinition noIdDef;
-    noIdDef.setFields(fields);
-
-    QContactDetailDefinition noFieldsDef;
-    noFieldsDef.setName("No fields");
-
-    QContactDetailDefinition invalidFieldKeyDef;
-    invalidFieldKeyDef.setName("Invalid field key");
-    QMap<QString, QContactDetailFieldDefinition> badfields;
-    badfields.insert(QString(), field);
-    invalidFieldKeyDef.setFields(badfields);
-
-    QContactDetailDefinition invalidFieldTypeDef;
-    invalidFieldTypeDef.setName("Invalid field type");
-    badfields.clear();
-    QContactDetailFieldDefinition badfield;
-    badfield.setDataType((QVariant::Type) qMetaTypeId<UnsupportedMetatype>());
-    badfields.insert("Bad type", badfield);
-    invalidFieldTypeDef.setFields(badfields);
-
-    QContactDetailDefinition invalidAllowedValuesDef;
-    invalidAllowedValuesDef.setName("Invalid field allowed values");
-    badfields.clear();
-    badfield.setDataType(field.dataType()); // use a supported type
-    badfield.setAllowableValues(QList<QVariant>() << "String" << 5); // but unsupported value
-    badfields.insert("Bad allowed", badfield);
-    invalidAllowedValuesDef.setFields(badfields);
-
-    /* XXX Multiply defined fields.. depends on semantichangeSet. */
-
-    if (cm->hasFeature(QContactManager::MutableDefinitions)) {
-        /* First do some negative testing */
-
-        /* Bad add class */
-        QVERIFY(cm->saveDetailDefinition(QContactDetailDefinition()) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        /* Bad remove string */
-        QVERIFY(cm->removeDetailDefinition(QString()) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(noIdDef) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(noFieldsDef) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(invalidFieldKeyDef) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(invalidFieldTypeDef) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        QVERIFY(cm->saveDetailDefinition(invalidAllowedValuesDef) == false);
-        QVERIFY(cm->error() == QContactManager::BadArgumentError);
-
-        /* Check that our new definition doesn't already exist */
-        QVERIFY(cm->detailDefinition(newDef.name()).isEmpty());
-        QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-
-        QVERIFY(cm->removeDetailDefinition(newDef.name()) == false);
-        QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-
-        /* Add a new definition */
-        QVERIFY(cm->saveDetailDefinition(newDef) == true);
-        QVERIFY(cm->error() == QContactManager::NoError);
-
-        /* Now retrieve it */
-        QContactDetailDefinition def = cm->detailDefinition(newDef.name());
-        QVERIFY(def == newDef);
-
-        /* Update it */
-        QMap<QString, QContactDetailFieldDefinition> newFields = def.fields();
-        newFields.insert("Another new value", field);
-        newDef.setFields(newFields);
-
-        QVERIFY(cm->saveDetailDefinition(newDef) == true);
-        QVERIFY(cm->error() == QContactManager::NoError);
-
-        QVERIFY(cm->detailDefinition(newDef.name()) == newDef);
-
-        /* Remove it */
-        QVERIFY(cm->removeDetailDefinition(newDef.name()) == true);
-        QVERIFY(cm->error() == QContactManager::NoError);
-
-        /* and make sure it does not exist any more */
-        QVERIFY(cm->detailDefinition(newDef.name()) == QContactDetailDefinition());
-        QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-
-        /* Add the other good one */
-        QVERIFY(cm->saveDetailDefinition(allowedDef) == true);
-        QVERIFY(cm->error() == QContactManager::NoError);
-
-        QVERIFY(allowedDef == cm->detailDefinition(allowedDef.name()));
-
-        /* and remove it */
-        QVERIFY(cm->removeDetailDefinition(allowedDef.name()) == true);
-        QVERIFY(cm->detailDefinition(allowedDef.name()) == QContactDetailDefinition());
-        QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-
-    } else {
-        /* Bad add class */
-        QVERIFY(cm->saveDetailDefinition(QContactDetailDefinition()) == false);
-        QVERIFY(cm->error() == QContactManager::NotSupportedError);
-
-        /* Make sure we can't add/remove/modify detail definitions */
-        QVERIFY(cm->removeDetailDefinition(QString()) == false);
-        QVERIFY(cm->error() == QContactManager::NotSupportedError);
-
-        /* Try updating an existing definition */
-        QVERIFY(cm->saveDetailDefinition(updatedDef) == false);
-        QVERIFY(cm->error() == QContactManager::NotSupportedError);
-
-        /* Try removing an existing definition */
-        QVERIFY(cm->removeDetailDefinition(updatedDef.name()) == false);
-        QVERIFY(cm->error() == QContactManager::NotSupportedError);
-    }
-}
 
 void tst_QContactManager::displayName()
 {
@@ -2932,7 +2250,7 @@ void tst_QContactManager::displayName()
     /* Try to make this a bit more consistent by using a single name */
     QContact d;
     QContactName name;
-    saveContactName(&d, cm->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact), &name, "Wesley");
+    saveContactName(&d, &name, "Wesley");
 
     QVERIFY(d.displayLabel().isEmpty());
 
@@ -2995,7 +2313,7 @@ void tst_QContactManager::actionPreferences()
     u.setUrl("http://test.nokia.com");
     QContactName n;
     QContact c;
-    saveContactName(&c, cm->detailDefinition(QContactName::DefinitionName, QContactType::TypeContact), &n, "TestContact");
+    saveContactName(&c, &n, "TestContact");
     c.saveDetail(&a);
     c.saveDetail(&p1);
     c.saveDetail(&p2);
@@ -3102,7 +2420,7 @@ void tst_QContactManager::fetchHint()
     hint.setOptimizationHints(QContactFetchHint::NoBinaryBlobs);
     QCOMPARE(hint.optimizationHints(), QContactFetchHint::NoBinaryBlobs);
     QStringList rels;
-    rels << QString(QLatin1String(QContactRelationship::HasMember));
+    rels << QString(QStringLiteral(QContactRelationship::HasMember));
     hint.setRelationshipTypesHint(rels);
     QCOMPARE(hint.relationshipTypesHint(), rels);
     QStringList defs;
@@ -3199,13 +2517,7 @@ void tst_QContactManager::detailOrders()
     QContact a;
     //phone numbers
 
-    QContactDetailDefinition d = cm->detailDefinition(QContactPhoneNumber::DefinitionName, QContactType::TypeContact);
-    QContactDetailFieldDefinition supportedContexts = d.fields().value(QContactDetail::FieldContext);
     QString contextOther = QContactDetail::ContextOther;
-    if (!supportedContexts.allowableValues().contains(contextOther)) {
-        contextOther = QString();
-    }    
-    
     QContactPhoneNumber number1, number2, number3;
     
     number1.setNumber("11111111");
@@ -3251,12 +2563,7 @@ void tst_QContactManager::detailOrders()
 
     //addresses
     
-    d = cm->detailDefinition(QContactAddress::DefinitionName, QContactType::TypeContact);
-    supportedContexts = d.fields().value(QContactDetail::FieldContext);
-    contextOther = QString(QLatin1String(QContactDetail::ContextOther));
-    if (!supportedContexts.allowableValues().contains(contextOther)) {
-        contextOther = QString();
-    }     
+    contextOther = QLatin1String(QContactDetail::ContextOther);
     
     QContactAddress address1, address2, address3;
     
@@ -3303,13 +2610,8 @@ void tst_QContactManager::detailOrders()
 
 
     //emails
-    d = cm->detailDefinition(QContactEmailAddress::DefinitionName, QContactType::TypeContact);
-    supportedContexts = d.fields().value(QContactDetail::FieldContext);
-    contextOther = QString(QLatin1String(QContactDetail::ContextOther));
-    if (!supportedContexts.allowableValues().contains(contextOther)) {
-        contextOther = QString();
-    }      
-    
+    contextOther = QLatin1String(QContactDetail::ContextOther);
+
     QContactEmailAddress email1, email2, email3;
 
     email1.setEmailAddress("aaron@example.com");
@@ -3722,7 +3024,7 @@ void tst_QContactManager::relationships()
     source = cm->contact(source.localId());
     QVERIFY(!source.relatedContacts().contains(dest2)); // and it shouldn't appear in cache.
 
-    if (cm->managerName() == QLatin1String("tracker")) {
+    if (cm->managerName() == QStringLiteral("tracker")) {
         QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test.");
         return;
     }
@@ -3770,7 +3072,7 @@ void tst_QContactManager::contactType()
     // test that the accessing by type works properly
     QContactDetailFilter groupFilter;
     groupFilter.setDetailDefinitionName(QContactType::DefinitionName, QContactType::FieldType);
-    groupFilter.setValue(QString(QLatin1String(QContactType::TypeGroup)));
+    groupFilter.setValue(QContactType::TypeGroup);
     QVERIFY(cm->contactIds(groupFilter).contains(g1.localId()));
     QVERIFY(cm->contactIds(groupFilter).contains(g2.localId()));
     QVERIFY(!cm->contactIds(groupFilter).contains(c.localId()));
@@ -3808,10 +3110,10 @@ void tst_QContactManager::partialSave()
     QCOMPARE(reader.results().count(), 4);
     QVERIFY(imp.importDocuments(reader.results()));
     QCOMPARE(imp.contacts().count(), 4);
-    QVERIFY(imp.contacts()[0].displayLabel() == QLatin1String("Alice"));
-    QVERIFY(imp.contacts()[1].displayLabel() == QLatin1String("Bob"));
-    QVERIFY(imp.contacts()[2].displayLabel() == QLatin1String("Carol"));
-    QVERIFY(imp.contacts()[3].displayLabel() == QLatin1String("David"));
+    QVERIFY(imp.contacts()[0].displayLabel() == QStringLiteral("Alice"));
+    QVERIFY(imp.contacts()[1].displayLabel() == QStringLiteral("Bob"));
+    QVERIFY(imp.contacts()[2].displayLabel() == QStringLiteral("Carol"));
+    QVERIFY(imp.contacts()[3].displayLabel() == QStringLiteral("David"));
 
     QList<QContact> contacts = imp.contacts();
     QMap<int, QContactManager::Error> errorMap;
@@ -3966,60 +3268,6 @@ void tst_QContactManager::lateDeletion()
     QContactManager* cm = QContactManager::fromUri(uri);
 
     cm->setParent(qApp); // now do nothing
-}
-
-class errorSemanticsTester : public QObject {
-    Q_OBJECT;
-public:
-    bool initialErrorWasDoesNotExist;
-    bool slotErrorWasBadArgument;
-    QContactManager* mManager;
-
-    errorSemanticsTester(QContactManager* manager)
-        : initialErrorWasDoesNotExist(false),
-        slotErrorWasBadArgument(false),
-        mManager(manager)
-    {
-        connect(manager, SIGNAL(contactsAdded(QList<QContactLocalId>)), this, SLOT(handleAdded()));
-    }
-
-public slots:
-    void handleAdded()
-    {
-        // Make sure the initial error state is correct
-         initialErrorWasDoesNotExist = mManager->error() == QContactManager::DoesNotExistError;
-        // Now force a different error
-        mManager->removeContacts(QList<QContactLocalId>());
-        slotErrorWasBadArgument = mManager->error() == QContactManager::BadArgumentError;
-        // and return
-    }
-};
-
-void tst_QContactManager::errorSemantics()
-{
-    /*
-        Test to make sure that calling functions in response to signals doesn't upset the correct error results
-        This relies on the memory engine emitting signals before e.g. saveContacts returns
-     */
-
-    QContactManager m("memory");
-    errorSemanticsTester t(&m);
-
-    QVERIFY(m.error() == QContactManager::NoError);
-
-    QContactDetailDefinition nameDef = m.detailDefinition(QContactName::DefinitionName, QContactType::TypeContact);
-    QContact alice = createContact(nameDef, "Alice", "inWonderland", "1234567");
-
-    // Try creating some specific error so we can test it later on
-    QContact a = m.contact("567");
-    QVERIFY(m.error() == QContactManager::DoesNotExistError);
-
-    // Now save something
-    QVERIFY(m.saveContact(&alice));
-
-    QVERIFY(t.initialErrorWasDoesNotExist);
-    QVERIFY(t.slotErrorWasBadArgument);
-    QVERIFY(m.error() == QContactManager::NoError);
 }
 
 void tst_QContactManager::lazyConnections()

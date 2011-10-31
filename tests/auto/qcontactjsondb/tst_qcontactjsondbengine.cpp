@@ -82,6 +82,8 @@ private Q_SLOTS:
     void testContactSortOrder();
     void testContactSortOrder_data();
     void testContactUpdate();
+    void testExtendedDetailsFromJsonDb();
+    void testExtendedDetailsToJsonDb();
 
 private:
     QContactJsonDbEngine* m_engine;
@@ -319,6 +321,164 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     QCOMPARE(embeddedEmailMap.value("extra8"), QVariant());
 
     delete jsonConnection;
+}
+
+
+void tst_QContactJsondbEngine::testExtendedDetailsFromJsonDb() {
+
+    // Fetch existing contacts.
+    QContactManager cm;
+    QContactLocalIdFilter localIdFilter;
+    QList<QContactSortOrder> sortOrders;
+    QList<QContact> contacts = cm.contacts(localIdFilter, sortOrders);
+
+    // Take first of them as test contact.
+    QContact testContact = contacts[0];
+    localIdFilter.add(testContact.localId());
+
+    // Convert QContact to JsonDb contact and insert unknown properties to json contact.
+    QVariantMap jsonContact;
+    QContactJsonDbConverter jsonDbConverter;
+    int extraFieldInContactDetails = 5;
+
+    QVERIFY(jsonDbConverter.toJsonContact(&jsonContact, testContact));
+    jsonContact.insert("simpleStringDetail", "Simple string as detail data.");
+
+    QVariantMap variantMap;
+    variantMap.insert("MapItemInt", 1);
+    variantMap.insert("MapItemQString", "QStringData");
+    variantMap.insert("MapItemQVariant", QVariant( QString("QStringInQVariant")));
+    variantMap.insert("MapItemQVariantList", QVariantList() << QString("QStringInVariantList") << 5 );
+
+    QVariantMap jsonData;
+    jsonData.insert("QStringItem", "Content for QStringItem.");
+    jsonData.insert("MapInMap", variantMap);
+    jsonContact.insert("complexVariantMapDetail", jsonData);
+    jsonContact.insert("anotherSimilarComplexVariantMapDetail", jsonData);
+
+    QVariantMap embeddedDetailsMap;
+    embeddedDetailsMap["extra5"] = extraFieldInContactDetails;
+    jsonContact.insert("details", embeddedDetailsMap);
+
+    // Save test contact with unknown properties directly to the jsondb.
+    JsonDbConnection* jsonConnection = new JsonDbConnection(this);
+    jsonConnection->connectToServer();
+    QVariantMap jsonResponse = JsonDbConnection::makeUpdateRequest(jsonContact);
+    jsonResponse = JsonDbConnection::instance()->sync(jsonResponse).value<QVariantMap>();
+    delete jsonConnection;
+
+    // Check that the unknown properties come up as extended details.
+    QList<QContact> contactsNow = cm.contacts(localIdFilter, sortOrders);
+    foreach (QContact contact, contactsNow ) {
+        if (contact.localId() == testContact.localId()) {
+            QList<QContactExtendedDetail> extendedDetails = contact.details<QContactExtendedDetail>();
+            QCOMPARE(extendedDetails.size(), 3);
+            for (int i = 0; i < extendedDetails.size(); ++i) {
+                if (extendedDetails.at(i).name() == "simpleStringDetail") {
+                    QCOMPARE(extendedDetails[i].data().toString(), QString("Simple string as detail data."));
+                }
+                if (extendedDetails.at(i).name() == "complexVariantMapDetail") {
+                    QVariantMap extendedDetailItems = extendedDetails[i].data().toMap();
+                    QCOMPARE(extendedDetailItems.value("QStringItem").toString(), QString("Content for QStringItem."));
+                    QVariantMap returnMap = extendedDetailItems.value("MapInMap").toMap();
+                    QCOMPARE(returnMap.value("MapItemInt").toInt(), 1);
+                    QCOMPARE(returnMap.value("MapItemQString").toString(), QString("QStringData"));
+                    QCOMPARE(returnMap.value("MapItemQVariant").toString(), QString("QStringInQVariant"));
+                    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(0).toString(), QString("QStringInVariantList"));
+                    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(1).toInt(), 5);
+                }
+                if (extendedDetails.at(i).name() == "anotherSimilarComplexVariantMapDetail") {
+                    QVariantMap extendedDetailItems = extendedDetails[i].data().toMap();
+                    QCOMPARE(extendedDetailItems.value("QStringItem").toString(), QString("Content for QStringItem."));
+                    QVariantMap returnMap = extendedDetailItems.value("MapInMap").toMap();
+                    QCOMPARE(returnMap.value("MapItemInt").toInt(), 1);
+                    QCOMPARE(returnMap.value("MapItemQString").toString(), QString("QStringData"));
+                    QCOMPARE(returnMap.value("MapItemQVariant").toString(), QString("QStringInQVariant"));
+                    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(0).toString(), QString("QStringInVariantList"));
+                    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(1).toInt(), 5);
+                }
+            }
+        }
+    }
+}
+
+void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
+
+    // Fetch existing contacts.
+    QContactManager cm;
+    QContactLocalIdFilter localIdFilter;
+    QList<QContactSortOrder> sortOrders;
+    QList<QContact> contacts = cm.contacts(localIdFilter, sortOrders);
+
+    // Take first of them as test contact for update test.
+    QContact testContact = contacts[0];
+    localIdFilter.add(testContact.localId());
+    QContactFetchRequest fetchRequest;
+    fetchRequest.setFilter(localIdFilter);
+
+    // Add simple string as extended detail.
+    QContactExtendedDetail extendedDetail;
+    extendedDetail.setName("extendedDetailQString");
+    extendedDetail.setData(QString("Simple QString as extended detail."));
+    testContact.saveDetail(&extendedDetail);
+
+    // Add QVariantList as extended detail.
+    QContactExtendedDetail variantListDetail;
+    variantListDetail.setName("extendedDetailQVariantList");
+    variantListDetail.setData(QVariantList() << QString("QString in the QVariantlist detail.")
+                              << QVariant(1)
+                              << QString("Another QString in the QVariantlist detail.")
+                              << 2);
+    testContact.saveDetail(&variantListDetail);
+
+    // Add exteded details with a complex variantmap data in to test contact and save it.
+    QContactExtendedDetail complexExtendedDetail;
+    complexExtendedDetail.setName("complexExtendedDetail");
+    QVariantMap variantMap;
+    variantMap.insert("mapItemInt", 3);
+    variantMap.insert("mapItemQString", QString("QString item in QVariantMap"));
+    variantMap.insert("mapItemVariant", QVariant(QString("QString item as QVariant in QVariantMap")));
+    variantMap.insert("mapItemVariantList", QVariantList()
+                      << QString("QString item in QVariantList in QVarianMap")
+                      << QVariant(4)
+                      << QString("Another QString item in QVariantList in QVariantMap"));
+    complexExtendedDetail.setData(variantMap);
+    testContact.saveDetail(&complexExtendedDetail);
+    cm.saveContact(&testContact);
+
+    //Fetch saved test contact data directly from jsondb.
+    QContactJsonDbConverter jsonDbConverter;
+    QString finalQuery = jsonDbConverter.queryFromRequest(&fetchRequest);
+    JsonDbConnection* jsonConnection = new JsonDbConnection(this);
+    jsonConnection->connectToServer();
+    QVariantMap jsonDbItem = JsonDbConnection::makeQueryRequest(finalQuery);
+    jsonDbItem = JsonDbConnection::instance()->sync(jsonDbItem).value<QVariantMap>();
+    delete jsonConnection;
+    QVERIFY(!jsonDbItem.isEmpty());
+    QVariantList jsonDbObjectList = jsonDbItem.value("data").toList();
+    QVERIFY(!jsonDbObjectList.isEmpty());
+    QVariantMap jsonContact = jsonDbObjectList.at(0).toMap();
+
+
+    // Check simple extended detail got correctly to jsondb.
+    QCOMPARE(jsonContact["extendedDetailQString"].value<QVariant>().toString(),QString("Simple QString as extended detail."));
+
+    // Check variantlist exteded details got correctly to jsondb.
+    QVariantList variantList = jsonContact["extendedDetailQVariantList"].value<QVariant>().toList();
+    QCOMPARE( variantList[0].toString(), QString("QString in the QVariantlist detail."));
+    QCOMPARE( variantList[1].toInt(), 1);
+    QCOMPARE( variantList[2].toString(), QString("Another QString in the QVariantlist detail."));
+    QCOMPARE( variantList[3].toInt(),2);
+
+    // Check complex extended detail field got correctly to jsondb.
+    QVariantMap convertedVariantMap = jsonContact["complexExtendedDetail"].value<QVariant>().toMap();
+    QCOMPARE( convertedVariantMap["mapItemInt"].toInt(), 3);
+    QCOMPARE( convertedVariantMap["mapItemQString"].toString(),QString("QString item in QVariantMap"));
+    QCOMPARE( convertedVariantMap["mapItemVariant"].toString(),QString("QString item as QVariant in QVariantMap"));
+    variantList = convertedVariantMap["mapItemVariantList"].toList();
+    QCOMPARE( variantList[0].toString(), QString("QString item in QVariantList in QVarianMap"));
+    QCOMPARE( variantList[1].toInt(), 4);
+    QCOMPARE( variantList[2].toString(), QString("Another QString item in QVariantList in QVariantMap"));
 }
 
 

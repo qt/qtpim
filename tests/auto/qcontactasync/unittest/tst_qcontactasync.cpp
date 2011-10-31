@@ -51,7 +51,6 @@
 #include <QContactDetailFilter>
 #include <QContactUrl>
 #include <QContactPhoneNumber>
-#include <QContactDetailDefinitionFetchRequest>
 #include <QContactFetchByIdRequest>
 #include <QContactLocalIdFetchRequest>
 #include <QContactRemoveRequest>
@@ -59,8 +58,6 @@
 #include <QContactEmailAddress>
 #include <QContactOnlineAccount>
 #include <QContactTag>
-#include <QContactDetailDefinitionRemoveRequest>
-#include <QContactDetailDefinitionSaveRequest>
 #include <QContactOrganization>
 #include <QContactRelationshipFetchRequest>
 #include <QContactRelationshipRemoveRequest>
@@ -74,13 +71,9 @@ QTCONTACTS_USE_NAMESPACE
 
 /* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
 #define FILL_QUEUE_WITH_FETCH_REQUESTS() QContactFetchRequest fqcfr1, fqcfr2, fqcfr3; \
-                                         QContactDetailDefinitionFetchRequest fqdfr1, fqdfr2, fqdfr3; \
                                          fqcfr1.start(); \
                                          fqcfr2.start(); \
-                                         fqcfr3.start(); \
-                                         fqdfr1.start(); \
-                                         fqdfr2.start(); \
-                                         fqdfr3.start();
+                                         fqcfr3.start();
 
 //TESTED_COMPONENT=src/contacts
 //TESTED_CLASS=
@@ -225,13 +218,6 @@ private slots:
     void contactPartialSave_data() { addManagers(); }
     void contactPartialSaveAsync();
     void contactPartialSaveAsync_data() {addManagers();}
-
-    void definitionFetch();
-    void definitionFetch_data() { addManagers(); }
-    void definitionRemove();
-    void definitionRemove_data() { addManagers(); }
-    void definitionSave();
-    void definitionSave_data() { addManagers(); }
 
     void relationshipFetch();
     void relationshipFetch_data() { addManagers(); }
@@ -1276,37 +1262,30 @@ void tst_QContactAsync::contactPartialSave()
     QCOMPARE(contacts[4].details<QContactEmailAddress>().count(), 0); // not saved
     QCOMPARE(contacts[4].details<QContactPhoneNumber>().count(), 1); // saved
 
-    // 6) Have a bad manager uri in the middle followed by a save error
+    // 6) Have a bad manager uri in the middle
     QContactId id3(contacts[3].id());
     QContactId badId(id3);
     badId.setManagerUri(QString());
     contacts[3].setId(badId);
-    QContactDetail badDetail("BadDetail");
-    badDetail.setValue("BadField", "BadValue");
-    contacts[4].saveDetail(&badDetail);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList("BadDetail"));
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() != QContactManager::NoError);
+    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
     QMap<int, QContactManager::Error> errorMap(csr.errorMap());
-    QCOMPARE(errorMap.count(), 2);
+    QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[3], QContactManager::DoesNotExistError);
-    QCOMPARE(errorMap[4], QContactManager::InvalidDetailError);
 
-    // 7) Have a non existing contact in the middle followed by a save error
+    // 7) Have a non existing contact in the middle
     badId = id3;
     badId.setLocalId("987234"); // something nonexistent (hopefully)
     contacts[3].setId(badId);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList("BadDetail"));
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() != QContactManager::NoError);
+    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
     errorMap = csr.errorMap();
-    QCOMPARE(errorMap.count(), 2);
+    QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[3], QContactManager::DoesNotExistError);
-    QCOMPARE(errorMap[4], QContactManager::InvalidDetailError);
 
     // 8) A list entirely of new contacts, with no details in the mask
     QList<QContact> contacts2;
@@ -1344,7 +1323,7 @@ void tst_QContactAsync::contactPartialSave()
     QCOMPARE(contacts2[0].details<QContactEmailAddress>().count(), 0); // not saved
     QCOMPARE(contacts2[0].details<QContactPhoneNumber>().count(), 1); // saved
 
-    // 10) A list entirely of new contacts, with some details in the mask
+    // 10) A list entirely of new contacts
     contacts2.clear();
     QVERIFY(newContact.localId() == 0);
     QVERIFY(newContact.details<QContactEmailAddress>().count() == 1);
@@ -1352,16 +1331,13 @@ void tst_QContactAsync::contactPartialSave()
     contacts2.append(newContact);
     contacts2.append(newContact);
     contacts2[0].setId(badId);
-    contacts2[1].saveDetail(&badDetail);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList("BadDetail"));
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() != QContactManager::NoError);
+    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
     errorMap = csr.errorMap();
-    QCOMPARE(errorMap.count(), 2);
+    QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[0], QContactManager::DoesNotExistError);
-    QCOMPARE(errorMap[1], QContactManager::InvalidDetailError);
 }
 
 void tst_QContactAsync::contactPartialSaveAsync()
@@ -1405,462 +1381,6 @@ void tst_QContactAsync::contactPartialSaveAsync()
     QTest::qWait(1000);
     QVERIFY(saveRequest->waitForFinished());
     QVERIFY(saveRequest->isFinished());
-}
-
-void tst_QContactAsync::definitionFetch()
-{
-    QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(prepareModel(uri));
-    QContactDetailDefinitionFetchRequest dfr;
-    QVERIFY(dfr.type() == QContactAbstractRequest::DetailDefinitionFetchRequest);
-    QVERIFY(dfr.contactType() == QString(QLatin1String(QContactType::TypeContact))); // ensure ctor sets contact type correctly.
-    dfr.setContactType(QContactType::TypeContact);
-    QVERIFY(dfr.contactType() == QString(QLatin1String(QContactType::TypeContact)));
-
-    // initial state - not started, no manager.
-    QVERIFY(!dfr.isActive());
-    QVERIFY(!dfr.isFinished());
-    QVERIFY(!dfr.start());
-    QVERIFY(!dfr.cancel());
-    QVERIFY(!dfr.waitForFinished());
-
-    // "all definitions" retrieval
-    dfr.setManager(cm.data());
-    QCOMPARE(dfr.manager(), cm.data());
-    QVERIFY(!dfr.isActive());
-    QVERIFY(!dfr.isFinished());
-    QVERIFY(!dfr.cancel());
-    QVERIFY(!dfr.waitForFinished());
-    qRegisterMetaType<QContactDetailDefinitionFetchRequest*>("QContactDetailDefinitionFetchRequest*");
-    QThreadSignalSpy spy(&dfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
-    dfr.setDefinitionNames(QStringList());
-    QVERIFY(!dfr.cancel()); // not started
-    QVERIFY(dfr.start());
-
-    QVERIFY((dfr.isActive() && dfr.state() == QContactAbstractRequest::ActiveState) || dfr.isFinished());
-    //QVERIFY(dfr.isFinished() || !dfr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(dfr.waitForFinished());
-    QVERIFY(dfr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    QMap<QString, QContactDetailDefinition> defs = cm->detailDefinitions();
-    QMap<QString, QContactDetailDefinition> result = dfr.definitions();
-    QCOMPARE(defs, result);
-
-    // specific definition retrieval
-    QStringList specific;
-    specific << QContactUrl::DefinitionName;
-    dfr.setDefinitionName(QContactUrl::DefinitionName);
-    QVERIFY(dfr.definitionNames() == specific);
-    QVERIFY(!dfr.cancel()); // not started
-    QVERIFY(dfr.start());
-
-    QVERIFY((dfr.isActive() && dfr.state() == QContactAbstractRequest::ActiveState) || dfr.isFinished());
-    //QVERIFY(dfr.isFinished() || !dfr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(dfr.waitForFinished());
-    QVERIFY(dfr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    defs.clear();
-    defs.insert(QContactUrl::DefinitionName, cm->detailDefinition(QContactUrl::DefinitionName));
-    result = dfr.definitions();
-    QCOMPARE(defs, result);
-
-    // cancelling
-    dfr.setDefinitionNames(QStringList());
-
-    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
-    while (true) {
-        QVERIFY(!dfr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(dfr.start());
-        if (!dfr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            dfr.waitForFinished();
-            dfr.setDefinitionNames(QStringList());
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            continue;
-        }
-
-        // if we get here, then we are cancelling the request.
-        QVERIFY(dfr.waitForFinished());
-        QVERIFY(dfr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-        break;
-    }
-
-    // restart, and wait for progress after cancel.
-    while (true) {
-        QVERIFY(!dfr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(dfr.start());
-        if (!dfr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            dfr.waitForFinished();
-            dfr.setDefinitionNames(QStringList());
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            continue;
-        }
-        dfr.waitForFinished();
-        QVERIFY(dfr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-
-        break;
-    }
-
-}
-
-void tst_QContactAsync::definitionRemove()
-{
-    QFETCH(QString, uri);
-
-    QScopedPointer<QContactManager> cm(prepareModel(uri));
-    if (!cm->hasFeature(QContactManager::MutableDefinitions)) {
-       QSKIP("This contact manager does not support mutable definitions, can't remove a definition!");
-    }
-    QContactDetailDefinitionRemoveRequest drr;
-    QVERIFY(drr.type() == QContactAbstractRequest::DetailDefinitionRemoveRequest);
-    QVERIFY(drr.contactType() == QString(QLatin1String(QContactType::TypeContact))); // ensure ctor sets contact type correctly.
-    drr.setContactType(QContactType::TypeContact);
-    drr.setDefinitionNames(QStringList());
-    QVERIFY(drr.contactType() == QString(QLatin1String(QContactType::TypeContact)));
-
-    // initial state - not started, no manager.
-    QVERIFY(!drr.isActive());
-    QVERIFY(!drr.isFinished());
-    QVERIFY(!drr.start());
-    QVERIFY(!drr.cancel());
-    QVERIFY(!drr.waitForFinished());
-
-    // specific group removal
-    int originalCount = cm->detailDefinitions().keys().size();
-    QStringList removeIds;
-    removeIds << cm->detailDefinitions().keys().first();
-    drr.setDefinitionName(cm->detailDefinitions().keys().first());
-    drr.setManager(cm.data());
-    QCOMPARE(drr.manager(), cm.data());
-    QVERIFY(!drr.isActive());
-    QVERIFY(!drr.isFinished());
-    QVERIFY(!drr.cancel());
-    QVERIFY(!drr.waitForFinished());
-    qRegisterMetaType<QContactDetailDefinitionRemoveRequest*>("QContactDetailDefinitionRemoveRequest*");
-    QThreadSignalSpy spy(&drr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
-    QVERIFY(drr.definitionNames() == removeIds);
-    QVERIFY(!drr.cancel()); // not started
-    QVERIFY(drr.start());
-
-    QVERIFY((drr.isActive() && drr.state() == QContactAbstractRequest::ActiveState) || drr.isFinished());
-    //QVERIFY(drr.isFinished() || !drr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(drr.waitForFinished());
-    QVERIFY(drr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 1);
-    cm->detailDefinition(removeIds.first()); // check that it has already been removed.
-    QCOMPARE(cm->error(), QContactManager::DoesNotExistError);
-
-    // remove (asynchronously) a nonexistent group - should fail.
-    drr.setDefinitionNames(removeIds);
-    QVERIFY(!drr.cancel()); // not started
-    QVERIFY(drr.start());
-
-    QVERIFY((drr.isActive() && drr.state() == QContactAbstractRequest::ActiveState) || drr.isFinished());
-    //QVERIFY(drr.isFinished() || !drr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(drr.waitForFinished());
-    QVERIFY(drr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 1); // hasn't changed
-    QCOMPARE(drr.error(), QContactManager::DoesNotExistError);
-
-    // remove with list containing one valid and one invalid id.
-    removeIds << cm->detailDefinitions().keys().first();
-    drr.setDefinitionNames(removeIds);
-    QVERIFY(!drr.cancel()); // not started
-    QVERIFY(drr.start());
-
-    QVERIFY((drr.isActive() && drr.state() == QContactAbstractRequest::ActiveState) || drr.isFinished());
-    //QVERIFY(drr.isFinished() || !drr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(drr.waitForFinished());
-    QVERIFY(drr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished signals
-    spy.clear();
-
-    QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 2); // only one more has been removed
-    QVERIFY(drr.errorMap().count() == 1);
-    QVERIFY(drr.errorMap().keys().contains(0));
-    QCOMPARE(drr.errorMap().value(0), QContactManager::DoesNotExistError);
-
-    // remove with empty list - nothing should happen.
-    removeIds.clear();
-    drr.setDefinitionNames(removeIds);
-    QVERIFY(!drr.cancel()); // not started
-    QVERIFY(drr.start());
-
-    QVERIFY(drr.isActive() || drr.isFinished());
-    //QVERIFY(drr.isFinished() || !drr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(drr.waitForFinished());
-
-    QVERIFY(drr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 2); // hasn't changed
-    QCOMPARE(drr.error(), QContactManager::NoError);  // no error but no effect.
-
-    // cancelling
-    removeIds.clear();
-    removeIds << cm->detailDefinitions().keys().first();
-    drr.setDefinitionNames(removeIds);
-
-    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
-    while (true) {
-        QVERIFY(!drr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(drr.start());
-        if (!drr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            drr.waitForFinished();
-            drr.setDefinitionNames(removeIds);
-
-            QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 3); // finished
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            // XXX should be readded
-            continue;
-        }
-
-        // if we get here, then we are cancelling the request.
-        QVERIFY(drr.waitForFinished());
-        QVERIFY(drr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-
-        QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 2); // hasn't changed
-        break;
-    }
-
-    // restart, and wait for progress after cancel.
-    while (true) {
-        QVERIFY(!drr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(drr.start());
-        if (!drr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            drr.waitForFinished();
-            drr.setDefinitionNames(removeIds);
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            continue;
-        }
-        drr.waitForFinished();
-        QVERIFY(drr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-
-        QCOMPARE(cm->detailDefinitions().keys().size(), originalCount - 3); // hasn't changed
-        break;
-    }
-
-}
-
-void tst_QContactAsync::definitionSave()
-{
-    QFETCH(QString, uri);
-
-    QScopedPointer<QContactManager> cm(prepareModel(uri));
-
-    if (!cm->hasFeature(QContactManager::MutableDefinitions)) {
-
-       QSKIP("This contact manager does not support mutable definitions, can't save a definition!");
-    }
-    
-    QContactDetailDefinitionSaveRequest dsr;
-    QVERIFY(dsr.type() == QContactAbstractRequest::DetailDefinitionSaveRequest);
-    QVERIFY(dsr.contactType() == QString(QLatin1String(QContactType::TypeContact))); // ensure ctor sets contact type correctly
-    dsr.setContactType(QContactType::TypeContact);
-    QVERIFY(dsr.contactType() == QString(QLatin1String(QContactType::TypeContact)));
-
-    // initial state - not started, no manager.
-    QVERIFY(!dsr.isActive());
-    QVERIFY(!dsr.isFinished());
-    QVERIFY(!dsr.start());
-    QVERIFY(!dsr.cancel());
-    QVERIFY(!dsr.waitForFinished());
-
-    // save a new detail definition
-    int originalCount = cm->detailDefinitions().keys().size();
-    QContactDetailDefinition testDef;
-    testDef.setName("TestDefinitionId");
-    QMap<QString, QContactDetailFieldDefinition> fields;
-    QContactDetailFieldDefinition f;
-    f.setDataType(QVariant::String);
-    fields.insert("TestDefinitionField", f);
-    testDef.setFields(fields);
-    QList<QContactDetailDefinition> saveList;
-    saveList << testDef;
-    dsr.setManager(cm.data());
-    QCOMPARE(dsr.manager(), cm.data());
-    QVERIFY(!dsr.isActive());
-    QVERIFY(!dsr.isFinished());
-    QVERIFY(!dsr.cancel());
-    QVERIFY(!dsr.waitForFinished());
-    qRegisterMetaType<QContactDetailDefinitionSaveRequest*>("QContactDetailDefinitionSaveRequest*");
-    QThreadSignalSpy spy(&dsr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
-    dsr.setDefinition(testDef);
-    QCOMPARE(dsr.definitions(), saveList);
-    QVERIFY(!dsr.cancel()); // not started
-    QVERIFY(dsr.start());
-
-    QVERIFY((dsr.isActive() && dsr.state() == QContactAbstractRequest::ActiveState) || dsr.isFinished());
-    //QVERIFY(dsr.isFinished() || !dsr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(dsr.waitForFinished());
-    QVERIFY(dsr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    QList<QContactDetailDefinition> expected;
-    expected << cm->detailDefinition("TestDefinitionId");
-    QList<QContactDetailDefinition> result = dsr.definitions();
-    QCOMPARE(expected, result);
-    QVERIFY(expected.contains(testDef));
-    QCOMPARE(cm->detailDefinitions().values().size(), originalCount + 1);
-
-    // update a previously saved group
-    fields.insert("TestDefinitionFieldTwo", f);
-    testDef.setFields(fields);
-    saveList.clear();
-    saveList << testDef;
-    dsr.setDefinitions(saveList);
-    QCOMPARE(dsr.definitions(), saveList);
-    QVERIFY(!dsr.cancel()); // not started
-    QVERIFY(dsr.start());
-
-    QVERIFY((dsr.isActive() && dsr.state() == QContactAbstractRequest::ActiveState) || dsr.isFinished());
-    //QVERIFY(dsr.isFinished() || !dsr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(dsr.waitForFinished());
-    QVERIFY(dsr.isFinished());
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
-
-    expected.clear();
-    expected << cm->detailDefinition("TestDefinitionId");
-    result = dsr.definitions();
-    QCOMPARE(expected, result);
-    QVERIFY(expected.contains(testDef));
-    QCOMPARE(cm->detailDefinitions().values().size(), originalCount + 1);
-
-    // cancelling
-    fields.insert("TestDefinitionFieldThree - shouldn't get saved", f);
-    testDef.setFields(fields);
-    saveList.clear();
-    saveList << testDef;
-    dsr.setDefinitions(saveList);
-
-    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
-    while (true) {
-        QVERIFY(!dsr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(dsr.start());
-        if (!dsr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            dsr.waitForFinished();
-            saveList.clear();
-            saveList << testDef;
-            dsr.setDefinitions(saveList);
-            cm->removeDetailDefinition(testDef.name());
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            continue;
-        }
-
-        // if we get here, then we are cancelling the request.
-        QVERIFY(dsr.waitForFinished());
-        QVERIFY(dsr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-
-        // verify that the changes were not saved
-        QList<QContactDetailDefinition> allDefs = cm->detailDefinitions().values();
-        QVERIFY(!allDefs.contains(testDef));
-        QCOMPARE(cm->detailDefinitions().values().size(), originalCount + 1);
-
-        break;
-    }
-
-    // restart, and wait for progress after cancel.
-    while (true) {
-        QVERIFY(!dsr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS();
-        QVERIFY(dsr.start());
-        if (!dsr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            dsr.waitForFinished();
-            saveList.clear();
-            saveList << testDef;
-            dsr.setDefinitions(saveList);
-            cm->removeDetailDefinition(testDef.name());
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            spy.clear();
-            continue;
-        }
-        dsr.waitForFinished();
-        QVERIFY(dsr.isCanceled());
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-
-        // verify that the changes were not saved
-        QList<QContactDetailDefinition> allDefs = cm->detailDefinitions().values();
-        QVERIFY(!allDefs.contains(testDef));
-        QCOMPARE(cm->detailDefinitions().values().size(), originalCount + 1);
-
-        break;
-    }
-
 }
 
 void tst_QContactAsync::relationshipFetch()
@@ -2425,9 +1945,7 @@ void tst_QContactAsync::maliciousManager()
     QCOMPARE(mcm.managerName(), QString("maliciousplugin"));
     QList<QContact> emptyCList;
     QList<QContactLocalId> emptyIList;
-    QList<QContactDetailDefinition> emptyDList;
     QStringList emptyDNList;
-    QMap<QString, QContactDetailDefinition> emptyDMap;
     cfr.setFilter(fil);
     cfr.setManager(&mcm);
     QVERIFY(cfr.start());
@@ -2447,28 +1965,6 @@ void tst_QContactAsync::maliciousManager()
     csr.setManager(&mcm);
     QVERIFY(csr.start());
 
-    {
-    QContactDetailDefinitionFetchRequest dfr;
-    dfr.setDefinitionNames(emptyDNList);
-    dfr.setManager(&mcm);
-    QVERIFY(dfr.start());
-    }
-
-    {
-    QContactDetailDefinitionFetchRequest dfr;
-    dfr.setDefinitionNames(emptyDNList);
-    dfr.setManager(&mcm);
-    }
-
-    QContactDetailDefinitionSaveRequest dsr;
-    dsr.setDefinitions(emptyDList);
-    dsr.setManager(&mcm);
-    QVERIFY(dsr.start());
-
-    QContactDetailDefinitionRemoveRequest drr;
-    drr.setDefinitionNames(emptyDNList);
-    drr.setManager(&mcm);
-    QVERIFY(drr.start());
 }
 
 void tst_QContactAsync::testQuickDestruction()

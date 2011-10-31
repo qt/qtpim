@@ -71,17 +71,20 @@ public:
         Birthday,
         DisplayLabel,
         Email,
+        ExtendedDetail,
         Family,
         Favorite,
         Gender,
         Geolocation,
         GlobalPresence,
         Guid,
+        Hobby,
         Name,
         NickName,
         Note,
         OnlineAccount,
         Organization,
+        PersonId,
         PhoneNumber,
         Presence,
         Ringtone,
@@ -91,9 +94,7 @@ public:
         Timestamp,
         Type,
         Url,
-        Hobby,
-        PersonId,
-        Customized = 100
+        Unknown = 100
     };
 
     ~QDeclarativeContactDetail();

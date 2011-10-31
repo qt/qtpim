@@ -172,17 +172,20 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
     \o ContactDetail.Birthday
     \o ContactDetail.DisplayLabel
     \o ContactDetail.Email
+    \o ContactDetail.ExtendedDetail
     \o ContactDetail.Family
     \o ContactDetail.Favorite
     \o ContactDetail.Gender
     \o ContactDetail.Geolocation
     \o ContactDetail.GlobalPresence
     \o ContactDetail.Guid
+    \o ContactDetail.Hobby
     \o ContactDetail.Name
     \o ContactDetail.NickName
     \o ContactDetail.Note
     \o ContactDetail.OnlineAccount
     \o ContactDetail.Organization
+    \o ContactDetail.PersonId
     \o ContactDetail.PhoneNumber
     \o ContactDetail.Presence
     \o ContactDetail.Ringtone
@@ -190,16 +193,14 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
     \o ContactDetail.Tag
     \o ContactDetail.Timestamp
     \o ContactDetail.Url
-    \o ContactDetail.Hobby
-    \o ContactDetail.Customized
-    \o ContactDetail.PersonId
+    \o ContactDetail.Unknown
     \endlist
 
     This property is read only.
 */
 QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailType() const
 {
-    return Customized;
+    return Unknown;
 }
 
 /*!
@@ -261,6 +262,8 @@ QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::Con
         return QContactDisplayLabel::DefinitionName;
     case QDeclarativeContactDetail::Email:
         return QContactEmailAddress::DefinitionName;
+    case QDeclarativeContactDetail::ExtendedDetail:
+        return QContactExtendedDetail::DefinitionName;
     case QDeclarativeContactDetail::Family:
         return QContactFamily::DefinitionName;
     case QDeclarativeContactDetail::Favorite:
@@ -299,11 +302,12 @@ QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::Con
         return QContactUrl::DefinitionName;
     case QDeclarativeContactDetail::PersonId:
         return QContactPersonId::DefinitionName;
-    case QDeclarativeContactDetail::Customized:
     default:
         break;
     }
+#ifndef QT_NO_DEBUG
     qmlInfo(0) << QString(tr("Can't find the detail definition name for detail type '%1'")).arg(type);
+#endif
     return QString();
 }
 
@@ -321,6 +325,8 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
         return QDeclarativeContactDetail::DisplayLabel;
     if (definitionName == QContactEmailAddress::DefinitionName)
         return QDeclarativeContactDetail::Email;
+    if (definitionName == QContactExtendedDetail::DefinitionName)
+        return QDeclarativeContactDetail::ExtendedDetail;
     if (definitionName == QContactFamily::DefinitionName)
         return QDeclarativeContactDetail::Family;
     if (definitionName == QContactFavorite::DefinitionName)
@@ -359,8 +365,10 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
         return QDeclarativeContactDetail::Url;
     if (definitionName == QContactPersonId::DefinitionName)
         return QDeclarativeContactDetail::PersonId;
+#ifndef QT_NO_DEBUG
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
-    return QDeclarativeContactDetail::Customized;
+#endif
+    return QDeclarativeContactDetail::Unknown;
 }
 
 QString QDeclarativeContactDetail::fieldName(QDeclarativeContactDetail::ContactDetailType detailType, int fieldType)
@@ -378,6 +386,8 @@ QString QDeclarativeContactDetail::fieldName(QDeclarativeContactDetail::ContactD
         return QDeclarativeContactDisplayLabel::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Email:
         return QDeclarativeContactEmailAddress::fieldNameFromFieldType(fieldType);
+    case QDeclarativeContactDetail::ExtendedDetail:
+        return QDeclarativeContactExtendedDetail::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Family:
         return QDeclarativeContactFamily::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Favorite:
@@ -416,11 +426,12 @@ QString QDeclarativeContactDetail::fieldName(QDeclarativeContactDetail::ContactD
         return QDeclarativeContactUrl::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::PersonId:
         return QDeclarativeContactPersonId::fieldNameFromFieldType(fieldType);
-    case QDeclarativeContactDetail::Customized:
     default:
         break;
     }
+#ifndef QT_NO_DEBUG
     qmlInfo(0) << QString(tr("Can't find the field name for detail type '%1' and field type '%2'")).arg(detailType).arg(fieldType);
+#endif
     return QString();
 }
 
@@ -1471,6 +1482,27 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
     \qmlproperty string PersonId::personid
 
     This property holds the value of the PersonId.
+ */
+
+/* ==================== QDeclarativeContactExtendedDetail ======================= */
+/*!
+    \qmlclass ExtendedDetail QDeclarativeContactExtendedDetail
+    \brief The ExtendedDetail element contains a extended detail of a contact.
+    \ingroup qml-contacts
+
+    This element is part of the \bold{QtContacts 5.0} module.
+ */
+
+/*!
+    \qmlproperty string ExtendedDetail::name
+
+    This property holds the name of the extended detail.
+ */
+
+/*!
+    \qmlproperty variant ExtendedDetail::data
+
+    This property holds the data of the extended detail.
  */
 
 #include "moc_qdeclarativecontactdetail_p.cpp"

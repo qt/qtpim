@@ -84,7 +84,6 @@ public:
 
     QString managerName() const;
     bool validateContact(const QContact&, QContactManager::Error* error) const;
-    bool validateDefinition(const QContactDetailDefinition&, QContactManager::Error* error) const;
     QContact compatibleContact(const QContact& contact, QContactManager::Error* error) const;
 
     /* "Self" contact id (MyCard) */
@@ -100,10 +99,6 @@ public:
     bool removeContact(const QContactLocalId& contactId, QContactManager::Error* error);
     bool saveContacts(QList<QContact>*, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular saveContact
     bool removeContacts(const QList<QContactLocalId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular removeContact
-
-    /* Definitions - Accessors and Mutators */
-    QMap<QString, QContactDetailDefinition> detailDefinitions(const QString& contactType, QContactManager::Error* error) const;
-    QContactDetailDefinition detailDefinition(const QString& definitionName, const QString& contactType, QContactManager::Error* error) const; // implemented in terms of the plural detailDefinitions
 
     /* Version Reporting */
     int implementationVersion() const { return QCONTACT_JSONDB_ENGINE_VERSION; };

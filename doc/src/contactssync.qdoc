@@ -54,10 +54,9 @@ applications that the asynchronous API be used where possible.
 \section1 Using The API
 
 The synchronous API offered by the Contacts module is available through the QContactManager
-class.  It consists of four major sections:
+class.  It consists of three major sections:
 \list
   \o Error Reporting
-  \o Schema Manipulation
   \o Contact Manipulation
   \o Relationship Manipulation
 \endlist
@@ -170,44 +169,6 @@ The relationship manipulation functionality is also provided via asynchronous AP
 QContactRelationshipSaveRequest, and QContactRelationshipRemoveRequest classes.
 
 
-\section2 Schema Manipulation
-
-The schema supported by a plugin is the list of detail definitions which are supported by the plugin.
-A contact which contains a detail of a particular definition which is not supported by the plugin
-will fail to validate when the user attempts to save it in that manager.  The schema also includes
-any access constraints which may apply to certain details or detail definitions (for example,
-a particular detail definition might be declared to be unique per-contact in a particular manager).
-
-Every plugin will support a slightly different schema, as the schema which can be supported will depend
-on the semantics and limitations of the underlying storage platform on which the plugin is based.
-The default schema is described in the \l {Qt Contacts Schema}{QtMobility Contacts schema documentation},
-and plugins should attempt to implement that schema; however no guarantees are given to clients as to
-the conformance of the schemas supported by various plugins to the default schema.
-
-Some plugins support extensible detail types.  This means that third party developers can
-extend the schema of such plugins at run time (for example, to add a new field to a detail).
-Some plugins allow third party developers to define new detail types (that is, to
-add an entirely new detail type to the schema supported by that plugin).
-Plugins which support these types of operations must report to clients that they support the
-QContactManager::MutableDefinitions feature.
-
-The synchronous API offers several functions to retrieve or modify the schema supported by a plugin:
-\list
-  \o detailDefinitions(const QString& contactType = QContactType::TypeContact) const
-  \o detailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact) const
-  \o saveDetailDefinition(const QContactDetailDefinition& def, const QString& contactType = QContactType::TypeContact)
-  \o removeDetailDefinition(const QString& definitionName, const QString& contactType = QContactType::TypeContact)
-\endlist
-
-The schema manipulation functionality is also provided via asynchronous API through the
-QContactDetailDefinitionFetchRequest, QContactDetailDefinitionSaveRequest and QContactDetailDefinitionRemoveRequest
-classes.
-
-Note that the schema supported by a plugin may vary depending on the type of contact to which the schema applies.
-For example, a particular plugin might support name, address, phone number, email address, and gender details for
-normal contacts, but only name, address, and phone number details for a group contact.
-
-
 \section1 Examples Of Usage
 
 The synchronous API provides the simplest way to access or modify the
@@ -242,20 +203,10 @@ implements the default definition for phone number details).
     \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
 
 
-\section2 Installing a plugin that modifies the definition of one type of detail
-
-The client installs a plugin, which requires a new field to be added to
-details of the "EmailAddress" definition.  It loads the definition from the
-default manager, modifies it (by adding the new field - a label field), and
-saves it back.
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Installing a plugin which modifies a definition
-
 \section3 \bold{Modifying an existing contact and saving the modifications}
 
 The client retrieves a contact, modifies one of its details, adds a new
-detail, and then saves the contact back to the manager.  Note that it uses
-the newly added field of the email address definition!
+detail, and then saves the contact back to the manager.
 
     \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Modifying an existing contact
 

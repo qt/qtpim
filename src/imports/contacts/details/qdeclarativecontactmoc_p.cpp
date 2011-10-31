@@ -49,6 +49,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontactbirthday_p.cpp"
 #include "moc_qdeclarativecontactdisplaylabel_p.cpp"
 #include "moc_qdeclarativecontactemailaddress_p.cpp"
+#include "moc_qdeclarativecontactextendeddetail_p.cpp"
 #include "moc_qdeclarativecontactfamily_p.cpp"
 #include "moc_qdeclarativecontactfavorite_p.cpp"
 #include "moc_qdeclarativecontactgender_p.cpp"

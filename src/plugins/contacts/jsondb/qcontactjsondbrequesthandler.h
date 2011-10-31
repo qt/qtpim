@@ -48,7 +48,6 @@
 #include <qcontactabstractrequest.h>
 #include <qcontactsaverequest.h>
 #include <qcontactfetchrequest.h>
-#include <qcontactdetaildefinitionfetchrequest.h>
 #include <qcontactremoverequest.h>
 #include <qcontact.h>
 #include <qcontactchangeset.h>
@@ -87,7 +86,6 @@ private:
     void handleContactSaveRequest(QContactSaveRequest* req);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
-    void handleDetailDefinitionFetchRequest(QContactDetailDefinitionFetchRequest* req);
 
     void handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error);
     void handleContactFetchResponse(QContactFetchRequest* req, const QVariant &object, QContactManager::Error error);

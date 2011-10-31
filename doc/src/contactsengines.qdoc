@@ -67,9 +67,7 @@ Each engine may support a different schema.  All engines should attempt to suppo
 schema, described in the \l{Qt Contacts Schema}{default schema} documentation, however clients
 should never assume that any engine does support the default schema fully.
 
-Clients are able to retrieve the schema supported by a particular engine at run-time by calling
-QContactManager::detailDefinitions().  Some engines support different detail definitions (that is,
-a different schema) for different types of contacts.  Clients can retrieve the contact types
+Some engines support different types of contacts.  Clients can retrieve the contact types
 supported by an engine by calling QContactManager::supportedContactTypes().
 
 \section2 Provided Engines
@@ -174,7 +172,6 @@ All engines must implement the following functions:
   \o QContactManagerEngine::supportedContactTypes()
   \o QContactManagerEngine::supportedDataTypes()
   \o QContactManagerEngine::hasFeature()
-  \o QContactManagerEngine::detailDefinitions()
   \o QContactManagerEngine::contactIds()
   \o QContactManagerEngine::contacts()
 \endlist
@@ -249,14 +246,6 @@ It may also choose to implement the "single contact" functions:
 If it does not, the default implementation of those functions will use the batch (plural) versions
 of those functions to implement the required behavior.
 
-If the engine supports modification of its schema (that is, extension of its definitions at
-run-time), it must report that it supports the \c QContactManager::MutableDefinitions feature
-via QContactManagerEngine::hasFeature(), and must also implement:
-\list
-  \o QContactManagerEngine::saveDetailDefinition()
-  \o QContactManagerEngine::removeDetailDefinition()
-\endlist
-
 If the engine supports any relationships, it must report that it supports the
 \c QContactManager::Relationships feature via QContactManagerEngine::hasFeature(), and must also
 implement:
@@ -294,7 +283,6 @@ As previously mentioned it may implement its own sorting or filtering, in functi
 QContactManagerEngine::contacts().  An engine may also implement:
 \list
   \o QContactManagerEngine::validateContact()
-  \o QContactManagerEngine::validateDefinition()
   \o QContactManagerEngine::compatibleContact()
   \o QContactManagerEngine::synthesizedDisplayLabel()
 \endlist

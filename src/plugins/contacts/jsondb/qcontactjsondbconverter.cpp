@@ -399,7 +399,9 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactNickname::DefinitionName));
         embeddedDetailsMap.remove(detailsToJsonMapping.value(QContactNote::DefinitionName));
         //  Preseserve possible extra contact details jsondb contact object may have.
-        object->insert(ContactDetails, embeddedDetailsMap);
+        if (!embeddedDetailsMap.isEmpty()) {
+            object->insert(ContactDetails, embeddedDetailsMap);
+        }
     }
     // End of Quickfix
 

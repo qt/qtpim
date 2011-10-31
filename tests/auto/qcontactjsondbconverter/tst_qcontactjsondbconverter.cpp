@@ -67,6 +67,8 @@
 
 Q_USE_JSONDB_NAMESPACE
 
+QTCONTACTS_USE_NAMESPACE
+
 
 class tst_QcontactJsondbConverter : public QObject
 {

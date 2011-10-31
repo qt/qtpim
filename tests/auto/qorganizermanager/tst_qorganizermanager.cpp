@@ -4449,6 +4449,12 @@ void tst_QOrganizerManager::testTags()
     QVERIFY(item2.tags().contains(QString::fromAscii("Tag1")));
     QVERIFY(item2.tags().contains(QString::fromAscii("Tag222")));
     QVERIFY(item2.tags().contains(QString::fromAscii("Tag4")));
+
+    // Anniversary
+    event.addTag(QOrganizerItemTag::Anniversary);
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(event.id());
+    QVERIFY(item.tags().contains(QOrganizerItemTag::Anniversary));
 }
 
 void tst_QOrganizerManager::testExtendedDetail()

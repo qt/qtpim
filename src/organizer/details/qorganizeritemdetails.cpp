@@ -1249,7 +1249,7 @@ const QString QOrganizerItemTag::FieldTag(QStringLiteral("Tag"));
 
     The constant string for anniversary and birthday tag.
 */
-const QString QOrganizerItemTag::Anniversary(QStringLiteral("Anniversary"));
+const QString QOrganizerItemTag::Anniversary(QStringLiteral("ANNIVERSARY"));
 
 /*!
     \fn QOrganizerItemTag::setTag(const QString &tag)

@@ -64,7 +64,7 @@ class QOrganizerJsonDbItemId : public QOrganizerItemEngineId
 {
 public:
     QOrganizerJsonDbItemId();
-    QOrganizerJsonDbItemId(QString itemId);
+    QOrganizerJsonDbItemId(const QString &itemId);
     ~QOrganizerJsonDbItemId();
     QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId &other);
 
@@ -92,7 +92,7 @@ class QOrganizerJsonDbCollectionId : public QOrganizerCollectionEngineId
 {
 public:
     QOrganizerJsonDbCollectionId();
-    QOrganizerJsonDbCollectionId(QString collectionId);
+    QOrganizerJsonDbCollectionId(const QString &collectionId);
     ~QOrganizerJsonDbCollectionId();
     QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId &other);
 

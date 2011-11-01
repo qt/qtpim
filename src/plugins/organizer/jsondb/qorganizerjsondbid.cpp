@@ -50,7 +50,7 @@ QOrganizerJsonDbItemId::QOrganizerJsonDbItemId()
 {
 }
 
-QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(QString itemId)
+QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QString &itemId)
     : QOrganizerItemEngineId()
     , m_itemId(itemId)
 {
@@ -131,7 +131,7 @@ QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId()
 {
 }
 
-QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId(QString collectionId)
+QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId(const QString &collectionId)
     : QOrganizerCollectionEngineId()
     , m_collectionId(collectionId)
 {

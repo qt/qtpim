@@ -86,6 +86,8 @@ private slots:
     void emailReminder();
     void visualReminder();
 
+    void attendee();
+
     // custom definition testing
     void custom();
 };
@@ -798,7 +800,56 @@ void tst_QOrganizerItemDetails::visualReminder()
     QVERIFY(oi.details<QOrganizerItemVisualReminder>().size() == 0);
 }
 
+void tst_QOrganizerItemDetails::attendee()
+{
+    QOrganizerEventAttendee a;
+    QOrganizerItem oi;
 
+    QVERIFY(a.isEmpty());
+    QVERIFY(a.name().isEmpty());
+    QVERIFY(a.emailAddress().isEmpty());
+    QVERIFY(a.contactId().isEmpty());
+    QVERIFY(a.participationRole() == 0);
+    QVERIFY(a.participationStatus() == 0);
+
+    a.setContactId("123456");
+    QVERIFY(a.contactId() == QString("123456"));
+    a.setEmailAddress("people@nokia.com");
+    QVERIFY(a.emailAddress() == QString("people@nokia.com"));
+    a.setName("people");
+    QVERIFY(a.name() == QString("people"));
+    a.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
+    QVERIFY(a.participationRole() == QOrganizerEventAttendee::RoleRequiredParticipant);
+    a.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
+    QVERIFY(a.participationStatus() == QOrganizerEventAttendee::StatusAccepted);
+    // add
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 0);
+    QVERIFY(oi.saveDetail(&a));
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(oi.detail<QOrganizerEventAttendee>() == a);
+    // update
+    a.setContactId("54321");
+    a.setName("newpeople");
+    a.setEmailAddress("newpeople@nokia.com");
+    QVERIFY(oi.detail<QOrganizerEventAttendee>() != a);
+    QVERIFY(oi.saveDetail(&a));
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(oi.detail<QOrganizerEventAttendee>() == a);
+
+    // add one more attendee
+    QOrganizerEventAttendee a1;
+    a1.setContactId("777777");
+    a1.setName("people1");
+    a1.setEmailAddress("people1@nokia.com");
+    QVERIFY(oi.saveDetail(&a1));
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 2);
+
+    // remove
+    QVERIFY(oi.removeDetail(&a));
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(oi.removeDetail(&a1));
+    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 0);
+}
 
 
 

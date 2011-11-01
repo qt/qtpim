@@ -146,6 +146,14 @@ public:
     const static QString RuleWeeksOfYear;
     const static QString RuleMonthsOfYear;
 
+    // Attendee properties
+    const static QString Attendee;
+    const static QString AttendeeName;
+    const static QString AttendeeEmailAddress;
+    const static QString AttendeeContactId;
+    const static QString AttendeeParticipationStatus;
+    const static QString AttendeeParticipationRole;
+
     //warning string
     const static QString WarningMoreItemDelete;
     const static QString WarningCollectionMissing;

@@ -126,6 +126,13 @@ const QString QOrganizerJsonDbStr::RuleDaysOfYear(QStringLiteral("daysOfYear"));
 const QString QOrganizerJsonDbStr::RuleWeeksOfYear(QStringLiteral("weeksOfYear"));
 const QString QOrganizerJsonDbStr::RuleMonthsOfYear(QStringLiteral("monthsOfYear"));
 
+// Attendee properties
+const QString QOrganizerJsonDbStr::Attendee(QStringLiteral("attendee"));
+const QString QOrganizerJsonDbStr::AttendeeName(QStringLiteral("name"));
+const QString QOrganizerJsonDbStr::AttendeeEmailAddress(QStringLiteral("emailAddress"));
+const QString QOrganizerJsonDbStr::AttendeeContactId(QStringLiteral("contactId"));
+const QString QOrganizerJsonDbStr::AttendeeParticipationStatus(QStringLiteral("participationStatus"));
+const QString QOrganizerJsonDbStr::AttendeeParticipationRole(QStringLiteral("participationRole"));
 
 //warning string
 const QString QOrganizerJsonDbStr::WarningMoreItemDelete(QStringLiteral("Items are delete from jsondb!!"));

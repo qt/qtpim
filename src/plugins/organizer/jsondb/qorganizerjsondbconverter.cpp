@@ -101,7 +101,27 @@ static QOrganizerJsonDbEnumConversionData qt_organizerMonthEnumMap[] = {
     {enumMapEnd,                                     QLatin1String("")}
 };
 
+static QOrganizerJsonDbEnumConversionData qt_organizerParticipationStatusMap[] = {
+    {QOrganizerEventAttendee::StatusUnknown,         QLatin1String("StatusUnknown")},
+    {QOrganizerEventAttendee::StatusAccepted,        QLatin1String("StatusAccepted")},
+    {QOrganizerEventAttendee::StatusDeclined,        QLatin1String("StatusDeclined")},
+    {QOrganizerEventAttendee::StatusTentative,       QLatin1String("StatusTentative")},
+    {QOrganizerEventAttendee::StatusDelegated,       QLatin1String("StatusDelegated")},
+    {QOrganizerEventAttendee::StatusInProcess,       QLatin1String("StatusInProcess")},
+    {QOrganizerEventAttendee::StatusCompleted,       QLatin1String("StatusCompleted")},
+    {enumMapEnd,                                     QLatin1String("")}
+};
 
+static QOrganizerJsonDbEnumConversionData qt_organizerParticipationRoleMap[] = {
+    {QOrganizerEventAttendee::RoleUnknown,             QLatin1String("RoleUnknown")},
+    {QOrganizerEventAttendee::RoleOrganizer,           QLatin1String("RoleOrganizer")},
+    {QOrganizerEventAttendee::RoleChairperson,         QLatin1String("RoleChairperson")},
+    {QOrganizerEventAttendee::RoleHost,                QLatin1String("RoleHost")},
+    {QOrganizerEventAttendee::RoleRequiredParticipant, QLatin1String("RoleRequiredParticipant")},
+    {QOrganizerEventAttendee::RoleOptionalParticipant, QLatin1String("RoleOptionalParticipant")},
+    {QOrganizerEventAttendee::RoleNonParticipant,      QLatin1String("RoleNonParticipant")},
+    {enumMapEnd,                                       QLatin1String("")}
+};
 
 QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
@@ -290,6 +310,14 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 QOrganizerTodoTime todoTime = item->detail(QOrganizerTodoTime::DefinitionName);
                 todoTime.setAllDay(isAllDay);
                 item->saveDetail(&todoTime);
+            }
+        } else if (i.key() == QOrganizerJsonDbStr::Attendee) {
+            QVariantList attendeeObjectList = i.value().toList();
+            foreach (const QVariant &attendeeObject, attendeeObjectList) {
+                QOrganizerEventAttendee attendee;
+                jsonDbObjectToAttendeeDetail(attendeeObject.toMap(), &attendee);
+                if (!attendee.isEmpty())
+                    item->saveDetail(&attendee);
             }
         } else if (i.key() == QOrganizerJsonDbStr::ItemLocation
                    || i.key() == QOrganizerJsonDbStr::ItemVisualReminder
@@ -525,6 +553,20 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::ItemExceptioneDates, exceptionDatesList);
     }
 
+    // attendee
+    QList<QOrganizerEventAttendee> attendees = item.details<QOrganizerEventAttendee>();
+    if (!attendees.isEmpty()) {
+        QVariantList attendeeObjectList;
+        foreach (const QOrganizerEventAttendee &attendee, attendees) {
+            QVariantMap attendeeObject;
+            attendeeDetailToJsonDbObject(attendee, &attendeeObject);
+            if (!attendeeObject.isEmpty())
+                attendeeObjectList.append(attendeeObject);
+        }
+        if (!attendeeObjectList.isEmpty())
+            object->insert(QOrganizerJsonDbStr::Attendee, attendeeObjectList);
+    }
+
     // extended details
     QList<QOrganizerItemExtendedDetail> extendedDetails = item.details<QOrganizerItemExtendedDetail>();
     foreach (const QOrganizerItemExtendedDetail &detail, extendedDetails) {
@@ -539,6 +581,63 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     }
 
     return true;
+}
+
+void QOrganizerJsonDbConverter::attendeeDetailToJsonDbObject(const QOrganizerEventAttendee &attendeeDetail, QVariantMap *object) const
+{
+    QVariantMap detailValues = attendeeDetail.values();
+    QMap<QString, QVariant>::const_iterator i = detailValues.constBegin();
+    QString value;
+    QString jsonDbField;
+    while (i != detailValues.constEnd()) {
+        if (i.key() == QOrganizerEventAttendee::FieldName) {
+            value = i.value().toString();
+            jsonDbField = QOrganizerJsonDbStr::AttendeeName;
+        } else if (i.key() == QOrganizerEventAttendee::FieldEmailAddress) {
+            value = i.value().toString();
+            jsonDbField = QOrganizerJsonDbStr::AttendeeEmailAddress;
+        } else if (i.key() == QOrganizerEventAttendee::FieldContactId) {
+            value= i.value().toString();
+            jsonDbField = QOrganizerJsonDbStr::AttendeeContactId;
+        } else if (i.key() == QOrganizerEventAttendee::FieldParticipationRole) {
+            value = enumToString(qt_organizerParticipationRoleMap, i.value().toInt());
+            jsonDbField = QOrganizerJsonDbStr::AttendeeParticipationRole;
+        } else if (i.key() == QOrganizerEventAttendee::FieldParticipationStatus) {
+            value = enumToString(qt_organizerParticipationStatusMap, i.value().toInt());
+            jsonDbField = QOrganizerJsonDbStr::AttendeeParticipationStatus;
+        }
+        if (!value.isEmpty())
+            object->insert(jsonDbField, value);
+        ++i;
+    }
+}
+
+void QOrganizerJsonDbConverter::jsonDbObjectToAttendeeDetail(const QVariantMap &object, QOrganizerEventAttendee *attendeeDetail) const
+{
+    QMap<QString, QVariant>::const_iterator i = object.constBegin();
+    QString value;
+    while (i != object.constEnd()) {
+        if (i.key() == QOrganizerJsonDbStr::AttendeeName) {
+            value = i.value().toString();
+            if (!value.isEmpty())
+                attendeeDetail->setName(value);
+        } else if (i.key() == QOrganizerJsonDbStr::AttendeeEmailAddress) {
+            value = i.value().toString();
+            if (!value.isEmpty())
+                attendeeDetail->setEmailAddress(value);
+        } else if (i.key() == QOrganizerJsonDbStr::AttendeeContactId) {
+            value = i.value().toString();
+            if (!value.isEmpty())
+                attendeeDetail->setContactId(value);
+        } else if (i.key() == QOrganizerJsonDbStr::AttendeeParticipationRole) {
+            int intValue = stringToEnum(qt_organizerParticipationRoleMap, i.value().toString());
+            attendeeDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));
+        } else if (i.key() == QOrganizerJsonDbStr::AttendeeParticipationStatus) {
+            int intValue = stringToEnum(qt_organizerParticipationStatusMap, i.value().toString());
+            attendeeDetail->setParticipationStatus(static_cast<QOrganizerEventAttendee::ParticipationStatus>(intValue));
+        }
+        ++i;
+    }
 }
 
 bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)

@@ -83,6 +83,10 @@ private:
     QString enumToString(const QOrganizerJsonDbEnumConversionData* const conversionData, int enumValue) const;
 
     void extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant& property) const;
+
+    void attendeeDetailToJsonDbObject(const QOrganizerEventAttendee &attendeeDetail, QVariantMap *object) const;
+    void jsonDbObjectToAttendeeDetail(const QVariantMap &object, QOrganizerEventAttendee *attendeeDetail) const;
+
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
 };

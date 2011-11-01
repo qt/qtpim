@@ -367,6 +367,14 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(const QString &definitionNa
         extendedDetail.setName(QStringLiteral("My-Stupid-Extended-Detail"));
         extendedDetail.setData(QVariantList() << QStringLiteral("Code once") << QStringLiteral("Create more") << QStringLiteral("Deploy everywhere"));
         return extendedDetail;
+    } else if (definitionName == QOrganizerEventAttendee::DefinitionName) {
+        QOrganizerEventAttendee attendee;
+        attendee.setName(QStringLiteral("people"));
+        attendee.setContactId(QStringLiteral("123456"));
+        attendee.setEmailAddress(QStringLiteral("people@nokia.com"));
+        attendee.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
+        attendee.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
+        return attendee;
     }
 
     return QOrganizerItemDetail();

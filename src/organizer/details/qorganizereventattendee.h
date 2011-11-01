@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -39,56 +39,58 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZEREVENT_H
-#define QORGANIZEREVENT_H
+#ifndef QORGANIZEREVENTATTENDEE_H
+#define QORGANIZEREVENTATTENDEE_H
 
-#include "qorganizer.h"
-#include "qorganizeritemrecurrence.h"
-#include "qorganizeritempriority.h"
+#include <QString>
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class Q_ORGANIZER_EXPORT QOrganizerEvent : public QOrganizerItem
+class Q_ORGANIZER_EXPORT QOrganizerEventAttendee : public QOrganizerItemDetail
 {
 public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee, "Attendee")
+    const static QString FieldName;
+    const static QString FieldEmailAddress;
+    const static QString FieldContactId;
+    const static QString FieldParticipationStatus;
+    const static QString FieldParticipationRole;
 
-#ifdef Q_QDOC
-    static const QLatin1Constant QOrganizerEvent;
-#else
-    Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerEvent, QOrganizerItemType::TypeEvent)
-#endif
+    enum ParticipationStatus {
+        StatusUnknown = 0,
+        StatusAccepted,
+        StatusDeclined,
+        StatusTentative,
+        StatusDelegated,
+        StatusInProcess,
+        StatusCompleted
+    };
 
-    void setStartDateTime(const QDateTime& startDateTime);
-    QDateTime startDateTime() const;
-    void setEndDateTime(const QDateTime& endDateTime);
-    QDateTime endDateTime() const;
+    enum ParticipationRole {
+        RoleUnknown = 0,
+        RoleOrganizer,
+        RoleChairperson,
+        RoleHost,
+        RoleRequiredParticipant,
+        RoleOptionalParticipant,
+        RoleNonParticipant
+    };
 
-    void setAllDay(bool isAllDay);
-    bool isAllDay() const;
+    void setName(const QString &name);
+    QString name() const;
 
-    void setRecurrenceDate(const QDate& rdate);
-    void setRecurrenceDates(const QSet<QDate>& rdates);
-    QSet<QDate> recurrenceDates() const;
+    void setEmailAddress(const QString &emailAddress);
+    QString emailAddress() const;
 
-    void setRecurrenceRule(const QOrganizerRecurrenceRule& rrule);
-    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules);
-    QOrganizerRecurrenceRule recurrenceRule() const;
-    QSet<QOrganizerRecurrenceRule> recurrenceRules() const;
+    void setParticipationStatus(ParticipationStatus status);
+    ParticipationStatus participationStatus() const;
 
-    void setExceptionDate(const QDate& exdate);
-    void setExceptionDates(const QSet<QDate>& exdates);
-    QSet<QDate> exceptionDates() const;
+    void setParticipationRole(ParticipationRole role);
+    ParticipationRole participationRole() const;
 
-    void setExceptionRule(const QOrganizerRecurrenceRule& xrule);
-    void setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules);
-    QOrganizerRecurrenceRule exceptionRule() const;
-    QSet<QOrganizerRecurrenceRule> exceptionRules() const;
-
-    void setPriority(QOrganizerItemPriority::Priority);
-    QOrganizerItemPriority::Priority priority() const;
-
-    QString location() const;
-    void setLocation(const QString& location);
+    void setContactId(const QString &contactId);
+    QString contactId() const;
 };
 
 QTORGANIZER_END_NAMESPACE

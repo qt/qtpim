@@ -251,6 +251,9 @@ private slots:
 
     void testExtendedDetail_data() { addManagers(); }
     void testExtendedDetail();
+
+    void testAttendee_data() { addManagers(); }
+    void testAttendee();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -4550,6 +4553,58 @@ void tst_QOrganizerManager::testExtendedDetail()
     }
 
     QVERIFY(mgr->removeItem(event.id()));
+}
+
+void tst_QOrganizerManager::testAttendee()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    QOrganizerEvent event;
+
+    // Save item and verify
+    QOrganizerEventAttendee attendee;
+    attendee.setName("people");
+    attendee.setContactId("123456");
+    attendee.setEmailAddress("people@nokia.com");
+    attendee.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
+    attendee.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
+    event.saveDetail(&attendee);
+    QVERIFY(mgr->saveItem(&event));
+    QOrganizerItemId id = event.id();
+    QOrganizerItem item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 1);
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Update
+    attendee.setName("newpeople");
+    attendee.setContactId("54321");
+    attendee.setEmailAddress("newpeople@nokia.com");
+    event.saveDetail(&attendee);
+    QVERIFY(item != event);
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 1);
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Add one more attendee
+    QOrganizerEventAttendee a1;
+    a1.setContactId("777777");
+    a1.setName("people1");
+    a1.setEmailAddress("people1@nokia.com");
+    event.saveDetail(&a1);
+    QVERIFY(item != event);
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 2);
+
+    // Remove
+    QVERIFY(event.removeDetail(&attendee));
+    QVERIFY(event.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(event.removeDetail(&a1));
+    QVERIFY(event.details<QOrganizerEventAttendee>().size() == 0);
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 0);
 }
 
 #if defined(QT_NO_JSONDB)

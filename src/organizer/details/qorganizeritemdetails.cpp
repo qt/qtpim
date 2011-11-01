@@ -137,6 +137,179 @@ QString QOrganizerItemDisplayLabel::label() const
  */
 const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
 
+
+/* ==================== QOrganizerEventAttendee ======================= */
+/*!
+    \class QOrganizerEventAttendee
+    \brief The QOrganizerEventAttendee class contains information about an attendee of an event
+    \inmodule QtOrganizer
+    \ingroup organizer-details
+
+    Attendee details contain information such as the display label (name) of an attendee, their
+    role in the event, and their participation status.
+ */
+
+/*!
+    \variable QOrganizerEventAttendee::DefinitionName
+    The constant string which identifies the definition of details which contain information of an event attendee.
+ */
+const QString QOrganizerEventAttendee::DefinitionName(QStringLiteral("Attendee"));
+
+/*!
+    \variable QOrganizerEventAttendee::FieldName
+
+    The constant key for which the name (or title or other label) of the attendee is stored in
+    details of the QOrganizerEventAttendee type.
+ */
+const QString QOrganizerEventAttendee::FieldName(QStringLiteral("Name"));
+
+/*!
+    \variable QOrganizerEventAttendee::FieldEmailAddress
+
+    The constant key for which the email address of the attendee is stored in
+    details of the QOrganizerEventAttendee type.
+ */
+const QString QOrganizerEventAttendee::FieldEmailAddress(QStringLiteral("EmailAddress"));
+
+/*!
+    \variable QOrganizerEventAttendee::FieldContactId
+    \preliminary
+
+    The constant key for which the string which identifies the attendee is stored in
+    details of the QOrganizerEventAttendee type.  It contains a free-form string which
+    may be a serialized contact id, vCard UID, or other platform-specific identifier.
+
+ */
+const QString QOrganizerEventAttendee::FieldContactId(QStringLiteral("ContactId"));
+
+/*!
+    \variable QOrganizerEventAttendee::FieldParticipationStatus
+
+    The constant key for which the participation status of the attendee is stored in
+    details of the QOrganizerEventAttendee type.
+ */
+const QString QOrganizerEventAttendee::FieldParticipationStatus(QStringLiteral("ParticipationStatus"));
+
+/*!
+    \variable QOrganizerEventAttendee::FieldParticipationRole
+
+    The constant key for which the participation role of the attendee is stored in
+    details of the QOrganizerEventAttendee type.
+ */
+const QString QOrganizerEventAttendee::FieldParticipationRole(QStringLiteral("ParticipationRole"));
+
+/*!
+    \enum QOrganizerEventAttendee::ParticipationStatus
+    \value StatusUnknown The status of the attendee is unknown or they have yet to respond
+    \value StatusAccepted The attendee has responded that they will be attending the event
+    \value StatusDeclined The attendee has responded that they will not be attending the event
+    \value StatusTentative The attendee has responded that they may be attending the event
+    \value StatusDelegated The attendee has delegated attendance at the event to another person
+    \value StatusInProcess The attendee is currently attending the event
+    \value StatusCompleted The attendee attended the event
+*/
+
+/*!
+    \enum QOrganizerEventAttendee::ParticipationRole
+    \value RoleUnknown The role of the attendee is unknown or they have yet to respond
+    \value RoleOrganizer The attendee is the organizer of the event
+    \value RoleChairperson The attendee is the chairperson of the event
+    \value RoleHost The attendee is the host of the event
+    \value RoleRequiredParticipant The attendee is a required participant of the event
+    \value RoleOptionalParticipant The attendee is an optional participant of the event
+    \value RoleNonParticipant The attendee is not participating in the event (value included for informational purposes only, as per iCalendar specification)
+*/
+
+/*!
+    \fn QOrganizerEventAttendee::setName(const QString &name)
+    Sets the name (or title or other label) of the attendee to \a name.
+ */
+void QOrganizerEventAttendee::setName(const QString &name)
+{
+    setValue(FieldName, name);
+}
+/*!
+    \fn QOrganizerEventAttendee::name() const
+    Returns the name (or title or other label) of the attendee.
+ */
+QString QOrganizerEventAttendee::name() const
+{
+    return value<QString>(FieldName);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
+    Sets the email address of the attendee to \a emailAddress.
+ */
+void QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
+{
+    setValue(FieldEmailAddress, emailAddress);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::emailAddress() const
+    Returns the email address of the attendee.
+ */
+QString QOrganizerEventAttendee::emailAddress() const
+{
+    return value<QString>(FieldEmailAddress);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::setContactId(const QString &contactId)
+    Sets the unique identifier of the attendee to \a contactId.
+ */
+void QOrganizerEventAttendee::setContactId(const QString &contactId)
+{
+    setValue(FieldContactId, contactId);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::contactId() const
+    Returns the unique identifier of the attendee.  The format of the identifier
+    is platform specific and may be a serialized id, a vCard UID, or something else.
+ */
+QString QOrganizerEventAttendee::contactId() const
+{
+    return value<QString>(FieldContactId);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
+    Sets the participation status of the attendee in the event to \a status.
+ */
+void QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
+{
+    setValue(FieldParticipationStatus, status);
+}
+
+/*!
+    \fn QOrganizerEventAttendee::participationStatus() const
+    Returns the participation status of the attendee in the event.
+ */
+QOrganizerEventAttendee::ParticipationStatus QOrganizerEventAttendee::participationStatus() const
+{
+    return static_cast<ParticipationStatus>(value<int>(FieldParticipationStatus));
+}
+
+/*!
+    \fn QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
+    Sets the role of the attendee in the event to \a role.
+ */
+void QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
+{
+    setValue(FieldParticipationRole, static_cast<int>(role));
+}
+
+/*!
+    \fn QOrganizerEventAttendee::participationRole() const
+    Returns the participation role of the attendee in the event.
+ */
+QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participationRole() const
+{
+    return static_cast<ParticipationRole>(value<int>(FieldParticipationRole));
+}
+
 /*!
     \variable QOrganizerItemDisplayLabel::FieldLabel
 

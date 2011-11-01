@@ -64,5 +64,6 @@
 #include <qorganizeritemvisualreminder.h>
 
 #include <qorganizeritemextendeddetail.h>
+#include <qorganizereventattendee.h>
 
 #endif // QORGANIZERITEMDETAILS_H

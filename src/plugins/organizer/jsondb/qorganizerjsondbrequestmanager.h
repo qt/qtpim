@@ -61,10 +61,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbRequestData;
 
-class QOrganizerJsonDbRequestManager : public QObject
+class QOrganizerJsonDbRequestManager
 {
-    Q_OBJECT
-
 public:
     // HandlingStatus gives info about in which phase the handling of the request is.
     // The status is not necessarily in sync with the request status (QOrganizerAbstractRequest::state())

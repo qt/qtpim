@@ -139,8 +139,4 @@ QOrganizerJsonDbRequestManager::HandlingStatus QOrganizerJsonDbRequestManager::r
     return QOrganizerJsonDbRequestManager::Invalid;
 }
 
-
-
-#include "moc_qorganizerjsondbrequestmanager.cpp"
-
 QTORGANIZER_END_NAMESPACE

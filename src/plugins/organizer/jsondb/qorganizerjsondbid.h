@@ -53,8 +53,10 @@
 // We mean it.
 //
 
-#include "qorganizeritemengineid.h"
-#include "qorganizercollectionengineid.h"
+#include <qorganizeritemengineid.h>
+#include <qorganizercollectionengineid.h>
+
+#include <QtCore/qdebug.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -64,19 +66,20 @@ public:
     QOrganizerJsonDbItemId();
     QOrganizerJsonDbItemId(QString itemId);
     ~QOrganizerJsonDbItemId();
-    QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId& other);
+    QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId &other);
 
-    bool isEqualTo(const QOrganizerItemEngineId* other) const;
-    bool isLessThan(const QOrganizerItemEngineId* other) const;
+    bool isEqualTo(const QOrganizerItemEngineId *other) const;
+    bool isLessThan(const QOrganizerItemEngineId *other) const;
 
     QString managerUri() const;
-    QOrganizerItemEngineId* clone() const;
+    QOrganizerItemEngineId *clone() const;
 
     QString toString() const;
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
+    QDebug &debugStreamOut(QDebug &dbg) const;
 #endif
+
     uint hash() const;
     void setItemId(QString itemId);
 
@@ -91,19 +94,20 @@ public:
     QOrganizerJsonDbCollectionId();
     QOrganizerJsonDbCollectionId(QString collectionId);
     ~QOrganizerJsonDbCollectionId();
-    QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId& other);
+    QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId &other);
 
-    bool isEqualTo(const QOrganizerCollectionEngineId* other) const;
-    bool isLessThan(const QOrganizerCollectionEngineId* other) const;
+    bool isEqualTo(const QOrganizerCollectionEngineId *other) const;
+    bool isLessThan(const QOrganizerCollectionEngineId *other) const;
 
     QString managerUri() const;
-    QOrganizerCollectionEngineId* clone() const;
+    QOrganizerCollectionEngineId *clone() const;
 
     QString toString() const;
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
+    QDebug &debugStreamOut(QDebug &dbg) const;
 #endif
+
     uint hash() const;
     void setCollectionId(QString collectionId);
 
@@ -114,4 +118,3 @@ private:
 QTORGANIZER_END_NAMESPACE
 
 #endif
-

@@ -53,27 +53,22 @@
 // We mean it.
 //
 
-
-#include "qorganizermanager.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizermanagerenginefactory.h"
-#include "qorganizeritemengineid.h"
-#include "qorganizercollectionengineid.h"
+#include <qorganizermanagerenginefactory.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbEngineFactory : public QObject, public QOrganizerManagerEngineFactory
 {
-  Q_OBJECT
-  Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
-  public:
-    QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
-    QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
-    QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
+    Q_OBJECT
+    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
+
+public:
+    QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error);
+    QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &idString) const;
+    QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &idString) const;
     QString managerName() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
 #endif
-

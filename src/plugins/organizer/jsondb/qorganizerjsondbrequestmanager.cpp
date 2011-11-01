@@ -38,9 +38,10 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QMutexLocker>
 
 #include "qorganizerjsondbrequestmanager.h"
+
+#include <QtCore/qmutex.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -54,19 +55,19 @@ QOrganizerJsonDbRequestManager::~QOrganizerJsonDbRequestManager()
     delete m_operationMutex;
 }
 
-void QOrganizerJsonDbRequestManager::addRequest(QOrganizerAbstractRequest* req)
+void QOrganizerJsonDbRequestManager::addRequest(QOrganizerAbstractRequest *req)
 {
     QMutexLocker locker(m_operationMutex);
 
     if (!m_requests.contains(req)) {
-        QOrganizerJsonDbRequestData* newData = new QOrganizerJsonDbRequestData();
+        QOrganizerJsonDbRequestData *newData = new QOrganizerJsonDbRequestData();
         newData->m_status = QOrganizerJsonDbRequestManager::Inactive;
         newData->m_waitCondition = 0;
         m_requests.insert(req, newData);
     }
 }
 
-void QOrganizerJsonDbRequestManager::removeRequest(QOrganizerAbstractRequest* req)
+void QOrganizerJsonDbRequestManager::removeRequest(QOrganizerAbstractRequest *req)
 {
     QMutexLocker locker(m_operationMutex);
 
@@ -100,8 +101,7 @@ bool QOrganizerJsonDbRequestManager::setDeleted(QOrganizerAbstractRequest *req)
     return false;
 }
 
-
-bool QOrganizerJsonDbRequestManager::setWaitCondition(QOrganizerAbstractRequest* req, QWaitCondition* waitCondition)
+bool QOrganizerJsonDbRequestManager::setWaitCondition(QOrganizerAbstractRequest *req, QWaitCondition *waitCondition)
 {
     // This function is called from JsonDbEngine thread
     QMutexLocker locker(m_operationMutex);
@@ -113,32 +113,29 @@ bool QOrganizerJsonDbRequestManager::setWaitCondition(QOrganizerAbstractRequest*
     return false;
 }
 
-QWaitCondition* QOrganizerJsonDbRequestManager::waitCondition(QOrganizerAbstractRequest* req)
+QWaitCondition *QOrganizerJsonDbRequestManager::waitCondition(QOrganizerAbstractRequest *req)
 {
     QMutexLocker locker(m_operationMutex);
 
-    if (m_requests.contains(req)) {
+    if (m_requests.contains(req))
         return m_requests.value(req)->m_waitCondition;
-    }
     return 0;
 }
 
-void QOrganizerJsonDbRequestManager::removeWaitCondition(QOrganizerAbstractRequest* req)
+void QOrganizerJsonDbRequestManager::removeWaitCondition(QOrganizerAbstractRequest *req)
 {
     QMutexLocker locker(m_operationMutex);
 
-    if (m_requests.contains(req)) {
+    if (m_requests.contains(req))
         m_requests.value(req)->m_waitCondition = 0;
-    }
 }
 
-QOrganizerJsonDbRequestManager::HandlingStatus QOrganizerJsonDbRequestManager::requestStatus(QOrganizerAbstractRequest* req)
+QOrganizerJsonDbRequestManager::HandlingStatus QOrganizerJsonDbRequestManager::requestStatus(QOrganizerAbstractRequest *req)
 {
     QMutexLocker locker(m_operationMutex);
 
-    if (m_requests.contains(req)) {
+    if (m_requests.contains(req))
         return m_requests.value(req)->m_status;
-    }
     return QOrganizerJsonDbRequestManager::Invalid;
 }
 

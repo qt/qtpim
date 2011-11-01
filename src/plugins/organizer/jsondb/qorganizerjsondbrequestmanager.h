@@ -53,12 +53,9 @@
 // We mean it.
 //
 
-#include <QObject>
-#include <QMap>
-#include <QMutex>
-#include <QWaitCondition>
+#include <qorganizerabstractrequest.h>
 
-#include "qorganizerabstractrequest.h"
+#include <QtCore/qwaitcondition.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -69,7 +66,6 @@ class QOrganizerJsonDbRequestManager : public QObject
     Q_OBJECT
 
 public:
-
     // HandlingStatus gives info about in which phase the handling of the request is.
     // The status is not necessarily in sync with the request status (QOrganizerAbstractRequest::state())
     enum HandlingStatus {
@@ -83,28 +79,27 @@ public:
     QOrganizerJsonDbRequestManager();
     ~QOrganizerJsonDbRequestManager();
 
-    void addRequest(QOrganizerAbstractRequest* req);
-    void removeRequest(QOrganizerAbstractRequest* req);
+    void addRequest(QOrganizerAbstractRequest *req);
+    void removeRequest(QOrganizerAbstractRequest *req);
 
-    bool setActive(QOrganizerAbstractRequest* req);
-    bool setDeleted(QOrganizerAbstractRequest* req);
-    QOrganizerJsonDbRequestManager::HandlingStatus requestStatus(QOrganizerAbstractRequest* req);
+    bool setActive(QOrganizerAbstractRequest *req);
+    bool setDeleted(QOrganizerAbstractRequest *req);
+    QOrganizerJsonDbRequestManager::HandlingStatus requestStatus(QOrganizerAbstractRequest *req);
 
-    bool setWaitCondition(QOrganizerAbstractRequest* req, QWaitCondition* waitCondition);
-    QWaitCondition* waitCondition(QOrganizerAbstractRequest* req);
-    void removeWaitCondition(QOrganizerAbstractRequest* req);
+    bool setWaitCondition(QOrganizerAbstractRequest *req, QWaitCondition *waitCondition);
+    QWaitCondition *waitCondition(QOrganizerAbstractRequest *req);
+    void removeWaitCondition(QOrganizerAbstractRequest *req);
 
 private:
-    QMap<QOrganizerAbstractRequest*, QOrganizerJsonDbRequestData* > m_requests;
-    QMutex* m_operationMutex;
+    QMap<QOrganizerAbstractRequest *, QOrganizerJsonDbRequestData *> m_requests;
+    QMutex *m_operationMutex;
 };
 
 class QOrganizerJsonDbRequestData
 {
-    public:
-
+public:
     QOrganizerJsonDbRequestData() {}
-    QWaitCondition* m_waitCondition;
+    QWaitCondition *m_waitCondition;
     QOrganizerJsonDbRequestManager::HandlingStatus m_status;
 };
 

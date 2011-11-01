@@ -43,31 +43,32 @@
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring_p.h"
-#include "qorganizer.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-QOrganizerManagerEngine* QOrganizerJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
+QOrganizerManagerEngine *QOrganizerJsonDbEngineFactory::engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(parameters);
+    Q_UNUSED(parameters)
 
-    QOrganizerJsonDbEngine* ret = QOrganizerJsonDbEngine::createJsonDbEngine (error); // manager takes ownership and will clean up.
+    QOrganizerJsonDbEngine *ret = QOrganizerJsonDbEngine::createJsonDbEngine(error); // manager takes ownership and will clean up.
     return ret;
 }
 
-QOrganizerItemEngineId* QOrganizerJsonDbEngineFactory::createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
+QOrganizerItemEngineId *QOrganizerJsonDbEngineFactory::createItemEngineId(const QMap<QString, QString> &parameters, const QString &idString) const
 {
-    Q_UNUSED(parameters);
-    QOrganizerJsonDbItemId* retn = new QOrganizerJsonDbItemId;
+    Q_UNUSED(parameters)
+
+    QOrganizerJsonDbItemId *retn = new QOrganizerJsonDbItemId;
     if (!idString.isEmpty())
         retn->setItemId(idString);
     return retn;
 }
 
-QOrganizerCollectionEngineId* QOrganizerJsonDbEngineFactory::createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
+QOrganizerCollectionEngineId *QOrganizerJsonDbEngineFactory::createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &idString) const
 {
-    Q_UNUSED(parameters);
-    QOrganizerJsonDbCollectionId* retn = new QOrganizerJsonDbCollectionId;
+    Q_UNUSED(parameters)
+
+    QOrganizerJsonDbCollectionId *retn = new QOrganizerJsonDbCollectionId;
     if (!idString.isEmpty())
         retn->setCollectionId(idString);
     return retn;
@@ -82,4 +83,4 @@ QString QOrganizerJsonDbEngineFactory::managerName() const
 
 QTORGANIZER_END_NAMESPACE
 
-Q_EXPORT_PLUGIN2(qtorganizer_jsondb, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerJsonDbEngineFactory));
+Q_EXPORT_PLUGIN2(qtorganizer_jsondb, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerJsonDbEngineFactory))

@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbid.h"
-#include "qorganizer.h"
 #include "qorganizerjsondbstring_p.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -57,7 +56,7 @@ QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(QString itemId)
 {
 }
 
-QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId& other)
+QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId &other)
     : QOrganizerItemEngineId(),
       m_itemId(other.m_itemId)
 {
@@ -67,15 +66,15 @@ QOrganizerJsonDbItemId::~QOrganizerJsonDbItemId()
 {
 }
 
-bool QOrganizerJsonDbItemId::isEqualTo(const QOrganizerItemEngineId* other) const
+bool QOrganizerJsonDbItemId::isEqualTo(const QOrganizerItemEngineId *other) const
 {
-    QString otherItemId = static_cast<const QOrganizerJsonDbItemId*>(other)->m_itemId;
+    QString otherItemId = static_cast<const QOrganizerJsonDbItemId *>(other)->m_itemId;
     return (m_itemId == otherItemId);
 }
 
-bool QOrganizerJsonDbItemId::isLessThan(const QOrganizerItemEngineId* other) const
+bool QOrganizerJsonDbItemId::isLessThan(const QOrganizerItemEngineId *other) const
 {
-    QString otherItemId = static_cast<const QOrganizerJsonDbItemId*>(other)->m_itemId;
+    QString otherItemId = static_cast<const QOrganizerJsonDbItemId *>(other)->m_itemId;
     return (m_itemId < otherItemId);
 }
 
@@ -84,13 +83,13 @@ QString QOrganizerJsonDbItemId::managerUri() const
     return QOrganizerJsonDbStr::ManagerUri;
 }
 
-QOrganizerItemEngineId* QOrganizerJsonDbItemId::clone() const
+QOrganizerItemEngineId *QOrganizerJsonDbItemId::clone() const
 {
     return new QOrganizerJsonDbItemId(m_itemId);
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug& QOrganizerJsonDbItemId::debugStreamOut(QDebug& dbg) const
+QDebug &QOrganizerJsonDbItemId::debugStreamOut(QDebug &dbg) const
 {
     dbg.nospace() << "QOrganizerJsonDbItemId(" << m_itemId << ")";
     return dbg.maybeSpace();
@@ -126,9 +125,6 @@ void QOrganizerJsonDbItemId::setItemId(QString itemId)
     m_itemId = itemId;
 }
 
-
-
-
 QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId()
     : QOrganizerCollectionEngineId()
     , m_collectionId(QString())
@@ -141,7 +137,7 @@ QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId(QString collectionId)
 {
 }
 
-QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId& other)
+QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId &other)
     : QOrganizerCollectionEngineId()
     , m_collectionId(other.m_collectionId)
 {
@@ -151,15 +147,15 @@ QOrganizerJsonDbCollectionId::~QOrganizerJsonDbCollectionId()
 {
 }
 
-bool QOrganizerJsonDbCollectionId::isEqualTo(const QOrganizerCollectionEngineId* other) const
+bool QOrganizerJsonDbCollectionId::isEqualTo(const QOrganizerCollectionEngineId *other) const
 {
-    QString otherCollectionId = static_cast<const QOrganizerJsonDbCollectionId*>(other)->m_collectionId;
+    QString otherCollectionId = static_cast<const QOrganizerJsonDbCollectionId *>(other)->m_collectionId;
     return (m_collectionId == otherCollectionId);
 }
 
-bool QOrganizerJsonDbCollectionId::isLessThan(const QOrganizerCollectionEngineId* other) const
+bool QOrganizerJsonDbCollectionId::isLessThan(const QOrganizerCollectionEngineId *other) const
 {
-    QString otherCollectionId = static_cast<const QOrganizerJsonDbCollectionId*>(other)->m_collectionId;
+    QString otherCollectionId = static_cast<const QOrganizerJsonDbCollectionId *>(other)->m_collectionId;
     return (m_collectionId < otherCollectionId);
 }
 
@@ -168,13 +164,13 @@ QString QOrganizerJsonDbCollectionId::managerUri() const
     return QOrganizerJsonDbStr::ManagerUri;
 }
 
-QOrganizerCollectionEngineId* QOrganizerJsonDbCollectionId::clone() const
+QOrganizerCollectionEngineId *QOrganizerJsonDbCollectionId::clone() const
 {
     return new QOrganizerJsonDbCollectionId(m_collectionId);
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug& QOrganizerJsonDbCollectionId::debugStreamOut(QDebug& dbg) const
+QDebug &QOrganizerJsonDbCollectionId::debugStreamOut(QDebug &dbg) const
 {
     dbg.nospace() << "QOrganizerJsonDbCollectionId(" << m_collectionId << ")";
     return dbg.maybeSpace();

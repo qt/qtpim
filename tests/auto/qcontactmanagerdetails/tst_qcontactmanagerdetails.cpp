@@ -41,10 +41,10 @@
 
 #include <QtTest/QtTest>
 #include <QDateTime>
-#include <qtcontacts.h>
+#include <QtContacts>
 #include "../qcontactmanagerdataholder.h"
 
-QTPIM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 // to get QFETCH to work with the template expression...
 typedef QMap<QString,QString> tst_QContactManagerDetails_QStringMap;

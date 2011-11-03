@@ -11,3 +11,8 @@ DEFINES += MALICIOUSPLUGINNAME=maliciousplugin
 
 HEADERS += maliciousplugin_p.h
 SOURCES += maliciousplugin.cpp
+
+# Enable installation of plugin in "make install"
+TARGET = maliciousplugin
+target.path += $$[QT_INSTALL_PLUGINS]/contacts
+INSTALLS += target

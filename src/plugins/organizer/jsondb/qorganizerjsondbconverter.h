@@ -75,6 +75,11 @@ public:
     bool singleFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
 
+    // notification handling
+    QString jsonDbNotificationObjectToOrganizerType(const QVariantMap &object) const;
+    QOrganizerItemId jsonDbNotificationObjectToItemId(const QVariantMap &object) const;
+    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QVariantMap &object) const;
+
 private:
     void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
     void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;

@@ -85,6 +85,8 @@ bool QOrganizerJsonDbEngine::initEngine (QOrganizerManager::Error* error)
             qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
             qRegisterMetaType<QList<QOrganizerCollectionId> >("QList<QOrganizerCollectionId>");
             qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+            qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
+            qRegisterMetaType<QOrganizerCollectionId>("QOrganizerCollectionId");
             d->m_requestHandlerThread->moveToThread (d->m_requestHandlerThread);
             // making sure that thread is started before exiting this function
             QEventLoop loop;

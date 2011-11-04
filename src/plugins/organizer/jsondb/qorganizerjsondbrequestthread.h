@@ -49,6 +49,10 @@
 #include "qorganizer.h"
 #include "qorganizerjsondbconverter.h"
 
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerJsonDbRequestManager;
@@ -77,6 +81,17 @@ signals:
 protected:
     virtual void run();
 
+private slots:
+    // Since these three slots are triggered either by signals from data storage for notifications
+    // from JsonDb, or by the timer, and they are executed only in this thread, no mutex is needed.
+    void onItemAdded(const QOrganizerItemId &itemId);
+    void onItemChanged(const QOrganizerItemId &itemId);
+    void onItemRemoved(const QOrganizerItemId &itemId);
+    void onCollectionAdded(const QOrganizerCollectionId &collectionId);
+    void onCollectionChanged(const QOrganizerCollectionId &collectionId);
+    void onCollectionRemoved(const QOrganizerCollectionId &collectionId);
+    void onTimeout();
+
 private:
     void handleItemSaveRequest(QOrganizerItemSaveRequest* saveReq);
     void handleItemFetchRequest(QOrganizerItemFetchRequest* fetchReq);
@@ -94,8 +109,15 @@ private:
     QOrganizerJsonDbRequestManager* m_requestMgr;
     //Mutex to make the request state changes atomic
     QMutex* m_reqStateMutex;
+
+    // Handle item / collection changes
+    // They are only used by the notification system, so no mutex is needed.
+    static const int TIMEOUT_INTERVAL;
+    QTimer *m_timer;
     QOrganizerItemChangeSet m_ics;
     QOrganizerCollectionChangeSet m_ccs;
+
+    void startTimer();  // Only used by onItemChanged() and onCollectionChanged()
 };
 
 QTORGANIZER_END_NAMESPACE

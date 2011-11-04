@@ -1173,6 +1173,29 @@ bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFi
     return isValidFilter;
 }
 
+QString QOrganizerJsonDbConverter::jsonDbNotificationObjectToOrganizerType(const QVariantMap &object) const
+{
+    return object.value(JsonDbString::kTypeStr).toString();
+}
+
+QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(const QVariantMap &object) const
+{
+    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    if (jsonUuid.isEmpty())
+        return QOrganizerItemId();
+    else
+        return QOrganizerItemId(new QOrganizerJsonDbItemId(jsonUuid));
+}
+
+QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QVariantMap &object) const
+{
+    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    if (jsonUuid.isEmpty())
+        return QOrganizerCollectionId();
+    else
+        return QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonUuid));
+}
+
 bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
 {
     bool isValidFilter = true;

@@ -102,9 +102,18 @@ public:
     QOrganizerCollection defaultCollection();
     QSet<QOrganizerCollectionId> collectionIds();
 
+    void initNotification();
+
 signals:
     void threadInitialized();
     void requestInitialized();
+
+    void itemAdded(const QOrganizerItemId &itemId);
+    void itemChanged(const QOrganizerItemId &itemId);
+    void itemRemoved(const QOrganizerItemId &itemId);
+    void collectionAdded(const QOrganizerCollectionId &collectionId);
+    void collectionChanged(const QOrganizerCollectionId &collectionId);
+    void collectionRemoved(const QOrganizerCollectionId &collectionId);
 
 protected:
     virtual void run();
@@ -126,7 +135,8 @@ private:
         RemoveItemsByCollectionId,
         SaveCollections,
         Collections,
-        RemoveCollections
+        RemoveCollections,
+        RegisterNotification
     };
 
     void handleResponse(int trId, QOrganizerManager::Error error, const QVariant& object);
@@ -146,6 +156,8 @@ private:
     void handleCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
     void handleRemoveCollectionsRequest();
     void handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
+    void handleRegisterNotificationRequest();
+    void handleRegisterNotificationResponse(QOrganizerManager::Error error);
 
     QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
 
@@ -153,11 +165,6 @@ private:
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void clearRequestData();
 
-    // This mutex is used for protecting request data in situations where jsondb is modified by someone
-    // else when a request is being processed in this class. Modification causes onNotified slot to be called
-    // and it can happen while the one of the public methods is waiting for a request to complete
-    // TODO: implement notification system and take the mutex into use
-    //QMutex* m_operationMutex;
     QMutex* m_waitMutex;
     QWaitCondition m_syncWaitCondition;
 

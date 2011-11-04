@@ -178,6 +178,13 @@ QSet<QOrganizerCollectionId> QOrganizerJsonDbDataStorage::collectionIds()
     return m_collectionIds;
 }
 
+void QOrganizerJsonDbDataStorage::initNotification()
+{
+    initRequestData(RegisterNotification, 0, 0);
+    processRequest();
+    clearRequestData();
+}
+
 void QOrganizerJsonDbDataStorage::run()
 {
     m_waitMutex = new QMutex();
@@ -210,6 +217,7 @@ void QOrganizerJsonDbDataStorage::onResponse(int trId, const QVariant &object)
 void QOrganizerJsonDbDataStorage::onError(int trId, int errorCode, const QString &message)
 {
     Q_UNUSED(message);
+
     QVariant object;
     QOrganizerManager::Error error = handleErrorResponse(object, errorCode);
     handleResponse(trId, error, object);
@@ -217,9 +225,30 @@ void QOrganizerJsonDbDataStorage::onError(int trId, int errorCode, const QString
 
 void QOrganizerJsonDbDataStorage::onNotified(const QString& notifyUuid, const QVariant& object, const QString& action)
 {
-    Q_UNUSED(notifyUuid);
-    Q_UNUSED(object);
-    Q_UNUSED(action);
+    // No mutex is needed since this slot doesn't touch any member variables.
+
+    Q_UNUSED(notifyUuid)
+
+    QVariantMap jsonDbObject(object.toMap());
+    if (jsonDbObject.isEmpty())
+        return;
+
+    QString jsonType(m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject));
+    if (jsonType == QOrganizerJsonDbStr::Event || jsonType == QOrganizerJsonDbStr::Todo) {
+        if (action == JsonDbString::kCreateStr)
+            emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+        else if (action == JsonDbString::kUpdateStr)
+            emit itemChanged(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+        else if (action == JsonDbString::kRemoveStr)
+            emit itemRemoved(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+    } else if (jsonType == QOrganizerJsonDbStr::Collection) {
+        if (action == JsonDbString::kCreateStr)
+            emit collectionAdded(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
+        else if (action == JsonDbString::kUpdateStr)
+            emit collectionChanged(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
+        else if (action == JsonDbString::kRemoveStr)
+            emit collectionRemoved(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
+    }
 }
 
 void QOrganizerJsonDbDataStorage::handleRequest()
@@ -248,6 +277,9 @@ void QOrganizerJsonDbDataStorage::handleRequest()
         break;
     case RemoveCollections:
         handleRemoveCollectionsRequest();
+        break;
+    case RegisterNotification:
+        handleRegisterNotificationRequest();
         break;
     default:
         break;
@@ -291,6 +323,9 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         break;
     case RemoveCollections:
         handleRemoveCollectionsResponse(error, object);
+        break;
+    case RegisterNotification:
+        handleRegisterNotificationResponse(error);
         break;
     case Invalid:
         // no active request at the moment, internal variables have been cleared and some pointers have
@@ -663,6 +698,20 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerMana
             m_collectionIds.remove(j.value());
     }
      m_syncWaitCondition.wakeAll();
+}
+
+void QOrganizerJsonDbDataStorage::handleRegisterNotificationRequest()
+{
+    int trId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
+                                QOrganizerJsonDbStr::NotificationQuery);
+    m_transactionIds.insert(trId, 0);
+}
+
+void QOrganizerJsonDbDataStorage::handleRegisterNotificationResponse(QOrganizerManager::Error error)
+{
+    if (error != QOrganizerManager::NoError)
+        qWarning("Can't register notifications!");
+    m_syncWaitCondition.wakeAll();
 }
 
 QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const QVariant &object, int errorCode)

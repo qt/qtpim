@@ -2411,10 +2411,10 @@ void tst_QOrganizerManager::signalEmission()
     QVERIFY(todo.saveDetail(&nc));
     QVERIFY(m1->saveItem(&todo));
     QOrganizerItemId cid = todo.id();
-    addSigCount += 1;
-    QTRY_COMPARE(spyAdded.count(), addSigCount);
+    QTRY_VERIFY(spyAdded.count() > addSigCount);
+    ++addSigCount;
     args = spyAdded.takeFirst();
-    addSigCount -= 1;
+    --addSigCount;
     arg = args.first().value<QList<QOrganizerItemId> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QOrganizerItemId(arg.at(0)), cid);
@@ -2427,22 +2427,21 @@ void tst_QOrganizerManager::signalEmission()
     nc.setLabel("label me that");
     QVERIFY(todo.saveDetail(&nc));
     QVERIFY(m1->saveItem(&todo));
-    modSigCount += 1;
-    QTRY_COMPARE(spyModified.count(), modSigCount);
-    QTRY_COMPARE(spyObserverModified1->count(), 1);
+    QTRY_VERIFY(spyModified.count() > modSigCount);
+    ++modSigCount;
+    QTRY_VERIFY(spyObserverModified1->count() > 0);
     args = spyModified.takeFirst();
-    modSigCount -= 1;
+    --modSigCount;
     arg = args.first().value<QList<QOrganizerItemId> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QOrganizerItemId(arg.at(0)), cid);
 
     // verify remove emits signal removed
     QVERIFY(m1->removeItem(todo.id()));
-    remSigCount += 1;
-    QTRY_COMPARE(spyRemoved.count(), remSigCount);
-    QTRY_COMPARE(spyObserverRemoved1->count(), 1);
+    QTRY_VERIFY(spyRemoved.count() > remSigCount);
+    QTRY_VERIFY(spyObserverRemoved1->count() > 0);
     args = spyRemoved.takeFirst();
-    remSigCount -= 1;
+    --remSigCount;
     arg = args.first().value<QList<QOrganizerItemId> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QOrganizerItemId(arg.at(0)), cid);
@@ -2455,11 +2454,10 @@ void tst_QOrganizerManager::signalEmission()
     QVERIFY(todo2.saveDetail(&nc2));
     QVERIFY(todo3.saveDetail(&nc3));
     QVERIFY(m1->saveItem(&todo2));
-    addSigCount += 1;
     QVERIFY(m1->saveItem(&todo3));
-    addSigCount += 1;
     QTRY_COMPARE(spyModified.count(), modSigCount);
-    QTRY_COMPARE(spyAdded.count(), addSigCount);
+    QTRY_VERIFY(spyAdded.count() > addSigCount);
+    addSigCount = spyAdded.count();
 
     spyObserverModified1->clear();
     spyObserverRemoved1->clear();
@@ -2474,28 +2472,25 @@ void tst_QOrganizerManager::signalEmission()
     nc2.setLabel("M.");
     QVERIFY(todo2.saveDetail(&nc2));
     QVERIFY(m1->saveItem(&todo2));
-    modSigCount += 1;
     nc2.setLabel("Mark");
     nc3.setLabel("G.");
     QVERIFY(todo2.saveDetail(&nc2));
     QVERIFY(todo3.saveDetail(&nc3));
     QVERIFY(m1->saveItem(&todo2));
-    modSigCount += 1;
     QVERIFY(m1->saveItem(&todo3));
-    modSigCount += 1;
-    QTRY_COMPARE(spyModified.count(), modSigCount);
-    QTRY_COMPARE(spyObserverModified2->count(), 2);
-    QTRY_COMPARE(spyObserverModified3->count(), 1);
+    QTRY_VERIFY(spyModified.count() > modSigCount);
+    modSigCount = spyModified.count();
+    QTRY_VERIFY(spyObserverModified2->count() > 0);
+    QTRY_VERIFY(spyObserverModified3->count() > 0);
     QCOMPARE(spyObserverModified1->count(), 0);
 
     // verify multiple removes works as advertised
     m1->removeItem(todo3.id());
-    remSigCount += 1;
     m1->removeItem(todo2.id());
-    remSigCount += 1;
-    QTRY_COMPARE(spyRemoved.count(), remSigCount);
-    QTRY_COMPARE(spyObserverRemoved2->count(), 1);
-    QTRY_COMPARE(spyObserverRemoved3->count(), 1);
+    QTRY_VERIFY(spyRemoved.count() > remSigCount);
+    remSigCount = spyRemoved.count();
+    QTRY_VERIFY(spyObserverRemoved2->count() > 0);
+    QTRY_VERIFY(spyObserverRemoved3->count() > 0);
     QCOMPARE(spyObserverRemoved1->count(), 0);
 
     QVERIFY(!m1->removeItem(todo.id())); // not saved.
@@ -2569,38 +2564,118 @@ void tst_QOrganizerManager::signalEmission()
     QTRY_COMPARE(spyAdded.count(), 0);
     QTRY_COMPARE(spyModified.count(), 0);
 
+    /* Now some cross manager testing */
+    if (m1->managerName() == QStringLiteral("memory"))
+        QSKIP("Not supported by memory back-end");
+
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
+
+
+    // verify that signals are emitted for modifications made to other managers (same id).
     QScopedPointer<QOrganizerManager> m2(QOrganizerManager::fromUri(uri));
 
-#if defined(QT_NO_JSONDB)
-//    /* Now some cross manager testing */
-//    spyAdded.clear();
-//    spyModified.clear();
-//    spyRemoved.clear();
-//    spyChanged.clear();
+    // add one new item
+    QOrganizerEvent newEvent;
+    newEvent.setStartDateTime(QDateTime::currentDateTime());
+    newEvent.setEndDateTime(QDateTime::currentDateTime());
+    newEvent.setDisplayLabel(QStringLiteral("a new event"));
 
-//    // verify that signals are emitted for modifications made to other managers (same id).
-//    QSignalSpy spyDataChanged(m1.data(), SIGNAL(dataChanged()));
-//    spyDataChanged.clear();
-//    QOrganizerItemDisplayLabel ncs = todo.detail(QOrganizerItemDisplayLabel::DefinitionName);
-//    ncs.setLabel("Test");
-//    QVERIFY(todo.saveDetail(&ncs));
-//    todo.setId(QOrganizerItemId()); // reset id so save can succeed.
-//    QVERIFY(m2->saveItem(&todo));
+    QVERIFY(m2->saveItem(&newEvent));
+    QTRY_VERIFY(spyChanged.count() || (spyAdded.count() > 0));
 
-//    // now modify and resave.
-//    ncs.setLabel("Test2");
-//    QVERIFY(todo.saveDetail(&ncs));
-//    QVERIFY(m2->saveItem(&todo));
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
 
-//    // we should have one addition and one modification (or at least a data changed signal).
-//    QTRY_VERIFY(spyDataChanged.count() || (spyAdded.count() == 1)); // check that we received the update signals.
-//    QTRY_VERIFY(spyDataChanged.count() || (spyModified.count() == 1)); // check that we received the update signals.
-//    todo = m2->item(todo.id()); // reload it.
-//    QVERIFY(m1->item(todo.id()) == todo); // ensure we can read it from m1.
-//    spyDataChanged.clear();
-//    m2->removeItem(todo.id());
-//    QTRY_VERIFY(spyDataChanged.count() || (spyRemoved.count() == 1)); // check that we received the remove signal.
-#endif
+    // modify the item
+    newEvent.setEndDateTime(QDateTime::currentDateTime().addDays(1));
+
+    QVERIFY(m2->saveItem(&newEvent));
+    QTRY_VERIFY(spyChanged.count() || (spyModified.count() > 0));
+
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
+
+    // remove the item
+    QVERIFY(m2->removeItem(newEvent.id()));
+    QTRY_VERIFY(spyChanged.count() || (spyRemoved.count() > 0));
+
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
+
+    // add several new items
+    QOrganizerEvent moreEvents[10];
+    for (int i = 0; i < 10; ++i) {;
+        moreEvents[i].setStartDateTime(QDateTime::currentDateTime());
+        moreEvents[i].setEndDateTime(QDateTime::currentDateTime());
+        moreEvents[i].setDisplayLabel(QStringLiteral("yet another event"));
+
+        QVERIFY(m2->saveItem(&moreEvents[i]));
+    }
+    QTRY_VERIFY(spyChanged.count() || (spyAdded.count() > 0));
+
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
+
+    // modify several items
+    for (int i = 0; i < 10; ++i) {
+        moreEvents[i].setEndDateTime(QDateTime::currentDateTime().addDays(i + 1));
+        QVERIFY(m2->saveItem(&moreEvents[i]));
+    }
+    QTRY_VERIFY(spyChanged.count() || (spyModified.count() > 0));
+
+    spyAdded.clear();
+    spyModified.clear();
+    spyRemoved.clear();
+    spyChanged.clear();
+
+    // remove several items
+    for (int i = 0; i < 10; ++i)
+        QVERIFY(m2->removeItem(moreEvents[i].id()));
+    QTRY_VERIFY(spyChanged.count() || (spyRemoved.count() > 0));
+
+    spyChanged.clear();
+
+    QSignalSpy spyCollectionAdded(m1.data(), SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)));
+    QSignalSpy spyCollectionModified(m1.data(), SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)));
+    QSignalSpy spyCollectionRemoved(m1.data(), SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)));
+
+    // add one collection
+    QOrganizerCollection newCollection;
+    newCollection.setMetaData(QOrganizerCollection::KeyName, QStringLiteral("a new collection"));
+
+    QVERIFY(m2->saveCollection(&newCollection));
+    QTRY_VERIFY(spyChanged.count() || (spyCollectionAdded.count() > 0));
+
+    spyCollectionAdded.clear();
+    spyCollectionModified.clear();
+    spyCollectionRemoved.clear();
+    spyChanged.clear();
+
+    // modify one collection
+    newCollection.setMetaData(QOrganizerCollection::KeyName, QStringLiteral("a new collection, modified"));
+
+    QVERIFY(m2->saveCollection(&newCollection));
+    QTRY_VERIFY(spyChanged.count() || (spyCollectionModified.count() > 0));
+
+    spyCollectionAdded.clear();
+    spyCollectionModified.clear();
+    spyCollectionRemoved.clear();
+    spyChanged.clear();
+
+    // remove one collection
+    QVERIFY(m2->removeCollection(newCollection.id()));
+    QTRY_VERIFY(spyChanged.count() || (spyCollectionRemoved.count() > 0));
 }
 
 void tst_QOrganizerManager::errorStayingPut()

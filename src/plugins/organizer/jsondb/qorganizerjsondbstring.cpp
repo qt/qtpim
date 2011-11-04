@@ -152,4 +152,7 @@ const QString QOrganizerJsonDbStr::WarningDefaultCollectionRemove(QStringLiteral
 const QString QOrganizerJsonDbStr::WarningDefaultCollectionChange(QStringLiteral("Default collection can not be changed!"));
 const QString QOrganizerJsonDbStr::WarningDefaultCollectionCreate(QStringLiteral("Same name as default collection!"));
 
+// Notification
+const QString QOrganizerJsonDbStr::NotificationQuery(QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\", \"com.nokia.mp.organizer.Collection\"]]"));
+
 QTORGANIZER_END_NAMESPACE

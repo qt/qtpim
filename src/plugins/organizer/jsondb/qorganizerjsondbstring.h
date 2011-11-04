@@ -172,6 +172,8 @@ public:
     const static QString WarningDefaultCollectionChange;
     const static QString WarningDefaultCollectionCreate;
 
+    // Notification
+    const static QString NotificationQuery;
 };
 
 QTORGANIZER_END_NAMESPACE

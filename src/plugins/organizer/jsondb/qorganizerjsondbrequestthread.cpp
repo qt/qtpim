@@ -49,15 +49,20 @@
 #include "qorganizerjsondbstring.h"
 #include "qorganizer.h"
 
+#include <QtCore/qdebug.h>
+#include <QtCore/qtimer.h>
 #include <QtCore/quuid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-#include <QDebug>
-
+const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);
 
 QOrganizerJsonDbRequestThread::QOrganizerJsonDbRequestThread()
-    : m_engine(0), m_storage(0), m_requestMgr(0), m_reqStateMutex(0)
+    : m_engine(0)
+    , m_storage(0)
+    , m_requestMgr(0)
+    , m_reqStateMutex(0)
+    , m_timer(0)
 {
 }
 
@@ -83,7 +88,17 @@ void QOrganizerJsonDbRequestThread::run()
     connect(m_storage, SIGNAL(threadInitialized()), &loop, SLOT(quit()));
     m_storage->start();
     loop.exec();
+
+    m_storage->initNotification();
+    connect(m_storage, SIGNAL(itemAdded(QOrganizerItemId)), this, SLOT(onItemAdded(QOrganizerItemId)));
+    connect(m_storage, SIGNAL(itemChanged(QOrganizerItemId)), this, SLOT(onItemChanged(QOrganizerItemId)));
+    connect(m_storage, SIGNAL(itemRemoved(QOrganizerItemId)), this, SLOT(onItemRemoved(QOrganizerItemId)));
+    connect(m_storage, SIGNAL(collectionAdded(QOrganizerCollectionId)), this, SLOT(onCollectionAdded(QOrganizerCollectionId)));
+    connect(m_storage, SIGNAL(collectionChanged(QOrganizerCollectionId)), this, SLOT(onCollectionChanged(QOrganizerCollectionId)));
+    connect(m_storage, SIGNAL(collectionRemoved(QOrganizerCollectionId)), this, SLOT(onCollectionRemoved(QOrganizerCollectionId)));
+
     initDefaultCollection();
+
     emit initialized();
     QThread::run();
 }
@@ -191,6 +206,63 @@ void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req
     }
 }
 
+void QOrganizerJsonDbRequestThread::onItemAdded(const QOrganizerItemId &itemId)
+{
+    m_ics.insertAddedItem(itemId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::onItemChanged(const QOrganizerItemId &itemId)
+{
+    m_ics.insertChangedItem(itemId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::onItemRemoved(const QOrganizerItemId &itemId)
+{
+    m_ics.insertRemovedItem(itemId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::onCollectionAdded(const QOrganizerCollectionId &collectionId)
+{
+    m_ccs.insertAddedCollection(collectionId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::onCollectionChanged(const QOrganizerCollectionId &collectionId)
+{
+    m_ccs.insertChangedCollection(collectionId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::onCollectionRemoved(const QOrganizerCollectionId &collectionId)
+{
+    m_ccs.insertRemovedCollection(collectionId);
+    startTimer();
+}
+
+void QOrganizerJsonDbRequestThread::startTimer()
+{
+    if (!m_timer) {
+        m_timer = new QTimer(this);
+        m_timer->setSingleShot(true);
+        m_timer->setInterval(TIMEOUT_INTERVAL);
+        connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    }
+
+    m_timer->start();
+}
+
+void QOrganizerJsonDbRequestThread::onTimeout()
+{
+    if (m_engine) {
+        m_ics.emitSignals(m_engine);
+        m_ics.clearAll();
+        m_ccs.emitSignals(m_engine);
+        m_ccs.clearAll();
+    }
+}
 
 void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequest* saveReq)
 {
@@ -248,24 +320,17 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         while (i.hasNext()) {
             i.next();
             if (!errorMap.contains(i.key())) {
-                if (itemIsNewStatusMap.value(i.key())) {
-                    // if there were no errors when saving this item and this is a new item,
-                    // insert item with newly created item id to items list
-                    // (updated items already contain item id, so no need to insert them)
+                // if there were no errors when saving this item and this is a new item,
+                // insert item with newly created item id to items list
+                // (updated items already contain item id, so no need to insert them)
+                if (itemIsNewStatusMap.value(i.key()))
                     items.replace(i.key(), i.value());
-                    m_ics.insertAddedItem(i.value().id());
-                } else {
-                    m_ics.insertChangedItem(i.value().id());
-                }
             }
         }
     }
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
     m_requestMgr->removeRequest(saveReq);
     QOrganizerManagerEngine::updateItemSaveRequest(saveReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    m_ics.emitSignals(m_engine);
-    m_ics.clearAddedItems();
-    m_ics.clearChangedItems();
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -323,16 +388,9 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
     if (!itemIds.isEmpty())
         m_storage->removeItems(itemIds, &errorMap, &latestError);
 
-    for (int i = 0; i < itemIds.size(); i++) {
-        if (!errorMap.contains(i))
-            m_ics.insertRemovedItem(itemIds.at(i));
-    }
-
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeReq);
     m_requestMgr->removeRequest(removeReq);
     QOrganizerManagerEngine::updateItemRemoveRequest(removeReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    m_ics.emitSignals(m_engine);
-    m_ics.clearRemovedItems();
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -372,21 +430,14 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
         while (i.hasNext()) {
             i.next();
             if (!errorMap.contains(i.key())) {
-                if (collectionIsNewStatusMap.value(i.key())) {
+                if (collectionIsNewStatusMap.value(i.key()))
                     collections.replace(i.key(), i.value());
-                    m_ccs.insertAddedCollection(i.value().id());
-                } else {
-                    m_ccs.insertChangedCollection(i.value().id());
-                }
             }
         }
     }
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionSaveReq);
     m_requestMgr->removeRequest(collectionSaveReq);
     QOrganizerManagerEngine::updateCollectionSaveRequest(collectionSaveReq, collections, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    m_ccs.emitSignals(m_engine);
-    m_ccs.clearAddedCollections();
-    m_ccs.clearChangedCollections();
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -437,17 +488,11 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerColl
             if (!errorMap.contains(i))
                 removedCollectionIds.append(collectionIds.at(i));
         }
-        m_ccs.insertRemovedCollections(removedCollectionIds);
-        QList<QOrganizerItemId> removedItemIds = m_storage->removeItemsByCollectionId(removedCollectionIds);
-        m_ics.insertRemovedItems(removedItemIds);
+        m_storage->removeItemsByCollectionId(removedCollectionIds);
     }
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionRemoveReq);
     QOrganizerManagerEngine::updateCollectionRemoveRequest(collectionRemoveReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    m_ccs.emitSignals(m_engine);
-    m_ics.emitSignals(m_engine);
-    m_ccs.clearRemovedCollections();
-    m_ics.clearRemovedItems();
     if (waitCondition)
         waitCondition->wakeAll();
 }

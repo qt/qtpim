@@ -16,7 +16,7 @@ HEADERS += \
     qorganizerjsondbenginefactory.h \
     qorganizerjsondbid.h \
     qorganizerjsondbrequestmanager.h \
-    qorganizerjsondbstring_p.h \
+    qorganizerjsondbstring.h \
     qorganizerjsondbconverter.h \
     qorganizerjsondbdatastorage.h
 

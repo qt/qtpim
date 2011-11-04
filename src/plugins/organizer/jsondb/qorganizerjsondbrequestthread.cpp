@@ -46,7 +46,7 @@
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbrequestmanager.h"
 #include "qorganizerjsondbdatastorage.h"
-#include "qorganizerjsondbstring_p.h"
+#include "qorganizerjsondbstring.h"
 #include "qorganizer.h"
 
 #include <QtCore/quuid.h>

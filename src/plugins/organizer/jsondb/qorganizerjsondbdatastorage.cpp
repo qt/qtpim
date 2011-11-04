@@ -43,7 +43,7 @@
 #include <QMutexLocker>
 
 #include "qorganizerjsondbid.h"
-#include "qorganizerjsondbstring_p.h"
+#include "qorganizerjsondbstring.h"
 
 #include <jsondb-client.h>
 #include <private/jsondb-connection_p.h>

@@ -41,7 +41,7 @@
 
 #include "qorganizerjsondbconverter.h"
 #include "qorganizerjsondbid.h"
-#include "qorganizerjsondbstring_p.h"
+#include "qorganizerjsondbstring.h"
 #include "qorganizer.h"
 
 #include <private/jsondb-strings_p.h>

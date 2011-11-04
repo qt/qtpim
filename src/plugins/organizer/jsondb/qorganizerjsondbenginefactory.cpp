@@ -42,7 +42,7 @@
 #include "qorganizerjsondbenginefactory.h"
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbid.h"
-#include "qorganizerjsondbstring_p.h"
+#include "qorganizerjsondbstring.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
 

@@ -43,7 +43,7 @@
 #include <QAbstractSocket>
 
 #include "qorganizerjsondbengine.h"
-#include "qorganizerjsondbstring_p.h"
+#include "qorganizerjsondbstring.h"
 #include "qorganizer.h"
 
 QTORGANIZER_BEGIN_NAMESPACE

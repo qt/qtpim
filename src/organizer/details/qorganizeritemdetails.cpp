@@ -137,6 +137,13 @@ QString QOrganizerItemDisplayLabel::label() const
  */
 const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
 
+/*!
+    \variable QOrganizerItemDisplayLabel::FieldLabel
+
+    The constant key for which the display label value is stored in
+    details of the QOrganizerItemDisplayLabel type.
+ */
+const QString QOrganizerItemDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
 /* ==================== QOrganizerEventAttendee ======================= */
 /*!
@@ -309,14 +316,6 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participatio
 {
     return static_cast<ParticipationRole>(value<int>(FieldParticipationRole));
 }
-
-/*!
-    \variable QOrganizerItemDisplayLabel::FieldLabel
-
-    The constant key for which the display label value is stored in
-    details of the QOrganizerItemDisplayLabel type.
- */
-const QString QOrganizerItemDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
 /*!
     \class QOrganizerEventTime

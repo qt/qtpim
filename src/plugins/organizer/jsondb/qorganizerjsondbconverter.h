@@ -90,6 +90,9 @@ private:
     void attendeeDetailToJsonDbObject(const QOrganizerEventAttendee &attendeeDetail, QVariantMap *object) const;
     void jsonDbObjectToAttendeeDetail(const QVariantMap &object, QOrganizerEventAttendee *attendeeDetail) const;
 
+    void rsvpDetailToJsonDbObject(const QOrganizerEventRsvp &rsvpDetail, QVariantMap *object) const;
+    void jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail) const;
+
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
 

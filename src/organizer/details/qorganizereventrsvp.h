@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -39,32 +39,54 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILS_H
-#define QORGANIZERITEMDETAILS_H
+#ifndef QORGANIZEREVENTRSVP_H
+#define QORGANIZEREVENTRSVP_H
 
-#include <qorganizereventtime.h>
-#include <qorganizeritemcomment.h>
-#include <qorganizeritemdescription.h>
-#include <qorganizeritemdisplaylabel.h>
-#include <qorganizeritemguid.h>
-#include <qorganizeritemlocation.h>
-#include <qorganizeritemparent.h>
-#include <qorganizeritempriority.h>
-#include <qorganizeritemrecurrence.h>
-#include <qorganizeritemtag.h>
-#include <qorganizeritemtimestamp.h>
-#include <qorganizeritemtype.h>
-#include <qorganizerjournaltime.h>
-#include <qorganizertodoprogress.h>
-#include <qorganizertodotime.h>
-
-#include <qorganizeritemreminder.h>
-#include <qorganizeritemaudiblereminder.h>
-#include <qorganizeritememailreminder.h>
-#include <qorganizeritemvisualreminder.h>
-
-#include <qorganizeritemextendeddetail.h>
 #include <qorganizereventattendee.h>
-#include <qorganizereventrsvp.h>
+#include <qorganizeritemdetail.h>
 
-#endif // QORGANIZERITEMDETAILS_H
+QTORGANIZER_BEGIN_NAMESPACE
+
+class Q_ORGANIZER_EXPORT QOrganizerEventRsvp : public QOrganizerItemDetail
+{
+public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventRsvp, "Rsvp")
+    const static QString FieldParticipationStatus;
+    const static QString FieldParticipationRole;
+    const static QString FieldResponseRequirement;
+    const static QString FieldResponseDeadline;
+    const static QString FieldResponseDate;
+    const static QString FieldOrganizerName;
+    const static QString FieldOrganizerEmail;
+
+    enum ResponseRequirement {
+        ResponseNotRequired = 0,
+        ResponseRequired = 1
+    };
+
+    void setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status);
+    QOrganizerEventAttendee::ParticipationStatus participationStatus() const;
+
+    void setParticipationRole(QOrganizerEventAttendee::ParticipationRole role);
+    QOrganizerEventAttendee::ParticipationRole participationRole() const;
+
+    void setResponseRequirement(ResponseRequirement responseRequirement);
+    ResponseRequirement responseRequirement() const;
+
+    void setResponseDeadline(const QDate &date);
+    QDate responseDeadline() const;
+
+    void setResponseDate(const QDate &date);
+    QDate responseDate() const;
+
+    void setOrganizerName(const QString &name);
+    QString organizerName() const;
+
+    void setOrganizerEmail(const QString &email);
+    QString organizerEmail() const;
+};
+
+QTORGANIZER_END_NAMESPACE
+
+#endif// QORGANIZEREVENTRSVP_H
+

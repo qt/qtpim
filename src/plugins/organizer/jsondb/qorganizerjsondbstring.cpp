@@ -133,8 +133,16 @@ const QString QOrganizerJsonDbStr::Attendee(QStringLiteral("attendee"));
 const QString QOrganizerJsonDbStr::AttendeeName(QStringLiteral("name"));
 const QString QOrganizerJsonDbStr::AttendeeEmailAddress(QStringLiteral("emailAddress"));
 const QString QOrganizerJsonDbStr::AttendeeId(QStringLiteral("attendeeId"));
-const QString QOrganizerJsonDbStr::AttendeeParticipationStatus(QStringLiteral("participationStatus"));
+const QString QOrganizerJsonDbStr::AttendeeParticipationStatus(QStringLiteral("participationState"));
 const QString QOrganizerJsonDbStr::AttendeeParticipationRole(QStringLiteral("participationRole"));
+
+// Rsvp properties
+const QString QOrganizerJsonDbStr::Rsvp(QStringLiteral("rsvp"));
+const QString QOrganizerJsonDbStr::RsvpOrganizerName(QStringLiteral("organizerName"));
+const QString QOrganizerJsonDbStr::RsvpOrganizerEmail(QStringLiteral("organizerEmail"));
+const QString QOrganizerJsonDbStr::RsvpResponseRequirement(QStringLiteral("responseRequirement"));
+const QString QOrganizerJsonDbStr::RsvpResponseDate(QStringLiteral("responseDate"));
+const QString QOrganizerJsonDbStr::RsvpResponseDeadline(QStringLiteral("responseDeadline"));
 
 //warning string
 const QString QOrganizerJsonDbStr::WarningMoreItemDelete(QStringLiteral("Items are delete from jsondb!!"));

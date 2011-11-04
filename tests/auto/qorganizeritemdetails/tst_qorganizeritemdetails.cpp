@@ -87,6 +87,7 @@ private slots:
     void visualReminder();
 
     void attendee();
+    void rsvp();
 
     // custom definition testing
     void custom();
@@ -851,10 +852,74 @@ void tst_QOrganizerItemDetails::attendee()
     QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 0);
 }
 
+void tst_QOrganizerItemDetails::rsvp()
+{
+    QOrganizerEventRsvp rsvp;
+    QOrganizerItem oi;
 
+    QVERIFY(rsvp.isEmpty());
+    QVERIFY(rsvp.organizerName().isEmpty());
+    QVERIFY(rsvp.organizerEmail().isEmpty());
+    QVERIFY(rsvp.responseDate().isNull());
+    QVERIFY(!rsvp.responseDate().isValid());
+    QVERIFY(rsvp.responseDeadline().isNull());
+    QVERIFY(!rsvp.responseDeadline().isValid());
+    QVERIFY(rsvp.participationRole() == 0);
+    QVERIFY(rsvp.participationStatus() == 0);
+    QVERIFY(rsvp.responseRequirement() == 0);
 
+    rsvp.setOrganizerName("Donald Duck");
+    QVERIFY(rsvp.organizerName() == QString("Donald Duck"));
+    rsvp.setOrganizerEmail("don@duck.com");
+    QVERIFY(rsvp.organizerEmail() == QString("don@duck.com"));
+    QDate testDate(2010, 10, 10);
+    rsvp.setResponseDate(testDate);
+    QVERIFY(!rsvp.responseDate().isNull());
+    QVERIFY(rsvp.responseDate().isValid());
+    QCOMPARE(testDate, rsvp.responseDate());
+    rsvp.setResponseDeadline(testDate);
+    QVERIFY(!rsvp.responseDeadline().isNull());
+    QVERIFY(rsvp.responseDeadline().isValid());
+    QCOMPARE(testDate, rsvp.responseDeadline());
+    rsvp.setParticipationRole(QOrganizerEventAttendee::RoleOrganizer);
+    QVERIFY(rsvp.participationRole() == QOrganizerEventAttendee::RoleOrganizer);
+    rsvp.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
+    QVERIFY(rsvp.participationStatus() == QOrganizerEventAttendee::StatusAccepted);
+    rsvp.setResponseRequirement(QOrganizerEventRsvp::ResponseRequired);
+    QVERIFY(rsvp.responseRequirement() == QOrganizerEventRsvp::ResponseRequired);
 
+    // add
+    QCOMPARE(0, oi.details<QOrganizerEventRsvp>().size());
+    QVERIFY(oi.saveDetail(&rsvp));
+    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(rsvp, oi.detail<QOrganizerEventRsvp>());
 
+    // update
+    rsvp.setOrganizerName("Mickey Mouse");
+    rsvp.setOrganizerEmail("mick@mouse.com");
+    QDate testDate2(2011, 11, 11);
+    rsvp.setResponseDate(testDate2);
+    rsvp.setResponseDeadline(testDate2);
+    rsvp.setParticipationRole(QOrganizerEventAttendee::RoleChairperson);
+    rsvp.setParticipationStatus(QOrganizerEventAttendee::StatusDelegated);
+    rsvp.setResponseRequirement(QOrganizerEventRsvp::ResponseNotRequired);
+    QVERIFY(oi.detail<QOrganizerEventRsvp>() != rsvp);
+    QVERIFY(oi.saveDetail(&rsvp));
+    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
+    QVERIFY(oi.detail<QOrganizerEventRsvp>() == rsvp);
+
+    // add another rsvp - not supported by all the backends
+    QOrganizerEventRsvp rsvp2;
+    rsvp2.setOrganizerName("Goofy");
+    QVERIFY(oi.saveDetail(&rsvp2));
+    QCOMPARE(2, oi.details<QOrganizerEventRsvp>().size());
+
+    // remove
+    QVERIFY(oi.removeDetail(&rsvp2));
+    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
+    QVERIFY(oi.removeDetail(&rsvp));
+    QCOMPARE(0, oi.details<QOrganizerEventRsvp>().size());
+}
 
 
 // define a custom detail to test inheritance/slicing

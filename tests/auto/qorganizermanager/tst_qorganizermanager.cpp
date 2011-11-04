@@ -257,6 +257,9 @@ private slots:
 
     void testAttendee_data() { addManagers(); }
     void testAttendee();
+
+    void testRsvp_data() { addManagers(); }
+    void testRsvp();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -4851,6 +4854,51 @@ void tst_QOrganizerManager::testAttendee()
     item = mgr->item(id);
     QVERIFY(item.details<QOrganizerEventAttendee>().count() == 0);
 }
+
+void tst_QOrganizerManager::testRsvp()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    QOrganizerEvent event;
+
+    // Save item and verify
+    QOrganizerEventRsvp rsvp;
+    rsvp.setOrganizerName("Donald Duck");
+    rsvp.setOrganizerEmail("don@duck.com");
+    rsvp.setResponseDate(QDate(2010, 10, 10));
+    rsvp.setResponseDeadline(QDate(2010, 11, 11));
+    rsvp.setParticipationRole(QOrganizerEventAttendee::RoleOrganizer);
+    rsvp.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
+    rsvp.setResponseRequirement(QOrganizerEventRsvp::ResponseRequired);
+    QVERIFY(event.saveDetail(&rsvp));
+    QVERIFY(mgr->saveItem(&event));
+    QOrganizerItemId id = event.id();
+    QOrganizerItem item = mgr->item(id);
+    QCOMPARE(1, item.details<QOrganizerEventRsvp>().count());
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Update
+    rsvp.setOrganizerName("Mickey Mouse");
+    rsvp.setOrganizerEmail("mick@mouse.com");
+    rsvp.setResponseDate(QDate(2011, 11, 11));
+    rsvp.setResponseDeadline(QDate(2011, 12, 12));
+    rsvp.setParticipationRole(QOrganizerEventAttendee::RoleChairperson);
+    rsvp.setParticipationStatus(QOrganizerEventAttendee::StatusDelegated);
+    rsvp.setResponseRequirement(QOrganizerEventRsvp::ResponseNotRequired);
+    QVERIFY(event.saveDetail(&rsvp));
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QCOMPARE(1, event.details<QOrganizerEventRsvp>().size());
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Remove
+    QVERIFY(event.removeDetail(&rsvp));
+    QCOMPARE(0, event.details<QOrganizerEventRsvp>().size());
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerEventRsvp>().count() == 0);
+}
+
 
 #if defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {

@@ -645,7 +645,8 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemAudibleReminder::DefinitionName
                          << QOrganizerItemEmailReminder::DefinitionName
                          << QOrganizerItemVisualReminder::DefinitionName
-                         << QOrganizerEventAttendee::DefinitionName;
+                         << QOrganizerEventAttendee::DefinitionName
+                         << QOrganizerEventRsvp::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeTodo) {
         supportedDetails << QOrganizerItemRecurrence::DefinitionName
                          << QOrganizerTodoTime::DefinitionName
@@ -664,7 +665,8 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemAudibleReminder::DefinitionName
                          << QOrganizerItemEmailReminder::DefinitionName
                          << QOrganizerItemVisualReminder::DefinitionName
-                         << QOrganizerEventAttendee::DefinitionName;
+                         << QOrganizerEventAttendee::DefinitionName
+                         << QOrganizerEventRsvp::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
         supportedDetails << QOrganizerItemParent::DefinitionName
                          << QOrganizerTodoTime::DefinitionName

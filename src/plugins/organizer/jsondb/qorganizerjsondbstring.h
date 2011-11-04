@@ -156,6 +156,14 @@ public:
     const static QString AttendeeParticipationStatus;
     const static QString AttendeeParticipationRole;
 
+    // Rsvp properties
+    const static QString Rsvp;
+    const static QString RsvpOrganizerName;
+    const static QString RsvpOrganizerEmail;
+    const static QString RsvpResponseRequirement;
+    const static QString RsvpResponseDate;
+    const static QString RsvpResponseDeadline;
+
     //warning string
     const static QString WarningMoreItemDelete;
     const static QString WarningCollectionMissing;

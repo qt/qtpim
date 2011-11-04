@@ -1816,6 +1816,224 @@ void QOrganizerItemType::setType(const QString &type)
     setValue(FieldType, type);
 }
 
+/* ==================== QOrganizerEventRsvp ======================= */
+/*!
+   \class QOrganizerEventRsvp
+   \brief The QOrganizerEventRsvp class contains RSVP information for an event, applicable to the user of the calendar
+   \inmodule QtOrganizer
+   \ingroup organizer-details
+
+   RSVP detail contain information such as the role of the calendar user in the event,
+   the participation status of the calendar user in the event, the date by which the
+   user is requested to respond to the invitation, the date at which the user did
+   respond to the invitation, the name of the organizer of the event, and the contact
+   details of the organizer of the event.
+ */
+
+/*!
+   \variable QOrganizerEventRsvp::DefinitionName
+   The constant string which identifies the definition of details which are event invitation RSVP details.
+ */
+const QString QOrganizerEventRsvp::DefinitionName(QStringLiteral("Rsvp"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldParticipationStatus
+
+   The constant key for which the participation status of the calendar user is stored in
+   details of the QOrganizerEventRsvp type.  The participation statuses valid for the user
+   are the same as those for any other attendee, and are enumerated in \c QOrganizerEventAttendee::Status.
+
+   \sa QOrganizerEventAttendee
+ */
+const QString QOrganizerEventRsvp::FieldParticipationStatus(QStringLiteral("ParticipationStatus"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldParticipationRole
+
+   The constant key for which the participation role of the calendar user is stored in
+   details of the QOrganizerEventRsvp type.  The participation roles valid for the user
+   are the same as those for any other attendee.
+
+   \sa QOrganizerEventAttendee
+ */
+const QString QOrganizerEventRsvp::FieldParticipationRole(QStringLiteral("ParticipationRole"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldResponseRequirement
+
+   The constant key for which the value is stored which determines whether or
+   not the organizer of the event requires a response to the invitation from the
+   calendar user, in details of the QOrganizerEventRsvp type.
+ */
+const QString QOrganizerEventRsvp::FieldResponseRequirement(QStringLiteral("ResponseRequirement"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldResponseDeadline
+
+   The constant key for which the response deadline date is stored in
+   details of the QOrganizerEventRsvp type.  This date is the date by
+   which the user must respond to the event invitation.
+ */
+const QString QOrganizerEventRsvp::FieldResponseDeadline(QStringLiteral("ResponseDeadline"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldResponseDate
+
+   The constant key for which the date of response is stored in
+   details of the QOrganizerEventRsvp type.  This date is the date at
+   which the user responded to the event invitation.
+ */
+const QString QOrganizerEventRsvp::FieldResponseDate(QStringLiteral("ResponseDate"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldOrganizerName
+
+   The constant key for which the name of the event organizer is stored in
+   details of the QOrganizerEventRsvp type.  This is the name of the person
+   who organized the event, to whom the user of the calendar should respond
+   regarding the invitation to the event, as requested by the organizer.
+ */
+const QString QOrganizerEventRsvp::FieldOrganizerName(QStringLiteral("OrganizerName"));
+
+/*!
+   \variable QOrganizerEventRsvp::FieldOrganizerEmail
+
+   The constant key for which the email address of the event organizer is stored in
+   details of the QOrganizerEventRsvp type.
+ */
+const QString QOrganizerEventRsvp::FieldOrganizerEmail(QStringLiteral("OrganizerEmail"));
+
+/*!
+   \fn QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
+   Sets the participation status of the user of the calendar in the event to \a status.
+ */
+void QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
+{
+    setValue(FieldParticipationStatus, static_cast<int>(status));
+}
+
+/*!
+   \fn QOrganizerEventRsvp::participationStatus() const
+   Returns the participation status of the user of the calendar in the event.
+ */
+QOrganizerEventAttendee::ParticipationStatus QOrganizerEventRsvp::participationStatus() const
+{
+    return static_cast<QOrganizerEventAttendee::ParticipationStatus>(value<int>(FieldParticipationStatus));
+}
+
+/*!
+   \fn QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::ParticipationRole role)
+   Sets the role of the user of the calendar in the event to \a role.
+ */
+void QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::ParticipationRole role)
+{
+    setValue(FieldParticipationRole, static_cast<int>(role));
+}
+
+/*!
+   \fn QOrganizerEventRsvp::participationRole() const
+   Returns the participation role of the user of the calendar in the event.
+ */
+QOrganizerEventAttendee::ParticipationRole QOrganizerEventRsvp::participationRole() const
+{
+    return static_cast<QOrganizerEventAttendee::ParticipationRole>(value<int>(FieldParticipationRole));
+}
+
+/*!
+   \enum QOrganizerEventRsvp::ResponseRequirement
+   \value ResponseNotRequired The organizer does not require the calendar user to respond to the invitation
+   \value ResponseRequired The organizer requires the calendar user to respond to the invitation
+*/
+
+/*!
+   \fn QOrganizerEventRsvp::setResponseRequirement(QOrganizerEventRsvp::ResponseRequirement responseRequirement)
+   Sets the response requirement for the invitation to \a responseRequirement.
+ */
+void QOrganizerEventRsvp::setResponseRequirement(ResponseRequirement responseRequirement)
+{
+    setValue(FieldResponseRequirement, static_cast<int>(responseRequirement));
+}
+
+/*!
+   \fn QOrganizerEventRsvp::responseRequirement() const
+   Returns the response requirement of the invitation.
+ */
+QOrganizerEventRsvp::ResponseRequirement QOrganizerEventRsvp::responseRequirement() const
+{
+    return static_cast<ResponseRequirement>(value<int>(FieldResponseRequirement));
+}
+
+/*!
+   \fn QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
+   Sets the date by which the user was requested to have responded to the invitation to the event to \a date.
+ */
+void QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
+{
+    setValue(FieldResponseDeadline, date);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::responseDeadline() const
+   Returns the date by which the user was requested to have responded to the invitation to the event.
+ */
+QDate QOrganizerEventRsvp::responseDeadline() const
+{
+    return value<QDate>(FieldResponseDeadline);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::setResponseDate(const QDate &date)
+   Sets the date at which the user responded to the invitation to the event to \a date.
+ */
+void QOrganizerEventRsvp::setResponseDate(const QDate &date)
+{
+    setValue(FieldResponseDate, date);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::responseDate() const
+   Returns the date at which user responded to the invitation to the event.
+ */
+QDate QOrganizerEventRsvp::responseDate() const
+{
+    return value<QDate>(FieldResponseDate);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::setOrganizerName(const QString &name)
+   Sets the name of the organizer of the event (who sent the invitation) to \a name.
+ */
+void QOrganizerEventRsvp::setOrganizerName(const QString &name)
+{
+    setValue(FieldOrganizerName, name);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::organizerName() const
+   Returns the name of the organizer of the event.
+ */
+QString QOrganizerEventRsvp::organizerName() const
+{
+    return value<QString>(FieldOrganizerName);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::setOrganizerEmail(const QString &emailAddress)
+   Sets the email address of the organizer of the event (who sent the invitation) to \a emailAddress.
+ */
+void QOrganizerEventRsvp::setOrganizerEmail(const QString &email)
+{
+    setValue(FieldOrganizerEmail, email);
+}
+
+/*!
+   \fn QOrganizerEventRsvp::organizerEmail() const
+   Returns the email address of the organizer of the event.
+ */
+QString QOrganizerEventRsvp::organizerEmail() const
+{
+    return value<QString>(FieldOrganizerEmail);
+}
 
 /*!
     \class QOrganizerItemExtendedDetail

@@ -140,6 +140,10 @@ TestCase {
         id: eventAttendee
     }
 
+    EventRsvp {
+        id: eventRsvp
+    }
+
     function test_extendedDetail() {
         compare(extendedDetail.type, Detail.Customized)
 
@@ -514,6 +518,197 @@ TestCase {
         compare(eventAttendee.participationRole, EventAttendee.RoleRequiredParticipant)
         // no signal has been emited
         compare(detailChangedSpy.count, count)
+    }
+
+    function test_rsvpGeneralTesting() {
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {id : organizerChangedSpy;}"
+                 , organizerItemDetailTests);
+        detailChangedSpy.target = eventRsvp;
+        detailChangedSpy.signalName = "detailChanged";
+        var count = 0;
+
+        compare(eventRsvp.type, Detail.EventRsvp)
+
+        // default value checks
+        compare(eventRsvp.organizerName, "")
+        compare(eventRsvp.organizerEmail, "")
+        compare(eventRsvp.participationStatus, EventAttendee.StatusUnknown)
+        compare(eventRsvp.participationRole, EventAttendee.RoleUnknown)
+        compare(eventRsvp.responseRequirement, EventRsvp.ResponseNotRequired)
+
+        // no change tests are here to minimize the delays of testing
+        // organizerName - no change on value
+        eventRsvp.organizerName = eventRsvp.organizerName
+        wait(waitTime)
+        compare(eventRsvp.organizerName, eventRsvp.organizerName)
+        compare(detailChangedSpy.count, count)
+        // organizerEmail - no change on value
+        eventRsvp.organizerEmail = eventRsvp.organizerEmail
+        wait(waitTime)
+        compare(eventRsvp.organizerEmail, eventRsvp.organizerEmail)
+        compare(detailChangedSpy.count, count)
+        // participationStatus - no change on value
+        eventRsvp.participationStatus = eventRsvp.participationStatus
+        wait(waitTime)
+        compare(eventRsvp.participationStatus, eventRsvp.participationStatus)
+        compare(detailChangedSpy.count, count)
+        // participationRole - no change on value
+        eventRsvp.participationRole = eventRsvp.participationRole
+        wait(waitTime)
+        compare(eventRsvp.participationRole, eventRsvp.participationRole)
+        compare(detailChangedSpy.count, count)
+        // responseRequirement - no change on value
+        eventRsvp.responseRequirement = eventRsvp.responseRequirement
+        wait(waitTime)
+        compare(eventRsvp.responseRequirement, eventRsvp.responseRequirement)
+        compare(detailChangedSpy.count, count)
+    }
+
+    function test_rsvpStringProperties_data() {
+        return [
+            {tag: "string", testValue: "short string"},
+            {tag: "long string", testValue: "here goes the long string name but what to have here? Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Donec ultricies nisl ut felis, suspendisse potenti. Lorem ipsum ligula ut hendrerit mollis, ipsum erat vehicula risus, eu suscipit sem libero nec erat. Aliquam erat volutpat. Sed congue augue vitae neque. Nulla consectetuer porttitor pede. Fusce purus morbi tortor magna condimentum vel, placerat id blandit sit amet tortor. Mauris sed libero. Suspendisse facilisis nulla in lacinia laoreet, lorem velit accumsan velit vel mattis libero nisl et sem. Proin interdum maecenas massa turpis sagittis in, interdum non lobortis vitae massa. Quisque purus lectus, posuere eget imperdiet nec sodales id arcu. Vestibulum elit pede dictum eu, viverra non tincidunt eu ligula. Nam molestie nec tortor. Donec placerat leo sit amet velit. Vestibulum id justo ut vitae massa. Proin in dolor mauris consequat aliquam. Donec ipsum, vestibulum ullamcorper venenatis augue. Aliquam tempus nisi in auctor vulputate, erat felis pellentesque augue nec, pellentesque lectus justo nec erat. Aliquam et nisl. Quisque sit amet dolor in justo pretium condimentum. Vivamus placerat lacus vel vehicula scelerisque, dui enim adipiscing lacus sit amet sagittis, libero enim vitae mi. In neque magna posuere, euismod ac tincidunt tempor est. Ut suscipit nisi eu purus. Proin ut pede mauris eget ipsum. Integer vel quam nunc commodo consequat. Integer ac eros eu tellus dignissim viverra. Maecenas erat aliquam erat volutpat. Ut venenatis ipsum quis turpis. Integer cursus scelerisque lorem. Sed nec mauris id quam blandit consequat. Cras nibh mi hendrerit vitae, dapibus et aliquam et magna. Nulla vitae elit. Mauris consectetuer odio vitae augue."},
+            {tag: "number", testValue: 123},
+        ]
+    }
+    function test_rsvpStringProperties(data) {
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;SignalSpy{}", organizerItemDetailTests)
+        var tempEventRsvp = utility.create_testobject("import QtOrganizer 5.0; EventRsvp{}", organizerItemDetailTests)
+        detailChangedSpy.target = tempEventRsvp
+        detailChangedSpy.signalName = "detailChanged"
+
+        // organizerName
+        tempEventRsvp.organizerName = data.testValue
+        detailChangedSpy.wait(waitTime)
+        compare(tempEventRsvp.organizerName, data.testValue.toString())
+        compare(detailChangedSpy.count, 1)
+
+        // organizerEmail
+        tempEventRsvp.organizerEmail = data.testValue
+        detailChangedSpy.wait(waitTime)
+        compare(tempEventRsvp.organizerEmail, data.testValue.toString())
+        compare(detailChangedSpy.count, 2)
+    }
+
+    function test_rsvpDateProperties_data() {
+        return [
+            {tag: "empty date", testValue: new Date},
+            {tag: "date object", testValue: new Date("January 1, 1986")},
+            {tag: "datetime object", testValue: new Date("October 13, 1975 11:13:00")},
+            {tag: "date string", testValue: '2012-01-01'},
+            {tag: "datetime string", testValue: '2010-10-23T23:55:00'},
+        ]
+    }
+    function test_rsvpDateProperties(data) {
+        console.log()//print the separate cases
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;SignalSpy{}", organizerItemDetailTests)
+        var tempEventRsvp = utility.create_testobject("import QtOrganizer 5.0; EventRsvp{}", organizerItemDetailTests)
+        detailChangedSpy.target = tempEventRsvp
+        detailChangedSpy.signalName = "detailChanged"
+        // get rid of possible hours, minutes, seconds since we're dealing with dates only
+        var stringBasedDate = typeof data.testValue == 'string' ? true : false;
+        var onlyDateIncluded;
+        if (stringBasedDate) {
+            var tempdate = new Date(data.testValue)
+            onlyDateIncluded = new Date(tempdate.toDateString());
+        } else {
+            onlyDateIncluded = new Date(data.testValue.toDateString());
+        }
+
+        // responseDeadline
+        tempEventRsvp.responseDeadline = data.testValue
+        detailChangedSpy.wait(waitTime)
+        compare(tempEventRsvp.responseDeadline.toString(), onlyDateIncluded.toString())
+        compare(detailChangedSpy.count, 1)
+
+        // responseDate
+        tempEventRsvp.responseDate = data.testValue
+        detailChangedSpy.wait(waitTime)
+        compare(tempEventRsvp.responseDate.toString(), onlyDateIncluded.toString())
+        compare(detailChangedSpy.count, 2)
+    }
+
+    function test_rsvpParticipationStatus_data() {
+        return [
+            {tag: "StatusUnknown", testValue: EventAttendee.StatusUnknown},
+            {tag: "StatusAccepted", testValue: EventAttendee.StatusAccepted},
+            {tag: "StatusDeclined", testValue: EventAttendee.StatusDeclined},
+            {tag: "StatusTentative", testValue: EventAttendee.StatusTentative},
+            {tag: "StatusDelegated", testValue: EventAttendee.StatusDelegated},
+            {tag: "StatusInProcess", testValue: EventAttendee.StatusInProcess},
+            {tag: "StatusCompleted", testValue: EventAttendee.StatusCompleted},
+            {tag: "non existing - number", testValue: 123},
+        ]
+    }
+    function test_rsvpParticipationStatus(data) {
+        console.log()//print the separate cases
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;SignalSpy{}", organizerItemDetailTests)
+        var tempEventRsvp = utility.create_testobject("import QtOrganizer 5.0; EventRsvp{}", organizerItemDetailTests)
+        detailChangedSpy.target = tempEventRsvp
+        detailChangedSpy.signalName = "detailChanged"
+        var defaultValue = EventAttendee.StatusUnknown == data.testValue ? true : false;
+
+        tempEventRsvp.participationStatus = data.testValue
+        if (defaultValue)
+            wait(waitTime)
+        else
+            detailChangedSpy.wait(waitTime)
+        compare(detailChangedSpy.count, defaultValue ? 0 : 1)
+        compare(tempEventRsvp.participationStatus, data.testValue)
+    }
+
+    function test_rsvpParticipationRole_data() {
+        return [
+            {tag: "RoleUnknown", testValue: EventAttendee.RoleUnknown},
+            {tag: "RoleOrganizer", testValue: EventAttendee.RoleOrganizer},
+            {tag: "RoleChairperson", testValue: EventAttendee.RoleChairperson},
+            {tag: "RoleHost", testValue: EventAttendee.RoleHost},
+            {tag: "RoleRequiredParticipant", testValue: EventAttendee.RoleRequiredParticipant},
+            {tag: "RoleOptionalParticipant", testValue: EventAttendee.RoleOptionalParticipant},
+            {tag: "RoleNonParticipant", testValue: EventAttendee.RoleNonParticipant},
+            {tag: "non existing - number", testValue: 123},
+        ]
+    }
+    function test_rsvpParticipationRole(data) {
+        console.log()//print the separate cases
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;SignalSpy{}", organizerItemDetailTests)
+        var tempEventRsvp = utility.create_testobject("import QtOrganizer 5.0; EventRsvp{}", organizerItemDetailTests)
+        detailChangedSpy.target = tempEventRsvp
+        detailChangedSpy.signalName = "detailChanged"
+        var defaultValue = EventAttendee.RoleUnknown == data.testValue ? true : false;
+
+        tempEventRsvp.participationRole = data.testValue
+        if (defaultValue)
+            wait(waitTime)
+        else
+            detailChangedSpy.wait(waitTime)
+        compare(detailChangedSpy.count, defaultValue ? 0 : 1)
+        compare(tempEventRsvp.participationRole, data.testValue)
+    }
+
+    function test_rsvpResponseRequirement_data() {
+        return [
+            {tag: "ResponseNotRequired", testValue: EventRsvp.ResponseNotRequired},
+            {tag: "ResponseRequired", testValue: EventRsvp.ResponseRequired},
+            {tag: "non existing - number", testValue: 123},
+        ]
+    }
+    function test_rsvpResponseRequirement(data) {
+        console.log()//print the separate cases
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;SignalSpy{}", organizerItemDetailTests)
+        var tempEventRsvp = utility.create_testobject("import QtOrganizer 5.0; EventRsvp{}", organizerItemDetailTests)
+        detailChangedSpy.target = tempEventRsvp
+        detailChangedSpy.signalName = "detailChanged"
+        var defaultValue = EventRsvp.ResponseNotRequired == data.testValue ? true : false;
+
+        tempEventRsvp.responseRequirement = data.testValue
+        if (defaultValue)
+            wait(waitTime)
+        else
+            detailChangedSpy.wait(waitTime)
+        compare(detailChangedSpy.count, defaultValue ? 0 : 1)
+        compare(tempEventRsvp.responseRequirement, data.testValue)
     }
 
     function test_emptyDetail() {

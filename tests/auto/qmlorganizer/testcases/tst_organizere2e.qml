@@ -114,6 +114,15 @@ TestCase {
                         "attendeeId": "'123444455555'",
                         "participationStatus": "EventAttendee.StatusAccepted",
                         "participationRole": "EventAttendee.RoleRequiredParticipant"
+                    },
+                    "EventRsvp": {
+                        "organizerName": "'Oswald Organizer'",
+                        "organizerEmail": "'ossy@waldo.com'",
+                        "participationStatus": "EventAttendee.StatusDelegated",
+                        "participationRole": "EventAttendee.RoleChairperson",
+                        "responseRequirement": "EventRsvp.ResponseRequired",
+                        "responseDeadline": "'2012-10-10'",
+                        "responseDate": "'2012-01-01'"
                     }
                 },
 

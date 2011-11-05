@@ -79,6 +79,9 @@ Rectangle
                 customDescriptionRow.setValue(item.description);
                 customLocationRow.setValue(item.location);
                 customCollectionRow.value = customCollectionRow.findCollectionArrayIndex(item.collectionId);
+                customRsvpParticipationStatusRow.value = item.details(Detail.EventRsvp).length ?
+                    item.detail(Detail.EventRsvp).participationStatus :
+                    EventAttendee.StatusUnknown;
             } else if (item.type == "Todo") {
                 todoCustomLabelRow.setValue(item.displayLabel);
                 todoCustomDueDateRow.dateTimeRoller.setDateTime(detailsView.item.dueDateTime);
@@ -467,6 +470,29 @@ Rectangle
                 item.collectionId = organizer.collections[currentIndex].collectionId;
             }
         }
+
+        RollerRow {
+            id: customRsvpParticipationStatusRow
+            valueRoller.clip: true // clipping to roller-component..
+            label: "Partic. status"
+            valueSet: ["Unknown", "Accepted", "Declined", "Tentative", "Delegated", "InProcess", "Completed"]
+            onCurrentIndexChanged: {
+                // rsvp-detail included only if modified on the view
+                if (EventAttendee.StatusUnknown != customRsvpParticipationStatusRow.currentIndex) {
+                    var rsvpDetail;
+                    if (item.details(Detail.EventRsvp).length) {
+                        rsvpDetail = item.detail(Detail.EventRsvp);
+                    } else {
+                        rsvpDetail = Qt.createQmlObject("import QtOrganizer 5.0; EventRsvp{}", organizer);
+                    }
+                    rsvpDetail.participationStatus = customRsvpParticipationStatusRow.currentIndex;
+                    item.setDetail(rsvpDetail);
+                } else if (item.details(Detail.EventRsvp).length) {
+                    item.removeDetail(item.detail(Detail.EventRsvp));
+                }
+            }
+        }
+
         Column {
             id : tagColumn
             Repeater {

@@ -119,6 +119,7 @@ bool QDeclarativeOrganizerItemDetail::removable() const
     \o Detail.Type
     \o Detail.Tag
     \o Detail.EventAttendee
+    \o Detail.EventRsvp
     \endlist
  */
 QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail::type() const
@@ -243,6 +244,8 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
         return QDeclarativeOrganizerItemTag::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::EventAttendee:
         return QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(fieldType);
+    case QDeclarativeOrganizerItemDetail::EventRsvp:
+        return QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
         return QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
@@ -298,6 +301,8 @@ QString QDeclarativeOrganizerItemDetail::definitionName(QDeclarativeOrganizerIte
         return QOrganizerItemTag::DefinitionName;
     case QDeclarativeOrganizerItemDetail::EventAttendee:
         return QOrganizerEventAttendee::DefinitionName;
+    case QDeclarativeOrganizerItemDetail::EventRsvp:
+        return QOrganizerEventRsvp::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Customized:
         return QOrganizerItemExtendedDetail::DefinitionName;
     default:
@@ -352,6 +357,8 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
         return QDeclarativeOrganizerItemTag::Tag;
     if (definitionName == QOrganizerEventAttendee::DefinitionName)
         return QDeclarativeOrganizerItemDetail::EventAttendee;
+    if (definitionName == QOrganizerEventRsvp::DefinitionName)
+        return QDeclarativeOrganizerItemDetail::EventRsvp;
     if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Customized;
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
@@ -1911,6 +1918,168 @@ QString QDeclarativeOrganizerEventAttendee::attendeeId() const
     return m_detail.value(QOrganizerEventAttendee::FieldAttendeeId).toString();
 }
 
+/*!
+    \qmlclass Rsvp QDeclarativeOrganizerEventRsvp
+    \brief The Rsvp element contains Rsvp-information of an event.
+    \ingroup qml-organizer
+
+    RSVP detail contains user specific information about calendar event like
+    participation status and role, information about response
+    dates and information about organizer of the event. See more details
+    from the properties themselves and the QOrganizerEventRsvp.
+
+    This element is part of the \bold{QtOrganizer 5.0} module.
+
+    \sa QOrganizerEventRsvp
+ */
+QDeclarativeOrganizerEventRsvp::QDeclarativeOrganizerEventRsvp(QObject *parent)
+    : QDeclarativeOrganizerItemDetail(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
+    setDetail(QOrganizerEventRsvp());
+}
+
+QDeclarativeOrganizerEventRsvp::ItemDetailType QDeclarativeOrganizerEventRsvp::type() const
+{
+    return QDeclarativeOrganizerItemDetail::EventRsvp;
+}
+
+/*!
+    \qmlproperty variant EventRsvp::participationStatus
+
+    This property holds the calendar user's participation status related to the event. See EventAttendee::participationStatus
+    for more details.
+
+    \sa EventAttendee::participationStatus
+ */
+void QDeclarativeOrganizerEventRsvp::setParticipationStatus(QDeclarativeOrganizerEventAttendee::ParticipationStatus status)
+{
+    if (participationStatus() != status && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldParticipationStatus, status);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerEventAttendee::ParticipationStatus QDeclarativeOrganizerEventRsvp::participationStatus() const
+{
+    return static_cast<QDeclarativeOrganizerEventAttendee::ParticipationStatus>(m_detail.value(QOrganizerEventRsvp::FieldParticipationStatus).toInt());
+}
+
+/*!
+    \qmlproperty variant EventRsvp::participationRole
+
+    This property holds the calendar user's participation role related to the event. See EventAttendee::participationRole
+    for more details.
+
+    \sa EventAttendee::participationRole
+ */
+void QDeclarativeOrganizerEventRsvp::setParticipationRole(QDeclarativeOrganizerEventAttendee::ParticipationRole role)
+{
+    if (participationRole() != role && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldParticipationRole, role);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEventRsvp::participationRole() const
+{
+    return static_cast<QDeclarativeOrganizerEventAttendee::ParticipationRole>(m_detail.value(QOrganizerEventRsvp::FieldParticipationRole).toInt());
+}
+
+/*!
+    \qmlproperty variant EventRsvp::responseRequirement
+
+    This property holds the response requirement of the event. The value can be one of:
+    \list
+    \o EventRsvp.ResponseNotRequired
+    \o EventRsvp.ResponseRequired
+    \endlist
+ */
+void QDeclarativeOrganizerEventRsvp::setResponseRequirement(ResponseRequirement requirement)
+{
+    if (responseRequirement() != requirement && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldResponseRequirement, requirement);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerEventRsvp::ResponseRequirement QDeclarativeOrganizerEventRsvp::responseRequirement() const
+{
+    return static_cast<ResponseRequirement>(m_detail.value(QOrganizerEventRsvp::FieldResponseRequirement).toInt());
+}
+
+/*!
+    \qmlproperty variant EventRsvp::responseDeadline
+
+    This property holds the last date for responding the event.
+ */
+void QDeclarativeOrganizerEventRsvp::setResponseDeadline(const QDate &date)
+{
+    if (responseDeadline() != date && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date);
+        emit valueChanged();
+     }
+}
+
+QDate QDeclarativeOrganizerEventRsvp::responseDeadline() const
+{
+    return m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDeadline);
+}
+
+/*!
+    \qmlproperty variant EventRsvp::responseDate
+
+    This property holds the date when user responded to the event.
+ */
+void QDeclarativeOrganizerEventRsvp::setResponseDate(const QDate &date)
+{
+    if (responseDate() != date && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date);
+        emit valueChanged();
+     }
+}
+
+QDate QDeclarativeOrganizerEventRsvp::responseDate() const
+{
+    return m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDate);
+}
+
+/*!
+    \qmlproperty variant EventRsvp::organizerName
+
+    This property holds organizer's name of the event.
+ */
+void QDeclarativeOrganizerEventRsvp::setOrganizerName(const QString &name)
+{
+    if (organizerName() != name && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldOrganizerName, name);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerEventRsvp::organizerName() const
+{
+    return m_detail.value(QOrganizerEventRsvp::FieldOrganizerName).toString();
+}
+
+/*!
+    \qmlproperty variant EventRsvp::organizerEmail
+
+    This property holds organizer's email of the event.
+ */
+void QDeclarativeOrganizerEventRsvp::setOrganizerEmail(const QString &email)
+{
+    if (organizerEmail() != email && !readOnly()) {
+        m_detail.setValue(QOrganizerEventRsvp::FieldOrganizerEmail, email);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerEventRsvp::organizerEmail() const
+{
+    return m_detail.value(QOrganizerEventRsvp::FieldOrganizerEmail).toString();
+}
+
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type)
 {
     QDeclarativeOrganizerItemDetail *itemDetail;
@@ -1956,6 +2125,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
     else if (type == QDeclarativeOrganizerItemDetail::EventAttendee)
         itemDetail = new QDeclarativeOrganizerEventAttendee;
+    else if (type == QDeclarativeOrganizerItemDetail::EventRsvp)
+        itemDetail = new QDeclarativeOrganizerEventRsvp;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -2006,6 +2177,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
     else if (definitionName == QOrganizerEventAttendee::DefinitionName)
         itemDetail = new QDeclarativeOrganizerEventAttendee;
+    else if (definitionName == QOrganizerEventRsvp::DefinitionName)
+        itemDetail = new QDeclarativeOrganizerEventRsvp;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -2267,6 +2440,28 @@ QString QDeclarativeOrganizerItemTag::fieldNameFromFieldType(int type)
     switch (type) {
     case FieldTag:
         return QOrganizerItemTag::FieldTag;
+    }
+    qmlInfo(0) << tr("invalid field type:") << type;
+    return QString();
+}
+
+QString QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(int type)
+{
+    switch (type) {
+    case QDeclarativeOrganizerEventRsvp::FieldParticipationStatus:
+        return QOrganizerEventRsvp::FieldParticipationStatus;
+    case QDeclarativeOrganizerEventRsvp::FieldParticipationRole:
+        return QOrganizerEventRsvp::FieldParticipationRole;
+    case QDeclarativeOrganizerEventRsvp::FieldResponseRequirement:
+        return QOrganizerEventRsvp::FieldResponseRequirement;
+    case QDeclarativeOrganizerEventRsvp::FieldResponseDeadline:
+        return QOrganizerEventRsvp::FieldResponseDeadline;
+    case QDeclarativeOrganizerEventRsvp::FieldResponseDate:
+        return QOrganizerEventRsvp::FieldResponseDate;
+    case QDeclarativeOrganizerEventRsvp::FieldOrganizerName:
+        return QOrganizerEventRsvp::FieldOrganizerName;
+    case QDeclarativeOrganizerEventRsvp::FieldOrganizerEmail:
+        return QOrganizerEventRsvp::FieldOrganizerEmail;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
     return QString();

@@ -83,6 +83,7 @@ public:
         Type,
         Tag,
         EventAttendee,
+        EventRsvp,
         Customized = 100
     };
 
@@ -850,6 +851,7 @@ Q_SIGNALS:
     void valueChanged();
 };
 
+
 class QDeclarativeOrganizerEventAttendee : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
@@ -918,6 +920,68 @@ Q_SIGNALS:
     void valueChanged();
 };
 
+
+class QDeclarativeOrganizerEventRsvp : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+    Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus READ participationStatus WRITE setParticipationStatus NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
+    Q_PROPERTY(ResponseRequirement responseRequirement READ responseRequirement WRITE setResponseRequirement NOTIFY valueChanged)
+    Q_PROPERTY(QDate responseDeadline READ responseDeadline WRITE setResponseDeadline NOTIFY valueChanged)
+    Q_PROPERTY(QDate responseDate READ responseDate WRITE setResponseDate NOTIFY valueChanged)
+    Q_PROPERTY(QString organizerName READ organizerName WRITE setOrganizerName NOTIFY valueChanged)
+    Q_PROPERTY(QString organizerEmail READ organizerEmail WRITE setOrganizerEmail NOTIFY valueChanged)
+    Q_ENUMS(Field)
+    Q_ENUMS(ResponseRequirement)
+
+public:
+    enum Field {
+        FieldParticipationStatus = 0,
+        FieldParticipationRole,
+        FieldResponseRequirement,
+        FieldResponseDeadline,
+        FieldResponseDate,
+        FieldOrganizerName,
+        FieldOrganizerEmail,
+    };
+
+    enum ResponseRequirement {
+        ResponseNotRequired = QOrganizerEventRsvp::ResponseNotRequired,
+        ResponseRequired = QOrganizerEventRsvp::ResponseRequired
+    };
+
+    QDeclarativeOrganizerEventRsvp(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setParticipationStatus(QDeclarativeOrganizerEventAttendee::ParticipationStatus status);
+    QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus() const;
+
+    void setParticipationRole(QDeclarativeOrganizerEventAttendee::ParticipationRole role);
+    QDeclarativeOrganizerEventAttendee::ParticipationRole participationRole() const;
+
+    void setResponseRequirement(ResponseRequirement requirement);
+    ResponseRequirement responseRequirement() const;
+
+    void setResponseDeadline(const QDate &date);
+    QDate responseDeadline() const;
+
+    void setResponseDate(const QDate &date);
+    QDate responseDate() const;
+
+    void setOrganizerName(const QString &name);
+    QString organizerName() const;
+
+    void setOrganizerEmail(const QString &email);
+    QString organizerEmail() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void valueChanged();
+};
+
+
 class QDeclarativeOrganizerItemDetailFactory
 {
 public:
@@ -949,5 +1013,6 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemEmailRem
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVisualReminder))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizeritemExtendedDetail))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventAttendee))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventRsvp))
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H

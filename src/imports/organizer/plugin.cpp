@@ -97,6 +97,7 @@ public:
         qmlRegisterType<QDeclarativeOrganizerTodoTime>(uri, major, minor, "TodoTime");
         qmlRegisterType<QDeclarativeOrganizeritemExtendedDetail>(uri, major, minor, "ExtendedDetail");
         qmlRegisterType<QDeclarativeOrganizerEventAttendee>(uri, major, minor, "EventAttendee");
+        qmlRegisterType<QDeclarativeOrganizerEventRsvp>(uri, major, minor, "EventRsvp");
 
         qmlRegisterType<QDeclarativeOrganizerItemReminder>(uri, major, minor, "Reminder");
         qmlRegisterType<QDeclarativeOrganizerItemAudibleReminder>(uri, major, minor, "AudibleReminder");

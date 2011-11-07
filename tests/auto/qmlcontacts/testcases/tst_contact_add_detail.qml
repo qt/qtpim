@@ -51,7 +51,7 @@ TestCase {
     }
 
     function test_contact_add_null_detail_emits_no_signal() {
-        listenToSignalFromObject("detailsChanged", contact0);
+        listenToSignalFromObject("contactChanged", contact0);
         contact0.addDetail(null);
         verifyNoSignalReceived();
     }
@@ -65,7 +65,7 @@ TestCase {
     }
 
     function test_contact_add_detail_emits_signal() {
-        expectSignalFromObject("detailsChanged", contact1);
+        expectSignalFromObject("contactChanged", contact1);
         contact1.addDetail(contact1Name);
         verifySignalReceived();
     }
@@ -78,7 +78,7 @@ TestCase {
     }
 
     function test_contact_add_the_same_detail_emits_no_signal() {
-        listenToSignalFromObject("detailsChanged", contact2);
+        listenToSignalFromObject("contactChanged", contact2);
         contact2.addDetail(contact2Name);
         verifyNoSignalReceived();
     }
@@ -95,7 +95,7 @@ TestCase {
     }
 
     function test_contact_add_second_detail_of_the_same_type_emits_signal() {
-        expectSignalFromObject("detailsChanged", contact3);
+        expectSignalFromObject("contactChanged", contact3);
         contact3.addDetail(contact3PhoneNumber2);
         expectFail("", "Add does not emit change signal");
         verifySignalReceived();
@@ -113,7 +113,7 @@ TestCase {
     }
 
     function test_contact_add_second_detail_of_the_different_type_emits_signal() {
-        expectSignalFromObject("detailsChanged", contact4);
+        expectSignalFromObject("contactChanged", contact4);
         contact4.addDetail(contact4PhoneNumber);
         expectFail("", "Add does not emit change signal");
         verifySignalReceived();

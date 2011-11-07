@@ -51,7 +51,7 @@ TestCase {
     }
 
     function test_contact_remove_null_detail_emits_no_signal() {
-        listenToSignalFromObject("detailsChanged", contact0);
+        listenToSignalFromObject("contactChanged", contact0);
         contact0.addDetail(null);
         verifyNoSignalReceived();
     }
@@ -64,7 +64,7 @@ TestCase {
     }
 
     function test_contact_remove_detail_emits_signal() {
-        expectSignalFromObject("detailsChanged", contact2);
+        expectSignalFromObject("contactChanged", contact2);
         contact2.removeDetail(contact2Name);
         verifySignalReceived();
     }
@@ -81,7 +81,7 @@ TestCase {
     }
 
     function test_contact_remove_unrelated_detail_emits_no_signal() {
-        listenToSignalFromObject("detailsChanged", contact3);
+        listenToSignalFromObject("contactChanged", contact3);
         contact3.removeDetail(contact3Name2);
         verifyNoSignalReceived();
     }
@@ -98,7 +98,7 @@ TestCase {
     }
 
     function test_contact_remove_unrelated_detail_of_the_different_type_emits_no_signal() {
-        listenToSignalFromObject("detailsChanged", contact4);
+        listenToSignalFromObject("contactChanged", contact4);
         contact4.removeDetail(contact4PhoneNumber);
         verifyNoSignalReceived();
     }
@@ -114,7 +114,7 @@ TestCase {
     }
 
     function test_contact_remove_one_of_multiple_details_emits_signal() {
-        expectSignalFromObject("detailsChanged", contact5);
+        expectSignalFromObject("contactChanged", contact5);
         contact5.removeDetail(contact5PhoneNumber1);
         expectFail("", "Remove does not emit change signal");
         verifySignalReceived();
@@ -132,7 +132,7 @@ TestCase {
 
     function test_contact_remove_multiple_details_emits_signal() {
         contact6.removeDetail(contact6PhoneNumber1);
-        expectSignalFromObject("detailsChanged", contact6);
+        expectSignalFromObject("contactChanged", contact6);
         contact6.removeDetail(contact6PhoneNumber2);
         expectFail("", "Remove does not emit change signal");
         verifySignalReceived();

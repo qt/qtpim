@@ -303,9 +303,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
             address->setRegion(map[addressFieldsMapping.value(QContactAddress::FieldRegion)].toString());
         if (!map[addressFieldsMapping.value(QContactAddress::FieldCountry)].toString().isEmpty())
             address->setCountry(map[addressFieldsMapping.value(QContactAddress::FieldCountry)].toString());
-        if (updateContexts(map, address)) {
-            address->setSubTypes(address->contexts());//TODO decide if we use "Context" or "SubTypes" to store the jsondb SubTypes
-        }
+        updateContexts(map, address);
         detailList << address;
     }
 

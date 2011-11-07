@@ -11,3 +11,7 @@ DEFINES += DUMMYPLUGINNAME=memory
 
 SOURCES += ../dummyplugin/dummyplugin.cpp
 HEADERS += ../dummyplugin/dummyplugin.h
+
+# Enable installation of plugin in "make install"
+target.path += $$[QT_INSTALL_PLUGINS]/contacts
+INSTALLS += target

@@ -455,7 +455,10 @@ bool QContactManagerEngine::removeRelationships(const QList<QContactRelationship
 /*!
   Synthesizes the display label of the given \a contact in a platform specific manner.
   Any error that occurs will be stored in \a error.
-  Returns the synthesized display label.
+  Returns the synthesized display label. The returned display label can be empty in
+  cases where the given \a contact does not contain the details used by the backend
+  to synthesize the label (default: \c QContactName, and \c QContactOrganization).
+  the returned
   \since 2.0
  */
 QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const
@@ -518,7 +521,6 @@ QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, 
         }
     }
 
-    *error = QContactManager::UnspecifiedError;
     return QString();
 }
 

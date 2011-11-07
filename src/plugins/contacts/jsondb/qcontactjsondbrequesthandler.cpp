@@ -507,12 +507,11 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
             if (error == QContactManager::NoError) {
                 QContactManagerEngine::setContactDisplayLabel(&contact, displayLabel);
             } else {
-                //TODO Error handling(!)
                 errorMap.insert(index, error);
                 if (qt_debug_jsondb_contacts())
                     qDebug() << "[QContactJsonDb] ERROR in synthesizing display label: "
                          << error << "for contact " << contact;
-                //QContactManagerEngine::setContactDisplayLabel(contact, QString(""));
+                QContactManagerEngine::setContactDisplayLabel(&contact, QString(""));
             };
         }
         else {

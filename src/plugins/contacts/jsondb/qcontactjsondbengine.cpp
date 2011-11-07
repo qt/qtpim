@@ -133,41 +133,6 @@ QString QContactJsonDbEngine::managerName() const
 
 
 
-/* Synthesise the display label of a contact */
-QString QContactJsonDbEngine::synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const
-{
-  QString label;
-  // Synthesise the display label for not saved contacts
-  // A. FirstName + LastName
-  QContactName name = contact.detail(QContactName::DefinitionName);
-  QStringList nameList;
-
-  nameList << name.firstName();
-  if (name.lastName().count()) {
-      nameList << name.lastName();
-  }
-  label = nameList.join(QString(' '));
-
-  // B. Email
-  if (label.isEmpty()) {
-      QContactEmailAddress email = contact.detail(QContactEmailAddress::DefinitionName);
-      label = email.emailAddress();
-  }
-
-  //
-  if (label.isEmpty()) {
-      *error = QContactManager::UnspecifiedError;
-      return QString("No name");
-  }
-
-  *error = QContactManager::NoError;
-  return label;
-}
-
-
-
-
-
 bool QContactJsonDbEngine::validateContact(const QContact& contact, QContactManager::Error* error) const
 {
     return QContactManagerEngine::validateContact(contact, error);

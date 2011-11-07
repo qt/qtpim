@@ -83,7 +83,6 @@ public:
     QContactJsonDbEngine& operator=(const QContactJsonDbEngine& other);
 
     QString managerName() const;
-    QString synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const;
     bool validateContact(const QContact&, QContactManager::Error* error) const;
     bool validateDefinition(const QContactDetailDefinition&, QContactManager::Error* error) const;
     QContact compatibleContact(const QContact& contact, QContactManager::Error* error) const;

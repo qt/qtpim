@@ -279,18 +279,18 @@ void tst_QContactManagerDetails::testAddress()
 void tst_QContactManagerDetails::testAnniversary()
 {
     QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-
-    if (cm->detailDefinition(QContactAnniversary::DefinitionName).isEmpty())
-        QSKIP("This backend does not support the required detail!");
-
-    QContact c;
-
-    QContactAnniversary a;
-    a.setOriginalDate( QDate(2009,9,9) );
-    c.saveDetail( &a );
-
-    saveAndVerifyContact( cm.data(), c );
+    if (uri == "qtcontacts:jsondb:") {
+        QSKIP("JsonDb backend does not support QContactAnniversary detail!");
+    } else {
+        QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+        if (cm->detailDefinition(QContactAnniversary::DefinitionName).isEmpty())
+            QSKIP("This backend does not support the required detail!");
+        QContact c;
+        QContactAnniversary a;
+        a.setOriginalDate( QDate(2009,9,9) );
+        c.saveDetail( &a );
+        saveAndVerifyContact( cm.data(), c );
+    }
 }
 
 void tst_QContactManagerDetails::testAvatar()
@@ -414,25 +414,29 @@ void tst_QContactManagerDetails::testOrganisation()
 void tst_QContactManagerDetails::testOnlineAccount()
 {
     QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    if (uri == "qtcontacts:jsondb:") {
+        QSKIP("JsonDb backend does not support QContactOnlineAccount detail!");
+    } else {
+        QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContactDetailDefinition def = cm->detailDefinition(QContactOnlineAccount::DefinitionName);
-    if (def.isEmpty())
-        QSKIP("This backend does not support the required detail!");
+        QContactDetailDefinition def = cm->detailDefinition(QContactOnlineAccount::DefinitionName);
+        if (def.isEmpty())
+            QSKIP("This backend does not support the required detail!");
 
-    QContact c;
+        QContact c;
 
-    QContactOnlineAccount o;
-    o.setAccountUri( "john@example.com" );
+        QContactOnlineAccount o;
+        o.setAccountUri( "john@example.com" );
 
-    if (def.fields().contains(QContactOnlineAccount::FieldProtocol))
-        o.setProtocol(QContactOnlineAccount::ProtocolJabber);
-    else
-        qDebug() << "Manager doesn't support Protocol";
+        if (def.fields().contains(QContactOnlineAccount::FieldProtocol))
+            o.setProtocol(QContactOnlineAccount::ProtocolJabber);
+        else
+            qDebug() << "Manager doesn't support Protocol";
 
-    c.saveDetail( &o );
+        c.saveDetail( &o );
 
-    saveAndVerifyContact( cm.data(), c );
+        saveAndVerifyContact( cm.data(), c );
+    }
 }
 
 void tst_QContactManagerDetails::testPhoneNumber()

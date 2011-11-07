@@ -316,26 +316,8 @@ QVariantList QDeclarativeOrganizerItem::details(int type)
  */
 void QDeclarativeOrganizerItem::setDetail(QDeclarativeOrganizerItemDetail *detail)
 {
-    if (!detail)
-        return;
-
-    bool found(false);
-    int key = detail->detail().key();
-    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
-        if (key == itemDetail->detail().key()) {
-            itemDetail->setDetail(detail->detail());
-            found = true;
-        }
-    }
-
-    if (!found) {
-        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
-        itemDetail->setDetail(detail->detail());
-        m_details.append(itemDetail);
-    }
-
-    m_modified = true;
-    emit itemChanged();
+    if (_q_setDetail(detail))
+        emit itemChanged();
 }
 
 /*!
@@ -345,21 +327,7 @@ void QDeclarativeOrganizerItem::setDetail(QDeclarativeOrganizerItemDetail *detai
  */
 void QDeclarativeOrganizerItem::removeDetail(QDeclarativeOrganizerItemDetail *detail)
 {
-    if (!detail->removable())
-        return;
-
-    int key = detail->detail().key();
-    int i = 0;
-    bool removed = false;
-    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
-        if (key == itemDetail->detail().key()) {
-            delete itemDetail;
-            m_details.removeAt(i);
-            removed = true;
-        }
-        ++i;
-    }
-    if (removed)
+    if (_q_removeDetail(detail))
         emit itemChanged();
 }
 
@@ -372,13 +340,8 @@ void QDeclarativeOrganizerItem::removeDetail(QDeclarativeOrganizerItemDetail *de
  */
 void QDeclarativeOrganizerItem::clearDetails()
 {
-    if (!m_details.empty()) {
-        foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
-            delete detail;
-        m_details.clear();
-        m_modified = true;
+    if (_q_clearDetails())
         emit itemChanged();
-    }
 }
 
 /*!
@@ -485,6 +448,68 @@ int QDeclarativeOrganizerItem::_q_detail_count(QDeclarativeListProperty<QDeclara
         return 0;
 }
 
+/*!
+    \internal
+ */
+bool QDeclarativeOrganizerItem::_q_removeDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (!detail->removable())
+        return false;
+
+    int key = detail->detail().key();
+    int i = 0;
+    bool removed = false;
+    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
+        if (key == itemDetail->detail().key()) {
+            delete itemDetail;
+            m_details.removeAt(i);
+            removed = true;
+        }
+        ++i;
+    }
+    return removed;
+}
+
+/*!
+    \internal
+ */
+bool QDeclarativeOrganizerItem::_q_setDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (!detail)
+        return false;
+
+    bool found(false);
+    int key = detail->detail().key();
+    foreach (QDeclarativeOrganizerItemDetail *itemDetail, m_details) {
+        if (key == itemDetail->detail().key()) {
+            itemDetail->setDetail(detail->detail());
+            found = true;
+        }
+    }
+    if (!found) {
+        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
+        itemDetail->setDetail(detail->detail());
+        m_details.append(itemDetail);
+    }
+    m_modified = true;
+    return true;
+}
+
+/*!
+    \internal
+ */
+bool QDeclarativeOrganizerItem::_q_clearDetails()
+{
+    bool ret = false;
+    if (!m_details.empty()) {
+        foreach (QDeclarativeOrganizerItemDetail *detail, m_details)
+            delete detail;
+        m_details.clear();
+        m_modified = true;
+        ret = true;
+    }
+    return ret;
+}
 
 // to be removed
 /*!
@@ -632,6 +657,41 @@ QDeclarativeOrganizerEvent::QDeclarativeOrganizerEvent(QObject *parent)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
     setItem(QOrganizerEvent());
+}
+
+/*!
+    \qmlmethod void Event::setDetail(detail)
+
+    Saves the given \a detail in the organizer event, and sets its id.
+ */
+void QDeclarativeOrganizerEvent::setDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (_q_setDetail(detail))
+        emit valueChanged();
+}
+
+/*!
+    \qmlmethod void Event::removeDetail(detail)
+
+    Removes given \a detail from the organizer event.
+ */
+void QDeclarativeOrganizerEvent::removeDetail(QDeclarativeOrganizerItemDetail *detail)
+{
+    if (_q_removeDetail(detail))
+        emit valueChanged();
+}
+
+/*!
+    \qmlmethod Event::clearDetails()
+
+    Removes all details from the organizer event.
+
+    \sa Event::removeDetail()
+ */
+void QDeclarativeOrganizerEvent::clearDetails()
+{
+    if (_q_clearDetails())
+        emit valueChanged();
 }
 
 /*!

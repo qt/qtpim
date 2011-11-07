@@ -105,9 +105,14 @@ public:
     Q_INVOKABLE QDeclarativeOrganizerItemDetail *detail(int type);
     Q_INVOKABLE QVariantList details(int type);
 
-    Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
-    Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
-    Q_INVOKABLE void clearDetails();
+    virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
+    virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
+    virtual Q_INVOKABLE void clearDetails();
+
+    // non-QML APIs, used internal only
+    bool _q_setDetail(QDeclarativeOrganizerItemDetail *detail);
+    bool _q_removeDetail(QDeclarativeOrganizerItemDetail *detail);
+    bool _q_clearDetails();
 
     Q_INVOKABLE void save();
 
@@ -164,6 +169,10 @@ class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
 
 public:
     explicit QDeclarativeOrganizerEvent(QObject *parent = 0);
+
+    virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
+    virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
+    virtual Q_INVOKABLE void clearDetails();
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;

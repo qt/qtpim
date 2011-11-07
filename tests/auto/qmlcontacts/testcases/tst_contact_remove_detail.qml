@@ -45,6 +45,7 @@ import QtContacts 5.0
 
 TestCase {
     name: "ContactRemoveDetailTests"
+    id: contactRemoveDetailTests
 
     Contact {
         id: contact0
@@ -116,7 +117,6 @@ TestCase {
     function test_contact_remove_one_of_multiple_details_emits_signal() {
         expectSignalFromObject("contactChanged", contact5);
         contact5.removeDetail(contact5PhoneNumber1);
-        expectFail("", "Remove does not emit change signal");
         verifySignalReceived();
     }
 
@@ -134,12 +134,15 @@ TestCase {
         contact6.removeDetail(contact6PhoneNumber1);
         expectSignalFromObject("contactChanged", contact6);
         contact6.removeDetail(contact6PhoneNumber2);
-        expectFail("", "Remove does not emit change signal");
         verifySignalReceived();
     }
 
-    SignalSpy {
-        id: spy
+    property SignalSpy spy
+
+    function init() {
+        spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                 "SignalSpy {}",
+                                 contactRemoveDetailTests);
     }
 
     function listenToSignalFromObject(signalName, object) {

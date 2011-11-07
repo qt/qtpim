@@ -45,6 +45,7 @@ import QtContacts 5.0
 
 TestCase {
     name: "ContactSignalsTests"
+    id: contactSignalsTests
 
     Contact {
         id: contact1
@@ -438,12 +439,13 @@ TestCase {
         verifyNoSignalReceived();
     }
 
-    SignalSpy {
-        id: spy
-    }
+    property SignalSpy spy
 
     function init() {
-        expectSignalFromObject("detailsChanged", contact1);
+        spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                 "SignalSpy {}",
+                                 contactSignalsTests);
+        expectSignalFromObject("contactChanged", contact1);
     }
 
     function expectSignalFromObject(signalName, object) {

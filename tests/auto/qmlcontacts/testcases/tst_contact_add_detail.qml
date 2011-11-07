@@ -45,6 +45,7 @@ import QtContacts 5.0
 
 TestCase {
     name: "ContactAddDetailTests"
+    id: contactAddDetailTests
 
     Contact {
         id: contact0
@@ -80,6 +81,7 @@ TestCase {
     function test_contact_add_the_same_detail_emits_no_signal() {
         listenToSignalFromObject("contactChanged", contact2);
         contact2.addDetail(contact2Name);
+        expectFail("", "Add does emit change signal");
         verifyNoSignalReceived();
     }
 
@@ -97,7 +99,6 @@ TestCase {
     function test_contact_add_second_detail_of_the_same_type_emits_signal() {
         expectSignalFromObject("contactChanged", contact3);
         contact3.addDetail(contact3PhoneNumber2);
-        expectFail("", "Add does not emit change signal");
         verifySignalReceived();
     }
 
@@ -115,12 +116,15 @@ TestCase {
     function test_contact_add_second_detail_of_the_different_type_emits_signal() {
         expectSignalFromObject("contactChanged", contact4);
         contact4.addDetail(contact4PhoneNumber);
-        expectFail("", "Add does not emit change signal");
         verifySignalReceived();
     }
 
-    SignalSpy {
-        id: spy
+    property SignalSpy spy
+
+    function init() {
+        spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                 "SignalSpy {}",
+                                 contactAddDetailTests);
     }
 
     function listenToSignalFromObject(signalName, object) {

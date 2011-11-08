@@ -97,29 +97,6 @@ Rectangle {
                 if (managerName == "memory")
                     organizer.importItems(Qt.resolvedUrl("contents/test.ics"));
             }
-            onModelChanged: {
-                //update all the calendar views such as Monthview and weekview by change the calendar currentDate
-                //ugly!
-                calendar.currentDate = new Date (calendar.year, calendar.month + 1, calendar.day + 1);
-                calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
-
-            }
-            onCollectionsChanged: {
-                //update all the calendar views such as Monthview and weekview by change the calendar currentDate
-                //ugly!
-                calendar.currentDate = new Date (calendar.year, calendar.month + 1, calendar.day + 1);
-                calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
-            }
-
-            onManagerChanged:{
-                //update all the calendar views such as Monthview and weekview by change the calendar currentDate
-                //ugly!
-                //calendar.currentDate = new Date (calendar.year, calendar.month + 1, calendar.day + 1);
-                //calendar.currentDate = new Date (calendar.year, calendar.month - 1, calendar.day - 1);
-            }
-            //onErrorChanged: {
-            //    console.log("OrganizerModel error changed: " + error);
-            //}
         }
 
         MenuBar { id: menuBar; width: parent.width; height: 35; opacity: 0.9; info: organizer.error + "\nTotal:" + organizer.itemCount }

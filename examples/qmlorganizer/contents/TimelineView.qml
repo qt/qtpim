@@ -129,8 +129,9 @@ Rectangle {
                     }
                     Repeater {
                         focus: true
-                        model:calendar.organizer.itemIds(new Date(timelineView.year,timelineView.month, index + 1),
+                        model:calendar.organizer.items? calendar.organizer.itemIds(new Date(timelineView.year,timelineView.month, index + 1),
                                                                                       new Date(timelineView.year,timelineView.month, index + 2))
+                                                      : 0
 
                         Text {
                             clip: true

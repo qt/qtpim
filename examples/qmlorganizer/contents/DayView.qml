@@ -124,7 +124,7 @@ Flickable
                          focus: true
 
                          // Simple fetch ALL events on this day...and we will filter them bu hour.
-                         model:calendar.organizer.itemIds(calendar.currentDate, new Date(calendar.year, calendar.month, calendar.day+1))
+                         model: calendar.organizer.items? calendar.organizer.itemIds(calendar.currentDate, new Date(calendar.year, calendar.month, calendar.day+1)) : 0
 
                          Row {
                              spacing:  4

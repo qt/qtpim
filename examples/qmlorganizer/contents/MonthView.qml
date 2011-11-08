@@ -88,7 +88,7 @@ Rectangle  {
                                       dayContainer.radius= 20
                                       return "lightsteelblue";
                                   }
-                                  else if (calendar.organizer.containsItems(Month.dateOfThisDay(startDay,   index - startWeekday +1), Month.dateOfThisDay(startDay,   index - startWeekday +2))) {
+                                  else if (calendar.organizer.items && calendar.organizer.containsItems(Month.dateOfThisDay(startDay,   index - startWeekday +1), Month.dateOfThisDay(startDay,   index - startWeekday +2))) {
                                       dayContainer.radius= 20
                                       return "yellow";
                                   }

@@ -287,6 +287,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
         detailList << number;
     }
 
+    //address
     array = object[detailsToJsonMapping.value(QContactAddress::DefinitionName)].value<QVariantList>();
     for(int i = 0; i < array.size(); ++i) {
         QContactAddress* address = new QContactAddress;
@@ -307,6 +308,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
         detailList << address;
     }
 
+    //url
     array = object[detailsToJsonMapping.value(QContactUrl::DefinitionName)].value<QVariantList>();
     for(int i = 0; i < array.size(); ++i) {
         QContactUrl* url = new QContactUrl;

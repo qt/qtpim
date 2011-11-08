@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the QtPim module of the Qt Toolkit
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -41,21 +41,34 @@
 
 #include "qcontactmanager.h"
 
-#include "qcontactdetaildefinition.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactrequests.h"
-#include "qcontactchangeset.h"
-#include "qcontactdetails.h"
+#include <QContactDetailDefinition>
+#include <QContactManagerEngine>
+#include <QContactAbstractRequest>
+#include <QContactChangeSet>
+#include <QContactTimestamp>
+#include <qcontactrequests.h>
 
 #include "qcontactmemorybackend_p.h"
 
-#include <QTimer>
-#include <QUuid>
-#include <QSharedData>
-#include <QDebug>
+#include <QtCore/qdebug.h>
+#include <QtCore/qstringbuilder.h>
+#include <QtCore/quuid.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
+
+QContactManagerEngine* QContactMemoryEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
+{
+    Q_UNUSED(error);
+
+    QContactMemoryEngine *ret = QContactMemoryEngine::createMemoryEngine(parameters);
+    return ret;
+}
+
+QString QContactMemoryEngineFactory::managerName() const
+{
+    return QString::fromAscii("memory");
+}
+Q_EXPORT_PLUGIN2(qtcontacts_memory, QContactMemoryEngineFactory)
 
 /*!
   \class QContactMemoryEngine

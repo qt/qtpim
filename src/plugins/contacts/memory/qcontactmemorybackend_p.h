@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the QtPim module of the Qt Toolkit
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -54,29 +54,29 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QQueue>
-#include <QPair>
-#include <QSet>
-#include <QDateTime>
-#include <QString>
-#include <QObject>
-
-#include "qcontact.h"
-#include "qcontactmanager.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactdetaildefinition.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactchangeset.h"
+#include <QContact>
+#include <QContactManager>
+#include <QContactManagerEngine>
+#include <QContactManagerEngineFactory>
+#include <QContactDetailDefinition>
+#include <QContactAbstractRequest>
+#include <QContactChangeSet>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactAbstractRequest;
 class QContactManagerEngine;
 class QContactMemoryEngine;
+
+class QContactMemoryEngineFactory : public QObject, public QContactManagerEngineFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
+public:
+    QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error*);
+    QString managerName() const;
+};
+
 class QContactMemoryEngineData : public QSharedData
 {
 public:

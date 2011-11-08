@@ -66,7 +66,6 @@
 # include <f32file.h>
 #endif
 
-#include "qcontactmemorybackend_p.h"
 #include "qcontactinvalidbackend_p.h"
 #include "qcontactspluginsearch_p.h"
 
@@ -129,75 +128,70 @@ void QContactManagerData::createEngine(const QString& managerName, const QMap<QS
     m_engine = 0;
 
     QString builtManagerName = managerName.isEmpty() ? QContactManager::availableManagers().value(0) : managerName;
-    if (builtManagerName == QLatin1String("memory")) {
-        QContactManagerEngine* engine = QContactMemoryEngine::createMemoryEngine(parameters);
-        m_engine = new QContactManagerEngineV2Wrapper(engine);
-        m_signalSource = engine;
 #ifdef QT_SIMULATOR
-    } else if (builtManagerName == QLatin1String("simulator")) {
+    if (builtManagerName == QLatin1String("simulator")) {
         QContactManagerEngine* engine = QContactSimulatorEngine::createSimulatorEngine(parameters);
         m_engine = new QContactManagerEngineV2Wrapper(engine);
         m_signalSource = engine;
+    }
 #endif
-    } else {
-        int implementationVersion = parameterValue(parameters, QTCONTACTS_IMPLEMENTATION_VERSION_NAME, -1);
+    int implementationVersion = parameterValue(parameters, QTCONTACTS_IMPLEMENTATION_VERSION_NAME, -1);
 
-        bool found = false;
-        bool loadedDynamic = false;
+    bool found = false;
+    bool loadedDynamic = false;
 
-        /* First check static factories */
-        loadStaticFactories();
+    /* First check static factories */
+    loadStaticFactories();
 
-        /* See if we got a fast hit */
-        QList<QContactManagerEngineFactory*> factories = m_engines.values(builtManagerName);
-        m_lastError = QContactManager::NoError;
+    /* See if we got a fast hit */
+    QList<QContactManagerEngineFactory*> factories = m_engines.values(builtManagerName);
+    m_lastError = QContactManager::NoError;
 
-        while(!found) {
-            foreach (QContactManagerEngineFactory* f, factories) {
-                QList<int> versions = f->supportedImplementationVersions();
-                if (implementationVersion == -1 ||//no given implementation version required
-                        versions.isEmpty() || //the manager engine factory does not report any version
-                        versions.contains(implementationVersion)) {
-                    QContactManagerEngine* engine = f->engine(parameters, &m_lastError);
-                    // if it's a V2, use it
-                    // qobject_cast for QContactManagerEngineV2 broken, see QTMOBILITY-1798
-                    // Workaround: use code behind general qobject_cast explicitly:
-                    //m_engine = qobject_cast<QContactManagerEngineV2*>(engine);
-                    m_engine = static_cast<QContactManagerEngineV2*>(reinterpret_cast<QContactManagerEngineV2*>(0)->staticMetaObject.cast(engine));
-                    if (!m_engine && engine) {
-                        // Nope, v1, so wrap it
-                        m_engine = new QContactManagerEngineV2Wrapper(engine);
-                        m_signalSource = engine;
-                    } else {
-                        m_signalSource = m_engine; // use the v2 engine directly
-                    }
-                    found = true;
-                    break;
+    while (!found) {
+        foreach (QContactManagerEngineFactory* f, factories) {
+            QList<int> versions = f->supportedImplementationVersions();
+            if (implementationVersion == -1 ||//no given implementation version required
+                    versions.isEmpty() || //the manager engine factory does not report any version
+                    versions.contains(implementationVersion)) {
+                QContactManagerEngine* engine = f->engine(parameters, &m_lastError);
+                // if it's a V2, use it
+                // qobject_cast for QContactManagerEngineV2 broken, see QTMOBILITY-1798
+                // Workaround: use code behind general qobject_cast explicitly:
+                //m_engine = qobject_cast<QContactManagerEngineV2*>(engine);
+                m_engine = static_cast<QContactManagerEngineV2*>(reinterpret_cast<QContactManagerEngineV2*>(0)->staticMetaObject.cast(engine));
+                if (!m_engine && engine) {
+                    // Nope, v1, so wrap it
+                    m_engine = new QContactManagerEngineV2Wrapper(engine);
+                    m_signalSource = engine;
+                } else {
+                    m_signalSource = m_engine; // use the v2 engine directly
                 }
-            }
-
-            // Break if found or if this is the second time through
-            if (loadedDynamic || found)
+                found = true;
                 break;
-
-            // otherwise load dynamic factories and reloop
-            loadFactories();
-            factories = m_engines.values(builtManagerName);
-            loadedDynamic = true;
+            }
         }
 
-        // XXX remove this
-        // the engine factory could lie to us, so check the real implementation version
-        if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
-            m_lastError = QContactManager::VersionMismatchError;
-            m_signalSource = m_engine = 0;
-        }
+        // Break if found or if this is the second time through
+        if (loadedDynamic || found)
+            break;
 
-        if (!m_engine) {
-            if (m_lastError == QContactManager::NoError)
-                m_lastError = QContactManager::DoesNotExistError;
-            m_signalSource = m_engine = new QContactInvalidEngine();
-        }
+        // otherwise load dynamic factories and reloop
+        loadFactories();
+        factories = m_engines.values(builtManagerName);
+        loadedDynamic = true;
+    }
+
+    // XXX remove this
+    // the engine factory could lie to us, so check the real implementation version
+    if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
+        m_lastError = QContactManager::VersionMismatchError;
+        m_signalSource = m_engine = 0;
+    }
+
+    if (!m_engine) {
+        if (m_lastError == QContactManager::NoError)
+            m_lastError = QContactManager::DoesNotExistError;
+        m_signalSource = m_engine = new QContactInvalidEngine();
     }
 }
 
@@ -224,7 +218,7 @@ void QContactManagerData::loadStaticFactories()
                 if (showDebug)
                     qDebug() << "Static: found an engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("memory") && name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
                         qWarning() << "Static contacts plugin" << name << "has the same name as a currently loaded plugin; ignored";
@@ -279,11 +273,12 @@ void QContactManagerData::loadFactories()
                 if (showDebug)
                     qDebug() << "Dynamic: found a contact engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("memory") && name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
                         qWarning() << "Contacts plugin" << plugins.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";
                     } else {
+                        qDebug() << "ADDING ENGINE to m_engines: " << name << " factory: " << plugins.at(i);
                         m_engines.insertMulti(name, f);
                     }
                 } else {

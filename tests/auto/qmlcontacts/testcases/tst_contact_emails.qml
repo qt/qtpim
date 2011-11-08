@@ -1,0 +1,183 @@
+/****************************************************************************
+**
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** This file is part of the QtPim module of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** GNU Lesser General Public License Usage
+** This file may be used under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation and
+** appearing in the file LICENSE.LGPL included in the packaging of this
+** file. Please review the following information to ensure the GNU Lesser
+** General Public License version 2.1 requirements will be met:
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** In addition, as a special exception, Nokia gives you certain additional
+** rights. These rights are described in the Nokia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU General
+** Public License version 3.0 as published by the Free Software Foundation
+** and appearing in the file LICENSE.GPL included in the packaging of this
+** file. Please review the following information to ensure the GNU General
+** Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms and
+** conditions contained in a signed written agreement between you and Nokia.
+**
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+import QtQuick 2.0
+import QtTest 1.0
+import QtContacts 5.0
+
+TestCase {
+    name: "ContactsEmailsTests"
+
+    TestCase {
+        name: "ContactsEmailsTests::NoEmail"
+
+        Contact {
+            id: contactWithoutEmail
+        }
+
+        function test_emailOfContactWithoutEmailIsEmpty() {
+            verifyIsUndefined(contactWithoutEmail.email);
+        }
+
+        function test_emailsCountOfContactWithoutEmailIsZero() {
+            compare(contactWithoutEmail.emails.length, 0);
+        }
+    }
+
+    TestCase {
+        name: "ContactsEmailsTests::OneEmail"
+
+        Contact {
+            id: contactWithOneEmail
+
+            EmailAddress {
+                emailAddress: "a@ovi.com"
+            }
+        }
+
+        function test_accessEmailThroughEmail() {
+            compare(contactWithOneEmail.email.emailAddress, "a@ovi.com");
+        }
+
+        function test_emailCount() {
+            compare(contactWithOneEmail.emails.length, 1);
+        }
+
+        function test_accessEmailThroughEmails() {
+            compare(contactWithOneEmail.emails[0].emailAddress, "a@ovi.com");
+        }
+
+        function test_accessEmailThroughDetails() {
+            compare(contactWithOneEmail.details(
+                        ContactDetail.Email)[0].emailAddress, "a@ovi.com");
+        }
+    }
+
+    TestCase {
+        name: "ContactsEmailsTests::MultipleEmails"
+
+        Contact {
+            id: contactWithEmails
+
+            EmailAddress {
+                emailAddress: "a@ovi.com"
+            }
+
+            EmailAddress {
+                emailAddress: "b@ovi.com"
+            }
+        }
+
+        function test_accessEmailThroughEmail() {
+            compare(contactWithEmails.email.emailAddress, "a@ovi.com");
+        }
+
+        function test_emailCount() {
+            compare(contactWithEmails.emails.length, 2);
+        }
+
+        function test_accessEmailThroughEmails() {
+            compare(contactWithEmails.emails[0].emailAddress, "a@ovi.com");
+            compare(contactWithEmails.emails[1].emailAddress, "b@ovi.com");
+        }
+
+        function test_accessEmailThroughDetails() {
+            compare(contactWithEmails.details(
+                        ContactDetail.Email)[0].emailAddress, "a@ovi.com");
+            compare(contactWithEmails.details(
+                        ContactDetail.Email)[1].emailAddress, "b@ovi.com");
+        }
+    }
+
+    TestCase {
+        name: "ContactsEmailsTests::DynamicallyAdded::MultipleEmails"
+
+        Contact {
+            id: contact1
+        }
+
+        EmailAddress {
+            id: emailAddress1
+            emailAddress: "a@ovi.com"
+        }
+
+        EmailAddress {
+            id: emailAddress2
+            emailAddress: "b@ovi.com"
+        }
+
+        function init() {
+            contact1.clearDetails();
+            contact1.addDetail(emailAddress1);
+            contact1.addDetail(emailAddress2);
+        }
+
+        function test_accessEmailThroughEmail() {
+            compare(contact1.email.emailAddress, "a@ovi.com");
+        }
+
+        function test_emailCount() {
+            verify(contact1.emails);
+            compare(contact1.emails.length, 2);
+        }
+
+        function test_accessEmailThroughEmails() {
+            compare(contact1.emails[0].emailAddress, "a@ovi.com");
+            compare(contact1.emails[1].emailAddress, "b@ovi.com");
+        }
+
+        function test_accessEmailThroughDetails() {
+            compare(contact1.details(
+                        ContactDetail.Email)[0].emailAddress, "a@ovi.com");
+            compare(contact1.details(
+                        ContactDetail.Email)[1].emailAddress, "b@ovi.com");
+        }
+
+        function cleanup () {
+            contact1.clearDetails();
+        }
+    }
+
+    function verifyIsUndefined(object) {
+        verify(!object, "Object " + object + " is undefined");
+    }
+}
+

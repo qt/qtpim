@@ -448,11 +448,15 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization->assistantName();
             organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl().toString();
             QDateTime startDate = organization->startDate();
-            QString organizationStartDate = toJsonDate(startDate);
-            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organizationStartDate;
+            if (startDate.isValid()) {
+                QString organizationStartDate = toJsonDate(startDate);
+                organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organizationStartDate;
+            }
             QDateTime endDate = organization->endDate();
-            QString organizationEndDate = toJsonDate(endDate);
-            organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
+            if (endDate.isValid()) {
+                QString organizationEndDate = toJsonDate(endDate);
+                organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
+            }
 
             updateContexts(*organization, &organizationMap);
             if (!organization->contexts().isEmpty())

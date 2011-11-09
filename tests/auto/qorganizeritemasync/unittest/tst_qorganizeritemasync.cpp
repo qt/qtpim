@@ -804,6 +804,16 @@ void tst_QOrganizerItemAsync::itemFetchById()
         QOrganizerItem curr = oim->item(itemIds.at(i));
         QVERIFY(items.at(i) == curr);
     }
+    // save empty list
+    QList<QOrganizerItemId> itemIdList;
+    QOrganizerItemFetchByIdRequest ifr1;
+    ifr1.setManager(oim.data());
+    ifr1.setIds(itemIdList);
+    ifr1.start();
+    ifr1.waitForFinished();
+    QVERIFY(ifr1.isFinished());
+    QVERIFY(ifr1.error() == QOrganizerManager::NoError);
+
     // XXX TODO: fetchbyid request for items as well as items!!!
 }
 
@@ -1470,6 +1480,16 @@ void tst_QOrganizerItemAsync::itemRemove()
     irr.setItemId(removableId);
     QVERIFY(irr.itemIds() == QList<QOrganizerItemId>() << removableId);
 
+    // remove empty list
+    QList<QOrganizerItemId> itemIdList;
+    QOrganizerItemRemoveRequest irr1;
+    irr1.setManager(oim.data());
+    irr1.setItemIds(itemIdList);
+    irr1.start();
+    irr1.waitForFinished();
+    QVERIFY(irr1.isFinished());
+    QVERIFY(irr1.error() == QOrganizerManager::NoError);
+
     // specific item removal via detail filter
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
@@ -1511,20 +1531,20 @@ void tst_QOrganizerItemAsync::itemRemove()
 
     irr.setItemIds(oim->itemIds());
 
-//    QVERIFY(!irr.isActive());
-//    QVERIFY(!irr.isFinished());
-//    QVERIFY(!irr.waitForFinished());
-//    QVERIFY(!irr.cancel()); // not started
-//    QVERIFY(irr.start());
+    QVERIFY(!irr.isActive());
+    QVERIFY(irr.isFinished());
+    QVERIFY(irr.waitForFinished());
+    QVERIFY(!irr.cancel()); // not started
+    QVERIFY(irr.start());
 
-//    QVERIFY((irr.isActive() && irr.state() == QOrganizerAbstractRequest::ActiveState) || irr.isFinished());
-//    //QVERIFY(irr.isFinished() || !irr.start());  // already started. // thread scheduling means this is untestable
-//    QVERIFY(irr.waitForFinished());
-//    QVERIFY(irr.isFinished());
+    QVERIFY((irr.isActive() && irr.state() == QOrganizerAbstractRequest::ActiveState) || irr.isFinished());
+    //QVERIFY(irr.isFinished() || !irr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(irr.waitForFinished());
+    QVERIFY(irr.isFinished());
 
-//    QCOMPARE(oim->itemIds().size(), 0); // no items should be left.
-//    QVERIFY(spy.count() >= 1); // active + finished progress signals
-//    spy.clear();
+    QCOMPARE(oim->itemIds().size(), 0); // no items should be left.
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
 
 //    // cancelling
 //    QOrganizerTodo temp;
@@ -1679,6 +1699,16 @@ void tst_QOrganizerItemAsync::itemSave()
     result << oim->item(expected.first().id());
 
     QVERIFY(compareItemLists(result, expected));
+
+    // save empty list
+    QList<QOrganizerItem> itemList;
+    QOrganizerItemSaveRequest isr1;
+    isr1.setManager(oim.data());
+    isr1.setItems(itemList);
+    isr1.start();
+    isr1.waitForFinished();
+    QVERIFY(isr1.isFinished());
+    QVERIFY(isr1.error() == QOrganizerManager::NoError);
 
     //here we can't compare the whole item details, testTodo would be updated by async call because we just use QThreadSignalSpy to receive signals.
     //QVERIFY(containsIgnoringTimestamps(result, testTodo));
@@ -2204,6 +2234,16 @@ void tst_QOrganizerItemAsync::collectionRemove()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
+    // remove empty list
+    QList<QOrganizerCollectionId> collectionIdList;
+    QOrganizerCollectionRemoveRequest crr1;
+    crr1.setManager(oim.data());
+    crr1.setCollectionIds(collectionIdList);
+    crr1.start();
+    crr1.waitForFinished();
+    QVERIFY(crr1.isFinished());
+    QVERIFY(crr1.error() == QOrganizerManager::NoError);
+
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData("description", "Should not be removed!");
@@ -2373,6 +2413,16 @@ void tst_QOrganizerItemAsync::collectionSave()
     QCOMPARE(oim->collections().size(), originalCount + 1); // ie shouldn't have added an extra one (would be +2)
     QVERIFY(csr.error() == QOrganizerManager::NoError);
     QVERIFY(csr.errorMap().isEmpty());
+
+    // save empty list
+    QList<QOrganizerCollection> collectionList;
+    QOrganizerCollectionSaveRequest csr1;
+    csr1.setManager(oim.data());
+    csr1.setCollections(collectionList);
+    csr1.start();
+    csr1.waitForFinished();
+    QVERIFY(csr1.isFinished());
+    QVERIFY(csr1.error() == QOrganizerManager::NoError);
 
     // cancelling
     QOrganizerCollection temp;

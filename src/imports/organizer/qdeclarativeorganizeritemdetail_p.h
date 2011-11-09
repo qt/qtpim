@@ -82,6 +82,7 @@ public:
         Timestamp,
         Type,
         Tag,
+        EventAttendee,
         Customized = 100
     };
 
@@ -700,6 +701,63 @@ Q_SIGNALS:
     void valueChanged();
 };
 
+class QDeclarativeOrganizerEventAttendee : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+    Q_ENUMS(ParticipationStatus)
+    Q_ENUMS(ParticipationRole)
+
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
+    Q_PROPERTY(QString emailAddress READ emailAddress WRITE setEmailAddress NOTIFY valueChanged)
+    Q_PROPERTY(QString attendeeId READ attendeeId WRITE setAttendeeId NOTIFY valueChanged)
+    Q_PROPERTY(ParticipationStatus participationStatus READ participationStatus WRITE setParticipationStatus NOTIFY valueChanged)
+    Q_PROPERTY(ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
+
+public:
+    enum ParticipationStatus {
+        StatusUnknown = QOrganizerEventAttendee::StatusUnknown,
+        StatusAccepted = QOrganizerEventAttendee::StatusAccepted,
+        StatusDeclined = QOrganizerEventAttendee::StatusDeclined,
+        StatusTentative = QOrganizerEventAttendee::StatusTentative,
+        StatusDelegated = QOrganizerEventAttendee::StatusDelegated,
+        StatusInProcess = QOrganizerEventAttendee::StatusInProcess,
+        StatusCompleted = QOrganizerEventAttendee::StatusCompleted
+    };
+
+    enum ParticipationRole {
+        RoleUnknown = QOrganizerEventAttendee::RoleUnknown,
+        RoleOrganizer = QOrganizerEventAttendee::RoleOrganizer,
+        RoleChairperson = QOrganizerEventAttendee::RoleChairperson,
+        RoleHost = QOrganizerEventAttendee::RoleHost,
+        RoleRequiredParticipant = QOrganizerEventAttendee::RoleRequiredParticipant,
+        RoleOptionalParticipant = QOrganizerEventAttendee::RoleOptionalParticipant,
+        RoleNonParticipant = QOrganizerEventAttendee::RoleNonParticipant
+    };
+
+    QDeclarativeOrganizerEventAttendee(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setName(const QString &newName);
+    QString name() const;
+
+    void setEmailAddress(const QString &newEmailAddress);
+    QString emailAddress() const;
+
+    void setParticipationStatus(ParticipationStatus status);
+    ParticipationStatus participationStatus() const;
+
+    void setParticipationRole(ParticipationRole role);
+    ParticipationRole participationRole() const;
+
+    void setAttendeeId(const QString &newAttendeeId);
+    QString attendeeId() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void valueChanged();
+};
 
 class QDeclarativeOrganizerItemDetailFactory
 {
@@ -731,5 +789,6 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemAudibleR
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemEmailReminder))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVisualReminder))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizeritemExtendedDetail))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventAttendee))
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H

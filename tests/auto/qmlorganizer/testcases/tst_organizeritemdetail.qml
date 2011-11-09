@@ -45,6 +45,12 @@ import QtOrganizer 5.0
 
 TestCase {
     name: "ItemDetailTests"
+    id: organizerItemDetailTests
+    property int waitTime : 200
+
+    QOrganizerTestUtility {
+        id: utility
+    }
 
     Detail {
         id: emptyDetail
@@ -128,6 +134,10 @@ TestCase {
 
     ExtendedDetail {
         id: extendedDetail
+    }
+
+    EventAttendee {
+        id: eventAttendee
     }
 
     function test_extendedDetail() {
@@ -370,6 +380,47 @@ TestCase {
         var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
         eventTime.endDateTime = endDateTime
         compare(eventTime.endDateTime, endDateTime)
+    }
+
+    function test_attendeeDetail() {
+        var detailChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {id : organizerChangedSpy;}"
+                 , organizerItemDetailTests);
+        detailChangedSpy.target = eventAttendee;
+        detailChangedSpy.signalName = "detailChanged";
+        var count = 0;
+
+        compare(eventAttendee.type, Detail.EventAttendee)
+        eventAttendee.name = "new attendee"
+        detailChangedSpy.wait(waitTime)
+        compare(eventAttendee.name, "new attendee")
+        compare(detailChangedSpy.count, ++count)
+
+        eventAttendee.emailAddress = "new.attendee@qt.com"
+        detailChangedSpy.wait(waitTime)
+        compare(eventAttendee.emailAddress, "new.attendee@qt.com")
+        compare(detailChangedSpy.count, ++count)
+
+        eventAttendee.attendeeId = "123444455555"
+        detailChangedSpy.wait(waitTime)
+        compare(eventAttendee.attendeeId, "123444455555")
+        compare(detailChangedSpy.count, ++count)
+
+        eventAttendee.participationStatus = EventAttendee.StatusAccepted
+        detailChangedSpy.wait(waitTime)
+        compare(eventAttendee.participationStatus, EventAttendee.StatusAccepted)
+        compare(detailChangedSpy.count, ++count)
+
+        eventAttendee.participationRole = EventAttendee.RoleRequiredParticipant
+        detailChangedSpy.wait(waitTime)
+        compare(eventAttendee.participationRole, EventAttendee.RoleRequiredParticipant)
+        compare(detailChangedSpy.count, ++count)
+
+        // set same value
+        eventAttendee.participationRole = EventAttendee.RoleRequiredParticipant
+        compare(eventAttendee.participationRole, EventAttendee.RoleRequiredParticipant)
+        // no signal has been emited
+        compare(detailChangedSpy.count, count)
     }
 
     function test_emptyDetail() {

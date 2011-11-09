@@ -166,9 +166,12 @@ class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
     Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemRecurrence *recurrence READ recurrence NOTIFY valueChanged)
     Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> attendees READ attendees NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerEvent(QObject *parent = 0);
+
+    QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> attendees();
 
     virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
     virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
@@ -193,6 +196,13 @@ public:
 
 Q_SIGNALS:
     void valueChanged();
+
+private:
+    // call-back functions for attendees list property
+    static void _q_attendee_append(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value);
+    static QDeclarativeOrganizerEventAttendee *_q_attendee_at(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, int index);
+    static void _q_attendee_clear(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property);
+    static int _q_attendee_count(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property);
 };
 
 

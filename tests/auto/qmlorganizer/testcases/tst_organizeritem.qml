@@ -85,6 +85,10 @@ TestCase {
         comment: "Code Less"
     }
 
+    EventAttendee {
+        id: eventAttendee
+    }
+
     ExtendedDetail {
         id: extendedDetail
         name: "extendedDetail1"
@@ -265,6 +269,68 @@ TestCase {
         compare(event.details(Detail.Recurrence).length, 1)
         compare(event.recurrence.recurrenceDates.length, 2)
         //compare(itemChangedSpy.count, ++count)
+
+        // attendee
+        eventAttendee.name = "new attendee"
+        eventAttendee.emailAddress = "new.attendee@qt.com"
+        eventAttendee.attendeeId = "123444455555"
+        eventAttendee.participationStatus = EventAttendee.StatusAccepted
+        eventAttendee.participationRole = EventAttendee.RoleRequiredParticipant
+        event.setDetail(eventAttendee)
+        itemChangedSpy.wait(waitTime);
+        compare(event.details(Detail.EventAttendee).length, 1)
+        compare(event.detail(Detail.EventAttendee).name, "new attendee")
+        compare(event.detail(Detail.EventAttendee).emailAddress, "new.attendee@qt.com")
+        compare(event.detail(Detail.EventAttendee).participationStatus, EventAttendee.StatusAccepted)
+        compare(event.detail(Detail.EventAttendee).participationRole, EventAttendee.RoleRequiredParticipant)
+        compare(itemChangedSpy.count, ++count)
+
+        // add one more dynamic created attendee
+        var eventAttendee2 = utility.create_testobject("import QtTest 1.0;import QtOrganizer 5.0;"
+                 + "EventAttendee {id : eventAttendee2;}"
+                 , organizerItemTests);
+        event.setDetail(eventAttendee2)
+        itemChangedSpy.wait(waitTime);
+        compare(event.details(Detail.EventAttendee).length, 2)
+        compare(itemChangedSpy.count, ++count)
+
+        // remove one attendee
+        event.removeDetail(eventAttendee)
+        itemChangedSpy.wait(waitTime);
+        compare(event.details(Detail.EventAttendee).length, 1)
+        compare(itemChangedSpy.count, ++count)
+
+        // remove last attendee
+        event.removeDetail(eventAttendee2)
+        itemChangedSpy.wait(waitTime);
+        compare(event.details(Detail.EventAttendee).length, 0)
+        compare(itemChangedSpy.count, ++count)
+
+        // attenddees property
+        event.attendees = [eventAttendee];
+        itemChangedSpy.wait(waitTime);
+        compare(event.attendees.length, 1)
+        compare(itemChangedSpy.count, ++count)
+
+        // attendees append test
+        event.attendees = [eventAttendee, eventAttendee2];
+        itemChangedSpy.wait(waitTime);
+        compare(event.attendees.length, 2)
+        count += 3;//clear + 2 * append signals
+        compare(itemChangedSpy.count, count)
+
+        event.attendees = [eventAttendee2];
+        itemChangedSpy.wait(waitTime);
+        compare(event.attendees.length, 1)
+        count += 2;//clear + append signals
+        compare(itemChangedSpy.count, count)
+
+        // attendees clear
+        event.attendees = [];
+        itemChangedSpy.wait(waitTime);
+        compare(event.attendees.length, 0)
+        count += 1;//clear
+        compare(itemChangedSpy.count, count)
     }
 
     function test_item() {

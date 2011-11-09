@@ -164,6 +164,8 @@ Rectangle
                 calendar.organizer.saveItem(item);
                 calendar.state = "DayView";
                 saveButton.enabled = true;
+                //"item" will be removed after saved without any signal notify.
+                item = null;
             }
         }
         Button {
@@ -463,6 +465,39 @@ Rectangle
             id: customCollectionRow
             onCurrentIndexChanged: {
                 item.collectionId = organizer.collections[currentIndex].collectionId;
+            }
+        }
+        Column {
+            Repeater {
+                model: item? item.attendees : 0
+                Rectangle {
+                    width: detailsView.width;
+                    height: 25
+                    Text {
+                        id : nameText;
+                        width: detailsView.width
+                        text: "attendee " + index + " : " + name + "," + emailAddress;
+                    }
+                    Button {
+                        text: "remove"
+                        width: detailsView.width / 6
+                        height: 30
+                        anchors.right: nameText.right
+                        onClicked: {
+                            item.removeDetail(modelData);
+                        }
+                    }
+                }
+            }
+        }
+        Button {
+            id: addAttendeeButton
+            text: "Add Attendee"
+            width: detailsView.width / 2
+            anchors.horizontalCenter: customCollectionRow.horizontalCenter
+            onClicked: {
+                attendeeDetailsView.item = item;
+                calendar.state = "AttendeeDetailsView";
             }
         }
     }

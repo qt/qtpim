@@ -107,6 +107,13 @@ TestCase {
                     },
                     "VisualReminder": {
                         "message": "'dummy'"
+                    },
+                    "EventAttendee": {
+                        "name": "'dummy'",
+                        "emailAddress": "'new.attendee@qt.com'",
+                        "attendeeId": "'123444455555'",
+                        "participationStatus": "EventAttendee.StatusAccepted",
+                        "participationRole": "EventAttendee.RoleRequiredParticipant"
                     }
                 },
 

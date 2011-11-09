@@ -118,6 +118,7 @@ bool QDeclarativeOrganizerItemDetail::removable() const
     \o Detail.Timestamp
     \o Detail.Type
     \o Detail.Tag
+    \o Detail.EventAttendee
     \endlist
  */
 QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail::type() const
@@ -240,6 +241,8 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
         return QDeclarativeOrganizerItemType::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Tag:
         return QDeclarativeOrganizerItemTag::fieldNameFromFieldType(fieldType);
+    case QDeclarativeOrganizerItemDetail::EventAttendee:
+        return QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
         return QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
@@ -293,6 +296,8 @@ QString QDeclarativeOrganizerItemDetail::definitionName(QDeclarativeOrganizerIte
         return QOrganizerItemType::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Tag:
         return QOrganizerItemTag::DefinitionName;
+    case QDeclarativeOrganizerItemDetail::EventAttendee:
+        return QOrganizerEventAttendee::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Customized:
         return QOrganizerItemExtendedDetail::DefinitionName;
     default:
@@ -345,6 +350,8 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
         return QDeclarativeOrganizerItemDetail::Type;
     if (definitionName == QOrganizerItemTag::DefinitionName)
         return QDeclarativeOrganizerItemTag::Tag;
+    if (definitionName == QOrganizerEventAttendee::DefinitionName)
+        return QDeclarativeOrganizerItemDetail::EventAttendee;
     if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Customized;
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
@@ -1644,6 +1651,132 @@ QVariant QDeclarativeOrganizeritemExtendedDetail::data() const
     return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
 }
 
+/*!
+    \qmlclass EventAttendee QDeclarativeOrganizerEventAttendee
+    \brief The EventAttendee element contains information about an attendee of an event.
+    \ingroup qml-organizer
+
+    This element is part of the \bold{QtOrganizer 5.0} module.
+ */
+QDeclarativeOrganizerEventAttendee::QDeclarativeOrganizerEventAttendee(QObject *parent)
+    : QDeclarativeOrganizerItemDetail(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
+    setDetail(QOrganizerEventAttendee());
+}
+
+QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerEventAttendee::type() const
+{
+    return QDeclarativeOrganizerItemDetail::EventAttendee;
+}
+
+/*!
+    \qmlproperty variant EventAttendee::name
+
+    This property holds the name of the attendee.
+ */
+void QDeclarativeOrganizerEventAttendee::setName(const QString &newName)
+{
+    if (name() != newName && !readOnly()) {
+        m_detail.setValue(QOrganizerEventAttendee::FieldName, newName);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerEventAttendee::name() const
+{
+    return m_detail.value(QOrganizerEventAttendee::FieldName).toString();
+}
+
+/*!
+    \qmlproperty variant EventAttendee::emailAddress
+
+    This property holds the email address of the attendee.
+ */
+void QDeclarativeOrganizerEventAttendee::setEmailAddress(const QString &newEmailAddress)
+{
+    if (emailAddress() != newEmailAddress && !readOnly()) {
+        m_detail.setValue(QOrganizerEventAttendee::FieldEmailAddress, newEmailAddress);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerEventAttendee::emailAddress() const
+{
+    return m_detail.value(QOrganizerEventAttendee::FieldEmailAddress).toString();
+}
+
+/*!
+    \qmlproperty variant EventAttendee::participationStatus
+
+    This property holds the participation status of the attendee of the event. The value can be one of:
+    \list
+    \o EventAttendee.StatusUnknown
+    \o EventAttendee.StatusAccepted
+    \o EventAttendee.StatusDeclined
+    \o EventAttendee.StatusTentative
+    \o EventAttendee.StatusDelegated
+    \o EventAttendee.StatusInProcess
+    \o EventAttendee.StatusCompleted
+    \endlist
+ */
+void QDeclarativeOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
+{
+    if (participationStatus() != status && !readOnly()) {
+        m_detail.setValue(QOrganizerEventAttendee::FieldParticipationStatus, status);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerEventAttendee::ParticipationStatus QDeclarativeOrganizerEventAttendee::participationStatus() const
+{
+    return static_cast<ParticipationStatus>(m_detail.value(QOrganizerEventAttendee::FieldParticipationStatus).toInt());
+}
+
+/*!
+    \qmlproperty variant EventAttendee::participationRole
+
+    This property holds the participation role of the attendee of the event.The value can be one of:
+    \list
+    \o EventAttendee.RoleUnknown
+    \o EventAttendee.RoleOrganizer
+    \o EventAttendee.RoleChairperson
+    \o EventAttendee.RoleHost
+    \o EventAttendee.RoleRequiredParticipant
+    \o EventAttendee.RoleOptionalParticipant
+    \o EventAttendee.RoleNonParticipant
+    \endlist
+ */
+void QDeclarativeOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
+{
+    if (participationRole() != role && !readOnly()) {
+        m_detail.setValue(QOrganizerEventAttendee::FieldParticipationRole, role);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEventAttendee::participationRole() const
+{
+    return static_cast<ParticipationRole>(m_detail.value(QOrganizerEventAttendee::FieldParticipationRole).toInt());
+}
+
+/*!
+    \qmlproperty variant EventAttendee::attendeeId
+
+    This property holds the unique identifier of the attendee.
+ */
+void QDeclarativeOrganizerEventAttendee::setAttendeeId(const QString &newAttendeeId)
+{
+    if (attendeeId() != newAttendeeId && !readOnly()) {
+        m_detail.setValue(QOrganizerEventAttendee::FieldContactId, newAttendeeId);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerEventAttendee::attendeeId() const
+{
+    return m_detail.value(QOrganizerEventAttendee::FieldContactId).toString();
+}
 
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type)
 {
@@ -1688,6 +1821,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerTodoTime;
     else if (type == QDeclarativeOrganizerItemDetail::Customized)
         itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
+    else if (type == QDeclarativeOrganizerItemDetail::EventAttendee)
+        itemDetail = new QDeclarativeOrganizerEventAttendee;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -1736,6 +1871,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerTodoTime;
     else if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
+    else if (definitionName == QOrganizerEventAttendee::DefinitionName)
+        itemDetail = new QDeclarativeOrganizerEventAttendee;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -1991,6 +2128,24 @@ QString QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(int type
         return QOrganizerItemExtendedDetail::FieldExtendedDetailName;
     case 1:
         return QOrganizerItemExtendedDetail::FieldExtendedDetailData;
+    }
+    qmlInfo(0) << tr("invalid field type:") << type;
+    return QString();
+}
+
+QString QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(int type)
+{
+    switch (type) {
+    case 0:
+        return QOrganizerEventAttendee::FieldName;
+    case 1:
+        return QOrganizerEventAttendee::FieldEmailAddress;
+    case 2:
+        return QOrganizerEventAttendee::FieldContactId;
+    case 3:
+        return QOrganizerEventAttendee::FieldParticipationStatus;
+    case 4:
+        return QOrganizerEventAttendee::FieldParticipationRole;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
     return QString();

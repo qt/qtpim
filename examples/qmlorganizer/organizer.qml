@@ -154,7 +154,8 @@ Rectangle {
                 PropertyChanges { target: collectionEditorView; opacity: 1; }
                 PropertyChanges { target: statusBar; opacity: 0; }
             },
-            State {name: "TodoView"; PropertyChanges { target: todoView; opacity: 1; }}
+            State {name: "TodoView"; PropertyChanges { target: todoView; opacity: 1; }},
+            State {name: "AttendeeDetailsView"; PropertyChanges { target: attendeeDetailsView; opacity: 1; }}
         ]
         transitions: [
             Transition {
@@ -270,6 +271,9 @@ Rectangle {
             }
             TodoView {
                 id: todoView;
+            }
+            AttendeeDetailsView {
+                id: attendeeDetailsView;
             }
         }
 

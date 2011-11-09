@@ -695,6 +695,91 @@ void QDeclarativeOrganizerEvent::clearDetails()
 }
 
 /*!
+    \qmlproperty list<Detail> Event::attendees
+
+    This property holds the attendees list of the event.
+ */
+QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> QDeclarativeOrganizerEvent::attendees()
+{
+    return QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee>(this, 0,
+                                                                     &QDeclarativeOrganizerEvent::_q_attendee_append,
+                                                                     &QDeclarativeOrganizerEvent::_q_attendee_count,
+                                                                     &QDeclarativeOrganizerEvent::_q_attendee_at,
+                                                                     &QDeclarativeOrganizerEvent::_q_attendee_clear);
+}
+
+// call-back functions for list property
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerEvent::_q_attendee_append(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value)
+{
+    QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
+    if (object)
+        object->setDetail(value);
+}
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerEventAttendee *QDeclarativeOrganizerEvent::_q_attendee_at(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, int index)
+{
+    QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
+    QDeclarativeOrganizerEventAttendee *ret = 0;
+    int i = 0;
+    foreach (QDeclarativeOrganizerItemDetail *detail, object->m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventAttendee == detail->type()) {
+            if (i == index) {
+                ret = qobject_cast<QDeclarativeOrganizerEventAttendee *>(detail);
+                break;
+            } else {
+                ++i;
+            }
+        }
+    }
+    return ret;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerEvent::_q_attendee_clear(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property)
+{
+    QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
+    if (object) {
+        int i = 0;
+        bool removed = false;
+        foreach (QDeclarativeOrganizerItemDetail *obj, object->m_details) {
+            if (obj->type() == QDeclarativeOrganizerItemDetail::EventAttendee) {
+                delete obj;
+                object->m_details.removeAt(i);
+                removed = true;
+            } else {// Index should not increase if some thing is removed
+                ++i;
+            }
+        }
+        if (removed)
+            emit object->valueChanged();
+    }
+}
+
+/*!
+    \internal
+ */
+int QDeclarativeOrganizerEvent::_q_attendee_count(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property)
+{
+    QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
+    int ret = 0;
+    if (object) {
+        foreach (QDeclarativeOrganizerItemDetail *detail, object->m_details) {
+            if (QDeclarativeOrganizerItemDetail::EventAttendee == detail->type())
+                ++ret;
+        }
+    }
+    return ret;
+}
+
+/*!
     \qmlproperty bool Event::allDay
 
     This property indicates whether the time-of-day component of the event's start date-time or end date-time is

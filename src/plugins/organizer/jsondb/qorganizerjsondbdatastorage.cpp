@@ -511,7 +511,18 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsRequest()
         QOrganizerCollection collection = i.value();
         bool collectionIsNew = collection.id().isNull();
         QVariantMap jsonDbCollection;
-        if (m_converter.collectionToJsonDbObject(collection, m_isDefaultCollection, &jsonDbCollection)) {
+        // check whether this is a default collection
+        // if we are creating a new default collection, then m_isDefaultCollection is true
+        // if we are modifying an existing default collection, then collection id should be the same
+        // as m_defaultCollection id.
+
+        bool convertToDefaultCollection;
+        if (collectionIsNew)
+            convertToDefaultCollection = m_isDefaultCollection;
+        else
+            convertToDefaultCollection = (collection.id() == m_defaultCollection.id());
+
+        if (m_converter.collectionToJsonDbObject(collection, convertToDefaultCollection, &jsonDbCollection)) {
             int trId;
             if (collectionIsNew)
                 trId = m_jsonDb->create(jsonDbCollection);

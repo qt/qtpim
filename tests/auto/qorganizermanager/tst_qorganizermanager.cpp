@@ -4052,6 +4052,21 @@ void tst_QOrganizerManager::collections()
     i5.setDisplayLabel("five");
 //    i5.setLocation("test location address");
 
+    // modify default collection
+    if (oim->managerName() != "memory") // modifying default collection is not allowed in memory engine
+    {
+        int initialCollectionCount = oim->collections().size();
+        QOrganizerCollection defaultCollection = oim->defaultCollection();
+        QOrganizerCollectionId defaultCollectionId = oim->defaultCollection().id();
+        defaultCollection.setMetaData(QOrganizerCollection::KeyName, "NewName");
+        QCOMPARE(defaultCollection.id(), defaultCollectionId);
+        QVERIFY(oim->saveCollection(&defaultCollection));
+        int finalCollectionCount = oim->collections().size();
+        QCOMPARE(finalCollectionCount, initialCollectionCount);
+        QCOMPARE(oim->defaultCollection().metaData(QOrganizerCollection::KeyName).toString(), QString("NewName"));
+        QCOMPARE(defaultCollection.id(), defaultCollectionId);
+    }
+
     // first test
     {
         // save a collection

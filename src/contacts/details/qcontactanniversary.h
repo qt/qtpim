@@ -54,29 +54,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactAnniversary : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldCalendarId;
-    static const QLatin1Constant FieldOriginalDate;
-    static const QLatin1Constant FieldEvent;
-    static const QLatin1Constant FieldSubType;
-    static const QLatin1Constant SubTypeWedding;
-    static const QLatin1Constant SubTypeEngagement;
-    static const QLatin1Constant SubTypeHouse;
-    static const QLatin1Constant SubTypeEmployment;
-    static const QLatin1Constant SubTypeMemorial;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAnniversary, "Anniversary")
-    Q_DECLARE_LATIN1_CONSTANT(FieldCalendarId, "CalendarId");
-    Q_DECLARE_LATIN1_CONSTANT(FieldOriginalDate, "OriginalDate");
-    Q_DECLARE_LATIN1_CONSTANT(FieldEvent, "Event");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubType, "SubType");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeWedding, "Wedding");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeEngagement, "Engagement");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeHouse, "House");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeEmployment, "Employment");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeMemorial, "Memorial");
-#endif
+    const static QString FieldCalendarId;
+    const static QString FieldOriginalDate;
+    const static QString FieldEvent;
+    const static QString FieldSubType;
+    const static QString SubTypeWedding;
+    const static QString SubTypeEngagement;
+    const static QString SubTypeHouse;
+    const static QString SubTypeEmployment;
+    const static QString SubTypeMemorial;
 
     void setOriginalDate(const QDate& date) {setValue(FieldOriginalDate, date);}
     QDate originalDate() const {return value<QDate>(FieldOriginalDate);}
@@ -84,12 +71,12 @@ public:
     QDateTime originalDateTime() const {return value<QDateTime>(FieldOriginalDate);}
 
     void setCalendarId(const QString& calendarId) {setValue(FieldCalendarId, calendarId);}
-    QString calendarId() const {return value(FieldCalendarId);}
+    QString calendarId() const {return value(FieldCalendarId).toString();}
     void setEvent(const QString& event) {setValue(FieldEvent, event);}
-    QString event() const {return value(FieldEvent);}
+    QString event() const {return value(FieldEvent).toString();}
 
     void setSubType(const QString& subType) {setValue(FieldSubType, subType);}
-    QString subType() const {return value(FieldSubType);}
+    QString subType() const {return value(FieldSubType).toString();}
 };
 
 QTCONTACTS_END_NAMESPACE

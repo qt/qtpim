@@ -212,12 +212,12 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
   */
 QStringList QDeclarativeContactDetail::fieldNames() const
 {
-    return m_detail.variantValues().keys();
+    return m_detail.values().keys();
 }
 
 QVariant QDeclarativeContactDetail::value(const QString& key) const
 {
-    return m_detail.variantValue(key);
+    return m_detail.value(key);
 }
 
 bool QDeclarativeContactDetail::setValue(const QString& key, const QVariant& v)
@@ -450,6 +450,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactDisplayLabel;
     else if (type == QDeclarativeContactDetail::Email)
         contactDetail = new QDeclarativeContactEmailAddress;
+    else if (type == QDeclarativeContactDetail::ExtendedDetail)
+        contactDetail = new QDeclarativeContactExtendedDetail;
     else if (type == QDeclarativeContactDetail::Family)
         contactDetail = new QDeclarativeContactFamily;
     else if (type == QDeclarativeContactDetail::Gender)
@@ -512,6 +514,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactDisplayLabel;
     else if (definitionName == QContactEmailAddress::DefinitionName)
         contactDetail = new QDeclarativeContactEmailAddress;
+    else if (definitionName == QContactExtendedDetail::DefinitionName)
+        contactDetail = new QDeclarativeContactExtendedDetail;
     else if (definitionName == QContactFamily::DefinitionName)
         contactDetail = new QDeclarativeContactFamily;
     else if (definitionName == QContactGender::DefinitionName)

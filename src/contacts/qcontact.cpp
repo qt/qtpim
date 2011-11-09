@@ -116,16 +116,6 @@ QTCONTACTS_BEGIN_NAMESPACE
  */
 
 /*!
- * \fn QList<T> QContact::details(const QString& fieldName, const QString& value) const
- * Returns a list of details of the template parameter type which have field called \a fieldName, with matching \a value.
- * The type must be a subclass of QContactDetail.
- *
- * For example:
- *  \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 4
- * \since 2.0
- */
-
-/*!
  * \fn T QContact::detail() const
  * Returns the first detail of the template parameter type, as returned by the template details() function.
  * The type must be a subclass of QContactDetail.
@@ -278,9 +268,9 @@ QContactLocalId QContact::localId() const
 QString QContact::type() const
 {
     // type is detail 1
-    QString type = d->m_details.at(1).value(QContactType::FieldType);
+    QString type = d->m_details.at(1).value(QContactType::FieldType).toString();
     if (type.isEmpty())
-        return QString(QLatin1String(QContactType::TypeContact));
+        return QContactType::TypeContact;
     return type;
 }
 
@@ -328,7 +318,7 @@ void QContact::setType(const QContactType& type)
  */
 QString QContact::displayLabel() const
 {
-    return d->m_details.at(0).value(QContactDisplayLabel::FieldLabel);
+    return d->m_details.at(0).value(QContactDisplayLabel::FieldLabel).toString();
 }
 
 /*!
@@ -396,7 +386,7 @@ void QContact::setTags(const QStringList& tags)
 */
 
 /*!
-    \fn QList<QContactDetail> QContact::details(const QLatin1Constant& definitionName) const
+    \fn QList<QContactDetail> QContact::details(const QString& definitionName) const
     Returns a list of details of the given \a definitionName.
 
     The \a definitionName argument is typically the detail name constant provided by a
@@ -411,19 +401,6 @@ void QContact::setTags(const QStringList& tags)
     \since 2.0
 */
 
-/*!
-    \fn QList<QContactDetail> QContact::details(const QLatin1Constant& definitionName, const QLatin1Constant& fieldName, const QString& value)
-    Returns a list of details of the given \a definitionName, with fields named \a fieldName and with value \a value.
-    \since 2.0
-*/
-
-/*!
-    \fn QList<T> QContact::details(const char* fieldName, const QString& value) const
-    \internal
-
-    Returns a list of details of the template type which match the \a fieldName and \a value criteria
-    \since 2.0
-*/
 
 /*!
     Returns the first detail stored in the contact with the given \a definitionName
@@ -479,113 +456,6 @@ QList<QContactDetail> QContact::details(const QString& definitionName) const
 }
 
 /*!
-    Returns a list of details of the given \a definitionName, with fields named \a fieldName and with value \a value.
-    The definitionName string can be determined by the DefinitionName attribute
-    of defined objects (e.g. QContactPhoneNumber::DefinitionName) or by
-    requesting a list of all the definitions synchronously with
-    \l {QContactManager::detailDefinitions()}{detailDefinitions()} or
-    asynchronously with a
-    \l {QContactDetailDefinitionFetchRequest}{detail definition fetch request},
-    and then inspecting the
-    \l{QContactDetailDefinition::name()}{name()} of each
-    definition.  If \a definitionName is empty, all details of any definition
-    will be returned.
-    \since 2.0
- */
-QList<QContactDetail> QContact::details(const QString& definitionName, const QString& fieldName, const QString& value) const
-{
-    // build the sub-list of matching details.
-    QList<QContactDetail> sublist;
-
-    // special case
-    if (fieldName.isEmpty()) {
-        sublist = details(definitionName);
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QContactDetail& existing = d->m_details.at(i);
-            if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName
-                && existing.hasValue(fieldName) && value == existing.value(fieldName)) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
-    \internal
-    Returns the first detail stored in the contact which with the given \a definitionName
-    \since 2.0
-*/
-QContactDetail QContact::detail(const char* definitionName) const
-{
-    if (definitionName == 0)
-        return d->m_details.first();
-
-    // build the sub-list of matching details.
-    for (int i = 0; i < d->m_details.size(); i++) {
-        const QContactDetail& existing = d->m_details.at(i);
-        if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-            return existing;
-        }
-    }
-
-    return QContactDetail();
-}
-
-/*!
-    \internal
-    Returns a list of details with the given \a definitionName
-    \since 2.0
-*/
-QList<QContactDetail> QContact::details(const char* definitionName) const
-{
-    // build the sub-list of matching details.
-    QList<QContactDetail> sublist;
-
-    // special case
-    if (definitionName == 0) {
-        sublist = d->m_details;
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QContactDetail& existing = d->m_details.at(i);
-            if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
-    \internal
-    Returns a list of details with the given \a definitionName, \a fieldName and field \a value
-    \since 2.0
-*/
-QList<QContactDetail> QContact::details(const char* definitionName, const char* fieldName, const QString& value) const
-{
-    // build the sub-list of matching details.
-    QList<QContactDetail> sublist;
-
-    // special case
-    if (fieldName == 0) {
-        sublist = details(definitionName);
-    } else {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            const QContactDetail& existing = d->m_details.at(i);
-            if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName
-                && existing.hasValue(fieldName) && value == existing.value(fieldName)) {
-                sublist.append(existing);
-            }
-        }
-    }
-
-    return sublist;
-}
-
-/*!
  * Saves the given \a detail in the list of stored details, and sets the detail's id.
  * If another detail of the same type and id has been previously saved in
  * this contact, that detail is overwritten.  Otherwise, a new id is generated
@@ -627,14 +497,14 @@ bool QContact::saveDetail(QContactDetail* detail)
         return false;
 
     /* Also handle contact type specially - only one of them. */
-    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactType::DefinitionName.latin1()) {
+    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactType::DefinitionName) {
         detail->d->m_access |= QContactDetail::Irremovable;
         d->m_details[1] = *detail;
         return true;
     }
 
     /* And display label.. */
-    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactDisplayLabel::DefinitionName.latin1()) {
+    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactDisplayLabel::DefinitionName) {
         return false;
     }
 

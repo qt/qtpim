@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString syncTarget() const {return detail().value(QContactSyncTarget::FieldSyncTarget);}
+    QString syncTarget() const {return detail().value(QContactSyncTarget::FieldSyncTarget).toString();}
 signals:
     void valueChanged();
 

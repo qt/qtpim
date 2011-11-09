@@ -42,6 +42,7 @@
 #include <QtTest/QtTest>
 
 #include <qcontacts.h>
+#include <QContactDetail>
 
 //TESTED_COMPONENT=src/contacts
 //TESTED_CLASS=
@@ -132,10 +133,10 @@ void tst_QContactDetails::address()
 
     // Sub types
     a1.setSubTypes(QContactAddress::SubTypeDomestic);
-    QCOMPARE(a1.subTypes(), QStringList() << QLatin1String(QContactAddress::SubTypeDomestic));
+    QCOMPARE(a1.subTypes(), QStringList() << QContactAddress::SubTypeDomestic);
 
     QStringList sl;
-    sl << QLatin1String(QContactAddress::SubTypeParcel) << QLatin1String(QContactAddress::SubTypePostal);
+    sl << QContactAddress::SubTypeParcel << QContactAddress::SubTypePostal;
     a1.setSubTypes(sl);
     QCOMPARE(a1.subTypes(), sl);
 
@@ -204,13 +205,13 @@ void tst_QContactDetails::anniversary()
     // test property set
     a1.setCalendarId("1234");
     QCOMPARE(a1.calendarId(), QString("1234"));
-    QCOMPARE(a1.value(QContactAnniversary::FieldCalendarId), QString("1234"));
+    QCOMPARE(a1.value(QContactAnniversary::FieldCalendarId).toString(), QString("1234"));
     a1.setEvent("4321");
     QCOMPARE(a1.event(), QString("4321"));
-    QCOMPARE(a1.value(QContactAnniversary::FieldEvent), QString("4321"));
+    QCOMPARE(a1.value(QContactAnniversary::FieldEvent).toString(), QString("4321"));
     a1.setSubType(QContactAnniversary::SubTypeWedding);
-    QCOMPARE(a1.subType(), QString(QLatin1String(QContactAnniversary::SubTypeWedding)));
-    QCOMPARE(a1.value(QContactAnniversary::FieldSubType), QString(QLatin1String(QContactAnniversary::SubTypeWedding)));
+    QCOMPARE(a1.subType(), QContactAnniversary::SubTypeWedding);
+    QCOMPARE(a1.value(QContactAnniversary::FieldSubType).toString(), QContactAnniversary::SubTypeWedding);
 
     a1.setOriginalDate(currDate);
     QCOMPARE(a1.originalDate(), currDate);
@@ -233,8 +234,8 @@ void tst_QContactDetails::anniversary()
     a1.setValue("label","label1");
     a1.setCalendarId("12345");
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value(QContactAnniversary::FieldCalendarId), QString("12345"));
+    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value(QContactAnniversary::FieldCalendarId).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&a1));
@@ -272,7 +273,7 @@ void tst_QContactDetails::avatar()
     a1.setValue("label","label1");
     a1.setImageUrl(QUrl("12345"));
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactAvatar::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactAvatar::DefinitionName).value(0).value<QUrl>(QContactAvatar::FieldImageUrl), QUrl("12345"));
 
     // test property remove
@@ -309,7 +310,7 @@ void tst_QContactDetails::birthday()
 
     b1.setCalendarId("1234");
     QCOMPARE(b1.calendarId(), QString("1234"));
-    QCOMPARE(b1.value(QContactBirthday::FieldCalendarId), QString("1234"));
+    QCOMPARE(b1.value(QContactBirthday::FieldCalendarId).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&b1));
@@ -321,9 +322,9 @@ void tst_QContactDetails::birthday()
     b1.setDate(currDate.addDays(3));
     b1.setCalendarId("12345");
     QVERIFY(c.saveDetail(&b1));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value<QDate>(QContactBirthday::FieldBirthday), currDate.addDays(3));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value(QContactBirthday::FieldCalendarId), QString("12345"));
+    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value(QContactBirthday::FieldCalendarId).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&b1));
@@ -342,9 +343,9 @@ void tst_QContactDetails::displayLabel()
     QContact c;
 
     QVERIFY(d1.label().isEmpty());
-    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel).isEmpty());
+    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel).isNull());
     d1.setValue(QContactDisplayLabel::FieldLabel, "Test");
-    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel) == QString("Test"));
+    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel).toString() == QString("Test"));
     QVERIFY(d1.label() == QString("Test"));
 
     QContactDisplayLabel d2;
@@ -371,7 +372,7 @@ void tst_QContactDetails::emailAddress()
     // test property set
     e1.setEmailAddress("1234");
     QCOMPARE(e1.emailAddress(), QString("1234"));
-    QCOMPARE(e1.value(QContactEmailAddress::FieldEmailAddress), QString("1234"));
+    QCOMPARE(e1.value(QContactEmailAddress::FieldEmailAddress).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&e1));
@@ -382,8 +383,8 @@ void tst_QContactDetails::emailAddress()
     e1.setValue("label","label1");
     e1.setEmailAddress("12345");
     QVERIFY(c.saveDetail(&e1));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value(QContactEmailAddress::FieldEmailAddress), QString("12345"));
+    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value(QContactEmailAddress::FieldEmailAddress).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&e1));
@@ -419,9 +420,9 @@ void tst_QContactDetails::extendedDetail()
     extD1.setName("newDetail1");
     extD1.setValue("variantField", v1);
     QVERIFY(c.saveDetail(&extD1));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("variantField").toInt(), v1.toInt());
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value(QContactExtendedDetail::FieldName), QString("newDetail1"));
+    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value(QContactExtendedDetail::FieldName).toString(), QString("newDetail1"));
 
     // test property remove
     QVERIFY(c.removeDetail(&extD1));
@@ -444,7 +445,7 @@ void tst_QContactDetails::family()
     // test property set
     f1.setSpouse("1234");
     QCOMPARE(f1.spouse(), QString("1234"));
-    QCOMPARE(f1.value(QContactFamily::FieldSpouse), QString("1234"));
+    QCOMPARE(f1.value(QContactFamily::FieldSpouse).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&f1));
@@ -456,8 +457,8 @@ void tst_QContactDetails::family()
     f1.setSpouse("12345");
     f1.setChildren(QStringList("54321"));
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value(QContactFamily::FieldSpouse), QString("12345"));
+    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value(QContactFamily::FieldSpouse).toString(), QString("12345"));
     QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value<QStringList>(QContactFamily::FieldChildren), QStringList("54321"));
 
     // test property remove
@@ -497,7 +498,7 @@ void tst_QContactDetails::favorite()
     f1.setFavorite(false);
     f1.setIndex(5);
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value<bool>(QContactFavorite::FieldFavorite), false);
     QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value<int>(QContactFavorite::FieldIndex), 5);
     QCOMPARE(c.details<QContactFavorite>().value(0).index(), 5);
@@ -522,7 +523,7 @@ void tst_QContactDetails::gender()
     // test property set
     g1.setGender("1234");
     QCOMPARE(g1.gender(), QString("1234"));
-    QCOMPARE(g1.value(QContactGender::FieldGender), QString("1234"));
+    QCOMPARE(g1.value(QContactGender::FieldGender).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
@@ -533,8 +534,8 @@ void tst_QContactDetails::gender()
     g1.setValue("label","label1");
     g1.setGender("12345");
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value(QContactGender::FieldGender), QString("12345"));
+    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value(QContactGender::FieldGender).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
@@ -555,32 +556,32 @@ void tst_QContactDetails::geolocation()
     // test property set
     g1.setLabel("1234");
     QCOMPARE(g1.label(), QString("1234"));
-    QCOMPARE(g1.value(QContactGeoLocation::FieldLabel), QString("1234"));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldLabel).toString(), QString("1234"));
     g1.setAccuracy(3.2);
     QCOMPARE(g1.accuracy(), 3.2);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldAccuracy), QVariant(3.2));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldAccuracy), QVariant(3.2));
     g1.setAltitude(3.3);
     QCOMPARE(g1.altitude(), 3.3);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldAltitude), QVariant(3.3));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldAltitude), QVariant(3.3));
     g1.setAltitudeAccuracy(3.4);
     QCOMPARE(g1.altitudeAccuracy(), 3.4);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldAltitudeAccuracy), QVariant(3.4));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldAltitudeAccuracy), QVariant(3.4));
     g1.setHeading(3.5);
     QCOMPARE(g1.heading(), 3.5);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldHeading), QVariant(3.5));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldHeading), QVariant(3.5));
     g1.setLatitude(3.6);
     QCOMPARE(g1.latitude(), 3.6);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldLatitude), QVariant(3.6));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldLatitude), QVariant(3.6));
     g1.setLongitude(3.7);
     QCOMPARE(g1.longitude(), 3.7);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldLongitude), QVariant(3.7));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldLongitude), QVariant(3.7));
     QDateTime current = QDateTime::currentDateTime();
     g1.setTimestamp(current);
     QCOMPARE(g1.timestamp(), current);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldTimestamp), QVariant(current));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldTimestamp), QVariant(current));
     g1.setSpeed(3.8);
     QCOMPARE(g1.speed(), 3.8);
-    QCOMPARE(g1.variantValue(QContactGeoLocation::FieldSpeed), QVariant(3.8));
+    QCOMPARE(g1.value(QContactGeoLocation::FieldSpeed), QVariant(3.8));
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
@@ -590,7 +591,7 @@ void tst_QContactDetails::geolocation()
     // test property update
     g1.setLabel("12345");
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).value(0).value(QContactGeoLocation::FieldLabel), QString("12345"));
+    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).value(0).value(QContactGeoLocation::FieldLabel).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
@@ -619,15 +620,15 @@ void tst_QContactDetails::globalPresence()
     QCOMPARE(p1.timestamp(), ts);
     QCOMPARE(p1.value<QDateTime>(QContactGlobalPresence::FieldTimestamp), ts);
     QCOMPARE(p1.nickname(), QString("nick"));
-    QCOMPARE(p1.value(QContactGlobalPresence::FieldNickname), QString("nick"));
+    QCOMPARE(p1.value(QContactGlobalPresence::FieldNickname).toString(), QString("nick"));
     QCOMPARE(p1.presenceState(), QContactPresence::PresenceExtendedAway);
     QCOMPARE(p1.value<int>(QContactGlobalPresence::FieldPresenceState), static_cast<int>(QContactPresence::PresenceExtendedAway));
     QCOMPARE(p1.presenceStateText(), QString("1234"));
-    QCOMPARE(p1.value(QContactGlobalPresence::FieldPresenceStateText), QString("1234"));
+    QCOMPARE(p1.value(QContactGlobalPresence::FieldPresenceStateText).toString(), QString("1234"));
     QCOMPARE(p1.presenceStateImageUrl(), QUrl("http://example.com/someimage.png"));
     QCOMPARE(p1.value<QUrl>(QContactGlobalPresence::FieldPresenceStateImageUrl), QUrl("http://example.com/someimage.png"));
     QCOMPARE(p1.customMessage(), QString("gone fishing!"));
-    QCOMPARE(p1.value(QContactGlobalPresence::FieldCustomMessage), QString("gone fishing!"));
+    QCOMPARE(p1.value(QContactGlobalPresence::FieldCustomMessage).toString(), QString("gone fishing!"));
 
     // test property add
     QVERIFY(c.saveDetail(&p1));
@@ -638,8 +639,8 @@ void tst_QContactDetails::globalPresence()
     p1.setValue("label","label1");
     p1.setPresenceStateText("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value(QContactGlobalPresence::FieldPresenceStateText), QString("12345"));
+    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value(QContactGlobalPresence::FieldPresenceStateText).toString(), QString("12345"));
 
     p2.setTimestamp(ts);
     p2.setNickname(QString("test"));
@@ -675,7 +676,7 @@ void tst_QContactDetails::guid()
     // test property set
     g1.setGuid("1234");
     QCOMPARE(g1.guid(), QString("1234"));
-    QCOMPARE(g1.value(QContactGuid::FieldGuid), QString("1234"));
+    QCOMPARE(g1.value(QContactGuid::FieldGuid).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
@@ -686,8 +687,8 @@ void tst_QContactDetails::guid()
     g1.setValue("label","label1");
     g1.setGuid("12345");
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value(QContactGuid::FieldGuid), QString("12345"));
+    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value(QContactGuid::FieldGuid).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
@@ -708,7 +709,7 @@ void tst_QContactDetails::hobby()
     // test property set
     h1.setHobby("1234");
     QCOMPARE(h1.hobby(), QString("1234"));
-    QCOMPARE(h1.value(QContactHobby::FieldHobby), QString("1234"));
+    QCOMPARE(h1.value(QContactHobby::FieldHobby).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&h1));
@@ -719,8 +720,8 @@ void tst_QContactDetails::hobby()
     h1.setValue("label","label1");
     h1.setHobby("12345");
     QVERIFY(c.saveDetail(&h1));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value(QContactHobby::FieldHobby), QString("12345"));
+    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value(QContactHobby::FieldHobby).toString(), QString("12345"));
 
     // test property remove
     h2.setHobby("1111");
@@ -754,26 +755,12 @@ void tst_QContactDetails::name()
     QCOMPARE(n1.lastName(), QString("Gumboots"));
     QCOMPARE(n1.suffix(), QString("Esquire"));
 
-    // Values based (ql1c)
-    QCOMPARE(n1.value(QContactName::FieldPrefix), QString("Dr"));
-    QCOMPARE(n1.value(QContactName::FieldFirstName), QString("Freddy"));
-    QCOMPARE(n1.value(QContactName::FieldMiddleName), QString("William Preston"));
-    QCOMPARE(n1.value(QContactName::FieldLastName), QString("Gumboots"));
-    QCOMPARE(n1.value(QContactName::FieldSuffix), QString("Esquire"));
-
-    // Values based (const char *)
-    QCOMPARE(n1.value(QContactName::FieldPrefix.latin1()), QString("Dr"));
-    QCOMPARE(n1.value(QContactName::FieldFirstName.latin1()), QString("Freddy"));
-    QCOMPARE(n1.value(QContactName::FieldMiddleName.latin1()), QString("William Preston"));
-    QCOMPARE(n1.value(QContactName::FieldLastName.latin1()), QString("Gumboots"));
-    QCOMPARE(n1.value(QContactName::FieldSuffix.latin1()), QString("Esquire"));
-
-    // Values based (QLatin1String)
-    QCOMPARE(n1.value(QLatin1String(QContactName::FieldPrefix)), QString("Dr"));
-    QCOMPARE(n1.value(QLatin1String(QContactName::FieldFirstName)), QString("Freddy"));
-    QCOMPARE(n1.value(QLatin1String(QContactName::FieldMiddleName)), QString("William Preston"));
-    QCOMPARE(n1.value(QLatin1String(QContactName::FieldLastName)), QString("Gumboots"));
-    QCOMPARE(n1.value(QLatin1String(QContactName::FieldSuffix)), QString("Esquire"));
+    // Values based (QString)
+    QCOMPARE(n1.value(QContactName::FieldPrefix).toString(), QString("Dr"));
+    QCOMPARE(n1.value(QContactName::FieldFirstName).toString(), QString("Freddy"));
+    QCOMPARE(n1.value(QContactName::FieldMiddleName).toString(), QString("William Preston"));
+    QCOMPARE(n1.value(QContactName::FieldLastName).toString(), QString("Gumboots"));
+    QCOMPARE(n1.value(QContactName::FieldSuffix).toString(), QString("Esquire"));
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
@@ -807,7 +794,7 @@ void tst_QContactDetails::nickname()
     // test property set
     n1.setNickname("1234");
     QCOMPARE(n1.nickname(), QString("1234"));
-    QCOMPARE(n1.value(QContactNickname::FieldNickname), QString("1234"));
+    QCOMPARE(n1.value(QContactNickname::FieldNickname).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
@@ -818,8 +805,8 @@ void tst_QContactDetails::nickname()
     n1.setValue("label","label1");
     n1.setNickname("12345");
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value(QContactNickname::FieldNickname), QString("12345"));
+    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value(QContactNickname::FieldNickname).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&n1));
@@ -840,7 +827,7 @@ void tst_QContactDetails::note()
     // test property set
     n1.setNote("lorem ipsum");
     QCOMPARE(n1.note(), QString("lorem ipsum"));
-    QCOMPARE(n1.value(QContactNote::FieldNote), QString("lorem ipsum"));
+    QCOMPARE(n1.value(QContactNote::FieldNote).toString(), QString("lorem ipsum"));
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
@@ -851,8 +838,8 @@ void tst_QContactDetails::note()
     n1.setValue("label","label1");
     n1.setNote("orange gypsum");
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value(QContactNote::FieldNote), QString("orange gypsum"));
+    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value(QContactNote::FieldNote).toString(), QString("orange gypsum"));
 
     // test property remove
     QVERIFY(c.removeDetail(&n1));
@@ -873,16 +860,16 @@ void tst_QContactDetails::onlineAccount()
     // test property set
     o1.setAccountUri("test@nokia.com");
     QCOMPARE(o1.accountUri(), QString("test@nokia.com"));
-    QCOMPARE(o1.value(QContactOnlineAccount::FieldAccountUri), QString("test@nokia.com"));
+    QCOMPARE(o1.value(QContactOnlineAccount::FieldAccountUri).toString(), QString("test@nokia.com"));
     o1.setProtocol(QContactOnlineAccount::ProtocolJabber);
-    QCOMPARE(o1.protocol(), QLatin1String(QContactOnlineAccount::ProtocolJabber));
+    QCOMPARE(o1.protocol(), QContactOnlineAccount::ProtocolJabber);
 
     // Sub types
     o1.setSubTypes(QContactOnlineAccount::SubTypeSip);
-    QCOMPARE(o1.subTypes(), QStringList() << QLatin1String(QContactOnlineAccount::SubTypeSip));
+    QCOMPARE(o1.subTypes(), QStringList() << QContactOnlineAccount::SubTypeSip);
 
     QStringList sl;
-    sl << QLatin1String(QContactOnlineAccount::SubTypeImpp) << QLatin1String(QContactOnlineAccount::SubTypeVideoShare);
+    sl << QContactOnlineAccount::SubTypeImpp << QContactOnlineAccount::SubTypeVideoShare;
     o1.setSubTypes(sl);
     QCOMPARE(o1.subTypes(), sl);
 
@@ -903,11 +890,11 @@ void tst_QContactDetails::onlineAccount()
     o1.setServiceProvider("some provider");
     o1.setCapabilities(caps);
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldAccountUri), QString("test2@nokia.com"));
+    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldAccountUri).toString(), QString("test2@nokia.com"));
     QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value<QStringList>(QContactOnlineAccount::FieldCapabilities), caps);
     QCOMPARE(c.details<QContactOnlineAccount>().value(0).capabilities(), caps);
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldServiceProvider), QString("some provider"));
+    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldServiceProvider).toString(), QString("some provider"));
     QCOMPARE(c.details<QContactOnlineAccount>().value(0).serviceProvider(), QString("some provider"));
 
     // test property remove
@@ -929,7 +916,7 @@ void tst_QContactDetails::organization()
     // test property set
     o1.setName("organization one");
     QCOMPARE(o1.name(), QString("organization one"));
-    QCOMPARE(o1.value(QContactOrganization::FieldName), QString("organization one"));
+    QCOMPARE(o1.value(QContactOrganization::FieldName).toString(), QString("organization one"));
 
     o1.setDepartment(QStringList(QString("department one")));
     QCOMPARE(o1.department(), QStringList(QString("department one")));
@@ -937,7 +924,7 @@ void tst_QContactDetails::organization()
 
     o1.setLocation("location one");
     QCOMPARE(o1.location(), QString("location one"));
-    QCOMPARE(o1.value(QContactOrganization::FieldLocation), QString("location one"));
+    QCOMPARE(o1.value(QContactOrganization::FieldLocation).toString(), QString("location one"));
 
     o1.setLogoUrl(QUrl("logo one"));
     QCOMPARE(o1.logoUrl(), QUrl("logo one"));
@@ -945,11 +932,11 @@ void tst_QContactDetails::organization()
 
     o1.setTitle("title one");
     QCOMPARE(o1.title(), QString("title one"));
-    QCOMPARE(o1.value(QContactOrganization::FieldTitle), QString("title one"));
+    QCOMPARE(o1.value(QContactOrganization::FieldTitle).toString(), QString("title one"));
 
     o1.setAssistantName("assistant one");
     QCOMPARE(o1.assistantName(), QString("assistant one"));
-    QCOMPARE(o1.value(QContactOrganization::FieldAssistantName), QString("assistant one"));
+    QCOMPARE(o1.value(QContactOrganization::FieldAssistantName).toString(), QString("assistant one"));
 
     // test property add
     QVERIFY(c.saveDetail(&o1));
@@ -959,7 +946,7 @@ void tst_QContactDetails::organization()
     // test property update
     o1.setName("organization two");
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).value(0).value(QContactOrganization::FieldName), QString("organization two"));
+    QCOMPARE(c.details(QContactOrganization::DefinitionName).value(0).value(QContactOrganization::FieldName).toString(), QString("organization two"));
 
     // test property remove
     QVERIFY(c.removeDetail(&o1));
@@ -979,10 +966,10 @@ void tst_QContactDetails::organization()
     o1.setTitle("Generic Employee");
     c.saveDetail(&o1);
     QVERIFY(c.detail(QContactOrganization::DefinitionName).value<QStringList>(QContactOrganization::FieldDepartment) == QStringList(QString("Imaginary Dept")));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldLocation) == QString("Utopia"));
+    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldLocation).toString() == QString("Utopia"));
     QVERIFY(c.detail(QContactOrganization::DefinitionName).value<QUrl>(QContactOrganization::FieldLogoUrl) == QUrl("logo.png"));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldName) == QString("Utopian Megacorporation"));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldTitle) == QString("Generic Employee"));
+    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldName).toString() == QString("Utopian Megacorporation"));
+    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldTitle).toString() == QString("Generic Employee"));
 }
 
 void tst_QContactDetails::phoneNumber()
@@ -993,14 +980,14 @@ void tst_QContactDetails::phoneNumber()
     // test property set
     p1.setNumber("1234");
     QCOMPARE(p1.number(), QString("1234"));
-    QCOMPARE(p1.value(QContactPhoneNumber::FieldNumber), QString("1234"));
+    QCOMPARE(p1.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
 
     // Sub types
     p1.setSubTypes(QContactPhoneNumber::SubTypeCar);
-    QCOMPARE(p1.subTypes(), QStringList() << QLatin1String(QContactPhoneNumber::SubTypeCar));
+    QCOMPARE(p1.subTypes(), QStringList() << QContactPhoneNumber::SubTypeCar);
 
     QStringList sl;
-    sl << QLatin1String(QContactPhoneNumber::SubTypeMobile) << QLatin1String(QContactPhoneNumber::SubTypeFax);
+    sl << QContactPhoneNumber::SubTypeMobile << QContactPhoneNumber::SubTypeFax;
     p1.setSubTypes(sl);
     QCOMPARE(p1.subTypes(), sl);
 
@@ -1013,15 +1000,15 @@ void tst_QContactDetails::phoneNumber()
     p1.setValue("label","label1");
     p1.setNumber("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value(QContactPhoneNumber::FieldNumber), QString("12345"));
+    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value(QContactPhoneNumber::FieldNumber).toString(), QString("12345"));
 
     p1.setSubTypes(QContactPhoneNumber::SubTypeDtmfMenu);
     c.saveDetail(&p1);
-    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).variantValue(QContactPhoneNumber::FieldSubTypes).toStringList() == QStringList(QString(QLatin1String(QContactPhoneNumber::SubTypeDtmfMenu))));
+    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldSubTypes).toStringList() == QStringList(QContactPhoneNumber::SubTypeDtmfMenu));
     p1.setSubTypes(QStringList() << QContactPhoneNumber::SubTypeModem << QContactPhoneNumber::SubTypeFax);
     c.saveDetail(&p1);
-    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).variantValue(QContactPhoneNumber::FieldSubTypes).toStringList() == p1.subTypes());
+    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldSubTypes).toStringList() == p1.subTypes());
 
     // test property remove
     QVERIFY(c.removeDetail(&p1));
@@ -1050,15 +1037,15 @@ void tst_QContactDetails::presence()
     QCOMPARE(p1.timestamp(), ts);
     QCOMPARE(p1.value<QDateTime>(QContactPresence::FieldTimestamp), ts);
     QCOMPARE(p1.nickname(), QString("nick"));
-    QCOMPARE(p1.value(QContactPresence::FieldNickname), QString("nick"));
+    QCOMPARE(p1.value(QContactPresence::FieldNickname).toString(), QString("nick"));
     QCOMPARE(p1.presenceState(), QContactPresence::PresenceExtendedAway);
     QCOMPARE(p1.value<int>(QContactPresence::FieldPresenceState), static_cast<int>(QContactPresence::PresenceExtendedAway));
     QCOMPARE(p1.presenceStateText(), QString("1234"));
-    QCOMPARE(p1.value(QContactPresence::FieldPresenceStateText), QString("1234"));
+    QCOMPARE(p1.value(QContactPresence::FieldPresenceStateText).toString(), QString("1234"));
     QCOMPARE(p1.presenceStateImageUrl(), QUrl("http://example.com/someimage.png"));
     QCOMPARE(p1.value<QUrl>(QContactPresence::FieldPresenceStateImageUrl), QUrl("http://example.com/someimage.png"));
     QCOMPARE(p1.customMessage(), QString("gone fishing!"));
-    QCOMPARE(p1.value(QContactPresence::FieldCustomMessage), QString("gone fishing!"));
+    QCOMPARE(p1.value(QContactPresence::FieldCustomMessage).toString(), QString("gone fishing!"));
 
     // test property add
     QVERIFY(c.saveDetail(&p1));
@@ -1069,8 +1056,8 @@ void tst_QContactDetails::presence()
     p1.setValue("label","label1");
     p1.setPresenceStateText("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value(QContactPresence::FieldPresenceStateText), QString("12345"));
+    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value(QContactPresence::FieldPresenceStateText).toString(), QString("12345"));
 
     p2.setTimestamp(ts);
     p2.setNickname(QString("test"));
@@ -1117,7 +1104,7 @@ void tst_QContactDetails::ringtone()
     r1.setValue("label","label1");
     r1.setAudioRingtoneUrl(QUrl("audioUrl2"));
     QVERIFY(c.saveDetail(&r1));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactRingtone::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactRingtone::DefinitionName).value(0).value<QUrl>(QContactRingtone::FieldAudioRingtoneUrl), QUrl("audioUrl2"));
 
     // test property remove
@@ -1139,7 +1126,7 @@ void tst_QContactDetails::syncTarget()
     // test property set
     s1.setSyncTarget("1234");
     QCOMPARE(s1.syncTarget(), QString("1234"));
-    QCOMPARE(s1.value(QContactSyncTarget::FieldSyncTarget), QString("1234"));
+    QCOMPARE(s1.value(QContactSyncTarget::FieldSyncTarget).toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&s1));
@@ -1150,8 +1137,8 @@ void tst_QContactDetails::syncTarget()
     s1.setValue("label","label1");
     s1.setSyncTarget("12345");
     QVERIFY(c.saveDetail(&s1));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value(QContactSyncTarget::FieldSyncTarget), QString("12345"));
+    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value(QContactSyncTarget::FieldSyncTarget).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&s1));
@@ -1172,7 +1159,7 @@ void tst_QContactDetails::tag()
     // test property set
     t1.setTag("red");
     QCOMPARE(t1.tag(), QString("red"));
-    QCOMPARE(t1.value(QContactTag::FieldTag), QString("red"));
+    QCOMPARE(t1.value(QContactTag::FieldTag).toString(), QString("red"));
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
@@ -1185,8 +1172,8 @@ void tst_QContactDetails::tag()
     t1.setValue("label","label1");
     t1.setTag("green");
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value(QContactTag::FieldTag), QString("green"));
+    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value(QContactTag::FieldTag).toString(), QString("green"));
 
     // test property remove
     QVERIFY(c.removeDetail(&t1));
@@ -1220,7 +1207,7 @@ void tst_QContactDetails::thumbnail()
     t1.setValue("label","label1");
     t1.setThumbnail(i2);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).value(0).value("label"), QString("label1"));
+    QCOMPARE(c.details(QContactThumbnail::DefinitionName).value(0).value("label").toString(), QString("label1"));
     QCOMPARE(c.details(QContactThumbnail::DefinitionName).value(0).value<QImage>(QContactThumbnail::FieldThumbnail), i2);
 
     // Uniqueness is not currently enforced
@@ -1245,7 +1232,7 @@ void tst_QContactDetails::timestamp()
     // test property set
     t1.setCreated(created);
     QCOMPARE(t1.created(), created);
-    QCOMPARE(t1.variantValue(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
+    QCOMPARE(t1.value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
@@ -1256,9 +1243,9 @@ void tst_QContactDetails::timestamp()
     t1.setValue("label","label1");
     t1.setLastModified(modified);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).variantValue(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).variantValue(QContactTimestamp::FieldModificationTimestamp).toDateTime(), modified);
+    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
+    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value(QContactTimestamp::FieldModificationTimestamp).toDateTime(), modified);
 
     // test property remove
     QVERIFY(c.removeDetail(&t1));
@@ -1279,8 +1266,8 @@ void tst_QContactDetails::type()
 
     // test property set
     t1.setType(QContactType::TypeGroup);
-    QCOMPARE(t1.type(), QString(QLatin1String(QContactType::TypeGroup)));
-    QCOMPARE(t1.value(QContactType::FieldType), QString(QLatin1String(QContactType::TypeGroup)));
+    QCOMPARE(t1.type(), QContactType::TypeGroup);
+    QCOMPARE(t1.value(QContactType::FieldType).toString(), QContactType::TypeGroup);
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
@@ -1290,7 +1277,7 @@ void tst_QContactDetails::type()
     // test property update
     t1.setType(QContactType::TypeContact);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactType::DefinitionName).value(0).value(QContactType::FieldType), QString(QLatin1String(QContactType::TypeContact)));
+    QCOMPARE(c.details(QContactType::DefinitionName).value(0).value(QContactType::FieldType).toString(), QContactType::TypeContact);
 
     // test property remove
     QVERIFY(!c.removeDetail(&t1)); // cannot remove type
@@ -1312,11 +1299,11 @@ void tst_QContactDetails::url()
     // test property set
     u1.setUrl("1234");
     QCOMPARE(u1.url(), QString("1234"));
-    QCOMPARE(u1.value(QContactUrl::FieldUrl), QString("1234"));
+    QCOMPARE(u1.value(QContactUrl::FieldUrl).toString(), QString("1234"));
 
     u1.setSubType(QContactUrl::SubTypeHomePage);
-    QCOMPARE(u1.subType(), QString(QLatin1String(QContactUrl::SubTypeHomePage)));
-    QCOMPARE(u1.value(QContactUrl::FieldSubType), QString(QLatin1String(QContactUrl::SubTypeHomePage)));
+    QCOMPARE(u1.subType(), QContactUrl::SubTypeHomePage);
+    QCOMPARE(u1.value(QContactUrl::FieldSubType).toString(), QContactUrl::SubTypeHomePage);
 
     // test property add
     QVERIFY(c.saveDetail(&u1));
@@ -1327,8 +1314,8 @@ void tst_QContactDetails::url()
     u1.setValue("label","label1");
     u1.setUrl("12345");
     QVERIFY(c.saveDetail(&u1));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value("label"), QString("label1"));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value(QContactUrl::FieldUrl), QString("12345"));
+    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value(QContactUrl::FieldUrl).toString(), QString("12345"));
 
     // now as above, but with the QUrl setter.
     QUrl urlValue("http://www.example.com");
@@ -1354,22 +1341,12 @@ void tst_QContactDetails::url()
 }
 
 
-
-
-
-
-
-
-
-
-
-
 // define a custom detail to test inheritance/slicing
 class CustomTestDetail : public QContactDetail
 {
 public:
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(CustomTestDetail, "CustomTestDetail")
-    Q_DECLARE_LATIN1_CONSTANT(FieldTestLabel, "TestLabel");
+    const static QString FieldTestLabel;
 
     ~CustomTestDetail()
     {
@@ -1390,10 +1367,11 @@ public:
     }
 
     void setTestLabel(const QString& testLabel) { setValue(FieldTestLabel, testLabel); }
-    QString testLabel() const { return value(FieldTestLabel); }
+    QString testLabel() const { return value(FieldTestLabel).toString(); }
 };
-Q_DEFINE_LATIN1_CONSTANT(CustomTestDetail::FieldTestLabel, "TestLabel");
-Q_DEFINE_LATIN1_CONSTANT(CustomTestDetail::DefinitionName, "CustomTestDetail");
+
+const QString CustomTestDetail::FieldTestLabel(QStringLiteral("TestLabel"));
+const QString CustomTestDetail::DefinitionName(QStringLiteral("CustomTestDetail"));
 
 void tst_QContactDetails::custom()
 {
@@ -1404,7 +1382,7 @@ void tst_QContactDetails::custom()
 
     // test property set
     c1.setValue("custom", "1234");
-    QCOMPARE(c1.value("custom"), QString("1234"));
+    QCOMPARE(c1.value("custom").toString(), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&c1));

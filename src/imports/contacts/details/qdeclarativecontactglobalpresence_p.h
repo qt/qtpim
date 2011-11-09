@@ -116,7 +116,7 @@ public:
             emit valueChanged();
         }
     }
-    QString nickname() const {return detail().value(QContactGlobalPresence::FieldNickname);}
+    QString nickname() const {return detail().value(QContactGlobalPresence::FieldNickname).toString();}
     void setPresenceState(QDeclarativeContactPresence::PresenceStateType v)
     {
         if (!readOnly() && v != presenceState()) {
@@ -137,7 +137,7 @@ public:
             emit valueChanged();
         }
     }
-    QString presenceStateText() const {return detail().value(QContactGlobalPresence::FieldPresenceStateText);}
+    QString presenceStateText() const {return detail().value(QContactGlobalPresence::FieldPresenceStateText).toString();}
     void setPresenceStateImageUrl(const QUrl& v)
     {
         if (!readOnly() && v != presenceStateImageUrl())  {
@@ -153,7 +153,7 @@ public:
             emit valueChanged();
         }
     }
-    QString customMessage() const {return detail().value(QContactGlobalPresence::FieldCustomMessage);}
+    QString customMessage() const {return detail().value(QContactGlobalPresence::FieldCustomMessage).toString();}
 signals:
     void valueChanged();
 };

@@ -65,9 +65,9 @@ public:
                           QVersitDocument* document);
 };
 
-Q_DEFINE_LATIN1_CONSTANT(DetailName, "Custom");
-Q_DEFINE_LATIN1_CONSTANT(KeyField, "Key");
-Q_DEFINE_LATIN1_CONSTANT(ValueField, "Value");
+const QString DetailName(QStringLiteral("Custom"));
+const QString KeyField(QStringLiteral("Key"));
+const QString ValueField(QStringLiteral("Value"));
 
 
 QSet<QString> VCardPreserverFactory::profiles() const
@@ -75,13 +75,13 @@ QSet<QString> VCardPreserverFactory::profiles() const
     QSet<QString> retval;
     // TODO: use this line in 1.2 when the constant is enabled
     //retval.insert(QVersitContactHandlerFactory::ProfilePreserve);
-    retval.insert(QLatin1String("Preserve"));
+    retval.insert(QStringLiteral("Preserve"));
     return retval;
 }
 
 QString VCardPreserverFactory::name() const
 {
-    return QLatin1String("com.nokia.qt.pim.versit.vcardpreserver");
+    return QStringLiteral("com.nokia.qt.pim.versit.vcardpreserver");
 }
 
 int VCardPreserverFactory::index() const
@@ -138,8 +138,8 @@ void VCardPreserver::detailProcessed(const QContact& contact,
     Q_UNUSED(toBeRemoved)
     if (detail.definitionName() == DetailName
             && processedFields->isEmpty()) {
-        QString key(detail.value(KeyField));
-        QString value(detail.value(ValueField));
+        QString key(detail.value(KeyField).toString());
+        QString value(detail.value(ValueField).toString());
         if (!key.isEmpty() && !value.isEmpty()) {
             QVersitProperty property;
             property.setName(key);

@@ -55,28 +55,19 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactUrl : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldUrl;
-    static const QLatin1Constant FieldSubType;
-    static const QLatin1Constant SubTypeHomePage;
-    static const QLatin1Constant SubTypeBlog;
-    static const QLatin1Constant SubTypeFavourite;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactUrl, "Url")
-    Q_DECLARE_LATIN1_CONSTANT(FieldUrl, "Url");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubType, "SubType");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeHomePage, "HomePage");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeBlog, "Blog");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeFavourite, "Favourite");
-#endif
+    const static QString FieldUrl;
+    const static QString FieldSubType;
+    const static QString SubTypeHomePage;
+    const static QString SubTypeBlog;
+    const static QString SubTypeFavourite;
 
     void setUrl(const QString& url) {setValue(FieldUrl, url);}
     void setUrl(const QUrl& url) {setValue(FieldUrl, url.toString());}
-    QString url() const {return value(FieldUrl);}
+    QString url() const {return value(FieldUrl).toString();}
 
     void setSubType(const QString& subType) {setValue(FieldSubType, subType);}
-    QString subType() const {return value(FieldSubType);}
+    QString subType() const {return value(FieldSubType).toString();}
 };
 
 QTCONTACTS_END_NAMESPACE

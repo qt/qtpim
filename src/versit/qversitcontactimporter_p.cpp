@@ -91,12 +91,12 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
         sizeof(versitContactDetailMappings)/sizeof(VersitDetailMapping);
     for (int i=0; i < versitPropertyCount; i++) {
         QString versitPropertyName =
-            QLatin1String(versitContactDetailMappings[i].versitPropertyName);
+            QStringLiteral(versitContactDetailMappings[i].versitPropertyName);
         QPair<QString,QString> contactDetail;
         contactDetail.first =
-            QLatin1String(versitContactDetailMappings[i].detailDefinitionName);
+            versitContactDetailMappings[i].detailDefinitionName;
         contactDetail.second =
-            QLatin1String(versitContactDetailMappings[i].detailFieldName);
+            versitContactDetailMappings[i].detailFieldName;
         mDetailMappings.insert(versitPropertyName,contactDetail);
     }
 
@@ -104,16 +104,16 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
     int contextCount = sizeof(versitContextMappings)/sizeof(VersitMapping);
     for (int i=0; i < contextCount; i++) {
         mContextMappings.insert(
-            QLatin1String(versitContextMappings[i].versitString),
-            QLatin1String(versitContextMappings[i].contactString));
+            QStringLiteral(versitContextMappings[i].versitString),
+            versitContextMappings[i].contactString);
     }
 
     // Subtype mappings
     int subTypeCount = sizeof(versitSubTypeMappings)/sizeof(VersitMapping);
     for (int i=0; i < subTypeCount; i++) {
         mSubTypeMappings.insert(
-            QLatin1String(versitSubTypeMappings[i].versitString),
-            QLatin1String(versitSubTypeMappings[i].contactString));
+            QStringLiteral(versitSubTypeMappings[i].versitString),
+            versitSubTypeMappings[i].contactString);
     }
 
     mPluginPropertyHandlers = QVersitContactPluginLoader::instance()->createContactHandlers(profiles);
@@ -137,7 +137,7 @@ bool QVersitContactImporterPrivate::importContact(
         const QVersitDocument& document, int contactIndex, QContact* contact,
         QVersitContactImporter::Error* error)
 {
-    if (document.componentType() != QLatin1String("VCARD")
+    if (document.componentType() != QStringLiteral("VCARD")
         && document.type() != QVersitDocument::VCard21Type
         && document.type() != QVersitDocument::VCard30Type) {
         *error = QVersitContactImporter::InvalidDocumentError;
@@ -151,14 +151,14 @@ bool QVersitContactImporterPrivate::importContact(
 
     // First, do the properties with PREF set so they appear first in the contact details
     foreach (const QVersitProperty& property, properties) {
-        QStringList typeParameters = property.parameters().values(QLatin1String("TYPE"));
-        if (typeParameters.contains(QLatin1String("PREF"), Qt::CaseInsensitive))
+        QStringList typeParameters = property.parameters().values(QStringLiteral("TYPE"));
+        if (typeParameters.contains(QStringLiteral("PREF"), Qt::CaseInsensitive))
             importProperty(document, property, contactIndex, contact);
     }
     // ... then, do the rest of the properties.
     foreach (const QVersitProperty& property, properties) {
-        QStringList typeParameters = property.parameters().values(QLatin1String("TYPE"));
-        if (!typeParameters.contains(QLatin1String("PREF"), Qt::CaseInsensitive))
+        QStringList typeParameters = property.parameters().values(QStringLiteral("TYPE"));
+        if (!typeParameters.contains(QStringLiteral("PREF"), Qt::CaseInsensitive))
             importProperty(document, property, contactIndex, contact);
     }
 
@@ -264,7 +264,7 @@ bool QVersitContactImporterPrivate::createName(
     if (!detail.isEmpty()) {
         // If multiple name properties exist,
         // discard all except the first occurrence
-        if (!detail.value(QContactName::FieldFirstName).isEmpty())
+        if (!detail.value(QContactName::FieldFirstName).toString().isEmpty())
             return false;
         else
             name = QContactName(static_cast<QContactName>(detail));
@@ -310,7 +310,7 @@ bool QVersitContactImporterPrivate::createPhone(
         return false;
     phone.setNumber(property.value());
     QStringList subTypes(extractSubTypes(property));
-    if (property.name() == QLatin1String("X-ASSISTANT-TEL"))
+    if (property.name() == QStringLiteral("X-ASSISTANT-TEL"))
         subTypes << QContactPhoneNumber::SubTypeAssistant;
     if (!subTypes.isEmpty())
         phone.setSubTypes(subTypes);
@@ -378,7 +378,7 @@ bool QVersitContactImporterPrivate::createOrganization(
     QString fieldName = detailNameAndFieldName.second;
     QList<QContactOrganization> organizations = contact->details<QContactOrganization>();
     foreach(const QContactOrganization& current, organizations) {
-        if (current.value(fieldName).length() == 0) {
+        if (current.value(fieldName).toString().length() == 0) {
             organization = current;
             break;
         }
@@ -573,29 +573,29 @@ bool QVersitContactImporterPrivate::createOnlineAccount(
     if (value.isEmpty())
         return false;
     onlineAccount.setAccountUri(property.value());
-    if (property.name() == QLatin1String("X-SIP")) {
+    if (property.name() == QStringLiteral("X-SIP")) {
         QStringList subTypes = extractSubTypes(property);
         if (subTypes.isEmpty())
             subTypes.append(QContactOnlineAccount::SubTypeSip);
         onlineAccount.setSubTypes(subTypes);
-    } else if (property.name() == QLatin1String("X-IMPP") ||
-               property.name() == QLatin1String("IMPP")) {
+    } else if (property.name() == QStringLiteral("X-IMPP") ||
+               property.name() == QStringLiteral("IMPP")) {
         onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeImpp);
-    } else if (property.name() == QLatin1String("X-JABBER")) {
+    } else if (property.name() == QStringLiteral("X-JABBER")) {
         onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeImpp);
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolJabber);
-    } else if (property.name() == QLatin1String("X-AIM")) {
+    } else if (property.name() == QStringLiteral("X-AIM")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolAim);
-    } else if (property.name() == QLatin1String("X-ICQ")) {
+    } else if (property.name() == QStringLiteral("X-ICQ")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolIcq);
-    } else if (property.name() == QLatin1String("X-MSN")) {
+    } else if (property.name() == QStringLiteral("X-MSN")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolMsn);
-    } else if (property.name() == QLatin1String("X-QQ")) {
+    } else if (property.name() == QStringLiteral("X-QQ")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolQq);
-    } else if (property.name() == QLatin1String("X-YAHOO")) {
+    } else if (property.name() == QStringLiteral("X-YAHOO")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolYahoo);
-    } else if (property.name() == QLatin1String("X-SKYPE") ||
-            property.name() == QLatin1String("X-SKYPE-USERNAME")) {
+    } else if (property.name() == QStringLiteral("X-SKYPE") ||
+            property.name() == QStringLiteral("X-SKYPE-USERNAME")) {
         onlineAccount.setProtocol(QContactOnlineAccount::ProtocolSkype);
     }
 
@@ -695,11 +695,11 @@ bool QVersitContactImporterPrivate::createFamily(
 {
     QString val = property.value();
     QContactFamily family = contact->detail<QContactFamily>();
-    if (property.name() == QLatin1String("X-SPOUSE")) {
+    if (property.name() == QStringLiteral("X-SPOUSE")) {
         if (val.isEmpty())
             return false;
         family.setSpouse(val);
-    } else if (property.name() == QLatin1String("X-CHILDREN")) {
+    } else if (property.name() == QStringLiteral("X-CHILDREN")) {
         QVariant variant = property.variantValue();
         if (property.valueType() != QVersitProperty::ListType
                 || variant.type() != QVariant::StringList)
@@ -771,7 +771,7 @@ bool QVersitContactImporterPrivate::createCustomLabel(
 QStringList QVersitContactImporterPrivate::extractContexts(
     const QVersitProperty& property) const
 {
-    QStringList types = property.parameters().values(QLatin1String("TYPE"));
+    QStringList types = property.parameters().values(QStringLiteral("TYPE"));
     QStringList contexts;
     foreach (const QString& type, types) {
         QString value = mContextMappings.value(type.toUpper());
@@ -787,7 +787,7 @@ QStringList QVersitContactImporterPrivate::extractContexts(
 QStringList QVersitContactImporterPrivate::extractSubTypes(
     const QVersitProperty& property) const
 {
-    QStringList types = property.parameters().values(QLatin1String("TYPE"));
+    QStringList types = property.parameters().values(QStringLiteral("TYPE"));
     QStringList subTypes;
     foreach (const QString& type, types) {
         QString subType = mSubTypeMappings.value(type.toUpper());
@@ -822,10 +822,10 @@ QDateTime QVersitContactImporterPrivate::parseDateTime(QString value, bool *just
     } else {
         switch (value.length()) {
         case 8:
-            dateTime = QDateTime::fromString(value, QLatin1String("yyyyMMdd"));
+            dateTime = QDateTime::fromString(value, QStringLiteral("yyyyMMdd"));
             break;
         case 15:
-            dateTime = QDateTime::fromString(value, QLatin1String("yyyyMMddThhmmss"));
+            dateTime = QDateTime::fromString(value, QStringLiteral("yyyyMMddThhmmss"));
             hasTime = true;
             break;
         // default: return invalid
@@ -851,11 +851,11 @@ bool QVersitContactImporterPrivate::saveDataFromProperty(const QVersitProperty &
                                                             QByteArray *data) const
 {
     bool found = false;
-    const QString valueParam = property.parameters().value(QLatin1String("VALUE")).toUpper();
+    const QString valueParam = property.parameters().value(QStringLiteral("VALUE")).toUpper();
     QVariant variant(property.variantValue());
     if (variant.type() == QVariant::String
-        || valueParam == QLatin1String("URL")
-        || valueParam == QLatin1String("URI")) {
+        || valueParam == QStringLiteral("URL")
+        || valueParam == QStringLiteral("URI")) {
         *location = property.value();
         found |= !location->isEmpty();
     } else if (variant.type() == QVariant::ByteArray) {
@@ -906,7 +906,7 @@ QString QVersitContactImporterPrivate::synthesizedDisplayLabel(const QContact& c
        static function in QCME and called here */
     QList<QContactName> allNames = contact.details<QContactName>();
 
-    const QLatin1String space(" ");
+    const QString space(QStringLiteral(" "));
 
     // synthesize the display label from the name.
     foreach (const QContactName& name, allNames) {
@@ -916,28 +916,28 @@ QString QVersitContactImporterPrivate::synthesizedDisplayLabel(const QContact& c
         }
 
         QString result;
-        if (!name.value(QContactName::FieldPrefix).trimmed().isEmpty()) {
-           result += name.value(QContactName::FieldPrefix);
+        if (!name.value(QContactName::FieldPrefix).toString().trimmed().isEmpty()) {
+            result += name.value(QContactName::FieldPrefix).toString();
         }
-        if (!name.value(QContactName::FieldFirstName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldFirstName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldFirstName);
+            result += name.value(QContactName::FieldFirstName).toString();
         }
-        if (!name.value(QContactName::FieldMiddleName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldMiddleName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldMiddleName);
+            result += name.value(QContactName::FieldMiddleName).toString();
         }
-        if (!name.value(QContactName::FieldLastName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldLastName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldLastName);
+            result += name.value(QContactName::FieldLastName).toString();
         }
-        if (!name.value(QContactName::FieldSuffix).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldSuffix).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldSuffix);
+            result += name.value(QContactName::FieldSuffix).toString();
         }
         if (!result.isEmpty())
             return result;

@@ -97,7 +97,7 @@ public:
     }
     ContactType type() const
     {
-        QString typeString = detail().value(QContactType::FieldType);
+        QString typeString = detail().value(QContactType::FieldType).toString();
         if (typeString == QContactType::TypeContact)
             return Contact;
         return Group;

@@ -435,12 +435,12 @@ void tst_QContactManager::dumpContactDifferences(const QContact& ca, const QCont
     bDetails = b.details();
     foreach(QContactDetail d, aDetails) {
         if (d.definitionName() != QContactDisplayLabel::DefinitionName && d.definitionName() != QContactType::DefinitionName && d.definitionName() != QContactTimestamp::DefinitionName)
-            qDebug() << "A contact had extra detail:" << d.definitionName() << d.variantValues();
+            qDebug() << "A contact had extra detail:" << d.definitionName() << d.values();
     }
     // and same for B
     foreach(QContactDetail d, bDetails) {
         if (d.definitionName() != QContactDisplayLabel::DefinitionName && d.definitionName() != QContactType::DefinitionName && d.definitionName() != QContactTimestamp::DefinitionName)
-            qDebug() << "B contact had extra detail:" << d.definitionName() << d.variantValues();
+            qDebug() << "B contact had extra detail:" << d.definitionName() << d.values();
     }
 
     // now test specifically the display label and the type
@@ -486,7 +486,7 @@ bool tst_QContactManager::isSuperset(const QContact& ca, const QContact& cb)
         foreach (QContactDetail d2, bDetails) {
             if (d.definitionName() == d2.definitionName()) {
                 bool canRemove = true;
-                QMap<QString, QVariant> d2map = d2.variantValues();
+                QMap<QString, QVariant> d2map = d2.values();
                 foreach (QString key, d2map.keys()) {
                     if (d.value(key) != d2.value(key)) {
                         // d can have _more_ keys than d2,
@@ -528,7 +528,7 @@ void tst_QContactManager::dumpContact(const QContact& contact)
     QList<QContactDetail> details = contact.details();
     foreach(QContactDetail d, details) {
         qDebug() << "  " << d.definitionName() << ":";
-        qDebug() << "    Vals:" << d.variantValues();
+        qDebug() << "    Vals:" << d.values();
     }
 }
 
@@ -880,7 +880,7 @@ void tst_QContactManager::add()
     if (cm->managerName() == "symbiansim") {
         // TODO: symbiansim backend fails this test currently. Will be fixed later.
         QWARN("This manager has a known issue with saving a non-zero id contact. Skipping this test step.");
-    } else if (cm->managerName() == QLatin1String("tracker")) {
+    } else if (cm->managerName() == QStringLiteral("tracker")) {
         // tracker backend does not support checking if a contact exists.
         // The tracker database is shared, and there is no way to check if a contact exists and then overwrite it
         // in a single transaction.
@@ -928,7 +928,7 @@ void tst_QContactManager::update()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->managerName() == QString(QLatin1String("maemo5"))) {
+    if (cm->managerName() == QStringLiteral("maemo5")) {
         // we specifically want to test the update semantics of the maemo5 backend
         // since there are various complexities relating to roster contacts.
         QContact mt;
@@ -1104,7 +1104,7 @@ void tst_QContactManager::update()
     //QCOMPARE(detailCount, alice.details().size()); // removing a detail should cause the detail count to decrease by one.
 
     if (cm->hasFeature(QContactManager::Groups)) {
-        if (cm->managerName() == QLatin1String("tracker")) {
+        if (cm->managerName() == QStringLiteral("tracker")) {
             QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test .");
             return;
         }
@@ -2424,8 +2424,8 @@ void tst_QContactManager::fetchHint()
     hint.setRelationshipTypesHint(rels);
     QCOMPARE(hint.relationshipTypesHint(), rels);
     QStringList defs;
-    defs << QString(QLatin1String(QContactName::DefinitionName))
-         << QString(QLatin1String(QContactPhoneNumber::DefinitionName));
+    defs << QString(QContactName::DefinitionName)
+         << QString(QContactPhoneNumber::DefinitionName);
     hint.setDetailDefinitionsHint(defs);
     QCOMPARE(hint.detailDefinitionsHint(), defs);
     QSize prefImageSize(33, 33);
@@ -2563,7 +2563,7 @@ void tst_QContactManager::detailOrders()
 
     //addresses
     
-    contextOther = QLatin1String(QContactDetail::ContextOther);
+    contextOther = QContactDetail::ContextOther;
     
     QContactAddress address1, address2, address3;
     
@@ -2610,7 +2610,7 @@ void tst_QContactManager::detailOrders()
 
 
     //emails
-    contextOther = QLatin1String(QContactDetail::ContextOther);
+    contextOther = QContactDetail::ContextOther;
 
     QContactEmailAddress email1, email2, email3;
 

@@ -111,7 +111,7 @@ public:
             emit valueChanged();
         }
     }
-    QString accountUri() const {return detail().value(QContactOnlineAccount::FieldAccountUri);}
+    QString accountUri() const {return detail().value(QContactOnlineAccount::FieldAccountUri).toString();}
 
     void setServiceProvider(const QString& v)
     {
@@ -120,7 +120,7 @@ public:
             emit valueChanged();
         }
     }
-    QString serviceProvider() const {return detail().value(QContactOnlineAccount::FieldServiceProvider);}
+    QString serviceProvider() const {return detail().value(QContactOnlineAccount::FieldServiceProvider).toString();}
 
     void setCapabilities(const QStringList& v)
     {

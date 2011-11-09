@@ -101,12 +101,12 @@ public:
         qmlInfo(0) << tr("Unknown field type.");
         return QString();
     }
-    QString prefix() const {return detail().value(QContactName::FieldPrefix);}
-    QString firstName() const {return detail().value(QContactName::FieldFirstName);}
-    QString middleName() const {return detail().value(QContactName::FieldMiddleName);}
-    QString lastName() const {return detail().value(QContactName::FieldLastName);}
-    QString suffix() const {return detail().value(QContactName::FieldSuffix);}
-    QString customLabel() const{return detail().value(QContactName::FieldCustomLabel);}
+    QString prefix() const {return detail().value(QContactName::FieldPrefix).toString();}
+    QString firstName() const {return detail().value(QContactName::FieldFirstName).toString();}
+    QString middleName() const {return detail().value(QContactName::FieldMiddleName).toString();}
+    QString lastName() const {return detail().value(QContactName::FieldLastName).toString();}
+    QString suffix() const {return detail().value(QContactName::FieldSuffix).toString();}
+    QString customLabel() const{return detail().value(QContactName::FieldCustomLabel).toString();}
 
     void setPrefix(const QString& v)
     {

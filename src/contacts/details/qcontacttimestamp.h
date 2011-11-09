@@ -54,15 +54,9 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactTimestamp : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldModificationTimestamp;
-    static const QLatin1Constant FieldCreationTimestamp;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTimestamp, "Timestamp")
-    Q_DECLARE_LATIN1_CONSTANT(FieldModificationTimestamp, "ModificationTimestamp");
-    Q_DECLARE_LATIN1_CONSTANT(FieldCreationTimestamp, "CreationTimestamp");
-#endif
+    const static QString FieldModificationTimestamp;
+    const static QString FieldCreationTimestamp;
 
     void setLastModified(const QDateTime& timestamp) {setValue(FieldModificationTimestamp, timestamp);}
     QDateTime lastModified() const {return value<QDateTime>(FieldModificationTimestamp);}

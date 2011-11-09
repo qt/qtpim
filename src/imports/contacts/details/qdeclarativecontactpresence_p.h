@@ -126,7 +126,7 @@ public:
             emit valueChanged();
         }
     }
-    QString nickname() const {return detail().value(QContactPresence::FieldNickname);}
+    QString nickname() const {return detail().value(QContactPresence::FieldNickname).toString();}
 
     void setPresenceState(PresenceStateType v)
     {
@@ -149,7 +149,7 @@ public:
             emit valueChanged();
         }
     }
-    QString presenceStateText() const {return detail().value(QContactPresence::FieldPresenceStateText);}
+    QString presenceStateText() const {return detail().value(QContactPresence::FieldPresenceStateText).toString();}
     void setPresenceStateImageUrl(const QUrl& v)
     {
         if (!readOnly() && v != presenceStateImageUrl())  {
@@ -157,7 +157,7 @@ public:
             emit valueChanged();
         }
     }
-    QUrl presenceStateImageUrl() const {return detail().value(QContactPresence::FieldPresenceStateImageUrl);}
+    QUrl presenceStateImageUrl() const {return detail().value<QUrl>(QContactPresence::FieldPresenceStateImageUrl);}
     void setCustomMessage(const QString& v)
     {
         if (!readOnly() && v != customMessage()) {
@@ -165,7 +165,7 @@ public:
             emit valueChanged();
         }
     }
-    QString customMessage() const {return detail().value(QContactPresence::FieldCustomMessage);}
+    QString customMessage() const {return detail().value(QContactPresence::FieldCustomMessage).toString();}
 signals:
     void valueChanged();
 };

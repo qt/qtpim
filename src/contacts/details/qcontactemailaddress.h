@@ -55,16 +55,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactEmailAddress : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldEmailAddress;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactEmailAddress, "EmailAddress")
-    Q_DECLARE_LATIN1_CONSTANT(FieldEmailAddress, "EmailAddress");
-#endif
+    const static QString FieldEmailAddress;
 
     void setEmailAddress(const QString& emailAddress) {setValue(FieldEmailAddress, emailAddress);}
-    QString emailAddress() const {return value(FieldEmailAddress);}
+    QString emailAddress() const {return value(FieldEmailAddress).toString();}
 
     // Convenience filter
     static QContactFilter match(const QString& emailAddress);

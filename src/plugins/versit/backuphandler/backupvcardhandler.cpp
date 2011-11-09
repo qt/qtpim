@@ -79,19 +79,19 @@ private:
     int mDetailNumber;
 };
 
-Q_DEFINE_LATIN1_CONSTANT(PropertyName, "X-NOKIA-QCONTACTFIELD");
-Q_DEFINE_LATIN1_CONSTANT(DetailDefinitionParameter, "DETAIL");
-Q_DEFINE_LATIN1_CONSTANT(FieldParameter, "FIELD");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameter, "DATATYPE");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterVariant, "VARIANT");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterDate, "DATE");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterDateTime, "DATETIME");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterTime, "TIME");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterBool, "BOOL");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterInt, "INT");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterUInt, "UINT");
-Q_DEFINE_LATIN1_CONSTANT(DatatypeParameterUrl, "URL");
-Q_DEFINE_LATIN1_CONSTANT(GroupPrefix, "G");
+const QString PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));
+const QString DetailDefinitionParameter(QStringLiteral("DETAIL"));
+const QString FieldParameter(QStringLiteral("FIELD"));
+const QString DatatypeParameter(QStringLiteral("DATATYPE"));
+const QString DatatypeParameterVariant(QStringLiteral("VARIANT"));
+const QString DatatypeParameterDate(QStringLiteral("DATE"));
+const QString DatatypeParameterDateTime(QStringLiteral("DATETIME"));
+const QString DatatypeParameterTime(QStringLiteral("TIME"));
+const QString DatatypeParameterBool(QStringLiteral("BOOL"));
+const QString DatatypeParameterInt(QStringLiteral("INT"));
+const QString DatatypeParameterUInt(QStringLiteral("UINT"));
+const QString DatatypeParameterUrl(QStringLiteral("URL"));
+const QString GroupPrefix(QStringLiteral("G"));
 
 QSet<QString> BackupVCardHandlerFactory::profiles() const
 {
@@ -102,7 +102,7 @@ QSet<QString> BackupVCardHandlerFactory::profiles() const
 
 QString BackupVCardHandlerFactory::name() const
 {
-    return QLatin1String("com.nokia.qt.pim.versit.backuphandler");
+    return QStringLiteral("com.nokia.qt.pim.versit.backuphandler");
 }
 
 int BackupVCardHandlerFactory::index() const
@@ -159,7 +159,7 @@ void BackupVCardHandler::detailProcessed(
     Q_UNUSED(toBeRemoved)
     if (detail.accessConstraints().testFlag(QContactDetail::ReadOnly))
         return;
-    QVariantMap fields = detail.variantValues();
+    QVariantMap fields = detail.values();
     // fields from the same detail have the same group so the importer can collate them
     QString detailGroup = GroupPrefix + QString::number(mDetailNumber++);
     int toBeAddedCount = toBeAdded->count();

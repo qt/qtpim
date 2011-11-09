@@ -72,19 +72,19 @@ public:
                            QList<QContactDetail>* updatedDetails);
     void documentProcessed();
 
-    Q_DECLARE_LATIN1_CONSTANT(PropertyName, "X-NOKIA-QCONTACTFIELD");
-    Q_DECLARE_LATIN1_CONSTANT(DetailDefinitionParameter, "DETAIL");
-    Q_DECLARE_LATIN1_CONSTANT(FieldParameter, "FIELD");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameter, "DATATYPE");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterVariant, "VARIANT");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterDate, "DATE");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterDateTime, "DATETIME");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterTime, "TIME");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterBool, "BOOL");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterInt, "INT");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterUInt, "UINT");
-    Q_DECLARE_LATIN1_CONSTANT(DatatypeParameterUrl, "URL");
-    Q_DECLARE_LATIN1_CONSTANT(GroupPrefix, "G");
+    const static QString PropertyName;
+    const static QString DetailDefinitionParameter;
+    const static QString FieldParameter;
+    const static QString DatatypeParameter;
+    const static QString DatatypeParameterVariant;
+    const static QString DatatypeParameterDate;
+    const static QString DatatypeParameterDateTime;
+    const static QString DatatypeParameterTime;
+    const static QString DatatypeParameterBool;
+    const static QString DatatypeParameterInt;
+    const static QString DatatypeParameterUInt;
+    const static QString DatatypeParameterUrl;
+    const static QString GroupPrefix;
 
 private:
     static QVariant deserializeValue(const QVersitProperty& property);

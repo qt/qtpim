@@ -55,13 +55,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactThumbnail : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldThumbnail;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactThumbnail, "Thumbnail")
-    Q_DECLARE_LATIN1_CONSTANT(FieldThumbnail, "Thumbnail");
-#endif
+    const static QString FieldThumbnail;
 
     void setThumbnail(const QImage& thumbnail) {setValue(FieldThumbnail, thumbnail);}
     QImage thumbnail() const {return value<QImage>(FieldThumbnail);}

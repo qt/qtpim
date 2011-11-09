@@ -56,48 +56,35 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactGeoLocation : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldLabel;
-    static const QLatin1Constant FieldLatitude;
-    static const QLatin1Constant FieldLongitude;
-    static const QLatin1Constant FieldAccuracy;
-    static const QLatin1Constant FieldAltitude;
-    static const QLatin1Constant FieldAltitudeAccuracy;
-    static const QLatin1Constant FieldHeading;
-    static const QLatin1Constant FieldSpeed;
-    static const QLatin1Constant FieldTimestamp;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGeoLocation, "GeoLocation")
-    Q_DECLARE_LATIN1_CONSTANT(FieldLabel, "Label");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLatitude, "Latitude");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLongitude, "Longitude");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAccuracy, "Accuracy");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAltitude, "Altitude");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAltitudeAccuracy, "AltitudeAccuracy");
-    Q_DECLARE_LATIN1_CONSTANT(FieldHeading, "Heading");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSpeed, "Speed");
-    Q_DECLARE_LATIN1_CONSTANT(FieldTimestamp, "Timestamp");
-#endif
+    const static QString FieldLabel;
+    const static QString FieldLatitude;
+    const static QString FieldLongitude;
+    const static QString FieldAccuracy;
+    const static QString FieldAltitude;
+    const static QString FieldAltitudeAccuracy;
+    const static QString FieldHeading;
+    const static QString FieldSpeed;
+    const static QString FieldTimestamp;
 
     void setLabel(const QString& label) {setValue(FieldLabel, label);}
-    QString label() const {return value(FieldLabel);}
+    QString label() const {return value(FieldLabel).toString();}
     void setLatitude(double latitude) {setValue(FieldLatitude, latitude);}
-    double latitude() const {return variantValue(FieldLatitude).toDouble();}
+    double latitude() const {return value(FieldLatitude).toDouble();}
     void setLongitude(double longitude) {setValue(FieldLongitude, longitude);}
-    double longitude() const {return variantValue(FieldLongitude).toDouble();}
+    double longitude() const {return value(FieldLongitude).toDouble();}
     void setAccuracy(double accuracy) {setValue(FieldAccuracy, accuracy);}
-    double accuracy() const {return variantValue(FieldAccuracy).toDouble();}
+    double accuracy() const {return value(FieldAccuracy).toDouble();}
     void setAltitude(double altitude) {setValue(FieldAltitude, altitude);}
-    double altitude() const {return variantValue(FieldAltitude).toDouble();}
+    double altitude() const {return value(FieldAltitude).toDouble();}
     void setAltitudeAccuracy(double altitudeAccuracy) {setValue(FieldAltitudeAccuracy, altitudeAccuracy);}
-    double altitudeAccuracy() const {return variantValue(FieldAltitudeAccuracy).toDouble();}
+    double altitudeAccuracy() const {return value(FieldAltitudeAccuracy).toDouble();}
     void setHeading(double heading) {setValue(FieldHeading, heading);}
-    double heading() const {return variantValue(FieldHeading).toDouble();}
+    double heading() const {return value(FieldHeading).toDouble();}
     void setSpeed(double speed) {setValue(FieldSpeed, speed);}
-    double speed() const {return variantValue(FieldSpeed).toDouble();}
+    double speed() const {return value(FieldSpeed).toDouble();}
     void setTimestamp(const QDateTime& timestamp) {setValue(FieldTimestamp, timestamp);}
-    QDateTime timestamp() const {return variantValue(FieldTimestamp).toDateTime();}
+    QDateTime timestamp() const {return value(FieldTimestamp).toDateTime();}
 };
 
 QTCONTACTS_END_NAMESPACE

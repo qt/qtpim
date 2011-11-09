@@ -48,19 +48,19 @@
 
 QTVERSIT_BEGIN_NAMESPACE
 
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::PropertyName, "X-NOKIA-QCONTACTFIELD");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DetailDefinitionParameter, "DETAIL");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::FieldParameter, "FIELD");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameter, "DATATYPE");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterVariant, "VARIANT");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterDate, "DATE");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterDateTime, "DATETIME");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterTime, "TIME");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterBool, "BOOL");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterInt, "INT");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterUInt, "UINT");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::DatatypeParameterUrl, "URL");
-Q_DEFINE_LATIN1_CONSTANT(QVCardRestoreHandler::GroupPrefix, "G");
+const QString QVCardRestoreHandler::PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));
+const QString QVCardRestoreHandler::DetailDefinitionParameter(QStringLiteral("DETAIL"));
+const QString QVCardRestoreHandler::FieldParameter(QStringLiteral("FIELD"));
+const QString QVCardRestoreHandler::DatatypeParameter(QStringLiteral("DATATYPE"));
+const QString QVCardRestoreHandler::DatatypeParameterVariant(QStringLiteral("VARIANT"));
+const QString QVCardRestoreHandler::DatatypeParameterDate(QStringLiteral("DATE"));
+const QString QVCardRestoreHandler::DatatypeParameterDateTime(QStringLiteral("DATETIME"));
+const QString QVCardRestoreHandler::DatatypeParameterTime(QStringLiteral("TIME"));
+const QString QVCardRestoreHandler::DatatypeParameterBool(QStringLiteral("BOOL"));
+const QString QVCardRestoreHandler::DatatypeParameterInt(QStringLiteral("INT"));
+const QString QVCardRestoreHandler::DatatypeParameterUInt(QStringLiteral("UINT"));
+const QString QVCardRestoreHandler::DatatypeParameterUrl(QStringLiteral("URL"));
+const QString QVCardRestoreHandler::GroupPrefix(QStringLiteral("G"));
 
 
 /*

@@ -55,45 +55,31 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactOrganization : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldName;
-    static const QLatin1Constant FieldLogoUrl;
-    static const QLatin1Constant FieldDepartment;
-    static const QLatin1Constant FieldLocation;
-    static const QLatin1Constant FieldRole;
-    static const QLatin1Constant FieldTitle;
-    static const QLatin1Constant FieldAssistantName;
-    static const QLatin1Constant FieldStartDate;
-    static const QLatin1Constant FieldEndDate;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactOrganization, "Organization")
-    Q_DECLARE_LATIN1_CONSTANT(FieldName, "Name");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLogoUrl, "LogoUrl");
-    Q_DECLARE_LATIN1_CONSTANT(FieldDepartment, "Department");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLocation, "Location");
-    Q_DECLARE_LATIN1_CONSTANT(FieldRole, "Role");
-    Q_DECLARE_LATIN1_CONSTANT(FieldTitle, "Title");
-    Q_DECLARE_LATIN1_CONSTANT(FieldAssistantName, "AssistantName");
-    Q_DECLARE_LATIN1_CONSTANT(FieldStartDate, "StartDate");
-    Q_DECLARE_LATIN1_CONSTANT(FieldEndDate, "EndDate");
-
-#endif
+    const static QString FieldName;
+    const static QString FieldLogoUrl;
+    const static QString FieldDepartment;
+    const static QString FieldLocation;
+    const static QString FieldRole;
+    const static QString FieldTitle;
+    const static QString FieldAssistantName;
+    const static QString FieldStartDate;
+    const static QString FieldEndDate;
 
     void setName(const QString& name) {setValue(FieldName, name);}
-    QString name() const {return value(FieldName);}
+    QString name() const {return value(FieldName).toString();}
     void setLogoUrl(const QUrl& logo) {setValue(FieldLogoUrl, logo);}
-    QUrl logoUrl() const {return value(FieldLogoUrl);}
+    QUrl logoUrl() const {return value<QUrl>(FieldLogoUrl);}
     void setDepartment(const QStringList& department) {setValue(FieldDepartment, department);}
     QStringList department() const {return value<QStringList>(FieldDepartment);}
     void setLocation(const QString& location) {setValue(FieldLocation, location);}
-    QString location() const {return value(FieldLocation);}
+    QString location() const {return value(FieldLocation).toString();}
     void setRole(const QString& role) {setValue(FieldRole, role);}
-    QString role() const {return value(FieldRole);}
+    QString role() const {return value(FieldRole).toString();}
     void setTitle(const QString& title) {setValue(FieldTitle, title);}
-    QString title() const {return value(FieldTitle);}
+    QString title() const {return value(FieldTitle).toString();}
     void setAssistantName(const QString& assistantName) {setValue(FieldAssistantName, assistantName);}
-    QString assistantName() const {return value(FieldAssistantName);}
+    QString assistantName() const {return value(FieldAssistantName).toString();}
     void setStartDate(const QDateTime& dateTime) {setValue(FieldStartDate, dateTime);}
     QDateTime startDate() const {return value<QDateTime>(FieldStartDate);}
     void setEndDate(const QDateTime& dateTime) {setValue(FieldEndDate, dateTime);}

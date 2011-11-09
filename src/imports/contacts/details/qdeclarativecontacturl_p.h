@@ -100,7 +100,7 @@ public:
             emit valueChanged();
         }
     }
-    QString url() const {return detail().value(QContactUrl::FieldUrl);}
+    QString url() const {return detail().value(QContactUrl::FieldUrl).toString();}
 
     void setSubType(const QVariant& v)
     {
@@ -109,13 +109,13 @@ public:
             if (v.type() != QVariant::String) {
                 switch (v.toInt()) {
                 case HomePage:
-                    st = QLatin1String(QContactUrl::SubTypeHomePage);
+                    st = QContactUrl::SubTypeHomePage;
                     break;
                 case Blog:
-                    st = QLatin1String(QContactUrl::SubTypeBlog);
+                    st = QContactUrl::SubTypeBlog;
                     break;
                 case Favourite:
-                    st = QLatin1String(QContactUrl::SubTypeFavourite);
+                    st = QContactUrl::SubTypeFavourite;
                     break;
                 default:break;
                 }

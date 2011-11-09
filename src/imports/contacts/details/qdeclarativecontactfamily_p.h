@@ -90,7 +90,7 @@ public:
             emit valueChanged();
         }
     }
-    QString spouse() const {return detail().value(QContactFamily::FieldSpouse);}
+    QString spouse() const {return detail().value(QContactFamily::FieldSpouse).toString();}
     void setChildren(const QStringList& v)
     {
         if (!readOnly() && v.toSet() != children().toSet()) {

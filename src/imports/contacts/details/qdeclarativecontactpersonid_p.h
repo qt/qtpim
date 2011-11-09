@@ -86,7 +86,7 @@ public:
             emit valueChanged();
         }
     }
-    QString personid() const {return detail().value(QContactPersonId::FieldPersonId);}
+    QString personid() const {return detail().value(QContactPersonId::FieldPersonId).toString();}
 signals:
     void valueChanged();
 };

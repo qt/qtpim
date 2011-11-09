@@ -71,24 +71,24 @@ QVersitContactExporterPrivate::QVersitContactExporterPrivate(const QStringList& 
     // Put them in in reverse order so the entries at the top of the list take precedence
     for (int i = versitPropertyCount-1; i >= 0; i--) {
         mPropertyMappings.insert(
-                QLatin1String(versitContactDetailMappings[i].detailDefinitionName),
-                QLatin1String(versitContactDetailMappings[i].versitPropertyName));
+                versitContactDetailMappings[i].detailDefinitionName,
+                QStringLiteral(versitContactDetailMappings[i].versitPropertyName));
     }
 
     // Contexts mappings
     int contextCount = sizeof(versitContextMappings)/sizeof(VersitMapping);
     for (int i=0; i < contextCount; i++) {
         mParameterMappings.insert(
-                QLatin1String(versitContextMappings[i].contactString),
-                QLatin1String(versitContextMappings[i].versitString));
+                versitContextMappings[i].contactString,
+                QStringLiteral(versitContextMappings[i].versitString));
     }
 
     // Subtypes mappings
     int subTypeCount = sizeof(versitSubTypeMappings)/sizeof(VersitMapping);
     for (int i=0; i < subTypeCount; i++) {
         mParameterMappings.insert(
-                QLatin1String(versitSubTypeMappings[i].contactString),
-                QLatin1String(versitSubTypeMappings[i].versitString));
+                versitSubTypeMappings[i].contactString,
+                QStringLiteral(versitSubTypeMappings[i].versitString));
     }
 
     mPluginDetailHandlers = QVersitContactPluginLoader::instance()->createContactHandlers(profiles);
@@ -432,7 +432,7 @@ void QVersitContactExporterPrivate::encodeBirthDay(
     QContactBirthday bday = static_cast<QContactBirthday>(detail);
     QVersitProperty property;
     property.setName(mPropertyMappings.value(detail.definitionName()));
-    QVariant variant = bday.variantValue(QContactBirthday::FieldBirthday);
+    QVariant variant = bday.value(QContactBirthday::FieldBirthday);
     QString value;
     if (variant.type() == QVariant::Date) {
         value = variant.toDate().toString(Qt::ISODate);

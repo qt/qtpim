@@ -53,46 +53,31 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactAddress : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldStreet;
-    static const QLatin1Constant FieldLocality;
-    static const QLatin1Constant FieldRegion;
-    static const QLatin1Constant FieldPostcode;
-    static const QLatin1Constant FieldCountry;
-    static const QLatin1Constant FieldSubTypes;
-    static const QLatin1Constant FieldPostOfficeBox;
-    static const QLatin1Constant SubTypeParcel;
-    static const QLatin1Constant SubTypePostal;
-    static const QLatin1Constant SubTypeDomestic;
-    static const QLatin1Constant SubTypeInternational;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAddress, "Address")
-    Q_DECLARE_LATIN1_CONSTANT(FieldStreet, "Street");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLocality, "Locality");
-    Q_DECLARE_LATIN1_CONSTANT(FieldRegion, "Region");
-    Q_DECLARE_LATIN1_CONSTANT(FieldPostcode, "Postcode");
-    Q_DECLARE_LATIN1_CONSTANT(FieldCountry, "Country");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubTypes, "SubTypes");
-    Q_DECLARE_LATIN1_CONSTANT(FieldPostOfficeBox, "PostOfficeBox");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeParcel, "Parcel");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypePostal, "Postal");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeDomestic, "Domestic");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeInternational, "International");
-#endif
+    const static QString FieldStreet;
+    const static QString FieldLocality;
+    const static QString FieldRegion;
+    const static QString FieldPostcode;
+    const static QString FieldCountry;
+    const static QString FieldSubTypes;
+    const static QString FieldPostOfficeBox;
+    const static QString SubTypeParcel;
+    const static QString SubTypePostal;
+    const static QString SubTypeDomestic;
+    const static QString SubTypeInternational;
 
     void setStreet(const QString& street) {setValue(FieldStreet, street);}
-    QString street() const {return value(FieldStreet);}
+    QString street() const {return value(FieldStreet).toString();}
     void setLocality(const QString& locality) {setValue(FieldLocality, locality);}
-    QString locality() const {return value(FieldLocality);}
+    QString locality() const {return value(FieldLocality).toString();}
     void setRegion(const QString& region) {setValue(FieldRegion, region);}
-    QString region() const {return value(FieldRegion);}
+    QString region() const {return value(FieldRegion).toString();}
     void setPostcode(const QString& postcode) {setValue(FieldPostcode, postcode);}
-    QString postcode() const {return value(FieldPostcode);}
+    QString postcode() const {return value(FieldPostcode).toString();}
     void setCountry(const QString& country) {setValue(FieldCountry, country);}
-    QString country() const {return value(FieldCountry);}
+    QString country() const {return value(FieldCountry).toString();}
     void setPostOfficeBox(const QString& postOfficeBox) {setValue(FieldPostOfficeBox, postOfficeBox);}
-    QString postOfficeBox() const {return value(FieldPostOfficeBox);}
+    QString postOfficeBox() const {return value(FieldPostOfficeBox).toString();}
 
     void setSubTypes(const QStringList& subTypes) {setValue(FieldSubTypes, subTypes);}
     void setSubTypes(const QString& subType) {setValue(FieldSubTypes, QStringList(subType));}

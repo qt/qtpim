@@ -84,7 +84,7 @@ public:
     }
 
     QString label() const {
-        return detail().value(QContactDisplayLabel::FieldLabel);
+        return detail().value(QContactDisplayLabel::FieldLabel).toString();
     }
 signals:
     void valueChanged();

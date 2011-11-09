@@ -55,15 +55,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactDisplayLabel : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldLabel;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactDisplayLabel, "DisplayLabel")
-    Q_DECLARE_LATIN1_CONSTANT(FieldLabel, "Label");
-#endif
+    const static QString FieldLabel;
 
-    QString label() const {return value(FieldLabel);}
+    QString label() const {return value(FieldLabel).toString();}
 
     static QContactFilter match(const QString& label);
 };

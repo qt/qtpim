@@ -111,7 +111,7 @@ public:
             emit valueChanged();
         }
     }
-    QString number() const {return detail().value(QContactPhoneNumber::FieldNumber);}
+    QString number() const {return detail().value(QContactPhoneNumber::FieldNumber).toString();}
 
 
     void setSubTypes(const QVariant& v)

@@ -120,7 +120,7 @@ public:
             emit valueChanged();
         }
     }
-    QString label() const {return detail().value(QContactGeoLocation::FieldLabel);}
+    QString label() const {return detail().value(QContactGeoLocation::FieldLabel).toString();}
     void setLatitude(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, latitude())) {
@@ -128,7 +128,7 @@ public:
             emit valueChanged();
         }
     }
-    double latitude() const {return detail().variantValue(QContactGeoLocation::FieldLatitude).toDouble();}
+    double latitude() const {return detail().value(QContactGeoLocation::FieldLatitude).toDouble();}
     void setLongitude(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, longitude())) {
@@ -136,7 +136,7 @@ public:
             emit valueChanged();
         }
     }
-    double longitude() const {return detail().variantValue(QContactGeoLocation::FieldLongitude).toDouble();}
+    double longitude() const {return detail().value(QContactGeoLocation::FieldLongitude).toDouble();}
     void setAccuracy(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, accuracy())) {
@@ -144,7 +144,7 @@ public:
             emit valueChanged();
         }
     }
-    double accuracy() const {return detail().variantValue(QContactGeoLocation::FieldAccuracy).toDouble();}
+    double accuracy() const {return detail().value(QContactGeoLocation::FieldAccuracy).toDouble();}
     void setAltitude(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, altitude())) {
@@ -152,7 +152,7 @@ public:
             emit valueChanged();
         }
     }
-    double altitude() const {return detail().variantValue(QContactGeoLocation::FieldAltitude).toDouble();}
+    double altitude() const {return detail().value(QContactGeoLocation::FieldAltitude).toDouble();}
     void setAltitudeAccuracy(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, altitudeAccuracy())) {
@@ -160,7 +160,7 @@ public:
             emit valueChanged();
         }
     }
-    double altitudeAccuracy() const {return detail().variantValue(QContactGeoLocation::FieldAltitudeAccuracy).toDouble();}
+    double altitudeAccuracy() const {return detail().value(QContactGeoLocation::FieldAltitudeAccuracy).toDouble();}
     void setHeading(double v)
     {
         if (!readOnly() && v != heading()) {
@@ -168,7 +168,7 @@ public:
             emit valueChanged();
         }
     }
-    double heading() const {return detail().variantValue(QContactGeoLocation::FieldHeading).toDouble();}
+    double heading() const {return detail().value(QContactGeoLocation::FieldHeading).toDouble();}
     void setSpeed(double v)
     {
         if (!readOnly() && !qFuzzyCompare(v, speed())) {
@@ -176,7 +176,7 @@ public:
             emit valueChanged();
         }
     }
-    double speed() const {return detail().variantValue(QContactGeoLocation::FieldSpeed).toDouble();}
+    double speed() const {return detail().value(QContactGeoLocation::FieldSpeed).toDouble();}
     void setTimestamp(const QDateTime& v)
     {
         if (!readOnly() && v != timestamp()) {
@@ -184,7 +184,7 @@ public:
             emit valueChanged();
         }
     }
-    QDateTime timestamp() const {return detail().variantValue(QContactGeoLocation::FieldTimestamp).toDateTime();}
+    QDateTime timestamp() const {return detail().value(QContactGeoLocation::FieldTimestamp).toDateTime();}
 signals:
     void valueChanged();
 };

@@ -57,10 +57,10 @@ QVersitOrganizerExporterPrivate::QVersitOrganizerExporterPrivate(const QString& 
         sizeof(versitOrganizerDetailMappings)/sizeof(VersitDetailMapping);
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
-                QLatin1String(versitOrganizerDetailMappings[i].detailDefinitionName),
+                versitOrganizerDetailMappings[i].detailDefinitionName,
                 QPair<QString,QString>(
-                    QLatin1String(versitOrganizerDetailMappings[i].detailFieldName),
-                    QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName)));
+                    versitOrganizerDetailMappings[i].detailFieldName,
+                    QStringLiteral(versitOrganizerDetailMappings[i].versitPropertyName)));
     }
 
     mPluginDetailHandlers = QVersitOrganizerPluginLoader::instance()->createOrganizerHandlers(profile);

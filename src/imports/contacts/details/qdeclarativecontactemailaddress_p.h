@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString emailAddress() const {return detail().value(QContactEmailAddress::FieldEmailAddress);}
+    QString emailAddress() const {return detail().value(QContactEmailAddress::FieldEmailAddress).toString();}
 
 signals:
     void valueChanged();

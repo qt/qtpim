@@ -155,8 +155,8 @@ void tst_QVersit::testImportVCardFiles()
                 QContactDetail parsedDetail = parsed.detail(name);
                 if (parsedDetail != expectedDetail) {
                     qDebug() << "Detail: " << name.toAscii();
-                    qDebug() << "Actual:" << parsedDetail.variantValues();
-                    qDebug() << "Expected:" << expectedDetail.variantValues();
+                    qDebug() << "Actual:" << parsedDetail.values();
+                    qDebug() << "Expected:" << expectedDetail.values();
                     QCOMPARE(parsedDetail, expectedDetail);
                 }
             }

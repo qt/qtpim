@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString guid() const {return detail().value(QContactGuid::FieldGuid);}
+    QString guid() const {return detail().value(QContactGuid::FieldGuid).toString();}
 signals:
     void valueChanged();
 };

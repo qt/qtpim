@@ -55,18 +55,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactFamily : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldSpouse;
-    static const QLatin1Constant FieldChildren;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFamily, "Family")
-    Q_DECLARE_LATIN1_CONSTANT(FieldSpouse, "Spouse");
-    Q_DECLARE_LATIN1_CONSTANT(FieldChildren, "Children");
-#endif
+    const static QString FieldSpouse;
+    const static QString FieldChildren;
 
     void setSpouse(const QString& spouseName) {setValue(FieldSpouse, spouseName);}
-    QString spouse() const {return value(FieldSpouse);}
+    QString spouse() const {return value(FieldSpouse).toString();}
     void setChildren(const QStringList& childrenNames) {setValue(FieldChildren, childrenNames);}
     QStringList children() const {return value<QStringList>(FieldChildren);}
 };

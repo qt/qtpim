@@ -90,7 +90,7 @@ QTCONTACTS_BEGIN_NAMESPACE
     \variable QContactSyncTarget::DefinitionName
     The string constant for the definition name of QContactSyncTarget details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactSyncTarget::DefinitionName, "SyncTarget");
+const QString QContactSyncTarget::DefinitionName(QStringLiteral("SyncTarget"));
 
 /*!
     \variable QContactSyncTarget::FieldSyncTarget
@@ -98,7 +98,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactSyncTarget::DefinitionName, "SyncTarget");
    The field key constant for the sync target value.
    \sa syncTarget(), setSyncTarget()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactSyncTarget::FieldSyncTarget, "SyncTarget");
+const QString QContactSyncTarget::FieldSyncTarget(QStringLiteral("SyncTarget"));
 
 /*!
    \fn QContactSyncTarget::syncTarget() const
@@ -135,7 +135,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactSyncTarget::FieldSyncTarget, "SyncTarget");
    \variable QContactEmailAddress::DefinitionName
    The string constant for the definition name of QContactEmailAddress details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactEmailAddress::DefinitionName, "EmailAddress");
+const QString QContactEmailAddress::DefinitionName(QStringLiteral("EmailAddress"));
 
 /*!
    \variable QContactEmailAddress::FieldEmailAddress
@@ -143,7 +143,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactEmailAddress::DefinitionName, "EmailAddress");
    The field key constant for the email address value.
    \sa emailAddress(), setEmailAddress()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactEmailAddress::FieldEmailAddress, "EmailAddress");
+const QString QContactEmailAddress::FieldEmailAddress(QStringLiteral("EmailAddress"));
 
 /*!
    \fn QContactEmailAddress::emailAddress() const
@@ -173,7 +173,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactEmailAddress::FieldEmailAddress, "EmailAddress"
    \variable QContactFamily::DefinitionName
    The string constant for the definition name of QContactFamily details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFamily::DefinitionName, "Family");
+const QString QContactFamily::DefinitionName(QStringLiteral("Family"));
 
 /*!
    \variable QContactFamily::FieldSpouse
@@ -181,7 +181,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactFamily::DefinitionName, "Family");
    The field key constant for the value containing the name of a spouse.
    \sa spouse(), setSpouse()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFamily::FieldSpouse, "Spouse");
+const QString QContactFamily::FieldSpouse(QStringLiteral("Spouse"));
 
 /*!
    \variable QContactFamily::FieldChildren
@@ -189,7 +189,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactFamily::FieldSpouse, "Spouse");
    The field key constant for the value containing the names of children.
    \sa children(), setChildren()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFamily::FieldChildren, "Children");
+const QString QContactFamily::FieldChildren(QStringLiteral("Children"));
 
 /*!
    \fn QContactFamily::spouse() const
@@ -231,7 +231,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactFamily::FieldChildren, "Children");
    \variable QContactFavorite::DefinitionName
    The string constant for the definition name of QContactFavorite details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFavorite::DefinitionName, "Favorite");
+const QString QContactFavorite::DefinitionName(QStringLiteral("Favorite"));
 
 /*!
    \variable QContactFavorite::FieldFavorite
@@ -239,7 +239,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactFavorite::DefinitionName, "Favorite");
    The field key constant for the value that indicates whether a contact is a favorite.
    \sa index(), setIndex()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFavorite::FieldFavorite, "Favorite");
+const QString QContactFavorite::FieldFavorite(QStringLiteral("Favorite"));
 
 /*!
    \variable QContactFavorite::FieldIndex
@@ -247,7 +247,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactFavorite::FieldFavorite, "Favorite");
    The field key constant for the value containing the index of the favorite contact (which determines the order they appear)
    \sa index(), setIndex()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactFavorite::FieldIndex, "Index");
+const QString QContactFavorite::FieldIndex(QStringLiteral("Index"));
 
 /*!
    \fn bool QContactFavorite::isFavorite() const
@@ -300,7 +300,7 @@ QContactFilter QContactFavorite::match()
    \variable QContactAnniversary::DefinitionName
    The string constant for the definition name of QContactAnniversary details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::DefinitionName, "Anniversary");
+const QString QContactAnniversary::DefinitionName(QStringLiteral("Anniversary"));
 
 /*!
    \variable QContactAnniversary::FieldOriginalDate
@@ -313,7 +313,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::DefinitionName, "Anniversary");
    supported, or by using midnight if a time is not supplied).
    \sa originalDate(), setOriginalDate(), originalDateTime(), setOriginalDateTime()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldOriginalDate, "OriginalDate");
+const QString QContactAnniversary::FieldOriginalDate(QStringLiteral("OriginalDate"));
 
 /*!
    \variable QContactAnniversary::FieldEvent
@@ -321,7 +321,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldOriginalDate, "OriginalDate")
    The field key constant for the name of the event value.
    \sa event(), setEvent()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldEvent, "Event");
+const QString QContactAnniversary::FieldEvent(QStringLiteral("Event"));
 
 /*!
    \variable QContactAnniversary::FieldCalendarId
@@ -329,7 +329,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldEvent, "Event");
    The field key constant for the value containing the id of the calendar event.
    \sa calendarId(), setCalendarId()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldCalendarId, "CalendarId");
+const QString QContactAnniversary::FieldCalendarId(QStringLiteral("CalendarId"));
 
 /*!
    \variable QContactAnniversary::FieldSubType
@@ -337,7 +337,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldCalendarId, "CalendarId");
    The field key constant for the field that stores the sub type of a QContactAnniversary.
    \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldSubType, "SubType");
+const QString QContactAnniversary::FieldSubType(QStringLiteral("SubType"));
 
 
 /*!
@@ -347,7 +347,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::FieldSubType, "SubType");
     indicating this anniversary is a wedding anniversary.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeWedding, "Wedding");
+const QString QContactAnniversary::SubTypeWedding(QStringLiteral("Wedding"));
 
 /*!
    \variable QContactAnniversary::SubTypeEngagement
@@ -356,7 +356,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeWedding, "Wedding");
     indicating this anniversary is the anniversary of an engagement.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeEngagement, "Engagement");
+const QString QContactAnniversary::SubTypeEngagement(QStringLiteral("Engagement"));
 
 /*!
    \variable QContactAnniversary::SubTypeHouse
@@ -366,7 +366,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeEngagement, "Engagement");
     indicating this anniversary is the anniversary of a new residence.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeHouse, "House");
+const QString QContactAnniversary::SubTypeHouse(QStringLiteral("House"));
 
 /*!
    \variable QContactAnniversary::SubTypeEmployment
@@ -376,7 +376,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeHouse, "House");
     employment.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeEmployment, "Employment");
+const QString QContactAnniversary::SubTypeEmployment(QStringLiteral("Employment"));
 
 /*!
    \variable QContactAnniversary::SubTypeMemorial
@@ -385,7 +385,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeEmployment, "Employment");
     indicating this anniversary is an anniversary of an event of sentimental significance.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeMemorial, "Memorial");
+const QString QContactAnniversary::SubTypeMemorial(QStringLiteral("Memorial"));
 
 /*!
    \fn QContactAnniversary::originalDate() const
@@ -482,7 +482,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAnniversary::SubTypeMemorial, "Memorial");
    \variable QContactAvatar::DefinitionName
    The string constant for the definition name of QContactAvatar details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::DefinitionName, "Avatar");
+const QString QContactAvatar::DefinitionName(QStringLiteral("Avatar"));
 
 /*!
    \variable QContactAvatar::FieldImageUrl
@@ -490,7 +490,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::DefinitionName, "Avatar");
    The field key constant for the value containing the URL of the avatar image.
    \sa imageUrl(), setImageUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::FieldImageUrl, "ImageUrl");
+const QString QContactAvatar::FieldImageUrl(QStringLiteral("ImageUrl"));
 
 /*!
    \variable QContactAvatar::FieldVideoUrl
@@ -498,7 +498,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::FieldImageUrl, "ImageUrl");
    The field key constant for the value containing the URL of a video avatar.
    \sa videoUrl(), setVideoUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::FieldVideoUrl, "VideoUrl");
+const QString QContactAvatar::FieldVideoUrl(QStringLiteral("VideoUrl"));
 
 /*!
   \fn QContactAvatar::imageUrl() const
@@ -545,7 +545,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAvatar::FieldVideoUrl, "VideoUrl");
    \variable QContactAddress::DefinitionName
    The string constant for the definition name of QContactAddress details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::DefinitionName, "Address");
+const QString QContactAddress::DefinitionName(QStringLiteral("Address"));
 
 /*!
    \variable QContactAddress::FieldStreet
@@ -554,7 +554,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::DefinitionName, "Address");
    The street segment contains the street number and street name of the address.
    \sa street(), setStreet()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldStreet, "Street");
+const QString QContactAddress::FieldStreet(QStringLiteral("Street"));
 
 /*!
    \variable QContactAddress::FieldLocality
@@ -563,7 +563,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldStreet, "Street");
    The locality segment contains the name of the city, town or suburb of the address.
    \sa locality(), setLocality()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldLocality, "Locality");
+const QString QContactAddress::FieldLocality(QStringLiteral("Locality"));
 
 
 /*!
@@ -574,7 +574,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldLocality, "Locality");
    province or region of the address.
    \sa region(), setRegion()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldRegion, "Region");
+const QString QContactAddress::FieldRegion(QStringLiteral("Region"));
 
 /*!
    \variable QContactAddress::FieldPostcode
@@ -583,7 +583,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldRegion, "Region");
    The postcode segment contains the postal code for the address.
    \sa postcode(), setPostcode()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldPostcode, "Postcode");
+const QString QContactAddress::FieldPostcode(QStringLiteral("Postcode"));
 
 /*!
    \variable QContactAddress::FieldCountry
@@ -592,7 +592,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldPostcode, "Postcode");
    The country segment contains the name of the country of the address.
    \sa country(), setCountry()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldCountry, "Country");
+const QString QContactAddress::FieldCountry(QStringLiteral("Country"));
 
 /*!
    \variable QContactAddress::FieldPostOfficeBox
@@ -602,7 +602,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldCountry, "Country");
    mailing address.
    \sa postOfficeBox(), setPostOfficeBox()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldPostOfficeBox, "PostOfficeBox");
+const QString QContactAddress::FieldPostOfficeBox(QStringLiteral("PostOfficeBox"));
 
 /*!
    \variable QContactAddress::FieldSubTypes
@@ -610,7 +610,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldPostOfficeBox, "PostOfficeBox");
    The field key constant for the field that stores the sub types of a QContactAddress.
    \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldSubTypes, "SubTypes");
+const QString QContactAddress::FieldSubTypes(QStringLiteral("SubTypes"));
 
 /*!
    \variable QContactAddress::SubTypeParcel
@@ -619,7 +619,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::FieldSubTypes, "SubTypes");
     indicating this address is an address for parcel delivery.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypeParcel, "Parcel");
+const QString QContactAddress::SubTypeParcel(QStringLiteral("Parcel"));
 
 /*!
    \variable QContactAddress::SubTypePostal
@@ -628,7 +628,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypeParcel, "Parcel");
     indicating this address is an address for postal delivery.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypePostal, "Postal");
+const QString QContactAddress::SubTypePostal(QStringLiteral("Postal"));
 
 /*!
    \variable QContactAddress::SubTypeDomestic
@@ -637,7 +637,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypePostal, "Postal");
     indicating this address is an address for domestic mail delivery.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypeDomestic, "Domestic");
+const QString QContactAddress::SubTypeDomestic(QStringLiteral("Domestic"));
 
 /*!
    \variable QContactAddress::SubTypeInternational
@@ -646,7 +646,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypeDomestic, "Domestic");
     indicating this address is an address for international mail delivery.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAddress::SubTypeInternational, "International");
+const QString QContactAddress::SubTypeInternational(QStringLiteral("International"));
 
 /*!
    \fn QContactAddress::postOfficeBox() const
@@ -799,7 +799,7 @@ QContactFilter QContactAddress::match(const QString &subString)
    \variable QContactUrl::DefinitionName
    The string constant for the definition name of QContactUrl details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::DefinitionName, "Url");
+const QString QContactUrl::DefinitionName(QStringLiteral("Url"));
 
 /*!
    \variable QContactUrl::FieldUrl
@@ -807,7 +807,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::DefinitionName, "Url");
    The field key constant for the value containing the URL.
    \sa url(), setUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::FieldUrl, "Url");
+const QString QContactUrl::FieldUrl(QStringLiteral("Url"));
 
 /*!
    \variable QContactUrl::FieldSubType
@@ -815,7 +815,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::FieldUrl, "Url");
    The field key constant for the field that stores the sub type of a QContactUrl.
    \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::FieldSubType, "SubType");
+const QString QContactUrl::FieldSubType(QStringLiteral("SubType"));
 
 /*!
    \variable QContactUrl::SubTypeHomePage
@@ -824,7 +824,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::FieldSubType, "SubType");
     indicating this url is a contact's home page.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeHomePage, "HomePage");
+const QString QContactUrl::SubTypeHomePage(QStringLiteral("HomePage"));
 
 /*!
    \variable QContactUrl::SubTypeFavourite
@@ -833,7 +833,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeHomePage, "HomePage");
     indicating this url is one of the contact's favourite URLs (or bookmarks).
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeFavourite, "Favourite");
+const QString QContactUrl::SubTypeFavourite(QStringLiteral("Favourite"));
 
 /*!
    \variable QContactUrl::SubTypeBlog
@@ -842,7 +842,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeFavourite, "Favourite");
     indicating this url refers to one of the contact's blogs.
     \sa subType(), setSubType()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeBlog, "Blog");
+const QString QContactUrl::SubTypeBlog(QStringLiteral("Blog"));
 
 /*!
    \fn QContactUrl::url() const
@@ -892,7 +892,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::SubTypeBlog, "Blog");
     \variable QContactPhoneNumber::DefinitionName
     The string constant for the definition name of QContactPhoneNumber details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::DefinitionName, "PhoneNumber");
+const QString QContactPhoneNumber::DefinitionName(QStringLiteral("PhoneNumber"));
 
 /*!
    \variable QContactPhoneNumber::FieldNumber
@@ -900,7 +900,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::DefinitionName, "PhoneNumber");
    The field key constant for the value containing the phone number.
    \sa number(), setNumber()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::FieldNumber, "PhoneNumber");
+const QString QContactPhoneNumber::FieldNumber(QStringLiteral("PhoneNumber"));
 
 /*!
    \variable QContactPhoneNumber::FieldSubTypes
@@ -908,7 +908,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::FieldNumber, "PhoneNumber");
    The field key constant for the field that stores the sub types of a QContactPhoneNumber.
    \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::FieldSubTypes, "SubTypes");
+const QString QContactPhoneNumber::FieldSubTypes(QStringLiteral("SubTypes"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeLandline
@@ -917,7 +917,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::FieldSubTypes, "SubTypes");
     indicating this phone number is a landline number.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeLandline, "Landline");
+const QString QContactPhoneNumber::SubTypeLandline(QStringLiteral("Landline"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeMobile
@@ -926,7 +926,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeLandline, "Landline");
     indicating this phone number is a mobile (cellular) number.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeMobile, "Mobile");
+const QString QContactPhoneNumber::SubTypeMobile(QStringLiteral("Mobile"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeFax
@@ -935,7 +935,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeMobile, "Mobile");
     indicating this phone number is a fax number.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeFax, "Fax");
+const QString QContactPhoneNumber::SubTypeFax(QStringLiteral("Fax"));
 
 /*!
    \variable QContactPhoneNumber::SubTypePager
@@ -944,7 +944,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeFax, "Fax");
     indicating this phone number is a pager number.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypePager, "Pager");
+const QString QContactPhoneNumber::SubTypePager(QStringLiteral("Pager"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeCar
@@ -953,7 +953,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypePager, "Pager");
     indicating this phone number is a car phone.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeCar, "Car");
+const QString QContactPhoneNumber::SubTypeCar(QStringLiteral("Car"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeBulletinBoardSystem
@@ -962,7 +962,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeCar, "Car");
     indicating this phone number is a bulletin board system.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeBulletinBoardSystem, "BulletinBoardSystem");
+const QString QContactPhoneNumber::SubTypeBulletinBoardSystem(QStringLiteral("BulletinBoardSystem"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeVoice
@@ -971,7 +971,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeBulletinBoardSystem, "Bulle
     indicating this phone number supports voice transmission.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeVoice, "Voice");
+const QString QContactPhoneNumber::SubTypeVoice(QStringLiteral("Voice"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeModem
@@ -980,7 +980,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeVoice, "Voice");
     indicating this phone number supports data transmission.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeModem, "Modem");
+const QString QContactPhoneNumber::SubTypeModem(QStringLiteral("Modem"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeVideo
@@ -989,7 +989,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeModem, "Modem");
     indicating this phone number supports video transmission.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeVideo, "Video");
+const QString QContactPhoneNumber::SubTypeVideo(QStringLiteral("Video"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeMessagingCapable
@@ -998,7 +998,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeVideo, "Video");
     indicating this phone number supports messaging services.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeMessagingCapable, "MessagingCapable");
+const QString QContactPhoneNumber::SubTypeMessagingCapable(QStringLiteral("MessagingCapable"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeAssistant
@@ -1007,7 +1007,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeMessagingCapable, "Messagin
     indicating this phone number is the number of an assistant.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeAssistant, "Assistant");
+const QString QContactPhoneNumber::SubTypeAssistant(QStringLiteral("Assistant"));
 
 /*!
    \variable QContactPhoneNumber::SubTypeDtmfMenu
@@ -1016,7 +1016,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeAssistant, "Assistant");
     indicating this phone number supports DTMF-controlled voice menu navigation.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeDtmfMenu, "DtmfMenu");
+const QString QContactPhoneNumber::SubTypeDtmfMenu(QStringLiteral("DtmfMenu"));
 
 
 /*!
@@ -1065,7 +1065,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPhoneNumber::SubTypeDtmfMenu, "DtmfMenu");
    \variable QContactBirthday::DefinitionName
    The string constant for the definition name of QContactBirthday details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::DefinitionName, "Birthday");
+const QString QContactBirthday::DefinitionName(QStringLiteral("Birthday"));
 
 /*!
    \variable QContactBirthday::FieldBirthday
@@ -1079,7 +1079,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::DefinitionName, "Birthday");
 
    \sa date(), setDate(), dateTime(), setDateTime()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::FieldBirthday, "Birthday");
+const QString QContactBirthday::FieldBirthday(QStringLiteral("Birthday"));
 
 /*!
    \variable QContactBirthday::FieldCalendarId
@@ -1087,7 +1087,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::FieldBirthday, "Birthday");
    The field key constant for the value containing the id of the calendar event.
    \sa calendarId(), setCalendarId()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::FieldCalendarId, "CalendarId");
+const QString QContactBirthday::FieldCalendarId(QStringLiteral("CalendarId"));
 
 /*!
    \fn QContactBirthday::date() const
@@ -1141,7 +1141,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactBirthday::FieldCalendarId, "CalendarId");
    \variable QContactGender::DefinitionName
    The string constant for the definition name of QContactGender details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGender::DefinitionName, "Gender");
+const QString QContactGender::DefinitionName(QStringLiteral("Gender"));
 
 /*!
    \variable QContactGender::FieldGender
@@ -1149,25 +1149,25 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGender::DefinitionName, "Gender");
    The field key constant for the value containing the gender.
    \sa gender(), setGender()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGender::FieldGender, "Gender");
+const QString QContactGender::FieldGender(QStringLiteral("Gender"));
 
 /*!
    \variable QContactGender::GenderMale
    The value that identifies this contact as being male.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGender::GenderMale, "Male");
+const QString QContactGender::GenderMale(QStringLiteral("Male"));
 
 /*!
    \variable QContactGender::GenderFemale
    The value that identifies this contact as being female.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGender::GenderFemale, "Female");
+const QString QContactGender::GenderFemale(QStringLiteral("Female"));
 
 /*!
    \variable QContactGender::GenderUnspecified
    The value that identifies this contact as being of unspecified gender.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGender::GenderUnspecified, "Unspecified");
+const QString QContactGender::GenderUnspecified(QStringLiteral("Unspecified"));
 
 /*!
    \fn QContactGender::gender() const
@@ -1203,7 +1203,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGender::GenderUnspecified, "Unspecified");
    \variable QContactGeoLocation::DefinitionName
    The string constant for the definition name of QContactGeoLocation details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::DefinitionName, "GeoLocation");
+const QString QContactGeoLocation::DefinitionName(QStringLiteral("GeoLocation"));
 
 /*!
    \variable QContactGeoLocation::FieldLabel
@@ -1211,7 +1211,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::DefinitionName, "GeoLocation");
    The field key constant for the value containing the location label.
    \sa label(), setLabel()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLabel, "Label");
+const QString QContactGeoLocation::FieldLabel(QStringLiteral("Label"));
 
 /*!
    \variable QContactGeoLocation::FieldLatitude
@@ -1219,7 +1219,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLabel, "Label");
    The field key constant for the value containing the latitude.
    \sa latitude(), setLatitude()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLatitude, "Latitude");
+const QString QContactGeoLocation::FieldLatitude(QStringLiteral("Latitude"));
 
 /*!
    \variable QContactGeoLocation::FieldLongitude
@@ -1227,7 +1227,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLatitude, "Latitude");
    The field key constant for the value containing the longitude.
    \sa longitude(), setLongitude()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLongitude, "Longitude");
+const QString QContactGeoLocation::FieldLongitude(QStringLiteral("Longitude"));
 
 /*!
    \variable QContactGeoLocation::FieldAccuracy
@@ -1235,7 +1235,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldLongitude, "Longitude");
    The field key constant for the value containing the location (latitude/longitude) accuracy.
    \sa accuracy(), setAccuracy()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAccuracy, "Accuracy");
+const QString QContactGeoLocation::FieldAccuracy(QStringLiteral("Accuracy"));
 
 /*!
    \variable QContactGeoLocation::FieldAltitude
@@ -1243,7 +1243,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAccuracy, "Accuracy");
    The field key constant for the value containing the altitude.
    \sa altitude(), setAltitude()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAltitude, "Altitude");
+const QString QContactGeoLocation::FieldAltitude(QStringLiteral("Altitude"));
 
 
 /*!
@@ -1252,7 +1252,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAltitude, "Altitude");
    The field key constant for the value containing the accuracy of the altitude.
    \sa altitudeAccuracy(), setAltitudeAccuracy()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAltitudeAccuracy, "AltitudeAccuracy");
+const QString QContactGeoLocation::FieldAltitudeAccuracy(QStringLiteral("AltitudeAccuracy"));
 
 /*!
    \variable QContactGeoLocation::FieldHeading
@@ -1260,7 +1260,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldAltitudeAccuracy, "AltitudeAc
    The field key constant for the value containing the heading.
    \sa heading(), setHeading()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldHeading, "Heading");
+const QString QContactGeoLocation::FieldHeading(QStringLiteral("Heading"));
 
 /*!
    \variable QContactGeoLocation::FieldSpeed
@@ -1268,7 +1268,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldHeading, "Heading");
    The field key constant for the value containing the speed.
    \sa speed(), setSpeed()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldSpeed, "Speed");
+const QString QContactGeoLocation::FieldSpeed(QStringLiteral("Speed"));
 
 /*!
    \variable QContactGeoLocation::FieldTimestamp
@@ -1276,7 +1276,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldSpeed, "Speed");
    The field key constant for the value containing the timestamp of the location information.
    \sa timestamp(), setTimestamp()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldTimestamp, "Timestamp");
+const QString QContactGeoLocation::FieldTimestamp(QStringLiteral("Timestamp"));
 
 /*!
    \fn QContactGeoLocation::setLabel(const QString& label)
@@ -1436,7 +1436,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGeoLocation::FieldTimestamp, "Timestamp");
    \variable QContactGuid::DefinitionName
    The string constant for the definition name of QContactGuid details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGuid::DefinitionName, "Guid");
+const QString QContactGuid::DefinitionName(QStringLiteral("Guid"));
 
 /*!
    \variable QContactGuid::FieldGuid
@@ -1444,7 +1444,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGuid::DefinitionName, "Guid");
    The field key constant for the value containing the GUID.
    \sa guid(), setGuid()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGuid::FieldGuid, "Guid");
+const QString QContactGuid::FieldGuid(QStringLiteral("Guid"));
 
 /*!
    \fn QContactGuid::guid() const
@@ -1475,7 +1475,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGuid::FieldGuid, "Guid");
    \variable QContactHobby::DefinitionName
    The string constant for the definition name of QContactHobby details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactHobby::DefinitionName, "Hobby");
+const QString QContactHobby::DefinitionName(QStringLiteral("Hobby"));
 
 /*!
    \variable QContactHobby::FieldHobby
@@ -1484,7 +1484,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactHobby::DefinitionName, "Hobby");
     of the hobby.
    \sa hobby(), setHobby()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactHobby::FieldHobby, "Hobby");
+const QString QContactHobby::FieldHobby(QStringLiteral("Hobby"));
 
 /*!
    \fn QContactHobby::setHobby(const QString& hobby)
@@ -1513,7 +1513,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactHobby::FieldHobby, "Hobby");
    \variable QContactName::DefinitionName
    The string constant for the definition name of QContactName details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::DefinitionName, "Name");
+const QString QContactName::DefinitionName(QStringLiteral("Name"));
 
 /*!
    \variable QContactName::FieldPrefix
@@ -1521,7 +1521,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::DefinitionName, "Name");
    The field key constant for the value containing the prefix part of the name.
    \sa prefix(), setPrefix()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldPrefix, "Prefix");
+const QString QContactName::FieldPrefix(QStringLiteral("Prefix"));
 
 /*!
    \variable QContactName::FieldFirstName
@@ -1529,7 +1529,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldPrefix, "Prefix");
    The field key constant for the value containing the first name part of the name.
    \sa firstName(), setFirstName()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldFirstName, "FirstName");
+const QString QContactName::FieldFirstName(QStringLiteral("FirstName"));
 
 /*!
    \variable QContactName::FieldMiddleName
@@ -1537,7 +1537,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldFirstName, "FirstName");
    The field key constant for the value containing the middle name part of the name.
    \sa middleName(), setMiddleName()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldMiddleName, "MiddleName");
+const QString QContactName::FieldMiddleName(QStringLiteral("MiddleName"));
 
 /*!
    \variable QContactName::FieldLastName
@@ -1545,7 +1545,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldMiddleName, "MiddleName");
    The field key constant for the value containing the last name part of the name.
    \sa lastName(), setLastName()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldLastName, "LastName");
+const QString QContactName::FieldLastName(QStringLiteral("LastName"));
 
 /*!
    \variable QContactName::FieldSuffix
@@ -1553,7 +1553,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldLastName, "LastName");
    The field key constant for the value containing the suffix part of the name.
    \sa suffix(), setSuffix()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldSuffix, "Suffix");
+const QString QContactName::FieldSuffix(QStringLiteral("Suffix"));
 
 /*!
    \variable QContactName::FieldCustomLabel
@@ -1561,7 +1561,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldSuffix, "Suffix");
    The field key constant for the value containing a custom formatted label.
    \sa customLabel(), setCustomLabel()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldCustomLabel, "CustomLabel");
+const QString QContactName::FieldCustomLabel(QStringLiteral("CustomLabel"));
 
 /*!
    \fn QContactName::prefix() const
@@ -1655,7 +1655,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactName::FieldCustomLabel, "CustomLabel");
 \variable QContactNickname::DefinitionName
 The string constant for the definition name of QContactNickname details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactNickname::DefinitionName, "Nickname");
+const QString QContactNickname::DefinitionName(QStringLiteral("Nickname"));
 
 /*!
    \variable QContactNickname::FieldNickname
@@ -1663,7 +1663,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactNickname::DefinitionName, "Nickname");
    The field key constant for the value containing the nickname.
    \sa nickname(), setNickname()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactNickname::FieldNickname, "Nickname");
+const QString QContactNickname::FieldNickname(QStringLiteral("Nickname"));
 
 /*!
    \fn QContactNickname::setNickname(const QString& nickname)
@@ -1694,7 +1694,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactNickname::FieldNickname, "Nickname");
    \variable QContactNote::DefinitionName
    The string constant for the definition name of QContactNote details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactNote::DefinitionName, "Note");
+const QString QContactNote::DefinitionName(QStringLiteral("Note"));
 
 /*!
    \variable QContactNote::FieldNote
@@ -1702,7 +1702,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactNote::DefinitionName, "Note");
    The field key constant for the value containing the note.
    \sa note(), setNote()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactNote::FieldNote, "Note");
+const QString QContactNote::FieldNote(QStringLiteral("Note"));
 
 
 /*!
@@ -1745,7 +1745,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactNote::FieldNote, "Note");
    \variable QContactTag::DefinitionName
    The string constant for the definition name of QContactTag details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactTag::DefinitionName, "Tag");
+const QString QContactTag::DefinitionName(QStringLiteral("Tag"));
 
 /*!
    \variable QContactTag::FieldTag
@@ -1753,7 +1753,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactTag::DefinitionName, "Tag");
     The field key constant for the value containing the tag.
    \sa tag(), setTag()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactTag::FieldTag, "Tag");
+const QString QContactTag::FieldTag(QStringLiteral("Tag"));
 
 /*!
    \fn QContactTag::setTag(const QString& tag)
@@ -1820,7 +1820,7 @@ QContactFilter QContactTag::match(const QString &subString)
    \variable QContactThumbnail::DefinitionName
    The string constant for the definition name of QContactThumbnail details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactThumbnail::DefinitionName, "Thumbnail");
+const QString QContactThumbnail::DefinitionName(QStringLiteral("Thumbnail"));
 
 /*!
    \variable QContactThumbnail::FieldThumbnail
@@ -1828,7 +1828,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactThumbnail::DefinitionName, "Thumbnail");
    The field key constant for the value containing the thumbnail image.
    \sa thumbnail(), setThumbnail()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactThumbnail::FieldThumbnail, "Thumbnail");
+const QString QContactThumbnail::FieldThumbnail(QStringLiteral("Thumbnail"));
 
 /*!
   \fn QContactThumbnail::thumbnail() const
@@ -1859,7 +1859,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactThumbnail::FieldThumbnail, "Thumbnail");
 \variable QContactTimestamp::DefinitionName
 The string constant for the definition name of QContactTimestamp details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::DefinitionName, "Timestamp");
+const QString QContactTimestamp::DefinitionName(QStringLiteral("Timestamp"));
 
 /*!
    \variable QContactTimestamp::FieldModificationTimestamp
@@ -1867,7 +1867,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::DefinitionName, "Timestamp");
    The field key constant for the value of the last modified timestamp.
    \sa lastModified(), setLastModified()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::FieldModificationTimestamp, "ModificationTimestamp");
+const QString QContactTimestamp::FieldModificationTimestamp(QStringLiteral("ModificationTimestamp"));
 
 /*!
    \variable QContactTimestamp::FieldCreationTimestamp
@@ -1875,7 +1875,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::FieldModificationTimestamp, "Modific
    The field key constant for the value of the timestamp a contact was created.
    \sa created(), setCreated()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::FieldCreationTimestamp, "CreationTimestamp");
+const QString QContactTimestamp::FieldCreationTimestamp(QStringLiteral("CreationTimestamp"));
 
 /*!
    \fn QContactTimestamp::created() const
@@ -1917,7 +1917,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactTimestamp::FieldCreationTimestamp, "CreationTim
 \variable QContactType::DefinitionName
 The string constant for the definition name of QContactType details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactType::DefinitionName, "Type");
+const QString QContactType::DefinitionName(QStringLiteral("Type"));
 
 /*!
    \variable QContactType::FieldType
@@ -1925,7 +1925,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactType::DefinitionName, "Type");
    The field key constant for the type value which is stored in details of
    the QContactType definition.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactType::FieldType, "Type");
+const QString QContactType::FieldType(QStringLiteral("Type"));
 
 
 /*!
@@ -1935,7 +1935,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactType::FieldType, "Type");
     indicating this contact is an ordinary contact.
     \sa setType(), type()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactType::TypeContact, "Contact");
+const QString QContactType::TypeContact(QStringLiteral("Contact"));
 
 /*!
    \variable QContactType::TypeGroup
@@ -1952,7 +1952,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactType::TypeContact, "Contact");
 
     \sa setType(), type()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactType::TypeGroup, "Group");
+const QString QContactType::TypeGroup(QStringLiteral("Group"));
 
 /*!
    \fn QContactType::type() const
@@ -1985,7 +1985,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactType::TypeGroup, "Group");
 
    The string constant for the definition name of QContactDisplayLabel details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactDisplayLabel::DefinitionName, "DisplayLabel");
+const QString QContactDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
 
 
 /*!
@@ -1994,7 +1994,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactDisplayLabel::DefinitionName, "DisplayLabel");
    The field key constant for the value of the display label.
    \sa label()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactDisplayLabel::FieldLabel, "Label");
+const QString QContactDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
 /*!
    \fn QContactDisplayLabel::label() const
@@ -2033,7 +2033,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactDisplayLabel::FieldLabel, "Label");
    \variable QContactOnlineAccount::DefinitionName
    The string constant for the definition name of QContactOnlineAccount details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::DefinitionName, "OnlineAccount");
+const QString QContactOnlineAccount::DefinitionName(QStringLiteral("OnlineAccount"));
 
 /*!
    \variable QContactOnlineAccount::FieldCapabilities
@@ -2041,7 +2041,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::DefinitionName, "OnlineAccount")
    The field key constant for the account capabilities value.
    \sa capabilities(), setCapabilities()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldCapabilities, "Capabilities");
+const QString QContactOnlineAccount::FieldCapabilities(QStringLiteral("Capabilities"));
 
 /*!
    \variable QContactOnlineAccount::FieldAccountUri
@@ -2049,7 +2049,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldCapabilities, "Capabilities
    The field key constant for the account uri value.
    \sa accountUri(), setAccountUri()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldAccountUri, "AccountUri");
+const QString QContactOnlineAccount::FieldAccountUri(QStringLiteral("AccountUri"));
 
 /*!
    \variable QContactOnlineAccount::FieldServiceProvider
@@ -2057,7 +2057,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldAccountUri, "AccountUri");
    The field key constant for the account service provider name.
    \sa serviceProvider(), setServiceProvider()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldServiceProvider, "ServiceProvider");
+const QString QContactOnlineAccount::FieldServiceProvider(QStringLiteral("ServiceProvider"));
 
 /*!
    \variable QContactOnlineAccount::FieldProtocol
@@ -2065,7 +2065,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldServiceProvider, "ServicePr
    The field key constant for the account service provider name.
    \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldProtocol, "Protocol");
+const QString QContactOnlineAccount::FieldProtocol(QStringLiteral("Protocol"));
 
 /*!
    \variable QContactOnlineAccount::FieldSubTypes
@@ -2073,7 +2073,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldProtocol, "Protocol");
    The field key constant for the field that stores the sub types of a QContactOnlineAccount.
    \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldSubTypes, "SubTypes");
+const QString QContactOnlineAccount::FieldSubTypes(QStringLiteral("SubTypes"));
 
 /*!
    \variable QContactOnlineAccount::SubTypeSip
@@ -2082,7 +2082,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::FieldSubTypes, "SubTypes");
     indicating this online account supports SIP.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeSip, "Sip");
+const QString QContactOnlineAccount::SubTypeSip(QStringLiteral("Sip"));
 
 /*!
    \variable QContactOnlineAccount::SubTypeSipVoip
@@ -2091,7 +2091,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeSip, "Sip");
     indicating this online account supports SIP based VOIP.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeSipVoip, "SipVoip");
+const QString QContactOnlineAccount::SubTypeSipVoip(QStringLiteral("SipVoip"));
 
 /*!
    \variable QContactOnlineAccount::SubTypeImpp
@@ -2100,7 +2100,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeSipVoip, "SipVoip");
     indicating this online account supports IMPP.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeImpp, "Impp");
+const QString QContactOnlineAccount::SubTypeImpp(QStringLiteral("Impp"));
 
 /*!
    \variable QContactOnlineAccount::SubTypeVideoShare
@@ -2109,7 +2109,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeImpp, "Impp");
     indicating this online account supports VideoShare.
     \sa subTypes(), setSubTypes()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeVideoShare, "VideoShare");
+const QString QContactOnlineAccount::SubTypeVideoShare(QStringLiteral("VideoShare"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolAim
@@ -2118,7 +2118,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::SubTypeVideoShare, "VideoShare")
     indicating this online account is for the AIM protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolAim, "aim");
+const QString QContactOnlineAccount::ProtocolAim(QStringLiteral("aim"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolIcq
@@ -2127,7 +2127,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolAim, "aim");
     indicating this online account is for the ICQ protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolIcq, "icq");
+const QString QContactOnlineAccount::ProtocolIcq(QStringLiteral("icq"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolIrc
@@ -2136,7 +2136,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolIcq, "icq");
     indicating this online account is for the IRC protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolIrc, "irc");
+const QString QContactOnlineAccount::ProtocolIrc(QStringLiteral("irc"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolJabber
@@ -2145,7 +2145,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolIrc, "irc");
     indicating this online account is for the Jabber protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolJabber, "jabber");
+const QString QContactOnlineAccount::ProtocolJabber(QStringLiteral("jabber"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolMsn
@@ -2154,7 +2154,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolJabber, "jabber");
     indicating this online account is for the MSN protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolMsn, "msn");
+const QString QContactOnlineAccount::ProtocolMsn(QStringLiteral("msn"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolQq
@@ -2163,7 +2163,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolMsn, "msn");
     indicating this online account is for the Tecent QQ protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolQq, "qq");
+const QString QContactOnlineAccount::ProtocolQq(QStringLiteral("qq"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolSkype
@@ -2172,7 +2172,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolQq, "qq");
     indicating this online account is for the Skype protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolSkype, "skype");
+const QString QContactOnlineAccount::ProtocolSkype(QStringLiteral("skype"));
 
 /*!
    \variable QContactOnlineAccount::ProtocolYahoo
@@ -2181,7 +2181,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolSkype, "skype");
     indicating this online account is for the Yahoo chat protocol.
     \sa protocol(), setProtocol()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolYahoo, "yahoo");
+const QString QContactOnlineAccount::ProtocolYahoo(QStringLiteral("yahoo"));
 
 
 /*!
@@ -2279,7 +2279,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOnlineAccount::ProtocolYahoo, "yahoo");
    \variable QContactOrganization::DefinitionName
    The string constant for the definition name of QContactOrganization details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::DefinitionName, "Organization");
+const QString QContactOrganization::DefinitionName(QStringLiteral("Organization"));
 
 /*!
    \variable QContactOrganization::FieldName
@@ -2287,7 +2287,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::DefinitionName, "Organization");
    The field key constant for the value of the organization name.
    \sa name(), setName()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldName, "Name");
+const QString QContactOrganization::FieldName(QStringLiteral("Name"));
 
 /*!
    \variable QContactOrganization::FieldLogoUrl
@@ -2295,7 +2295,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldName, "Name");
    The field key constant for the URL of the organization logo image.
    \sa logoUrl(), setLogoUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldLogoUrl, "LogoUrl");
+const QString QContactOrganization::FieldLogoUrl(QStringLiteral("LogoUrl"));
 
 /*!
    \variable QContactOrganization::FieldDepartment
@@ -2303,7 +2303,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldLogoUrl, "LogoUrl");
    The field key constant for the value of the department name.
    \sa department(), setDepartment()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldDepartment, "Department");
+const QString QContactOrganization::FieldDepartment(QStringLiteral("Department"));
 
 /*!
    \variable QContactOrganization::FieldLocation
@@ -2311,7 +2311,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldDepartment, "Department");
    The field key constant for the value of the location of the organization.
    \sa location(), setLocation()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldLocation, "Location");
+const QString QContactOrganization::FieldLocation(QStringLiteral("Location"));
 
 /*!
    \variable QContactOrganization::FieldRole
@@ -2319,7 +2319,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldLocation, "Location");
    The field key constant for the value of the contact's role in the organization.
    \sa role(), setRole()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldRole, "Role");
+const QString QContactOrganization::FieldRole(QStringLiteral("Role"));
 
 /*!
    \variable QContactOrganization::FieldTitle
@@ -2327,7 +2327,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldRole, "Role");
    The field key constant for the value of the contact's title in the organization.
    \sa title(), setTitle()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldTitle, "Title");
+const QString QContactOrganization::FieldTitle(QStringLiteral("Title"));
 
 /*!
    \variable QContactOrganization::FieldAssistantName
@@ -2335,7 +2335,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldTitle, "Title");
    The field key constant for the value of the name of the contact's assistant.
    \sa assistantName(), setAssistantName()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldAssistantName, "AssistantName");
+const QString QContactOrganization::FieldAssistantName(QStringLiteral("AssistantName"));
 
 /*!
    \variable QContactOrganization::FieldStartDate
@@ -2344,7 +2344,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldAssistantName, "AssistantNam
    \sa startDate(), setStartDate()
  */
 
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldStartDate, "StartDate");
+const QString QContactOrganization::FieldStartDate(QStringLiteral("StartDate"));
 
 /*!
    \variable QContactOrganization::FieldEndDate
@@ -2352,7 +2352,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldStartDate, "StartDate");
    \sa endDate(), setEndDate()
  */
 
-Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldEndDate, "EndDate");
+const QString QContactOrganization::FieldEndDate(QStringLiteral("EndDate"));
 
 /*!
    \fn QContactOrganization::setName(const QString& name)
@@ -2489,7 +2489,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactOrganization::FieldEndDate, "EndDate");
 \variable QContactRingtone::DefinitionName
 The string constant for the definition name of QContactRingtone details.
 */
-Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::DefinitionName, "Ringtone");
+const QString QContactRingtone::DefinitionName(QStringLiteral("Ringtone"));
 
 /*!
    \variable QContactRingtone::FieldAudioRingtoneUrl
@@ -2497,7 +2497,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::DefinitionName, "Ringtone");
    The field key constant for the value of the URL for an audio ringtone.
    \sa setAudioRingtoneUrl(), audioRingtoneUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldAudioRingtoneUrl, "AudioRingtoneUrl");
+const QString QContactRingtone::FieldAudioRingtoneUrl(QStringLiteral("AudioRingtoneUrl"));
 
 /*!
    \variable QContactRingtone::FieldVideoRingtoneUrl
@@ -2505,7 +2505,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldAudioRingtoneUrl, "AudioRingtone
    The field key constant for the value of the URL for a video ringtone.
    \sa setVideoRingtoneUrl(), videoRingtoneUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldVideoRingtoneUrl, "VideoRingtoneUrl");
+const QString QContactRingtone::FieldVideoRingtoneUrl(QStringLiteral("VideoRingtoneUrl"));
 
 /*!
    \variable QContactRingtone::FieldVibrationRingtoneUrl
@@ -2514,7 +2514,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldVideoRingtoneUrl, "VideoRingtone
    The field key constant for the value of the URL for a vibration ringtone.
    \sa setVibrationRingtoneUrl(), vibrationRingtoneUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldVibrationRingtoneUrl, "VibrationRingtoneUrl");
+const QString QContactRingtone::FieldVibrationRingtoneUrl(QStringLiteral("VibrationRingtoneUrl"));
 
 /*!
   \fn QContactRingtone::audioRingtoneUrl() const
@@ -2593,49 +2593,49 @@ Q_DEFINE_LATIN1_CONSTANT(QContactRingtone::FieldVibrationRingtoneUrl, "Vibration
    \variable QContactPresence::DefinitionName
    The string constant for the definition name of QContactPresence details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::DefinitionName, "Presence");
+const QString QContactPresence::DefinitionName(QStringLiteral("Presence"));
 
 /*!
    \variable QContactPresence::FieldTimestamp
    The field key constant for the timestamp value.
    \sa setTimestamp(), timestamp()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldTimestamp, "Timestamp");
+const QString QContactPresence::FieldTimestamp(QStringLiteral("Timestamp"));
 
 /*!
    \variable QContactPresence::FieldNickname
    The field key constant for the nickname value.
    \sa setNickname(), nickname()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldNickname, "Nickname");
+const QString QContactPresence::FieldNickname(QStringLiteral("Nickname"));
 
 /*!
    \variable QContactPresence::FieldPresenceState
    The field key constant for the presence state enumeration value.
    \sa setPresenceState(), presenceState()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldPresenceState, "PresenceState");
+const QString QContactPresence::FieldPresenceState(QStringLiteral("PresenceState"));
 
 /*!
    \variable QContactPresence::FieldPresenceStateText
    The field key constant for the presence state description value.
    \sa setPresenceStateText(), presenceStateText()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldPresenceStateText, "PresenceStateText");
+const QString QContactPresence::FieldPresenceStateText(QStringLiteral("PresenceStateText"));
 
 /*!
    \variable QContactPresence::FieldPresenceStateImageUrl
    The field key constant for the presence state image URL.
    \sa setPresenceStateImageUrl(), presenceStateImageUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldPresenceStateImageUrl, "PresenceStateImageUrl");
+const QString QContactPresence::FieldPresenceStateImageUrl(QStringLiteral("PresenceStateImageUrl"));
 
 /*!
    \variable QContactPresence::FieldCustomMessage
    The field key constant for the user-entered custom presence message.
    \sa setCustomMessage(), customMessage()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldCustomMessage, "CustomMessage");
+const QString QContactPresence::FieldCustomMessage(QStringLiteral("CustomMessage"));
 
 /*!
    \fn QContactPresence::setTimestamp(const QDateTime& updateTimestamp)
@@ -2768,42 +2768,42 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPresence::FieldCustomMessage, "CustomMessage");
    \variable QContactGlobalPresence::DefinitionName
    The string constant for the definition name of QContactGlobalPresence details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::DefinitionName, "GlobalPresence");
+const QString QContactGlobalPresence::DefinitionName(QStringLiteral("GlobalPresence"));
 
 /*!
    \variable QContactGlobalPresence::FieldTimestamp
    The field key constant for the timestamp value.
    \sa setTimestamp(), timestamp()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldTimestamp, "Timestamp");
+const QString QContactGlobalPresence::FieldTimestamp(QStringLiteral("Timestamp"));
 
 /*!
    \variable QContactGlobalPresence::FieldNickname
    The field key constant for the nickname value.
    \sa setNickname(), nickname()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldNickname, "Nickname");
+const QString QContactGlobalPresence::FieldNickname(QStringLiteral("Nickname"));
 
 /*!
    \variable QContactGlobalPresence::FieldPresenceState
    The field key constant for the presence state enumeration value.
    \sa setPresenceState(), presenceState()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldPresenceState, "PresenceState");
+const QString QContactGlobalPresence::FieldPresenceState(QStringLiteral("PresenceState"));
 
 /*!
    \variable QContactGlobalPresence::FieldPresenceStateText
    The field key constant for the presence state description value.
    \sa setPresenceStateText(), presenceStateText()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldPresenceStateText, "PresenceStateText");
+const QString QContactGlobalPresence::FieldPresenceStateText(QStringLiteral("PresenceStateText"));
 
 /*!
    \variable QContactGlobalPresence::FieldPresenceStateImageUrl
    The field key constant for the presence state image URL.
    \sa setPresenceStateImageUrl(), presenceStateImageUrl()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldPresenceStateImageUrl, "PresenceStateImageUrl");
+const QString QContactGlobalPresence::FieldPresenceStateImageUrl(QStringLiteral("PresenceStateImageUrl"));
 
 /*!
    \variable QContactGlobalPresence::FieldCustomMessage
@@ -2811,7 +2811,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldPresenceStateImageUrl, "Pr
    The field key constant for the user-entered custom presence message.
    \sa setCustomMessage(), customMessage()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactGlobalPresence::FieldCustomMessage, "CustomMessage");
+const QString QContactGlobalPresence::FieldCustomMessage(QStringLiteral("CustomMessage"));
 
 /*!
    \fn QContactGlobalPresence::setTimestamp(const QDateTime& updateTimestamp)
@@ -2941,7 +2941,7 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
    \variable QContactPersonId::DefinitionName
    The string constant for the definition name of QContactPersonId details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::DefinitionName, "Personid");
+const QString QContactPersonId::DefinitionName(QStringLiteral("Personid"));
 
 /*!
    \variable QContactPersonId::FieldPersonId
@@ -2949,7 +2949,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::DefinitionName, "Personid");
    The field key constant for the value containing the personid.
    \sa personId(), setPersonId()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::FieldPersonId, "Personid");
+const QString QContactPersonId::FieldPersonId(QStringLiteral("Personid"));
 
 /*!
    \fn QContactPersonId::personId() const
@@ -2982,21 +2982,21 @@ Q_DEFINE_LATIN1_CONSTANT(QContactPersonId::FieldPersonId, "Personid");
 
     The constant string which identifies the definition of details which are extended details.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::DefinitionName, "ExtendedDetail");
+const QString QContactExtendedDetail::DefinitionName(QStringLiteral("ExtendedDetail"));
 
 /*!
-    \variable QContactExtendedDetail::FieldDetailName
+    \variable QContactExtendedDetail::FieldName
 
     Contains the name of the extended detail.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::FieldName, "Name");
+const QString QContactExtendedDetail::FieldName(QStringLiteral("Name"));
 
 /*!
     \variable QContactExtendedDetail::FieldData
 
     Contains the data this extended detail.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactExtendedDetail::FieldData, "Data");
+const QString QContactExtendedDetail::FieldData(QStringLiteral("Data"));
 
 /*!
     \fn void QContactExtendedDetail::setName(const QString &name)

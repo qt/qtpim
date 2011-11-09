@@ -56,42 +56,24 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactPhoneNumber : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldNumber;
-    static const QLatin1Constant FieldSubTypes;
-    static const QLatin1Constant SubTypeLandline;
-    static const QLatin1Constant SubTypeMobile;
-    static const QLatin1Constant SubTypeFax;
-    static const QLatin1Constant SubTypePager;
-    static const QLatin1Constant SubTypeVoice;
-    static const QLatin1Constant SubTypeModem;
-    static const QLatin1Constant SubTypeVideo;
-    static const QLatin1Constant SubTypeCar;
-    static const QLatin1Constant SubTypeBulletinBoardSystem;
-    static const QLatin1Constant SubTypeMessagingCapable;
-    static const QLatin1Constant SubTypeAssistant;
-    static const QLatin1Constant SubTypeDtmfMenu;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPhoneNumber, "PhoneNumber")
-    Q_DECLARE_LATIN1_CONSTANT(FieldNumber, "PhoneNumber");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubTypes, "SubTypes");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeLandline, "Landline");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeMobile, "Mobile");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeFax, "Fax");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypePager, "Pager");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeVoice, "Voice");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeModem, "Modem");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeVideo, "Video");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeCar, "Car");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeBulletinBoardSystem, "BulletinBoardSystem");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeMessagingCapable, "MessagingCapable");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeAssistant, "Assistant");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeDtmfMenu, "DtmfMenu");
-#endif
+    const static QString FieldNumber;
+    const static QString FieldSubTypes;
+    const static QString SubTypeLandline;
+    const static QString SubTypeMobile;
+    const static QString SubTypeFax;
+    const static QString SubTypePager;
+    const static QString SubTypeVoice;
+    const static QString SubTypeModem;
+    const static QString SubTypeVideo;
+    const static QString SubTypeCar;
+    const static QString SubTypeBulletinBoardSystem;
+    const static QString SubTypeMessagingCapable;
+    const static QString SubTypeAssistant;
+    const static QString SubTypeDtmfMenu;
 
     void setNumber(const QString& number) {setValue(FieldNumber, number);}
-    QString number() const {return value(FieldNumber);}
+    QString number() const {return value(FieldNumber).toString();}
 
     void setSubTypes(const QStringList& subTypes) {setValue(FieldSubTypes, subTypes);}
     void setSubTypes(const QString& subType) {setValue(FieldSubTypes, QStringList(subType));}

@@ -90,7 +90,7 @@ public:
             emit valueChanged();
         }
     }
-    bool isFavorite() const {return detail().variantValue(QContactFavorite::FieldFavorite).toBool();}
+    bool isFavorite() const {return detail().value(QContactFavorite::FieldFavorite).toBool();}
     void setIndex(int v)
     {
         if (!readOnly() && v != index()) {
@@ -98,7 +98,7 @@ public:
             emit valueChanged();
         }
     }
-    int index() const {return detail().variantValue(QContactFavorite::FieldIndex).toInt();}
+    int index() const {return detail().value(QContactFavorite::FieldIndex).toInt();}
 signals:
     void valueChanged();
 };

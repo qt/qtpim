@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString hobby() const {return detail().value(QContactHobby::FieldHobby);}
+    QString hobby() const {return detail().value(QContactHobby::FieldHobby).toString();}
 signals:
     void valueChanged();
 };

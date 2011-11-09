@@ -54,16 +54,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactTag : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldTag;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTag, "Tag")
-    Q_DECLARE_LATIN1_CONSTANT(FieldTag, "Tag");
-#endif
+    const static QString FieldTag;
 
     void setTag(const QString& tag) {setValue(FieldTag, tag);}
-    QString tag() const {return value(FieldTag);}
+    QString tag() const {return value(FieldTag).toString();}
 
     // Convenience filter
     static QContactFilter match(const QString& subString);

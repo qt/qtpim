@@ -113,57 +113,12 @@ public:
 
     /* Access details of particular type */
     QContactDetail detail(const QString& definitionId) const;
-    QList<QContactDetail> details(const QString& definitionId = QString()) const;
-
-    QList<QContactDetail> details(const QString& definitionName, const QString& fieldName, const QString& value) const;
-
-    QContactDetail detail(const char* definitionId) const;
-    QList<QContactDetail> details(const char* definitionId) const;
-    QList<QContactDetail> details(const char* definitionId, const char* fieldName, const QString& value) const;
-
-    /* Templated retrieval for definition names */
-#ifdef Q_QDOC
-    QContactDetail detail(const QLatin1Constant& definitionName) const;
-    QList<QContactDetail> details(const QLatin1Constant& definitionName) const;
-    QList<QContactDetail> details(const QLatin1Constant& definitionName, const QLatin1Constant& fieldName, const QString& value);
-#else
-    template <int N> QContactDetail detail(const QLatin1Constant<N>& definitionName) const
-    {
-        return detail(definitionName.latin1());
-    }
-    template <int N> QList<QContactDetail> details(const QLatin1Constant<N>& definitionName) const
-    {
-        return details(definitionName.latin1());
-    }
-    template <int N, int M> QList<QContactDetail> details(const QLatin1Constant<N>& definitionName, const QLatin1Constant<M>& fieldName, const QString& value)
-    {
-        return details(definitionName.latin1(), fieldName.latin1(), value);
-    }
-#endif
+    QList<QContactDetail> details(const QString& definitionName = QString()) const;
 
     /* Templated (type-specific) detail retrieval */
     template<typename T> QList<T> details() const
     {
-        QList<QContactDetail> props = details(T::DefinitionName.latin1());
-        QList<T> ret;
-        for (int i=0; i<props.count(); i++)
-            ret.append(T(props.at(i)));
-        return ret;
-    }
-
-    /* Templated (type-specific) detail retrieval base on given detail field name and field value */
-    template<typename T> QList<T> details(const QString& fieldName, const QString& value) const
-    {
-        QList<QContactDetail> props = details(T::DefinitionName, fieldName, value);
-        QList<T> ret;
-        for (int i=0; i<props.count(); i++)
-            ret.append(T(props.at(i)));
-        return ret;
-    }
-
-    template<typename T> QList<T> details(const char* fieldName, const QString& value) const
-    {
-        QList<QContactDetail> props = details(T::DefinitionName.latin1(), fieldName, value);
+        QList<QContactDetail> props = details(T::DefinitionName);
         QList<T> ret;
         for (int i=0; i<props.count(); i++)
             ret.append(T(props.at(i)));
@@ -172,7 +127,7 @@ public:
 
     template<typename T> T detail() const
     {
-        return T(detail(T::DefinitionName.latin1()));
+        return T(detail(T::DefinitionName));
     }
 
     /* generic detail addition/removal functions */

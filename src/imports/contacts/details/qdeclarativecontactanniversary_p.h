@@ -127,7 +127,7 @@ public:
             emit valueChanged();
         }
     }
-    QString calendarId() const {return detail().value(QContactAnniversary::FieldCalendarId);}
+    QString calendarId() const {return detail().value(QContactAnniversary::FieldCalendarId).toString();}
     void setEvent(const QString& v)
     {
         if (!readOnly() && v != event()) {
@@ -135,7 +135,7 @@ public:
             emit valueChanged();
         }
     }
-    QString event() const {return detail().value(QContactAnniversary::FieldEvent);}
+    QString event() const {return detail().value(QContactAnniversary::FieldEvent).toString();}
 
     void setSubType(AnniversarySubType v)
     {
@@ -143,19 +143,19 @@ public:
             QString subTypeString;
             switch (v) {
             case Wedding:
-                subTypeString = QContactAnniversary::SubTypeWedding.latin1();
+                subTypeString = QContactAnniversary::SubTypeWedding;
                 break;
             case Engagement:
-                subTypeString = QContactAnniversary::SubTypeEngagement.latin1();
+                subTypeString = QContactAnniversary::SubTypeEngagement;
                 break;
             case House:
-                subTypeString = QContactAnniversary::SubTypeHouse.latin1();
+                subTypeString = QContactAnniversary::SubTypeHouse;
                 break;
             case Employment:
-                subTypeString = QContactAnniversary::SubTypeEmployment.latin1();
+                subTypeString = QContactAnniversary::SubTypeEmployment;
                 break;
             case Memorial:
-                subTypeString = QContactAnniversary::SubTypeMemorial.latin1();
+                subTypeString = QContactAnniversary::SubTypeMemorial;
                 break;
            default:
                 break;
@@ -167,7 +167,7 @@ public:
 
     AnniversarySubType subType() const
     {
-        QString subType = detail().value(QContactAnniversary::FieldSubType);
+        QString subType = detail().value(QContactAnniversary::FieldSubType).toString();
         if (subType == QContactAnniversary::SubTypeWedding)
             return Wedding;
         else if (subType == QContactAnniversary::SubTypeEngagement)

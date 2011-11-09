@@ -120,7 +120,7 @@ public:
             emit valueChanged();
         }
     }
-    QString name() const {return detail().value(QContactOrganization::FieldName);}
+    QString name() const {return detail().value(QContactOrganization::FieldName).toString();}
     void setLogoUrl(const QUrl& v)
     {
         if (!readOnly() && v != logoUrl()) {
@@ -128,7 +128,7 @@ public:
             emit valueChanged();
         }
     }
-    QUrl logoUrl() const {return detail().value(QContactOrganization::FieldLogoUrl);}
+    QUrl logoUrl() const {return detail().value(QContactOrganization::FieldLogoUrl).toString();}
     void setDepartment(const QStringList& v)
     {
         if (!readOnly() && v.toSet() != department().toSet()) {
@@ -144,7 +144,7 @@ public:
             emit valueChanged();
         }
     }
-    QString location() const {return detail().value(QContactOrganization::FieldLocation);}
+    QString location() const {return detail().value(QContactOrganization::FieldLocation).toString();}
     void setRole(const QString& v)
     {
         if (!readOnly() && v != role()) {
@@ -152,7 +152,7 @@ public:
             emit valueChanged();
         }
     }
-    QString role() const {return detail().value(QContactOrganization::FieldRole);}
+    QString role() const {return detail().value(QContactOrganization::FieldRole).toString();}
     void setTitle(const QString& v)
     {
         if (!readOnly() && v != title()) {
@@ -160,7 +160,7 @@ public:
             emit valueChanged();
         }
     }
-    QString title() const {return detail().value(QContactOrganization::FieldTitle);}
+    QString title() const {return detail().value(QContactOrganization::FieldTitle).toString();}
     void setAssistantName(const QString& v)
     {
         if (!readOnly() && v != assistantName()) {
@@ -168,7 +168,7 @@ public:
             emit valueChanged();
         }
     }
-    QString assistantName() const {return detail().value(QContactOrganization::FieldAssistantName);}
+    QString assistantName() const {return detail().value(QContactOrganization::FieldAssistantName).toString();}
     void setStartDate(const QDateTime& v)
     {
         if (!readOnly() && v != startDate()) {

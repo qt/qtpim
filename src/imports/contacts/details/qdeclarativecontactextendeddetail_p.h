@@ -83,7 +83,7 @@ public:
 
     QString name() const
     {
-        return detail().value(QContactExtendedDetail::FieldName);
+        return detail().value(QContactExtendedDetail::FieldName).toString();
     }
 
     void setData(const QVariant &newData)
@@ -96,7 +96,7 @@ public:
 
     QVariant data() const
     {
-        return detail().variantValue(QContactExtendedDetail::FieldData);
+        return detail().value(QContactExtendedDetail::FieldData);
     }
 
     static QString fieldNameFromFieldType(int type)

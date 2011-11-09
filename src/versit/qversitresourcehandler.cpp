@@ -110,8 +110,8 @@ QVersitDefaultResourceHandler::QVersitDefaultResourceHandler()
     int fileExtensionCount = sizeof(versitFileExtensionMappings)/sizeof(VersitMapping);
     for (int i = 0; i < fileExtensionCount; i++) {
         d->mFileExtensionMapping.insert(
-            QLatin1String(versitFileExtensionMappings[i].contactString),
-            QLatin1String(versitFileExtensionMappings[i].versitString));
+            versitFileExtensionMappings[i].contactString,
+            QStringLiteral(versitFileExtensionMappings[i].versitString));
     }
 }
 

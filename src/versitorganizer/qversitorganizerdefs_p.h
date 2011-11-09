@@ -57,15 +57,23 @@
 #include <private/qversitdefs_p.h>
 #include <qorganizer.h>
 
+QTORGANIZER_BEGIN_NAMESPACE
+class QOrganizerItemDisplayLabel;
+class QOrganizerItemDescription;
+class QOrganizerItemGuid;
+QTORGANIZER_END_NAMESPACE
+
+QTORGANIZER_USE_NAMESPACE
+
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 // Only put simple mappings in this table; ie. where a Versit property maps to a specific detail's
 // specific field (and that detail has no other fields of interest)
 const VersitDetailMapping versitOrganizerDetailMappings[] = {
     // FIXME
-    {"SUMMARY", "DisplayLabel", "Label"},
-    {"DESCRIPTION", "Description", "Description"},
-    {"UID", "Guid", "Guid"}
+    {"SUMMARY", QOrganizerItemDisplayLabel::DefinitionName, QStringLiteral("Label")},
+    {"DESCRIPTION", QOrganizerItemDescription::DefinitionName, QStringLiteral("Description")},
+    {"UID", QOrganizerItemGuid::DefinitionName, QStringLiteral("Guid")}
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

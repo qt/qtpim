@@ -86,7 +86,7 @@ public:
             emit valueChanged();
         }
     }
-    QString nickname() const {return detail().value(QContactNickname::FieldNickname);}
+    QString nickname() const {return detail().value(QContactNickname::FieldNickname).toString();}
 signals:
     void valueChanged();
 };

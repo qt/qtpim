@@ -97,7 +97,7 @@ public:
             emit valueChanged();
         }
     }
-    QUrl audioRingtoneUrl() const {return detail().value(QContactRingtone::FieldAudioRingtoneUrl);}
+    QUrl audioRingtoneUrl() const {return detail().value<QUrl>(QContactRingtone::FieldAudioRingtoneUrl);}
 
     void setVideoRingtoneUrl(const QUrl& v)
     {
@@ -106,7 +106,7 @@ public:
             emit valueChanged();
         }
     }
-    QUrl videoRingtoneUrl() const {return detail().value(QContactRingtone::FieldVideoRingtoneUrl);}
+    QUrl videoRingtoneUrl() const {return detail().value<QUrl>(QContactRingtone::FieldVideoRingtoneUrl);}
 
     void setVibrationRingtoneUrl(const QUrl& v)
     {
@@ -115,7 +115,7 @@ public:
             emit valueChanged();
         }
     }
-    QUrl vibrationRingtoneUrl() const {return detail().value(QContactRingtone::FieldVibrationRingtoneUrl);}
+    QUrl vibrationRingtoneUrl() const {return detail().value<QUrl>(QContactRingtone::FieldVibrationRingtoneUrl);}
 signals:
     void valueChanged();
 

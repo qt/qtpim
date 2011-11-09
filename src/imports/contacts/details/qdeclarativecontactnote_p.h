@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString note() const {return detail().value(QContactNote::FieldNote);}
+    QString note() const {return detail().value(QContactNote::FieldNote).toString();}
 signals:
     void valueChanged();
 };

@@ -55,57 +55,33 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactOnlineAccount : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldAccountUri;
-    static const QLatin1Constant FieldServiceProvider;
-    static const QLatin1Constant FieldProtocol;
-    static const QLatin1Constant FieldCapabilities;
-    static const QLatin1Constant FieldSubTypes;
-    static const QLatin1Constant SubTypeSip;
-    static const QLatin1Constant SubTypeSipVoip;
-    static const QLatin1Constant SubTypeImpp;
-    static const QLatin1Constant SubTypeVideoShare;
-    static const QLatin1Constant ProtocolAim;
-    static const QLatin1Constant ProtocolIcq;
-    static const QLatin1Constant ProtocolIrc;
-    static const QLatin1Constant ProtocolJabber;
-    static const QLatin1Constant ProtocolMsn;
-    static const QLatin1Constant ProtocolQq;
-    static const QLatin1Constant ProtocolSkype;
-    static const QLatin1Constant ProtocolYahoo;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactOnlineAccount, "OnlineAccount")
-    Q_DECLARE_LATIN1_CONSTANT(FieldAccountUri, "AccountUri");
-    Q_DECLARE_LATIN1_CONSTANT(FieldServiceProvider, "ServiceProvider");
-    Q_DECLARE_LATIN1_CONSTANT(FieldProtocol, "Protocol");
-    Q_DECLARE_LATIN1_CONSTANT(FieldCapabilities, "Capabilities");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSubTypes, "SubTypes");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeSip, "Sip");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeSipVoip, "SipVoip");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeImpp, "Impp");
-    Q_DECLARE_LATIN1_CONSTANT(SubTypeVideoShare, "VideoShare");
-
-    // These strings are taken from
-    // http://telepathy.freedesktop.org/spec/Connection_Manager.html#Simple-Type:Protocol
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolAim, "aim");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolIcq, "icq");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolIrc, "irc");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolJabber, "jabber");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolMsn, "msn");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolQq, "qq");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolSkype, "skype");
-    Q_DECLARE_LATIN1_CONSTANT(ProtocolYahoo, "yahoo");
-#endif
+    const static QString FieldAccountUri;
+    const static QString FieldServiceProvider;
+    const static QString FieldProtocol;
+    const static QString FieldCapabilities;
+    const static QString FieldSubTypes;
+    const static QString SubTypeSip;
+    const static QString SubTypeSipVoip;
+    const static QString SubTypeImpp;
+    const static QString SubTypeVideoShare;
+    const static QString ProtocolAim;
+    const static QString ProtocolIcq;
+    const static QString ProtocolIrc;
+    const static QString ProtocolJabber;
+    const static QString ProtocolMsn;
+    const static QString ProtocolQq;
+    const static QString ProtocolSkype;
+    const static QString ProtocolYahoo;
 
     void setAccountUri(const QString& accountUri) {setValue(FieldAccountUri, accountUri);}
-    QString accountUri() const {return value(FieldAccountUri);}
+    QString accountUri() const {return value(FieldAccountUri).toString();}
 
     void setServiceProvider(const QString& serviceProvider) {setValue(FieldServiceProvider, serviceProvider);}
-    QString serviceProvider() const {return value(FieldServiceProvider);}
+    QString serviceProvider() const {return value(FieldServiceProvider).toString();}
 
     void setProtocol(const QString& protocol) {setValue(FieldProtocol, protocol);}
-    QString protocol() const {return value(FieldProtocol);}
+    QString protocol() const {return value(FieldProtocol).toString();}
 
     void setCapabilities(const QStringList& capabilities) {setValue(FieldCapabilities, capabilities);}
     QStringList capabilities() const {return value<QStringList>(FieldCapabilities);}

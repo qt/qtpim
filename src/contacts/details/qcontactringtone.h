@@ -54,26 +54,19 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactRingtone : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldAudioRingtoneUrl;
-    static const QLatin1Constant FieldVideoRingtoneUrl;
-    static const QLatin1Constant FieldVibrationRingtoneUrl;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactRingtone, "Ringtone")
-    Q_DECLARE_LATIN1_CONSTANT(FieldAudioRingtoneUrl, "AudioRingtoneUrl");
-    Q_DECLARE_LATIN1_CONSTANT(FieldVideoRingtoneUrl, "VideoRingtoneUrl");
-    Q_DECLARE_LATIN1_CONSTANT(FieldVibrationRingtoneUrl, "VibrationRingtoneUrl");
-#endif
+    const static QString FieldAudioRingtoneUrl;
+    const static QString FieldVideoRingtoneUrl;
+    const static QString FieldVibrationRingtoneUrl;
 
     void setAudioRingtoneUrl(const QUrl& audioRingtoneUrl) {setValue(FieldAudioRingtoneUrl, audioRingtoneUrl);}
-    QUrl audioRingtoneUrl() const {return value(FieldAudioRingtoneUrl);}
+    QUrl audioRingtoneUrl() const {return value<QUrl>(FieldAudioRingtoneUrl);}
 
     void setVideoRingtoneUrl(const QUrl& videoRingtoneUrl) {setValue(FieldVideoRingtoneUrl, videoRingtoneUrl);}
-    QUrl videoRingtoneUrl() const {return value(FieldVideoRingtoneUrl);}
+    QUrl videoRingtoneUrl() const {return value<QUrl>(FieldVideoRingtoneUrl);}
 
     void setVibrationRingtoneUrl(const QUrl& vibrationRingtoneUrl) {setValue(FieldVibrationRingtoneUrl, vibrationRingtoneUrl);}
-    QUrl vibrationRingtoneUrl() const {return value(FieldVibrationRingtoneUrl);}
+    QUrl vibrationRingtoneUrl() const {return value<QUrl>(FieldVibrationRingtoneUrl);}
 };
 
 QTCONTACTS_END_NAMESPACE

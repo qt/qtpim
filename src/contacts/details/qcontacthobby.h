@@ -53,16 +53,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactHobby : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldHobby;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactHobby, "Hobby")
-    Q_DECLARE_LATIN1_CONSTANT(FieldHobby, "Hobby");
-#endif
+    const static QString FieldHobby;
 
     void setHobby(const QString& hobby) {setValue(FieldHobby, hobby);}
-    QString hobby() const {return value(FieldHobby);}
+    QString hobby() const {return value(FieldHobby).toString();}
 };
 
 QTCONTACTS_END_NAMESPACE

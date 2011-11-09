@@ -55,16 +55,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactSyncTarget : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldSyncTarget;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactSyncTarget, "SyncTarget")
-    Q_DECLARE_LATIN1_CONSTANT(FieldSyncTarget, "SyncTarget");
-#endif
+    const static QString FieldSyncTarget;
 
     void setSyncTarget(const QString& syncTarget) {setValue(FieldSyncTarget, syncTarget);}
-    QString syncTarget() const {return value(FieldSyncTarget);}
+    QString syncTarget() const {return value(FieldSyncTarget).toString();}
 };
 
 QTCONTACTS_END_NAMESPACE

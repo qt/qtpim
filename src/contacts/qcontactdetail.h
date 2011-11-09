@@ -44,7 +44,6 @@
 #define QCONTACTDETAIL_H
 
 #include <qcontactsglobal.h>
-#include <qlatin1constant.h>
 
 #include <QSharedDataPointer>
 #include <QStringList>
@@ -68,7 +67,6 @@ class Q_CONTACTS_EXPORT QContactDetail
 {
 public:
     QContactDetail();
-    explicit QContactDetail(const char* definitionName); // possibly internal
     explicit QContactDetail(const QString& definitionName);
     ~QContactDetail();
 
@@ -84,22 +82,13 @@ public:
 
     AccessConstraints accessConstraints() const;
 
-    // Predefined attribute names and values
-#ifdef Q_QDOC
-    static const QLatin1Constant FieldContext;
-    static const QLatin1Constant ContextHome;
-    static const QLatin1Constant ContextWork;
-    static const QLatin1Constant ContextOther;
-    static const QLatin1Constant FieldDetailUri;
-    static const QLatin1Constant FieldLinkedDetailUris;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(FieldContext, "Context");
-    Q_DECLARE_LATIN1_CONSTANT(ContextHome, "Home");
-    Q_DECLARE_LATIN1_CONSTANT(ContextWork, "Work");
-    Q_DECLARE_LATIN1_CONSTANT(ContextOther, "Other");
-    Q_DECLARE_LATIN1_CONSTANT(FieldDetailUri, "DetailUri");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLinkedDetailUris, "LinkedDetailUris");
-#endif
+    // Predefined attributes
+    const static QString FieldContext;
+    const static QString ContextHome;
+    const static QString ContextWork;
+    const static QString ContextOther;
+    const static QString FieldDetailUri;
+    const static QString FieldLinkedDetailUris;
 
     bool operator==(const QContactDetail& other) const;
     bool operator!=(const QContactDetail& other) const {return !(other == *this);}
@@ -110,61 +99,16 @@ public:
     int key() const;
     void resetKey();
 
-    QString value(const QString& key) const;
     bool setValue(const QString& key, const QVariant& value);
     bool removeValue(const QString& key);
     bool hasValue(const QString& key) const;
 
-    QVariantMap variantValues() const;
-    QVariant variantValue(const QString& key) const;
+    QVariantMap values() const;
+    QVariant value(const QString& key) const;
     template <typename T> T value(const QString& key) const
     {
-        return variantValue(key).value<T>();
+        return value(key).value<T>();
     }
-
-    /* These are probably internal */
-    QString value(const char* key) const;
-    bool setValue(const char* key, const QVariant& value);
-    bool removeValue(const char* key);
-    bool hasValue(const char* key) const;
-    QVariant variantValue(const char *key) const;
-    template<typename T> T value(const char *key) const
-    {
-        return variantValue(key).value<T>();
-    }
-#ifdef Q_QDOC
-    QString value(const QLatin1Constant& key) const;
-    bool setValue(const QLatin1Constant& key, const QVariant& value);
-    bool removeValue(const QLatin1Constant& key);
-    bool hasValue(const QLatin1Constant& key) const;
-    QVariant variantValue(const QLatin1Constant& key) const;
-    T value(const QLatin1Constant& key) const;
-#else
-    template<int N> QString value(const QLatin1Constant<N>& key) const
-    {
-        return value(key.latin1());
-    }
-    template<int N> bool setValue(const QLatin1Constant<N>& key, const QVariant& value)
-    {
-        return setValue(key.latin1(), value);
-    }
-    template<int N> bool removeValue(const QLatin1Constant<N>& key)
-    {
-        return removeValue(key.latin1());
-    }
-    template<int N> bool hasValue(const QLatin1Constant<N>& key) const
-    {
-        return hasValue(key.latin1());
-    }
-    template<int N> QVariant variantValue(const QLatin1Constant<N>& key) const
-    {
-        return variantValue(key.latin1());
-    }
-    template<typename T, int N> T value(const QLatin1Constant<N>& key) const
-    {
-        return value<T>(key.latin1());
-    }
-#endif
 
     void setContexts(const QStringList& contexts)
     {
@@ -188,7 +132,7 @@ public:
 
     QString detailUri() const
     {
-        return value(FieldDetailUri);
+        return value(FieldDetailUri).toString();
     }
 
     void setLinkedDetailUris(const QStringList& linkedDetailUris)
@@ -209,8 +153,6 @@ public:
 protected:
     QContactDetail(const QContactDetail &other, const QString& expectedDefinitionId);
     QContactDetail& assign(const QContactDetail &other, const QString& expectedDefinitionId);
-    QContactDetail(const QContactDetail &other, const char* expectedDefinitionId);
-    QContactDetail& assign(const QContactDetail &other, const char* expectedDefinitionId);
 
 private:
     friend class QContact;
@@ -229,14 +171,10 @@ Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactDetail& detail);
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetail::AccessConstraints)
 
 #define Q_DECLARE_CUSTOM_CONTACT_DETAIL(className, definitionNameString) \
-    className() : QContactDetail(DefinitionName.latin1()) {} \
-    className(const QContactDetail& field) : QContactDetail(field, DefinitionName.latin1()) {} \
-    className& operator=(const QContactDetail& other) {assign(other, DefinitionName.latin1()); return *this;} \
-    \
-    Q_DECLARE_LATIN1_CONSTANT(DefinitionName, definitionNameString);
-
-#define Q_IMPLEMENT_CUSTOM_CONTACT_DETAIL(className, definitionNameString) \
-    Q_DEFINE_LATIN1_CONSTANT(className::DefinitionName, definitionNameString)
+    className() : QContactDetail(DefinitionName) {} \
+    className(const QContactDetail &field) : QContactDetail(field, DefinitionName) {} \
+    className& operator=(const QContactDetail &other) {assign(other, DefinitionName); return *this;} \
+    const static QString DefinitionName;
 
 QTCONTACTS_END_NAMESPACE
 

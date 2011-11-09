@@ -87,7 +87,7 @@ public:
             emit valueChanged();
         }
     }
-    QString tag() const {return detail().value(QContactTag::FieldTag);}
+    QString tag() const {return detail().value(QContactTag::FieldTag).toString();}
 signals:
     void valueChanged();
 };

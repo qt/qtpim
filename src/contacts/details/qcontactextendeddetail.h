@@ -50,15 +50,9 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactExtendedDetail : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldName;
-    static const QLatin1Constant FieldData;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactExtendedDetail, "ExtendedDetail")
-    Q_DECLARE_LATIN1_CONSTANT(FieldName, "Name");
-    Q_DECLARE_LATIN1_CONSTANT(FieldData, "Data");
-#endif
+    const static QString FieldName;
+    const static QString FieldData;
 
     void setName(const QString &name)
     {
@@ -67,7 +61,7 @@ public:
 
     QString name() const
     {
-        return value(FieldName);
+        return value(FieldName).toString();
     }
 
     void setData(const QVariant &data)
@@ -77,7 +71,7 @@ public:
 
     QVariant data() const
     {
-        return variantValue(FieldData);
+        return value(FieldData);
     }
 };
 

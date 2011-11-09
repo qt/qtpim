@@ -53,20 +53,14 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactFavorite : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldFavorite;
-    static const QLatin1Constant FieldIndex;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFavorite, "Favorite")
-    Q_DECLARE_LATIN1_CONSTANT(FieldFavorite, "Favorite");
-    Q_DECLARE_LATIN1_CONSTANT(FieldIndex, "Index");
-#endif
+    const static QString FieldFavorite;
+    const static QString FieldIndex;
 
     void setFavorite(bool isFavorite) {setValue(FieldFavorite, isFavorite);}
-    bool isFavorite() const {return variantValue(FieldFavorite).toBool();}
+    bool isFavorite() const {return value(FieldFavorite).toBool();}
     void setIndex(int index) {setValue(FieldIndex, index);}
-    int index() const {return variantValue(FieldIndex).toInt();}
+    int index() const {return value(FieldIndex).toInt();}
 
     // Convenience filter
     static QContactFilter match();

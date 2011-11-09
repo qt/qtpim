@@ -477,32 +477,32 @@ QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, 
         }
 
         QString result;
-        if (!name.value(QContactName::FieldPrefix).trimmed().isEmpty()) {
-           result += name.value(QContactName::FieldPrefix);
+        if (!name.value(QContactName::FieldPrefix).toString().trimmed().isEmpty()) {
+           result += name.value(QContactName::FieldPrefix).toString();
         }
 
-        if (!name.value(QContactName::FieldFirstName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldFirstName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldFirstName);
+            result += name.value(QContactName::FieldFirstName).toString();
         }
 
-        if (!name.value(QContactName::FieldMiddleName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldMiddleName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldMiddleName);
+            result += name.value(QContactName::FieldMiddleName).toString();
         }
 
-        if (!name.value(QContactName::FieldLastName).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldLastName).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldLastName);
+            result += name.value(QContactName::FieldLastName).toString();
         }
 
-        if (!name.value(QContactName::FieldSuffix).trimmed().isEmpty()) {
+        if (!name.value(QContactName::FieldSuffix).toString().trimmed().isEmpty()) {
             if (!result.isEmpty())
                 result += space;
-            result += name.value(QContactName::FieldSuffix);
+            result += name.value(QContactName::FieldSuffix).toString();
         }
 
         if (!result.isEmpty()) {
@@ -1143,7 +1143,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                         const QContactDetail& detail = details.at(j);
 
                         /* Check that the field is present and has a non-empty value */
-                        if (detail.variantValues().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isEmpty())
+                        if (detail.values().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isNull())
                             return true;
                     }
                     return false;
@@ -1170,7 +1170,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Look at every detail in the set of details and compare */
                     for (int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& valueString = detail.value(cdf.detailFieldName());
+                        const QString& valueString = detail.value(cdf.detailFieldName()).toString();
                         QString preprocessedValueString;
                         for (int i = 0; i < valueString.size(); i++) {
                             QChar current = valueString.at(i).toLower();
@@ -1207,7 +1207,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Look at every detail in the set of details and compare */
                     for (int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& valueString = detail.value(cdf.detailFieldName()).toLower();
+                        const QString& valueString = detail.value(cdf.detailFieldName()).toString().toLower();
 
                         // preprocess the valueString
                         QString preprocessedValue;
@@ -1256,7 +1256,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Value equality test */
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName());
+                        const QString& var = detail.value(cdf.detailFieldName()).toString();
                         const QString& needle = cdf.value().toString();
                         if (matchStarts && var.startsWith(needle, cs))
                             return true;
@@ -1273,7 +1273,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Value equality test */
                     for(int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QVariant& var = detail.variantValue(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailFieldName());
                         if (!var.isNull() && compareVariant(var, cdf.value(), cs) == 0)
                             return true;
                     }
@@ -1303,7 +1303,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                 if (!cdf.minValue().isValid() && !cdf.maxValue().isValid()) {
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        if (detail.variantValues().contains(cdf.detailFieldName()))
+                        if (detail.values().contains(cdf.detailFieldName()))
                             return true;
                     }
                     return false;
@@ -1329,9 +1329,9 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                         const QContactDetail& detail = details.at(j);
 
                         // The detail has to have a field of this type in order to be compared.
-                        if (!detail.variantValue(cdf.detailFieldName()).isValid())
+                        if (!detail.value(cdf.detailFieldName()).isValid())
                             continue;
-                        const QString& var = detail.value(cdf.detailFieldName());
+                        const QString& var = detail.value(cdf.detailFieldName()).toString();
                         if (testMin && compareStrings(var, minVal, cs) < minComp)
                             continue;
                         if (testMax && compareStrings(var, maxVal, cs) >= maxComp)
@@ -1346,7 +1346,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Nope, testing the values as a variant */
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QVariant& var = detail.variantValue(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailFieldName());
 
                         // The detail has to have a field of this type in order to be compared.
                         if (!var.isValid())
@@ -1535,8 +1535,8 @@ int QContactManagerEngine::compareContact(const QContact& a, const QContact& b, 
             break;
 
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).variantValue(sortOrder.detailFieldName());
-        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).variantValue(sortOrder.detailFieldName());
+        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
+        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
 
         bool aIsNull = false;
         bool bIsNull = false;

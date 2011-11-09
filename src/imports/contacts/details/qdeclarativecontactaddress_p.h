@@ -123,7 +123,7 @@ public:
             emit valueChanged();
         }
     }
-    QString street() const {return detail().value(QContactAddress::FieldStreet);}
+    QString street() const {return detail().value(QContactAddress::FieldStreet).toString();}
     void setLocality(const QString& v)
     {
         if (!readOnly() && v != locality()) {
@@ -131,7 +131,7 @@ public:
             emit valueChanged();
         }
     }
-    QString locality() const {return detail().value(QContactAddress::FieldLocality);}
+    QString locality() const {return detail().value(QContactAddress::FieldLocality).toString();}
     void setRegion(const QString& v)
     {
         if (!readOnly() && v != region()) {
@@ -139,7 +139,7 @@ public:
             emit valueChanged();
         }
     }
-    QString region() const {return detail().value(QContactAddress::FieldRegion);}
+    QString region() const {return detail().value(QContactAddress::FieldRegion).toString();}
     void setPostcode(const QString& v)
     {
         if (!readOnly() && v != postcode()) {
@@ -147,7 +147,7 @@ public:
             emit valueChanged();
         }
     }
-    QString postcode() const {return detail().value(QContactAddress::FieldPostcode);}
+    QString postcode() const {return detail().value(QContactAddress::FieldPostcode).toString();}
     void setCountry(const QString& v)
     {
         if (!readOnly() && v != country()) {
@@ -155,7 +155,7 @@ public:
             emit valueChanged();
         }
     }
-    QString country() const {return detail().value(QContactAddress::FieldCountry);}
+    QString country() const {return detail().value(QContactAddress::FieldCountry).toString();}
     void setPostOfficeBox(const QString& v)
     {
         if (!readOnly() && v != postOfficeBox()) {
@@ -163,7 +163,7 @@ public:
             emit valueChanged();
         }
     }
-    QString postOfficeBox() const {return detail().value(QContactAddress::FieldPostOfficeBox);}
+    QString postOfficeBox() const {return detail().value(QContactAddress::FieldPostOfficeBox).toString();}
 
     void setSubTypes(const QVariant& subTypes)
     {

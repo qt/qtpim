@@ -54,16 +54,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactNickname : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldNickname;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactNickname, "Nickname")
-    Q_DECLARE_LATIN1_CONSTANT(FieldNickname, "Nickname");
-#endif
+    const static QString FieldNickname;
 
     void setNickname(const QString& nickname) {setValue(FieldNickname, nickname);}
-    QString nickname() const {return value(FieldNickname);}
+    QString nickname() const {return value(FieldNickname).toString();}
 };
 
 QTCONTACTS_END_NAMESPACE

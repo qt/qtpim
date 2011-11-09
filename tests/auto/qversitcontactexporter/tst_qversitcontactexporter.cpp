@@ -305,9 +305,9 @@ void tst_QVersitContactExporter::testContactDetailHandlerV2()
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
 
     QCOMPARE(detailHandler.mProcessedFields.size(), 3);
-    QVERIFY(detailHandler.mProcessedFields.contains(QLatin1String(QContactPhoneNumber::FieldContext)));
-    QVERIFY(detailHandler.mProcessedFields.contains(QLatin1String(QContactPhoneNumber::FieldSubTypes)));
-    QVERIFY(detailHandler.mProcessedFields.contains(QLatin1String(QContactPhoneNumber::FieldNumber)));
+    QVERIFY(detailHandler.mProcessedFields.contains(QContactPhoneNumber::FieldContext));
+    QVERIFY(detailHandler.mProcessedFields.contains(QContactPhoneNumber::FieldSubTypes));
+    QVERIFY(detailHandler.mProcessedFields.contains(QContactPhoneNumber::FieldNumber));
     QVersitProperty expectedProperty;
     expectedProperty.setName(QLatin1String("TEL"));
     expectedProperty.setValue(QLatin1String("1234"));

@@ -55,30 +55,20 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactName : public QContactDetail
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant DefinitionName;
-    static const QLatin1Constant FieldPrefix;
-    static const QLatin1Constant FieldFirstName;
-    static const QLatin1Constant FieldMiddleName;
-    static const QLatin1Constant FieldLastName;
-    static const QLatin1Constant FieldSuffix;
-    static const QLatin1Constant FieldCustomLabel;
-#else
     Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactName, "Name")
-    Q_DECLARE_LATIN1_CONSTANT(FieldPrefix, "Prefix");
-    Q_DECLARE_LATIN1_CONSTANT(FieldFirstName, "FirstName");
-    Q_DECLARE_LATIN1_CONSTANT(FieldMiddleName, "MiddleName");
-    Q_DECLARE_LATIN1_CONSTANT(FieldLastName, "LastName");
-    Q_DECLARE_LATIN1_CONSTANT(FieldSuffix, "Suffix");
-    Q_DECLARE_LATIN1_CONSTANT(FieldCustomLabel, "CustomLabel");
-#endif
+    const static QString FieldPrefix;
+    const static QString FieldFirstName;
+    const static QString FieldMiddleName;
+    const static QString FieldLastName;
+    const static QString FieldSuffix;
+    const static QString FieldCustomLabel;
 
-    QString prefix() const {return value(FieldPrefix);}
-    QString firstName() const {return value(FieldFirstName);}
-    QString middleName() const {return value(FieldMiddleName);}
-    QString lastName() const {return value(FieldLastName);}
-    QString suffix() const {return value(FieldSuffix);}
-    QString customLabel() const{return value(FieldCustomLabel);}
+    QString prefix() const {return value(FieldPrefix).toString();}
+    QString firstName() const {return value(FieldFirstName).toString();}
+    QString middleName() const {return value(FieldMiddleName).toString();}
+    QString lastName() const {return value(FieldLastName).toString();}
+    QString suffix() const {return value(FieldSuffix).toString();}
+    QString customLabel() const{return value(FieldCustomLabel).toString();}
 
     void setPrefix(const QString& prefix) {setValue(FieldPrefix, prefix);}
     void setFirstName(const QString& firstName) {setValue(FieldFirstName, firstName);}

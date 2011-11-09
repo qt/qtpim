@@ -155,7 +155,7 @@ QContactFilter QContactActionDescriptor::contactFilter() const
    action.
    \sa metaData()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataIcon, "Icon");
+const QString QContactActionDescriptor::MetaDataIcon(QStringLiteral("Icon"));
 
 /*!
    \variable QContactActionDescriptor::MetaDataLabel
@@ -163,7 +163,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataIcon, "Icon");
    which contains the display label for this action.
    \sa metaData()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataLabel, "Label");
+const QString QContactActionDescriptor::MetaDataLabel(QStringLiteral("Label"));
 
 /*!
    \variable QContactActionDescriptor::MetaDataSecondLabel
@@ -172,7 +172,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataLabel, "Label");
    action.
    \sa metaData()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataSecondLabel, "SecondLabel");
+const QString QContactActionDescriptor::MetaDataSecondLabel(QStringLiteral("SecondLabel"));
 
 /*!
    \variable QContactActionDescriptor::MetaDataOptionalParameterKeys
@@ -185,7 +185,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataSecondLabel, "SecondL
 
    \sa metaData()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataOptionalParameterKeys, "OptionalParameterKeys");
+const QString QContactActionDescriptor::MetaDataOptionalParameterKeys(QStringLiteral("OptionalParameterKeys"));
 
 /*!
    \variable QContactActionDescriptor::MetaDataMandatoryParameterKeys
@@ -198,7 +198,7 @@ Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataOptionalParameterKeys
 
    \sa metaData()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionDescriptor::MetaDataMandatoryParameterKeys, "MandatoryParameterKeys");
+const QString QContactActionDescriptor::MetaDataMandatoryParameterKeys(QStringLiteral("MandatoryParameterKeys"));
 
 /*!
   Returns the meta data for the given meta data key \a key for the the given action targets \a targets with the given invocation parameters \a parameters.

@@ -47,28 +47,24 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemCollectionFilter
-  \brief The QOrganizerItemCollectionFilter class provides a filter based around a list of organizeritem ids
-  \since 1.1
+    \class QOrganizerItemCollectionFilter
+    \brief The QOrganizerItemCollectionFilter class provides a filter based around the collection one organizeritem belongs to.
+    \inmodule QtOrganizer
+    \ingroup organizeritems-filters
 
-  \ingroup organizeritems-filters
-
-  \inmodule QtOrganizer
-
-  It may be used to select organizeritems whose ids are contained in the given list of ids.
+    It may be used to select organizeritems belonging to certain collections.
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemCollectionFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemCollectionFilter)
 
 /*!
- * \fn QOrganizerItemCollectionFilter::QOrganizerItemCollectionFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new organizeritem id filter
- \since 1.1
+    \fn QOrganizerItemCollectionFilter::QOrganizerItemCollectionFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new organizeritem collection filter.
  */
 
 /*!
- * Constructs a new organizeritem id filter
-   \since 1.1
+    Constructs a new organizeritem collection filter.
  */
 QOrganizerItemCollectionFilter::QOrganizerItemCollectionFilter()
     : QOrganizerItemFilter(new QOrganizerItemCollectionFilterPrivate)
@@ -76,9 +72,7 @@ QOrganizerItemCollectionFilter::QOrganizerItemCollectionFilter()
 }
 
 /*!
- * Clears the list which contains the ids of possible matching organizeritems, and sets it to the list
- * which contains a single id \a id.
-   \since 1.1
+    Sets the \a id of the collection, which the organizer items should belong to.
  */
 void QOrganizerItemCollectionFilter::setCollectionId(const QOrganizerCollectionId &id)
 {
@@ -88,8 +82,7 @@ void QOrganizerItemCollectionFilter::setCollectionId(const QOrganizerCollectionI
 }
 
 /*!
- * Sets the list which contains the ids of possible matching organizeritems to \a ids
-   \since 1.1
+    Sets the list of collection \a ids, which the organizer items should belong to.
  */
 void QOrganizerItemCollectionFilter::setCollectionIds(const QSet<QOrganizerCollectionId> &ids)
 {
@@ -98,8 +91,7 @@ void QOrganizerItemCollectionFilter::setCollectionIds(const QSet<QOrganizerColle
 }
 
 /*!
- * Returns the list of ids of organizeritems which match this filter
-   \since 1.1
+    Returns the list of collection IDs of organizeritems should belong to.
  */
 QSet<QOrganizerCollectionId> QOrganizerItemCollectionFilter::collectionIds() const
 {

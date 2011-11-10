@@ -468,21 +468,80 @@ Rectangle
             }
         }
         Column {
+            id : tagColumn
+            Repeater {
+                model: item? (item.itemDetails? item.details(Detail.Tag) : 0) : 0
+                Rectangle {
+                    width: detailsView.width;
+                    height: childrenRect.height
+                    Text {
+                        width: detailsView.width
+                        text: "Tag " + index + " : " + modelData.tag;
+                    }
+                    Button {
+                        text: "remove"
+                        width: detailsView.width / 6
+                        anchors.right: parent.right
+                        onClicked: {
+                            item.removeDetail(modelData);
+                        }
+                    }
+                }
+            }
+        }
+        FieldRow {
+            id: tagRow
+            anchors { top: tagColumn.bottom; margins: height / 3 }
+            label: "New Tag"
+            value: "NewTag"
+        }
+        Row {
+            anchors.horizontalCenter: tagRow.horizontalCenter
+            Button {
+                text: "Add tag"
+                width: detailsView.width / 4
+                onClicked: {
+                    if (tagRow.newValue) {
+                        var tag = Qt.createQmlObject("import QtOrganizer 5.0;Tag {}", organizer);
+                        tag.tag = tagRow.newValue;
+                        item.setDetail(tag);
+                    }
+                }
+            }
+            Button {
+                text: "Birthday"
+                width: detailsView.width / 4
+                onClicked: {
+                    var tagList = item.details(Detail.Tag)
+                    var found = false;
+                    for (var i=0; i< tagList.length; i++) {
+                        if (tagList[i].tag == "ANNIVERSARY")
+                             found = true;
+                    }
+                    if (!found) {
+                        var tag = Qt.createQmlObject("import QtOrganizer 5.0;Tag {}", organizer);
+                        tag.tag = "ANNIVERSARY";
+                        item.setDetail(tag);
+                    }
+                }
+            }
+        }
+        Column {
+            id: attendeeColumn
             Repeater {
                 model: item? item.attendees : 0
                 Rectangle {
                     width: detailsView.width;
-                    height: 25
+                    height: childrenRect.height
                     Text {
-                        id : nameText;
                         width: detailsView.width
                         text: "attendee " + index + " : " + name + "," + emailAddress;
                     }
                     Button {
                         text: "remove"
                         width: detailsView.width / 6
-                        height: 30
-                        anchors.right: nameText.right
+                        height: parent
+                        anchors.right: parent.right
                         onClicked: {
                             item.removeDetail(modelData);
                         }
@@ -491,10 +550,13 @@ Rectangle
             }
         }
         Button {
-            id: addAttendeeButton
             text: "Add Attendee"
             width: detailsView.width / 2
-            anchors.horizontalCenter: customCollectionRow.horizontalCenter
+            anchors {
+                horizontalCenter: tagRow.horizontalCenter;
+                top: attendeeColumn.bottom;
+                margins: height / 3
+            }
             onClicked: {
                 attendeeDetailsView.item = item;
                 calendar.state = "AttendeeDetailsView";

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -27,17 +27,15 @@
 
 /*!
     \group qml-organizer
-    \title QML Organizer Plugin
-    QML Support for the QtMobility Project Organizer API.
+    \ingroup qtpim
+    \title Organizer QML Plugin
+    QML Support for the QtPim Module Organizer API.
 
-*/
-
-/*!
     \page qml-organizer.html
 
     \title Organizer QML Plugin
 
-    \brief A QML plugin for the QtMobility Project Organizer API.
+    \brief A QML plugin for the QtPim Module Organizer API.
 
 
     \section1 Overview
@@ -74,7 +72,7 @@
 
     \section2 Organizer Item Details
     Several sub elements of ItemDetail are provided as part of the
-    QtMobility Organizer API. They are general in design but are intended
+    QtPim Module Organizer API. They are general in design but are intended
     to fulfill specific use-cases. Please note that certain backends may
     choose not to support one or more of these elements as they appear
     here; they may offer their own which provide similar functionality.

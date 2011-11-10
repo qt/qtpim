@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -26,19 +26,16 @@
 ****************************************************************************/
 
 /*!
+    \title QML Contacts Plugin
+    QML Support for the QtPim Module Contacts API.
+
     \group qml-contacts
-    \title QML Contacts
-    QML Support for the QtMobility Project Contacts API.
+    \ingroup qtpim
 
-*/
-
-
-/*!
     \page qml-contacts.html
-
     \title Contacts QML Plugin
 
-    \brief A QML plugin for the QtMobility Project Contacts API.
+    \brief A QML plugin for the QtPim Module Contacts API.
 
 
 

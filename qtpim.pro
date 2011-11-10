@@ -1,6 +1,8 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
+include(doc/doc.pri)
+
 module_qtpim_src.subdir = src
 module_qtpim_src.target = module-qtpim-src
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -28,19 +28,12 @@
 /*!
 
 \page versit.html
-\title Versit
+\title C++ Versit
 \brief An API to import and export to the vCard and iCalendar formats.
 
-\ingroup mobility
+\ingroup qtpim
 
 \tableofcontents
-
-\section1 Namespace
-
-The QtMobility APIs are placed into the \i{QtMobility} namespace. This is done
-to facilitate the future migration of QtMobility APIs into Qt. See the
-\l {Quickstart guide} for an example on how the
-namespace impacts on application development.
 
 \section1 Overview
 The Versit API provides a library to convert \l{QContact}{QContacts} to and from
@@ -64,11 +57,13 @@ QVersitOrganizerExporter, respectively.
 
 Currently \l{QVersitReader} and \l{QVersitWriter} support
 reading and writing vCard 2.1, vCard 3.0 and iCalendar 2.0 format documents.
-Please note that the QtMobility Organizer API is still under development, so
+Please note that the QtPim Module Organizer API is still under development, so
 the Qt Versit API classes related to importing and exporting organizer items
 is subject to change.
 
 Versit \reg is a trademark of the Internet Mail Consortium.
+
+A full list of classes can be found in the specific \l{Versit c++ Classes} section.
 
 \section1 Usage
 The following example goes through the process of reading a vCard and importing

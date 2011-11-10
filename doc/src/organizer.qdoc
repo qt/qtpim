@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -32,24 +32,16 @@
 
 \page organizer.html
 
-\title Organizer
+\title C++ Organizer
 \brief An API enabling clients to request calendar, schedule and personal data
 from local or remote backends.
 
-\ingroup mobility
+\ingroup qtpim
 
 The Organizer API enables a client to request calendar, schedule and personal
-data from local or remote backends. This is part of the QtMobility Project.
+data from local or remote backends. This is part of the QtPim Module.
 
 \tableofcontents
-
-
-\section1 Namespace
-
-The QtMobility APIs are placed into the \i{QtMobility} namespace. This is done
-to facilitate the future migration of QtMobility APIs into Qt. See the
-\l {Quickstart guide} for an example on how the
-namespace impacts on application development.
 
 
 \section1 Introduction
@@ -69,6 +61,8 @@ and an \l{Organizer Asynchronous API}{asynchronous} API.  Note that for clarity,
 the short examples on this page demonstrate the synchronous API.  While these
 code snippets might be useful for non-GUI applications, it is highly recommended
 that the asynchronous API is used for GUI applications.
+
+A full list of classes can be found in the specific \l{Organizer c++ Classes} section.
 
 \section2 The Organizer Manager
 Organizer information is stored in datastores whose functionality is exposed
@@ -281,7 +275,7 @@ example, if you intend to implement a manager backend) please see
 \section2 QOrganizerItemDetail Leaf Classes
 
 Several subclasses of \l{QOrganizerItemDetail} are provided as part of the
-QtMobility Organizer API.  They are general in design but are intended
+QtPim Module Organizer API.  They are general in design but are intended
 to fulfill specific use-cases.  Please note that certain backends may
 choose not to support one or more of these subclasses as they appear here;
 they may offer their own which provide similar functionality.
@@ -324,7 +318,7 @@ For more information on this topic, see please see the documentation on
 
 \section2 Synchronization and Serialization
 
-The organizer API is used by another QtMobility module: the
+The organizer API is used by another QtPim module: the
 \l {Versit} {Versit}* module.  It allows
 serialization of a QOrganizerItem into an iCalendar document, and vice versa.
 

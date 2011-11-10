@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -44,7 +44,7 @@
 \ingroup licensing
 \brief About the LGPL license used for Qt.
 
-The Qt GUI Toolkit is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).\br
+The Qt Pim Module is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).\br
 Contact: Nokia Corporation (qt-info@nokia.com)
 
 Qt is available under the LGPL.

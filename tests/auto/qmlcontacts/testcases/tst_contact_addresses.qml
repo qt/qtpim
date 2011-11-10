@@ -53,12 +53,45 @@ TestCase {
             id: contactWithoutAddress
         }
 
-        function test_addressOfContactWithoutAddressIsEmpty() {
-            verifyIsUndefined(contactWithoutAddress.address);
+        Contact {
+            id: anotherContactWithoutAddress
         }
 
-        function test_addressesCountOfContactWithoutAddressIsZero() {
-            compare(contactWithoutAddress.addresses.length, 0);
+        Contact {
+            id: yetAnotherContactWithoutAddress
+        }
+
+        function test_addressOfContactWithoutAddressIsDefined() {
+            verifyIsDefined(contactWithoutAddress.address);
+        }
+
+        function test_addressesCountOfAnotherContactWithoutAddressIsZero() {
+            // we do not access the address property of the contact,
+            // so in this case the expected length is 0
+            compare(anotherContactWithoutAddress.addresses.length, 0);
+        }
+
+        function test_addressesCountOfYetAnotherContactWithoutAddressIsOne() {
+            // we first access the address property of the contact,
+            // so in this case the expected length is 1
+            verifyIsDefined(yetAnotherContactWithoutAddress.address);
+            compare(yetAnotherContactWithoutAddress.addresses.length, 1);
+        }
+
+        function test_addressOfContactWithoutAddressIsEmpty() {
+            verifyIsUndefined(contactWithoutAddress.address.city);
+            verifyIsUndefined(contactWithoutAddress.address.country);
+            verifyIsUndefined(contactWithoutAddress.address.countryCode);
+            verifyIsUndefined(contactWithoutAddress.address.county);
+            verifyIsUndefined(contactWithoutAddress.address.district);
+            verifyIsUndefined(contactWithoutAddress.address.postcode);
+            verifyIsUndefined(contactWithoutAddress.address.state);
+            verifyIsUndefined(contactWithoutAddress.address.street);
+        }
+
+        function test_addressSetStreetOfContactWithoutAddress() {
+            contactWithoutAddress.address.street = "NoAddressStreet";
+            compare(contactWithoutAddress.address.street, "NoAddressStreet");
         }
     }
 
@@ -179,5 +212,8 @@ TestCase {
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }
-}
 
+    function verifyIsDefined(object) {
+        verify(object, "Object " + object + " is defined");
+    }
+}

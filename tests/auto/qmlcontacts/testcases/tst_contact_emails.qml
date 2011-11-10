@@ -53,12 +53,33 @@ TestCase {
             id: contactWithoutEmail
         }
 
-        function test_emailOfContactWithoutEmailIsEmpty() {
-            verifyIsUndefined(contactWithoutEmail.email);
+        Contact {
+            id: anotherContactWithoutEmail
         }
 
-        function test_emailsCountOfContactWithoutEmailIsZero() {
-            compare(contactWithoutEmail.emails.length, 0);
+        Contact {
+            id: yetAnotherContactWithoutEmail
+        }
+
+        function test_emailOfContactWithoutEmailIsDefined() {
+            verifyIsDefined(contactWithoutEmail.email);
+        }
+
+        function test_emailOfContactWithoutEmailIsEmpty() {
+            verifyIsUndefined(contactWithoutEmail.email.emailAddress);
+        }
+
+        function test_emailsCountOfAnotherContactWithoutEmailIsZero() {
+            // we do not access the email property of the contact,
+            // so in this case the expected length is 0
+            compare(anotherContactWithoutEmail.emails.length, 0);
+        }
+
+        function test_emailsCountOfYetAnotherContactWithoutEmailIsOne() {
+            // we first access the email property of the contact,
+            // so in this case the expected length is 1
+            verifyIsDefined(yetAnotherContactWithoutEmail.email);
+            compare(yetAnotherContactWithoutEmail.emails.length, 1);
         }
     }
 
@@ -178,6 +199,10 @@ TestCase {
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
+    }
+
+    function verifyIsDefined(object) {
+        verify(object, "Object " + object + " is defined");
     }
 }
 

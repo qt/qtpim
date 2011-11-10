@@ -53,12 +53,39 @@ TestCase {
             id: contactWithoutOrganization
         }
 
-        function test_organizationOfContactWithoutOrganizationIsEmpty() {
-            verifyIsUndefined(contactWithoutOrganization.name);
+        Contact {
+            id: anotherContactWithoutOrganization
         }
 
-        function test_organizationsCountOfContactWithoutOrganizationsIsZero() {
-            compare(contactWithoutOrganization.organizations.length, 0);
+        Contact {
+            id: yetAnotherContactWithoutOrganization
+        }
+
+        function test_organizationOfContactWithoutOrganizationIsDefined() {
+            verifyIsDefined(contactWithoutOrganization.organization);
+        }
+
+        function test_organizationOfContactWithoutOrganizationIsEmpty() {
+            verifyIsUndefined(contactWithoutOrganization.organization.assistantName);
+            compare(contactWithoutOrganization.organization.department.length, 0);
+            verifyIsUndefined(contactWithoutOrganization.organization.location);
+            compare(contactWithoutOrganization.organization.logoUrl, "");
+            verifyIsUndefined(contactWithoutOrganization.organization.name);
+            verifyIsUndefined(contactWithoutOrganization.organization.role);
+            verifyIsUndefined(contactWithoutOrganization.organization.title);
+        }
+
+        function test_organizationsCountOfAnotherContactWithoutOrganizationIsZero() {
+            // we do not access the organization property of the contact,
+            // so in this case the expected length is 0
+            compare(anotherContactWithoutOrganization.organizations.length, 0);
+        }
+
+        function test_organizationsCountOfYetAnotherContactWithoutOrganizationIsOne() {
+            // we first access the organization property of the contact,
+            // so in this case the expected length is 1
+            verifyIsDefined(yetAnotherContactWithoutOrganization.organization);
+            compare(yetAnotherContactWithoutOrganization.organizations.length, 1);
         }
     }
 
@@ -174,6 +201,10 @@ TestCase {
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
+    }
+
+    function verifyIsDefined(object) {
+        verify(object, "Object " + object + " is defined");
     }
 }
 

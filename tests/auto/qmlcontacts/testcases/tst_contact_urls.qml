@@ -53,12 +53,34 @@ TestCase {
             id: contactWithoutUrl
         }
 
-        function test_urlOfContactWithoutUrlIsEmpty() {
-            verifyIsUndefined(contactWithoutUrl.url);
+        Contact {
+            id: anotherContactWithoutUrl
         }
 
-        function test_urlsCountOfContactWithoutUrlsIsZero() {
-            compare(contactWithoutUrl.urls.length, 0);
+        Contact {
+            id: yetAnotherContactWithoutUrl
+        }
+
+        function test_urlOfContactWithoutUrlIsDefined() {
+            verifyIsDefined(contactWithoutUrl.url);
+        }
+
+        function test_urlOfContactWithoutUrlIsEmpty() {
+            verifyIsUndefined(contactWithoutUrl.url.url);
+            verifyIsUndefined(contactWithoutUrl.url.subType);
+        }
+
+        function test_urlsCountOfAnotherContactWithoutUrlIsZero() {
+            // we do not access the url property of the contact,
+            // so in this case the expected length is 0
+            compare(anotherContactWithoutUrl.urls.length, 0);
+        }
+
+        function test_urlsCountOfYetAnotherContactWithoutUrlIsOne() {
+            // we first access the url property of the contact,
+            // so in this case the expected length is 1
+            verifyIsDefined(yetAnotherContactWithoutUrl.url);
+            compare(yetAnotherContactWithoutUrl.urls.length, 1);
         }
     }
 
@@ -178,6 +200,10 @@ TestCase {
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
+    }
+
+    function verifyIsDefined(object) {
+        verify(object, "Object " + object + " is defined");
     }
 }
 

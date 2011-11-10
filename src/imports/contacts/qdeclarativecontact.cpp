@@ -392,14 +392,7 @@ void QDeclarativeContact::save()
 */
 QDeclarativeContactAddress* QDeclarativeContact::address()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Address == detail->detailType())
-        {
-            QDeclarativeContactAddress* tempAddress = static_cast<QDeclarativeContactAddress *>(detail);
-            return tempAddress;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactAddress>(QDeclarativeContactDetail::Address);
 }
 
 /*!
@@ -425,14 +418,7 @@ QDeclarativeListProperty<QDeclarativeContactAddress> QDeclarativeContact::addres
 */
 QDeclarativeContactAnniversary* QDeclarativeContact::anniversary()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Anniversary == detail->detailType())
-        {
-            QDeclarativeContactAnniversary* tempAnniversary = static_cast<QDeclarativeContactAnniversary *>(detail);
-            return tempAnniversary;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactAnniversary>(QDeclarativeContactDetail::Anniversary);
 }
 
 /*!
@@ -442,14 +428,7 @@ QDeclarativeContactAnniversary* QDeclarativeContact::anniversary()
 */
 QDeclarativeContactAvatar* QDeclarativeContact::avatar()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Avatar == detail->detailType())
-        {
-            QDeclarativeContactAvatar* tempAvatar = static_cast<QDeclarativeContactAvatar *>(detail);
-            return tempAvatar;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactAvatar>(QDeclarativeContactDetail::Avatar);
 }
 
 /*!
@@ -459,14 +438,7 @@ QDeclarativeContactAvatar* QDeclarativeContact::avatar()
 */
 QDeclarativeContactBirthday*  QDeclarativeContact::birthday()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Birthday == detail->detailType())
-        {
-            QDeclarativeContactBirthday* tempBirthday = static_cast<QDeclarativeContactBirthday *>(detail);
-            return tempBirthday;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactBirthday>(QDeclarativeContactDetail::Birthday);
 }
 
 /*!
@@ -476,12 +448,9 @@ QDeclarativeContactBirthday*  QDeclarativeContact::birthday()
 */
 QString QDeclarativeContact::displayLabel()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::DisplayLabel == detail->detailType())
-        {
-            QDeclarativeContactDisplayLabel* tempDisplayLabel = static_cast<QDeclarativeContactDisplayLabel *>(detail);
-            return tempDisplayLabel->label();
-        }
+    QDeclarativeContactDisplayLabel* tempDisplayLabel = getDetail<QDeclarativeContactDisplayLabel>(QDeclarativeContactDetail::DisplayLabel);
+    if (tempDisplayLabel) {
+        return tempDisplayLabel->label();
     }
     return QString::null;
 }
@@ -494,14 +463,7 @@ QString QDeclarativeContact::displayLabel()
 */
 QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Email == detail->detailType())
-        {
-            QDeclarativeContactEmailAddress* tempEmail = static_cast<QDeclarativeContactEmailAddress *>(detail);
-            return tempEmail;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactEmailAddress>(QDeclarativeContactDetail::Email);
 }
 
 /*!
@@ -527,14 +489,7 @@ QDeclarativeListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::e
 */
 QDeclarativeContactFamily*  QDeclarativeContact::family()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Family == detail->detailType())
-        {
-            QDeclarativeContactFamily* tempFamily = static_cast<QDeclarativeContactFamily *>(detail);
-            return tempFamily;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactFamily>(QDeclarativeContactDetail::Family);
 }
 
 /*!
@@ -544,14 +499,7 @@ QDeclarativeContactFamily*  QDeclarativeContact::family()
 */
 QDeclarativeContactFavorite*  QDeclarativeContact::favorite()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Favorite == detail->detailType())
-        {
-            QDeclarativeContactFavorite* tempFavorite = static_cast<QDeclarativeContactFavorite *>(detail);
-            return tempFavorite;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactFavorite>(QDeclarativeContactDetail::Favorite);
 }
 
 /*!
@@ -561,14 +509,7 @@ QDeclarativeContactFavorite*  QDeclarativeContact::favorite()
 */
 QDeclarativeContactGender*  QDeclarativeContact::gender()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Gender == detail->detailType())
-        {
-            QDeclarativeContactGender* tempGender = static_cast<QDeclarativeContactGender *>(detail);
-            return tempGender;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactGender>(QDeclarativeContactDetail::Gender);
 }
 
 /*!
@@ -578,14 +519,7 @@ QDeclarativeContactGender*  QDeclarativeContact::gender()
 */
 QDeclarativeContactGeoLocation*  QDeclarativeContact::geolocation()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Geolocation == detail->detailType())
-        {
-            QDeclarativeContactGeoLocation* tempGeolocation = static_cast<QDeclarativeContactGeoLocation *>(detail);
-            return tempGeolocation;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactGeoLocation>(QDeclarativeContactDetail::Geolocation);
 }
 
 /*!
@@ -595,14 +529,7 @@ QDeclarativeContactGeoLocation*  QDeclarativeContact::geolocation()
 */
 QDeclarativeContactGlobalPresence*  QDeclarativeContact::globalPresence()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::GlobalPresence == detail->detailType())
-        {
-            QDeclarativeContactGlobalPresence* tempPresence = static_cast<QDeclarativeContactGlobalPresence *>(detail);
-            return tempPresence;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactGlobalPresence>(QDeclarativeContactDetail::GlobalPresence);
 }
 
 /*!
@@ -612,14 +539,7 @@ QDeclarativeContactGlobalPresence*  QDeclarativeContact::globalPresence()
 */
 QDeclarativeContactGuid*  QDeclarativeContact::guid()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Guid == detail->detailType())
-        {
-            QDeclarativeContactGuid* tempGuid = static_cast<QDeclarativeContactGuid *>(detail);
-            return tempGuid;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactGuid>(QDeclarativeContactDetail::Guid);
 }
 
 /*!
@@ -629,14 +549,7 @@ QDeclarativeContactGuid*  QDeclarativeContact::guid()
 */
 QDeclarativeContactName*  QDeclarativeContact::name()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Name == detail->detailType())
-        {
-            QDeclarativeContactName* tempName = static_cast<QDeclarativeContactName *>(detail);
-            return tempName;
-        }
-    }
-    return 0;
+   return getDetail<QDeclarativeContactName>(QDeclarativeContactDetail::Name);
 }
 
 /*!
@@ -646,14 +559,7 @@ QDeclarativeContactName*  QDeclarativeContact::name()
 */
 QDeclarativeContactNickname*  QDeclarativeContact::nickname()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::NickName == detail->detailType())
-        {
-            QDeclarativeContactNickname* tempNickName = static_cast<QDeclarativeContactNickname *>(detail);
-            return tempNickName;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactNickname>(QDeclarativeContactDetail::NickName);
 }
 
 /*!
@@ -663,14 +569,7 @@ QDeclarativeContactNickname*  QDeclarativeContact::nickname()
 */
 QDeclarativeContactNote*  QDeclarativeContact::note()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Note == detail->detailType())
-        {
-            QDeclarativeContactNote* tempNote = static_cast<QDeclarativeContactNote *>(detail);
-            return tempNote;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactNote>(QDeclarativeContactDetail::Note);
 }
 
 /*!
@@ -681,14 +580,7 @@ QDeclarativeContactNote*  QDeclarativeContact::note()
 */
 QDeclarativeContactOnlineAccount*  QDeclarativeContact::onlineAccount()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::OnlineAccount == detail->detailType())
-        {
-            QDeclarativeContactOnlineAccount* tempOnlineAccount = static_cast<QDeclarativeContactOnlineAccount *>(detail);
-            return tempOnlineAccount;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactOnlineAccount>(QDeclarativeContactDetail::OnlineAccount);
 }
 
 /*!
@@ -698,14 +590,7 @@ QDeclarativeContactOnlineAccount*  QDeclarativeContact::onlineAccount()
 */
 QDeclarativeContactOrganization*  QDeclarativeContact::organization()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Organization == detail->detailType())
-        {
-            QDeclarativeContactOrganization* tempOrganization = static_cast<QDeclarativeContactOrganization *>(detail);
-            return tempOrganization;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactOrganization>(QDeclarativeContactDetail::Organization);
 }
 
 /*!
@@ -732,14 +617,7 @@ QDeclarativeListProperty<QDeclarativeContactOrganization> QDeclarativeContact::o
 */
 QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::PhoneNumber == detail->detailType())
-        {
-            QDeclarativeContactPhoneNumber* tempPhoneNumber = static_cast<QDeclarativeContactPhoneNumber *>(detail);
-            return tempPhoneNumber;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactPhoneNumber>(QDeclarativeContactDetail::PhoneNumber);
 }
 
 /*!
@@ -765,14 +643,7 @@ QDeclarativeListProperty<QDeclarativeContactPhoneNumber> QDeclarativeContact::ph
 */
 QDeclarativeContactPresence*  QDeclarativeContact::presence()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Presence == detail->detailType())
-        {
-            QDeclarativeContactPresence* tempPresence = static_cast<QDeclarativeContactPresence *>(detail);
-            return tempPresence;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactPresence>(QDeclarativeContactDetail::Presence);
 }
 
 /*!
@@ -782,14 +653,7 @@ QDeclarativeContactPresence*  QDeclarativeContact::presence()
 */
 QDeclarativeContactRingtone*  QDeclarativeContact::ringtone()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Ringtone == detail->detailType())
-        {
-            QDeclarativeContactRingtone* tempRingtone = static_cast<QDeclarativeContactRingtone *>(detail);
-            return tempRingtone;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactRingtone>(QDeclarativeContactDetail::Ringtone);
 }
 
 /*!
@@ -799,14 +663,7 @@ QDeclarativeContactRingtone*  QDeclarativeContact::ringtone()
 */
 QDeclarativeContactSyncTarget*  QDeclarativeContact::syncTarget()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::SyncTarget == detail->detailType())
-        {
-            QDeclarativeContactSyncTarget* tempSyncTarget = static_cast<QDeclarativeContactSyncTarget *>(detail);
-            return tempSyncTarget;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactSyncTarget>(QDeclarativeContactDetail::SyncTarget);
 }
 
 /*!
@@ -816,14 +673,7 @@ QDeclarativeContactSyncTarget*  QDeclarativeContact::syncTarget()
 */
 QDeclarativeContactTag*  QDeclarativeContact::tag()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Tag == detail->detailType())
-        {
-            QDeclarativeContactTag* tempTag = static_cast<QDeclarativeContactTag *>(detail);
-            return tempTag;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactTag>(QDeclarativeContactDetail::Tag);
 }
 
 /*!
@@ -866,14 +716,7 @@ void QDeclarativeContact::setThumbnail(const QUrl& url)
 */
 QDeclarativeContactUrl*  QDeclarativeContact::url()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Url == detail->detailType())
-        {
-            QDeclarativeContactUrl* tempUrl = static_cast<QDeclarativeContactUrl *>(detail);
-            return tempUrl;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactUrl>(QDeclarativeContactDetail::Url);
 }
 
 /*!
@@ -899,14 +742,7 @@ QDeclarativeListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
 */
 QDeclarativeContactHobby*  QDeclarativeContact::hobby()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Hobby == detail->detailType())
-        {
-            QDeclarativeContactHobby* tempHobby = static_cast<QDeclarativeContactHobby *>(detail);
-            return tempHobby;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactHobby>(QDeclarativeContactDetail::Hobby);
 }
 
 /*!
@@ -916,14 +752,7 @@ QDeclarativeContactHobby*  QDeclarativeContact::hobby()
 */
 QDeclarativeContactPersonId*  QDeclarativeContact::personid()
 {
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::PersonId == detail->detailType())
-        {
-            QDeclarativeContactPersonId* tempPersonId = static_cast<QDeclarativeContactPersonId *>(detail);
-            return tempPersonId;
-        }
-    }
-    return 0;
+    return getDetail<QDeclarativeContactPersonId>(QDeclarativeContactDetail::PersonId);
 }
 
 // call-back functions for list property contactDetails

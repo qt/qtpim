@@ -328,9 +328,9 @@ property Contact testContact
             model.saveContact(testContact)
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testContact = model.contacts[0]
-            compare(testContact.nickname,null)
-            compare(testContact.phoneNumber,null)
-            compare(testContact.email,null)
+            verify(!testContact.detail(ContactDetail.NickName))
+            verify(!testContact.detail(ContactDetail.PhoneNumber))
+            verify(!testContact.detail(ContactDetail.Email))
             compare(model.contacts.length, 1)
             testHelper.emptyContactsDb();
         }
@@ -412,7 +412,7 @@ property Contact testContact
         function test_contactRemoveDetail() {
             // delete one existing Detail
             contact4.removeDetail(phoneNumber4);
-            compare(contact4.phoneNumber,null)
+            verify(!contact4.phoneNumber.number)
         }
     }
 }

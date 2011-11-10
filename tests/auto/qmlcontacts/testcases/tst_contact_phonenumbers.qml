@@ -53,12 +53,34 @@ TestCase {
             id: contactWithoutPhoneNumber
         }
 
-        function test_phoneNumberOfContactWithoutPhoneNumberIsEmpty() {
-            verifyIsUndefined(contactWithoutPhoneNumber.phoneNumber);
+        Contact {
+            id: anotherContactWithoutPhoneNumber
         }
 
-        function test_phoneNumbersCountOfContactWithoutPhoneNumberIsZero() {
-            compare(contactWithoutPhoneNumber.phoneNumbers.length, 0);
+        Contact {
+            id: yetAnotherContactWithoutPhoneNumber
+        }
+
+        function test_phoneNumberOfContactWithoutPhoneNumberIsDefined() {
+            verifyIsDefined(contactWithoutPhoneNumber.phoneNumber);
+        }
+
+        function test_phoneNumberOfContactWithoutPhoneNumberIsEmpty() {
+            verifyIsUndefined(contactWithoutPhoneNumber.phoneNumber.number);
+            compare(contactWithoutPhoneNumber.phoneNumber.subTypes.length, 0);
+        }
+
+        function test_phoneNumbersCountOfAnotherContactWithoutPhoneNumberIsZero() {
+            // we do not access the phoneNumber property of the contact,
+            // so in this case the expected length is 0
+            compare(anotherContactWithoutPhoneNumber.phoneNumbers.length, 0);
+        }
+
+        function test_phoneNumbersCountOfYetAnotherContactWithoutPhoneNumberIsOne() {
+            // we first access the phoneNumber property of the contact,
+            // so in this case the expected length is 1
+            verifyIsDefined(yetAnotherContactWithoutPhoneNumber.phoneNumber);
+            compare(yetAnotherContactWithoutPhoneNumber.phoneNumbers.length, 1);
         }
     }
 
@@ -178,6 +200,10 @@ TestCase {
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
+    }
+
+    function verifyIsDefined(object) {
+        verify(object, "Object " + object + " is defined");
     }
 }
 

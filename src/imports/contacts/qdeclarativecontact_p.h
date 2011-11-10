@@ -177,6 +177,23 @@ private:
 
     QMap<QString, QContactDetailDefinition> m_defs;
 
+    template<typename T> T* getDetail(const QDeclarativeContactDetail::ContactDetailType &definitionName)
+    {
+        foreach (QDeclarativeContactDetail *detail, m_details) {
+            if (definitionName == detail->detailType())
+            {
+                T* tempDetail = static_cast<T *>(detail);
+                return tempDetail;
+            }
+        }
+        T* detail = new T;
+        if (detail) {
+            m_details.append(detail);
+            return detail;
+        }
+        return 0;
+    }
+
     // call-back functions for list property
     static void _q_detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);
     static QDeclarativeContactDetail *_q_detail_at(QDeclarativeListProperty<QDeclarativeContactDetail> *property, int index);

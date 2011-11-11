@@ -370,7 +370,7 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(const QString &definitionNa
     } else if (definitionName == QOrganizerEventAttendee::DefinitionName) {
         QOrganizerEventAttendee attendee;
         attendee.setName(QStringLiteral("people"));
-        attendee.setContactId(QStringLiteral("123456"));
+        attendee.setAttendeeId(QStringLiteral("123456"));
         attendee.setEmailAddress(QStringLiteral("people@nokia.com"));
         attendee.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
         attendee.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);

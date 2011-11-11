@@ -179,7 +179,7 @@ const QString QOrganizerEventAttendee::FieldName(QStringLiteral("Name"));
 const QString QOrganizerEventAttendee::FieldEmailAddress(QStringLiteral("EmailAddress"));
 
 /*!
-    \variable QOrganizerEventAttendee::FieldContactId
+    \variable QOrganizerEventAttendee::FieldAttendeeId
     \preliminary
 
     The constant key for which the string which identifies the attendee is stored in
@@ -187,7 +187,7 @@ const QString QOrganizerEventAttendee::FieldEmailAddress(QStringLiteral("EmailAd
     may be a serialized contact id, vCard UID, or other platform-specific identifier.
 
  */
-const QString QOrganizerEventAttendee::FieldContactId(QStringLiteral("ContactId"));
+const QString QOrganizerEventAttendee::FieldAttendeeId(QStringLiteral("AttendeeId"));
 
 /*!
     \variable QOrganizerEventAttendee::FieldParticipationStatus
@@ -263,22 +263,22 @@ QString QOrganizerEventAttendee::emailAddress() const
 }
 
 /*!
-    \fn QOrganizerEventAttendee::setContactId(const QString &contactId)
-    Sets the unique identifier of the attendee to \a contactId.
+    \fn QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
+    Sets the unique identifier of the attendee.
  */
-void QOrganizerEventAttendee::setContactId(const QString &contactId)
+void QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
 {
-    setValue(FieldContactId, contactId);
+    setValue(FieldAttendeeId, attendeeId);
 }
 
 /*!
-    \fn QOrganizerEventAttendee::contactId() const
+    \fn QOrganizerEventAttendee::attendeeId() const
     Returns the unique identifier of the attendee.  The format of the identifier
     is platform specific and may be a serialized id, a vCard UID, or something else.
  */
-QString QOrganizerEventAttendee::contactId() const
+QString QOrganizerEventAttendee::attendeeId() const
 {
-    return value<QString>(FieldContactId);
+    return value<QString>(FieldAttendeeId);
 }
 
 /*!

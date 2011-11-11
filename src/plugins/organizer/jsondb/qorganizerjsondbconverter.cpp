@@ -596,9 +596,9 @@ void QOrganizerJsonDbConverter::attendeeDetailToJsonDbObject(const QOrganizerEve
         } else if (i.key() == QOrganizerEventAttendee::FieldEmailAddress) {
             value = i.value().toString();
             jsonDbField = QOrganizerJsonDbStr::AttendeeEmailAddress;
-        } else if (i.key() == QOrganizerEventAttendee::FieldContactId) {
+        } else if (i.key() == QOrganizerEventAttendee::FieldAttendeeId) {
             value= i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::AttendeeContactId;
+            jsonDbField = QOrganizerJsonDbStr::AttendeeId;
         } else if (i.key() == QOrganizerEventAttendee::FieldParticipationRole) {
             value = enumToString(qt_organizerParticipationRoleMap, i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::AttendeeParticipationRole;
@@ -625,10 +625,10 @@ void QOrganizerJsonDbConverter::jsonDbObjectToAttendeeDetail(const QVariantMap &
             value = i.value().toString();
             if (!value.isEmpty())
                 attendeeDetail->setEmailAddress(value);
-        } else if (i.key() == QOrganizerJsonDbStr::AttendeeContactId) {
+        } else if (i.key() == QOrganizerJsonDbStr::AttendeeId) {
             value = i.value().toString();
             if (!value.isEmpty())
-                attendeeDetail->setContactId(value);
+                attendeeDetail->setAttendeeId(value);
         } else if (i.key() == QOrganizerJsonDbStr::AttendeeParticipationRole) {
             int intValue = stringToEnum(qt_organizerParticipationRoleMap, i.value().toString());
             attendeeDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));

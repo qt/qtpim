@@ -53,7 +53,7 @@ public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee, "Attendee")
     const static QString FieldName;
     const static QString FieldEmailAddress;
-    const static QString FieldContactId;
+    const static QString FieldAttendeeId;
     const static QString FieldParticipationStatus;
     const static QString FieldParticipationRole;
 
@@ -89,8 +89,8 @@ public:
     void setParticipationRole(ParticipationRole role);
     ParticipationRole participationRole() const;
 
-    void setContactId(const QString &contactId);
-    QString contactId() const;
+    void setAttendeeId(const QString &attendeeId);
+    QString attendeeId() const;
 };
 
 QTORGANIZER_END_NAMESPACE

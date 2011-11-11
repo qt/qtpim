@@ -4663,7 +4663,7 @@ void tst_QOrganizerManager::testAttendee()
     // Save item and verify
     QOrganizerEventAttendee attendee;
     attendee.setName("people");
-    attendee.setContactId("123456");
+    attendee.setAttendeeId("123456");
     attendee.setEmailAddress("people@nokia.com");
     attendee.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
     attendee.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
@@ -4676,7 +4676,7 @@ void tst_QOrganizerManager::testAttendee()
 
     // Update
     attendee.setName("newpeople");
-    attendee.setContactId("54321");
+    attendee.setAttendeeId("54321");
     attendee.setEmailAddress("newpeople@nokia.com");
     event.saveDetail(&attendee);
     QVERIFY(item != event);
@@ -4687,7 +4687,7 @@ void tst_QOrganizerManager::testAttendee()
 
     // Add one more attendee
     QOrganizerEventAttendee a1;
-    a1.setContactId("777777");
+    a1.setAttendeeId("777777");
     a1.setName("people1");
     a1.setEmailAddress("people1@nokia.com");
     event.saveDetail(&a1);

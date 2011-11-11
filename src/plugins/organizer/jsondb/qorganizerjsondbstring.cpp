@@ -132,7 +132,7 @@ const QString QOrganizerJsonDbStr::RuleMonthsOfYear(QStringLiteral("monthsOfYear
 const QString QOrganizerJsonDbStr::Attendee(QStringLiteral("attendee"));
 const QString QOrganizerJsonDbStr::AttendeeName(QStringLiteral("name"));
 const QString QOrganizerJsonDbStr::AttendeeEmailAddress(QStringLiteral("emailAddress"));
-const QString QOrganizerJsonDbStr::AttendeeContactId(QStringLiteral("contactId"));
+const QString QOrganizerJsonDbStr::AttendeeId(QStringLiteral("attendeeId"));
 const QString QOrganizerJsonDbStr::AttendeeParticipationStatus(QStringLiteral("participationStatus"));
 const QString QOrganizerJsonDbStr::AttendeeParticipationRole(QStringLiteral("participationRole"));
 

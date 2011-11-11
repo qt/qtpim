@@ -1768,14 +1768,14 @@ QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEvent
 void QDeclarativeOrganizerEventAttendee::setAttendeeId(const QString &newAttendeeId)
 {
     if (attendeeId() != newAttendeeId && !readOnly()) {
-        m_detail.setValue(QOrganizerEventAttendee::FieldContactId, newAttendeeId);
+        m_detail.setValue(QOrganizerEventAttendee::FieldAttendeeId, newAttendeeId);
         emit valueChanged();
     }
 }
 
 QString QDeclarativeOrganizerEventAttendee::attendeeId() const
 {
-    return m_detail.value(QOrganizerEventAttendee::FieldContactId).toString();
+    return m_detail.value(QOrganizerEventAttendee::FieldAttendeeId).toString();
 }
 
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type)
@@ -2141,7 +2141,7 @@ QString QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(int type)
     case 1:
         return QOrganizerEventAttendee::FieldEmailAddress;
     case 2:
-        return QOrganizerEventAttendee::FieldContactId;
+        return QOrganizerEventAttendee::FieldAttendeeId;
     case 3:
         return QOrganizerEventAttendee::FieldParticipationStatus;
     case 4:

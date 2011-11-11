@@ -152,7 +152,7 @@ public:
     const static QString Attendee;
     const static QString AttendeeName;
     const static QString AttendeeEmailAddress;
-    const static QString AttendeeContactId;
+    const static QString AttendeeId;
     const static QString AttendeeParticipationStatus;
     const static QString AttendeeParticipationRole;
 

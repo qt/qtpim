@@ -1241,27 +1241,27 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
 
 
 /*!
-  Performs insertion sort of the item \a toAdd into the \a sorted list, according to the provided \a sortOrders list.
-  The first QOrganizerItemSortOrder in the list has the highest priority; if the item \a toAdd is deemed equal to another
-  in the \a sorted list, the second QOrganizerItemSortOrder in the list is used (and so on until either the item is inserted
-  or there are no more sort order objects in the list).
-  \since 1.1
+    Insert \a toAdd to the \a sorted list, according to the provided \a sortOrders. The index where \a toAdd is inserted
+    is returned.
+
+    The first one in the \a sortOrders list has the highest priority.
  */
-void QOrganizerManagerEngine::addSorted(QList<QOrganizerItem>* sorted, const QOrganizerItem& toAdd, const QList<QOrganizerItemSortOrder>& sortOrders)
+int QOrganizerManagerEngine::addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders)
 {
     if (sortOrders.count() > 0) {
-        for (int i = 0; i < sorted->size(); i++) {
+        for (int i = 0; i < sorted->size(); ++i) {
             // check to see if the new item should be inserted here
             int comparison = compareItem(sorted->at(i), toAdd, sortOrders);
             if (comparison > 0) {
                 sorted->insert(i, toAdd);
-                return;
+                return i;
             }
         }
     }
 
     // hasn't been inserted yet?  append to the list.
     sorted->append(toAdd);
+    return sorted->size() - 1;
 }
 
 /*!

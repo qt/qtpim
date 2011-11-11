@@ -164,8 +164,6 @@ Rectangle {
 
                 model.saveItem(savedEvent);
                 organizerChangedSpy.wait();
-                model.update();
-                organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
@@ -179,8 +177,6 @@ Rectangle {
                 var removeEventDetail = updatedEvent.detail(Detail.AudibleReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
-                organizerChangedSpy.wait();
-                model.update();
                 organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)

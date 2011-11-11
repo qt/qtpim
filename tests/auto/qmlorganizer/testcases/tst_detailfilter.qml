@@ -115,8 +115,7 @@ TestCase {
         + "   }");
         detailEvent.setDetail(detail);
         organizerModel.saveItem(detailEvent);
-        modelChangedSpy.wait();//save
-        modelChangedSpy.wait();//update
+        modelChangedSpy.wait();
     }
 
     function applyFilter(data) {

@@ -173,22 +173,30 @@ public slots:
     void cancelUpdate();
     void exportItems(const QUrl& url, const QStringList& profiles=QStringList());
     void importItems(const QUrl& url, const QStringList& profiles=QStringList());
+
 private slots:
     void fetchAgain();
     void requestUpdated();
     void doUpdate();
 
-    void itemsSaved();
+    // handle request from saveItem(), removeItem(), saveCollection(), and removeCollection()
+    void onRequestStateChanged(QOrganizerAbstractRequest::State newState);
 
-    void itemsRemoved();
-    void itemsRemoved(const QList<QOrganizerItemId>& ids);
-    void itemsChanged(const QList<QOrganizerItemId>& ids);
+    // handle signals from organizer manager
+    void onItemsAdded(const QList<QOrganizerItemId> &itemIds);
+    void onItemsChanged(const QList<QOrganizerItemId> &itemIds);
+    void onItemsRemoved(const QList<QOrganizerItemId> &itemIds);
+
     void startImport(QVersitReader::State state);
     void itemsExported(QVersitWriter::State state);
 
     void collectionsFetched();
-    void collectionSaved();
-    void collectionRemoved();
+
+    // handle fetch request from onItemsAdded()
+    void onItemsAddedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
+
+    // handle fetch request from onItemsChanged()
+    void onItemsChangedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
 
 private:
     void clearItems();

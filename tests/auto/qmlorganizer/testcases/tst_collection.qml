@@ -497,17 +497,17 @@ TestCase {
         modelChangedSpy.wait(spyWaitDelay);
         wait(250);//waiting for asyncronous operations to finish on backend side
         verify(!organizerModel.item(eventItemId));
-        compare(collectionsChangedSpy.count, 7);// item addition caused one and collection removal second
+        compare(collectionsChangedSpy.count, 6);
         // - remove non-existing
         organizerModel.removeCollection("Missing in action");
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 7);
+        compare(collectionsChangedSpy.count, 6);
         // - remove default collection
         organizerModel.removeCollection(organizerModel.defaultCollection.collectionId);
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 7);
+        compare(collectionsChangedSpy.count, 6);
 
         // after all the modifications to collections, default should still be the same
         compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);

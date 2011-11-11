@@ -180,6 +180,7 @@ Rectangle {
                 compare(model.itemCount, 0)
                 //save event to default collection
                 event.collectionId = model.defaultCollection().collectionId;
+                organizerChangedSpy.signalName = "modelChanged";
                 model.saveItem(event);
                 count = 0;
                 do {

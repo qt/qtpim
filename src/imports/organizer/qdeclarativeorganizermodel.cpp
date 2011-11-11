@@ -96,7 +96,7 @@ public:
 }
 
     QList<QDeclarativeOrganizerItem*> m_items;
-    QMap<QString, QDeclarativeOrganizerItem*> m_itemMap;
+    QHash<QString, QDeclarativeOrganizerItem *> m_itemIdHash;
     QOrganizerManager* m_manager;
     QDeclarativeOrganizerItemFetchHint* m_fetchHint;
     QList<QOrganizerItemSortOrder> m_sortOrders;
@@ -392,9 +392,9 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
     }
 
     connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(update()));
-    connect(d->m_manager, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SLOT(update()));
-    connect(d->m_manager, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(itemsRemoved(QList<QOrganizerItemId>)));
-    connect(d->m_manager, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(itemsChanged(QList<QOrganizerItemId>)));
+    connect(d->m_manager, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SLOT(onItemsAdded(QList<QOrganizerItemId>)));
+    connect(d->m_manager, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(onItemsRemoved(QList<QOrganizerItemId>)));
+    connect(d->m_manager, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(onItemsChanged(QList<QOrganizerItemId>)));
     connect(d->m_manager, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
@@ -592,7 +592,7 @@ void QDeclarativeOrganizerModel::addSorted(QDeclarativeOrganizerItem* item)
     beginInsertRows(QModelIndex(), idx, idx + 1);
     d->m_items.insert(idx, item);
     endInsertRows();
-    d->m_itemMap.insert(item->itemId(), item);
+    d->m_itemIdHash.insert(item->itemId(), item);
 
     if (itemHasReccurence(item->item())) {
         foreach (QDeclarativeOrganizerItem* di, d->m_items) {
@@ -600,7 +600,7 @@ void QDeclarativeOrganizerModel::addSorted(QDeclarativeOrganizerItem* item)
                  QOrganizerItemParent oip = di->item().detail<QOrganizerItemParent>();
                  if (oip.parentId() == item->item().id()) {
                      //delete this occurrence item, we will refetch it
-                     d->m_itemMap.remove(di->itemId());
+                     d->m_itemIdHash.remove(di->itemId());
                      d->m_items.removeOne(di);
                      di->deleteLater();
                  }
@@ -632,7 +632,7 @@ void QDeclarativeOrganizerModel::clearItems()
     foreach (QDeclarativeOrganizerItem* di, d->m_items)
         di->deleteLater();
     d->m_items.clear();
-    d->m_itemMap.clear();
+    d->m_itemIdHash.clear();
 }
 
 QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganizerItem& item)
@@ -690,17 +690,16 @@ bool QDeclarativeOrganizerModel::containsItems(QDateTime start, QDateTime end)
 }
 
 /*!
-  \qmlmethod OrganizerItem OrganizerModel::item(string itemId)
-  Returns the OrganizerItem object which item id is the given \a itemId.
+    \qmlmethod OrganizerItem OrganizerModel::item(string itemId)
 
-  \since organizer 1.1.1
-  */
-QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::item(const QString& id)
+    Returns the OrganizerItem object with the given \a itemId.
+ */
+QDeclarativeOrganizerItem *QDeclarativeOrganizerModel::item(const QString &itemId)
 {
+    if (itemId.isEmpty())
+        return 0;
 
-    if (d->m_itemMap.contains(id))
-        return d->m_itemMap.value(id);
-    return 0;
+    return d->m_itemIdHash.value(itemId, 0);
 }
 
 /*!
@@ -818,14 +817,11 @@ void QDeclarativeOrganizerModel::requestUpdated()
             }
         } else {
             //Partial updating, insert the fetched items into the the exist item list.
+            QDeclarativeOrganizerItem *di;
             foreach (const QOrganizerItem& item, items) {
-                QDeclarativeOrganizerItem* di;
-                if (d->m_itemMap.contains(item.id().toString())) {
-                    di = d->m_itemMap.value(item.id().toString());
-                    di->setItem(item);
-                } else {
+                di = d->m_itemIdHash.value(item.id().toString(), 0);
+                if (!di)
                     di = createItem(item);
-                }
                 addSorted(di);
             }
         }
@@ -848,21 +844,11 @@ void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
         req->setManager(d->m_manager);
         req->setItem(item);
 
-        connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(itemsSaved()));
+        connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
         req->start();
     }
 }
-
-void QDeclarativeOrganizerModel::itemsSaved()
-{
-    QOrganizerItemSaveRequest* req = qobject_cast<QOrganizerItemSaveRequest*>(QObject::sender());
-    if (req->isFinished()) {
-        checkError(req);
-        req->deleteLater();
-    }
-}
-
 
 /*!
   \qmlmethod OrganizerModel::removeItem(string itemId)
@@ -902,72 +888,208 @@ void QDeclarativeOrganizerModel::removeItems(const QStringList& ids)
 
     req->setItemIds(oids);
 
-    connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(itemsRemoved()));
+    connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
     req->start();
 }
 
-void QDeclarativeOrganizerModel::itemsChanged(const QList<QOrganizerItemId>& ids)
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerModel::onRequestStateChanged(QOrganizerAbstractRequest::State newState)
 {
-    if (d->m_autoUpdate) {
-        QList<QString> updatedIds;
-        foreach (const QOrganizerItemId& id, ids) {
-            if (d->m_itemMap.contains(id.toString())) {
-                updatedIds << id.toString();
-            }
-        }
+    if (newState != QOrganizerAbstractRequest::FinishedState || !sender())
+        return;
 
-        if (updatedIds.count() > 0)
-            fetchItems(updatedIds);
-    }
+    QOrganizerAbstractRequest *request = qobject_cast<QOrganizerAbstractRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+    request->deleteLater();
 }
 
-void QDeclarativeOrganizerModel::itemsRemoved()
-{
-    if (d->m_autoUpdate) {
-        QOrganizerItemRemoveRequest* req = qobject_cast<QOrganizerItemRemoveRequest*>(QObject::sender());
-
-        if (req->isFinished()) {
-            checkError(req);
-            req->deleteLater();
-        }
-    }
-}
-
-void QDeclarativeOrganizerModel::removeItemsFromModel(const QList<QString>& ids)
+void QDeclarativeOrganizerModel::removeItemsFromModel(const QList<QString> &itemIds)
 {
     bool emitSignal = false;
-    foreach (const QString& itemId, ids) {
-        if (d->m_itemMap.contains(itemId)) {
-            int row = 0;
-            //TODO:need a fast lookup
-            for (; row < d->m_items.count(); row++) {
-                if (d->m_items.at(row)->itemId() == itemId)
-                    break;
-            }
 
-            if (row < d->m_items.count()) {
-                beginRemoveRows(QModelIndex(), row, row);
-                d->m_items.removeAt(row);
-                d->m_itemMap.remove(itemId);
-                endRemoveRows();
-                emitSignal = true;
+    foreach (const QString &itemId, itemIds) {
+        if (d->m_itemIdHash.remove(itemId) > 0) {
+            emitSignal = true;
+
+            for (int i = 0; i < d->m_items.count(); ++i) {
+                if (d->m_items.at(i)->itemId() == itemId) {
+                    beginRemoveRows(QModelIndex(), i, i);
+                    d->m_items.removeAt(i);
+                    endRemoveRows();
+                    break;
+                }
             }
         }
     }
+
     if (emitSignal)
         emit modelChanged();
 }
 
-void QDeclarativeOrganizerModel::itemsRemoved(const QList<QOrganizerItemId>& ids)
+/*!
+    \internal
+
+    It's invoked upon the QOrganizerManager::itemsAdded() signal.
+ */
+void QDeclarativeOrganizerModel::onItemsAdded(const QList<QOrganizerItemId> &itemIds)
 {
-    if (!ids.isEmpty()) {
-        QList<QString> idStrings;
-        foreach (const QOrganizerItemId& id, ids) {
-            idStrings << id.toString();
+    if (d->m_autoUpdate && !itemIds.isEmpty()) {
+        QOrganizerItemFetchRequest *fetchRequest = new QOrganizerItemFetchRequest(this);
+        connect(fetchRequest, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)),
+                this, SLOT(onItemsAddedFetchRequestStateChanged(QOrganizerAbstractRequest::State)));
+        fetchRequest->setManager(d->m_manager);
+        fetchRequest->setStartDate(d->m_startPeriod);
+        fetchRequest->setEndDate(d->m_endPeriod);
+        fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QOrganizerItemFetchHint());
+
+        QOrganizerItemIdFilter idFilter;
+        idFilter.setIds(itemIds);
+        if (d->m_filter) {
+            QOrganizerItemIntersectionFilter filter;
+            filter.append(d->m_filter->filter());
+            filter.append(idFilter);
+            fetchRequest->setFilter(filter);
+        } else {
+            fetchRequest->setFilter(idFilter);
         }
+
+        fetchRequest->start();
+    }
+}
+
+/*!
+    \internal
+
+    It's invoked upon the QOrganizerManager::itemsChanged() signal.
+ */
+void QDeclarativeOrganizerModel::onItemsChanged(const QList<QOrganizerItemId> &itemIds)
+{
+    if (d->m_autoUpdate && !itemIds.isEmpty()) {
+        QList<QOrganizerItemId> updatedIds;
+        foreach (const QOrganizerItemId &itemId, itemIds) {
+            QString itemIdString(itemId.toString());
+            if (d->m_itemIdHash.contains(itemIdString))
+                updatedIds.append(itemId);
+            }
+
+        if (updatedIds.count() > 0) {
+            QOrganizerItemFetchByIdRequest *fetchRequest = new QOrganizerItemFetchByIdRequest(this);
+            connect(fetchRequest, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)),
+                    this, SLOT(onItemsChangedFetchRequestStateChanged(QOrganizerAbstractRequest::State)));
+            fetchRequest->setManager(d->m_manager);
+            fetchRequest->setIds(updatedIds);
+            fetchRequest->start();
+        }
+    }
+}
+
+/*!
+    \internal
+
+    It's invoked upon the QOrganizerManager::itemsRemoved() signal.
+ */
+void QDeclarativeOrganizerModel::onItemsRemoved(const QList<QOrganizerItemId> &itemIds)
+{
+    if (d->m_autoUpdate && !itemIds.isEmpty()) {
+        QList<QString> idStrings;
+        foreach (const QOrganizerItemId &itemId, itemIds)
+            idStrings << itemId.toString();
         removeItemsFromModel(idStrings);
     }
+}
+
+/*!
+    \internal
+
+    It's invoked by the fetch request from onItemsAdded().
+ */
+void QDeclarativeOrganizerModel::onItemsAddedFetchRequestStateChanged(QOrganizerAbstractRequest::State state)
+{
+    if (state != QOrganizerAbstractRequest::FinishedState || !sender())
+        return;
+
+    QOrganizerItemFetchRequest *request = qobject_cast<QOrganizerItemFetchRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+
+    if (request->error() == QOrganizerManager::NoError) {
+        bool emitSignal = false;
+        QList<QOrganizerItem> fetchedItems(request->items());
+        foreach (const QOrganizerItem &fetchedItem, fetchedItems) {
+            // needed because it might already been added by fetchAgain ;)
+            QString itemIdString(fetchedItem.id().toString());
+            if (d->m_itemIdHash.contains(itemIdString))
+                continue;
+
+            emitSignal = true;
+
+            if (fetchedItem.type() == QOrganizerItemType::TypeEventOccurrence || fetchedItem.type() == QOrganizerItemType::TypeTodoOccurrence) {
+                // TODO handle occurrences
+            } else {
+                QDeclarativeOrganizerItem *item = createItem(fetchedItem);
+                int index = itemIndex(item);
+                beginInsertRows(QModelIndex(), index, index);
+                d->m_items.insert(index, item);
+                d->m_itemIdHash.insert(itemIdString, item);
+                endInsertRows();
+            }
+        }
+        if (emitSignal)
+            emit modelChanged();
+    }
+
+    request->deleteLater();
+}
+
+/*!
+    \internal
+
+    It's invoked by the fetch request from onItemsChanged().
+ */
+void QDeclarativeOrganizerModel::onItemsChangedFetchRequestStateChanged(QOrganizerAbstractRequest::State state)
+{
+    if (state != QOrganizerAbstractRequest::FinishedState || !sender())
+        return;
+
+    QOrganizerItemFetchByIdRequest *request = qobject_cast<QOrganizerItemFetchByIdRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+
+    if (request->error() == QOrganizerManager::NoError) {
+        QList<QOrganizerItem> fetchedItems(request->items());
+        int count = 0;
+        foreach (const QOrganizerItem &fetchedItem, fetchedItems) {
+            if (fetchedItem.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+                QString itemIdString(fetchedItem.id().toString());
+                for (int i = 0; i < d->m_items.size(); ++i) {
+                    if (d->m_items.at(i)->itemId() == itemIdString) {
+                        d->m_items.at(i)->setItem(fetchedItem);
+                        emit dataChanged(createIndex(i, 0), createIndex(i, 0));
+                        ++count;
+                        break;
+                    }
+                }
+            } else {
+                // TODO handle occurrences
+            }
+
+            if (count == fetchedItems.size())
+                break;
+        }
+        emit modelChanged();
+    }
+
+    request->deleteLater();
 }
 
 /*!
@@ -1047,18 +1169,9 @@ void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection*
         req->setManager(d->m_manager);
         req->setCollection(collection);
 
-        connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionSaved()));
+        connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
         req->start();
-    }
-}
-
-void QDeclarativeOrganizerModel::collectionSaved()
-{
-    QOrganizerCollectionSaveRequest* req = qobject_cast<QOrganizerCollectionSaveRequest*>(QObject::sender());
-    if (req->isFinished()) {
-        checkError(req);
-        req->deleteLater();
     }
 }
 
@@ -1072,18 +1185,9 @@ void QDeclarativeOrganizerModel::removeCollection(const QString &collectionId)
     req->setManager(d->m_manager);
     req->setCollectionId(QOrganizerCollectionId::fromString(collectionId));
 
-    connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionRemoved()));
+    connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
     req->start();
-}
-
-void QDeclarativeOrganizerModel::collectionRemoved()
-{
-    QOrganizerCollectionRemoveRequest* req = qobject_cast<QOrganizerCollectionRemoveRequest*>(QObject::sender());
-    if (req->isFinished()) {
-        checkError(req);
-        req->deleteLater();
-    }
 }
 
 /*!

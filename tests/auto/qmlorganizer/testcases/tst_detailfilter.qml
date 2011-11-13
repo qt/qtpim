@@ -123,11 +123,11 @@ TestCase {
         var filterChangedSpy = create_spy(organizerModel, "filterChanged");
         var filter = create_detailFilter();
         filter.detail = data.filterDetail;
-        if (data.filterField)
+        if (data.filterField != undefined)
             filter.field = data.filterField;
-        if (data.filterValue)
+        if (data.filterValue != undefined)
             filter.value = data.filterValue;
-        if (data.matchFlags)
+        if (data.matchFlags != undefined)
             filter.matchFlags = data.matchFlags
         compare(organizerModel.error, "NoError");
         organizerModel.filter = filter;
@@ -162,7 +162,7 @@ TestCase {
                         + "DetailFilter {\n"
                         + "id: testDetailFilter\n"
                         + "detail:Detail.Description\n"
-                        + "field:'Description'\n"
+                        + "field:Description.FieldDescription\n"
                         + "value: 'my value'\n"
                         + "matchFlags: Filter.MatchContains\n"
                         + "}\n"
@@ -204,7 +204,7 @@ TestCase {
         return [
             {tag: "empty field", testValue: ""},
             {tag: "string field", testValue: "something"},
-            {tag: "enum string field", testValue: "Detail.Type"},
+            {tag: "enum field", testValue: "Type.FieldType"},
         ]
     }
     function test_field(data) {
@@ -409,17 +409,17 @@ TestCase {
             {tag: "exact filter - EventTime.StartDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.EventTime, filterField: "StartDateTime", filterValue: new Date("2011-10-23T16:42:00")},//notice, date-object
             {tag: "exact filter - EventTime.EndDateTime", expectedItemsAmount: 1,
-                filterDetail: Detail.EventTime, filterField: "EndDateTime", filterValue: new Date("2011-10-23T21:00:00")},
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldEndDateTime, filterValue: new Date("2011-10-23T21:00:00")},
             {tag: "exact filter - EventTime.AllDayEvent", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
-                filterDetail: Detail.EventTime, filterField: "AllDay", filterValue: true},
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - TodoTime.StartDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: "StartDateTime", filterValue: new Date("2010-10-23T15:48:00")},
             {tag: "exact filter - TodoTime.DueDateTime", expectedItemsAmount: 1,
-                filterDetail: Detail.TodoTime, filterField: "DueDateTime", filterValue: new Date("2010-10-25T15:49:00Z")},//notice, date-object with Z
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00Z")},//notice, date-object with Z
             {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
-                filterDetail: Detail.TodoTime, filterField: "AllDay", filterValue: true},
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - Comment", expectedItemsAmount: 1,
-                filterDetail: Detail.Comment, filterField: "Comment", filterValue: "my comment",
+                filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "my comment",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   Comment {\n"
@@ -428,11 +428,11 @@ TestCase {
             {tag: "exact filter - Description", expectedItemsAmount: 1,
                 filterDetail: Detail.Description, filterField: "Description", filterValue: "for exact filter - Description"},
             {tag: "exact filter - DisplayLabel", expectedItemsAmount: 1,
-                filterDetail: Detail.DisplayLabel, filterField: "Label", filterValue: "my displayLabel"},
+                filterDetail: Detail.DisplayLabel, filterField: DisplayLabel.FieldLabel, filterValue: "my displayLabel"},
             {tag: "exact filter - Guid", expectedItemsAmount: 1,
-                filterDetail: Detail.Guid, filterField: "Guid", filterValue: "my guid"},
+                filterDetail: Detail.Guid, filterField: Guid.FieldGuid, filterValue: "my guid"},
             {tag: "exact filter - Location.Label", expectedItemsAmount: 1,
-                filterDetail: Detail.Location, filterField: "Label", filterValue: "my location"},
+                filterDetail: Detail.Location, filterField: Location.FieldLabel, filterValue: "my location"},
             {tag: "exact filter - Location.Longitude", expectedItemsAmount: 1,
                 filterDetail: Detail.Location, filterField: "Longitude", filterValue: 12345.12345,
                 separateDetailCtrStr: "import QtQuick 2.0\n"
@@ -442,7 +442,7 @@ TestCase {
                 + "   longitude: 12345.12345\n"
                 + "   }"},
             {tag: "exact filter - Location.Latitude", expectedItemsAmount: 1,
-                filterDetail: Detail.Location, filterField: "Latitude", filterValue: 54321.54321,
+                filterDetail: Detail.Location, filterField: Location.FieldLatitude, filterValue: 54321.54321,
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   Location {\n"
@@ -450,20 +450,20 @@ TestCase {
                 + "   latitude: 54321.54321\n"
                 + "   }"},
             {tag: "exact filter - Priority", expectedItemsAmount: 1,
-                filterDetail: Detail.Priority, filterField: "Priority", filterValue: Priority.VeryHigh},
+                filterDetail: Detail.Priority, filterField: Priority.FieldPriority, filterValue: Priority.VeryHigh},
             {tag: "exact filter - Type enum", expectedItemsAmount: 4,//amount of todos
-                filterDetail: Detail.Type, filterField: "Type", filterValue: Type.Todo},
+                filterDetail: Detail.Type, filterField: Type.FieldType, filterValue: Type.Todo},
             {tag: "exact filter - Type string", expectedItemsAmount: 4,//amount of todos
-                filterDetail: Detail.Type, filterField: "Type", filterValue: "Todo"},
+                filterDetail: Detail.Type, filterField: Type.FieldType, filterValue: "Todo"},
             {tag: "exact filter - Tag", expectedItemsAmount: 1,
-                filterDetail: Detail.Tag, filterField: "Tag", filterValue: "my tag",
+                filterDetail: Detail.Tag, filterField: Tag.FieldTag, filterValue: "my tag",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   Tag {\n"
                 + "   tag: 'my tag'\n"
                 + "   }"},
             {tag: "exact filter - ExtendedDetail", expectedItemsAmount: 1,
-                filterDetail: Detail.Customized, filterField: "ExtendedDetailName", filterValue: "myField",
+                filterDetail: Detail.Customized, filterField: ExtendedDetail.FieldName, filterValue: "myField",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   ExtendedDetail {\n"
@@ -539,25 +539,25 @@ TestCase {
     function test_matchflags_data() {
         return [
             {tag: "Filter set, Description - MatchExactly", expectedItemsAmount: 1,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "aa bb cc",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "aa bb cc",
                 matchFlags: Filter.MatchExactly},
             {tag: "Filter set, Description - MatchFixedString", expectedItemsAmount: 0,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "bb",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
                 matchFlags: Filter.MatchEndsWith | Filter.MatchFixedString},
             {tag: "Filter set, Description - MatchContains case insensitive", expectedItemsAmount: 2,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "bb",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
                 matchFlags: Filter.MatchContains},
             {tag: "Filter set, Description - MatchContains case sensitive", expectedItemsAmount: 1,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "bb",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
                 matchFlags: Filter.MatchContains | Filter.MatchCaseSensitive},
             {tag: "Filter set, Description - MatchStartsWith", expectedItemsAmount: 1,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "bb",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
                 matchFlags: Filter.MatchStartsWith},
             {tag: "Filter set, Description - MatchEndsWith", expectedItemsAmount: 1,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "ee",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "ee",
                 matchFlags: Filter.MatchEndsWith},
             {tag: "Filter set, Comment - MatchExactly", expectedItemsAmount: 1,
-                filterDetail: Detail.Comment, filterField: "Comment", filterValue: "my great comment",
+                filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "my great comment",
                 matchFlags: Filter.MatchExactly,
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
@@ -565,7 +565,7 @@ TestCase {
                 + "   comment: 'my great comment'\n"
                 + "   }"},
             {tag: "Filter set, Comment - MatchStartsWith", expectedItemsAmount: 1,
-                filterDetail: Detail.Comment, filterField: "Comment", filterValue: "my",
+                filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "my",
                 matchFlags: Filter.MatchStartsWith,
                 // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
@@ -575,7 +575,7 @@ TestCase {
                 + "   comment: 'my great comment'\n"
                 + "   }"},
             {tag: "Filter set, Comment - MatchContains", expectedItemsAmount: 1,
-                filterDetail: Detail.Comment, filterField: "Comment", filterValue: "great",
+                filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "great",
                 matchFlags: Filter.MatchContains,
                 // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
@@ -585,7 +585,7 @@ TestCase {
                 + "   comment: 'my great comment'\n"
                 + "   }"},
             {tag: "Filter set, Comment - MatchEndsWith", expectedItemsAmount: 1,
-                filterDetail: Detail.Comment, filterField: "Comment", filterValue: "comment",
+                filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "comment",
                 matchFlags: Filter.MatchEndsWith,
                 // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
@@ -595,7 +595,7 @@ TestCase {
                 + "   comment: 'my great comment'\n"
                 + "   }"},
             {tag: "Filter set, Tag - MatchContains", expectedItemsAmount: 1,
-                filterDetail: Detail.Tag, filterField: "Tag", filterValue: "excellent",
+                filterDetail: Detail.Tag, filterField: Tag.FieldTag, filterValue: "excellent",
                 matchFlags: Filter.MatchContains,
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
@@ -603,7 +603,7 @@ TestCase {
                 + "   tag: 'my excellent tag'\n"
                 + "   }"},
             {tag: "Filter set, Description - tighten filter", expectedItemsAmount: 2,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "bb",
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
                 matchFlags: Filter.MatchContains, matchFlagsTighter: Filter.MatchContains | Filter.MatchCaseSensitive}
         ]
     }
@@ -674,36 +674,36 @@ TestCase {
             {tag: "Unsupported matchflag, TodoTime", filterDetail: Detail.TodoTime, matchFlags: Filter.MatchStartsWith },
             {tag: "Unsupported matchflag, Comment", filterDetail: Detail.Comment, matchFlags: Filter.MatchContains },
             {tag: "Unsupported matchflag, Location - Longitude", filterDetail: Detail.Location,
-                filterField: "Longitude", matchFlags: Filter.MatchEndsWith },
+                filterField: Location.FieldLongitude, matchFlags: Filter.MatchEndsWith },
             {tag: "Unsupported matchflag, Location - Latitude", filterDetail: Detail.Location,
-                filterField: "Latitude", matchFlags: Filter.MatchEndsWith },
+                filterField: Location.FieldLatitude, matchFlags: Filter.MatchEndsWith },
             {tag: "Unsupported matchflag, Priority", filterDetail: Detail.Priority, matchFlags: Filter.MatchStartsWith },
             {tag: "Unsupported matchflag, Type", filterDetail: Detail.Type, matchFlags: Filter.MatchFixedString },
             {tag: "Unsupported matchflag, Tag", filterDetail: Detail.Tag, matchFlags: Filter.MatchCaseSensitive },
             {tag: "Unsupported matchflag, ExtendedDetail", filterDetail: Detail.ExtendedDetail, matchFlags: Filter.MatchFixedString },
             // filtering with QString needs extra attention, not allowed for all the types
             {tag: "Unsupported string value, EventTime - StartDateTime",
-                filterDetail: Detail.EventTime, filterField: "StartDateTime", filterValue: "mystringie" },
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldStartDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, EventTime - EndDateTime",
-                filterDetail: Detail.EventTime, filterField: "EndDateTime", filterValue: "mystringie" },
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldEndDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, EventTime - AllDay",
-                filterDetail: Detail.EventTime, filterField: "AllDay", filterValue: "mystringie" },
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldAllDay, filterValue: "mystringie" },
             {tag: "Unsupported string value, JournalTime - EntryDateTime",
-                filterDetail: Detail.JournalTime, filterField: "EntryDateTime", filterValue: "mystringie" },
+                filterDetail: Detail.JournalTime, filterField: Journal.FieldEntryDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, TodoTime - StartDateTime",
-                filterDetail: Detail.TodoTime, filterField: "StartDateTime", filterValue: "mystringie" },
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldStartDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, TodoTime - DueDateTime",
-                filterDetail: Detail.TodoTime, filterField: "DueDateTime", filterValue: "mystringie" },
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, TodoTime - AllDay",
-                filterDetail: Detail.TodoTime, filterField: "AllDay", filterValue: "mystringie" },
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: "mystringie" },
             // missing TodoProgress-, all different Reminders -details/fields (tested already on Unsupported details-part)
             {tag: "Unsupported string value, Location - Longitude",
-                filterDetail: Detail.Location, filterField: "Longitude", filterValue: "mystringie" },
+                filterDetail: Detail.Location, filterField: Location.FieldLongitude, filterValue: "mystringie" },
             {tag: "Unsupported string value, Location - Latitude",
-                filterDetail: Detail.Location, filterField: "Latitude", filterValue: "mystringie" },
+                filterDetail: Detail.Location, filterField: Location.FieldLatitude, filterValue: "mystringie" },
             // missing Parent-detail/field (tested already on Unsupported details-part)
             {tag: "Unsupported string value, Priority",
-                filterDetail: Detail.Priority, filterField: "Priority", filterValue: "mystringie" },
+                filterDetail: Detail.Priority, filterField: Priority.FieldPriority, filterValue: "mystringie" },
             // missing Recurrence-, TimeStamp-details/fields (tested already on Unsupported details-part)
         ]
     }

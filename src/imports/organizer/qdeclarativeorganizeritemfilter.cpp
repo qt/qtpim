@@ -128,7 +128,7 @@ QTORGANIZER_BEGIN_NAMESPACE
        DetailFilter {
            id: todoFilter
            detail: Detail.Type
-           field: "Type"
+           field: Type.FieldType
            value: Type.Todo
        }
 

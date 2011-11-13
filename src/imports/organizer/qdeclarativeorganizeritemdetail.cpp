@@ -140,40 +140,40 @@ QStringList QDeclarativeOrganizerItemDetail::fieldNames() const
 }
 
 /*!
-    \qmlmethod variant Detail::value(key)
+    \qmlmethod variant Detail::value(field)
 
-    Returns the value stored in this detail for the given \a key, or an empty variant if not available.
+    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
  */
-QVariant QDeclarativeOrganizerItemDetail::value(const QString &key) const
+QVariant QDeclarativeOrganizerItemDetail::value(int field) const
 {
-    return m_detail.value(key);
+    return m_detail.value(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field));
 }
 
 /*!
-    \qmlmethod bool Detail::setValue(key, value)
+    \qmlmethod bool Detail::setValue(field, value)
 
     Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
     the field with the given key from the detail. Returns true if the given value was set for the key (if
     the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
     returns false if the key was unable to be removed (and the value was invalid).
  */
-bool QDeclarativeOrganizerItemDetail::setValue(const QString &key, const QVariant &value)
+bool QDeclarativeOrganizerItemDetail::setValue(int field, const QVariant &value)
 {
-    bool ok = m_detail.setValue(key, value);
+    bool ok = m_detail.setValue(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field), value);
     if (ok)
         emit detailChanged();
     return ok;
 }
 
 /*!
-    \qmlmethod bool Detail::removeValue(key)
+    \qmlmethod bool Detail::removeValue(field)
 
-    Removes the value stored in this detail for the given \a key. Returns true if a value was stored for
+    Removes the value stored in this detail for the given \a field. Returns true if a value was stored for
     the given key and the operation succeeded, and false otherwise.
  */
-bool QDeclarativeOrganizerItemDetail::removeValue(const QString &key)
+bool QDeclarativeOrganizerItemDetail::removeValue(int field)
 {
-    bool ok = m_detail.removeValue(key);
+    bool ok = m_detail.removeValue(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field));
     if (ok)
         emit detailChanged();
     return ok;
@@ -364,13 +364,54 @@ QString QDeclarativeOrganizerItemDetail::definitionName() const
     return m_detail.definitionName();
 }
 
+/*!
+    \qmlmethod variant Detail::value(key)
+
+    To be removed soon.
+ */
+QVariant QDeclarativeOrganizerItemDetail::value(const QString &key) const
+{
+    return m_detail.value(key);
+}
+
+/*!
+    \qmlmethod bool Detail::setValue(key, value)
+
+    To be removed soon.
+ */
+bool QDeclarativeOrganizerItemDetail::setValue(const QString &key, const QVariant &value)
+{
+    bool ok = m_detail.setValue(key, value);
+    if (ok)
+        emit detailChanged();
+    return ok;
+}
+
+/*!
+    \qmlmethod bool Detail::removeValue(key)
+
+    To be removed soon.
+ */
+bool QDeclarativeOrganizerItemDetail::removeValue(const QString &key)
+{
+    bool ok = m_detail.removeValue(key);
+    if (ok)
+        emit detailChanged();
+    return ok;
+}
+
 
 /*!
     \qmlclass EventTime QDeclarativeOrganizerEventTime
     \brief The EventTime element contains the start and end dates and times of a recurring event series, or occurrence of an event.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o EventTime.FieldStartDateTime
+    \o EventTime.FieldEndDateTime
+    \o EventTime.FieldAllDay
+    \endlist
  */
 QDeclarativeOrganizerEventTime::QDeclarativeOrganizerEventTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -444,7 +485,10 @@ QDateTime QDeclarativeOrganizerEventTime::endDateTime() const
     \brief The Comment element contains the comment text of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Comment.FieldComment
+    \endlist
  */
 QDeclarativeOrganizerItemComment::QDeclarativeOrganizerItemComment(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -482,7 +526,10 @@ QString QDeclarativeOrganizerItemComment::comment() const
     \brief The Description element contains the description text of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Description.FieldDescription
+    \endlist
  */
 QDeclarativeOrganizerItemDescription::QDeclarativeOrganizerItemDescription(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -520,7 +567,10 @@ QString QDeclarativeOrganizerItemDescription::description() const
     \brief The DisplayLabel element contains the display label of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o DisplayLabel.FieldLabel
+    \endlist
  */
 QDeclarativeOrganizerItemDisplayLabel::QDeclarativeOrganizerItemDisplayLabel(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -558,7 +608,10 @@ QString QDeclarativeOrganizerItemDisplayLabel::label() const
     \brief The Guid element contains the GUID string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Guid.FieldGuid
+    \endlist
  */
 QDeclarativeOrganizerItemGuid::QDeclarativeOrganizerItemGuid(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -596,7 +649,12 @@ QString QDeclarativeOrganizerItemGuid::guid() const
     \brief The Location element contains information about a location which is related to the organizer item in some manner.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Location.FieldLabel
+    \o Location.FieldLatitude
+    \o Location.FieldLongitude
+    \endlist
  */
 QDeclarativeOrganizerItemLocation::QDeclarativeOrganizerItemLocation(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -670,7 +728,11 @@ QString QDeclarativeOrganizerItemLocation::label() const
     \brief The Parent element contains information about the event or todo that generated this item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Parent.FieldParentId
+    \o Parent.FieldOriginalDate
+    \endlist
  */
 QDeclarativeOrganizerItemParent::QDeclarativeOrganizerItemParent(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -727,7 +789,10 @@ QString QDeclarativeOrganizerItemParent::parentId() const
     \brief The Priority element contains the priority of the organizer item, which may be used to resolve scheduling conflicts.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Priority.FieldPriority
+    \endlist
  */
 QDeclarativeOrganizerItemPriority::QDeclarativeOrganizerItemPriority(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -779,7 +844,13 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerItemPriority::p
            and a list of rules and dates on which exceptions occur.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Recurrence.FieldRecurrenceRules
+    \o Recurrence.FieldExceptionRules
+    \o Recurrence.FieldRecurrenceDates
+    \o Recurrence.FieldExceptionDates
+    \endlist
  */
 QDeclarativeOrganizerItemRecurrence::QDeclarativeOrganizerItemRecurrence(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -943,7 +1014,10 @@ void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<Q
     \brief The Tag element contains the tag string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Tag.FieldTag
+    \endlist
  */
 QDeclarativeOrganizerItemTag::QDeclarativeOrganizerItemTag(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -981,7 +1055,11 @@ QString QDeclarativeOrganizerItemTag::tag() const
     \brief The Timestamp element contains the created and last modified timestamp of an organizer item's creating date and time.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Timestamp.FieldCreated
+    \o Timestamp.FieldLastModified
+    \endlist
  */
 QDeclarativeOrganizerItemTimestamp::QDeclarativeOrganizerItemTimestamp(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1037,7 +1115,10 @@ QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
     \brief The Type element contains the type string of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Type.FieldType
+    \endlist
  */
 QDeclarativeOrganizerItemType::QDeclarativeOrganizerItemType(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1118,7 +1199,10 @@ QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItemType::
     \brief The JournalTime element contains the entry date and time of a journal item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o JournalTime.FieldEntryDateTime
+    \endlist
  */
 QDeclarativeOrganizerJournalTime::QDeclarativeOrganizerJournalTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1155,7 +1239,12 @@ QDateTime QDeclarativeOrganizerJournalTime::entryDateTime() const
     \brief The TodoProgress element contains information about the progress of a todo item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o TodoProgress.FieldStatus
+    \o TodoProgress.FieldPercentage
+    \o TodoProgress.FieldFinishedDateTime
+    \endlist
  */
 QDeclarativeOrganizerTodoProgress::QDeclarativeOrganizerTodoProgress(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1239,7 +1328,12 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoProgress:
     \brief The TodoTime element contains the start and due dates and times of a recurring todo series, or occurrence of an todo item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o TodoTime.FieldStartDateTime
+    \o TodoTime.FieldDueDateTime
+    \o TodoTime.FieldAllDay
+    \endlist
  */
 QDeclarativeOrganizerTodoTime::QDeclarativeOrganizerTodoTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1313,7 +1407,12 @@ QDateTime QDeclarativeOrganizerTodoTime::dueDateTime() const
     \brief The Reminder element contains information about when and how the user wants to reminded of the item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o Reminder.FieldRepetitionCount
+    \o Reminder.FieldRepetitionDelay
+    \o Reminder.FieldSecondsBeforeStart
+    \endlist
  */
 QDeclarativeOrganizerItemReminder::QDeclarativeOrganizerItemReminder(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1412,7 +1511,13 @@ int QDeclarativeOrganizerItemReminder::secondsBeforeStart() const
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o AudibleReminder.FieldRepetitionCount
+    \o AudibleReminder.FieldRepetitionDelay
+    \o AudibleReminder.FieldSecondsBeforeStart
+    \o AudibleReminder.FieldDataUrl
+    \endlist
  */
 QDeclarativeOrganizerItemAudibleReminder::QDeclarativeOrganizerItemAudibleReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1451,7 +1556,16 @@ QUrl QDeclarativeOrganizerItemAudibleReminder::dataUrl() const
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o EmailReminder.FieldRepetitionCount
+    \o EmailReminder.FieldRepetitionDelay
+    \o EmailReminder.FieldSecondsBeforeStart
+    \o EmailReminder.FieldSubject
+    \o EmailReminder.FieldBody
+    \o EmailReminder.FieldRecipients
+    \o EmailReminder.FieldAttachments
+    \endlist
  */
 QDeclarativeOrganizerItemEmailReminder::QDeclarativeOrganizerItemEmailReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1545,7 +1659,14 @@ QVariantList QDeclarativeOrganizerItemEmailReminder::attachments()
     \ingroup qml-organizer
     \inherits Reminder
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o VisualReminder.FieldRepetitionCount
+    \o VisualReminder.FieldRepetitionDelay
+    \o VisualReminder.FieldSecondsBeforeStart
+    \o VisualReminder.FieldDataUrl
+    \o VisualReminder.FieldMessage
+    \endlist
  */
 QDeclarativeOrganizerItemVisualReminder::QDeclarativeOrganizerItemVisualReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
@@ -1601,7 +1722,11 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
     \brief The ExtendedDetail element contains a extended detail of an organizer item.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o ExtendedDetail.FieldName
+    \o ExtendedDetail.FieldData
+    \endlist
  */
 QDeclarativeOrganizeritemExtendedDetail::QDeclarativeOrganizeritemExtendedDetail(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1612,6 +1737,7 @@ QDeclarativeOrganizeritemExtendedDetail::QDeclarativeOrganizeritemExtendedDetail
 
 QDeclarativeOrganizeritemExtendedDetail::ItemDetailType QDeclarativeOrganizeritemExtendedDetail::type() const
 {
+    // XXX Should use something like "Extended" instead of "Customized"
     return QDeclarativeOrganizerItemDetail::Customized;
 }
 
@@ -1656,7 +1782,14 @@ QVariant QDeclarativeOrganizeritemExtendedDetail::data() const
     \brief The EventAttendee element contains information about an attendee of an event.
     \ingroup qml-organizer
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
+    The following fields are supported:
+    \list
+    \o EventAttendee.FieldName
+    \o EventAttendee.FieldEmailAddress
+    \o EventAttendee.FieldAddendeeId
+    \o EventAttendee.FieldParticipationStatus
+    \o EventAttendee.FieldParticipationRole
+    \endlist
  */
 QDeclarativeOrganizerEventAttendee::QDeclarativeOrganizerEventAttendee(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
@@ -1882,11 +2015,11 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
 QString QDeclarativeOrganizerEventTime::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldStartDateTime:
         return QOrganizerEventTime::FieldStartDateTime;
-    case 1:
+    case FieldEndDateTime:
         return QOrganizerEventTime::FieldEndDateTime;
-    case 2:
+    case FieldAllDay:
         return QOrganizerEventTime::FieldAllDay;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1896,7 +2029,7 @@ QString QDeclarativeOrganizerEventTime::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemType::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldType:
         return QOrganizerItemType::FieldType;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1907,7 +2040,7 @@ QString QDeclarativeOrganizerItemType::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerJournalTime::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldEntryDateTime:
         return QOrganizerJournalTime::FieldEntryDateTime;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1918,11 +2051,11 @@ QString QDeclarativeOrganizerJournalTime::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerTodoProgress::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldStatus:
         return QOrganizerTodoProgress::FieldStatus;
-    case 1:
+    case FieldPercentage:
         return QOrganizerTodoProgress::FieldPercentageComplete;
-    case 2:
+    case FieldFinishedDateTime:
         return QOrganizerTodoProgress::FieldFinishedDateTime;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1932,11 +2065,11 @@ QString QDeclarativeOrganizerTodoProgress::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerTodoTime::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldAllDay:
         return QOrganizerTodoTime::FieldAllDay;
-    case 1:
+    case FieldStartDateTime:
         return QOrganizerTodoTime::FieldStartDateTime;
-    case 2:
+    case FieldDueDateTime:
         return QOrganizerTodoTime::FieldDueDateTime;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1947,7 +2080,7 @@ QString QDeclarativeOrganizerTodoTime::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemComment::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldComment:
         return QOrganizerItemComment::FieldComment;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1958,7 +2091,7 @@ QString QDeclarativeOrganizerItemComment::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemDescription::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldDescription:
         return QOrganizerItemDescription::FieldDescription;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1969,7 +2102,7 @@ QString QDeclarativeOrganizerItemDescription::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemDisplayLabel::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldLabel:
         return QOrganizerItemDisplayLabel::FieldLabel;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1980,7 +2113,7 @@ QString QDeclarativeOrganizerItemDisplayLabel::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemGuid::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldGuid:
         return QOrganizerItemGuid::FieldGuid;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -1991,9 +2124,9 @@ QString QDeclarativeOrganizerItemGuid::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemParent::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldParentId:
         return QOrganizerItemParent::FieldParentId;
-    case 1:
+    case FieldOriginalDate:
         return QOrganizerItemParent::FieldOriginalDate;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2003,11 +2136,11 @@ QString QDeclarativeOrganizerItemParent::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemLocation::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldLatitude:
         return QOrganizerItemLocation::FieldLatitude;
-    case 1:
+    case FieldLongitude:
         return QOrganizerItemLocation::FieldLongitude;
-    case 2:
+    case FieldLabel:
         return QOrganizerItemLocation::FieldLabel;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2017,7 +2150,7 @@ QString QDeclarativeOrganizerItemLocation::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemPriority::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldPriority:
         return QOrganizerItemPriority::FieldPriority;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2027,13 +2160,13 @@ QString QDeclarativeOrganizerItemPriority::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemRecurrence::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldRecurrenceRules:
         return QOrganizerItemRecurrence::FieldRecurrenceRules;
-    case 1:
+    case FieldExceptionRules:
         return QOrganizerItemRecurrence::FieldExceptionRules;
-    case 2:
+    case FieldRecurrenceDates:
         return QOrganizerItemRecurrence::FieldRecurrenceDates;
-    case 3:
+    case FieldExceptionDates:
         return QOrganizerItemRecurrence::FieldExceptionDates;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2044,11 +2177,11 @@ QString QDeclarativeOrganizerItemRecurrence::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemReminder::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldSecondsBeforeStart:
         return QOrganizerItemReminder::FieldSecondsBeforeStart;
-    case 1:
+    case FieldRepetitionCount:
         return QOrganizerItemReminder::FieldRepetitionCount;
-    case 2:
+    case FieldRepetitionDelay:
         return QOrganizerItemReminder::FieldRepetitionDelay;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2059,7 +2192,13 @@ QString QDeclarativeOrganizerItemReminder::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemAudibleReminder::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldRepetitionCount:
+        return QOrganizerItemReminder::FieldRepetitionCount;
+    case FieldRepetitionDelay:
+        return QOrganizerItemReminder::FieldRepetitionDelay;
+    case FieldSecondsBeforeStart:
+        return QOrganizerItemReminder::FieldSecondsBeforeStart;
+    case FieldDataUrl:
         return QOrganizerItemAudibleReminder::FieldDataUrl;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2071,9 +2210,15 @@ QString QDeclarativeOrganizerItemAudibleReminder::fieldNameFromFieldType(int typ
 QString QDeclarativeOrganizerItemVisualReminder::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldRepetitionCount:
+        return QOrganizerItemReminder::FieldRepetitionCount;
+    case FieldRepetitionDelay:
+        return QOrganizerItemReminder::FieldRepetitionDelay;
+    case FieldSecondsBeforeStart:
+        return QOrganizerItemReminder::FieldSecondsBeforeStart;
+    case FieldDataUrl:
         return QOrganizerItemVisualReminder::FieldDataUrl;
-    case 1:
+    case FieldMessage:
         return QOrganizerItemVisualReminder::FieldMessage;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2084,13 +2229,19 @@ QString QDeclarativeOrganizerItemVisualReminder::fieldNameFromFieldType(int type
 QString QDeclarativeOrganizerItemEmailReminder::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldRepetitionCount:
+        return QOrganizerItemReminder::FieldRepetitionCount;
+    case FieldRepetitionDelay:
+        return QOrganizerItemReminder::FieldRepetitionDelay;
+    case FieldSecondsBeforeStart:
+        return QOrganizerItemReminder::FieldSecondsBeforeStart;
+    case FieldSubject:
         return QOrganizerItemEmailReminder::FieldSubject;
-    case 1:
+    case FieldBody:
         return QOrganizerItemEmailReminder::FieldBody;
-    case 2:
+    case FieldRecipients:
         return QOrganizerItemEmailReminder::FieldRecipients;
-    case 3:
+    case FieldAttachments:
         return QOrganizerItemEmailReminder::FieldAttachments;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2102,9 +2253,9 @@ QString QDeclarativeOrganizerItemEmailReminder::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldLastModified:
         return QOrganizerItemTimestamp::FieldModificationTimestamp;
-    case 1:
+    case FieldCreated:
         return QOrganizerItemTimestamp::FieldCreationTimestamp;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2114,7 +2265,7 @@ QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizerItemTag::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldTag:
         return QOrganizerItemTag::FieldTag;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2124,9 +2275,9 @@ QString QDeclarativeOrganizerItemTag::fieldNameFromFieldType(int type)
 QString QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldName:
         return QOrganizerItemExtendedDetail::FieldExtendedDetailName;
-    case 1:
+    case FieldData:
         return QOrganizerItemExtendedDetail::FieldExtendedDetailData;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
@@ -2136,15 +2287,15 @@ QString QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(int type
 QString QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(int type)
 {
     switch (type) {
-    case 0:
+    case FieldName:
         return QOrganizerEventAttendee::FieldName;
-    case 1:
+    case FieldEmailAddress:
         return QOrganizerEventAttendee::FieldEmailAddress;
-    case 2:
+    case FieldAddendeeId:
         return QOrganizerEventAttendee::FieldAttendeeId;
-    case 3:
+    case FieldParticipationStatus:
         return QOrganizerEventAttendee::FieldParticipationStatus;
-    case 4:
+    case FieldParticipationRole:
         return QOrganizerEventAttendee::FieldParticipationRole;
     }
     qmlInfo(0) << tr("invalid field type:") << type;

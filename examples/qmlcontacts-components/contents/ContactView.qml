@@ -285,6 +285,18 @@ Page {
                 contact.organization.startDate = newValue;
             }
         }
+        FieldEdit {
+            id: extendedDetailEdit
+            field: "data"
+            detailDefinitionName: "ExtendedDetail"
+            detail: contact.extendedDetail
+            text: contact.extendedDetail.data
+            width: contactEditListView.width
+            onValueChanged: {
+                contact.extendedDetail.name = "testExtDetail"
+                contact.extendedDetail.data = newValue;
+            }
+        }
     }
 
     ToolBarLayout {

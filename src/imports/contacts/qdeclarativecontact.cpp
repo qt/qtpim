@@ -263,7 +263,7 @@ bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
 */
 bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
 {
-    if (!detail)
+    if (!detail || m_details.contains(detail))
         return false;
 
     QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());

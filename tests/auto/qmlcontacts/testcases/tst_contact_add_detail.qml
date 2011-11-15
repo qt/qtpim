@@ -81,7 +81,6 @@ TestCase {
     function test_contact_add_the_same_detail_emits_no_signal() {
         listenToSignalFromObject("contactChanged", contact2);
         contact2.addDetail(contact2Name);
-        expectFail("", "Add does emit change signal");
         verifyNoSignalReceived();
     }
 

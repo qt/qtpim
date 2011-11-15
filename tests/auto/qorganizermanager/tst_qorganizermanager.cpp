@@ -197,6 +197,7 @@ private slots:
     void testFilterFunction();
     void testReminder();
     void testIntersectionFilter();
+    void testNestCompoundFilter();
     void testUnionFilter();
 #if defined(QT_NO_JSONDB)
     void testItemOccurrences();
@@ -240,6 +241,7 @@ private slots:
     void idComparison_data() {addManagers();}
     void testReminder_data() {addManagers();}
     void testIntersectionFilter_data() {addManagers();}
+    void testNestCompoundFilter_data() {addManagers();}
     void testUnionFilter_data() {addManagers();}
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
@@ -4433,6 +4435,150 @@ void tst_QOrganizerManager::testIntersectionFilter()
     isf.append(idFilter);//event3
     itemList = mgr->items(isf);
     QCOMPARE(itemList.size(), 0);
+}
+
+void tst_QOrganizerManager::testNestCompoundFilter()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    //simple case: nest intersection filter
+    //prepare filter data
+    QOrganizerCollection c1;
+    QOrganizerCollection c2;
+    mgr->saveCollection(&c1);
+    mgr->saveCollection(&c2);
+    QOrganizerItem event1;
+    event1.setType("Event");
+    QOrganizerItem event2;
+    event2.setType("Event");
+    event1.setCollectionId(c1.id());
+    event2.setCollectionId(c2.id());
+    mgr->saveItem(&event1);
+    mgr->saveItem(&event2);
+    //Test intersection filter with 2 different collection filter
+    QOrganizerItemCollectionFilter cf1;
+    cf1.setCollectionId(c1.id());
+    QOrganizerItemCollectionFilter cf2;
+    cf2.setCollectionId(c2.id());
+    QOrganizerItemIntersectionFilter isf;
+    isf.append(cf1);
+
+    QOrganizerItemIntersectionFilter isfLevel1;
+    isfLevel1.append(isf);
+    QList<QOrganizerItem> itemList = mgr->items(isfLevel1);
+    QCOMPARE(itemList.size(), 1);
+
+    QOrganizerItemIntersectionFilter isfLevel2;
+    isfLevel2.append(isfLevel1);
+
+    itemList = mgr->items(isfLevel2);
+    QCOMPARE(itemList.size(), 1);
+
+    QOrganizerItemIntersectionFilter isfLevel3;
+    isfLevel3.append(isfLevel2);
+
+    itemList = mgr->items(isfLevel3);
+    QCOMPARE(itemList.size(), 1);
+
+    // union filter nest in interseion filter
+    QOrganizerItemUnionFilter unf;
+    unf.append(cf2);
+    unf.append(cf1);
+
+    isfLevel1.append(unf);
+    itemList = mgr->items(isfLevel1);
+    QCOMPARE(itemList.size(), 1);
+
+    isfLevel2.append(unf);
+    itemList = mgr->items(isfLevel2);
+    QCOMPARE(itemList.size(), 1);
+
+    QList<QOrganizerItemId> idList;
+    idList << event1.id() << event2.id();
+
+    QOrganizerItemIdFilter idf;
+    idf.setIds(idList);
+    isfLevel3.append(idf);
+
+    itemList = mgr->items(isfLevel3);
+    QCOMPARE(itemList.size(), 1);
+
+    QOrganizerItemUnionFilter unfLevel4;
+    unfLevel4.append(isfLevel3);
+    unfLevel4.append(idf);
+
+    itemList = mgr->items(unfLevel4);
+    QCOMPARE(itemList.size(), 2);
+
+    //attach each other
+    isfLevel3.append(unfLevel4);
+    itemList = mgr->items(isfLevel3);
+    QCOMPARE(itemList.size(), 1);
+
+    //actual use case test
+    int count = mgr->items().size();
+
+    QOrganizerTodo todo;
+    todo.setDisplayLabel("myTodo");
+    todo.setCollectionId(c1.id());
+    mgr->saveItem(&todo);
+    itemList = mgr->items();
+    QCOMPARE(itemList.size(), ++count);
+    //collection
+    QOrganizerItemCollectionFilter collectionFilter;
+    collectionFilter.setCollectionId(c1.id());
+    itemList = mgr->items(collectionFilter);
+    QCOMPARE(itemList.size(), 2);
+    //event
+    QOrganizerItemDetailFilter detailFilter;
+    detailFilter.setDetailDefinitionName(QOrganizerItemType::DefinitionName, QOrganizerItemType::FieldType);
+    detailFilter.setValue(QOrganizerItemType::TypeEvent);
+    itemList = mgr->items(detailFilter);
+    QVERIFY(itemList.size() >= 2);
+    //event + collection
+    QOrganizerItemIntersectionFilter intersFilter;
+    intersFilter.append(detailFilter);
+    intersFilter.append(collectionFilter);
+    itemList = mgr->items(intersFilter);
+    QCOMPARE(itemList.size(), 1);
+    //filter event + collection + id
+    idList << event1.id() << event2.id() << todo.id();
+    QOrganizerItemIdFilter idf1;
+    idf1.setIds(idList);
+    QOrganizerItemIntersectionFilter intersFilter2;
+    intersFilter2.append(idf1);
+    intersFilter2.append(intersFilter);
+    itemList = mgr->items(intersFilter);
+    QCOMPARE(itemList.size(), 1);
+    QCOMPARE(itemList[0].id(), event1.id());
+
+    //case 2: myTodo or event + collection + id
+    QOrganizerItemDetailFilter detailFilter2;
+    detailFilter2.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    detailFilter2.setValue("myTodo");
+    itemList = mgr->items(detailFilter2);
+    QCOMPARE(itemList.size(), 1);
+
+    QOrganizerItemUnionFilter unf2;
+    unf2.append(detailFilter2);
+    unf2.append(detailFilter);
+    itemList = mgr->items(unf2);
+    QVERIFY(itemList.size() >= 3);
+
+    //event or myTodo + collection
+    QOrganizerItemIntersectionFilter intersFilter3;
+    intersFilter3.append(unf2);
+    intersFilter3.append(collectionFilter);
+    itemList = mgr->items(intersFilter3);
+    QCOMPARE(itemList.size(), 2);
+    // ... + id
+    QOrganizerItemIntersectionFilter intersFilter4;
+    intersFilter4.append(idf1);
+    intersFilter4.append(intersFilter3);
+    itemList = mgr->items(intersFilter4);
+    QCOMPARE(itemList.size(), 2);
+    QVERIFY(itemList.contains(event1));
+    QVERIFY(itemList.contains(todo));
 }
 
 void tst_QOrganizerManager::testUnionFilter()

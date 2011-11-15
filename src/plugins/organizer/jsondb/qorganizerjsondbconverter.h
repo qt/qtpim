@@ -72,8 +72,8 @@ public:
     bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QVariantMap *object) const;
 
     // filter handling
-    bool singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const;
-    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const;
+    bool singleFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
+    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
 
 private:
     void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
@@ -94,8 +94,6 @@ private:
     void dataToMap(const QVariant &data, QVariantMap &map) const;
 
     // separate filter type specific handling
-    bool intersectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
-    bool unionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;

@@ -1005,16 +1005,45 @@ void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map
     }
 }
 
-bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
 {
     bool isValidFilter = true;
     switch (filter.type()) {
-    case QOrganizerItemFilter::IntersectionFilter:
-        isValidFilter = intersectionFilterToJsondbQuery(filter, jsonDbQueryStr);
-        break;
-    case QOrganizerItemFilter::UnionFilter:
-        isValidFilter = unionFilterToJsondbQuery(filter, jsonDbQueryStr);
-        break;
+    case QOrganizerItemFilter::IntersectionFilter: {
+        const QOrganizerItemIntersectionFilter isf(filter);
+        const QList<QOrganizerItemFilter> filterList = isf.filters();
+        foreach (const QOrganizerItemFilter &filter, filterList){
+            //query filter1 filter2 filter3 ...
+            //query [?definition="value"][?definition="value"][?definition="value"]
+            QString filterStr;
+            if (compoundFilterToJsondbQuery(filter, filterStr))
+                jsonDbQueryStr += filterStr;
+            else //For intersection filter, single filter invalid means empty result from jsondb query
+                isValidFilter = false;
+        }
+        return isValidFilter;
+    }
+    case QOrganizerItemFilter::UnionFilter: {
+        const QOrganizerItemUnionFilter uf(filter);
+        const QList<QOrganizerItemFilter> filterList = uf.filters();
+        int validFilterCount = 0;
+        foreach (const QOrganizerItemFilter &filter, filterList){
+            //query filter1 filter2 filter3 ...
+            //query [?definition="value" | definition="value" | definition="value"]
+            QString filterStr;
+            if (compoundFilterToJsondbQuery(filter, filterStr)) {
+                jsonDbQueryStr += filterStr;
+                validFilterCount ++;
+            } else {//For union filter, single filter invalid means we could skip this filter
+                continue;
+            }
+        }
+        if (validFilterCount > 0)
+            jsonDbQueryStr.replace(QStringLiteral("][?"), QStringLiteral(" | ")); //replace the "][?" to " | "
+        else //no valid filter means empty item list from jsondb
+            isValidFilter = false;
+        return isValidFilter;
+    }
     default:
         isValidFilter = singleFilterToJsondbQuery(filter, jsonDbQueryStr);
         break;
@@ -1042,48 +1071,6 @@ bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFi
     default:
         break;
     }
-
-    return isValidFilter;
-}
-
-bool QOrganizerJsonDbConverter::intersectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
-{
-    bool isValidFilter = true;
-    const QOrganizerItemIntersectionFilter isf(filter);
-    const QList<QOrganizerItemFilter> filterList = isf.filters();
-    foreach (const QOrganizerItemFilter &filter, filterList){
-        //query filter1 filter2 filter3 ...
-        //query [?definition="value"][?definition="value"][?definition="value"]
-        QString filterStr;
-        if (singleFilterToJsondbQuery(filter, filterStr))
-            jsonDbQueryStr += filterStr;
-        else //For intersection filter, single filter invalid means empty result from jsondb query
-            isValidFilter = false;
-    }
-    return isValidFilter;
-}
-
-bool QOrganizerJsonDbConverter::unionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
-{
-    bool isValidFilter = true;
-    const QOrganizerItemUnionFilter uf(filter);
-    const QList<QOrganizerItemFilter> filterList = uf.filters();
-    int validFilterCount = 0;
-    foreach (const QOrganizerItemFilter &filter, filterList){
-        //query filter1 filter2 filter3 ...
-        //query [?definition="value" | definition="value" | definition="value"]
-        QString filterStr;
-        if (singleFilterToJsondbQuery(filter, filterStr)) {
-            jsonDbQueryStr += filterStr;
-            validFilterCount ++;
-        } else {//For union filter, single filter invalid means we could skip this filter
-            continue;
-        }
-    }
-    if (validFilterCount > 0)
-        jsonDbQueryStr.replace(QStringLiteral("][?"), QStringLiteral(" | ")); //replace the "][?" to " | "
-    else //no valid filter means empty item list from jsondb
-        isValidFilter = false;
 
     return isValidFilter;
 }

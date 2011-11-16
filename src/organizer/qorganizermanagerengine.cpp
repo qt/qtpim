@@ -899,7 +899,6 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
 {
     switch(filter.type()) {
         case QOrganizerItemFilter::InvalidFilter:
-        case QOrganizerItemFilter::ActionFilter:
             return false;
 
         case QOrganizerItemFilter::DefaultFilter:

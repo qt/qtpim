@@ -220,7 +220,6 @@ public:
                   << QOrganizerItemFilter::OrganizerItemDetailFilter
                   << QOrganizerItemFilter::OrganizerItemDetailRangeFilter
                   << QOrganizerItemFilter::ChangeLogFilter
-                  << QOrganizerItemFilter::ActionFilter
                   << QOrganizerItemFilter::IntersectionFilter
                   << QOrganizerItemFilter::UnionFilter
                   << QOrganizerItemFilter::IdFilter

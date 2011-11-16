@@ -126,19 +126,6 @@ TestCase {
                     + "   }\n"
                     + "}\n"
                 },
-                // Reserved for future use
-                /*
-                {tag: "With action filter",
-                code:"import QtOrganizer 5.0\n"
-                   + "OrganizerModel {\n"
-                   + "   id:organizerModelId\n"
-                   + "   filter:ActionFilter{\n"
-                   + "       id:filter\n"
-                   + "       actionName:'SomeAction'\n"
-                   + "   }\n"
-                   + "}\n"
-                },
-                */
                 {tag: "With collection filter",
                  code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"

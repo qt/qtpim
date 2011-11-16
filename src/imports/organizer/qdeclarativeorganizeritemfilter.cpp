@@ -70,7 +70,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \o Filter.DetailFilter - A filter which matches organizer items containing one or more details of a particular definition with a particular value.
   \o Filter.DetailRangeFilter - A filter which matches organizer items containing one or more details of a particular definition whose values are within a particular range.
   \o Filter.ChangeLogFilter - A filter which matches organizer items whose timestamps have been updated since some particular date and time.
-  \o Filter.ActionFilter - A filter which matches organizer items for which a particular action is available, or which contain a detail with a particular value for which a particular action is available.
   \o Filter.CollectionFilter - A filter which matches any organizer item that is matched by collection.
   \o Filter.IntersectionFilter - A filter which matches all organizer items that are matched by all filters it includes.
   \o Filter.UnionFilter - A filter which matches any organizer item that is matched by any of the filters it includes.

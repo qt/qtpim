@@ -77,7 +77,6 @@ public:
         DetailFilter = QOrganizerItemFilter::OrganizerItemDetailFilter,
         DetailRangeFilter = QOrganizerItemFilter::OrganizerItemDetailRangeFilter,
         ChangeLogFilter = QOrganizerItemFilter::ChangeLogFilter,
-        ActionFilter = QOrganizerItemFilter::ActionFilter,
         IntersectionFilter = QOrganizerItemFilter::IntersectionFilter,
         UnionFilter = QOrganizerItemFilter::UnionFilter,
         IdFilter = QOrganizerItemFilter::IdFilter,

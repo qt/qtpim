@@ -82,7 +82,6 @@ public:
         OrganizerItemDetailFilter,
         OrganizerItemDetailRangeFilter,
         ChangeLogFilter,
-        ActionFilter,
         IntersectionFilter,
         UnionFilter,
         IdFilter,

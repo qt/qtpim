@@ -42,11 +42,11 @@
 #ifndef QLATIN1CONSTANT_H
 #define QLATIN1CONSTANT_H
 
-#include <qorganizerglobal.h>
+#include <qversitorganizerglobal.h>
 
 #include <QtCore/qvariant.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QTVERSITORGANIZER_BEGIN_NAMESPACE
 
 /*
  * QLatin1Constant
@@ -159,6 +159,6 @@ template<int N> bool operator!=(const QString& b, const QLatin1Constant<N>& a)
 #define Q_DECLARE_LATIN1_CONSTANT(varname, str) static const QLatin1Constant<sizeof(str)> varname;
 #define Q_DEFINE_LATIN1_CONSTANT(varname, str) const QLatin1Constant<sizeof(str)> varname = {str};
 
-QTORGANIZER_END_NAMESPACE
+QTVERSITORGANIZER_END_NAMESPACE
 
 #endif

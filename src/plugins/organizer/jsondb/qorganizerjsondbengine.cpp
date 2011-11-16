@@ -626,7 +626,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
     return supported;
 }
 
-QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType) const
+QStringList QOrganizerJsonDbEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     QStringList supportedDetails;
     supportedDetails << QOrganizerItemType::DefinitionName
@@ -678,10 +678,9 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
     return supportedDetails;
 }
 
-QStringList QOrganizerJsonDbEngine::supportedItemTypes() const
+QList<QOrganizerItemType::ItemType> QOrganizerJsonDbEngine::supportedItemTypes() const
 {
-    // TODO - return which [predefined] types this engine supports
-    QStringList ret;
+    QList<QOrganizerItemType::ItemType> ret;
 
     ret << QOrganizerItemType::TypeEvent;
 //    ret << QOrganizerItemType::TypeEventOccurrence;

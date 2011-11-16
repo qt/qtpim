@@ -129,6 +129,16 @@ static QOrganizerJsonDbEnumConversionData qt_organizerResponseRequirementMap[] =
     {enumMapEnd,                                       QLatin1String("")}
 };
 
+static QOrganizerJsonDbEnumConversionData qt_organizerItemTypeMap[] = {
+    {QOrganizerItemType::TypeUndefined,                   QStringLiteral("Unknown")},
+    {QOrganizerItemType::TypeEvent,                     QStringLiteral("Event")},
+    {QOrganizerItemType::TypeEventOccurrence,           QStringLiteral("EventOccurrence")},
+    {QOrganizerItemType::TypeTodo,                      QStringLiteral("Todo")},
+    {QOrganizerItemType::TypeTodoOccurrence,            QStringLiteral("TodoOccurrence")},
+    {QOrganizerItemType::TypeJournal,                   QStringLiteral("Journal")},
+    {QOrganizerItemType::TypeNote,                      QStringLiteral("Note")},
+};
+
 QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
 }
@@ -1395,7 +1405,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
             && QOrganizerItemType::FieldType ==  detailFieldName) {
             jsonDbQueryStr += equalsQueryTemplate
                 .arg(JsonDbString::kTypeStr)
-                .arg(QOrganizerJsonDbStr::JsonDbSchemaPrefix + valueString);
+                .arg(QOrganizerJsonDbStr::JsonDbSchemaPrefix + enumToString(qt_organizerItemTypeMap, df.value().toInt()));
 
         } else if (QOrganizerItemTag::DefinitionName == detailDefinitionName
             && QOrganizerItemTag::FieldTag ==  detailFieldName) {

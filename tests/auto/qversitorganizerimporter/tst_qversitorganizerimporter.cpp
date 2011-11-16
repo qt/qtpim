@@ -900,7 +900,7 @@ void tst_QVersitOrganizerImporter::testTimeZones()
     QCOMPARE(items.size(), 1);
 
     QOrganizerEvent event = static_cast<QOrganizerEvent>(items.first());
-    QCOMPARE(event.type(), QString(QLatin1String(QOrganizerItemType::TypeEvent)));
+    QCOMPARE(event.type(), QOrganizerItemType::TypeEvent);
     QDateTime actualDatetime = event.startDateTime();
     QCOMPARE(actualDatetime, expected);
     QCOMPARE(actualDatetime.timeSpec(), expected.timeSpec());

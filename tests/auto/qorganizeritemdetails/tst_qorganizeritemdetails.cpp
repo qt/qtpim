@@ -474,8 +474,8 @@ void tst_QOrganizerItemDetails::type()
 
     // test property set
     t1.setType(QOrganizerItemType::TypeEvent);
-    QCOMPARE(t1.type(), QString(QLatin1String(QOrganizerItemType::TypeEvent)));
-    QCOMPARE(t1.value(QOrganizerItemType::FieldType).toString(), QString(QLatin1String(QOrganizerItemType::TypeEvent)));
+    QCOMPARE(t1.type(), QOrganizerItemType::TypeEvent);
+    QCOMPARE(static_cast<QOrganizerItemType::ItemType>(t1.value(QOrganizerItemType::FieldType).toInt()), QOrganizerItemType::TypeEvent);
 
     // test property add
     QVERIFY(oi.saveDetail(&t1));
@@ -485,7 +485,7 @@ void tst_QOrganizerItemDetails::type()
     // test property update
     t1.setType(QOrganizerItemType::TypeTodo);
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).value(0).value(QOrganizerItemType::FieldType).toString(), QString(QLatin1String(QOrganizerItemType::TypeTodo)));
+    QCOMPARE(static_cast<QOrganizerItemType::ItemType>(oi.details(QOrganizerItemType::DefinitionName).value(0).value(QOrganizerItemType::FieldType).toInt()), QOrganizerItemType::TypeTodo);
 
     // test property remove
     QVERIFY(!oi.removeDetail(&t1)); // cannot remove type

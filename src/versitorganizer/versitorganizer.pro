@@ -18,7 +18,8 @@ PUBLIC_HEADERS += \
     qversitorganizerhandler.h \
     qversitorganizerexporter.h \
     qversitorganizerimporter.h \
-    qversittimezonehandler.h
+    qversittimezonehandler.h \
+    qlatin1constant.h
 
 PRIVATE_HEADERS += \
     qversitorganizerexporter_p.h \

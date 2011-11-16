@@ -229,12 +229,12 @@ public:
         return supported;
     }
     /*! \reimp */
-    virtual QStringList supportedItemDetails(const QString &itemType) const;
+    virtual QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
 
     /*! \reimp */
-    virtual QStringList supportedItemTypes() const
+    virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const
     {
-        return QStringList() << QOrganizerItemType::TypeEvent
+        return QList<QOrganizerItemType::ItemType>() << QOrganizerItemType::TypeEvent
                              << QOrganizerItemType::TypeEventOccurrence
                              << QOrganizerItemType::TypeJournal
                              << QOrganizerItemType::TypeNote
@@ -257,7 +257,7 @@ private:
     void addItemRecurrences(QList<QOrganizerItem>& sorted, const QOrganizerItem& c, const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, bool forExport, QSet<QOrganizerItemId>* parentsAdded) const;
 
     bool fixOccurrenceReferences(QOrganizerItem* item, QOrganizerManager::Error* error);
-    bool typesAreRelated(const QString& occurrenceType, const QString& parentType);
+    bool typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType);
 
     void performAsynchronousOperation(QOrganizerAbstractRequest* request);
 

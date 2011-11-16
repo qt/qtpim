@@ -798,19 +798,15 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManager::supportedFilters() co
 /*!
     Returns the list of details that are supported by this manager for the given \a itemType.
  */
-QStringList QOrganizerManager::supportedItemDetails(const QString &itemType) const
+QStringList QOrganizerManager::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     return d->m_engine->supportedItemDetails(itemType);
 }
 
 /*!
-  Returns the list of organizer item types which are supported by this manager.
-  This is a convenience function, equivalent to retrieving the allowable values
-  for the \c QOrganizerItemType::FieldType field of the QOrganizerItemType definition
-  which is valid in this manager.
-  \since 1.1
+    Returns the list of organizer item types supported by this manager.
  */
-QStringList QOrganizerManager::supportedItemTypes() const
+QList<QOrganizerItemType::ItemType> QOrganizerManager::supportedItemTypes() const
 {
     return d->m_engine->supportedItemTypes();
 }

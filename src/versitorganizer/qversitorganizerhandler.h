@@ -44,6 +44,7 @@
 
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
+#include <qlatin1constant.h>
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 

@@ -785,16 +785,16 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedF
     return QList<QOrganizerItemFilter::FilterType>();
 }
 
-QStringList QOrganizerItemSkeletonEngine::supportedItemDetails(const QString &itemType) const
+QStringList QOrganizerItemSkeletonEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     // TODO - return which [predefined] details this engine supports for this item type
     return QStringList();
 }
 
-QStringList QOrganizerItemSkeletonEngine::supportedItemTypes() const
+QList<QOrganizerItemType::ItemType> QOrganizerItemSkeletonEngine::supportedItemTypes() const
 {
     // TODO - return which [predefined] types this engine supports
-    QStringList ret;
+    QList<QOrganizerItemType::ItemType> ret;
 
     ret << QOrganizerItemType::TypeEvent;
     ret << QOrganizerItemType::TypeEventOccurrence;

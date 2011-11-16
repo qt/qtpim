@@ -416,8 +416,8 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
     }
 
     // check for item type updates
-    if (!a.type().isEmpty())
-        if (!b.type().isEmpty())
+    if (a.type() != QOrganizerItemType::TypeUndefined)
+        if (b.type() != QOrganizerItemType::TypeUndefined)
             if (a.type() != b.type())
                 return false; // nonempty type is different.
 
@@ -769,11 +769,11 @@ void tst_QOrganizerManager::add()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
     
     // Use note & todo item depending on backend support
-    QString type;
+    QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
-        type = QLatin1String(QOrganizerItemType::TypeNote);
+        type = QOrganizerItemType::TypeNote;
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
-        type = QLatin1String(QOrganizerItemType::TypeTodo);
+        type = QOrganizerItemType::TypeTodo;
     else
         QSKIP("This manager does not support note or todo item");
 
@@ -1025,7 +1025,7 @@ void tst_QOrganizerManager::addExceptions()
                                  QDateTime(QDate(2010, 2, 1), QTime(0, 0, 0)));
     QCOMPARE(items.size(), 3);
     QOrganizerItem secondItem = items.at(1);
-    QCOMPARE(secondItem.type(), QLatin1String(QOrganizerItemType::TypeEventOccurrence));
+    QCOMPARE(secondItem.type(), QOrganizerItemType::TypeEventOccurrence);
     QOrganizerEventOccurrence secondEvent = static_cast<QOrganizerEventOccurrence>(secondItem); // not sure this is the best way...
     QCOMPARE(secondEvent.startDateTime(), QDateTime(QDate(2010, 1, 8), QTime(11, 0, 0)));
     QCOMPARE(secondEvent.id(), QOrganizerItemId());
@@ -1325,11 +1325,11 @@ void tst_QOrganizerManager::update()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
     
     // Use note & todo item depending on backend support
-    QString type;
+    QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
-        type = QLatin1String(QOrganizerItemType::TypeNote);
+        type = QOrganizerItemType::TypeNote;
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
-        type = QLatin1String(QOrganizerItemType::TypeTodo);
+        type = QOrganizerItemType::TypeTodo;
     else
         QSKIP("This manager does not support note or todo item");
 
@@ -1427,11 +1427,11 @@ void tst_QOrganizerManager::remove()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
     // Use note & todo item depending on backend support
-    QString type;
+    QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
-        type = QLatin1String(QOrganizerItemType::TypeNote);
+        type = QOrganizerItemType::TypeNote;
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
-        type = QLatin1String(QOrganizerItemType::TypeTodo);
+        type = QOrganizerItemType::TypeTodo;
     else
         QSKIP("This manager does not support note or todo item");
 
@@ -1526,11 +1526,11 @@ void tst_QOrganizerManager::batch()
     QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
     
     // Use note & todo item depending on backend support
-    QString type;
+    QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
-        type = QLatin1String(QOrganizerItemType::TypeNote);
+        type = QOrganizerItemType::TypeNote;
     else if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeTodo))
-        type = QLatin1String(QOrganizerItemType::TypeTodo);
+        type = QOrganizerItemType::TypeTodo;
     else
         QSKIP("This manager does not support note or todo item");
     
@@ -1894,7 +1894,7 @@ void tst_QOrganizerManager::memoryManager()
     QOrganizerManager m5("memory", params);
 
     // add a item to each of m1, m2, m3
-    QOrganizerItem c;
+    QOrganizerEvent c;
     QOrganizerItemDisplayLabel c1dl;
     c1dl.setLabel("c1dl");
     c.saveDetail(&c1dl);
@@ -2248,7 +2248,7 @@ void tst_QOrganizerManager::recurrenceWithGenerator()
         QList<QDate> actualDates;
         for (int i = 0; i < items.size(); i++) {
             QOrganizerItem item = items.at(i);
-            QCOMPARE(item.type(), QString(QLatin1String(QOrganizerItemType::TypeEventOccurrence)));
+            QCOMPARE(item.type(), QOrganizerItemType::TypeEventOccurrence);
             QDate occurrenceDate = item.detail<QOrganizerEventTime>().startDateTime().date();
             //QCOMPARE(occurrenceDate, occurrenceDates.at(i));
             actualDates << occurrenceDate;
@@ -2303,7 +2303,7 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
         QList<QDate> actualDates;
         for (int i = 0; i < items.size(); i++) {
             QOrganizerItem item = items.at(i);
-            QCOMPARE(item.type(), QString(QLatin1String(QOrganizerItemType::TypeTodoOccurrence)));
+            QCOMPARE(item.type(), QOrganizerItemType::TypeTodoOccurrence);
             QDate occurrenceDate = item.detail<QOrganizerTodoTime>().startDateTime().date();
             //QCOMPARE(occurrenceDate, occurrenceDates.at(i));
             actualDates << occurrenceDate;
@@ -2325,7 +2325,7 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
 void tst_QOrganizerManager::observerDeletion()
 {
     QOrganizerManager *manager = new QOrganizerManager("memory");
-    QOrganizerItem c;
+    QOrganizerEvent c;
     QVERIFY(manager->saveItem(&c));
     QOrganizerItemId id = c.id();
     QOrganizerItemObserver *observer = new QOrganizerItemObserver(manager, id);
@@ -4416,9 +4416,9 @@ void tst_QOrganizerManager::testIntersectionFilter()
     mgr->saveCollection(&c1);
     mgr->saveCollection(&c2);
     QOrganizerItem event1;
-    event1.setType("Event");
+    event1.setType(QOrganizerItemType::TypeEvent);
     QOrganizerItem event2;
-    event2.setType("Event");
+    event2.setType(QOrganizerItemType::TypeEvent);
     event1.setCollectionId(c1.id());
     event2.setCollectionId(c2.id());
     mgr->saveItem(&event1);
@@ -4466,7 +4466,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     QOrganizerItemIdFilter idFilter;
     QList<QOrganizerItemId> ids;
     QOrganizerItem event3;
-    event3.setType("Event");
+    event3.setType(QOrganizerItemType::TypeEvent);
     mgr->saveItem(&event3);
     ids << event1.id() << event3.id();
     idFilter.setIds(ids);
@@ -4523,9 +4523,9 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     mgr->saveCollection(&c1);
     mgr->saveCollection(&c2);
     QOrganizerItem event1;
-    event1.setType("Event");
+    event1.setType(QOrganizerItemType::TypeEvent);
     QOrganizerItem event2;
-    event2.setType("Event");
+    event2.setType(QOrganizerItemType::TypeEvent);
     event1.setCollectionId(c1.id());
     event2.setCollectionId(c2.id());
     mgr->saveItem(&event1);
@@ -4667,9 +4667,9 @@ void tst_QOrganizerManager::testUnionFilter()
     mgr->saveCollection(&c1);
     mgr->saveCollection(&c2);
     QOrganizerItem event1;
-    event1.setType("Event");
+    event1.setType(QOrganizerItemType::TypeEvent);
     QOrganizerItem event2;
-    event2.setType("Event");
+    event2.setType(QOrganizerItemType::TypeEvent);
     event1.setCollectionId(c1.id());
     event2.setCollectionId(c2.id());
     mgr->saveItem(&event1);
@@ -4717,7 +4717,7 @@ void tst_QOrganizerManager::testUnionFilter()
     QList<QOrganizerItemId> ids;
     QOrganizerItemIdFilter idFilter;
     QOrganizerItem event3;
-    event3.setType("Event");
+    event3.setType(QOrganizerItemType::TypeEvent);
     mgr->saveItem(&event3);
     ids << event3.id();
     idFilter.setIds(ids);
@@ -4731,7 +4731,7 @@ void tst_QOrganizerManager::testUnionFilter()
 
     //3 filters union
     QOrganizerItem event4;
-    event4.setType("Event");
+    event4.setType(QOrganizerItemType::TypeEvent);
     mgr->saveItem(&event4);
     ids.clear();
     ids.append(event4.id());

@@ -98,13 +98,13 @@ bool QDeclarativeOrganizerItem::modified() const
 
     This property holds the type of the OrganizerItem object.
  */
-QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItem::itemType() const
+QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItem::itemType() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Type == detail->type())
             return static_cast<QDeclarativeOrganizerItemType *>(detail)->itemType();
     }
-    return QDeclarativeOrganizerItemType::Customized;
+    return QDeclarativeOrganizerItemType::Undefined;
 }
 
 /*!
@@ -514,30 +514,6 @@ bool QDeclarativeOrganizerItem::_q_clearDetails()
 /*!
     WARNING: This is to be removed soon.
  */
-QString QDeclarativeOrganizerItem::type() const
-{
-    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
-    switch (type) {
-    case QDeclarativeOrganizerItemType::Event:
-        return QOrganizerItemType::TypeEvent;
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return QOrganizerItemType::TypeEventOccurrence;
-    case QDeclarativeOrganizerItemType::Todo:
-        return QOrganizerItemType::TypeTodo;
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return QOrganizerItemType::TypeTodoOccurrence;
-    case QDeclarativeOrganizerItemType::Journal:
-        return QOrganizerItemType::TypeJournal;
-    case QDeclarativeOrganizerItemType::Note:
-        return QOrganizerItemType::TypeNote;
-    default:
-        return QOrganizerItemType::TypeNote; // XX Customized
-    }
-}
-
-/*!
-    WARNING: This is to be removed soon.
- */
 bool QDeclarativeOrganizerItem::isFloatingTime()
 {
     switch (itemType()) {
@@ -567,8 +543,7 @@ bool QDeclarativeOrganizerItem::isFloatingTime()
  */
 QDateTime QDeclarativeOrganizerItem::itemStartTime() const
 {
-    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
-    switch (type) {
+    switch (itemType()) {
     case QDeclarativeOrganizerItemType::Event:
         return static_cast<const QDeclarativeOrganizerEvent*>(this)->startDateTime();
     case QDeclarativeOrganizerItemType::EventOccurrence:
@@ -591,8 +566,7 @@ QDateTime QDeclarativeOrganizerItem::itemStartTime() const
  */
 QDateTime QDeclarativeOrganizerItem::itemEndTime() const
 {
-    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
-    switch (type) {
+    switch (itemType()) {
     case QDeclarativeOrganizerItemType::Event:
         return static_cast<const QDeclarativeOrganizerEvent*>(this)->endDateTime();
     case QDeclarativeOrganizerItemType::EventOccurrence:
@@ -633,7 +607,7 @@ bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail *detai
  */
 bool QDeclarativeOrganizerItem::isOccurrence() const
 {
-    QDeclarativeOrganizerItemType::OrganizerItemType type = itemType();
+    QDeclarativeOrganizerItemType::ItemType type = itemType();
     return type == QDeclarativeOrganizerItemType::EventOccurrence || type == QDeclarativeOrganizerItemType::TodoOccurrence;
 }
 

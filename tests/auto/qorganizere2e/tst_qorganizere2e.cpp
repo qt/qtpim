@@ -67,7 +67,7 @@ private slots:
 private:
     void addManager();
 
-    QOrganizerItem createItem(const QString &itemType);
+    QOrganizerItem createItem(QOrganizerItemType::ItemType itemType);
     QOrganizerItemDetail createDetail(const QString &definitionName);
 
     // <manager, items> pair for existing items
@@ -112,8 +112,8 @@ void tst_QOrganizerE2E::testMegaItem()
     QFETCH(QString, managerName);
     QOrganizerManager organizerManager(managerName);
 
-    QStringList supportedItemTypes(organizerManager.supportedItemTypes());
-    foreach (const QString &itemType, supportedItemTypes) {
+    QList<QOrganizerItemType::ItemType> supportedItemTypes(organizerManager.supportedItemTypes());
+    foreach (QOrganizerItemType::ItemType itemType, supportedItemTypes) {
         QOrganizerItem referenceItem = createItem(itemType);
         QCOMPARE(referenceItem.type(), itemType);
 
@@ -173,7 +173,7 @@ void tst_QOrganizerE2E::testUnsupportedItemType()
     QFETCH(QString, managerName);
     QOrganizerManager organizerManager(managerName);
 
-    QStringList supportedItemTypes(organizerManager.supportedItemTypes());
+    QList<QOrganizerItemType::ItemType> supportedItemTypes(organizerManager.supportedItemTypes());
     if (!supportedItemTypes.contains(QOrganizerItemType::TypeEvent)) {
         QOrganizerItem event = createItem(QOrganizerItemType::TypeEvent);
         QVERIFY(!organizerManager.saveItem(&event));
@@ -205,8 +205,8 @@ void tst_QOrganizerE2E::testInvalidParentId()
     QFETCH(QString, managerName);
     QOrganizerManager organizerManager(managerName);
 
-    QStringList supportedItemTypes(organizerManager.supportedItemTypes());
-    foreach (const QString &itemType, supportedItemTypes) {
+    QList<QOrganizerItemType::ItemType> supportedItemTypes(organizerManager.supportedItemTypes());
+    foreach (QOrganizerItemType::ItemType itemType, supportedItemTypes) {
         if (itemType == QOrganizerItemType::TypeEventOccurrence || itemType == QOrganizerItemType::TypeTodoOccurrence) {
             QOrganizerItem item = createItem(itemType);
             QCOMPARE(item.type(), itemType);
@@ -232,7 +232,7 @@ void tst_QOrganizerE2E::addManager()
         QTest::newRow(manager.toLatin1().constData()) << manager;
 }
 
-QOrganizerItem tst_QOrganizerE2E::createItem(const QString &itemType)
+QOrganizerItem tst_QOrganizerE2E::createItem(QOrganizerItemType::ItemType itemType)
 {
     if (itemType == QOrganizerItemType::TypeEvent)
         return QOrganizerEvent();

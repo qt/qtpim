@@ -130,7 +130,7 @@ QTORGANIZER_BEGIN_NAMESPACE
     Construct an empty organizer item.
 
     The organizer item will have an empty display label, an empty id, and an empty description
-    and have type \l QOrganizerItemType::TypeNote.
+    and have type \l QOrganizerItemType::TypeUnknown.
     The isEmpty() function will return true.
    \since 1.1
 */
@@ -152,13 +152,12 @@ QOrganizerItem::QOrganizerItem(const QOrganizerItem& other)
     \internal
 
     Constructs a new, empty item of the given type \a type.
-   \since 1.1
 */
-QOrganizerItem::QOrganizerItem(const char* type)
+QOrganizerItem::QOrganizerItem(QOrganizerItemType::ItemType type)
 {
     d = new QOrganizerItemData;
     clearDetails();
-    setType(QString(QLatin1String(type)));
+    setType(type);
 }
 
 /*!
@@ -169,15 +168,14 @@ QOrganizerItem::QOrganizerItem(const char* type)
     type identified by the \a expectedType.
 
     The \a expectedType pointer must be valid for the lifetime of the program.
-    \since 1.1
 */
-QOrganizerItem::QOrganizerItem(const QOrganizerItem& other, const char* expectedType)
+QOrganizerItem::QOrganizerItem(const QOrganizerItem& other, QOrganizerItemType::ItemType expectedType)
 {
-    if (other.type() == QString(QLatin1String(expectedType))) {
+    if (other.type() == expectedType) {
         d = other.d;
     } else {
         d = new QOrganizerItemData;
-        setType(QString(QLatin1String(expectedType)));
+        setType(expectedType);
     }
 }
 
@@ -189,14 +187,14 @@ QOrganizerItem::QOrganizerItem(const QOrganizerItem& other, const char* expected
     item of the type identified by the given \a expectedType
     \since 1.1
 */
-QOrganizerItem& QOrganizerItem::assign(const QOrganizerItem& other, const char* expectedType)
+QOrganizerItem& QOrganizerItem::assign(const QOrganizerItem& other, QOrganizerItemType::ItemType expectedType)
 {
     if (this != &other) {
-        if (other.type() == QString(QLatin1String(expectedType))) {
+        if (other.type() == expectedType) {
             d = other.d;
         } else {
             d = new QOrganizerItemData;
-            setType(QString(QLatin1String(expectedType)));
+            setType(expectedType);
         }
     }
     return *this;
@@ -229,11 +227,10 @@ bool QOrganizerItem::isEmpty() const
 }
 
 /*!
- * Removes all details of the organizer item.
- * This function does not modify the id or type of the organizer item.
- * Calling isEmpty() after calling this function will return true.
- * The empty item becomes a \l QOrganizerNote.
-    \since 1.1
+    Removes all details of the organizer item.
+
+    This function does not modify the id or type of the organizer item.
+    Calling isEmpty() after calling this function will return true.
  */
 void QOrganizerItem::clearDetails()
 {
@@ -241,7 +238,7 @@ void QOrganizerItem::clearDetails()
 
     // and the organizer item type detail.
     QOrganizerItemType organizeritemType;
-    organizeritemType.setType(QOrganizerItemType::TypeNote);
+    organizeritemType.setType(QOrganizerItemType::TypeUndefined);
     organizeritemType.d->m_access = QOrganizerItemDetail::Irremovable;
     d->m_details.insert(0, organizeritemType);
 }
@@ -629,26 +626,18 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItem& item)
 #endif
 
 /*!
- * Returns the type of the organizer item.  Every organizer item has exactly one type which
- * is either set manually (by saving a modified copy of the QOrganizerItemType
- * in the organizer item, or by calling \l setType()) or synthesized automatically.
- *
- * \sa QOrganizerItemType
-   \since 1.1
+    Returns the type of the organizer item.
  */
-QString QOrganizerItem::type() const
+QOrganizerItemType::ItemType QOrganizerItem::type() const
 {
     QOrganizerItemType newType = detail<QOrganizerItemType>();
     return newType.type();
 }
 
 /*!
- * Sets the type of the organizer item to the given \a type.
- *
- * \sa QOrganizerItemType
-   \since 1.1
+    Sets the type of the organizer item to the given \a type.
  */
-void QOrganizerItem::setType(const QString& type)
+void QOrganizerItem::setType(QOrganizerItemType::ItemType type)
 {
     QOrganizerItemType newType = detail<QOrganizerItemType>();
     newType.setType(type);

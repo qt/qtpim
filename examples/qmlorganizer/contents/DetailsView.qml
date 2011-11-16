@@ -56,10 +56,10 @@ Rectangle
         if (detailsView.opacity == 1) {
             // Initialize empty item
             if (isNewItem) {
-                if (item.type == "Event") {
+                if (item.itemType == Type.Event) {
                     item.startDateTime = new Date (calendar.year, calendar.month, calendar.day, 12);
                     item.endDateTime = new Date (calendar.year, calendar.month, calendar.day, 13);
-                } else if (item.type == "Todo") {
+                } else if (item.itemType == Type.Todo) {
                     item.startDateTime = new Date (calendar.year, calendar.month, calendar.day, 12);
                     item.dueDateTime = new Date (calendar.year, calendar.month, calendar.day, 13);
                 }
@@ -70,7 +70,7 @@ Rectangle
             emptyRecurrenceRule.limit = null;
 
             // Initialize UI
-            if (item.type == "Event") {
+            if (item.itemType == Type.Event) {
                 customLabelRow.setValue(item.displayLabel);
                 customStartDateRow.dateTimeRoller.setDateTime(item.startDateTime);
                 customEndDateRow.dateTimeRoller.setDateTime(item.endDateTime);
@@ -81,7 +81,7 @@ Rectangle
                 customRsvpParticipationStatusRow.value = item.details(Detail.EventRsvp).length ?
                     item.detail(Detail.EventRsvp).participationStatus :
                     EventAttendee.StatusUnknown;
-            } else if (item.type == "Todo") {
+            } else if (item.itemType == Type.Todo) {
                 todoCustomLabelRow.setValue(item.displayLabel);
                 todoCustomDueDateRow.dateTimeRoller.setDateTime(detailsView.item.dueDateTime);
                 todoCustomDescriptionRow.setValue(item.description);
@@ -172,13 +172,13 @@ Rectangle
         model: {
             if (item == undefined)
                 return null;
-            switch (item.type) {
-                    case "Event" :
+            switch (item.itemType) {
+                    case Type.Event:
                         //temporary comment because recurrence is not supported yet
                         // return eventItemModel;
-                    case "EventOccurrence":
+                    case Type.EventOccurrence:
                          return eventOccurrenceItemModel;
-                    case "Todo":
+                    case Type.Todo:
                          return todoItemModel;
                     default:
                          break;
@@ -518,7 +518,7 @@ Rectangle
             id: todoCustomDueDateRow
             label: "Due Time"
             onRollerChanged: {
-                if (item.type == "Todo") {
+                if (item.itemType == Type.Todo) {
                     var startDate = todoCustomDueDateRow.dateTimeRoller.selectedDateTime();
                     startDate.setHours(startDate.getHours()-1);
                     item.startDateTime = startDate;

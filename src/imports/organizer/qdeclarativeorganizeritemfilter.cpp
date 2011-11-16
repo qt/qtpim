@@ -226,16 +226,7 @@ QVariant QDeclarativeOrganizerItemDetailFilter::value() const
 
 void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
 {
-    // C++ side uses strings to identify Type-values, so possible enum needs to be mapped to a string
-    if (QDeclarativeOrganizerItemDetail::Type == m_detail
-        && QDeclarativeOrganizerItemType::FieldType == m_field
-        && QVariant::Int == newValue.type()) {
-        QString typeValueName(toTypeValueName(newValue.toInt()));
-        if (typeValueName != value()) {
-            d.setValue(typeValueName);
-            emit valueChanged();
-        }
-    } else if (newValue != value()) {
+     if (newValue != value()) {
         // UTC time is used with details internally
         if (QVariant::DateTime == newValue.type())
             d.setValue(newValue.toDateTime().toUTC());
@@ -291,29 +282,6 @@ void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
     d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
                               QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
     emit valueChanged();
-}
-
-/*!
-    \internal
- */
-const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType)
-{
-    switch (static_cast<QDeclarativeOrganizerItemType::OrganizerItemType>(newType)) {
-    case QDeclarativeOrganizerItemType::Event:
-        return QOrganizerItemType::TypeEvent;
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return QOrganizerItemType::TypeEventOccurrence;
-    case QDeclarativeOrganizerItemType::Todo:
-        return QOrganizerItemType::TypeTodo;
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return QOrganizerItemType::TypeTodoOccurrence;
-    case QDeclarativeOrganizerItemType::Note:
-        return QOrganizerItemType::TypeNote;
-    case QDeclarativeOrganizerItemType::Journal:
-        return QOrganizerItemType::TypeJournal;
-    default:
-        return QString();
-    }
 }
 
 

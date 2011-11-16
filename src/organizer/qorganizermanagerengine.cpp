@@ -537,7 +537,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilter
 /*!
     Returns the list of details that are supported by this engine for the given \a itemType.
  */
-QStringList QOrganizerManagerEngine::supportedItemDetails(const QString &itemType) const
+QStringList QOrganizerManagerEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     Q_UNUSED(itemType)
     return QStringList();
@@ -545,11 +545,10 @@ QStringList QOrganizerManagerEngine::supportedItemDetails(const QString &itemTyp
 
 /*!
     Returns the list of item types which are supported by this engine.
-    \since 1.1
  */
-QStringList QOrganizerManagerEngine::supportedItemTypes() const
+QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes() const
 {
-    return QStringList();
+    return QList<QOrganizerItemType::ItemType>();
 }
 
 /*!

@@ -120,8 +120,8 @@ public:
 
     /* Capabilities reporting */
     virtual QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    virtual QStringList supportedItemDetails(const QString &itemType) const;
-    virtual QStringList supportedItemTypes() const;
+    virtual QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
 Q_SIGNALS:
     void dataChanged();

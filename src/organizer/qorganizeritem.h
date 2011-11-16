@@ -125,8 +125,8 @@ public:
     // has to be things that all subclasses (including Occurrences) have.
 
     /* Type - event, todo, journal, note... */
-    QString type() const;
-    void setType(const QString& type);
+    QOrganizerItemType::ItemType type() const;
+    void setType(QOrganizerItemType::ItemType type);
 
     /* The display label of the organizer item */
     QString displayLabel() const;
@@ -153,9 +153,9 @@ public:
     void setExtendedDetailData(const QString &name, const QVariant &data);
 
 protected:
-    explicit QOrganizerItem(const char* type);
-    QOrganizerItem(const QOrganizerItem &other, const char* expectedType);
-    QOrganizerItem& assign(const QOrganizerItem &other, const char* expectedType);
+    explicit QOrganizerItem(QOrganizerItemType::ItemType type);
+    QOrganizerItem(const QOrganizerItem &other, QOrganizerItemType::ItemType expectedType);
+    QOrganizerItem& assign(const QOrganizerItem &other, QOrganizerItemType::ItemType expectedType);
 
 protected:
     friend class QOrganizerItemData;
@@ -174,9 +174,9 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem& organizer
 #endif
 
 #define Q_DECLARE_CUSTOM_ORGANIZER_ITEM(className, typeConstant) \
-    className() : QOrganizerItem(typeConstant.latin1()) {} \
-    className(const QOrganizerItem& other) : QOrganizerItem(other, typeConstant.latin1()) {} \
-    className& operator=(const QOrganizerItem& other) {assign(other, typeConstant.latin1()); return *this;}
+    className() : QOrganizerItem(typeConstant) {} \
+    className(const QOrganizerItem& other) : QOrganizerItem(other, typeConstant) {} \
+    className& operator=(const QOrganizerItem& other) {assign(other, typeConstant); return *this;}
 
 QTORGANIZER_END_NAMESPACE
 

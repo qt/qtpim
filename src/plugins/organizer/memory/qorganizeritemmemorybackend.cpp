@@ -1032,7 +1032,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         return false;
     }
 
-    if (theOrganizerItem->type().isEmpty()) {
+    if (theOrganizerItem->type() == QOrganizerItemType::TypeUndefined) {
         *error = QOrganizerManager::InvalidItemTypeError;
         return false;
     }
@@ -1276,7 +1276,7 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
  * Returns true if and only if \a occurrenceType is the "Occurrence" version of \a parentType.
   \since 1.1
  */
-bool QOrganizerItemMemoryEngine::typesAreRelated(const QString& occurrenceType, const QString& parentType)
+bool QOrganizerItemMemoryEngine::typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType)
 {
     return ((parentType == QOrganizerItemType::TypeEvent
                 && occurrenceType == QOrganizerItemType::TypeEventOccurrence)
@@ -1659,9 +1659,8 @@ bool QOrganizerItemMemoryEngine::waitForRequestFinished(QOrganizerAbstractReques
     return true;
 }
 
-QStringList QOrganizerItemMemoryEngine::supportedItemDetails(const QString &itemType) const
+QStringList QOrganizerItemMemoryEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
-
     QStringList supportedDetails;
     supportedDetails << QOrganizerItemType::DefinitionName
                      << QOrganizerItemGuid::DefinitionName

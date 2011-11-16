@@ -42,7 +42,6 @@
 #ifndef QORGANIZERITEMTYPE_H
 #define QORGANIZERITEMTYPE_H
 
-#include <qlatin1constant.h>
 #include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -50,27 +49,21 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemType : public QOrganizerItemDetail
 {
 public:
+    enum ItemType {
+        TypeUndefined = 0,
+        TypeEvent,
+        TypeEventOccurrence,
+        TypeTodo,
+        TypeTodoOccurrence,
+        TypeJournal,
+        TypeNote
+    };
+
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, "Type")
     const static QString FieldType;
 
-#ifdef Q_QDOC
-    static const QLatin1Constant TypeEvent;
-    static const QLatin1Constant TypeTodo;
-    static const QLatin1Constant TypeJournal;
-    static const QLatin1Constant TypeNote;
-    static const QLatin1Constant TypeEventOccurrence;
-    static const QLatin1Constant TypeTodoOccurrence;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(TypeEvent, "Event")
-    Q_DECLARE_LATIN1_CONSTANT(TypeEventOccurrence, "EventOccurrence")
-    Q_DECLARE_LATIN1_CONSTANT(TypeTodo, "Todo")
-    Q_DECLARE_LATIN1_CONSTANT(TypeTodoOccurrence, "TodoOccurrence")
-    Q_DECLARE_LATIN1_CONSTANT(TypeJournal, "Journal")
-    Q_DECLARE_LATIN1_CONSTANT(TypeNote, "Note")
-#endif
-
-    void setType(const QString &type);
-    QString type() const;
+    void setType(ItemType type);
+    ItemType type() const;
 };
 
 QTORGANIZER_END_NAMESPACE

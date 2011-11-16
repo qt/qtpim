@@ -272,7 +272,6 @@ signals:
 
 private:
     void setDetailDefinitionName();
-    const QString toTypeValueName(int newType);
 
     QDeclarativeOrganizerItemDetail::ItemDetailType m_detail;
     int m_field;

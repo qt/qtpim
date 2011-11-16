@@ -523,31 +523,31 @@ class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
     Q_OBJECT
 
     Q_ENUMS(Field)
-    Q_ENUMS(OrganizerItemType)
+    Q_ENUMS(ItemType)
 
-    Q_PROPERTY(OrganizerItemType itemType READ itemType WRITE setItemType NOTIFY valueChanged)
+    Q_PROPERTY(ItemType itemType READ itemType WRITE setItemType NOTIFY valueChanged)
 
 public:
     enum Field {
         FieldType = 0
     };
 
-    enum OrganizerItemType {
-        Event = 0,
-        EventOccurrence,
-        Todo,
-        TodoOccurrence,
-        Journal,
-        Note,
-        Customized = 100
+    enum ItemType {
+        Undefined = QOrganizerItemType::TypeUndefined,
+        Event = QOrganizerItemType::TypeEvent,
+        EventOccurrence = QOrganizerItemType::TypeEventOccurrence,
+        Todo = QOrganizerItemType::TypeTodo,
+        TodoOccurrence = QOrganizerItemType::TypeTodoOccurrence,
+        Journal = QOrganizerItemType::TypeJournal,
+        Note = QOrganizerItemType::TypeNote
     };
 
     QDeclarativeOrganizerItemType(QObject *parent = 0);
 
     virtual ItemDetailType type() const;
 
-    void setItemType(OrganizerItemType newType);
-    OrganizerItemType itemType() const;
+    void setItemType(ItemType newType);
+    ItemType itemType() const;
 
     static QString fieldNameFromFieldType(int type);
 

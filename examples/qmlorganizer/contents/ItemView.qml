@@ -53,7 +53,7 @@ Rectangle
         if (itemId != "") {
             item = calendar.organizer.item(itemId);
             startTime = item.itemStartTime.getHours() * 60 + item.itemStartTime.getMinutes();
-            if (item.type == "Event")
+            if (item.itemType == Type.Event)
                 endTime = item.itemEndTime.getHours() * 60 + item.itemEndTime.getMinutes();
             else
                 endTime = startTime;
@@ -62,7 +62,7 @@ Rectangle
         }
     }
     radius: 5
-    color: "Event" == item.type? "steelblue" : "green"
+    color: Type.Event == item.itemType ? "steelblue" : "green"
 
     Column {
         spacing: 2

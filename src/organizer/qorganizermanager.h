@@ -142,8 +142,8 @@ public:
 
     /* Functionality reporting */
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    QStringList supportedItemDetails(const QString &itemType) const;
-    QStringList supportedItemTypes() const;
+    QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
     /* return a list of available backends for which a QOrganizerManager can be constructed. */
     static QStringList availableManagers();

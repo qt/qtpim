@@ -1734,9 +1734,23 @@ bool QOrganizerTodoTime::isAllDay() const
 
 /*!
     \class QOrganizerItemType
-    \brief The QOrganizerItemType class describes the type of the organizer item.  This detail may be automatically synthesized by the backend depending on other details in the organizer item.
+    \brief The QOrganizerItemType class describes the type of the organizer item.
     \inmodule QtOrganizer
     \ingroup organizer-details
+ */
+
+/*!
+    \enum QOrganizerItemType::ItemType
+
+    This enumeration describes the type of the organizer item.
+
+    \value TypeUnknown          This item is of an unknown type.
+    \value TypeEvent            This item is an event.
+    \value TypeEventOccurrence  This item is an event occurrence.
+    \value TypeTodo             This item is a TODO.
+    \value TypeTodoOccurrence   This item is a TODO occurrence.
+    \value TypeJournal          This item is a journal.
+    \value TypeNote             This item is a note.
  */
 
 /*!
@@ -1755,63 +1769,17 @@ const QString QOrganizerItemType::DefinitionName(QStringLiteral("Type"));
 const QString QOrganizerItemType::FieldType(QStringLiteral("Type"));
 
 /*!
-    \variable QOrganizerItemType::TypeEvent
-
-    The constant attribute value which describes the organizer item as being an event.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEvent, "Event")
-
-/*!
-    \variable QOrganizerItemType::TypeEventOccurrence
-
-    The constant attribute value which describes the organizer item as being an occurrence of an event.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeEventOccurrence, "EventOccurrence")
-
-/*!
-    \variable QOrganizerItemType::TypeJournal
-
-    The constant attribute value which describes the organizer item as being a journal.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeJournal, "Journal")
-
-/*!
-    \variable QOrganizerItemType::TypeNote
-
-    The constant attribute value which describes the organizer item as being a note.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeNote, "Note")
-
-/*!
-    \variable QOrganizerItemType::TypeTodo
-
-    The constant attribute value which describes the organizer item as being a todo.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodo, "Todo")
-
-/*!
-    \variable QOrganizerItemType::TypeTodoOccurrence
-
-    The constant attribute value which describes the organizer item as being an occurrence of a todo.
- */
-Q_DEFINE_LATIN1_CONSTANT(QOrganizerItemType::TypeTodoOccurrence, "TodoOccurrence")
-
-/*!
-    \fn QOrganizerItemType::type() const
-
     Returns the organizer item type value stored in this detail.
  */
-QString QOrganizerItemType::type() const
+QOrganizerItemType::ItemType QOrganizerItemType::type() const
 {
-    return value(FieldType).toString();
+    return static_cast<ItemType>(value(FieldType).toInt());
 }
 
 /*!
-    \fn QOrganizerItemType::setType(const QString &type)
-
     Sets the type of the organizer item to be the give \a type.
  */
-void QOrganizerItemType::setType(const QString &type)
+void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
 {
     setValue(FieldType, type);
 }

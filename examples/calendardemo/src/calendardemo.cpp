@@ -149,7 +149,7 @@ void CalendarDemo::buildMenu()
 #endif
     // Add editing options in the menu for Symbian (other platforms get buttons)
     QOrganizerManager defaultManager;
-    QStringList supportedItemTypes = defaultManager.supportedItemTypes();
+    QList<QOrganizerItemType::ItemType> supportedItemTypes = defaultManager.supportedItemTypes();
     if (supportedItemTypes.contains(QOrganizerItemType::TypeEvent)) {
         QAction* addEventAction = optionsMenu->addAction("Add E&vent");
         connect(addEventAction, SIGNAL(triggered(bool)), this, SLOT(addNewEvent()));

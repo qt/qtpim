@@ -1173,51 +1173,17 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemType::t
     \o Type.Customized
     \endlist
  */
-void QDeclarativeOrganizerItemType::setItemType(OrganizerItemType newType)
+void QDeclarativeOrganizerItemType::setItemType(ItemType newType)
 {
     if (newType != itemType() && !readOnly()) {
-        switch (newType) {
-        case Event:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeEvent);
-            break;
-        case EventOccurrence:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeEventOccurrence);
-            break;
-        case Todo:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeTodo);
-            break;
-        case TodoOccurrence:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeTodoOccurrence);
-            break;
-        case Note:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeNote);
-            break;
-        case Journal:
-            m_detail.setValue(QOrganizerItemType::FieldType, QOrganizerItemType::TypeJournal);
-            break;
-        default:
-            return;
-        }
+        m_detail.setValue(QOrganizerItemType::FieldType, static_cast<QOrganizerItemType::ItemType>(newType));
         emit valueChanged();
     }
 }
 
-QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItemType::itemType() const
+QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItemType::itemType() const
 {
-    QString typeString = m_detail.value(QOrganizerItemType::FieldType).toString();
-    if (typeString == QOrganizerItemType::TypeEvent)
-        return Event;
-    else if (typeString == QOrganizerItemType::TypeEventOccurrence)
-        return EventOccurrence;
-    else if (typeString == QOrganizerItemType::TypeTodo)
-        return Todo;
-    else if (typeString == QOrganizerItemType::TypeTodoOccurrence)
-        return TodoOccurrence;
-    else if (typeString == QOrganizerItemType::TypeNote)
-        return Note;
-    else if (typeString == QOrganizerItemType::TypeJournal)
-        return Journal;
-    return Customized;
+    return static_cast<ItemType>(m_detail.value(QOrganizerItemType::FieldType).toInt());
 }
 
 

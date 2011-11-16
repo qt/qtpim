@@ -56,7 +56,7 @@ class QDeclarativeOrganizerItem : public QObject
     // basic information
     Q_PROPERTY(bool modified READ modified NOTIFY itemChanged)
 
-    Q_PROPERTY(QDeclarativeOrganizerItemType::OrganizerItemType itemType READ itemType NOTIFY itemChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemType::ItemType itemType READ itemType NOTIFY itemChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails READ itemDetails NOTIFY itemChanged)
     Q_PROPERTY(QString itemId READ itemId NOTIFY itemChanged)
     Q_PROPERTY(QString manager READ manager NOTIFY itemChanged)
@@ -72,7 +72,6 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(bool isFloatingTime READ isFloatingTime)
     Q_PROPERTY(QDateTime itemStartTime READ itemStartTime NOTIFY itemChanged)
     Q_PROPERTY(QDateTime itemEndTime READ itemEndTime NOTIFY itemChanged)
-    Q_PROPERTY(QString type READ type NOTIFY itemChanged)
     Q_CLASSINFO("DefaultProperty", "itemDetails")
 
 public:
@@ -82,7 +81,7 @@ public:
     // basic information
     bool modified() const;
 
-    QDeclarativeOrganizerItemType::OrganizerItemType itemType() const;
+    QDeclarativeOrganizerItemType::ItemType itemType() const;
     QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails();
     QString itemId() const;
     QString manager() const;
@@ -127,8 +126,6 @@ public:
     QDateTime itemEndTime() const;
 
     bool isOccurrence() const;
-
-    QString type() const;
 
     Q_INVOKABLE bool addDetail(QDeclarativeOrganizerItemDetail* detail);
 

@@ -39,8 +39,7 @@ PUBLIC_HEADERS += \
     qorganizerrecurrencerule.h \
     qorganizeritemsortorder.h \
     qorganizerglobal.h \
-    qorganizer.h \
-    qlatin1constant.h
+    qorganizer.h
 
 PRIVATE_HEADERS += \
     qorganizerpluginsearch_p.h \

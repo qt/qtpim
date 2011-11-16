@@ -240,7 +240,7 @@ Rectangle {
                         width: addNewItemview.width / 2
                         onClicked: {
                             detailsView.isNewItem = true;
-                            detailsView.item = createEmptyItem("Event");
+                            detailsView.item = createEmptyItem(Type.Event);
                             calendar.state = "DetailsView";
                         }
                     }
@@ -249,7 +249,7 @@ Rectangle {
                         width: addNewItemview.width / 2
                         onClicked: {
                             detailsView.isNewItem = true;
-                            detailsView.item = createEmptyItem("Todo");
+                            detailsView.item = createEmptyItem(Type.Todo);
                             calendar.state = "DetailsView";
                         }
                     }
@@ -279,13 +279,13 @@ Rectangle {
 
         function createEmptyItem(type)
         {
-            if (type == "Event") {
+            if (type == Type.Event) {
                 return Qt.createQmlObject("import QtOrganizer 5.0; Event { }", organizer);
-            } else if (type == "Todo") {
+            } else if (type == Type.Todo) {
                 return Qt.createQmlObject("import QtOrganizer 5.0; Todo { }", organizer);
-    //        } else if (type == "EventOccurrence") {
+    //        } else if (type == Type.EventOccurrence) {
     //            return Qt.createQmlObject("import QtOrganizer 5.0; EventOccurrence { }", organizer);
-    //        } else if (type == "TodoOccurrence") {
+    //        } else if (type == Type.TodoOccurrence) {
     //            return Qt.createQmlObject("import QtOrganizer 5.0; TodoOccurrence { }", organizer);
             } else {
                 return Qt.createQmlObject("import QtOrganizer 5.0; Event { }", organizer);

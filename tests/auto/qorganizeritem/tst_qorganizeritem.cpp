@@ -532,18 +532,18 @@ void tst_QOrganizerItem::type()
     QOrganizerItem oi;
     QVERIFY(oi.isEmpty() == true);
 
-    // ensure that the default type is the QOrganizerItemType::TypeNote type
-    QVERIFY(oi.type() == QString(QLatin1String(QOrganizerItemType::TypeNote)));
+    // ensure that the default type is the QOrganizerItemType::TypeUnknown type
+    QVERIFY(oi.type() == QOrganizerItemType::TypeUndefined);
 
     // now set it to be an event via the type mutator, and test that it works
     QOrganizerItemType eventType;
-    eventType.setType(QString(QLatin1String(QOrganizerItemType::TypeEvent)));
+    eventType.setType(QOrganizerItemType::TypeEvent);
     oi.setType(eventType.type());
-    QVERIFY(oi.type() == QString(QLatin1String(QOrganizerItemType::TypeEvent)));
+    QVERIFY(oi.type() == QOrganizerItemType::TypeEvent);
 
     // set it back to a note, via the string mutator
     oi.setType(QOrganizerItemType::TypeNote);
-    QVERIFY(oi.type() == QString(QLatin1String(QOrganizerItemType::TypeNote)));
+    QVERIFY(oi.type() == QOrganizerItemType::TypeNote);
     QVERIFY(oi.isEmpty() == true); // type doesn't affect emptiness
 }
 
@@ -553,7 +553,7 @@ void tst_QOrganizerItem::emptiness()
     QVERIFY(oi.isEmpty() == true);
 
     oi.setType(QOrganizerItemType::TypeNote);
-    QVERIFY(oi.type() == QString(QLatin1String(QOrganizerItemType::TypeNote)));
+    QVERIFY(oi.type() == QOrganizerItemType::TypeNote);
     QVERIFY(oi.isEmpty() == true); // type doesn't affect emptiness
 }
 
@@ -731,7 +731,7 @@ void tst_QOrganizerItem::datastream()
 {
     // item datastreaming
     QByteArray buffer;
-    QOrganizerItem itemIn;
+    QOrganizerEvent itemIn;
     itemIn.addComment("test comment");
     QOrganizerItem itemOut;
     QOrganizerItemId originalId;
@@ -952,7 +952,7 @@ void tst_QOrganizerItem::localIdTraits()
 void tst_QOrganizerItem::event()
 {
     QOrganizerEvent testEvent;
-    QCOMPARE(testEvent.type(), QString(QLatin1String(QOrganizerItemType::TypeEvent)));
+    QCOMPARE(testEvent.type(), QOrganizerItemType::TypeEvent);
 
     testEvent.setLocation("test address");
     QCOMPARE(testEvent.location(), QString("test address"));
@@ -1054,7 +1054,7 @@ void tst_QOrganizerItem::event()
 void tst_QOrganizerItem::todo()
 {
     QOrganizerTodo testTodo;
-    QCOMPARE(testTodo.type(), QString(QLatin1String(QOrganizerItemType::TypeTodo)));
+    QCOMPARE(testTodo.type(), QOrganizerItemType::TypeTodo);
 
     QCOMPARE(testTodo.status(), QOrganizerTodoProgress::StatusNotStarted);
     testTodo.setStatus(QOrganizerTodoProgress::StatusInProgress);
@@ -1123,7 +1123,7 @@ void tst_QOrganizerItem::todo()
 void tst_QOrganizerItem::journal()
 {
     QOrganizerJournal testJournal;
-    QCOMPARE(testJournal.type(), QString(QLatin1String(QOrganizerItemType::TypeJournal)));
+    QCOMPARE(testJournal.type(), QOrganizerItemType::TypeJournal);
 
     QDateTime currDateTime = QDateTime::currentDateTime();
     testJournal.setDateTime(currDateTime);
@@ -1133,13 +1133,13 @@ void tst_QOrganizerItem::journal()
 void tst_QOrganizerItem::note()
 {
     QOrganizerNote testNote;
-    QCOMPARE(testNote.type(), QString(QLatin1String(QOrganizerItemType::TypeNote)));
+    QCOMPARE(testNote.type(), QOrganizerItemType::TypeNote);
 }
 
 void tst_QOrganizerItem::eventOccurrence()
 {
     QOrganizerEventOccurrence testEventOccurrence;
-    QCOMPARE(testEventOccurrence.type(), QString(QLatin1String(QOrganizerItemType::TypeEventOccurrence)));
+    QCOMPARE(testEventOccurrence.type(), QOrganizerItemType::TypeEventOccurrence);
 
     testEventOccurrence.setLocation("test address");
     QCOMPARE(testEventOccurrence.location(), QString("test address"));
@@ -1167,7 +1167,7 @@ void tst_QOrganizerItem::eventOccurrence()
 void tst_QOrganizerItem::todoOccurrence()
 {
     QOrganizerTodoOccurrence testTodoOccurrence;
-    QCOMPARE(testTodoOccurrence.type(), QString(QLatin1String(QOrganizerItemType::TypeTodoOccurrence)));
+    QCOMPARE(testTodoOccurrence.type(), QOrganizerItemType::TypeTodoOccurrence);
 
     QCOMPARE(testTodoOccurrence.status(), QOrganizerTodoProgress::StatusNotStarted);
     testTodoOccurrence.setStatus(QOrganizerTodoProgress::StatusInProgress);

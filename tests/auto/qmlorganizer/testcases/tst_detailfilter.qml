@@ -453,8 +453,6 @@ TestCase {
                 filterDetail: Detail.Priority, filterField: Priority.FieldPriority, filterValue: Priority.VeryHigh},
             {tag: "exact filter - Type enum", expectedItemsAmount: 4,//amount of todos
                 filterDetail: Detail.Type, filterField: Type.FieldType, filterValue: Type.Todo},
-            {tag: "exact filter - Type string", expectedItemsAmount: 4,//amount of todos
-                filterDetail: Detail.Type, filterField: Type.FieldType, filterValue: "Todo"},
             {tag: "exact filter - Tag", expectedItemsAmount: 1,
                 filterDetail: Detail.Tag, filterField: Tag.FieldTag, filterValue: "my tag",
                 separateDetailCtrStr: "import QtQuick 2.0\n"

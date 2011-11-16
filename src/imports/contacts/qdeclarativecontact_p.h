@@ -193,6 +193,7 @@ private:
         T* detail = new T;
         if (detail) {
             m_details.append(detail);
+            emit contactChanged();
             return detail;
         }
         return 0;

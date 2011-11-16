@@ -280,7 +280,6 @@ TestCase {
                     PhoneNumber.Mobile,
                     PhoneNumber.Fax,
                     PhoneNumber.Video,
-                    PhoneNumber.Service
                 ]
         phonenumber.number = "1"
         contact.addDetail(phonenumber)

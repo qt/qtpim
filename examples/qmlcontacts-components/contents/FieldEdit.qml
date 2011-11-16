@@ -45,7 +45,6 @@ import QtContacts 5.0
 Rectangle {
     id: fieldEdit
     property string field
-    property ContactDetail detail
     property string detailDefinitionName
     property string text
     signal valueChanged(string newValue)
@@ -67,7 +66,7 @@ Rectangle {
         TextField {
             id: fieldValue
             height: 30
-            text:  fieldEdit.text//detail.value(field)
+            text:  fieldEdit.text
             font.pointSize: 16
             width: parent.width
             onTextChanged: {

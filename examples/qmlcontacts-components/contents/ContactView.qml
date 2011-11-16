@@ -108,7 +108,6 @@ Page {
             id: firstNameEdit
             field: "firstName"
             detailDefinitionName: "Name"
-            detail: contact.name
             text: contact.name.firstName
             width: contactEditListView.width
             onValueChanged: {
@@ -119,7 +118,6 @@ Page {
             id: lastNameEdit
             field: "lastName"
             detailDefinitionName: "Name"
-            detail: contact.name
             text: contact.name.lastName
             width: contactEditListView.width
             onValueChanged: {
@@ -130,7 +128,6 @@ Page {
             id: emailEdit
             field: "emailAddress"
             detailDefinitionName: "EMail"
-            detail: contact.email
             text: contact.email.emailAddress
             width: contactEditListView.width
             onValueChanged: {
@@ -141,7 +138,6 @@ Page {
             id: phoneEdit
             field: "number"
             detailDefinitionName: "Phone Number"
-            detail: contact.phoneNumber
             text: contact.phoneNumber.number
             width: contactEditListView.width
             onValueChanged: {
@@ -152,7 +148,6 @@ Page {
             id: streetEdit
             field: "street"
             detailDefinitionName: "Address"
-            detail: contact.address
             text: contact.address.street
             width: contactEditListView.width
             onValueChanged: {
@@ -163,7 +158,6 @@ Page {
             id: postCodeEdit
             field: "postcode"
             detailDefinitionName: "Address"
-            detail: contact.address
             text: contact.address.postcode
             width: contactEditListView.width
             onValueChanged: {
@@ -174,7 +168,6 @@ Page {
             id: cityEdit
             field: "locality"
             detailDefinitionName: "Address"
-            detail: contact.address
             text: contact.address.locality
             width: contactEditListView.width
             onValueChanged: {
@@ -185,7 +178,6 @@ Page {
             id: countryEdit
             field: "country"
             detailDefinitionName: "Address"
-            detail: contact.address
             text: contact.address.country
             width: contactEditListView.width
             onValueChanged: {
@@ -196,7 +188,6 @@ Page {
             id: urlEdit
             field: "url"
             detailDefinitionName: "Url"
-            detail: contact.url
             text: contact.url.url
             width: contactEditListView.width
             onValueChanged: {
@@ -207,7 +198,6 @@ Page {
             id: genderEdit
             field: "gender"
             detailDefinitionName: "Gender"
-            detail: contact.gender
             text: contact.gender.gender
             width: contactEditListView.width
             onValueChanged: {
@@ -218,7 +208,6 @@ Page {
             id: nicknameEdit
             field: "nickname"
             detailDefinitionName: "Nickname"
-            detail: contact.nickname
             text: contact.nickname.nickname
             width: contactEditListView.width
             onValueChanged: {
@@ -229,7 +218,6 @@ Page {
             id: birthdayEdit
             field: "birthday"
             detailDefinitionName: "Birthday"
-            detail: contact.birthday
             text: contact.birthday.birthday
             width: contactEditListView.width
             onValueChanged: {
@@ -241,7 +229,6 @@ Page {
             id: noteEdit
             field: "note"
             detailDefinitionName: "Note"
-            detail: contact.note
             text: contact.note.note
             width: contactEditListView.width
             onValueChanged: {
@@ -252,7 +239,6 @@ Page {
             id: avatarEdit
             field: "imageUrl"
             detailDefinitionName: "Avatar"
-            detail: contact.avatar
             text: contact.avatar.imageUrl
             width: contactEditListView.width
             onValueChanged: {
@@ -263,7 +249,6 @@ Page {
             id: ringtoneEdit
             field: "audioRingtoneUrl"
             detailDefinitionName: "Ringtone"
-            detail: contact.ringtone
             text: contact.ringtone.audioRingtoneUrl
             width: contactEditListView.width
             onValueChanged: {
@@ -274,7 +259,6 @@ Page {
             id: personIdEdit
             field: "personid"
             detailDefinitionName: "Personid"
-            detail: contact.personid
             text: contact.personid.personid
             width: contactEditListView.width
             onValueChanged: {
@@ -285,7 +269,6 @@ Page {
             id: assistantnameEdit
             field: "assistantName"
             detailDefinitionName: "Organization"
-            detail: contact.organization
             text: contact.organization.assistantName
             width: contactEditListView.width
             onValueChanged: {
@@ -296,7 +279,6 @@ Page {
             id: startdateEdit
             field: "startDate"
             detailDefinitionName: "Organization"
-            detail: contact.organization
             text: contact.organization.startDate
             width: contactEditListView.width
             onValueChanged: {

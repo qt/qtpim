@@ -122,6 +122,7 @@ QDeclarativeContact::QDeclarativeContact(QObject *parent)
     :QObject(parent)
     , m_modified(false)
 {
+    connect(this, SIGNAL(contactChanged()), SLOT(setModified()));
 }
 
 QDeclarativeContact::QDeclarativeContact(const QContact& contact, const QMap<QString, QContactDetailDefinition>& defs, QObject *parent)
@@ -129,6 +130,7 @@ QDeclarativeContact::QDeclarativeContact(const QContact& contact, const QMap<QSt
 {
     setContact(contact);
     setDetailDefinitions(defs);
+    connect(this, SIGNAL(contactChanged()), SLOT(setModified()));
 }
 
 QDeclarativeContact::~QDeclarativeContact()
@@ -182,6 +184,11 @@ QContact QDeclarativeContact::contact() const
 bool QDeclarativeContact::modified() const
 {
      return m_modified;
+}
+
+void QDeclarativeContact::setModified()
+{
+    m_modified = true;
 }
 
 /*!

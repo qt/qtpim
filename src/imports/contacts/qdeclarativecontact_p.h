@@ -172,6 +172,10 @@ Q_SIGNALS:
     void contactIdChanged();
     void managerChanged();
     void contactChanged();
+
+private slots:
+    void setModified();
+
 private:
     Q_DISABLE_COPY(QDeclarativeContact)
 

@@ -61,17 +61,9 @@ QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
     All of the information for an organizer item is stored in one or more QOrganizerItemDetail objects.
 
     A detail is a group of logically related bits of data - for example, a QOrganizerItemTimestamp is a single
-    detail that has multiple fields (timestamp of creation, timestamp of last update, etc).
-    Every QOrganizerItemDetail has the name of an associated QOrganizerItemDetailDefinition that describes the
-    fields, their data type, and any restrictions on their values.  Different organizer item managers might have
-    different detail definitions for the same name, depending on their capabilities.
-    For example, some managers might not support the last update timestamp field of the QOrganizerTimestamp detail,
-    while a different manager may add an extra field for storing specific extra information not present in the
-    default schema (e.g., a last accessed timestamp).
-
-    Both the names of all the fields, and the name of the associated QOrganizerItemDetailDefinition are stored
-    as 8-bit strings encoded in Latin 1 for memory conservation.  Note, however, that the values stored
-    in each field are not constrained in this way, and full unicode QStrings or QVariant data can be stored.
+    detail that has multiple fields (timestamp of creation, timestamp of last update, etc). Different organizer
+    managers may support different details for different item types, e.g. certain manager may not support the
+    timestamp, while others do.
 
     When a QOrganizerItemDetail has been retrieved in a QOrganizerItem from a QOrganizerManager, it may have certain
     access constraints provided with it, like \l ReadOnly or \l Irremovable.  This might mean that the
@@ -79,21 +71,12 @@ QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
     Also, some details may be marked \l Irremovable.  These are typically things that
     an organizer item has to have - like a QOrganizerItemType.
 
-    It is possible to inherit from QOrganizerItemDetail to provide convenience or
-    standardized access to values.  For example, \l QOrganizerEventTime provides
-    a convenient API for manipulating a QOrganizerItemDetail to describe the start and end time
-    of an event, according to the schema.
-
     In general, QOrganizerItemDetail and the built in subclasses (like \l QOrganizerEventTime) provide
-    constants for the names of fields (like \l QOrganizerEventTime::FieldStartDateTime).
+    convenience and standardized access to values. For example, \l QOrganizerEventTime provides a
+    convenient API for manipulating a QOrganizerItemDetail to describe the start and end time of an
+    event. Subclasses also provide constants for the names of fields (like \l QOrganizerEventTime::FieldStartDateTime).
     Typically the constants for field names start with \c Field, and the constants for predefined values
     of a field start with the name of that field (e.g. \c TypeEvent is a predefined constant for \c FieldType).
-
-    If you wish to create your own, customized organizer item detail, you should use
-    the \l Q_DECLARE_CUSTOM_ORGANIZER_DETAIL macro in order to ensure proper
-    operation, and declare your own field constants with \l Q_DECLARE_LATIN1_CONSTANT.
-    See the predefined detail subclasses (like \l QOrganizerEventTime,
-    \l QOrganizerItemType) for more information.
 
     QOrganizerItemDetail objects act like type checked values.  In general, you can assign them
     to and fro and have reasonable behaviour, like the following example.
@@ -123,26 +106,22 @@ QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
     // otherLabel.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
     \endcode
 
-    \sa QOrganizerItem, QOrganizerItemDetailDefinition, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter, Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
+    \sa QOrganizerItem, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter
  */
 
 /*!
+    \internal
     \macro Q_DECLARE_CUSTOM_ORGANIZER_DETAIL
     \relates QOrganizerItemDetail
 
-    Macro for simplifying declaring custom (leaf) detail classes.
+    Macro for simplifying declaring leaf detail classes.
 
-    The first argument is the name of the class, and the second argument
-    is a Latin-1 string literal naming the detail type.
+    The first argument is the name of the class, and the second argument is the
+    detail definition name.
 
-    If you are creating a convenience class for a type of QOrganizerItemDetail,
+    If you are creating a leaf detail class for a type of QOrganizerItemDetail,
     you should use this macro when declaring your class to ensure that
     it interoperates with other organizer item functionality.
-
-    Here is an example of a class (\l QOrganizerItemDescription) using this macro.
-    Note that the class provides some predefined constants
-    and some convenience methods that return values associated with schema
-    fields.
  */
 
 

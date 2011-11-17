@@ -52,6 +52,9 @@ QOrganizerJsonDbRequestManager::QOrganizerJsonDbRequestManager()
 
 QOrganizerJsonDbRequestManager::~QOrganizerJsonDbRequestManager()
 {
+    for (QMap<QOrganizerAbstractRequest *, QOrganizerJsonDbRequestData *>::const_iterator i = m_requests.begin(); i != m_requests.end(); ++i)
+        delete i.value();
+
     delete m_operationMutex;
 }
 

@@ -61,6 +61,11 @@ QOrganizerJsonDbDataStorage::QOrganizerJsonDbDataStorage()
     clearRequestData();
 }
 
+QOrganizerJsonDbDataStorage::~QOrganizerJsonDbDataStorage()
+{
+    delete m_waitMutex;
+}
+
 void QOrganizerJsonDbDataStorage::saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
     initRequestData(SaveItems, errorMap, error);

@@ -85,6 +85,7 @@ public:
     };
 
     QOrganizerJsonDbDataStorage();
+    ~QOrganizerJsonDbDataStorage();
 
     void saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders,

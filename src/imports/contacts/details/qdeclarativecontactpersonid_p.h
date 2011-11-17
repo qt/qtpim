@@ -83,6 +83,7 @@ public:
     {
         if (!readOnly() && v != personid()) {
             detail().setValue(QContactPersonId::FieldPersonId, v);
+            emit valueChanged();
         }
     }
     QString personid() const {return detail().value(QContactPersonId::FieldPersonId);}

@@ -81,7 +81,7 @@ public:
     }
     void setBirthday(const QDateTime& v)
     {
-        if (!readOnly() && v != QDateTime()) {
+        if (!readOnly() && v != birthday()) {
             detail().setValue(QContactBirthday::FieldBirthday, v);
             emit valueChanged();
         }

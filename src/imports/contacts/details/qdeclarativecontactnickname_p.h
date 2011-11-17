@@ -83,6 +83,7 @@ public:
     {
         if (!readOnly() && v != nickname()) {
             detail().setValue(QContactNickname::FieldNickname, v);
+            emit valueChanged();
         }
     }
     QString nickname() const {return detail().value(QContactNickname::FieldNickname);}

@@ -97,6 +97,7 @@ public:
     {
         if (!readOnly() && v != url()) {
             detail().setValue(QContactUrl::FieldUrl, v);
+            emit valueChanged();
         }
     }
     QString url() const {return detail().value(QContactUrl::FieldUrl);}

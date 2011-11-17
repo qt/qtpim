@@ -171,7 +171,6 @@ TestCase {
     function test_contact_birthday_emits_no_signal_when_value_does_not_change()
     {
         contact1.birthday.birthday = contact1.birthday.birthday;
-        expectFail("", "Birthday always emits change signal");
         verifyNoSignalReceived();
     }
 
@@ -270,7 +269,6 @@ TestCase {
     {
         expectSignalFromObject("contactChanged", contact1);
         contact1.nickname.nickname = "new";
-        expectFail("", "Nickname does not emit change signal");
         verifySignalReceived();
     }
 
@@ -323,7 +321,6 @@ TestCase {
     {
         expectSignalFromObject("contactChanged", contact1);
         contact1.personid.personid = "new";
-        expectFail("", "Personid does not emit change signal");
         verifySignalReceived();
     }
 
@@ -405,11 +402,11 @@ TestCase {
         verifySignalReceived();
     }
 
-    function test_contact_thumbnail_emits_no_signal_when_value_does_not_change()
+    function test_contact_thumbnail_emits_signal_also_when_value_does_not_change()
     {
+        expectSignalFromObject("contactChanged", contact1);
         contact1.thumbnail = contact1.thumbnail;
-        expectFail("", "Thumbnail always emits signal");
-        verifyNoSignalReceived();
+        verifySignalReceived();
     }
 
     function test_contact_type_change_emits_signal()
@@ -429,7 +426,6 @@ TestCase {
     {
         expectSignalFromObject("contactChanged", contact1);
         contact1.url.url = "http://new";
-        expectFail("", "Url does not emit change signal");
         verifySignalReceived();
     }
 

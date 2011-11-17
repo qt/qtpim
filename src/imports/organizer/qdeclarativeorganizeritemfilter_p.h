@@ -74,8 +74,8 @@ public:
 
     enum FilterType {
         InvalidFilter = QOrganizerItemFilter::InvalidFilter,
-        DetailFilter = QOrganizerItemFilter::OrganizerItemDetailFilter,
-        DetailRangeFilter = QOrganizerItemFilter::OrganizerItemDetailRangeFilter,
+        DetailFilter = QOrganizerItemFilter::DetailFilter,
+        DetailRangeFilter = QOrganizerItemFilter::DetailRangeFilter,
         ChangeLogFilter = QOrganizerItemFilter::ChangeLogFilter,
         IntersectionFilter = QOrganizerItemFilter::IntersectionFilter,
         UnionFilter = QOrganizerItemFilter::UnionFilter,

@@ -493,7 +493,7 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
         }
         break; // fall through to return at end
 
-        case QOrganizerItemFilter::OrganizerItemDetailRangeFilter:
+        case QOrganizerItemFilter::DetailRangeFilter:
         {
             QOrganizerItemDetailRangeFilter f(filter);
             if (f.detailDefinitionName().isEmpty())
@@ -511,7 +511,7 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
         }
         break; // fall through to return at end
 
-        case QOrganizerItemFilter::OrganizerItemDetailFilter:
+        case QOrganizerItemFilter::DetailFilter:
         {
             QOrganizerItemDetailFilter f(filter);
             if (f.detailDefinitionName().isEmpty())
@@ -913,7 +913,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
             // Fall through to end
             break;
 
-        case QOrganizerItemFilter::OrganizerItemDetailFilter:
+        case QOrganizerItemFilter::DetailFilter:
             {
                 const QOrganizerItemDetailFilter cdf(filter);
                 if (cdf.detailDefinitionName().isEmpty())
@@ -983,7 +983,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
             }
             break;
 
-        case QOrganizerItemFilter::OrganizerItemDetailRangeFilter:
+        case QOrganizerItemFilter::DetailRangeFilter:
             {
                 const QOrganizerItemDetailRangeFilter cdf(filter);
                 if (cdf.detailDefinitionName().isEmpty())

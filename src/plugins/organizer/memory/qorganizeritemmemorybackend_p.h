@@ -217,8 +217,8 @@ public:
         QList<QOrganizerItemFilter::FilterType> supported;
 
         supported << QOrganizerItemFilter::InvalidFilter
-                  << QOrganizerItemFilter::OrganizerItemDetailFilter
-                  << QOrganizerItemFilter::OrganizerItemDetailRangeFilter
+                  << QOrganizerItemFilter::DetailFilter
+                  << QOrganizerItemFilter::DetailRangeFilter
                   << QOrganizerItemFilter::ChangeLogFilter
                   << QOrganizerItemFilter::IntersectionFilter
                   << QOrganizerItemFilter::UnionFilter

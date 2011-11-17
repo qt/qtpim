@@ -614,7 +614,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
     QList<QOrganizerItemFilter::FilterType> supported;
 
     supported << QOrganizerItemFilter::InvalidFilter
-              << QOrganizerItemFilter::OrganizerItemDetailFilter
+              << QOrganizerItemFilter::DetailFilter
               << QOrganizerItemFilter::IntersectionFilter
               << QOrganizerItemFilter::UnionFilter
               << QOrganizerItemFilter::IdFilter

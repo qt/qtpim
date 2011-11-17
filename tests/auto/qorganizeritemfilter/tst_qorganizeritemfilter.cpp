@@ -183,15 +183,15 @@ void tst_QOrganizerItemFilter::classHierarchy()
 {
     /* Test "casting" up and down the hierarchy */
     QOrganizerItemDetailFilter df;
-    QVERIFY(df.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
     df.setDetailDefinitionName("Frog", "Croak");
     df.setValue(42);
 
     QOrganizerItemFilter f = df;
-    QVERIFY(f.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(f.type() == QOrganizerItemFilter::DetailFilter);
 
     QOrganizerItemDetailFilter df2 = f;
-    QVERIFY(df2.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
     QVERIFY(df2.detailFieldName() == "Croak");
     QVERIFY(df2.value() == 42);
@@ -200,7 +200,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     {
         QOrganizerItemFilter f2 = df2;
     }
-    QVERIFY(df2.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
     QVERIFY(df2.detailFieldName() == "Croak");
     QVERIFY(df2.value() == 42);
@@ -211,7 +211,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
         QVERIFY(sdf2.detailDefinitionName() == "Toad");
         QVERIFY(df2.detailDefinitionName() == "Frog");
     }
-    QVERIFY(df2.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
     QVERIFY(df2.detailFieldName() == "Croak");
     QVERIFY(df2.value() == 42);
@@ -497,7 +497,7 @@ void tst_QOrganizerItemFilter::detailFilter()
 {
     QOrganizerItemDetailFilter df;
 
-    QVERIFY(df.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
 
     QVERIFY(df.detailDefinitionName().isEmpty());
     QVERIFY(df.detailFieldName().isEmpty());
@@ -543,7 +543,7 @@ void tst_QOrganizerItemFilter::detailFilter()
 
     /* Directly */
     df2 = rf;
-    QVERIFY(df2.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName().isEmpty());
     QVERIFY(df2.detailFieldName().isEmpty());
     QVERIFY(df2.value().isNull());
@@ -562,7 +562,7 @@ void tst_QOrganizerItemFilter::detailFilter()
 
     /* Now test copy ctor */
     QOrganizerItemDetailFilter df3(rf);
-    QVERIFY(df3.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df3.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df3.detailDefinitionName().isEmpty());
     QVERIFY(df3.detailFieldName().isEmpty());
     QVERIFY(df3.value().isNull());
@@ -574,7 +574,7 @@ void tst_QOrganizerItemFilter::detailFilter()
 
     /* Now test copy ctor through base class */
     QOrganizerItemDetailFilter df4(f);
-    QVERIFY(df4.type() == QOrganizerItemFilter::OrganizerItemDetailFilter);
+    QVERIFY(df4.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df4.detailDefinitionName().isEmpty());
     QVERIFY(df4.detailFieldName().isEmpty());
     QVERIFY(df4.value().isNull());
@@ -589,7 +589,7 @@ void tst_QOrganizerItemFilter::detailRangeFilter()
 {
     QOrganizerItemDetailRangeFilter rf;
 
-    QVERIFY(rf.type() == QOrganizerItemFilter::OrganizerItemDetailRangeFilter);
+    QVERIFY(rf.type() == QOrganizerItemFilter::DetailRangeFilter);
 
     QVERIFY(rf.detailDefinitionName().isEmpty());
     QVERIFY(rf.detailFieldName().isEmpty());

@@ -195,10 +195,10 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItemFilter& filter)
             case QOrganizerItemFilter::InvalidFilter:
                 filter = QOrganizerItemInvalidFilter();
                 break;
-            case QOrganizerItemFilter::OrganizerItemDetailFilter:
+            case QOrganizerItemFilter::DetailFilter:
                 filter = QOrganizerItemDetailFilter();
                 break;
-            case QOrganizerItemFilter::OrganizerItemDetailRangeFilter:
+            case QOrganizerItemFilter::DetailRangeFilter:
                 filter = QOrganizerItemDetailRangeFilter();
                 break;
             case QOrganizerItemFilter::ChangeLogFilter:

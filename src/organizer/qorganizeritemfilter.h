@@ -79,8 +79,8 @@ public:
 
     enum FilterType {
         InvalidFilter,
-        OrganizerItemDetailFilter,
-        OrganizerItemDetailRangeFilter,
+        DetailFilter,
+        DetailRangeFilter,
         ChangeLogFilter,
         IntersectionFilter,
         UnionFilter,

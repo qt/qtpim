@@ -1161,7 +1161,7 @@ bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFi
     case QOrganizerItemFilter::IdFilter:
         isValidFilter = idFilterToJsondbQuery(filter, jsonDbQueryStr);
         break;
-    case QOrganizerItemFilter::OrganizerItemDetailFilter:
+    case QOrganizerItemFilter::DetailFilter:
         isValidFilter = detailFilterToJsondbQuery(filter, jsonDbQueryStr);
         break;
     default:

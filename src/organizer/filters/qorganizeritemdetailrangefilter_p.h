@@ -150,7 +150,7 @@ public:
     }
 #endif
 
-    Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailRangeFilter, QOrganizerItemFilter::OrganizerItemDetailRangeFilter)
+    Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailRangeFilter, QOrganizerItemFilter::DetailRangeFilter)
 
     QString m_defId;
     QString m_fieldId;

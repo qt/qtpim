@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEM_P_H
 #define QORGANIZERITEM_P_H
 
@@ -54,12 +53,7 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QList>
-#include <QDateTime>
-#include <QMultiHash>
-
-#include "qorganizer.h"
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -72,21 +66,21 @@ public:
         m_details.append(QOrganizerItemType());
     }
 
-    QOrganizerItemData(const QOrganizerItemData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details)
+    QOrganizerItemData(const QOrganizerItemData &other)
+        : QSharedData(other)
+        , m_id(other.m_id)
+        , m_collectionId(other.m_collectionId)
+        , m_details(other.m_details)
     {
     }
 
     ~QOrganizerItemData() {}
 
-    void removeOnly(const QString& definitionName);
-    void removeOnly(const QSet<QString>& definitionNames);
+    void removeOnly(const QString &definitionName);
+    void removeOnly(const QSet<QString> &definitionNames);
 
     // Trampoline
-    static QSharedDataPointer<QOrganizerItemData>& itemData(QOrganizerItem& item) {return item.d;}
+    static QSharedDataPointer<QOrganizerItemData> &itemData(QOrganizerItem &item) {return item.d;}
 
     QOrganizerItemId m_id;
     QOrganizerCollectionId m_collectionId;
@@ -95,5 +89,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEM_P_H

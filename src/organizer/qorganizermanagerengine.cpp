@@ -49,7 +49,7 @@
 #include "qorganizerabstractrequest_p.h"
 #include "qorganizeritemrequests.h"
 #include "qorganizeritemrequests_p.h"
-#include "qorganizeritem.h"
+#include "qorganizeritems.h"
 #include "qorganizeritemfetchhint.h"
 
 #include "qorganizercollection_p.h"

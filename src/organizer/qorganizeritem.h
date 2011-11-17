@@ -42,67 +42,46 @@
 #ifndef QORGANIZERITEM_H
 #define QORGANIZERITEM_H
 
-#include <QVariant>
-#include <QString>
-#include <QPair>
-#include <QMultiMap>
-#include <QList>
-#include <QDateTime>
-#include <QSharedDataPointer>
-
 #include <qorganizeritemid.h>
 #include <qorganizeritemdetail.h>
 #include <qorganizeritemtype.h>
-#include <qorganizeritemdisplaylabel.h>
-#include <qorganizeritemdescription.h>
-#include <qorganizercollection.h>
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <qorganizercollectionid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerManager;
 class QOrganizerItemData;
-class QOrganizerItemName;
 
 // MSVC needs the function declared before the friend declaration
-class QOrganizerItem;
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerItem& item);
-Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerItem& item);
-#endif
+class QOrganizerItem;
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItem &item);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItem &item);
+#endif // QT_NO_DATASTREAM
 
 class Q_ORGANIZER_EXPORT QOrganizerItem
 {
 public:
     QOrganizerItem();
-
+    QOrganizerItem(const QOrganizerItem &other);
     ~QOrganizerItem();
 
-    QOrganizerItem(const QOrganizerItem& other);
-    QOrganizerItem& operator=(const QOrganizerItem& other);
+    QOrganizerItem &operator=(const QOrganizerItem &other);
 
     bool operator==(const QOrganizerItem &other) const;
     bool operator!=(const QOrganizerItem &other) const {return !(other == *this);}
 
-    /* Unique ID */
     QOrganizerItemId id() const;
-    void setId(const QOrganizerItemId& id);
+    void setId(const QOrganizerItemId &id);
 
-    /* The collection to which an item belongs - read only */
     QOrganizerCollectionId collectionId() const;
-    void setCollectionId(const QOrganizerCollectionId& collectionId);
+    void setCollectionId(const QOrganizerCollectionId &collectionId);
 
-    /* Is this an empty organizer item? */
     bool isEmpty() const;
     void clearDetails();
 
-    QOrganizerItemDetail detail(const QString& definitionId) const;
-    QList<QOrganizerItemDetail> details(const QString& definitionId = QString()) const;
+    QOrganizerItemDetail detail(const QString &definitionName = QString()) const;
+    QList<QOrganizerItemDetail> details(const QString &definitionName = QString()) const;
 
-    /* Templated (type-specific) detail retrieval */
     template<typename T> QList<T> details() const
     {
         QList<QOrganizerItemDetail> props = details(T::DefinitionName);
@@ -117,37 +96,30 @@ public:
         return T(detail(T::DefinitionName));
     }
 
-    /* generic detail addition/removal functions */
-    bool saveDetail(QOrganizerItemDetail* detail);   // modifies the detail - sets its ID if detail already exists
-    bool removeDetail(QOrganizerItemDetail* detail); // modifies the detail - unsets its ID
+    bool saveDetail(QOrganizerItemDetail *detail);
+    bool removeDetail(QOrganizerItemDetail *detail);
 
-    // Some common convenience detail accessors
-    // has to be things that all subclasses (including Occurrences) have.
-
-    /* Type - event, todo, journal, note... */
     QOrganizerItemType::ItemType type() const;
     void setType(QOrganizerItemType::ItemType type);
 
-    /* The display label of the organizer item */
     QString displayLabel() const;
-    void setDisplayLabel(const QString& label);
+    void setDisplayLabel(const QString &label);
 
-    /* The description of the organizer item */
     QString description() const;
-    void setDescription(const QString& description);
+    void setDescription(const QString &description);
 
     QStringList comments() const;
     void clearComments();
-    void setComments(const QStringList& comments);
-    void addComment(const QString& comment);
+    void setComments(const QStringList &comments);
+    void addComment(const QString &comment);
 
     QStringList tags() const;
     void clearTags();
-    void addTag(const QString& tag);
-    void setTags(const QStringList& tags);
+    void addTag(const QString &tag);
+    void setTags(const QStringList &tags);
 
     QString guid() const;
-    void setGuid(const QString& guid);
+    void setGuid(const QString &guid);
 
     QVariant extendedDetailData(const QString &name) const;
     void setExtendedDetailData(const QString &name, const QVariant &data);
@@ -155,28 +127,32 @@ public:
 protected:
     explicit QOrganizerItem(QOrganizerItemType::ItemType type);
     QOrganizerItem(const QOrganizerItem &other, QOrganizerItemType::ItemType expectedType);
-    QOrganizerItem& assign(const QOrganizerItem &other, QOrganizerItemType::ItemType expectedType);
+    QOrganizerItem &assign(const QOrganizerItem &other, QOrganizerItemType::ItemType expectedType);
 
 protected:
     friend class QOrganizerItemData;
     friend class QOrganizerManager;
     friend class QOrganizerManagerData;
     friend class QOrganizerManagerEngine;
-    Q_ORGANIZER_EXPORT friend QDataStream& operator<<(QDataStream& out, const QOrganizerItem& item);
-    Q_ORGANIZER_EXPORT friend QDataStream& operator>>(QDataStream& in, QOrganizerItem& item);
+
+#ifndef QT_NO_DATASTREAM
+    Q_ORGANIZER_EXPORT friend QDataStream &operator<<(QDataStream &out, const QOrganizerItem &item);
+    Q_ORGANIZER_EXPORT friend QDataStream &operator>>(QDataStream &in, QOrganizerItem &item);
+#endif // QT_NO_DATASTREAM
 
     QSharedDataPointer<QOrganizerItemData> d;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItem& key);
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItem &key);
+
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem& organizeritem);
-#endif
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem &item);
+#endif // QT_NO_DEBUG_STREAM
 
 #define Q_DECLARE_CUSTOM_ORGANIZER_ITEM(className, typeConstant) \
     className() : QOrganizerItem(typeConstant) {} \
-    className(const QOrganizerItem& other) : QOrganizerItem(other, typeConstant) {} \
-    className& operator=(const QOrganizerItem& other) {assign(other, typeConstant); return *this;}
+    className(const QOrganizerItem &other) : QOrganizerItem(other, typeConstant) {} \
+    className& operator=(const QOrganizerItem &other) {assign(other, typeConstant); return *this;}
 
 QTORGANIZER_END_NAMESPACE
 
@@ -184,5 +160,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItem), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERITEM_H

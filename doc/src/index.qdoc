@@ -1,4 +1,4 @@
-/****************************************************************************
+w/****************************************************************************
 **
 ** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -46,7 +46,7 @@
 
     The QtPim module covers Personal InformationManagement (PIM).
     It is not a single API but a collection of APIs and frameworks which
-    allow you to developer applications with personal information.
+    allow you to develop applications with personal information.
 
     This release contains the following APIs:
 

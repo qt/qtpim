@@ -105,6 +105,7 @@ TestCase {
         address.region = "Region"
         address.postcode = "Postcode"
         address.country = "Country"
+        address.contexts = ["Home"]
         contact.addDetail(address)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Address)
@@ -113,6 +114,8 @@ TestCase {
         compare(detail.region, "Region")
         compare(detail.postcode, "Postcode")
         compare(detail.country, "Country")
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
     }
 
     Avatar {
@@ -145,10 +148,13 @@ TestCase {
 
     function test_emailAddress() {
         emailaddress.emailAddress = "test@qt.nokia.com"
+        emailaddress.contexts = ["Home"]
         contact.addDetail(emailaddress)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Email)
         compare(detail.emailAddress, "test@qt.nokia.com")
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
     }
 
     Gender {
@@ -173,6 +179,7 @@ TestCase {
         name.middleName = "B."
         name.lastName = "Doe"
         name.suffix = "Sr."
+        name.contexts = ["Home"]
         contact.addDetail(name)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Name)
@@ -181,6 +188,9 @@ TestCase {
         compare(detail.middleName, "B.")
         compare(detail.lastName, "Doe")
         compare(detail.suffix, "Sr.")
+        expectFail("", "contexts are not supported at the moment")
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
     }
 
     Nickname {
@@ -237,6 +247,7 @@ TestCase {
         organization.assistantName = "Assistant name"
         organization.startDate = new Date(2012, 12, 01)
         organization.endDate = new Date(2012, 12, 02)
+        organization.contexts = ["Home"]
         contact.addDetail(organization)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Organization)
@@ -255,6 +266,9 @@ TestCase {
         expectFail("", "TODO: endDate is not working as expected at the moment");
         compare(detail.endDate, new Date(2012, 12, 03))
         compare(new Date(detail.endDate), new Date(2012, 12, 02))
+        expectFail("", "TODO: contexts are not working as expected at the moment");
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
     }
 
     Personid {
@@ -282,10 +296,13 @@ TestCase {
                     PhoneNumber.Video,
                 ]
         phonenumber.number = "1"
+        phonenumber.contexts = ["Home"]
         contact.addDetail(phonenumber)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.PhoneNumber)
         compare(detail.number, "1")
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
         expectFail("", "TODO: This is not working as expected at the moment")
         compare(detail.subTypes.length, phonenumber.subTypes.length)
     }
@@ -330,9 +347,12 @@ TestCase {
 
     function test_url() {
         url.url = "http://qt.nokia.com"
+        url.contexts = ["Home"]
         contact.addDetail(url)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Url)
         compare(detail.url, "http://qt.nokia.com")
+        compare(detail.contexts.length, 1, "contexts length")
+        compare(detail.contexts[0], "Home", "contexts")
     }
 }

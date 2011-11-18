@@ -63,6 +63,14 @@ TestCase {
         id: birthday
     }
 
+    ContactDetail {
+        id: detailCommon
+    }
+
+    ContactDetail {
+        id: detailContexts
+    }
+
     DisplayLabel {
         id: displayLabel
     }
@@ -232,6 +240,21 @@ TestCase {
         compare(birthday.birthday, dateTime)
     }
 
+
+    function test_detail_common_properties() {
+        compare(detailCommon.type, ContactDetail.Customized, "type");
+        compare(detailCommon.detailUri, "", "detailUri");
+        compare(detailCommon.linkedDetailUris, [], "linkedDetailUris");
+        compare(detailCommon.fieldNames, [], "fieldNames");
+        compare(detailCommon.readOnly, false, "readOnly");
+        compare(detailCommon.removable, true, "removable");
+    }
+
+    function test_detail_contexts() {
+        compare(detailContexts.contexts, [], "contexts");
+        detailContexts.contexts = ["Home"];
+        compare(detailContexts.contexts, ["Home"], "context");
+    }
 
     function test_displayLabel() {
         compare(displayLabel.label.toString(), "")  // Not possible to assign values

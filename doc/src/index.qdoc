@@ -63,8 +63,8 @@
         supported by the selected backend.
         \o Access a list of calendar events from the calendar database
         supported by the selected backend.
-        \o Be able to import contacts in VCard format into the selected
-        contacts database, and be able to export them to VCard format
+        \o Be able to import contacts in vCard format into the selected
+        contacts database, and be able to export them to vCard format
         to share elsewhere.
         \o Be able to import iCalendar events into your selected calendar
         database, and also be able to share your events by exporting iCalendar

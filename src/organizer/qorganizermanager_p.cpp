@@ -54,10 +54,6 @@
 #include <QDir>
 #include <QFile>
 
-#if defined(Q_OS_SYMBIAN)
-# include <f32file.h>
-#endif
-
 #include "qorganizeriteminvalidbackend_p.h"
 #include "qorganizerpluginsearch_p.h"
 

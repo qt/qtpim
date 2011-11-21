@@ -118,7 +118,7 @@ Item {
                 text: "Add Phone";
                 onClicked: {
                         var detail = Qt.createQmlObject(
-                            "import QtMobility.contacts 1.1;" +
+                            "import QtContacts 5.0;" +
                             "PhoneNumber {number: ''}", contact);
                         contact.addDetail(detail);
                     }
@@ -151,7 +151,7 @@ Item {
                 text: "Add Email";
                 onClicked: {
                         var detail = Qt.createQmlObject(
-                            "import QtMobility.contacts 1.1;" +
+                            "import QtContacts 5.0;" +
                             "EmailAddress {emailAddress: ''}", contact);
                         contact.addDetail(detail);
                     }

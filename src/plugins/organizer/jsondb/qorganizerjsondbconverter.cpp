@@ -1256,7 +1256,12 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
         || QOrganizerItemPriority::DefinitionName == detailDefinitionName
         || QOrganizerItemType::DefinitionName == detailDefinitionName
         || QOrganizerItemTag::DefinitionName == detailDefinitionName
-        || QOrganizerItemExtendedDetail::DefinitionName == detailDefinitionName)) {
+        || QOrganizerItemExtendedDetail::DefinitionName == detailDefinitionName
+        || (QOrganizerEventRsvp::DefinitionName == detailDefinitionName && (QOrganizerEventRsvp::FieldParticipationStatus == detailFieldName
+                                                                            || QOrganizerEventRsvp::FieldParticipationRole == detailFieldName
+                                                                            || QOrganizerEventRsvp::FieldResponseRequirement == detailFieldName
+                                                                            || QOrganizerEventRsvp::FieldResponseDeadline == detailFieldName
+                                                                            || QOrganizerEventRsvp::FieldResponseDate == detailFieldName)))) {
         // filtering matchflags are not supported for all the types
         isValidFilter = false;
     } else if (QVariant::String == filter.value().type()
@@ -1267,7 +1272,9 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
         || (QOrganizerItemLocation::DefinitionName == detailDefinitionName && QOrganizerItemLocation::FieldLabel == detailFieldName)
         || QOrganizerItemTag::DefinitionName == detailDefinitionName
         || QOrganizerItemExtendedDetail::DefinitionName == detailDefinitionName
-        || QOrganizerItemType::DefinitionName == detailDefinitionName)) {
+        || QOrganizerItemType::DefinitionName == detailDefinitionName
+        || (QOrganizerEventRsvp::DefinitionName == detailDefinitionName && (QOrganizerEventRsvp::FieldOrganizerEmail == detailFieldName
+                                                                            || QOrganizerEventRsvp::FieldOrganizerName == detailFieldName)))) {
         // filtering with QString needs extra attention, not allowed for all the types
         isValidFilter = false;
     }
@@ -1396,6 +1403,44 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerItemExtendedDetail::DefinitionName == detailDefinitionName
              && QOrganizerItemExtendedDetail::FieldExtendedDetailName ==  detailFieldName) {
             jsonDbQueryStr += existsQueryTemplate.arg(valueString);
+
+        } else if (QOrganizerEventRsvp::DefinitionName == detailDefinitionName) {
+            if (QOrganizerEventRsvp::FieldParticipationStatus == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::AttendeeParticipationStatus)
+                        .arg(createMatchFlagQuery(enumToString(qt_organizerParticipationStatusMap, df.value().toInt()), df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldParticipationRole == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::AttendeeParticipationRole)
+                        .arg(createMatchFlagQuery(enumToString(qt_organizerParticipationRoleMap, df.value().toInt()), df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldResponseRequirement == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::RsvpResponseRequirement)
+                        .arg(createMatchFlagQuery(enumToString(qt_organizerResponseRequirementMap, df.value().toInt()), df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldResponseDeadline == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::RsvpResponseDeadline)
+                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldResponseDate == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::RsvpResponseDate)
+                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldOrganizerName == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::RsvpOrganizerName)
+                        .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+            } else if (QOrganizerEventRsvp::FieldOrganizerEmail == detailFieldName) {
+                jsonDbQueryStr += matchFlagQueryTemplate2
+                        .arg(QOrganizerJsonDbStr::Rsvp)
+                        .arg(QOrganizerJsonDbStr::RsvpOrganizerEmail)
+                        .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+            }
         }
     }
     return isValidFilter;

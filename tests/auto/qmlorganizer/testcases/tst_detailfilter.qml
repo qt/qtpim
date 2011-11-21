@@ -1,4 +1,3 @@
-
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -465,7 +464,56 @@ TestCase {
                 + "   ExtendedDetail {\n"
                 + "   name: 'myField'\n"
                 + "   data: 42\n"
-                + "   }"}
+                + "   }"},
+            {tag: "exact filter - EventRsvp.ParticipationStatus", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldParticipationStatus, filterValue: EventAttendee.StatusAccepted,
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        participationStatus: EventAttendee.StatusAccepted\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.ParticipationRole", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldParticipationRole, filterValue: EventAttendee.RoleHost,
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        participationRole: EventAttendee.RoleHost\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.ResponseRequirement", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldResponseRequirement, filterValue: EventRsvp.ResponseRequired,
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        responseRequirement: EventRsvp.ResponseRequired\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.ResponseDeadline", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldResponseDeadline, filterValue: new Date("2008-12-28"),
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        responseDeadline: new Date(\"2008-12-28\")\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.ResponseDate", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldResponseDate, filterValue: new Date("2008-12-28"),
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        responseDate: new Date(\"2008-12-28\")\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.OrganizerName", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerName, filterValue: "QtPim",
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        organizerName: \"QtPim\"\n"
+                + "    }"},
+            {tag: "exact filter - EventRsvp.OrganizerEmail", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerEmail, filterValue: "pim@qt-project.org",
+                separateDetailCtrStr: "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0 \n"
+                + "    EventRsvp {\n"
+                + "        organizerEmail: \"pim@qt-project.org\"\n"
+                + "    }"}
         ]
     }
 
@@ -516,12 +564,20 @@ TestCase {
             + "   Event {\n"
             + "  startDateTime:new Date('2010-10-20')\n"
             + "  description: 'aa bb cc'\n"
+            + "  EventRsvp {\n"
+            + "    organizerName: 'QtPim'\n"
+            + "    organizerEmail: 'pim@qt-project.org'\n"
+            + "  }"
             + "   }",
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:new Date('2011-10-22')\n"
             + "  description: 'bB cc dd'\n"
+            + "  EventRsvp {\n"
+            + "    organizerName: 'random organizer name'\n"
+            + "    organizerEmail: 'random organizer email'\n"
+            + "  }"
             + "   }",
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
@@ -600,7 +656,31 @@ TestCase {
                 + "   }"},
             {tag: "Filter set, Description - tighten filter", expectedItemsAmount: 2,
                 filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "bb",
-                matchFlags: Filter.MatchContains, matchFlagsTighter: Filter.MatchContains | Filter.MatchCaseSensitive}
+                matchFlags: Filter.MatchContains, matchFlagsTighter: Filter.MatchContains | Filter.MatchCaseSensitive},
+            {tag: "Filter set, EventRsvp.OrganizerName - MatchExactly", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerName, filterValue: "QtPim",
+                matchFlags: Filter.MatchExactly},
+            {tag: "Filter set, EventRsvp.OrganizerName - MatchStartsWith", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerName, filterValue: "Qt",
+                matchFlags: Filter.MatchStartsWith},
+            {tag: "Filter set, EventRsvp.OrganizerName - MatchContains", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerName, filterValue: "tP",
+                matchFlags: Filter.MatchContains},
+            {tag: "Filter set, EventRsvp.OrganizerName - MatchEndsWith", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerName, filterValue: "im",
+                matchFlags: Filter.MatchEndsWith},
+            {tag: "Filter set, EventRsvp.OrganizerEmail - MatchExactly", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerEmail, filterValue: "pim@qt-project.org",
+                matchFlags: Filter.MatchExactly},
+            {tag: "Filter set, EventRsvp.OrganizerEmail - MatchStartsWith", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerEmail, filterValue: "pim",
+                matchFlags: Filter.MatchStartsWith},
+            {tag: "Filter set, EventRsvp.OrganizerEmail - MatchContains", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerEmail, filterValue: "@qt-",
+                matchFlags: Filter.MatchContains},
+            {tag: "Filter set, EventRsvp.OrganizerEmail - MatchEndsWith", expectedItemsAmount: 1,
+                filterDetail: Detail.EventRsvp, filterField: EventRsvp.FieldOrganizerEmail, filterValue: ".org",
+                matchFlags: Filter.MatchEndsWith}
         ]
     }
 

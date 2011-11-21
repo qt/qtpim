@@ -942,7 +942,7 @@ public:
         FieldResponseDeadline,
         FieldResponseDate,
         FieldOrganizerName,
-        FieldOrganizerEmail,
+        FieldOrganizerEmail
     };
 
     enum ResponseRequirement {

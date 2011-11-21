@@ -331,6 +331,8 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
  */
 QDeclarativeOrganizerItemDetailRangeFilter::QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
+    , m_detail(QDeclarativeOrganizerItemDetail::Customized)
+    , m_field(-1)
     , m_componentCompleted(false)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
@@ -353,67 +355,44 @@ void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
 }
 
 /*!
-  \qmlproperty variant DetailRangeFilter::detail
+    \qmlproperty enum DetailRangeFilter::detail
 
-  This property holds the detail type of which details will be matched to.
-  The property value could be either the enumeration value of Detail::type
-  or detail names.
-  \sa Detail::type
-  \sa DetailFilter::detail
+    This property holds the detail type of which the detail filter will be matched to. The value
+    shuold be the enumeration value of Detail::type.
   */
-QVariant QDeclarativeOrganizerItemDetailRangeFilter::detail() const
+QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetailRangeFilter::detail() const
 {
     return m_detail;
 }
 
-void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(const QVariant& v)
+void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail)
 {
-    if (v != m_detail || m_componentCompleted) {
-        m_detail = v;
+    if (m_detail != detail) {
+        m_detail = detail;
         if (m_componentCompleted)
             setDetailDefinitionName();
-        emit filterChanged();
     }
 }
 
 /*!
-  \qmlproperty variant DetailRangeFilter::field
+    \qmlproperty enum DetailRangeFilter::field
 
-  This property holds the detail field type of which detail fields will be matched to.
-  Detail field types are enumeration values defined in each detail elements, you can also
-  set the value to be detail field names.
+    This property holds the detail field type of which the detail filter will be matched to. The
+    value should be the filld enumeration value defined in each detail element.
 
-  \sa EventTime
-  \sa JournalTime
-  \sa TodoTime
-  \sa TodoProgress
-  \sa Reminder
-  \sa AudibleReminder
-  \sa VisualReminder
-  \sa EmailReminder
-  \sa Comment
-  \sa Description
-  \sa DisplayLabel
-  \sa Guid
-  \sa Location
-  \sa Parent
-  \sa Priority
-  \sa Recurrence
-  \sa Timestamp
-  \sa Type
-  \sa Tag
-
-  \sa DetailFilter::field
+    \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
+        EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
+        Timestamp, Type, Tag
   */
-QVariant QDeclarativeOrganizerItemDetailRangeFilter::field() const
+int QDeclarativeOrganizerItemDetailRangeFilter::field() const
 {
     return m_field;
 }
 
-void QDeclarativeOrganizerItemDetailRangeFilter::setField(const QVariant& v)
+void QDeclarativeOrganizerItemDetailRangeFilter::setField(int field)
 {
-    if (v != m_field || m_componentCompleted) {
-        m_field = v;
+    if (field != m_field || m_componentCompleted) {
+        m_field = field;
         if (m_componentCompleted)
             setDetailDefinitionName();
         emit filterChanged();
@@ -520,23 +499,9 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
  */
 void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
 {
-    QString ddn;
-    if (m_detail.type() != QVariant::String) {
-        ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
-    } else {
-        ddn = m_detail.toString();
-    }
-
-    QString dfn;
-    if (m_field.type() != QVariant::String) {
-       QDeclarativeOrganizerItemDetail::ItemDetailType dt = static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn));
-       dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
-    } else {
-        dfn = m_field.toString();
-    }
-    d.setDetailDefinitionName(ddn, dfn);
-    m_detail = ddn;
-    m_field = dfn;
+    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
+                              QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
+    emit valueChanged();
 }
 
 

@@ -289,13 +289,13 @@ class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerI
     Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
-    Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY valueChanged)
-    Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::ItemDetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
     Q_ENUMS(RangeFlag)
     Q_FLAGS(RangeFlags)
-public:
 
+public:
     enum RangeFlag {
         IncludeLower = QOrganizerItemDetailRangeFilter::IncludeLower,
         IncludeUpper = QOrganizerItemDetailRangeFilter::IncludeUpper,
@@ -310,11 +310,11 @@ public:
     void classBegin();
     void componentComplete();
 
-    QVariant detail() const;
-    void setDetail(const QVariant& v);
+    QDeclarativeOrganizerItemDetail::ItemDetailType detail() const;
+    void setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail);
 
-    QVariant field() const;
-    void setField(const QVariant& v);
+    int field() const;
+    void setField(int field);
 
     QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const;
     void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags);
@@ -337,8 +337,8 @@ signals:
 private:
     void setDetailDefinitionName();
 
-    QVariant m_field;
-    QVariant m_detail;
+    QDeclarativeOrganizerItemDetail::ItemDetailType m_detail;
+    int m_field;
     bool m_componentCompleted;
     QOrganizerItemDetailRangeFilter d;
 

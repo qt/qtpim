@@ -63,7 +63,7 @@
     \brief The ContactModel element provides access to contacts from the contacts store.
     \ingroup qml-contacts
 
-    This element is part of the \bold{QtMobility.contacts 1.1} module.
+    This element is part of the \bold{QtContacts} module.
 
     ContactModel provides a model of contacts from the contacts store.
     The contents of the model can be specified with \l filter, \l sortOrders and \l fetchHint properties.

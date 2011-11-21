@@ -53,7 +53,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
     The contents of the model can be specified with \l participantId, \l role and \l relationshipType properties.
     Whether the model is automatically updated when the store or filter changes, can be controlled

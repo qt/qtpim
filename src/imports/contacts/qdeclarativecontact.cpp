@@ -55,7 +55,7 @@
     \brief The Contact element represents an addressbook contact.
     \ingroup qml-contacts
 
-    The Contact element is part of the \bold{QtMobility.contacts 5.0} module.
+    The Contact element is part of the \bold{QtContacts} module.
 
     A Contact object has a collection of details (like a name, phone numbers and
     email addresses).  Each detail (which can have multiple fields) is stored

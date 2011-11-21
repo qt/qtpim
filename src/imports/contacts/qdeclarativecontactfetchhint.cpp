@@ -53,7 +53,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactFetchHint
  */

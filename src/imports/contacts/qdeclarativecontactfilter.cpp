@@ -50,7 +50,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactFilter
  */
@@ -81,7 +81,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactActionFilter
  */
@@ -98,7 +98,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactChangeLogFilter
  */
@@ -126,7 +126,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactDetailFilter
  */
@@ -200,7 +200,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactDetailRangeFilter
  */
@@ -258,7 +258,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactIntersectionFilter
  */
@@ -276,7 +276,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactUnionFilter
  */
@@ -293,7 +293,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactLocalIdFilter
  */
@@ -311,7 +311,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa Relationship
    \sa RelationshipModel
@@ -351,7 +351,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts
 
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
 
    \sa QContactInvalidFilter
  */

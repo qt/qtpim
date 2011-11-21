@@ -53,7 +53,7 @@
 
    \sa QContactDetail
 
-    The ContactDetail element is part of the \bold{QtMobility.contacts 1.1} module.
+    The ContactDetail element is part of the \bold{QtContacts} module.
  */
 
 QTCONTACTS_BEGIN_NAMESPACE
@@ -570,7 +570,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
    Versit \reg is a trademark of the Internet Mail Consortium.
-   This element is part of the \bold{QtMobility.contacts 1.1} module.
+   This element is part of the \bold{QtContacts} module.
  */
 /*!
   \qmlproperty string Address::street
@@ -614,7 +614,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
   This property holds the post office box identifier of the mailing address.
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
   */
 
 /* ==================== QDeclarativeContactAnniversary ======================= */
@@ -632,7 +632,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Anniversary.SubType
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -678,7 +678,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Avatar.VideoUrl
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -704,7 +704,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Birthday.Birthday
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -724,7 +724,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o DisplayLabel.Label
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -745,7 +745,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o EmailAddress.EmailAddress
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -767,7 +767,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Family.Children
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -795,7 +795,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Favorite.Index
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -822,7 +822,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Gender.Gender
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -856,7 +856,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o GeoLocation.Timestamp
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -923,7 +923,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o GlobalPresence.CustomMessage
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -980,7 +980,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Guid.Guid
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1000,7 +1000,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Hobby.Hobby
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1025,7 +1025,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Name.CustomLabel
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1071,7 +1071,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Nickname.Nickname
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1092,7 +1092,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Note.Note
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1116,7 +1116,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o OnlineAccount.SubTypes - the sub types of an online account.
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1168,7 +1168,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Organization.EndDate
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1230,7 +1230,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o PhoneNumber.SubTypes
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1277,7 +1277,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Presence.CustomMessage
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1337,7 +1337,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Ringtone.VideoRingtoneUrl
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 
 /*!
@@ -1370,7 +1370,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   \sa QContactSyncTarget
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 /*!
   \qmlproperty string SyncTarget::syncTarget
@@ -1389,7 +1389,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Tag.Tag
    \endlist
   \sa QContactTag
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 /*!
   \qmlproperty string Tag::tag
@@ -1409,7 +1409,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Timestamp.Created
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 /*!
   \qmlproperty date Timestamp::lastModified
@@ -1434,7 +1434,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \o Url.SubType
    \endlist
 
-  This element is part of the \bold{QtMobility.contacts 1.1} module.
+  This element is part of the \bold{QtContacts} module.
  */
 /*!
   \qmlproperty string Url::url
@@ -1464,7 +1464,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
     \o PersonId.PersonId
     \endlist
 
-    This element is part of the \bold{QtMobility.contacts 1.1} module.
+    This element is part of the \bold{QtContacts} module.
  */
 
 /*!

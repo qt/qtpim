@@ -52,23 +52,25 @@
 
 /*!
     \qmlclass Contact QDeclarativeContact
-
-    \brief The Contact element represents an addressbook contact, A Contact
-     object has a collection of details (like a name, phone numbers and
-     email addresses).  Each detail (which can have multiple fields) is stored
-     in an appropriate subclass of ContactDetail, and the Contact allows
-     retrieving these details in various ways.
-
-    If some of the contact details are not unique details, all of this type of detail values
-    can be accessed by dynamic properties. For example, there are 3 phone numbers stored in
-    a contact, they can be accessed by contact.phoneNumbers property, Which holds a list of
-    all PhoneNumber details. If the dynamic property was not exists (for unique details), an undefined
-    value returned. The list of dynamic detail properties depends on the contact engine implementations.
-
+    \brief The Contact element represents an addressbook contact.
     \ingroup qml-contacts
 
+    The Contact element is part of the \bold{QtMobility.contacts 5.0} module.
+
+    A Contact object has a collection of details (like a name, phone numbers and
+    email addresses).  Each detail (which can have multiple fields) is stored
+    in an appropriate subclass of ContactDetail, and the Contact allows
+    retrieving these details in various ways.
+
+    If some of the contact details are not unique details, all of this type of detail values
+    can be accessed by the property with the name in plural. For example, if there are 3 phone numbers stored in
+    a contact, they can be accessed by contact.phoneNumbers property, which holds a list of
+    all PhoneNumber details. If a contact does not contain a detail of particular type,
+    the value of the corresponding singular property (e.g. phoneNumber) in undefined and the
+    plural (e.g. phoneNumbers) is empty. The list of properties which support multiple detail
+    instances depends on the contact engine implementations.
+
     \sa QContact
-    The Contact element is part of the \bold{QtMobility.contacts 1.1} module.
 */
 
 
@@ -265,7 +267,8 @@ bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
     \qmlmethod Contact::addDetail(detail)
 
     Adds the given contact \a detail to the contact, returns true if successful, otherwise returns false.
-    \note: If the \a detail has been added into the same contact before, this operation will be ignored,
+
+    Note: If the \a detail has been added into the same contact before, this operation will be ignored,
     so if you want to add a \a detail multiple times, the \a detail should be copied before calling this function.
 */
 bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
@@ -285,7 +288,7 @@ bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
 /*!
     \qmlproperty list<ContactDetail> Contact::contactDetails
 
-    This property holds the list of \l ContactDetail elements that the contact has.
+    This property holds the list of all the details that the contact has.
 */
 QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::contactDetails()
 {
@@ -476,7 +479,7 @@ QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 /*!
     \qmlproperty list<EmailAddress> Contact::emails
 
-    This property holds the email details of the Contact object.
+    This property holds the email address details of the Contact object.
 */
 QDeclarativeListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
 {
@@ -619,7 +622,7 @@ QDeclarativeListProperty<QDeclarativeContactOrganization> QDeclarativeContact::o
 /*!
     \qmlproperty PhoneNumber Contact::phoneNumber
 
-    This property holds the phoneNumber detail of the Contact object. In case a contact has several numbers then
+    This property holds the phone number detail of the Contact object. In case a contact has several numbers then
     the first one is returned.
 */
 QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()

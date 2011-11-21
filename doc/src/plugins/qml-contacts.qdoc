@@ -41,7 +41,7 @@
 
     \section1 Overview
 
-    The identifying string for this component is \i {"QtMobility.contacts"}.
+    The identifying string for this component is \i {"QtContacts"}.
     Use this in the QML \i {import} statement.
 
     The Contacts QML plugin supplies filters to search for contacts
@@ -65,7 +65,7 @@
     and then sort on the contacts' first name.
 
     \code
-        import QtMobility.contacts 1.1
+        import QtContacts 5.0
 
         ...
 
@@ -169,11 +169,10 @@
             //access the same property with different syntaxes
             Text { text:"Name(from property name):" + myContact.name.firstName + " " + myContact.name.lastName }
             Text { text:"Name(from detail type):" + myContact.detail(ContactDetail.Name).firstName + " " + myContact.name.lastName }
-            Text { text:"Name(from detail name):" + myContact.detail("Name").firstName + " " + myContact.name.lastName }
 
             Text { text:"Address:" + myContact.address.street + " " + myContact.address.locality + " " + myContact.address.region + " " + myContact.address.postcode }
 
-            //If a contact contains multiple details for the same detail type, you can access them with the dynamic property names.
+            //If a contact contains multiple details for the same detail type, you can access them with the property in plural
             Text { text:"How many email accounts?:" + myContact.emails.length }
             Text { text:"Email[0]:" + myContact.emails[0].emailAddress }
 

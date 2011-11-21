@@ -176,10 +176,8 @@ TestCase {
     // detail API
     function test_detail_data() {
         return [
-            {tag: "empty detail", testValue: ""},
-            {tag: "string detail", testValue: "something"},
-            {tag: "enum detail", testValue: Detail.Priority, stringTestValue: "Priority"},//enum is converted to string
-            {tag: "enum string detail", testValue: "Detail.Location"},
+            {tag: "empty field", testValue: -1},
+            {tag: "enum detail", testValue: Detail.Priority}
         ]
     }
     function test_detail(data) {
@@ -190,20 +188,19 @@ TestCase {
         detailFilter.detail = data.testValue;
         compare(valueChangedSpy.count, 1);
         compare(filterChangedSpy.count, 1);
-        compare(detailFilter.detail, data.stringTestValue ? data.stringTestValue : data.testValue);
+        compare(detailFilter.detail, data.testValue);
         // change without change
         detailFilter.detail = data.testValue;
         compare(valueChangedSpy.count, 1);
         compare(filterChangedSpy.count, 1);
-        compare(detailFilter.detail, data.stringTestValue ? data.stringTestValue : data.testValue);
+        compare(detailFilter.detail, data.testValue);
     }
 
     // field API
     function test_field_data() {
         return [
-            {tag: "empty field", testValue: ""},
-            {tag: "string field", testValue: "something"},
-            {tag: "enum field", testValue: "Type.FieldType"},
+            {tag: "empty field", testValue: -1},
+            {tag: "enum field", testValue: Type.FieldType},
         ]
     }
     function test_field(data) {
@@ -212,13 +209,13 @@ TestCase {
         var filterChangedSpy = create_spy(detailFilter, "filterChanged");
         // change
         detailFilter.field = data.testValue;
-        compare(valueChangedSpy.count, 1);
-        compare(filterChangedSpy.count, 1);
+        compare(valueChangedSpy.count, data.testValue == -1 ? 0 : 1);
+        compare(filterChangedSpy.count, data.testValue == -1 ? 0 : 1);
         compare(detailFilter.field, data.testValue);
         // change without change
         detailFilter.field = data.testValue;
-        compare(valueChangedSpy.count, 1);
-        compare(filterChangedSpy.count, 1);
+        compare(valueChangedSpy.count, data.testValue == -1 ? 0 : 1);
+        compare(filterChangedSpy.count, data.testValue == -1 ? 0 : 1);
         compare(detailFilter.field, data.testValue);
     }
 
@@ -406,13 +403,13 @@ TestCase {
         return [
             {tag: "no filter", expectedItemsAmount: filterTestItems().length },
             {tag: "exact filter - EventTime.StartDateTime", expectedItemsAmount: 1,
-                filterDetail: Detail.EventTime, filterField: "StartDateTime", filterValue: new Date("2011-10-23T16:42:00")},//notice, date-object
+                filterDetail: Detail.EventTime, filterField: EventTime.FieldStartDateTime, filterValue: new Date("2011-10-23T16:42:00")},//notice, date-object
             {tag: "exact filter - EventTime.EndDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldEndDateTime, filterValue: new Date("2011-10-23T21:00:00")},
             {tag: "exact filter - EventTime.AllDayEvent", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - TodoTime.StartDateTime", expectedItemsAmount: 1,
-                filterDetail: Detail.TodoTime, filterField: "StartDateTime", filterValue: new Date("2010-10-23T15:48:00")},
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldStartDateTime, filterValue: new Date("2010-10-23T15:48:00")},
             {tag: "exact filter - TodoTime.DueDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00Z")},//notice, date-object with Z
             {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
@@ -425,7 +422,7 @@ TestCase {
                 + "   comment: 'my comment'\n"
                 + "   }"},
             {tag: "exact filter - Description", expectedItemsAmount: 1,
-                filterDetail: Detail.Description, filterField: "Description", filterValue: "for exact filter - Description"},
+                filterDetail: Detail.Description, filterField: Description.FieldDescription, filterValue: "for exact filter - Description"},
             {tag: "exact filter - DisplayLabel", expectedItemsAmount: 1,
                 filterDetail: Detail.DisplayLabel, filterField: DisplayLabel.FieldLabel, filterValue: "my displayLabel"},
             {tag: "exact filter - Guid", expectedItemsAmount: 1,
@@ -433,7 +430,7 @@ TestCase {
             {tag: "exact filter - Location.Label", expectedItemsAmount: 1,
                 filterDetail: Detail.Location, filterField: Location.FieldLabel, filterValue: "my location"},
             {tag: "exact filter - Location.Longitude", expectedItemsAmount: 1,
-                filterDetail: Detail.Location, filterField: "Longitude", filterValue: 12345.12345,
+                filterDetail: Detail.Location, filterField: Location.FieldLongitude, filterValue: 12345.12345,
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   Location {\n"
@@ -679,7 +676,7 @@ TestCase {
             {tag: "Unsupported matchflag, Priority", filterDetail: Detail.Priority, matchFlags: Filter.MatchStartsWith },
             {tag: "Unsupported matchflag, Type", filterDetail: Detail.Type, matchFlags: Filter.MatchFixedString },
             {tag: "Unsupported matchflag, Tag", filterDetail: Detail.Tag, matchFlags: Filter.MatchCaseSensitive },
-            {tag: "Unsupported matchflag, ExtendedDetail", filterDetail: Detail.ExtendedDetail, matchFlags: Filter.MatchFixedString },
+            {tag: "Unsupported matchflag, ExtendedDetail", filterDetail: Detail.Customized, matchFlags: Filter.MatchFixedString },
             // filtering with QString needs extra attention, not allowed for all the types
             {tag: "Unsupported string value, EventTime - StartDateTime",
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldStartDateTime, filterValue: "mystringie" },

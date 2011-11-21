@@ -241,8 +241,8 @@ class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFi
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
-    Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY valueChanged)
-    Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::ItemDetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
 
 public:
@@ -252,11 +252,11 @@ public:
     void classBegin();
     void componentComplete();
 
-    QVariant detail() const;
-    void setDetail(const QVariant &detail);
+    QDeclarativeOrganizerItemDetail::ItemDetailType detail() const;
+    void setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail);
 
-    QVariant field() const;
-    void setField(const QVariant &field);
+    int field() const;
+    void setField(int field);
 
     void setValue(const QVariant &value);
     QVariant value() const;
@@ -274,8 +274,8 @@ private:
     void setDetailDefinitionName();
     const QString toTypeValueName(int newType);
 
-    QVariant m_field;
-    QVariant m_detail;
+    QDeclarativeOrganizerItemDetail::ItemDetailType m_detail;
+    int m_field;
     bool m_componentCompleted;
     QOrganizerItemDetailFilter d;
 };

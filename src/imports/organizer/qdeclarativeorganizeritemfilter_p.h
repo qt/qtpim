@@ -304,123 +304,39 @@ public:
     };
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
-    QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent),
-          m_componentCompleted(false)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
+    QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = 0);
 
-    //from QDeclarativeParserStatus
-    void classBegin() {}
-    void componentComplete()
-    {
-        setDetailDefinitionName();
-        m_componentCompleted = true;
-    }
-    void setDetailDefinitionName()
-    {
-        QString ddn;
-        if (m_detail.type() != QVariant::String) {
-            ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
-        } else {
-            ddn = m_detail.toString();
-        }
+    // inherited from QDeclarativeParserStatus
+    void classBegin();
+    void componentComplete();
 
-        QString dfn;
-        if (m_field.type() != QVariant::String) {
-           QDeclarativeOrganizerItemDetail::ItemDetailType dt = static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn));
-           dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
-        } else {
-            dfn = m_field.toString();
-        }
-        d.setDetailDefinitionName(ddn, dfn);
-        m_detail = ddn;
-        m_field = dfn;
-    }
+    QVariant detail() const;
+    void setDetail(const QVariant& v);
 
-    QVariant detail() const { return m_detail; }
-    void setDetail(const QVariant& v)
-    {
-        if (v != m_detail || m_componentCompleted) {
-            m_detail = v;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-            emit filterChanged();
-        }
-    }
+    QVariant field() const;
+    void setField(const QVariant& v);
 
-    QVariant field() const { return m_field; }
-    void setField(const QVariant& v)
-    {
-        if (v != m_field || m_componentCompleted) {
-            m_field = v;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-            emit filterChanged();
-        }
-    }
+    QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const;
+    void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags);
 
-    void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
-    {
-        QOrganizerItemFilter::MatchFlags newFlags;
-        newFlags = ~newFlags & (int)flags;
-        if (newFlags != d.matchFlags()) {
-            d.setMatchFlags(newFlags);
-            emit valueChanged();
-        }
-    }
-    QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const
-    {
-        QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
-        newFlags = ~newFlags & (int)d.matchFlags();
-        return newFlags;
-    }
+    RangeFlags rangeFlags() const;
+    void setRangeFlags(RangeFlags flags);
 
-    void setRangeFlags(RangeFlags flags)
-    {
-        QOrganizerItemDetailRangeFilter::RangeFlags newFlags;
-        newFlags = ~newFlags & (int)flags;
-        if (newFlags != d.rangeFlags()) {
-            d.setRange(d.minValue(), d.maxValue(), newFlags);
-            emit valueChanged();
-        }
-    }
-    RangeFlags rangeFlags() const
-    {
-        QDeclarativeOrganizerItemDetailRangeFilter::RangeFlags newFlags;
-        newFlags = ~newFlags & (int)d.rangeFlags();
-        return newFlags;
-    }
+    QVariant minValue() const;
+    void setMinValue(const QVariant &value);
 
+    QVariant maxValue() const;
+    void setMaxValue(const QVariant &value);
 
-    void setMinValue(const QVariant& value)
-    {
-        if (value != d.minValue()) {
-            d.setRange(value, d.maxValue(), d.rangeFlags());
-            emit valueChanged();
-        }
-    }
-    QVariant minValue() const { return d.minValue(); }
-
-    void setMaxValue(const QVariant& value)
-    {
-        if (value != d.maxValue()) {
-            d.setRange(d.minValue(), value, d.rangeFlags());
-            emit valueChanged();
-        }
-    }
-    QVariant maxValue() const { return d.maxValue(); }
-
-    QOrganizerItemFilter filter() const
-    {
-        return d;
-    }
+    // internal
+    QOrganizerItemFilter filter() const;
 
 signals:
     void valueChanged();
 
 private:
+    void setDetailDefinitionName();
+
     QVariant m_field;
     QVariant m_detail;
     bool m_componentCompleted;

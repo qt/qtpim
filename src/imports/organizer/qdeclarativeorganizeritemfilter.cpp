@@ -327,6 +327,32 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
  */
 
 /*!
+    \internal
+ */
+QDeclarativeOrganizerItemDetailRangeFilter::QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+    , m_componentCompleted(false)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailRangeFilter::classBegin()
+{
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
+{
+    setDetailDefinitionName();
+    m_componentCompleted = true;
+}
+
+/*!
   \qmlproperty variant DetailRangeFilter::detail
 
   This property holds the detail type of which details will be matched to.
@@ -334,8 +360,21 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
   or detail names.
   \sa Detail::type
   \sa DetailFilter::detail
-
   */
+QVariant QDeclarativeOrganizerItemDetailRangeFilter::detail() const
+{
+    return m_detail;
+}
+
+void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(const QVariant& v)
+{
+    if (v != m_detail || m_componentCompleted) {
+        m_detail = v;
+        if (m_componentCompleted)
+            setDetailDefinitionName();
+        emit filterChanged();
+    }
+}
 
 /*!
   \qmlproperty variant DetailRangeFilter::field
@@ -366,16 +405,57 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
 
   \sa DetailFilter::field
   */
+QVariant QDeclarativeOrganizerItemDetailRangeFilter::field() const
+{
+    return m_field;
+}
+
+void QDeclarativeOrganizerItemDetailRangeFilter::setField(const QVariant& v)
+{
+    if (v != m_field || m_componentCompleted) {
+        m_field = v;
+        if (m_componentCompleted)
+            setDetailDefinitionName();
+        emit filterChanged();
+    }
+}
+
+
 /*!
   \qmlproperty variant DetailRangeFilter::min
 
   This property holds the lower bound of the value range criterion. By default, there is no lower bound.
   */
+void QDeclarativeOrganizerItemDetailRangeFilter::setMinValue(const QVariant &value)
+{
+    if (value != d.minValue()) {
+        d.setRange(value, d.maxValue(), d.rangeFlags());
+        emit valueChanged();
+    }
+}
+
+QVariant QDeclarativeOrganizerItemDetailRangeFilter::minValue() const
+{
+    return d.minValue();
+}
+
 /*!
   \qmlproperty variant DetailRangeFilter::max
 
   This property holds the upper bound of the value range criterion. By default, there is no upper bound.
   */
+void QDeclarativeOrganizerItemDetailRangeFilter::setMaxValue(const QVariant &value)
+{
+    if (value != d.maxValue()) {
+        d.setRange(d.minValue(), value, d.rangeFlags());
+        emit valueChanged();
+    }
+}
+
+QVariant QDeclarativeOrganizerItemDetailRangeFilter::maxValue() const
+{
+    return d.maxValue();
+}
 
 /*!
   \qmlproperty enumeration DetailRangeFilter::matchFlags
@@ -383,6 +463,22 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
   This property holds the match flags of the criterion, which define semantics such as case sensitivity, and exact matching.
   \sa DetailFilter::matchFlags
   */
+void QDeclarativeOrganizerItemDetailRangeFilter::setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
+{
+    QOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)flags;
+    if (newFlags != d.matchFlags()) {
+        d.setMatchFlags(newFlags);
+        emit valueChanged();
+    }
+}
+
+QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailRangeFilter::matchFlags() const
+{
+    QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)d.matchFlags();
+    return newFlags;
+}
 
 /*!
   \qmlproperty enumeration DetailRangeFilter::rangeFlags
@@ -395,6 +491,54 @@ const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType
     \o DetailRangeFilter.ExcludeUpper
     \endlist
   */
+void QDeclarativeOrganizerItemDetailRangeFilter::setRangeFlags(RangeFlags flags)
+{
+    QOrganizerItemDetailRangeFilter::RangeFlags newFlags;
+    newFlags = ~newFlags & (int)flags;
+    if (newFlags != d.rangeFlags()) {
+        d.setRange(d.minValue(), d.maxValue(), newFlags);
+        emit valueChanged();
+    }
+}
+QDeclarativeOrganizerItemDetailRangeFilter::RangeFlags QDeclarativeOrganizerItemDetailRangeFilter::rangeFlags() const
+{
+    QDeclarativeOrganizerItemDetailRangeFilter::RangeFlags newFlags;
+    newFlags = ~newFlags & (int)d.rangeFlags();
+    return newFlags;
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
+{
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
+{
+    QString ddn;
+    if (m_detail.type() != QVariant::String) {
+        ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
+    } else {
+        ddn = m_detail.toString();
+    }
+
+    QString dfn;
+    if (m_field.type() != QVariant::String) {
+       QDeclarativeOrganizerItemDetail::ItemDetailType dt = static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn));
+       dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
+    } else {
+        dfn = m_field.toString();
+    }
+    d.setDetailDefinitionName(ddn, dfn);
+    m_detail = ddn;
+    m_field = dfn;
+}
+
 
 /*!
    \qmlclass IntersectionFilter QDeclarativeOrganizerItemIntersectionFilter

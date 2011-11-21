@@ -101,6 +101,7 @@ QTORGANIZER_BEGIN_NAMESPACE
   \endlist
   */
 
+
 /*!
    \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
    \brief The \l DetailFilter element provides a filter based around a detail value criterion.
@@ -138,6 +139,32 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+    \internal
+ */
+QDeclarativeOrganizerItemDetailFilter::QDeclarativeOrganizerItemDetailFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+    , m_componentCompleted(false)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFilter::classBegin()
+{
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFilter::componentComplete()
+{
+    setDetailDefinitionName();
+    m_componentCompleted = true;
+}
+
+/*!
   \qmlproperty variant DetailFilter::detail
 
   This property holds the detail type of which details will be matched to.
@@ -145,6 +172,24 @@ QTORGANIZER_BEGIN_NAMESPACE
   or detail names.
   \sa Detail::type
   */
+QVariant QDeclarativeOrganizerItemDetailFilter::detail() const
+{
+    return m_detail;
+}
+
+void QDeclarativeOrganizerItemDetailFilter::setDetail(const QVariant &detail)
+{
+    // C++ side uses strings to identify details, so enum needs to be mapped to a string
+    QString detailName;
+    if (QVariant::Int == detail.type())
+        detailName = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(detail.toInt()));
+
+    if (detailName.isEmpty() ? detail != m_detail : detailName != m_detail) {
+        m_detail = detailName.isEmpty() ? detail : detailName;
+        if (m_componentCompleted)
+            setDetailDefinitionName();
+    }
+}
 
 /*!
   \qmlproperty variant DetailFilter::field
@@ -173,12 +218,55 @@ QTORGANIZER_BEGIN_NAMESPACE
   \sa Type
   \sa Tag
   */
+QVariant QDeclarativeOrganizerItemDetailFilter::field() const
+{
+    return m_field;
+}
+
+void QDeclarativeOrganizerItemDetailFilter::setField(const QVariant &field)
+{
+    if (field != m_field) {
+        m_field = field;
+        if (m_componentCompleted)
+            setDetailDefinitionName();
+    }
+}
 
 /*!
   \qmlproperty variant DetailFilter::value
 
   This property holds the value criterion of the detail filter.
   */
+QVariant QDeclarativeOrganizerItemDetailFilter::value() const
+{
+    // UTC time is used with details internally
+    if (QVariant::DateTime == d.value().type()) {
+        return d.value().toDateTime().toLocalTime();
+    } else {
+        return d.value();
+    }
+}
+
+void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
+{
+    // C++ side uses strings to identify Type-values, so possible enum needs to be mapped to a string
+    if (QOrganizerItemType::FieldType == m_detail
+        && QOrganizerItemType::FieldType == m_field
+        && QVariant::Int == newValue.type()) {
+        QString typeValueName(toTypeValueName(newValue.toInt()));
+        if (typeValueName != value()) {
+            d.setValue(typeValueName);
+            emit valueChanged();
+        }
+    } else if (newValue != value()) {
+        // UTC time is used with details internally
+        if (QVariant::DateTime == newValue.type())
+            d.setValue(newValue.toDateTime().toUTC());
+        else
+            d.setValue(newValue);
+        emit valueChanged();
+    }
+}
 
 /*!
   \qmlproperty enumeration DetailFilter::matchFlags
@@ -193,6 +281,79 @@ QTORGANIZER_BEGIN_NAMESPACE
   \o MatchCaseSensitive - The search is case sensitive.
   \endlist
   */
+QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailFilter::matchFlags() const
+{
+    QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)d.matchFlags();
+    return newFlags;
+}
+
+void QDeclarativeOrganizerItemDetailFilter::setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
+{
+    QOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)flags;
+    if (newFlags != d.matchFlags()) {
+        d.setMatchFlags(newFlags);
+        emit valueChanged();
+    }
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
+{
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
+{
+    QString ddn;
+    if (m_detail.type() != QVariant::String)
+        ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
+    else
+        ddn = m_detail.toString();
+
+    QString dfn;
+    if (m_field.type() != QVariant::String) {
+       QDeclarativeOrganizerItemDetail::ItemDetailType dt = static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn));
+       dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
+    } else {
+        dfn = m_field.toString();
+    }
+
+    d.setDetailDefinitionName(ddn, dfn);
+    m_detail = ddn;
+    m_field = dfn;
+    emit valueChanged();
+}
+
+/*!
+    \internal
+ */
+const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType)
+{
+    switch (static_cast<QDeclarativeOrganizerItemType::OrganizerItemType>(newType)) {
+    case QDeclarativeOrganizerItemType::Event:
+        return QOrganizerItemType::TypeEvent;
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return QOrganizerItemType::TypeEventOccurrence;
+    case QDeclarativeOrganizerItemType::Todo:
+        return QOrganizerItemType::TypeTodo;
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return QOrganizerItemType::TypeTodoOccurrence;
+    case QDeclarativeOrganizerItemType::Note:
+        return QOrganizerItemType::TypeNote;
+    case QDeclarativeOrganizerItemType::Journal:
+        return QOrganizerItemType::TypeJournal;
+    default:
+        return QString();
+    }
+}
+
 
 /*!
    \qmlclass DetailRangeFilter QDeclarativeOrganizerItemDetailRangeFilter
@@ -374,58 +535,6 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
     f.setCollectionIds(ids);
     return f;
 }
-
-void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant& v)
-{
-    // C++ side uses strings to identify Type-values, so possible enum needs to be mapped to a string
-    if (QOrganizerItemType::FieldType == m_detail
-        && QOrganizerItemType::FieldType == m_field
-        && QVariant::Int == v.type()) {
-        QString typeValueName(toTypeValueName(v.toInt()));
-        if (typeValueName != value()) {
-            d.setValue(typeValueName);
-            emit valueChanged();
-        }
-    } else if (v != value()) {
-        // UTC time is used with details internally
-        if (QVariant::DateTime == v.type())
-            d.setValue(v.toDateTime().toUTC());
-        else
-            d.setValue(v);
-        emit valueChanged();
-    }
-}
-
-QVariant QDeclarativeOrganizerItemDetailFilter::value() const
-{
-    // UTC time is used with details internally
-    if (QVariant::DateTime == d.value().type()) {
-        return d.value().toDateTime().toLocalTime();
-    } else {
-        return d.value();
-    }
-}
-
-const QString QDeclarativeOrganizerItemDetailFilter::toTypeValueName(int newType)
-{
-    switch (static_cast<QDeclarativeOrganizerItemType::OrganizerItemType>(newType)) {
-    case QDeclarativeOrganizerItemType::Event:
-        return QOrganizerItemType::TypeEvent;
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return QOrganizerItemType::TypeEventOccurrence;
-    case QDeclarativeOrganizerItemType::Todo:
-        return QOrganizerItemType::TypeTodo;
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return QOrganizerItemType::TypeTodoOccurrence;
-    case QDeclarativeOrganizerItemType::Note:
-        return QOrganizerItemType::TypeNote;
-    case QDeclarativeOrganizerItemType::Journal:
-        return QOrganizerItemType::TypeJournal;
-    default:
-        return QString();
-  }
-}
-
 
 QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> QDeclarativeOrganizerItemCompoundFilter::filters()
 {

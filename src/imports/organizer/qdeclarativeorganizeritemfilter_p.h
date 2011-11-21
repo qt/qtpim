@@ -244,105 +244,40 @@ class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFi
     Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY valueChanged)
     Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
+
 public:
-    QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent),
-          m_componentCompleted(false)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
+    QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
 
-    //from QDeclarativeParserStatus
-    void classBegin() {}
-    void componentComplete()
-    {
-        setDetailDefinitionName();
-        m_componentCompleted = true;
-    }
-    void setDetailDefinitionName()
-    {
-        QString ddn;
-        if (m_detail.type() != QVariant::String) {
-            ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
-        } else {
-            ddn = m_detail.toString();
-        }
+    // inherited from QDeclarativeParserStatus
+    void classBegin();
+    void componentComplete();
 
-        QString dfn;
-        if (m_field.type() != QVariant::String) {
-           QDeclarativeOrganizerItemDetail::ItemDetailType dt = static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn));
-           dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
-        } else {
-            dfn = m_field.toString();
-        }
-        d.setDetailDefinitionName(ddn, dfn);
-        m_detail = ddn;
-        m_field = dfn;
-        emit valueChanged();
-    }
+    QVariant detail() const;
+    void setDetail(const QVariant &detail);
 
-    QVariant detail() const { return m_detail; }
-    void setDetail(const QVariant& v)
-    {
-        // C++ side uses strings to identify details, so enum needs to be mapped to a string
-        QString detailName;
-        if (QVariant::Int == v.type()) {
-            detailName = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(v.toInt()));
-        }
-        if (detailName.isEmpty() ? v != m_detail : detailName != m_detail) {
-            m_detail = detailName.isEmpty() ? v : detailName;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-        }
-    }
+    QVariant field() const;
+    void setField(const QVariant &field);
 
-    QVariant field() const { return m_field; }
-    void setField(const QVariant& v)
-    {
-        if (v != m_field) {
-            m_field = v;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-        }
-    }
-
-
-    void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
-    {
-        QOrganizerItemFilter::MatchFlags newFlags;
-        newFlags = ~newFlags & (int)flags;
-        if (newFlags != d.matchFlags()) {
-            d.setMatchFlags(newFlags);
-            emit valueChanged();
-        }
-    }
-    QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const
-    {
-        QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
-        newFlags = ~newFlags & (int)d.matchFlags();
-        return newFlags;
-    }
-
-    void setValue(const QVariant& v);
+    void setValue(const QVariant &value);
     QVariant value() const;
 
-    QOrganizerItemFilter filter() const
-    {
-        return d;
-    }
+    QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const;
+    void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags);
+
+    // internal
+    QOrganizerItemFilter filter() const;
 
 signals:
     void valueChanged();
 
 private:
+    void setDetailDefinitionName();
     const QString toTypeValueName(int newType);
 
-private:
     QVariant m_field;
     QVariant m_detail;
     bool m_componentCompleted;
     QOrganizerItemDetailFilter d;
-
 };
 
 

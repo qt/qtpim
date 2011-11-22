@@ -1245,7 +1245,8 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
         || QOrganizerItemEmailReminder::DefinitionName == detailDefinitionName
         || QOrganizerItemParent::DefinitionName == detailDefinitionName
         || QOrganizerItemRecurrence::DefinitionName == detailDefinitionName
-        || QOrganizerItemTimestamp::DefinitionName == detailDefinitionName) {
+        || QOrganizerItemTimestamp::DefinitionName == detailDefinitionName
+        || QOrganizerEventAttendee::DefinitionName == detailDefinitionName) {
         // filtering certain details/definitions are currently not supported
         isValidFilter = false;
     } else if (QOrganizerItemFilter::MatchExactly != filter.matchFlags()

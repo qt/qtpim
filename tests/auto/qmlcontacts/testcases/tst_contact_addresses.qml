@@ -209,6 +209,46 @@ TestCase {
         }
     }
 
+    TestCase {
+        name: "ContactsAddressesTests::ModificationSignaling"
+
+        Contact {
+            id: contactWithAddress
+            Address {
+                street: "old"
+            }
+        }
+
+        function test_changeToDetailThroughAddressesEmitsSignal()
+        {
+            listenToSignalFromObject("contactChanged", contactWithAddress);
+            contactWithAddress.addresses[0].street = "new";
+            verifySignalReceived();
+        }
+
+        function init() {
+            spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                     "SignalSpy {}",
+                                     this);
+        }
+    }
+
+    property SignalSpy spy
+
+    function listenToSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
+        spy.clear();
+    }
+
+    function verifySignalReceived() {
+        spy.wait();
+    }
+
+    function verifyNoSignalReceived() {
+        verify(spy.count == 0, "no signal was received");
+    }
+
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }

@@ -199,6 +199,46 @@ TestCase {
         }
     }
 
+    TestCase {
+        name: "ContactsOrganizationsTests::ModificationSignaling"
+
+        Contact {
+            id: contactWithOrganization
+            Organization {
+                name: "old"
+            }
+        }
+
+        function test_changeToDetailThroughOrganizationsEmitsSignal()
+        {
+            listenToSignalFromObject("contactChanged", contactWithOrganization);
+            contactWithOrganization.organizations[0].name = "new";
+            verifySignalReceived();
+        }
+
+        function init() {
+            spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                     "SignalSpy {}",
+                                     this);
+        }
+    }
+
+    property SignalSpy spy
+
+    function listenToSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
+        spy.clear();
+    }
+
+    function verifySignalReceived() {
+        spy.wait();
+    }
+
+    function verifyNoSignalReceived() {
+        verify(spy.count == 0, "no signal was received");
+    }
+
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }

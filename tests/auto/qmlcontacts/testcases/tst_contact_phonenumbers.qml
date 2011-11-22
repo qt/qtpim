@@ -198,6 +198,46 @@ TestCase {
         }
     }
 
+    TestCase {
+        name: "ContactsPhoneNumbersTests::ModificationSignaling"
+
+        Contact {
+            id: contactWithPhoneNumber
+            PhoneNumber {
+                number: "1234"
+            }
+        }
+
+        function test_changeToDetailThroughPhoneNumbersEmitsSignal()
+        {
+            listenToSignalFromObject("contactChanged", contactWithPhoneNumber);
+            contactWithPhoneNumber.phoneNumbers[0].number = "5678";
+            verifySignalReceived();
+        }
+
+        function init() {
+            spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                     "SignalSpy {}",
+                                     this);
+        }
+    }
+
+    property SignalSpy spy
+
+    function listenToSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
+        spy.clear();
+    }
+
+    function verifySignalReceived() {
+        spy.wait();
+    }
+
+    function verifyNoSignalReceived() {
+        verify(spy.count == 0, "no signal was received");
+    }
+
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }

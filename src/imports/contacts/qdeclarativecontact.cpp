@@ -329,10 +329,7 @@ QDeclarativeContactDetail* QDeclarativeContact::detail(int type)
 {
     foreach (QDeclarativeContactDetail *detail, m_details) {
         if (type == detail->detailType()) {
-            QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
-            QDeclarativeEngine::setObjectOwnership(contactDetail, QDeclarativeEngine::JavaScriptOwnership);
-            contactDetail->setDetail(detail->detail());
-            return contactDetail;
+            return detail;
         }
     }
     return 0;
@@ -348,10 +345,7 @@ QVariantList QDeclarativeContact::details(int type)
     QVariantList list;
     foreach (QDeclarativeContactDetail *detail, m_details) {
         if (type == detail->detailType()) {
-            QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
-            QDeclarativeEngine::setObjectOwnership(contactDetail, QDeclarativeEngine::JavaScriptOwnership);
-            contactDetail->setDetail(detail->detail());
-            list.append(QVariant::fromValue((QObject*)contactDetail));
+            list.append(QVariant::fromValue((QObject*)detail));
         }
     }
     return list;

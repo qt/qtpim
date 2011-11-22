@@ -197,6 +197,47 @@ TestCase {
         }
     }
 
+    TestCase {
+        name: "ContactsEmailsTests::ModificationSignaling"
+
+        Contact {
+            id: contactWithEmailAddress
+            EmailAddress {
+                emailAddress: "a@a"
+            }
+        }
+
+        function test_changeToDetailThroughEmailsEmitsSignal()
+        {
+            listenToSignalFromObject("contactChanged", contactWithEmailAddress);
+            contactWithEmailAddress.emails[0].emailAddress = "b@b";
+            verifySignalReceived();
+        }
+
+
+        function init() {
+            spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                     "SignalSpy {}",
+                                     this);
+        }
+    }
+
+    property SignalSpy spy
+
+    function listenToSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
+        spy.clear();
+    }
+
+    function verifySignalReceived() {
+        spy.wait();
+    }
+
+    function verifyNoSignalReceived() {
+        verify(spy.count == 0, "no signal was received");
+    }
+
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }

@@ -198,6 +198,46 @@ TestCase {
         }
     }
 
+    TestCase {
+        name: "ContactsUrlsTests::ModificationSignaling"
+
+        Contact {
+            id: contactWithUrl
+            Url {
+                url: "http://old"
+            }
+        }
+
+        function test_changeToDetailThroughUrlsEmitsSignal()
+        {
+            listenToSignalFromObject("contactChanged", contactWithUrl);
+            contactWithUrl.urls[0].url = "http://new";
+            verifySignalReceived();
+        }
+
+        function init() {
+            spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                     "SignalSpy {}",
+                                     this);
+        }
+    }
+
+    property SignalSpy spy
+
+    function listenToSignalFromObject(signalName, object) {
+        spy.target = object;
+        spy.signalName = signalName;
+        spy.clear();
+    }
+
+    function verifySignalReceived() {
+        spy.wait();
+    }
+
+    function verifyNoSignalReceived() {
+        verify(spy.count == 0, "no signal was received");
+    }
+
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");
     }

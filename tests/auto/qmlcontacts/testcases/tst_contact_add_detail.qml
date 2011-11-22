@@ -118,6 +118,85 @@ TestCase {
         verifySignalReceived();
     }
 
+    Contact {
+        id: contact5
+    }
+
+    Name {
+        id: contact5Name
+        firstName: "old"
+    }
+
+    function test_contact_modify_added_detail_emits_signal() {
+        contact5.addDetail(contact5Name);
+        var detail = contact5.detail(ContactDetail.Name);
+        verify(detail);
+        expectSignalFromObject("contactChanged", contact5);
+        detail.firstName = "new";
+        expectFail("", "not working at the moment");
+        verifySignalReceived();
+    }
+
+    Contact {
+        id: contact6
+    }
+
+    Name {
+        id: contact6Name
+        firstName: "old"
+    }
+
+    function test_contact_modify_detail_already_added_modifies_contact() {
+        contact6.addDetail(contact6Name);
+        contact6Name.firstName = "new";
+        var detail = contact6.detail(ContactDetail.Name);
+        expectFail("", "implementation takes a copy of the detail");
+        compare(detail.firstName, "new");
+    }
+
+    Contact {
+        id: contact7
+    }
+
+    Name {
+        id: contact7Name
+        firstName: "old"
+    }
+
+    function test_contact_modify_detail_already_added_emits_signal() {
+        contact7.addDetail(contact7Name);
+        listenToSignalFromObject("contactChanged", contact7);
+        contact7Name.firstName = "new";
+        expectFail("", "implementation takes a copy of the detail");
+        verifySignalReceived();
+    }
+
+    Contact {
+        id: contact8_1
+    }
+
+    Contact {
+        id: contact8_2
+    }
+
+    Name {
+        id: contact8Name
+        firstName: "old"
+    }
+
+    function test_contact_modify_detail_added_to_two_contacts_modifies_both() {
+        contact8_1.addDetail(contact8Name);
+        contact8_2.addDetail(contact8Name);
+
+        var detail = contact8_1.detail(ContactDetail.Name);
+        detail.firstName = "new";
+
+        detail = contact8_2.detail(ContactDetail.Name);
+        expectFail("", "does not propagate to the second contact");
+        compare(detail.firstName, "new");
+        compare(contact8_2.name.firstName, "new");
+    }
+
     property SignalSpy spy
 
     function init() {

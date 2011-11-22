@@ -53,7 +53,7 @@ TestCase {
 
     function test_contact_remove_null_detail_emits_no_signal() {
         listenToSignalFromObject("contactChanged", contact0);
-        contact0.addDetail(null);
+        contact0.removeDetail(null);
         verifyNoSignalReceived();
     }
 
@@ -135,6 +135,22 @@ TestCase {
         expectSignalFromObject("contactChanged", contact6);
         contact6.removeDetail(contact6PhoneNumber2);
         verifySignalReceived();
+    }
+
+    Contact {
+        id: contact7
+        Name {
+            id: contact7Name
+            firstName: "old"
+        }
+    }
+
+    function test_contact_modify_detail_already_removed_emits_no_signal() {
+        var detail = contact7.detail(ContactDetail.Name);
+        contact7.removeDetail(detail);
+        expectSignalFromObject("contactChanged", contact7);
+        detail.firstName = "new";
+        verifyNoSignalReceived();
     }
 
     property SignalSpy spy

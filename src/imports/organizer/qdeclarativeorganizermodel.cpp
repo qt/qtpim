@@ -123,9 +123,8 @@ public:
 /*!
     \qmlclass OrganizerModel QDeclarativeOrganizerModel
     \brief The OrganizerModel element provides access to organizer items from the organizer store.
-    \ingroup qml-organizer
-
-    This element is part of the \bold{QtMobility.organizer 1.1} module.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-main
 
     OrganizerModel provides a model of organizer items from the organizer store.
     The contents of the model can be specified with \l filter, \l sortOrders and \l fetchHint properties.

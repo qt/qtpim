@@ -48,10 +48,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
     \qmlclass OrganizerItem QDeclarativeOrganizerItem
-
     \brief The OrganizerItem element represents the in-memory version of a organizer item.
-
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-main
 
     A OrganizerItem has a number of mandatory details. Different subclasses of OrganizerItem
     (i.e., Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note) may have more mandatory details.
@@ -642,7 +641,8 @@ bool QDeclarativeOrganizerItem::isOccurrence() const
 /*!
     \qmlclass Event QDeclarativeOrganizerEvent
     \brief The Event element provides an event in time which may reoccur.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The Event element is part of the \bold{QtOrganizer 5.0} module.
 
@@ -990,7 +990,8 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
 /*!
     \qmlclass EventOccurrence QDeclarativeOrganizerEventOccurrence
     \brief The EventOccurrence element provides an occurrence of an event.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The EventOccurrence element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, Journal, Todo, TodoOccurrence, Note, {QOrganizerEventOccurrence}
@@ -1232,7 +1233,8 @@ QString QDeclarativeOrganizerEventOccurrence::parentId() const
 /*!
     \qmlclass Journal QDeclarativeOrganizerJournal
     \brief The Journal element provides a journal which is associated with a particular point in time.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The Journal element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Todo, TodoOccurrence, Note, {QOrganizerJournal}
@@ -1287,7 +1289,8 @@ QDateTime QDeclarativeOrganizerJournal::dateTime() const
 /*!
     \qmlclass Note QDeclarativeOrganizerNote
     \brief The Note element provides a note which is not associated with any particular point in time.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The Note element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, TodoOccurrence, {QOrganizerNote}
@@ -1307,7 +1310,8 @@ QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
 /*!
     \qmlclass Todo QDeclarativeOrganizerTodo
     \brief The Todo element provides a task which should be completed.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The Todo element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, TodoOccurrence, Note, {QOrganizerTodo}
@@ -1608,7 +1612,8 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
 /*!
     \qmlclass TodoOccurrence QDeclarativeOrganizerTodoOccurrence
     \brief The TodoOccurrence element provides an occurrence of an event.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-items
 
     The TodoOccurrence element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}

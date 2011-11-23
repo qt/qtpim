@@ -44,14 +44,10 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass SortOrder QDeclarativeOrganizerItemSortOrder
-   \brief The SortOrder element defines how a list of organizer item should be ordered according to some criteria.
-
-   \ingroup qml-organizer
-
-   This element is part of the \bold{QtMobility.organizer 1.1} module.
-
-   \sa OrganizerModel, {QOrganizerItemSortOrder}
+    \qmlclass SortOrder QDeclarativeOrganizerItemSortOrder
+    \brief The SortOrder element defines how a list of organizer item should be ordered according to some criteria.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
  */
 
 

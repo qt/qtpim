@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \brief The Filter element is used as a property of OrganizerModel, to allow
    selection of organizer items which have certain details or properties.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-main
 
    \sa QOrganizerItemFilter
  */
@@ -79,7 +79,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass ChangeLogFilter QDeclarativeOrganizerItemChangeLogFilter
    \brief The ChangeLogFilter element provides a filter based around a organizer item timestamp criterion.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa QOrganizerItemChangeLogFilter
  */
@@ -105,9 +105,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
    \brief The \l DetailFilter element provides a filter based around a detail value criterion.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
-
-   This element is part of the \bold{QtMobility.organizer 1.1} module.
+   \ingroup qml-organizer-filters
 
    Simple example how to utilize DetailFilter element together with OrganizerModel and ListView elements:
    \code
@@ -200,7 +198,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass DetailRangeFilter QDeclarativeOrganizerItemDetailRangeFilter
    \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa QOrganizerItemDetailRangeFilter
  */
@@ -279,7 +277,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass IntersectionFilter QDeclarativeOrganizerItemIntersectionFilter
    \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa QOrganizerItemIntersectionFilter
  */
@@ -295,7 +293,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass UnionFilter QDeclarativeOrganizerItemUnionFilter
    \brief The UnionFilter element provides a filter which unions the results of other filters.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa QOrganizerItemUnionFilter
  */
@@ -310,7 +308,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass IdFilter QDeclarativeOrganizerItemIdFilter
    \brief The IdFilter element provides a filter based around a list of organizer item ids.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa {QOrganizerItemIdFilter}
  */
@@ -326,7 +324,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass CollectionFilter QDeclarativeOrganizerItemCollectionFilter
    \brief The CollectionFilter element provides a filter based around a list of organizer item ids.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
    \sa Collection
  */
 
@@ -342,7 +340,7 @@ QTORGANIZER_BEGIN_NAMESPACE
    \qmlclass InvalidFilter QDeclarativeOrganizerItemInvalidFilter
    \brief the InvalidFilter element provides a filter which will never match any organizer items.
    \inqmlmodule QtOrganizer
-   \ingroup qml-organizer
+   \ingroup qml-organizer-filters
 
    \sa QOrganizerItemInvalidFilter
  */

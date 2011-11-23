@@ -48,7 +48,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
     \qmlclass Detail QDeclarativeOrganizerItemDetail
     \brief The Detail element represents a single, complete detail about a organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-main
 
     \sa QOrganizerItemDetail
 
@@ -411,7 +412,8 @@ bool QDeclarativeOrganizerItemDetail::removeValue(const QString &key)
 /*!
     \qmlclass EventTime QDeclarativeOrganizerEventTime
     \brief The EventTime element contains the start and end dates and times of a recurring event series, or occurrence of an event.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -490,7 +492,8 @@ QDateTime QDeclarativeOrganizerEventTime::endDateTime() const
 /*!
     \qmlclass Comment QDeclarativeOrganizerItemComment
     \brief The Comment element contains the comment text of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -531,7 +534,8 @@ QString QDeclarativeOrganizerItemComment::comment() const
 /*!
     \qmlclass Description QDeclarativeOrganizerItemDescription
     \brief The Description element contains the description text of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -572,7 +576,8 @@ QString QDeclarativeOrganizerItemDescription::description() const
 /*!
     \qmlclass DisplayLabel QDeclarativeOrganizerItemDisplayLabel
     \brief The DisplayLabel element contains the display label of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -613,7 +618,8 @@ QString QDeclarativeOrganizerItemDisplayLabel::label() const
 /*!
     \qmlclass Guid QDeclarativeOrganizerItemGuid
     \brief The Guid element contains the GUID string of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -654,7 +660,8 @@ QString QDeclarativeOrganizerItemGuid::guid() const
 /*!
     \qmlclass Location QDeclarativeOrganizerItemLocation
     \brief The Location element contains information about a location which is related to the organizer item in some manner.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -733,7 +740,8 @@ QString QDeclarativeOrganizerItemLocation::label() const
 /*!
     \qmlclass Parent QDeclarativeOrganizerItemParent
     \brief The Parent element contains information about the event or todo that generated this item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -794,7 +802,8 @@ QString QDeclarativeOrganizerItemParent::parentId() const
 /*!
     \qmlclass Priority QDeclarativeOrganizerItemPriority
     \brief The Priority element contains the priority of the organizer item, which may be used to resolve scheduling conflicts.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -849,7 +858,8 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerItemPriority::p
     \qmlclass Recurrence QDeclarativeOrganizerItemRecurrence
     \brief The Recurrence element contains a list of rules and dates on which the recurrent item occurs,
            and a list of rules and dates on which exceptions occur.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1019,7 +1029,8 @@ void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<Q
 /*!
     \qmlclass Tag QDeclarativeOrganizerItemTag
     \brief The Tag element contains the tag string of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1060,7 +1071,8 @@ QString QDeclarativeOrganizerItemTag::tag() const
 /*!
     \qmlclass Timestamp QDeclarativeOrganizerItemTimestamp
     \brief The Timestamp element contains the created and last modified timestamp of an organizer item's creating date and time.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1119,8 +1131,9 @@ QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
 
 /*!
     \qmlclass Type QDeclarativeOrganizerItemType
-    \brief The Type element contains the type string of an organizer item.
-    \ingroup qml-organizer
+    \brief The Type element contains the type of an organizer item.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1204,7 +1217,8 @@ QDeclarativeOrganizerItemType::OrganizerItemType QDeclarativeOrganizerItemType::
 /*!
     \qmlclass JournalTime QDeclarativeOrganizerJournalTime
     \brief The JournalTime element contains the entry date and time of a journal item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1244,7 +1258,8 @@ QDateTime QDeclarativeOrganizerJournalTime::entryDateTime() const
 /*!
     \qmlclass TodoProgress QDeclarativeOrganizerTodoProgress
     \brief The TodoProgress element contains information about the progress of a todo item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1333,7 +1348,8 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoProgress:
 /*!
     \qmlclass TodoTime QDeclarativeOrganizerTodoTime
     \brief The TodoTime element contains the start and due dates and times of a recurring todo series, or occurrence of an todo item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1412,7 +1428,8 @@ QDateTime QDeclarativeOrganizerTodoTime::dueDateTime() const
 /*!
     \qmlclass Reminder QDeclarativeOrganizerItemReminder
     \brief The Reminder element contains information about when and how the user wants to reminded of the item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1515,7 +1532,8 @@ int QDeclarativeOrganizerItemReminder::secondsBeforeStart() const
 /*!
     \qmlclass AudibleReminder QDeclarativeOrganizerItemAudibleReminder
     \brief The AudibleReminder element contains information about an audible reminder of an item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
     \inherits Reminder
 
     The following fields are supported:
@@ -1560,7 +1578,8 @@ QUrl QDeclarativeOrganizerItemAudibleReminder::dataUrl() const
 /*!
     \qmlclass EmailReminder QDeclarativeOrganizerItemEmailReminder
     \brief The EmailReminder element contains information about an email reminder of an item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
     \inherits Reminder
 
     The following fields are supported:
@@ -1663,7 +1682,8 @@ QVariantList QDeclarativeOrganizerItemEmailReminder::attachments()
 /*!
     \qmlclass VisualReminder QDeclarativeOrganizerItemVisualReminder
     \brief The VisualReminder element contains information about a visual reminder of an item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
     \inherits Reminder
 
     The following fields are supported:
@@ -1727,7 +1747,8 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
 /*!
     \qmlclass ExtendedDetail QDeclarativeOrganizeritemExtendedDetail
     \brief The ExtendedDetail element contains a extended detail of an organizer item.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1787,7 +1808,8 @@ QVariant QDeclarativeOrganizeritemExtendedDetail::data() const
 /*!
     \qmlclass EventAttendee QDeclarativeOrganizerEventAttendee
     \brief The EventAttendee element contains information about an attendee of an event.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     The following fields are supported:
     \list
@@ -1921,7 +1943,8 @@ QString QDeclarativeOrganizerEventAttendee::attendeeId() const
 /*!
     \qmlclass Rsvp QDeclarativeOrganizerEventRsvp
     \brief The Rsvp element contains Rsvp-information of an event.
-    \ingroup qml-organizer
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
 
     RSVP detail contains user specific information about calendar event like
     participation status and role, information about response

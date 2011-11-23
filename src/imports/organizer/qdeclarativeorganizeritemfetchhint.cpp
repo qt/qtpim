@@ -44,16 +44,12 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass FetchHint QDeclarativeOrganizerItemFetchHint
-   \brief The FetchHint element provides hints to the manager about which organizer item
-  information needs to be retrieved in an asynchronous fetch request or a synchronous
-  function call.
-
-   \ingroup qml-organizer
-
-   This element is part of the \bold{QtMobility.organizer 1.1} module.
-
-   \sa {QOrganizerItemFetchHint}
+    \qmlclass FetchHint QDeclarativeOrganizerItemFetchHint
+    \brief The FetchHint element provides hints to the manager about which organizer item
+           information needs to be retrieved in an asynchronous fetch request or a synchronous
+           function call.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
  */
 
 /*!

@@ -79,7 +79,6 @@ TestCase {
 
     // Clean and populate the database with test contacts
     function initTestCase() {
-
         contactsChangedSpy.wait()
 
         cleanupTestCase()
@@ -90,12 +89,10 @@ TestCase {
         contactsChangedSpy.wait()
         model.saveContact(contact3)
         contactsChangedSpy.wait()
-
     }
 
     // Clean database
     function cleanupTestCase() {
-
         var amt = model.contacts.length;
         for (var i = 0; i < amt; ++i) {
             var id = model.contacts[0].contactId
@@ -103,20 +100,16 @@ TestCase {
             contactsChangedSpy.wait()
         }
         compare(model.contacts.length, 0)
-
     }
 
     // Clear filter
     function cleanup() {
-
         model.filter = null
         contactsChangedSpy.wait();
         compare (model.contacts.length, 3)
-
     }
 
     function test_dynamicIdFilterConstruction() {
-
         var newFilter = Qt.createQmlObject(
                 "import QtContacts 5.0;" +
                     "IdFilter { ids: ['" + model.contacts[0].contactId + "']" +
@@ -125,11 +118,9 @@ TestCase {
         model.filter = newFilter;
         contactsChangedSpy.wait();
         compare(model.contacts.length, 1)
-
     }
 
     function test_filterById() {
-
         filter.ids = [model.contacts[0].contactId]
         model.filter = filter
         contactsChangedSpy.wait()
@@ -148,11 +139,9 @@ TestCase {
         model.filter = filter
         contactsChangedSpy.wait()
         compare (model.contacts.length, 1)
-
     }
 
     function test_filterByMultipleIds() {
-
         filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId]
         model.filter = filter
         contactsChangedSpy.wait()
@@ -171,11 +160,9 @@ TestCase {
         model.filter = filter
         contactsChangedSpy.wait()
         compare (model.contacts.length, 2)
-
     }
 
     function test_filterByNonExistingId() {
-
         filter.ids = ["foo bar"]
         model.filter = filter
         contactsChangedSpy.wait()
@@ -194,31 +181,27 @@ TestCase {
         model.filter = filter
         contactsChangedSpy.wait()
         compare (model.contacts.length, 1)
-
     }
 
     function test_filterByEmptyList() {
-
         filter.ids = []
         model.filter = filter
         contactsChangedSpy.wait()
         compare (model.contacts.length, 3)
-
     }
 
-    /*
     function test_filterByDuplicateIds() {
-
         // Overlapping ids
-
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId]
         model.filter = filter
-        contactsChangedSpy.wait();
+        contactsChangedSpy.wait()
+        expectFail("", "Filtering with two identical identifiers fails at the moment.")
         compare (model.contacts.length, 1)
 
-        // Clear filter
+        // Clear filter by setting null
         model.filter = null
         waitForContactsChanged()
-    }*/
+        compare (model.contacts.length, 3)
+    }
 
 }

@@ -319,12 +319,12 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   \qmlmethod OrganizerModel::importItems(url url, list<string> profiles)
 
   Import organizer items from a vcalendar by the given \a url and optional \a profiles.
-  */
-void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList& profiles)
+ */
+void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList &profiles)
 {
-   d->m_importProfiles = profiles;
-   //TODO: need to allow download vcard from network
-   QFile*  file = new QFile(urlToLocalFileName(url));
+    d->m_importProfiles = profiles;
+    //TODO: need to allow download vcard from network
+    QFile *file = new QFile(urlToLocalFileName(url));
     if (file->open(QIODevice::ReadOnly)) {
         if (!d->m_reader) {
             d->m_reader = new QVersitReader;
@@ -332,7 +332,7 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList&
         }
         d->m_reader->setDevice(file);
         d->m_reader->startReading();
-   }
+    }
 }
 
 /*!
@@ -340,19 +340,18 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList&
   Export organizer items into a vcalendar file to the given \a url by optional \a profiles.
   At the moment only the local file url is supported in export method.
   */
-void QDeclarativeOrganizerModel::exportItems(const QUrl& url, const QStringList& profiles)
+void QDeclarativeOrganizerModel::exportItems(const QUrl &url, const QStringList &profiles)
 {
-    QString profile = profiles.isEmpty()? QString() : profiles.at(0);
+    QString profile = profiles.isEmpty() ? QString() : profiles.at(0);
 
     QVersitOrganizerExporter exporter(profile);
     QList<QOrganizerItem> items;
-    foreach (QDeclarativeOrganizerItem* di, d->m_items) {
+    foreach (QDeclarativeOrganizerItem *di, d->m_items)
         items.append(di->item());
-    }
 
     exporter.exportItems(items, QVersitDocument::VCard30Type);
     QVersitDocument document = exporter.document();
-    QFile* file = new QFile(urlToLocalFileName(url));
+    QFile *file = new QFile(urlToLocalFileName(url));
     if (file->open(QIODevice::ReadWrite)) {
         if (!d->m_writer) {
             d->m_writer = new QVersitWriter;

@@ -369,7 +369,6 @@ bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, c
   };
   switch (feature) {
     case QContactManager::Anonymous:
-    case QContactManager::Relationships:
     case QContactManager::ChangeLogs:
     case QContactManager::DetailOrdering:
     case QContactManager::SelfContact:

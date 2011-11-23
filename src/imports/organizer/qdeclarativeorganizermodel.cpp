@@ -43,8 +43,6 @@
 #include <QtDeclarative/qdeclarativeinfo.h>
 #include "qdeclarativeorganizermodel_p.h"
 #include <qorganizermanager.h>
-#include <qversitreader.h>
-#include <qversitwriter.h>
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
 #include "qdeclarativeorganizercollection_p.h"
@@ -78,6 +76,8 @@ public:
         m_filter(0),
         m_fetchRequest(0),
         m_occurrenceFetchRequest(0),
+        m_reader(0),
+        m_writer(0),
         m_startPeriod(QDateTime::currentDateTime()),
         m_endPeriod(QDateTime::currentDateTime()),
         m_error(QOrganizerManager::NoError),
@@ -93,6 +93,8 @@ public:
             delete m_manager;
         if (m_filter)
             delete m_filter;
+        delete m_reader;
+        delete m_writer;
 }
 
     QList<QDeclarativeOrganizerItem*> m_items;
@@ -106,8 +108,8 @@ public:
     QOrganizerItemOccurrenceFetchRequest* m_occurrenceFetchRequest;
     QList<QString> m_updatedItemIds;
     QStringList m_importProfiles;
-    QVersitReader m_reader;
-    QVersitWriter m_writer;
+    QVersitReader *m_reader;
+    QVersitWriter *m_writer;
     QDateTime m_startPeriod;
     QDateTime m_endPeriod;
     QList<QDeclarativeOrganizerCollection*> m_collections;
@@ -162,10 +164,6 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdate()));
-
-    //import vcard
-    connect(&d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
-    connect(&d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(itemsExported(QVersitWriter::State)));
 }
 
 /*!
@@ -327,10 +325,13 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList&
    d->m_importProfiles = profiles;
    //TODO: need to allow download vcard from network
    QFile*  file = new QFile(urlToLocalFileName(url));
-   bool ok = file->open(QIODevice::ReadOnly);
-   if (ok) {
-      d->m_reader.setDevice(file);
-      d->m_reader.startReading();
+    if (file->open(QIODevice::ReadOnly)) {
+        if (!d->m_reader) {
+            d->m_reader = new QVersitReader;
+            connect(d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
+        }
+        d->m_reader->setDevice(file);
+        d->m_reader->startReading();
    }
 }
 
@@ -352,18 +353,21 @@ void QDeclarativeOrganizerModel::exportItems(const QUrl& url, const QStringList&
     exporter.exportItems(items, QVersitDocument::VCard30Type);
     QVersitDocument document = exporter.document();
     QFile* file = new QFile(urlToLocalFileName(url));
-    bool ok = file->open(QIODevice::ReadWrite);
-    if (ok) {
-       d->m_writer.setDevice(file);
-       d->m_writer.startWriting(document);
+    if (file->open(QIODevice::ReadWrite)) {
+        if (!d->m_writer) {
+            d->m_writer = new QVersitWriter;
+            connect(d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(itemsExported(QVersitWriter::State)));
+        }
+        d->m_writer->setDevice(file);
+        d->m_writer->startWriting(document);
     }
 }
 
 void QDeclarativeOrganizerModel::itemsExported(QVersitWriter::State state)
 {
     if (state == QVersitWriter::FinishedState || state == QVersitWriter::CanceledState) {
-         delete d->m_writer.device();
-         d->m_writer.setDevice(0);
+         delete d->m_writer->device();
+         d->m_writer->setDevice(0);
     }
 }
 
@@ -542,14 +546,13 @@ QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> QDeclarativeOrganiz
 void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
 {
     if (state == QVersitReader::FinishedState || state == QVersitReader::CanceledState) {
-        if (!d->m_reader.results().isEmpty()) {
+        if (!d->m_reader->results().isEmpty()) {
             QVersitOrganizerImporter importer;
 
-            importer.importDocument(d->m_reader.results().at(0));
+            importer.importDocument(d->m_reader->results().at(0));
             QList<QOrganizerItem> items = importer.items();
-            delete d->m_reader.device();
-            d->m_reader.setDevice(0);
-
+            delete d->m_reader->device();
+            d->m_reader->setDevice(0);
 
             if (d->m_manager) {
                 if (d->m_manager->saveItems(&items)) {

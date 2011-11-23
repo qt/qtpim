@@ -167,13 +167,14 @@ Item {
         anchors.top: parent.top
         anchors.bottom: toolBar.top
         opacity: 1
+        visible: false
         transform: Scale {
             id: detailViewScale;
             xScale: 0
             origin.x: detailView.width/2
         }
 
-        model: contact ? contact.details : null
+        model: contact ? contact.contactDetails : null
 
         delegate: Column {
                 width: parent.width
@@ -257,8 +258,16 @@ Item {
                 xScale: 0
             }
             PropertyChanges {
+                target: normalView
+                visible: false
+            }
+            PropertyChanges {
                 target: detailViewScale
                 xScale: 1
+            }
+            PropertyChanges {
+                target: detailView
+                visible: true
             }
         }
         ]

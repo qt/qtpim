@@ -67,12 +67,16 @@ Item {
         color: "#00000000";
         border.color: "#00000000";
         border.width: 0
+        BorderImage {
+            source: "images/lineedit.sci"
+            anchors.fill: parent
+        }
         TextInput {
             id: textEdit
             anchors.fill: parent
             anchors.margins: 3
-            text: value.toString();
-            color: activeFocus? "black" : "#ffffaa";
+            text: value.toString()
+            color: "black"
             onActiveFocusChanged: { if (!activeFocus) { blur(); } }
         }
         states: [

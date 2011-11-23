@@ -45,8 +45,7 @@ import QtContacts 5.0
 
 TestCase {
     name: "ContactsSortingTests"
-
-    property SignalSpy contactsChangedSpy
+    id: contactsSortingE2ETests
 
     ContactModel {
         id: modelSortedByFirstName
@@ -77,12 +76,9 @@ TestCase {
 
     function test_sortByFirstName()
     {
-        testHelper.model = modelSortedByFirstName;
+        initTestForModel(modelSortedByFirstName);
 
-        contactsChangedSpy.target = modelSortedByFirstName;
-        contactsChangedSpy.clear();
-
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByFirstName);
 
         modelSortedByFirstName.saveContact(contact2);
         waitForContactsChanged();
@@ -91,7 +87,7 @@ TestCase {
 
         compareContactArrays(modelSortedByFirstName.contacts, [contact1, contact2]);
 
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByFirstName);
     }
 
     ContactModel {
@@ -123,12 +119,9 @@ TestCase {
 
     function test_sortByLastName()
     {
-        testHelper.model = modelSortedByLastName;
+        initTestForModel(modelSortedByLastName);
 
-        contactsChangedSpy.target = modelSortedByLastName;
-        contactsChangedSpy.clear();
-
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByLastName);
 
         modelSortedByLastName.saveContact(contactWithLastName2);
         waitForContactsChanged();
@@ -137,7 +130,7 @@ TestCase {
 
         compareContactArrays(modelSortedByLastName.contacts, [contactWithLastName1, contactWithLastName2]);
 
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByLastName);
     }
 
     ContactModel {
@@ -169,12 +162,9 @@ TestCase {
 
     function test_sortByEmail()
     {
-        testHelper.model = modelSortedByEmailAddress;
+        initTestForModel(modelSortedByEmailAddress);
 
-        contactsChangedSpy.target = modelSortedByEmailAddress;
-        contactsChangedSpy.clear();
-
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByEmailAddress);
 
         modelSortedByEmailAddress.saveContact(contactWithEmailAddress2);
         waitForContactsChanged();
@@ -183,7 +173,7 @@ TestCase {
 
         compareContactArrays(modelSortedByEmailAddress.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
 
-        testHelper.emptyContactsDb();
+        emptyContacts(modelSortedByEmailAddress);
     }
 
     function compareContactArrays(actual, expected) {
@@ -204,31 +194,29 @@ TestCase {
         }
     }
 
-    function waitForContactsChanged() {
-        contactsChangedSpy.wait();
-    }
+    property SignalSpy spy
 
-    property Component component
-    property ContactsTestHelper testHelper
-
-    function init() {
-        component = Qt.createComponent("ContactsTestHelper.qml");
-        testHelper = component.createObject(top);
-        if (testHelper == undefined)
-            console.log("Unable to load component from " + name +  " error is ", component.errorString())
-        verify(testHelper != undefined, 'Unable to load component ' + name);
-
-        contactsChangedSpy = Qt.createQmlObject(
+    function initTestForModel(model) {
+        spy = Qt.createQmlObject(
                     "import QtTest 1.0;" +
                     "SignalSpy {" +
-                    "   id: theSpy;" +
-                    "   signalName: \"contactsChanged\";" +
                     "}",
-                    testHelper);
+                    contactsSortingE2ETests);
+        spy.target = model;
+        spy.signalName = "contactsChanged"
     }
 
-    function cleanup() {
-        testHelper.destroy();
-        component.destroy();
+    function waitForContactsChanged() {
+        spy.wait();
+    }
+
+    function emptyContacts(model) {
+        var count = model.contacts.length
+        for (var i = 0; i < count; i++) {
+            var id = model.contacts[0].contactId
+            model.removeContact(id)
+            spy.wait()
+        }
+        compare(model.contacts.length, 0, "model is empty")
     }
 }

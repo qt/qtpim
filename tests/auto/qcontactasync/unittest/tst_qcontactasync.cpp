@@ -561,6 +561,9 @@ void tst_QContactAsync::contactFetch()
     cfr.setSorting(sorting);
     cfr.setFetchHint(QContactFetchHint());
 
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
+
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!cfr.cancel()); // not started
@@ -702,6 +705,10 @@ void tst_QContactAsync::contactIdFetch()
     QVERIFY(!cfr.waitForFinished());
 
     // "all contacts" retrieval
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support local id fetch request. Skipping.");
+
     QContactFilter fil;
     cfr.setManager(cm.data());
     QCOMPARE(cfr.manager(), cm.data());
@@ -775,6 +782,9 @@ void tst_QContactAsync::contactIdFetch()
     sorting.clear();
     cfr.setFilter(fil);
     cfr.setSorting(sorting);
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -909,6 +919,9 @@ void tst_QContactAsync::contactRemove()
     temp.saveDetail(&nameDetail);
     cm->saveContact(&temp);
     crr.setContactIds(cm->contactIds(dfil));
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
@@ -1070,6 +1083,9 @@ void tst_QContactAsync::contactSave()
     saveList.clear();
     saveList << temp;
     csr.setContacts(saveList);
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -1535,6 +1551,9 @@ void tst_QContactAsync::relationshipFetch()
     // cancelling
     rfr.setRelationshipType(QString());
 
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
+
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!rfr.cancel()); // not started
@@ -1687,7 +1706,9 @@ void tst_QContactAsync::relationshipRemove()
     r.setSecond(QContact());
     relationships.clear();
     relationships.push_back(r);
-    
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -1846,6 +1867,10 @@ void tst_QContactAsync::relationshipSave()
     saveList.clear();
     saveList << testRel;
     rsr.setRelationships(saveList);
+
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support request cancelling, skipping...");
+
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!rsr.cancel()); // not started

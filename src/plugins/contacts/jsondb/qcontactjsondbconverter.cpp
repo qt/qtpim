@@ -625,20 +625,8 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
     case QContactAbstractRequest::ContactFetchRequest: {
 
         QContactFetchRequest* fetchReq = static_cast<QContactFetchRequest*>(request);
-
-/*        QContactFetchHint fetchHint = fetchReq->fetchHint();
-        QStringList fetchHintDetails = fetchHint.detailDefinitionsHint();
-        if (!fetchHintDetails.isEmpty()) {
-            newJsonDbQuery.append("[=");
-            foreach (QString detail, fetchHintDetails) {
-                if (fetchHintDetails.first()!=detail)
-                    newJsonDbQuery.append(",");
-                newJsonDbQuery.append(detailsToJsonMapping.value(detail));
-            }
-            newJsonDbQuery.append("," + JsonDbString::kUuidStr + "]");
-        };
-*/
         QContactFilter filter = fetchReq->filter();
+
         switch (filter.type()) {
         case QContactFilter::ContactDetailFilter: {
             QContactDetailFilter detailFilter;
@@ -647,11 +635,10 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
                 //If definitionName is empty, the detail filter will match no contacts
                 return "";
             }
-            if (detailFilter.detailFieldName().isEmpty()) {
-                //If fieldName is empty, the detail filter acts like a "detail exists" filter
-                newJsonDbQuery.append("[?"
-                                      + detailsToJsonMapping.value(detailFilter.detailDefinitionName())
-                                      + " exists]");
+            QString jsondbField = detailsToJsonMapping.value(detailFilter.detailDefinitionName());
+            if (!jsondbField.isEmpty() && (detailFilter.detailFieldName().isEmpty() || detailFilter.value().toString().isEmpty())) {
+                // If fieldName or value is empty, the detail filter acts like a "detail exists" filter
+                newJsonDbQuery.append("[?" + jsondbField + " exists]");
                 break;
             }
             // Filter by name (first or last)
@@ -659,8 +646,7 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
             {
                  if (qt_debug_jsondb_contacts())
                      qDebug() << "Filter by name";
-                 newJsonDbQuery.append("[?" + detailsToJsonMapping.value(detailFilter.detailDefinitionName()) + "."
-                                      + contactNameFieldsMapping.value(detailFilter.detailFieldName()));                 
+                 newJsonDbQuery.append("[?" + jsondbField + "." + contactNameFieldsMapping.value(detailFilter.detailFieldName()));
                  QString paramValue = detailFilter.value().toString();
                  createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue);
             }
@@ -669,9 +655,7 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
             {
                  if (qt_debug_jsondb_contacts())
                      qDebug() << "Filter by phone number";
-                 newJsonDbQuery.append("[?" + detailsToJsonMapping.value(detailFilter.detailDefinitionName()) + "." + "0" + "."
-                                       //+ contactNameFieldsMapping.value(detailFilter.detailFieldName())
-                                       + "value" );
+                 newJsonDbQuery.append("[?" + jsondbField + ".0.value");
                  QString paramValue = detailFilter.value().toString();
                  createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue, PhoneNumberUriScheme);
             }
@@ -680,16 +664,25 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
             {
                  if (qt_debug_jsondb_contacts())
                      qDebug() << "Filter by email address";
-                 newJsonDbQuery.append("[?" + detailsToJsonMapping.value(detailFilter.detailDefinitionName()) + "." + "0" + "."
-                                       + "value" );
+                 newJsonDbQuery.append("[?" + jsondbField + ".0.value" );
                  QString paramValue = detailFilter.value().toString();
                  createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue);
+            }
+            // Filter by Url
+            else if (detailFilter.detailDefinitionName() == QContactUrl::DefinitionName)
+            {
+                if (qt_debug_jsondb_contacts())
+                    qDebug() << "Filter by url";
+                newJsonDbQuery.append("[?" + jsondbField + ".0.value" );
+                QString paramValue = detailFilter.value().toString();
+                createMatchFlagQuery(newJsonDbQuery, detailFilter.matchFlags(), paramValue);
             }
             // Default case: return all the contacts
             else {
                     // No need to add anything to the already present query:   query [?_type="com.nokia.mp.contacts.Contact"]
-                    qDebug() << "Detail not supported by filtering, returning all the contacts !!!";
-                    qDebug() << "Query string: " << newJsonDbQuery;
+                    qWarning() << "Detail" <<  detailFilter.detailDefinitionName()
+                             << "not supported by filtering, returning all the contacts !!!";
+                    qWarning() << "Query string: " << newJsonDbQuery;
             }
             break;
         }
@@ -703,6 +696,11 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
                 newJsonDbQuery.append("[?" + JsonDbString::kUuidStr +
                                       " in [");
                 foreach (QContactLocalId id, ids) {
+                    if (ids.first()!=id) {
+                        newJsonDbQuery.append(",");
+                    } else {
+                        newJsonDbQuery.append("[?" + JsonDbString::kUuidStr + " in [");
+                    }
                     newJsonDbQuery.append("\"" + convertId(id) + "\"");
                     newJsonDbQuery.append(",");
                 }

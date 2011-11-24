@@ -629,8 +629,10 @@ void QOrganizerJsonDbConverter::attendeeDetailToJsonDbObject(const QOrganizerEve
             value = enumToString(qt_organizerParticipationStatusMap, i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::AttendeeParticipationStatus;
         }
-        if (!value.isEmpty())
+        if (!value.isEmpty()) {
             object->insert(jsonDbField, value);
+            value.clear();
+        }
         ++i;
     }
 }

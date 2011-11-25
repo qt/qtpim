@@ -44,9 +44,10 @@ w/****************************************************************************
 
     \section2 Introducing the QtPim module
 
-    The QtPim module covers Personal InformationManagement (PIM).
-    It is not a single API but a collection of APIs and frameworks which
-    allow you to develop applications with personal information.
+    The QtPim module covers Personal Information Management (PIM).
+    It is a collection of APIs and frameworks which
+    allows you to develop applications using contacts and calendar
+    data and versit functionality for exporting and importing data.
 
     This release contains the following APIs:
 

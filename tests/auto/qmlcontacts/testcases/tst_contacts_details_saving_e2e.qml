@@ -219,11 +219,11 @@ TestCase {
     }
 
     function test_onlineAccount() {
-        onlineaccount.accountUri = "Account URI"
-        contact.addDetail(onlineaccount)
+        onlineaccount.accountUri = "Account URI";
+        contact.addDetail(onlineaccount);
         expectFail("", "Saving of Account URI is not supported at the moment");
         verify(false);
-        saveAndRefreshContact()
+        saveAndRefreshContact();
         var detail = contact.detail(ContactDetail.OnlineAccount);
         expectFail("", "This is not supported at the moment");
         verify(detail);

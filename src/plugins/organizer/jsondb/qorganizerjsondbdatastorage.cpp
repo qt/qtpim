@@ -431,7 +431,7 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsResponse(int index, QOrganizerM
 
 void QOrganizerJsonDbDataStorage::handleItemsRequest()
 {
-    QString newJsonDbQuery = ALL_ITEM_QUERY_STRING;
+    QString newJsonDbQuery(QOrganizerJsonDbStr::JsonDbQueryAllItems);
     switch (m_fetchType) {
     case FetchItems:
         break;
@@ -442,7 +442,7 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
         // only uuid, startdate and enddate fields
 
         //jsondb query [?type="com.nokia.mp.organizer.Item"][=_uuid]
-        //newJsonDbQuery += ITEM_ID_RESULT_STRING;
+        //newJsonDbQuery += "[=_uuid]";
         break;
     default:
         break;
@@ -485,15 +485,16 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
 
 void QOrganizerJsonDbDataStorage::handleItemsByIdRequest()
 {
-    QString itemQuery = "[?";
-    for (int i = 0; i < m_itemIds.size(); i++)
-        itemQuery += ITEM_IDS_QUERY_STRING (m_itemIds[i].toString().remove(QOrganizerJsonDbStr::ManagerName));
+    const QString uuidTemplate(QStringLiteral("\"%1\","));
+    QString itemQuery;
+    for (int i = 0; i < m_itemIds.size(); ++i)
+        itemQuery += uuidTemplate.arg(m_itemIds.at(i).toString().remove(QOrganizerJsonDbStr::ManagerName));
 
-    // remove the last " | "
-    itemQuery.truncate(itemQuery.length() - 3);
-    itemQuery += "]";
-    QString newJsonDbQuery = ALL_ITEM_QUERY_STRING;
-    newJsonDbQuery += itemQuery;
+    // remove the last ","
+    itemQuery.truncate(itemQuery.length() - 1);
+
+    QString newJsonDbQuery(QOrganizerJsonDbStr::JsonDbQueryAllItems);
+    newJsonDbQuery.append(QOrganizerJsonDbStr::JsonDbQueryUuidsTemplate.arg(itemQuery));
     int trId = m_jsonDb->query(newJsonDbQuery);
     m_transactionIds.insert(trId, 0);
 }
@@ -558,7 +559,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsResponse(int index, QOrganize
 void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdRequest()
 {
     //Remove the items that are belong to collections
-    QString jsondbQuery = ALL_ITEM_QUERY_STRING;
+    QString jsondbQuery(QOrganizerJsonDbStr::JsonDbQueryAllItems);
     //Set the filter for the jsondb query string
     QOrganizerItemCollectionFilter collectonFilter;
     collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(m_removeItemCollectionIds));
@@ -654,8 +655,7 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsResponse(int index, QOrga
 
 void QOrganizerJsonDbDataStorage::handleCollectionsRequest()
 {
-    QString newJsonDbQuery = COLLECTION_QUERY_STRING;
-    int trId = m_jsonDb->query(newJsonDbQuery);
+    int trId = m_jsonDb->query(QOrganizerJsonDbStr::JsonDbQueryAllCollections);
     // we don't care about item index when fetching collections --> 0 index
     m_transactionIds.insert(trId, 0);
 }
@@ -777,8 +777,7 @@ void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
     QString alarmIdQuery = QStringLiteral("[?") + JsonDbString::kTypeStr + QStringLiteral("=\"") + QOrganizerJsonDbStr::Alarm + QStringLiteral("\"]");
     alarmIdQuery += QStringLiteral("[?") + QOrganizerJsonDbStr::AlarmEventUuid + QStringLiteral("=\"");
     alarmIdQuery += m_itemIds[0].toString().remove(QOrganizerJsonDbStr::ManagerName);
-    alarmIdQuery += QStringLiteral("\"]");
-    alarmIdQuery += ITEM_ID_RESULT_STRING;
+    alarmIdQuery += QString(QStringLiteral("\"][=%1]")).arg(JsonDbString::kUuidStr);
     int trId = m_jsonDb->query(alarmIdQuery);
     m_transactionIds.insert(trId, 0);
 }

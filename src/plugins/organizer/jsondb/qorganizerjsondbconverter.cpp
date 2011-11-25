@@ -1208,18 +1208,15 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
     const QOrganizerItemCollectionFilter cf(filter);
     const QSet<QOrganizerCollectionId>& ids = cf.collectionIds();
     if (!ids.empty()) {
-        //query [?collectionId in ["collection1_uuid1", "collection1_uuid2", ...] ]
-        jsonDbQueryStr = ITEM_COLLECTION_ID_QUERY_STRING;
-        int validIdCount = 0;
+        const QString idTemplate(QStringLiteral("\"%1\","));
+        QString query;
         foreach (const QOrganizerCollectionId &id, ids) {
-            jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
-            jsonDbQueryStr += QStringLiteral("\",\""); // ","
-            validIdCount ++;
+            if (!id.isNull())
+                query += idTemplate.arg(id.toString().remove(QOrganizerJsonDbStr::ManagerName));
         }
-        if (validIdCount > 0) {
-            jsonDbQueryStr += QStringLiteral("]]");
-            //change last "collection_uuid","]] to "collection_uuid"]]
-            jsonDbQueryStr.replace(QStringLiteral(",\"]]"), QStringLiteral("]]"));
+        if (!query.isEmpty()) {
+            query.truncate(query.length() - 1);
+            jsonDbQueryStr = QOrganizerJsonDbStr::JsonDbQueryCollectionIdsTemplate.arg(query);
         } else {
             isValidFilter = false;
         }
@@ -1235,19 +1232,15 @@ bool QOrganizerJsonDbConverter::idFilterToJsondbQuery(const QOrganizerItemFilter
     const QOrganizerItemIdFilter idf(filter);
     const QList<QOrganizerItemId>& ids = idf.ids();
     if (!ids.empty()) {
-        //query [?_uuid in ["uuid1", "uuid2", ...]]
-        jsonDbQueryStr = ITEM_IDS_LIST_QUERY_STRING;
-        int validIdCount = 0;
+        const QString uuidTemplate(QStringLiteral("\"%1\","));
+        QString query;
         foreach (const QOrganizerItemId &id, ids) {
-            if (!id.isNull()) {
-                jsonDbQueryStr += id.toString().remove(QOrganizerJsonDbStr::ManagerName);
-                jsonDbQueryStr += QStringLiteral("\",\""); // add "," between item ids
-                validIdCount ++;
-            }
+            if (!id.isNull())
+                query += uuidTemplate.arg(id.toString().remove(QOrganizerJsonDbStr::ManagerName));
         }
-        if (validIdCount > 0) {
-            jsonDbQueryStr += QStringLiteral("]]");
-            jsonDbQueryStr.replace(QStringLiteral(",\"]]"), QStringLiteral("]]")); //change last "uuid","]] to "uuid"]]
+        if (!query.isEmpty()) {
+            query.truncate(query.length() - 1);
+            jsonDbQueryStr = QOrganizerJsonDbStr::JsonDbQueryUuidsTemplate.arg(query);
         } else {
             isValidFilter = false;
         }

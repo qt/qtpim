@@ -49,6 +49,13 @@ const QString QOrganizerJsonDbStr::JsonDbEngineId(QStringLiteral("jsondb"));
 
 const QString QOrganizerJsonDbStr::JsonDbSchemaPrefix(QStringLiteral("com.nokia.mp.organizer."));
 
+// JsonDb query string
+const QString QOrganizerJsonDbStr::JsonDbQueryAllItems(QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\"]]"));
+const QString QOrganizerJsonDbStr::JsonDbQueryAllCollections(QStringLiteral("[?_type=\"com.nokia.mp.organizer.Collection\"]"));
+
+const QString QOrganizerJsonDbStr::JsonDbQueryCollectionIdsTemplate(QStringLiteral("[?collectionId in [%1]]"));
+const QString QOrganizerJsonDbStr::JsonDbQueryUuidsTemplate(QStringLiteral("[?_uuid in [%1]]"));
+
 //Organizer item string
 const QString QOrganizerJsonDbStr::ItemName(QStringLiteral("displayName"));
 const QString QOrganizerJsonDbStr::ItemCollectionId(QStringLiteral("collectionId"));

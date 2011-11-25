@@ -44,8 +44,9 @@ import QtTest 1.0
 import QtContacts 5.0
 
 TestCase {
-    id: testcase
     name: "ContactsDetailsSavingE2ETests"
+    id: contactsDetailsSavingE2ETests
+
     property Contact contact
 
     ContactModel {
@@ -67,13 +68,9 @@ TestCase {
     }
 
     function init() {
-        var qmlContact = Qt.createQmlObject(
+        contact = Qt.createQmlObject(
                   "import QtContacts 5.0;" +
-                  "Contact {}", testcase)
-        model.saveContact(qmlContact)
-        spy.wait()
-        compare(model.contacts.length, 1, "Failed to init model")
-        contact = model.contacts[0]
+                  "Contact {}", contactsDetailsSavingE2ETests)
     }
 
     function cleanup() {
@@ -280,7 +277,6 @@ TestCase {
         contact.addDetail(personid)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.PersonId)
-        expectFail("", "TODO: personId is not working as expected at the moment");
         compare(detail.personid, "Person id")
     }
 

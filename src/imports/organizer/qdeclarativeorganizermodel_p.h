@@ -79,13 +79,6 @@ class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativ
     Q_PROPERTY(QDeclarativeOrganizerItemFetchHint* fetchHint READ fetchHint WRITE setFetchHint NOTIFY fetchHintChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> items READ items NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> occurrences READ occurrences NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> events READ events NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> eventOccurrences READ eventOccurrences NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> todos READ todos NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> todoOccurrences READ todoOccurrences NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> journals READ journals NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> notes READ notes NOTIFY modelChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
@@ -125,14 +118,7 @@ public:
 
 
     QDeclarativeListProperty<QDeclarativeOrganizerItem> items() ;
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> occurrences();
     QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders() ;
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> events();
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> eventOccurrences();
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> todos();
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> todoOccurrences();
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> journals();
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> notes();
     QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections();
 
     Q_INVOKABLE void removeItem(const QString& id);
@@ -211,7 +197,6 @@ private:
     static void item_append(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item);
     static int  item_count(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p);
     static QDeclarativeOrganizerItem * item_at(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, int idx);
-    static void  item_clear(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p);
 
     static void sortOrder_append(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p, QDeclarativeOrganizerItemSortOrder *sortOrder);
     static int  sortOrder_count(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p);

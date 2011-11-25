@@ -1249,101 +1249,7 @@ QVariant QDeclarativeOrganizerModel::data(const QModelIndex &index, int role) co
   */
 QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::items()
 {
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, 0, item_append, item_count, item_at, item_clear);
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::occurrences
-
-  This property holds a list of event or todo occurrence items in the organizer model.
-  \note This property is not currently supported yet.
-
-  \sa Event, Todo, EventOccurrence, TodoOccurrence
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::occurrences()
-{
-    //TODO:XXX
-    qmlInfo(this) << tr("OrganizerModel: occurrences is not currently supported.");
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>();
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::events
-
-  This property holds a list of events in the organizer model.
-
-  \sa Event
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::events()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeEvent.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::eventOccurrences
-
-  This property holds a list of event occurrences in the organizer model.
-
-  \sa EventOccurrence
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::eventOccurrences()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeEventOccurrence.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::todos
-
-  This property holds a list of todos in the organizer model.
-
-  \sa Todo
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::todos()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeTodo.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::todoOccurrences
-
-  This property holds a list of todo occurrences in the organizer model.
-
-  \sa TodoOccurrence
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::todoOccurrences()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeTodoOccurrence.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
-}
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::journals
-
-  This property holds a list of journal items in the organizer model.
-
-  \sa Journal
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::journals()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeJournal.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
-}
-
-
-/*!
-  \qmlproperty list<OrganizerItem> OrganizerModel::notes
-
-  This property holds a list of note items in the organizer model.
-
-  \sa Note
-  */
-QDeclarativeListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::notes()
-{
-    void* d = const_cast<char*>(QOrganizerItemType::TypeNote.latin1());
-    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, d, item_append, item_count, item_at, item_clear);
+    return QDeclarativeListProperty<QDeclarativeOrganizerItem>(this, 0, item_append, item_count, item_at);
 }
 
 /*!
@@ -1367,67 +1273,18 @@ void QDeclarativeOrganizerModel::item_append(QDeclarativeListProperty<QDeclarati
 
 int  QDeclarativeOrganizerModel::item_count(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p)
 {
-    QString type((const char*)(p->data));
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
-    int count = 0;
-
-    if (model) {
-        if (!type.isEmpty()) {
-            foreach (const QDeclarativeOrganizerItem* item, model->d->m_items) {
-                if (item->item().type() == type)
-                    count++;
-            }
-        } else {
-            return model->d->m_items.count();
-        }
-    }
-    return count;
+    if (model)
+        return model->d->m_items.count();
+    return 0;
 }
 
 QDeclarativeOrganizerItem * QDeclarativeOrganizerModel::item_at(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, int idx)
 {
-    QString type((const char*)(p->data));
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
-
-    QDeclarativeOrganizerItem* item = 0;
-    if (model && idx < model->d->m_items.size()) {
-        int i = 0;
-        if (!type.isEmpty()) {
-            foreach (QDeclarativeOrganizerItem* di, model->d->m_items) {
-                if (di->item().type() == type) {
-                    if (i == idx) {
-                        item = di;
-                        break;
-                    } else {
-                        i++;
-                    }
-                }
-            }
-        } else {
-            item = model->d->m_items.at(idx);
-        }
-    }
-    return item;
-}
-
-void  QDeclarativeOrganizerModel::item_clear(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p)
-{
-    QString type((const char*)(p->data));
-    QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
-
-    if (model) {
-        if (!type.isEmpty()) {
-            foreach (QDeclarativeOrganizerItem* di, model->d->m_items) {
-                if (di->item().type() == type) {
-                    di->deleteLater();
-                    model->d->m_items.removeAll(di);
-                }
-            }
-        } else {
-            model->d->m_items.clear();
-        }
-        emit model->modelChanged();
-    }
+    if (model && idx >= 0 && idx < model->d->m_items.size())
+        return model->d->m_items.at(idx);
+    return 0;
 }
 
 void QDeclarativeOrganizerModel::sortOrder_append(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p, QDeclarativeOrganizerItemSortOrder *sortOrder)

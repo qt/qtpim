@@ -452,7 +452,7 @@ int QDeclarativeOrganizerItem::_q_detail_count(QDeclarativeListProperty<QDeclara
  */
 bool QDeclarativeOrganizerItem::_q_removeDetail(QDeclarativeOrganizerItemDetail *detail)
 {
-    if (!detail->removable())
+    if (!detail || !detail->removable())
         return false;
 
     int key = detail->detail().key();

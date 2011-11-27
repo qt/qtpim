@@ -118,6 +118,8 @@ private:
     QOrganizerCollectionChangeSet m_ccs;
 
     void startTimer();  // Only used by onItemChanged() and onCollectionChanged()
+    // Prevent infinite alarm remove loop
+    static const int ALARM_REMOVE_MAXLOOP;
 };
 
 QTORGANIZER_END_NAMESPACE

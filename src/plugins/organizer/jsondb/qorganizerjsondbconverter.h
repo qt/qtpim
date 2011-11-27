@@ -80,12 +80,14 @@ public:
     QOrganizerItemId jsonDbNotificationObjectToItemId(const QVariantMap &object) const;
     QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QVariantMap &object) const;
 
+    bool itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap &alarmObject) const;
+
 private:
     void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
     void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;
 
-    void itemReminderDetailToJsonDbObject(const QOrganizerItemReminder &itemReminder, QVariantMap &reminderObject) const;
-    void jsonDbObjectToItemReminderDetailCommon(const QVariantMap &object, QOrganizerItemReminder *itemReminder) const;
+    void audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap &object) const;
+    void jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder) const;
 
     int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, QString enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData *const conversionData, int enumValue) const;

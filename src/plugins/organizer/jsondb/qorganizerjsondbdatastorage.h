@@ -103,6 +103,9 @@ public:
     QSet<QOrganizerCollectionId> collectionIds();
 
     void initNotification();
+    void saveAlarm(const QOrganizerItem *item, const QString *alarmUuid, QOrganizerManager::Error *error);
+    void removeAlarm(const QString *alarmUuid, QOrganizerManager::Error *error);
+    QString alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error);
 
 signals:
     void threadInitialized();
@@ -136,7 +139,10 @@ private:
         SaveCollections,
         Collections,
         RemoveCollections,
-        RegisterNotification
+        RegisterNotification,
+        AlarmId,
+        SaveAlarm,
+        RemoveAlarm
     };
 
     void handleResponse(int trId, QOrganizerManager::Error error, const QVariant& object);
@@ -158,6 +164,13 @@ private:
     void handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
     void handleRegisterNotificationRequest();
     void handleRegisterNotificationResponse(QOrganizerManager::Error error);
+
+    void handleSaveAlarmRequest();
+    void handleSaveAlarmResponse(QOrganizerManager::Error error);
+    void handleAlarmIdRequest();
+    void handleAlarmIdResponse(QOrganizerManager::Error error, const QVariant &object);
+    void handleRemoveAlarmRequest();
+    void handleRemoveAlarmResponse(QOrganizerManager::Error error);
 
     QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
 
@@ -211,6 +224,9 @@ private:
 
     // RemoveCollections
     QMap<int, QOrganizerCollectionId> m_removeCollectionIds;
+
+    // Alarm Id string
+    QString m_alarmId;
 };
 
 QTORGANIZER_END_NAMESPACE

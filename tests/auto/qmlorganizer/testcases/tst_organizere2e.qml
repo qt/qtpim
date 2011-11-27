@@ -102,12 +102,6 @@ TestCase {
                     "AudibleReminder": {
                         "dataUrl": "'url'"
                     },
-                    "EmailReminder": {
-                        "subject": "'dummy'"
-                    },
-                    "VisualReminder": {
-                        "message": "'dummy'"
-                    },
                     "EventAttendee": {
                         "name": "'dummy'",
                         "emailAddress": "'new.attendee@qt.com'",
@@ -157,12 +151,6 @@ TestCase {
                     },
                     "AudibleReminder": {
                         "dataUrl": "'url'"
-                    },
-                    "EmailReminder": {
-                        "subject": "'dummy'"
-                    },
-                    "VisualReminder": {
-                        "message": "'dummy'"
                     }
                 }
             }

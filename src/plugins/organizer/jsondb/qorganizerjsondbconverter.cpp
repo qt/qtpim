@@ -332,10 +332,14 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 jsonDbObjectToRsvpDetail(rsvpMap, &rsvp);
                 item->saveDetail(&rsvp);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ItemLocation
-                   || i.key() == QOrganizerJsonDbStr::ItemVisualReminder
-                   || i.key() == QOrganizerJsonDbStr::ItemAudibleReminder
-                   || i.key() == QOrganizerJsonDbStr::ItemEmailReminder) {
+        } else if (i.key() == QOrganizerJsonDbStr::ItemReminder) {
+            QVariantMap reminderMap = i.value().toMap();
+            if (!reminderMap.isEmpty()) {
+                QOrganizerItemAudibleReminder audibleReminder;
+                jsonDbObjectToAudibleReminderDetail(reminderMap, &audibleReminder);
+                item->saveDetail(&audibleReminder);
+            }
+        } else if (i.key() == QOrganizerJsonDbStr::ItemLocation) {
             // TODO implement them properly when schema gets frozen
         } else if (i.key() == JsonDbString::kUuidStr
             || i.key() == JsonDbString::kTypeStr
@@ -371,53 +375,6 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         locationDetail.setLongitude(longitude);
 
         item->saveDetail(&locationDetail);
-    }
-
-    //Visual reminder
-    QVariantMap jsondbVisualReminder = object.value(QOrganizerJsonDbStr::ItemVisualReminder).toMap();
-    if (!jsondbVisualReminder.isEmpty()) {
-        QOrganizerItemVisualReminder visualReminder;
-        jsonDbObjectToItemReminderDetailCommon(jsondbVisualReminder, &visualReminder);
-        QString message = jsondbVisualReminder.value(QOrganizerJsonDbStr::ItemVisualReminderMessage).toString();
-        if (!message.isEmpty())
-            visualReminder.setMessage(message);
-        QString dataUrlStr = jsondbVisualReminder.value(QOrganizerJsonDbStr::ItemVisualReminderDataUrl).toString();
-        if (!dataUrlStr.isEmpty())
-            visualReminder.setDataUrl(QUrl(dataUrlStr));
-        item->saveDetail(&visualReminder);
-    }
-    //Audible reminder
-    QVariantMap jsondbAudibleReminder = object.value(QOrganizerJsonDbStr::ItemAudibleReminder).toMap();
-    if (!jsondbAudibleReminder.isEmpty()) {
-        QOrganizerItemAudibleReminder audibleReminder;
-        jsonDbObjectToItemReminderDetailCommon(jsondbAudibleReminder, &audibleReminder);
-        QString dataUrlStr = jsondbAudibleReminder.value(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl).toString();
-        if (!dataUrlStr.isEmpty()) {
-            QUrl url(dataUrlStr);
-            audibleReminder.setDataUrl(url);
-        }
-        item->saveDetail(&audibleReminder);
-    }
-    //Email reminder
-    QVariantMap jsondbEmailReminder = object.value(QOrganizerJsonDbStr::ItemEmailReminder).toMap();
-    if (!jsondbEmailReminder.isEmpty()) {
-        QOrganizerItemEmailReminder emailReminder;
-        jsonDbObjectToItemReminderDetailCommon(jsondbEmailReminder, &emailReminder);
-        QString subject = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderSubject).toString();
-        if (!subject.isEmpty())
-            emailReminder.setValue(QOrganizerItemEmailReminder::FieldSubject, subject);
-        QString body = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderBody).toString();
-        if (!body.isEmpty())
-            emailReminder.setValue(QOrganizerItemEmailReminder::FieldBody, body);
-        if (jsondbEmailReminder.contains(QOrganizerJsonDbStr::ItemEmailReminderAttachments)) {
-            QVariantList attachments = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderAttachments).toList();
-            emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
-        }
-        if (jsondbEmailReminder.contains(QOrganizerJsonDbStr::ItemEmailReminderRecipients)) {
-            QStringList recipients = jsondbEmailReminder.value(QOrganizerJsonDbStr::ItemEmailReminderRecipients).toStringList();
-            emailReminder.setRecipients(recipients);
-        }
-        item->saveDetail(&emailReminder);
     }
 
     return true;
@@ -507,26 +464,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::ItemPriority, enumToString(qt_organizerPriorityEnumMap, priorityDetail.priority()));
     }
 
-    //Audio,visual,email reminder details
-    QOrganizerItemVisualReminder visualReminder = item.detail(QOrganizerItemVisualReminder::DefinitionName);
-    if (!visualReminder.isEmpty()) {
-        QVariantMap reminderObject;
-        itemReminderDetailToJsonDbObject(visualReminder, reminderObject);
-        object->insert(QOrganizerJsonDbStr::ItemVisualReminder, reminderObject);
-    }
-
     QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
     if (!audibleReminder.isEmpty()) {
         QVariantMap reminderObject;
-        itemReminderDetailToJsonDbObject(audibleReminder, reminderObject);
-        object->insert(QOrganizerJsonDbStr::ItemAudibleReminder, reminderObject);
-    }
-
-    QOrganizerItemEmailReminder emailReminder = item.detail(QOrganizerItemEmailReminder::DefinitionName);
-    if (!emailReminder.isEmpty()) {
-        QVariantMap reminderObject;
-        itemReminderDetailToJsonDbObject(emailReminder, reminderObject);
-        object->insert(QOrganizerJsonDbStr::ItemEmailReminder, reminderObject);
+        audibleReminderDetailToJsonDbObject(audibleReminder, reminderObject);
+        object->insert(QOrganizerJsonDbStr::ItemReminder, reminderObject);
     }
 
     // recurrence
@@ -955,61 +897,97 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
     }
 }
 
-void QOrganizerJsonDbConverter::itemReminderDetailToJsonDbObject(const QOrganizerItemReminder& itemReminder, QVariantMap& reminderObject) const
+bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap &alarmObject) const
 {
-    //Item reminder common part
-    if (itemReminder.hasValue(itemReminder.FieldSecondsBeforeStart))
-        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderSecBeforeStart, itemReminder.secondsBeforeStart());
-    if (itemReminder.hasValue(itemReminder.FieldRepetitionCount))
-        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderRepCount, itemReminder.repetitionCount());
-    if (itemReminder.hasValue(itemReminder.FieldRepetitionDelay))
-        reminderObject.insert(QOrganizerJsonDbStr::ItemReminderRepDelay, itemReminder.repetitionDelay());
+    bool ret = false;
+    QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
+    QDateTime alarmStartTime;
+    if (item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeEventOccurrence)
+        alarmStartTime = item.detail(QOrganizerEventTime::DefinitionName).value<QDateTime>(QOrganizerEventTime::FieldStartDateTime);
+    else if (item.type() == QOrganizerItemType::TypeTodo || item.type() == QOrganizerItemType::TypeTodoOccurrence)
+        alarmStartTime = item.detail(QOrganizerTodoTime::DefinitionName).value<QDateTime>(QOrganizerTodoTime::FieldStartDateTime);
 
-    //Audio, visual, Email sepcified properties
-    switch (itemReminder.reminderType()) {
-    case QOrganizerItemReminder::NoReminder :
-        break;
-    case QOrganizerItemReminder::VisualReminder : {
-        if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldMessage))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderMessage, itemReminder.value(QOrganizerItemVisualReminder::FieldMessage));
-        if (itemReminder.hasValue(QOrganizerItemVisualReminder::FieldDataUrl))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemVisualReminderDataUrl, itemReminder.value(QOrganizerItemVisualReminder::FieldDataUrl).toString());
-        break;
+    // audibleReminder and start time details are mandatory for alarm object
+    if (!audibleReminder.isEmpty() && alarmStartTime.isValid()) {
+        // alarm object
+        alarmObject.insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::Alarm);
+        // alarm start time
+        if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
+            alarmStartTime = alarmStartTime.addSecs(-audibleReminder.secondsBeforeStart());//Nagetive value
+        alarmObject.insert(QOrganizerJsonDbStr::AlarmISODate, alarmStartTime.toString(Qt::ISODate));
+        // repetition count to alarm snooze count
+        if (audibleReminder.hasValue(audibleReminder.FieldRepetitionCount))
+           alarmObject.insert(QOrganizerJsonDbStr::AlarmSnoozeCount, audibleReminder.repetitionCount());
+        // repetition delay to alarm snooze time
+        if (audibleReminder.hasValue(audibleReminder.FieldRepetitionDelay))
+           alarmObject.insert(QOrganizerJsonDbStr::AlarmSnoozeTime, audibleReminder.repetitionDelay());
+        // item Uuid to alarm event Uuid
+        alarmObject.insert(QOrganizerJsonDbStr::AlarmEventUuid, item.id().toString().remove(QOrganizerJsonDbStr::ManagerName));
+        // item displayLabel to alarm title
+        QString displayLabel(item.displayLabel());
+        if (!displayLabel.isEmpty())
+            alarmObject.insert(QOrganizerJsonDbStr::AlarmTitle, displayLabel);
+        // item description to alarm description
+        QString description(item.description());
+        if (!description.isEmpty())
+            alarmObject.insert(QOrganizerJsonDbStr::AlarmDescription, description);
+        // set calender app as alarm identifier
+        alarmObject.insert(QOrganizerJsonDbStr::AlarmIdentifier, QOrganizerJsonDbStr::AlarmCalenderIdentifier);
+        ret = true;
     }
-    case QOrganizerItemReminder::AudibleReminder : {
-        if (itemReminder.hasValue(QOrganizerItemAudibleReminder::FieldDataUrl))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemAudibleReminderDataUrl, itemReminder.value(QOrganizerItemAudibleReminder::FieldDataUrl).toString());
-        break;
-    }
-    case QOrganizerItemReminder::EmailReminder : {
-        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldSubject))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderSubject, itemReminder.value(QOrganizerItemEmailReminder::FieldSubject));
-        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldBody))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderBody, itemReminder.value(QOrganizerItemEmailReminder::FieldBody));
-        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldAttachments))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderAttachments, itemReminder.value(QOrganizerItemEmailReminder::FieldAttachments));//QVariantList
-        if (itemReminder.hasValue(QOrganizerItemEmailReminder::FieldRecipients))
-            reminderObject.insert(QOrganizerJsonDbStr::ItemEmailReminderRecipients, itemReminder.value(QOrganizerItemEmailReminder::FieldRecipients));//QStringList
-        break;
-    }
+    return ret;
+}
+
+void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap &object) const
+{
+    QVariantMap reminderValues = itemReminder.values();
+    QMap<QString, QVariant>::const_iterator i = reminderValues.constBegin();
+    QVariant value;
+    QString jsonDbField;
+    while (i != reminderValues.constEnd()) {
+        value.clear();
+        if (i.key() == QOrganizerItemReminder::FieldSecondsBeforeStart) {
+            value = i.value().toInt();
+            jsonDbField = QOrganizerJsonDbStr::ItemReminderSecBeforeStart;
+        } else if (i.key() == QOrganizerItemReminder::FieldRepetitionCount) {
+            value = i.value().toInt();
+            jsonDbField = QOrganizerJsonDbStr::ItemReminderRepCount;
+        } else if (i.key() == QOrganizerItemReminder::FieldRepetitionDelay) {
+            value = i.value().toInt();
+            jsonDbField = QOrganizerJsonDbStr::ItemReminderRepDelay;
+        } else if (i.key() == QOrganizerItemAudibleReminder::FieldDataUrl) {
+            value = i.value().toString();
+            jsonDbField = QOrganizerJsonDbStr::ItemReminderDataUrl;
+        }
+        if (value.isValid())
+            object.insert(jsonDbField, value);
+        ++i;
     }
 }
 
-void QOrganizerJsonDbConverter::jsonDbObjectToItemReminderDetailCommon(const QVariantMap& object, QOrganizerItemReminder* itemReminder) const
+void QOrganizerJsonDbConverter::jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder) const
 {
-    //Common details exist in all reminder types
-    if (object.contains(QOrganizerJsonDbStr::ItemReminderSecBeforeStart)) {
-        int secBeforeStart = object.value(QOrganizerJsonDbStr::ItemReminderSecBeforeStart).toInt();
-        itemReminder->setSecondsBeforeStart(secBeforeStart);
-    }
-
-    if (object.contains(QOrganizerJsonDbStr::ItemReminderRepCount)) {
-        int repetitionCount = object.value(QOrganizerJsonDbStr::ItemReminderRepCount).toInt();
-        itemReminder->setValue(QOrganizerItemReminder::FieldRepetitionCount, repetitionCount);
-    }
-    if (object.contains(QOrganizerJsonDbStr::ItemReminderRepDelay)) {
-        int repetitionDelay = object.value(QOrganizerJsonDbStr::ItemReminderRepDelay).toInt();
-        itemReminder->setValue(QOrganizerItemReminder::FieldRepetitionDelay, repetitionDelay);
+    QMap<QString, QVariant>::const_iterator i = object.constBegin();
+    QString field;
+    QVariant value;
+    while (i != object.constEnd()) {
+        value.clear();
+        if (i.key() == QOrganizerJsonDbStr::ItemReminderSecBeforeStart) {
+            field = QOrganizerItemReminder::FieldSecondsBeforeStart;
+            value = i.value().toInt();
+        } else if (i.key() == QOrganizerJsonDbStr::ItemReminderRepCount) {
+            field = QOrganizerItemReminder::FieldRepetitionCount;
+            value = i.value().toInt();
+        } else if (i.key() == QOrganizerJsonDbStr::ItemReminderRepDelay) {
+            field = QOrganizerItemReminder::FieldRepetitionDelay;
+            value = i.value().toInt();
+        } else if (i.key() == QOrganizerJsonDbStr::ItemReminderDataUrl) {
+            field = QOrganizerItemAudibleReminder::FieldDataUrl;
+            value = QUrl(i.value().toString());
+        }
+        if (value.isValid())
+            itemReminder->setValue(field, value);
+        ++i;
     }
 }
 

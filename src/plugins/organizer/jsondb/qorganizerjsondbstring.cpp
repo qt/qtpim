@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include <qorganizerjsondbstring.h>
-
 QTORGANIZER_BEGIN_NAMESPACE
 
 //Jsondb manager name
@@ -58,9 +57,7 @@ const QString QOrganizerJsonDbStr::ItemComments(QStringLiteral("comments"));
 const QString QOrganizerJsonDbStr::ItemLocation(QStringLiteral("location"));
 const QString QOrganizerJsonDbStr::ItemPriority(QStringLiteral("Priority"));
 const QString QOrganizerJsonDbStr::ItemTags(QStringLiteral("tags"));
-const QString QOrganizerJsonDbStr::ItemVisualReminder(QStringLiteral("visualReminder"));
-const QString QOrganizerJsonDbStr::ItemAudibleReminder(QStringLiteral("audibleReminder"));
-const QString QOrganizerJsonDbStr::ItemEmailReminder(QStringLiteral("emailReminder"));
+const QString QOrganizerJsonDbStr::ItemReminder(QStringLiteral("reminder"));
 const QString QOrganizerJsonDbStr::ItemGuid(QStringLiteral("guid"));
 
 //Location sub properties
@@ -72,16 +69,7 @@ const QString QOrganizerJsonDbStr::ItemLocationLongitude(QStringLiteral("longitu
 const QString QOrganizerJsonDbStr::ItemReminderSecBeforeStart(QStringLiteral("secondsBeforeStart"));
 const QString QOrganizerJsonDbStr::ItemReminderRepCount(QStringLiteral("repetitionCount"));
 const QString QOrganizerJsonDbStr::ItemReminderRepDelay(QStringLiteral("repetitionDelay"));
-//Item audible remibder
-const QString QOrganizerJsonDbStr::ItemAudibleReminderDataUrl(QStringLiteral("dataUrl"));
-//Item email reminder
-const QString QOrganizerJsonDbStr::ItemEmailReminderSubject(QStringLiteral("subject"));
-const QString QOrganizerJsonDbStr::ItemEmailReminderBody(QStringLiteral("body"));
-const QString QOrganizerJsonDbStr::ItemEmailReminderAttachments(QStringLiteral("attachments"));
-const QString QOrganizerJsonDbStr::ItemEmailReminderRecipients(QStringLiteral("recipients"));
-//Item visual reminder
-const QString QOrganizerJsonDbStr::ItemVisualReminderMessage(QStringLiteral("message"));
-const QString QOrganizerJsonDbStr::ItemVisualReminderDataUrl(QStringLiteral("dataUrl"));
+const QString QOrganizerJsonDbStr::ItemReminderDataUrl(QStringLiteral("dataUrl"));
 
 //Event item
 const QString QOrganizerJsonDbStr::Event(QStringLiteral("com.nokia.mp.organizer.Event"));
@@ -143,6 +131,17 @@ const QString QOrganizerJsonDbStr::RsvpOrganizerEmail(QStringLiteral("organizerE
 const QString QOrganizerJsonDbStr::RsvpResponseRequirement(QStringLiteral("responseRequirement"));
 const QString QOrganizerJsonDbStr::RsvpResponseDate(QStringLiteral("responseDate"));
 const QString QOrganizerJsonDbStr::RsvpResponseDeadline(QStringLiteral("responseDeadline"));
+
+// Alarm object schema
+const QString QOrganizerJsonDbStr::Alarm(QStringLiteral("com.nokia.mt.alarm-daemon.Alarm"));
+const QString QOrganizerJsonDbStr::AlarmISODate(QStringLiteral("isoDate"));
+const QString QOrganizerJsonDbStr::AlarmSnoozeTime(QStringLiteral("snoozeTime"));
+const QString QOrganizerJsonDbStr::AlarmSnoozeCount(QStringLiteral("snoozeCount"));
+const QString QOrganizerJsonDbStr::AlarmIdentifier(QStringLiteral("identifier"));
+const QString QOrganizerJsonDbStr::AlarmTitle(QStringLiteral("title"));
+const QString QOrganizerJsonDbStr::AlarmDescription(QStringLiteral("description"));
+const QString QOrganizerJsonDbStr::AlarmEventUuid(QStringLiteral("eventUuid"));
+const QString QOrganizerJsonDbStr::AlarmCalenderIdentifier(QStringLiteral("com.nokia.mt.calendar"));
 
 //warning string
 const QString QOrganizerJsonDbStr::WarningMoreItemDelete(QStringLiteral("Items are delete from jsondb!!"));

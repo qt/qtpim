@@ -56,6 +56,7 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);
+const int QOrganizerJsonDbRequestThread::ALARM_REMOVE_MAXLOOP(10);
 
 QOrganizerJsonDbRequestThread::QOrganizerJsonDbRequestThread()
     : m_engine(0)
@@ -316,15 +317,44 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     }
     if (!itemMap.isEmpty()) {
         m_storage->saveItems(&itemMap, &errorMap, &latestError);
+        QOrganizerManager::Error alarmError;
+        QString alarmId;
+        QOrganizerItemId itemId;
         QMapIterator<int, QOrganizerItem> i(itemMap);
         while (i.hasNext()) {
             i.next();
             if (!errorMap.contains(i.key())) {
-                // if there were no errors when saving this item and this is a new item,
-                // insert item with newly created item id to items list
-                // (updated items already contain item id, so no need to insert them)
+                alarmError = QOrganizerManager::NoError;
+                alarmId.clear();
                 if (itemIsNewStatusMap.value(i.key()))
+                    // if there were no errors when saving this item and this is a new item,
+                    // insert item with newly created item id to items list
+                    // (updated items already contain item id, so no need to insert them)
                     items.replace(i.key(), i.value());
+                else {// Query alarm object if the item is not new one
+                    itemId = i.value().id();
+                    alarmId = m_storage->alarmId(&itemId, &alarmError);
+                    if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
+                        int count = 0;
+                        do {//Try to delete all the alarm objects
+                            m_storage->removeAlarm(&alarmId, &alarmError);
+                            alarmId = m_storage->alarmId(&itemId, &alarmError);
+                            ++count;//Prevent infinite loop
+                        } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
+                    }
+                }
+
+                if (QOrganizerManager::NoError == alarmError) {
+                    if (!i.value().detail(QOrganizerItemAudibleReminder::DefinitionName).isEmpty())
+                        m_storage->saveAlarm(&i.value(), &alarmId, &alarmError);// Save/Update alarm object for the saved item
+                    else if (!alarmId.isEmpty())
+                        m_storage->removeAlarm(&alarmId, &alarmError);
+                }
+
+                if (QOrganizerManager::NoError != alarmError) {
+                    latestError = alarmError;
+                    errorMap.insert(i.key(), alarmError);
+                }
             }
         }
     }
@@ -387,6 +417,31 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
     m_requestMgr->setActive(removeReq);
     if (!itemIds.isEmpty())
         m_storage->removeItems(itemIds, &errorMap, &latestError);
+
+    QOrganizerManager::Error alarmError;
+    QString alarmId;
+    int index = 0;
+    foreach (const QOrganizerItemId &id, itemIds) {
+        if (!errorMap.contains(index)) {
+            alarmError = QOrganizerManager::NoError;
+            alarmId = m_storage->alarmId(&id, &alarmError);
+            if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty())
+                m_storage->removeAlarm(&alarmId, &alarmError);
+            else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
+                int count = 0;
+                do {//Try to delete all the alarm objects
+                    m_storage->removeAlarm(&alarmId, &alarmError);
+                    alarmId = m_storage->alarmId(&id, &alarmError);
+                    ++count;//Prevent infinite loop
+                } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
+            }
+            if (QOrganizerManager::NoError != alarmError) {
+                latestError = alarmError;
+                errorMap.insert(index, alarmError);
+            }
+        }
+        ++index;
+    }
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeReq);
     m_requestMgr->removeRequest(removeReq);
@@ -488,7 +543,27 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerColl
             if (!errorMap.contains(i))
                 removedCollectionIds.append(collectionIds.at(i));
         }
-        m_storage->removeItemsByCollectionId(removedCollectionIds);
+        if (!removedCollectionIds.isEmpty()) {
+            QList<QOrganizerItemId> idList = m_storage->removeItemsByCollectionId(removedCollectionIds);
+            if (!idList.isEmpty()) {// remove alarm objects
+                QOrganizerManager::Error alarmError;
+                QString alarmId;
+                foreach (const QOrganizerItemId &id, idList) {
+                    alarmError = QOrganizerManager::NoError;
+                    alarmId = m_storage->alarmId(&id, &alarmError);
+                    if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty())
+                        m_storage->removeAlarm(&alarmId, &alarmError);
+                    else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
+                        int count = 0;
+                        do {//Try to delete all the alarm objects
+                            m_storage->removeAlarm(&alarmId, &alarmError);
+                            alarmId = m_storage->alarmId(&id, &alarmError);
+                            ++count;//Prevent infinite loop
+                        } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
+                    }
+                }
+            }
+        }
     }
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionRemoveReq);

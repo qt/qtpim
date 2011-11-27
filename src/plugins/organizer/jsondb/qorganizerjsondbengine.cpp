@@ -645,8 +645,6 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemLocation::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
                          << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName
                          << QOrganizerEventAttendee::DefinitionName
                          << QOrganizerEventRsvp::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeTodo) {
@@ -655,9 +653,7 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemPriority::DefinitionName
 //                         << QOrganizerTodoProgress::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+                         << QOrganizerItemAudibleReminder::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {
         supportedDetails << QOrganizerItemParent::DefinitionName
                          << QOrganizerEventTime::DefinitionName
@@ -665,8 +661,6 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemLocation::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
                          << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName
                          << QOrganizerEventAttendee::DefinitionName
                          << QOrganizerEventRsvp::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
@@ -675,9 +669,7 @@ QStringList QOrganizerJsonDbEngine::supportedItemDetails(const QString &itemType
                          << QOrganizerItemPriority::DefinitionName
                          << QOrganizerTodoProgress::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+                         << QOrganizerItemAudibleReminder::DefinitionName;
     } else {
         // We don't support Journal and Note, yet ;)
         supportedDetails.clear();

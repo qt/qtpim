@@ -106,6 +106,8 @@ Rectangle {
             //Test all manager backends
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
+                if (managerName == "jsondb")//jsondb backend does not support visual reminder
+                    return;
                 console.log("VisualReminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
                       "import QtOrganizer 5.0;"

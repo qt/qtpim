@@ -50,7 +50,6 @@ Rectangle
     property variant item
     property variant rule
     property variant audibleReminderdetail
-    property variant visualReminderdetail
 
     onOpacityChanged: {
         // Is this view visible
@@ -112,16 +111,6 @@ Rectangle
                 audibleReminderdetail = emptyAudibleReminder;
                 audibleReminderCheckBox.setValue(false);
             }
-
-            //Visual reminder
-            var visualDetailList = item.details(Detail.VisualReminder);
-            if (visualDetailList.length > 0) {
-                visualReminderdetail = item.detail(Detail.VisualReminder);
-                visualReminderCheckBox.setValue(true);
-            } else {
-                visualReminderdetail = emptyVisualReminder;
-                visualReminderCheckBox.setValue(false);
-            }
         }
     }
 
@@ -132,12 +121,6 @@ Rectangle
     AudibleReminder {
         id: emptyAudibleReminder
         dataUrl: "http://www.qt.nokia.com"
-    }
-
-    VisualReminder {
-        id: emptyVisualReminder
-        dataUrl: "http://www.qt.nokia.com"
-        message: "empty message"
     }
 
     Image { source: "images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 0.8 }
@@ -160,9 +143,6 @@ Rectangle
                 calendar.currentDate = item.startDateTime;
                 if (item.detail(Detail.AudibleReminder)) {
                     item.setDetail(audibleReminderdetail);
-                }
-                if (item.detail(Detail.VisualReminder)) {
-                    item.setDetail(visualReminderdetail);
                 }
                 calendar.organizer.saveItem(item);
                 calendar.state = "DayView";
@@ -323,7 +303,7 @@ Rectangle
 
        CheckBoxRow {
            id: audibleReminderCheckBox
-           label: "Audible reminder"
+           label: "Reminder"
            onCheckBoxChanged: {
                 if (newValue) {
                     audibleReminderdetail = emptyAudibleReminder;
@@ -345,7 +325,7 @@ Rectangle
                anchors.top: parent.top
                width: detailsView.width;
                height: 20
-               text: "Audible reminder"
+               text: "Reminder"
                verticalAlignment: Text.AlignVCenter
                horizontalAlignment: Text.AlignHCenter
                color: "White";
@@ -385,81 +365,6 @@ Rectangle
                 value: audibleReminderdetail? audibleReminderdetail.dataUrl : ""
                 onNewValueChanged: {
                     audibleReminderdetail.dataUrl = newValue;
-                }
-            }
-        }
-
-        CheckBoxRow {
-            id:  visualReminderCheckBox
-            label: "Visual reminder"
-            onCheckBoxChanged: {
-                if (newValue) {
-                    visualReminderdetail = emptyVisualReminder;
-                    item.addDetail(visualReminderdetail);
-                } else {
-                    var removeDetail = item.detail(Detail.VisualReminder);
-                    item.removeDetail(removeDetail);
-                }
-            }
-        }
-        Item {
-            height: visible? 260 : 0
-            width: detailsView.width
-            id:  visualReminderDataRow
-            visible:  visualReminderCheckBox.newValue
-            Text {
-                id:  visualReminderDataRowText
-                anchors.top: parent.top
-                width: detailsView.width;
-                height: 20
-                text: "Visual reminder"
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color: "White";
-                font.weight: Font.Bold
-            }
-            FieldRow {
-                id: customVisualReminderRepCountRow
-                anchors.top:  visualReminderDataRowText.bottom
-                label: "Repetition count"
-                value:  visualReminderdetail? visualReminderdetail.repetitionCount : 0
-                onNewValueChanged: {
-                    visualReminderdetail.repetitionCount = newValue;
-                }
-            }
-            FieldRow {
-                id: customVisualReminderRepDelayRow
-                anchors.top: customVisualReminderRepCountRow.bottom
-                label: "Repetition delay"
-                value:  visualReminderdetail? visualReminderdetail.repetitionDelay : 0
-                onNewValueChanged: {
-                     visualReminderdetail.repetitionDelay = newValue;
-                }
-            }
-            FieldRow {
-                id: customVisualReminderSecBeforeStartRow
-                anchors.top: customVisualReminderRepDelayRow.bottom
-                label: "Seconds before start"
-                value: visualReminderdetail? visualReminderdetail.secondsBeforeStart : 0
-                onNewValueChanged: {
-                    visualReminderdetail.secondsBeforeStart = newValue;
-                }
-            }
-            FieldRow {
-                id: customVisualReminderDataUrlRow
-                anchors.top: customVisualReminderSecBeforeStartRow.bottom
-                label: "Data url"
-                value: visualReminderdetail? visualReminderdetail.dataUrl : ""
-                onNewValueChanged: {
-                    visualReminderdetail.dataUrl = newValue;
-                }
-            }
-            FieldRow {
-                anchors.top: customVisualReminderDataUrlRow.bottom
-                label: "Message"
-                value: visualReminderdetail? visualReminderdetail.message : ""
-                onNewValueChanged: {
-                    visualReminderdetail.message = newValue;
                 }
             }
         }

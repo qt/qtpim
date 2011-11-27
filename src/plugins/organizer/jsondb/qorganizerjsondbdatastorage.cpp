@@ -185,6 +185,36 @@ void QOrganizerJsonDbDataStorage::initNotification()
     clearRequestData();
 }
 
+QString QOrganizerJsonDbDataStorage::alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error)
+{
+    if (itemId->isNull())
+        return QString();
+    initRequestData(AlarmId, 0, error);
+    m_itemIds.append(*itemId);
+    processRequest();
+    QString ret = m_alarmId;
+    clearRequestData();
+    return ret;
+}
+
+void QOrganizerJsonDbDataStorage::saveAlarm(const QOrganizerItem *item, const QString *alarmUuid, QOrganizerManager::Error *error)
+{
+    initRequestData(SaveAlarm, 0, error);
+    m_items.append(*item);
+    if (!alarmUuid->isEmpty())
+        m_alarmId = *alarmUuid;
+    processRequest();
+    clearRequestData();
+}
+
+void QOrganizerJsonDbDataStorage::removeAlarm(const QString *alarmUuid, QOrganizerManager::Error *error)
+{
+    initRequestData(RemoveAlarm, 0, error);
+    m_alarmId = *alarmUuid;
+    processRequest();
+    clearRequestData();
+}
+
 void QOrganizerJsonDbDataStorage::run()
 {
     m_waitMutex = new QMutex();
@@ -281,6 +311,15 @@ void QOrganizerJsonDbDataStorage::handleRequest()
     case RegisterNotification:
         handleRegisterNotificationRequest();
         break;
+    case AlarmId:
+        handleAlarmIdRequest();
+        break;
+    case SaveAlarm:
+        handleSaveAlarmRequest();
+        break;
+    case RemoveAlarm:
+        handleRemoveAlarmRequest();
+        break;
     default:
         break;
     }
@@ -326,6 +365,15 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         break;
     case RegisterNotification:
         handleRegisterNotificationResponse(error);
+        break;
+    case AlarmId:
+        handleAlarmIdResponse(error, object);
+        break;
+    case SaveAlarm:
+        handleSaveAlarmResponse(error);
+        break;
+    case RemoveAlarm:
+        handleRemoveAlarmResponse(error);
         break;
     case Invalid:
         // no active request at the moment, internal variables have been cleared and some pointers have
@@ -727,6 +775,82 @@ QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const 
     return m_converter.jsondbErrorToOrganizerError (jsonErrorCode);
 }
 
+void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
+{
+    //jsondb query [?type="com.nokia.mt.alarm-daemon.Alarm"][?eventUuid="<m_itemIds[0]>"][=_uuid]
+    QString alarmIdQuery = QStringLiteral("[?") + JsonDbString::kTypeStr + QStringLiteral("=\"") + QOrganizerJsonDbStr::Alarm + QStringLiteral("\"]");
+    alarmIdQuery += QStringLiteral("[?") + QOrganizerJsonDbStr::AlarmEventUuid + QStringLiteral("=\"");
+    alarmIdQuery += m_itemIds[0].toString().remove(QOrganizerJsonDbStr::ManagerName);
+    alarmIdQuery += QStringLiteral("\"]");
+    alarmIdQuery += ITEM_ID_RESULT_STRING;
+    int trId = m_jsonDb->query(alarmIdQuery);
+    m_transactionIds.insert(trId, 0);
+}
+
+void QOrganizerJsonDbDataStorage::handleAlarmIdResponse(QOrganizerManager::Error error, const QVariant &object)
+{
+    QVariantList jsonDbObjectList;
+    if (QOrganizerManager::NoError == error && !object.isNull()) {
+        jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
+        if (jsonDbObjectList.size() == 1)
+            m_alarmId = jsonDbObjectList.at(0).toString();
+        else if (jsonDbObjectList.size() > 1) {
+            m_alarmId = jsonDbObjectList.at(0).toString();
+            *m_error = QOrganizerManager::InvalidDetailError;
+            qWarning("More than one alarm for one event!");
+        }
+    }
+    m_syncWaitCondition.wakeAll();
+}
+
+void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
+{
+    bool requestSent = false;
+    QVariantMap jsonDbAlarm;
+    if (m_converter.itemToJsondbAlarmObject(m_items.at(0), jsonDbAlarm)) {
+        int trId;
+        if (m_alarmId.isEmpty())
+            trId = m_jsonDb->create(jsonDbAlarm);
+        else {
+            jsonDbAlarm.insert(JsonDbString::kUuidStr, m_alarmId);
+            trId = m_jsonDb->update(jsonDbAlarm);
+        }
+        m_transactionIds.insert(trId, 0);
+        requestSent = true;
+    } else {
+        *m_error = QOrganizerManager::InvalidDetailError;
+    }
+    if (!requestSent)
+        m_syncWaitCondition.wakeAll();
+}
+
+void QOrganizerJsonDbDataStorage::handleSaveAlarmResponse(QOrganizerManager::Error error)
+{
+    if (error != QOrganizerManager::NoError)
+        *m_error = error;
+    m_syncWaitCondition.wakeAll();
+}
+
+void QOrganizerJsonDbDataStorage::handleRemoveAlarmRequest()
+{
+    if (!m_alarmId.isEmpty()) {
+        QVariantMap jsonDbRemoveItem;
+        jsonDbRemoveItem.insert(JsonDbString::kUuidStr, m_alarmId);
+        int trId = m_jsonDb->remove(jsonDbRemoveItem);
+        m_transactionIds.insert(trId, 0);
+    } else {
+        *m_error = QOrganizerManager::InvalidDetailError;
+        m_syncWaitCondition.wakeAll();
+    }
+}
+
+void QOrganizerJsonDbDataStorage::handleRemoveAlarmResponse(QOrganizerManager::Error error)
+{
+    if (QOrganizerManager::NoError != error)
+        *m_error = error;
+    m_syncWaitCondition.wakeAll();
+}
+
 void QOrganizerJsonDbDataStorage::processRequest()
 {
     emit requestInitialized();
@@ -754,6 +878,7 @@ void QOrganizerJsonDbDataStorage::initRequestData(RequestType requestType, QMap<
     m_removeItemCollectionIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
+    m_alarmId.clear();
 }
 
 void QOrganizerJsonDbDataStorage::clearRequestData()
@@ -771,6 +896,7 @@ void QOrganizerJsonDbDataStorage::clearRequestData()
     m_removeItemCollectionIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
+    m_alarmId.clear();
 }
 
 #include "moc_qorganizerjsondbdatastorage.cpp"

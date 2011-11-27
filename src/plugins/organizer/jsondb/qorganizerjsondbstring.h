@@ -88,19 +88,11 @@ public:
     const static QString ItemLocationLongitude;
 
     //Item reminder properties
+    const static QString ItemReminder;
     const static QString ItemReminderSecBeforeStart;
     const static QString ItemReminderRepCount;
     const static QString ItemReminderRepDelay;
-    //Item audible remibder
-    const static QString ItemAudibleReminderDataUrl;
-    //Item email reminder
-    const static QString ItemEmailReminderSubject;
-    const static QString ItemEmailReminderBody;
-    const static QString ItemEmailReminderAttachments;
-    const static QString ItemEmailReminderRecipients;
-    //Item visual reminder
-    const static QString ItemVisualReminderMessage;
-    const static QString ItemVisualReminderDataUrl;
+    const static QString ItemReminderDataUrl;
 
     //Event item
     const static QString Event;
@@ -163,6 +155,17 @@ public:
     const static QString RsvpResponseRequirement;
     const static QString RsvpResponseDate;
     const static QString RsvpResponseDeadline;
+
+    // Alarm Jsondb schema
+    const static QString Alarm;
+    const static QString AlarmISODate;
+    const static QString AlarmSnoozeTime;
+    const static QString AlarmSnoozeCount;
+    const static QString AlarmIdentifier;
+    const static QString AlarmTitle;
+    const static QString AlarmDescription;
+    const static QString AlarmEventUuid;
+    const static QString AlarmCalenderIdentifier;
 
     //warning string
     const static QString WarningMoreItemDelete;

@@ -78,17 +78,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
 // call-back function templates for list properties
-/*!
-    \internal
- */
 template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
 static void list_property_append(QDeclarativeListProperty<T> *, T *)
 {
 }
 
-/*!
-    \internal
- */
 template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
 static int list_property_count(QDeclarativeListProperty<T> *property)
 {
@@ -99,9 +93,6 @@ static int list_property_count(QDeclarativeListProperty<T> *property)
         return 0;
 }
 
-/*!
-    \internal
- */
 template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
 static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
 {
@@ -112,9 +103,6 @@ static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
         return 0;
 }
 
-/*!
-    \internal
- */
 template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
 static void list_property_clear(QDeclarativeListProperty<T> *)
 {

@@ -115,7 +115,7 @@ Item {
                 }
             }
             MediaButton {
-                text: "Add Phone";
+                text: "+ Phone";
                 onClicked: {
                         var detail = Qt.createQmlObject(
                             "import QtContacts 5.0;" +
@@ -148,11 +148,55 @@ Item {
                 }
             }
             MediaButton {
-                text: "Add Email";
+                text: "+ Email";
                 onClicked: {
                         var detail = Qt.createQmlObject(
                             "import QtContacts 5.0;" +
                             "EmailAddress {emailAddress: ''}", contact);
+                        contact.addDetail(detail);
+                    }
+            }
+
+            Text {
+                width: normalView.width - 6;
+                height: 30
+                text: "Extended Details"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                color: "white";
+                font.weight: Font.Bold
+            }
+            Column {
+                Repeater {
+                    model: contact ? contact.extendedDetails : []
+                    delegate:
+                        Column {
+                            FieldRow {
+                                width: normalView.width
+                                label: "Name"
+                                value: modelData.name
+                                onBlur: {
+                                            modelData.setValue("Name", newValue);
+                                    }
+                            }
+                            FieldRow {
+                                width: normalView.width
+                                label: "Data"
+                                value: modelData.data
+                                onBlur: {
+                                            modelData.setValue("Data", newValue);
+                                    }
+                            }
+                        }
+                }
+            }
+            MediaButton {
+                text: "+ Extended";
+                width: normalView.width
+                onClicked: {
+                        var detail = Qt.createQmlObject(
+                            "import QtContacts 5.0;" +
+                            "ExtendedDetail {}", contact);
                         contact.addDetail(detail);
                     }
             }

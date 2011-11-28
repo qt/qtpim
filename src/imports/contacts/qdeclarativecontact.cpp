@@ -752,6 +752,22 @@ QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
     return getDetail<QDeclarativeContactExtendedDetail>(QDeclarativeContactDetail::ExtendedDetail);
 }
 
+/*!
+    \qmlproperty list<ExtendedDetail> Contact::extendedDetails
+
+    This property holds the extended details of the Contact object.
+*/
+QDeclarativeListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
+{
+    return QDeclarativeListProperty<QDeclarativeContactExtendedDetail>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_count<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_at<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_clear<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>);
+}
+
 // call-back functions for list property
 
 /*!

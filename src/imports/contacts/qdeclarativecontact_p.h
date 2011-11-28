@@ -95,6 +95,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
@@ -154,6 +155,7 @@ public:
     QDeclarativeContactHobby*  hobby();
     QDeclarativeContactPersonId* personid();
     QDeclarativeContactExtendedDetail*  extendedDetail();
+    QDeclarativeListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
 
 protected:
     bool m_modified;

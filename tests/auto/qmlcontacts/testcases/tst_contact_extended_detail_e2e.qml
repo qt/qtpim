@@ -368,6 +368,81 @@ TestCase {
         compare(fetchedExtendedDetail.data, myMapData, "extendDetail.data");
     }
 
+    Contact {
+        id: contactWithThreeExtendedDetails
+        ExtendedDetail {
+            name: "First"
+            data: 1
+        }
+        ExtendedDetail {
+            name: "Second"
+            data: 2
+        }
+        ExtendedDetail {
+            name: "Third"
+            data: 3
+        }
+    }
+
+    function test_extendedDetailsListProperty_multipleDetails()
+    {
+        var fetchedContact = saveAndFetchContact(contactWithThreeExtendedDetails);
+        var fetchedExtendedDetails = fetchedContact.extendedDetails;
+        compare(fetchedExtendedDetails.length, 3, "extendedDetails.length");
+        compare(fetchedExtendedDetails[0], fetchedContact.extendedDetail, "extendedDetail == extendedDetails[0]");
+        compareExtendedDetails(fetchedExtendedDetails[0], contactWithThreeExtendedDetails.extendedDetails[0]);
+        compareExtendedDetails(fetchedExtendedDetails[1], contactWithThreeExtendedDetails.extendedDetails[1]);
+        compareExtendedDetails(fetchedExtendedDetails[2], contactWithThreeExtendedDetails.extendedDetails[2]);
+    }
+
+    Contact {
+        id: contactWithOneExtendedDetail
+        ExtendedDetail {
+            name: "First"
+            data: 1
+        }
+    }
+
+    function test_extendedDetailsListProperty_oneDetail()
+    {
+        var fetchedContact = saveAndFetchContact(contactWithOneExtendedDetail);
+        var fetchedExtendedDetails = fetchedContact.extendedDetails;
+        compare(fetchedExtendedDetails.length, 1, "extendedDetails.length");
+        compare(fetchedExtendedDetails[0], fetchedContact.extendedDetail, "extendedDetail == extendedDetails[0]");
+        compareExtendedDetails(fetchedExtendedDetails[0], contactWithOneExtendedDetail.extendedDetail);
+    }
+
+    Contact {
+        id: contactWithoutExtendedDetails
+    }
+
+    function test_extendedDetailsListProperty_noDetails()
+    {
+        var fetchedExtendedDetails = saveAndFetchContact(contactWithoutExtendedDetails).extendedDetails;
+        compare(fetchedExtendedDetails.length, 0, "extendedDetails.length");
+        verify(!fetchedExtendedDetails[0], "extendedDetails[0] is undefined");
+    }
+
+    Contact {
+        id: contactWithTwoExtendedDetails
+        ExtendedDetail {
+            name: "First"
+            data: 1
+        }
+        ExtendedDetail {
+            name: "Second"
+            data: 2
+        }
+    }
+
+    function test_extendedDetailsListProperty_removing_one_detail()
+    {
+        var fetchedExtendedDetails = saveAndFetchContact(contactWithTwoExtendedDetails).extendedDetails;
+        compare(fetchedExtendedDetails.length, 2, "extendedDetails.length");
+        contactWithTwoExtendedDetails.removeDetail(contactWithTwoExtendedDetails.extendedDetails[1])
+        compare(contactWithTwoExtendedDetails.extendedDetails.length, 1, "extendedDetails.length");
+    }
+
     // TODO: Test more QML and Javascript types.
 
     function saveAndFetch(contact)
@@ -385,8 +460,29 @@ TestCase {
         return modelForSaveAndFetch.contacts[0].extendedDetail;
     }
 
+    function saveAndFetchContact(contact)
+    {
+        testHelper.model = modelForSaveAndFetch;
+
+        contactsChangedSpy.target = modelForSaveAndFetch;
+        contactsChangedSpy.clear();
+
+        modelForSaveAndFetch.saveContact(contact);
+        waitForContactsChanged();
+
+        modelForSaveAndFetch.fetchContacts([]);
+        waitForContactsChanged();
+        return modelForSaveAndFetch.contacts[0];
+    }
+
     function waitForContactsChanged() {
         contactsChangedSpy.wait();
+    }
+
+    function compareExtendedDetails(actual, expected)
+    {
+        compare(actual.name, expected.name, "name")
+        compare(actual.data, expected.data, "data")
     }
 
     property Component component

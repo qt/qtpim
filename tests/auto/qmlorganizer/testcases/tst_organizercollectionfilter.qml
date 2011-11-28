@@ -81,6 +81,7 @@ Rectangle {
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
                 var debugFlag = 0;
+                var waitTime = 400;
                 console.log("test_collectionFilter test start! :" + managerName);
                 var model = Qt.createQmlObject(
                         "import QtOrganizer 5.0;"
@@ -107,9 +108,15 @@ Rectangle {
                         "import QtTest 1.0;"
                         + "SignalSpy {id : organizerChangedSpy;}"
                         , test);
+                var organizerCollectionChangedSpy = Qt.createQmlObject(
+                        "import QtTest 1.0;"
+                        + "SignalSpy {id : organizerChangedSpy;}"
+                        , test);
 
                 organizerChangedSpy.target = model;
-                organizerChangedSpy.signalName = "collectionsChanged";
+                organizerChangedSpy.signalName = "modelChanged";
+                organizerCollectionChangedSpy.target = model;
+                organizerCollectionChangedSpy.signalName = "collectionsChanged";
                 utility.model = model;
                 utility.spy = organizerChangedSpy;
                 utility.empty_calendar();
@@ -120,7 +127,7 @@ Rectangle {
                 //Let's wait for the model to be up-to-date
                 var count = 0;
                 do {
-                    organizerChangedSpy.wait(400);
+                    organizerCollectionChangedSpy.wait(waitTime);
                     count ++;
                     verify(count <= 10)
                 } while (model.collections.length < collectionLegnth + 1)
@@ -130,17 +137,9 @@ Rectangle {
                 var savedCollection = model.collections[model.collections.length - 1];
                 utility.debug("New collection id :" + savedCollection.collectionId, debugFlag);
                 event.collectionId = savedCollection.collectionId;
-                organizerChangedSpy.signalName = "modelChanged";
                 model.saveItem(event);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
+                utility.waiting_model_signal(1);
 
-                model.update();
                 var fetchlist = model.items;
                 compare(model.itemCount, 1)
                 var savedEvent = fetchlist[0];
@@ -150,113 +149,47 @@ Rectangle {
                 //Change collection filter id
                 collectionFilter.ids = [event.collectionId];
                 model.filter = collectionFilter;
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-
-                model.update();
+                utility.waiting_model_signal(1);
                 compare(model.itemCount, 1)
 
                 //default collection
-                //collectionFilter.ids = [model.defaultCollection().collectionId];
                 utility.debug("default collection id :" + model.defaultCollection().collectionId, debugFlag);
                 var modelCollectionFilter = model.filter;
-                organizerChangedSpy.signalName = "collectionsChanged";
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId];
-
-                count = 0;
-                do {
-                    utility.debug("175 line item count" + model.itemCount, debugFlag);
-                    organizerChangedSpy.wait();
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount != 0)
+                utility.waiting_model_signal(0);
 
                 compare(model.itemCount, 0)
                 //save event to default collection
                 event.collectionId = model.defaultCollection().collectionId;
-                organizerChangedSpy.signalName = "modelChanged";
                 model.saveItem(event);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    utility.debug("191 line item count" + model.itemCount, debugFlag);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-                compare(model.itemCount, 1)
+                utility.waiting_model_signal(1);
 
                 //empty ides:
                 modelCollectionFilter.ids = [];
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount == 1)
+                utility.waiting_model_signal(0);
                 compare(model.itemCount, 0)
 
                 //remove collection filter or set empty filter
                 model.filter = null;
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    utility.debug("count after save item :" + model.itemCount, debugFlag);
-                    verify(model.itemCount <= 2)
-                    verify(count <= 10)
-                } while (model.itemCount < 2)
-
+                utility.waiting_model_signal(2);
                 compare(model.itemCount, 2);
 
                 //reset back filter
-                organizerChangedSpy.signalName = "modelChanged";
                 collectionFilter = Qt.createQmlObject(data.code, test);
                 collectionFilter.ids = [event.collectionId];
                 model.filter = collectionFilter;
-                count = 0;
-                do {
-                    utility.debug("228 line item count" + model.itemCount, debugFlag);
-                    organizerChangedSpy.wait();
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-
+                utility.waiting_model_signal(1);
                 compare(model.itemCount, 1);
 
                 //set more collection ids
                 modelCollectionFilter = model.filter
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId, savedCollection.collectionId];
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    utility.debug("244 count after wait :" + model.itemCount, debugFlag);
-                    verify(model.itemCount <= 2)
-                    verify(count <= 10)
-                } while (model.itemCount < 2)
-
+                utility.waiting_model_signal(2);
                 compare(model.itemCount, 2);
 
                 //One invalid collection id
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId, "12345666666",savedCollection.collectionId];
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    utility.debug("257 count after wait :" + model.itemCount, debugFlag);
-                    verify(model.itemCount <= 2)
-                    verify(count <= 10)
-                } while (model.itemCount < 2)
-
+                utility.waiting_model_signal(2);
                 compare(model.itemCount, 2);
             }
         }

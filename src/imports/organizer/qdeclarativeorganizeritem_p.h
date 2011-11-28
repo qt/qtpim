@@ -266,6 +266,9 @@ class QDeclarativeOrganizerNote : public QDeclarativeOrganizerItem
 
 public:
     explicit QDeclarativeOrganizerNote(QObject *parent = 0);
+
+Q_SIGNALS:
+    void valueChanged();
 };
 
 

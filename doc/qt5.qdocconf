@@ -12,9 +12,9 @@ headerdirs  += ..
 sourcedirs  += .. \
                ../../doc/src
 
-exampledirs += ../.. \
-               ../../doc/src \
-               ../../examples
+exampledirs += .. \
+               ../doc/src \
+               ../examples
 
 imagedirs   += ../../doc/src/images \
                ../../examples

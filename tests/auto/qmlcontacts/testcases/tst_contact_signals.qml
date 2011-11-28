@@ -204,7 +204,7 @@ TestCase {
 
     function test_contact_extended_detail_change_data_emits_signal()
     {
-        expectSignalFromObject("contactChanged", contactWithExtendedDetail1);
+        listenToSignalFromObject("contactChanged", contactWithExtendedDetail1);
         contactWithExtendedDetail1.extendedDetail.data = "new data";
         verifySignalReceived();
     }

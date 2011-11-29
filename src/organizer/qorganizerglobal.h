@@ -84,6 +84,5 @@
 
 #define QTORGANIZER_VERSION_NAME "com.nokia.qt.organizer.api.version"
 #define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.organizer.implementation.version"
-#define QTORGANIZER_VERSION 1
 
 #endif

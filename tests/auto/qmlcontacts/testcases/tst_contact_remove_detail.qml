@@ -65,7 +65,7 @@ TestCase {
     }
 
     function test_contact_remove_detail_emits_signal() {
-        expectSignalFromObject("contactChanged", contact2);
+        listenToSignalFromObject("contactChanged", contact2);
         contact2.removeDetail(contact2Name);
         verifySignalReceived();
     }
@@ -115,7 +115,7 @@ TestCase {
     }
 
     function test_contact_remove_one_of_multiple_details_emits_signal() {
-        expectSignalFromObject("contactChanged", contact5);
+        listenToSignalFromObject("contactChanged", contact5);
         contact5.removeDetail(contact5PhoneNumber1);
         verifySignalReceived();
     }
@@ -132,7 +132,7 @@ TestCase {
 
     function test_contact_remove_multiple_details_emits_signal() {
         contact6.removeDetail(contact6PhoneNumber1);
-        expectSignalFromObject("contactChanged", contact6);
+        listenToSignalFromObject("contactChanged", contact6);
         contact6.removeDetail(contact6PhoneNumber2);
         verifySignalReceived();
     }
@@ -148,7 +148,7 @@ TestCase {
     function test_contact_modify_detail_already_removed_emits_no_signal() {
         var detail = contact7.detail(ContactDetail.Name);
         contact7.removeDetail(detail);
-        expectSignalFromObject("contactChanged", contact7);
+        listenToSignalFromObject("contactChanged", contact7);
         detail.firstName = "new";
         verifyNoSignalReceived();
     }
@@ -162,10 +162,6 @@ TestCase {
     }
 
     function listenToSignalFromObject(signalName, object) {
-        expectSignalFromObject(signalName, object);
-    }
-
-    function expectSignalFromObject(signalName, object) {
         spy.target = object;
         spy.signalName = signalName;
         spy.clear();

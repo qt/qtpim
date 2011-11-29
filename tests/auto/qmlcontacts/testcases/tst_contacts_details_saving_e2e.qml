@@ -43,7 +43,7 @@ import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
 
-TestCase {
+ContactsSavingTestCase {
     name: "ContactsDetailsSavingE2ETests"
     id: contactsDetailsSavingE2ETests
 
@@ -343,31 +343,5 @@ TestCase {
         waitForContactsChanged();
         compare(model.contacts.length, 1, "Unexpected amount of contacts in model after updating contact.")
         contact = model.contacts[0]
-    }
-
-    property SignalSpy spy
-
-    function initTestForModel(model) {
-        spy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsDetailsSavingE2ETests);
-        spy.target = model;
-        spy.signalName = "contactsChanged"
-    }
-
-    function waitForContactsChanged() {
-        spy.wait();
-    }
-
-    function emptyContacts(model) {
-        var count = model.contacts.length
-        for (var i = 0; i < count; i++) {
-            var id = model.contacts[0].contactId
-            model.removeContact(id)
-            spy.wait()
-        }
-        compare(model.contacts.length, 0, "model is empty")
     }
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -26,44 +26,45 @@
 ****************************************************************************/
 
 /*!
-    \title QML Contacts Plugin
-    QML Support for the QtPim Module Contacts API.
-
     \group qml-contacts
     \ingroup qtpim
     \ingroup qtpim-qml
+    \title Contacts QML Plugin
+    QML Support for the QtPim Module Contacts API.
 
     \page qml-contacts.html
+
     \title Contacts QML Plugin
 
     \brief A QML plugin for the QtPim Module Contacts API.
-
-
 
     \section1 Overview
 
     The identifying string for this component is \i {"QtContacts"}.
     Use this in the QML \i {import} statement.
 
-    The Contacts QML plugin supplies filters to search for contacts
-    with particular values for various properties in the contact details. The Contact itself
-    is represented by a model called a \l {ContactModel}.
+    The Contacts API enables client to search for contacts data from local backends and use
+    filters to get only the relevant results. The QML Contacts Plugin delivers this capability in
+    easy to use form.
+
+    \section2 Contact Model
+    The Contact itself is represented by a model called a \l {ContactModel}.
     This model supplies a rich selection of properties to display or to use
-    as filter criteria. We can also construct a series of filters and combine
-    them using the \l {IntersectionFilter} and \l {UnionFilter}
-    to represent a logical 'and' and 'or' of the results. Other properties also give
+    as filter criteria. The model is then used to perform requests on a contacts store.
+
+    \section2 Filters
+    User of the API can construct a series of filters and combine them
+    using the \l {IntersectionFilter} and \l {UnionFilter}
+    to represent a logical 'and' and 'or' of the results. There are also other properties that give
     control over the filter logic, such as \l {DetailRangeFilter::rangeFlags} {RangeFlags}
     and the \l {DetailFilter::matchFlags}{MatchFlags}.
 
-    \section2 ContactModel element
-
-    The \l ContactModel element is used to perform the requests on a contacts store.
     As an example consider the follow QML code which has a \l ContactModel element
     containing a filter and a list of sort orders. The contacts will be restricted
-    to those living in Australia who are either male or born between 1970 and 1984.
+    to those living in Finland who are either male or born between 1970 and 1984.
 
-    The list of contacts in this ContactModel will firstly sort on the contacts' organization name
-    and then sort on the contacts' first name.
+    The list of contacts in this ContactModel will be first sorted on the contacts' organization name
+    and then on the contacts' first name.
 
     \code
         import QtContacts 5.0
@@ -76,7 +77,7 @@
                 DetailFilter {
                     detail:ContactDetail.Address
                     field: Address.Country
-                    value: "Australia"
+                    value: "Finland"
                 }
                 UnionFilter {
                     DetailRangeFilter {
@@ -109,9 +110,10 @@
 
     \section2 Contact element
 
-    The \l {Contact} element represents a single contact instance from a the contacts store.
-    All contact details are organized as group properties. The following snippet shows how
-    you can construct a Contact object in QML:
+    The \l {Contact} element represents a single contact instance from the contacts store.
+    All contact details are organized as group properties.
+
+    The following snippet shows how you can construct a Contact object in QML:
     \code
 
     Rectangle {
@@ -163,7 +165,6 @@
             }
         }
 
-
         Column {
             spacing:4
 
@@ -186,9 +187,16 @@
 
     \endcode
 
-    \section1 Contacts Elements
+    \section1 Reference documentation
 
-    \annotatedlist  qml-contacts
+    \section2 Main Classes
+    \annotatedlist qml-contacts-main
+
+    \section2 Detail Leaf Classes
+    \annotatedlist qml-contacts-details
+
+    \section2 Item matching and filtering
+    \annotatedlist qml-contacts-filters
 
 */
 

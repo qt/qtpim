@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -48,7 +48,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The Filter element is used as a property of ContactModel, to allow
    selection of contacts which have certain details or properties.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-main
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -79,7 +80,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass ActionFilter QDeclarativeContactActionFilter
    \brief The ActionFilter element provides a filter based around an action availability criterion.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -96,7 +98,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass ChangeLogFilter QDeclarativeContactChangeLogFilter
    \brief The ChangeLogFilter element provides a filter based around a contact timestamp criterion.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -124,7 +127,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass DetailFilter QDeclarativeContactDetailFilter
    \brief The \l DetailFilter element provides a filter based around a detail value criterion.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -198,7 +202,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
 
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -256,7 +261,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass IntersectionFilter QDeclarativeContactIntersectionFilter
    \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -274,7 +280,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass UnionFilter QDeclarativeContactUnionFilter
    \brief The UnionFilter element provides a filter which unions the results of other filters.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -291,7 +298,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass IdFilter QDeclarativeContactLocalIdFilter
    \brief The IdFilter element provides a filter based around a list of contact ids.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 
@@ -309,7 +317,9 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass RelationshipFilter QDeclarativeContactRelationshipFilter
    \brief The RelationshipFilter element provides a filter based around relationship criteria.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
+
 
    This element is part of the \bold{QtContacts} module.
 
@@ -349,7 +359,8 @@ QTCONTACTS_BEGIN_NAMESPACE
    \qmlclass InvalidFilter QDeclarativeContactInvalidFilter
    \brief the InvalidFilter element provides a filter which will never match any contacts.
 
-   \ingroup qml-contacts
+   \ingroup qml-contacts-filters
+   \inqmlmodule QtContacts
 
    This element is part of the \bold{QtContacts} module.
 

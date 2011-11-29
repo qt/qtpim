@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -49,7 +49,8 @@
 /*!
    \qmlclass ContactDetail QDeclarativeContactDetail
    \brief The ContactDetail element represents a single, complete detail about a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-main
+   \inqmlmodule QtContacts
 
    \sa QContactDetail
 
@@ -568,7 +569,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Address QDeclarativeContactAddress
    \brief The Address element contains an address of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    The fields in the Address element are based on the segments
    of the ADR property of a Versit vCard file.
@@ -637,7 +639,9 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Anniversary  QDeclarativeContactAnniversary
    \brief The Anniversary element contains an anniversary of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
+
 
    Anniversary element contains the following field types:
    \list
@@ -685,7 +689,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Avatar  QDeclarativeContactAvatar
    \brief The Avatar element contains avatar URLs of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Avatar element contains the following field types:
    \list
@@ -712,7 +717,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Birthday QDeclarativeContactBirthday
    \brief The Birthday element contains a birthday of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Birthday element contains the following field types:
    \list
@@ -732,7 +738,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass DisplayLabel QDeclarativeContactDisplayLabel
    \brief The DisplayLabel element contains the (possibly synthesized) display label of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    DisplayLabel element contains the following field types:
    \list
@@ -753,7 +760,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass EmailAddress QDeclarativeContactEmailAddress
    \brief The EmailAddress element contains an email address of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    EmailAddress element contains the following field types:
    \list
@@ -774,7 +782,9 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Family QDeclarativeContactFamily
    \brief The Family element contains names of family members of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
+
 
    Family element contains the following field types:
    \list
@@ -802,7 +812,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \qmlclass Favorite QDeclarativeContactFavorite
    \brief The Favorite element indicates if a contact is a favorite contact as well as the
    position it should appear in an ordered list of favorites.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Favorite element contains the following field types:
    \list
@@ -830,7 +841,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Gender QDeclarativeContactGender
    \brief The Gender element contains the gender of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Gender element contains the following field types:
    \list
@@ -856,7 +868,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass GeoLocation QDeclarativeContactGeoLocation
    \brief The GeoLocation element contains a global location coordinate associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    GeoLocation element contains the following field types:
    \list
@@ -926,7 +939,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \qmlclass GlobalPresence QDeclarativeContactGlobalPresence
    \brief The GlobalPresence element provides aggregated presence information
    for a contact, synthesized or supplied by the backend.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    GlobalPresence element contains the following field types:
    \list
@@ -988,7 +1002,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Guid QDeclarativeContactGuid
    \brief The Guid element contains a globally unique Id of a contact, for use in synchronization with other datastores.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Guid element contains the following field types:
    \list
@@ -1008,7 +1023,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Hobby QDeclarativeContactHobby
    \brief The Hobby element contains a hobby of the contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Hobby element contains the following field types:
    \list
@@ -1028,7 +1044,9 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Name QDeclarativeContactName
    \brief The Name element contains a name of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
+
 
    Name element contains the following field types:
    \list
@@ -1079,7 +1097,9 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Nickname QDeclarativeContactNickname
    \brief The Nickname element contains a nickname of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
+
 
    Nickname element contains the following field types:
    \list
@@ -1100,7 +1120,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Note QDeclarativeContactNote
    \brief The Note element contains a note associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Note element contains the following field types:
    \list
@@ -1121,7 +1142,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass OnlineAccount QDeclarativeContactOnlineAccount
    \brief The OnlineAccount element contains a note associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    OnlineAccount element contains the following field types:
    \list
@@ -1168,7 +1190,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \qmlclass Organization QDeclarativeContactOrganization
    \brief The Organization element provides details about an
    organization that the contact is either a part of, or stands for.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Organization element contains the following field types:
    \list
@@ -1237,7 +1260,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass PhoneNumber QDeclarativeContactPhoneNumber
    \brief The PhoneNumber element provides a phone number of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    PhoneNumber element contains the following field types:
    \list
@@ -1280,7 +1304,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Presence QDeclarativeContactPresence
    \brief The Presence element provides presence information for an online account of a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Presence element contains the following field types:
    \list
@@ -1344,7 +1369,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Ringtone QDeclarativeContactRingtone
    \brief The Ringtone element provides a ringtone associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Ringtone element contains the following field types:
    \list
@@ -1377,7 +1403,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass SyncTarget QDeclarativeContactSyncTarget
    \brief The SyncTarget element provides a sync target for a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    SyncTarget element contains the following field types:
    \list
@@ -1397,7 +1424,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Tag QDeclarativeContactTag
    \brief The Tag element provides a contains a tag associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Tag element contains the following field types:
    \list
@@ -1416,7 +1444,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Timestamp QDeclarativeContactTimestamp
    \brief The Timestamp element contains the creation and last-modified timestamp associated with the contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Timestamp element contains the following field types:
    \list
@@ -1441,7 +1470,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
    \qmlclass Url QDeclarativeContactUrl
    \brief The Url element contains a url associated with a contact.
-   \ingroup qml-contacts
+   \ingroup qml-contacts-details
+   \inqmlmodule QtContacts
 
    Url element contains the following field types:
    \list
@@ -1472,7 +1502,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /*!
     \qmlclass PersonID QDeclarativeContactPersonId
     \brief The PersonId element contains a unique Id of a contact This groups all together a persons contact details.
-    \ingroup qml-contacts
+    \ingroup qml-contacts-details
+    \inqmlmodule QtContacts
 
     PersonId element contains the following field types:
     \list

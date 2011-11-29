@@ -190,18 +190,26 @@ TestCase {
         compare (model.contacts.length, 3)
     }
 
-    function test_filterByDuplicateIds() {
-        // Overlapping ids
+    function test_filterByTwoOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId]
         model.filter = filter
         contactsChangedSpy.wait()
-        expectFail("", "Filtering with two identical identifiers fails at the moment.")
         compare (model.contacts.length, 1)
+    }
 
-        // Clear filter by setting null
-        model.filter = null
-        waitForContactsChanged()
-        compare (model.contacts.length, 3)
+
+    function test_filterByTwoCouplesOfOverlappingIds() {
+        filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[1].contactId]
+        model.filter = filter
+        contactsChangedSpy.wait()
+        compare (model.contacts.length, 2)
+    }
+
+    function test_filterByAlternatingOverlappingIds() {
+        filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[0].contactId]
+        model.filter = filter
+        contactsChangedSpy.wait()
+        compare (model.contacts.length, 2)
     }
 
 }

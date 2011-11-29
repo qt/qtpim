@@ -700,14 +700,13 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
             QContactLocalIdFilter idFilter = (QContactLocalIdFilter) filter;
             QList<QContactLocalId> ids = idFilter.ids();
             if (!ids.isEmpty()) {
+                newJsonDbQuery.append("[?" + JsonDbString::kUuidStr +
+                                      " in [");
                 foreach (QContactLocalId id, ids) {
-                    if (ids.first()!=id)
-                        newJsonDbQuery.append(",");
-                    else
-                        newJsonDbQuery.append("[?" + JsonDbString::kUuidStr +
-                                              " in [");
                     newJsonDbQuery.append("\"" + convertId(id) + "\"");
+                    newJsonDbQuery.append(",");
                 }
+                newJsonDbQuery.chop(1);
                 newJsonDbQuery.append("]]");
             }
             break;

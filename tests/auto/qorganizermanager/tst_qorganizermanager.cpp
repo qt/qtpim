@@ -211,6 +211,9 @@ private slots:
 
     void testRsvp_data() { addManagers(); }
     void testRsvp();
+
+    void testClassification_data() { addManagers(); }
+    void testClassification();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -4968,6 +4971,40 @@ void tst_QOrganizerManager::testRsvp()
     QVERIFY(item.details<QOrganizerEventRsvp>().count() == 0);
 }
 
+void tst_QOrganizerManager::testClassification()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    if (!mgr->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemClassification::DefinitionName))
+        QSKIP("Classification -detail not supported by this backend.");
+
+    // Save item and verify
+    QOrganizerEvent event;
+    QOrganizerItemClassification classification;
+    classification.setClassification(QOrganizerItemClassification::Private);
+    QVERIFY(event.saveDetail(&classification));
+    QVERIFY(mgr->saveItem(&event));
+    QOrganizerItemId id = event.id();
+    QOrganizerItem item = mgr->item(id);
+    QEXPECT_FAIL("mgr='jsondb'", "No support on jsondb backend yet", Abort);
+    QCOMPARE(1, item.details<QOrganizerItemClassification>().count());
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Update
+    classification.setClassification(QOrganizerItemClassification::Confidential);
+    QVERIFY(event.saveDetail(&classification));
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QCOMPARE(1, event.details<QOrganizerItemClassification>().size());
+    QVERIFY(item == event);//This will compare all details and their values
+
+    // Remove
+    QVERIFY(event.removeDetail(&classification));
+    QCOMPARE(0, event.details<QOrganizerItemClassification>().size());
+    QVERIFY(mgr->saveItem(&event));
+    item = mgr->item(id);
+    QVERIFY(item.details<QOrganizerItemClassification>().count() == 0);
+}
 
 #if defined(QT_NO_JSONDB)
 class errorSemanticsTester : public QObject {

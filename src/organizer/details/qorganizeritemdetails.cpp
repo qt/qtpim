@@ -2036,6 +2036,72 @@ QString QOrganizerEventRsvp::organizerEmail() const
 }
 
 /*!
+    \class QOrganizerItemClassification
+    \brief The QOrganizerItemClassification class is for defining the classification of an organizer item.
+    \inmodule QtOrganizer
+    \ingroup organizer-details
+
+    This can be used as a part of security model for the organizer.
+ */
+
+/*!
+   \variable QOrganizerItemClassification::DefinitionName
+
+   The constant string which identifies the definition of Classification-detail.
+ */
+const QString QOrganizerItemClassification::DefinitionName(QStringLiteral("Classification"));
+
+/*!
+   \variable QOrganizerItemClassification::FieldClassification
+
+    The constant key of the value which contains the classification of an item. This field does
+    not have default value.
+ */
+const QString QOrganizerItemClassification::FieldClassification(QStringLiteral("Classification"));
+
+
+/*!
+    \variable QOrganizerItemClassification::Public
+
+    The constant string for public access.
+*/
+const QString QOrganizerItemClassification::Public(QStringLiteral("PUBLIC"));
+
+/*!
+    \variable QOrganizerItemClassification::Private
+
+    The constant string for private access.
+*/
+const QString QOrganizerItemClassification::Private(QStringLiteral("PRIVATE"));
+
+/*!
+    \variable QOrganizerItemClassification::Confidential
+
+    The constant string for confidential access.
+*/
+const QString QOrganizerItemClassification::Confidential(QStringLiteral("CONFIDENTIAL"));
+
+/*!
+   \fn QOrganizerItemClassification::setClassification(const QString &classification)
+
+   Sets the classification of the item \a classification.
+ */
+void QOrganizerItemClassification::setClassification(const QString &classification)
+{
+    setValue(FieldClassification, classification);
+}
+
+/*!
+   \fn QOrganizerItemClassification::classification() const
+
+   Returns classification of the event.
+ */
+QString QOrganizerItemClassification::classification() const
+{
+    return value<QString>(FieldClassification);
+}
+
+/*!
     \class QOrganizerItemExtendedDetail
     \brief The QOrganizerItemExtendedDetail class provides the possibility to save extended details to the organizer item.
     \inmodule QtOrganizer

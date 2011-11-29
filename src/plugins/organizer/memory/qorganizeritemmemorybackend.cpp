@@ -1670,6 +1670,7 @@ QStringList QOrganizerItemMemoryEngine::supportedItemDetails(const QString &item
                      << QOrganizerItemDescription::DefinitionName
                      << QOrganizerItemComment::DefinitionName
                      << QOrganizerItemTag::DefinitionName
+                     << QOrganizerItemClassification::DefinitionName
                      << QOrganizerItemExtendedDetail::DefinitionName;
 
     if (itemType == QOrganizerItemType::TypeEvent) {

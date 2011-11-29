@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the Qt Pim module.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,33 +39,28 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILS_H
-#define QORGANIZERITEMDETAILS_H
+#ifndef QORGANIZERITEMCLASSIFICATION_H
+#define QORGANIZERITEMCLASSIFICATION_H
 
-#include <qorganizereventtime.h>
-#include <qorganizeritemcomment.h>
-#include <qorganizeritemdescription.h>
-#include <qorganizeritemdisplaylabel.h>
-#include <qorganizeritemguid.h>
-#include <qorganizeritemlocation.h>
-#include <qorganizeritemparent.h>
-#include <qorganizeritempriority.h>
-#include <qorganizeritemrecurrence.h>
-#include <qorganizeritemtag.h>
-#include <qorganizeritemtimestamp.h>
-#include <qorganizeritemtype.h>
-#include <qorganizerjournaltime.h>
-#include <qorganizertodoprogress.h>
-#include <qorganizertodotime.h>
+#include <qorganizeritemdetail.h>
 
-#include <qorganizeritemreminder.h>
-#include <qorganizeritemaudiblereminder.h>
-#include <qorganizeritememailreminder.h>
-#include <qorganizeritemvisualreminder.h>
+QTORGANIZER_BEGIN_NAMESPACE
 
-#include <qorganizeritemextendeddetail.h>
-#include <qorganizereventattendee.h>
-#include <qorganizereventrsvp.h>
-#include <qorganizeritemclassification.h>
+class Q_ORGANIZER_EXPORT QOrganizerItemClassification : public QOrganizerItemDetail
+{
+public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification, "Classification")
+    const static QString FieldClassification;
 
-#endif // QORGANIZERITEMDETAILS_H
+    const static QString Public;
+    const static QString Private;
+    const static QString Confidential;
+
+    void setClassification(const QString &classification);
+    QString classification() const;
+};
+
+QTORGANIZER_END_NAMESPACE
+
+#endif// QORGANIZERITEMCLASSIFICATION_H
+

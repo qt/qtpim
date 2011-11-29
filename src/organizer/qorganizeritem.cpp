@@ -422,7 +422,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details[i].accessConstraints();
+                detail->d->m_access = d->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -436,7 +436,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details[i].accessConstraints();
+                detail->d->m_access = d->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -450,7 +450,21 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
             if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details[i].accessConstraints();
+                detail->d->m_access = d->m_details.at(i).accessConstraints();
+                d->m_details.replace(i, *detail);
+                return true;
+            }
+        }
+        // doesn't already exist; append it.
+        d->m_details.append(*detail);
+        return true;
+    }
+
+    /* And classification.. */
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemClassification::DefinitionName) {
+        for (int i = 0; i < d->m_details.size(); i++) {
+            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
+                detail->d->m_access = d->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -466,7 +480,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
         const QOrganizerItemDetail& curr = d->m_details.at(i);
         if (detail->d->m_definitionName == curr.d->m_definitionName && detail->d->m_id == curr.d->m_id) {
             // update the detail constraints of the supplied detail
-            detail->d->m_access = d->m_details[i].accessConstraints();
+            detail->d->m_access = d->m_details.at(i).accessConstraints();
             // Found the old version.  Replace it with this one.
             d->m_details[i] = *detail;
             return true;

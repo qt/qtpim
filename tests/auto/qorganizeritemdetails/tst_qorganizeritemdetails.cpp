@@ -86,6 +86,7 @@ private slots:
 
     void attendee();
     void rsvp();
+    void classification();
 
     // custom definition testing
     void custom();
@@ -919,6 +920,46 @@ void tst_QOrganizerItemDetails::rsvp()
     QCOMPARE(0, oi.details<QOrganizerEventRsvp>().size());
 }
 
+void tst_QOrganizerItemDetails::classification()
+{
+    QOrganizerItemClassification classification;
+    QOrganizerItem oi;
+
+    QVERIFY(classification.classification().isEmpty());
+
+    // setters/getters
+    classification.setClassification(QOrganizerItemClassification::Public);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::Public);
+    classification.setClassification(QOrganizerItemClassification::Private);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::Private);
+    classification.setClassification(QOrganizerItemClassification::Confidential);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::Confidential);
+    classification.setClassification("secret custom string");
+    QVERIFY(classification.classification() == QString("secret custom string"));
+
+    // add
+    QCOMPARE(0, oi.details<QOrganizerItemClassification>().size());
+    QVERIFY(oi.saveDetail(&classification));
+    QCOMPARE(1, oi.details<QOrganizerItemClassification>().size());
+    QCOMPARE(classification, oi.detail<QOrganizerItemClassification>());
+
+    // update
+    classification.setValue(QOrganizerItemClassification::FieldClassification, "very secret custom string");
+    QVERIFY(oi.detail<QOrganizerItemClassification>() != classification);
+    QVERIFY(oi.saveDetail(&classification));
+    QCOMPARE(1, oi.details<QOrganizerItemClassification>().size());
+    QVERIFY(oi.detail<QOrganizerItemClassification>() == classification);
+
+    // try adding another, amount of details should stay the same
+    QOrganizerItemClassification classification2;
+    classification2.setClassification("2nd classification");
+    QVERIFY(oi.saveDetail(&classification2));
+    QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 1);
+
+    // remove
+    QVERIFY(oi.removeDetail(&classification2));
+    QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 0);
+}
 
 // define a custom detail to test inheritance/slicing
 class CustomTestDetail : public QOrganizerItemDetail

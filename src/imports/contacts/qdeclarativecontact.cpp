@@ -248,6 +248,7 @@ bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
 
     QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
     contactDetail->setDetail(detail->detail());
+    connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
     m_details.append(contactDetail);
 
     m_modified = true;

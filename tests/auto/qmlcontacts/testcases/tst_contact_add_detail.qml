@@ -130,10 +130,8 @@ TestCase {
     function test_contact_modify_added_detail_emits_signal() {
         contact5.addDetail(contact5Name);
         var detail = contact5.detail(ContactDetail.Name);
-        verify(detail);
         expectSignalFromObject("contactChanged", contact5);
         detail.firstName = "new";
-        expectFail("", "not working at the moment");
         verifySignalReceived();
     }
 

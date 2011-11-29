@@ -54,42 +54,6 @@ TestCase {
         autoUpdate: true
     }
 
-    SignalSpy {
-        id: spy
-        signalName: "contactsChanged"
-        target: model
-    }
-
-    // Init & teardown
-
-    function initTestCase() {
-        spy.wait()  // The wait is needed so the model is populated (e.g. with garbage left from previous test runs) before cleanup() is called.
-        cleanup()
-    }
-
-    function init() {
-        contact = Qt.createQmlObject(
-                  "import QtContacts 5.0;" +
-                  "Contact {}", contactsDetailsSavingE2ETests)
-    }
-
-    function cleanup() {
-        var amt = model.contacts.length
-        for (var i = 0; i < amt; i++) {
-            var id = model.contacts[0].contactId
-            model.removeContact(id)
-            spy.wait()
-        }
-        compare(model.contacts.length, 0, "Failed to clean model")
-    }
-
-    function saveAndRefreshContact() {
-        model.saveContact(contact)
-        spy.wait()
-        compare(model.contacts.length, 1, "Unexpected amount of contacts in model after updating contact.")
-        contact = model.contacts[0]
-    }
-
     // Tests
 
     Address {
@@ -350,5 +314,60 @@ TestCase {
         compare(detail.url, "http://qt.nokia.com")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], "Home", "contexts")
+    }
+
+    // Init & teardown
+
+    function initTestCase() {
+        initTestForModel(model);
+        waitForContactsChanged();
+        // The wait is needed so the model is populated
+        // (e.g. with garbage left from previous test runs)
+        // before cleanup() is called.
+        emptyContacts(model);
+    }
+
+    function init() {
+        initTestForModel(model);
+        contact = Qt.createQmlObject(
+                  "import QtContacts 5.0;" +
+                  "Contact {}", contactsDetailsSavingE2ETests)
+    }
+
+    function cleanup() {
+        emptyContacts(model);
+    }
+
+    function saveAndRefreshContact() {
+        model.saveContact(contact)
+        waitForContactsChanged();
+        compare(model.contacts.length, 1, "Unexpected amount of contacts in model after updating contact.")
+        contact = model.contacts[0]
+    }
+
+    property SignalSpy spy
+
+    function initTestForModel(model) {
+        spy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "}",
+                    contactsDetailsSavingE2ETests);
+        spy.target = model;
+        spy.signalName = "contactsChanged"
+    }
+
+    function waitForContactsChanged() {
+        spy.wait();
+    }
+
+    function emptyContacts(model) {
+        var count = model.contacts.length
+        for (var i = 0; i < count; i++) {
+            var id = model.contacts[0].contactId
+            model.removeContact(id)
+            spy.wait()
+        }
+        compare(model.contacts.length, 0, "model is empty")
     }
 }

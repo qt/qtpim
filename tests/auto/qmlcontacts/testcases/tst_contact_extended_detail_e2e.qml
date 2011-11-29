@@ -45,8 +45,7 @@ import QtContacts 5.0
 
 TestCase {
     name: "ContactsExtendedDetailE2ETests"
-
-    property SignalSpy contactsChangedSpy
+    id: contactExtendedDetailE2ETests
 
     ContactModel {
         id: modelForSaveAndFetch
@@ -447,11 +446,6 @@ TestCase {
 
     function saveAndFetch(contact)
     {
-        testHelper.model = modelForSaveAndFetch;
-
-        contactsChangedSpy.target = modelForSaveAndFetch;
-        contactsChangedSpy.clear();
-
         modelForSaveAndFetch.saveContact(contact);
         waitForContactsChanged();
 
@@ -462,11 +456,6 @@ TestCase {
 
     function saveAndFetchContact(contact)
     {
-        testHelper.model = modelForSaveAndFetch;
-
-        contactsChangedSpy.target = modelForSaveAndFetch;
-        contactsChangedSpy.clear();
-
         modelForSaveAndFetch.saveContact(contact);
         waitForContactsChanged();
 
@@ -475,38 +464,43 @@ TestCase {
         return modelForSaveAndFetch.contacts[0];
     }
 
-    function waitForContactsChanged() {
-        contactsChangedSpy.wait();
-    }
-
     function compareExtendedDetails(actual, expected)
     {
         compare(actual.name, expected.name, "name")
         compare(actual.data, expected.data, "data")
     }
 
-    property Component component
-    property ContactsTestHelper testHelper
-
     function init() {
-        component = Qt.createComponent("ContactsTestHelper.qml");
-        testHelper = component.createObject(top);
-        if (testHelper == undefined)
-            console.log("Unable to load component from " + name +  " error is ", component.errorString())
-        verify(testHelper != undefined, 'Unable to load component ' + name);
-
-        contactsChangedSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "   id: theSpy;" +
-                    "   signalName: \"contactsChanged\";" +
-                    "}",
-                    testHelper);
-     }
+        initTestForModel(modelForSaveAndFetch);
+    }
 
     function cleanup() {
-        testHelper.emptyContactsDb();
-        testHelper.destroy();
-        component.destroy();
+        emptyContacts(modelForSaveAndFetch);
+    }
+
+    property SignalSpy spy
+
+    function initTestForModel(model) {
+        spy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "}",
+                    contactExtendedDetailE2ETests);
+        spy.target = model;
+        spy.signalName = "contactsChanged"
+    }
+
+    function waitForContactsChanged() {
+        spy.wait();
+    }
+
+    function emptyContacts(model) {
+        var count = model.contacts.length
+        for (var i = 0; i < count; i++) {
+            var id = model.contacts[0].contactId
+            model.removeContact(id)
+            spy.wait()
+        }
+        compare(model.contacts.length, 0, "model is empty")
     }
 }

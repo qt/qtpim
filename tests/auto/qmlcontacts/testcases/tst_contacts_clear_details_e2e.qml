@@ -44,18 +44,12 @@ import QtTest 1.0
 import QtContacts 5.0
 
 TestCase {
-    id: testcase
     name: "ContactsClearDetailsE2ETests"
+    id: contactsClearDetailsE2ETests
 
     ContactModel {
         id: model
         autoUpdate: true
-    }
-
-    SignalSpy {
-        id: spy
-        signalName: "contactsChanged"
-        target: model
     }
 
     // Tests
@@ -163,16 +157,41 @@ TestCase {
     // Init & teardown
 
     function initTestCase() {
-        spy.wait()
+        initTestForModel(model);
+        waitForContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
-        cleanup()
+        emptyContacts(model);
+    }
+
+    function init() {
+        initTestForModel(model);
     }
 
     function cleanup() {
-        var amt = model.contacts.length
-        for (var i = 0; i < amt; i++) {
+        emptyContacts(model);
+    }
+
+    property SignalSpy spy
+
+    function initTestForModel(model) {
+        spy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "}",
+                    contactsClearDetailsE2ETests);
+        spy.target = model;
+        spy.signalName = "contactsChanged"
+    }
+
+    function waitForContactsChanged() {
+        spy.wait();
+    }
+
+    function emptyContacts(model) {
+        var count = model.contacts.length
+        for (var i = 0; i < count; i++) {
             var id = model.contacts[0].contactId
             model.removeContact(id)
             spy.wait()
@@ -181,10 +200,6 @@ TestCase {
     }
 
     // Helpers
-
-    function waitForContactsChanged() {
-        spy.wait();
-    }
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");

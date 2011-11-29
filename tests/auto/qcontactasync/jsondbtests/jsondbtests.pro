@@ -13,8 +13,6 @@ HEADERS += ../../qcontactmanagerdataholder.h
 
 #qtAddLibrary(QtTest)
 
-#QMAKE_LIBS += -Wl,-rpath,$${QT.contacts.libs}
-
 #T += contacts
 
 INCLUDEPATH += ../../

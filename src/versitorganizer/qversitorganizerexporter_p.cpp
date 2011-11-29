@@ -60,7 +60,7 @@ QVersitOrganizerExporterPrivate::QVersitOrganizerExporterPrivate(const QString& 
                 versitOrganizerDetailMappings[i].detailDefinitionName,
                 QPair<QString,QString>(
                     versitOrganizerDetailMappings[i].detailFieldName,
-                    QStringLiteral(versitOrganizerDetailMappings[i].versitPropertyName)));
+                    QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName)));
     }
 
     mPluginDetailHandlers = QVersitOrganizerPluginLoader::instance()->createOrganizerHandlers(profile);
@@ -449,7 +449,6 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
     qSort(dateList);
     foreach (const QDate& dt, dateList) {
         QString str;
-        QTime eventTime = static_cast<QOrganizerEvent>(item).startDateTime().time();
         if (dt.isValid()) {
             str = dt.toString(QLatin1String("yyyyMMdd"));
             if (!valueIsEmpty)

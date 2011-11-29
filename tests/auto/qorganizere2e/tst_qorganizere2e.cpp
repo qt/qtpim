@@ -293,9 +293,9 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(const QString &definitionNa
         QOrganizerItemEmailReminder emailReminder;
         emailReminder.setContents(QStringLiteral("Qt Rocks!!"),
                                   QStringLiteral("Qt - Cross-platform application and UI framework"),
-                                  QVariantList() << QStringLiteral("Code once")
-                                                 << QStringLiteral("Create more")
-                                                 << QStringLiteral("Deploy everywhere"));
+                                  QVariantList() << QVariant(QStringLiteral("Code once"))
+                                                 << QVariant(QStringLiteral("Create more"))
+                                                 << QVariant(QStringLiteral("Deploy everywhere")));
         emailReminder.setRecipients(QStringList() << QStringLiteral("Berlin")
                                                   << QStringLiteral("Brisbane")
                                                   << QStringLiteral("Oslo")
@@ -365,7 +365,9 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(const QString &definitionNa
     } else if (definitionName == QOrganizerItemExtendedDetail::DefinitionName) {
         QOrganizerItemExtendedDetail extendedDetail;
         extendedDetail.setName(QStringLiteral("My-Stupid-Extended-Detail"));
-        extendedDetail.setData(QVariantList() << QStringLiteral("Code once") << QStringLiteral("Create more") << QStringLiteral("Deploy everywhere"));
+        extendedDetail.setData(QVariantList() << QVariant(QStringLiteral("Code once"))
+                               << QVariant(QStringLiteral("Create more"))
+                               << QVariant(QStringLiteral("Deploy everywhere")));
         return extendedDetail;
     } else if (definitionName == QOrganizerEventAttendee::DefinitionName) {
         QOrganizerEventAttendee attendee;

@@ -58,7 +58,7 @@ QVersitOrganizerImporterPrivate::QVersitOrganizerImporterPrivate(const QString& 
         sizeof(versitOrganizerDetailMappings)/sizeof(VersitDetailMapping);
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
-                QStringLiteral(versitOrganizerDetailMappings[i].versitPropertyName),
+                QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName),
                 QPair<QString,QString>(
                     versitOrganizerDetailMappings[i].detailDefinitionName,
                     versitOrganizerDetailMappings[i].detailFieldName));

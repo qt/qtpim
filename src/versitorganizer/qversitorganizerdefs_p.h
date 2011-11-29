@@ -55,6 +55,7 @@
 //
 //
 #include <private/qversitdefs_p.h>
+#include <qversitorganizerglobal.h>
 #include <qorganizer.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -71,9 +72,9 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
 // specific field (and that detail has no other fields of interest)
 const VersitDetailMapping versitOrganizerDetailMappings[] = {
     // FIXME
-    {"SUMMARY", QOrganizerItemDisplayLabel::DefinitionName, QStringLiteral("Label")},
-    {"DESCRIPTION", QOrganizerItemDescription::DefinitionName, QStringLiteral("Description")},
-    {"UID", QOrganizerItemGuid::DefinitionName, QStringLiteral("Guid")}
+    {"SUMMARY", QOrganizerItemDisplayLabel::DefinitionName, QLatin1String("Label")},
+    {"DESCRIPTION", QOrganizerItemDescription::DefinitionName, QLatin1String("Description")},
+    {"UID", QOrganizerItemGuid::DefinitionName, QLatin1String("Guid")}
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

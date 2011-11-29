@@ -2652,7 +2652,7 @@ void tst_QOrganizerManager::signalEmission()
 
     // add one collection
     QOrganizerCollection newCollection;
-    newCollection.setMetaData(QOrganizerCollection::KeyName, QStringLiteral("a new collection"));
+    newCollection.setMetaData(QOrganizerCollection::KeyName, QVariant(QStringLiteral("a new collection")));
 
     QVERIFY(m2->saveCollection(&newCollection));
     QTRY_VERIFY(spyChanged.count() || (spyCollectionAdded.count() > 0));
@@ -2663,7 +2663,7 @@ void tst_QOrganizerManager::signalEmission()
     spyChanged.clear();
 
     // modify one collection
-    newCollection.setMetaData(QOrganizerCollection::KeyName, QStringLiteral("a new collection, modified"));
+    newCollection.setMetaData(QOrganizerCollection::KeyName, QVariant(QStringLiteral("a new collection, modified")));
 
     QVERIFY(m2->saveCollection(&newCollection));
     QTRY_VERIFY(spyChanged.count() || (spyCollectionModified.count() > 0));

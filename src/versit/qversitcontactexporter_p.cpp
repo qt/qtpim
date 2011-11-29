@@ -72,7 +72,7 @@ QVersitContactExporterPrivate::QVersitContactExporterPrivate(const QStringList& 
     for (int i = versitPropertyCount-1; i >= 0; i--) {
         mPropertyMappings.insert(
                 versitContactDetailMappings[i].detailDefinitionName,
-                QStringLiteral(versitContactDetailMappings[i].versitPropertyName));
+                QLatin1String(versitContactDetailMappings[i].versitPropertyName));
     }
 
     // Contexts mappings
@@ -80,7 +80,7 @@ QVersitContactExporterPrivate::QVersitContactExporterPrivate(const QStringList& 
     for (int i=0; i < contextCount; i++) {
         mParameterMappings.insert(
                 versitContextMappings[i].contactString,
-                QStringLiteral(versitContextMappings[i].versitString));
+                QLatin1String(versitContextMappings[i].versitString));
     }
 
     // Subtypes mappings
@@ -88,7 +88,7 @@ QVersitContactExporterPrivate::QVersitContactExporterPrivate(const QStringList& 
     for (int i=0; i < subTypeCount; i++) {
         mParameterMappings.insert(
                 versitSubTypeMappings[i].contactString,
-                QStringLiteral(versitSubTypeMappings[i].versitString));
+                QLatin1String(versitSubTypeMappings[i].versitString));
     }
 
     mPluginDetailHandlers = QVersitContactPluginLoader::instance()->createContactHandlers(profiles);

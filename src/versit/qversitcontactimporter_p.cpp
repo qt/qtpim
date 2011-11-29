@@ -91,7 +91,7 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
         sizeof(versitContactDetailMappings)/sizeof(VersitDetailMapping);
     for (int i=0; i < versitPropertyCount; i++) {
         QString versitPropertyName =
-            QStringLiteral(versitContactDetailMappings[i].versitPropertyName);
+            QLatin1Literal(versitContactDetailMappings[i].versitPropertyName);
         QPair<QString,QString> contactDetail;
         contactDetail.first =
             versitContactDetailMappings[i].detailDefinitionName;
@@ -104,7 +104,7 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
     int contextCount = sizeof(versitContextMappings)/sizeof(VersitMapping);
     for (int i=0; i < contextCount; i++) {
         mContextMappings.insert(
-            QStringLiteral(versitContextMappings[i].versitString),
+            QLatin1String(versitContextMappings[i].versitString),
             versitContextMappings[i].contactString);
     }
 
@@ -112,7 +112,7 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
     int subTypeCount = sizeof(versitSubTypeMappings)/sizeof(VersitMapping);
     for (int i=0; i < subTypeCount; i++) {
         mSubTypeMappings.insert(
-            QStringLiteral(versitSubTypeMappings[i].versitString),
+            QLatin1String(versitSubTypeMappings[i].versitString),
             versitSubTypeMappings[i].contactString);
     }
 

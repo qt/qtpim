@@ -90,17 +90,16 @@ Rectangle
                     }
                     Repeater {
                         focus: true
-                        model: calendar.organizer.items? calendar.organizer.itemIds(new Date(calendar.year,calendar.month, index - calendar.weekDay + calendar.day),
+                        model: calendar.organizer.items? calendar.organizer.itemsByTimePeriod(new Date(calendar.year,calendar.month, index - calendar.weekDay + calendar.day),
                                                          new Date(calendar.year,calendar.month, index - calendar.weekDay + calendar.day + 1))
                                                        : 0
                         Text {
                             clip: true
                             focus: true
-                            property OrganizerItem oi: calendar.organizer.item(modelData)
-                            text: "a <a href=\"#\">" + oi.displayLabel + "</a>"
+                            text: "a <a href=\"#\">" + modelData.displayLabel + "</a>"
                             onLinkActivated: {
                                 detailsView.isNewItem = false;
-                                detailsView.item = oi;
+                                detailsView.item = modelData;
                                 calendar.state = "DetailsView";
                             }
                         }

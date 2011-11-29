@@ -696,6 +696,41 @@ bool QDeclarativeOrganizerModel::containsItems(QDateTime start, QDateTime end)
 }
 
 /*!
+    \qmlmethod \qmlmethod list<OrganizerItem> OrganizerModel::itemsByTimePeriod(date start, date end)
+
+    Returns the list of organizer items between the given \a start and \a end period.
+ */
+QVariantList QDeclarativeOrganizerModel::itemsByTimePeriod(const QDateTime &start, const QDateTime &end)
+{
+    QVariantList list;
+
+    if (start.isValid() && end.isValid()) {
+        foreach (QDeclarativeOrganizerItem *item, d->m_items) {
+            if ((item->itemStartTime() <= start && item->itemEndTime() >= end)
+                || (item->itemStartTime() >= start && item->itemStartTime() <= end)
+                || (item->itemEndTime() >= start && item->itemEndTime() <= end)) {
+                list.append(QVariant::fromValue((QObject *)item));
+            }
+        }
+    } else if (start.isValid()) {
+        foreach (QDeclarativeOrganizerItem *item, d->m_items) {
+            if (item->itemEndTime() >= start)
+                list.append(QVariant::fromValue((QObject *)item));
+        }
+    } else if (end.isValid()) {
+        foreach (QDeclarativeOrganizerItem *item, d->m_items) {
+            if (item->itemStartTime() <= end)
+                list.append(QVariant::fromValue((QObject *)item));
+        }
+    } else {
+        foreach (QDeclarativeOrganizerItem *item, d->m_items)
+            list.append(QVariant::fromValue((QObject *)item));
+    }
+
+    return list;
+}
+
+/*!
     \qmlmethod OrganizerItem OrganizerModel::item(string itemId)
 
     Returns the OrganizerItem object with the given \a itemId.

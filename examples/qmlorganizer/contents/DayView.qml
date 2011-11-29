@@ -124,7 +124,7 @@ Flickable
                          focus: true
 
                          // Simple fetch ALL events on this day...and we will filter them bu hour.
-                         model: calendar.organizer.items? calendar.organizer.itemIds(new Date(calendar.year, calendar.month, calendar.day)
+                         model: calendar.organizer.items? calendar.organizer.itemsByTimePeriod(new Date(calendar.year, calendar.month, calendar.day)
                                                                                      , new Date(calendar.year, calendar.month, calendar.day+1))
                                                         : 0
 
@@ -134,13 +134,12 @@ Flickable
                                  id: itemText
                                  clip: true
                                  focus: true
-                                 property OrganizerItem oi: calendar.organizer.item(modelData)
 
                                  // Only display a link when the event starts within this hour......
-                                 text: (hourDelegateInstanceItem.rowIndex == Qt.formatTime(oi.itemStartTime, "hh")) ? "<a href=\"#\">" + oi.displayLabel + "</a>":""
+                                 text: (hourDelegateInstanceItem.rowIndex == Qt.formatTime(modelData.itemStartTime, "hh")) ? "<a href=\"#\">" + modelData.displayLabel + "</a>":""
                                  onLinkActivated: {
                                      detailsView.isNewItem = false;
-                                     detailsView.item = oi;
+                                     detailsView.item = modelData;
                                      calendar.state = "DetailsView";
                                  }
                              }
@@ -148,8 +147,8 @@ Flickable
                                  width: 15; height: 15
                                  anchors { verticalCenter: parent.verticalCenter }
                                  border { color: "black"; width: 1; }
-                                 visible: (hourDelegateInstanceItem.rowIndex == Qt.formatTime(itemText.oi.itemStartTime, "hh")) ? true : false
-                                 color: calendar.organizer.collection(itemText.oi.collectionId)? calendar.organizer.collection(itemText.oi.collectionId).color : "red"
+                                 visible: (hourDelegateInstanceItem.rowIndex == Qt.formatTime(modelData.itemStartTime, "hh")) ? true : false
+                                 color: calendar.organizer.collection(modelData.collectionId)? calendar.organizer.collection(modelData.collectionId).color : "red"
                              }
                          }
                      }

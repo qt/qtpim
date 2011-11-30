@@ -121,6 +121,7 @@ bool QDeclarativeOrganizerItemDetail::removable() const
     \o Detail.Tag
     \o Detail.EventAttendee
     \o Detail.EventRsvp
+    \o Detail.Classification
     \endlist
  */
 QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail::type() const
@@ -247,6 +248,8 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
         return QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::EventRsvp:
         return QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(fieldType);
+    case QDeclarativeOrganizerItemDetail::Classification:
+        return QDeclarativeOrganizerItemClassification::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
         return QDeclarativeOrganizerItemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
@@ -304,6 +307,8 @@ QString QDeclarativeOrganizerItemDetail::definitionName(QDeclarativeOrganizerIte
         return QOrganizerEventAttendee::DefinitionName;
     case QDeclarativeOrganizerItemDetail::EventRsvp:
         return QOrganizerEventRsvp::DefinitionName;
+    case QDeclarativeOrganizerItemDetail::Classification:
+        return QOrganizerItemClassification::DefinitionName;
     case QDeclarativeOrganizerItemDetail::Customized:
         return QOrganizerItemExtendedDetail::DefinitionName;
     default:
@@ -360,6 +365,8 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
         return QDeclarativeOrganizerItemDetail::EventAttendee;
     if (definitionName == QOrganizerEventRsvp::DefinitionName)
         return QDeclarativeOrganizerItemDetail::EventRsvp;
+    if (definitionName == QOrganizerItemClassification::DefinitionName)
+        return QDeclarativeOrganizerItemDetail::Classification;
     if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
         return QDeclarativeOrganizerItemDetail::Customized;
     qmlInfo(0) << QString(tr("Can't find the detail type for detail name '%1'")).arg(definitionName);
@@ -2103,6 +2110,51 @@ QString QDeclarativeOrganizerEventRsvp::organizerEmail() const
     return m_detail.value(QOrganizerEventRsvp::FieldOrganizerEmail).toString();
 }
 
+/*!
+    \qmlclass Classification QDeclarativeOrganizerItemClassification
+    \brief The Classification element contains classification-information of an item.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
+
+    The Classification detail contains classification related information. This can
+    be used as a part of security model for the organizer.
+
+    This element is part of the \bold{QtOrganizer 5.0} module.
+
+    \sa QOrganizerItemClassification
+ */
+QDeclarativeOrganizerItemClassification::QDeclarativeOrganizerItemClassification(QObject *parent)
+    : QDeclarativeOrganizerItemDetail(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
+    setDetail(QOrganizerItemClassification());
+}
+
+QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemClassification::type() const
+{
+    return QDeclarativeOrganizerItemDetail::Classification;
+}
+
+/*!
+    \qmlproperty string Classification::classification
+
+    This property holds the calendar item's classification related information. Value can be
+    either one defined by iCalendar specification ("PUBLIC", "PRIVATE", "CONFIDENTIAL") or custom string.
+ */
+void QDeclarativeOrganizerItemClassification::setClassification(const QString &newClassification)
+{
+    if (classification() != newClassification && !readOnly()) {
+        m_detail.setValue(QOrganizerItemClassification::FieldClassification, newClassification);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerItemClassification::classification() const
+{
+    return m_detail.value(QOrganizerItemClassification::FieldClassification).toString();
+}
+
+
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type)
 {
     QDeclarativeOrganizerItemDetail *itemDetail;
@@ -2150,6 +2202,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerEventAttendee;
     else if (type == QDeclarativeOrganizerItemDetail::EventRsvp)
         itemDetail = new QDeclarativeOrganizerEventRsvp;
+    else if (type == QDeclarativeOrganizerItemDetail::Classification)
+        itemDetail = new QDeclarativeOrganizerItemClassification;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -2202,6 +2256,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerEventAttendee;
     else if (definitionName == QOrganizerEventRsvp::DefinitionName)
         itemDetail = new QDeclarativeOrganizerEventRsvp;
+    else if (definitionName == QOrganizerItemClassification::DefinitionName)
+        itemDetail = new QDeclarativeOrganizerItemClassification;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
@@ -2485,6 +2541,16 @@ QString QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(int type)
         return QOrganizerEventRsvp::FieldOrganizerName;
     case QDeclarativeOrganizerEventRsvp::FieldOrganizerEmail:
         return QOrganizerEventRsvp::FieldOrganizerEmail;
+    }
+    qmlInfo(0) << tr("invalid field type:") << type;
+    return QString();
+}
+
+QString QDeclarativeOrganizerItemClassification::fieldNameFromFieldType(int type)
+{
+    switch (type) {
+    case QDeclarativeOrganizerItemClassification::FieldClassification:
+        return QOrganizerItemClassification::FieldClassification;
     }
     qmlInfo(0) << tr("invalid field type:") << type;
     return QString();

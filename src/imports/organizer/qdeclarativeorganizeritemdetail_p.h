@@ -84,6 +84,7 @@ public:
         Tag,
         EventAttendee,
         EventRsvp,
+        Classification,
         Customized = 100
     };
 
@@ -982,6 +983,31 @@ Q_SIGNALS:
 };
 
 
+class QDeclarativeOrganizerItemClassification : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+    Q_ENUMS(Field)
+    Q_PROPERTY(QString classification READ classification WRITE setClassification NOTIFY valueChanged)
+
+public:
+    enum Field {
+        FieldClassification = 0
+    };
+
+    QDeclarativeOrganizerItemClassification(QObject *parent = 0);
+
+    virtual ItemDetailType type() const;
+
+    void setClassification(const QString &newClassification);
+    QString classification() const;
+
+    static QString fieldNameFromFieldType(int type);
+
+Q_SIGNALS:
+    void valueChanged();
+};
+
+
 class QDeclarativeOrganizerItemDetailFactory
 {
 public:
@@ -1014,5 +1040,6 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVisualRe
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemExtendedDetail))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventAttendee))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventRsvp))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemClassification))
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H

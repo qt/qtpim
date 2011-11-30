@@ -217,7 +217,7 @@ QOrganizerItemDetail::~QOrganizerItemDetail()
  */
 QString QOrganizerItemDetail::definitionName() const
 {
-    return d.constData()->m_definitionName;
+    return d->m_definitionName;
 }
 
 /*!
@@ -227,17 +227,17 @@ QString QOrganizerItemDetail::definitionName() const
  */
 bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 {
-    if (!(d.constData()->m_definitionName == other.d.constData()->m_definitionName))
+    if (!(d->m_definitionName == other.d->m_definitionName))
         return false;
 
-    if (d.constData()->m_access != other.d.constData()->m_access)
+    if (d->m_access != other.d->m_access)
         return false;
 
     // QVariant doesn't support == on QOrganizerItemRecurrence - do it manually
-    if (d.constData()->m_definitionName == QOrganizerItemRecurrence::DefinitionName)
+    if (d->m_definitionName == QOrganizerItemRecurrence::DefinitionName)
         return static_cast<QOrganizerItemRecurrence>(*this) == static_cast<QOrganizerItemRecurrence>(other);
 
-    if (d.constData()->m_values != other.d.constData()->m_values)
+    if (d->m_values != other.d->m_values)
         return false;
 
     return true;
@@ -323,7 +323,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
  */
 bool QOrganizerItemDetail::isEmpty() const
 {
-    return (d.constData()->m_values.isEmpty());
+    return (d->m_values.isEmpty());
 }
 
 /*!
@@ -349,7 +349,7 @@ void QOrganizerItemDetail::resetKey()
  */
 QVariant QOrganizerItemDetail::value(const QString &key) const
 {
-    return d.constData()->m_values.value(key);
+    return d->m_values.value(key);
 }
 
 /*!
@@ -357,7 +357,7 @@ QVariant QOrganizerItemDetail::value(const QString &key) const
  */
 bool QOrganizerItemDetail::hasValue(const QString &key) const
 {
-    return d.constData()->m_values.contains(key);
+    return d->m_values.contains(key);
 }
 
 /*!
@@ -390,8 +390,8 @@ bool QOrganizerItemDetail::removeValue(const QString &key)
 QVariantMap QOrganizerItemDetail::values() const
 {
     QVariantMap ret;
-    QHash<QString, QVariant>::const_iterator it = d.constData()->m_values.constBegin();
-    while (it != d.constData()->m_values.constEnd()) {
+    QHash<QString, QVariant>::const_iterator it = d->m_values.constBegin();
+    while (it != d->m_values.constEnd()) {
         ret.insert(it.key(), it.value());
         ++it;
     }
@@ -425,7 +425,7 @@ QVariantMap QOrganizerItemDetail::values() const
  */
 QOrganizerItemDetail::AccessConstraints QOrganizerItemDetail::accessConstraints() const
 {
-    return d.constData()->m_access;
+    return d->m_access;
 }
 
 QTORGANIZER_END_NAMESPACE

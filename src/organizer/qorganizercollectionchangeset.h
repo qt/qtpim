@@ -62,7 +62,7 @@ public:
     QOrganizerCollectionChangeSet& operator=(const QOrganizerCollectionChangeSet& other);
 
     void setDataChanged(bool dataChanged);
-    bool dataChanged();
+    bool dataChanged() const;
 
     QSet<QOrganizerCollectionId> addedCollections() const;
     void insertAddedCollection(const QOrganizerCollectionId& addedCollectionId);
@@ -81,7 +81,7 @@ public:
 
     void clearAll();
 
-    void emitSignals(QOrganizerManagerEngine *engine);
+    void emitSignals(QOrganizerManagerEngine *engine) const;
 
 private:
     QSharedDataPointer<QOrganizerCollectionChangeSetData> d;

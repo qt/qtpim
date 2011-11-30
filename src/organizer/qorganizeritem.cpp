@@ -326,7 +326,7 @@ QOrganizerItemDetail QOrganizerItem::detail(const QString &definitionName) const
 QList<QOrganizerItemDetail> QOrganizerItem::details(const QString &definitionName) const
 {
     if (definitionName.isEmpty())
-        return d.constData()->m_details;
+        return d->m_details;
 
     QList<QOrganizerItemDetail> sublist;
     for (int i = 0; i < d->m_details.size(); i++) {
@@ -367,9 +367,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
 
     /* Also handle organizer item type specially - only one of them. */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName) {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details.at(i).accessConstraints();
+        for (int i = 0; i < d.constData()->m_details.size(); i++) {
+            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -381,9 +381,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
 
     /* And description */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName) {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details.at(i).accessConstraints();
+        for (int i = 0; i < d.constData()->m_details.size(); i++) {
+            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -395,9 +395,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
 
     /* And display label.. */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName) {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details.at(i).accessConstraints();
+        for (int i = 0; i < d.constData()->m_details.size(); i++) {
+            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -409,9 +409,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
 
     /* And classification.. */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemClassification::DefinitionName) {
-        for (int i = 0; i < d->m_details.size(); i++) {
-            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
-                detail->d->m_access = d->m_details.at(i).accessConstraints();
+        for (int i = 0; i < d.constData()->m_details.size(); i++) {
+            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -423,11 +423,11 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
 
     // try to find the "old version" of this field
     // ie, the one with the same type and id, but different value or attributes.
-    for (int i = 0; i < d->m_details.size(); i++) {
-        const QOrganizerItemDetail& curr = d->m_details.at(i);
-        if (detail->d->m_definitionName == curr.d->m_definitionName && detail->d->m_id == curr.d->m_id) {
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        const QOrganizerItemDetail& curr = d.constData()->m_details.at(i);
+        if (detail->d.constData()->m_definitionName == curr.d.constData()->m_definitionName && detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
-            detail->d->m_access = d->m_details.at(i).accessConstraints();
+            detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
             // Found the old version.  Replace it with this one.
             d->m_details[i] = *detail;
             return true;
@@ -459,8 +459,8 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
 
     // find the detail stored in the organizer item which has the same key as the detail argument
     int removeIndex = -1;
-    for (int i = 0; i < d->m_details.size(); i++) {
-        if (d->m_details.at(i).key() == detail->key()) {
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        if (d.constData()->m_details.at(i).key() == detail->key()) {
             removeIndex = i;
             break;
         }
@@ -477,7 +477,7 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
     if (QOrganizerItemType::DefinitionName == QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName)
         return false;
 
-    if (!d->m_details.contains(*detail))
+    if (!d.constData()->m_details.contains(*detail))
         return false;
 
     // then remove the detail.
@@ -491,15 +491,15 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
  */
 bool QOrganizerItem::operator==(const QOrganizerItem &other) const
 {
-    if (other.d.constData()->m_id != d.constData()->m_id
-        || other.d.constData()->m_collectionId != d.constData()->m_collectionId
-        || d.constData()->m_details.size() != other.d.constData()->m_details.size()) {
+    if (other.d->m_id != d->m_id
+        || other.d->m_collectionId != d->m_collectionId
+        || d->m_details.size() != other.d->m_details.size()) {
         return false;
     }
 
-    QList<QOrganizerItemDetail> searchList(d.constData()->m_details);
+    QList<QOrganizerItemDetail> searchList(d->m_details);
 
-    foreach (const QOrganizerItemDetail &detail, other.d.constData()->m_details) {
+    foreach (const QOrganizerItemDetail &detail, other.d->m_details) {
         if (!searchList.removeOne(detail))
             return false;
     }

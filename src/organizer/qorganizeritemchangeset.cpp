@@ -113,7 +113,7 @@ void QOrganizerItemChangeSet::setDataChanged(bool dataChanged)
    Returns the value of the data changed flag
   \since 1.1
  */
-bool QOrganizerItemChangeSet::dataChanged()
+bool QOrganizerItemChangeSet::dataChanged() const
 {
     return d->m_dataChanged;
 }
@@ -255,7 +255,7 @@ void QOrganizerItemChangeSet::clearAll()
    Emits the appropriate signals from the given \a engine given the state of the change set
    \since 1.1
  */
-void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine)
+void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
 {
     if (!engine)
         return;

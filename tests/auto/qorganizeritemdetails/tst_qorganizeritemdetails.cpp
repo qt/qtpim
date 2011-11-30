@@ -128,7 +128,6 @@ void tst_QOrganizerItemDetails::description()
     QCOMPARE(oi.details(QOrganizerItemDescription::DefinitionName).count(), 1); // count should be 1
 
     // test property update
-    d1 = oi.detail<QOrganizerItemDescription>();
     d1.setDescription("Test 3");
     QVERIFY(oi.saveDetail(&d1));
     QCOMPARE(oi.details(QOrganizerItemDescription::DefinitionName).count(), 1); // count should be 1
@@ -160,9 +159,10 @@ void tst_QOrganizerItemDetails::displayLabel()
     QCOMPARE(oi.details(QOrganizerItemDisplayLabel::DefinitionName).count(), 1);
 
     // test property update - should update
-    d1 = oi.detail<QOrganizerItemDisplayLabel>();
+    d1.setLabel("Test 3");
     QVERIFY(oi.saveDetail(&d1));
     QCOMPARE(oi.details(QOrganizerItemDisplayLabel::DefinitionName).count(), 1);
+    QVERIFY(oi.detail<QOrganizerItemDisplayLabel>().label() == QString("Test 3"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&d1)); // can remove display label.  it's unique but not required.

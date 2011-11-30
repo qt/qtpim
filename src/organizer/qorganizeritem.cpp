@@ -421,14 +421,12 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     /* Also handle organizer item type specially - only one of them. */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
-            QOrganizerItemDetail curr = d->m_details.at(i);
-            if (detail->d->m_definitionName == curr.d->m_definitionName) {
-                curr.setValue(QOrganizerItemType::FieldType, detail->value(QOrganizerItemType::FieldType));
-                d->m_details.replace(i, curr);
+            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
+                detail->d->m_access = d->m_details[i].accessConstraints();
+                d->m_details.replace(i, *detail);
                 return true;
             }
         }
-
         // doesn't already exist; append it.
         d->m_details.append(*detail);
         return true;
@@ -437,14 +435,12 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     /* And description */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
-            QOrganizerItemDetail curr = d->m_details.at(i);
-            if (detail->d->m_definitionName == curr.d->m_definitionName) {
-                curr.setValue(QOrganizerItemDescription::FieldDescription, detail->value(QOrganizerItemDescription::FieldDescription));
-                d->m_details.replace(i, curr);
+            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
+                detail->d->m_access = d->m_details[i].accessConstraints();
+                d->m_details.replace(i, *detail);
                 return true;
             }
         }
-
         // doesn't already exist; append it.
         d->m_details.append(*detail);
         return true;
@@ -453,14 +449,12 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
     /* And display label.. */
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName) {
         for (int i = 0; i < d->m_details.size(); i++) {
-            QOrganizerItemDetail curr = d->m_details.at(i);
-            if (detail->d->m_definitionName == curr.d->m_definitionName) {
-                curr.setValue(QOrganizerItemDisplayLabel::FieldLabel, detail->value(QOrganizerItemDisplayLabel::FieldLabel));
-                d->m_details.replace(i, curr);
+            if (detail->d->m_definitionName == d->m_details.at(i).d->m_definitionName) {
+                detail->d->m_access = d->m_details[i].accessConstraints();
+                d->m_details.replace(i, *detail);
                 return true;
             }
         }
-
         // doesn't already exist; append it.
         d->m_details.append(*detail);
         return true;
@@ -478,7 +472,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail* detail)
             return true;
         }
     }
-
     // this is a new detail!  add it to the organizer item.
     d->m_details.append(*detail);
     return true;
@@ -518,6 +511,10 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail* detail)
         return false;
 
     if (detail->accessConstraints() & QOrganizerItemDetail::Irremovable)
+        return false;
+
+    // Type -detail is specific case which cannot be deleted
+    if (QOrganizerItemType::DefinitionName == QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName)
         return false;
 
     if (!d->m_details.contains(*detail))

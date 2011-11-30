@@ -703,10 +703,6 @@ void tst_QContactAsync::contactIdFetch()
     QVERIFY(!cfr.waitForFinished());
 
     // "all contacts" retrieval
-
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support local id fetch request. Skipping.");
-
     QContactFilter fil;
     cfr.setManager(cm.data());
     QCOMPARE(cfr.manager(), cm.data());

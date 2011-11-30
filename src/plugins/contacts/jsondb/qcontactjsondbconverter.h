@@ -73,7 +73,7 @@ public:
     QHash<QString, QString> phoneNumbersSubtypesMapping;
 private:
     void initializeMappings();
-    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "");
+    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "") const;
     QString toJsonDate(const QDateTime& date) const;
     QDateTime toContactDate(const QString& dateString) const;
     void extendedDetailToJsonDbProperty(const QContactExtendedDetail &extendedDetail, QVariant& property) const;

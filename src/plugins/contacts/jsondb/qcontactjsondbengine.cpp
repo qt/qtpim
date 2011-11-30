@@ -302,6 +302,7 @@ bool QContactJsonDbEngine::saveContacts(QList<QContact>* contacts, QMap<int, QCo
 
 bool QContactJsonDbEngine::removeContacts(const QList<QContactLocalId>& ids, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
 {
+    Q_UNUSED(errorMap);
     QContactRemoveRequest removeReq;
     *error = QContactManager::NoError;
     removeReq.setContactIds(ids);
@@ -310,20 +311,9 @@ bool QContactJsonDbEngine::removeContacts(const QList<QContactLocalId>& ids, QMa
     if (*error != QContactManager::NoError) {
         qDebug() << "Error at function removeContacts:" << *error;
         return false;
+    } else {
+        return true;
     }
-    else return true;
-    /*
-    QContactManager::Error tempError = QContactManager::NoError;
-    QContact curr;
-    for (int i = 0; i < ids.size(); i++) {
-        if (!removeContact(ids.at(i), &tempError)) {
-            if (errorMap)
-                errorMap->insert(i, tempError);
-            *error = tempError;
-        }
-    }
-    */
-    //return (*error == QContactManager::NoError);
 }
 
 bool QContactJsonDbEngine::saveContact(QContact* contact, QContactManager::Error* error)

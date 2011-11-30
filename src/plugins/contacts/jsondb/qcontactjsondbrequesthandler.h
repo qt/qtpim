@@ -48,6 +48,7 @@
 #include <qcontactabstractrequest.h>
 #include <qcontactsaverequest.h>
 #include <qcontactfetchrequest.h>
+#include <qcontactlocalidfetchrequest.h>
 #include <qcontactremoverequest.h>
 #include <qcontact.h>
 #include <qcontactchangeset.h>
@@ -80,16 +81,17 @@ public slots:
     void onResponse(int id, const QVariant& object);
     void onError(int id, int code, const QString& message);
     void init();
-public slots:
-  void removeDestroyed(QObject *);
+    void removeDestroyed(QObject *);
 private:
     void handleContactSaveRequest(QContactSaveRequest* req);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
+    void handleContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req);
 
     void handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error);
     void handleContactFetchResponse(QContactFetchRequest* req, const QVariant &object, QContactManager::Error error);
     void handleContactRemoveResponse(QContactRemoveRequest* req, const QVariant &object, int index, QContactManager::Error error);
+    void handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest* req, const QVariant &object, int index, QContactManager::Error error);
 
     QContactJsonDbEngine* m_engine;
     JsonDbClient* m_jsonDb;

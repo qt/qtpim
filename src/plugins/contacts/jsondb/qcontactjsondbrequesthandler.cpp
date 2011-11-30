@@ -159,6 +159,11 @@ void QContactJsonDbRequestHandler::handleRequest(QContactAbstractRequest *req)
         handleContactRemoveRequest(removeReq);
         break;
     }
+    case QContactAbstractRequest::ContactLocalIdFetchRequest: {
+        QContactLocalIdFetchRequest* idReq = static_cast<QContactLocalIdFetchRequest*>(req);
+        handleContactLocalIdFetchRequest(idReq);
+        break;
+    }
     default:
         break;
     }
@@ -221,18 +226,9 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
 
     };
     QContactManagerEngine::updateContactSaveRequest(req, contacts, error, errorMap, QContactAbstractRequest::ActiveState);
-    /*if (error != QContactManager::NoError) {
-        QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
-        m_requestMgr->removeRequest(saveReq);
-        QContactManagerEngine::updateContactSaveRequest(saveReq, contacts, error, errorMap, QContactAbstractRequest::FinishedState);
-        if (waitCondition)
-            waitCondition->wakeAll();
-    }*/
-
 }
 
 void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchRequest* req) {
-    QList<QContact> contacts;
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
     int trId = m_jsonDb->query(newJsonDbQuery);
@@ -279,7 +275,14 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
         if (waitCondition)
             waitCondition->wakeAll();
     }
+}
 
+void QContactJsonDbRequestHandler::handleContactLocalIdFetchRequest(QContactLocalIdFetchRequest *req)
+{
+    m_requestMgr->addRequest(req);
+    QString newJsonDbQuery = m_converter->queryFromRequest(req);
+    int trId = m_jsonDb->query(newJsonDbQuery);
+    m_requestMgr->addTransaction(req, trId);
 }
 
 void QContactJsonDbRequestHandler::onNotified(const QString &notifyUuid, const QVariant &object, const QString &action)
@@ -316,6 +319,11 @@ void QContactJsonDbRequestHandler::onResponse(int id, const QVariant &object)
     case QContactAbstractRequest::ContactRemoveRequest: {
         QContactRemoveRequest* removeReq = static_cast<QContactRemoveRequest*>(req);
         handleContactRemoveResponse(removeReq, object, contactIndex, error);
+        break;
+    }
+    case QContactAbstractRequest::ContactLocalIdFetchRequest: {
+        QContactLocalIdFetchRequest* idReq = static_cast<QContactLocalIdFetchRequest*>(req);
+        handleContactLocalIdFetchResponse(idReq, object, contactIndex, error);
         break;
     }
     default:
@@ -556,6 +564,25 @@ void QContactJsonDbRequestHandler::handleContactRemoveResponse(QContactRemoveReq
         if (waitCondition)
             waitCondition->wakeAll();
     }
+}
+
+void QContactJsonDbRequestHandler::handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest *req, const QVariant &object, int index, QContactManager::Error error)
+{
+    QList<QContactLocalId> ids;
+    QVariantList jsonObjects;
+    if (!object.isNull()) {
+        jsonObjects = object.toMap().value("data").toList();
+    }
+    foreach (QVariant jsonObject, jsonObjects) {
+        ids.append(QContactLocalId(jsonObject.toString()));
+    }
+    if (ids.isEmpty() || object.isNull())
+        error = QContactManager::DoesNotExistError;
+    QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+    m_requestMgr->removeRequest(req);
+    QContactManagerEngine::updateContactLocalIdFetchRequest(req, ids, error, QContactAbstractRequest::FinishedState);
+    if (waitCondition)
+        waitCondition->wakeAll();
 }
 
 #include "moc_qcontactjsondbrequesthandler.cpp"

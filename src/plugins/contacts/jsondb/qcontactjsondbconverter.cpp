@@ -958,4 +958,18 @@ void QContactJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map) 
     }
 }
 
+QString QContactJsonDbConverter::jsonDbNotificationObjectToContactType(const QVariantMap &object) const
+{
+    return object.value(JsonDbString::kTypeStr).toString();
+}
+
+QContactLocalId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QVariantMap &object) const
+{
+    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    if (jsonUuid.isEmpty())
+        return QContactLocalId();
+    else
+        return QContactLocalId(jsonUuid);
+}
+
 QTCONTACTS_END_NAMESPACE

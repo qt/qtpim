@@ -54,6 +54,11 @@
 #include <qcontactchangeset.h>
 
 #include <jsondb-global.h>
+
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 Q_ADDON_JSONDB_BEGIN_NAMESPACE
 class JsonDbClient;
 class JsonDbConnection;
@@ -82,27 +87,41 @@ public slots:
     void onError(int id, int code, const QString& message);
     void init();
     void removeDestroyed(QObject *);
+
+private slots:
+    void onTimeout();
+
 private:
     void handleContactSaveRequest(QContactSaveRequest* req);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
     void handleContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req);
+    void sendJsonDbNotificationsRequest();
 
     void handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error);
     void handleContactFetchResponse(QContactFetchRequest* req, const QVariant &object, QContactManager::Error error);
     void handleContactRemoveResponse(QContactRemoveRequest* req, const QVariant &object, int index, QContactManager::Error error);
     void handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest* req, const QVariant &object, int index, QContactManager::Error error);
+    void handleJsonDbNotificationsRequestError(QContactManager::Error error);
+
+    void startTimer();
 
     QContactJsonDbEngine* m_engine;
     JsonDbClient* m_jsonDb;
     JsonDbConnection* m_jsonConnection;
     QContactJsonDbRequestManager* m_requestMgr;
-    // Mutex to make the request state changes atomic
-    QMutex* m_reqStateMutex;
     QContactJsonDbConverter* m_converter;
+    // Mutex to make request state changes atomic.
+    // Main thread access the same requests we store in m_reqList.
+    QMutex* m_reqStateMutex;
     QList <QContactAbstractRequest*> m_reqList;
-    QContactChangeSet m_ccs;
 
+    // For contact change notifications.
+    QContactChangeSet m_ccs;
+    static const int TIMEOUT_INTERVAL;
+    QTimer *m_timer;
+    int m_notificationsRequestTrId;
+    bool m_jsonDbNotificationsRequested;
 };
 
 QTCONTACTS_END_NAMESPACE

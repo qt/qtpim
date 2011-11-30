@@ -124,7 +124,7 @@ public:
     Q_INVOKABLE void removeItem(const QString& id);
     Q_INVOKABLE void removeItems(const QStringList& ids);
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
-    Q_INVOKABLE void fetchItems(const QStringList& ids);
+    Q_INVOKABLE int fetchItems(const QStringList &itemIds);
     Q_INVOKABLE void removeCollection(const QString& collectionId);
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
     Q_INVOKABLE void fetchCollections();
@@ -154,6 +154,7 @@ signals:
     void endPeriodChanged();
     void autoUpdateChanged();
     void collectionsChanged();
+    void itemsFetched(int requestId, const QVariantList &fetchedItems);
 
 public slots:
     void update();
@@ -184,6 +185,9 @@ private slots:
 
     // handle fetch request from onItemsChanged()
     void onItemsChangedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
+
+    // handle fetch request from fetchItems()
+    void onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State state);
 
 private:
     void clearItems();

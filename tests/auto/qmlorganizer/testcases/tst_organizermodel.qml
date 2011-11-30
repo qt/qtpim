@@ -397,5 +397,31 @@ TestCase {
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.error, "PermissionsError");
     }
+
+    function test_organizermodel_fetchitems_data() {
+        return [
+            {tag: "memory backend", managerToBeTested: "memory"},
+            {tag: "jsondb backend", managerToBeTested: "jsondb"}
+        ]
+    }
+
+    function test_organizermodel_fetchitems(data) {
+        var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "OrganizerModel {\n"
+            + "  manager: '" + data.managerToBeTested + "'\n"
+            + "}\n", modelTests);
+        wait(500);
+
+        compare(organizerModel.fetchItems([]), -1)
+
+        var spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", modelTests);
+        spy.target = organizerModel;
+        spy.signalName = "itemsFetched";
+
+        verify(organizerModel.fetchItems(["invalid-id"]) >= 0)
+        spy.wait()
+        compare(spy.count, 1)
+    }
 }
 

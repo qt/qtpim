@@ -84,7 +84,8 @@ public:
         m_autoUpdate(true),
         m_updatePending(false),
         m_componentCompleted(false),
-        m_fullUpdate(false)
+        m_fullUpdate(false),
+        m_lastRequestId(0)
     {
     }
     ~QDeclarativeOrganizerModelPrivate()
@@ -106,7 +107,6 @@ public:
     QDeclarativeOrganizerItemFilter* m_filter;
     QOrganizerItemFetchRequest* m_fetchRequest;
     QOrganizerItemOccurrenceFetchRequest* m_occurrenceFetchRequest;
-    QList<QString> m_updatedItemIds;
     QStringList m_importProfiles;
     QVersitReader *m_reader;
     QVersitWriter *m_writer;
@@ -120,6 +120,9 @@ public:
     bool m_updatePending;
     bool m_componentCompleted;
     bool m_fullUpdate;
+
+    QAtomicInt m_lastRequestId;
+    QHash<QOrganizerAbstractRequest *, int> m_requestIdHash;
 };
 
 /*!
@@ -671,14 +674,75 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
 }
 
 /*!
-  \qmlmethod OrganizerModel::fetchItems(QStringList itemIds)
-  Fetch a list of organizer items from the organizer store by given \a itemIds.
+    \qmlsignal OrganizerModel::onItemsFetched(int requestId, list<OrganizerItem> fetchedItems)
+
+    This handler is called when request of the given \a requestId is finished with the \a fetchedItems.
+
+    \sa fetchItems
+ */
+
+/*!
+    \qmlmethod int OrganizerModel::fetchItems(stringlist itemIds)
+
+    Starts a request to fetch items by the given \a itemIds, and returns the unique ID of this request.
+    -1 is returned if the request can't be started.
+
+    Note that the items fetched won't be added to the model, but can be accessed through the onItemsFetched
+    handler.
+
+    \sa onItemsFetched
   */
-void QDeclarativeOrganizerModel::fetchItems(const QStringList& itemIds)
+int QDeclarativeOrganizerModel::fetchItems(const QStringList &itemIds)
 {
-    d->m_updatedItemIds = itemIds;
-    d->m_updatePending = true;
-    QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+    if (itemIds.isEmpty())
+        return -1;
+
+    QOrganizerItemFetchByIdRequest *fetchRequest = new QOrganizerItemFetchByIdRequest(this);
+    connect(fetchRequest, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)),
+            this, SLOT(onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State)));
+    fetchRequest->setManager(d->m_manager);
+
+    QList<QOrganizerItemId> ids;
+    foreach (const QString &itemId, itemIds)
+        ids.append(QOrganizerItemId::fromString(itemId));
+    fetchRequest->setIds(ids);
+    if (fetchRequest->start()) {
+        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
+        d->m_requestIdHash.insert(fetchRequest, requestId);
+        return requestId;
+    } else {
+        return -1;
+    }
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State state)
+{
+    if (state != QOrganizerAbstractRequest::FinishedState || !sender())
+        return;
+
+    QOrganizerItemFetchByIdRequest *request = qobject_cast<QOrganizerItemFetchByIdRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+
+    int requestId(d->m_requestIdHash.value(request, -1));
+    QVariantList list;
+    if (request->error() == QOrganizerManager::NoError) {
+        QList<QOrganizerItem> items(request->items());
+        QDeclarativeOrganizerItem *declarativeItem(0);
+        foreach (const QOrganizerItem &item, items) {
+            declarativeItem = new QDeclarativeOrganizerItem(this);
+            declarativeItem->setItem(item);
+            list.append(QVariant::fromValue((QObject *)declarativeItem));
+        }
+    }
+    emit itemsFetched(requestId, list);
+
+    request->deleteLater();
 }
 
 /*!
@@ -784,11 +848,9 @@ QStringList QDeclarativeOrganizerModel::itemIds(QDateTime start, QDateTime end)
 void QDeclarativeOrganizerModel::fetchAgain()
 {
     cancelUpdate();
-    if (d->m_updatedItemIds.isEmpty()) {//fetch all items
-        if (!d->m_items.empty())
-            d->m_fullUpdate = true;
-        clearItems();
-    }
+    if (!d->m_items.empty())
+        d->m_fullUpdate = true;
+    clearItems();
 
     d->m_fetchRequest  = new QOrganizerItemFetchRequest(this);
     d->m_fetchRequest->setManager(d->m_manager);
@@ -796,17 +858,7 @@ void QDeclarativeOrganizerModel::fetchAgain()
     d->m_fetchRequest->setStartDate(d->m_startPeriod);
     d->m_fetchRequest->setEndDate(d->m_endPeriod);
 
-    if (!d->m_updatedItemIds.isEmpty()) {
-        QOrganizerItemIdFilter f;
-        QList<QOrganizerItemId> ids;
-        foreach (const QString& id, d->m_updatedItemIds) {
-            ids << QOrganizerItemId::fromString(id);
-        }
-
-        f.setIds(ids);
-        d->m_fetchRequest->setFilter(f);
-        d->m_updatedItemIds.clear();
-    } else if (d->m_filter){
+    if (d->m_filter){
         d->m_fetchRequest->setFilter(d->m_filter->filter());
     } else {
         d->m_fetchRequest->setFilter(QOrganizerItemFilter());

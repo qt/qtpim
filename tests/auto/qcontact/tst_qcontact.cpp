@@ -73,6 +73,8 @@ private slots:
     void traits();
     void idTraits();
     void localIdTraits();
+    void equality();
+    void inequality();
 };
 
 tst_QContact::tst_QContact()
@@ -721,6 +723,80 @@ void tst_QContact::localIdTraits()
     QVERIFY(!ti.isLarge);
     QVERIFY(!ti.isPointer);
     QVERIFY(!ti.isDummy);
+}
+
+void tst_QContact::equality()
+{
+    QContactId id;
+    id.setLocalId(QContactLocalId("123"));
+    QContactName name;
+    name.setFirstName("John");
+    name.setLastName("Doe");
+    QContactPhoneNumber number;
+    number.setNumber("7654321");
+    QContactEmailAddress email;
+    email.setEmailAddress("john.doe@nokia.com");
+    QContactExtendedDetail xdetail;
+    xdetail.setValue("shoesize", "45");
+    // Setup two identical contacts
+    QContact one, two;
+    one.setId(id);
+    one.saveDetail(&name);
+    one.saveDetail(&number);
+    one.saveDetail(&email);
+    one.saveDetail(&xdetail);
+    two.setId(id);
+    two.saveDetail(&xdetail);
+    two.saveDetail(&email);
+    two.saveDetail(&number);
+    two.saveDetail(&name);
+
+    QVERIFY(one == two);
+}
+
+void tst_QContact::inequality()
+{
+    QContactId id;
+    id.setLocalId(QContactLocalId("123"));
+    QContactName name;
+    name.setFirstName("John");
+    name.setLastName("Doe");
+    QContactPhoneNumber number;
+    number.setNumber("7654321");
+    QContactEmailAddress email;
+    email.setEmailAddress("john.doe@nokia.com");
+    QContactExtendedDetail xdetail;
+    xdetail.setName("shoesize");
+    xdetail.setData("45");
+    // Setup two contacts
+    QContact one, two;
+    one.setId(id);
+    QVERIFY(one != two);
+    two.setId(id);
+    QVERIFY(one == two);
+    // insert different amount of details
+    one.saveDetail(&name);
+    one.saveDetail(&number);
+    two.saveDetail(&number);
+    QVERIFY(one != two);
+    two.clearDetails();
+    // same amount of details with different types
+    two.saveDetail(&number);
+    two.saveDetail(&email);
+    QVERIFY(one != two);
+    two.clearDetails();
+    // same amount of details with different value
+    name.setFirstName("Jim");
+    two.saveDetail(&name);
+    two.saveDetail(&number);
+    QVERIFY(one != two);
+    two.clearDetails();
+    name.setFirstName("John");
+    // different types of details with same value
+    email.setEmailAddress("7654321");
+    two.saveDetail(&name);
+    two.saveDetail(&email);
+    QVERIFY(one != two);
 }
 
 QTEST_MAIN(tst_QContact)

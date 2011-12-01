@@ -592,8 +592,19 @@ bool QContact::removeDetail(QContactDetail* detail)
 */
 bool QContact::operator==(const QContact& other) const
 {
-    return other.d->m_id == d->m_id &&
-        other.d->m_details == d->m_details;
+    // Id must be the same
+    if (other.d->m_id != d->m_id)
+        return false;
+    // There must be same amount of details
+    if (other.d->m_details.size() != d->m_details.size())
+        return false;
+    // All details must match
+    foreach (QContactDetail detail, other.d->m_details) {
+        if (!d->m_details.contains(detail))
+            return false;
+    }
+    // All equal
+    return true;
 }
 
 /*!

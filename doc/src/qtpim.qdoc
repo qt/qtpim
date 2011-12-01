@@ -49,9 +49,13 @@ w/****************************************************************************
     allows you to develop applications using contacts and calendar
     data and versit functionality for exporting and importing data.
 
-    This release contains the following APIs:
+    This release contains the following APIs
 
-    \annotatedlist  qtpim
+    To create simple and effective PIM createUI using QML:
+    \annotatedlist  qtpim-qml
+
+    To use low level, non UI, PIM related functionality:
+    \annotatedlist  qtpim-c++
 
     These APIs give the developer a range of desirable functions for a
     mobile platform, or desktop, depending on what backend implementation

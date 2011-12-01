@@ -31,6 +31,7 @@
 
     \group qml-contacts
     \ingroup qtpim
+    \ingroup qtpim-qml
 
     \page qml-contacts.html
     \title Contacts QML Plugin

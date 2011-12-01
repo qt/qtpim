@@ -28,6 +28,7 @@
 /*!
     \group qml-organizer
     \ingroup qtpim
+    \ingroup qtpim-qml
     \title Organizer QML Plugin
     QML Support for the QtPim Module Organizer API.
 

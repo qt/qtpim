@@ -32,6 +32,7 @@
 \brief An API to import and export to the vCard and iCalendar formats.
 
 \ingroup qtpim
+\ingroup qtpim-c++
 
 \tableofcontents
 

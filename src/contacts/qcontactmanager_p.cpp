@@ -362,7 +362,7 @@ void QContactManagerData::unregisterObserver(QContactManager* manager, QContactO
 
 void QContactManagerData::_q_contactsUpdated(const QList<QContactLocalId>& ids)
 {
-    foreach (QContactLocalId id, ids) {
+    foreach (const QContactLocalId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
         foreach (QContactObserver* observer, observers) {
             QMetaObject::invokeMethod(observer, "contactChanged");
@@ -372,7 +372,7 @@ void QContactManagerData::_q_contactsUpdated(const QList<QContactLocalId>& ids)
 
 void QContactManagerData::_q_contactsDeleted(const QList<QContactLocalId>& ids)
 {
-    foreach (QContactLocalId id, ids) {
+    foreach (const QContactLocalId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
         foreach (QContactObserver* observer, observers) {
             QMetaObject::invokeMethod(observer, "contactRemoved");

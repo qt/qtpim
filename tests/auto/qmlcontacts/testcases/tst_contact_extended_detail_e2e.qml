@@ -471,6 +471,15 @@ ContactsSavingTestCase {
 
     // Init & teardown
 
+    function initTestCase() {
+        initTestForModel(modelForSaveAndFetch);
+        waitForContactsChanged();
+        // The wait is needed so the model is populated
+        // (e.g. with garbage left from previous test runs)
+        // before cleanup() is called.
+        emptyContacts(modelForSaveAndFetch);
+    }
+
     function init() {
         initTestForModel(modelForSaveAndFetch);
     }

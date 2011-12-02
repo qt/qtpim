@@ -48,28 +48,40 @@ TestCase {
     id: contactsSavingTestCase
 
     property SignalSpy spy
+    property bool debug: false
 
     function initTestForModel(model) {
+        logDebug("initTestForModel");
         spy = Qt.createQmlObject(
                     "import QtTest 1.0;" +
                     "SignalSpy {" +
                     "}",
                     contactsSavingTestCase);
         spy.target = model;
-        spy.signalName = "contactsChanged"
+        spy.signalName = "contactsChanged";
+        return spy;
     }
 
     function waitForContactsChanged() {
+        logDebug("waitForContactsChanged");
         spy.wait();
     }
 
     function emptyContacts(model) {
-        var count = model.contacts.length
+        logDebug("emptyContacts");
+        model.fetchContacts([]);
+        spy.wait();
+        var count = model.contacts.length;
         for (var i = 0; i < count; i++) {
-            var id = model.contacts[0].contactId
-            model.removeContact(id)
-            spy.wait()
+            var id = model.contacts[0].contactId;
+            model.removeContact(id);
+            spy.wait();
         }
-        compare(model.contacts.length, 0, "model is empty")
+        compare(model.contacts.length, 0, "model is empty");
+    }
+
+    function logDebug(message) {
+        if (debug)
+            console.log(message);
     }
 }

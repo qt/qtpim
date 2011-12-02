@@ -175,21 +175,95 @@ ContactsSavingTestCase {
         emptyContacts(modelSortedByEmailAddress);
     }
 
-    function compareContactArrays(actual, expected) {
-        compare(actual.length, expected.length, "length");
-        for (var i = 0; i < expected.length; i++) {
-            compareContacts(actual[i], expected[i]);
+    ContactModel {
+        id: modelSortedByLastAndFirstName
+        manager: "jsondb"
+        autoUpdate:true
+        sortOrders: [
+            SortOrder {
+                detail: ContactDetail.Name
+                field: Name.FirstName
+                direction: Qt.AscendingOrder
+            },
+            SortOrder {
+                detail: ContactDetail.Name
+                field: Name.LastName
+                direction: Qt.AscendingOrder
+            }
+        ]
+    }
+
+    Contact {
+        id: contactWithFirstAndLastName1
+        Name {
+            lastName: "A"
+            firstName: "E"
         }
     }
 
-    function compareContacts(actual, expected) {
+    Contact {
+        id: contactWithFirstAndLastName2
+        Name {
+            lastName: "B"
+            firstName: "C"
+        }
+    }
+
+    Contact {
+        id: contactWithFirstAndLastName3
+        Name {
+            lastName: "B"
+            firstName: "D"
+        }
+    }
+
+    function test_sortByLastAndFirstName()
+    {
+        initTestForModel(modelSortedByLastAndFirstName);
+
+        emptyContacts(modelSortedByLastAndFirstName);
+
+        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName3);
+        waitForContactsChanged();
+        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName2);
+        waitForContactsChanged();
+        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName1);
+        waitForContactsChanged();
+
+        compareContactArrays(modelSortedByLastAndFirstName.contacts,
+                             [contactWithFirstAndLastName1, contactWithFirstAndLastName2,
+                             contactWithFirstAndLastName3]);
+
+        emptyContacts(modelSortedByLastAndFirstName);
+    }
+
+    function initTestCase() {
+        var spy1 = initTestForModel(modelSortedByFirstName);
+        var spy2 = initTestForModel(modelSortedByLastName);
+        var spy3 = initTestForModel(modelSortedByEmailAddress);
+        var spy4 = initTestForModel(modelSortedByLastAndFirstName);
+
+        spy1.wait();
+        spy2.wait();
+        spy3.wait();
+        spy4.wait();
+    }
+
+    function compareContactArrays(actual, expected) {
+        compare(actual.length, expected.length, "length");
+        for (var i = 0; i < expected.length; i++) {
+            compareContacts(actual[i], expected[i], "index " + i);
+        }
+    }
+
+    function compareContacts(actual, expected, message) {
         if (expected.name) {
-            compare(actual.name.firstName, expected.name.firstName, 'name.firstName');
-            compare(actual.name.lastName, expected.name.lastName, 'name.lastName');
+            compare(actual.name.firstName, expected.name.firstName, message + ': name.firstName');
+            compare(actual.name.lastName, expected.name.lastName, message + ': name.lastName');
         }
         if (expected.email) {
             compare(actual.email.emailAddress, expected.email.emailAddress,
-                    'email.emailAddress');
+                    message + ': email.emailAddress');
         }
     }
 }

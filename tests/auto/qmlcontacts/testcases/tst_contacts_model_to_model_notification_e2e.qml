@@ -50,7 +50,8 @@ ContactsSavingTestCase {
     ContactModel {
         id: modifiedModel
         manager: "jsondb"
-        autoUpdate:true
+        autoUpdate: false
+        // otherwise this model will distract the test helper functions
     }
 
     ContactModel {
@@ -62,8 +63,6 @@ ContactsSavingTestCase {
     ContactsSavingTestCase {
         name: "ContactsModelToModelNotificationE2ETests::CreateContact"
 
-        // All test functions pass if run individually.
-        // When run in batch the first test function passes, others fail.
         Contact {
             id: contact
         }
@@ -74,7 +73,6 @@ ContactsSavingTestCase {
 
             modifiedModel.saveContact(contact);
 
-            expectFail("", "model does not receive a signal");
             waitForContactsChanged();
             compare(notifiedModel.contacts.length, 1,
                     "contacts updated in the notified model");
@@ -91,14 +89,8 @@ ContactsSavingTestCase {
         {
             initTestForModel(notifiedModel);
 
-            var spyModifiedModel = createSpyForModel(modifiedModel);
             modifiedModel.saveContact(contactWithDetailToBeVerified);
-            spyModifiedModel.wait();
-            compareContactArrays(modifiedModel.contacts, [contactWithDetailToBeVerified],
-                                 "contacts updated in the modified model");
 
-            // expectFail("", "model does not receive a signal");
-            // This works as it is run as the first test function
             waitForContactsChanged();
             compareContactArrays(notifiedModel.contacts, [contactWithDetailToBeVerified],
                                  "contacts updated in the notified model");
@@ -119,14 +111,113 @@ ContactsSavingTestCase {
             modifiedModel.saveContact(firstOfMultipleContacts);
             modifiedModel.saveContact(secondOfMultipleContacts);
 
-            expectFail("", "model does not receive a signal");
             waitForContactsChanged();
-            if (notifiedModel.length < 2) {
-                // model not yet notified of both contacts
+            if (notifiedModel.contacts.length < 2) {
                 waitForContactsChanged();
             }
             compare(notifiedModel.contacts.length, 2,
                     "contacts updated in the notified model");
+        }
+
+        function initTestCase() {
+            initTestForModel(notifiedModel);
+            waitForContactsChanged();
+            emptyContacts(notifiedModel);
+        }
+
+        function cleanup() {
+            initTestForModel(modifiedModel);
+            emptyContacts(modifiedModel);
+        }
+
+        function cleanupTestCase() {
+            initTestForModel(modifiedModel);
+            emptyContacts(modifiedModel);
+        }
+    }
+
+    ContactsSavingTestCase {
+        name: "ContactsModelToModelNotificationE2ETests::UpdateContact"
+
+        Contact {
+            id: contactWithNoDetails
+        }
+
+        Name {
+            id: detailForContactWithNoDetails
+            firstName: "detail"
+        }
+
+        function pending_updateContactByAddingDetail()
+        {
+            initTestForModel(modifiedModel);
+            modifiedModel.saveContact(contactWithNoDetails);
+            waitForContactsChanged();
+
+            initTestForModel(notifiedModel);
+
+            compareContactArrays(notifiedModel.contacts, [contactWithNoDetails], "contact present in the notified model");
+
+            initTestForModel(notifiedModel);
+
+            contactWithNoDetails.addDetail(detailForContactWithNoDetails);
+            modifiedModel.saveContact(contactWithNoDetails);
+
+            waitForContactsChanged();
+            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
+        }
+
+        Contact {
+            id: contactWithDetail
+            Name {
+                id: detailOfContactWithDetail
+                firstName: "detail"
+            }
+        }
+
+        function pending_updateContactByRemovingDetail()
+        {
+            initTestForModel(modifiedModel);
+            modifiedModel.saveContact(contactWithDetail);
+            waitForContactsChanged();
+
+            initTestForModel(notifiedModel);
+
+            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact present in the notified model");
+
+            initTestForModel(notifiedModel);
+
+            contactWithDetail.removeDetail(detailOfContactWithDetail);
+            modifiedModel.saveContact(contactWithDetail);
+
+            waitForContactsChanged();
+            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
+        }
+
+        function cleanup() {
+            initTestForModel(modifiedModel);
+            emptyContacts(modifiedModel);
+        }
+    }
+
+    ContactsSavingTestCase {
+        name: "ContactsModelToModelNotificationE2ETests::RemoveContact"
+
+        function pending_removeContact()
+        {
+            initTestForModel(modifiedModel);
+            modifiedModel.saveContact(contact);
+            waitForContactsChanged();
+
+            initTestForModel(notifiedModel);
+
+            compareContactArrays(notifiedModel.contacts, [contact], "contact present in the notified model");
+
+            modifiedModel.removeContact(contact);
+
+            expectFail("", "the other model does not receive signal")
+            waitForContactsChanged();
+            compareContactArrays(notifiedModel.contacts, [], "contacts removed from the notified model");
         }
 
         function cleanup() {
@@ -151,26 +242,5 @@ ContactsSavingTestCase {
             compare(actual.email.emailAddress, expected.email.emailAddress,
                     message + ': email.emailAddress');
         }
-    }
-
-    function initTestCase() {
-        initTestForModel(modifiedModel);
-        emptyContacts(modifiedModel);
-    }
-
-    function cleanupTestCase() {
-        initTestForModel(modifiedModel);
-        emptyContacts(modifiedModel);
-    }
-
-    function createSpyForModel(model) {
-        var spy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsModelToModelNotificationE2ETests);
-        spy.target = model;
-        spy.signalName = "contactsChanged";
-        return spy;
     }
 }

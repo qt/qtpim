@@ -79,34 +79,34 @@ TestCase {
 
     // Clean and populate the database with test contacts
     function initTestCase() {
-        contactsChangedSpy.wait()
+        contactsChangedSpy.wait();
 
-        cleanupTestCase()
+        cleanupTestCase();
 
-        model.saveContact(contact1)
-        contactsChangedSpy.wait()
-        model.saveContact(contact2)
-        contactsChangedSpy.wait()
-        model.saveContact(contact3)
-        contactsChangedSpy.wait()
+        model.saveContact(contact1);
+        contactsChangedSpy.wait();
+        model.saveContact(contact2);
+        contactsChangedSpy.wait();
+        model.saveContact(contact3);
+        contactsChangedSpy.wait();
     }
 
     // Clean database
     function cleanupTestCase() {
         var amt = model.contacts.length;
         for (var i = 0; i < amt; ++i) {
-            var id = model.contacts[0].contactId
-            model.removeContact(id)
-            contactsChangedSpy.wait()
+            var id = model.contacts[0].contactId;
+            model.removeContact(id);
+            contactsChangedSpy.wait();
         }
-        compare(model.contacts.length, 0)
+        compare(model.contacts.length, 0);
     }
 
     // Clear filter
     function cleanup() {
-        model.filter = null
+        model.filter = null;
         contactsChangedSpy.wait();
-        compare (model.contacts.length, 3)
+        compare (model.contacts.length, 3);
     }
 
     function test_dynamicIdFilterConstruction() {
@@ -117,99 +117,188 @@ TestCase {
                 this);
         model.filter = newFilter;
         contactsChangedSpy.wait();
-        compare(model.contacts.length, 1)
+        compare(model.contacts.length, 1);
     }
 
     function test_filterById() {
-        filter.ids = [model.contacts[0].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 1)
+        var id = model.contacts[0].contactId;
+        filterById(id);
+    }
 
-        cleanup()
+    function filterById(id) {
+        filter.ids = [id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 1);
+        compare(model.contacts[0].contactId, id);
+    }
 
-        filter.ids = [model.contacts[1].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 1)
+    function test_filterByIdOfContactInTheMiddle() {
+        var id = model.contacts[1].contactId;
+        filterById(id);
+    }
 
-        cleanup()
-
-        filter.ids = [model.contacts[2].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 1)
+    function test_filterByIdOfContactAtTheEnd() {
+        var id = model.contacts[2].contactId;
+        filterById(id);
     }
 
     function test_filterByMultipleIds() {
-        filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 2)
+        var id1 = model.contacts[0].contactId;
+        var id2 = model.contacts[1].contactId;
+        filterByMultipleIds(id1, id2);
+    }
 
-        cleanup()
+    function filterByMultipleIds(id1, id2) {
+        var id1 = model.contacts[0].contactId;
+        var id2 = model.contacts[1].contactId;
+        filter.ids = [id1, id2];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 2);
+        compare(model.contacts[0].contactId, id1);
+        compare(model.contacts[1].contactId, id2);
+    }
 
-        filter.ids = [model.contacts[0].contactId, model.contacts[2].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 2)
+    function test_filterByMultipleNonConsequtiveIds() {
+        var id1 = model.contacts[0].contactId;
+        var id2 = model.contacts[2].contactId;
+        filterByMultipleIds(id1, id2);
+    }
 
-        cleanup()
-
-        filter.ids = [model.contacts[1].contactId, model.contacts[2].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 2)
+    function test_filterByMultipleIdsOfContactsAtTheEnd() {
+        var id1 = model.contacts[1].contactId;
+        var id2 = model.contacts[2].contactId;
+        filterByMultipleIds(id1, id2);
     }
 
     function test_filterByNonExistingId() {
-        filter.ids = ["foo bar"]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 0)
+        filter.ids = ["foo bar"];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 0);
+    }
 
-        cleanup()
+    function test_filterByMultipleNonExistingIds() {
+        filter.ids = ["foo", "bar", "baz", "qux"];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 0);
+    }
 
-        filter.ids = ["foo", "bar", "baz", "qux"]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 0)
-
-        cleanup()
-
-        filter.ids = ["foo bar", model.contacts[0].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 1)
+    function test_filterByMixedExistingAndNonExistingIds() {
+        var id = model.contacts[0].contactId;
+        filter.ids = ["foo bar", id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 1);
+        compare(model.contacts[0].contactId, id);
     }
 
     function test_filterByEmptyList() {
-        filter.ids = []
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 3)
+        filter.ids = [];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 3);
     }
 
     function test_filterByTwoOverlappingIds() {
-        filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 1)
+        filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 1);
     }
 
 
     function test_filterByTwoCouplesOfOverlappingIds() {
-        filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[1].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 2)
+        filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[1].contactId];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 2);
     }
 
     function test_filterByAlternatingOverlappingIds() {
-        filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[0].contactId]
-        model.filter = filter
-        contactsChangedSpy.wait()
-        compare (model.contacts.length, 2)
+        filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[0].contactId];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+        compare (model.contacts.length, 2);
     }
 
+    function test_filterMatchingContactLeavesItStillValid() {
+        var contact = model.contacts[0];
+        var id = contact.contactId;
+
+        filter.ids = [id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        verify(contact, "contact is defined");
+        verify(contact.contactId, "contact id is defined");
+        verify(contact === model.contacts[0],
+               "still contains the contact")
+    }
+
+    function test_filterOutContactLeavesItStillValid() {
+        var contact = model.contacts[0];
+        var idOfAnotherContact = model.contacts[1].contactId;
+
+        filter.ids = [idOfAnotherContact];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        verify(contact, "contact is defined");
+        verify(contact.contactId, "contact id is defined");
+    }
+
+    function test_expandFilterLeavesContactsStillValid() {
+        var contact = model.contacts[0];
+        var id = contact.contactId;
+        var idOfAnotherContact = model.contacts[1].contactId;
+
+        filter.ids = [id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        contact = model.contacts[0];
+
+        filter.ids = [id, idOfAnotherContact];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        verify(contact, "contact is defined");
+        verify(contact.contactId, "contact id is defined");
+        verify(contact === model.contacts[0] || contact === model.contacts[1],
+               "still contains the contact")
+    }
+
+    function test_filterAndFetchSomeMatchingIds() {
+        var contact = model.contacts[0];
+        var id = contact.contactId;
+
+        filter.ids = [id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        model.fetchContacts([id]);
+        contactsChangedSpy.wait();
+
+        compare(model.contacts[0].contactId, id);
+    }
+
+    function test_filterAndFetchSomeNonMatchingIds() {
+        var contact = model.contacts[0];
+        var id = contact.contactId;
+        var idOfAnotherContact = model.contacts[1].contactId;
+        verify(id != idOfAnotherContact, "guard: contacts are different");
+
+        filter.ids = [id];
+        model.filter = filter;
+        contactsChangedSpy.wait();
+
+        model.fetchContacts([idOfAnotherContact]);
+        contactsChangedSpy.wait();
+
+        compare(model.contacts.length, 1, "contacts length");
+        compare(model.contacts[0].contactId, id, "contact is still present");
+    }
 }

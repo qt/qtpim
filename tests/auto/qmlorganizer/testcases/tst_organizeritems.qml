@@ -61,7 +61,6 @@ Rectangle {
         Component.onCompleted: {
             model.update();
             model.autoUpdate = true;
-            console.log("model is created!");
         }
     }
 
@@ -88,7 +87,7 @@ Rectangle {
         name: "OrganizerItemTests"
         when: model.autoUpdate
         function test_addRemoveEvent() {
-            var list = utility.test_managerdata();
+            var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
                 return;
@@ -99,20 +98,13 @@ Rectangle {
                 var debugFlag = 0;
                 console.log("test_addRemoveEvents test start! :" + managerName);
 
-                var organizerChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                         + "SignalSpy {id : organizerChangedSpy;}"
-                         , test);
-
-                organizerChangedSpy.target = model;
-                organizerChangedSpy.signalName = "modelChanged";
-                utility.model = model
-                utility.spy = organizerChangedSpy
+                utility.init(model);
                 utility.empty_calendar()
 
                 //------model save event------//
                 model.saveItem(newEvent1);
                 //make sure event is saved
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
                 verify(model.itemCount === 1);
 
                 var ids = model.itemIds();
@@ -126,7 +118,7 @@ Rectangle {
                 item.displayLabel = "EditedEvent1";
                 model.saveItem(item);
                 //make sure exist event saved/updated and no duplicated items saved
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
                 //console.log(model.itemCount);
                 verify(model.itemCount === 1);
                 var item2 = model.item(ids[0]);
@@ -134,22 +126,22 @@ Rectangle {
 
                 //------delete event------//
                 model.removeItem(ids[0]);
-                utility.waiting_model_signal(0);
+                utility.waitModelChange(0);
                 verify(model.itemCount === 0);
 
                 //delete invalid items and no crash
                 model.removeItem(ids[0]);
-                utility.waiting_model_signal(0);
+                utility.waitModelChange(0);
                 verify(model.itemCount === 0);
 
                 //remove a list of event
                 model.saveItem(newEvent2);
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
                 model.saveItem(newEvent1);
-                utility.waiting_model_signal(2);
+                utility.waitModelChange(2);
                 var deletList = model.itemIds();
                 model.removeItems(deletList);
-                utility.waiting_model_signal(0);
+                utility.waitModelChange(0);
             }
         }
     }

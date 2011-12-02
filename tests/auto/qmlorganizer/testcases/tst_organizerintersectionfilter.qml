@@ -76,7 +76,7 @@ Rectangle {
         }
 
         function test_intersectionFilter(data) {
-            var list = utility.test_managerdata();
+            var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
                 return;
@@ -107,55 +107,26 @@ Rectangle {
                         + "   endDateTime: '2010-12-13'; }"
                         , test);
 
-                var organizerChangedSpy = Qt.createQmlObject(
-                        "import QtTest 1.0;"
-                        + "SignalSpy {id : organizerChangedSpy;}"
-                        , test);
-
-                organizerChangedSpy.target = model
-                organizerChangedSpy.signalName = "collectionsChanged"
-                utility.model = model
-                utility.spy = organizerChangedSpy
+                utility.init(model);
                 utility.empty_calendar()
                 //------prepare filter data: save event and collection------//
                 var collectionLegnth = model.collections.length
-                model.saveCollection(testCollection)
 
+                model.saveCollection(testCollection)
                 //Let's wait for the model to be up-to-date
-                var count = 0;
-                do {
-                    organizerChangedSpy.wait(400)
-                    count ++
-                    verify(count <= 10)
-                } while (model.collections.length < collectionLegnth + 1)
+                utility.waitModelChange(collectionLegnth + 1, utility.collectionChange);
+                compare(model.collections.length, collectionLegnth + 1)
 
                 //we should have more than default collection now
                 var savedCollection = model.collections[model.collections.length - 1];
-                organizerChangedSpy.signalName = "modelChanged";
                 model.saveItem(event);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-
-                model.update();
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1)
 
                 //event with new collection id
                 event.collectionId = savedCollection.collectionId;
                 model.saveItem(event);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(200);
-                    count ++;
-                    verify(model.itemCount <= 2)
-                    verify(count <= 10)
-                } while (model.itemCount < 2)
-
-                model.update();
+                utility.waitModelChange(2);
                 compare(model.itemCount, 2)
                 var fetchlist = model.items;
                 var idEventId;
@@ -175,30 +146,14 @@ Rectangle {
                 //Single filter
                 intersectionFilter.filters = [idFilter];
                 model.filter = intersectionFilter;
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-
-                model.update();
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1)
                 //Change collection filter id
                 collectionFilter.ids = [savedCollection.collectionId];
                 //Duoble filters
                 model.filter.filters = [idFilter, collectionFilter]
                 utility.debug("Duoble filter", debugFlag);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount != 0)
-
-                model.update();
+                utility.waitModelChange(0);
                 compare(model.itemCount, 0)
 
                 //Double filter 2
@@ -206,15 +161,7 @@ Rectangle {
                 collectionFilter.ids = [savedCollection.collectionId, model.defaultCollection().collectionId];
                 model.filter.filters = [idFilter, collectionFilter]
                 utility.debug("Duoble filter 2", debugFlag);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 1)
-                    verify(count <= 10)
-                } while (model.itemCount < 1)
-
-                model.update();
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1)
 
                 //Double filter 3
@@ -224,14 +171,7 @@ Rectangle {
                 utility.debug("Duoble filter ~3", debugFlag);
                 model.filter.filters = [idFilter, collectionFilter]
                 utility.debug("Duoble filter 3" + collectionFilter.ids, debugFlag);
-                count = 0;
-                do {
-                    organizerChangedSpy.wait(100);
-                    count ++;
-                    verify(model.itemCount <= 2)
-                    verify(count <= 10)
-                } while (model.itemCount < 2)
-                model.update();
+                utility.waitModelChange(2);
                 compare(model.itemCount, 2)
                 utility.debug("Test over!", debugFlag);
             }

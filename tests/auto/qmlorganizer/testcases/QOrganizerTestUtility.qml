@@ -45,8 +45,30 @@ import QtOrganizer 5.0
 
 TestCase {
     id: testUtility
-    property OrganizerModel model
-    property SignalSpy spy
+    property var signalWaitTime : 400
+    property var itemChange: 0
+    property var collectionChange: 1
+    property SignalSpy organizerChangedSpy
+    property SignalSpy organizerCollectionChangedSpy
+
+    //---------internal use---------//
+    property OrganizerModel __model
+
+    function init(model) {
+        __model = model;
+        organizerChangedSpy = Qt.createQmlObject(
+                "import QtTest 1.0;"
+                + "SignalSpy {}"
+                , testUtility);
+        organizerChangedSpy.target = model
+        organizerChangedSpy.signalName = "modelChanged"
+        organizerCollectionChangedSpy = Qt.createQmlObject(
+                "import QtTest 1.0;"
+                + "SignalSpy {}"
+                , testUtility);
+        organizerCollectionChangedSpy.target = model;
+        organizerCollectionChangedSpy.signalName = "collectionsChanged";
+    }
 
     function debug(string, flag) {
         if (flag == 1)
@@ -58,27 +80,45 @@ TestCase {
         verify(newObject != undefined, 'Object creation failed');
         return newObject;
     }
-
-    function waiting_model_signal(expect_count) {
+    //default is item change
+    function waitModelChange(expect_count, waitModelSignalType) {
         var count = 0;
-        if (model.itemCount < expect_count) {
-            do {
-                spy.wait(400);
-                count ++;
-                verify(model.itemCount <= expect_count)
-                verify(count <= 10)
-            } while (model.itemCount < expect_count)
-        } else if (model.itemCount > expect_count) {
-            do {
-                spy.wait(500);
-                count ++;
-                verify(model.itemCount >= expect_count)
-                verify(count <= 10)
-            } while (model.itemCount > expect_count)
+        if (Number(waitModelSignalType) == itemChange || waitModelSignalType === undefined ) {
+            if (__model.itemCount < expect_count) {
+                do {
+                    organizerChangedSpy.wait(signalWaitTime);
+                    count ++;
+                    verify(__model.itemCount <= expect_count)
+                    verify(count <= 10)
+                } while (__model.itemCount < expect_count)
+            } else if (__model.itemCount > expect_count) {
+                do {
+                    organizerChangedSpy.wait(signalWaitTime);
+                    count ++;
+                    verify(__model.itemCount >= expect_count)
+                    verify(count <= 10)
+                } while (__model.itemCount > expect_count)
+            }
+        } else if (Number(waitModelSignalType) == collectionChange) {
+            if (__model.collections.length < expect_count) {
+                do {
+                    organizerCollectionChangedSpy.wait(signalWaitTime);
+                    count ++;
+                    verify(__model.collections.length <= expect_count)
+                    verify(count <= 10)
+                } while (__model.collections.length < expect_count)
+            } else if (__model.collections.length > expect_count) {
+                do {
+                    organizerCollectionChangedSpy.wait(signalWaitTime);
+                    count ++;
+                    verify(__model.collections.length >= expect_count)
+                    verify(count <= 10)
+                } while (__model.collections.length > expect_count)
+            }
         }
     }
 
-    function test_managerdata() {
+    function getManagerList() {
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
@@ -101,24 +141,24 @@ TestCase {
         //waiting for model update and remove request
         wait(500);
 
-        var ids = model.itemIds();
+        var ids = __model.itemIds();
         if (log != undefined) {
-            console.log("items count :" + model.itemCount);
+            console.log("items count :" + __model.itemCount);
             console.log("items  :" + ids);
         }
 
         if (ids.length > 0) {
-            model.removeItems(ids);
-            if (spy != undefined)
-                spy.wait();
+            __model.removeItems(ids);
+            if (organizerChangedSpy != undefined)
+                organizerChangedSpy.wait();
             else
                 wait(100);
         }
-        model.update();
+        __model.update();
 
-        if (model.itemCount >0) {
+        if (__model.itemCount >0) {
             if (log != undefined)
-                console.log("Not empty database! " + model.itemCount);
+                console.log("Not empty database! " + __model.itemCount);
             empty_calendar(log);
         }
     }

@@ -98,7 +98,7 @@ Rectangle {
 
         function test_visualReminder(data) {
 
-            var list = utility.test_managerdata();
+            var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
                 return;
@@ -129,28 +129,14 @@ Rectangle {
                         , test);
 
                 var visualReminderDetail = Qt.createQmlObject(data.code , visualReminderEvent);
-                var organizerChangedSpy = Qt.createQmlObject(
-                          "import QtTest 1.0;"
-                          + "SignalSpy {id : organizerChangedSpy;}"
-                        , test);
-                organizerChangedSpy.target = model;
-                organizerChangedSpy.signalName = "modelChanged";
-                utility.model = model;
-                utility.spy = organizerChangedSpy;
+                utility.init(model);
                 utility.empty_calendar();
                 //------Create and save the detail test------//
                 visualReminderDetail.dataUrl = "http://www.test0.com";
                 visualReminderEvent.addDetail(visualReminderDetail);
                 model.saveItem(visualReminderEvent);
                 //Let's wait for the model to be up-to-date
-                var count = 0;
-                do {
-                   organizerChangedSpy.wait(200);
-                   count ++;
-                   verify(model.itemCount <= 1)
-                   verify(count <= 10)
-                } while (model.itemCount < 1)
-
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1)
                 var fetchVisuallist = model.items;
                 var savedVisualEvent = fetchVisuallist[0];
@@ -173,8 +159,7 @@ Rectangle {
                 savedVisualEvent.setDetail(savedEventDetail);
 
                 model.saveItem(savedVisualEvent);
-                organizerChangedSpy.wait();
-                model.update();
+                utility.organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchVisuallist = model.items;
@@ -189,8 +174,7 @@ Rectangle {
                 var removeEventDetail = updatedEvent.detail(Detail.VisualReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
-                organizerChangedSpy.wait();
-                model.update();
+                utility.organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchVisuallist = model.items;
@@ -202,8 +186,8 @@ Rectangle {
                 }
                 verify(detailRemovedEventDetailList.length == 0);
                 verify(removeEventDetail != undefined)
-                organizerChangedSpy.clear();
-                organizerChangedSpy.destroy();
+                utility.organizerChangedSpy.clear();
+                utility.organizerChangedSpy.destroy();
                 model.destroy();
                 visualReminderEvent.destroy();
                 visualReminderDetail.destroy();

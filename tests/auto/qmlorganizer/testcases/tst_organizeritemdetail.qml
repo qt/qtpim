@@ -481,7 +481,7 @@ TestCase {
 
     function test_attendeeDetail() {
         var detailChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                 + "SignalSpy {id : organizerChangedSpy;}"
+                 + "SignalSpy {}"
                  , organizerItemDetailTests);
         detailChangedSpy.target = eventAttendee;
         detailChangedSpy.signalName = "detailChanged";
@@ -522,7 +522,7 @@ TestCase {
 
     function test_rsvpGeneralTesting() {
         var detailChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                 + "SignalSpy {id : organizerChangedSpy;}"
+                 + "SignalSpy {}"
                  , organizerItemDetailTests);
         detailChangedSpy.target = eventRsvp;
         detailChangedSpy.signalName = "detailChanged";

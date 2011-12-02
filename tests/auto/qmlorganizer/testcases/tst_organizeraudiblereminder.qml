@@ -90,7 +90,7 @@ Rectangle {
 
         function test_audibleReminder(data) {
 
-            var list = utility.test_managerdata();
+            var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
                 return;
@@ -120,14 +120,7 @@ Rectangle {
                         , test);
 
                 var audibleReminderDetail = Qt.createQmlObject(data.code , event);
-                var organizerChangedSpy = Qt.createQmlObject(
-                          "import QtTest 1.0;"
-                          + "SignalSpy {id : organizerChangedSpy;}"
-                        , test);
-                organizerChangedSpy.target = model;
-                organizerChangedSpy.signalName = "modelChanged";
-                utility.model = model;
-                utility.spy = organizerChangedSpy;
+                utility.init(model);
                 utility.empty_calendar();
                 //------Create and save the detail test------//
                 utility.debug("Create and save the detail test", debugFlag);
@@ -135,15 +128,9 @@ Rectangle {
                 event.addDetail(audibleReminderDetail);
                 model.saveItem(event);
                 //Let's wait for the model to be up-to-date
-                var count = 0;
-                do {
-                   organizerChangedSpy.wait(200);
-                   count ++;
-                   verify(model.itemCount <= 1)
-                   verify(count <= 10)
-                } while (model.itemCount < 1)
+                utility.waitModelChange(1);
+                compare(model.itemCount, 1)
 
-                model.update();
                 var fetchlist = model.items;
                 var savedEvent = fetchlist[0];
                 verify(savedEvent != undefined);
@@ -163,7 +150,7 @@ Rectangle {
                 savedEvent.setDetail(savedEventDetail);
 
                 model.saveItem(savedEvent);
-                organizerChangedSpy.wait();
+                utility.organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
@@ -177,7 +164,7 @@ Rectangle {
                 var removeEventDetail = updatedEvent.detail(Detail.AudibleReminder);
                 updatedEvent.removeDetail(removeEventDetail);
                 model.saveItem(updatedEvent);
-                organizerChangedSpy.wait();
+                utility.organizerChangedSpy.wait();
                 //no new event created
                 compare(model.itemCount, 1)
                 fetchlist = model.items;
@@ -187,8 +174,8 @@ Rectangle {
                     utility.outputDetail(detailRemovedEvent.detail(Detail.AudibleReminder));
                 verify(detailRemovedEventDetailList.length == 0)
                 verify(removeEventDetail != undefined)
-                organizerChangedSpy.clear();
-                organizerChangedSpy.destroy();
+                utility.organizerChangedSpy.clear();
+                utility.organizerChangedSpy.destroy();
                 model.destroy();
                 event.destroy();
                 audibleReminderDetail.destroy();

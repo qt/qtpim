@@ -62,17 +62,14 @@ Rectangle {
         function test_collectionFilter_data() {
             return [
                         { tag:  "properties",
-                            code: "import QtOrganizer 5.0;"
-                                  + "CollectionFilter{\n"
-                                  + "    id:collectionfilter\n"
-                                  + "}\n"
+                            code: "import QtOrganizer 5.0;CollectionFilter{}"
                         },
                     ]
         }
 
         function test_collectionFilter(data) {
 
-            var list = utility.test_managerdata();
+            var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
                 return;
@@ -81,7 +78,6 @@ Rectangle {
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
                 var debugFlag = 0;
-                var waitTime = 400;
                 console.log("test_collectionFilter test start! :" + managerName);
                 var model = Qt.createQmlObject(
                         "import QtOrganizer 5.0;"
@@ -97,40 +93,20 @@ Rectangle {
                 var event = Qt.createQmlObject(
                         "import QtOrganizer 5.0;"
                         + "Event { "
-                        + "   id:event;"
                         + "   displayLabel: \"organizer collection filter test event\"; "
                         + "   description: \"organizer collection filter test event\"; "
                         + "   startDateTime: '2010-12-12'; "
                         + "   endDateTime: '2010-12-13'; }"
                         , test);
 
-                var organizerChangedSpy = Qt.createQmlObject(
-                        "import QtTest 1.0;"
-                        + "SignalSpy {id : organizerChangedSpy;}"
-                        , test);
-                var organizerCollectionChangedSpy = Qt.createQmlObject(
-                        "import QtTest 1.0;"
-                        + "SignalSpy {id : organizerChangedSpy;}"
-                        , test);
-
-                organizerChangedSpy.target = model;
-                organizerChangedSpy.signalName = "modelChanged";
-                organizerCollectionChangedSpy.target = model;
-                organizerCollectionChangedSpy.signalName = "collectionsChanged";
-                utility.model = model;
-                utility.spy = organizerChangedSpy;
+                utility.init(model);
                 utility.empty_calendar();
                 //------Create and save the detail test------//
-                var collectionLegnth = model.collections.length;
+                var collectionLength = model.collections.length;
                 model.saveCollection(testCollection)
 
                 //Let's wait for the model to be up-to-date
-                var count = 0;
-                do {
-                    organizerCollectionChangedSpy.wait(waitTime);
-                    count ++;
-                    verify(count <= 10)
-                } while (model.collections.length < collectionLegnth + 1)
+                utility.waitModelChange(collectionLength + 1, utility.collectionChange);
 
                 //we should have more than default collection now
                 utility.debug("New collection length :" + model.collections.length, debugFlag);
@@ -138,7 +114,7 @@ Rectangle {
                 utility.debug("New collection id :" + savedCollection.collectionId, debugFlag);
                 event.collectionId = savedCollection.collectionId;
                 model.saveItem(event);
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1, utility.itemChange);
 
                 var fetchlist = model.items;
                 compare(model.itemCount, 1)
@@ -149,47 +125,47 @@ Rectangle {
                 //Change collection filter id
                 collectionFilter.ids = [event.collectionId];
                 model.filter = collectionFilter;
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1)
 
                 //default collection
                 utility.debug("default collection id :" + model.defaultCollection().collectionId, debugFlag);
                 var modelCollectionFilter = model.filter;
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId];
-                utility.waiting_model_signal(0);
+                utility.waitModelChange(0);
 
                 compare(model.itemCount, 0)
                 //save event to default collection
                 event.collectionId = model.defaultCollection().collectionId;
                 model.saveItem(event);
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
 
                 //empty ides:
                 modelCollectionFilter.ids = [];
-                utility.waiting_model_signal(0);
+                utility.waitModelChange(0);
                 compare(model.itemCount, 0)
 
                 //remove collection filter or set empty filter
                 model.filter = null;
-                utility.waiting_model_signal(2);
+                utility.waitModelChange(2);
                 compare(model.itemCount, 2);
 
                 //reset back filter
                 collectionFilter = Qt.createQmlObject(data.code, test);
                 collectionFilter.ids = [event.collectionId];
                 model.filter = collectionFilter;
-                utility.waiting_model_signal(1);
+                utility.waitModelChange(1);
                 compare(model.itemCount, 1);
 
                 //set more collection ids
                 modelCollectionFilter = model.filter
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId, savedCollection.collectionId];
-                utility.waiting_model_signal(2);
+                utility.waitModelChange(2);
                 compare(model.itemCount, 2);
 
                 //One invalid collection id
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId, "12345666666",savedCollection.collectionId];
-                utility.waiting_model_signal(2);
+                utility.waitModelChange(2);
                 compare(model.itemCount, 2);
             }
         }

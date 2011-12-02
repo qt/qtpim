@@ -178,7 +178,7 @@ TestCase {
 
     function test_eventOccurrence() {
         var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                 + "SignalSpy {id : organizerChangedSpy;}"
+                 + "SignalSpy {}"
                  , organizerItemTests);
         itemChangedSpy.target = eventOccurrence;
         itemChangedSpy.signalName = "itemChanged";
@@ -222,7 +222,7 @@ TestCase {
 
     function test_event() {
         var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                 + "SignalSpy {id : organizerChangedSpy;}"
+                 + "SignalSpy {}"
                  , organizerItemTests);
         itemChangedSpy.target = event;
         itemChangedSpy.signalName = "itemChanged";
@@ -287,7 +287,7 @@ TestCase {
 
         // add one more dynamic created attendee
         var eventAttendee2 = utility.create_testobject("import QtTest 1.0;import QtOrganizer 5.0;"
-                 + "EventAttendee {id : eventAttendee2;}"
+                 + "EventAttendee {}"
                  , organizerItemTests);
         event.setDetail(eventAttendee2)
         itemChangedSpy.wait(waitTime);
@@ -335,7 +335,7 @@ TestCase {
 
     function test_item() {
         var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
-                 + "SignalSpy {id : organizerChangedSpy;}"
+                 + "SignalSpy {}"
                  , organizerItemTests);
         itemChangedSpy.target = item;
         itemChangedSpy.signalName = "itemChanged";

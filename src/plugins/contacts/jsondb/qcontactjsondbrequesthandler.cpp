@@ -60,7 +60,7 @@ Q_USE_JSONDB_NAMESPACE
 QTCONTACTS_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(ContactsJsonDbType, "com.nokia.mp.contacts.Contact")
-Q_DEFINE_LATIN1_CONSTANT(ContanctsJsonDbNotificationQuery, "[?_type in [\"com.nokia.mp.contacts.Contact\"]")
+Q_DEFINE_LATIN1_CONSTANT(ContanctsJsonDbNotificationQuery, "[?_type in [\"com.nokia.mp.contacts.Contact\"]]")
 
 const int QContactJsonDbRequestHandler::TIMEOUT_INTERVAL(100);
 

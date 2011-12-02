@@ -47,6 +47,7 @@
 #include <QDeclarativeParserStatus>
 
 #include <qcontact.h>
+#include "qcontactrequests.h"
 #include "qdeclarativecontact_p.h"
 #include <qversitreader.h>
 #include <qversitwriter.h>
@@ -122,7 +123,9 @@ public:
     QDeclarativeListProperty<QDeclarativeContactSortOrder> sortOrders() ;
 
     Q_INVOKABLE void removeContact(QContactLocalId id);
+    Q_INVOKABLE void removeContacts(const QStringList& ids);
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
+    Q_INVOKABLE void fetchContacts(const QStringList& contactIds);
 
 signals:
     void managerChanged();
@@ -139,22 +142,22 @@ public slots:
     void cancelUpdate();
     void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
     void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
-    void removeContacts(const QList<QContactLocalId>& ids);
-    void fetchContacts(const QList<QContactLocalId>& contactIds);
 
 private slots:
     void clearContacts();
     void fetchAgain();
     void requestUpdated();
-    void contactsSaved();
-    void contactsRemoved();
-    void contactsRemoved(const QList<QContactLocalId>& ids);
-    void contactsChanged(const QList<QContactLocalId>& ids);
+    void onRequestStateChanged(QContactAbstractRequest::State newState);
+    void onContactsAdded(const QList<QContactLocalId>& ids);
+    void onContactsRemoved(const QList<QContactLocalId>& ids);
+    void onContactsChanged(const QList<QContactLocalId>& ids);
 
     void startImport(QVersitReader::State state);
     void contactsExported(QVersitWriter::State state);
 
 private:
+    void checkError(const QContactAbstractRequest *request);
+
     QDeclarativeContactModelPrivate* d;
 };
 

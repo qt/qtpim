@@ -119,7 +119,9 @@ TestCase {
     }
 
     function getManagerList() {
-        var modelSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy {}", testUtility);
+
+        //  Javascript splice() is currently broken
+/*        var modelSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy {}", testUtility);
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
@@ -136,7 +138,8 @@ TestCase {
             managerlist.splice(idx, 1); // Remove it if really found!
 
         //console.log ("Manager list:  " + managerlist);
-        return managerlist;
+        return managerlist;*/
+        return ["jsondb", "memory"];
     }
 
     //Empty calendar data

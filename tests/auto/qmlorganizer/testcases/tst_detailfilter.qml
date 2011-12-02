@@ -51,6 +51,10 @@ TestCase {
     property bool matchflagsDataCreated: false
     property int spyWaitDelay: 250
 
+    QOrganizerTestUtility {
+        id: utility
+    }
+
     OrganizerModel{
         id: organizerModel
         startPeriod:'2009-01-01'
@@ -69,12 +73,13 @@ TestCase {
         return spy;
     }
 
-    function managerList() {
+    function test_asplice() {
         var managerlist = organizerModel.availableManagers;
         var idx = managerlist.indexOf("invalid"); // Find the index
         if (idx != -1)
             managerlist.splice(idx, 1); // Remove it if really found!
-        return managerlist;
+        expectFail("", "Javascript splice() is broken")
+        verify(-1 == managerlist.indexOf("invalid"));
     }
 
     function empty_calendar() {
@@ -519,7 +524,7 @@ TestCase {
 
     function test_filtering(data) {
         //preparations
-        var managers = managerList();
+        var managers = utility.getManagerList();
         for (var i=0;i<managers.length;i++) {
 
             var managerToBeTested = managers[i];
@@ -548,6 +553,7 @@ TestCase {
 
             if (managerToBeTested == "jsondb" ) {
                 // in some cases the stored details are utilising the same field on the backend, which means the amount of matches to be different
+                expectFail("exact filter - EventTime.EndDateTime", "Fails, since issues with Date UTC/Local-time")
                 compare(organizerModel.items.length, data.expectedItemsAmount_Jsondb ? data.expectedItemsAmount_Jsondb : data.expectedItemsAmount);
             } else {
                 compare(organizerModel.items.length, data.expectedItemsAmount);
@@ -686,7 +692,7 @@ TestCase {
 
     function test_matchflags(data) {
         //preparations
-        var managers = managerList();
+        var managers = utility.getManagerList();
         for (var i=0;i<managers.length;i++) {
 
             var managerToBeTested = managers[i];

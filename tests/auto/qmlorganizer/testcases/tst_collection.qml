@@ -47,6 +47,9 @@ TestCase {
     name: "CollectionTests"
     id: collectionTests
 
+    property int spyWaitDelay: 700
+    property int noSpyWaitDelay: 250
+
     // UTILITIES
 
     function empty_calendar(organizerModel) {
@@ -259,7 +262,6 @@ TestCase {
     }
     function test_item_api(data) {
         console.log("");//to print out test tags for every data set
-        var spyWaitDelay = 150;
         var modelChangedSpy = create_testobject("import QtTest 1.0; SignalSpy {}");
         // Create and check that backend for the tests is available
         var organizerModel = create_testobject("import QtQuick 2.0\n"
@@ -307,7 +309,7 @@ TestCase {
         organizerModel.saveItem(event);
         modelChangedSpy.wait(spyWaitDelay);
         var savedEvent = organizerModel.items[organizerModel.items.length - 1];
-        compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);
+        compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);//savedEvent sometimes undefined!?!?!?
         spy.target = savedEvent;
         spy.signalName = "itemChanged";
 
@@ -331,9 +333,8 @@ TestCase {
         }
         else if (data.managerToBeTested == "memory") {
             // memory backend does not support changing collection of an item, collection id does not change
-            wait(spyWaitDelay);
+            wait(noSpyWaitDelay);
             savedEvent = organizerModel.items[organizerModel.items.length - 1];
-            expectFail("memory backend", "Memory backend returns an error, but saves the collection still. To be fixed.");
             compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);
         }
 
@@ -351,7 +352,6 @@ TestCase {
     }
     function test_model_api(data) {
         console.log("");//to print out test tags for every data set
-        var spyWaitDelay = 250;
         // Create and check that backend for the tests is available
         var modelChangedSpy = create_testobject("import QtTest 1.0; SignalSpy {}");
         var organizerModel = create_testobject("import QtQuick 2.0\n"
@@ -392,7 +392,7 @@ TestCase {
           + "}\n");
         organizerModel.saveCollection(coll1);
         compare(organizerModel.collections.length, originalAmountOfCollections);
-        wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
+        wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(collectionsChangedSpy.count, 0);
         organizerModel.fetchCollections();
         collectionsChangedSpy.wait(spyWaitDelay);
@@ -495,17 +495,17 @@ TestCase {
         organizerModel.removeCollection(toBeDeletedCollection.collectionId);
         collectionsChangedSpy.wait(spyWaitDelay);
         modelChangedSpy.wait(spyWaitDelay);
-        wait(250);//waiting for asyncronous operations to finish on backend side
+        wait(noSpyWaitDelay);//waiting for asyncronous operations to finish on backend side
         verify(!organizerModel.item(eventItemId));
         compare(collectionsChangedSpy.count, 6);
         // - remove non-existing
         organizerModel.removeCollection("Missing in action");
-        wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
+        wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
         compare(collectionsChangedSpy.count, 6);
         // - remove default collection
         organizerModel.removeCollection(organizerModel.defaultCollection.collectionId);
-        wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
+        wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
         compare(collectionsChangedSpy.count, 6);
 
@@ -513,7 +513,7 @@ TestCase {
         compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);
 
         empty_calendar(organizerModel);
-        wait(spyWaitDelay);
+        wait(noSpyWaitDelay);
     }
 }
 

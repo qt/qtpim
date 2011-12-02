@@ -260,6 +260,7 @@ TestCase {
     function test_item_api(data) {
         console.log("");//to print out test tags for every data set
         var spyWaitDelay = 150;
+        var modelChangedSpy = create_testobject("import QtTest 1.0; SignalSpy {}");
         // Create and check that backend for the tests is available
         var organizerModel = create_testobject("import QtQuick 2.0\n"
           + "import QtOrganizer 5.0\n"
@@ -268,10 +269,12 @@ TestCase {
           + "  startPeriod:'2009-01-01'\n"
           + "  endPeriod:'2012-12-31'\n"
           + "}\n");
+        modelChangedSpy.target = organizerModel;
+        modelChangedSpy.signalName = "modelChanged";
+        modelChangedSpy.wait(spyWaitDelay);
         verify(backend_plugin_available(organizerModel, data.managerToBeTested),
                "Cannot run tests for " + data.managerToBeTested + " backend. No plugin available!");
         empty_calendar(organizerModel);
-        wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
 
         // There is currently some problem with static
         // SignalSpy and changing the target (QTBUG-21083).
@@ -293,9 +296,6 @@ TestCase {
         organizerModel.saveCollection(collection);
         collectionsChangedSpy.wait(spyWaitDelay);
         var savedCollection = organizerModel.collections[organizerModel.collections.length - 1];
-        var modelChangedSpy = create_testobject("import QtTest 1.0 \nSignalSpy {}");
-        modelChangedSpy.target = organizerModel;
-        modelChangedSpy.signalName = "modelChanged";
 
         // check that after first save event has default collection id
         var spySettingCollectionId = create_testobject("import QtTest 1.0 \nSignalSpy {}");
@@ -353,6 +353,7 @@ TestCase {
         console.log("");//to print out test tags for every data set
         var spyWaitDelay = 250;
         // Create and check that backend for the tests is available
+        var modelChangedSpy = create_testobject("import QtTest 1.0; SignalSpy {}");
         var organizerModel = create_testobject("import QtQuick 2.0\n"
           + "import QtOrganizer 5.0\n"
           + "OrganizerModel {\n"
@@ -360,10 +361,12 @@ TestCase {
           + "  startPeriod:'2009-01-01'\n"
           + "  endPeriod:'2012-12-31'\n"
           + "}\n");
+        modelChangedSpy.target = organizerModel;
+        modelChangedSpy.signalName = "modelChanged";
+        modelChangedSpy.wait();
         verify(backend_plugin_available(organizerModel, data.managerToBeTested),
                "Cannot run tests for " + data.managerToBeTested + " backend. No plugin available!");
         empty_calendar(organizerModel);
-        wait(spyWaitDelay);
 
         // There is currently some problem with static
         // SignalSpy and changing the target (QTBUG-21083).
@@ -485,9 +488,6 @@ TestCase {
           + "  endDateTime: '2010-12-13'\n"
           + "}\n");
         event.collectionId = toBeDeletedCollection.collectionId;
-        var modelChangedSpy = create_testobject("import QtTest 1.0 \nSignalSpy {}");
-        modelChangedSpy.target = organizerModel;
-        modelChangedSpy.signalName = "modelChanged";
         organizerModel.saveItem(event);
         modelChangedSpy.wait(spyWaitDelay);
         var eventItemId = organizerModel.events[organizerModel.events.length - 1].itemId;

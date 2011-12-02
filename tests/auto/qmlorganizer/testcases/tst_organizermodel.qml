@@ -383,14 +383,16 @@ TestCase {
 
     function test_organizermodel_error(data) {
         var spyWaitDelay = 200;
+        var organizerChangedSpy = utility.create_testobject("import QtTest 1.0; SignalSpy {}", modelTests);
         // Create and check that backend for the tests is available
         var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
             + "OrganizerModel {\n"
             + "  manager: '" + data.managerToBeTested + "'\n"
             + "}\n", modelTests);
-        wait(500);//needed so that OrganizerModel is initialised properly
-
+        organizerChangedSpy.target = organizerModel;
+        organizerChangedSpy.signalName = "modelChanged";
+        organizerChangedSpy.wait();
         organizerModel.removeCollection(organizerModel.defaultCollection().collectionId);
         wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.error, "PermissionsError");

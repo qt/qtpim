@@ -412,8 +412,12 @@ void QDeclarativeOrganizerModel::componentComplete()
     if (!d->m_manager)
         setManager(QString());
 
-    if (d->m_autoUpdate)
+    if (d->m_autoUpdate) {
+        d->m_fullUpdate = true;
         update();
+    } else {
+        emit modelChanged();
+    }
 }
 /*!
   \qmlproperty Filter OrganizerModel::filter

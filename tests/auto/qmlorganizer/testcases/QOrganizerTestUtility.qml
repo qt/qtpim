@@ -119,10 +119,13 @@ TestCase {
     }
 
     function getManagerList() {
+        var modelSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy {}", testUtility);
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
-        wait (100);
+        modelSpy.target = model;
+        modelSpy.signalName = "modelChanged";
+        modelSpy.wait();
         var managerlist = model.availableManagers;
         var idx = managerlist.indexOf("invalid"); // Find the index
         if (idx != -1)

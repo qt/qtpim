@@ -81,6 +81,7 @@ public:
 QTVERSIT_END_NAMESPACE
 
 #define QT_VERSIT_CONTACT_HANDLER_INTERFACE "com.nokia.qt.versit.contacthandlerfactory/1.0"
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtVersit::QVersitContactHandlerFactory, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
-
+QT_END_NAMESPACE
 #endif

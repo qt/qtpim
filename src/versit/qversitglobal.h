@@ -44,10 +44,17 @@
 
 #include <QtCore/qglobal.h>
 
-#define QTVERSIT_PREPEND_NAMESPACE(name) ::QtVersit::name
-#define QTVERSIT_BEGIN_NAMESPACE namespace QtVersit {
-#define QTVERSIT_END_NAMESPACE }
-#define QTVERSIT_USE_NAMESPACE using namespace QtVersit;
+#if defined(QT_NAMESPACE)
+#  define QTVERSIT_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtVersit::name
+#  define QTVERSIT_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtVersit {
+#  define QTVERSIT_END_NAMESPACE } }
+#  define QTVERSIT_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtVersit;
+#else
+#  define QTVERSIT_PREPEND_NAMESPACE(name) ::QtVersit::name
+#  define QTVERSIT_BEGIN_NAMESPACE namespace QtVersit {
+#  define QTVERSIT_END_NAMESPACE }
+#  define QTVERSIT_USE_NAMESPACE using namespace QtVersit;
+#endif
 
 #if defined(Q_OS_WIN)
 #  if defined(QT_NODLL)

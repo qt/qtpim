@@ -59,7 +59,9 @@
 #include <qcontactrelationshipfilter.h>
 #include <qcontacttype.h>
 
+QT_BEGIN_NAMESPACE
 class QDataStream;
+QT_END_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -165,6 +167,8 @@ Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContact& contact);
 
 QTCONTACTS_END_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContact), Q_MOVABLE_TYPE);
+QT_END_NAMESPACE
 
 #endif

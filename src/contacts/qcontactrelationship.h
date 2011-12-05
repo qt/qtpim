@@ -51,7 +51,9 @@
 #include <qcontactsglobal.h>
 #include <qlatin1constant.h>
 
+QT_BEGIN_NAMESPACE
 class QDataStream;
+QT_END_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 

@@ -696,11 +696,6 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
                 newJsonDbQuery.append("[?" + JsonDbString::kUuidStr +
                                       " in [");
                 foreach (QContactLocalId id, ids) {
-                    if (ids.first()!=id) {
-                        newJsonDbQuery.append(",");
-                    } else {
-                        newJsonDbQuery.append("[?" + JsonDbString::kUuidStr + " in [");
-                    }
                     newJsonDbQuery.append("\"" + convertId(id) + "\"");
                     newJsonDbQuery.append(",");
                 }

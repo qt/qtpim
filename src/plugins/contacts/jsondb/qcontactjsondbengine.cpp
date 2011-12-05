@@ -243,9 +243,9 @@ QContact QContactJsonDbEngine::contact(const QContactLocalId& contactId, const Q
     QString query;
     QVariantList results;
 
-    request.setFilter(idFilter);
-    idFilter.setIds(filterIds);
     filterIds.append(contactId);
+    idFilter.setIds(filterIds);
+    request.setFilter(idFilter);
     request.setFetchHint(fetchHint);
     *error = QContactManager::NoError;
 

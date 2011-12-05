@@ -47,10 +47,12 @@
 #include <QDataStream>
 
 #if !defined(Q_CC_MWERKS)
+QT_BEGIN_NAMESPACE
 template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemEngineId) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemEngineId)>::clone()
 {
     return d ? d->clone() : 0;
 }
+QT_END_NAMESPACE
 #endif
 
 QTORGANIZER_BEGIN_NAMESPACE

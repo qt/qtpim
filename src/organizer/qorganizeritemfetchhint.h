@@ -48,7 +48,9 @@
 
 #include "qorganizerglobal.h"
 
+QT_BEGIN_NAMESPACE
 class QDataStream;
+QT_END_NAMESPACE
 
 QTORGANIZER_BEGIN_NAMESPACE
 

@@ -57,7 +57,9 @@
 #include <qorganizeritemdescription.h>
 #include <qorganizercollection.h>
 
+QT_BEGIN_NAMESPACE
 class QDataStream;
+QT_END_NAMESPACE
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -178,8 +180,9 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem& organizer
 
 QTORGANIZER_END_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItem), Q_MOVABLE_TYPE);
-
+QT_END_NAMESPACE
 
 #endif
 

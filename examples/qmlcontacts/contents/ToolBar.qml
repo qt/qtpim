@@ -57,6 +57,37 @@ Item {
     Row {
         y: 3
         anchors.horizontalCenter: parent.horizontalCenter
+        Rectangle {
+            property int dummy: 0
+            property int fpsCount: 0
+            color: "black"
+            width: 35
+            height: 20
+            anchors.left: parent.left//; anchors.leftMargin: 0
+            anchors.verticalCenter: parent.verticalCenter
+            Text {
+                id: fpsText
+                color: "white"
+                anchors.centerIn: parent
+            }
+            NumberAnimation on dummy {
+                duration: 500
+                from: 0
+                to: 10000
+                loops: Animation.Infinite
+            }
+            onDummyChanged: fpsCount++;
+
+            Timer {
+                interval: 1000
+                 repeat: true
+                 running: true
+                 onTriggered: {
+                     fpsText.text = parent.fpsCount;
+                     parent.fpsCount = 0;
+                 }
+             }
+         }
         Repeater {
             model: toolbar.labels
             delegate:

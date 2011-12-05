@@ -44,10 +44,18 @@
 
 #include <QtCore/qglobal.h>
 
-#define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QtVersitOrganizer::name
-#define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QtVersitOrganizer {
-#define QTVERSITORGANIZER_END_NAMESPACE }
-#define QTVERSITORGANIZER_USE_NAMESPACE using namespace QtVersitOrganizer;
+#if defined(QT_NAMESPACE)
+#  define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtVersitOrganizer::name
+#  define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtVersitOrganizer {
+#  define QTVERSITORGANIZER_END_NAMESPACE } }
+#  define QTVERSITORGANIZER_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtVersitOrganizer;
+#else
+#  define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QtVersitOrganizer::name
+#  define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QtVersitOrganizer {
+#  define QTVERSITORGANIZER_END_NAMESPACE }
+#  define QTVERSITORGANIZER_USE_NAMESPACE using namespace QtVersitOrganizer;
+#endif
+
 
 #if defined(Q_OS_WIN)
 #  if defined(QT_NODLL)

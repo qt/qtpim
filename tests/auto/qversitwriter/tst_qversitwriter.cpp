@@ -48,23 +48,6 @@
 #include <QtTest/QtTest>
 #include <QByteArray>
 
-// Copied from tst_qcontactmanager.cpp
-// Waits until __expr is true and fails if it doesn't happen within 5s.
-#ifndef QTRY_VERIFY
-#define QTRY_VERIFY(__expr) \
-        do { \
-        const int __step = 50; \
-        const int __timeout = 5000; \
-        if (!(__expr)) { \
-            QTest::qWait(0); \
-        } \
-        for (int __i = 0; __i < __timeout && !(__expr); __i+=__step) { \
-            QTest::qWait(__step); \
-        } \
-        QVERIFY(__expr); \
-    } while(0)
-#endif
-
 QTVERSIT_USE_NAMESPACE
 
 void tst_QVersitWriter::init()

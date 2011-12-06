@@ -44,8 +44,6 @@
 #include <qcontacts.h>
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
 
 QTCONTACTS_USE_NAMESPACE
 

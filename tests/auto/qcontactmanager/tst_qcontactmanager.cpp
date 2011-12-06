@@ -139,8 +139,6 @@ QTCONTACTS_USE_NAMESPACE
     } while(0)
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
 
 // to get QFETCH to work with the template expression...
 typedef QMap<QString,QString> tst_QContactManager_QStringMap;

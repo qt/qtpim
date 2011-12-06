@@ -76,8 +76,6 @@ QTCONTACTS_USE_NAMESPACE
                                          fqcfr3.start();
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
 
 // Unfortunately the plumbing isn't in place to allow cancelling requests at arbitrary points
 // in their processing.  So we do multiple loops until things work out.. or not

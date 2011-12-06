@@ -44,8 +44,6 @@
 #include "qorganizer.h"
 
 //TESTED_COMPONENT=src/organizer
-//TESTED_CLASS=
-//TESTED_FILES=
 
 QTORGANIZER_USE_NAMESPACE
 class tst_QOrganizerItemDetails : public QObject

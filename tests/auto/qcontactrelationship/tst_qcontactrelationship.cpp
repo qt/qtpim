@@ -45,9 +45,6 @@
 
 #include <qcontacts.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 QTCONTACTS_USE_NAMESPACE
 
 class tst_QContactRelationship: public QObject

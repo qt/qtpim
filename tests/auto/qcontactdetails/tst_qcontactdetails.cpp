@@ -45,8 +45,6 @@
 #include <QContactDetail>
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
 
 QTCONTACTS_USE_NAMESPACE
 class tst_QContactDetails : public QObject

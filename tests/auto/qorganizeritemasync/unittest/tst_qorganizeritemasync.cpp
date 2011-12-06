@@ -56,8 +56,6 @@ QTORGANIZER_USE_NAMESPACE
                                                 fqifr3.setManager(manager); fqifr3.start();
 
 //TESTED_COMPONENT=src/organizer
-//TESTED_CLASS=
-//TESTED_FILES=
 
 // Unfortunately the plumbing isn't in place to allow cancelling requests at arbitrary points
 // in their processing.  So we do multiple loops until things work out.. or not

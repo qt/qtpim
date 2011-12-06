@@ -49,9 +49,6 @@
 #include <QMetaType>
 #include <QTypeInfo>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 QTCONTACTS_USE_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(a, "a");

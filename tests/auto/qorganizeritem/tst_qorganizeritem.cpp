@@ -47,8 +47,6 @@
 #include <QSet>
 
 //TESTED_COMPONENT=src/organizer
-//TESTED_CLASS=
-//TESTED_FILES=
 
 QTORGANIZER_USE_NAMESPACE
 class tst_QOrganizerItem: public QObject

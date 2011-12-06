@@ -47,8 +47,6 @@
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
 
 // Q_ASSERT replacement, since we often run in release builds
 #define Q_FATAL_VERIFY(statement)                                         \

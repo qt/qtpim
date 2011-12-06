@@ -45,9 +45,6 @@
 #include <qcontacts.h>
 
 //TESTED_COMPONENT=src/contacts
-//TESTED_CLASS=
-//TESTED_FILES=
-
 
 // Define global op new so we can track some amount of allocations
 static qulonglong cAllocated = 0;

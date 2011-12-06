@@ -102,10 +102,6 @@ QTORGANIZER_USE_NAMESPACE
 
 #define QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromAscii(QTORGANIZER_VERSION_NAME)); \
                                                           params.remove(QString::fromAscii(QTORGANIZER_IMPLEMENTATION_VERSION_NAME))
-
-//TESTED_CLASS=
-//TESTED_FILES=
-
 // to get QFETCH to work with the template expression...
 typedef QMap<QString,QString> tst_QOrganizerManager_QStringMap;
 Q_DECLARE_METATYPE(tst_QOrganizerManager_QStringMap)

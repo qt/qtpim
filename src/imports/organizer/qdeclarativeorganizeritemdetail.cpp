@@ -248,7 +248,7 @@ QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDeta
     case QDeclarativeOrganizerItemDetail::EventRsvp:
         return QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(fieldType);
     case QDeclarativeOrganizerItemDetail::Customized:
-        return QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(fieldType);
+        return QDeclarativeOrganizerItemExtendedDetail::fieldNameFromFieldType(fieldType);
     default:
         break;
     }
@@ -1756,14 +1756,14 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
     \o ExtendedDetail.FieldData
     \endlist
  */
-QDeclarativeOrganizeritemExtendedDetail::QDeclarativeOrganizeritemExtendedDetail(QObject *parent)
+QDeclarativeOrganizerItemExtendedDetail::QDeclarativeOrganizerItemExtendedDetail(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     setDetail(QOrganizerItemExtendedDetail());
 }
 
-QDeclarativeOrganizeritemExtendedDetail::ItemDetailType QDeclarativeOrganizeritemExtendedDetail::type() const
+QDeclarativeOrganizerItemExtendedDetail::ItemDetailType QDeclarativeOrganizerItemExtendedDetail::type() const
 {
     // XXX Should use something like "Extended" instead of "Customized"
     return QDeclarativeOrganizerItemDetail::Customized;
@@ -1774,7 +1774,7 @@ QDeclarativeOrganizeritemExtendedDetail::ItemDetailType QDeclarativeOrganizerite
 
     This property holds the name of the extended detail.
  */
-void QDeclarativeOrganizeritemExtendedDetail::setName(const QString &newDetailName)
+void QDeclarativeOrganizerItemExtendedDetail::setName(const QString &newDetailName)
 {
     if (newDetailName != name() && !readOnly()) {
         m_detail.setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailName, newDetailName);
@@ -1782,7 +1782,7 @@ void QDeclarativeOrganizeritemExtendedDetail::setName(const QString &newDetailNa
     }
 }
 
-QString QDeclarativeOrganizeritemExtendedDetail::name() const
+QString QDeclarativeOrganizerItemExtendedDetail::name() const
 {
     return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
 }
@@ -1792,7 +1792,7 @@ QString QDeclarativeOrganizeritemExtendedDetail::name() const
 
     This property holds the data of the extended detail.
  */
-void QDeclarativeOrganizeritemExtendedDetail::setData(const QVariant &data)
+void QDeclarativeOrganizerItemExtendedDetail::setData(const QVariant &data)
 {
     if (!readOnly()) {
         setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailData, data);
@@ -1800,7 +1800,7 @@ void QDeclarativeOrganizeritemExtendedDetail::setData(const QVariant &data)
     }
 }
 
-QVariant QDeclarativeOrganizeritemExtendedDetail::data() const
+QVariant QDeclarativeOrganizerItemExtendedDetail::data() const
 {
     return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
 }
@@ -2145,7 +2145,7 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
     else if (type == QDeclarativeOrganizerItemDetail::TodoTime)
         itemDetail = new QDeclarativeOrganizerTodoTime;
     else if (type == QDeclarativeOrganizerItemDetail::Customized)
-        itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
+        itemDetail = new QDeclarativeOrganizerItemExtendedDetail;
     else if (type == QDeclarativeOrganizerItemDetail::EventAttendee)
         itemDetail = new QDeclarativeOrganizerEventAttendee;
     else if (type == QDeclarativeOrganizerItemDetail::EventRsvp)
@@ -2197,7 +2197,7 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
     else if (definitionName == QOrganizerTodoTime::DefinitionName)
         itemDetail = new QDeclarativeOrganizerTodoTime;
     else if (definitionName == QOrganizerItemExtendedDetail::DefinitionName)
-        itemDetail = new QDeclarativeOrganizeritemExtendedDetail;
+        itemDetail = new QDeclarativeOrganizerItemExtendedDetail;
     else if (definitionName == QOrganizerEventAttendee::DefinitionName)
         itemDetail = new QDeclarativeOrganizerEventAttendee;
     else if (definitionName == QOrganizerEventRsvp::DefinitionName)
@@ -2490,7 +2490,7 @@ QString QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(int type)
     return QString();
 }
 
-QString QDeclarativeOrganizeritemExtendedDetail::fieldNameFromFieldType(int type)
+QString QDeclarativeOrganizerItemExtendedDetail::fieldNameFromFieldType(int type)
 {
     switch (type) {
     case FieldName:

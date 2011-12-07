@@ -95,7 +95,7 @@ public:
         qmlRegisterType<QDeclarativeOrganizerJournalTime>(uri, major, minor, "JournalTime");
         qmlRegisterType<QDeclarativeOrganizerTodoProgress>(uri, major, minor, "TodoProgress");
         qmlRegisterType<QDeclarativeOrganizerTodoTime>(uri, major, minor, "TodoTime");
-        qmlRegisterType<QDeclarativeOrganizeritemExtendedDetail>(uri, major, minor, "ExtendedDetail");
+        qmlRegisterType<QDeclarativeOrganizerItemExtendedDetail>(uri, major, minor, "ExtendedDetail");
         qmlRegisterType<QDeclarativeOrganizerEventAttendee>(uri, major, minor, "EventAttendee");
         qmlRegisterType<QDeclarativeOrganizerEventRsvp>(uri, major, minor, "EventRsvp");
 

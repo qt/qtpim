@@ -820,7 +820,7 @@ Q_SIGNALS:
 };
 
 
-class QDeclarativeOrganizeritemExtendedDetail : public QDeclarativeOrganizerItemDetail
+class QDeclarativeOrganizerItemExtendedDetail : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
@@ -835,7 +835,7 @@ public:
         FieldData
     };
 
-    QDeclarativeOrganizeritemExtendedDetail(QObject *parent = 0);
+    QDeclarativeOrganizerItemExtendedDetail(QObject *parent = 0);
 
     virtual ItemDetailType type() const;
 
@@ -1011,7 +1011,7 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemReminder
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemAudibleReminder))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemEmailReminder))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVisualReminder))
-QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizeritemExtendedDetail))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemExtendedDetail))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventAttendee))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventRsvp))
 

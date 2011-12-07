@@ -55,19 +55,6 @@
 
 QTORGANIZER_USE_NAMESPACE
 
-#define QTRY_WAIT(code, __expr) \
-        do { \
-        const int __step = 50; \
-        const int __timeout = 5000; \
-        if (!(__expr)) { \
-            QTest::qWait(0); \
-        } \
-        for (int __i = 0; __i < __timeout && !(__expr); __i+=__step) { \
-            do { code } while(0); \
-            QTest::qWait(__step); \
-        } \
-    } while(0)
-
 #define QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromAscii(QTORGANIZER_VERSION_NAME)); \
                                                           params.remove(QString::fromAscii(QTORGANIZER_IMPLEMENTATION_VERSION_NAME))
 // to get QFETCH to work with the template expression...
@@ -2364,7 +2351,6 @@ void tst_QOrganizerManager::signalEmission()
     QOrganizerTodo todo;
     QList<QOrganizerItem> batchAdd;
     QList<QOrganizerItemId> batchRemove;
-    QList<QOrganizerItemId> sigids;
     int addSigCount = 0; // the expected signal counts.
     int modSigCount = 0;
     int remSigCount = 0;
@@ -2478,10 +2464,14 @@ void tst_QOrganizerManager::signalEmission()
     todo2 = batchAdd.at(1);
     todo3 = batchAdd.at(2);
 
-    /* We basically loop, processing events, until we've seen an Add signal for each item */
-    sigids.clear();
-
-    QTRY_WAIT( while(spyAdded.size() > 0) {sigids += spyAdded.takeFirst().at(0).value<QList<QOrganizerItemId> >(); }, sigids.contains(todo.id()) && sigids.contains(todo2.id()) && sigids.contains(todo3.id()));
+    // We want to see one itemsAdded signal listing the id's for all three items
+    QTRY_COMPARE(spyAdded.count(), 1);
+    {
+        QList<QOrganizerItemId> sigids = spyAdded.takeFirst().at(0).value<QList<QOrganizerItemId> >();
+        QVERIFY(sigids.contains(todo.id()));
+        QVERIFY(sigids.contains(todo2.id()));
+        QVERIFY(sigids.contains(todo3.id()));
+    }
     QTRY_COMPARE(spyModified.count(), 0);
 
     todo1Observer.reset(new QOrganizerItemObserver(m1.data(), todo.id()));
@@ -2508,8 +2498,14 @@ void tst_QOrganizerManager::signalEmission()
     QVERIFY(m1->saveItems(&batchAdd));
     errorMap = m1->errorMap();
 
-    sigids.clear();
-    QTRY_WAIT( while(spyModified.size() > 0) {sigids += spyModified.takeFirst().at(0).value<QList<QOrganizerItemId> >(); }, sigids.contains(todo.id()) && sigids.contains(todo2.id()) && sigids.contains(todo3.id()));
+    // We want to see one itemsChanged signal listing the id's for all three items.
+    QTRY_COMPARE(spyModified.count(), 1);
+    {
+        QList<QOrganizerItemId> sigids = spyModified.takeFirst().at(0).value<QList<QOrganizerItemId> >();
+        QVERIFY(sigids.contains(todo.id()));
+        QVERIFY(sigids.contains(todo2.id()));
+        QVERIFY(sigids.contains(todo3.id()));
+    }
     QTRY_COMPARE(spyObserverModified1->count(), 1);
     QTRY_COMPARE(spyObserverModified2->count(), 1);
     QTRY_COMPARE(spyObserverModified3->count(), 1);
@@ -2519,8 +2515,14 @@ void tst_QOrganizerManager::signalEmission()
     QVERIFY(m1->removeItems(batchRemove));
     errorMap = m1->errorMap();
 
-    sigids.clear();
-    QTRY_WAIT( while(spyRemoved.size() > 0) {sigids += spyRemoved.takeFirst().at(0).value<QList<QOrganizerItemId> >(); }, sigids.contains(todo.id()) && sigids.contains(todo2.id()) && sigids.contains(todo3.id()));
+    // We want to see one itemsRemoved signal listing the id's for all three items.
+    QTRY_COMPARE(spyRemoved.count(), 1);
+    {
+        QList<QOrganizerItemId> sigids = spyRemoved.takeFirst().at(0).value<QList<QOrganizerItemId> >();
+        QVERIFY(sigids.contains(todo.id()));
+        QVERIFY(sigids.contains(todo2.id()));
+        QVERIFY(sigids.contains(todo3.id()));
+    }
     QTRY_COMPARE(spyObserverRemoved1->count(), 1);
     QTRY_COMPARE(spyObserverRemoved2->count(), 1);
     QTRY_COMPARE(spyObserverRemoved3->count(), 1);

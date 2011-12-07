@@ -51,6 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)
     : QObject(parent)
+    , m_detail(QDeclarativeOrganizerItemDetail::Customized), m_field(-1), m_componentCompleted(false)
 {
 }
 
@@ -66,23 +67,26 @@ void QDeclarativeOrganizerItemSortOrder::classBegin()
  */
 void QDeclarativeOrganizerItemSortOrder::componentComplete()
 {
-     setSortOrder(sortOrder());
+    setDetailDefinitionName();
+    m_componentCompleted = true;
 }
 
 /*!
     \qmlproperty string SortOrder::detail
 
-    This property holds the detail definition name of the details which will be inspected to perform sorting.
+    This property holds the detail type of which the sorting will be performed to. The value should
+    be the enumeration value of Detail::type.
  */
-void QDeclarativeOrganizerItemSortOrder::setDetail(const QVariant &detail)
+void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail)
 {
     if (m_detail != detail) {
         m_detail = detail;
-        emit sortOrderChanged();
+        if (m_componentCompleted)
+            setDetailDefinitionName();
     }
 }
 
-QVariant QDeclarativeOrganizerItemSortOrder::detail() const
+QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemSortOrder::detail() const
 {
     return m_detail;
 }
@@ -90,18 +94,23 @@ QVariant QDeclarativeOrganizerItemSortOrder::detail() const
 /*!
     \qmlproperty string SortOrder::field
 
-    This property holds the detail field name of the details which will be inspected to perform sorting.
-    For each detail elements, there are predefined field types.
+    This property holds the detail field type of which the sorting will be performed to. The value
+    should be the filld enumeration value defined in each detail element.
+
+    \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
+        EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
+        Timestamp, Type, Tag
  */
-void QDeclarativeOrganizerItemSortOrder::setField(const QVariant &field)
+void QDeclarativeOrganizerItemSortOrder::setField(int field)
 {
-    if (m_field !=field) {
+    if (field != m_field) {
         m_field = field;
-        emit sortOrderChanged();
+        if (m_componentCompleted)
+            setDetailDefinitionName();
     }
 }
 
-QVariant QDeclarativeOrganizerItemSortOrder::field() const
+int QDeclarativeOrganizerItemSortOrder::field() const
 {
     return m_field;
 }
@@ -177,35 +186,16 @@ Qt::CaseSensitivity QDeclarativeOrganizerItemSortOrder::caseSensitivity() const
  */
 QOrganizerItemSortOrder QDeclarativeOrganizerItemSortOrder::sortOrder()
 {
-    QString ddn;
-    if (m_detail.type() != QVariant::String) {
-        ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
-    } else {
-        ddn = m_detail.toString();
-    }
-
-    QString dfn;
-    if (m_field.type() != QVariant::String) {
-       QDeclarativeOrganizerItemDetail::ItemDetailType dt = QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn);
-       dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
-    } else {
-        dfn = m_field.toString();
-    }
-
-    d.setDetailDefinitionName(ddn, dfn);
-    m_detail = ddn;
-    m_field = dfn;
     return d;
 }
 
 /*!
     \internal
  */
-void QDeclarativeOrganizerItemSortOrder::setSortOrder(const QOrganizerItemSortOrder &sortOrder)
+void QDeclarativeOrganizerItemSortOrder::setDetailDefinitionName()
 {
-    d = sortOrder;
-    m_field = d.detailFieldName();
-    m_detail = d.detailDefinitionName();
+    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
+                              QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
     emit sortOrderChanged();
 }
 

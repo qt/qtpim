@@ -52,8 +52,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
-    Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY sortOrderChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::ItemDetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY sortOrderChanged)
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity sensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
@@ -68,11 +68,11 @@ public:
 
     QDeclarativeOrganizerItemSortOrder(QObject *parent = 0);
 
-    void setDetail(const QVariant &detail);
-    QVariant detail() const;
+    void setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail);
+    QDeclarativeOrganizerItemDetail::ItemDetailType detail() const;
 
-    void setField(const QVariant &field);
-    QVariant field() const;
+    void setField(int field);
+    int field() const;
 
     void setBlankPolicy(BlankPolicy policy);
     BlankPolicy blankPolicy() const;
@@ -94,10 +94,11 @@ Q_SIGNALS:
     void sortOrderChanged();
 
 private:
-    void setSortOrder(const QOrganizerItemSortOrder &sortOrder);
+    void setDetailDefinitionName();
 
-    QVariant m_field;
-    QVariant m_detail;
+    QDeclarativeOrganizerItemDetail::ItemDetailType m_detail;
+    int m_field;
+    bool m_componentCompleted;
     QOrganizerItemSortOrder d;
 };
 

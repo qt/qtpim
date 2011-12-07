@@ -113,9 +113,9 @@ QContactId& QContactId::operator=(const QContactId& other)
 */
 bool QContactId::operator==(const QContactId& other) const
 {
-    if (d->m_managerUri != other.d->m_managerUri)
+    if (d.constData()->m_managerUri != other.d.constData()->m_managerUri)
         return false;
-    if (d->m_localId != other.d->m_localId)
+    if (d.constData()->m_localId != other.d.constData()->m_localId)
         return false;
     return true;
 }
@@ -201,7 +201,7 @@ QDataStream& operator>>(QDataStream& in, QContactId& id)
  */
 QString QContactId::managerUri() const
 {
-    return d->m_managerUri;
+    return d.constData()->m_managerUri;
 }
 
 /*!
@@ -210,7 +210,7 @@ QString QContactId::managerUri() const
  */
 QContactLocalId QContactId::localId() const
 {
-    return d->m_localId;
+    return d.constData()->m_localId;
 }
 
 /*!

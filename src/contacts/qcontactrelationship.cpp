@@ -162,11 +162,11 @@ QContactRelationship& QContactRelationship::operator=(const QContactRelationship
  */
 bool QContactRelationship::operator==(const QContactRelationship &other) const
 {
-    if (d->m_first != other.d->m_first)
+    if (d.constData()->m_first != other.d.constData()->m_first)
         return false;
-    if (d->m_second != other.d->m_second)
+    if (d.constData()->m_second != other.d.constData()->m_second)
         return false;
-    if (d->m_relationshipType != other.d->m_relationshipType)
+    if (d.constData()->m_relationshipType != other.d.constData()->m_relationshipType)
         return false;
     return true;
 }
@@ -238,7 +238,7 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
  */
 QContact QContactRelationship::first() const
 {
-    return d->m_first;
+    return d.constData()->m_first;
 }
 
 /*!
@@ -248,7 +248,7 @@ QContact QContactRelationship::first() const
  */
 QContact QContactRelationship::second() const
 {
-    return d->m_second;
+    return d.constData()->m_second;
 }
 
 /*!
@@ -258,7 +258,7 @@ QContact QContactRelationship::second() const
  */
 QString QContactRelationship::relationshipType() const
 {
-    return d->m_relationshipType;
+    return d.constData()->m_relationshipType;
 }
 
 /*!

@@ -95,7 +95,7 @@ QContactActionDescriptor::~QContactActionDescriptor()
  */
 QString QContactActionDescriptor::actionName() const
 {
-    return d->m_actionName;
+    return d.constData()->m_actionName;
 }
 
 
@@ -104,7 +104,7 @@ QString QContactActionDescriptor::actionName() const
  */
 QString QContactActionDescriptor::serviceName() const
 {
-    return d->m_serviceName;
+    return d.constData()->m_serviceName;
 }
 
 /*!
@@ -112,7 +112,7 @@ QString QContactActionDescriptor::serviceName() const
  */
 QString QContactActionDescriptor::actionIdentifier() const
 {
-    return d->m_identifier;
+    return d.constData()->m_identifier;
 }
 
 /*!
@@ -120,7 +120,7 @@ QString QContactActionDescriptor::actionIdentifier() const
  */
 int QContactActionDescriptor::implementationVersion() const
 {
-    return d->m_implementationVersion;
+    return d.constData()->m_implementationVersion;
 }
 
 /*!
@@ -128,8 +128,8 @@ int QContactActionDescriptor::implementationVersion() const
  */
 QSet<QContactActionTarget> QContactActionDescriptor::supportedTargets(const QContact& contact) const
 {
-    if (d->m_factory) {
-        return d->m_factory->supportedTargets(contact, *this);
+    if (d.constData()->m_factory) {
+        return d.constData()->m_factory->supportedTargets(contact, *this);
     }
 
     return QSet<QContactActionTarget>();
@@ -140,8 +140,8 @@ QSet<QContactActionTarget> QContactActionDescriptor::supportedTargets(const QCon
  */
 QContactFilter QContactActionDescriptor::contactFilter() const
 {
-    if (d->m_factory) {
-        return d->m_factory->contactFilter(*this);
+    if (d.constData()->m_factory) {
+        return d.constData()->m_factory->contactFilter(*this);
     }
 
     return QContactInvalidFilter();
@@ -205,8 +205,8 @@ const QString QContactActionDescriptor::MetaDataMandatoryParameterKeys(QStringLi
  */
 QVariant QContactActionDescriptor::metaData(const QString& key, const QList<QContactActionTarget>& targets, const QVariantMap& parameters) const
 {
-    if (d->m_factory) {
-        return d->m_factory->metaData(key, targets, parameters, *this);
+    if (d.constData()->m_factory) {
+        return d.constData()->m_factory->metaData(key, targets, parameters, *this);
     }
 
     return QVariant();
@@ -241,8 +241,8 @@ QVariant QContactActionDescriptor::metaData(const QString& key, const QContact& 
  */
 bool QContactActionDescriptor::supportsContact(const QContact& contact) const
 {
-    if (d->m_factory) {
-        return d->m_factory->supportsContact(contact, *this);
+    if (d.constData()->m_factory) {
+        return d.constData()->m_factory->supportsContact(contact, *this);
     }
 
     return false;
@@ -255,15 +255,15 @@ bool QContactActionDescriptor::supportsContact(const QContact& contact) const
  */
 bool QContactActionDescriptor::isValid() const
 {
-    if (d->m_actionName.isEmpty())
+    if (d.constData()->m_actionName.isEmpty())
         return false;
-    if (d->m_serviceName.isEmpty())
+    if (d.constData()->m_serviceName.isEmpty())
         return false;
-    if (d->m_identifier.isEmpty())
+    if (d.constData()->m_identifier.isEmpty())
         return false;
-    if (d->m_implementationVersion <= 0)
+    if (d.constData()->m_implementationVersion <= 0)
         return false;
-    if (d->m_factory == 0)
+    if (d.constData()->m_factory == 0)
         return false;
     return true;
 }
@@ -277,7 +277,7 @@ bool QContactActionDescriptor::isValid() const
  */
 bool QContactActionDescriptor::operator==(const QContactActionDescriptor& other) const
 {
-    return (d->m_factory == other.d->m_factory && d->m_identifier == other.d->m_identifier);
+    return (d.constData()->m_factory == other.d.constData()->m_factory && d.constData()->m_identifier == other.d.constData()->m_identifier);
 }
 
 /*!
@@ -296,9 +296,9 @@ uint qHash(const QContactActionDescriptor& key)
 
     ret += QT_PREPEND_NAMESPACE(qHash)(key.serviceName())
             + QT_PREPEND_NAMESPACE(qHash)(key.actionName())
-            + QT_PREPEND_NAMESPACE(qHash)(key.d->m_identifier)
+            + QT_PREPEND_NAMESPACE(qHash)(key.d.constData()->m_identifier)
             + QT_PREPEND_NAMESPACE(qHash)(key.implementationVersion())
-            + QT_PREPEND_NAMESPACE(qHash)(key.d->m_factory);
+            + QT_PREPEND_NAMESPACE(qHash)(key.d.constData()->m_factory);
 
     return ret;
 }
@@ -309,9 +309,9 @@ QDebug& operator<<(QDebug dbg, const QContactActionDescriptor& descriptor)
     dbg.nospace() << "QContactActionDescriptor("
                   << descriptor.serviceName() << ","
                   << descriptor.actionName() << ","
-                  << descriptor.d->m_identifier << ","
+                  << descriptor.d.constData()->m_identifier << ","
                   << descriptor.implementationVersion() << ","
-                  << descriptor.d->m_factory
+                  << descriptor.d.constData()->m_factory
                   << ')';
     return dbg.maybeSpace();
 }

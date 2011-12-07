@@ -156,11 +156,11 @@ QContact::QContact(const QContact& other)
 bool QContact::isEmpty() const
 {
     /* Every contact has a display label field.. */
-    if (d->m_details.count() > 2)
+    if (d.constData()->m_details.count() > 2)
         return false;
 
     /* We know we have two details (a display label and a type) */
-    const QContactDisplayLabel& label = d->m_details.at(0);
+    const QContactDisplayLabel& label = d.constData()->m_details.at(0);
     return label.label().isEmpty();
 }
 
@@ -215,7 +215,7 @@ QContact::~QContact()
  */
 QContactId QContact::id() const
 {
-    return d->m_id;
+    return d.constData()->m_id;
 }
 
 /*!
@@ -254,7 +254,7 @@ void QContact::setId(const QContactId& id)
 */
 QContactLocalId QContact::localId() const
 {
-    return d->m_id.localId();
+    return d.constData()->m_id.localId();
 }
 
 /*!
@@ -268,7 +268,7 @@ QContactLocalId QContact::localId() const
 QString QContact::type() const
 {
     // type is detail 1
-    QString type = d->m_details.at(1).value(QContactType::FieldType).toString();
+    QString type = d.constData()->m_details.at(1).value(QContactType::FieldType).toString();
     if (type.isEmpty())
         return QContactType::TypeContact;
     return type;
@@ -318,7 +318,7 @@ void QContact::setType(const QContactType& type)
  */
 QString QContact::displayLabel() const
 {
-    return d->m_details.at(0).value(QContactDisplayLabel::FieldLabel).toString();
+    return d.constData()->m_details.at(0).value(QContactDisplayLabel::FieldLabel).toString();
 }
 
 /*!
@@ -409,11 +409,11 @@ void QContact::setTags(const QStringList& tags)
 QContactDetail QContact::detail(const QString& definitionName) const
 {
     if (definitionName.isEmpty())
-        return d->m_details.first();
+        return d.constData()->m_details.first();
 
     // build the sub-list of matching details.
-    for (int i = 0; i < d->m_details.size(); i++) {
-        const QContactDetail& existing = d->m_details.at(i);
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        const QContactDetail& existing = d.constData()->m_details.at(i);
         if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
             return existing;
         }
@@ -442,10 +442,10 @@ QList<QContactDetail> QContact::details(const QString& definitionName) const
 
     // special case
     if (definitionName.isEmpty()) {
-        sublist = d->m_details;
+        sublist = d.constData()->m_details;
     } else {
         for (int i = 0; i < d->m_details.size(); i++) {
-            const QContactDetail& existing = d->m_details.at(i);
+            const QContactDetail& existing = d.constData()->m_details.at(i);
             if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
                 sublist.append(existing);
             }
@@ -510,11 +510,11 @@ bool QContact::saveDetail(QContactDetail* detail)
 
     // try to find the "old version" of this field
     // ie, the one with the same type and id, but different value or attributes.
-    for (int i = 0; i < d->m_details.size(); i++) {
-        const QContactDetail& curr = d->m_details.at(i);
-        if (detail->d->m_definitionName == curr.d->m_definitionName && detail->d->m_id == curr.d->m_id) {
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        const QContactDetail& curr = d.constData()->m_details.at(i);
+        if (detail->d.constData()->m_definitionName == curr.d.constData()->m_definitionName && detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
-            detail->d->m_access = d->m_details[i].accessConstraints();
+            detail->d->m_access = d.constData()->m_details[i].accessConstraints();
             // Found the old version.  Replace it with this one.
             d->m_details[i] = *detail;
             return true;
@@ -556,8 +556,8 @@ bool QContact::removeDetail(QContactDetail* detail)
 
     // find the detail stored in the contact which has the same key as the detail argument
     int removeIndex = -1;
-    for (int i = 0; i < d->m_details.size(); i++) {
-        if (d->m_details.at(i).key() == detail->key()) {
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        if (d.constData()->m_details.at(i).key() == detail->key()) {
             removeIndex = i;
             break;
         }
@@ -570,14 +570,14 @@ bool QContact::removeDetail(QContactDetail* detail)
     if (detail->accessConstraints() & QContactDetail::Irremovable)
         return false;
 
-    if (!d->m_details.contains(*detail))
+    if (!d.constData()->m_details.contains(*detail))
         return false;
 
     // remove any preferences we may have stored for the detail.
-    QStringList keys = d->m_preferences.keys();
+    QStringList keys = d.constData()->m_preferences.keys();
     for (int i = 0; i < keys.size(); i++) {
         QString prefKey = keys.at(i);
-        if (d->m_preferences.value(prefKey) == detail->d->m_id) {
+        if (d.constData()->m_preferences.value(prefKey) == detail->d.constData()->m_id) {
             d->m_preferences.remove(prefKey);
         }
     }
@@ -593,14 +593,14 @@ bool QContact::removeDetail(QContactDetail* detail)
 bool QContact::operator==(const QContact& other) const
 {
     // Id must be the same
-    if (other.d->m_id != d->m_id)
+    if (other.d.constData()->m_id != d.constData()->m_id)
         return false;
     // There must be same amount of details
-    if (other.d->m_details.size() != d->m_details.size())
+    if (other.d.constData()->m_details.size() != d.constData()->m_details.size())
         return false;
     // All details must match
-    foreach (QContactDetail detail, other.d->m_details) {
-        if (!d->m_details.contains(detail))
+    foreach (QContactDetail detail, other.d.constData()->m_details) {
+        if (!d.constData()->m_details.contains(detail))
             return false;
     }
     // All equal
@@ -684,12 +684,12 @@ QList<QContactRelationship> QContact::relationships(const QString& relationshipT
 {
     // if empty, then they want all relationships
     if (relationshipType.isEmpty())
-        return d->m_relationshipsCache;
+        return d.constData()->m_relationshipsCache;
 
     // otherwise, filter on type.
     QList<QContactRelationship> retn;
-    for (int i = 0; i < d->m_relationshipsCache.size(); i++) {
-        QContactRelationship curr = d->m_relationshipsCache.at(i);
+    for (int i = 0; i < d.constData()->m_relationshipsCache.size(); i++) {
+        QContactRelationship curr = d.constData()->m_relationshipsCache.at(i);
         if (curr.relationshipType() == relationshipType) {
             retn.append(curr);
         }
@@ -716,24 +716,24 @@ QList<QContactRelationship> QContact::relationships(const QString& relationshipT
 QList<QContact> QContact::relatedContacts(const QString& relationshipType, QContactRelationship::Role role) const
 {
     QList<QContact> retn;
-    for (int i = 0; i < d->m_relationshipsCache.size(); i++) {
-        QContactRelationship curr = d->m_relationshipsCache.at(i);
+    for (int i = 0; i < d.constData()->m_relationshipsCache.size(); i++) {
+        QContactRelationship curr = d.constData()->m_relationshipsCache.at(i);
         if (relationshipType.isEmpty() || curr.relationshipType() == relationshipType) {
             // check that the other contacts fill the given role
             if (role == QContactRelationship::First) {
-                if (curr.first().id() != d->m_id) {
+                if (curr.first().id() != d.constData()->m_id) {
                     if (!retn.contains(curr.first())) {
                         retn.append(curr.first());
                     }
                 }
             } else if (role == QContactRelationship::Second) {
-                if (curr.first().id() == d->m_id) {
+                if (curr.first().id() == d.constData()->m_id) {
                     if (!retn.contains(curr.second())) {
                         retn.append(curr.second());
                     }
                 }
             } else { // role == Either.
-                if (curr.first().id() == d->m_id) {
+                if (curr.first().id() == d.constData()->m_id) {
                     if (!retn.contains(curr.second())) {
                         retn.append(curr.second());
                     }
@@ -789,11 +789,11 @@ bool QContact::setPreferredDetail(const QString& actionName, const QContactDetai
         return false;
 
     // check to see whether the the given preferredDetail is saved in this contact
-    if (!d->m_details.contains(preferredDetail))
+    if (!d.constData()->m_details.contains(preferredDetail))
         return false;
 
     // otherwise, save the preference.
-    d->m_preferences.insert(actionName, preferredDetail.d->m_id);
+    d->m_preferences.insert(actionName, preferredDetail.d.constData()->m_id);
     return true;
 }
 
@@ -805,14 +805,14 @@ bool QContact::setPreferredDetail(const QString& actionName, const QContactDetai
  */
 bool QContact::isPreferredDetail(const QString& actionName, const QContactDetail& detail) const
 {
-    if (!d->m_details.contains(detail))
+    if (!d.constData()->m_details.contains(detail))
         return false;
 
     if (actionName.isEmpty())
-         return d->m_preferences.values().contains(detail.d->m_id);
+         return d.constData()->m_preferences.values().contains(detail.d.constData()->m_id);
 
-    QMap<QString, int>::const_iterator it = d->m_preferences.find(actionName);
-    if (it != d->m_preferences.end() && it.value() == detail.d->m_id)
+    QMap<QString, int>::const_iterator it = d.constData()->m_preferences.find(actionName);
+    if (it != d.constData()->m_preferences.end() && it.value() == detail.d.constData()->m_id)
         return true;
 
     return false;
@@ -832,14 +832,14 @@ QContactDetail QContact::preferredDetail(const QString& actionName) const
     if (actionName.isEmpty())
         return QContactDetail();
 
-    if (!d->m_preferences.contains(actionName))
+    if (!d.constData()->m_preferences.contains(actionName))
         return QContactDetail();
 
     QContactDetail retn;
-    int detId = d->m_preferences.value(actionName);
-    for (int i = 0; i < d->m_details.size(); i++) {
-        QContactDetail det = d->m_details.at(i);
-        if (det.d->m_id == detId) {
+    int detId = d.constData()->m_preferences.value(actionName);
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        QContactDetail det = d.constData()->m_details.at(i);
+        if (det.d.constData()->m_id == detId) {
             // found it.
             retn = det;
             break;
@@ -858,9 +858,9 @@ QContactDetail QContact::preferredDetail(const QString& actionName) const
 QMap<QString, QContactDetail> QContact::preferredDetails() const
 {
     QMap<QString, QContactDetail> ret;
-    QMap<QString, int>::const_iterator it = d->m_preferences.constBegin();
-    while (it != d->m_preferences.constEnd()) {
-        ret.insert(it.key(), d->m_details.at(it.value()));
+    QMap<QString, int>::const_iterator it = d.constData()->m_preferences.constBegin();
+    while (it != d.constData()->m_preferences.constEnd()) {
+        ret.insert(it.key(), d.constData()->m_details.at(it.value()));
         ++it;
     }
 

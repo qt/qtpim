@@ -209,7 +209,7 @@ QContactDetail::QContactDetail(const QContactDetail& other)
 */
 QContactDetail::QContactDetail(const QContactDetail& other, const QString& expectedDefinitionId)
 {
-    if (other.d->m_definitionName == expectedDefinitionId) {
+    if (other.d.constData()->m_definitionName == expectedDefinitionId) {
         d = other.d;
     } else {
         d = new QContactDetailPrivate;
@@ -236,7 +236,7 @@ QContactDetail& QContactDetail::operator=(const QContactDetail& other)
 QContactDetail& QContactDetail::assign(const QContactDetail& other, const QString& expectedDefinitionId)
 {
     if (this != &other) {
-        if (other.d->m_definitionName == expectedDefinitionId) {
+        if (other.d.constData()->m_definitionName == expectedDefinitionId) {
             d = other.d;
         } else {
             d = new QContactDetailPrivate;
@@ -385,7 +385,7 @@ bool QContactDetail::isEmpty() const
  */
 int QContactDetail::key() const
 {
-    return d->m_id;
+    return d.constData()->m_id;
 }
 
 /*! Causes the implicitly-shared detail to be detached from any other copies, and generates a new key for it.

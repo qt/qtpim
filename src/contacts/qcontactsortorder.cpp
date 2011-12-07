@@ -116,7 +116,7 @@ QContactSortOrder& QContactSortOrder::operator=(const QContactSortOrder& other)
 bool QContactSortOrder::isValid() const
 {
     /* We clear both when one is empty, so we only need to check one */
-    if (d->m_definitionName.isEmpty())
+    if (d.constData()->m_definitionName.isEmpty())
         return false;
     return true;
 }
@@ -127,11 +127,11 @@ bool QContactSortOrder::isValid() const
  */
 bool QContactSortOrder::operator ==(const QContactSortOrder& other) const
 {
-    if (d->m_blankPolicy == other.d->m_blankPolicy &&
-        d->m_direction == other.d->m_direction &&
-        d->m_sensitivity == other.d->m_sensitivity &&
-        d->m_definitionName == other.d->m_definitionName &&
-        d->m_fieldName == other.d->m_fieldName)
+    if (d.constData()->m_blankPolicy == other.d.constData()->m_blankPolicy &&
+        d.constData()->m_direction == other.d.constData()->m_direction &&
+        d.constData()->m_sensitivity == other.d.constData()->m_sensitivity &&
+        d.constData()->m_definitionName == other.d.constData()->m_definitionName &&
+        d.constData()->m_fieldName == other.d.constData()->m_fieldName)
         return true;
     return false;
 }
@@ -237,7 +237,7 @@ void QContactSortOrder::setDirection(Qt::SortOrder direction)
  */
 QString QContactSortOrder::detailDefinitionName() const
 {
-    return d->m_definitionName;
+    return d.constData()->m_definitionName;
 }
 
 /*!
@@ -246,7 +246,7 @@ QString QContactSortOrder::detailDefinitionName() const
  */
 QString QContactSortOrder::detailFieldName() const
 {
-    return d->m_fieldName;
+    return d.constData()->m_fieldName;
 }
 
 /*!
@@ -255,7 +255,7 @@ QString QContactSortOrder::detailFieldName() const
  */
 QContactSortOrder::BlankPolicy QContactSortOrder::blankPolicy() const
 {
-    return d->m_blankPolicy;
+    return d.constData()->m_blankPolicy;
 }
 
 /*!
@@ -264,7 +264,7 @@ QContactSortOrder::BlankPolicy QContactSortOrder::blankPolicy() const
  */
 Qt::SortOrder QContactSortOrder::direction() const
 {
-    return d->m_direction;
+    return d.constData()->m_direction;
 }
 
 /*!
@@ -273,7 +273,7 @@ Qt::SortOrder QContactSortOrder::direction() const
  */
 Qt::CaseSensitivity QContactSortOrder::caseSensitivity() const
 {
-    return d->m_sensitivity;
+    return d.constData()->m_sensitivity;
 }
 
 /*!

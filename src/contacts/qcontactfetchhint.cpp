@@ -138,7 +138,7 @@ QContactFetchHint& QContactFetchHint::operator=(const QContactFetchHint& other)
  */
 QStringList QContactFetchHint::detailDefinitionsHint() const
 {
-    return d->m_definitionsHint;
+    return d.constData()->m_definitionsHint;
 }
 
 /*!
@@ -166,7 +166,7 @@ void QContactFetchHint::setDetailDefinitionsHint(const QStringList& definitionNa
  */
 QStringList QContactFetchHint::relationshipTypesHint() const
 {
-    return d->m_relationshipsHint;
+    return d.constData()->m_relationshipsHint;
 }
 
 /*!
@@ -197,7 +197,7 @@ void QContactFetchHint::setRelationshipTypesHint(const QStringList& relationship
  */
 QSize QContactFetchHint::preferredImageSize() const
 {
-    return d->m_preferredImageSize;
+    return d.constData()->m_preferredImageSize;
 }
 
 /*!
@@ -228,7 +228,7 @@ void QContactFetchHint::setPreferredImageSize(const QSize& size)
  */
 QContactFetchHint::OptimizationHints QContactFetchHint::optimizationHints() const
 {
-    return d->m_optimizationHints;
+    return d.constData()->m_optimizationHints;
 }
 
 /*!
@@ -262,7 +262,7 @@ void QContactFetchHint::setOptimizationHints(OptimizationHints hints)
  */
 int QContactFetchHint::maxCountHint() const
 {
-    return d->m_maxCount;
+    return d.constData()->m_maxCount;
 }
 
 /*!

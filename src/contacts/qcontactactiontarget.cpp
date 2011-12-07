@@ -118,7 +118,7 @@ QContactActionTarget::~QContactActionTarget()
  */
 QContact QContactActionTarget::contact() const
 {
-    return d->m_contact;
+    return d.constData()->m_contact;
 }
 
 /*!
@@ -127,7 +127,7 @@ QContact QContactActionTarget::contact() const
  */
 QList<QContactDetail> QContactActionTarget::details() const
 {
-    return d->m_details;
+    return d.constData()->m_details;
 }
 
 /*!
@@ -154,7 +154,7 @@ void QContactActionTarget::setDetails(const QList<QContactDetail>& details)
  */
 bool QContactActionTarget::isValid() const
 {
-    return (d->m_contact != QContact());
+    return (d.constData()->m_contact != QContact());
 }
 
 /*!
@@ -162,8 +162,8 @@ bool QContactActionTarget::isValid() const
  */
 bool QContactActionTarget::operator==(const QContactActionTarget& other) const
 {
-    return d->m_contact == other.d->m_contact
-            && d->m_details == other.d->m_details;
+    return d.constData()->m_contact == other.d.constData()->m_contact
+            && d.constData()->m_details == other.d.constData()->m_details;
 }
 
 /*!
@@ -181,9 +181,9 @@ bool QContactActionTarget::operator!=(const QContactActionTarget& other) const
  */
 QContactActionTarget::Type QContactActionTarget::type() const
 {
-    if (d->m_contact.isEmpty())
+    if (d.constData()->m_contact.isEmpty())
         return QContactActionTarget::Invalid;
-    switch (d->m_details.count()) {
+    switch (d.constData()->m_details.count()) {
         case 0:
             return QContactActionTarget::WholeContact;
         case 1:
@@ -209,8 +209,8 @@ QDataStream& operator<<(QDataStream& out, const QContactActionTarget& target)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QContactActionTarget
     out << formatVersion;
-    out << target.d->m_contact;
-    out << target.d->m_details;
+    out << target.d.constData()->m_contact;
+    out << target.d.constData()->m_details;
     return out;
 }
 

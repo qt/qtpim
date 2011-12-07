@@ -115,7 +115,7 @@ void QContactChangeSet::setDataChanged(bool dataChanged)
  */
 bool QContactChangeSet::dataChanged()
 {
-    return d->m_dataChanged;
+    return d.constData()->m_dataChanged;
 }
 
 /*!
@@ -125,7 +125,7 @@ bool QContactChangeSet::dataChanged()
  */
 QSet<QContactLocalId> QContactChangeSet::addedContacts() const
 {
-    return d->m_addedContacts;
+    return d.constData()->m_addedContacts;
 }
 
 /*!
@@ -165,7 +165,7 @@ void QContactChangeSet::clearAddedContacts()
  */
 QSet<QContactLocalId> QContactChangeSet::changedContacts() const
 {
-    return d->m_changedContacts;
+    return d.constData()->m_changedContacts;
 }
 
 /*!
@@ -205,7 +205,7 @@ void QContactChangeSet::clearChangedContacts()
  */
 QSet<QContactLocalId> QContactChangeSet::removedContacts() const
 {
-    return d->m_removedContacts;
+    return d.constData()->m_removedContacts;
 }
 
 /*!
@@ -245,7 +245,7 @@ void QContactChangeSet::clearRemovedContacts()
  */
 QSet<QContactLocalId> QContactChangeSet::addedRelationshipsContacts() const
 {
-    return d->m_addedRelationships;
+    return d.constData()->m_addedRelationships;
 }
 
 /*!
@@ -285,7 +285,7 @@ void QContactChangeSet::clearAddedRelationshipsContacts()
  */
 QSet<QContactLocalId> QContactChangeSet::removedRelationshipsContacts() const
 {
-    return d->m_removedRelationships;
+    return d.constData()->m_removedRelationships;
 }
 
 /*!
@@ -343,7 +343,7 @@ void QContactChangeSet::setOldAndNewSelfContactId(const QPair<QContactLocalId, Q
  */
 QPair<QContactLocalId, QContactLocalId> QContactChangeSet::oldAndNewSelfContactId() const
 {
-    return d->m_oldAndNewSelfContactId;
+    return d.constData()->m_oldAndNewSelfContactId;
 }
 
 /*!
@@ -370,21 +370,21 @@ void QContactChangeSet::emitSignals(QContactManagerEngine *engine)
     if (!engine)
         return;
 
-    if (d->m_dataChanged) {
+    if (d.constData()->m_dataChanged) {
         emit engine->dataChanged();
     } else {
-        if (!d->m_addedContacts.isEmpty())
-            emit engine->contactsAdded(d->m_addedContacts.toList());
-        if (!d->m_changedContacts.isEmpty())
-            emit engine->contactsChanged(d->m_changedContacts.toList());
-        if (!d->m_removedContacts.isEmpty())
-            emit engine->contactsRemoved(d->m_removedContacts.toList());
-        if (!d->m_addedRelationships.isEmpty())
-            emit engine->relationshipsAdded(d->m_addedRelationships.toList());
-        if (!d->m_removedRelationships.isEmpty())
-            emit engine->relationshipsRemoved(d->m_removedRelationships.toList());
-        if (d->m_oldAndNewSelfContactId.first != d->m_oldAndNewSelfContactId.second)
-            emit engine->selfContactIdChanged(d->m_oldAndNewSelfContactId.first, d->m_oldAndNewSelfContactId.second);
+        if (!d.constData()->m_addedContacts.isEmpty())
+            emit engine->contactsAdded(d.constData()->m_addedContacts.toList());
+        if (!d.constData()->m_changedContacts.isEmpty())
+            emit engine->contactsChanged(d.constData()->m_changedContacts.toList());
+        if (!d.constData()->m_removedContacts.isEmpty())
+            emit engine->contactsRemoved(d.constData()->m_removedContacts.toList());
+        if (!d.constData()->m_addedRelationships.isEmpty())
+            emit engine->relationshipsAdded(d.constData()->m_addedRelationships.toList());
+        if (!d.constData()->m_removedRelationships.isEmpty())
+            emit engine->relationshipsRemoved(d.constData()->m_removedRelationships.toList());
+        if (d.constData()->m_oldAndNewSelfContactId.first != d.constData()->m_oldAndNewSelfContactId.second)
+            emit engine->selfContactIdChanged(d.constData()->m_oldAndNewSelfContactId.first, d.constData()->m_oldAndNewSelfContactId.second);
     }
 }
 

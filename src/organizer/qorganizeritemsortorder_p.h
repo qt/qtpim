@@ -53,9 +53,7 @@
 // We mean it.
 //
 
-#include "qorganizeritemsortorder.h"
-
-#include <QSharedData>
+#include <qorganizeritemsortorder.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -63,10 +61,10 @@ class QOrganizerItemSortOrderPrivate : public QSharedData
 {
 public:
     QOrganizerItemSortOrderPrivate()
-            : QSharedData()
-            , m_blankPolicy(QOrganizerItemSortOrder::BlanksLast)
-            , m_direction(Qt::AscendingOrder)
-            , m_sensitivity(Qt::CaseSensitive)
+        : QSharedData()
+        , m_blankPolicy(QOrganizerItemSortOrder::BlanksLast)
+        , m_direction(Qt::AscendingOrder)
+        , m_sensitivity(Qt::CaseSensitive)
     {
     }
 
@@ -83,4 +81,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMSORTORDER_P_H

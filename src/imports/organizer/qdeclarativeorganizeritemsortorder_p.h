@@ -42,11 +42,10 @@
 #ifndef QDECLARATIVEORGANIZERITEMSORTORDER_H
 #define QDECLARATIVEORGANIZERITEMSORTORDER_H
 
-#include "qdeclarative.h"
-
-#include "qorganizeritemsortorder.h"
 #include "qdeclarativeorganizeritemdetail_p.h"
-#include <QDeclarativeParserStatus>
+#include <qorganizeritemsortorder.h>
+#include <QtDeclarative/qdeclarative.h>
+#include <QtDeclarative/qdeclarativeparserstatus.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -60,120 +59,43 @@ class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativePa
     Q_PROPERTY(Qt::CaseSensitivity sensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
     Q_ENUMS(BlankPolicy)
-public:
-    QDeclarativeOrganizerItemSortOrder(QObject* parent = 0)
-        :QObject(parent)
-    {
-    }
 
+public:
     enum BlankPolicy {
         BlanksFirst = QOrganizerItemSortOrder::BlanksFirst,
-        BlanksLast = QOrganizerItemSortOrder::BlanksLast,
+        BlanksLast = QOrganizerItemSortOrder::BlanksLast
     };
 
-    //from QDeclarativeParserStatus
-    void classBegin() {}
-    void componentComplete()
-    {
-         setSortOrder(sortOrder());
-    }
+    QDeclarativeOrganizerItemSortOrder(QObject *parent = 0);
 
-    void setDetail(const QVariant& v)
-    {
-        if (m_detail != v) {
-            m_detail = v;
-            emit sortOrderChanged();
-        }
+    void setDetail(const QVariant &detail);
+    QVariant detail() const;
 
-    }
+    void setField(const QVariant &field);
+    QVariant field() const;
 
-    void setField(const QVariant& v)
-    {
-        if (m_field !=v) {
-            m_field = v;
-            emit sortOrderChanged();
-        }
-    }
+    void setBlankPolicy(BlankPolicy policy);
+    BlankPolicy blankPolicy() const;
 
-    void setBlankPolicy(BlankPolicy policy)
-    {
-        if (policy != blankPolicy()) {
-            d.setBlankPolicy(static_cast<QOrganizerItemSortOrder::BlankPolicy>(policy));
-            emit sortOrderChanged();
-        }
-    }
+    void setDirection(Qt::SortOrder newDirection);
+    Qt::SortOrder direction() const;
 
-    void setDirection(Qt::SortOrder newDirection)
-    {
-        if (newDirection != direction()) {
-            d.setDirection(newDirection);
-            emit sortOrderChanged();
-        }
-    }
+    void setCaseSensitivity(Qt::CaseSensitivity newSensitivity);
+    Qt::CaseSensitivity caseSensitivity() const;
 
-    void setCaseSensitivity(Qt::CaseSensitivity newSensitivity)
-    {
-        if (newSensitivity != caseSensitivity()) {
-            d.setCaseSensitivity(newSensitivity);
-            emit sortOrderChanged();
-        }
-    }
+    // from QDeclarativeParserStatus
+    void classBegin();
+    void componentComplete();
 
-    QVariant detail() const
-    {
-        return m_detail;
-    }
-    QVariant field() const
-    {
-        return m_field;
-    }
-    BlankPolicy blankPolicy() const
-    {
-        return static_cast<QDeclarativeOrganizerItemSortOrder::BlankPolicy>(d.blankPolicy());
-    }
-    Qt::SortOrder direction() const
-    {
-        return d.direction();
-    }
-    Qt::CaseSensitivity caseSensitivity() const
-    {
-        return d.caseSensitivity();
-    }
+    // used by organizer model
+    QOrganizerItemSortOrder sortOrder();
 
-    QOrganizerItemSortOrder sortOrder()
-    {
-        QString ddn;
-        if (m_detail.type() != QVariant::String) {
-            ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
-        } else {
-            ddn = m_detail.toString();
-        }
-
-        QString dfn;
-        if (m_field.type() != QVariant::String) {
-           QDeclarativeOrganizerItemDetail::ItemDetailType dt = QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn);
-           dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
-        } else {
-            dfn = m_field.toString();
-        }
-
-        d.setDetailDefinitionName(ddn, dfn);
-        m_detail = ddn;
-        m_field = dfn;
-        return d;
-    }
-
-    void setSortOrder(const QOrganizerItemSortOrder& sortOrder)
-    {
-        d = sortOrder;
-        m_field = d.detailFieldName();
-        m_detail = d.detailDefinitionName();
-        emit sortOrderChanged();
-    }
-
-signals:
+Q_SIGNALS:
     void sortOrderChanged();
+
 private:
+    void setSortOrder(const QOrganizerItemSortOrder &sortOrder);
+
     QVariant m_field;
     QVariant m_detail;
     QOrganizerItemSortOrder d;
@@ -183,4 +105,4 @@ QTORGANIZER_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemSortOrder))
 
-#endif
+#endif // QDECLARATIVEORGANIZERITEMSORTORDER_H

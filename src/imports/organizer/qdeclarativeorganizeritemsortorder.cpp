@@ -49,50 +49,166 @@ QTORGANIZER_BEGIN_NAMESPACE
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-filters
  */
-
-
-/*!
-  \qmlproperty string SortOrder::definitionName
-
-  This property holds the detail definition name of the details which will be inspected to perform sorting.
-
-  */
+QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)
+    : QObject(parent)
+{
+}
 
 /*!
-  \qmlproperty string SortOrder::fieldName
-
-  This property holds the detail field name of the details which will be inspected to perform sorting.
-  For each detail elements, there are predefined field types.
-  */
-
-/*!
-  \qmlproperty enumeration SortOrder::blankPolicy
-  This property enumerates the ways in which the sort order interprets blanks when sorting organizer.
-  \list
-  \o SortOrder.BlanksFirst - Considers blank values to evaluate to less than all other values in comparisons.
-  \o SortOrder.BlanksLast - Considers blank values to evaluate to greater than all other values in comparisons.
-  \endlist
+    \internal
  */
+void QDeclarativeOrganizerItemSortOrder::classBegin()
+{
+}
 
 /*!
-  \qmlproperty enumeration SortOrder::direction
-
-  This property holds the direction of the sort order, the value can be one of:
-  \list
-  \o Qt.AscendingOrder - (default)
-  \o Qt.DescendingOrder
-  \endlist
-  */
+    \internal
+ */
+void QDeclarativeOrganizerItemSortOrder::componentComplete()
+{
+     setSortOrder(sortOrder());
+}
 
 /*!
-  \qmlproperty enumeration SortOrder::caseSensitivity
+    \qmlproperty string SortOrder::detail
 
-  This property holds the case sensitivity of the sort order, the value can be one of:
-  \list
-  \o Qt.CaseInsensitive
-  \o Qt.CaseSensitive - (default)
-  \endlist
-  */
+    This property holds the detail definition name of the details which will be inspected to perform sorting.
+ */
+void QDeclarativeOrganizerItemSortOrder::setDetail(const QVariant &detail)
+{
+    if (m_detail != detail) {
+        m_detail = detail;
+        emit sortOrderChanged();
+    }
+}
+
+QVariant QDeclarativeOrganizerItemSortOrder::detail() const
+{
+    return m_detail;
+}
+
+/*!
+    \qmlproperty string SortOrder::field
+
+    This property holds the detail field name of the details which will be inspected to perform sorting.
+    For each detail elements, there are predefined field types.
+ */
+void QDeclarativeOrganizerItemSortOrder::setField(const QVariant &field)
+{
+    if (m_field !=field) {
+        m_field = field;
+        emit sortOrderChanged();
+    }
+}
+
+QVariant QDeclarativeOrganizerItemSortOrder::field() const
+{
+    return m_field;
+}
+
+/*!
+    \qmlproperty enumeration SortOrder::blankPolicy
+
+    This property enumerates the ways in which the sort order interprets blanks when sorting organizer.
+    \list
+    \o SortOrder.BlanksFirst  Considers blank values to evaluate to less than all other values in comparisons.
+    \o SortOrder.BlanksLast   Considers blank values to evaluate to greater than all other values in comparisons.
+    \endlist
+ */
+void QDeclarativeOrganizerItemSortOrder::setBlankPolicy(BlankPolicy policy)
+{
+    if (policy != blankPolicy()) {
+        d.setBlankPolicy(static_cast<QOrganizerItemSortOrder::BlankPolicy>(policy));
+        emit sortOrderChanged();
+    }
+}
+
+QDeclarativeOrganizerItemSortOrder::BlankPolicy QDeclarativeOrganizerItemSortOrder::blankPolicy() const
+{
+    return static_cast<QDeclarativeOrganizerItemSortOrder::BlankPolicy>(d.blankPolicy());
+}
+
+/*!
+    \qmlproperty enumeration SortOrder::direction
+
+    This property holds the direction of the sort order, the value can be one of:
+    \list
+    \o Qt.AscendingOrder   The items will be sorted by the ascending order (default).
+    \o Qt.DescendingOrder  The items will be sorted by the descending order.
+    \endlist
+ */
+void QDeclarativeOrganizerItemSortOrder::setDirection(Qt::SortOrder newDirection)
+{
+    if (newDirection != direction()) {
+        d.setDirection(newDirection);
+        emit sortOrderChanged();
+    }
+}
+
+Qt::SortOrder QDeclarativeOrganizerItemSortOrder::direction() const
+{
+    return d.direction();
+}
+
+/*!
+    \qmlproperty enumeration SortOrder::caseSensitivity
+
+    This property holds the case sensitivity of the sort order, the value can be one of:
+    \list
+    \o Qt.CaseInsensitive  Sets the case sensitivity of the sort order to insensitivity.
+    \o Qt.CaseSensitive    Sets the case sensitivity of the sort order to sensitivity (default).
+    \endlist
+ */
+void QDeclarativeOrganizerItemSortOrder::setCaseSensitivity(Qt::CaseSensitivity newSensitivity)
+{
+    if (newSensitivity != caseSensitivity()) {
+        d.setCaseSensitivity(newSensitivity);
+        emit sortOrderChanged();
+    }
+}
+
+Qt::CaseSensitivity QDeclarativeOrganizerItemSortOrder::caseSensitivity() const
+{
+    return d.caseSensitivity();
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemSortOrder QDeclarativeOrganizerItemSortOrder::sortOrder()
+{
+    QString ddn;
+    if (m_detail.type() != QVariant::String) {
+        ddn = QDeclarativeOrganizerItemDetail::definitionName(static_cast<QDeclarativeOrganizerItemDetail::ItemDetailType>(m_detail.toInt()));
+    } else {
+        ddn = m_detail.toString();
+    }
+
+    QString dfn;
+    if (m_field.type() != QVariant::String) {
+       QDeclarativeOrganizerItemDetail::ItemDetailType dt = QDeclarativeOrganizerItemDetail::detailTypeByDefinitionName(ddn);
+       dfn = QDeclarativeOrganizerItemDetail::fieldName(dt, m_field.toInt());
+    } else {
+        dfn = m_field.toString();
+    }
+
+    d.setDetailDefinitionName(ddn, dfn);
+    m_detail = ddn;
+    m_field = dfn;
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemSortOrder::setSortOrder(const QOrganizerItemSortOrder &sortOrder)
+{
+    d = sortOrder;
+    m_field = d.detailFieldName();
+    m_detail = d.detailDefinitionName();
+    emit sortOrderChanged();
+}
+
 
 #include "moc_qdeclarativeorganizeritemsortorder_p.cpp"
 

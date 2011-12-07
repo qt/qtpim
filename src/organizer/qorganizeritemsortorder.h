@@ -42,15 +42,10 @@
 #ifndef QORGANIZERITEMSORTORDER_H
 #define QORGANIZERITEMSORTORDER_H
 
-#include "qorganizerglobal.h"
-
-#include <QString>
-#include <QSharedData>
-#include <QList>
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <qorganizerglobal.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -61,21 +56,21 @@ public:
     QOrganizerItemSortOrder();
     ~QOrganizerItemSortOrder();
 
-    QOrganizerItemSortOrder(const QOrganizerItemSortOrder& other);
-    QOrganizerItemSortOrder& operator=(const QOrganizerItemSortOrder& other);
+    QOrganizerItemSortOrder(const QOrganizerItemSortOrder &other);
+    QOrganizerItemSortOrder &operator=(const QOrganizerItemSortOrder &other);
 
     enum BlankPolicy {
         BlanksFirst,
-        BlanksLast,
+        BlanksLast
     };
 
-    /* Mutators */
-    void setDetailDefinitionName(const QString& definitionName, const QString& fieldName);
+    // mutators
+    void setDetailDefinitionName(const QString &definitionName, const QString &fieldName);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);
 
-    /* Accessors */
+    // accessors
     QString detailDefinitionName() const;
     QString detailFieldName() const;
     BlankPolicy blankPolicy() const;
@@ -84,24 +79,24 @@ public:
 
     bool isValid() const;
 
-    bool operator==(const QOrganizerItemSortOrder& other) const;
-    bool operator!=(const QOrganizerItemSortOrder& other) const {return !operator==(other);}
+    bool operator==(const QOrganizerItemSortOrder &other) const;
+    bool operator!=(const QOrganizerItemSortOrder &other) const { return !operator==(other); }
 
-    /* Convenience cast */
-    operator QList<QOrganizerItemSortOrder>() const {return QList<QOrganizerItemSortOrder>() << *this;}
+    // convenience cast
+    operator QList<QOrganizerItemSortOrder>() const { return QList<QOrganizerItemSortOrder>() << *this; }
 
 private:
     QSharedDataPointer<QOrganizerItemSortOrderPrivate> d;
 };
 
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerItemSortOrder& sortOrder);
-Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerItemSortOrder& sortOrder);
-#endif
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemSortOrder &sortOrder);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder);
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder& sortOrder);
-#endif
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder);
+#endif // QT_NO_DEBUG_STREAM
 
 QTORGANIZER_END_NAMESPACE
 
@@ -109,4 +104,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemSortOrder), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMSORTORDER_H

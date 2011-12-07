@@ -565,7 +565,7 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
     }
 }
 
-bool QDeclarativeOrganizerModel::itemHasReccurence(const QOrganizerItem& oi) const
+bool QDeclarativeOrganizerModel::itemHasRecurrence(const QOrganizerItem& oi) const
 {
     if (oi.type() == QOrganizerItemType::TypeEvent || oi.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerItemRecurrence recur = oi.detail(QOrganizerItemRecurrence::DefinitionName);
@@ -574,6 +574,7 @@ bool QDeclarativeOrganizerModel::itemHasReccurence(const QOrganizerItem& oi) con
 
     return false;
 }
+
 void QDeclarativeOrganizerModel::fetchOccurrences(const QOrganizerItem& item)
 {
     QOrganizerItemOccurrenceFetchRequest* req =  new QOrganizerItemOccurrenceFetchRequest(this);
@@ -597,7 +598,7 @@ void QDeclarativeOrganizerModel::addSorted(QDeclarativeOrganizerItem* item)
     endInsertRows();
     d->m_itemIdHash.insert(item->itemId(), item);
 
-    if (itemHasReccurence(item->item())) {
+    if (itemHasRecurrence(item->item())) {
         foreach (QDeclarativeOrganizerItem* di, d->m_items) {
             if (di->isOccurrence()) {
                  QOrganizerItemParent oip = di->item().detail<QOrganizerItemParent>();

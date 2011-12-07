@@ -203,7 +203,7 @@ private:
     int itemIndex(const QDeclarativeOrganizerItem* item);
     void addSorted(QDeclarativeOrganizerItem* item);
     void removeItemsFromModel(const QList<QString>& ids);
-    bool itemHasReccurence(const QOrganizerItem& oi) const;
+    bool itemHasRecurrence(const QOrganizerItem& oi) const;
     void fetchOccurrences(const QOrganizerItem& item);
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
     void checkError(const QOrganizerAbstractRequest *request);

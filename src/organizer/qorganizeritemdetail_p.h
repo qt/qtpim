@@ -86,7 +86,7 @@ public:
 
     int m_id; // internal, unique id.
     QString m_definitionName;
-    QHash<QString, QVariant> m_values;
+    QHash<int, QVariant> m_values;
     QOrganizerItemDetail::AccessConstraints m_access;
 
     static QAtomicInt lastDetailKey;

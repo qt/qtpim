@@ -71,7 +71,7 @@ public:
     virtual void detailProcessed(const QOrganizerItem& item,
                                  const QOrganizerItemDetail& detail,
                                  const QVersitDocument& document,
-                                 QSet<QString>* processedFields,
+                                 QSet<int>* processedFields,
                                  QList<QVersitProperty>* toBeRemoved,
                                  QList<QVersitProperty>* toBeAdded) = 0;
     virtual void itemProcessed(const QOrganizerItem& item,

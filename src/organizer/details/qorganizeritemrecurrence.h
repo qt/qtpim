@@ -51,10 +51,13 @@ class Q_ORGANIZER_EXPORT QOrganizerItemRecurrence : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemRecurrence, "Recurrence")
-    const static QString FieldRecurrenceRules;
-    const static QString FieldExceptionRules;
-    const static QString FieldRecurrenceDates;
-    const static QString FieldExceptionDates;
+
+    enum RecurrenceField {
+        FieldRecurrenceRules = 0,
+        FieldExceptionRules,
+        FieldRecurrenceDates,
+        FieldExceptionDates
+    };
 
     void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule> &rrules);
     QSet<QOrganizerRecurrenceRule> recurrenceRules() const;

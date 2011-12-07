@@ -50,9 +50,12 @@ class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder, "Reminder")
-    const static QString FieldSecondsBeforeStart;
-    const static QString FieldRepetitionCount;
-    const static QString FieldRepetitionDelay;
+
+    enum ReminderField {
+        FieldSecondsBeforeStart = 0,
+        FieldRepetitionCount,
+        FieldRepetitionDelay
+    };
 
     enum ReminderType {
         NoReminder = 0,

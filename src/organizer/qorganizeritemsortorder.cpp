@@ -147,7 +147,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemSortOrder &sortOrd
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemSortOrder
     return out << formatVersion
                << sortOrder.detailDefinitionName()
-               << sortOrder.detailFieldName()
+               << sortOrder.detailField()
                << static_cast<quint32>(sortOrder.blankPolicy())
                << static_cast<quint32>(sortOrder.direction())
                << static_cast<quint32>(sortOrder.caseSensitivity());
@@ -162,7 +162,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder)
     in >> formatVersion;
     if (formatVersion == 1) {
         QString definitionName;
-        QString fieldName;
+        int fieldName;
         quint32 blankPolicy;
         quint32 direction;
         quint32 caseSensitivity;
@@ -189,7 +189,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
     dbg.nospace() << sortOrder.detailDefinitionName();
     dbg.nospace() << ",";
     dbg.nospace() << "detailFieldName=";
-    dbg.nospace() << sortOrder.detailFieldName();
+    dbg.nospace() << sortOrder.detailField();
     dbg.nospace() << ",";
     dbg.nospace() << "blankPolicy=";
     dbg.nospace() << static_cast<quint32>(sortOrder.blankPolicy());
@@ -210,14 +210,14 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
 
     \sa detailDefinitionName(), detailFieldName()
  */
-void QOrganizerItemSortOrder::setDetailDefinitionName(const QString &definitionName, const QString &fieldName)
+void QOrganizerItemSortOrder::setDetailDefinitionName(const QString& definitionName, int field)
 {
-    if (definitionName.isEmpty() || fieldName.isEmpty()) {
+    if (definitionName.isEmpty() || field == -1) {
         d->m_definitionName.clear();
-        d->m_fieldName.clear();
+        d->m_fieldName = -1;
     } else {
         d->m_definitionName = definitionName;
-        d->m_fieldName = fieldName;
+        d->m_fieldName = field;
     }
 }
 
@@ -254,13 +254,21 @@ QString QOrganizerItemSortOrder::detailDefinitionName() const
 }
 
 /*!
-    Returns the name of the field in the definition which will be inspected to perform sorting.
+    Returns the detail field which will be inspected to perform sorting.
 
     \sa setDetailDefinitionName()
  */
-QString QOrganizerItemSortOrder::detailFieldName() const
+int QOrganizerItemSortOrder::detailField() const
 {
     return d->m_fieldName;
+}
+
+/*!
+    This is to be removed soon, please use detailField() instead.
+ */
+int QOrganizerItemSortOrder::detailFieldName() const
+{
+    return detailField();
 }
 
 /*!

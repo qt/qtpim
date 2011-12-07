@@ -51,7 +51,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemTag : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, "Tag")
-    const static QString FieldTag;
+
+    enum TagField {
+        FieldTag = 0
+    };
 
     const static QString Anniversary;
 

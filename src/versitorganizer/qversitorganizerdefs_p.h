@@ -54,7 +54,7 @@
 // We mean it.
 //
 //
-#include <private/qversitdefs_p.h>
+
 #include <qversitorganizerglobal.h>
 #include <qorganizer.h>
 
@@ -68,13 +68,20 @@ QTORGANIZER_USE_NAMESPACE
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 
+// Mapping between a string in versit specifications and Qt contact details
+struct VersitOrganizerDetailMapping {
+    const char* versitPropertyName;
+    const QString detailDefinitionName;
+    const int detailField;
+};
+
 // Only put simple mappings in this table; ie. where a Versit property maps to a specific detail's
 // specific field (and that detail has no other fields of interest)
-const VersitDetailMapping versitOrganizerDetailMappings[] = {
+const VersitOrganizerDetailMapping versitOrganizerDetailMappings[] = {
     // FIXME
-    {"SUMMARY", QOrganizerItemDisplayLabel::DefinitionName, QLatin1String("Label")},
-    {"DESCRIPTION", QOrganizerItemDescription::DefinitionName, QLatin1String("Description")},
-    {"UID", QOrganizerItemGuid::DefinitionName, QLatin1String("Guid")}
+    {"SUMMARY", QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel},
+    {"DESCRIPTION", QOrganizerItemDescription::DefinitionName, QOrganizerItemDescription::FieldDescription},
+    {"UID", QOrganizerItemGuid::DefinitionName, QOrganizerItemGuid::FieldGuid}
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

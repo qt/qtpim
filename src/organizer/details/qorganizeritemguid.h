@@ -50,7 +50,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemGuid : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemGuid, "Guid")
-    const static QString FieldGuid;
+
+    enum GuidField {
+        FieldGuid = 0
+    };
 
     void setGuid(const QString &guid);
     QString guid() const;

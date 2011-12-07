@@ -51,9 +51,12 @@ class Q_ORGANIZER_EXPORT QOrganizerItemLocation : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemLocation, "Location")
-    const static QString FieldLatitude;
-    const static QString FieldLongitude;
-    const static QString FieldLabel;
+
+    enum LocationField {
+        FieldLatitude = 0,
+        FieldLongitude,
+        FieldLabel
+    };
 
     void setLatitude(double latitude);
     double latitude() const;

@@ -51,11 +51,14 @@ class Q_ORGANIZER_EXPORT QOrganizerEventAttendee : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee, "Attendee")
-    const static QString FieldName;
-    const static QString FieldEmailAddress;
-    const static QString FieldAttendeeId;
-    const static QString FieldParticipationStatus;
-    const static QString FieldParticipationRole;
+
+    enum EventAttendeeField {
+        FieldName = 0,
+        FieldEmailAddress,
+        FieldAttendeeId,
+        FieldParticipationStatus,
+        FieldParticipationRole
+    };
 
     enum ParticipationStatus {
         StatusUnknown = 0,

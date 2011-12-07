@@ -59,12 +59,11 @@ QTORGANIZER_BEGIN_NAMESPACE
 const QString QOrganizerItemDescription::DefinitionName(QStringLiteral("Description"));
 
 /*!
-    \variable QOrganizerItemDescription::FieldDescription
+    \enum QOrganizerItemDescription::DescriptionField
 
-    The constant key for which the description value is stored in details of
-    the QOrganizerItemDescription type.
+    This enumeration defines the fields supported by QOrganizerItemDescription.
+    \value FieldDescription  The value stored is a description.
  */
-const QString QOrganizerItemDescription::FieldDescription(QStringLiteral("Description"));
 
 /*!
     \fn QOrganizerItemDescription::setDescription(const QString& description)
@@ -138,14 +137,13 @@ QString QOrganizerItemDisplayLabel::label() const
 const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
 
 /*!
-    \variable QOrganizerItemDisplayLabel::FieldLabel
+    \enum QOrganizerItemDisplayLabel::DisplayLabelField
 
-    The constant key for which the display label value is stored in
-    details of the QOrganizerItemDisplayLabel type.
+    This enumeration defines the fields supported by QOrganizerItemDisplayLabel.
+    \value FieldLabel  The value stored is a description label.
  */
-const QString QOrganizerItemDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
-/* ==================== QOrganizerEventAttendee ======================= */
+
 /*!
     \class QOrganizerEventAttendee
     \brief The QOrganizerEventAttendee class contains information about an attendee of an event
@@ -163,47 +161,17 @@ const QString QOrganizerItemDisplayLabel::FieldLabel(QStringLiteral("Label"));
 const QString QOrganizerEventAttendee::DefinitionName(QStringLiteral("Attendee"));
 
 /*!
-    \variable QOrganizerEventAttendee::FieldName
+    \enum QOrganizerEventAttendee::EventAttendeeField
 
-    The constant key for which the name (or title or other label) of the attendee is stored in
-    details of the QOrganizerEventAttendee type.
+    This enumeration defines the fields supported by QOrganizerEventAttendee.
+    \value FieldName                 The value stored describes the name of the attendee.
+    \value FieldEmailAddress         The value stored describes the Email address of the attendee.
+    \value FieldAttendeeId           The value stored describes the ID of the attendee. It can be e.g.
+                                     a serialized contact ID, vCard UID, or any other platform specific
+                                     ID.
+    \value FieldParticipationStatus  The value stored describes the participation status of the attendee.
+    \value FieldParticipationRole    The value stored describes the participation role of the attendee.
  */
-const QString QOrganizerEventAttendee::FieldName(QStringLiteral("Name"));
-
-/*!
-    \variable QOrganizerEventAttendee::FieldEmailAddress
-
-    The constant key for which the email address of the attendee is stored in
-    details of the QOrganizerEventAttendee type.
- */
-const QString QOrganizerEventAttendee::FieldEmailAddress(QStringLiteral("EmailAddress"));
-
-/*!
-    \variable QOrganizerEventAttendee::FieldAttendeeId
-    \preliminary
-
-    The constant key for which the string which identifies the attendee is stored in
-    details of the QOrganizerEventAttendee type.  It contains a free-form string which
-    may be a serialized contact id, vCard UID, or other platform-specific identifier.
-
- */
-const QString QOrganizerEventAttendee::FieldAttendeeId(QStringLiteral("AttendeeId"));
-
-/*!
-    \variable QOrganizerEventAttendee::FieldParticipationStatus
-
-    The constant key for which the participation status of the attendee is stored in
-    details of the QOrganizerEventAttendee type.
- */
-const QString QOrganizerEventAttendee::FieldParticipationStatus(QStringLiteral("ParticipationStatus"));
-
-/*!
-    \variable QOrganizerEventAttendee::FieldParticipationRole
-
-    The constant key for which the participation role of the attendee is stored in
-    details of the QOrganizerEventAttendee type.
- */
-const QString QOrganizerEventAttendee::FieldParticipationRole(QStringLiteral("ParticipationRole"));
 
 /*!
     \enum QOrganizerEventAttendee::ParticipationStatus
@@ -334,28 +302,13 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participatio
 const QString QOrganizerEventTime::DefinitionName(QStringLiteral("EventTime"));
 
 /*!
-    \variable QOrganizerEventTime::FieldEndDateTime
+    \enum QOrganizerEventTime::EventTimeField
 
-    The constant key for which the end date and time value is stored in
-    details of the QOrganizerEventTime type.
+    This enumeration defines the fields supported by QOrganizerEventTime.
+    \value FieldEndDateTime    The value stored describes the end date time of the event.
+    \value FieldStartDateTime  The value stored describes the start date time of the event.
+    \value FieldAllDay         The value stored describes if the event is an all day event.
  */
-const QString QOrganizerEventTime::FieldEndDateTime(QStringLiteral("EndDateTime"));
-
-/*!
-    \variable QOrganizerEventTime::FieldStartDateTime
-
-    The constant key for which the start date and time value is stored in
-    details of the QOrganizerEventTime type.
- */
-const QString QOrganizerEventTime::FieldStartDateTime(QStringLiteral("StartDateTime"));
-
-/*!
-    \variable QOrganizerEventTime::FieldAllDay
-
-    The constant key for the specification of whether the time is significant in the
-    start datetime of the QOrganizerEventTime type.
- */
-const QString QOrganizerEventTime::FieldAllDay(QStringLiteral("AllDay"));
 
 /*!
     \fn QOrganizerEventTime::startDateTime() const
@@ -451,12 +404,11 @@ bool QOrganizerEventTime::isAllDay() const
 const QString QOrganizerItemGuid::DefinitionName(QStringLiteral("Guid"));
 
 /*!
-    \variable QOrganizerItemGuid::FieldGuid
+    \enum QOrganizerItemGuid::GuidField
 
-    The constant key for which the globally unique identifier value is
-    stored in details of the QOrganizerItemGuid type.
+    This enumeration defines the fields supported by QOrganizerItemGuid.
+    \value FieldGuid  The value stored is the global unique identifier of the item.
  */
-const QString QOrganizerItemGuid::FieldGuid(QStringLiteral("Guid"));
 
 /*!
     \fn QOrganizerItemGuid::guid() const
@@ -495,20 +447,13 @@ void QOrganizerItemGuid::setGuid(const QString &guid)
 const QString QOrganizerItemParent::DefinitionName(QStringLiteral("Parent"));
 
 /*!
-    \variable QOrganizerItemParent::FieldParentId
+    \enum QOrganizerItemParent::ParentField
 
-    The constant key for the field in which the id of the parent recurrent event
-    is stored in details of the QOrganizerItemParent type.
+    This enumeration defines the fields supported by QOrganizerItemParent.
+    \value FieldParentId      The value stored describes the ID of the item's parent item.
+    \value FieldOriginalDate  The value stored describes the original date of this instance or exception
+                              according to the recurrent series of the parent item is stored.
  */
-const QString QOrganizerItemParent::FieldParentId(QStringLiteral("ParentId"));
-
-/*!
-    \variable QOrganizerItemParent::FieldOriginalDate
-
-    The constant key for the field in which the original date of this instance
-    or exception according to the recurrent series of the parent item is stored.
- */
-const QString QOrganizerItemParent::FieldOriginalDate(QStringLiteral("OriginalDate"));
 
 /*!
     \fn QOrganizerItemParent::parentId() const
@@ -569,12 +514,11 @@ void QOrganizerItemParent::setOriginalDate(const QDate &date)
 const QString QOrganizerJournalTime::DefinitionName(QStringLiteral("JournalTime"));
 
 /*!
-   \variable QOrganizerJournalTime::FieldEntryDateTime
+    \enum QOrganizerJournalTime::JournalTimeField
 
-   The constant key for which the date and time of value for a journal entry is
-   stored in details of the QOrganizerJournalTime type.
+    This enumeration defines the fields supported by QOrganizerJournalTime.
+    \value FieldEntryDateTime  The value stored describes the date time of the journal entry.
  */
-const QString QOrganizerJournalTime::FieldEntryDateTime(QStringLiteral("EntryDateTime"));
 
 /*!
     \fn QOrganizerJournalTime::entryDateTime() const
@@ -630,28 +574,13 @@ QOrganizerItemFilter QOrganizerItemLocation::match(const QString &substring)
 const QString QOrganizerItemLocation::DefinitionName(QStringLiteral("Location"));
 
 /*!
-    \variable QOrganizerItemLocation::FieldLatitude
+    \enum QOrganizerItemLocation::LocationField
 
-    The constant key for which the location latitude value is
-    stored in details of the QOrganizerItemLocation type.
+    This enumeration defines the fields supported by QOrganizerItemLocation.
+    \value FieldLatitude   The value stored describes the latitude of the location.
+    \value FieldLongitude  The value stored describes the longitude of the location.
+    \value FieldLabel      The value stored is a label for the location.
  */
-const QString QOrganizerItemLocation::FieldLatitude(QStringLiteral("Latitude"));
-
-/*!
-    \variable QOrganizerItemLocation::FieldLongitude
-
-    The constant key for which the location longitude value is
-    stored in details of the QOrganizerItemLocation type.
- */
-const QString QOrganizerItemLocation::FieldLongitude(QStringLiteral("Longitude"));
-
-/*!
-    \variable QOrganizerItemLocation::FieldLabel
-
-    The constant key for which the location label value is
-    stored in details of the QOrganizerItemLocation type.
- */
-const QString QOrganizerItemLocation::FieldLabel(QStringLiteral("Label"));
 
 /*!
     \fn QOrganizerItemLocation::latitude() const
@@ -744,12 +673,11 @@ QOrganizerItemFilter QOrganizerItemComment::match(const QString &substring)
 const QString QOrganizerItemComment::DefinitionName(QStringLiteral("Comment"));
 
 /*!
-    \variable QOrganizerItemComment::FieldComment
+    \enum QOrganizerItemComment::CommentField
 
-    The constant key for which the comment value is stored in details of
-    the QOrganizerItemComment type.
+    This enumeration defines the fields supported by QOrganizerItemComment.
+    \value FieldComment  The value is a comment of the item.
  */
-const QString QOrganizerItemComment::FieldComment(QStringLiteral("Comment"));
 
 /*!
     \fn QOrganizerItemComment::setComment(const QString &comment)
@@ -815,12 +743,11 @@ QOrganizerItemFilter QOrganizerItemPriority::match(QOrganizerItemPriority::Prior
 const QString QOrganizerItemPriority::DefinitionName(QStringLiteral("Priority"));
 
 /*!
-    \variable QOrganizerItemPriority::FieldPriority
+    \enum QOrganizerItemPriority::PriorityField
 
-    The constant key for which the priority value is stored in details of
-    the QOrganizerItemPriority type.
+    This enumeration defines the fields supported by QOrganizerItemPriority.
+    \value FieldPriority  The value describes the priority of the item.
  */
-const QString QOrganizerItemPriority::FieldPriority(QStringLiteral("Priority"));
 
 /*!
     \fn QOrganizerItemPriority::setPriority(Priority priority)
@@ -884,51 +811,14 @@ bool QOrganizerItemRecurrence::operator==(const QOrganizerItemRecurrence &other)
  */
 
 /*!
-    \variable QOrganizerItemRecurrence::FieldRecurrenceRules
+    \enum QOrganizerItemRecurrence::RecurrenceField
 
-    The constant key for the value which is stored in details of the
-    QOrganizerItemRecurrence type which describes the rules for when an
-    item should recur.
-
-    When multiple rules are specified, the list of recurrence dates are
-    calculated separately for each rule and the results are unioned.
+    This enumeration defines the fields supported by QOrganizerItemRecurrence.
+    \value FieldRecurrenceRules  The value stored describes the rules for when an item should recur.
+    \value FieldRecurrenceDates  The value stored describes the dates for when an item should recur.
+    \value FieldExceptionRules   The value stored describes the rules for when an item should not recur.
+    \value FieldExceptionDates   The value stored describes the dates for when an item should not recur.
  */
-const QString QOrganizerItemRecurrence::FieldRecurrenceRules(QStringLiteral("RecurrenceRules"));
-
-/*!
-    \variable QOrganizerItemRecurrence::FieldRecurrenceDates
-
-    The constant key for the value which is stored in details of the
-    QOrganizerItemRecurrence type which describes the dates on which an
-    item should recur.
- */
-const QString QOrganizerItemRecurrence::FieldRecurrenceDates(QStringLiteral("RecurrenceDates"));
-
-/*!
-    \variable QOrganizerItemRecurrence::FieldExceptionRules
-
-    The constant key for the value which is stored in details of the
-    QOrganizerItemRecurrence type which describes the rules for when an
-    item should not recur.
-
-    If a recurrence rule or the recurrence dates list specifies that an item should occur on a
-    particular date and any of the exception rules include that date, the item should not occur on
-    that date.
- */
-const QString QOrganizerItemRecurrence::FieldExceptionRules(QStringLiteral("ExceptionRules"));
-
-/*!
-    \variable QOrganizerItemRecurrence::FieldExceptionDates
-
-    The constant key for the value which is stored in details of the
-    QOrganizerItemRecurrence type which describes the dates on which an
-    item should not recur.
-
-    If a recurrence rule or the recurrence dates list specifies that an item should occur on a
-    particular date and that date appears in the exception dates list, the item should not occur on
-    that date.
- */
-const QString QOrganizerItemRecurrence::FieldExceptionDates(QStringLiteral("ExceptionDates"));
 
 /*!
     Returns the set of recurrence dates.
@@ -1022,28 +912,15 @@ void QOrganizerItemRecurrence::setExceptionDates(const QSet<QDate> &xdates)
 const QString QOrganizerItemReminder::DefinitionName(QStringLiteral("Reminder"));
 
 /*!
-    \variable QOrganizerItemReminder::FieldSecondsBeforeStart
+    \enum QOrganizerItemReminder::ReminderField
 
-    The constant key for which time delta (in seconds prior to the item activation time)
-    at which the user should be reminded of the item is stored in details of the QOrganizerItemReminder type.
+    This enumeration defines the fields supported by QOrganizerItemReminder.
+    \value FieldSecondsBeforeStart  The value stored describes the time in seconds prior to the item's
+                                    start time, when the reminder should be triggered.
+    \value FieldRepetitionCount     The value stored describes the number of repetitions of the reminder.
+    \value FieldRepetitionDelay     The value stored describes the delays in seconds between repetitions
+                                    of the reminder.
  */
-const QString QOrganizerItemReminder::FieldSecondsBeforeStart(QStringLiteral("SecondsBeforeStart"));
-
-/*!
-    \variable QOrganizerItemReminder::FieldRepetitionCount
-
-    The constant key for which the number of repetitions of the reminder
-    is stored in details of the QOrganizerItemReminder type.
- */
-const QString QOrganizerItemReminder::FieldRepetitionCount(QStringLiteral("RepetitionCount"));
-
-/*!
-    \variable QOrganizerItemReminder::FieldRepetitionDelay
-
-    The constant key for which the delay (in seconds) between repetitions of the reminder
-    is stored in details of the QOrganizerItemReminder type.
- */
-const QString QOrganizerItemReminder::FieldRepetitionDelay(QStringLiteral("RepetitionDelay"));
 
 /*!
     Returns the reminder type of this reminder for an organizer item.
@@ -1166,11 +1043,11 @@ void QOrganizerItemReminder::setRepetition(int count, int delaySeconds)
 const QString QOrganizerItemAudibleReminder::DefinitionName(QStringLiteral("AudibleReminder"));
 
 /*!
-    \variable QOrganizerItemAudibleReminder::FieldDataUrl
+    \enum QOrganizerItemAudibleReminder::AudibleReminderField
 
-    The constant key for which the value of the sound data url is stored.
+    This enumeration defines the fields supported by QOrganizerItemAudibleReminder.
+    \value FieldDataUrl  The value stored describes URL of the sound to be played when the reminder is triggered.
  */
-const QString QOrganizerItemAudibleReminder::FieldDataUrl(QStringLiteral("DataUrl"));
 
 /*!
     \fn QOrganizerItemAudibleReminder::setDataUrl(const QUrl& dataUrl)
@@ -1215,32 +1092,14 @@ QUrl QOrganizerItemAudibleReminder::dataUrl() const
 const QString QOrganizerItemEmailReminder::DefinitionName(QStringLiteral("EmailReminder"));
 
 /*!
-    \variable QOrganizerItemEmailReminder::FieldSubject
+    \enum QOrganizerItemEmailReminder::EmailReminderField
 
-    The constant key for which the subject field of the email which the user wishes to be sent as a reminder, is stored.
+    This enumeration defines the fields supported by QOrganizerItemEmailReminder.
+    \value FieldSubject      The value stored describes the subject of the Email, which the user wishes to be sent as a reminder.
+    \value FieldBody         The value stored describes the body of the Email, which the user wishes to be sent as a reminder.
+    \value FieldAttachments  The value stored describes the attachments of the Email, which the user wishes to be sent as a reminder.
+    \value FieldRecipients   The value stored describes the recipients of the Email, which the user wishes to be sent as a reminder.
  */
-const QString QOrganizerItemEmailReminder::FieldSubject(QStringLiteral("Subject"));
-
-/*!
-    \variable QOrganizerItemEmailReminder::FieldBody
-
-    The constant key for which the body field of the email which the user wishes to be sent as a reminder, is stored.
- */
-const QString QOrganizerItemEmailReminder::FieldBody(QStringLiteral("Body"));
-
-/*!
-    \variable QOrganizerItemEmailReminder::FieldAttachments
-
-    The constant key for which the attachments of the email which the user wishes to be sent as a reminder, is stored.
- */
-const QString QOrganizerItemEmailReminder::FieldAttachments(QStringLiteral("Attachments"));
-
-/*!
-    \variable QOrganizerItemEmailReminder::FieldRecipients
-
-    The constant key for which the recipients field of the email which the user wishes to be sent as a reminder, is stored.
- */
-const QString QOrganizerItemEmailReminder::FieldRecipients(QStringLiteral("Recipients"));
 
 /*!
     \fn QOrganizerItemEmailReminder::setContents(const QString& subject, const QString& body, const QVariantList& attachments)
@@ -1325,18 +1184,12 @@ QStringList QOrganizerItemEmailReminder::recipients() const
 const QString QOrganizerItemVisualReminder::DefinitionName(QStringLiteral("VisualReminder"));
 
 /*!
-    \variable QOrganizerItemVisualReminder::FieldMessage
+    \enum QOrganizerItemVisualReminder::VisualReminderField
 
-    The constant key for which the value of the message to be displayed is stored in details of the QOrganizerItemVisualReminder type.
+    This enumeration defines the fields supported by QOrganizerItemVisualReminder.
+    \value FieldMessage  The value stored describes the message to be shown when the reminder is triggered.
+    \value FieldDataUrl  The value stored describes URL of the video to be played when the reminder is triggered.
  */
-const QString QOrganizerItemVisualReminder::FieldMessage(QStringLiteral("Message"));
-
-/*!
-    \variable QOrganizerItemVisualReminder::FieldDataUrl
-
-    The constant key for which the value of the visual data url is stored.
- */
-const QString QOrganizerItemVisualReminder::FieldDataUrl(QStringLiteral("DataUrl"));
 
 /*!
     \fn QOrganizerItemVisualReminder::setMessage(const QString& message)
@@ -1409,12 +1262,11 @@ QOrganizerItemFilter QOrganizerItemTag::match(const QString &substring)
 const QString QOrganizerItemTag::DefinitionName(QStringLiteral("Tag"));
 
 /*!
-    \variable QOrganizerItemTag::FieldTag
+    \enum QOrganizerItemTag::TagField
 
-    The constant key for which the tag value is stored in details of
-    the QOrganizerItemTag type.
+    This enumeration defines the fields supported by QOrganizerItemTag.
+    \value FieldTag  The value stored is a tag of the item.
  */
-const QString QOrganizerItemTag::FieldTag(QStringLiteral("Tag"));
 
 /*!
     \variable QOrganizerItemTag::Anniversary
@@ -1459,22 +1311,12 @@ QString QOrganizerItemTag::tag() const
 const QString QOrganizerItemTimestamp::DefinitionName(QStringLiteral("Timestamp"));
 
 /*!
-    \variable QOrganizerItemTimestamp::FieldModificationTimestamp
+    \enum QOrganizerItemTimestamp::TimestampField
 
-    The constant key for the value which is stored in details of the
-    QOrganizerItemTimestamp type which describes the last modification date
-    and time of an organizer item.
+    This enumeration defines the fields supported by QOrganizerItemTimestamp.
+    \value FieldModificationTimestamp  The value stored describes the last time the item is modified.
+    \value FieldCreationTimestamp      The value stored describes the time the item is created.
  */
-const QString QOrganizerItemTimestamp::FieldModificationTimestamp(QStringLiteral("ModificationTimestamp"));
-
-/*!
-    \variable QOrganizerItemTimestamp::FieldCreationTimestamp
-
-    The constant key for the value which is stored in details of the
-    QOrganizerItemTimestamp type which describes the creation date and time
-    of an organizer item.
- */
-const QString QOrganizerItemTimestamp::FieldCreationTimestamp(QStringLiteral("CreationTimestamp"));
 
 /*!
     \fn QOrganizerItemTimestamp::created() const
@@ -1532,28 +1374,13 @@ void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
 const QString QOrganizerTodoProgress::DefinitionName(QStringLiteral("TodoProgress"));
 
 /*!
-    \variable QOrganizerTodoProgress::FieldStatus
+    \enum QOrganizerTodoProgress::TodoProgressField
 
-    The constant key of the value which describes the current completion status of the
-    todo item.
+    This enumeration defines the fields supported by QOrganizerTodoProgress.
+    \value FieldStatus              The value stored describes the status of the TODO item.
+    \value FieldPercentageComplete  The value stored describes the current completion percentage of the TODO item.
+    \value FieldFinishedDateTime    The value stored describes the date time at which this TODO item is finished.
  */
-const QString QOrganizerTodoProgress::FieldStatus(QStringLiteral("Status"));
-
-/*!
-    \variable QOrganizerTodoProgress::FieldPercentageComplete
-
-    The constant key of the value which contains the current completion percentage of the
-    todo item.
- */
-const QString QOrganizerTodoProgress::FieldPercentageComplete(QStringLiteral("PercentageComplete"));
-
-/*!
-    \variable QOrganizerTodoProgress::FieldFinishedDateTime
-
-    The constant key of the date time value which contains the date and time at which the
-    todo item was completed.
- */
-const QString QOrganizerTodoProgress::FieldFinishedDateTime(QStringLiteral("FinishedDateTime"));
 
 /*!
     \enum QOrganizerTodoProgress::Status
@@ -1640,28 +1467,13 @@ void QOrganizerTodoProgress::setPercentageComplete(int percentage)
 const QString QOrganizerTodoTime::DefinitionName(QStringLiteral("TodoTime"));
 
 /*!
-    \variable QOrganizerTodoTime::FieldStartDateTime
+    \enum QOrganizerTodoTime::TodoTimeField
 
-    The constant key of the date time value which describes the date at which
-    the todo should be started.
+    This enumeration defines the fields supported by QOrganizerTodoTime.
+    \value FieldStartDateTime  The value stored describes the time when the TODO item should be started.
+    \value FieldDueDateTime    The value stored describes the time when the TODO item should be finished.
+    \value FieldAllDay         The value stored describes if it is an all day TODO item.
  */
-const QString QOrganizerTodoTime::FieldStartDateTime(QStringLiteral("StartDateTime"));
-
-/*!
-    \variable QOrganizerTodoTime::FieldDueDateTime
-
-    The constant key of the date time value which describes the latest date at which
-    the todo should be completed.
- */
-const QString QOrganizerTodoTime::FieldDueDateTime(QStringLiteral("DueDateTime"));
-
-/*!
-    \variable QOrganizerTodoTime::FieldAllDay
-
-    The constant key for the specification of whether the time is significant in the
-    start datetime of the QOrganizerTodoTime type.
- */
-const QString QOrganizerTodoTime::FieldAllDay(QStringLiteral("AllDay"));
 
 /*!
     \fn QOrganizerTodoTime::startDateTime() const
@@ -1761,12 +1573,11 @@ bool QOrganizerTodoTime::isAllDay() const
 const QString QOrganizerItemType::DefinitionName(QStringLiteral("Type"));
 
 /*!
-    \variable QOrganizerItemType::FieldType
+    \enum QOrganizerItemType::ItemTypeField
 
-    The constant key for the type value which is stored in details of
-    the QOrganizerItemType definition.
+    This enumeration defines the fields supported by QOrganizerItemType.
+    \value FieldType  The value stored describes the type of the item.
  */
-const QString QOrganizerItemType::FieldType(QStringLiteral("Type"));
 
 /*!
     Returns the organizer item type value stored in this detail.
@@ -1784,7 +1595,7 @@ void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
     setValue(FieldType, type);
 }
 
-/* ==================== QOrganizerEventRsvp ======================= */
+
 /*!
    \class QOrganizerEventRsvp
    \brief The QOrganizerEventRsvp class contains RSVP information for an event, applicable to the user of the calendar
@@ -1805,71 +1616,17 @@ void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
 const QString QOrganizerEventRsvp::DefinitionName(QStringLiteral("Rsvp"));
 
 /*!
-   \variable QOrganizerEventRsvp::FieldParticipationStatus
+    \enum QOrganizerEventRsvp::EventRsvpField
 
-   The constant key for which the participation status of the calendar user is stored in
-   details of the QOrganizerEventRsvp type.  The participation statuses valid for the user
-   are the same as those for any other attendee, and are enumerated in \c QOrganizerEventAttendee::Status.
-
-   \sa QOrganizerEventAttendee
+    This enumeration defines the fields supported by QOrganizerEventRsvp.
+    \value FieldParticipationStatus  The value stored describes the pariticipation status of the user for this event.
+    \value FieldParticipationRole    The value stored describes the pariticipation role of the user for this event.
+    \value FieldResponseRequirement  The value stored describes the if the user is required to respond this event invitation.
+    \value FieldResponseDeadline     The value stored describes when the user should respond to this event invitation.
+    \value FieldResponseDate         The value stored describes when the user responds to this event invitation.
+    \value FieldOrganizerName        The value stored describes the organizer's name of this event.
+    \value FieldOrganizerEmail       The value stored describes the organizer's Email of this event.
  */
-const QString QOrganizerEventRsvp::FieldParticipationStatus(QStringLiteral("ParticipationStatus"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldParticipationRole
-
-   The constant key for which the participation role of the calendar user is stored in
-   details of the QOrganizerEventRsvp type.  The participation roles valid for the user
-   are the same as those for any other attendee.
-
-   \sa QOrganizerEventAttendee
- */
-const QString QOrganizerEventRsvp::FieldParticipationRole(QStringLiteral("ParticipationRole"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldResponseRequirement
-
-   The constant key for which the value is stored which determines whether or
-   not the organizer of the event requires a response to the invitation from the
-   calendar user, in details of the QOrganizerEventRsvp type.
- */
-const QString QOrganizerEventRsvp::FieldResponseRequirement(QStringLiteral("ResponseRequirement"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldResponseDeadline
-
-   The constant key for which the response deadline date is stored in
-   details of the QOrganizerEventRsvp type.  This date is the date by
-   which the user must respond to the event invitation.
- */
-const QString QOrganizerEventRsvp::FieldResponseDeadline(QStringLiteral("ResponseDeadline"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldResponseDate
-
-   The constant key for which the date of response is stored in
-   details of the QOrganizerEventRsvp type.  This date is the date at
-   which the user responded to the event invitation.
- */
-const QString QOrganizerEventRsvp::FieldResponseDate(QStringLiteral("ResponseDate"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldOrganizerName
-
-   The constant key for which the name of the event organizer is stored in
-   details of the QOrganizerEventRsvp type.  This is the name of the person
-   who organized the event, to whom the user of the calendar should respond
-   regarding the invitation to the event, as requested by the organizer.
- */
-const QString QOrganizerEventRsvp::FieldOrganizerName(QStringLiteral("OrganizerName"));
-
-/*!
-   \variable QOrganizerEventRsvp::FieldOrganizerEmail
-
-   The constant key for which the email address of the event organizer is stored in
-   details of the QOrganizerEventRsvp type.
- */
-const QString QOrganizerEventRsvp::FieldOrganizerEmail(QStringLiteral("OrganizerEmail"));
 
 /*!
    \fn QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
@@ -2020,13 +1777,11 @@ QString QOrganizerEventRsvp::organizerEmail() const
 const QString QOrganizerItemClassification::DefinitionName(QStringLiteral("Classification"));
 
 /*!
-   \variable QOrganizerItemClassification::FieldClassification
+    \enum QOrganizerItemClassification::ClassificationField
 
-    The constant key of the value which contains the classification of an item. This field does
-    not have default value.
+    This enumeration defines the fields supported by QOrganizerItemClassification.
+    \value FieldClassification  The value stored describes the classification of an item.
  */
-const QString QOrganizerItemClassification::FieldClassification(QStringLiteral("Classification"));
-
 
 /*!
     \variable QOrganizerItemClassification::Public
@@ -2087,18 +1842,12 @@ QString QOrganizerItemClassification::classification() const
 const QString QOrganizerItemExtendedDetail::DefinitionName(QStringLiteral("ExtendedDetail"));
 
 /*!
-    \variable QOrganizerItemExtendedDetail::FieldDetailName
+    \enum QOrganizerItemExtendedDetail::ExtendedDetailField
 
-    Contains the name of the extended detail.
+    This enumeration defines the fields supported by QOrganizerItemExtendedDetail.
+    \value FieldExtendedDetailName  The value stored describes the name of this extended detail.
+    \value FieldExtendedDetailData  The value stored describes the data stored in this extended detail.
  */
-const QString QOrganizerItemExtendedDetail::FieldExtendedDetailName(QStringLiteral("ExtendedDetailName"));
-
-/*!
-    \variable QOrganizerItemExtendedDetail::FieldExtendedDetailData
-
-    Contains the data this extended detail.
- */
-const QString QOrganizerItemExtendedDetail::FieldExtendedDetailData(QStringLiteral("ExtendedDetailData"));
 
 /*!
     \fn void QOrganizerItemExtendedDetail::setName(const QString &name)

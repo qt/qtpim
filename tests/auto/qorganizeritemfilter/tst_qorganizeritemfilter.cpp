@@ -182,7 +182,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     /* Test "casting" up and down the hierarchy */
     QOrganizerItemDetailFilter df;
     QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
-    df.setDetailDefinitionName("Frog", "Croak");
+    df.setDetailDefinitionName("Frog", 101);
     df.setValue(42);
 
     QOrganizerItemFilter f = df;
@@ -191,7 +191,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     QOrganizerItemDetailFilter df2 = f;
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
-    QVERIFY(df2.detailFieldName() == "Croak");
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     /* Now try to check if we dangle pointers at all */
@@ -200,18 +200,18 @@ void tst_QOrganizerItemFilter::classHierarchy()
     }
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
-    QVERIFY(df2.detailFieldName() == "Croak");
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     {
         QOrganizerItemDetailFilter sdf2 = df2;
-        sdf2.setDetailDefinitionName("Toad");
+        sdf2.setDetailDefinitionName("Toad", 101);
         QVERIFY(sdf2.detailDefinitionName() == "Toad");
         QVERIFY(df2.detailDefinitionName() == "Frog");
     }
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName() == "Frog");
-    QVERIFY(df2.detailFieldName() == "Croak");
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     /* Try creating a default filter and making sure we don't break */
@@ -250,13 +250,13 @@ void tst_QOrganizerItemFilter::intersectionFilter()
 {
     /* Test boolean ops */
     QOrganizerItemDetailFilter df;
-    df.setDetailDefinitionName("Frog");
+    df.setDetailDefinitionName("Frog", -1);
 
     QOrganizerItemDetailFilter df2;
-    df2.setDetailDefinitionName("Toad");
+    df2.setDetailDefinitionName("Toad", -1);
 
     QOrganizerItemDetailFilter df3;
-    df3.setDetailDefinitionName("Hippopotamus");
+    df3.setDetailDefinitionName("Hippopotamus", -1);
 
     QOrganizerItemIntersectionFilter bf;
     bf << df << df2;
@@ -341,13 +341,13 @@ void tst_QOrganizerItemFilter::unionFilter()
 {
     /* Test boolean ops */
     QOrganizerItemDetailFilter df;
-    df.setDetailDefinitionName("Frog");
+    df.setDetailDefinitionName("Frog", -1);
 
     QOrganizerItemDetailFilter df2;
-    df2.setDetailDefinitionName("Toad");
+    df2.setDetailDefinitionName("Toad", -1);
 
     QOrganizerItemDetailFilter df3;
-    df3.setDetailDefinitionName("Hippopotamus");
+    df3.setDetailDefinitionName("Hippopotamus", -1);
 
     QOrganizerItemUnionFilter bf;
     bf << df << df2;
@@ -498,19 +498,19 @@ void tst_QOrganizerItemFilter::detailFilter()
     QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
 
     QVERIFY(df.detailDefinitionName().isEmpty());
-    QVERIFY(df.detailFieldName().isEmpty());
+    QVERIFY(df.detailField() == -1);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
-    df.setDetailDefinitionName("Definition");
+    df.setDetailDefinitionName("Definition", -1);
     QVERIFY(df.detailDefinitionName() == "Definition");
-    QVERIFY(df.detailFieldName().isEmpty());
+    QVERIFY(df.detailField() == -1);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
-    df.setDetailDefinitionName("Definition", "Field");
+    df.setDetailDefinitionName("Definition", 101);
     QVERIFY(df.detailDefinitionName() == "Definition");
-    QVERIFY(df.detailFieldName() == "Field");
+    QVERIFY(df.detailField() == 101);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
@@ -530,7 +530,7 @@ void tst_QOrganizerItemFilter::detailFilter()
     QOrganizerItemDetailFilter df2 = f;
     QVERIFY(df2 == df);
     QVERIFY(df2.detailDefinitionName() == "Definition");
-    QVERIFY(df2.detailFieldName() == "Field");
+    QVERIFY(df2.detailField() == 101);
 
     /* Self assignment should do nothing */
     df2 = df2;
@@ -543,44 +543,44 @@ void tst_QOrganizerItemFilter::detailFilter()
     df2 = rf;
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df2.detailDefinitionName().isEmpty());
-    QVERIFY(df2.detailFieldName().isEmpty());
+    QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value().isNull());
 
     /* reset it */
     df2 = df;
     QVERIFY(df2.detailDefinitionName() == "Definition");
-    QVERIFY(df2.detailFieldName() == "Field");
+    QVERIFY(df2.detailField() == 101);
 
     /* Through base class */
     f = rf;
     df2 = f;
     QVERIFY(df2.detailDefinitionName().isEmpty());
-    QVERIFY(df2.detailFieldName().isEmpty());
+    QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value().isNull());
 
     /* Now test copy ctor */
     QOrganizerItemDetailFilter df3(rf);
     QVERIFY(df3.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df3.detailDefinitionName().isEmpty());
-    QVERIFY(df3.detailFieldName().isEmpty());
+    QVERIFY(df3.detailField() == -1);
     QVERIFY(df3.value().isNull());
 
     /* reset it */
     df3 = df;
     QVERIFY(df3.detailDefinitionName() == "Definition");
-    QVERIFY(df3.detailFieldName() == "Field");
+    QVERIFY(df3.detailField() == 101);
 
     /* Now test copy ctor through base class */
     QOrganizerItemDetailFilter df4(f);
     QVERIFY(df4.type() == QOrganizerItemFilter::DetailFilter);
     QVERIFY(df4.detailDefinitionName().isEmpty());
-    QVERIFY(df4.detailFieldName().isEmpty());
+    QVERIFY(df4.detailField() == -1);
     QVERIFY(df4.value().isNull());
 
     /* reset it */
     df4 = df;
     QVERIFY(df4.detailDefinitionName() == "Definition");
-    QVERIFY(df4.detailFieldName() == "Field");
+    QVERIFY(df4.detailField() == 101);
 }
 
 void tst_QOrganizerItemFilter::detailRangeFilter()
@@ -590,25 +590,25 @@ void tst_QOrganizerItemFilter::detailRangeFilter()
     QVERIFY(rf.type() == QOrganizerItemFilter::DetailRangeFilter);
 
     QVERIFY(rf.detailDefinitionName().isEmpty());
-    QVERIFY(rf.detailFieldName().isEmpty());
+    QVERIFY(rf.detailField() == -1);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
     QVERIFY(rf.maxValue().isNull());
     QVERIFY(rf.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeUpper | QOrganizerItemDetailRangeFilter::IncludeLower));
 
-    rf.setDetailDefinitionName("Definition");
+    rf.setDetailDefinitionName("Definition", -1);
     QVERIFY(rf.detailDefinitionName() == "Definition");
-    QVERIFY(rf.detailFieldName().isEmpty());
+    QVERIFY(rf.detailField() == -1);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
     QVERIFY(rf.maxValue().isNull());
     QVERIFY(rf.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeUpper | QOrganizerItemDetailRangeFilter::IncludeLower));
 
-    rf.setDetailDefinitionName("Definition", "Field");
+    rf.setDetailDefinitionName("Definition", 101);
     QVERIFY(rf.detailDefinitionName() == "Definition");
-    QVERIFY(rf.detailFieldName() == "Field");
+    QVERIFY(rf.detailField() == 101);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
@@ -691,7 +691,7 @@ void tst_QOrganizerItemFilter::sortObject()
     /* Defaults */
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -701,7 +701,7 @@ void tst_QOrganizerItemFilter::sortObject()
     sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -710,7 +710,7 @@ void tst_QOrganizerItemFilter::sortObject()
     sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -721,7 +721,7 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(sortorder.direction() == Qt::DescendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder != QOrganizerItemSortOrder());
@@ -730,7 +730,7 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder == QOrganizerItemSortOrder());
@@ -740,7 +740,7 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseInsensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder != QOrganizerItemSortOrder());
@@ -749,85 +749,71 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder == QOrganizerItemSortOrder());
 
     /* Definitions */
-    sortorder.setDetailDefinitionName(QString(), QString());
+    sortorder.setDetailDefinitionName(QString(), -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
-    sortorder.setDetailDefinitionName("", QString());
+    sortorder.setDetailDefinitionName("", -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
-    sortorder.setDetailDefinitionName(QString(), "");
+    sortorder.setDetailDefinitionName("Definition", -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailDefinitionName("", "");
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailDefinitionName("Definition", QString());
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder == QOrganizerItemSortOrder());
 
-    sortorder.setDetailDefinitionName("Definition", "Detail");
+    sortorder.setDetailDefinitionName("Definition", 101);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName() == "Definition");
-    QVERIFY(sortorder.detailFieldName() == "Detail");
+    QVERIFY(sortorder.detailField() == 101);
     QVERIFY(sortorder.isValid());
 
-    sortorder.setDetailDefinitionName(QString(), "Detail");
+    sortorder.setDetailDefinitionName(QString(), 101);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
     /* Copy ctor */
-    sortorder.setDetailDefinitionName("Definition", "Detail");
+    sortorder.setDetailDefinitionName("Definition", 101);
     sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
     sortorder.setDirection(Qt::DescendingOrder);
     QVERIFY(sortorder.direction() == Qt::DescendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(sortorder.detailDefinitionName() == "Definition");
-    QVERIFY(sortorder.detailFieldName() == "Detail");
+    QVERIFY(sortorder.detailField() == 101);
     QVERIFY(sortorder.isValid());
 
     QOrganizerItemSortOrder other(sortorder);
     QVERIFY(other.direction() == Qt::DescendingOrder);
     QVERIFY(other.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(other.detailDefinitionName() == "Definition");
-    QVERIFY(other.detailFieldName() == "Detail");
+    QVERIFY(other.detailField() == 101);
     QVERIFY(other.isValid());
     QVERIFY(other == sortorder);
     QVERIFY(!(other != sortorder));
 
-    other.setDetailDefinitionName("Another Definition", "Detail");
+    other.setDetailDefinitionName("Another Definition", 101);
     QVERIFY(other != sortorder);
 
-    other.setDetailDefinitionName("Definition", "Another Detail");
+    other.setDetailDefinitionName("Definition", 102);
     QVERIFY(other != sortorder);
 
     /* Assignment operator */
@@ -836,7 +822,7 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(another.direction() == Qt::DescendingOrder);
     QVERIFY(another.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(another.detailDefinitionName() == "Definition");
-    QVERIFY(another.detailFieldName() == "Another Detail");
+    QVERIFY(another.detailField() == 102);
     QVERIFY(another.isValid());
     QVERIFY(another == other);
     QVERIFY(!(other != another));
@@ -846,7 +832,7 @@ void tst_QOrganizerItemFilter::sortObject()
     QVERIFY(another.direction() == Qt::DescendingOrder);
     QVERIFY(another.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
     QVERIFY(another.detailDefinitionName() == "Definition");
-    QVERIFY(another.detailFieldName() == "Another Detail");
+    QVERIFY(another.detailField() == 102);
     QVERIFY(another.isValid());
     QVERIFY(another == other);
     QVERIFY(!(other != another));
@@ -1302,7 +1288,7 @@ void tst_QOrganizerItemFilter::datastream_data()
 
     {
         QOrganizerItemDetailFilter filter;
-        filter.setDetailDefinitionName("detail", "field");
+        filter.setDetailDefinitionName("detail", 101);
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
         filter.setValue("ski");
         QTest::newRow("detail") << (QOrganizerItemFilter)filter;
@@ -1357,7 +1343,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut()
     qDebug() << filterIn;
 
     QOrganizerItemSortOrder sortorder;
-    QTest::ignoreMessage(QtDebugMsg, "QOrganizerItemSortOrder(detailDefinitionName=\"\",detailFieldName=\"\",blankPolicy=1,direction=0,caseSensitivity=1)");
+    QTest::ignoreMessage(QtDebugMsg, "QOrganizerItemSortOrder(detailDefinitionName=\"\",detailFieldName=-1,blankPolicy=1,direction=0,caseSensitivity=1)");
     qDebug() << sortorder;
 }
 
@@ -1417,79 +1403,79 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
 
     {
         QOrganizerItemDetailFilter filter;
-        filter.setDetailDefinitionName("detail", "field");
+        filter.setDetailDefinitionName("detail", 101);
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
         filter.setValue("ski");
-        QTest::newRow("detail") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"detail\",detailFieldName=\"field\",value=QVariant(QString, \"ski\") ,matchFlags=3))";
+        QTest::newRow("detail") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"detail\",detailFieldName=101,value=QVariant(QString, \"ski\") ,matchFlags=3))";
     }
 
     {
         QOrganizerItemDetailRangeFilter filter;
         // Testing the empty fields
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"\",detailFieldName=\"\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"\",detailFieldName=-1,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
 
         // Testing the method setDetailDefinitionName (fieldname not assigned)
-        filter.setDetailDefinitionName("Definition");
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        filter.setDetailDefinitionName("Definition", -1);
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=-1,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method setDetailDefinitionName
-        filter.setDetailDefinitionName("Definition", "Field");
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        filter.setDetailDefinitionName("Definition", 102);
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method rangeFlags
         filter.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method matchFlags
         filter.setMatchFlags(QOrganizerItemFilter::MatchCaseSensitive);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
 
         // Contains is not allowed
         filter.setMatchFlags(QOrganizerItemFilter::MatchCaseSensitive | QOrganizerItemFilter::MatchContains);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the minValue and maxValue
         filter.setRange(5, 10);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(int, 5) ,maxValue=QVariant(int, 10) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(int, 5) ,maxValue=QVariant(int, 10) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the setRange
         filter.setRange(QVariant(), 11);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(6, QVariant());
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(QVariant(), QVariant());
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(5, 10, QOrganizerItemDetailRangeFilter::ExcludeLower);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(int, 5) ,maxValue=QVariant(int, 10) ,matchFlags=0,rangeFlags=2))";  // *
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(int, 5) ,maxValue=QVariant(int, 10) ,matchFlags=0,rangeFlags=2))";  // *
 
         filter.setRange(QVariant(), 11, QOrganizerItemDetailRangeFilter::IncludeUpper);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=1))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=1))";
 
         filter.setRange(6, QVariant(), QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::IncludeUpper);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=3))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=3))";
 
     filter.setRange(QVariant(), QVariant(), QOrganizerItemDetailRangeFilter::ExcludeUpper | QOrganizerItemDetailRangeFilter::IncludeLower);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
     // Test op=
     QOrganizerItemFilter f = filter;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
     QOrganizerItemDetailRangeFilter filter2 = f;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
     filter2 = filter;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
 
     // Self assignment should do nothing
     filter2 = filter2;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=\"Field\",minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailDefinitionName=\"Definition\",detailFieldName=102,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
     }
 
     {
@@ -1557,16 +1543,16 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
 
         // Test boolean ops
         QOrganizerItemDetailFilter filter1;
-        filter1.setDetailDefinitionName("Frog");
+        filter1.setDetailDefinitionName("Frog", -1);
 
         QOrganizerItemDetailFilter filter2;
-        filter2.setDetailDefinitionName("Toad");
+        filter2.setDetailDefinitionName("Toad", -1);
 
         QOrganizerItemDetailFilter filter3;
-        filter3.setDetailDefinitionName("Hippopotamus");
+        filter3.setDetailDefinitionName("Hippopotamus", -1);
 
         filter << filter1 << filter2;
-        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Frog\",detailFieldName=\"\",value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Toad\",detailFieldName=\"\",value=QVariant(, ) ,matchFlags=0))) ))";
+        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Frog\",detailFieldName=-1,value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Toad\",detailFieldName=-1,value=QVariant(, ) ,matchFlags=0))) ))";
     }
 
     {
@@ -1580,18 +1566,18 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
 
         // Test boolean ops
         QOrganizerItemDetailFilter df;
-        df.setDetailDefinitionName("Frog");
+        df.setDetailDefinitionName("Frog", -1);
 
         QOrganizerItemDetailFilter df2;
-        df2.setDetailDefinitionName("Toad");
+        df2.setDetailDefinitionName("Toad", -1);
 
         QOrganizerItemDetailFilter df3;
-        df3.setDetailDefinitionName("Hippopotamus");
+        df3.setDetailDefinitionName("Hippopotamus", -1);
 
 
         QOrganizerItemUnionFilter bf;
         bf << df << df2;
-        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Frog\",detailFieldName=\"\",value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Toad\",detailFieldName=\"\",value=QVariant(, ) ,matchFlags=0))) ))";
+        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Frog\",detailFieldName=-1,value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailDefinitionName=\"Toad\",detailFieldName=-1,value=QVariant(, ) ,matchFlags=0))) ))";
     }
 
 }

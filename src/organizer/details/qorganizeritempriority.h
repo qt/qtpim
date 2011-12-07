@@ -51,7 +51,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority, "Priority")
-    const static QString FieldPriority;
+
+    enum PriorityField {
+        FieldPriority = 0
+    };
 
     // time vs impact priority?  greater granularity?
     enum Priority {

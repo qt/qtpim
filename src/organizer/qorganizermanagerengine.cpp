@@ -486,7 +486,7 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
                 return QOrganizerItemInvalidFilter();
             if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
                 QOrganizerItemDetailFilter df;
-                df.setDetailDefinitionName(f.detailDefinitionName(), f.detailFieldName());
+                df.setDetailDefinitionName(f.detailDefinitionName(), f.detailField());
                 df.setMatchFlags(f.matchFlags());
                 df.setValue(f.minValue());
                 return df;
@@ -895,7 +895,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     return false; /* can't match */
 
                 /* See if we need to check the values */
-                if (cdf.detailFieldName().isEmpty())
+                if (cdf.detailField() == -1)
                     return true;  /* just testing for the presence of a detail of the specified definition */
 
                 /* Now figure out what tests we are doing */
@@ -908,7 +908,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                         const QOrganizerItemDetail& detail = details.at(j);
 
                         /* Check that the field is present and has a non-empty value */
-                        if (detail.values().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isNull())
+                        if (detail.values().contains(cdf.detailField()) && !detail.value(cdf.detailField()).isNull())
                             return true;
                     }
                     return false;
@@ -927,7 +927,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Value equality test */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName()).toString();
+                        const QString& var = detail.value(cdf.detailField()).toString();
                         const QString& needle = cdf.value().toString();
                         if (matchStarts && var.startsWith(needle, cs))
                             return true;
@@ -944,7 +944,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Value equality test */
                     for(int j = 0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QVariant& var = detail.value(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailField());
                         if (!var.isNull() && compareVariant(var, cdf.value(), cs) == 0)
                             return true;
                     }
@@ -965,14 +965,14 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     return false; /* can't match */
 
                 /* Check for a detail presence test */
-                if (cdf.detailFieldName().isEmpty())
+                if (cdf.detailField() == -1)
                     return true;
 
                 /* See if this is a field presence test */
                 if (!cdf.minValue().isValid() && !cdf.maxValue().isValid()) {
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        if (detail.values().contains(cdf.detailFieldName()))
+                        if (detail.values().contains(cdf.detailField()))
                             return true;
                     }
                     return false;
@@ -1007,7 +1007,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Starts with is the normal compare case, endsWith is a bit trickier */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName()).toString();
+                        const QString& var = detail.value(cdf.detailField()).toString();
                         if (!matchEnds) {
                             // MatchStarts or MatchFixedString
                             if (testMin && QString::compare(var, minVal, cs) < minComp)
@@ -1030,7 +1030,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                     /* Nope, testing the values as a variant */
                     for(int j=0; j < details.count(); j++) {
                         const QOrganizerItemDetail& detail = details.at(j);
-                        const QVariant& var = detail.value(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailField());
 
                         if (testMin && compareVariant(var, cdf.minValue(), cs) < minComp)
                             continue;
@@ -1244,8 +1244,8 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
             break;
 
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
-        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
+        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailField());
+        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailField());
 
         bool aIsNull = false;
         bool bIsNull = false;

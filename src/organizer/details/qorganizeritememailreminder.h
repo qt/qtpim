@@ -52,10 +52,13 @@ class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemRemi
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemEmailReminder, "EmailReminder")
-    const static QString FieldSubject;
-    const static QString FieldBody;
-    const static QString FieldAttachments;
-    const static QString FieldRecipients;
+
+    enum EmailReminderField {
+        FieldSubject = QOrganizerItemReminder::FieldRepetitionDelay + 100,  // in case more fields added to QOrganizerItemReminder
+        FieldBody,
+        FieldAttachments,
+        FieldRecipients
+    };
 
     void setContents(const QString &subject, const QString &body, const QVariantList &attachments);
     QString subject() const;

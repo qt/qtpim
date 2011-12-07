@@ -194,8 +194,7 @@ QOrganizerItemSortOrder QDeclarativeOrganizerItemSortOrder::sortOrder()
  */
 void QDeclarativeOrganizerItemSortOrder::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
-                              QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
+    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
     emit sortOrderChanged();
 }
 

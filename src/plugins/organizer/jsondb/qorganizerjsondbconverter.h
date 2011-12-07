@@ -111,7 +111,7 @@ private:
     bool idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const;
     bool isSupportedDetailFilter(
-        const QOrganizerItemDetailFilter &filter, const QString &detailDefinitionName, const QString &detailFieldName) const;
+        const QOrganizerItemDetailFilter &filter, const QString &detailDefinitionName, int detailFieldName) const;
     QString createMatchFlagQuery(const QString &value, QOrganizerItemFilter::MatchFlags flags) const;
 };
 

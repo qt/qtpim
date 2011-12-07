@@ -52,9 +52,12 @@ class Q_ORGANIZER_EXPORT QOrganizerEventTime : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventTime, "EventTime")
-    const static QString FieldStartDateTime;
-    const static QString FieldEndDateTime;
-    const static QString FieldAllDay;
+
+    enum EventTimeField {
+        FieldStartDateTime = 0,
+        FieldEndDateTime,
+        FieldAllDay
+    };
 
     void setStartDateTime(const QDateTime &startDateTime);
     QDateTime startDateTime() const;

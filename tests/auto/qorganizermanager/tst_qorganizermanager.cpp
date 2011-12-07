@@ -395,8 +395,8 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
         foreach (QOrganizerItemDetail d2, bDetails) {
             if (d.definitionName() == d2.definitionName()) {
                 bool canRemove = true;
-                QMap<QString, QVariant> d2map = d2.values();
-                foreach (QString key, d2map.keys()) {
+                QMap<int, QVariant> d2map = d2.values();
+                foreach (int key, d2map.keys()) {
                     if (d.value(key) != d2.value(key)) {
                         // d can have _more_ keys than d2,
                         // but not _less_; and it cannot
@@ -2673,7 +2673,7 @@ void tst_QOrganizerManager::errorStayingPut()
 
     QOrganizerItem c;
     QOrganizerItemDetail d("This does not exist and if it does this will break");
-    d.setValue("Value that also doesn't exist", 5);
+    d.setValue(101, 5);
     c.saveDetail(&d);
 
 //    QVERIFY(m1.saveItem(&c) == false);
@@ -3896,7 +3896,7 @@ void tst_QOrganizerManager::partialSave()
     // 6 Have a non existing item in the middle followed by a save error
     cm->removeItem(items[4].id());
     QOrganizerItemDetail badDetail("BadDetail");
-    badDetail.setValue("BadField", "BadValue");
+    badDetail.setValue(101, "BadValue");
     items[5].saveDetail(&badDetail);
     QVERIFY(!cm->saveItems(&items, QStringList("BadDetail")));
     QMap<int, QOrganizerManager::Error> errorMap = cm->errorMap();

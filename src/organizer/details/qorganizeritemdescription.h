@@ -50,7 +50,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemDescription : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDescription, "Description")
-    const static QString FieldDescription;
+
+    enum DescriptionField {
+        FieldDescription = 0
+    };
 
     void setDescription(const QString &description);
     QString description() const;

@@ -210,7 +210,7 @@ void tst_QOrganizerItem::details()
     // now we want to add multiple details of the same type, and test that retrieval works correctly.
     a2 = QOrganizerItemLocation();
     a2.setLabel("22222");
-    a2.setValue("nonexistent-field", QVariant("22222-2"));
+    a2.setValue(100, QVariant("22222-2")); // non-existing field
     oi.saveDetail(&a);
     oi.saveDetail(&a2);
     QCOMPARE(oi.details().count(), 3);
@@ -706,7 +706,7 @@ void tst_QOrganizerItem::hash()
     QOrganizerItem oi1;
     oi1.setId(id);
     QOrganizerItemDetail detail1("definition");
-    detail1.setValue("key", "value");
+    detail1.setValue(1, "value");
     oi1.saveDetail(&detail1);
     QOrganizerItem oi2;
     oi2.setId(id);
@@ -714,7 +714,7 @@ void tst_QOrganizerItem::hash()
     QOrganizerItem oi3;
     oi3.setId(id);
     QOrganizerItemDetail detail3("definition");
-    detail3.setValue("key", "another value");
+    detail3.setValue(1, "another value");
     oi3.saveDetail(&detail3);
     QOrganizerItem oi4; // no details
     oi4.setId(id);

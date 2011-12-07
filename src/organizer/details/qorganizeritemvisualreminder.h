@@ -50,8 +50,11 @@ class Q_ORGANIZER_EXPORT QOrganizerItemVisualReminder : public QOrganizerItemRem
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemVisualReminder, "VisualReminder")
-    const static QString FieldMessage;
-    const static QString FieldDataUrl;
+
+    enum VisualReminderField {
+        FieldMessage = QOrganizerItemReminder::FieldRepetitionDelay + 100,   // in case more fields added to QOrganizerItemReminder
+        FieldDataUrl
+    };
 
     void setMessage(const QString &message);
     QString message() const;

@@ -204,7 +204,7 @@ private:
     TimeZonePhase importTimeZonePhase(const QVersitDocument& document) const;
 
     // versit property name -> <definition name, field name>:
-    QMap<QString, QPair<QString, QString> > mPropertyMappings;
+    QMap<QString, QPair<QString, int> > mPropertyMappings;
     TimeZones mTimeZones;
 };
 

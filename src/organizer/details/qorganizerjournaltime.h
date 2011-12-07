@@ -52,7 +52,10 @@ class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime, "JournalTime")
-    const static QString FieldEntryDateTime;
+
+    enum JournalTimeField {
+        FieldEntryDateTime = 0
+    };
 
     void setEntryDateTime(const QDateTime &entryDateTime);
     QDateTime entryDateTime() const;

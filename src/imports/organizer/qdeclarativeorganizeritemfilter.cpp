@@ -279,8 +279,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
  */
 void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
-                              QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
+    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
     emit valueChanged();
 }
 
@@ -467,8 +466,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
  */
 void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail),
-                              QDeclarativeOrganizerItemDetail::fieldName(m_detail, m_field));
+    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
     emit valueChanged();
 }
 

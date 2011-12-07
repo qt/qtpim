@@ -128,14 +128,14 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
 }
 
 /*!
-    \qmlproperty list<string> Detail::fieldNames
+    \qmlproperty list<int> Detail::fieldNames
 
     This property holds the list of all field names which this detail currently contains. Thse names are
     used as the key for value(), setValue() and removeValue().
 
     This property is read only.
  */
-QStringList QDeclarativeOrganizerItemDetail::fieldNames() const
+QList<int> QDeclarativeOrganizerItemDetail::fieldNames() const
 {
     return m_detail.values().keys();
 }
@@ -147,7 +147,7 @@ QStringList QDeclarativeOrganizerItemDetail::fieldNames() const
  */
 QVariant QDeclarativeOrganizerItemDetail::value(int field) const
 {
-    return m_detail.value(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field));
+    return m_detail.value(field);
 }
 
 /*!
@@ -160,7 +160,7 @@ QVariant QDeclarativeOrganizerItemDetail::value(int field) const
  */
 bool QDeclarativeOrganizerItemDetail::setValue(int field, const QVariant &value)
 {
-    bool ok = m_detail.setValue(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field), value);
+    bool ok = m_detail.setValue(field, value);
     if (ok)
         emit detailChanged();
     return ok;
@@ -174,7 +174,7 @@ bool QDeclarativeOrganizerItemDetail::setValue(int field, const QVariant &value)
  */
 bool QDeclarativeOrganizerItemDetail::removeValue(int field)
 {
-    bool ok = m_detail.removeValue(fieldName(detailTypeByDefinitionName(m_detail.definitionName()), field));
+    bool ok = m_detail.removeValue(field);
     if (ok)
         emit detailChanged();
     return ok;
@@ -196,65 +196,6 @@ void QDeclarativeOrganizerItemDetail::setDetail(const QOrganizerItemDetail &deta
 {
     m_detail = detail;
     emit detailChanged();
-}
-
-/*!
-    \internal
- */
-QString QDeclarativeOrganizerItemDetail::fieldName(QDeclarativeOrganizerItemDetail::ItemDetailType detailType, int fieldType)
-{
-    switch (detailType) {
-    case QDeclarativeOrganizerItemDetail::EventTime:
-        return QDeclarativeOrganizerEventTime::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::JournalTime:
-        return QDeclarativeOrganizerJournalTime::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::TodoTime:
-        return QDeclarativeOrganizerTodoTime::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::TodoProgress:
-        return QDeclarativeOrganizerTodoProgress::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Reminder:
-        return QDeclarativeOrganizerItemReminder::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::AudibleReminder:
-        return QDeclarativeOrganizerItemAudibleReminder::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::VisualReminder:
-        return QDeclarativeOrganizerItemVisualReminder::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::EmailReminder:
-        return QDeclarativeOrganizerItemEmailReminder::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Comment:
-        return QDeclarativeOrganizerItemComment::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Description:
-        return QDeclarativeOrganizerItemDescription::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::DisplayLabel:
-        return QDeclarativeOrganizerItemDisplayLabel::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Guid:
-        return QDeclarativeOrganizerItemGuid::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Location:
-        return QDeclarativeOrganizerItemLocation::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Parent:
-        return QDeclarativeOrganizerItemParent::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Priority:
-        return QDeclarativeOrganizerItemPriority::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Recurrence:
-        return QDeclarativeOrganizerItemRecurrence::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Timestamp:
-        return QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Type:
-        return QDeclarativeOrganizerItemType::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Tag:
-        return QDeclarativeOrganizerItemTag::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::EventAttendee:
-        return QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::EventRsvp:
-        return QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Classification:
-        return QDeclarativeOrganizerItemClassification::fieldNameFromFieldType(fieldType);
-    case QDeclarativeOrganizerItemDetail::Customized:
-        return QDeclarativeOrganizerItemExtendedDetail::fieldNameFromFieldType(fieldType);
-    default:
-        break;
-    }
-    qmlInfo(0) << QString(tr("Can't find the field name for detail type '%1' and field type '%2'")).arg(detailType).arg(fieldType);
-    return QString();
 }
 
 /*!
@@ -375,42 +316,6 @@ QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetail:
 QString QDeclarativeOrganizerItemDetail::definitionName() const
 {
     return m_detail.definitionName();
-}
-
-/*!
-    \qmlmethod variant Detail::value(key)
-
-    To be removed soon.
- */
-QVariant QDeclarativeOrganizerItemDetail::value(const QString &key) const
-{
-    return m_detail.value(key);
-}
-
-/*!
-    \qmlmethod bool Detail::setValue(key, value)
-
-    To be removed soon.
- */
-bool QDeclarativeOrganizerItemDetail::setValue(const QString &key, const QVariant &value)
-{
-    bool ok = m_detail.setValue(key, value);
-    if (ok)
-        emit detailChanged();
-    return ok;
-}
-
-/*!
-    \qmlmethod bool Detail::removeValue(key)
-
-    To be removed soon.
- */
-bool QDeclarativeOrganizerItemDetail::removeValue(const QString &key)
-{
-    bool ok = m_detail.removeValue(key);
-    if (ok)
-        emit detailChanged();
-    return ok;
 }
 
 
@@ -2221,329 +2126,6 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;
-}
-
-// used by filters
-QString QDeclarativeOrganizerEventTime::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldStartDateTime:
-        return QOrganizerEventTime::FieldStartDateTime;
-    case FieldEndDateTime:
-        return QOrganizerEventTime::FieldEndDateTime;
-    case FieldAllDay:
-        return QOrganizerEventTime::FieldAllDay;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemType::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldType:
-        return QOrganizerItemType::FieldType;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerJournalTime::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldEntryDateTime:
-        return QOrganizerJournalTime::FieldEntryDateTime;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerTodoProgress::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldStatus:
-        return QOrganizerTodoProgress::FieldStatus;
-    case FieldPercentage:
-        return QOrganizerTodoProgress::FieldPercentageComplete;
-    case FieldFinishedDateTime:
-        return QOrganizerTodoProgress::FieldFinishedDateTime;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerTodoTime::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldAllDay:
-        return QOrganizerTodoTime::FieldAllDay;
-    case FieldStartDateTime:
-        return QOrganizerTodoTime::FieldStartDateTime;
-    case FieldDueDateTime:
-        return QOrganizerTodoTime::FieldDueDateTime;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemComment::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldComment:
-        return QOrganizerItemComment::FieldComment;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemDescription::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldDescription:
-        return QOrganizerItemDescription::FieldDescription;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemDisplayLabel::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldLabel:
-        return QOrganizerItemDisplayLabel::FieldLabel;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemGuid::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldGuid:
-        return QOrganizerItemGuid::FieldGuid;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemParent::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldParentId:
-        return QOrganizerItemParent::FieldParentId;
-    case FieldOriginalDate:
-        return QOrganizerItemParent::FieldOriginalDate;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemLocation::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldLatitude:
-        return QOrganizerItemLocation::FieldLatitude;
-    case FieldLongitude:
-        return QOrganizerItemLocation::FieldLongitude;
-    case FieldLabel:
-        return QOrganizerItemLocation::FieldLabel;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemPriority::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldPriority:
-        return QOrganizerItemPriority::FieldPriority;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemRecurrence::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldRecurrenceRules:
-        return QOrganizerItemRecurrence::FieldRecurrenceRules;
-    case FieldExceptionRules:
-        return QOrganizerItemRecurrence::FieldExceptionRules;
-    case FieldRecurrenceDates:
-        return QOrganizerItemRecurrence::FieldRecurrenceDates;
-    case FieldExceptionDates:
-        return QOrganizerItemRecurrence::FieldExceptionDates;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemReminder::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldSecondsBeforeStart:
-        return QOrganizerItemReminder::FieldSecondsBeforeStart;
-    case FieldRepetitionCount:
-        return QOrganizerItemReminder::FieldRepetitionCount;
-    case FieldRepetitionDelay:
-        return QOrganizerItemReminder::FieldRepetitionDelay;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemAudibleReminder::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldRepetitionCount:
-        return QOrganizerItemReminder::FieldRepetitionCount;
-    case FieldRepetitionDelay:
-        return QOrganizerItemReminder::FieldRepetitionDelay;
-    case FieldSecondsBeforeStart:
-        return QOrganizerItemReminder::FieldSecondsBeforeStart;
-    case FieldDataUrl:
-        return QOrganizerItemAudibleReminder::FieldDataUrl;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-
-QString QDeclarativeOrganizerItemVisualReminder::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldRepetitionCount:
-        return QOrganizerItemReminder::FieldRepetitionCount;
-    case FieldRepetitionDelay:
-        return QOrganizerItemReminder::FieldRepetitionDelay;
-    case FieldSecondsBeforeStart:
-        return QOrganizerItemReminder::FieldSecondsBeforeStart;
-    case FieldDataUrl:
-        return QOrganizerItemVisualReminder::FieldDataUrl;
-    case FieldMessage:
-        return QOrganizerItemVisualReminder::FieldMessage;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-QString QDeclarativeOrganizerItemEmailReminder::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldRepetitionCount:
-        return QOrganizerItemReminder::FieldRepetitionCount;
-    case FieldRepetitionDelay:
-        return QOrganizerItemReminder::FieldRepetitionDelay;
-    case FieldSecondsBeforeStart:
-        return QOrganizerItemReminder::FieldSecondsBeforeStart;
-    case FieldSubject:
-        return QOrganizerItemEmailReminder::FieldSubject;
-    case FieldBody:
-        return QOrganizerItemEmailReminder::FieldBody;
-    case FieldRecipients:
-        return QOrganizerItemEmailReminder::FieldRecipients;
-    case FieldAttachments:
-        return QOrganizerItemEmailReminder::FieldAttachments;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-
-
-QString QDeclarativeOrganizerItemTimestamp::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldLastModified:
-        return QOrganizerItemTimestamp::FieldModificationTimestamp;
-    case FieldCreated:
-        return QOrganizerItemTimestamp::FieldCreationTimestamp;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemTag::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldTag:
-        return QOrganizerItemTag::FieldTag;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerEventRsvp::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case QDeclarativeOrganizerEventRsvp::FieldParticipationStatus:
-        return QOrganizerEventRsvp::FieldParticipationStatus;
-    case QDeclarativeOrganizerEventRsvp::FieldParticipationRole:
-        return QOrganizerEventRsvp::FieldParticipationRole;
-    case QDeclarativeOrganizerEventRsvp::FieldResponseRequirement:
-        return QOrganizerEventRsvp::FieldResponseRequirement;
-    case QDeclarativeOrganizerEventRsvp::FieldResponseDeadline:
-        return QOrganizerEventRsvp::FieldResponseDeadline;
-    case QDeclarativeOrganizerEventRsvp::FieldResponseDate:
-        return QOrganizerEventRsvp::FieldResponseDate;
-    case QDeclarativeOrganizerEventRsvp::FieldOrganizerName:
-        return QOrganizerEventRsvp::FieldOrganizerName;
-    case QDeclarativeOrganizerEventRsvp::FieldOrganizerEmail:
-        return QOrganizerEventRsvp::FieldOrganizerEmail;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemClassification::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case QDeclarativeOrganizerItemClassification::FieldClassification:
-        return QOrganizerItemClassification::FieldClassification;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerItemExtendedDetail::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldName:
-        return QOrganizerItemExtendedDetail::FieldExtendedDetailName;
-    case FieldData:
-        return QOrganizerItemExtendedDetail::FieldExtendedDetailData;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
-}
-
-QString QDeclarativeOrganizerEventAttendee::fieldNameFromFieldType(int type)
-{
-    switch (type) {
-    case FieldName:
-        return QOrganizerEventAttendee::FieldName;
-    case FieldEmailAddress:
-        return QOrganizerEventAttendee::FieldEmailAddress;
-    case FieldAddendeeId:
-        return QOrganizerEventAttendee::FieldAttendeeId;
-    case FieldParticipationStatus:
-        return QOrganizerEventAttendee::FieldParticipationStatus;
-    case FieldParticipationRole:
-        return QOrganizerEventAttendee::FieldParticipationRole;
-    }
-    qmlInfo(0) << tr("invalid field type:") << type;
-    return QString();
 }
 
 #include "moc_qdeclarativeorganizeritemdetail_p.cpp"

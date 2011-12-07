@@ -65,8 +65,9 @@ class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 {
 public:
     QOrganizerItemDetailFilterPrivate()
-        : QOrganizerItemFilterPrivate(),
-        m_flags(0)
+        : QOrganizerItemFilterPrivate()
+        , m_fieldId(-1)
+        , m_flags(0)
     {
     }
 
@@ -134,7 +135,7 @@ public:
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFilter, QOrganizerItemFilter::DetailFilter)
 
     QString m_defId;
-    QString m_fieldId;
+    int m_fieldId;
     QVariant m_exactValue;
     QOrganizerItemFilter::MatchFlags m_flags;
 };

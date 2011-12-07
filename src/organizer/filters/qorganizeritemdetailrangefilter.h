@@ -62,7 +62,7 @@ public:
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definition, const QString& fieldName = QString());
+    void setDetailDefinitionName(const QString& definition, int field);
     void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
 
     /* Filter Criterion */
@@ -70,12 +70,15 @@ public:
 
     /* Accessors */
     QString detailDefinitionName() const;
-    QString detailFieldName() const;
+    int detailField() const;
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
     QVariant minValue() const;
     QVariant maxValue() const;
     RangeFlags rangeFlags() const;
+
+    // to be removed
+    int detailFieldName() const;
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailRangeFilter)

@@ -58,7 +58,7 @@ class QDeclarativeOrganizerItemDetail : public QObject
     Q_PROPERTY(ItemDetailType type READ type)
 
     // to be removed
-    Q_PROPERTY(QStringList fieldNames READ fieldNames)
+    Q_PROPERTY(QList<int> fieldNames READ fieldNames)
     Q_PROPERTY(QString definitionName READ definitionName)
 
 public:
@@ -106,17 +106,13 @@ public:
     void setDetail(const QOrganizerItemDetail &detail);
 
     // to be removed once we use enumerations also in C++ side
-    static QString fieldName(ItemDetailType detailType, int fieldType);
     static QString definitionName(ItemDetailType type);
 
     static ItemDetailType detailTypeByDefinitionName(const QString& definitionName); // used by sort order
 
     // to be removed
     QString definitionName() const;
-    QStringList fieldNames() const;
-    Q_INVOKABLE QVariant value(const QString& key) const;
-    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value);
-    Q_INVOKABLE bool removeValue(const QString& key);
+    QList<int> fieldNames() const;
 
 Q_SIGNALS:
     void detailChanged();
@@ -133,17 +129,17 @@ class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(EventTimeField)
 
     Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldStartDateTime = 0,
-        FieldEndDateTime,
-        FieldAllDay
+    enum EventTimeField {
+        FieldStartDateTime = QOrganizerEventTime::FieldStartDateTime,
+        FieldEndDateTime = QOrganizerEventTime::FieldEndDateTime,
+        FieldAllDay = QOrganizerEventTime::FieldAllDay
     };
 
     QDeclarativeOrganizerEventTime(QObject *parent = 0);
@@ -159,8 +155,6 @@ public:
     void setEndDateTime(const QDateTime &datetime);
     QDateTime endDateTime() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -170,13 +164,13 @@ class QDeclarativeOrganizerItemComment : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(CommentField)
 
     Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldComment = 0
+    enum CommentField {
+        FieldComment = QOrganizerItemComment::FieldComment
     };
 
     QDeclarativeOrganizerItemComment(QObject *parent = 0);
@@ -185,8 +179,6 @@ public:
 
     void setComment(const QString &newComment);
     QString comment() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -197,13 +189,13 @@ class QDeclarativeOrganizerItemDescription : public QDeclarativeOrganizerItemDet
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(DescriptionField)
 
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldDescription = 0
+    enum DescriptionField {
+        FieldDescription = QOrganizerItemDescription::FieldDescription
     };
 
     QDeclarativeOrganizerItemDescription(QObject *parent = 0);
@@ -212,8 +204,6 @@ public:
 
     void setDescription(const QString &desc);
     QString description() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -224,13 +214,13 @@ class QDeclarativeOrganizerItemDisplayLabel : public QDeclarativeOrganizerItemDe
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(DisplayLabelField)
 
     Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldLabel = 0
+    enum DisplayLabelField {
+        FieldLabel = QOrganizerItemDisplayLabel::FieldLabel
     };
 
     QDeclarativeOrganizerItemDisplayLabel(QObject *parent = 0);
@@ -239,8 +229,6 @@ public:
 
     void setLabel(const QString &newLabel);
     QString label() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -251,13 +239,13 @@ class QDeclarativeOrganizerItemGuid : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(GuidField)
 
     Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldGuid = 0
+    enum GuidField {
+        FieldGuid = QOrganizerItemGuid::FieldGuid
     };
 
     QDeclarativeOrganizerItemGuid(QObject *parent = 0);
@@ -266,8 +254,6 @@ public:
 
     void setGuid(const QString &newGuid);
     QString guid() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -278,17 +264,17 @@ class QDeclarativeOrganizerItemLocation : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(LocationField)
 
     Q_PROPERTY(double latitude READ latitude WRITE setLatitude NOTIFY valueChanged)
     Q_PROPERTY(double longitude READ longitude WRITE setLongitude NOTIFY valueChanged)
     Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldLabel = 0,
-        FieldLatitude,
-        FieldLongitude
+    enum LocationField {
+        FieldLabel = QOrganizerItemLocation::FieldLabel,
+        FieldLatitude = QOrganizerItemLocation::FieldLatitude,
+        FieldLongitude = QOrganizerItemLocation::FieldLongitude
     };
 
     QDeclarativeOrganizerItemLocation(QObject *parent = 0);
@@ -304,8 +290,6 @@ public:
     void setLabel(const QString &newLabel);
     QString label() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -315,15 +299,15 @@ class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(ParentField)
 
     Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldParentId = 0,
-        FieldOriginalDate
+    enum ParentField {
+        FieldParentId = QOrganizerItemParent::FieldParentId,
+        FieldOriginalDate = QOrganizerItemParent::FieldOriginalDate
     };
 
     QDeclarativeOrganizerItemParent(QObject *parent = 0);
@@ -336,8 +320,6 @@ public:
     void setParentId(const QString &newParentId);
     QString parentId() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -347,14 +329,14 @@ class QDeclarativeOrganizerItemPriority : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(PriorityField)
     Q_ENUMS(Priority)
 
     Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldPriority = 0
+    enum PriorityField {
+        FieldPriority = QOrganizerItemPriority::FieldPriority
     };
 
     enum Priority {
@@ -377,8 +359,6 @@ public:
     void setPriority(Priority newPriority);
     Priority priority() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -388,7 +368,7 @@ class QDeclarativeOrganizerItemRecurrence : public QDeclarativeOrganizerItemDeta
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(RecurrenceField)
 
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules READ recurrenceRules NOTIFY recurrenceRulesChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules READ exceptionRules NOTIFY exceptionRulesChanged)
@@ -396,11 +376,11 @@ class QDeclarativeOrganizerItemRecurrence : public QDeclarativeOrganizerItemDeta
     Q_PROPERTY(QVariantList exceptionDates  READ exceptionDates WRITE setExceptionDates NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldRecurrenceRules = 0,
-        FieldExceptionRules,
-        FieldRecurrenceDates,
-        FieldExceptionDates
+    enum RecurrenceField {
+        FieldRecurrenceRules = QOrganizerItemRecurrence::FieldRecurrenceRules,
+        FieldExceptionRules = QOrganizerItemRecurrence::FieldExceptionRules,
+        FieldRecurrenceDates = QOrganizerItemRecurrence::FieldRecurrenceDates,
+        FieldExceptionDates = QOrganizerItemRecurrence::FieldExceptionDates
     };
 
     QDeclarativeOrganizerItemRecurrence(QObject *parent = 0);
@@ -416,8 +396,6 @@ public:
 
     void setExceptionDates(const QVariantList &dates);
     QVariantList exceptionDates() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void recurrenceRulesChanged();
@@ -463,13 +441,13 @@ class QDeclarativeOrganizerItemTag : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(TagField)
 
     Q_PROPERTY(QString tag READ tag WRITE setTag NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldTag = 0
+    enum TagField {
+        FieldTag = QOrganizerItemTag::FieldTag
     };
 
     QDeclarativeOrganizerItemTag(QObject *parent = 0);
@@ -478,8 +456,6 @@ public:
 
     void setTag(const QString &newTag);
     QString tag() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -490,15 +466,15 @@ class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetai
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(TimestampField)
 
     Q_PROPERTY(QDateTime created READ created WRITE setCreated NOTIFY valueChanged)
     Q_PROPERTY(QDateTime lastModified READ lastModified WRITE setLastModified NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldCreated = 0,
-        FieldLastModified
+    enum TimestampField {
+        FieldCreated = QOrganizerItemTimestamp::FieldCreationTimestamp,
+        FieldLastModified = QOrganizerItemTimestamp::FieldModificationTimestamp
     };
 
     QDeclarativeOrganizerItemTimestamp(QObject *parent = 0);
@@ -511,8 +487,6 @@ public:
     void setLastModified(const QDateTime &timestamp);
     QDateTime lastModified() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -522,14 +496,14 @@ class QDeclarativeOrganizerItemType : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(ItemTypeField)
     Q_ENUMS(ItemType)
 
     Q_PROPERTY(ItemType itemType READ itemType WRITE setItemType NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldType = 0
+    enum ItemTypeField {
+        FieldType = QOrganizerItemType::FieldType
     };
 
     enum ItemType {
@@ -549,8 +523,6 @@ public:
     void setItemType(ItemType newType);
     ItemType itemType() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -560,13 +532,13 @@ class QDeclarativeOrganizerJournalTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(JournalTimeField)
 
     Q_PROPERTY(QDateTime entryDateTime READ entryDateTime WRITE setEntryDateTime NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldEntryDateTime = 0
+    enum JournalTimeField {
+        FieldEntryDateTime = QOrganizerJournalTime::FieldEntryDateTime
     };
 
     QDeclarativeOrganizerJournalTime(QObject *parent = 0);
@@ -575,8 +547,6 @@ public:
 
     void setEntryDateTime(const QDateTime &datetime);
     QDateTime entryDateTime() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -587,7 +557,7 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(TodoProgressField)
     Q_ENUMS(StatusType)
 
     Q_PROPERTY(int percentage READ percentage WRITE setPercentage NOTIFY valueChanged)
@@ -595,10 +565,10 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
     Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldStatus = 0,
-        FieldPercentage,
-        FieldFinishedDateTime
+    enum TodoProgressField {
+        FieldStatus = QOrganizerTodoProgress::FieldStatus,
+        FieldPercentage = QOrganizerTodoProgress::FieldPercentageComplete,
+        FieldFinishedDateTime = QOrganizerTodoProgress::FieldFinishedDateTime
     };
 
     enum StatusType {
@@ -620,8 +590,6 @@ public:
     void setStatus(StatusType newStatus);
     StatusType status() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -630,17 +598,17 @@ class QDeclarativeOrganizerTodoTime : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(TodoTimeField)
 
     Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldStartDateTime = 0,
-        FieldDueDateTime,
-        FieldAllDay
+    enum TodoTimeField {
+        FieldStartDateTime = QOrganizerTodoTime::FieldStartDateTime,
+        FieldDueDateTime = QOrganizerTodoTime::FieldDueDateTime,
+        FieldAllDay = QOrganizerTodoTime::FieldAllDay
     };
 
     QDeclarativeOrganizerTodoTime(QObject *parent = 0);
@@ -656,8 +624,6 @@ public:
     void setDueDateTime(const QDateTime &dateTime);
     QDateTime dueDateTime() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -667,7 +633,7 @@ class QDeclarativeOrganizerItemReminder : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(ReminderField)
     Q_ENUMS(ReminderType)
 
     Q_PROPERTY(ReminderType reminderType READ reminderType NOTIFY reminderChanged)
@@ -676,10 +642,10 @@ class QDeclarativeOrganizerItemReminder : public QDeclarativeOrganizerItemDetail
     Q_PROPERTY(int secondsBeforeStart READ secondsBeforeStart WRITE setSecondsBeforeStart NOTIFY reminderChanged)
 
 public:
-    enum Field {
-        FieldRepetitionCount = 0,
-        FieldRepetitionDelay,
-        FieldSecondsBeforeStart
+    enum ReminderField {
+        FieldRepetitionCount = QOrganizerItemReminder::FieldRepetitionCount,
+        FieldRepetitionDelay = QOrganizerItemReminder::FieldRepetitionDelay,
+        FieldSecondsBeforeStart = QOrganizerItemReminder::FieldSecondsBeforeStart
     };
 
     enum ReminderType {
@@ -704,8 +670,6 @@ public:
     void setSecondsBeforeStart(int seconds);
     int secondsBeforeStart() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void reminderChanged();
 };
@@ -715,16 +679,13 @@ class QDeclarativeOrganizerItemAudibleReminder : public QDeclarativeOrganizerIte
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(AudibleReminderField)
 
     Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldRepetitionCount = 0,
-        FieldRepetitionDelay,
-        FieldSecondsBeforeStart,
-        FieldDataUrl
+    enum AudibleReminderField {
+        FieldDataUrl = QOrganizerItemAudibleReminder::FieldDataUrl
     };
 
     QDeclarativeOrganizerItemAudibleReminder(QObject *parent = 0);
@@ -733,8 +694,6 @@ public:
 
     void setDataUrl(const QUrl &url);
     QUrl dataUrl() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();
@@ -745,7 +704,7 @@ class QDeclarativeOrganizerItemEmailReminder : public QDeclarativeOrganizerItemR
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(EmailReminderField)
 
     Q_PROPERTY(QString body READ body WRITE setBody NOTIFY valueChanged)
     Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY valueChanged)
@@ -753,14 +712,11 @@ class QDeclarativeOrganizerItemEmailReminder : public QDeclarativeOrganizerItemR
     Q_PROPERTY(QVariantList attachments READ attachments WRITE setAttachments NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldRepetitionCount = 0,
-        FieldRepetitionDelay,
-        FieldSecondsBeforeStart,
-        FieldSubject,
-        FieldBody,
-        FieldRecipients,
-        FieldAttachments
+    enum EmailReminderField {
+        FieldSubject = QOrganizerItemEmailReminder::FieldSubject,
+        FieldBody = QOrganizerItemEmailReminder::FieldBody,
+        FieldRecipients = QOrganizerItemEmailReminder::FieldRecipients,
+        FieldAttachments = QOrganizerItemEmailReminder::FieldAttachments
     };
 
     QDeclarativeOrganizerItemEmailReminder(QObject *parent = 0);
@@ -779,8 +735,6 @@ public:
     void setAttachments(const QVariantList &newAttachments);
     QVariantList attachments();
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -790,18 +744,15 @@ class QDeclarativeOrganizerItemVisualReminder : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(VisualReminderField)
 
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY valueChanged)
     Q_PROPERTY(QUrl dataUrl READ dataUrl WRITE setDataUrl NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldRepetitionCount = 0,
-        FieldRepetitionDelay,
-        FieldSecondsBeforeStart,
-        FieldDataUrl,
-        FieldMessage
+    enum VisualReminderField {
+        FieldDataUrl = QOrganizerItemVisualReminder::FieldDataUrl,
+        FieldMessage = QOrganizerItemVisualReminder::FieldMessage
     };
 
     QDeclarativeOrganizerItemVisualReminder(QObject *parent = 0);
@@ -814,8 +765,6 @@ public:
     void setDataUrl(const QUrl &url);
     QUrl dataUrl() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -825,15 +774,15 @@ class QDeclarativeOrganizerItemExtendedDetail : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(ExtendedDetailField)
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
     Q_PROPERTY(QVariant data READ data WRITE setData NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldName = 0,
-        FieldData
+    enum ExtendedDetailField {
+        FieldName = QOrganizerItemExtendedDetail::FieldExtendedDetailName,
+        FieldData = QOrganizerItemExtendedDetail::FieldExtendedDetailData
     };
 
     QDeclarativeOrganizerItemExtendedDetail(QObject *parent = 0);
@@ -846,8 +795,6 @@ public:
     void setData(const QVariant &data);
     QVariant data() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -857,7 +804,7 @@ class QDeclarativeOrganizerEventAttendee : public QDeclarativeOrganizerItemDetai
 {
     Q_OBJECT
 
-    Q_ENUMS(Field)
+    Q_ENUMS(EventAttendeeField)
     Q_ENUMS(ParticipationStatus)
     Q_ENUMS(ParticipationRole)
 
@@ -868,12 +815,12 @@ class QDeclarativeOrganizerEventAttendee : public QDeclarativeOrganizerItemDetai
     Q_PROPERTY(ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
 
 public:
-    enum Field {
-        FieldName = 0,
-        FieldEmailAddress,
-        FieldAddendeeId,
-        FieldParticipationStatus,
-        FieldParticipationRole
+    enum EventAttendeeField {
+        FieldName = QOrganizerEventAttendee::FieldName,
+        FieldEmailAddress = QOrganizerEventAttendee::FieldEmailAddress,
+        FieldAddendeeId = QOrganizerEventAttendee::FieldAttendeeId,
+        FieldParticipationStatus = QOrganizerEventAttendee::FieldParticipationStatus,
+        FieldParticipationRole = QOrganizerEventAttendee::FieldParticipationRole
     };
 
     enum ParticipationStatus {
@@ -915,8 +862,6 @@ public:
     void setAttendeeId(const QString &newAttendeeId);
     QString attendeeId() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -932,18 +877,18 @@ class QDeclarativeOrganizerEventRsvp : public QDeclarativeOrganizerItemDetail
     Q_PROPERTY(QDate responseDate READ responseDate WRITE setResponseDate NOTIFY valueChanged)
     Q_PROPERTY(QString organizerName READ organizerName WRITE setOrganizerName NOTIFY valueChanged)
     Q_PROPERTY(QString organizerEmail READ organizerEmail WRITE setOrganizerEmail NOTIFY valueChanged)
-    Q_ENUMS(Field)
+    Q_ENUMS(EventRsvpField)
     Q_ENUMS(ResponseRequirement)
 
 public:
-    enum Field {
-        FieldParticipationStatus = 0,
-        FieldParticipationRole,
-        FieldResponseRequirement,
-        FieldResponseDeadline,
-        FieldResponseDate,
-        FieldOrganizerName,
-        FieldOrganizerEmail
+    enum EventRsvpField {
+        FieldParticipationStatus = QOrganizerEventRsvp::FieldParticipationStatus,
+        FieldParticipationRole = QOrganizerEventRsvp::FieldParticipationRole,
+        FieldResponseRequirement = QOrganizerEventRsvp::FieldResponseRequirement,
+        FieldResponseDeadline = QOrganizerEventRsvp::FieldResponseDeadline,
+        FieldResponseDate = QOrganizerEventRsvp::FieldResponseDate,
+        FieldOrganizerName = QOrganizerEventRsvp::FieldOrganizerName,
+        FieldOrganizerEmail = QOrganizerEventRsvp::FieldOrganizerEmail
     };
 
     enum ResponseRequirement {
@@ -976,8 +921,6 @@ public:
     void setOrganizerEmail(const QString &email);
     QString organizerEmail() const;
 
-    static QString fieldNameFromFieldType(int type);
-
 Q_SIGNALS:
     void valueChanged();
 };
@@ -991,7 +934,7 @@ class QDeclarativeOrganizerItemClassification : public QDeclarativeOrganizerItem
 
 public:
     enum Field {
-        FieldClassification = 0
+        FieldClassification = QOrganizerItemClassification::FieldClassification
     };
 
     QDeclarativeOrganizerItemClassification(QObject *parent = 0);
@@ -1000,8 +943,6 @@ public:
 
     void setClassification(const QString &newClassification);
     QString classification() const;
-
-    static QString fieldNameFromFieldType(int type);
 
 Q_SIGNALS:
     void valueChanged();

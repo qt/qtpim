@@ -82,32 +82,32 @@ private:
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeTodoTimeRange(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeJournalTimeRange(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeTimestamp(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeRecurrence(
             const QOrganizerItem& item,
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeRecurRule(
             const QString& propertyName,
             const QOrganizerRecurrenceRule& rule,
@@ -126,29 +126,29 @@ private:
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeInstanceOrigin(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeTodoProgress(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeComment(
             const QOrganizerItemDetail& detail,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     void encodeSimpleProperty(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
-            QSet<QString>* processedFields);
+            QSet<int>* processedFields);
     QString encodeDateTime(const QDateTime& dateTime);
 
     bool documentContainsUidAndRecurrenceId(const QVersitDocument& document);
@@ -158,7 +158,7 @@ private:
             QList<QVersitProperty>* toBeRemoved);
 
     // definition name -> <field name, versit property name>:
-    QMap<QString, QPair<QString, QString> > mPropertyMappings;
+    QMap<QString, QPair<int, QString> > mPropertyMappings;
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

@@ -52,7 +52,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemAudibleReminder : public QOrganizerItemRe
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemAudibleReminder, "AudibleReminder")
-    const static QString FieldDataUrl;
+
+    enum AudibleReminderField {
+        FieldDataUrl = QOrganizerItemReminder::FieldRepetitionDelay + 100   // in case more fields added to QOrganizerItemReminder
+    };
 
     void setDataUrl(const QUrl &dataUrl);
     QUrl dataUrl() const;

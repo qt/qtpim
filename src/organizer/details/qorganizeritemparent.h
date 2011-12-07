@@ -53,8 +53,11 @@ class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemParent, "Parent")
-    const static QString FieldParentId;
-    const static QString FieldOriginalDate;
+
+    enum ParentField {
+        FieldParentId = 0,
+        FieldOriginalDate
+    };
 
     void setParentId(const QOrganizerItemId &parentId);
     QOrganizerItemId parentId() const;

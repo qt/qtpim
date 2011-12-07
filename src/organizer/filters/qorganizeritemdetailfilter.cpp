@@ -55,7 +55,7 @@ QTORGANIZER_BEGIN_NAMESPACE
   It may be used to select organizeritems which contain a detail of a particular definition with a particular value
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)
 
 /*!
  * \fn QOrganizerItemDetailFilter::QOrganizerItemDetailFilter(const QOrganizerItemFilter& other)
@@ -72,14 +72,14 @@ QOrganizerItemDetailFilter::QOrganizerItemDetailFilter()
 
 /*!
  * Sets the name of the detail definition of which details will be matched to \a definitionName, and the name of the field in
- * details of that definition which will contain the value criterion to \a fieldName
+ * details of that definition which will contain the value criterion to \a field
  * \sa detailDefinitionName()
  */
-void QOrganizerItemDetailFilter::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
+void QOrganizerItemDetailFilter::setDetailDefinitionName(const QString& definitionName, int field)
 {
     Q_D(QOrganizerItemDetailFilter);
     d->m_defId = definitionName;
-    d->m_fieldId = fieldName;
+    d->m_fieldId = field;
 }
 
 /*!
@@ -123,13 +123,22 @@ QString QOrganizerItemDetailFilter::detailDefinitionName() const
 }
 
 /*!
- * Returns the name of the field which contains the value which will be matched against the value criterion
- * \sa setDetailDefinitionName()
+    Returns the detail field containing the value which will be matched against the value criterion.
+
+    \sa setDetailDefinitionName()
  */
-QString QOrganizerItemDetailFilter::detailFieldName() const
+int QOrganizerItemDetailFilter::detailField() const
 {
     Q_D(const QOrganizerItemDetailFilter);
     return d->m_fieldId;
+}
+
+/*!
+    This is to be removed soon, please use detailField() instead.
+ */
+int QOrganizerItemDetailFilter::detailFieldName() const
+{
+    return detailField();
 }
 
 /*!

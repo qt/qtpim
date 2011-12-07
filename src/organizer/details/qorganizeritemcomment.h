@@ -51,7 +51,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemComment : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment, "Comment")
-    const static QString FieldComment;
+
+    enum CommentField {
+        FieldComment = 0
+    };
 
     void setComment(const QString &comment);
     QString comment() const;

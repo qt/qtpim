@@ -65,14 +65,14 @@ public:
     };
 
     // mutators
-    void setDetailDefinitionName(const QString &definitionName, const QString &fieldName);
+    void setDetailDefinitionName(const QString& definitionName, int field);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);
 
     // accessors
     QString detailDefinitionName() const;
-    QString detailFieldName() const;
+    int detailField() const;
     BlankPolicy blankPolicy() const;
     Qt::SortOrder direction() const;
     Qt::CaseSensitivity caseSensitivity() const;
@@ -84,6 +84,9 @@ public:
 
     // convenience cast
     operator QList<QOrganizerItemSortOrder>() const { return QList<QOrganizerItemSortOrder>() << *this; }
+
+    // to be removed
+    int detailFieldName() const;
 
 private:
     QSharedDataPointer<QOrganizerItemSortOrderPrivate> d;

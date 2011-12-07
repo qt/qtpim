@@ -54,7 +54,7 @@ public:
     QOrganizerItemDetailFilter(const QOrganizerItemFilter& other);
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definition, const QString& fieldName = QString());
+    void setDetailDefinitionName(const QString& definition, int field);
     void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
 
     /* Filter Criterion */
@@ -62,10 +62,13 @@ public:
 
     /* Accessors */
     QString detailDefinitionName() const;
-    QString detailFieldName() const;
+    int detailField() const;
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
     QVariant value() const;
+
+    // to be removed
+    int detailFieldName() const;
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)

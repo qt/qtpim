@@ -51,7 +51,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemDisplayLabel : public QOrganizerItemDetai
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDisplayLabel, "DisplayLabel")
-    const static QString FieldLabel;
+
+    enum DisplayLabelField {
+        FieldLabel = 0
+    };
 
     void setLabel(const QString &label);
     QString label() const;

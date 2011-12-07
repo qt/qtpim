@@ -50,8 +50,11 @@ class Q_ORGANIZER_EXPORT QOrganizerItemExtendedDetail : public QOrganizerItemDet
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemExtendedDetail, "ExtendedDetail")
-    const static QString FieldExtendedDetailName;
-    const static QString FieldExtendedDetailData;
+
+    enum ExtendedDetailField {
+        FieldExtendedDetailName = 0,
+        FieldExtendedDetailData
+    };
 
     void setName(const QString &name);
     QString name() const;

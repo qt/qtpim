@@ -255,9 +255,9 @@ uint qHash(const QOrganizerItemDetail &key)
 {
     const QOrganizerItemDetailPrivate *dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
     uint hash = qHash(dptr->m_definitionName) + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
-    QHash<QString, QVariant>::const_iterator it = dptr->m_values.constBegin();
+    QHash<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
     while (it != dptr->m_values.constEnd()) {
-        hash += qHash(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
+        hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
         ++it;
     }
     return hash;
@@ -267,8 +267,8 @@ uint qHash(const QOrganizerItemDetail &key)
 QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 {
     dbg.nospace() << "QOrganizerItemDetail(name=" << detail.definitionName() << ", key=" << detail.key();
-    QVariantMap fields = detail.values();
-    QVariantMap::const_iterator it;
+    QMap<int, QVariant> fields = detail.values();
+    QMap<int, QVariant>::const_iterator it;
     for (it = fields.constBegin(); it != fields.constEnd(); ++it)
         dbg.nospace() << ", " << it.key() << '=' << it.value();
     dbg.nospace() << ')';
@@ -299,14 +299,14 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
     if (formatVersion == 1) {
         QString definitionName;
         quint32 accessConstraintsInt;
-        QVariantMap values;
+        QMap<int, QVariant> values;
         in >> definitionName >> accessConstraintsInt >> values;
 
         detail = QOrganizerItemDetail(definitionName);
         QOrganizerItemDetail::AccessConstraints accessConstraints(accessConstraintsInt);
         detail.d->m_access = accessConstraints;
 
-        QMapIterator<QString, QVariant> it(values);
+        QMapIterator<int, QVariant> it(values);
         while (it.hasNext()) {
             it.next();
             detail.setValue(it.key(), it.value());
@@ -345,52 +345,51 @@ void QOrganizerItemDetail::resetKey()
 }
 
 /*!
-    Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
+    Returns the value stored in this detail for the given \a field. An invalid QVariant is returned if the
+    value of \a field is not set.
  */
-QVariant QOrganizerItemDetail::value(const QString &key) const
+QVariant QOrganizerItemDetail::value(int field) const
 {
-    return d->m_values.value(key);
+    return d->m_values.value(field);
 }
 
 /*!
-    Returns true if this detail has a field with the given \a key, or false otherwise.
+    Returns true if the value of the given \a field has been set, or false otherwise.
  */
-bool QOrganizerItemDetail::hasValue(const QString &key) const
+bool QOrganizerItemDetail::hasValue(int field) const
 {
-    return d->m_values.contains(key);
+    return d->m_values.contains(field);
 }
 
 /*!
-    Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
-    removes the field with the given \a key from the detail.  Returns true if the given \a value was set
-    for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid).
+    Sets the value of the given \a field to be \a value. If the given \a value is invalid, removes
+    the given \a field from the detail. Returns true on success, or false otherwise.
  */
-bool QOrganizerItemDetail::setValue(const QString &key, const QVariant &value)
+bool QOrganizerItemDetail::setValue(int field, const QVariant &value)
 {
     if (!value.isValid())
-        return removeValue(key);
+        return removeValue(field);
 
-    d->m_values.insert(key, value);
+    d->m_values.insert(field, value);
     return true;
 }
 
 /*!
-    Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
-    for the given \a key and the operation succeeded, and false otherwise.
+    Removes the value stored in this detail for the given \a field.  Returns true if a value was stored
+    for the given \a field and the removing succeeds, or false otherwise.
  */
-bool QOrganizerItemDetail::removeValue(const QString &key)
+bool QOrganizerItemDetail::removeValue(int field)
 {
-    return d->m_values.remove(key);
+    return d->m_values.remove(field);
 }
 
 /*!
-    Returns the values stored in this detail as a map from value key to value.
+    Returns the values stored in this detail as a field-to-value map.
  */
-QVariantMap QOrganizerItemDetail::values() const
+    QMap<int, QVariant> QOrganizerItemDetail::values() const
 {
-    QVariantMap ret;
-    QHash<QString, QVariant>::const_iterator it = d->m_values.constBegin();
+    QMap<int, QVariant> ret;
+    QHash<int, QVariant>::const_iterator it = d->m_values.constBegin();
     while (it != d->m_values.constEnd()) {
         ret.insert(it.key(), it.value());
         ++it;
@@ -400,8 +399,8 @@ QVariantMap QOrganizerItemDetail::values() const
 }
 
 /*!
-    \fn T QOrganizerItemDetail::value(const QString &key) const
-    Returns the value of the template type associated with the given \a key.
+    \fn T QOrganizerItemDetail::value(const QString &field) const
+    Returns the value of the template type associated with the given \a field.
  */
 
 /*!

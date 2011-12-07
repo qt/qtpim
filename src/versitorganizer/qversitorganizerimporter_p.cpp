@@ -55,13 +55,13 @@ QVersitOrganizerImporterPrivate::QVersitOrganizerImporterPrivate(const QString& 
     mDurationSpecified(false)
 {
     int versitPropertyCount =
-        sizeof(versitOrganizerDetailMappings)/sizeof(VersitDetailMapping);
+        sizeof(versitOrganizerDetailMappings)/sizeof(VersitOrganizerDetailMapping);
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
                 QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName),
-                QPair<QString,QString>(
+                QPair<QString,int>(
                     versitOrganizerDetailMappings[i].detailDefinitionName,
-                    versitOrganizerDetailMappings[i].detailFieldName));
+                    versitOrganizerDetailMappings[i].detailField));
     }
 
     mPluginPropertyHandlers = QVersitOrganizerPluginLoader::instance()->createOrganizerHandlers(profile);
@@ -196,9 +196,9 @@ bool QVersitOrganizerImporterPrivate::createSimpleDetail(
 {
     if (property.value().isEmpty())
         return false;
-    QPair<QString, QString> mapping = mPropertyMappings[property.name()];
+    QPair<QString, int> mapping = mPropertyMappings[property.name()];
     QString definitionName = mapping.first;
-    QString fieldName = mapping.second;
+    int fieldName = mapping.second;
     QOrganizerItemDetail detail(item->detail(definitionName));
     if (detail.isEmpty())
         detail = QOrganizerItemDetail(definitionName);

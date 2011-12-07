@@ -50,7 +50,10 @@ class Q_ORGANIZER_EXPORT QOrganizerItemClassification : public QOrganizerItemDet
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification, "Classification")
-    const static QString FieldClassification;
+
+    enum ClassificationField {
+        FieldClassification = 0
+    };
 
     const static QString Public;
     const static QString Private;

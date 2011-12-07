@@ -51,13 +51,16 @@ class Q_ORGANIZER_EXPORT QOrganizerEventRsvp : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventRsvp, "Rsvp")
-    const static QString FieldParticipationStatus;
-    const static QString FieldParticipationRole;
-    const static QString FieldResponseRequirement;
-    const static QString FieldResponseDeadline;
-    const static QString FieldResponseDate;
-    const static QString FieldOrganizerName;
-    const static QString FieldOrganizerEmail;
+
+    enum EventRsvpField {
+        FieldParticipationStatus = 0,
+        FieldParticipationRole,
+        FieldResponseRequirement,
+        FieldResponseDeadline,
+        FieldResponseDate,
+        FieldOrganizerName,
+        FieldOrganizerEmail
+    };
 
     enum ResponseRequirement {
         ResponseNotRequired = 0,

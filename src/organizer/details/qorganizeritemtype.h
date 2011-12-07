@@ -60,7 +60,10 @@ public:
     };
 
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, "Type")
-    const static QString FieldType;
+
+    enum ItemTypeField {
+        FieldType = 0
+    };
 
     void setType(ItemType type);
     ItemType type() const;

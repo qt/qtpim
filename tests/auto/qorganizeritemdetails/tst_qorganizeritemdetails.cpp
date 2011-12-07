@@ -187,10 +187,10 @@ void tst_QOrganizerItemDetails::guid()
     QCOMPARE(QOrganizerItemGuid(oi.details(QOrganizerItemGuid::DefinitionName).value(0)).guid(), g1.guid());
 
     // test property update
-    g1.setValue("label","label1");
+    g1.setValue(101,"label1");
     g1.setGuid("12345");
     QVERIFY(oi.saveDetail(&g1));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).value(0).value(101).toString(), QString("label1"));
     QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).value(0).value(QOrganizerItemGuid::FieldGuid).toString(), QString("12345"));
 
     // test property remove
@@ -360,10 +360,10 @@ void tst_QOrganizerItemDetails::tag()
     QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 2);
 
     // test property update
-    t1.setValue("label","label1");
+    t1.setValue(101,"label1");
     t1.setTag("green");
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).value(0).value(101).toString(), QString("label1"));
     QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).value(0).value(QOrganizerItemTag::FieldTag).toString(), QString("green"));
 
     // test property remove
@@ -394,10 +394,10 @@ void tst_QOrganizerItemDetails::timestamp()
     QCOMPARE(QOrganizerItemTimestamp(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0)).created(), t1.created());
 
     // test property update
-    t1.setValue("label","label1");
+    t1.setValue(101,"label1");
     t1.setLastModified(modified);
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value("label").toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(101).toString(), QString("label1"));
     QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldCreationTimestamp).toDateTime(), created);
     QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldModificationTimestamp).toDateTime(), modified);
 
@@ -966,7 +966,7 @@ class CustomTestDetail : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(CustomTestDetail, "CustomTestDetail")
-    const static QString FieldTestLabel;
+    const static int FieldTestLabel;
 
     ~CustomTestDetail()
     {
@@ -989,7 +989,7 @@ public:
     void setTestLabel(const QString& testLabel) { setValue(FieldTestLabel, testLabel); }
     QString testLabel() const { return value(FieldTestLabel).toString(); }
 };
-const QString CustomTestDetail::FieldTestLabel(QStringLiteral("TestLabel"));
+const int CustomTestDetail::FieldTestLabel(1);
 const QString CustomTestDetail::DefinitionName(QStringLiteral("CustomTestDetail"));
 
 void tst_QOrganizerItemDetails::custom()
@@ -1000,17 +1000,17 @@ void tst_QOrganizerItemDetails::custom()
     QOrganizerItemDetail c1("mycustom"), c2("mycustom");
 
     // test property set
-    c1.setValue("custom", "1234");
-    QCOMPARE(c1.value("custom").toString(), QString("1234"));
+    c1.setValue(101, "1234");
+    QCOMPARE(c1.value(101).toString(), QString("1234"));
 
     // test property add
     QVERIFY(oi.saveDetail(&c1));
     QCOMPARE(oi.details("mycustom").count(), 1);
-    QCOMPARE((oi.details("mycustom").value(0)).value("custom"), c1.value("custom"));
+    QCOMPARE((oi.details("mycustom").value(0)).value(101), c1.value(101));
 
     // test property update
-    c1.setValue("label","label1");
-    c1.setValue("custom", "12345");
+    c1.setValue(102,"label1");
+    c1.setValue(101, "12345");
     QVERIFY(oi.saveDetail(&c1));
 
     // test property remove

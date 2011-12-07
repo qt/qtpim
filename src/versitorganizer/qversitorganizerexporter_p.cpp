@@ -54,12 +54,12 @@ QVersitOrganizerExporterPrivate::QVersitOrganizerExporterPrivate(const QString& 
     mTimeZoneHandler(NULL)
 {
     int versitPropertyCount =
-        sizeof(versitOrganizerDetailMappings)/sizeof(VersitDetailMapping);
+        sizeof(versitOrganizerDetailMappings)/sizeof(VersitOrganizerDetailMapping);
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
                 versitOrganizerDetailMappings[i].detailDefinitionName,
-                QPair<QString,QString>(
-                    versitOrganizerDetailMappings[i].detailFieldName,
+                QPair<int, QString>(
+                    versitOrganizerDetailMappings[i].detailField,
                     QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName)));
     }
 
@@ -127,7 +127,7 @@ void QVersitOrganizerExporterPrivate::exportDetail(
 {
     QList<QVersitProperty> removedProperties;
     QList<QVersitProperty> generatedProperties;
-    QSet<QString> processedFields;
+    QSet<int> processedFields;
 
     if (detail.definitionName() == QOrganizerEventTime::DefinitionName) {
         encodeEventTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
@@ -175,7 +175,7 @@ void QVersitOrganizerExporterPrivate::encodeEventTimeRange(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerEventTime etr = static_cast<QOrganizerEventTime>(detail);
     bool isAllDay = etr.isAllDay();
@@ -208,7 +208,7 @@ void QVersitOrganizerExporterPrivate::encodeTodoTimeRange(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerTodoTime ttr = static_cast<QOrganizerTodoTime>(detail);
     bool isAllDay = ttr.isAllDay();
@@ -240,7 +240,7 @@ void QVersitOrganizerExporterPrivate::encodeJournalTimeRange(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerJournalTime jtr = static_cast<QOrganizerJournalTime>(detail);
     QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
@@ -255,7 +255,7 @@ void QVersitOrganizerExporterPrivate::encodeTimestamp(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerItemTimestamp timestamp = static_cast<QOrganizerItemTimestamp>(detail);
     QVersitProperty property = takeProperty(document, QLatin1String("CREATED"), removedProperties);
@@ -277,7 +277,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurrence(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerItemRecurrence recurrence = static_cast<QOrganizerItemRecurrence>(detail);
     QSet<QOrganizerRecurrenceRule> rrules = recurrence.recurrenceRules();
@@ -466,7 +466,7 @@ void QVersitOrganizerExporterPrivate::encodePriority(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerItemPriority priority = static_cast<QOrganizerItemPriority>(detail);
     QVersitProperty property =
@@ -482,7 +482,7 @@ void QVersitOrganizerExporterPrivate::encodeInstanceOrigin(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerItemParent instanceOrigin = static_cast<QOrganizerItemParent>(detail);
     QVersitProperty property =
@@ -498,7 +498,7 @@ void QVersitOrganizerExporterPrivate::encodeTodoProgress(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerTodoProgress todoProgress = static_cast<QOrganizerTodoProgress>(detail);
 
@@ -545,7 +545,7 @@ void QVersitOrganizerExporterPrivate::encodeTodoProgress(
 void QVersitOrganizerExporterPrivate::encodeComment(
         const QOrganizerItemDetail& detail,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
     QOrganizerItemComment comment = static_cast<QOrganizerItemComment>(detail);
     QVersitProperty property;
@@ -560,10 +560,10 @@ void QVersitOrganizerExporterPrivate::encodeSimpleProperty(
         const QVersitDocument& document,
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties,
-        QSet<QString>* processedFields)
+        QSet<int>* processedFields)
 {
-    QPair<QString, QString> fieldPropertyMap = mPropertyMappings[detail.definitionName()];
-    const QString& fieldName = fieldPropertyMap.first;
+    QPair<int, QString> fieldPropertyMap = mPropertyMappings[detail.definitionName()];
+    const int& fieldName = fieldPropertyMap.first;
     const QString& propertyName = fieldPropertyMap.second;
     QVersitProperty property =
         takeProperty(document, propertyName, removedProperties);

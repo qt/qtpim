@@ -52,9 +52,12 @@ class Q_ORGANIZER_EXPORT QOrganizerTodoTime : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoTime, "TodoTime")
-    const static QString FieldStartDateTime;
-    const static QString FieldDueDateTime;
-    const static QString FieldAllDay;
+
+    enum TodoTimeField {
+        FieldStartDateTime = 0,
+        FieldDueDateTime,
+        FieldAllDay
+    };
 
     void setStartDateTime(const QDateTime &startDateTime);
     QDateTime startDateTime() const;

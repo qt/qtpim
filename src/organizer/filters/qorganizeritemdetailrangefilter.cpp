@@ -119,11 +119,11 @@ void QOrganizerItemDetailRangeFilter::setMatchFlags(QOrganizerItemFilter::MatchF
  * and the name of the field which will be inspected in details of that definition to \a fieldName.
  * \sa detailDefinitionName(), detailFieldName()
  */
-void QOrganizerItemDetailRangeFilter::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
+void QOrganizerItemDetailRangeFilter::setDetailDefinitionName(const QString& definitionName, int field)
 {
     Q_D(QOrganizerItemDetailRangeFilter);
     d->m_defId = definitionName;
-    d->m_fieldId = fieldName;
+    d->m_fieldId = field;
 }
 
 /*!
@@ -147,13 +147,22 @@ QString QOrganizerItemDetailRangeFilter::detailDefinitionName() const
 }
 
 /*!
- * Returns the name of the field which contains the value which will be matched against the value criterion
- * \sa setDetailDefinitionName()
+    Returns the detail field containing the value which will be matched against the value criterion.
+
+    \sa setDetailDefinitionName()
  */
-QString QOrganizerItemDetailRangeFilter::detailFieldName() const
+int QOrganizerItemDetailRangeFilter::detailField() const
 {
     Q_D(const QOrganizerItemDetailRangeFilter);
     return d->m_fieldId;
+}
+
+/*!
+    This is to be removed soon, please use detailField() instead.
+ */
+int QOrganizerItemDetailRangeFilter::detailFieldName() const
+{
+    return detailField();
 }
 
 /*!

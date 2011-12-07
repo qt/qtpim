@@ -67,9 +67,7 @@ class QOrganizerItemDetailRangeFilterPrivate : public QOrganizerItemFilterPrivat
 {
 public:
     QOrganizerItemDetailRangeFilterPrivate()
-        : QOrganizerItemFilterPrivate(),
-        m_flags(0),
-        m_rangeflags(0)
+        : QOrganizerItemFilterPrivate(), m_fieldId(-1), m_flags(0), m_rangeflags(0)
     {
     }
 
@@ -153,7 +151,7 @@ public:
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailRangeFilter, QOrganizerItemFilter::DetailRangeFilter)
 
     QString m_defId;
-    QString m_fieldId;
+    int m_fieldId;
     QVariant m_minValue;
     QVariant m_maxValue;
     QOrganizerItemFilter::MatchFlags m_flags;

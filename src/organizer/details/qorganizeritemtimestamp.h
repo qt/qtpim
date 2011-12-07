@@ -52,8 +52,11 @@ class Q_ORGANIZER_EXPORT QOrganizerItemTimestamp : public QOrganizerItemDetail
 {
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTimestamp, "Timestamp")
-    const static QString FieldModificationTimestamp;
-    const static QString FieldCreationTimestamp;
+
+    enum TimestampField {
+        FieldModificationTimestamp = 0,
+        FieldCreationTimestamp
+    };
 
     void setLastModified(const QDateTime &timestamp);
     QDateTime lastModified() const;

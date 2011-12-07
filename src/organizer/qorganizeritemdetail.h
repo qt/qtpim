@@ -86,15 +86,15 @@ public:
     int key() const;
     void resetKey();
 
-    bool setValue(const QString &key, const QVariant &value);
-    bool removeValue(const QString &key);
-    bool hasValue(const QString &key) const;
+    bool setValue(int field, const QVariant &value);
+    bool removeValue(int field);
+    bool hasValue(int field) const;
 
-    QVariantMap values() const;
-    QVariant value(const QString &key) const;
-    template <typename T> T value(const QString &key) const
+    QMap<int, QVariant> values() const;
+    QVariant value(int field) const;
+    template <typename T> T value(int field) const
     {
-        return value(key).value<T>();
+        return value(field).value<T>();
     }
 
 protected:

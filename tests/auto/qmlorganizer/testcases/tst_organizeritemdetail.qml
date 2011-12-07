@@ -354,7 +354,7 @@ TestCase {
         var entryDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
         journalTime.entryDateTime = entryDateTime
         compare(journalTime.entryDateTime, entryDateTime)
-        compare(journalTime.value(TodoProgress.FieldEntryDateTime), JournalTime.entryDateTime)
+        compare(journalTime.value(JournalTime.FieldEntryDateTime), journalTime.entryDateTime)
     }
 
     function test_type() {

@@ -51,17 +51,20 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerTodoProgress : public QOrganizerItemDetail
 {
 public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress, "TodoProgress")
+
+    enum TodoProgressField {
+        FieldFinishedDateTime = 0,
+        FieldPercentageComplete,
+        FieldStatus
+    };
+
     enum Status {
         // what about: waited/blocked, and deferred?
         StatusNotStarted,
         StatusInProgress,
         StatusComplete
     };
-
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress, "TodoProgress")
-    const static QString FieldFinishedDateTime;
-    const static QString FieldPercentageComplete;
-    const static QString FieldStatus;
 
     void setFinishedDateTime(const QDateTime &finishedDateTime);
     QDateTime finishedDateTime() const;

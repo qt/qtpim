@@ -67,19 +67,6 @@
 
 QTCONTACTS_USE_NAMESPACE
 
-#define QTRY_WAIT(code, __expr) \
-        do { \
-        const int __step = 50; \
-        const int __timeout = 5000; \
-        if (!(__expr)) { \
-            QTest::qWait(0); \
-        } \
-        for (int __i = 0; __i < __timeout && !(__expr); __i+=__step) { \
-            do { code } while(0); \
-            QTest::qWait(__step); \
-        } \
-    } while(0)
-
 #define QCONTACTMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromAscii(QTCONTACTS_VERSION_NAME)); \
                                                           params.remove(QString::fromAscii(QTCONTACTS_IMPLEMENTATION_VERSION_NAME))
 
@@ -1944,7 +1931,6 @@ void tst_QContactManager::signalEmission()
     QContact c;
     QList<QContact> batchAdd;
     QList<QContactLocalId> batchRemove;
-    QList<QContactLocalId> sigids;
     int addSigCount = 0; // the expected signal counts.
     int modSigCount = 0;
     int remSigCount = 0;
@@ -2085,10 +2071,17 @@ void tst_QContactManager::signalEmission()
     c2 = batchAdd.at(1);
     c3 = batchAdd.at(2);
 
-    /* We basically loop, processing events, until we've seen an Add signal for each contact */
-    sigids.clear();
+    // We want to see one (and only one) contactsAdded signal for each contact.
+    QTRY_COMPARE(spyCA.count(), 3);
+    {
+        QList<QContactLocalId> sigids;
+        while (spyCA.size() > 0)
+            sigids += spyCA.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QVERIFY(sigids.contains(c.localId()));
+        QVERIFY(sigids.contains(c2.localId()));
+        QVERIFY(sigids.contains(c3.localId()));
+    }
 
-    QTRY_WAIT( while(spyCA.size() > 0) {sigids += spyCA.takeFirst().at(0).value<QList<QContactLocalId> >(); }, sigids.contains(c.localId()) && sigids.contains(c2.localId()) && sigids.contains(c3.localId()));
     QTRY_COMPARE(spyCM.count(), 0);
 
     c1Observer.reset(new QContactObserver(m1.data(), c.localId()));
@@ -2114,8 +2107,16 @@ void tst_QContactManager::signalEmission()
     batchAdd << c << c2 << c3;
     QVERIFY(m1->saveContacts(&batchAdd, &errorMap));
 
-    sigids.clear();
-    QTRY_WAIT( while(spyCM.size() > 0) {sigids += spyCM.takeFirst().at(0).value<QList<QContactLocalId> >(); }, sigids.contains(c.localId()) && sigids.contains(c2.localId()) && sigids.contains(c3.localId()));
+    // We want to see one (and only one) contactsChanged signal for each contact.
+    QTRY_COMPARE(spyCM.count(), 3);
+    {
+        QList<QContactLocalId> sigids;
+        while (spyCM.size() > 0)
+            sigids += spyCM.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QVERIFY(sigids.contains(c.localId()));
+        QVERIFY(sigids.contains(c2.localId()));
+        QVERIFY(sigids.contains(c3.localId()));
+    }
     QTRY_COMPARE(spyCOM1->count(), 1);
     QTRY_COMPARE(spyCOM2->count(), 1);
     QTRY_COMPARE(spyCOM3->count(), 1);
@@ -2124,8 +2125,16 @@ void tst_QContactManager::signalEmission()
     batchRemove << c.id().localId() << c2.id().localId() << c3.id().localId();
     QVERIFY(m1->removeContacts(batchRemove, &errorMap));
 
-    sigids.clear();
-    QTRY_WAIT( while(spyCR.size() > 0) {sigids += spyCR.takeFirst().at(0).value<QList<QContactLocalId> >(); }, sigids.contains(c.localId()) && sigids.contains(c2.localId()) && sigids.contains(c3.localId()));
+    // We want to see one (and only one) contactsRemoved signal for each contact.
+    QTRY_COMPARE(spyCR.count(), 3);
+    {
+        QList<QContactLocalId> sigids;
+        while (spyCR.size() > 0)
+            sigids += spyCR.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QVERIFY(sigids.contains(c.localId()));
+        QVERIFY(sigids.contains(c2.localId()));
+        QVERIFY(sigids.contains(c3.localId()));
+    }
     QTRY_COMPARE(spyCOR1->count(), 1);
     QTRY_COMPARE(spyCOR2->count(), 1);
     QTRY_COMPARE(spyCOR3->count(), 1);

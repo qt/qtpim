@@ -747,14 +747,15 @@ void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstr
 
 /*!
   \qmlmethod bool OrganizerModel::containsItems(date start, date end)
+
   Returns true if there is at least one OrganizerItem between the given date range.
   Both the \a start and  \a end parameters are optional, if no \a end parameter, returns true
   if there are item(s) after \a start, if neither start nor end date time provided, returns true if
   items in the current model is not empty, otherwise return false.
-  \since organizer 1.1.1
+
   \sa itemIds()
   */
-bool QDeclarativeOrganizerModel::containsItems(QDateTime start, QDateTime end)
+bool QDeclarativeOrganizerModel::containsItems(const QDateTime &start, const QDateTime &end)
 {
     return !itemIds(start, end).isEmpty();
 }
@@ -809,15 +810,15 @@ QDeclarativeOrganizerItem *QDeclarativeOrganizerModel::item(const QString &itemI
 
 /*!
   \qmlmethod list<string> OrganizerModel::itemIds(date start, date end)
+
   Returns the list of organizer item ids between the given date range \a start and \a end,
   Both the \a start and  \a end parameters are optional, if no \a end parameter, returns all
   item ids from \a start, if neither start nor end date time provided, returns all item ids in the
   current model.
 
-  \since organizer 1.1.1
   \sa containsItems()
   */
-QStringList QDeclarativeOrganizerModel::itemIds(QDateTime start, QDateTime end)
+QStringList QDeclarativeOrganizerModel::itemIds(const QDateTime &start, const QDateTime &end)
 {
     //TODO: quick search this
     QStringList ids;

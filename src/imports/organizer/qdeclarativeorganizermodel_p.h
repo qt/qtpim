@@ -129,10 +129,10 @@ public:
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
     Q_INVOKABLE void fetchCollections();
 
-    Q_INVOKABLE bool containsItems(QDateTime start, QDateTime end = QDateTime());
+    Q_INVOKABLE bool containsItems(const QDateTime &start, const QDateTime &end = QDateTime());
     Q_INVOKABLE QVariantList itemsByTimePeriod(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime());
     Q_INVOKABLE QDeclarativeOrganizerItem* item(const QString& id);
-    Q_INVOKABLE QStringList itemIds(QDateTime start=QDateTime(), QDateTime end = QDateTime());
+    Q_INVOKABLE QStringList itemIds(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime());
     Q_INVOKABLE QDeclarativeOrganizerCollection* defaultCollection();
     Q_INVOKABLE QDeclarativeOrganizerCollection* collection(const QString& collectionId);
     bool autoUpdate() const;

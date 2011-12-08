@@ -2071,12 +2071,10 @@ void tst_QContactManager::signalEmission()
     c2 = batchAdd.at(1);
     c3 = batchAdd.at(2);
 
-    // We want to see one (and only one) contactsAdded signal for each contact.
-    QTRY_COMPARE(spyCA.count(), 3);
+    // We want to see one contactsAdded signal listing id's for all three contacts.
+    QTRY_COMPARE(spyCA.count(), 1);
     {
-        QList<QContactLocalId> sigids;
-        while (spyCA.size() > 0)
-            sigids += spyCA.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QList<QContactLocalId> sigids = spyCA.takeFirst().at(0).value<QList<QContactLocalId> >();
         QVERIFY(sigids.contains(c.localId()));
         QVERIFY(sigids.contains(c2.localId()));
         QVERIFY(sigids.contains(c3.localId()));
@@ -2107,12 +2105,10 @@ void tst_QContactManager::signalEmission()
     batchAdd << c << c2 << c3;
     QVERIFY(m1->saveContacts(&batchAdd, &errorMap));
 
-    // We want to see one (and only one) contactsChanged signal for each contact.
-    QTRY_COMPARE(spyCM.count(), 3);
+    // We want to see one contactsChanged signal listing id's for all three contacts.
+    QTRY_COMPARE(spyCM.count(), 1);
     {
-        QList<QContactLocalId> sigids;
-        while (spyCM.size() > 0)
-            sigids += spyCM.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QList<QContactLocalId> sigids = spyCM.takeFirst().at(0).value<QList<QContactLocalId> >();
         QVERIFY(sigids.contains(c.localId()));
         QVERIFY(sigids.contains(c2.localId()));
         QVERIFY(sigids.contains(c3.localId()));
@@ -2125,12 +2121,10 @@ void tst_QContactManager::signalEmission()
     batchRemove << c.id().localId() << c2.id().localId() << c3.id().localId();
     QVERIFY(m1->removeContacts(batchRemove, &errorMap));
 
-    // We want to see one (and only one) contactsRemoved signal for each contact.
-    QTRY_COMPARE(spyCR.count(), 3);
+    // We want to see one contactsRemoved signal listing id's for all three contacts.
+    QTRY_COMPARE(spyCR.count(), 1);
     {
-        QList<QContactLocalId> sigids;
-        while (spyCR.size() > 0)
-            sigids += spyCR.takeFirst().at(0).value<QList<QContactLocalId> >();
+        QList<QContactLocalId> sigids = spyCR.takeFirst().at(0).value<QList<QContactLocalId> >();
         QVERIFY(sigids.contains(c.localId()));
         QVERIFY(sigids.contains(c2.localId()));
         QVERIFY(sigids.contains(c3.localId()));

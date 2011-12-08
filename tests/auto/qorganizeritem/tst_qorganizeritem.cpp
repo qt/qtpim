@@ -82,6 +82,7 @@ private slots:
     void eventOccurrence();
     void todoOccurrence();
     void testDebugStreamOut();
+    void itemsCompare();
 };
 
 tst_QOrganizerItem::tst_QOrganizerItem()
@@ -1236,6 +1237,79 @@ void tst_QOrganizerItem::testDebugStreamOut()
     qDebug() << rrule;
 }
 
+void tst_QOrganizerItem::itemsCompare()
+{
+    QOrganizerItemDisplayLabel displayLabel;
+    displayLabel.setLabel("test label");
+    QOrganizerItemDescription descr;
+    descr.setDescription("test description");
+    QOrganizerItemComment comment;
+    comment.setComment("yet another test comment");
+    QOrganizerItemLocation location;
+    location.setLabel("another test address label");
+    QOrganizerEventAttendee a;
+    a.setAttendeeId("123456");
+    a.setEmailAddress("people@qt-project.org");
+    a.setName("people");
+
+    QOrganizerEventAttendee a1;
+    a1.setAttendeeId("777777");
+    a1.setName("people1");
+    a1.setEmailAddress("people1@qt-project.org");
+
+    QOrganizerEventAttendee a2;
+    a2.setAttendeeId("9jjjkkk");
+    a2.setName("people2");
+    a2.setEmailAddress("people1@qt-project.org");
+
+    QOrganizerEventAttendee a3;
+    a2.setAttendeeId("ppppp");
+    a2.setName("people3");
+    a2.setEmailAddress("people3@qt-project.org");
+
+    QOrganizerEventTime etr;
+    etr.setStartDateTime(QDateTime(QDate::currentDate()));
+    etr.setEndDateTime(QDateTime(QDate::currentDate().addDays(1)));
+
+    QOrganizerItem item1;
+    QOrganizerItem item2;
+    item1.saveDetail(&displayLabel);
+    item1.saveDetail(&descr);
+    item1.saveDetail(&comment);
+    item1.saveDetail(&location);
+    item1.saveDetail(&etr);
+
+    item2.saveDetail(&etr);
+    item2.saveDetail(&location);
+    item2.saveDetail(&comment);
+    item2.saveDetail(&descr);
+    QVERIFY(item1 != item2);
+    item2.saveDetail(&displayLabel);
+    QVERIFY(item1 == item2);
+
+    // Identical details compare test
+    // Same type details but different amount
+    item1.addTag("TestTag1");
+    item1.addTag("TestTag2");
+    item1.saveDetail(&a);
+
+    item2.addTag("TestTag1");
+    item2.saveDetail(&a);
+    item2.saveDetail(&a1);
+    QVERIFY(item1 != item2);
+
+    // Make they same but different orders
+    item1.saveDetail(&a1);
+    item2.addTag("TestTag2");
+    QVERIFY(item1 == item2);
+
+    item1.saveDetail(&a2);
+    item2.saveDetail(&a3);
+    QVERIFY(item1 != item2);
+    item1.saveDetail(&a3);
+    item2.saveDetail(&a2);
+    QVERIFY(item1 == item2);
+}
 
 QTEST_MAIN(tst_QOrganizerItem)
 #include "tst_qorganizeritem.moc"

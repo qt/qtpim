@@ -544,15 +544,19 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail* detail)
 */
 bool QOrganizerItem::operator==(const QOrganizerItem& other) const
 {
-    // work around, as this function is "const" that we can't sort m_details
-    QList<QOrganizerItemDetail> myDetails = d->m_details;
-    QList<QOrganizerItemDetail> otherDetails = other.d->m_details;
-    qSort(myDetails.begin(), myDetails.end(), compareOrganizerItemDetail);
-    qSort(otherDetails.begin(), otherDetails.end(), compareOrganizerItemDetail);
+    if (other.d.constData()->m_id != d.constData()->m_id
+        || other.d.constData()->m_collectionId != d.constData()->m_collectionId
+        || d.constData()->m_details.size() != other.d.constData()->m_details.size()) {
+        return false;
+    }
 
-    return other.d->m_id == d->m_id &&
-        other.d->m_collectionId == d->m_collectionId &&
-        otherDetails == myDetails;
+    QList<QOrganizerItemDetail> searchList(d.constData()->m_details);
+
+    foreach (const QOrganizerItemDetail &detail, other.d.constData()->m_details) {
+        if (!searchList.removeOne(detail))
+            return false;
+    }
+    return true;
 }
 
 /*!

@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the examples of the Qt Mobility Components.
+** This file is part of the examples of the Qt Organizer module.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** You may use this file under the terms of the BSD license as follows:
@@ -41,35 +41,36 @@
 import QtQuick 2.0
 
 Rectangle {
-    id: menuBar;
+    Rectangle {
+        id: frameRateCounter
+        anchors.fill: parent
+        property int dummy: 0
+        property int fpsCount: 0
+        color: "black"
 
-    property string info;
-    BorderImage { source: "images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
-    gradient: Gradient {
-        GradientStop { position: 0.0; color: activePalette.dark }
-        GradientStop { position: 1.0; color: Qt.darker(activePalette.dark); }
-    }
-    Row {
-        spacing: 0
-        Image {
-            id: quitButton
-            height: monthButton.height
-            width:height
-            source: "images/quit.png"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: Qt.quit()
-            }
+        Text {
+            id: fpsText
+            color: "white"
+            anchors.centerIn: parent
         }
 
-        Button { id: dayButton; text: "Day";onClicked: calendar.state="DayView";}
-        Button { id: weekButton; text: "Week";onClicked: calendar.state="WeekView";}
-        Button { id: monthButton; text: "Month"; onClicked: calendar.state="MonthView";}
-        Button { id: timelineButton; text: "Timeline";onClicked: calendar.state="TimelineView";}
-        Button { id: collectionButton; text: "Coll.";onClicked: calendar.state="CollectionManagerView";}
-        Button { id: todoButton; text: "Todos";onClicked: calendar.state="TodoView"; }
+        NumberAnimation on dummy {
+            duration: 500
+            from: 0
+            to: 10000
+            loops: Animation.Infinite
+        }
+        onDummyChanged: ++fpsCount;
 
-        Text { color: "#f5f210";text:info ; font.bold: true; verticalAlignment: Text.AlignVCenter; style: Text.Sunken;font.pointSize: 6}
+        Timer {
+            interval: 1000
+            repeat: true
+            running: true
+            onTriggered: {
+                fpsText.text = "Frame rate: " + parent.fpsCount + " fps";
+                parent.fpsCount = 0;
+            }
+        }
     }
 }
 

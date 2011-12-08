@@ -99,7 +99,22 @@ Rectangle {
             }
         }
 
-        MenuBar { id: menuBar; width: parent.width; height: 35; opacity: 0.9; info: organizer.error + "\nTotal:" + organizer.itemCount }
+        InfoBar {
+            id: infoBar;
+            anchors {
+                left: parent.left; right: parent.right; top: parent.top
+            }
+            height: 20
+        }
+
+        MenuBar {
+            id: menuBar;
+            anchors {
+                left: parent.left; right: parent.right; top: infoBar.bottom
+            }
+            height: 35; opacity: 0.9
+            info: organizer.error + "\nTotal:" + organizer.itemCount
+        }
 
         StatusBar {
             id: statusBar; status:calendar.status; width: parent.width; height: 35; opacity: 0.9; anchors.bottom: calendar.bottom

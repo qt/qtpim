@@ -423,5 +423,79 @@ TestCase {
         spy.wait()
         compare(spy.count, 1)
     }
+
+    function test_organizermodel_containsitems_data() {
+        return [
+            {tag: "memory backend", managerToBeTested: "memory"},
+            {tag: "jsondb backend", managerToBeTested: "jsondb"}
+        ]
+    }
+
+    function test_organizermodel_containsitems(data) {
+        var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "OrganizerModel {\n"
+            + "  manager: '" + data.managerToBeTested + "'\n"
+            + "  startPeriod: new Date(2011, 12, 8, 14, 0)\n"
+            + "  endPeriod: new Date(2011, 12, 8, 16, 0)\n"
+            + "}\n", modelTests);
+        wait(500);
+
+        var event1 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 13, 55)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 14, 07)\n"
+            + "}\n", modelTests);
+
+        var event2 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 14, 11)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 14, 15)\n"
+            + "}\n", modelTests);
+
+        var event3 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 14, 25, 0)\n"
+            + "}\n", modelTests);
+
+        var event4 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  endDateTime: new Date(2011, 12, 8, 14, 45)\n"
+            + "}\n", modelTests);
+
+        var event5 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 14, 55)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 15, 05)\n"
+            + "}\n", modelTests);
+
+        organizerModel.saveItem(event1);
+        organizerModel.saveItem(event2);
+        organizerModel.saveItem(event3);
+        organizerModel.saveItem(event4);
+        organizerModel.saveItem(event5);
+        wait(2000);
+        compare(organizerModel.items.length, 5);
+
+        var containsItems = organizerModel.containsItems(new Date(2011, 12, 8, 14, 0), new Date(2011, 12, 8, 16, 0), 600);
+        compare(containsItems.length, 12);
+        compare(containsItems[0], true);
+        compare(containsItems[1], true);
+        compare(containsItems[2], true);
+        compare(containsItems[3], false);
+        compare(containsItems[4], true);
+        compare(containsItems[5], true);
+        compare(containsItems[6], true);
+        compare(containsItems[7], false);
+        compare(containsItems[8], false);
+        compare(containsItems[9], false);
+        compare(containsItems[10], false);
+        compare(containsItems[11], false);
+    }
 }
 

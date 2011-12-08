@@ -746,6 +746,52 @@ void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstr
 }
 
 /*!
+    \qmlmethod list<bool> OrganizerModel::containsItems(date start, date end, int interval)
+
+    Returns a list of booleans telling if there is any item falling in the given time range.
+
+    For example, if the \a start time is 2011-12-08 14:00:00, the \a end time is 2011-12-08 20:00:00,
+    and the \a interval is 3600 (seconds), a list of size 6 is returned, telling if there is any item
+    falling in the range of 14:00:00 to 15:00:00, 15:00:00 to 16:00:00, ..., 19:00:00 to 20:00:00.
+ */
+QList<bool> QDeclarativeOrganizerModel::containsItems(const QDateTime &start, const QDateTime &end, int interval)
+{
+    QList<bool> list;
+    if (start.isValid() && end.isValid() && start < end && interval > 0) {
+        int count = qCeil(start.secsTo(end) / static_cast<double>(interval));
+        list.reserve(count);
+        int i(0);
+        for (; i < count; ++i)
+            list.append(false);
+
+        QList<QDateTime> dateTime;
+        dateTime.reserve(count + 1);
+        dateTime.append(start);
+        for (i = 1; i < count; ++i)
+            dateTime.append(dateTime.at(i - 1).addSecs(interval));
+        dateTime.append(end);
+
+        QDateTime startTime;
+        QDateTime endTime;
+        foreach (QDeclarativeOrganizerItem *item, d->m_items) {
+            for (i = 0; i < count; ++i) {
+                if (list.at(i))
+                    continue;
+
+                startTime = item->itemStartTime();
+                endTime = item->itemEndTime();
+                if ((startTime.isValid() && startTime <= dateTime.at(i) && endTime >= dateTime.at(i + 1))
+                    || (startTime >= dateTime.at(i) && startTime <= dateTime.at(i + 1))
+                    || (endTime >= dateTime.at(i) && endTime <= dateTime.at(i + 1))) {
+                    list[i] = true;
+                }
+            }
+        }
+    }
+    return list;
+}
+
+/*!
   \qmlmethod bool OrganizerModel::containsItems(date start, date end)
 
   Returns true if there is at least one OrganizerItem between the given date range.

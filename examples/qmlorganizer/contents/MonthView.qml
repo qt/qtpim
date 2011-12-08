@@ -48,6 +48,7 @@ Rectangle  {
     property int year
     property date startDay:new Date(year, month, 1)
     property int startWeekday:startDay.getDay()
+    property var containItems: calendar.organizer.items ? calendar.organizer.containsItems(Month.dateOfThisDay(startDay, 1 - startWeekday), Month.dateOfThisDay(startDay, 43 - startWeekday), 86400) : undefined
     anchors.fill: parent
 
     Grid {
@@ -88,7 +89,7 @@ Rectangle  {
                                       dayContainer.radius= 20
                                       return "lightsteelblue";
                                   }
-                                  else if (calendar.organizer.items && calendar.organizer.containsItems(Month.dateOfThisDay(startDay,   index - startWeekday +1), Month.dateOfThisDay(startDay,   index - startWeekday +2))) {
+                                  else if (monthView.containItems[index]) {
                                       dayContainer.radius= 20
                                       return "yellow";
                                   }

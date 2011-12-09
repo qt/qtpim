@@ -444,7 +444,6 @@ public:
     QDeclarativeOrganizerItemInvalidFilter(QObject *parent = 0)
         :QDeclarativeOrganizerItemFilter(parent)
     {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
     }
 
     QOrganizerItemFilter filter() const

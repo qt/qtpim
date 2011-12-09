@@ -10,14 +10,14 @@ project = qtpim
 headerdirs  += ..
 
 sourcedirs  += .. \
-               ../../doc/src
+               ../doc/src
 
 exampledirs += ../.. \
-               ../../doc/src \
-               ../../examples
+               ../doc/src \
+               ../examples
 
-imagedirs   += ../../doc/src/images \
-               ../../examples
+imagedirs   += ../doc/src/images \
+               ../examples
 
 excludedirs +=
 

@@ -56,7 +56,7 @@ categories:
 
 The most common type of operation that clients will perform involves retrieval
 or modification of organizer items.  For in-depth information about item
-manipulation, please refer to the main \l{Organizer} API page.
+manipulation, please refer to the main \l{C++ Organizer} API page.
 
 There are six different types of operation which are supported by the asynchronous API:
 \list
@@ -83,7 +83,7 @@ These operations are supported via the classes:
 Every item is saved in a collection in a manager.  Each collection has various
 properties which, if the manager supports such operations, may be modified
 by clients.  For in-depth information about collections, please refer to the
-main \l{Organizer} API page.
+main \l{C++ Organizer} API page.
 
 
 There are three different types of operation which are supported by the asynchronous API:

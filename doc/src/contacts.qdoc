@@ -339,7 +339,7 @@ For more information on this topic, see please see the documentation on
 
 \section2 Synchronization and Serialization
 
-The contacts API is used by another QtPim module: the \l {Versit} {Versit}* module.  It allows
+The Contacts API is used by another QtPim module: the \l {C++ Versit} {Versit}* module.  It allows
 serialization of a QContact into a vCard document, and vice versa.
 
 [*] Versit \reg is a trademark of the Internet Mail Consortium.
@@ -348,7 +348,7 @@ serialization of a QContact into a vCard document, and vice versa.
 
 The following sample applications show examples of API usage:
 \list
-    \o \l{samplephonebook}{Sample Phonebook}
+    \o TODO: Need example listed here.
 \endlist
 See also: \l{Contacts API Usage}
 

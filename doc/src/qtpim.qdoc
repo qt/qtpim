@@ -26,25 +26,25 @@ w/****************************************************************************
 ****************************************************************************/
 
 /*!
-\title QtPim Overview
+\title Qt PIM Overview
 \page qtpim.html
 
     \group QtPim
-    \title QtPim Module
+    \title Qt PIM Addon
 
     \startpage qtpim.html  Qt Reference Documentation
-    \title Qt Pim Reference Documentation
+    \title Qt5 Personal Information Management Reference Documentation
 
-    \brief An overview of the QtPim Project APIs.
+    \brief An overview of the Qt5 Personal Information management AddOn Module.
 
     \tableofcontents
 
 
     \section1 Overview
 
-    \section2 Introducing the QtPim module
+    \section2 Introducing the Qt Personal Information management Addon module
 
-    The QtPim module covers Personal Information Management (PIM).
+    Qt PIM addon module covers Personal Information Management (PIM).
     It is a collection of APIs and frameworks which
     allows you to develop applications using contacts and calendar
     data and versit functionality for exporting and importing data.
@@ -76,16 +76,18 @@ w/****************************************************************************
         content.
         \endlist
 
-    The new QtPim module is derived from the older QtMobility and exists as
+    The new PIM addon module is derived from the older QtMobility and exists as
     an addon module within Qt5. The following documentation leads you through what
     you can do, getting started, some simple examples and tutorials.
 
     \section1 Getting Started
-    To get started with QtPim see the
+    To get started with Qt PIM see the
     \list
         \o \l {Installation Guide}
         \o \l {Quickstart guide}{Quickstart Guide}
-        \o \l {QtMobility Examples}{List of all examples.}
+        \o \l {Qt PIM Examples}{Examples}
+        \o \l {Qt Personal Information Management Tutorials}{Tutorials}
+
     \endlist
 
     \section2 Known Issues
@@ -94,11 +96,11 @@ w/****************************************************************************
 
     For an overview of Platform Compatibility see  <---Need to add this info here --->
 
-    \section1 The QtPim APIs
+    \section1 The Qt Personal Information Management API's
 
-    \section2 QML Plugins
+    \section2 QML API
 
-    The various APIs that constitute QtPim are have QML interfaces
+    The various APIs that constitute Qt PIM addon have QML interfaces
     the power of QML can be explored to create very powerful yet simple UI
     applications, and these API's make this possible.
 
@@ -138,7 +140,7 @@ w/****************************************************************************
     with iCalendar documents using the same framework as for vCards.
 
     \section1 Feedback and bug reports
-    Email any inquiries and feedback about QtPim to ???
+    Email any inquiries and feedback about Qt PIM to ???
 
     And please report any bugs you may find to \l {http://bugreports.qt.nokia.com}
 

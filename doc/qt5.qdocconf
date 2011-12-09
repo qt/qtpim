@@ -1,6 +1,11 @@
 # Name of the project.
 project = qtpim
 
+include(macros.qdocconf)
+include(compat.qdocconf)
+include(qt-cpp-ignore.qdocconf)
+include(qt-defines.qdocconf)
+
 # Directories in which to search for files to document and images.
 # By default set to the root directory of the project for sources
 # and headers and qdoc will therefore generate output for each file.
@@ -10,14 +15,14 @@ project = qtpim
 headerdirs  += ..
 
 sourcedirs  += .. \
-               ../../doc/src
+               ../doc/src
 
 exampledirs += .. \
                ../doc/src \
                ../examples
 
-imagedirs   += ../../doc/src/images \
-               ../../examples
+imagedirs   += ../doc/src/images \
+               ../examples
 
 excludedirs +=
 

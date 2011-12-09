@@ -1,0 +1,122 @@
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \page tutorials-qmlorganizerListView.html
+
+
+    \contentspage Organizer Qt Quick ListView Tutorial
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Organizer Qt Quick ListView Tutorial
+
+    \brief An introduction to the Organizer Qt Quick  API, showing how to develop a simple
+           appplication using ListView and the Organizer Model to show events.
+
+    In this tutorial, you will learn about the basic components of the Organizer
+    API, including
+
+    \list
+    \o Using the Organizer Model and the Qt Quick ListView to display Events
+    \o Delete Events stored in your supported calendar backend
+    \o Add your own new  Events stored in your supported calendar backend
+    \o Edit existing title, start and end dates for your events retrieved.
+    \endlist
+
+    We will be developing the simple Qt Quick Events ListView application shown below:
+
+    \image qmlorganizerlistview-main.png
+
+    Tutorial contents:
+
+    \list 1
+    \o \l{Part 1 - The Organizer Model and using listViews}
+    \o \l{Part 2 - Adding New Events}
+    \o \l{Part 3 - Deleting Events}
+    \o \l{Part 4 - Editing selected Events}
+    \o \l{Part 5 - Future steps}
+    \endlist
+*/
+
+/*!
+    \page tutorials-qmlorganizerListView-part1.html
+
+    \previouspage {Organizer Qt Quick ListView Tutorial}
+    \contentspage {Organizer Qt Quick ListView Tutorial} {Contents}
+    \nextpage Part 2 - Adding New Events
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Part 1 - The Organizer Model and using ListViews
+
+*/
+
+/*!
+    \page tutorials-qmlorganizerListView-part2.html
+
+    \previouspage Part 1 - The Organizer Model and using ListViews
+    \contentspage {Organizer Qt Quick ListView Tutorial} {Contents}
+    \nextpage Part 3 - Deleting Events
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Part 2 - Adding New Events
+
+*/
+
+/*!
+    \page tutorials-qmlorganizerListView-part3.html
+
+    \previouspage Part 2 - Adding New Events
+    \contentspage {Organizer Qt Quick ListView Tutorial} {Contents}
+    \nextpage Part 4 - Editing selected Events
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Part 3 - Deleting Events
+
+*/
+
+/*!
+    \page tutorials-qmlorganizerListView-part4.html
+
+    \previouspage Part 3 - Deleting Events
+    \contentspage {Organizer Qt Quick ListView Tutorial} {Contents}
+    \nextpage Part 5 - Future Steps
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Part 4 - Editing selected Events
+
+*/
+
+/*!
+    \page tutorials-qmlorganizerListView-part5.html
+
+    \previouspage Part 4 - Editing selected Events
+    \contentspage {Organizer Qt Quick ListView Tutorial} {Contents}
+    \startpage Organizer Qt Quick ListView Tutorial
+
+    \title Part 5 - Future Steps
+
+*/

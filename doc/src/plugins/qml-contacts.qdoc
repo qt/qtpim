@@ -47,6 +47,9 @@
     filters to get only the relevant results. The QML Contacts Plugin delivers this capability in
     easy to use form.
 
+    The following describes the API. You can also study the \l{Qt PIM Examples}{Examples}
+    or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
+
     \section2 Contact Model
     The Contact itself is represented by a model called a \l {ContactModel}.
     This model supplies a rich selection of properties to display or to use
@@ -198,6 +201,19 @@
     \section2 Item matching and filtering
     \annotatedlist qml-contacts-filters
 
+    \section2 Examples
+
+    The following sample applications show examples of API usage:
+    \list
+        \o TODO: a qml contacts example needs adding here!!!
+    \endlist
+
+    \section2 Tutorials
+
+    The following tutorials are useful to work through the use of the Qt Quick Contacts API::
+    \list
+        \o TODO: This needs a wml contacts tutorial
+    \endlist
 */
 
 

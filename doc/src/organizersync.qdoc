@@ -67,7 +67,7 @@ class.  It consists of three major categories:
 
 The most common type of operation that clients will perform involves retrieval
 or modification of organizer items.  For in-depth information about item
-manipulation, please refer to the main \l{Organizer} API page.
+manipulation, please refer to the main \l{C++ Organizer} API page.
 
 The QOrganizerManager class provides API for accessing the IDs of items which are stored in the manager:
 \list
@@ -96,7 +96,7 @@ The synchronous, batch item manipulation functions offered by the QOrganizerMana
 Every item is saved in a collection in a manager.  Each collection has various
 properties which, if the manager supports such operations, may be modified
 by clients.  For in-depth information about collections, please refer to the
-main \l{Organizer} API page.
+main \l{C++ Organizer} API page.
 
 The synchronous API offers the following functions to manipulate collections:
 \list

@@ -46,6 +46,9 @@
     personal data from local or remote backends. The QML Organizer Plugin
     delivers these capabilities in an easy to use form.
 
+    The following describes the API. You can also study the \l{Qt PIM Examples}{Examples}
+    or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
+
     \section2 Organizer Items
     The \l {OrganizerItem} element provides a generic interface for accessing
     events, todos, journals and notes. To actually access specific fields
@@ -93,4 +96,18 @@
 
     \section2 Item Selection And Sorting
     \annotatedlist qml-organizer-filters
+
+    \section2 Examples
+
+    The following sample applications show examples of API usage:
+    \list
+        \o \l{qmlOrganizerListView}{Qt Quick Organizer List view}
+    \endlist
+
+    \section2 Tutorials
+
+    The following tutorials are useful to work through the use of the Qt Quick Organizer API::
+    \list
+        \o \l{Organizer Qt Quick ListView Tutorial}{Qt Quick Organizer List view Tutorial}
+    \endlist
 */

@@ -85,28 +85,59 @@ QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
     QOrganizerItemDescription description;
     description.setDescription("Some descriptive text");
     // description.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
-    // description.definitionName() == QOrganizerItemDescription::DefinitionName
+    // description.type() == QOrganizerItemDetail::TypeDescription
 
     QOrganizerItemDetail detail = description;
     // detail.value(QOrganizerItemDescription::FieldDescription) == "Some descriptive text";
-    // detail.definitionName() == QOrganizerItemDescription::DefinitionName
+    // detail.type() == QOrganizerItemDetail::TypeDescription
 
     QOrganizerItemDescription otherDescription = detail;
     // otherDescription.description() == "Some descriptive text";
-    // otherDescription.definitionName() == QOrganizerItemDescription::DefinitionName
+    // otherDescription.type() == QOrganizerItemDetail::TypeDescription
 
     QOrganizerItemDisplayLabel label = detail;
     // label is now a default constructed QOrganizerItemDisplayLabel
     // label.value(QOrganizerItemDescription::FieldDescription) is empty
-    // label.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
+    // label.type() == QOrganizerItemDetail::TypeDisplayLabel
 
     QOrganizerItemDisplayLabel otherLabel = description;
     // otherLabel is now a default constructed QOrganizerItemDisplayLabel
     // otherLabel.value(QOrganizerItemDescription::FieldDescription) is empty
-    // otherLabel.definitionName() == QOrganizerItemDisplayLabel::DefinitionName
+    // otherLabel.type() == QOrganizerItemDetail::TypeDisplayLabel
     \endcode
 
     \sa QOrganizerItem, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter
+ */
+
+/*!
+    \enum QOrganizerItemDetail::DetailType
+
+    This enumeration describes the type of the organizer item detail.
+
+    \value TypeUndefined        This detail is of type undefined.
+    \value TypeClassification   This detail is a classification.
+    \value TypeComment          This detail is a comment
+    \value TypeDescription      This detail is a description.
+    \value TypeDisplayLabel     This detail is a display label.
+    \value TypeItemType         This detail is an item type.
+    \value TypeGuid             This detail is a GUID.
+    \value TypeLocation         This detail is a location.
+    \value TypeParent           This detail is a parent. Should not be used in parent items.
+    \value TypePriority         This detail is a priority.
+    \value TypeRecurrence       This detail is a recurrence. Should not be used in occurrences.
+    \value TypeTag              This detail is a tag.
+    \value TypeTimestamp        This detail is a timestamp.
+    \value TypeReminder         This detail is a reminder. Should not be directly used.
+    \value TypeAudibleReminder  This detail is an audible reminder.
+    \value TypeEmailReminder    This detail is an email reminder.
+    \value TypeVisualReminder   This detail is a visual reminder.
+    \value TypeExtendedDetail   This detail is an extended detail.
+    \value TypeEventAttendee    This detail is an event attendee.
+    \value TypeEventRsvp        This detail is an event RSVP.
+    \value TypeEventTime        This detail is an event time.
+    \value TypeJournalTime      This detail is a journal time.
+    \value TypeTodoTime         This detail is a TODO time.
+    \value TypeTodoProgress     This detail is a TODO progress.
  */
 
 /*!
@@ -140,13 +171,12 @@ QOrganizerItemDetail::QOrganizerItemDetail()
 }
 
 /*!
-    Constructs a new, empty detail of the definition identified by \a thisDefinitionId.
-    The definitionId must be restricted to the Latin 1 character set.
+    Constructs a new, empty detail of the \a detailType.
  */
-QOrganizerItemDetail::QOrganizerItemDetail(const QString &thisDefinitionId)
+QOrganizerItemDetail::QOrganizerItemDetail(DetailType detailType)
     : d(new QOrganizerItemDetailPrivate)
 {
-    d->m_definitionName = thisDefinitionId;
+    d->m_detailType = detailType;
 }
 
 /*!
@@ -160,17 +190,17 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other)
 /*!
     \internal
 
-    Constructs a detail that is a copy of \a other if \a other is of the expected definition
-    identified by \a expectedDefinitionId, else constructs a new, empty detail of the
-    definition identified by the \a expectedDefinitionId.
+    Constructs a detail that is a copy of \a other if \a other is of the type
+    identified by \a expectedDetailType, else constructs a new, empty detail of the
+    type identified by the \a expectedDetailType.
 */
-QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other, const QString &expectedDefinitionId)
+QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other, DetailType expectedDetailType)
 {
-    if (other.d->m_definitionName == expectedDefinitionId) {
+    if (other.d->m_detailType == expectedDetailType) {
         d = other.d;
     } else {
         d = new QOrganizerItemDetailPrivate;
-        d->m_definitionName = expectedDefinitionId;
+        d->m_detailType = expectedDetailType;
     }
 }
 
@@ -187,18 +217,18 @@ QOrganizerItemDetail &QOrganizerItemDetail::operator=(const QOrganizerItemDetail
 /*!
     \internal
 
-    Assigns this detail to \a other if the definition of \a other is that identified
-    by the given \a expectedDefinitionId, else assigns this detail to be a new, empty
-    detail of the definition identified by the given \a expectedDefinitionId.
+    Assigns this detail to \a other if the type of \a other is that identified
+    by the given \a expectedDetailType, else assigns this detail to be a new, empty
+    detail of the type identified by the given \a expectedDetailType.
  */
-QOrganizerItemDetail &QOrganizerItemDetail::assign(const QOrganizerItemDetail &other, const QString &expectedDefinitionId)
+QOrganizerItemDetail &QOrganizerItemDetail::assign(const QOrganizerItemDetail &other, DetailType expectedDetailType)
 {
     if (this != &other) {
-        if (other.d->m_definitionName == expectedDefinitionId) {
+        if (other.d->m_detailType == expectedDetailType) {
             d = other.d;
         } else {
             d = new QOrganizerItemDetailPrivate;
-            d->m_definitionName = expectedDefinitionId;
+            d->m_detailType = expectedDetailType;
         }
     }
     return *this;
@@ -212,12 +242,19 @@ QOrganizerItemDetail::~QOrganizerItemDetail()
 }
 
 /*!
-    Returns the (unique) name of the definition which defines the semantics and structure of this detail.
-    The actual QOrganizerItemDetailDefinition should be retrieved from the relevant QOrganizerManager using this name.
+    Returns the detail type.
  */
-QString QOrganizerItemDetail::definitionName() const
+QOrganizerItemDetail::DetailType QOrganizerItemDetail::type() const
 {
-    return d->m_definitionName;
+    return d->m_detailType;
+}
+
+/*!
+    To be removed soon, please use type() instead.
+ */
+QOrganizerItemDetail::DetailType QOrganizerItemDetail::definitionName() const
+{
+    return type();
 }
 
 /*!
@@ -227,14 +264,14 @@ QString QOrganizerItemDetail::definitionName() const
  */
 bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 {
-    if (!(d->m_definitionName == other.d->m_definitionName))
+    if (!(d->m_detailType == other.d->m_detailType))
         return false;
 
     if (d->m_access != other.d->m_access)
         return false;
 
     // QVariant doesn't support == on QOrganizerItemRecurrence - do it manually
-    if (d->m_definitionName == QOrganizerItemRecurrence::DefinitionName)
+    if (d->m_detailType == QOrganizerItemDetail::TypeRecurrence)
         return static_cast<QOrganizerItemRecurrence>(*this) == static_cast<QOrganizerItemRecurrence>(other);
 
     if (d->m_values != other.d->m_values)
@@ -245,7 +282,7 @@ bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 
 bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganizerItemDetail &other)
 {
-    return (one.definitionName() < other.definitionName());
+    return (one.type() < other.type());
 }
 
 /*!
@@ -254,7 +291,7 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
 uint qHash(const QOrganizerItemDetail &key)
 {
     const QOrganizerItemDetailPrivate *dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
-    uint hash = qHash(dptr->m_definitionName) + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
+    uint hash = QT_PREPEND_NAMESPACE(qHash)(dptr->m_detailType) + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
     QHash<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
     while (it != dptr->m_values.constEnd()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
@@ -266,7 +303,7 @@ uint qHash(const QOrganizerItemDetail &key)
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 {
-    dbg.nospace() << "QOrganizerItemDetail(name=" << detail.definitionName() << ", key=" << detail.key();
+    dbg.nospace() << "QOrganizerItemDetail(name=" << detail.type() << ", key=" << detail.key();
     QMap<int, QVariant> fields = detail.values();
     QMap<int, QVariant>::const_iterator it;
     for (it = fields.constBegin(); it != fields.constEnd(); ++it)
@@ -284,7 +321,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetail
     return out << formatVersion
-               << detail.definitionName()
+               << detail.type()
                << static_cast<quint32>(detail.accessConstraints())
                << detail.values();
 }
@@ -297,12 +334,12 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QString definitionName;
+        quint32 detailType;
         quint32 accessConstraintsInt;
         QMap<int, QVariant> values;
-        in >> definitionName >> accessConstraintsInt >> values;
+        in >> detailType >> accessConstraintsInt >> values;
 
-        detail = QOrganizerItemDetail(definitionName);
+        detail = QOrganizerItemDetail(static_cast<QOrganizerItemDetail::DetailType>(detailType));
         QOrganizerItemDetail::AccessConstraints accessConstraints(accessConstraintsInt);
         detail.d->m_access = accessConstraints;
 

@@ -59,8 +59,8 @@ QVersitOrganizerImporterPrivate::QVersitOrganizerImporterPrivate(const QString& 
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
                 QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName),
-                QPair<QString,int>(
-                    versitOrganizerDetailMappings[i].detailDefinitionName,
+                QPair<QOrganizerItemDetail::DetailType, int>(
+                    versitOrganizerDetailMappings[i].detailType,
                     versitOrganizerDetailMappings[i].detailField));
     }
 
@@ -196,8 +196,8 @@ bool QVersitOrganizerImporterPrivate::createSimpleDetail(
 {
     if (property.value().isEmpty())
         return false;
-    QPair<QString, int> mapping = mPropertyMappings[property.name()];
-    QString definitionName = mapping.first;
+    QPair<QOrganizerItemDetail::DetailType, int> mapping = mPropertyMappings[property.name()];
+    QOrganizerItemDetail::DetailType definitionName = mapping.first;
     int fieldName = mapping.second;
     QOrganizerItemDetail detail(item->detail(definitionName));
     if (detail.isEmpty())

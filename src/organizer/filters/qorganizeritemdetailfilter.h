@@ -42,7 +42,8 @@
 #ifndef QORGANIZERITEMDETAILFILTER_H
 #define QORGANIZERITEMDETAILFILTER_H
 
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemfilter.h>
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -54,21 +55,23 @@ public:
     QOrganizerItemDetailFilter(const QOrganizerItemFilter& other);
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definition, int field);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
     void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
 
     /* Filter Criterion */
     void setValue(const QVariant& value);
 
     /* Accessors */
-    QString detailDefinitionName() const;
+    QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
     QVariant value() const;
 
     // to be removed
+    QOrganizerItemDetail::DetailType detailDefinitionName() const;
     int detailFieldName() const;
+    void setDetailDefinitionName(QOrganizerItemDetail::DetailType definition, int field = -1);
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)

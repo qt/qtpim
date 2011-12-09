@@ -192,7 +192,7 @@ public:
 
     /* Capabilities reporting */
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
     /* Asynchronous Request Support */

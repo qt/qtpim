@@ -42,11 +42,11 @@
 #ifndef QORGANIZERITEMFETCHHINT_H
 #define QORGANIZERITEMFETCHHINT_H
 
+#include <qorganizeritemdetail.h>
+
 #include <QVariant>
 #include <QList>
 #include <QSharedData>
-
-#include "qorganizerglobal.h"
 
 QT_BEGIN_NAMESPACE
 class QDataStream;
@@ -62,8 +62,8 @@ public:
     ~QOrganizerItemFetchHint();
     QOrganizerItemFetchHint& operator=(const QOrganizerItemFetchHint& other);
 
-    QStringList detailDefinitionsHint() const;
-    void setDetailDefinitionsHint(const QStringList& definitionNames);
+    QList<QOrganizerItemDetail::DetailType> detailTypesHint() const;
+    void setDetailTypesHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes);
 
     enum OptimizationHint {
         AllRequired = 0x0,
@@ -75,6 +75,10 @@ public:
 
     OptimizationHints optimizationHints() const;
     void setOptimizationHints(OptimizationHints hints);
+
+    // to be removed
+    QList<QOrganizerItemDetail::DetailType> detailDefinitionsHint() const;
+    void setDetailDefinitionsHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes);
 
 private:
     QSharedDataPointer<QOrganizerItemFetchHintPrivate> d;

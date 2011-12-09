@@ -143,7 +143,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 QDeclarativeOrganizerItemDetailFilter::QDeclarativeOrganizerItemDetailFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Customized)
+    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
     , m_field(-1)
     , m_componentCompleted(false)
 {
@@ -172,12 +172,12 @@ void QDeclarativeOrganizerItemDetailFilter::componentComplete()
     This property holds the detail type of which the detail filter will be matched to. The value
     shuold be the enumeration value of Detail::type.
   */
-QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetailFilter::detail() const
+QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailFilter::detail() const
 {
     return m_detail;
 }
 
-void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail)
+void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
     if (m_detail != detail) {
         m_detail = detail;
@@ -279,7 +279,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
  */
 void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
+    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit valueChanged();
 }
 
@@ -298,7 +298,7 @@ void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
  */
 QDeclarativeOrganizerItemDetailRangeFilter::QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Customized)
+    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
     , m_field(-1)
     , m_componentCompleted(false)
 {
@@ -327,12 +327,12 @@ void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
     This property holds the detail type of which the detail filter will be matched to. The value
     shuold be the enumeration value of Detail::type.
   */
-QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemDetailRangeFilter::detail() const
+QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailRangeFilter::detail() const
 {
     return m_detail;
 }
 
-void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail)
+void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
     if (m_detail != detail) {
         m_detail = detail;
@@ -466,7 +466,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
  */
 void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
+    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit valueChanged();
 }
 

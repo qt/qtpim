@@ -600,10 +600,10 @@ void tst_QVersit::testImportICalFiles()
             QOrganizerItem expected = i.next();
             QList<QOrganizerItemDetail> expectedDetails = expected.details();
             foreach(QOrganizerItemDetail expectedDetail, expectedDetails) {
-                QString name = expectedDetail.definitionName();
+                QOrganizerItemDetail::DetailType name = expectedDetail.type();
                 QOrganizerItemDetail parsedDetail = parsed.detail(name);
                 if (parsedDetail != expectedDetail) {
-                    qDebug() << "Detail: " << name.toAscii();
+                    qDebug() << "Detail: " << name;
                     qDebug() << "Actual:" << parsedDetail.values();
                     qDebug() << "Expected:" << expectedDetail.values();
                     QCOMPARE(parsedDetail, expectedDetail);

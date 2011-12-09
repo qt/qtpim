@@ -79,8 +79,8 @@ public:
     bool isEmpty() const;
     void clearDetails();
 
-    QOrganizerItemDetail detail(const QString &definitionName = QString()) const;
-    QList<QOrganizerItemDetail> details(const QString &definitionName = QString()) const;
+    QOrganizerItemDetail detail(QOrganizerItemDetail::DetailType detailType = QOrganizerItemDetail::TypeUndefined) const;
+    QList<QOrganizerItemDetail> details(QOrganizerItemDetail::DetailType detailType = QOrganizerItemDetail::TypeUndefined) const;
 
     template<typename T> QList<T> details() const
     {

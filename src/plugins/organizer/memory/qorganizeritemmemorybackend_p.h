@@ -195,7 +195,7 @@ public:
     virtual QOrganizerItem item(const QOrganizerItemId& organizeritemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
 
     virtual bool saveItems(QList<QOrganizerItem>* organizeritems, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    virtual bool saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
+    virtual bool saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
     virtual bool removeItems(const QList<QOrganizerItemId>& organizeritemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
     virtual QOrganizerCollection defaultCollection(QOrganizerManager::Error* error) const;
@@ -229,7 +229,7 @@ public:
         return supported;
     }
     /*! \reimp */
-    virtual QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    virtual QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
 
     /*! \reimp */
     virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const

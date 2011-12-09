@@ -121,29 +121,41 @@ QOrganizerItemFetchHint& QOrganizerItemFetchHint::operator=(const QOrganizerItem
 }
 
 /*!
-  Returns the list of definition names that identify detail definitions of which details
-  the manager should (at a minimum) retrieve when fetching organizer items.
-  This hint may be ignored by the backend, in which case it will return the full set of details for
-  each organizer item retrieved.
+    Returns the list of detail types that identify details which should be retrieved by the manager
+    when fetching items.
 
-  \sa setDetailDefinitionsHint()
+    \sa setDetailTypesHint()
  */
-QStringList QOrganizerItemFetchHint::detailDefinitionsHint() const
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailTypesHint() const
 {
-    return d->m_definitionsHint;
+    return d->m_detailTypesHint;
 }
 
 /*!
-  Sets the list of definition names that identify detail definitions of which details
-  the manager should (at a minimum) retrieve when fetching organizer items to \a definitionNames.
-  This hint may be ignored by the backend, in which case it will return the full set of details for
-  each organizer item retrieved.
-
-  \sa detailDefinitionsHint()
+    Note this is to be removed soon, please use detailTypesHint() instead.
  */
-void QOrganizerItemFetchHint::setDetailDefinitionsHint(const QStringList& definitionNames)
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailDefinitionsHint() const
 {
-    d->m_definitionsHint = definitionNames;
+    return detailTypesHint();
+}
+
+/*!
+    Sets the list of detail types that identify details which should be retrieved by the manager
+    when fetching items.
+
+    \sa detailTypesHint()
+ */
+void QOrganizerItemFetchHint::setDetailTypesHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes)
+{
+    d->m_detailTypesHint = detailTypes;
+}
+
+/*!
+    Note this is to be removed soon, please use setDetailTypesHint() instead.
+ */
+void QOrganizerItemFetchHint::setDetailDefinitionsHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes)
+{
+    setDetailTypesHint(detailTypes);
 }
 
 /*!
@@ -175,7 +187,7 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerItemFetchHint& hint)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemFetchHint
     return out << formatVersion
-               << hint.detailDefinitionsHint()
+               << hint.detailTypesHint()
                << static_cast<quint32>(hint.optimizationHints());
 }
 
@@ -184,10 +196,15 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItemFetchHint& hint)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QStringList detailDefinitionHints;
+        QList<quint32> detailTypesHint;
         quint32 optimizations;
-        in >> detailDefinitionHints >> optimizations;
-        hint.setDetailDefinitionsHint(detailDefinitionHints);
+        in >> detailTypesHint >> optimizations;
+
+        QList<QOrganizerItemDetail::DetailType> types;
+        foreach (quint32 detailType, detailTypesHint)
+            types.append(static_cast<QOrganizerItemDetail::DetailType>(detailType));
+        hint.setDetailTypesHint(types);
+
         hint.setOptimizationHints(static_cast<QOrganizerItemFetchHint::OptimizationHints>(optimizations));
     } else {
         in.setStatus(QDataStream::ReadCorruptData);
@@ -204,7 +221,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint)
 {
     dbg.nospace() << "QOrganizerItemFetchHint(";
     dbg.nospace() << "detailDefinitionsHint=";
-    dbg.nospace() << hint.detailDefinitionsHint();
+    dbg.nospace() << hint.detailTypesHint();
     dbg.nospace() << ",";
     dbg.nospace() << "optimizationHints=";
     dbg.nospace() << static_cast<quint32>(hint.optimizationHints());

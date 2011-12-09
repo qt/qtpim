@@ -410,9 +410,9 @@ TestCase {
 
         // extended detail
         item.setDetail(extendedDetail)
-        compare(item.details(Detail.Customized).length, 1)
-        compare(item.detail(Detail.Customized).name, "extendedDetail1")
-        compare(item.detail(Detail.Customized).data, "data 1")
+        compare(item.details(Detail.ExtendedDetail).length, 1)
+        compare(item.detail(Detail.ExtendedDetail).name, "extendedDetail1")
+        compare(item.detail(Detail.ExtendedDetail).data, "data 1")
         compare(itemChangedSpy.count, ++count)
     }
 }

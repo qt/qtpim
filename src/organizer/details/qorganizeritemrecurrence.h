@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemRecurrence : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemRecurrence, "Recurrence")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemRecurrence)
 
     enum RecurrenceField {
         FieldRecurrenceRules = 0,

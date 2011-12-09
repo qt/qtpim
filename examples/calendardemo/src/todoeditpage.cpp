@@ -97,7 +97,7 @@ TodoEditPage::TodoEditPage(QWidget *parent)
 
     // check to see whether we support alarms.
     QOrganizerManager defaultManager;
-    QStringList supportedDefinitionNames = defaultManager.supportedItemDetails(QOrganizerItemType::TypeTodo);
+    QList<QOrganizerItemDetail::DetailType> supportedDetails = defaultManager.supportedItemDetails(QOrganizerItemType::TypeTodo);
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(subjectLabel);
@@ -110,7 +110,7 @@ TodoEditPage::TodoEditPage(QWidget *parent)
     scrollAreaLayout->addWidget(m_priorityEdit);
     scrollAreaLayout->addWidget(statusLabel);
     scrollAreaLayout->addWidget(m_statusEdit);
-    if (supportedDefinitionNames.contains(QOrganizerItemVisualReminder::DefinitionName)) {
+    if (supportedDetails.contains(QOrganizerItemDetail::TypeVisualReminder)) {
         scrollAreaLayout->addWidget(alarmLabel);
         scrollAreaLayout->addWidget(m_alarmComboBox);
     }
@@ -266,7 +266,7 @@ void TodoEditPage::showEvent(QShowEvent *event)
 
 void TodoEditPage::handleAlarmIndexChanged(const QString time)
 {
-    bool noVisualReminders = !m_manager->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemVisualReminder::DefinitionName);
+    bool noVisualReminders = !m_manager->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemDetail::TypeVisualReminder);
 
         QScopedPointer<QOrganizerItemReminder> reminder;
         if (noVisualReminders) {
@@ -277,7 +277,7 @@ void TodoEditPage::handleAlarmIndexChanged(const QString time)
         }
     
     if (time == "None") {
-        QOrganizerItemVisualReminder fetchedReminder = m_organizerTodo.detail(QOrganizerItemVisualReminder::DefinitionName);
+        QOrganizerItemVisualReminder fetchedReminder = m_organizerTodo.detail(QOrganizerItemDetail::TypeVisualReminder);
         m_organizerTodo.removeDetail(&fetchedReminder);
         return;
     } else if (time == "0 minutes before") {

@@ -208,7 +208,7 @@ void tst_QVersitOrganizerImporter::testImportEventProperties()
     QCOMPARE(items.size(), 1);
 
     foreach (const QOrganizerItemDetail& expectedDetail, expectedDetails) {
-        QList<QOrganizerItemDetail> actualDetails = items.first().details(expectedDetail.definitionName());
+        QList<QOrganizerItemDetail> actualDetails = items.first().details(expectedDetail.type());
         if (!actualDetails.contains(expectedDetail)) {
             qDebug() << "Actual:" << actualDetails;
             qDebug() << "Expected to find:" << expectedDetail;
@@ -788,7 +788,7 @@ void tst_QVersitOrganizerImporter::testImportTodoProperties()
     QCOMPARE(items.size(), 1);
 
     foreach (const QOrganizerItemDetail& expectedDetail, expectedDetails) {
-        QOrganizerItemDetail actualDetail = items.first().detail(expectedDetail.definitionName());
+        QOrganizerItemDetail actualDetail = items.first().detail(expectedDetail.type());
         if (actualDetail != expectedDetail) {
             qDebug() << "Actual:" << actualDetail;
             qDebug() << "Expected:" << expectedDetail;

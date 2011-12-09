@@ -52,7 +52,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeOrganizerItemDetail::ItemDetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY sortOrderChanged)
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)
@@ -68,8 +68,8 @@ public:
 
     QDeclarativeOrganizerItemSortOrder(QObject *parent = 0);
 
-    void setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail);
-    QDeclarativeOrganizerItemDetail::ItemDetailType detail() const;
+    void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
+    QDeclarativeOrganizerItemDetail::DetailType detail() const;
 
     void setField(int field);
     int field() const;
@@ -96,7 +96,7 @@ Q_SIGNALS:
 private:
     void setDetailDefinitionName();
 
-    QDeclarativeOrganizerItemDetail::ItemDetailType m_detail;
+    QDeclarativeOrganizerItemDetail::DetailType m_detail;
     int m_field;
     bool m_componentCompleted;
     QOrganizerItemSortOrder d;

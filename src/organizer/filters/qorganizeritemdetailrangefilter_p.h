@@ -67,7 +67,7 @@ class QOrganizerItemDetailRangeFilterPrivate : public QOrganizerItemFilterPrivat
 {
 public:
     QOrganizerItemDetailRangeFilterPrivate()
-        : QOrganizerItemFilterPrivate(), m_fieldId(-1), m_flags(0), m_rangeflags(0)
+        : QOrganizerItemFilterPrivate(), m_defId(QOrganizerItemDetail::TypeUndefined), m_fieldId(-1), m_flags(0), m_rangeflags(0)
     {
     }
 
@@ -115,7 +115,9 @@ public:
         if (formatVersion == 1) {
             quint32 flags;
             quint32 rangeFlags;
-            stream >> m_defId >> m_fieldId >> m_minValue >> m_maxValue >> flags >> rangeFlags;
+            quint32 defId;
+            stream >> defId >> m_fieldId >> m_minValue >> m_maxValue >> flags >> rangeFlags;
+            m_defId = static_cast<QOrganizerItemDetail::DetailType>(defId);
             m_flags = static_cast<QOrganizerItemFilter::MatchFlags>(flags);
             m_rangeflags = static_cast<QOrganizerItemDetailRangeFilter::RangeFlags>(rangeFlags);
         }
@@ -150,7 +152,7 @@ public:
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailRangeFilter, QOrganizerItemFilter::DetailRangeFilter)
 
-    QString m_defId;
+    QOrganizerItemDetail::DetailType m_defId;
     int m_fieldId;
     QVariant m_minValue;
     QVariant m_maxValue;

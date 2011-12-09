@@ -49,7 +49,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder, "Reminder")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder)
 
     enum ReminderField {
         FieldSecondsBeforeStart = 0,
@@ -78,15 +78,15 @@ public:
     int repetitionCount() const;
 
 protected:
-    QOrganizerItemReminder(const QString &definitionName) : QOrganizerItemDetail(definitionName) {}
-    QOrganizerItemReminder(const QOrganizerItemDetail &detail, const QString &definitionName) : QOrganizerItemDetail(detail, definitionName) {}
+    QOrganizerItemReminder(DetailType detailType) : QOrganizerItemDetail(detailType) {}
+    QOrganizerItemReminder(const QOrganizerItemDetail &detail, DetailType detailType) : QOrganizerItemDetail(detail, detailType) {}
 };
 
-#define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, definitionNameString) \
+#define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className) \
     className() : QOrganizerItemReminder(DefinitionName) {} \
     className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, DefinitionName) {} \
     className& operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    const static QString DefinitionName;
+    const static DetailType DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 

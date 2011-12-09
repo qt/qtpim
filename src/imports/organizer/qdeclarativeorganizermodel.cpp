@@ -573,7 +573,7 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
 bool QDeclarativeOrganizerModel::itemHasRecurrence(const QOrganizerItem& oi) const
 {
     if (oi.type() == QOrganizerItemType::TypeEvent || oi.type() == QOrganizerItemType::TypeTodo) {
-        QOrganizerItemRecurrence recur = oi.detail(QOrganizerItemRecurrence::DefinitionName);
+        QOrganizerItemRecurrence recur = oi.detail(QOrganizerItemDetail::TypeRecurrence);
         return !recur.recurrenceDates().isEmpty() || !recur.recurrenceRules().isEmpty();
     }
 
@@ -1217,7 +1217,7 @@ void QDeclarativeOrganizerModel::onItemsChangedFetchRequestStateChanged(QOrganiz
         QList<QOrganizerItem> fetchedItems(request->items());
         int count = 0;
         foreach (const QOrganizerItem &fetchedItem, fetchedItems) {
-            if (fetchedItem.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+            if (fetchedItem.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()) {
                 QString itemIdString(fetchedItem.id().toString());
                 for (int i = 0; i < d->m_items.size(); ++i) {
                     if (d->m_items.at(i)->itemId() == itemIdString) {

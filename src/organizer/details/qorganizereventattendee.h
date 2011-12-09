@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerEventAttendee : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee, "Attendee")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee)
 
     enum EventAttendeeField {
         FieldName = 0,

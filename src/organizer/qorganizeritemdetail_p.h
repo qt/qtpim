@@ -67,6 +67,7 @@ public:
     QOrganizerItemDetailPrivate()
         : QSharedData()
         , m_id(lastDetailKey.fetchAndAddOrdered(1))
+        , m_detailType(QOrganizerItemDetail::TypeUndefined)
         , m_access(QOrganizerItemDetail::NoConstraint)
     {
     }
@@ -74,7 +75,7 @@ public:
     QOrganizerItemDetailPrivate(const QOrganizerItemDetailPrivate &other)
         : QSharedData(other)
         , m_id(other.m_id)
-        , m_definitionName(other.m_definitionName)
+        , m_detailType(other.m_detailType)
         , m_values(other.m_values)
         , m_access(other.m_access)
     {
@@ -85,7 +86,7 @@ public:
     }
 
     int m_id; // internal, unique id.
-    QString m_definitionName;
+    QOrganizerItemDetail::DetailType m_detailType;
     QHash<int, QVariant> m_values;
     QOrganizerItemDetail::AccessConstraints m_access;
 

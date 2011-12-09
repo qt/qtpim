@@ -115,12 +115,12 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemSaveRequest::errorMap() const
 }
 
 /*!
-    Set the list of definitions to restrict saving to \a definitionMask.  This allows you to perform
+    Set the list of detail types to restrict saving to \a detailMask.  This allows you to perform
     partial save (and remove) operations on existing items.
 
-    If \a definitionMask is empty (the default), no restrictions will apply, and the passed
-    in items will be saved as is.  Otherwise, only details whose definitions are in
-    the list will be saved.  If a definition name is present in the list, but there are no
+    If \a detailMask is empty (the default), no restrictions will apply, and the passed
+    in items will be saved as is.  Otherwise, only details whose types are in
+    the list will be saved.  If a detail type is present in the list, but there are no
     corresponding details in the item passed into this request, any existing details in
     the manager for that item will be removed.
 
@@ -136,11 +136,19 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemSaveRequest::errorMap() const
     framework will emulate the functionality (fetching the whole item, applying the
     new restricted details, and saving the item back).
 */
-void QOrganizerItemSaveRequest::setDefinitionMask(const QStringList &definitionMask)
+void QOrganizerItemSaveRequest::setDetailMask(const QList<QOrganizerItemDetail::DetailType> &detailMask)
 {
     Q_D(QOrganizerItemSaveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_definitionMask = definitionMask;
+    d->m_detailMask = detailMask;
+}
+
+/*!
+    \obsolete
+ */
+void QOrganizerItemSaveRequest::setDefinitionMask(const QList<QOrganizerItemDetail::DetailType> &definitionMask)
+{
+    setDetailMask(definitionMask);
 }
 
 /*!
@@ -148,11 +156,19 @@ void QOrganizerItemSaveRequest::setDefinitionMask(const QStringList &definitionM
 
     If the list is empty, the request will operate on all details.
  */
-QStringList QOrganizerItemSaveRequest::definitionMask() const
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::detailMask() const
 {
     Q_D(const QOrganizerItemSaveRequest);
     QMutexLocker ml(&d->m_mutex);
-    return d->m_definitionMask;
+    return d->m_detailMask;
+}
+
+/*!
+    \obsolete
+ */
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::definitionMask() const
+{
+    return detailMask();
 }
 
 #include "moc_qorganizeritemsaverequest.cpp"

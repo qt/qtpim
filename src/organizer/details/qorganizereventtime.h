@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerEventTime : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventTime, "EventTime")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventTime)
 
     enum EventTimeField {
         FieldStartDateTime = 0,

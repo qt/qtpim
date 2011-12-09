@@ -343,13 +343,13 @@ void tst_QOrganizerManager::dumpOrganizerItemDifferences(const QOrganizerItem& c
     aDetails = a.details();
     bDetails = b.details();
     foreach(QOrganizerItemDetail d, aDetails) {
-        if (d.definitionName() != QOrganizerItemDisplayLabel::DefinitionName && d.definitionName() != QOrganizerItemType::DefinitionName)
-            qDebug() << "A item had extra detail:" << d.definitionName() << d.values();
+        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName && d.type() != QOrganizerItemType::DefinitionName)
+            qDebug() << "A item had extra detail:" << d.type() << d.values();
     }
     // and same for B
     foreach(QOrganizerItemDetail d, bDetails) {
-        if (d.definitionName() != QOrganizerItemDisplayLabel::DefinitionName && d.definitionName() != QOrganizerItemType::DefinitionName)
-            qDebug() << "B item had extra detail:" << d.definitionName() << d.values();
+        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName && d.type() != QOrganizerItemType::DefinitionName)
+            qDebug() << "B item had extra detail:" << d.type() << d.values();
     }
 
     // now test specifically the display label and the type
@@ -393,7 +393,7 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
     bDetails = b.details();
     foreach (QOrganizerItemDetail d, aDetails) {
         foreach (QOrganizerItemDetail d2, bDetails) {
-            if (d.definitionName() == d2.definitionName()) {
+            if (d.type() == d2.type()) {
                 bool canRemove = true;
                 QMap<int, QVariant> d2map = d2.values();
                 foreach (int key, d2map.keys()) {
@@ -424,8 +424,8 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
     // Now check to see if b has any details remaining; if so, a is not a superset.
     // Note that the DisplayLabel and Type can never be removed.
     if (b.details().size() > 2
-            || (b.details().size() == 2 && (b.details().value(0).definitionName() != QOrganizerItemDisplayLabel::DefinitionName
-                                            || b.details().value(1).definitionName() != QOrganizerItemType::DefinitionName)))
+            || (b.details().size() == 2 && (b.details().value(0).type() != QOrganizerItemDisplayLabel::DefinitionName
+                                            || b.details().value(1).type() != QOrganizerItemType::DefinitionName)))
         return false;
     return true;
 }
@@ -436,7 +436,7 @@ void tst_QOrganizerManager::dumpOrganizerItem(const QOrganizerItem& item)
     qDebug() << "OrganizerItem: " << item.id() << "(" << item.displayLabel() << ")";
     QList<QOrganizerItemDetail> details = item.details();
     foreach(QOrganizerItemDetail d, details) {
-        qDebug() << "  " << d.definitionName() << ":";
+        qDebug() << "  " << d.type() << ":";
         qDebug() << "    Vals:" << d.values();
     }
 }
@@ -1779,7 +1779,7 @@ void tst_QOrganizerManager::invalidManager()
     /* filters */
     QOrganizerItemFilter f; // matches everything
     QOrganizerItemDetailFilter df;
-    df.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    df.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
     QVERIFY(manager.itemIds(QOrganizerItemFilter()).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
     QVERIFY(manager.itemIds(df).count() == 0);
@@ -2672,7 +2672,7 @@ void tst_QOrganizerManager::errorStayingPut()
     QVERIFY(m2.error() == QOrganizerManager::BadArgumentError);
 
     QOrganizerItem c;
-    QOrganizerItemDetail d("This does not exist and if it does this will break");
+    QOrganizerItemDetail d(QOrganizerItemDetail::TypeUndefined);
     d.setValue(101, 5);
     c.saveDetail(&d);
 
@@ -2828,7 +2828,7 @@ void tst_QOrganizerManager::testFilterFunction()
 
     // Test for QOrganizerItemFilter::OrganizerItemDetailFilter:
     QOrganizerItemDetailFilter fdef;
-    fdef.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    fdef.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
     fdef.setValue("invalid");
     // test for nonexistent label
     QVERIFY(!QOrganizerManagerEngine::testFilter(fdef, item));
@@ -2839,7 +2839,7 @@ void tst_QOrganizerManager::testFilterFunction()
 
     // Test for QOrganizerItemFilter::OrganizerItemDetailRangeFilter:
     QOrganizerItemDetailRangeFilter fdrf;
-    fdrf.setDetailDefinitionName(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
+    fdrf.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
     fdrf.setRange(QDateTime(QDate(2010,10,9)), QDateTime(QDate(2010,10,11)));
     // test for a valid range
     QVERIFY(QOrganizerManagerEngine::testFilter(fdrf, item));
@@ -2986,17 +2986,17 @@ void tst_QOrganizerManager::itemFilterFetch()
     // Checks
     QOrganizerItemDetailFilter dfil;
     // 1
-    dfil.setDetailDefinitionName(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    dfil.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
     dfil.setValue(QOrganizerItemPriority::VeryHighPriority);
     QCOMPARE(cm->items(dfil).count(), 0);
     dfil.setValue(QOrganizerItemPriority::VeryLowPriority);
     QCOMPARE(cm->items(dfil).count(), 1);
     // 2
-    dfil.setDetailDefinitionName(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    dfil.setDetail(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
     dfil.setValue("my comment");
     QCOMPARE(cm->items(dfil).count(), 1);
     // 3-4
-    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    dfil.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
     dfil.setValue("my 3rd event!");
     QCOMPARE(cm->items(dfil).count(), 1);
     dfil.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
@@ -3014,11 +3014,11 @@ void tst_QOrganizerManager::itemFilterFetch()
     QCOMPARE(cm->items(dfil).count(), 4);
     // 5
     dfil.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-    dfil.setDetailDefinitionName(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldEndDateTime);
+    dfil.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldEndDateTime);
     dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
     QCOMPARE(cm->items(dfil).count(), 1);
     // 6
-    dfil.setDetailDefinitionName(QOrganizerItemExtendedDetail::DefinitionName, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
+    dfil.setDetail(QOrganizerItemExtendedDetail::DefinitionName, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
     dfil.setValue("DetailOfMine");
     QCOMPARE(cm->items(dfil).count(), 1);
 }
@@ -3146,7 +3146,7 @@ void tst_QOrganizerManager::itemFetch()
 
     //make a parent filter and test item count
     QOrganizerItemDetailFilter df;
-    df.setDetailDefinitionName(QOrganizerItemParent::DefinitionName, QOrganizerItemParent::FieldParentId);
+    df.setDetail(QOrganizerItemParent::DefinitionName, QOrganizerItemParent::FieldParentId);
     df.setValue(QVariant::fromValue(recEvent.id()));
     QCOMPARE(cm->items(df).count(), 3);
     QCOMPARE(cm->itemsForExport(QDateTime(), QDateTime(), df).count(), 2);
@@ -3834,7 +3834,7 @@ void tst_QOrganizerManager::partialSave()
     items[0].setDescription("One changed description");
 
     // 0) empty mask == full save
-    QVERIFY(cm->saveItems(&items, QStringList()));
+    QVERIFY(cm->saveItems(&items));
 
     // That should have updated everything
     QOrganizerItem a = cm->item(originalItems[0].id());
@@ -3842,7 +3842,7 @@ void tst_QOrganizerManager::partialSave()
 
     // 1) Change the description for b, mask it out
     items[1].setDescription("Two changed description");
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerEventTime::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerEventTime::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
 
     QOrganizerItem b = cm->item(originalItems[1].id());
@@ -3851,7 +3851,7 @@ void tst_QOrganizerManager::partialSave()
     // 2) save a modified detail in the mask
     items[1].setDescription("Two changed description");
 
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerItemDescription::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDescription::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
     QCOMPARE(b.description(), QString("Two changed description"));
@@ -3860,12 +3860,12 @@ void tst_QOrganizerManager::partialSave()
     QOrganizerItemDescription desc = items[1].detail<QOrganizerItemDescription>();
     QVERIFY(items[1].removeDetail(&desc));
     // Mask it out, so it shouldn't work.
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerEventTime::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerEventTime::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
     QCOMPARE(b.details<QOrganizerItemDescription>().count(), 1);
     // Now include it in the mask
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerItemDescription::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDescription::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
     QCOMPARE(b.details<QOrganizerItemDescription>().count(), 0);
@@ -3875,7 +3875,7 @@ void tst_QOrganizerManager::partialSave()
     newItem.setId(QOrganizerItemId());
 
     items.append(newItem); // this is items[4]
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerItemTag::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemTag::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
     QVERIFY(!items[4].id().isNull()); // Saved
     b = cm->item(items[4].id());
@@ -3886,7 +3886,7 @@ void tst_QOrganizerManager::partialSave()
     newItem = originalItems[2];
     newItem.setId(QOrganizerItemId());
     items.append(newItem); // this is items[5]
-    QVERIFY(cm->saveItems(&items, QStringList(QOrganizerItemDisplayLabel::DefinitionName)));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDisplayLabel::DefinitionName));
     QVERIFY(cm->errorMap().isEmpty());
     QVERIFY(!items[5].id().isNull()); // Saved
     b = cm->item(items[5].id());
@@ -3895,10 +3895,10 @@ void tst_QOrganizerManager::partialSave()
 
     // 6 Have a non existing item in the middle followed by a save error
     cm->removeItem(items[4].id());
-    QOrganizerItemDetail badDetail("BadDetail");
+    QOrganizerItemDetail badDetail(QOrganizerItemDetail::TypeUndefined);
     badDetail.setValue(101, "BadValue");
     items[5].saveDetail(&badDetail);
-    QVERIFY(!cm->saveItems(&items, QStringList("BadDetail")));
+    QVERIFY(!cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeUndefined));
     QMap<int, QOrganizerManager::Error> errorMap = cm->errorMap();
 //    QCOMPARE(errorMap.count(), 2);
     QCOMPARE(errorMap[4], QOrganizerManager::DoesNotExistError);
@@ -3978,9 +3978,9 @@ QList<QOrganizerItemDetail> tst_QOrganizerManager::removeAllDefaultDetails(const
 {
     QList<QOrganizerItemDetail> newlist;
     foreach (const QOrganizerItemDetail d, details) {
-        if (d.definitionName() != QOrganizerItemDisplayLabel::DefinitionName
-                && d.definitionName() != QOrganizerItemType::DefinitionName
-                && d.definitionName() != QOrganizerItemTimestamp::DefinitionName) {
+        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName
+                && d.type() != QOrganizerItemType::DefinitionName
+                && d.type() != QOrganizerItemTimestamp::DefinitionName) {
             newlist << d;
         }
     }
@@ -4606,7 +4606,7 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     QCOMPARE(itemList.size(), 2);
     //event
     QOrganizerItemDetailFilter detailFilter;
-    detailFilter.setDetailDefinitionName(QOrganizerItemType::DefinitionName, QOrganizerItemType::FieldType);
+    detailFilter.setDetail(QOrganizerItemType::DefinitionName, QOrganizerItemType::FieldType);
     detailFilter.setValue(QOrganizerItemType::TypeEvent);
     itemList = mgr->items(detailFilter);
     QVERIFY(itemList.size() >= 2);
@@ -4629,7 +4629,7 @@ void tst_QOrganizerManager::testNestCompoundFilter()
 
     //case 2: myTodo or event + collection + id
     QOrganizerItemDetailFilter detailFilter2;
-    detailFilter2.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    detailFilter2.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
     detailFilter2.setValue("myTodo");
     itemList = mgr->items(detailFilter2);
     QCOMPARE(itemList.size(), 1);

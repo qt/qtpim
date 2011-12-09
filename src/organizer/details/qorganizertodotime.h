@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerTodoTime : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoTime, "TodoTime")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoTime)
 
     enum TodoTimeField {
         FieldStartDateTime = 0,

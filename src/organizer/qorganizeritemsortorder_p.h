@@ -65,6 +65,7 @@ public:
         , m_blankPolicy(QOrganizerItemSortOrder::BlanksLast)
         , m_direction(Qt::AscendingOrder)
         , m_sensitivity(Qt::CaseSensitive)
+        , m_definitionName(QOrganizerItemDetail::TypeUndefined)
         , m_fieldName(-1)
     {
     }
@@ -76,7 +77,7 @@ public:
     QOrganizerItemSortOrder::BlankPolicy m_blankPolicy;
     Qt::SortOrder m_direction;
     Qt::CaseSensitivity m_sensitivity;
-    QString m_definitionName;
+    QOrganizerItemDetail::DetailType m_definitionName;
     int m_fieldName;
 };
 

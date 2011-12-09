@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime, "JournalTime")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime)
 
     enum JournalTimeField {
         FieldEntryDateTime = 0

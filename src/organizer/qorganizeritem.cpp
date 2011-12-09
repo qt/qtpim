@@ -302,17 +302,17 @@ void QOrganizerItem::setId(const QOrganizerItemId &id)
 }
 
 /*!
-    Returns the first detail stored in the organizer item with the given \a definitionName. If the
-    given \a definitionName is empty, it returns the first detail found.
+    Returns the first detail stored in the organizer item with the given \a detailType. If the
+    given \a detailType is TypeUndefined, it returns the first detail found.
  */
-QOrganizerItemDetail QOrganizerItem::detail(const QString &definitionName) const
+QOrganizerItemDetail QOrganizerItem::detail(QOrganizerItemDetail::DetailType detailType) const
 {
-    if (definitionName.isEmpty())
+    if (detailType == QOrganizerItemDetail::TypeUndefined)
         return d->m_details.first();
 
     for (int i = 0; i < d->m_details.size(); i++) {
         const QOrganizerItemDetail &existing = d->m_details.at(i);
-        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName)
+        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_detailType == detailType)
             return existing;
     }
 
@@ -320,18 +320,18 @@ QOrganizerItemDetail QOrganizerItem::detail(const QString &definitionName) const
 }
 
 /*!
-    Returns a list of details with the given \a definitionName. If the given \a definitionName is
-    empty, it returns all the details.
+    Returns a list of details with the given \a detailType. If the given \a detailType is of TypeUndefined,
+    it returns all the details.
  */
-QList<QOrganizerItemDetail> QOrganizerItem::details(const QString &definitionName) const
+QList<QOrganizerItemDetail> QOrganizerItem::details(QOrganizerItemDetail::DetailType detailType) const
 {
-    if (definitionName.isEmpty())
+    if (detailType == QOrganizerItemDetail::TypeUndefined)
         return d->m_details;
 
     QList<QOrganizerItemDetail> sublist;
     for (int i = 0; i < d->m_details.size(); i++) {
         const QOrganizerItemDetail &existing = d->m_details.at(i);
-        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName)
+        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_detailType == detailType)
             sublist.append(existing);
     }
     return sublist;
@@ -366,9 +366,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
         return false;
 
     /* Also handle organizer item type specially - only one of them. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemType::DefinitionName) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeItemType) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
@@ -380,9 +380,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And description */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDescription::DefinitionName) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDescription) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
@@ -394,9 +394,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And display label.. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemDisplayLabel::DefinitionName) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDisplayLabel) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
@@ -408,9 +408,9 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And classification.. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName == QOrganizerItemClassification::DefinitionName) {
+    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeClassification) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_definitionName == d.constData()->m_details.at(i).d.constData()->m_definitionName) {
+            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
@@ -425,7 +425,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     // ie, the one with the same type and id, but different value or attributes.
     for (int i = 0; i < d.constData()->m_details.size(); i++) {
         const QOrganizerItemDetail& curr = d.constData()->m_details.at(i);
-        if (detail->d.constData()->m_definitionName == curr.d.constData()->m_definitionName && detail->d.constData()->m_id == curr.d.constData()->m_id) {
+        if (detail->d.constData()->m_detailType == curr.d.constData()->m_detailType && detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
             detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
             // Found the old version.  Replace it with this one.
@@ -474,7 +474,7 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
         return false;
 
     // Type -detail is specific case which cannot be deleted
-    if (QOrganizerItemType::DefinitionName == QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_definitionName)
+    if (QOrganizerItemDetail::TypeItemType == QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType)
         return false;
 
     if (!d.constData()->m_details.contains(*detail))
@@ -645,7 +645,7 @@ QStringList QOrganizerItem::comments() const
  */
 void QOrganizerItem::clearComments()
 {
-    d->removeOnly(QOrganizerItemComment::DefinitionName);
+    d->removeOnly(QOrganizerItemDetail::TypeComment);
 }
 
 /*!
@@ -653,7 +653,7 @@ void QOrganizerItem::clearComments()
  */
 void QOrganizerItem::setComments(const QStringList &comments)
 {
-    d->removeOnly(QOrganizerItemComment::DefinitionName);
+    d->removeOnly(QOrganizerItemDetail::TypeComment);
     foreach (const QString &comment, comments)
         addComment(comment);
 }
@@ -684,7 +684,7 @@ QStringList QOrganizerItem::tags() const
  */
 void QOrganizerItem::clearTags()
 {
-    d->removeOnly(QOrganizerItemTag::DefinitionName);
+    d->removeOnly(QOrganizerItemDetail::TypeTag);
 }
 
 /*!
@@ -702,7 +702,7 @@ void QOrganizerItem::addTag(const QString &tag)
  */
 void QOrganizerItem::setTags(const QStringList &tags)
 {
-    d->removeOnly(QOrganizerItemTag::DefinitionName);
+    d->removeOnly(QOrganizerItemDetail::TypeTag);
     foreach (const QString &tag, tags)
         addTag(tag);
 }
@@ -766,12 +766,12 @@ void QOrganizerItem::setExtendedDetailData(const QString &name, const QVariant &
 /*!
     \internal
  */
-void QOrganizerItemData::removeOnly(const QString &definitionName)
+void QOrganizerItemData::removeOnly(QOrganizerItemDetail::DetailType detailType)
 {
     QList<QOrganizerItemDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
         // XXX this doesn't check type or display label
-        if (dit->definitionName() == definitionName)
+        if (dit->type() == detailType)
             dit = m_details.erase(dit);
         else
             ++dit;
@@ -781,12 +781,12 @@ void QOrganizerItemData::removeOnly(const QString &definitionName)
 /*!
     \internal
  */
-void QOrganizerItemData::removeOnly(const QSet<QString> &definitionNames)
+void QOrganizerItemData::removeOnly(const QSet<QOrganizerItemDetail::DetailType> &detailTypes)
 {
     QList<QOrganizerItemDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
         // XXX this doesn't check type or display label
-        if (definitionNames.contains(dit->definitionName()))
+        if (detailTypes.contains(dit->type()))
             dit = m_details.erase(dit);
         else
             ++dit;

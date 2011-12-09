@@ -452,7 +452,7 @@ TestCase {
             {tag: "exact filter - Priority", expectedItemsAmount: 1,
                 filterDetail: Detail.Priority, filterField: Priority.FieldPriority, filterValue: Priority.VeryHigh},
             {tag: "exact filter - Type enum", expectedItemsAmount: 4,//amount of todos
-                filterDetail: Detail.Type, filterField: Type.FieldType, filterValue: Type.Todo},
+                filterDetail: Detail.ItemType, filterField: Type.FieldType, filterValue: Type.Todo},
             {tag: "exact filter - Tag", expectedItemsAmount: 1,
                 filterDetail: Detail.Tag, filterField: Tag.FieldTag, filterValue: "my tag",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
@@ -461,7 +461,7 @@ TestCase {
                 + "   tag: 'my tag'\n"
                 + "   }"},
             {tag: "exact filter - ExtendedDetail", expectedItemsAmount: 1,
-                filterDetail: Detail.Customized, filterField: ExtendedDetail.FieldName, filterValue: "myField",
+                filterDetail: Detail.ExtendedDetail, filterField: ExtendedDetail.FieldName, filterValue: "myField",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
                 + "   ExtendedDetail {\n"
@@ -758,9 +758,9 @@ TestCase {
             {tag: "Unsupported matchflag, Location - Latitude", filterDetail: Detail.Location,
                 filterField: Location.FieldLatitude, matchFlags: Filter.MatchEndsWith },
             {tag: "Unsupported matchflag, Priority", filterDetail: Detail.Priority, matchFlags: Filter.MatchStartsWith },
-            {tag: "Unsupported matchflag, Type", filterDetail: Detail.Type, matchFlags: Filter.MatchFixedString },
+            {tag: "Unsupported matchflag, Type", filterDetail: Detail.ItemType, matchFlags: Filter.MatchFixedString },
             {tag: "Unsupported matchflag, Tag", filterDetail: Detail.Tag, matchFlags: Filter.MatchCaseSensitive },
-            {tag: "Unsupported matchflag, ExtendedDetail", filterDetail: Detail.Customized, matchFlags: Filter.MatchFixedString },
+            {tag: "Unsupported matchflag, ExtendedDetail", filterDetail: Detail.ExtendedDetail, matchFlags: Filter.MatchFixedString },
             // filtering with QString needs extra attention, not allowed for all the types
             {tag: "Unsupported string value, EventTime - StartDateTime",
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldStartDateTime, filterValue: "mystringie" },

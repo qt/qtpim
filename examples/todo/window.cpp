@@ -125,8 +125,7 @@ void Window::refreshList()
     listWidget->clear();
 
     QOrganizerItemSortOrder sortOrder;
-    sortOrder.setDetailDefinitionName(QOrganizerTodoTime::DefinitionName,
-        QOrganizerTodoTime::FieldDueDateTime);
+    sortOrder.setDetail(QOrganizerItemDetail::TypeTodoTime, QOrganizerTodoTime::FieldDueDateTime);
 
     QList<QOrganizerItem> items =
         manager->items(QOrganizerItemFilter(), QList<QOrganizerItemSortOrder>() << sortOrder);

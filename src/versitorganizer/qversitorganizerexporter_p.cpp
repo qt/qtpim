@@ -57,7 +57,7 @@ QVersitOrganizerExporterPrivate::QVersitOrganizerExporterPrivate(const QString& 
         sizeof(versitOrganizerDetailMappings)/sizeof(VersitOrganizerDetailMapping);
     for (int i = 0; i < versitPropertyCount; i++) {
         mPropertyMappings.insert(
-                versitOrganizerDetailMappings[i].detailDefinitionName,
+                versitOrganizerDetailMappings[i].detailType,
                 QPair<int, QString>(
                     versitOrganizerDetailMappings[i].detailField,
                     QLatin1String(versitOrganizerDetailMappings[i].versitPropertyName)));
@@ -129,25 +129,25 @@ void QVersitOrganizerExporterPrivate::exportDetail(
     QList<QVersitProperty> generatedProperties;
     QSet<int> processedFields;
 
-    if (detail.definitionName() == QOrganizerEventTime::DefinitionName) {
+    if (detail.type() == QOrganizerEventTime::DefinitionName) {
         encodeEventTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerTodoTime::DefinitionName) {
+    } else if (detail.type() == QOrganizerTodoTime::DefinitionName) {
         encodeTodoTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerJournalTime::DefinitionName) {
+    } else if (detail.type() == QOrganizerJournalTime::DefinitionName) {
         encodeJournalTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerItemTimestamp::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemTimestamp::DefinitionName) {
         encodeTimestamp(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerItemRecurrence::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemRecurrence::DefinitionName) {
         encodeRecurrence(item, detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerItemPriority::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemPriority::DefinitionName) {
         encodePriority(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerItemParent::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemParent::DefinitionName) {
         encodeInstanceOrigin(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerTodoProgress::DefinitionName) {
+    } else if (detail.type() == QOrganizerTodoProgress::DefinitionName) {
         encodeTodoProgress(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.definitionName() == QOrganizerItemComment::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemComment::DefinitionName) {
         encodeComment(detail, &generatedProperties, &processedFields);
-    } else if (mPropertyMappings.contains(detail.definitionName())) {
+    } else if (mPropertyMappings.contains(detail.type())) {
         encodeSimpleProperty(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     }
 
@@ -438,6 +438,8 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties)
 {
+    Q_UNUSED(item)
+
     QVersitProperty property;
     property = takeProperty(document, propertyName, removedProperties);
     property.setName(propertyName);
@@ -562,7 +564,7 @@ void QVersitOrganizerExporterPrivate::encodeSimpleProperty(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QPair<int, QString> fieldPropertyMap = mPropertyMappings[detail.definitionName()];
+    QPair<int, QString> fieldPropertyMap = mPropertyMappings[detail.type()];
     const int& fieldName = fieldPropertyMap.first;
     const QString& propertyName = fieldPropertyMap.second;
     QVersitProperty property =

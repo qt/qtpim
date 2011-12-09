@@ -117,7 +117,7 @@ QOrganizerItemSortOrder &QOrganizerItemSortOrder::operator=(const QOrganizerItem
 bool QOrganizerItemSortOrder::isValid() const
 {
     /* We clear both when one is empty, so we only need to check one */
-    if (d->m_definitionName.isEmpty())
+    if (d->m_definitionName == QOrganizerItemDetail::TypeUndefined)
         return false;
     return true;
 }
@@ -146,7 +146,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemSortOrder &sortOrd
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemSortOrder
     return out << formatVersion
-               << sortOrder.detailDefinitionName()
+               << sortOrder.detailType()
                << sortOrder.detailField()
                << static_cast<quint32>(sortOrder.blankPolicy())
                << static_cast<quint32>(sortOrder.direction())
@@ -161,13 +161,13 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QString definitionName;
+        quint32 detailType;
         int fieldName;
         quint32 blankPolicy;
         quint32 direction;
         quint32 caseSensitivity;
-        in >> definitionName >> fieldName >> blankPolicy >> direction >> caseSensitivity;
-        sortOrder.setDetailDefinitionName(definitionName, fieldName);
+        in >> detailType >> fieldName >> blankPolicy >> direction >> caseSensitivity;
+        sortOrder.setDetail(static_cast<QOrganizerItemDetail::DetailType>(detailType), fieldName);
         sortOrder.setBlankPolicy(static_cast<QOrganizerItemSortOrder::BlankPolicy>(blankPolicy));
         sortOrder.setDirection(static_cast<Qt::SortOrder>(direction));
         sortOrder.setCaseSensitivity(static_cast<Qt::CaseSensitivity>(caseSensitivity));
@@ -186,7 +186,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
 {
     dbg.nospace() << "QOrganizerItemSortOrder(";
     dbg.nospace() << "detailDefinitionName=";
-    dbg.nospace() << sortOrder.detailDefinitionName();
+    dbg.nospace() << sortOrder.detailType();
     dbg.nospace() << ",";
     dbg.nospace() << "detailFieldName=";
     dbg.nospace() << sortOrder.detailField();
@@ -205,20 +205,28 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
 #endif // QT_NO_DEBUG_STREAM
 
 /*!
-    Sets the definition name of the details which will be inspected to perform sorting to \a definitionName,
-    and the name of those details' fields which contains the value which organizer items will be sorted by to \a fieldName.
+    Sets the type of detail which will be inspected for sorting to \a detailType, and the field of
+    the detail to \a field.
 
-    \sa detailDefinitionName(), detailFieldName()
+    \sa detailType(), detailField()
  */
-void QOrganizerItemSortOrder::setDetailDefinitionName(const QString& definitionName, int field)
+void QOrganizerItemSortOrder::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
-    if (definitionName.isEmpty() || field == -1) {
-        d->m_definitionName.clear();
-        d->m_fieldName = -1;
-    } else {
-        d->m_definitionName = definitionName;
+    if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
+        d->m_definitionName = detailType;
         d->m_fieldName = field;
+    } else {
+        d->m_definitionName = QOrganizerItemDetail::TypeUndefined;
+        d->m_fieldName = -1;
     }
+}
+
+/*!
+    To be removed soon, use setDetail() instead.
+ */
+void QOrganizerItemSortOrder::setDetailDefinitionName(QOrganizerItemDetail::DetailType detailType, int field)
+{
+    setDetail(detailType, field);
 }
 
 /*!
@@ -242,15 +250,21 @@ void QOrganizerItemSortOrder::setDirection(Qt::SortOrder direction)
 }
 
 /*!
-    Returns the definition name of the details which will be inspected to perform sorting.
-    Note that if an organizer item has multiple details of the definition, the result of the sorting
-    is undefined.
+    Returns the type of the detail which will be inspected to perform sorting.
 
-    \sa setDetailDefinitionName()
+    \sa setDetail()
  */
-QString QOrganizerItemSortOrder::detailDefinitionName() const
+QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailType() const
 {
     return d->m_definitionName;
+}
+
+/*!
+    This is to be removed soon, please use detailType() instead.
+ */
+QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailDefinitionName() const
+{
+    return detailType();
 }
 
 /*!

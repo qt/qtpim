@@ -49,7 +49,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemGuid : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemGuid, "Guid")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemGuid)
 
     enum GuidField {
         FieldGuid = 0

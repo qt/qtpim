@@ -54,7 +54,7 @@
 //
 
 #include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemdetailfilter.h>
 
 #include <QString>
 #include <QVariant>
@@ -66,6 +66,7 @@ class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 public:
     QOrganizerItemDetailFilterPrivate()
         : QOrganizerItemFilterPrivate()
+        , m_defId(QOrganizerItemDetail::TypeUndefined)
         , m_fieldId(-1)
         , m_flags(0)
     {
@@ -106,7 +107,9 @@ public:
     {
         if (formatVersion == 1) {
             quint32 flags;
-            stream >> m_defId >> m_fieldId >> m_exactValue >> flags;
+            quint32 defId;
+            stream >> defId >> m_fieldId >> m_exactValue >> flags;
+            m_defId = static_cast<QOrganizerItemDetail::DetailType>(defId);
             m_flags = static_cast<QOrganizerItemFilter::MatchFlags>(flags);
         }
         return stream;
@@ -134,7 +137,7 @@ public:
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFilter, QOrganizerItemFilter::DetailFilter)
 
-    QString m_defId;
+    QOrganizerItemDetail::DetailType m_defId;
     int m_fieldId;
     QVariant m_exactValue;
     QOrganizerItemFilter::MatchFlags m_flags;

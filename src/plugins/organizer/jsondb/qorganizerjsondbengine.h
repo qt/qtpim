@@ -127,7 +127,7 @@ public:
     QOrganizerItem item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
 
     bool saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    bool saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
+    bool saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
     bool removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
     /* Collections - every item belongs to exactly one collection */
@@ -139,7 +139,7 @@ public:
 
     /* Capabilities reporting */
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
     /* Asynchronous Request Support */

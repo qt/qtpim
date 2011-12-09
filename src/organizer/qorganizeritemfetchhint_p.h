@@ -71,7 +71,7 @@ public:
 
     QOrganizerItemFetchHintPrivate(const QOrganizerItemFetchHintPrivate& other)
         : QSharedData(other),
-        m_definitionsHint(other.m_definitionsHint),
+        m_detailTypesHint(other.m_detailTypesHint),
         m_optimizationHints(other.m_optimizationHints)
     {
     }
@@ -80,7 +80,7 @@ public:
     {
     }
 
-    QStringList m_definitionsHint;
+    QList<QOrganizerItemDetail::DetailType> m_detailTypesHint;
     QOrganizerItemFetchHint::OptimizationHints m_optimizationHints;
 };
 

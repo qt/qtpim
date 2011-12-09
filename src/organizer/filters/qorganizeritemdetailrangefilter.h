@@ -42,7 +42,8 @@
 #ifndef QORGANIZERITEMDETAILRANGEFILTER_H
 #define QORGANIZERITEMDETAILRANGEFILTER_H
 
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemfilter.h>
+#include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -62,14 +63,14 @@ public:
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definition, int field);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
     void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
 
     /* Filter Criterion */
     void setRange(const QVariant& min, const QVariant& max, RangeFlags flags = 0);
 
     /* Accessors */
-    QString detailDefinitionName() const;
+    QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
@@ -78,7 +79,9 @@ public:
     RangeFlags rangeFlags() const;
 
     // to be removed
+    QOrganizerItemDetail::DetailType detailDefinitionName() const;
     int detailFieldName() const;
+    void setDetailDefinitionName(QOrganizerItemDetail::DetailType definition, int field = -1);
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailRangeFilter)

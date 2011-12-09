@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)
     : QObject(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Customized), m_field(-1), m_componentCompleted(false)
+    , m_detail(QDeclarativeOrganizerItemDetail::Undefined), m_field(-1), m_componentCompleted(false)
 {
 }
 
@@ -77,7 +77,7 @@ void QDeclarativeOrganizerItemSortOrder::componentComplete()
     This property holds the detail type of which the sorting will be performed to. The value should
     be the enumeration value of Detail::type.
  */
-void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDetail::ItemDetailType detail)
+void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
     if (m_detail != detail) {
         m_detail = detail;
@@ -86,7 +86,7 @@ void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDeta
     }
 }
 
-QDeclarativeOrganizerItemDetail::ItemDetailType QDeclarativeOrganizerItemSortOrder::detail() const
+QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemSortOrder::detail() const
 {
     return m_detail;
 }
@@ -194,7 +194,7 @@ QOrganizerItemSortOrder QDeclarativeOrganizerItemSortOrder::sortOrder()
  */
 void QDeclarativeOrganizerItemSortOrder::setDetailDefinitionName()
 {
-    d.setDetailDefinitionName(QDeclarativeOrganizerItemDetail::definitionName(m_detail), m_field);
+    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit sortOrderChanged();
 }
 

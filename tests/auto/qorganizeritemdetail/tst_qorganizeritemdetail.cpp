@@ -90,19 +90,19 @@ void tst_QOrganizerItemDetail::cleanup()
 class NonMacroCustomDetail : public QOrganizerItemDetail
 {
 public:
-    NonMacroCustomDetail() : QOrganizerItemDetail("malicious") {}
-    void doAssign(const QOrganizerItemDetail& other) {assign(other, "malicious");}
+    NonMacroCustomDetail() : QOrganizerItemDetail(QOrganizerItemDetail::TypeUndefined) {}
+    void doAssign(const QOrganizerItemDetail& other) {assign(other, QOrganizerItemDetail::TypeUndefined);}
     NonMacroCustomDetail(const QOrganizerItemDetail& other)
-        : QOrganizerItemDetail(other, "malicious") {}
+        : QOrganizerItemDetail(other, QOrganizerItemDetail::TypeUndefined) {}
 };
 
 class NonMacroCustomDetail2 : public QOrganizerItemDetail
 {
 public:
-    NonMacroCustomDetail2() : QOrganizerItemDetail(QString("malicious")) {}
-    void doAssign(const QOrganizerItemDetail& other) {assign(other, QString("malicious"));}
+    NonMacroCustomDetail2() : QOrganizerItemDetail(QOrganizerItemDetail::TypeUndefined) {}
+    void doAssign(const QOrganizerItemDetail& other) {assign(other, QOrganizerItemDetail::TypeUndefined);}
     NonMacroCustomDetail2(const QOrganizerItemDetail& other)
-        : QOrganizerItemDetail(other, QString("malicious")) {}
+        : QOrganizerItemDetail(other, QOrganizerItemDetail::TypeUndefined) {}
 };
 
 void tst_QOrganizerItemDetail::classHierarchy()
@@ -116,12 +116,12 @@ void tst_QOrganizerItemDetail::classHierarchy()
     QOrganizerItemPriority p1;
     p1.setPriority(QOrganizerItemPriority::VeryHighPriority);
     QVERIFY(!p1.isEmpty());
-    QVERIFY(p1.definitionName() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p1.type() == QOrganizerItemPriority::DefinitionName);
 
     QOrganizerItemComment m1;
     m1.setComment("Bob");
     QVERIFY(!m1.isEmpty());
-    QVERIFY(m1.definitionName() == QOrganizerItemComment::DefinitionName);
+    QVERIFY(m1.type() == QOrganizerItemComment::DefinitionName);
 
     QVERIFY(p1 != m1);
     QVERIFY(f1 == f2);
@@ -173,7 +173,7 @@ void tst_QOrganizerItemDetail::classHierarchy()
     /* Bad assignment */
     p2 = m1; // assign a comment to a priority
     QVERIFY(p2 != m1);
-    QVERIFY(p2.definitionName() == QOrganizerItemPriority::DefinitionName); // should still be a phone number though
+    QVERIFY(p2.type() == QOrganizerItemPriority::DefinitionName); // should still be a phone number though
     QVERIFY(p2.isEmpty());
 
     /* copy ctor */
@@ -183,25 +183,25 @@ void tst_QOrganizerItemDetail::classHierarchy()
     /* another bad assignment */
     m2 = p2; // priority to a comment
     QVERIFY(m2 != m1);
-    QVERIFY(m2.definitionName() == QOrganizerItemComment::DefinitionName);
+    QVERIFY(m2.type() == QOrganizerItemComment::DefinitionName);
     QVERIFY(m2.isEmpty());
 
     /* Copy ctor from valid type */
     QOrganizerItemDetail f3(p2);
     QVERIFY(f3 == p2);
-    QVERIFY(f3.definitionName() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(f3.type() == QOrganizerItemPriority::DefinitionName);
 
     /* Copy ctor from invalid type */
     QOrganizerItemPriority p3(m1);
     QVERIFY(p3 != m1);
-    QVERIFY(p3.definitionName() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p3.type() == QOrganizerItemPriority::DefinitionName);
     QVERIFY(p3.isEmpty());
 
     /* Copy ctore from invalid type, through base type */
     f3 = m1;
     QOrganizerItemPriority p4(f3);
     QVERIFY(p4 != f3);
-    QVERIFY(p4.definitionName() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p4.type() == QOrganizerItemPriority::DefinitionName);
     QVERIFY(p4.isEmpty());
 
     /* Try a reference */
@@ -231,7 +231,7 @@ void tst_QOrganizerItemDetail::classHierarchy()
 
     /* Random other test */
     NonMacroCustomDetail md;
-    QVERIFY(md.definitionName() == "malicious");
+    QVERIFY(md.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(md.setValue(1, "value"));
     QVERIFY(!md.isEmpty());
     md.doAssign(md); // self assignment
@@ -240,26 +240,26 @@ void tst_QOrganizerItemDetail::classHierarchy()
 
     QOrganizerItemDetail mdv;
     mdv = md;
-    QVERIFY(mdv.definitionName() == "malicious");
+    QVERIFY(mdv.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(mdv.value(1) == "value");
 
     md = mdv;
-    QVERIFY(md.definitionName() == "malicious");
+    QVERIFY(md.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(md.value(1) == "value");
 
     NonMacroCustomDetail2 md2;
     QVERIFY(md2.setValue(1, "value"));
-    QVERIFY(md2.definitionName() == "malicious");
+    QVERIFY(md2.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(md2.value(1) == "value");
     md2.doAssign(md);
     QVERIFY(md2 == md);
     md2 = md;
-    QVERIFY(md.definitionName() == "malicious");
+    QVERIFY(md.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(md.value(1) == "value");
 
     // Self assignment
     md2.doAssign(md2);
-    QVERIFY(md2.definitionName() == "malicious");
+    QVERIFY(md2.type() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(md2.value(1) == "value");
 
     md.doAssign(md2);
@@ -270,15 +270,15 @@ void tst_QOrganizerItemDetail::classHierarchy()
     pn.setPriority(QOrganizerItemPriority::LowestPriority);
     md2.doAssign(pn);
     QVERIFY(md2.isEmpty());
-    QVERIFY(md2.definitionName() == "malicious");
+    QVERIFY(md2.type() == QOrganizerItemDetail::TypeUndefined);
 
     NonMacroCustomDetail mdb(pn);
     QVERIFY(mdb.isEmpty());
-    QVERIFY(mdb.definitionName() == "malicious");
+    QVERIFY(mdb.type() == QOrganizerItemDetail::TypeUndefined);
 
     NonMacroCustomDetail2 md2b(pn);
     QVERIFY(md2b.isEmpty());
-    QVERIFY(md2b.definitionName() == "malicious");
+    QVERIFY(md2b.type() == QOrganizerItemDetail::TypeUndefined);
 }
 
 void tst_QOrganizerItemDetail::assignment()
@@ -572,12 +572,12 @@ void tst_QOrganizerItemDetail::values()
 
 void tst_QOrganizerItemDetail::hash()
 {
-    QOrganizerItemDetail detail1("definition");
-    detail1.setValue(1, "value");
-    QOrganizerItemDetail detail2("definition");
-    detail2.setValue(1, "value");
-    QOrganizerItemDetail detail3("definition");
-    detail3.setValue(1, "different value");
+    QOrganizerItemDetail detail1(QOrganizerItemDetail::TypeComment);
+    detail1.setValue(QOrganizerItemComment::FieldComment, "value");
+    QOrganizerItemDetail detail2(QOrganizerItemDetail::TypeComment);
+    detail2.setValue(QOrganizerItemComment::FieldComment, "value");
+    QOrganizerItemDetail detail3(QOrganizerItemDetail::TypeComment);
+    detail3.setValue(QOrganizerItemComment::FieldComment, "different value");
     QVERIFY(qHash(detail1) == qHash(detail2));
     QVERIFY(qHash(detail1) != qHash(detail3));
     QSet<QOrganizerItemDetail> set;
@@ -591,9 +591,8 @@ void tst_QOrganizerItemDetail::datastream()
 {
     QByteArray buffer;
     QDataStream stream1(&buffer, QIODevice::WriteOnly);
-    QOrganizerItemDetail detailIn("definition");
-    detailIn.setValue(1, "value1");
-    detailIn.setValue(2, "value2");
+    QOrganizerItemDetail detailIn(QOrganizerItemDetail::TypeComment);
+    detailIn.setValue(QOrganizerItemComment::FieldComment, "value1");
     stream1 << detailIn;
 
     QVERIFY(buffer.size() > 0);

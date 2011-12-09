@@ -129,7 +129,7 @@ public:
 
     bool saveItem(QOrganizerItem* item);
     bool saveItems(QList<QOrganizerItem>* items);
-    bool saveItems(QList<QOrganizerItem>* items, const QStringList& definitionMask);
+    bool saveItems(QList<QOrganizerItem>* items, const QList<QOrganizerItemDetail::DetailType> &definitionMask);
     bool removeItem(const QOrganizerItemId& itemId);
     bool removeItems(const QList<QOrganizerItemId>& itemIds);
 
@@ -142,7 +142,7 @@ public:
 
     /* Functionality reporting */
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
     /* return a list of available backends for which a QOrganizerManager can be constructed. */

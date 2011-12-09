@@ -61,8 +61,35 @@ Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail
 class Q_ORGANIZER_EXPORT QOrganizerItemDetail
 {
 public:
+    enum DetailType {
+        TypeUndefined = 0,
+        TypeClassification,
+        TypeComment,
+        TypeDescription,
+        TypeDisplayLabel,
+        TypeItemType,
+        TypeGuid,
+        TypeLocation,
+        TypeParent,
+        TypePriority,
+        TypeRecurrence,
+        TypeTag,
+        TypeTimestamp,
+        TypeReminder,
+        TypeAudibleReminder,
+        TypeEmailReminder,
+        TypeVisualReminder,
+        TypeExtendedDetail,
+        TypeEventAttendee,
+        TypeEventRsvp,
+        TypeEventTime,
+        TypeJournalTime,
+        TypeTodoTime,
+        TypeTodoProgress
+    };
+
     QOrganizerItemDetail();
-    QOrganizerItemDetail(const QString &definitionName);
+    QOrganizerItemDetail(DetailType detailType);
     QOrganizerItemDetail(const QOrganizerItemDetail &other);
     ~QOrganizerItemDetail();
 
@@ -80,7 +107,7 @@ public:
     bool operator==(const QOrganizerItemDetail &other) const;
     bool operator!=(const QOrganizerItemDetail &other) const {return !(other == *this);}
 
-    QString definitionName() const;
+    DetailType type() const;
     bool isEmpty() const;
 
     int key() const;
@@ -97,9 +124,12 @@ public:
         return value(field).value<T>();
     }
 
+    // to be removed
+    DetailType definitionName() const;
+
 protected:
-    QOrganizerItemDetail(const QOrganizerItemDetail &other, const QString &expectedDefinitionId);
-    QOrganizerItemDetail &assign(const QOrganizerItemDetail &other, const QString &expectedDefinitionId);
+    QOrganizerItemDetail(const QOrganizerItemDetail &other, DetailType expectedDetailType);
+    QOrganizerItemDetail &assign(const QOrganizerItemDetail &other, DetailType expectedDetailType);
 
 private:
     friend class QOrganizerItem;
@@ -119,11 +149,11 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &det
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemDetail::AccessConstraints)
 
-#define Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(className, definitionNameString) \
+#define Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(className) \
     className() : QOrganizerItemDetail(DefinitionName) {} \
-    className(const QOrganizerItemDetail &field) : QOrganizerItemDetail(field, DefinitionName) {} \
+    className(const QOrganizerItemDetail &other) : QOrganizerItemDetail(other, DefinitionName) {} \
     className &operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    const static QString DefinitionName;
+    const static DetailType DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 

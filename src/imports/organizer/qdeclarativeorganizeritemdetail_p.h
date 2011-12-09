@@ -51,41 +51,41 @@ class QDeclarativeOrganizerItemDetail : public QObject
 {
     Q_OBJECT
 
-    Q_ENUMS(ItemDetailType)
+    Q_ENUMS(DetailType)
 
     Q_PROPERTY(bool readOnly READ readOnly)
     Q_PROPERTY(bool removable READ removable)
-    Q_PROPERTY(ItemDetailType type READ type)
+    Q_PROPERTY(DetailType type READ type)
 
     // to be removed
     Q_PROPERTY(QList<int> fieldNames READ fieldNames)
-    Q_PROPERTY(QString definitionName READ definitionName)
 
 public:
-    enum ItemDetailType {
-        EventTime = 0,
-        JournalTime,
-        TodoTime,
-        TodoProgress,
-        Reminder,
-        AudibleReminder,
-        VisualReminder,
-        EmailReminder,
-        Comment,
-        Description,
-        DisplayLabel,
-        Guid,
-        Location,
-        Parent,
-        Priority,
-        Recurrence,
-        Timestamp,
-        Type,
-        Tag,
-        EventAttendee,
-        EventRsvp,
-        Classification,
-        Customized = 100
+    enum DetailType {
+        Undefined = QOrganizerItemDetail::TypeUndefined,
+        Classification = QOrganizerItemDetail::TypeClassification,
+        Comment = QOrganizerItemDetail::TypeComment,
+        Description = QOrganizerItemDetail::TypeDescription,
+        DisplayLabel = QOrganizerItemDetail::TypeDisplayLabel,
+        ItemType = QOrganizerItemDetail::TypeItemType,
+        Guid = QOrganizerItemDetail::TypeGuid,
+        Location = QOrganizerItemDetail::TypeLocation,
+        Parent = QOrganizerItemDetail::TypeParent,
+        Priority = QOrganizerItemDetail::TypePriority,
+        Recurrence = QOrganizerItemDetail::TypeRecurrence,
+        Tag = QOrganizerItemDetail::TypeTag,
+        Timestamp = QOrganizerItemDetail::TypeTimestamp,
+        Reminder = QOrganizerItemDetail::TypeReminder,
+        AudibleReminder = QOrganizerItemDetail::TypeAudibleReminder,
+        EmailReminder = QOrganizerItemDetail::TypeEmailReminder,
+        VisualReminder = QOrganizerItemDetail::TypeVisualReminder,
+        ExtendedDetail = QOrganizerItemDetail::TypeExtendedDetail,
+        EventAttendee = QOrganizerItemDetail::TypeEventAttendee,
+        EventRsvp = QOrganizerItemDetail::TypeEventRsvp,
+        EventTime = QOrganizerItemDetail::TypeEventTime,
+        JournalTime = QOrganizerItemDetail::TypeJournalTime,
+        TodoTime = QOrganizerItemDetail::TypeTodoTime,
+        TodoProgress = QOrganizerItemDetail::TypeTodoProgress
     };
 
     explicit QDeclarativeOrganizerItemDetail(QObject *parent = 0);
@@ -94,7 +94,7 @@ public:
     bool readOnly() const;
     bool removable() const;
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     // QML functions
     Q_INVOKABLE QVariant value(int key) const;
@@ -105,13 +105,7 @@ public:
     QOrganizerItemDetail detail() const;
     void setDetail(const QOrganizerItemDetail &detail);
 
-    // to be removed once we use enumerations also in C++ side
-    static QString definitionName(ItemDetailType type);
-
-    static ItemDetailType detailTypeByDefinitionName(const QString& definitionName); // used by sort order
-
     // to be removed
-    QString definitionName() const;
     QList<int> fieldNames() const;
 
 Q_SIGNALS:
@@ -144,7 +138,7 @@ public:
 
     QDeclarativeOrganizerEventTime(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setAllDay(bool allDay);
     bool isAllDay();
@@ -175,7 +169,7 @@ public:
 
     QDeclarativeOrganizerItemComment(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setComment(const QString &newComment);
     QString comment() const;
@@ -200,7 +194,7 @@ public:
 
     QDeclarativeOrganizerItemDescription(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setDescription(const QString &desc);
     QString description() const;
@@ -225,7 +219,7 @@ public:
 
     QDeclarativeOrganizerItemDisplayLabel(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setLabel(const QString &newLabel);
     QString label() const;
@@ -250,7 +244,7 @@ public:
 
     QDeclarativeOrganizerItemGuid(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setGuid(const QString &newGuid);
     QString guid() const;
@@ -279,7 +273,7 @@ public:
 
     QDeclarativeOrganizerItemLocation(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setLatitude(double newLatitude);
     double latitude() const;
@@ -312,7 +306,7 @@ public:
 
     QDeclarativeOrganizerItemParent(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setOriginalDate(const QDate &date);
     QDate originalDate() const;
@@ -354,7 +348,7 @@ public:
 
     QDeclarativeOrganizerItemPriority(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setPriority(Priority newPriority);
     Priority priority() const;
@@ -385,7 +379,7 @@ public:
 
     QDeclarativeOrganizerItemRecurrence(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules();
 
@@ -452,7 +446,7 @@ public:
 
     QDeclarativeOrganizerItemTag(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setTag(const QString &newTag);
     QString tag() const;
@@ -479,7 +473,7 @@ public:
 
     QDeclarativeOrganizerItemTimestamp(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setCreated(const QDateTime &timestamp);
     QDateTime created() const;
@@ -518,7 +512,7 @@ public:
 
     QDeclarativeOrganizerItemType(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setItemType(ItemType newType);
     ItemType itemType() const;
@@ -543,7 +537,7 @@ public:
 
     QDeclarativeOrganizerJournalTime(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setEntryDateTime(const QDateTime &datetime);
     QDateTime entryDateTime() const;
@@ -579,7 +573,7 @@ public:
 
     QDeclarativeOrganizerTodoProgress(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setPercentage(int newPercentage);
     int percentage() const;
@@ -613,7 +607,7 @@ public:
 
     QDeclarativeOrganizerTodoTime(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setAllDay(bool allDay);
     bool isAllDay();
@@ -657,7 +651,7 @@ public:
 
     QDeclarativeOrganizerItemReminder(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     ReminderType reminderType() const;
 
@@ -690,7 +684,7 @@ public:
 
     QDeclarativeOrganizerItemAudibleReminder(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setDataUrl(const QUrl &url);
     QUrl dataUrl() const;
@@ -721,7 +715,7 @@ public:
 
     QDeclarativeOrganizerItemEmailReminder(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setBody(const QString &newBody);
     QString body() const;
@@ -757,7 +751,7 @@ public:
 
     QDeclarativeOrganizerItemVisualReminder(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setMessage(const QString &msg);
     QString message() const;
@@ -787,7 +781,7 @@ public:
 
     QDeclarativeOrganizerItemExtendedDetail(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setName(const QString &newDetailName);
     QString name() const;
@@ -845,7 +839,7 @@ public:
 
     QDeclarativeOrganizerEventAttendee(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setName(const QString &newName);
     QString name() const;
@@ -898,7 +892,7 @@ public:
 
     QDeclarativeOrganizerEventRsvp(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setParticipationStatus(QDeclarativeOrganizerEventAttendee::ParticipationStatus status);
     QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus() const;
@@ -939,7 +933,7 @@ public:
 
     QDeclarativeOrganizerItemClassification(QObject *parent = 0);
 
-    virtual ItemDetailType type() const;
+    virtual DetailType type() const;
 
     void setClassification(const QString &newClassification);
     QString classification() const;
@@ -952,8 +946,7 @@ Q_SIGNALS:
 class QDeclarativeOrganizerItemDetailFactory
 {
 public:
-    static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::ItemDetailType type);
-    static QDeclarativeOrganizerItemDetail *createItemDetail(const QString &definitionName);
+    static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::DetailType type);
 };
 
 QTORGANIZER_END_NAMESPACE

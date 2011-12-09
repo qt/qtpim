@@ -90,7 +90,7 @@ public:
         dbg.nospace() << m_organizeritems;
         dbg.nospace() << ",\n";
         dbg.nospace() << "* definitionMask=";
-        dbg.nospace() << m_definitionMask;
+        dbg.nospace() << m_detailMask;
         dbg.nospace() << ",\n";
         dbg.nospace() << "* errorMap=";
         dbg.nospace() << m_errors;
@@ -101,7 +101,7 @@ public:
 
     QList<QOrganizerItem> m_organizeritems;
     QMap<int, QOrganizerManager::Error> m_errors;
-    QStringList m_definitionMask;
+    QList<QOrganizerItemDetail::DetailType> m_detailMask;
 };
 
 class QOrganizerItemFetchRequestPrivate : public QOrganizerAbstractRequestPrivate

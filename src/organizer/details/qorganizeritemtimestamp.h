@@ -51,7 +51,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemTimestamp : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTimestamp, "Timestamp")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTimestamp)
 
     enum TimestampField {
         FieldModificationTimestamp = 0,

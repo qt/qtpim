@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority, "Priority")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority)
 
     enum PriorityField {
         FieldPriority = 0

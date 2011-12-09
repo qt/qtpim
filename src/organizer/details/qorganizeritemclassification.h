@@ -49,7 +49,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemClassification : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification, "Classification")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification)
 
     enum ClassificationField {
         FieldClassification = 0

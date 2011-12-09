@@ -71,15 +71,29 @@ QOrganizerItemDetailFilter::QOrganizerItemDetailFilter()
 }
 
 /*!
- * Sets the name of the detail definition of which details will be matched to \a definitionName, and the name of the field in
- * details of that definition which will contain the value criterion to \a field
- * \sa detailDefinitionName()
+    Sets the type of detail which will be matched to \a detailType, and the field of the detail
+    which will contain the value criterion to \a field.
+
+    \sa detailType(), detailField()
  */
-void QOrganizerItemDetailFilter::setDetailDefinitionName(const QString& definitionName, int field)
+void QOrganizerItemDetailFilter::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
     Q_D(QOrganizerItemDetailFilter);
-    d->m_defId = definitionName;
-    d->m_fieldId = field;
+    if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
+        d->m_defId = detailType;
+        d->m_fieldId = field;
+    } else {
+        d->m_defId = QOrganizerItemDetail::TypeUndefined;
+        d->m_fieldId = -1;
+    }
+}
+
+/*!
+    To be removed soon, use setDetail() instead.
+ */
+void QOrganizerItemDetailFilter::setDetailDefinitionName(QOrganizerItemDetail::DetailType definitionName, int field)
+{
+    setDetail(definitionName, field);
 }
 
 /*!
@@ -113,19 +127,28 @@ QOrganizerItemFilter::MatchFlags QOrganizerItemDetailFilter::matchFlags() const
 }
 
 /*!
- * Returns the definition name of the details which will be inspected for matching values
- * \sa setDetailDefinitionName()
+    Returns the type of the detail which will be inspected for matching values.
+
+    \sa setDetail()
  */
-QString QOrganizerItemDetailFilter::detailDefinitionName() const
+QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailType() const
 {
     Q_D(const QOrganizerItemDetailFilter);
     return d->m_defId;
 }
 
 /*!
+    This is to be removed soon, please use detailType() instead.
+ */
+QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailDefinitionName() const
+{
+    return detailType();
+}
+
+/*!
     Returns the detail field containing the value which will be matched against the value criterion.
 
-    \sa setDetailDefinitionName()
+    \sa setDetail()
  */
 int QOrganizerItemDetailFilter::detailField() const
 {

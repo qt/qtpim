@@ -87,14 +87,14 @@ JournalEditPage::JournalEditPage(QWidget *parent)
 
     // check to see whether we support alarms.
     QOrganizerManager defaultManager;
-    QStringList supportedDefinitionNames = defaultManager.supportedItemDetails(QOrganizerItemType::TypeJournal);
+    QList<QOrganizerItemDetail::DetailType> supportedDetails = defaultManager.supportedItemDetails(QOrganizerItemType::TypeJournal);
 
     QVBoxLayout *scrollAreaLayout = new QVBoxLayout();
     scrollAreaLayout->addWidget(subjectLabel);
     scrollAreaLayout->addWidget(m_subjectEdit);
     scrollAreaLayout->addWidget(startTimeLabel);
     scrollAreaLayout->addWidget(m_timeEdit);
-    if (supportedDefinitionNames.contains(QOrganizerItemVisualReminder::DefinitionName)) {
+    if (supportedDetails.contains(QOrganizerItemDetail::TypeVisualReminder)) {
         scrollAreaLayout->addWidget(alarmLabel);
         scrollAreaLayout->addWidget(m_alarmComboBox);
     }
@@ -213,7 +213,7 @@ void JournalEditPage::handleAlarmIndexChanged(const QString time)
     reminder.setMessage(m_subjectEdit->text());
 
     if (time == "None") {
-         QOrganizerItemVisualReminder fetchedReminder = m_organizerJournal.detail(QOrganizerItemVisualReminder::DefinitionName);
+         QOrganizerItemVisualReminder fetchedReminder = m_organizerJournal.detail(QOrganizerItemDetail::TypeVisualReminder);
          m_organizerJournal.removeDetail(&fetchedReminder);
         return;
     } else if (time == "0 minutes before") {

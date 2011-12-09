@@ -828,9 +828,9 @@ QOrganizerItem QOrganizerItemMemoryEngine::generateOccurrence(const QOrganizerIt
     QList<QOrganizerItemDetail> allDets = parentItem.details();
     QList<QOrganizerItemDetail> occDets;
     foreach (const QOrganizerItemDetail& det, allDets) {
-        if (det.definitionName() != QOrganizerItemRecurrence::DefinitionName
-                && det.definitionName() != QOrganizerEventTime::DefinitionName
-                && det.definitionName() != QOrganizerTodoTime::DefinitionName) {
+        if (det.type() != QOrganizerItemRecurrence::DefinitionName
+                && det.type() != QOrganizerEventTime::DefinitionName
+                && det.type() != QOrganizerTodoTime::DefinitionName) {
             occDets.append(det);
         }
     }
@@ -844,7 +844,7 @@ QOrganizerItem QOrganizerItemMemoryEngine::generateOccurrence(const QOrganizerIt
     // save those details in the instance.
     foreach (const QOrganizerItemDetail& det, occDets) {
         // copy every detail except the type
-        if (det.definitionName() != QOrganizerItemType::DefinitionName) {
+        if (det.type() != QOrganizerItemType::DefinitionName) {
             QOrganizerItemDetail modifiable = det;
             instanceItem.saveDetail(&modifiable);
         }
@@ -883,16 +883,16 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QDateTime& startDa
         return internalItems(startDate, endDate, filter, sortOrders, fetchHint, error, false);
     } else {
         QOrganizerItemSortOrder sortOrder;
-        sortOrder.setDetailDefinitionName(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
         sortOrder.setDirection(Qt::AscendingOrder);
 
         QList<QOrganizerItemSortOrder> sortOrders;
         sortOrders.append(sortOrder);
 
-        sortOrder.setDetailDefinitionName(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
         sortOrders.append(sortOrder);
 
-        sortOrder.setDetailDefinitionName(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
         sortOrders.append(sortOrder);
 
         return internalItems(startDate, endDate, filter, sortOrders, fetchHint, error, false);
@@ -1297,7 +1297,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems
     return (*error == QOrganizerManager::NoError);
 }
 
-bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
     // TODO should the default implementation do the right thing, or return false?
     if (definitionMask.isEmpty()) {
@@ -1367,7 +1367,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
                 itemToSave = existingItems.at(fetchedIdx);
 
                 // QOrganizerItemData::removeOnly() is not exported, so we can only do this...
-                foreach (const QString &mask, definitionMask) {
+                foreach (QOrganizerItemDetail::DetailType mask, definitionMask) {
                     QList<QOrganizerItemDetail> details(itemToSave.details(mask));
                     foreach (QOrganizerItemDetail detail, details)
                         itemToSave.removeDetail(&detail);
@@ -1385,7 +1385,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
 
             // Perhaps this could do this directly rather than through saveDetail
             // but that would duplicate the checks for display label etc
-            foreach (const QString& name, definitionMask) {
+            foreach (QOrganizerItemDetail::DetailType name, definitionMask) {
                 QList<QOrganizerItemDetail> details = item.details(name);
                 foreach (QOrganizerItemDetail detail, details)
                     itemToSave.saveDetail(&detail);
@@ -1633,9 +1633,9 @@ bool QOrganizerItemMemoryEngine::waitForRequestFinished(QOrganizerAbstractReques
     return true;
 }
 
-QStringList QOrganizerItemMemoryEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemMemoryEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
-    QStringList supportedDetails;
+    QList<QOrganizerItemDetail::DetailType> supportedDetails;
     supportedDetails << QOrganizerItemType::DefinitionName
                      << QOrganizerItemGuid::DefinitionName
                      << QOrganizerItemTimestamp::DefinitionName

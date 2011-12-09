@@ -479,14 +479,14 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
         case QOrganizerItemFilter::DetailRangeFilter:
         {
             QOrganizerItemDetailRangeFilter f(filter);
-            if (f.detailDefinitionName().isEmpty())
+            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
                 return QOrganizerItemInvalidFilter();
             if (f.minValue() == f.maxValue()
                 && f.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::ExcludeUpper))
                 return QOrganizerItemInvalidFilter();
             if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
                 QOrganizerItemDetailFilter df;
-                df.setDetailDefinitionName(f.detailDefinitionName(), f.detailField());
+                df.setDetail(f.detailType(), f.detailField());
                 df.setMatchFlags(f.matchFlags());
                 df.setValue(f.minValue());
                 return df;
@@ -497,7 +497,7 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
         case QOrganizerItemFilter::DetailFilter:
         {
             QOrganizerItemDetailFilter f(filter);
-            if (f.detailDefinitionName().isEmpty())
+            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
                 return QOrganizerItemInvalidFilter();
         }
         break; // fall through to return at end
@@ -520,10 +520,10 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilter
 /*!
     Returns the list of details that are supported by this engine for the given \a itemType.
  */
-QStringList QOrganizerManagerEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
+QList<QOrganizerItemDetail::DetailType> QOrganizerManagerEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     Q_UNUSED(itemType)
-    return QStringList();
+    return QList<QOrganizerItemDetail::DetailType>();
 }
 
 /*!
@@ -695,7 +695,7 @@ bool QOrganizerManagerEngine::saveItems(QList<QOrganizerItem>* items, QMap<int, 
 
     Any errors encountered during this operation should be stored to \a error.
  */
-bool QOrganizerManagerEngine::saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+bool QOrganizerManagerEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
     Q_UNUSED(items)
     Q_UNUSED(definitionMask)
@@ -885,11 +885,11 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
         case QOrganizerItemFilter::DetailFilter:
             {
                 const QOrganizerItemDetailFilter cdf(filter);
-                if (cdf.detailDefinitionName().isEmpty())
+                if (cdf.detailType() == QOrganizerItemDetail::TypeUndefined)
                     return false;
 
                 /* See if this organizer item has one of these details in it */
-                const QList<QOrganizerItemDetail>& details = item.details(cdf.detailDefinitionName());
+                const QList<QOrganizerItemDetail>& details = item.details(cdf.detailType());
 
                 if (details.count() == 0)
                     return false; /* can't match */
@@ -955,11 +955,11 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
         case QOrganizerItemFilter::DetailRangeFilter:
             {
                 const QOrganizerItemDetailRangeFilter cdf(filter);
-                if (cdf.detailDefinitionName().isEmpty())
+                if (cdf.detailType() == QOrganizerItemDetail::TypeUndefined)
                     return false; /* we do not know which field to check */
 
                 /* See if this organizer item has one of these details in it */
-                const QList<QOrganizerItemDetail>& details = item.details(cdf.detailDefinitionName());
+                const QList<QOrganizerItemDetail>& details = item.details(cdf.detailType());
 
                 if (details.count() == 0)
                     return false; /* can't match */
@@ -1048,7 +1048,7 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                 QOrganizerItemChangeLogFilter ccf(filter);
 
                 // See what we can do...
-                QOrganizerItemTimestamp ts = item.detail(QOrganizerItemTimestamp::DefinitionName);
+                QOrganizerItemTimestamp ts = item.detail(QOrganizerItemDetail::TypeTimestamp);
 
                 // See if timestamps are even supported
                 if (ts.isEmpty())
@@ -1244,8 +1244,8 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
             break;
 
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailField());
-        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailField());
+        const QVariant& aVal = a.detail(sortOrder.detailType()).value(sortOrder.detailField());
+        const QVariant& bVal = b.detail(sortOrder.detailType()).value(sortOrder.detailField());
 
         bool aIsNull = false;
         bool bIsNull = false;

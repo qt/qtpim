@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemComment : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment, "Comment")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment)
 
     enum CommentField {
         FieldComment = 0

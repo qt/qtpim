@@ -65,7 +65,7 @@ void TodoEditor::editTodo(const QOrganizerTodo &newTodo)
 //! [1]
 
 //! [2]
-    if (!todo.details(QOrganizerItemVisualReminder::DefinitionName).isEmpty()){ 
+    if (!todo.details(QOrganizerItemDetail::TypeVisualReminder).isEmpty()){
         QOrganizerItemVisualReminder reminder =
             todo.detail<QOrganizerItemVisualReminder>();
         int seconds = reminder.secondsBeforeStart();
@@ -124,7 +124,7 @@ void TodoEditor::updateAlarm(int index)
     QDateTime dueDate = todo.dueDateTime();
 
     QOrganizerItemVisualReminder oldReminder =
-        todo.detail(QOrganizerItemVisualReminder::DefinitionName);
+        todo.detail(QOrganizerItemDetail::TypeVisualReminder);
     todo.removeDetail(&oldReminder);
 
     if (seconds == 0)

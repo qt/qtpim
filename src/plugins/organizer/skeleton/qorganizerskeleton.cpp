@@ -785,10 +785,10 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedF
     return QList<QOrganizerItemFilter::FilterType>();
 }
 
-QStringList QOrganizerItemSkeletonEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
+QList<QOrganizerItemDetail::DetailType> QOrganizerItemSkeletonEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     // TODO - return which [predefined] details this engine supports for this item type
-    return QStringList();
+    return QList<QOrganizerItemDetail::DetailType>();
 }
 
 QList<QOrganizerItemType::ItemType> QOrganizerItemSkeletonEngine::supportedItemTypes() const

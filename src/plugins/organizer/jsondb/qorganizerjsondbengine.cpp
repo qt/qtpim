@@ -334,7 +334,7 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem>* items, QMap<int, Q
     return *error == QOrganizerManager::NoError;
 }
 
-bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
     // TODO implement this properly, this is copied from memory back-end
 
@@ -406,7 +406,7 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QStri
                 itemToSave = existingItems.at(fetchedIdx);
 
                 // QOrganizerItemData::removeOnly() is not exported, so we can only do this...
-                foreach (const QString &mask, definitionMask) {
+                foreach (QOrganizerItemDetail::DetailType mask, definitionMask) {
                     QList<QOrganizerItemDetail> details(itemToSave.details(mask));
                     foreach (QOrganizerItemDetail detail, details)
                         itemToSave.removeDetail(&detail);
@@ -424,7 +424,7 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QStri
 
             // Perhaps this could do this directly rather than through saveDetail
             // but that would duplicate the checks for display label etc
-            foreach (const QString& name, definitionMask) {
+            foreach (QOrganizerItemDetail::DetailType name, definitionMask) {
                 QList<QOrganizerItemDetail> details = item.details(name);
                 foreach (QOrganizerItemDetail detail, details)
                     itemToSave.saveDetail(&detail);
@@ -626,9 +626,9 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
     return supported;
 }
 
-QStringList QOrganizerJsonDbEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
+QList<QOrganizerItemDetail::DetailType> QOrganizerJsonDbEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
-    QStringList supportedDetails;
+    QList<QOrganizerItemDetail::DetailType> supportedDetails;
     supportedDetails << QOrganizerItemType::DefinitionName
                      << QOrganizerItemGuid::DefinitionName
 //                     << QOrganizerItemTimestamp::DefinitionName

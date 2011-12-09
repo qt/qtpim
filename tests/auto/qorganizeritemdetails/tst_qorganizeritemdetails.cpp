@@ -87,9 +87,6 @@ private slots:
     void attendee();
     void rsvp();
     void classification();
-
-    // custom definition testing
-    void custom();
 };
 
 tst_QOrganizerItemDetails::tst_QOrganizerItemDetails()
@@ -960,127 +957,6 @@ void tst_QOrganizerItemDetails::classification()
     QVERIFY(oi.removeDetail(&classification2));
     QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 0);
 }
-
-// define a custom detail to test inheritance/slicing
-class CustomTestDetail : public QOrganizerItemDetail
-{
-public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(CustomTestDetail, "CustomTestDetail")
-    const static int FieldTestLabel;
-
-    ~CustomTestDetail()
-    {
-        // we define a dtor which does some random stuff
-        // to test that the virtual dtor works as expected.
-
-        int *temp = 0;
-        int random = qrand();
-        random += 1;
-        if (random > 0) {
-            temp = new int;
-            *temp = 5;
-        }
-
-        if (temp) {
-            delete temp;
-        }
-    }
-
-    void setTestLabel(const QString& testLabel) { setValue(FieldTestLabel, testLabel); }
-    QString testLabel() const { return value(FieldTestLabel).toString(); }
-};
-const int CustomTestDetail::FieldTestLabel(1);
-const QString CustomTestDetail::DefinitionName(QStringLiteral("CustomTestDetail"));
-
-void tst_QOrganizerItemDetails::custom()
-{
-    QOrganizerItem oi;
-
-    // first, test a custom definition detail
-    QOrganizerItemDetail c1("mycustom"), c2("mycustom");
-
-    // test property set
-    c1.setValue(101, "1234");
-    QCOMPARE(c1.value(101).toString(), QString("1234"));
-
-    // test property add
-    QVERIFY(oi.saveDetail(&c1));
-    QCOMPARE(oi.details("mycustom").count(), 1);
-    QCOMPARE((oi.details("mycustom").value(0)).value(101), c1.value(101));
-
-    // test property update
-    c1.setValue(102,"label1");
-    c1.setValue(101, "12345");
-    QVERIFY(oi.saveDetail(&c1));
-
-    // test property remove
-    QVERIFY(oi.removeDetail(&c1));
-    QCOMPARE(oi.details("mycustom").count(), 0);
-    QVERIFY(oi.saveDetail(&c2));
-    QCOMPARE(oi.details("mycustom").count(), 1);
-    QVERIFY(oi.removeDetail(&c2));
-    QCOMPARE(oi.details("mycustom").count(), 0);
-    QVERIFY(oi.removeDetail(&c2) == false);
-    QCOMPARE(oi.details("mycustom").count(), 0);
-
-
-    // then, test a custom subclass (we don't test registration of the custom definition, however)
-    CustomTestDetail ctd1, ctd2;
-    ctd1.setTestLabel("this is a test");
-    ctd2.setTestLabel("test 2");
-    QCOMPARE(ctd1.testLabel(), QString("this is a test"));
-
-    // prior to add
-    QCOMPARE(oi.details("CustomTestDetail").count(), 0);
-    QCOMPARE(oi.details<CustomTestDetail>().count(), 0);
-
-    // test detail add
-    QVERIFY(oi.saveDetail(&ctd1));
-    QCOMPARE(oi.details("CustomTestDetail").count(), 1);
-    QCOMPARE(oi.details<CustomTestDetail>().count(), 1);
-    QCOMPARE(oi.details<CustomTestDetail>().first().testLabel(), QString("this is a test"));
-
-    // test detail update
-    ctd1.setTestLabel("this is a modified test");
-    QVERIFY(oi.saveDetail(&ctd1)); // should merely update
-    QCOMPARE(oi.details("CustomTestDetail").count(), 1);
-    QCOMPARE(oi.details<CustomTestDetail>().count(), 1);
-    QCOMPARE(oi.details<CustomTestDetail>().first().testLabel(), QString("this is a modified test"));
-
-    // test detail remove
-    QVERIFY(oi.removeDetail(&ctd1));
-    QCOMPARE(oi.details("CustomTestDetail").count(), 0);
-    QCOMPARE(oi.details<CustomTestDetail>().count(), 0);
-
-    // now test how custom details interact with foreach loops.
-    QVERIFY(oi.saveDetail(&ctd1));
-    QVERIFY(oi.saveDetail(&ctd2));
-    QVERIFY(oi.saveDetail(&c1));
-
-    // first, definition agnostic foreach.
-    foreach (const QOrganizerItemDetail& det, oi.details()) {
-        QCOMPARE(det.definitionName().isEmpty(), false);
-    }
-
-    // second, definition parameter foreach, with assignment.
-    foreach (const QOrganizerItemDetail& det, oi.details("CustomTestDetail")) {
-        CustomTestDetail customDet = det;
-        QCOMPARE(det.definitionName(), QString("CustomTestDetail"));
-        QCOMPARE(customDet.testLabel().isEmpty(), false);
-    }
-
-    // third, definition parameter foreach, with cast.
-    foreach (const QOrganizerItemDetail& det, oi.details("CustomTestDetail")) {
-        QCOMPARE(static_cast<CustomTestDetail>(det).definitionName(), QString("CustomTestDetail"));
-        QCOMPARE(static_cast<CustomTestDetail>(det).testLabel().isEmpty(), false);
-    }
-
-    // fourth, parametrized foreach.
-    foreach (const CustomTestDetail& det, oi.details<CustomTestDetail>()) {
-        QCOMPARE(det.definitionName(), QString("CustomTestDetail"));
-    }
-}
-
 
 QTEST_MAIN(tst_QOrganizerItemDetails)
 #include "tst_qorganizeritemdetails.moc"

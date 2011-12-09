@@ -102,7 +102,7 @@ public:
     virtual bool removeItem(const QOrganizerItemId& itemId, QOrganizerManager::Error* error);
 
     virtual bool saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    virtual bool saveItems(QList<QOrganizerItem> *items, const QStringList &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
+    virtual bool saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
     virtual bool removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
     /* Collections - every item belongs to exactly one collection */
@@ -120,7 +120,7 @@ public:
 
     /* Capabilities reporting */
     virtual QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
-    virtual QStringList supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
+    virtual QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
 Q_SIGNALS:

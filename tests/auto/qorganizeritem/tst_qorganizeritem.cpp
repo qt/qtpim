@@ -136,18 +136,17 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
 
     // Test retrieving the default details (type)
-    QList<QOrganizerItemDetail> details = oi.details(QString());
-    QVERIFY(details.at(0).definitionName() == QOrganizerItemType::DefinitionName);
+    QList<QOrganizerItemDetail> details = oi.details();
+    QVERIFY(details.at(0).type() == QOrganizerItemType::DefinitionName);
 
-    QOrganizerItemDetail detail = oi.detail("nonexistent");
+    QOrganizerItemDetail detail = oi.detail(QOrganizerItemDetail::TypeExtendedDetail);
     QVERIFY(detail.isEmpty());
-    QVERIFY(detail.definitionName().isEmpty());
 
     // retrieve the first detail using the empty definition name accessor.
-    detail = oi.detail(QString());
+    detail = oi.detail();
     QVERIFY(detail == details.at(0));
 
-    QVERIFY(oi.details("nonexistent").count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeExtendedDetail).count() == 0);
 
     // Add a detail
     QOrganizerItemLocation a;
@@ -705,26 +704,26 @@ void tst_QOrganizerItem::hash()
     QOrganizerItemId id(makeId("a", 1));
     QOrganizerItem oi1;
     oi1.setId(id);
-    QOrganizerItemDetail detail1("definition");
-    detail1.setValue(1, "value");
+    QOrganizerItemDetail detail1(QOrganizerItemDetail::TypeComment);
+    detail1.setValue(QOrganizerItemComment::FieldComment, "value");
     oi1.saveDetail(&detail1);
     QOrganizerItem oi2;
     oi2.setId(id);
     oi2.saveDetail(&detail1);
     QOrganizerItem oi3;
     oi3.setId(id);
-    QOrganizerItemDetail detail3("definition");
-    detail3.setValue(1, "another value");
+    QOrganizerItemDetail detail3(QOrganizerItemDetail::TypeComment);
+    detail3.setValue(QOrganizerItemComment::FieldComment, "another value");
     oi3.saveDetail(&detail3);
     QOrganizerItem oi4; // no details
     oi4.setId(id);
     QOrganizerItem oi5;
     oi5.setId(id);
-    oi5.saveDetail(&detail1);
-    QVERIFY(qHash(oi1) == qHash(oi2));
-    QVERIFY(qHash(oi1) != qHash(oi3));
-    QVERIFY(qHash(oi1) != qHash(oi4));
-    QVERIFY(qHash(oi1) == qHash(oi5));
+    oi5.saveDetail(&detail1);qDebug()<<__LINE__;
+    QVERIFY(qHash(oi1) == qHash(oi2));qDebug()<<__LINE__;
+    QVERIFY(qHash(oi1) != qHash(oi3));qDebug()<<__LINE__;
+    QVERIFY(qHash(oi1) != qHash(oi4));qDebug()<<__LINE__;
+    QVERIFY(qHash(oi1) == qHash(oi5));qDebug()<<__LINE__;
 }
 
 void tst_QOrganizerItem::datastream()

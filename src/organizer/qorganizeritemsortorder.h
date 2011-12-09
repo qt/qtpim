@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMSORTORDER_H
 #define QORGANIZERITEMSORTORDER_H
 
-#include <qorganizerglobal.h>
+#include <qorganizeritemdetail.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qshareddata.h>
 #include <QtCore/qstring.h>
@@ -65,13 +65,13 @@ public:
     };
 
     // mutators
-    void setDetailDefinitionName(const QString& definitionName, int field);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);
 
     // accessors
-    QString detailDefinitionName() const;
+    QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
     BlankPolicy blankPolicy() const;
     Qt::SortOrder direction() const;
@@ -86,7 +86,9 @@ public:
     operator QList<QOrganizerItemSortOrder>() const { return QList<QOrganizerItemSortOrder>() << *this; }
 
     // to be removed
+    QOrganizerItemDetail::DetailType detailDefinitionName() const;
     int detailFieldName() const;
+    void setDetailDefinitionName(QOrganizerItemDetail::DetailType detailType, int field = -1);
 
 private:
     QSharedDataPointer<QOrganizerItemSortOrderPrivate> d;

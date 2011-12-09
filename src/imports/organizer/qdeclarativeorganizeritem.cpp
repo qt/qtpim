@@ -99,7 +99,7 @@ bool QDeclarativeOrganizerItem::modified() const
 QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItem::itemType() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
-        if (QDeclarativeOrganizerItemDetail::Type == detail->type())
+        if (QDeclarativeOrganizerItemDetail::ItemType == detail->type())
             return static_cast<QDeclarativeOrganizerItemType *>(detail)->itemType();
     }
     return QDeclarativeOrganizerItemType::Undefined;
@@ -373,7 +373,7 @@ void QDeclarativeOrganizerItem::setItem(const QOrganizerItem &item)
     m_details.clear();
     QList<QOrganizerItemDetail> details(item.details());
     foreach (const QOrganizerItemDetail &detail, details) {
-        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail.definitionName());
+        QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(static_cast<QDeclarativeOrganizerItemDetail::DetailType>(detail.type()));
         itemDetail->setDetail(detail);
         m_details.append(itemDetail);
     }

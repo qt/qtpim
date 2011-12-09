@@ -59,7 +59,7 @@ public:
         TypeNote
     };
 
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, "Type")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType)
 
     enum ItemTypeField {
         FieldType = 0

@@ -158,7 +158,7 @@ private:
             QList<QVersitProperty>* toBeRemoved);
 
     // definition name -> <field name, versit property name>:
-    QMap<QString, QPair<int, QString> > mPropertyMappings;
+    QMap<QOrganizerItemDetail::DetailType, QPair<int, QString> > mPropertyMappings;
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

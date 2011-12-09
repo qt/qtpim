@@ -63,12 +63,16 @@ public:
     void setItem(const QOrganizerItem& organizeritem);
     void setItems(const QList<QOrganizerItem>& organizeritems);
 
-    void setDefinitionMask(const QStringList& definitionMask);
-    QStringList definitionMask() const;
+    void setDetailMask(const QList<QOrganizerItemDetail::DetailType> &detailMask);
+    QList<QOrganizerItemDetail::DetailType> detailMask() const;
 
     /* Results */
     QList<QOrganizerItem> items() const;
     QMap<int, QOrganizerManager::Error> errorMap() const;
+
+    // to be removed
+    void setDefinitionMask(const QList<QOrganizerItemDetail::DetailType> &definitionMask);
+    QList<QOrganizerItemDetail::DetailType> definitionMask() const;
 
 private:
     Q_DISABLE_COPY(QOrganizerItemSaveRequest)

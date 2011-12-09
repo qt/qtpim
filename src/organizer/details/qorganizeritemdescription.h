@@ -49,7 +49,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemDescription : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDescription, "Description")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDescription)
 
     enum DescriptionField {
         FieldDescription = 0

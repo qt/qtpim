@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemTag : public QOrganizerItemDetail
 {
 public:
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, "Tag")
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag)
 
     enum TagField {
         FieldTag = 0

@@ -55,8 +55,10 @@ QTORGANIZER_BEGIN_NAMESPACE
     \variable QOrganizerItemDescription::DefinitionName
 
     The constant string which identifies the definition of details which are long descriptions.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemDescription::DefinitionName(QStringLiteral("Description"));
+const QOrganizerItemDetail::DetailType QOrganizerItemDescription::DefinitionName(QOrganizerItemDetail::TypeDescription);
 
 /*!
     \enum QOrganizerItemDescription::DescriptionField
@@ -100,8 +102,7 @@ QString QOrganizerItemDescription::description() const
 QOrganizerItemFilter QOrganizerItemDisplayLabel::match(const QString &substring)
 {
     QOrganizerItemDetailFilter f;
-    f.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName,
-                              QOrganizerItemDisplayLabel::FieldLabel);
+    f.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
     f.setValue(substring);
     f.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -133,8 +134,10 @@ QString QOrganizerItemDisplayLabel::label() const
 
     The constant string which identifies the definition of details
     which contain a display label of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
+const QOrganizerItemDetail::DetailType QOrganizerItemDisplayLabel::DefinitionName(QOrganizerItemDetail::TypeDisplayLabel);
 
 /*!
     \enum QOrganizerItemDisplayLabel::DisplayLabelField
@@ -156,9 +159,12 @@ const QString QOrganizerItemDisplayLabel::DefinitionName(QStringLiteral("Display
 
 /*!
     \variable QOrganizerEventAttendee::DefinitionName
+
     The constant string which identifies the definition of details which contain information of an event attendee.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerEventAttendee::DefinitionName(QStringLiteral("Attendee"));
+const QOrganizerItemDetail::DetailType QOrganizerEventAttendee::DefinitionName(QOrganizerItemDetail::TypeEventAttendee);
 
 /*!
     \enum QOrganizerEventAttendee::EventAttendeeField
@@ -298,8 +304,10 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participatio
 
     The constant string which identifies the definition of details
     which contain a start and end timestamps of an event series or event occurrence.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerEventTime::DefinitionName(QStringLiteral("EventTime"));
+const QOrganizerItemDetail::DetailType QOrganizerEventTime::DefinitionName(QOrganizerItemDetail::TypeEventTime);
 
 /*!
     \enum QOrganizerEventTime::EventTimeField
@@ -400,8 +408,10 @@ bool QOrganizerEventTime::isAllDay() const
     \variable QOrganizerItemGuid::DefinitionName
 
     The constant string which identifies the definition of details which are globally unique identifiers.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemGuid::DefinitionName(QStringLiteral("Guid"));
+const QOrganizerItemDetail::DetailType QOrganizerItemGuid::DefinitionName(QOrganizerItemDetail::TypeGuid);
 
 /*!
     \enum QOrganizerItemGuid::GuidField
@@ -443,8 +453,10 @@ void QOrganizerItemGuid::setGuid(const QString &guid)
 
     The constant string which identifies the definition of details which contain information which identifies
     the recurrent event of which the organizer item is a particular instance or exception of.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemParent::DefinitionName(QStringLiteral("Parent"));
+const QOrganizerItemDetail::DetailType QOrganizerItemParent::DefinitionName(QOrganizerItemDetail::TypeParent);
 
 /*!
     \enum QOrganizerItemParent::ParentField
@@ -510,8 +522,10 @@ void QOrganizerItemParent::setOriginalDate(const QDate &date)
 
     The constant string which identifies the definition of details
     which describe the date and time associated with a journal item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerJournalTime::DefinitionName(QStringLiteral("JournalTime"));
+const QOrganizerItemDetail::DetailType QOrganizerJournalTime::DefinitionName(QOrganizerItemDetail::TypeJournalTime);
 
 /*!
     \enum QOrganizerJournalTime::JournalTimeField
@@ -557,8 +571,7 @@ void QOrganizerJournalTime::setEntryDateTime(const QDateTime &entryDateTime)
 QOrganizerItemFilter QOrganizerItemLocation::match(const QString &substring)
 {
     QOrganizerItemDetailFilter f;
-    f.setDetailDefinitionName(QOrganizerItemLocation::DefinitionName,
-                              QOrganizerItemLocation::FieldLabel);
+    f.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
     f.setValue(substring);
     f.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -570,8 +583,10 @@ QOrganizerItemFilter QOrganizerItemLocation::match(const QString &substring)
 
     The constant string which identifies the definition of details
     which describe a location associated with an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemLocation::DefinitionName(QStringLiteral("Location"));
+const QOrganizerItemDetail::DetailType QOrganizerItemLocation::DefinitionName(QOrganizerItemDetail::TypeLocation);
 
 /*!
     \enum QOrganizerItemLocation::LocationField
@@ -657,8 +672,7 @@ void QOrganizerItemLocation::setLabel(const QString &label)
 QOrganizerItemFilter QOrganizerItemComment::match(const QString &substring)
 {
     QOrganizerItemDetailFilter f;
-    f.setDetailDefinitionName(QOrganizerItemComment::DefinitionName,
-                              QOrganizerItemComment::FieldComment);
+    f.setDetail(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
     f.setValue(substring);
     f.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -669,8 +683,10 @@ QOrganizerItemFilter QOrganizerItemComment::match(const QString &substring)
     \variable QOrganizerItemComment::DefinitionName
 
     The constant string which identifies the definition of details which are comments.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemComment::DefinitionName(QStringLiteral("Comment"));
+const QOrganizerItemDetail::DetailType QOrganizerItemComment::DefinitionName(QOrganizerItemDetail::TypeComment);
 
 /*!
     \enum QOrganizerItemComment::CommentField
@@ -713,8 +729,7 @@ QString QOrganizerItemComment::comment() const
 QOrganizerItemFilter QOrganizerItemPriority::match(QOrganizerItemPriority::Priority priority)
 {
     QOrganizerItemDetailFilter f;
-    f.setDetailDefinitionName(QOrganizerItemPriority::DefinitionName,
-                              QOrganizerItemPriority::FieldPriority);
+    f.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
     f.setValue(priority);
     f.setMatchFlags(QOrganizerItemFilter::MatchExactly);
 
@@ -739,8 +754,10 @@ QOrganizerItemFilter QOrganizerItemPriority::match(QOrganizerItemPriority::Prior
     \variable QOrganizerItemPriority::DefinitionName
 
     The constant string which identifies the definition of details which contain the priority of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemPriority::DefinitionName(QStringLiteral("Priority"));
+const QOrganizerItemDetail::DetailType QOrganizerItemPriority::DefinitionName(QOrganizerItemDetail::TypePriority);
 
 /*!
     \enum QOrganizerItemPriority::PriorityField
@@ -782,8 +799,10 @@ QOrganizerItemPriority::Priority QOrganizerItemPriority::priority() const
     \variable QOrganizerItemRecurrence::DefinitionName
 
     The constant string which identifies the definition of details which are organizer item recurrence specifications.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemRecurrence::DefinitionName(QStringLiteral("Recurrence"));
+const QOrganizerItemDetail::DetailType QOrganizerItemRecurrence::DefinitionName(QOrganizerItemDetail::TypeRecurrence);
 
 /*!
     Returns true if the \a other recurrence detail is equal to this detail; otherwise, false.
@@ -908,8 +927,10 @@ void QOrganizerItemRecurrence::setExceptionDates(const QSet<QDate> &xdates)
     \variable QOrganizerItemReminder::DefinitionName
 
     The constant string which identifies the definition of details which contain reminder information of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemReminder::DefinitionName(QStringLiteral("Reminder"));
+const QOrganizerItemDetail::DetailType QOrganizerItemReminder::DefinitionName(QOrganizerItemDetail::TypeReminder);
 
 /*!
     \enum QOrganizerItemReminder::ReminderField
@@ -927,11 +948,11 @@ const QString QOrganizerItemReminder::DefinitionName(QStringLiteral("Reminder"))
  */
 QOrganizerItemReminder::ReminderType QOrganizerItemReminder::reminderType() const
 {
-    if (definitionName() == QOrganizerItemAudibleReminder::DefinitionName)
+    if (type() == QOrganizerItemDetail::TypeAudibleReminder)
         return QOrganizerItemReminder::AudibleReminder;
-    else if (definitionName() == QOrganizerItemEmailReminder::DefinitionName)
+    else if (type() == QOrganizerItemDetail::TypeEmailReminder)
         return QOrganizerItemReminder::EmailReminder;
-    else if (definitionName() == QOrganizerItemVisualReminder::DefinitionName)
+    else if (type() == QOrganizerItemDetail::TypeVisualReminder)
         return QOrganizerItemReminder::VisualReminder;
 
     return QOrganizerItemReminder::NoReminder;
@@ -1039,8 +1060,10 @@ void QOrganizerItemReminder::setRepetition(int count, int delaySeconds)
     \variable QOrganizerItemAudibleReminder::DefinitionName
 
     The constant string which identifies the definition of details which contain audible reminder information of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemAudibleReminder::DefinitionName(QStringLiteral("AudibleReminder"));
+const QOrganizerItemDetail::DetailType QOrganizerItemAudibleReminder::DefinitionName(QOrganizerItemDetail::TypeAudibleReminder);
 
 /*!
     \enum QOrganizerItemAudibleReminder::AudibleReminderField
@@ -1088,8 +1111,10 @@ QUrl QOrganizerItemAudibleReminder::dataUrl() const
     \variable QOrganizerItemEmailReminder::DefinitionName
 
     The constant string which identifies the definition of details which contain email reminder information of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemEmailReminder::DefinitionName(QStringLiteral("EmailReminder"));
+const QOrganizerItemDetail::DetailType QOrganizerItemEmailReminder::DefinitionName(QOrganizerItemDetail::TypeEmailReminder);
 
 /*!
     \enum QOrganizerItemEmailReminder::EmailReminderField
@@ -1180,8 +1205,10 @@ QStringList QOrganizerItemEmailReminder::recipients() const
     \variable QOrganizerItemVisualReminder::DefinitionName
 
     The constant string which identifies the definition of details which contain visual reminder information of an organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemVisualReminder::DefinitionName(QStringLiteral("VisualReminder"));
+const QOrganizerItemDetail::DetailType QOrganizerItemVisualReminder::DefinitionName(QOrganizerItemDetail::TypeVisualReminder);
 
 /*!
     \enum QOrganizerItemVisualReminder::VisualReminderField
@@ -1246,8 +1273,7 @@ QUrl QOrganizerItemVisualReminder::dataUrl() const
 QOrganizerItemFilter QOrganizerItemTag::match(const QString &substring)
 {
     QOrganizerItemDetailFilter f;
-    f.setDetailDefinitionName(QOrganizerItemTag::DefinitionName,
-                              QOrganizerItemTag::FieldTag);
+    f.setDetail(QOrganizerItemTag::DefinitionName, QOrganizerItemTag::FieldTag);
     f.setValue(substring);
     f.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -1258,8 +1284,10 @@ QOrganizerItemFilter QOrganizerItemTag::match(const QString &substring)
     \variable QOrganizerItemTag::DefinitionName
 
     The constant string which identifies the definition of details which are tags.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemTag::DefinitionName(QStringLiteral("Tag"));
+const QOrganizerItemDetail::DetailType QOrganizerItemTag::DefinitionName(QOrganizerItemDetail::TypeTag);
 
 /*!
     \enum QOrganizerItemTag::TagField
@@ -1307,8 +1335,10 @@ QString QOrganizerItemTag::tag() const
     \variable QOrganizerItemTimestamp::DefinitionName
 
     The constant string which identifies the definition of details which are organizer synchronisation timestamps.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemTimestamp::DefinitionName(QStringLiteral("Timestamp"));
+const QOrganizerItemDetail::DetailType QOrganizerItemTimestamp::DefinitionName(QOrganizerItemDetail::TypeTimestamp);
 
 /*!
     \enum QOrganizerItemTimestamp::TimestampField
@@ -1370,8 +1400,10 @@ void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
     \variable QOrganizerTodoProgress::DefinitionName
 
     The constant string which identifies the definition of details which contain progress information about a todo item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerTodoProgress::DefinitionName(QStringLiteral("TodoProgress"));
+const QOrganizerItemDetail::DetailType QOrganizerTodoProgress::DefinitionName(QOrganizerItemDetail::TypeTodoProgress);
 
 /*!
     \enum QOrganizerTodoProgress::TodoProgressField
@@ -1463,8 +1495,10 @@ void QOrganizerTodoProgress::setPercentageComplete(int percentage)
     \variable QOrganizerTodoTime::DefinitionName
 
     The constant string which identifies the definition of details which contain time-range information about a todo item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerTodoTime::DefinitionName(QStringLiteral("TodoTime"));
+const QOrganizerItemDetail::DetailType QOrganizerTodoTime::DefinitionName(QOrganizerItemDetail::TypeTodoTime);
 
 /*!
     \enum QOrganizerTodoTime::TodoTimeField
@@ -1569,8 +1603,10 @@ bool QOrganizerTodoTime::isAllDay() const
     \variable QOrganizerItemType::DefinitionName
 
     The constant string which identifies the definition of details which identify the type of the organizer item.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemType::DefinitionName(QStringLiteral("Type"));
+const QOrganizerItemDetail::DetailType QOrganizerItemType::DefinitionName(QOrganizerItemDetail::TypeItemType);
 
 /*!
     \enum QOrganizerItemType::ItemTypeField
@@ -1612,8 +1648,10 @@ void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
 /*!
    \variable QOrganizerEventRsvp::DefinitionName
    The constant string which identifies the definition of details which are event invitation RSVP details.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerEventRsvp::DefinitionName(QStringLiteral("Rsvp"));
+const QOrganizerItemDetail::DetailType QOrganizerEventRsvp::DefinitionName(QOrganizerItemDetail::TypeEventRsvp);
 
 /*!
     \enum QOrganizerEventRsvp::EventRsvpField
@@ -1773,8 +1811,10 @@ QString QOrganizerEventRsvp::organizerEmail() const
    \variable QOrganizerItemClassification::DefinitionName
 
    The constant string which identifies the definition of Classification-detail.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemClassification::DefinitionName(QStringLiteral("Classification"));
+const QOrganizerItemDetail::DetailType QOrganizerItemClassification::DefinitionName(QOrganizerItemDetail::TypeClassification);
 
 /*!
     \enum QOrganizerItemClassification::ClassificationField
@@ -1838,8 +1878,10 @@ QString QOrganizerItemClassification::classification() const
     \variable QOrganizerItemExtendedDetail::DefinitionName
 
     The constant string which identifies the definition of details which are extended details.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
  */
-const QString QOrganizerItemExtendedDetail::DefinitionName(QStringLiteral("ExtendedDetail"));
+const QOrganizerItemDetail::DetailType QOrganizerItemExtendedDetail::DefinitionName(QOrganizerItemDetail::TypeExtendedDetail);
 
 /*!
     \enum QOrganizerItemExtendedDetail::ExtendedDetailField

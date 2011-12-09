@@ -638,7 +638,7 @@ bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items)
 
   \sa QOrganizerManager::saveItem()
  */
-bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QStringList& definitionMask)
+bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QList<QOrganizerItemDetail::DetailType> &definitionMask)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     if (!items) {
@@ -764,7 +764,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManager::supportedFilters() co
 /*!
     Returns the list of details that are supported by this manager for the given \a itemType.
  */
-QStringList QOrganizerManager::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
+QList<QOrganizerItemDetail::DetailType> QOrganizerManager::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     return d->m_engine->supportedItemDetails(itemType);
 }

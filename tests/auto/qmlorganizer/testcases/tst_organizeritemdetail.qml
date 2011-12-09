@@ -149,7 +149,7 @@ TestCase {
     }
 
     function test_extendedDetail() {
-        compare(extendedDetail.type, Detail.Customized)
+        compare(extendedDetail.type, Detail.ExtendedDetail)
 
         compare(extendedDetail.name, "")
         compare(extendedDetail.value(ExtendedDetail.FieldName), undefined)
@@ -358,7 +358,7 @@ TestCase {
     }
 
     function test_type() {
-        compare(type.type, Detail.Type)
+        compare(type.type, Detail.ItemType)
 
         compare(type.value(Type.FieldType), undefined)
         type.itemType = Type.TodoOccurrence

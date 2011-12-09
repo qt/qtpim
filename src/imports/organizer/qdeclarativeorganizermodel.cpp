@@ -816,10 +816,14 @@ QVariantList QDeclarativeOrganizerModel::itemsByTimePeriod(const QDateTime &star
     QVariantList list;
 
     if (start.isValid() && end.isValid()) {
+        QDateTime startTime;
+        QDateTime endTime;
         foreach (QDeclarativeOrganizerItem *item, d->m_items) {
-            if ((item->itemStartTime() <= start && item->itemEndTime() >= end)
-                || (item->itemStartTime() >= start && item->itemStartTime() <= end)
-                || (item->itemEndTime() >= start && item->itemEndTime() <= end)) {
+            startTime = item->itemStartTime();
+            endTime = item->itemEndTime();
+            if ((startTime.isValid() && startTime <= start && endTime >= end)
+                || (startTime >= start && startTime <= end)
+                || (endTime >= start && endTime <= end)) {
                 list.append(QVariant::fromValue((QObject *)item));
             }
         }

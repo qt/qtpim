@@ -124,11 +124,11 @@ void QOrganizerItemDetailRangeFilter::setDetail(QOrganizerItemDetail::DetailType
 {
     Q_D(QOrganizerItemDetailRangeFilter);
     if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
-        d->m_defId = detailType;
-        d->m_fieldId = field;
+        d->m_detailType = detailType;
+        d->m_detailField = field;
     } else {
-        d->m_defId = QOrganizerItemDetail::TypeUndefined;
-        d->m_fieldId = -1;
+        d->m_detailType = QOrganizerItemDetail::TypeUndefined;
+        d->m_detailField = -1;
     }
 }
 
@@ -158,7 +158,7 @@ QOrganizerItemFilter::MatchFlags QOrganizerItemDetailRangeFilter::matchFlags() c
 QOrganizerItemDetail::DetailType QOrganizerItemDetailRangeFilter::detailType() const
 {
     Q_D(const QOrganizerItemDetailRangeFilter);
-    return d->m_defId;
+    return d->m_detailType;
 }
 
 /*!
@@ -177,7 +177,7 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetailRangeFilter::detailDefiniti
 int QOrganizerItemDetailRangeFilter::detailField() const
 {
     Q_D(const QOrganizerItemDetailRangeFilter);
-    return d->m_fieldId;
+    return d->m_detailField;
 }
 
 /*!

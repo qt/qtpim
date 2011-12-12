@@ -66,16 +66,16 @@ class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 public:
     QOrganizerItemDetailFilterPrivate()
         : QOrganizerItemFilterPrivate()
-        , m_defId(QOrganizerItemDetail::TypeUndefined)
-        , m_fieldId(-1)
+        , m_detailType(QOrganizerItemDetail::TypeUndefined)
+        , m_detailField(-1)
         , m_flags(0)
     {
     }
 
     QOrganizerItemDetailFilterPrivate(const QOrganizerItemDetailFilterPrivate& other)
         : QOrganizerItemFilterPrivate(other),
-        m_defId(other.m_defId),
-        m_fieldId(other.m_fieldId),
+        m_detailType(other.m_detailType),
+        m_detailField(other.m_detailField),
         m_exactValue(other.m_exactValue),
         m_flags(other.m_flags)
     {
@@ -84,9 +84,9 @@ public:
     virtual bool compare(const QOrganizerItemFilterPrivate* other) const
     {
         const QOrganizerItemDetailFilterPrivate *od = static_cast<const QOrganizerItemDetailFilterPrivate*>(other);
-        if (m_defId != od->m_defId)
+        if (m_detailType != od->m_detailType)
             return false;
-        if (m_fieldId != od->m_fieldId)
+        if (m_detailField != od->m_detailField)
             return false;
         if (m_exactValue != od->m_exactValue)
             return false;
@@ -98,7 +98,7 @@ public:
     QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
-            stream << m_defId << m_fieldId << m_exactValue << static_cast<quint32>(m_flags);
+            stream << m_detailType << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
         }
         return stream;
     }
@@ -108,8 +108,8 @@ public:
         if (formatVersion == 1) {
             quint32 flags;
             quint32 defId;
-            stream >> defId >> m_fieldId >> m_exactValue >> flags;
-            m_defId = static_cast<QOrganizerItemDetail::DetailType>(defId);
+            stream >> defId >> m_detailField >> m_exactValue >> flags;
+            m_detailType = static_cast<QOrganizerItemDetail::DetailType>(defId);
             m_flags = static_cast<QOrganizerItemFilter::MatchFlags>(flags);
         }
         return stream;
@@ -119,11 +119,11 @@ public:
     QDebug& debugStreamOut(QDebug& dbg) const
     {
         dbg.nospace() << "QOrganizerItemDetailFilter(";
-        dbg.nospace() << "detailDefinitionName=";
-        dbg.nospace() << m_defId;
+        dbg.nospace() << "detailType=";
+        dbg.nospace() << m_detailType;
         dbg.nospace() << ",";
-        dbg.nospace() << "detailFieldName=";
-        dbg.nospace() << m_fieldId;
+        dbg.nospace() << "detailField=";
+        dbg.nospace() << m_detailField;
         dbg.nospace() << ",";
         dbg.nospace() << "value=";
         dbg.nospace() << m_exactValue;
@@ -137,8 +137,8 @@ public:
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFilter, QOrganizerItemFilter::DetailFilter)
 
-    QOrganizerItemDetail::DetailType m_defId;
-    int m_fieldId;
+    QOrganizerItemDetail::DetailType m_detailType;
+    int m_detailField;
     QVariant m_exactValue;
     QOrganizerItemFilter::MatchFlags m_flags;
 };

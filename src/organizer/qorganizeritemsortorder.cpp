@@ -117,7 +117,7 @@ QOrganizerItemSortOrder &QOrganizerItemSortOrder::operator=(const QOrganizerItem
 bool QOrganizerItemSortOrder::isValid() const
 {
     /* We clear both when one is empty, so we only need to check one */
-    if (d->m_definitionName == QOrganizerItemDetail::TypeUndefined)
+    if (d->m_detailType == QOrganizerItemDetail::TypeUndefined)
         return false;
     return true;
 }
@@ -132,8 +132,8 @@ bool QOrganizerItemSortOrder::operator ==(const QOrganizerItemSortOrder &other) 
     if (d->m_blankPolicy == other.d->m_blankPolicy
         && d->m_direction == other.d->m_direction
         && d->m_sensitivity == other.d->m_sensitivity
-        && d->m_definitionName == other.d->m_definitionName
-        && d->m_fieldName == other.d->m_fieldName)
+        && d->m_detailType == other.d->m_detailType
+        && d->m_detailField == other.d->m_detailField)
         return true;
     return false;
 }
@@ -185,10 +185,10 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder)
 QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
 {
     dbg.nospace() << "QOrganizerItemSortOrder(";
-    dbg.nospace() << "detailDefinitionName=";
+    dbg.nospace() << "detailType=";
     dbg.nospace() << sortOrder.detailType();
     dbg.nospace() << ",";
-    dbg.nospace() << "detailFieldName=";
+    dbg.nospace() << "detailField=";
     dbg.nospace() << sortOrder.detailField();
     dbg.nospace() << ",";
     dbg.nospace() << "blankPolicy=";
@@ -213,11 +213,11 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
 void QOrganizerItemSortOrder::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
     if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
-        d->m_definitionName = detailType;
-        d->m_fieldName = field;
+        d->m_detailType = detailType;
+        d->m_detailField = field;
     } else {
-        d->m_definitionName = QOrganizerItemDetail::TypeUndefined;
-        d->m_fieldName = -1;
+        d->m_detailType = QOrganizerItemDetail::TypeUndefined;
+        d->m_detailField = -1;
     }
 }
 
@@ -256,7 +256,7 @@ void QOrganizerItemSortOrder::setDirection(Qt::SortOrder direction)
  */
 QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailType() const
 {
-    return d->m_definitionName;
+    return d->m_detailType;
 }
 
 /*!
@@ -274,7 +274,7 @@ QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailDefinitionName()
  */
 int QOrganizerItemSortOrder::detailField() const
 {
-    return d->m_fieldName;
+    return d->m_detailField;
 }
 
 /*!

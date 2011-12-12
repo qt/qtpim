@@ -96,20 +96,6 @@ QString QOrganizerItemDescription::description() const
 */
 
 /*!
-    Returns a filter suitable for finding items with a display label containing the specified
-    \a substring.
- */
-QOrganizerItemFilter QOrganizerItemDisplayLabel::match(const QString &substring)
-{
-    QOrganizerItemDetailFilter f;
-    f.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
-    f.setValue(substring);
-    f.setMatchFlags(QOrganizerItemFilter::MatchContains);
-
-    return f;
-}
-
-/*!
     \fn void QOrganizerItemDisplayLabel::setLabel(const QString& label)
 
     Sets the display label of the organizer item to \a label.
@@ -564,21 +550,6 @@ void QOrganizerJournalTime::setEntryDateTime(const QDateTime &entryDateTime)
  */
 
 /*!
-    Returns a filter suitable for finding items whose location matches the specified \a substring.
-    This filter matches location labels only.  If you wish to match against latitude or longitude
-    co-ordinates, use a QContactDetailFilter instead.
- */
-QOrganizerItemFilter QOrganizerItemLocation::match(const QString &substring)
-{
-    QOrganizerItemDetailFilter f;
-    f.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
-    f.setValue(substring);
-    f.setMatchFlags(QOrganizerItemFilter::MatchContains);
-
-    return f;
-}
-
-/*!
     \variable QOrganizerItemLocation::DefinitionName
 
     The constant string which identifies the definition of details
@@ -666,20 +637,6 @@ void QOrganizerItemLocation::setLabel(const QString &label)
  */
 
 /*!
-    Returns a filter suitable for finding items with a comment containing the specified
-    \a substring.
- */
-QOrganizerItemFilter QOrganizerItemComment::match(const QString &substring)
-{
-    QOrganizerItemDetailFilter f;
-    f.setDetail(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
-    f.setValue(substring);
-    f.setMatchFlags(QOrganizerItemFilter::MatchContains);
-
-    return f;
-}
-
-/*!
     \variable QOrganizerItemComment::DefinitionName
 
     The constant string which identifies the definition of details which are comments.
@@ -722,19 +679,6 @@ QString QOrganizerItemComment::comment() const
     \inmodule QtOrganizer
     \ingroup organizer-details
  */
-
-/*!
-    Returns a filter suitable for finding items of the specified \a priority.
- */
-QOrganizerItemFilter QOrganizerItemPriority::match(QOrganizerItemPriority::Priority priority)
-{
-    QOrganizerItemDetailFilter f;
-    f.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
-    f.setValue(priority);
-    f.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-
-    return f;
-}
 
 /*!
     \enum QOrganizerItemPriority::Priority
@@ -1264,20 +1208,6 @@ QUrl QOrganizerItemVisualReminder::dataUrl() const
     \inmodule QtOrganizer
     \ingroup organizer-details
  */
-
-/*!
-    Returns a filter suitable for finding items with a tag containing the specified
-    \a substring.
- */
-QOrganizerItemFilter QOrganizerItemTag::match(const QString &substring)
-{
-    QOrganizerItemDetailFilter f;
-    f.setDetail(QOrganizerItemTag::DefinitionName, QOrganizerItemTag::FieldTag);
-    f.setValue(substring);
-    f.setMatchFlags(QOrganizerItemFilter::MatchContains);
-
-    return f;
-}
 
 /*!
     \variable QOrganizerItemTag::DefinitionName

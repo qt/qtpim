@@ -66,9 +66,6 @@ public:
 
     void setLabel(const QString &label);
     QString label() const;
-
-    // Convenience filter
-    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE

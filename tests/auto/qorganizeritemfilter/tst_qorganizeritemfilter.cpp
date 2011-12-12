@@ -50,6 +50,7 @@ QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerItem)
 Q_DECLARE_METATYPE(QOrganizerItemFilter)
+Q_DECLARE_METATYPE(QOrganizerItemDetailFilter)
 
 class tst_QOrganizerItemFilter : public QObject
 {
@@ -973,8 +974,14 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
     QTest::addColumn<QOrganizerItemFilter>("in");
     QTest::addColumn<QOrganizerItemFilter>("expected");
 
-    QOrganizerItemFilter detailFilter1 = QOrganizerItemLocation::match("1");
-    QOrganizerItemFilter detailFilter2 = QOrganizerItemLocation::match("2");
+    QOrganizerItemDetailFilter detailFilter1;
+    detailFilter1.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
+    detailFilter1.setValue("1");
+    detailFilter1.setMatchFlags(QOrganizerItemFilter::MatchContains);
+    QOrganizerItemDetailFilter detailFilter2;
+    detailFilter2.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
+    detailFilter2.setValue("2");
+    detailFilter2.setMatchFlags(QOrganizerItemFilter::MatchContains);
     QOrganizerItemInvalidFilter invalidFilter;
     QOrganizerItemFilter defaultFilter;
 
@@ -1180,7 +1187,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 void tst_QOrganizerItemFilter::testFilter()
 {
     QFETCH(QOrganizerItem, item);
-    QFETCH(QOrganizerItemFilter, filter);
+    QFETCH(QOrganizerItemDetailFilter, filter);
     QFETCH(bool, expected);
 
     QCOMPARE(QOrganizerManagerEngine::testFilter(filter, item), expected);
@@ -1189,7 +1196,7 @@ void tst_QOrganizerItemFilter::testFilter()
 void tst_QOrganizerItemFilter::testFilter_data()
 {
     QTest::addColumn<QOrganizerItem>("item");
-    QTest::addColumn<QOrganizerItemFilter>("filter");
+    QTest::addColumn<QOrganizerItemDetailFilter>("filter");
     QTest::addColumn<bool>("expected");
 
     // XXX TODO: other detail types (comment, description, ...)
@@ -1200,34 +1207,53 @@ void tst_QOrganizerItemFilter::testFilter_data()
         name.setLabel("test location");
         item.saveDetail(&name);
 
+        QOrganizerItemDetailFilter filter;
+        filter.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
+        filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
+
+        filter.setValue("test location");
         QTest::newRow("QOrganizerItemLocation::match location")
                 << item
-                << QOrganizerItemLocation::match("test location")
+                << filter
                 << true;
+
+        filter.setValue("ocati");
         QTest::newRow("QOrganizerItemLocation::match substring")
                 << item
-                << QOrganizerItemLocation::match(QLatin1String("ocati"))
+                << filter
                 << true;
+
+        filter.setValue("foo");
         QTest::newRow("QOrganizerItemLocation::match negative")
                 << item
-                << QOrganizerItemLocation::match("foo")
+                << filter
                 << false;
     }
 
     {
         QOrganizerItem item;
         item.setDisplayLabel(QLatin1String("foo"));
+
+        QOrganizerItemDetailFilter filter;
+        filter.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
+        filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
+
+        filter.setValue("foo");
         QTest::newRow("QOrganizerItemDisplayLabel::match positive")
                 << item
-                << QOrganizerItemDisplayLabel::match("foo")
+                << filter
                 << true;
+
+        filter.setValue("o");
         QTest::newRow("QOrganizerItemDisplayLabel::match positive substring")
                 << item
-                << QOrganizerItemDisplayLabel::match("o")
+                << filter
                 << true;
+
+        filter.setValue("bar");
         QTest::newRow("QOrganizerItemDisplayLabel::match negative")
                 << item
-                << QOrganizerItemDisplayLabel::match("bar")
+                << filter
                 << false;
     }
 
@@ -1236,13 +1262,21 @@ void tst_QOrganizerItemFilter::testFilter_data()
         QOrganizerItemPriority priority;
         priority.setPriority(QOrganizerItemPriority::VeryHighPriority);
         item.saveDetail(&priority);
+
+        QOrganizerItemDetailFilter filter;
+        filter.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
+        filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
+
+        filter.setValue(QOrganizerItemPriority::VeryHighPriority);
         QTest::newRow("QOrganizerItemPriority::match positive")
                 << item
-                << QOrganizerItemPriority::match(QOrganizerItemPriority::VeryHighPriority)
+                << filter
                 << true;
+
+        filter.setValue(QOrganizerItemPriority::VeryLowPriority);
         QTest::newRow("QOrganizerItemPhoneNumber::match negative")
                 << item
-                << QOrganizerItemPriority::match(QOrganizerItemPriority::VeryLowPriority)
+                << filter
                 << false;
     }
 }

@@ -72,9 +72,6 @@ public:
 
     void setPriority(Priority priority);
     Priority priority() const;
-
-    // Convenience filter
-    static QOrganizerItemFilter match(Priority priority);
 };
 
 QTORGANIZER_END_NAMESPACE

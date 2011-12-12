@@ -60,9 +60,6 @@ public:
 
     void setTag(const QString &tag);
     QString tag() const;
-
-    // Convenience filter
-    static QOrganizerItemFilter match(const QString &substring);
 };
 
 QTORGANIZER_END_NAMESPACE

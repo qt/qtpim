@@ -60,9 +60,12 @@
 #include <QObject>
 #include <QString>
 
+QT_BEGIN_NAMESPACE
+class QThread;
+QT_END_NAMESPACE
+
 QTCONTACTS_USE_NAMESPACE
 
-class QThread;
 class MaliciousThreadObject;
 class MaliciousAsyncManagerEngine : public QContactManagerEngine
 {

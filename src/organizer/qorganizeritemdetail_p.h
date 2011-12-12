@@ -68,7 +68,6 @@ public:
         : QSharedData()
         , m_id(lastDetailKey.fetchAndAddOrdered(1))
         , m_detailType(QOrganizerItemDetail::TypeUndefined)
-        , m_access(QOrganizerItemDetail::NoConstraint)
     {
     }
 
@@ -77,7 +76,6 @@ public:
         , m_id(other.m_id)
         , m_detailType(other.m_detailType)
         , m_values(other.m_values)
-        , m_access(other.m_access)
     {
     }
 
@@ -88,14 +86,8 @@ public:
     int m_id; // internal, unique id.
     QOrganizerItemDetail::DetailType m_detailType;
     QHash<int, QVariant> m_values;
-    QOrganizerItemDetail::AccessConstraints m_access;
 
     static QAtomicInt lastDetailKey;
-
-    static void setAccessConstraints(QOrganizerItemDetail *d, QOrganizerItemDetail::AccessConstraints constraint)
-    {
-        d->d->m_access = constraint;
-    }
 
     static const QOrganizerItemDetailPrivate *detailPrivate(const QOrganizerItemDetail &detail)
     {

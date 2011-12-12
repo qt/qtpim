@@ -53,8 +53,6 @@ class QDeclarativeOrganizerItemDetail : public QObject
 
     Q_ENUMS(DetailType)
 
-    Q_PROPERTY(bool readOnly READ readOnly)
-    Q_PROPERTY(bool removable READ removable)
     Q_PROPERTY(DetailType type READ type)
 
     // to be removed
@@ -90,9 +88,6 @@ public:
 
     explicit QDeclarativeOrganizerItemDetail(QObject *parent = 0);
     ~QDeclarativeOrganizerItemDetail();
-
-    bool readOnly() const;
-    bool removable() const;
 
     virtual DetailType type() const;
 

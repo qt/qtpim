@@ -1044,7 +1044,6 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
 
         QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemTimestamp::DefinitionName);
         ts.setLastModified(QDateTime::currentDateTime());
-        QOrganizerManagerEngine::setDetailAccessConstraints(&ts, QOrganizerItemDetail::ReadOnly | QOrganizerItemDetail::Irremovable);
         theOrganizerItem->saveDetail(&ts);
 
         if (!fixOccurrenceReferences(theOrganizerItem, error)) {
@@ -1066,7 +1065,6 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemTimestamp::DefinitionName);
         ts.setLastModified(QDateTime::currentDateTime());
         ts.setCreated(ts.lastModified());
-        setDetailAccessConstraints(&ts, QOrganizerItemDetail::ReadOnly | QOrganizerItemDetail::Irremovable);
         theOrganizerItem->saveDetail(&ts);
 
         // now modify the target collection id; if null, set to default id.  BUT record whether we did that.

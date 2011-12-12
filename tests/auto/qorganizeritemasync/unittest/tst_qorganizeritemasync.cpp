@@ -395,7 +395,7 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
             }
 
             // equality without checking the detail key values.
-            if (d.type() == d2.type() && d.accessConstraints() == d2.accessConstraints() && d.values() == d2.values()) {
+            if (d.type() == d2.type() && d.values() == d2.values()) {
                 a.removeDetail(&d);
                 b.removeDetail(&d2);
                 break;
@@ -420,11 +420,11 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
     foreach (QOrganizerItemDetail d, aDetails) {
         bool foundCurrentDetail = false;
         foreach (QOrganizerItemDetail d2, bDetails) {
-            if (d.type() == d2.type() && d.accessConstraints() == d2.accessConstraints() && d.values() == d2.values()) {
+            if (d.type() == d2.type() && d.values() == d2.values()) {
                 foundCurrentDetail = true;
             }
 
-            if (d.type() == d2.type() && d.accessConstraints() == d2.accessConstraints() && d.type() == QOrganizerItemParent::DefinitionName) {
+            if (d.type() == d2.type() && d.type() == QOrganizerItemParent::DefinitionName) {
                 // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
                 QOrganizerItemParent p1 = d;
                 QOrganizerItemParent p2 = d2;
@@ -450,11 +450,11 @@ bool tst_QOrganizerItemAsync::detailListContainsDetailIgnoringDetailKeys(const Q
             foundCurrentDetail = true;
         }
 
-        if (det.type() == d2.type() && det.accessConstraints() == d2.accessConstraints() && det.values() == d2.values()) {
+        if (det.type() == d2.type() && det.values() == d2.values()) {
             foundCurrentDetail = true;
         }
 
-        if (det.type() == d2.type() && det.accessConstraints() == d2.accessConstraints() && det.type() == QOrganizerItemParent::DefinitionName) {
+        if (det.type() == d2.type() && det.type() == QOrganizerItemParent::DefinitionName) {
             // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
             QOrganizerItemParent p1 = det;
             QOrganizerItemParent p2 = d2;

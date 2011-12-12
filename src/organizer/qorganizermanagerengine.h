@@ -148,7 +148,6 @@ public:
     static void updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
 
     // Other protected area update functions
-    static void setDetailAccessConstraints(QOrganizerItemDetail* detail, QOrganizerItemDetail::AccessConstraints constraints);
     static const QOrganizerItemEngineId* engineItemId(const QOrganizerItemId& id);
     static const QOrganizerCollectionEngineId* engineCollectionId(const QOrganizerCollectionId& id);
 

@@ -203,7 +203,6 @@ void QOrganizerItem::clearDetails()
 
     QOrganizerItemType organizeritemType;
     organizeritemType.setType(QOrganizerItemType::TypeUndefined);
-    organizeritemType.d->m_access = QOrganizerItemDetail::Irremovable;
     d->m_details.append(organizeritemType);
 }
 
@@ -343,15 +342,6 @@ QList<QOrganizerItemDetail> QOrganizerItem::details(QOrganizerItemDetail::Detail
     this organizer item, that detail is overwritten.  Otherwise, a new id is generated
     and set in the detail, and the detail is added to the organizer item.
 
-    If the detail's access constraint includes \c QOrganizerItemDetail::ReadOnly,
-    this function will return true and save the detail in the organizer item,
-    however attempting to save the organizer item in a manager may fail (if that manager
-    decides that the read only detail should not be updated).
-    Details with the \c QOrganizerItemDetail::ReadOnly constraint set are typically provided
-    in a organizer item by the manager, and are usually information that is either
-    synthesized, or not intended to be changed by the user (e.g. presence information
-    for other organizer items).
-
     If \a detail is a QOrganizerItemType, the existing organizer item type will
     be overwritten with \a detail.  There is never more than one organizer item type
     in a organizer item.
@@ -369,7 +359,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeItemType) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -383,7 +372,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDescription) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -397,7 +385,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDisplayLabel) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -411,7 +398,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeClassification) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
                 d->m_details.replace(i, *detail);
                 return true;
             }
@@ -427,7 +413,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
         const QOrganizerItemDetail& curr = d.constData()->m_details.at(i);
         if (detail->d.constData()->m_detailType == curr.d.constData()->m_detailType && detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
-            detail->d->m_access = d.constData()->m_details.at(i).accessConstraints();
             // Found the old version.  Replace it with this one.
             d->m_details[i] = *detail;
             return true;
@@ -444,9 +429,6 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     The detail in the organizer item which has the same key as that of the given \a detail
     will be removed if it exists.  Only the key is used for comparison - that is, the
     information in the detail may be different.
-
-    If the detail's access constraint includes \c QOrganizerItemDetail::Irremovable,
-    this function will return false.
 
     Returns true if the detail was removed successfully, false if an error occurred.
 
@@ -468,9 +450,6 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
 
     // make sure the detail exists (in some form) in the organizer item.
     if (removeIndex < 0)
-        return false;
-
-    if (detail->accessConstraints() & QOrganizerItemDetail::Irremovable)
         return false;
 
     // Type -detail is specific case which cannot be deleted
@@ -586,7 +565,6 @@ void QOrganizerItem::setType(QOrganizerItemType::ItemType type)
 {
     QOrganizerItemType newType = detail<QOrganizerItemType>();
     newType.setType(type);
-    newType.d->m_access = QOrganizerItemDetail::Irremovable;
     saveDetail(&newType);
 }
 

@@ -298,9 +298,6 @@ void tst_QOrganizerItemDetail::assignment()
     QVERIFY(c1 != p1); // assignment across types shouldn't work
     QVERIFY(c1.comment() == QString()); // should reset the detail
     QCOMPARE(c1, QOrganizerItemComment());
-
-    QOrganizerManagerEngine::setDetailAccessConstraints(&p2, QOrganizerItemDetail::Irremovable);
-    QVERIFY(p1 != p2);
 }
 
 void tst_QOrganizerItemDetail::templates()

@@ -541,23 +541,6 @@ QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes(
  */
 
 /*!
-  Sets the access constraints of \a detail to the supplied \a constraints.
-
-  This function is provided to allow engine implementations to report the
-  access constraints of retrieved details, without generally allowing the
-  access constraints to be modified after retrieval.
-
-  Application code should not call this function, since validation of the
-  detail will happen in the engine in any case.
- */
-void QOrganizerManagerEngine::setDetailAccessConstraints(QOrganizerItemDetail *detail, QOrganizerItemDetail::AccessConstraints constraints)
-{
-    if (detail) {
-        QOrganizerItemDetailPrivate::setAccessConstraints(detail, constraints);
-    }
-}
-
-/*!
   Adds the given \a item to the database if \a item has a
   default-constructed id, or an id with the manager URI set to the URI of
   this manager and a id of zero, otherwise updates the organizer item in

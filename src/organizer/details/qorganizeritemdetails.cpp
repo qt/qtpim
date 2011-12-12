@@ -815,8 +815,7 @@ const QOrganizerItemDetail::DetailType QOrganizerItemRecurrence::DefinitionName(
  */
 bool QOrganizerItemRecurrence::operator==(const QOrganizerItemRecurrence &other) const
 {
-    return accessConstraints() == other.accessConstraints()
-           && recurrenceRules() == other.recurrenceRules()
+    return recurrenceRules() == other.recurrenceRules()
            && exceptionRules() == other.exceptionRules()
            && recurrenceDates() == other.recurrenceDates()
            && exceptionDates() == other.exceptionDates();

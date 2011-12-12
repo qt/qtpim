@@ -52,10 +52,6 @@ TestCase {
         id: utility
     }
 
-    Detail {
-        id: emptyDetail
-    }
-
     EventTime {
         id: eventTime
     }
@@ -752,10 +748,5 @@ TestCase {
         detailChangedSpy.wait(waitTime)
         compare(tempClassification.classification, data.testValue.toString())
         compare(detailChangedSpy.count, 1)
-    }
-
-    function test_emptyDetail() {
-        compare(emptyDetail.readOnly, false)
-        compare(emptyDetail.removable, true)
     }
 }

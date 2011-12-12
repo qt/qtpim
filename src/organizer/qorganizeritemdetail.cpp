@@ -65,12 +65,6 @@ QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
     managers may support different details for different item types, e.g. certain manager may not support the
     timestamp, while others do.
 
-    When a QOrganizerItemDetail has been retrieved in a QOrganizerItem from a QOrganizerManager, it may have certain
-    access constraints provided with it, like \l ReadOnly or \l Irremovable.  This might mean that the
-    supplied detail is calculated or otherwise not modifiable by the user.
-    Also, some details may be marked \l Irremovable.  These are typically things that
-    an organizer item has to have - like a QOrganizerItemType.
-
     In general, QOrganizerItemDetail and the built in subclasses (like \l QOrganizerEventTime) provide
     convenience and standardized access to values. For example, \l QOrganizerEventTime provides a
     convenient API for manipulating a QOrganizerItemDetail to describe the start and end time of an
@@ -258,16 +252,13 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetail::definitionName() const
 }
 
 /*!
-    Compares this detail to \a other.  Returns true if the definition, access constraints and values of \a other are equal to those of this detail.
+    Compares this detail to \a other.  Returns true if the type and values of \a other are equal to those of this detail.
     The keys of each detail are not considered during the comparison, in order to allow details from different organizer items to
     be compared according to their values.
  */
 bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 {
     if (!(d->m_detailType == other.d->m_detailType))
-        return false;
-
-    if (d->m_access != other.d->m_access)
         return false;
 
     // QVariant doesn't support == on QOrganizerItemRecurrence - do it manually
@@ -291,7 +282,7 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
 uint qHash(const QOrganizerItemDetail &key)
 {
     const QOrganizerItemDetailPrivate *dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
-    uint hash = QT_PREPEND_NAMESPACE(qHash)(dptr->m_detailType) + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
+    uint hash = QT_PREPEND_NAMESPACE(qHash)(dptr->m_detailType);
     QHash<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
     while (it != dptr->m_values.constEnd()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
@@ -322,7 +313,6 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetail
     return out << formatVersion
                << detail.type()
-               << static_cast<quint32>(detail.accessConstraints())
                << detail.values();
 }
 
@@ -335,13 +325,10 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
     in >> formatVersion;
     if (formatVersion == 1) {
         quint32 detailType;
-        quint32 accessConstraintsInt;
         QMap<int, QVariant> values;
-        in >> detailType >> accessConstraintsInt >> values;
+        in >> detailType >> values;
 
         detail = QOrganizerItemDetail(static_cast<QOrganizerItemDetail::DetailType>(detailType));
-        QOrganizerItemDetail::AccessConstraints accessConstraints(accessConstraintsInt);
-        detail.d->m_access = accessConstraints;
 
         QMapIterator<int, QVariant> it(values);
         while (it.hasNext()) {
@@ -439,29 +426,5 @@ bool QOrganizerItemDetail::removeValue(int field)
     \fn T QOrganizerItemDetail::value(const QString &field) const
     Returns the value of the template type associated with the given \a field.
  */
-
-/*!
-    \enum QOrganizerItemDetail::AccessConstraint
-
-    This enum defines the access constraints for a detail.  This information is typically provided by
-    the manager when an organizer item is retrieved.
-
-    \value NoConstraint Users can read, write, and otherwise modify this detail in any manner.
-    \value ReadOnly Users cannot write or modify values in this detail.
-    \value Irremovable Users cannot remove this detail from an organizer item.
- */
-
-/*!
-    Returns the access constraints associated with the detail.
-
-    Some details may not be written to, while other details may
-    not be removed from an organizer item.
-
-    \sa QOrganizerItemDetail::AccessConstraints
- */
-QOrganizerItemDetail::AccessConstraints QOrganizerItemDetail::accessConstraints() const
-{
-    return d->m_access;
-}
 
 QTORGANIZER_END_NAMESPACE

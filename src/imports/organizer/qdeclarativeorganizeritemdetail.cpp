@@ -70,30 +70,6 @@ QDeclarativeOrganizerItemDetail::~QDeclarativeOrganizerItemDetail()
 }
 
 /*!
-    \qmlproperty bool Detail::readOnly
-
-    This property indicates whether or not this detail is read-only.
-
-    This property is read only.
- */
-bool QDeclarativeOrganizerItemDetail::readOnly() const
-{
-    return m_detail.accessConstraints().testFlag(QOrganizerItemDetail::ReadOnly);
-}
-
-/*!
-    \qmlproperty bool Detail::removable
-
-    This property indicates whether or not this detail is removale.
-
-    This property is read only.
- */
-bool QDeclarativeOrganizerItemDetail::removable() const
-{
-    return !m_detail.accessConstraints().testFlag(QOrganizerItemDetail::Irremovable);
-}
-
-/*!
     \qmlproperty enumeration Detail::type
 
     This property holds the type of the detail and is read only. It can be one of:
@@ -234,7 +210,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerEventTime::type
  */
 void QDeclarativeOrganizerEventTime::setAllDay(bool allDay)
 {
-    if (allDay != isAllDay() && !readOnly()) {
+    if (allDay != isAllDay()) {
         m_detail.setValue(QOrganizerEventTime::FieldAllDay, allDay);
         emit valueChanged();
     }
@@ -252,7 +228,7 @@ bool QDeclarativeOrganizerEventTime::isAllDay()
  */
 void QDeclarativeOrganizerEventTime::setStartDateTime(const QDateTime &datetime)
 {
-     if (datetime != startDateTime() && !readOnly()) {
+     if (datetime != startDateTime()) {
         m_detail.setValue(QOrganizerEventTime::FieldStartDateTime, datetime.toUTC());
         emit valueChanged();
      }
@@ -270,7 +246,7 @@ QDateTime QDeclarativeOrganizerEventTime::startDateTime() const
  */
 void QDeclarativeOrganizerEventTime::setEndDateTime(const QDateTime &datetime)
 {
-    if (datetime != endDateTime() && !readOnly()) {
+    if (datetime != endDateTime()) {
         m_detail.setValue(QOrganizerEventTime::FieldEndDateTime, datetime.toUTC());
         emit valueChanged();
     }
@@ -312,7 +288,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemComment::ty
  */
 void QDeclarativeOrganizerItemComment::setComment(const QString &newComment)
 {
-    if (newComment != comment() && !readOnly()) {
+    if (newComment != comment()) {
         m_detail.setValue(QOrganizerItemComment::FieldComment, newComment);
         emit valueChanged();
     }
@@ -354,7 +330,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDescription
  */
 void QDeclarativeOrganizerItemDescription::setDescription(const QString &desc)
 {
-    if (desc != description() && !readOnly()) {
+    if (desc != description()) {
         m_detail.setValue(QOrganizerItemDescription::FieldDescription, desc);
         emit valueChanged();
     }
@@ -396,7 +372,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDisplayLabe
  */
 void QDeclarativeOrganizerItemDisplayLabel::setLabel(const QString &newLabel)
 {
-    if (newLabel != label() && !readOnly()) {
+    if (newLabel != label()) {
         m_detail.setValue(QOrganizerItemDisplayLabel::FieldLabel, newLabel);
         emit valueChanged();
     }
@@ -438,7 +414,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemGuid::type(
  */
 void QDeclarativeOrganizerItemGuid::setGuid(const QString &newGuid)
 {
-    if (newGuid != guid() && !readOnly()) {
+    if (newGuid != guid()) {
         m_detail.setValue(QOrganizerItemGuid::FieldGuid, newGuid);
         emit valueChanged();
     }
@@ -482,7 +458,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemLocation::t
  */
 void QDeclarativeOrganizerItemLocation::setLatitude(double newLatitude)
 {
-    if (!qFuzzyCompare(newLatitude, latitude()) && !readOnly()) {
+    if (!qFuzzyCompare(newLatitude, latitude())) {
         m_detail.setValue(QOrganizerItemLocation::FieldLatitude, newLatitude);
         emit valueChanged();
     }
@@ -500,7 +476,7 @@ double QDeclarativeOrganizerItemLocation::latitude() const
  */
 void QDeclarativeOrganizerItemLocation::setLongitude(double newLongitude)
 {
-    if (!qFuzzyCompare(newLongitude, longitude()) && !readOnly()) {
+    if (!qFuzzyCompare(newLongitude, longitude())) {
         m_detail.setValue(QOrganizerItemLocation::FieldLongitude, newLongitude);
         emit valueChanged();
     }
@@ -518,7 +494,7 @@ double QDeclarativeOrganizerItemLocation::longitude() const
  */
 void QDeclarativeOrganizerItemLocation::setLabel(const QString &newLabel)
 {
-    if (newLabel != label() && !readOnly()) {
+    if (newLabel != label()) {
         m_detail.setValue(QOrganizerItemLocation::FieldLabel, newLabel);
         emit valueChanged();
     }
@@ -561,7 +537,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemParent::typ
  */
 void QDeclarativeOrganizerItemParent::setOriginalDate(const QDate &date)
 {
-    if (date != originalDate() && !readOnly()) {
+    if (date != originalDate()) {
         m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date);
         emit valueChanged();
     }
@@ -579,7 +555,7 @@ QDate QDeclarativeOrganizerItemParent::originalDate() const
  */
 void QDeclarativeOrganizerItemParent::setParentId(const QString &newParentId)
 {
-    if (newParentId != parentId() && !readOnly()) {
+    if (newParentId != parentId()) {
         m_detail.setValue(QOrganizerItemParent::FieldParentId,
                           QVariant::fromValue(QOrganizerItemId::fromString(newParentId)));
         emit valueChanged();
@@ -635,7 +611,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemPriority::t
  */
 void QDeclarativeOrganizerItemPriority::setPriority(QDeclarativeOrganizerItemPriority::Priority newPriority)
 {
-    if (newPriority != priority() && !readOnly()) {
+    if (newPriority != priority()) {
         m_detail.setValue(QOrganizerItemPriority::FieldPriority, static_cast<int>(newPriority));
         emit valueChanged();
     }
@@ -725,7 +701,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrgani
  */
 void QDeclarativeOrganizerItemRecurrence::setRecurrenceDates(const QVariantList &dates)
 {
-    if (dates != recurrenceDates() && !readOnly()) {
+    if (dates != recurrenceDates()) {
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
         foreach (QVariant date, dates) {
@@ -755,7 +731,7 @@ QVariantList QDeclarativeOrganizerItemRecurrence::recurrenceDates() const
  */
 void QDeclarativeOrganizerItemRecurrence::setExceptionDates(const QVariantList& dates)
 {
-    if (dates != exceptionDates() && !readOnly()) {
+    if (dates != exceptionDates()) {
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
         foreach (QVariant date, dates) {
@@ -849,7 +825,7 @@ QDeclarativeOrganizerItemTag::DetailType QDeclarativeOrganizerItemTag::type() co
  */
 void QDeclarativeOrganizerItemTag::setTag(const QString &newTag)
 {
-    if (newTag != tag() && !readOnly()) {
+    if (newTag != tag()) {
         m_detail.setValue(QOrganizerItemTag::FieldTag, newTag);
         emit valueChanged();
     }
@@ -892,7 +868,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemTimestamp::
  */
 void QDeclarativeOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
 {
-    if (timestamp != created() && !readOnly()) {
+    if (timestamp != created()) {
         m_detail.setValue(QOrganizerItemTimestamp::FieldCreationTimestamp, timestamp.toUTC());
         emit valueChanged();
     }
@@ -910,7 +886,7 @@ QDateTime QDeclarativeOrganizerItemTimestamp::created() const
  */
 void QDeclarativeOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
 {
-    if (timestamp != lastModified() && !readOnly()) {
+    if (timestamp != lastModified()) {
         m_detail.setValue(QOrganizerItemTimestamp::FieldModificationTimestamp, timestamp.toUTC());
         emit valueChanged();
     }
@@ -961,7 +937,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemType::type(
  */
 void QDeclarativeOrganizerItemType::setItemType(ItemType newType)
 {
-    if (newType != itemType() && !readOnly()) {
+    if (newType != itemType()) {
         m_detail.setValue(QOrganizerItemType::FieldType, static_cast<QOrganizerItemType::ItemType>(newType));
         emit valueChanged();
     }
@@ -1003,7 +979,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerJournalTime::ty
   */
 void QDeclarativeOrganizerJournalTime::setEntryDateTime(const QDateTime &datetime)
 {
-    if (datetime != entryDateTime() && !readOnly()) {
+    if (datetime != entryDateTime()) {
         m_detail.setValue(QOrganizerJournalTime::FieldEntryDateTime, datetime.toUTC());
         emit valueChanged();
     }
@@ -1047,7 +1023,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerTodoProgress::t
  */
 void QDeclarativeOrganizerTodoProgress::setPercentage(int newPercentage)
 {
-    if (newPercentage != percentage() && !readOnly()) {
+    if (newPercentage != percentage()) {
         if (newPercentage >=0 && newPercentage <= 100) {
             m_detail.setValue(QOrganizerTodoProgress::FieldPercentageComplete, newPercentage);
             emit valueChanged();
@@ -1068,7 +1044,7 @@ int QDeclarativeOrganizerTodoProgress::percentage() const
  */
 void QDeclarativeOrganizerTodoProgress::setFinishedDateTime(const QDateTime &datetime)
 {
-    if (datetime != finishedDateTime() && !readOnly()) {
+    if (datetime != finishedDateTime()) {
         m_detail.setValue(QOrganizerTodoProgress::FieldFinishedDateTime, datetime.toUTC());
         emit valueChanged();
     }
@@ -1092,7 +1068,7 @@ QDateTime QDeclarativeOrganizerTodoProgress::finishedDateTime() const
  */
 void QDeclarativeOrganizerTodoProgress::setStatus(QDeclarativeOrganizerTodoProgress::StatusType newStatus)
 {
-    if (newStatus != status() && !readOnly()) {
+    if (newStatus != status()) {
         m_detail.setValue(QOrganizerTodoProgress::FieldStatus, (int) newStatus);
         emit valueChanged();
     }
@@ -1136,7 +1112,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerTodoTime::type(
  */
 void QDeclarativeOrganizerTodoTime::setAllDay(bool allDay)
 {
-    if (allDay != isAllDay() && !readOnly()) {
+    if (allDay != isAllDay()) {
         m_detail.setValue(QOrganizerTodoTime::FieldAllDay, allDay);
         emit valueChanged();
     }
@@ -1154,7 +1130,7 @@ bool QDeclarativeOrganizerTodoTime::isAllDay()
  */
 void QDeclarativeOrganizerTodoTime::setStartDateTime(const QDateTime &datetime)
 {
-    if (datetime != startDateTime() && !readOnly()) {
+    if (datetime != startDateTime()) {
         m_detail.setValue(QOrganizerTodoTime::FieldStartDateTime, datetime.toUTC());
         emit valueChanged();
     }
@@ -1172,7 +1148,7 @@ QDateTime QDeclarativeOrganizerTodoTime::startDateTime() const
  */
 void QDeclarativeOrganizerTodoTime::setDueDateTime(const QDateTime &dateTime)
 {
-    if (dateTime != dueDateTime() && !readOnly()) {
+    if (dateTime != dueDateTime()) {
         m_detail.setValue(QOrganizerTodoTime::FieldDueDateTime, dateTime.toUTC());
         emit valueChanged();
     }
@@ -1239,7 +1215,7 @@ QDeclarativeOrganizerItemReminder::ReminderType QDeclarativeOrganizerItemReminde
  */
 void QDeclarativeOrganizerItemReminder::setRepetitionCount(int count)
 {
-    if (count != repetitionCount() && !readOnly()) {
+    if (count != repetitionCount()) {
         m_detail.setValue(QOrganizerItemReminder::FieldRepetitionCount, count);
         emit reminderChanged();
     }
@@ -1257,7 +1233,7 @@ int QDeclarativeOrganizerItemReminder::repetitionCount() const
  */
 void QDeclarativeOrganizerItemReminder::setRepetitionDelay(int delaySeconds)
 {
-    if (delaySeconds != repetitionDelay() && !readOnly()) {
+    if (delaySeconds != repetitionDelay()) {
         m_detail.setValue(QOrganizerItemReminder::FieldRepetitionDelay, delaySeconds);
         emit reminderChanged();
     }
@@ -1276,7 +1252,7 @@ int QDeclarativeOrganizerItemReminder::repetitionDelay() const
  */
 void QDeclarativeOrganizerItemReminder::setSecondsBeforeStart(int seconds)
 {
-    if (seconds != secondsBeforeStart() && !readOnly()) {
+    if (seconds != secondsBeforeStart()) {
         m_detail.setValue(QOrganizerItemReminder::FieldSecondsBeforeStart, seconds);
         emit reminderChanged();
     }
@@ -1322,7 +1298,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemAudibleRemi
  */
 void QDeclarativeOrganizerItemAudibleReminder::setDataUrl(const QUrl &url)
 {
-    if (url != dataUrl() && !readOnly()) {
+    if (url != dataUrl()) {
         m_detail.setValue(QOrganizerItemAudibleReminder::FieldDataUrl, url);
         emit valueChanged();
     }
@@ -1371,7 +1347,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemEmailRemind
  */
 void QDeclarativeOrganizerItemEmailReminder::setBody(const QString &newBody)
 {
-    if (newBody != body() && !readOnly()) {
+    if (newBody != body()) {
         m_detail.setValue(QOrganizerItemEmailReminder::FieldBody, newBody);
         emit valueChanged();
     }
@@ -1389,7 +1365,7 @@ QString QDeclarativeOrganizerItemEmailReminder::body() const
  */
 void QDeclarativeOrganizerItemEmailReminder::setSubject(const QString &newSubject)
 {
-    if (newSubject != subject() && !readOnly()) {
+    if (newSubject != subject()) {
         m_detail.setValue(QOrganizerItemEmailReminder::FieldSubject, newSubject);
         emit valueChanged();
     }
@@ -1408,7 +1384,7 @@ QString QDeclarativeOrganizerItemEmailReminder::subject() const
  */
 void QDeclarativeOrganizerItemEmailReminder::setRecipients(const QStringList &newRecipients)
 {
-    if (newRecipients != recipients() && !readOnly()) {
+    if (newRecipients != recipients()) {
         m_detail.setValue(QOrganizerItemEmailReminder::FieldRecipients, newRecipients);
         emit valueChanged();
     }
@@ -1426,7 +1402,7 @@ QStringList QDeclarativeOrganizerItemEmailReminder::recipients() const
  */
 void QDeclarativeOrganizerItemEmailReminder::setAttachments(const QVariantList &newAttachments)
 {
-    if (newAttachments != attachments() && !readOnly()) {
+    if (newAttachments != attachments()) {
         m_detail.setValue(QOrganizerItemEmailReminder::FieldAttachments, newAttachments);
         emit valueChanged();
     }
@@ -1473,7 +1449,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemVisualRemin
  */
 void QDeclarativeOrganizerItemVisualReminder::setMessage(const QString &msg)
 {
-    if (msg != message() && !readOnly()) {
+    if (msg != message()) {
         m_detail.setValue(QOrganizerItemVisualReminder::FieldMessage, msg);
         emit valueChanged();
     }
@@ -1491,7 +1467,7 @@ QString QDeclarativeOrganizerItemVisualReminder::message() const
  */
 void QDeclarativeOrganizerItemVisualReminder::setDataUrl(const QUrl &url)
 {
-    if (url != dataUrl() && !readOnly()) {
+    if (url != dataUrl()) {
         m_detail.setValue(QOrganizerItemVisualReminder::FieldDataUrl, url);
         emit valueChanged();
     }
@@ -1534,7 +1510,7 @@ QDeclarativeOrganizerItemExtendedDetail::DetailType QDeclarativeOrganizerItemExt
  */
 void QDeclarativeOrganizerItemExtendedDetail::setName(const QString &newDetailName)
 {
-    if (newDetailName != name() && !readOnly()) {
+    if (newDetailName != name()) {
         m_detail.setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailName, newDetailName);
         emit valueChanged();
     }
@@ -1550,10 +1526,10 @@ QString QDeclarativeOrganizerItemExtendedDetail::name() const
 
     This property holds the data of the extended detail.
  */
-void QDeclarativeOrganizerItemExtendedDetail::setData(const QVariant &data)
+void QDeclarativeOrganizerItemExtendedDetail::setData(const QVariant &newData)
 {
-    if (!readOnly()) {
-        setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailData, data);
+    if (newData != data()) {
+        setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailData, newData);
         emit valueChanged();
     }
 }
@@ -1597,7 +1573,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerEventAttendee::
  */
 void QDeclarativeOrganizerEventAttendee::setName(const QString &newName)
 {
-    if (name() != newName && !readOnly()) {
+    if (name() != newName) {
         m_detail.setValue(QOrganizerEventAttendee::FieldName, newName);
         emit valueChanged();
     }
@@ -1615,7 +1591,7 @@ QString QDeclarativeOrganizerEventAttendee::name() const
  */
 void QDeclarativeOrganizerEventAttendee::setEmailAddress(const QString &newEmailAddress)
 {
-    if (emailAddress() != newEmailAddress && !readOnly()) {
+    if (emailAddress() != newEmailAddress) {
         m_detail.setValue(QOrganizerEventAttendee::FieldEmailAddress, newEmailAddress);
         emit valueChanged();
     }
@@ -1642,7 +1618,7 @@ QString QDeclarativeOrganizerEventAttendee::emailAddress() const
  */
 void QDeclarativeOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
 {
-    if (participationStatus() != status && !readOnly()) {
+    if (participationStatus() != status) {
         m_detail.setValue(QOrganizerEventAttendee::FieldParticipationStatus, status);
         emit valueChanged();
     }
@@ -1669,7 +1645,7 @@ QDeclarativeOrganizerEventAttendee::ParticipationStatus QDeclarativeOrganizerEve
  */
 void QDeclarativeOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
 {
-    if (participationRole() != role && !readOnly()) {
+    if (participationRole() != role) {
         m_detail.setValue(QOrganizerEventAttendee::FieldParticipationRole, role);
         emit valueChanged();
     }
@@ -1687,7 +1663,7 @@ QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEvent
  */
 void QDeclarativeOrganizerEventAttendee::setAttendeeId(const QString &newAttendeeId)
 {
-    if (attendeeId() != newAttendeeId && !readOnly()) {
+    if (attendeeId() != newAttendeeId) {
         m_detail.setValue(QOrganizerEventAttendee::FieldAttendeeId, newAttendeeId);
         emit valueChanged();
     }
@@ -1733,7 +1709,7 @@ QDeclarativeOrganizerEventRsvp::DetailType QDeclarativeOrganizerEventRsvp::type(
  */
 void QDeclarativeOrganizerEventRsvp::setParticipationStatus(QDeclarativeOrganizerEventAttendee::ParticipationStatus status)
 {
-    if (participationStatus() != status && !readOnly()) {
+    if (participationStatus() != status) {
         m_detail.setValue(QOrganizerEventRsvp::FieldParticipationStatus, status);
         emit valueChanged();
     }
@@ -1754,7 +1730,7 @@ QDeclarativeOrganizerEventAttendee::ParticipationStatus QDeclarativeOrganizerEve
  */
 void QDeclarativeOrganizerEventRsvp::setParticipationRole(QDeclarativeOrganizerEventAttendee::ParticipationRole role)
 {
-    if (participationRole() != role && !readOnly()) {
+    if (participationRole() != role) {
         m_detail.setValue(QOrganizerEventRsvp::FieldParticipationRole, role);
         emit valueChanged();
     }
@@ -1776,7 +1752,7 @@ QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEvent
  */
 void QDeclarativeOrganizerEventRsvp::setResponseRequirement(ResponseRequirement requirement)
 {
-    if (responseRequirement() != requirement && !readOnly()) {
+    if (responseRequirement() != requirement) {
         m_detail.setValue(QOrganizerEventRsvp::FieldResponseRequirement, requirement);
         emit valueChanged();
     }
@@ -1794,7 +1770,7 @@ QDeclarativeOrganizerEventRsvp::ResponseRequirement QDeclarativeOrganizerEventRs
  */
 void QDeclarativeOrganizerEventRsvp::setResponseDeadline(const QDate &date)
 {
-    if (responseDeadline() != date && !readOnly()) {
+    if (responseDeadline() != date) {
         m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date);
         emit valueChanged();
      }
@@ -1812,7 +1788,7 @@ QDate QDeclarativeOrganizerEventRsvp::responseDeadline() const
  */
 void QDeclarativeOrganizerEventRsvp::setResponseDate(const QDate &date)
 {
-    if (responseDate() != date && !readOnly()) {
+    if (responseDate() != date) {
         m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date);
         emit valueChanged();
      }
@@ -1830,7 +1806,7 @@ QDate QDeclarativeOrganizerEventRsvp::responseDate() const
  */
 void QDeclarativeOrganizerEventRsvp::setOrganizerName(const QString &name)
 {
-    if (organizerName() != name && !readOnly()) {
+    if (organizerName() != name) {
         m_detail.setValue(QOrganizerEventRsvp::FieldOrganizerName, name);
         emit valueChanged();
     }
@@ -1848,7 +1824,7 @@ QString QDeclarativeOrganizerEventRsvp::organizerName() const
  */
 void QDeclarativeOrganizerEventRsvp::setOrganizerEmail(const QString &email)
 {
-    if (organizerEmail() != email && !readOnly()) {
+    if (organizerEmail() != email) {
         m_detail.setValue(QOrganizerEventRsvp::FieldOrganizerEmail, email);
         emit valueChanged();
     }
@@ -1890,7 +1866,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemClassificat
  */
 void QDeclarativeOrganizerItemClassification::setClassification(const QString &newClassification)
 {
-    if (classification() != newClassification && !readOnly()) {
+    if (classification() != newClassification) {
         m_detail.setValue(QOrganizerItemClassification::FieldClassification, newClassification);
         emit valueChanged();
     }

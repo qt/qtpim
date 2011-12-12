@@ -95,15 +95,6 @@ public:
 
     QOrganizerItemDetail &operator=(const QOrganizerItemDetail &other);
 
-    enum AccessConstraint {
-        NoConstraint = 0,
-        ReadOnly = 0x01,
-        Irremovable = 0x02
-    };
-    Q_DECLARE_FLAGS(AccessConstraints, AccessConstraint)
-
-    AccessConstraints accessConstraints() const;
-
     bool operator==(const QOrganizerItemDetail &other) const;
     bool operator!=(const QOrganizerItemDetail &other) const {return !(other == *this);}
 
@@ -146,8 +137,6 @@ Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail);
 #endif // QT_NO_DEBUG_STREAM
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemDetail::AccessConstraints)
 
 #define Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(className) \
     className() : QOrganizerItemDetail(DefinitionName) {} \

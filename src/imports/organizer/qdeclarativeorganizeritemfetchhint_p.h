@@ -42,21 +42,22 @@
 #ifndef QDECLARATIVEORGANIZERITEMFETCHHINT_H
 #define QDECLARATIVEORGANIZERITEMFETCHHINT_H
 
-#include <QtDeclarative>
-#include "qorganizeritemfetchhint.h"
+#include <qorganizeritemfetchhint.h>
+#include <QtDeclarative/qdeclarative.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemFetchHint : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(OptimizationHints optimizationHints READ optimizationHints WRITE setOptimizationHints NOTIFY fetchHintChanged)
+
     Q_ENUMS(OptimizationHint)
     Q_FLAGS(OptimizationHints)
+
 public:
-    QDeclarativeOrganizerItemFetchHint(QObject* parent = 0)
-        :QObject(parent)
-    {}
+    QDeclarativeOrganizerItemFetchHint(QObject *parent = 0);
 
     enum OptimizationHint {
         AllRequired = QOrganizerItemFetchHint::AllRequired,
@@ -65,36 +66,15 @@ public:
     };
     Q_DECLARE_FLAGS(OptimizationHints, OptimizationHint)
 
-    OptimizationHints optimizationHints() const
-    {
-        OptimizationHints hints;
-        hints = ~hints & (int)d.optimizationHints();
-        return hints;
-    }
+    OptimizationHints optimizationHints() const;
+    void setOptimizationHints(OptimizationHints hints);
 
-    void setOptimizationHints(OptimizationHints hints)
-    {
-        if (hints != d.optimizationHints()) {
-            QOrganizerItemFetchHint::OptimizationHints newHints;
-            newHints = ~newHints & (int)hints;
-            d.setOptimizationHints(newHints);
-            emit fetchHintChanged();
-        }
-    }
+    QOrganizerItemFetchHint fetchHint() const;
+    void setFetchHint(const QOrganizerItemFetchHint &fetchHint);
 
-    QOrganizerItemFetchHint fetchHint() const
-    {
-        return d;
-    }
-
-    void setFetchHint(const QOrganizerItemFetchHint& fetchHint)
-    {
-        d = fetchHint;
-        emit fetchHintChanged();
-    }
-
-signals:
+Q_SIGNALS:
     void fetchHintChanged();
+
 private:
     QOrganizerItemFetchHint d;
 };
@@ -103,5 +83,4 @@ QTORGANIZER_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemFetchHint))
 
-#endif
-
+#endif // QDECLARATIVEORGANIZERITEMFETCHHINT_H

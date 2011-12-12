@@ -52,28 +52,24 @@ class Q_ORGANIZER_EXPORT QOrganizerItemDetailRangeFilter : public QOrganizerItem
 {
 public:
     QOrganizerItemDetailRangeFilter();
-    QOrganizerItemDetailRangeFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemDetailRangeFilter(const QOrganizerItemFilter &other);
 
     enum RangeFlag {
-        IncludeLower = 0, // [
-        IncludeUpper = 1, // ]
-        ExcludeLower = 2, // (
-        ExcludeUpper = 0  // ) - Default is [)
+        IncludeLower = 0,
+        IncludeUpper = 1,
+        ExcludeLower = 2,
+        ExcludeUpper = 0
     };
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
-    /* Mutators */
     void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
-    void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
-
-    /* Filter Criterion */
-    void setRange(const QVariant& min, const QVariant& max, RangeFlags flags = 0);
-
-    /* Accessors */
     QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
+
+    void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
+    void setRange(const QVariant &min, const QVariant &max, RangeFlags flags = 0);
     QVariant minValue() const;
     QVariant maxValue() const;
     RangeFlags rangeFlags() const;
@@ -90,4 +86,4 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemDetailRangeFilter::RangeFlags)
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDETAILRANGEFILTER_H

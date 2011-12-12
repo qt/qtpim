@@ -39,41 +39,41 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemchangelogfilter.h"
-#include "qorganizeritemchangelogfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemchangelogfilter.h>
+#include <private/qorganizeritemchangelogfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemChangeLogFilter
-  \brief The QOrganizerItemChangeLogFilter class provides a filter based around a
-  organizer item timestamp criterion.
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemChangeLogFilter
+    \brief The QOrganizerItemChangeLogFilter class provides a filter based around the timestamp criterion
+           of items.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  It may be used to select organizer items which have been updated or created
-  within a certain period of time.
+    It may be used to select organizer items which have been created, updated or removed within a certain
+    period of time.
  */
 
 /*!
- * \enum QOrganizerItemChangeLogFilter::EventType
- * Enumerates the type of changes which a changelog filter can match against
- * \value EventAdded
- * \value EventChanged
- * \value EventRemoved
+    \enum QOrganizerItemChangeLogFilter::EventType
+
+    This enumeration describes the type of changes which a changelog filter can match against.
+    \value EventAdded
+    \value EventChanged
+    \value EventRemoved
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemChangeLogFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemChangeLogFilter)
 
 /*!
- * \fn QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new changelog filter
+    \fn QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new changelog filter.
  */
 
 /*!
- * Constructs a new changelog filter which matches changes of the specified \a type
+    Constructs a new changelog filter which matches changes of the specified \a type.
  */
 QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(QOrganizerItemChangeLogFilter::EventType type)
     : QOrganizerItemFilter(new QOrganizerItemChangeLogFilterPrivate(type))
@@ -81,8 +81,9 @@ QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(QOrganizerItemChang
 }
 
 /*!
- * Sets the type of change that this filter will match against to \a type
- * \sa eventType()
+    Sets the type of change that this filter will match against to \a type.
+
+    \sa eventType()
  */
 void QOrganizerItemChangeLogFilter::setEventType(QOrganizerItemChangeLogFilter::EventType type)
 {
@@ -91,18 +92,20 @@ void QOrganizerItemChangeLogFilter::setEventType(QOrganizerItemChangeLogFilter::
 }
 
 /*!
- * Sets the date and time lower-bound criterion of the filter to \a since
- * \sa since()
+    Sets the date and time lower-bound criterion of the filter to \a since.
+
+    \sa since()
  */
-void QOrganizerItemChangeLogFilter::setSince(const QDateTime& since)
+void QOrganizerItemChangeLogFilter::setSince(const QDateTime &since)
 {
     Q_D(QOrganizerItemChangeLogFilter);
     d->m_since = since;
 }
 
 /*!
- * Returns the date and time lower-bound criterion of the filter
- * \sa setSince()
+    Returns the date and time lower-bound criterion of the filter.
+
+    \sa setSince()
  */
 QDateTime QOrganizerItemChangeLogFilter::since() const
 {
@@ -111,8 +114,9 @@ QDateTime QOrganizerItemChangeLogFilter::since() const
 }
 
 /*!
- * Returns the type of change that this filter will match against
- * \sa setEventType()
+    Returns the type of change that this filter will match against
+
+    \sa setEventType()
  */
 QOrganizerItemChangeLogFilter::EventType QOrganizerItemChangeLogFilter::eventType() const
 {

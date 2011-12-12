@@ -38,46 +38,142 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #include "qdeclarativeorganizercollection_p.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
+
 /*!
     \qmlclass Collection QDeclarativeOrganizerCollection
     \brief The Collection element represents a collection of items in an organizer manager.
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-main
-*/
+ */
 
 /*!
-  \qmlproperty int Collection::collectionId
-
-  This property holds the id of the collection.
-  This property is read only.
-  */
-
-/*!
-  \qmlproperty string Collection::name
-
-  This property holds the name meta data of a collection.
-  */
+    \internal
+ */
+QDeclarativeOrganizerCollection::QDeclarativeOrganizerCollection(QObject *parent)
+    : QObject(parent)
+{
+}
 
 /*!
-  \qmlproperty string Collection::description
+    \qmlproperty string Collection::collectionId
 
-  This property holds the description meta data of a collection.
-  */
+    This property holds the ID of the collection.
+ */
+QString QDeclarativeOrganizerCollection::id() const
+{
+    return d.id().toString();
+}
+
+void QDeclarativeOrganizerCollection::setId(const QString &id)
+{
+    if (d.id().toString() != id) {
+        d.setId(QOrganizerCollectionId::fromString(id));
+        emit valueChanged();
+    }
+}
 
 /*!
-  \qmlproperty color Collection::color
+    \qmlproperty string Collection::name
 
-  This property holds the color meta data of a collection.
-  */
+    This property holds the name meta data of a collection.
+ */
+QString QDeclarativeOrganizerCollection::name() const
+{
+    return metaData(QOrganizerCollection::KeyName).toString();
+}
+
+void QDeclarativeOrganizerCollection::setName(const QString &name)
+{
+    setMetaData(QOrganizerCollection::KeyName, name);
+}
 
 /*!
-  \qmlproperty url Collection::image
+    \qmlproperty string Collection::description
 
-  This property holds the image url meta data of a collection.
-  */
+    This property holds the description meta data of a collection.
+ */
+QString QDeclarativeOrganizerCollection::description() const
+{
+    return metaData(QOrganizerCollection::KeyDescription).toString();
+}
+
+void QDeclarativeOrganizerCollection::setDescription(const QString &description)
+{
+    setMetaData(QOrganizerCollection::KeyDescription, description);
+}
+
+/*!
+    \qmlproperty color Collection::color
+
+    This property holds the color meta data of a collection.
+ */
+QColor QDeclarativeOrganizerCollection::color() const
+{
+    return metaData(QOrganizerCollection::KeyColor).value<QColor>();
+}
+
+void QDeclarativeOrganizerCollection::setColor(const QColor &color)
+{
+    setMetaData(QOrganizerCollection::KeyColor, color);
+}
+
+/*!
+    \qmlproperty url Collection::image
+
+    This property holds the image url meta data of a collection.
+ */
+QUrl QDeclarativeOrganizerCollection::image() const
+{
+    return QUrl(metaData(QOrganizerCollection::KeyImage).toString());
+}
+
+void QDeclarativeOrganizerCollection::setImage(const QUrl &url)
+{
+    setMetaData(QOrganizerCollection::KeyImage, url);
+}
+
+/*!
+    \qmlmethod Collection::setMetaData(string key, var value)
+
+    Sets the meta data of the collection for the given \a key to the given \a value.
+ */
+void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
+{
+    if (metaData(key) != value) {
+        d.setMetaData(key, value);
+        emit valueChanged();
+    }
+}
+
+/*!
+    \qmlmethod var Collection::metaData(string key)
+
+    Returns the meta data stored in this collection for the given \a key.
+ */
+QVariant QDeclarativeOrganizerCollection::metaData(const QString &key) const
+{
+    return d.metaData(key);
+}
+
+/*!
+    \internal
+ */
+QOrganizerCollection QDeclarativeOrganizerCollection::collection() const
+{
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerCollection::setCollection(const QOrganizerCollection &collection)
+{
+    d = collection;
+}
 
 #include "moc_qdeclarativeorganizercollection_p.cpp"
 

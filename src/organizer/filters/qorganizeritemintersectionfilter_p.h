@@ -54,9 +54,7 @@
 //
 
 #include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilter.h"
-
-#include <QList>
+#include <QtCore/qlist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -66,42 +64,39 @@ public:
     QOrganizerItemIntersectionFilterPrivate()
        : QOrganizerItemFilterPrivate()
     {
-
     }
 
-    QOrganizerItemIntersectionFilterPrivate(const QOrganizerItemIntersectionFilterPrivate& other)
-       : QOrganizerItemFilterPrivate(other),
-       m_filters(other.m_filters)
+    QOrganizerItemIntersectionFilterPrivate(const QOrganizerItemIntersectionFilterPrivate &other)
+       : QOrganizerItemFilterPrivate(other), m_filters(other.m_filters)
     {
-
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemIntersectionFilterPrivate *od = static_cast<const QOrganizerItemIntersectionFilterPrivate*>(other);
-        if (m_filters != od->m_filters)
-            return false;
-        return true;
+        const QOrganizerItemIntersectionFilterPrivate *od = static_cast<const QOrganizerItemIntersectionFilterPrivate *>(other);
+        if (od)
+            return m_filters == od->m_filters;
+        return false;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
-        if (formatVersion == 1) {
+        if (formatVersion == 1)
             stream << m_filters;
-        }
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
-        if (formatVersion == 1) {
+        if (formatVersion == 1)
             stream >> m_filters;
-        }
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemIntersectionFilter(";
         dbg.nospace() << "filters=";
@@ -109,7 +104,7 @@ public:
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemIntersectionFilter, QOrganizerItemFilter::IntersectionFilter)
 
@@ -118,4 +113,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMINTERSECTIONFILTER_P_H

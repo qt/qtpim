@@ -39,31 +39,31 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemintersectionfilter.h"
-#include "qorganizeritemintersectionfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemintersectionfilter.h>
+#include <private/qorganizeritemintersectionfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemIntersectionFilter
-  \brief The QOrganizerItemIntersectionFilter class provides a filter which intersects the results of other filters.
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemIntersectionFilter
+    \brief The QOrganizerItemIntersectionFilter class provides a filter which intersects the results
+           of other filters.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  It may be used to select organizeritems which match all of the filters in the intersection
+    It may be used to select organizer items which match all of the filters in the intersection filter.
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIntersectionFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIntersectionFilter)
 
 /*!
- * \fn QOrganizerItemIntersectionFilter::QOrganizerItemIntersectionFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new intersection filter
+    \fn QOrganizerItemIntersectionFilter::QOrganizerItemIntersectionFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new intersection filter.
  */
 
 /*!
- * Constructs a new intersection filter
+    Constructs a new intersection filter.
  */
 QOrganizerItemIntersectionFilter::QOrganizerItemIntersectionFilter()
     : QOrganizerItemFilter(new QOrganizerItemIntersectionFilterPrivate)
@@ -71,18 +71,20 @@ QOrganizerItemIntersectionFilter::QOrganizerItemIntersectionFilter()
 }
 
 /*!
- * Sets the filters whose criteria will be intersected to \a filters
- * \sa filters(), clear()
+    Sets the filters whose criteria will be intersected to \a filters.
+
+    \sa filters(), clear()
  */
-void QOrganizerItemIntersectionFilter::setFilters(const QList<QOrganizerItemFilter>& filters)
+void QOrganizerItemIntersectionFilter::setFilters(const QList<QOrganizerItemFilter> &filters)
 {
     Q_D(QOrganizerItemIntersectionFilter);
     d->m_filters = filters;
 }
 
 /*!
- * Clears the list of filters.  A cleared intersection filter will match no items.
- * \sa filters(), setFilters()
+    Clears the list of filters. Note that an empty intersection filter will match no items.
+
+    \sa filters(), setFilters()
  */
 void QOrganizerItemIntersectionFilter::clear()
 {
@@ -91,40 +93,44 @@ void QOrganizerItemIntersectionFilter::clear()
 }
 
 /*!
- * Prepends the given \a filter to the list of intersected filters
- * \sa append(), filters()
+    Prepends the given \a filter to the list of intersected filters.
+
+    \sa append(), filters()
  */
-void QOrganizerItemIntersectionFilter::prepend(const QOrganizerItemFilter& filter)
+void QOrganizerItemIntersectionFilter::prepend(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemIntersectionFilter);
     d->m_filters.prepend(filter);
 }
 
 /*!
- * Appends the given \a filter to the list of intersected filters
- * \sa operator<<(), prepend(), filters()
+    Appends the given \a filter to the list of intersected filters.
+
+    \sa operator<<(), prepend(), filters()
  */
-void QOrganizerItemIntersectionFilter::append(const QOrganizerItemFilter& filter)
+void QOrganizerItemIntersectionFilter::append(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemIntersectionFilter);
     d->m_filters.append(filter);
 }
 
 /*!
- * Removes the given \a filter from the intersection list
- * \sa filters(), append(), prepend(), clear()
+    Removes the given \a filter from the intersection list.
+
+    \sa filters(), append(), prepend(), clear()
  */
-void QOrganizerItemIntersectionFilter::remove(const QOrganizerItemFilter& filter)
+void QOrganizerItemIntersectionFilter::remove(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemIntersectionFilter);
     d->m_filters.removeAll(filter);
 }
 
 /*!
- * Appends the given \a filter to the list of intersected filters
- * \sa append()
+    Appends the given \a filter to the list of intersected filters.
+
+    \sa append()
  */
-QOrganizerItemIntersectionFilter& QOrganizerItemIntersectionFilter::operator<<(const QOrganizerItemFilter& filter)
+QOrganizerItemIntersectionFilter &QOrganizerItemIntersectionFilter::operator<<(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemIntersectionFilter);
     d->m_filters << filter;
@@ -132,8 +138,9 @@ QOrganizerItemIntersectionFilter& QOrganizerItemIntersectionFilter::operator<<(c
 }
 
 /*!
- * Returns the list of filters which form the intersection filter
- * \sa setFilters(), prepend(), append(), remove()
+    Returns the list of filters which form the intersection filter.
+
+    \sa setFilters(), prepend(), append(), remove()
  */
 QList<QOrganizerItemFilter> QOrganizerItemIntersectionFilter::filters() const
 {

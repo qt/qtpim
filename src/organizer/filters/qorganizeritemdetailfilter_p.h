@@ -56,54 +56,41 @@
 #include "qorganizeritemfilter_p.h"
 #include <qorganizeritemdetailfilter.h>
 
-#include <QString>
-#include <QVariant>
-
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 {
 public:
     QOrganizerItemDetailFilterPrivate()
-        : QOrganizerItemFilterPrivate()
-        , m_detailType(QOrganizerItemDetail::TypeUndefined)
-        , m_detailField(-1)
-        , m_flags(0)
+        : QOrganizerItemFilterPrivate(), m_detailType(QOrganizerItemDetail::TypeUndefined), m_detailField(-1), m_flags(0)
     {
     }
 
     QOrganizerItemDetailFilterPrivate(const QOrganizerItemDetailFilterPrivate& other)
-        : QOrganizerItemFilterPrivate(other),
-        m_detailType(other.m_detailType),
-        m_detailField(other.m_detailField),
-        m_exactValue(other.m_exactValue),
-        m_flags(other.m_flags)
+        : QOrganizerItemFilterPrivate(other), m_detailType(other.m_detailType), m_detailField(other.m_detailField),
+          m_exactValue(other.m_exactValue), m_flags(other.m_flags)
     {
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemDetailFilterPrivate *od = static_cast<const QOrganizerItemDetailFilterPrivate*>(other);
-        if (m_detailType != od->m_detailType)
-            return false;
-        if (m_detailField != od->m_detailField)
-            return false;
-        if (m_exactValue != od->m_exactValue)
-            return false;
-        if (m_flags != od->m_flags)
-            return false;
-        return true;
-    }
-
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
-    {
-        if (formatVersion == 1) {
-            stream << m_detailType << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
+        const QOrganizerItemDetailFilterPrivate *od = static_cast<const QOrganizerItemDetailFilterPrivate *>(other);
+        if (od) {
+            return (m_detailType == od->m_detailType) && (m_detailField == od->m_detailField)
+                   && (m_exactValue == od->m_exactValue) && (m_flags == od->m_flags);
         }
+        return false;
+    }
+
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
+    {
+        if (formatVersion == 1)
+            stream << m_detailType << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
         if (formatVersion == 1) {
             quint32 flags;
@@ -114,9 +101,10 @@ public:
         }
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemDetailFilter(";
         dbg.nospace() << "detailType=";
@@ -133,7 +121,7 @@ public:
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFilter, QOrganizerItemFilter::DetailFilter)
 
@@ -145,4 +133,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDETAILFILTER_P_H

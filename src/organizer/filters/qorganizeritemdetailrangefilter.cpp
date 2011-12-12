@@ -39,41 +39,42 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemdetailrangefilter.h"
-#include "qorganizeritemdetailrangefilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemdetailrangefilter.h>
+#include <private/qorganizeritemdetailrangefilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemDetailRangeFilter
-  \brief The QOrganizerItemDetailRangeFilter class provides a filter based around
-  a detail value range criterion.
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemDetailRangeFilter
+    \brief The QOrganizerItemDetailRangeFilter class provides a filter based around a detail value
+           range criterion.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  It may be used to select organizeritems which contain a detail of a particular definition with a particular value
+    It may be used to select organizer items which contain a detail of a particular type, whose value
+    falls in a particular range.
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailRangeFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailRangeFilter)
 
 /*!
- * \fn QOrganizerItemDetailRangeFilter::QOrganizerItemDetailRangeFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new detail range filter
- */
+    \fn QOrganizerItemDetailRangeFilter::QOrganizerItemDetailRangeFilter(const QOrganizerItemFilter &other)
 
-/*!
- * \enum QOrganizerItemDetailRangeFilter::RangeFlag
- * Enumerates the semantics of the boundary conditions of the detail range filter
- * \value IncludeLower
- * \value IncludeUpper
- * \value ExcludeLower
- * \value ExcludeUpper
+    Constructs a copy of \a other if possible, otherwise constructs a new detail range filter.
  */
 
 /*!
- * Constructs a new detail range filter
+    \enum QOrganizerItemDetailRangeFilter::RangeFlag
+
+    This enumeration describes the semantics of the boundary conditions of the detail range filter.
+    \value IncludeLower
+    \value IncludeUpper
+    \value ExcludeLower
+    \value ExcludeUpper
+ */
+
+/*!
+    Constructs a new detail range filter.
  */
 QOrganizerItemDetailRangeFilter::QOrganizerItemDetailRangeFilter()
     : QOrganizerItemFilter(new QOrganizerItemDetailRangeFilterPrivate)
@@ -81,10 +82,12 @@ QOrganizerItemDetailRangeFilter::QOrganizerItemDetailRangeFilter()
 }
 
 /*!
- * Sets the value range criterion of the filter to within \a min and \a max, with boundary conditions specified in the given \a flags
- * \sa minValue(), maxValue()
+    Sets the value range criterion of the filter to within \a min and \a max, with boundary conditions
+    specified in the given \a flags.
+
+    \sa minValue(), maxValue(), rangeFlags()
  */
-void QOrganizerItemDetailRangeFilter::setRange(const QVariant& min, const QVariant& max, RangeFlags flags)
+void QOrganizerItemDetailRangeFilter::setRange(const QVariant &min, const QVariant &max, RangeFlags flags)
 {
     Q_D(QOrganizerItemDetailRangeFilter);
     d->m_minValue = min;
@@ -93,19 +96,18 @@ void QOrganizerItemDetailRangeFilter::setRange(const QVariant& min, const QVaria
 }
 
 /*!
-  Sets the match flags of the filter criterion to \a flags
+    Sets the match flags of the filter criterion to \a flags.
 
-  Not all flags are supported by a range filter.  The supported flags include:
+    Not all flags are supported by a range filter. The supported flags include:
+    \list
+    \o QOrganizerItemFilter::MatchExactly
+    \o QOrganizerItemFilter::MatchFixedString
+    \o QOrganizerItemFilter::MatchCaseSensitive
+    \endlist
 
-  \list
-  \o QOrganizerItemFilter::MatchExactly
-  \o QOrganizerItemFilter::MatchFixedString
-  \o QOrganizerItemFilter::MatchCaseSensitive
-  \endlist
+    Unsupported flags will be ignored.
 
-  Unsupported flags will be ignored.
-
-  \sa matchFlags()
+    \sa matchFlags()
  */
 void QOrganizerItemDetailRangeFilter::setMatchFlags(QOrganizerItemFilter::MatchFlags flags)
 {
@@ -141,8 +143,10 @@ void QOrganizerItemDetailRangeFilter::setDetailDefinitionName(QOrganizerItemDeta
 }
 
 /*!
- * Returns the match flags of the criterion, which define semantics such as case sensitivity, prefix matching, exact matching, etc.
- * \sa setMatchFlags()
+    Returns the match flags of the criterion, which define semantics such as case sensitivity, prefix
+    matching, exact matching, etc.
+
+    \sa setMatchFlags()
  */
 QOrganizerItemFilter::MatchFlags QOrganizerItemDetailRangeFilter::matchFlags() const
 {
@@ -189,8 +193,9 @@ int QOrganizerItemDetailRangeFilter::detailFieldName() const
 }
 
 /*!
- * Returns the lower bound of the value range criterion
- * \sa setRange()
+    Returns the lower bound of the value range criterion.
+
+    \sa setRange()
  */
 QVariant QOrganizerItemDetailRangeFilter::minValue() const
 {
@@ -199,8 +204,9 @@ QVariant QOrganizerItemDetailRangeFilter::minValue() const
 }
 
 /*!
- * Returns the upper bound of the value range criterion
- * \sa setRange()
+    Returns the upper bound of the value range criterion.
+
+    \sa setRange()
  */
 QVariant QOrganizerItemDetailRangeFilter::maxValue() const
 {
@@ -209,8 +215,9 @@ QVariant QOrganizerItemDetailRangeFilter::maxValue() const
 }
 
 /*!
- * Returns a set of flags which defines the boundary condition semantics of the value range criterion
- * \sa setRange()
+    Returns a set of flags which defines the boundary condition semantics of the value range criterion.
+
+    \sa setRange()
  */
 QOrganizerItemDetailRangeFilter::RangeFlags QOrganizerItemDetailRangeFilter::rangeFlags() const
 {

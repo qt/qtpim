@@ -53,10 +53,7 @@
 // We mean it.
 //
 
-#include "qorganizeritemfetchhint.h"
-
-#include <QSharedData>
-#include <QStringList>
+#include <qorganizeritemfetchhint.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -64,15 +61,13 @@ class QOrganizerItemFetchHintPrivate : public QSharedData
 {
 public:
     QOrganizerItemFetchHintPrivate()
-        : QSharedData(),
-        m_optimizationHints(QOrganizerItemFetchHint::AllRequired)
+        : QSharedData(), m_optimizationHints(QOrganizerItemFetchHint::AllRequired)
     {
     }
 
-    QOrganizerItemFetchHintPrivate(const QOrganizerItemFetchHintPrivate& other)
-        : QSharedData(other),
-        m_detailTypesHint(other.m_detailTypesHint),
-        m_optimizationHints(other.m_optimizationHints)
+    QOrganizerItemFetchHintPrivate(const QOrganizerItemFetchHintPrivate &other)
+        : QSharedData(other), m_detailTypesHint(other.m_detailTypesHint),
+          m_optimizationHints(other.m_optimizationHints)
     {
     }
 
@@ -86,4 +81,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMFETCHHINT_P_H

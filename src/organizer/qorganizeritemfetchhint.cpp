@@ -39,57 +39,53 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemfetchhint.h"
 #include "qorganizeritemfetchhint_p.h"
 
-#include <QStringList>
-
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
-#endif
+#include <QtCore/qdebug.h>
+#endif // QT_NO_DEBUG_STREAM
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemFetchHint
-  \brief The QOrganizerItemFetchHint class provides hints to the manager about which organizer item
-  information needs to be retrieved in an asynchronous fetch request or a synchronous
-  function call.
+    \class QOrganizerItemFetchHint
+    \brief The QOrganizerItemFetchHint class provides hints to the manager about which organizer item
+           information needs to be retrieved.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  \inmodule QtOrganizer
+    All of the hints may be ignored at the discretion of the manager, however if a manager
+    is able to optimize retrieval of organizer items due to hints, it may do so.  If a manager
+    ignores a hint, it must retrieve the full set of data that the hint refers to.
 
-  All of the hints may be ignored at the discretion of the manager, however if a manager
-  is able to optimize retrieval of organizer items due to hints, it may do so.  If a manager
-  ignores a hint, it must retrieve the full set of data that the hint refers to.
+    The fetch hint contains:
+    \list
+    \o a list of detail definition names which the client is interested
+       in (empty if interested in all detail definitions)
+    \o some optimization flags which allow the client to tell the backend if they are
+       not interested in binary blobs (images etc).
+    \endlist
 
-  The fetch hint contains:
-  \list
-   \o a list of detail definition names which the client is interested
-  in (empty if interested in all detail definitions)
-   \o some optimization flags which allow the client to tell the backend if they are
-  not interested in binary blobs (images etc).
-  \endlist
-
-  Important note: a client should not make changes to an organizer item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
-  replace the previously saved organizer item in the backend).
+    Important note: if certain organizer item is retrieved with fetch hint set, normal saving will
+    result in the loss of information that is not retrieved. Partial save should be used to avoid
+    information loss.
  */
 
 /*!
-  \enum QOrganizerItemFetchHint::OptimizationHint
+    \enum QOrganizerItemFetchHint::OptimizationHint
 
-  This enum defines flags which may be set to inform the backend that the client does
-  not require certain information.  The backend may safely ignore the hint, but then
-  must return the full set of information relating to the optimization hint.
+    This enum defines flags which may be set to inform the backend that the client does
+    not require certain information.
 
-  \value AllRequired Tells the backend that all information is required
-  \omitvalue NoActionPreferences Tells the backend that the client does not require retrieved organizer items to include a cache of action preferences
-  \value NoBinaryBlobs Tells the backend that the client does not require retrieved organizer items to include binary blobs such as thumbnail images
+    \value AllRequired          Tells the backend that all information is required.
+    \value NoActionPreferences  Tells the backend that the client does not require retrieved
+                                organizer items to include a cache of action preferences.
+    \value NoBinaryBlobs        Tells the backend that the client does not require retrieved
+                                organizer items to include binary blobs such as thumbnail images.
  */
 
 /*!
-  Constructs a new organizer item fetch hint which requests that the backend fetch all information
+    Constructs a new organizer item fetch hint which requests that the backend fetch all information.
  */
 QOrganizerItemFetchHint::QOrganizerItemFetchHint()
     : d(new QOrganizerItemFetchHintPrivate)
@@ -97,7 +93,7 @@ QOrganizerItemFetchHint::QOrganizerItemFetchHint()
 }
 
 /*!
-  Constructs a new organizer item fetch hint as a copy of \a other
+    Constructs a new organizer item fetch hint as a copy of \a other.
  */
 QOrganizerItemFetchHint::QOrganizerItemFetchHint(const QOrganizerItemFetchHint &other)
     : d(other.d)
@@ -105,16 +101,16 @@ QOrganizerItemFetchHint::QOrganizerItemFetchHint(const QOrganizerItemFetchHint &
 }
 
 /*!
-  Frees any memory in use by the fetch hint
+    Frees any memory in use by the fetch hint.
  */
 QOrganizerItemFetchHint::~QOrganizerItemFetchHint()
 {
 }
 
 /*!
-  Assigns this fetch hint to be equal to the \a other fetch hint
+    Assigns this fetch hint to the \a other.
  */
-QOrganizerItemFetchHint& QOrganizerItemFetchHint::operator=(const QOrganizerItemFetchHint& other)
+QOrganizerItemFetchHint& QOrganizerItemFetchHint::operator=(const QOrganizerItemFetchHint &other)
 {
     d = other.d;
     return *this;
@@ -159,11 +155,9 @@ void QOrganizerItemFetchHint::setDetailDefinitionsHint(const QList<QOrganizerIte
 }
 
 /*!
-  Returns the optimization hint flags specified by the client.
-  These hints may be ignored by the backend, in which case it will return
-  the full set of information accessible in an organizer item.
+    Returns the optimization hint flags specified by the client.
 
-  \sa setOptimizationHints()
+    \sa setOptimizationHints()
  */
 QOrganizerItemFetchHint::OptimizationHints QOrganizerItemFetchHint::optimizationHints() const
 {
@@ -171,11 +165,9 @@ QOrganizerItemFetchHint::OptimizationHints QOrganizerItemFetchHint::optimization
 }
 
 /*!
-  Sets the optimization hint flags specified by the client to \a hints.
-  These hints may be ignored by the backend, in which case it will return
-  the full set of information accessible in an organizer item.
+    Sets the optimization hint flags specified by the client to \a hints.
 
-  \sa optimizationHints()
+    \sa optimizationHints()
  */
 void QOrganizerItemFetchHint::setOptimizationHints(OptimizationHints hints)
 {
@@ -183,15 +175,15 @@ void QOrganizerItemFetchHint::setOptimizationHints(OptimizationHints hints)
 }
 
 #ifndef QT_NO_DATASTREAM
-QDataStream& operator<<(QDataStream& out, const QOrganizerItemFetchHint& hint)
+QDataStream &operator<<(QDataStream &out, const QOrganizerItemFetchHint &hint)
 {
-    quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemFetchHint
+    quint8 formatVersion = 1;
     return out << formatVersion
                << hint.detailTypesHint()
                << static_cast<quint32>(hint.optimizationHints());
 }
 
-QDataStream& operator>>(QDataStream& in, QOrganizerItemFetchHint& hint)
+QDataStream &operator>>(QDataStream &in, QOrganizerItemFetchHint &hint)
 {
     quint8 formatVersion;
     in >> formatVersion;
@@ -211,13 +203,13 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItemFetchHint& hint)
     }
     return in;
 }
-#endif
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
-  Outputs \a hint to the debug stream \a dbg
+    Outputs \a hint to the debug stream \a dbg.
  */
-QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint)
+QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint &hint)
 {
     dbg.nospace() << "QOrganizerItemFetchHint(";
     dbg.nospace() << "detailDefinitionsHint=";
@@ -228,6 +220,6 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint)
     dbg.nospace() << ")";
     return dbg.maybeSpace();
 }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 QTORGANIZER_END_NAMESPACE

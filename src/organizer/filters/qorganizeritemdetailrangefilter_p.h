@@ -54,12 +54,6 @@
 //
 
 #include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilter.h"
-
-#include "qorganizeritemdetailrangefilter.h"
-
-#include <QString>
-#include <QVariant>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -72,45 +66,34 @@ public:
     }
 
     QOrganizerItemDetailRangeFilterPrivate(const QOrganizerItemDetailRangeFilterPrivate& other)
-        : QOrganizerItemFilterPrivate(other),
-        m_detailType(other.m_detailType),
-        m_detailField(other.m_detailField),
-        m_minValue(other.m_minValue),
-        m_maxValue(other.m_maxValue),
-        m_flags(other.m_flags),
-        m_rangeflags(other.m_rangeflags)
+        : QOrganizerItemFilterPrivate(other), m_detailType(other.m_detailType), m_detailField(other.m_detailField),
+          m_minValue(other.m_minValue), m_maxValue(other.m_maxValue), m_flags(other.m_flags), m_rangeflags(other.m_rangeflags)
     {
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemDetailRangeFilterPrivate *od = static_cast<const QOrganizerItemDetailRangeFilterPrivate*>(other);
-        if (m_detailType != od->m_detailType)
-            return false;
-        if (m_detailField != od->m_detailField)
-            return false;
-        if (m_minValue != od->m_minValue)
-            return false;
-        if (m_maxValue!= od->m_maxValue)
-            return false;
-        if (m_flags != od->m_flags)
-            return false;
-        if (m_rangeflags != od->m_rangeflags)
-            return false;
-        return true;
+        const QOrganizerItemDetailRangeFilterPrivate *od = static_cast<const QOrganizerItemDetailRangeFilterPrivate *>(other);
+        if (od) {
+            return (m_detailType == od->m_detailType) && (m_detailField == od->m_detailField)
+                   && (m_minValue == od->m_minValue) && (m_maxValue == od->m_maxValue)
+                   && (m_flags == od->m_flags) && (m_rangeflags == od->m_rangeflags);
+        }
+        return false;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
             stream << m_detailType << m_detailField << m_minValue << m_maxValue
-                << static_cast<quint32>(m_flags)
-                << static_cast<quint32>(m_rangeflags);
+                   << static_cast<quint32>(m_flags)
+                   << static_cast<quint32>(m_rangeflags);
         }
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
         if (formatVersion == 1) {
             quint32 flags;
@@ -123,9 +106,10 @@ public:
         }
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemDetailRangeFilter(";
         dbg.nospace() << "detailType=";
@@ -148,7 +132,7 @@ public:
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailRangeFilter, QOrganizerItemFilter::DetailRangeFilter)
 
@@ -162,4 +146,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDETAILRANGEFILTER_P_H

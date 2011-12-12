@@ -42,104 +42,51 @@
 #ifndef QDECLARATIVEORGANIZERCOLLECTION_H
 #define QDECLARATIVEORGANIZERCOLLECTION_H
 
-#include "qdeclarative.h"
-#include "qorganizercollection.h"
-
-#include <QColor>
-#include <QUrl>
+#include <qorganizercollection.h>
+#include <QtCore/qurl.h>
+#include <QtDeclarative/qdeclarative.h>
+#include <QtGui/qcolor.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerCollection : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(QString collectionId READ id WRITE setId NOTIFY valueChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY valueChanged)
     Q_PROPERTY(QUrl image READ image WRITE setImage NOTIFY valueChanged)
+
 public:
-    QDeclarativeOrganizerCollection(QObject* parent = 0)
-        :QObject(parent)
-    {
-    }
+    QDeclarativeOrganizerCollection(QObject *parent = 0);
 
+    QString id() const;
+    void setId(const QString &id);
 
-    QString id() const
-    {
-        return d.id().toString();
-    }
+    QString name() const;
+    void setName(const QString &name);
 
-    void setId(const QString& newId)
-    {
-        d.setId(QOrganizerCollectionId::fromString(newId));
-    }
+    QString description() const;
+    void setDescription(const QString &description);
 
-    QString name() const
-    {
-        return metaData(QOrganizerCollection::KeyName).toString();
-    }
+    QColor color() const;
+    void setColor(const QColor &color);
 
-    void setName(const QString& name)
-    {
-        setMetaData(QOrganizerCollection::KeyName, name);
-    }
+    QUrl image() const;
+    void setImage(const QUrl &url);
 
-    QString description() const
-    {
-        return metaData(QOrganizerCollection::KeyDescription).toString();
-    }
+    Q_INVOKABLE void setMetaData(const QString &key, const QVariant &value);
+    Q_INVOKABLE QVariant metaData(const QString &key) const;
 
-    void setDescription(const QString& desc)
-    {
-        setMetaData(QOrganizerCollection::KeyDescription, desc);
-    }
+    // used by model
+    QOrganizerCollection collection() const;
+    void setCollection(const QOrganizerCollection & collection);
 
-    QColor color() const
-    {
-        return metaData(QOrganizerCollection::KeyColor).value<QColor>();
-    }
-
-    void setColor(const QColor& color)
-    {
-        setMetaData(QOrganizerCollection::KeyColor, color);
-    }
-
-    QUrl image() const
-    {
-        //image or image url?
-        return QUrl(metaData(QOrganizerCollection::KeyImage).toString());
-    }
-
-    void setImage(const QUrl& url)
-    {
-        setMetaData(QOrganizerCollection::KeyImage, url);
-    }
-
-    Q_INVOKABLE void setMetaData(const QString& key, const QVariant& value)
-    {
-        if (metaData(key) != value) {
-            d.setMetaData(key, value);
-            emit valueChanged();
-        }
-    }
-
-    Q_INVOKABLE  QVariant metaData(const QString& key) const
-    {
-        return d.metaData(key);
-    }
-
-    QOrganizerCollection collection() const
-    {
-        return d;
-    }
-
-    void setCollection(const QOrganizerCollection& collection)
-    {
-        d = collection;
-    }
-signals:
+Q_SIGNALS:
     void valueChanged();
+
 private:
     QOrganizerCollection d;
 };
@@ -148,5 +95,4 @@ QTORGANIZER_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerCollection))
 
-#endif
-
+#endif // QDECLARATIVEORGANIZERCOLLECTION_H

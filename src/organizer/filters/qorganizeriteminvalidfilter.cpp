@@ -39,16 +39,16 @@
 **
 ****************************************************************************/
 
-#include "qorganizeriteminvalidfilter.h"
-#include "qorganizeritemfilter_p.h"
+#include <qorganizeriteminvalidfilter.h>
+#include <private/qorganizeritemfilter_p.h>
 
 /*!
-  \class QOrganizerItemInvalidFilter
-  \brief The QOrganizerItemInvalidFilter class matches no organizeritems.
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemInvalidFilter
+    \brief The QOrganizerItemInvalidFilter class matches no organizeritems.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  This class provides a filter which will never match any organizeritems
+    This class provides a filter which will never match any organizer items.
  */
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -61,33 +61,34 @@ public:
     {
     }
 
-    bool compare(const QOrganizerItemFilterPrivate*) const
+    bool compare(const QOrganizerItemFilterPrivate *) const
     {
-        return true; // all invalid filters are alike
+        return true;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
         Q_UNUSED(formatVersion)
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
         Q_UNUSED(formatVersion)
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemInvalidFilter()";
         return dbg.maybeSpace() ;
     }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
-    /* There is no way this can be called - d is never detached */
-    QOrganizerItemFilterPrivate* clone() const
+    QOrganizerItemFilterPrivate *clone() const
     {
         return new QOrganizerItemInvalidFilterPrivate();
     }
@@ -101,7 +102,7 @@ public:
 };
 
 /*!
- * Constructs a new invalid filter
+    Constructs a new invalid filter.
  */
 QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter()
     : QOrganizerItemFilter(new QOrganizerItemInvalidFilterPrivate)
@@ -109,12 +110,11 @@ QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter()
 }
 
 /*!
- * Constructs a new invalid filter, ignoring the \a other filter
+    Constructs a new invalid filter, ignoring the \a other filter.
  */
-QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter(const QOrganizerItemFilter& other)
+QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter(const QOrganizerItemFilter &other)
     : QOrganizerItemFilter(new QOrganizerItemInvalidFilterPrivate)
 {
-    // Initializing a QCIF from anything is the same as just constructing a QCIF
     Q_UNUSED(other);
 }
 

@@ -39,31 +39,30 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemdetailfilter.h"
-#include "qorganizeritemdetailfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemdetailfilter.h>
+#include <private/qorganizeritemdetailfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemDetailFilter
-  \brief The QOrganizerItemDetailFilter class provides a filter based around a detail value criterion
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemDetailFilter
+    \brief The QOrganizerItemDetailFilter class provides a filter based around a detail value criterion.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  It may be used to select organizeritems which contain a detail of a particular definition with a particular value
+    It may be used to select organizeritems which contain a detail of a particular type and a particular value.
  */
 
 Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)
 
 /*!
- * \fn QOrganizerItemDetailFilter::QOrganizerItemDetailFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new detail filter
+    \fn QOrganizerItemDetailFilter::QOrganizerItemDetailFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new detail filter.
  */
 
 /*!
- * Constructs a new detail filter
+    Constructs a new detail filter.
  */
 QOrganizerItemDetailFilter::QOrganizerItemDetailFilter()
     : QOrganizerItemFilter(new QOrganizerItemDetailFilterPrivate)
@@ -97,18 +96,20 @@ void QOrganizerItemDetailFilter::setDetailDefinitionName(QOrganizerItemDetail::D
 }
 
 /*!
- * Sets the value criterion of the filter to \a value
- * \sa value()
+    Sets the value criterion of the filter to \a value.
+
+    \sa value()
  */
-void QOrganizerItemDetailFilter::setValue(const QVariant& value)
+void QOrganizerItemDetailFilter::setValue(const QVariant &value)
 {
     Q_D(QOrganizerItemDetailFilter);
     d->m_exactValue = value;
 }
 
 /*!
- * Sets the semantics of the value matching criterion to those defined in \a flags
- * \sa matchFlags()
+    Sets the semantics of the value matching criterion to those defined in \a flags.
+
+    \sa matchFlags()
  */
 void QOrganizerItemDetailFilter::setMatchFlags(QOrganizerItemFilter::MatchFlags flags)
 {
@@ -117,8 +118,9 @@ void QOrganizerItemDetailFilter::setMatchFlags(QOrganizerItemFilter::MatchFlags 
 }
 
 /*!
- * Returns the semantics of the value matching criterion
- * \sa setMatchFlags()
+    Returns the semantics of the value matching criterion.
+
+    \sa setMatchFlags()
  */
 QOrganizerItemFilter::MatchFlags QOrganizerItemDetailFilter::matchFlags() const
 {
@@ -165,8 +167,9 @@ int QOrganizerItemDetailFilter::detailFieldName() const
 }
 
 /*!
- * Returns the value criterion of the detail filter
- * \sa setValue()
+    Returns the value criterion of the detail filter.
+
+    \sa setValue()
  */
 QVariant QOrganizerItemDetailFilter::value() const
 {

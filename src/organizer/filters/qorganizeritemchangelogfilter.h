@@ -42,9 +42,8 @@
 #ifndef QORGANIZERITEMCHANGELOGFILTER_H
 #define QORGANIZERITEMCHANGELOGFILTER_H
 
-#include "qorganizeritemfilter.h"
-
-#include <QDateTime>
+#include <qorganizeritemfilter.h>
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -59,13 +58,13 @@ public:
     };
 
     explicit QOrganizerItemChangeLogFilter(QOrganizerItemChangeLogFilter::EventType type = QOrganizerItemChangeLogFilter::EventAdded);
-    QOrganizerItemChangeLogFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemChangeLogFilter(const QOrganizerItemFilter &other);
 
     void setEventType(QOrganizerItemChangeLogFilter::EventType type);
-    void setSince(const QDateTime& since);
-
-    QDateTime since() const;
     QOrganizerItemChangeLogFilter::EventType eventType() const;
+
+    void setSince(const QDateTime &since);
+    QDateTime since() const;
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemChangeLogFilter)
@@ -73,4 +72,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMCHANGELOGFILTER_H

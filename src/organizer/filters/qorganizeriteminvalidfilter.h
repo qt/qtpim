@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMINVALIDFILTER_H
 #define QORGANIZERITEMINVALIDFILTER_H
 
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -51,9 +51,9 @@ class Q_ORGANIZER_EXPORT QOrganizerItemInvalidFilter : public QOrganizerItemFilt
 {
 public:
     QOrganizerItemInvalidFilter();
-    QOrganizerItemInvalidFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemInvalidFilter(const QOrganizerItemFilter &other);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMINVALIDFILTER_H

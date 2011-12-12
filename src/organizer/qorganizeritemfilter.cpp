@@ -39,59 +39,59 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemfilter.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilters.h"
-
-#include "qorganizeritemintersectionfilter.h"
-#include "qorganizeritemunionfilter.h"
-
-#include "qorganizermanager.h"
-
-
+#include <qorganizeritemfilters.h>
+#include <private/qorganizeritemfilter_p.h>
 
 /*!
-  \class QOrganizerItemFilter
-  \brief The QOrganizerItemFilter class is used to select organizer items made available
-  through a QOrganizerManager.
+    \class QOrganizerItemFilter
+    \brief The QOrganizerItemFilter class is used to filter items made available through a QOrganizerManager.
+    \inmodule QtOrganizer
+    \ingroup organizer-main
 
-  \inmodule QtOrganizer
-
-  \ingroup organizer-main
-
-  This class is used as a parameter to various functions offered by QOrganizerManager, to allow
-  selection of items which have certain details or properties.
+    This class is used as a parameter to various functions offered by QOrganizerManager and QOrganizerAbstractRequest,
+    to allow filtering of items which have certain details or properties.
  */
 
 /*!
-  \enum QOrganizerItemFilter::FilterType
-  Describes the type of the filter
-  \value InvalidFilter An invalid filter which matches nothing
-  \value OrganizerItemDetailFilter A filter which matches items containing one or more details of a particular definition with a particular value
-  \value OrganizerItemDetailRangeFilter A filter which matches items containing one or more details of a particular definition whose values are within a particular range
-  \value ChangeLogFilter A filter which matches items whose timestamps have been updated since some particular date and time
-  \value IntersectionFilter A filter which matches all items that are matched by all filters it includes
-  \value UnionFilter A filter which matches any organizer item that is matched by any of the filters it includes
-  \value IdFilter A filter which matches any organizer item whose id is contained in a particular list of organizer item ids
-  \value CollectionFilter A filter which matches any organizer item that is matched by collection.
-  \value DefaultFilter A filter which matches everything
+    \enum QOrganizerItemFilter::FilterType
+
+    This enumeration describes the type of the filter.
+    \value InvalidFilter       An invalid filter which matches nothing.
+    \value DetailFilter        A filter which matches items containing a detail of a particular type
+                               and value.
+    \value DetailRangeFilter   A filter which matches items containing a detail of a particular type,
+                               whose values are within a particular range.
+    \value ChangeLogFilter     A filter which matches items whose timestamps have been updated since
+                               some particular date and time.
+    \value IntersectionFilter  A filter which matches all items that are matched by all filters it includes.
+    \value UnionFilter         A filter which matches any organizer item that is matched by any of the
+                               filters it includes.
+    \value IdFilter            A filter which matches any organizer item whose ID is contained in a
+                               particular list of organizer item IDs.
+    \value CollectionFilter    A filter which matches any items whose collection ID is contained in
+                               a particular list of collection IDs.
+    \value DefaultFilter       A filter which matches everything.
  */
 
 /*!
-  \enum QOrganizerItemFilter::MatchFlag
-  Describes the semantics of matching followed by the filter
-  \value MatchExactly Performs QVariant-based matching
-  \value MatchContains The search term is contained in the item
-  \value MatchStartsWith The search term matches the start of the item
-  \value MatchEndsWith The search term matches the end of the item
-  \value MatchFixedString Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified
-  \value MatchCaseSensitive The search is case sensitive
+    \enum QOrganizerItemFilter::MatchFlag
+
+    This enumeration describes the semantics of matching followed by the filter.
+    \value MatchExactly        Performs QVariant-based matching.
+    \value MatchContains       The search term is contained in the item.
+    \value MatchStartsWith     The search term matches the start of the item.
+    \value MatchEndsWith       The search term matches the end of the item.
+    \value MatchFixedString    Performs string-based matching. String-based comparisons are case-insensitive
+                               unless the \c MatchCaseSensitive flag is also specified.
+    \value MatchCaseSensitive  The search is case sensitive.
  */
 
 /*!
-  \fn QOrganizerItemFilter::operator!=(const QOrganizerItemFilter& other) const
-  Returns true if this filter is not identical to the \a other filter.
-  \sa operator==()
+    \fn QOrganizerItemFilter::operator!=(const QOrganizerItemFilter &other) const
+
+    Returns true if this filter is not identical to the \a other filter.
+
+    \sa operator==()
  */
 
 #if !defined(Q_CC_MWERKS)
@@ -99,40 +99,46 @@ template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDa
 {
     return d->clone();
 }
-#endif
+#endif // Q_CC_MWERKS
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/*! Constructs an empty filter */
+/*!
+    Constructs an empty filter of type DefaultFilter.
+ */
 QOrganizerItemFilter::QOrganizerItemFilter()
     : d_ptr(0)
 {
 }
 
-/*! Constructs a new copy of \a other
-*/
-QOrganizerItemFilter::QOrganizerItemFilter(const QOrganizerItemFilter& other)
+/*!
+    Constructs a new copy of \a other.
+ */
+QOrganizerItemFilter::QOrganizerItemFilter(const QOrganizerItemFilter &other)
     : d_ptr(other.d_ptr)
 {
 }
 
-/*! Assigns this filter to be \a other
-*/
-QOrganizerItemFilter& QOrganizerItemFilter::operator=(const QOrganizerItemFilter& other)
+/*!
+    Assigns this filter to be \a other.
+ */
+QOrganizerItemFilter &QOrganizerItemFilter::operator=(const QOrganizerItemFilter &other)
 {
-    if (this != &other) {
+    if (this != &other)
         d_ptr = other.d_ptr;
-    }
     return *this;
 }
 
-/*! Cleans up the memory used by this filter */
+/*!
+    Cleans up the memory used by this filter.
+ */
 QOrganizerItemFilter::~QOrganizerItemFilter()
 {
 }
 
-/*! Returns the type of the filter
-*/
+/*!
+    Returns the type of the filter.
+ */
 QOrganizerItemFilter::FilterType QOrganizerItemFilter::type() const
 {
     if (!d_ptr)
@@ -140,31 +146,31 @@ QOrganizerItemFilter::FilterType QOrganizerItemFilter::type() const
     return d_ptr->type();
 }
 
-/*! Returns true if the filter has the same type and criteria as \a other
-*/
-bool QOrganizerItemFilter::operator==(const QOrganizerItemFilter& other) const
+/*!
+    Returns true if this filter is identical to the \a other filter.
+
+    \sa operator!=()
+ */
+bool QOrganizerItemFilter::operator==(const QOrganizerItemFilter &other) const
 {
-    /* A default filter is only equal to other default filters */
     if (!d_ptr)
         return !other.d_ptr;
 
-    /* Different types can't be equal */
     if (other.type() != type())
         return false;
 
-    /* Otherwise, use the virtual op == */
     return d_ptr->compare(other.d_ptr);
 }
 
 #ifndef QT_NO_DATASTREAM
 /*!
- * Writes \a filter to the stream \a out.
- *
- * A QOrganizerItemIdFilter will not be preserved if streamed to a QDataStream.
+    Writes \a filter to the stream \a out.
+
+    A QOrganizerItemIdFilter will not be preserved if streamed to a QDataStream.
  */
-QDataStream& operator<<(QDataStream& out, const QOrganizerItemFilter& filter)
+QDataStream &operator<<(QDataStream &out, const QOrganizerItemFilter &filter)
 {
-    quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetailFilter
+    quint8 formatVersion = 1;
     out << formatVersion << static_cast<quint32>(filter.type());
     if (filter.d_ptr)
         filter.d_ptr->outputToStream(out, formatVersion);
@@ -172,11 +178,11 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerItemFilter& filter)
 }
 
 /*!
- * Reads an organizer item filter from stream \a in into \a filter.
- *
- * A QOrganizerItemIdFilter will not be preserved if streamed from a QDataStream.
+    Reads an organizer item filter from stream \a in into \a filter.
+
+    A QOrganizerItemIdFilter will not be preserved if streamed from a QDataStream.
  */
-QDataStream& operator>>(QDataStream& in, QOrganizerItemFilter& filter)
+QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter)
 {
     quint8 formatVersion;
     in >> formatVersion;
@@ -210,21 +216,20 @@ QDataStream& operator>>(QDataStream& in, QOrganizerItemFilter& filter)
                 break;
         }
 
-        if (filter.d_ptr) {
+        if (filter.d_ptr)
             filter.d_ptr->inputFromStream(in, formatVersion);
-        }
     } else {
         in.setStatus(QDataStream::ReadCorruptData);
     }
     return in;
 }
-#endif
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
-  Outputs \a filter to the debug stream \a dbg
+    Outputs \a filter to the debug stream \a dbg.
  */
-QDebug operator<<(QDebug dbg, const QOrganizerItemFilter& filter)
+QDebug operator<<(QDebug dbg, const QOrganizerItemFilter &filter)
 {
     dbg.nospace() << "QOrganizerItemFilter(";
     if (filter.d_ptr)
@@ -234,24 +239,25 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemFilter& filter)
     dbg.nospace() << ")";
     return dbg.maybeSpace();
 }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 /*!
-  \internal
-  Constructs a new filter from the given data pointer \a d
+    \internal
+
+    Constructs a new filter from the given data pointer \a d.
  */
 QOrganizerItemFilter::QOrganizerItemFilter(QOrganizerItemFilterPrivate *d)
     : d_ptr(d)
 {
-
 }
 
 /*!
- \relates QOrganizerItemFilter
- Returns a filter which is the intersection of the \a left and \a right filters
- \sa QOrganizerItemIntersectionFilter
+    \relates QOrganizerItemFilter
+    Returns a filter which is the intersection of the \a left and \a right filters.
+
+    \sa QOrganizerItemIntersectionFilter
  */
-const QOrganizerItemFilter operator&(const QOrganizerItemFilter& left, const QOrganizerItemFilter& right)
+const QOrganizerItemFilter operator&(const QOrganizerItemFilter &left, const QOrganizerItemFilter &right)
 {
     // XXX TODO: empty intersection/union operations are not well defined yet.
     //if (left.type() == QOrganizerItemFilter::Intersection) {
@@ -275,11 +281,12 @@ const QOrganizerItemFilter operator&(const QOrganizerItemFilter& left, const QOr
 }
 
 /*!
- \relates QOrganizerItemFilter
- Returns a filter which is the union of the \a left and \a right filters
- \sa QOrganizerItemUnionFilter
+    \relates QOrganizerItemFilter
+    Returns a filter which is the union of the \a left and \a right filters.
+
+    \sa QOrganizerItemUnionFilter
  */
-const QOrganizerItemFilter operator|(const QOrganizerItemFilter& left, const QOrganizerItemFilter& right)
+const QOrganizerItemFilter operator|(const QOrganizerItemFilter &left, const QOrganizerItemFilter &right)
 {
     if (left.type() == QOrganizerItemFilter::UnionFilter) {
         QOrganizerItemUnionFilter bf(left);
@@ -300,4 +307,5 @@ const QOrganizerItemFilter operator|(const QOrganizerItemFilter& left, const QOr
     nif << left << right;
     return nif;
 }
+
 QTORGANIZER_END_NAMESPACE

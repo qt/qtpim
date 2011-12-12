@@ -42,8 +42,8 @@
 #ifndef QORGANIZERITEMIDFILTER_H
 #define QORGANIZERITEMIDFILTER_H
 
-#include "qorganizeritemfilter.h"
-#include "qorganizeritemid.h"
+#include <qorganizeritemfilter.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -52,15 +52,13 @@ class Q_ORGANIZER_EXPORT QOrganizerItemIdFilter : public QOrganizerItemFilter
 {
 public:
     QOrganizerItemIdFilter();
-    QOrganizerItemIdFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemIdFilter(const QOrganizerItemFilter &other);
 
-    /* Mutators */
-    void setIds(const QList<QOrganizerItemId>& ids);
-    void insert(const QOrganizerItemId& id);
-    void remove(const QOrganizerItemId& id);
+    void setIds(const QList<QOrganizerItemId> &ids);
+    void insert(const QOrganizerItemId &id);
+    void remove(const QOrganizerItemId &id);
     void clear();
 
-    /* Accessors */
     QList<QOrganizerItemId> ids() const;
 
 private:
@@ -69,4 +67,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMIDFILTER_H

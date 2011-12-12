@@ -54,9 +54,8 @@
 //
 
 #include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilter.h"
-
-#include <QDateTime>
+#include <qorganizeritemchangelogfilter.h>
+#include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -64,39 +63,32 @@ class QOrganizerItemChangeLogFilterPrivate : public QOrganizerItemFilterPrivate
 {
 public:
     QOrganizerItemChangeLogFilterPrivate(QOrganizerItemChangeLogFilter::EventType type = QOrganizerItemChangeLogFilter::EventAdded)
-        : QOrganizerItemFilterPrivate()
-        , m_eventType(type)
+        : QOrganizerItemFilterPrivate(), m_eventType(type)
     {
-
     }
 
-    QOrganizerItemChangeLogFilterPrivate(const QOrganizerItemChangeLogFilterPrivate& other)
-        : QOrganizerItemFilterPrivate(other)
-        , m_eventType(other.m_eventType)
-        , m_since(other.m_since)
+    QOrganizerItemChangeLogFilterPrivate(const QOrganizerItemChangeLogFilterPrivate &other)
+        : QOrganizerItemFilterPrivate(other), m_eventType(other.m_eventType), m_since(other.m_since)
     {
-
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemChangeLogFilterPrivate *od = static_cast<const QOrganizerItemChangeLogFilterPrivate*>(other);
-        if (m_eventType != od->m_eventType)
-            return false;
-        if (m_since != od->m_since)
-            return false;
-        return true;
+        const QOrganizerItemChangeLogFilterPrivate *od = static_cast<const QOrganizerItemChangeLogFilterPrivate *>(other);
+        if (od)
+            return (m_eventType == od->m_eventType) && (m_since == od->m_since);
+        return false;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
-        if (formatVersion == 1) {
+        if (formatVersion == 1)
             stream << static_cast<quint32>(m_eventType) << m_since;
-        }
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
         if (formatVersion == 1) {
             quint32 eventType;
@@ -105,9 +97,10 @@ public:
         }
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemChangeLogFilter(";
         dbg.nospace() << "eventType=";
@@ -117,8 +110,7 @@ public:
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
-
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemChangeLogFilter, QOrganizerItemFilter::ChangeLogFilter)
 
@@ -128,4 +120,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMCHANGELOGFILTER_P_H

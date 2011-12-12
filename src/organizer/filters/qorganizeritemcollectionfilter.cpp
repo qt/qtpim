@@ -39,20 +39,19 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemcollectionfilter.h"
-#include "qorganizeritemcollectionfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemcollectionfilter.h>
+#include <private/qorganizeritemcollectionfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
     \class QOrganizerItemCollectionFilter
-    \brief The QOrganizerItemCollectionFilter class provides a filter based around the collection one organizeritem belongs to.
+    \brief The QOrganizerItemCollectionFilter class provides a filter based around the collection one'
+           organizer item belongs to.
     \inmodule QtOrganizer
     \ingroup organizeritems-filters
 
-    It may be used to select organizeritems belonging to certain collections.
+    It may be used to select organizer items belonging to certain collections.
  */
 
 Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemCollectionFilter)

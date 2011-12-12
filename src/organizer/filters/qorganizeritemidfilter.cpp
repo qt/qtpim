@@ -39,33 +39,32 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemidfilter.h"
-#include "qorganizeritemidfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemidfilter.h>
+#include <private/qorganizeritemidfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemIdFilter
-  \brief The QOrganizerItemIdFilter class provides a filter based around a list of organizer item ids
-  \inmodule QtOrganizer
-  \ingroup organizer-filters
+    \class QOrganizerItemIdFilter
+    \brief The QOrganizerItemIdFilter class provides a filter based around a list of organizer item IDs.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-  It may be used to select organizer items whose ids are contained in the given list of ids.
+    It may be used to select organizer items whose IDs are contained in the given list.
 
-  Note: a QOrganizerItemIdFilter will not be preserved if streamed to a QDataStream.
+    Note: a QOrganizerItemIdFilter will not be preserved if streamed to a QDataStream.
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIdFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIdFilter)
 
 /*!
- * \fn QOrganizerItemIdFilter::QOrganizerItemIdFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new organizer item id filter
+    \fn QOrganizerItemIdFilter::QOrganizerItemIdFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new organizer item ID filter.
  */
 
 /*!
- * Constructs a new organizer item id filter
+    Constructs a new organizer item ID filter.
  */
 QOrganizerItemIdFilter::QOrganizerItemIdFilter()
     : QOrganizerItemFilter(new QOrganizerItemIdFilterPrivate)
@@ -73,20 +72,22 @@ QOrganizerItemIdFilter::QOrganizerItemIdFilter()
 }
 
 /*!
- * Sets the list which contains the ids of possible matching organizer items to \a ids
- * \sa ids()
+    Sets the list which contains the IDs of possible matching organizer items to \a ids.
+
+    \sa ids()
  */
-void QOrganizerItemIdFilter::setIds(const QList<QOrganizerItemId>& ids)
+void QOrganizerItemIdFilter::setIds(const QList<QOrganizerItemId> &ids)
 {
     Q_D(QOrganizerItemIdFilter);
     d->m_ids = ids;
 }
 
 /*!
- * Inserts the id \a id into the list which contains the ids of possible matching items
- * \sa setIds()
+    Inserts the \a id into the list which contains the IDs of possible matching items.
+
+    \sa setIds()
  */
-void QOrganizerItemIdFilter::insert(const QOrganizerItemId& id)
+void QOrganizerItemIdFilter::insert(const QOrganizerItemId &id)
 {
     Q_D(QOrganizerItemIdFilter);
     if (!d->m_ids.contains(id))
@@ -94,20 +95,21 @@ void QOrganizerItemIdFilter::insert(const QOrganizerItemId& id)
 }
 
 /*!
- * Removes the id \a id from the list which contains the ids of possible matching items,
- * if it is contained in the list, otherwise has no effect.
- * \sa clear()
+    Removes the id \a id from the list which contains the IDs of possible matching items.
+
+    \sa clear()
  */
-void QOrganizerItemIdFilter::remove(const QOrganizerItemId& id)
+void QOrganizerItemIdFilter::remove(const QOrganizerItemId &id)
 {
     Q_D(QOrganizerItemIdFilter);
     d->m_ids.removeAll(id);
 }
 
 /*!
- * Clears the list which contains the ids of possible matching items.
- * A id filter with a cleared list will match no items.
- * \sa setIds()
+    Clears the list which contains the IDs of possible matching items. Note that an item ID filter
+    with an empty list will match no items.
+
+    \sa setIds()
  */
 void QOrganizerItemIdFilter::clear()
 {
@@ -116,8 +118,9 @@ void QOrganizerItemIdFilter::clear()
 }
 
 /*!
- * Returns the list of ids of organizer items which match this filter
- * \sa setIds()
+    Returns the list of IDs of organizer items which match this filter.
+
+    \sa setIds()
  */
 QList<QOrganizerItemId> QOrganizerItemIdFilter::ids() const
 {

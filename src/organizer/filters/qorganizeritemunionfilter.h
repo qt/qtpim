@@ -42,7 +42,8 @@
 #ifndef QORGANIZERITEMUNIONFILTER_H
 #define QORGANIZERITEMUNIONFILTER_H
 
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemfilter.h>
+#include <QtCore/qlist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -52,18 +53,16 @@ class Q_ORGANIZER_EXPORT QOrganizerItemUnionFilter : public QOrganizerItemFilter
 public:
 
     QOrganizerItemUnionFilter();
-    QOrganizerItemUnionFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemUnionFilter(const QOrganizerItemFilter &other);
 
-    void setFilters(const QList<QOrganizerItemFilter>& filters);
+    void setFilters(const QList<QOrganizerItemFilter> &filters);
+    void prepend(const QOrganizerItemFilter &filter);
+    void append(const QOrganizerItemFilter &filter);
+    void remove(const QOrganizerItemFilter &filter);
     void clear();
 
-    void prepend(const QOrganizerItemFilter& filter);
-    void append(const QOrganizerItemFilter& filter);
-    void remove(const QOrganizerItemFilter& filter);
+    QOrganizerItemUnionFilter &operator<<(const QOrganizerItemFilter &filter);
 
-    QOrganizerItemUnionFilter& operator<<(const QOrganizerItemFilter& filter);
-
-    /* Accessors */
     QList<QOrganizerItemFilter> filters() const;
 
 private:
@@ -72,4 +71,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMUNIONFILTER_H

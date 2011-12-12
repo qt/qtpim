@@ -53,12 +53,59 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-  \qmlproperty FetchHint::OptimizationHints  FetchHint::optimizationHints
+    \internal
+ */
+QDeclarativeOrganizerItemFetchHint::QDeclarativeOrganizerItemFetchHint(QObject *parent)
+    : QObject(parent)
+{
+}
 
-  This property holds the optimization hint flags specified by the client.
-  These hints may be ignored by the backend, in which case it will return
-  the full set of information accessible in a organizer item.
-  */
+/*!
+    \qmlproperty enumeration FetchHint::optimizationHints
+
+    This property holds the optimization hint flags specified by the client.
+
+    \list
+    \o AllRequired          Tells the backend that all information is required.
+    \o NoActionPreferences  Tells the backend that the client does not require retrieved
+                            organizer items to include a cache of action preferences.
+    \o NoBinaryBlobs        Tells the backend that the client does not require retrieved
+                            organizer items to include binary blobs such as thumbnail images.
+    \endlist
+ */
+QDeclarativeOrganizerItemFetchHint::OptimizationHints QDeclarativeOrganizerItemFetchHint::optimizationHints() const
+{
+    OptimizationHints hints;
+    hints = ~hints & (int)d.optimizationHints();
+    return hints;
+}
+
+void QDeclarativeOrganizerItemFetchHint::setOptimizationHints(OptimizationHints hints)
+{
+    if (hints != d.optimizationHints()) {
+        QOrganizerItemFetchHint::OptimizationHints newHints;
+        newHints = ~newHints & (int)hints;
+        d.setOptimizationHints(newHints);
+        emit fetchHintChanged();
+    }
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemFetchHint QDeclarativeOrganizerItemFetchHint::fetchHint() const
+{
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemFetchHint::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
+{
+    d = fetchHint;
+    emit fetchHintChanged();
+}
 
 #include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"
 

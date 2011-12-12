@@ -54,12 +54,8 @@
 //
 
 #include "qorganizeritemfilter_p.h"
-#include "qorganizeritemfilter.h"
-#include "qorganizercollectionid.h"
+#include <qorganizercollectionid.h>
 
-#include <QString>
-#include <QVariant>
-#include <QSet>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -71,45 +67,44 @@ public:
     {
     }
 
-    QOrganizerItemCollectionFilterPrivate(const QOrganizerItemCollectionFilterPrivate& other)
-        : QOrganizerItemFilterPrivate(other),
-        m_ids(other.m_ids)
+    QOrganizerItemCollectionFilterPrivate(const QOrganizerItemCollectionFilterPrivate &other)
+        : QOrganizerItemFilterPrivate(other), m_ids(other.m_ids)
     {
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemCollectionFilterPrivate *od = static_cast<const QOrganizerItemCollectionFilterPrivate*>(other);
-        if (m_ids != od->m_ids)
-            return false;
-        return true;
+        const QOrganizerItemCollectionFilterPrivate *od = static_cast<const QOrganizerItemCollectionFilterPrivate *>(other);
+        if (od)
+            return m_ids == od->m_ids;
+        return false;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
-        if (formatVersion == 1) {
+        if (formatVersion == 1)
             stream << m_ids;
-        }
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
-        if (formatVersion == 1) {
+        if (formatVersion == 1)
             stream >> m_ids;
-        }
         return stream;
     }
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemCollectionFilter(collectionIds=";
         dbg.nospace() << m_ids;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
     Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemCollectionFilter, QOrganizerItemFilter::CollectionFilter)
 
@@ -118,4 +113,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMCOLLECTIONFILTER_P_H

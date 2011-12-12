@@ -53,13 +53,16 @@
 // We mean it.
 //
 
-#include "qorganizeritemfilter.h"
-#include <QSharedData>
-#include <QDataStream>
+#include <qorganizeritemfilter.h>
+#include <QtCore/qshareddata.h>
+
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
-#endif
+#include <QtCore/qdebug.h>
+#endif // QT_NO_DEBUG_STREAM
 
 /* Boiler plate code */
 #define Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(Class) \
@@ -79,6 +82,7 @@
     }
 
 QTORGANIZER_BEGIN_NAMESPACE
+
 class QOrganizerItemFilterPrivate : public QSharedData
 {
 public:
@@ -90,18 +94,22 @@ public:
     {
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate* other) const = 0;
-    virtual QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const = 0;
-    virtual QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) = 0;
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const = 0;
+
+#ifndef QT_NO_DATASTREAM
+    virtual QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const = 0;
+    virtual QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion) = 0;
+#endif // QT_NO_DATASTREAM
+
 #ifndef QT_NO_DEBUG_STREAM
-    // NOTE: on platforms where Qt is built without debug streams enabled, vtable will differ!
-    virtual QDebug& debugStreamOut(QDebug& dbg) const = 0;
-#endif
-    virtual QOrganizerItemFilterPrivate* clone() const = 0;
+    virtual QDebug &debugStreamOut(QDebug &dbg) const = 0;
+#endif // QT_NO_DEBUG_STREAM
+
+    virtual QOrganizerItemFilterPrivate *clone() const = 0;
     virtual QOrganizerItemFilter::FilterType type() const = 0;
 
     /* Helper functions for C++ protection rules */
-    static const QSharedDataPointer<QOrganizerItemFilterPrivate>& extract_d(const QOrganizerItemFilter& other) {return other.d_ptr;}
+    static const QSharedDataPointer<QOrganizerItemFilterPrivate> &extract_d(const QOrganizerItemFilter &other) { return other.d_ptr; }
 };
 QTORGANIZER_END_NAMESPACE
 
@@ -119,5 +127,4 @@ template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDa
 #endif
 QT_END_NAMESPACE
 
-
-#endif
+#endif // QORGANIZERITEMFILTER_P_H

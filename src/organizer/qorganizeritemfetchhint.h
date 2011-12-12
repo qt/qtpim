@@ -44,23 +44,23 @@
 
 #include <qorganizeritemdetail.h>
 
-#include <QVariant>
-#include <QList>
-#include <QSharedData>
-
+#ifndef QT_NO_DATASTREAM
 QT_BEGIN_NAMESPACE
 class QDataStream;
 QT_END_NAMESPACE
+#endif // QT_NO_DATASTREAM
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemFetchHintPrivate;
-class Q_ORGANIZER_EXPORT QOrganizerItemFetchHint {
+class Q_ORGANIZER_EXPORT QOrganizerItemFetchHint
+{
 public:
     QOrganizerItemFetchHint();
-    QOrganizerItemFetchHint(const QOrganizerItemFetchHint& other);
+    QOrganizerItemFetchHint(const QOrganizerItemFetchHint &other);
     ~QOrganizerItemFetchHint();
-    QOrganizerItemFetchHint& operator=(const QOrganizerItemFetchHint& other);
+
+    QOrganizerItemFetchHint &operator=(const QOrganizerItemFetchHint &other);
 
     QList<QOrganizerItemDetail::DetailType> detailTypesHint() const;
     void setDetailTypesHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes);
@@ -85,14 +85,14 @@ private:
 };
 
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerItemFetchHint& hint);
-Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerItemFetchHint& hint);
-#endif
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemFetchHint &hint);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemFetchHint &hint);
+#endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint& hint);
-#endif
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint &hint);
+#endif // QT_NO_DEBUG_STREAM
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMFETCHHINT_H

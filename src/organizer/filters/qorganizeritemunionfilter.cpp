@@ -39,32 +39,30 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemunionfilter.h"
-#include "qorganizeritemunionfilter_p.h"
-#include "qorganizeritemfilter_p.h"
-#include "qorganizermanager.h"
+#include <qorganizeritemunionfilter.h>
+#include <private/qorganizeritemunionfilter_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-   \class QOrganizerItemUnionFilter
-   \brief The QOrganizerItemUnionFilter class provides a filter which unions the
-    results of other filters.
-   \inmodule QtOrganizer
-   \ingroup organizer-filters
+    \class QOrganizerItemUnionFilter
+    \brief The QOrganizerItemUnionFilter class provides a filter which unions the results of other filters.
+    \inmodule QtOrganizer
+    \ingroup organizer-filters
 
-   It may be used to select organizeritems which match all of the filters in the union
+    It may be used to select organizer items which match any of the filters in the union.
  */
 
-Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemUnionFilter);
+Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemUnionFilter)
 
 /*!
- * \fn QOrganizerItemUnionFilter::QOrganizerItemUnionFilter(const QOrganizerItemFilter& other)
- * Constructs a copy of \a other if possible, otherwise constructs a new union filter
+    \fn QOrganizerItemUnionFilter::QOrganizerItemUnionFilter(const QOrganizerItemFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new union filter.
  */
 
 /*!
- * Constructs a new intersection filter
+     Constructs a new intersection filter.
  */
 QOrganizerItemUnionFilter::QOrganizerItemUnionFilter()
     : QOrganizerItemFilter(new QOrganizerItemUnionFilterPrivate)
@@ -72,48 +70,53 @@ QOrganizerItemUnionFilter::QOrganizerItemUnionFilter()
 }
 
 /*!
- * Sets the filters whose criteria will be unioned to \a filters
- * \sa filters()
+    Sets the filters whose criteria will be unioned to \a filters.
+
+    \sa filters()
  */
-void QOrganizerItemUnionFilter::setFilters(const QList<QOrganizerItemFilter>& filters)
+void QOrganizerItemUnionFilter::setFilters(const QList<QOrganizerItemFilter> &filters)
 {
     Q_D(QOrganizerItemUnionFilter);
     d->m_filters = filters;
 }
 
 /*!
- * Prepends the given \a filter to the list of unioned filters
- * \sa append(), filters()
+    Prepends the given \a filter to the list of unioned filters.
+
+    \sa append(), filters()
  */
-void QOrganizerItemUnionFilter::prepend(const QOrganizerItemFilter& filter)
+void QOrganizerItemUnionFilter::prepend(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemUnionFilter);
     d->m_filters.prepend(filter);
 }
 
 /*!
- * Appends the given \a filter to the list of unioned filters
- * \sa operator<<(), prepend(), filters()
+    Appends the given \a filter to the list of unioned filters.
+
+    \sa operator<<(), prepend(), filters()
  */
-void QOrganizerItemUnionFilter::append(const QOrganizerItemFilter& filter)
+void QOrganizerItemUnionFilter::append(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemUnionFilter);
     d->m_filters.append(filter);
 }
 
 /*!
- * Removes the given \a filter from the union list
- * \sa filters(), append(), prepend(), clear()
+    Removes the given \a filter from the union list.
+
+    \sa filters(), append(), prepend(), clear()
  */
-void QOrganizerItemUnionFilter::remove(const QOrganizerItemFilter& filter)
+void QOrganizerItemUnionFilter::remove(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemUnionFilter);
     d->m_filters.removeAll(filter);
 }
 
 /*!
- * Clears the list of filters.  A cleared union filter will match no items.
- * \sa filters(), remove()
+    Clears the list of filters. Note that an empty union filter will match no items.
+
+    \sa filters(), remove()
  */
 void QOrganizerItemUnionFilter::clear()
 {
@@ -122,10 +125,11 @@ void QOrganizerItemUnionFilter::clear()
 }
 
 /*!
- * Appends the given \a filter to the list of unioned filters
- * \sa append()
+    Appends the given \a filter to the list of unioned filters.
+
+    \sa append()
  */
-QOrganizerItemUnionFilter& QOrganizerItemUnionFilter::operator<<(const QOrganizerItemFilter& filter)
+QOrganizerItemUnionFilter &QOrganizerItemUnionFilter::operator<<(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemUnionFilter);
     d->m_filters << filter;
@@ -133,8 +137,9 @@ QOrganizerItemUnionFilter& QOrganizerItemUnionFilter::operator<<(const QOrganize
 }
 
 /*!
- * Returns the list of filters which form the union filter
- * \sa setFilters(), prepend(), append(), remove()
+    Returns the list of filters which form the union filter.
+
+    \sa setFilters(), prepend(), append(), remove()
  */
 QList<QOrganizerItemFilter> QOrganizerItemUnionFilter::filters() const
 {

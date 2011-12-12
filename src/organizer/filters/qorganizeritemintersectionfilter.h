@@ -42,7 +42,8 @@
 #ifndef QORGANIZERITEMINTERSECTIONFILTER_H
 #define QORGANIZERITEMINTERSECTIONFILTER_H
 
-#include "qorganizeritemfilter.h"
+#include <qorganizeritemfilter.h>
+#include <QtCore/qlist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -50,20 +51,17 @@ class QOrganizerItemIntersectionFilterPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemIntersectionFilter : public QOrganizerItemFilter
 {
 public:
-
     QOrganizerItemIntersectionFilter();
-    QOrganizerItemIntersectionFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemIntersectionFilter(const QOrganizerItemFilter &other);
 
-    void setFilters(const QList<QOrganizerItemFilter>& filters);
-
-    void prepend(const QOrganizerItemFilter& filter);
-    void append(const QOrganizerItemFilter& filter);
-    void remove(const QOrganizerItemFilter& filter);
+    void setFilters(const QList<QOrganizerItemFilter> &filters);
+    void prepend(const QOrganizerItemFilter & filter);
+    void append(const QOrganizerItemFilter & filter);
+    void remove(const QOrganizerItemFilter & filter);
     void clear();
 
-    QOrganizerItemIntersectionFilter& operator<<(const QOrganizerItemFilter& filter);
+    QOrganizerItemIntersectionFilter &operator<<(const QOrganizerItemFilter &filter);
 
-    /* Accessors */
     QList<QOrganizerItemFilter> filters() const;
 
 private:
@@ -72,4 +70,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMINTERSECTIONFILTER_H

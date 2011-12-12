@@ -52,20 +52,16 @@ class Q_ORGANIZER_EXPORT QOrganizerItemDetailFilter : public QOrganizerItemFilte
 {
 public:
     QOrganizerItemDetailFilter();
-    QOrganizerItemDetailFilter(const QOrganizerItemFilter& other);
+    QOrganizerItemDetailFilter(const QOrganizerItemFilter &other);
 
-    /* Mutators */
     void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
-    void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
-
-    /* Filter Criterion */
-    void setValue(const QVariant& value);
-
-    /* Accessors */
     QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
+
+    void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
+    void setValue(const QVariant &value);
     QVariant value() const;
 
     // to be removed
@@ -79,4 +75,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMDETAILFILTER_H

@@ -53,6 +53,7 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/quuid.h>
 
+QT_ADDON_JSONDB_USE_NAMESPACE
 QTORGANIZER_BEGIN_NAMESPACE
 
 const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);

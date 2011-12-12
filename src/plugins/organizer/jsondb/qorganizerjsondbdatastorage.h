@@ -52,11 +52,11 @@
 #include <jsondb-error.h>
 #include <jsondb-global.h>
 
-Q_ADDON_JSONDB_BEGIN_NAMESPACE
+QT_ADDON_JSONDB_BEGIN_NAMESPACE
 class JsonDbClient;
 class JsonDbConnection;
-Q_ADDON_JSONDB_END_NAMESPACE
-Q_USE_JSONDB_NAMESPACE
+QT_ADDON_JSONDB_END_NAMESPACE
+QT_ADDON_JSONDB_USE_NAMESPACE
 QTORGANIZER_BEGIN_NAMESPACE
 
 // The purpose of this class is to provide synchronous access to jsondb and also hide jsondb

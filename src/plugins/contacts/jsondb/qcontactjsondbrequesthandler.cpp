@@ -52,7 +52,7 @@
 #include <jsondb-client.h>
 #include <private/jsondb-connection_p.h>
 #include <private/jsondb-strings_p.h>
-Q_USE_JSONDB_NAMESPACE
+QT_ADDON_JSONDB_USE_NAMESPACE
 #include <QDebug>
 #include <QString>
 #include <QMap>

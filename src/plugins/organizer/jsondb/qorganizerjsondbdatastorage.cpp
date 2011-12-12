@@ -50,7 +50,7 @@
 #include <private/jsondb-strings_p.h>
 #include <jsondb-error.h>
 
-Q_USE_JSONDB_NAMESPACE
+QT_ADDON_JSONDB_USE_NAMESPACE
 QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbDataStorage::QOrganizerJsonDbDataStorage()

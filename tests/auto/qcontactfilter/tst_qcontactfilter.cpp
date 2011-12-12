@@ -1216,6 +1216,16 @@ void tst_QContactFilter::testFilter_data()
                 << contact
                 << QContactName::match("foo")
                 << false;
+
+        QContactDetailFilter df;
+        df.setDetailDefinitionName("Name", "FirstName");
+        df.setMatchFlags(QContactFilter::MatchExactly);
+        df.setValue("");
+
+        QTest::newRow("QContactDetailFilter exact match for empty value")
+                << contact
+                << (QContactFilter)df
+                << false;
     }
 
     {

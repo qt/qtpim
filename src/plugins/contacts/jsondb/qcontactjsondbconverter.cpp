@@ -662,7 +662,7 @@ QString QContactJsonDbConverter::convertFilter(const QContactFilter &filter) con
             return "";
         }
         QString jsondbField = detailsToJsonMapping.value(detailFilter.detailDefinitionName());
-        if (!jsondbField.isEmpty() && (detailFilter.detailFieldName().isEmpty() || detailFilter.value().toString().isEmpty())) {
+        if (!jsondbField.isEmpty() && detailFilter.detailFieldName().isEmpty()) {
             // If fieldName or value is empty, the detail filter acts like a "detail exists" filter
             newJsonDbQuery.append("[?" + jsondbField + " exists]");
             break;

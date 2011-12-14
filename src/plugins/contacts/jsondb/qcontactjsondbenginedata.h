@@ -75,8 +75,7 @@ public:
     ~QContactJsonDbEngineData()
     {
         if (m_requestHandler)
-            delete m_requestHandler;
-        m_requestHandler = 0;
+            m_requestHandler->deleteLater();
     }
 
     QContactJsonDbRequestHandler* m_requestHandler;

@@ -863,7 +863,7 @@ void tst_QContactAsync::contactRemove()
     // specific contact removal via detail filter
     int originalCount = cm->contactIds().size();
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactUrl::DefinitionName, QContactUrl::FieldUrl);
+    dfil.setDetailDefinitionName(QContactUrl::DefinitionName);
     crr.setContactIds(cm->contactIds(dfil));
     crr.setManager(cm.data());
     QCOMPARE(crr.manager(), cm.data());

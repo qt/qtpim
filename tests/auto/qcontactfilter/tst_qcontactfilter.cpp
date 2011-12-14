@@ -1217,15 +1217,25 @@ void tst_QContactFilter::testFilter_data()
                 << QContactName::match("foo")
                 << false;
 
-        QContactDetailFilter df;
-        df.setDetailDefinitionName("Name", "FirstName");
-        df.setMatchFlags(QContactFilter::MatchExactly);
-        df.setValue("");
+        QContactDetailFilter dfWithEmptyValue;
+        dfWithEmptyValue.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+        dfWithEmptyValue.setMatchFlags(QContactFilter::MatchExactly);
+        dfWithEmptyValue.setValue("");
 
         QTest::newRow("QContactDetailFilter exact match for empty value")
                 << contact
-                << (QContactFilter)df
+                << (QContactFilter)dfWithEmptyValue
                 << false;
+
+        QContactDetailFilter dfWithEmptyFieldName;
+        dfWithEmptyFieldName.setDetailDefinitionName(QContactName::DefinitionName);
+        dfWithEmptyFieldName.setMatchFlags(QContactFilter::MatchExactly);
+        dfWithEmptyFieldName.setValue("");
+
+        QTest::newRow("QContactDetailFilter exact match for detail name but empty field name")
+                << contact
+                << (QContactFilter)dfWithEmptyFieldName
+                << true;
     }
 
     {

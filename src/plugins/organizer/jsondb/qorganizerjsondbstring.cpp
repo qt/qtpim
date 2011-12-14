@@ -61,9 +61,10 @@ const QString QOrganizerJsonDbStr::ItemReminder(QStringLiteral("reminder"));
 const QString QOrganizerJsonDbStr::ItemGuid(QStringLiteral("guid"));
 
 //Location sub properties
-const QString QOrganizerJsonDbStr::ItemLocationLabel(QStringLiteral("label"));
-const QString QOrganizerJsonDbStr::ItemLocationLatitude(QStringLiteral("latitude"));
-const QString QOrganizerJsonDbStr::ItemLocationLongitude(QStringLiteral("longitude"));
+const QString QOrganizerJsonDbStr::ItemLocationLabel(QStringLiteral("displayName"));
+const QString QOrganizerJsonDbStr::ItemLocationGeo(QStringLiteral("geo"));
+const QString QOrganizerJsonDbStr::ItemLocationGeoLatitude(QStringLiteral("latitude"));
+const QString QOrganizerJsonDbStr::ItemLocationGeoLongitude(QStringLiteral("longitude"));
 
 //Item reminder properties
 const QString QOrganizerJsonDbStr::ItemReminderSecBeforeStart(QStringLiteral("secondsBeforeStart"));

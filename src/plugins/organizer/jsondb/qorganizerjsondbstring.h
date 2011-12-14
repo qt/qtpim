@@ -84,8 +84,9 @@ public:
 
     //Location sub properties
     const static QString ItemLocationLabel;
-    const static QString ItemLocationLatitude;
-    const static QString ItemLocationLongitude;
+    const static QString ItemLocationGeo;
+    const static QString ItemLocationGeoLatitude;
+    const static QString ItemLocationGeoLongitude;
 
     //Item reminder properties
     const static QString ItemReminder;

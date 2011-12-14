@@ -350,7 +350,12 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 item->saveDetail(&audibleReminder);
             }
         } else if (i.key() == QOrganizerJsonDbStr::ItemLocation) {
-            // TODO implement them properly when schema gets frozen
+            QVariantMap locationMap = i.value().toMap();
+            if (!locationMap.isEmpty()) {
+                QOrganizerItemLocation location;
+                jsonDbObjectToLocationDetail(locationMap, &location);
+                item->saveDetail(&location);
+            }
         } else if (i.key() == JsonDbString::kUuidStr
             || i.key() == JsonDbString::kTypeStr
             || i.key() == QOrganizerJsonDbStr::ItemCollectionId
@@ -366,25 +371,6 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
             item->saveDetail(&extendedDetail);
         }
         ++i;
-    }
-
-    // XXX temprary solution before schema gets frozen
-
-    QVariantMap location = object.value(QOrganizerJsonDbStr::ItemLocation).toMap();
-    if (!location.isEmpty()) {
-        QOrganizerItemLocation locationDetail;
-
-        QString label = location.value(QOrganizerJsonDbStr::ItemLocationLabel).toString();
-        if (!label.isEmpty())
-            locationDetail.setLabel(label);
-
-        double latitude = location.value(QOrganizerJsonDbStr::ItemLocationLatitude).toDouble();
-        locationDetail.setLatitude(latitude);
-
-        double longitude = location.value(QOrganizerJsonDbStr::ItemLocationLongitude).toDouble();
-        locationDetail.setLongitude(longitude);
-
-        item->saveDetail(&locationDetail);
     }
 
     return true;
@@ -460,12 +446,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     if (!tags.isEmpty())
         object->insert(QOrganizerJsonDbStr::ItemTags, tags);
 
+    // location
     QOrganizerItemLocation locationDetail = item.detail(QOrganizerItemLocation::DefinitionName);
     if (!locationDetail.isEmpty()) {
         QVariantMap locationObject;
-        locationObject.insert(QOrganizerJsonDbStr::ItemLocationLabel, locationDetail.label());
-        locationObject.insert(QOrganizerJsonDbStr::ItemLocationLatitude, locationDetail.latitude());
-        locationObject.insert(QOrganizerJsonDbStr::ItemLocationLongitude, locationDetail.longitude());
+        locationDetailToJsonDbObject(locationDetail, &locationObject);
         object->insert(QOrganizerJsonDbStr::ItemLocation, locationObject);
     }
 
@@ -689,6 +674,39 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &obje
     }
 }
 
+void QOrganizerJsonDbConverter::locationDetailToJsonDbObject(const QOrganizerItemLocation &locationDetail, QVariantMap *object) const
+{
+    QString label(locationDetail.label());
+    if (!label.isEmpty())
+        object->insert(QOrganizerJsonDbStr::ItemLocationLabel, label);
+
+    QVariantMap geoObject;
+    if (locationDetail.hasValue(QOrganizerItemLocation::FieldLatitude))
+        geoObject.insert(QOrganizerJsonDbStr::ItemLocationGeoLatitude, locationDetail.latitude());
+    if (locationDetail.hasValue(QOrganizerItemLocation::FieldLongitude))
+        geoObject.insert(QOrganizerJsonDbStr::ItemLocationGeoLongitude, locationDetail.longitude());
+    if (!geoObject.isEmpty())
+        object->insert(QOrganizerJsonDbStr::ItemLocationGeo, geoObject);
+}
+
+void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail) const
+{
+    QString label(object.value(QOrganizerJsonDbStr::ItemLocationLabel).toString());
+    if (!label.isEmpty())
+        locationDetail->setLabel(label);
+
+    QVariantMap geoObject(object.value(QOrganizerJsonDbStr::ItemLocationGeo).toMap());
+    if (geoObject.contains(QOrganizerJsonDbStr::ItemLocationGeoLatitude)) {
+        QVariant latitude(geoObject.value(QOrganizerJsonDbStr::ItemLocationGeoLatitude));
+        if (latitude.canConvert(QVariant::Double))
+            locationDetail->setLatitude(latitude.toDouble());
+    }
+    if (geoObject.contains(QOrganizerJsonDbStr::ItemLocationGeoLongitude)) {
+        QVariant longitude(geoObject.value(QOrganizerJsonDbStr::ItemLocationGeoLongitude));
+        if (longitude.canConvert(QVariant::Double))
+            locationDetail->setLongitude(longitude.toDouble());
+    }
+}
 
 bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)
 {
@@ -1331,6 +1349,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         const QString containsQueryTemplate(QStringLiteral("[?%1 contains \"%2\"]"));
         const QString matchFlagQueryTemplate(QStringLiteral("[?%1%2\"]"));
         const QString matchFlagQueryTemplate2(QStringLiteral("[?%1.%2%3\"]"));
+        const QString matchFlagQueryTemplate3(QStringLiteral("[?%1.%2.%3%4\"]"));
         const QString existsQueryTemplate(QStringLiteral("[?%1 exists]"));
 
         if (QOrganizerEventTime::DefinitionName == detailDefinitionName) {
@@ -1384,14 +1403,16 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                     .arg(QOrganizerJsonDbStr::ItemLocationLabel)
                     .arg(createMatchFlagQuery(valueString, df.matchFlags()));
             } else if (QOrganizerItemLocation::FieldLongitude ==  detailFieldName) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr += matchFlagQueryTemplate3
                     .arg(QOrganizerJsonDbStr::ItemLocation)
-                    .arg(QOrganizerJsonDbStr::ItemLocationLongitude)
+                    .arg(QOrganizerJsonDbStr::ItemLocationGeo)
+                    .arg(QOrganizerJsonDbStr::ItemLocationGeoLongitude)
                     .arg(createMatchFlagQuery(valueString, df.matchFlags()));
             } else if (QOrganizerItemLocation::FieldLatitude ==  detailFieldName) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr += matchFlagQueryTemplate3
                     .arg(QOrganizerJsonDbStr::ItemLocation)
-                    .arg(QOrganizerJsonDbStr::ItemLocationLatitude)
+                    .arg(QOrganizerJsonDbStr::ItemLocationGeo)
+                    .arg(QOrganizerJsonDbStr::ItemLocationGeoLatitude)
                     .arg(createMatchFlagQuery(valueString, df.matchFlags()));
             }
 

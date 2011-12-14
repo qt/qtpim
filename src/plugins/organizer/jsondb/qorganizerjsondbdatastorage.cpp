@@ -46,7 +46,6 @@
 #include "qorganizerjsondbstring.h"
 
 #include <jsondb-client.h>
-#include <private/jsondb-connection_p.h>
 #include <private/jsondb-strings_p.h>
 #include <jsondb-error.h>
 
@@ -56,7 +55,6 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerJsonDbDataStorage::QOrganizerJsonDbDataStorage()
     : m_waitMutex(0)
     , m_jsonDb(0)
-    , m_jsonConnection(0)
 {
     clearRequestData();
 }
@@ -218,9 +216,7 @@ void QOrganizerJsonDbDataStorage::removeAlarm(const QString *alarmUuid, QOrganiz
 void QOrganizerJsonDbDataStorage::run()
 {
     m_waitMutex = new QMutex();
-    m_jsonConnection = new JsonDbConnection(this);
-    m_jsonConnection->connectToServer();
-    m_jsonDb = new JsonDbClient(m_jsonConnection);
+    m_jsonDb = new JsonDbClient(this);
 
     connect(this, SIGNAL(requestInitialized()), this, SLOT(handleRequest()));
     connect(m_jsonDb, SIGNAL(notified(const QString&, const QVariant&, const QString&)),

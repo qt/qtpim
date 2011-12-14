@@ -183,7 +183,6 @@ private:
 
     QOrganizerJsonDbConverter m_converter;
     JsonDbClient* m_jsonDb;
-    JsonDbConnection* m_jsonConnection;
 
     // "collection cache"
     QSet<QOrganizerCollectionId> m_collectionIds;

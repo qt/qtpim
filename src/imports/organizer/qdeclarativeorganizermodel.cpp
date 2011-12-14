@@ -638,10 +638,14 @@ int QDeclarativeOrganizerModel::itemIndex(const QDeclarativeOrganizerItem* item)
 
 void QDeclarativeOrganizerModel::clearItems()
 {
-    foreach (QDeclarativeOrganizerItem* di, d->m_items)
-        di->deleteLater();
-    d->m_items.clear();
-    d->m_itemIdHash.clear();
+    if (d->m_items.size() > 0) {
+        beginRemoveRows(QModelIndex(), 0, d->m_items.size() - 1);
+        foreach (QDeclarativeOrganizerItem* di, d->m_items)
+            di->deleteLater();
+        d->m_items.clear();
+        d->m_itemIdHash.clear();
+        endRemoveRows();
+    }
 }
 
 QDeclarativeOrganizerItem* QDeclarativeOrganizerModel::createItem(const QOrganizerItem& item)

@@ -389,9 +389,9 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
         QOrganizerEventTime eventTime = event.detail(QOrganizerEventTime::DefinitionName);
         if (eventTime.hasValue(QOrganizerEventTime::FieldStartDateTime))
-            object->insert(QOrganizerJsonDbStr::EventStartDateTime, eventTime.startDateTime().toString(Qt::ISODate));
+            object->insert(QOrganizerJsonDbStr::EventStartDateTime, eventTime.startDateTime().toUTC().toString(Qt::ISODate));
         if (eventTime.hasValue(QOrganizerEventTime::FieldEndDateTime))
-            object->insert(QOrganizerJsonDbStr::EventEndDateTime, eventTime.endDateTime().toString(Qt::ISODate));
+            object->insert(QOrganizerJsonDbStr::EventEndDateTime, eventTime.endDateTime().toUTC().toString(Qt::ISODate));
         if (eventTime.hasValue(QOrganizerEventTime::FieldAllDay))
             object->insert(QOrganizerJsonDbStr::EventIsAllDay, eventTime.isAllDay());
 
@@ -405,9 +405,9 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
         QOrganizerTodoTime todoTime = todo.detail(QOrganizerTodoTime::DefinitionName);
         if (todoTime.hasValue(QOrganizerTodoTime::FieldStartDateTime))
-            object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todoTime.startDateTime().toString(Qt::ISODate));
+            object->insert(QOrganizerJsonDbStr::TodoStartDateTime, todoTime.startDateTime().toUTC().toString(Qt::ISODate));
         if (todoTime.hasValue(QOrganizerTodoTime::FieldDueDateTime))
-            object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todoTime.dueDateTime().toString(Qt::ISODate));
+            object->insert(QOrganizerJsonDbStr::TodoDueDateTime, todoTime.dueDateTime().toUTC().toString(Qt::ISODate));
         if (todoTime.hasValue(QOrganizerTodoTime::FieldAllDay))
             object->insert(QOrganizerJsonDbStr::TodoIsAllDay, todoTime.isAllDay());
 
@@ -942,7 +942,7 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
         // alarm start time
         if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
             alarmStartTime = alarmStartTime.addSecs(-audibleReminder.secondsBeforeStart());//Nagetive value
-        alarmObject.insert(QOrganizerJsonDbStr::AlarmISODate, alarmStartTime.toString(Qt::ISODate));
+        alarmObject.insert(QOrganizerJsonDbStr::AlarmISODate, alarmStartTime.toUTC().toString(Qt::ISODate));
         // repetition count to alarm snooze count
         if (audibleReminder.hasValue(audibleReminder.FieldRepetitionCount))
            alarmObject.insert(QOrganizerJsonDbStr::AlarmSnoozeCount, audibleReminder.repetitionCount());
@@ -1355,10 +1355,10 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         if (QOrganizerEventTime::DefinitionName == detailDefinitionName) {
             if (QOrganizerEventTime::FieldStartDateTime ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::EventStartDateTime).arg(df.value().toDateTime().toString(Qt::ISODate));
+                    .arg(QOrganizerJsonDbStr::EventStartDateTime).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
             } else if (QOrganizerEventTime::FieldEndDateTime ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::EventEndDateTime).arg(df.value().toDateTime().toString(Qt::ISODate));
+                    .arg(QOrganizerJsonDbStr::EventEndDateTime).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
             } else if (QOrganizerEventTime::FieldAllDay ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::EventIsAllDay).arg(valueString);
@@ -1367,10 +1367,10 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerTodoTime::DefinitionName == detailDefinitionName) {
             if (QOrganizerTodoTime::FieldStartDateTime ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::TodoStartDateTime).arg(df.value().toDateTime().toString(Qt::ISODate));
+                    .arg(QOrganizerJsonDbStr::TodoStartDateTime).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
             } else if (QOrganizerTodoTime::FieldDueDateTime ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::TodoDueDateTime).arg(df.value().toDateTime().toString(Qt::ISODate));
+                    .arg(QOrganizerJsonDbStr::TodoDueDateTime).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
             } else if (QOrganizerTodoTime::FieldAllDay ==  detailFieldName) {
                 jsonDbQueryStr += equalsQueryTemplate.arg(QOrganizerJsonDbStr::TodoIsAllDay).arg(valueString);
             }

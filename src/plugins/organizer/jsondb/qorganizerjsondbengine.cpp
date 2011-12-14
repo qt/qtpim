@@ -108,7 +108,7 @@ bool QOrganizerJsonDbEngine::initEngine (QOrganizerManager::Error* error)
 
 QString QOrganizerJsonDbEngine::managerName() const
 {
-    return QOrganizerJsonDbStr::JsonDbEngineId;
+    return QOrganizerJsonDbStr::jsonDbEngineId();
 }
 
 QMap<QString, QString> QOrganizerJsonDbEngine::managerParameters() const

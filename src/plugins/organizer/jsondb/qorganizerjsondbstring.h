@@ -52,128 +52,122 @@ class QOrganizerJsonDbStr
 {
 public:
     //Jsondb manager name
-    const static QString ManagerName;
-    const static QString ManagerUri;
-    const static QString JsonDbEngineId;
+    const static QString &managerName();
+    const static QString &managerUri();
+    const static QString &jsonDbEngineId();
 
-    const static QString JsonDbSchemaPrefix;
+    const static QString &jsonDbSchemaPrefix();
 
     // JsonDb query string
-    const static QString JsonDbQueryAllItems;
-    const static QString JsonDbQueryAllCollections;
+    const static QString &jsonDbQueryAllItems();
+    const static QString &jsonDbQueryAllCollections();
 
-    const static QString JsonDbQueryCollectionIdsTemplate;
-    const static QString JsonDbQueryUuidsTemplate;
+    const static QString &jsonDbQueryCollectionIdsTemplate();
+    const static QString &jsonDbQueryUuidsTemplate();
 
     //Organizer item string
-    const static QString ItemName;
-    const static QString ItemCollectionId;
-    const static QString ItemDescription;
-    const static QString ItemComments;
-    const static QString ItemLocation;
-    const static QString ItemPriority;
-    const static QString ItemVisualReminder;
-    const static QString ItemAudibleReminder;
-    const static QString ItemEmailReminder;
-    const static QString ItemTags;
-    const static QString ItemGuid;
+    const static QString &itemName();
+    const static QString &itemCollectionId();
+    const static QString &itemDescription();
+    const static QString &itemComments();
+    const static QString &itemLocation();
+    const static QString &itemPriority();
+    const static QString &itemTags();
+    const static QString &itemGuid();
 
     //Location sub properties
-    const static QString ItemLocationLabel;
-    const static QString ItemLocationGeo;
-    const static QString ItemLocationGeoLatitude;
-    const static QString ItemLocationGeoLongitude;
+    const static QString &itemLocationLabel();
+    const static QString &itemLocationGeo();
+    const static QString &itemLocationGeoLatitude();
+    const static QString &itemLocationGeoLongitude();
 
     //Item reminder properties
-    const static QString ItemReminder;
-    const static QString ItemReminderSecBeforeStart;
-    const static QString ItemReminderRepCount;
-    const static QString ItemReminderRepDelay;
-    const static QString ItemReminderDataUrl;
+    const static QString &itemReminder();
+    const static QString &itemReminderSecBeforeStart();
+    const static QString &itemReminderRepCount();
+    const static QString &itemReminderRepDelay();
+    const static QString &itemReminderDataUrl();
 
     //Event item
-    const static QString Event;
-    const static QString EventStartDateTime;
-    const static QString EventEndDateTime;
-    const static QString EventIsAllDay;
-    const static QString EventLocation;
-    const static QString EventInviter;
-    const static QString EventAttendees;
+    const static QString &event();
+    const static QString &eventStartDateTime();
+    const static QString &eventEndDateTime();
+    const static QString &eventIsAllDay();
 
     //To-do item
-    const static QString Todo;
-    const static QString TodoStartDateTime;
-    const static QString TodoDueDateTime;
-    const static QString TodoIsAllDay;
+    const static QString &todo();
+    const static QString &todoStartDateTime();
+    const static QString &todoDueDateTime();
+    const static QString &todoIsAllDay();
 
     //Collection properties
-    const static QString Collection;
-    const static QString CollectionDefaultFlag;
-    const static QString CollectionName;
-    const static QString CollectionDescription;
-    const static QString CollectionColor;
-    const static QString CollectionImage;
-    const static QString CollectionCustomFields;
+    const static QString &collection();
+    const static QString &collectionDefaultFlag();
+    const static QString &collectionName();
+    const static QString &collectionDescription();
+    const static QString &collectionColor();
+    const static QString &collectionImage();
+    const static QString &collectionCustomFields();
 
-    const static QString DefaultCollectionName;
+    const static QString &defaultCollectionName();
 
     // Recurrence sub properties
-    const static QString ItemRecurrenceDates;
-    const static QString ItemExceptioneDates;
-    const static QString ItemExceptionRules;
-    const static QString ItemRecurrenceRules;
+    const static QString &itemRecurrenceDates();
+    const static QString &itemExceptioneDates();
+    const static QString &itemExceptionRules();
+    const static QString &itemRecurrenceRules();
 
 
     // Recurrence rule properties
-    const static QString RuleFirstDayOfWeek;
-    const static QString RuleFrequency;
-    const static QString RuleInterval;
-    const static QString RuleLimitCount;
-    const static QString RuleLimitDate;
-    const static QString RulePositions;
-    const static QString RuleDaysOfWeek;
-    const static QString RuleDaysOfMonth;
-    const static QString RuleDaysOfYear;
-    const static QString RuleWeeksOfYear;
-    const static QString RuleMonthsOfYear;
+    const static QString &ruleFirstDayOfWeek();
+    const static QString &ruleFrequency();
+    const static QString &ruleInterval();
+    const static QString &ruleLimitCount();
+    const static QString &ruleLimitDate();
+    const static QString &rulePositions();
+    const static QString &ruleDaysOfWeek();
+    const static QString &ruleDaysOfMonth();
+    const static QString &ruleDaysOfYear();
+    const static QString &ruleWeeksOfYear();
+    const static QString &ruleMonthsOfYear();
 
     // Attendee properties
-    const static QString Attendee;
-    const static QString AttendeeName;
-    const static QString AttendeeEmailAddress;
-    const static QString AttendeeId;
-    const static QString AttendeeParticipationStatus;
-    const static QString AttendeeParticipationRole;
+    const static QString &attendee();
+    const static QString &attendeeName();
+    const static QString &attendeeEmailAddress();
+    const static QString &attendeeId();
+    const static QString &attendeeParticipationStatus();
+    const static QString &attendeeParticipationRole();
 
     // Rsvp properties
-    const static QString Rsvp;
-    const static QString RsvpOrganizerName;
-    const static QString RsvpOrganizerEmail;
-    const static QString RsvpResponseRequirement;
-    const static QString RsvpResponseDate;
-    const static QString RsvpResponseDeadline;
+    const static QString &rsvp();
+    const static QString &rsvpOrganizerName();
+    const static QString &rsvpOrganizerEmail();
+    const static QString &rsvpResponseRequirement();
+    const static QString &rsvpResponseDate();
+    const static QString &rsvpResponseDeadline();
 
     // Alarm Jsondb schema
-    const static QString Alarm;
-    const static QString AlarmISODate;
-    const static QString AlarmSnoozeTime;
-    const static QString AlarmSnoozeCount;
-    const static QString AlarmIdentifier;
-    const static QString AlarmTitle;
-    const static QString AlarmDescription;
-    const static QString AlarmEventUuid;
-    const static QString AlarmCalenderIdentifier;
+    const static QString &alarm();
+    const static QString &alarmISODate();
+    const static QString &alarmSnoozeTime();
+    const static QString &alarmSnoozeCount();
+    const static QString &alarmIdentifier();
+    const static QString &alarmTitle();
+    const static QString &alarmDescription();
+    const static QString &alarmEventUuid();
+    const static QString &alarmCalenderIdentifier();
 
     //warning string
-    const static QString WarningMoreItemDelete;
-    const static QString WarningCollectionMissing;
-    const static QString WarningCollectionRemove;
-    const static QString WarningDefaultCollectionRemove;
-    const static QString WarningDefaultCollectionChange;
-    const static QString WarningDefaultCollectionCreate;
+    const static QString &warningMoreItemDelete();
+    const static QString &warningCollectionMissing();
+    const static QString &warningCollectionRemove();
+    const static QString &warningDefaultCollectionRemove();
+    const static QString &warningDefaultCollectionChange();
+    const static QString &warningDefaultCollectionCreate();
 
     // Notification
-    const static QString NotificationQuery;
+    const static QString &notificationQuery();
 };
 
 QTORGANIZER_END_NAMESPACE

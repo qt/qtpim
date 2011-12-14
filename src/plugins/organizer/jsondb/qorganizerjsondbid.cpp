@@ -80,7 +80,7 @@ bool QOrganizerJsonDbItemId::isLessThan(const QOrganizerItemEngineId *other) con
 
 QString QOrganizerJsonDbItemId::managerUri() const
 {
-    return QOrganizerJsonDbStr::ManagerUri;
+    return QOrganizerJsonDbStr::managerUri();
 }
 
 QOrganizerItemEngineId *QOrganizerJsonDbItemId::clone() const
@@ -161,7 +161,7 @@ bool QOrganizerJsonDbCollectionId::isLessThan(const QOrganizerCollectionEngineId
 
 QString QOrganizerJsonDbCollectionId::managerUri() const
 {
-    return QOrganizerJsonDbStr::ManagerUri;
+    return QOrganizerJsonDbStr::managerUri();
 }
 
 QOrganizerCollectionEngineId *QOrganizerJsonDbCollectionId::clone() const

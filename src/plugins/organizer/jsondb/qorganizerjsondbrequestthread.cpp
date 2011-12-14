@@ -526,7 +526,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerColl
             //Default collection cannot be removed
             latestError = QOrganizerManager::PermissionsError;
             errorMap.insert(i, latestError);
-            QString warning = QOrganizerJsonDbStr::WarningDefaultCollectionRemove;
+            QString warning = QOrganizerJsonDbStr::warningDefaultCollectionRemove();
             qWarning () << warning;
         } else if (m_storage->collectionIds().contains(collectionIds.at(i))) {
             validCollectionIds.insert(i, collectionIds[i]);
@@ -577,7 +577,7 @@ void QOrganizerJsonDbRequestThread::initDefaultCollection()
     QOrganizerCollection defaultCollection = m_storage->defaultCollection();
     if (defaultCollection.id().isNull()) {
         QOrganizerManager::Error error;
-        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QOrganizerJsonDbStr::DefaultCollectionName);
+        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QOrganizerJsonDbStr::defaultCollectionName());
         m_storage->createDefaultCollection(&defaultCollection, &error);
     }
 }

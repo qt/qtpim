@@ -278,10 +278,9 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
  */
 uint qHash(const QOrganizerItemDetail &key)
 {
-    const QOrganizerItemDetailPrivate *dptr= QOrganizerItemDetailPrivate::detailPrivate(key);
-    uint hash = QT_PREPEND_NAMESPACE(qHash)(dptr->m_detailType);
-    QHash<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
-    while (it != dptr->m_values.constEnd()) {
+    uint hash = QT_PREPEND_NAMESPACE(qHash)(key.d->m_detailType);
+    QHash<int, QVariant>::const_iterator it = key.d->m_values.constBegin();
+    while (it != key.d->m_values.constEnd()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
         ++it;
     }

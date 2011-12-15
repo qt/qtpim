@@ -311,7 +311,7 @@ QOrganizerItemDetail QOrganizerItem::detail(QOrganizerItemDetail::DetailType det
 
     for (int i = 0; i < d->m_details.size(); i++) {
         const QOrganizerItemDetail &existing = d->m_details.at(i);
-        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_detailType == detailType)
+        if (existing.d->m_detailType == detailType)
             return existing;
     }
 
@@ -330,7 +330,7 @@ QList<QOrganizerItemDetail> QOrganizerItem::details(QOrganizerItemDetail::Detail
     QList<QOrganizerItemDetail> sublist;
     for (int i = 0; i < d->m_details.size(); i++) {
         const QOrganizerItemDetail &existing = d->m_details.at(i);
-        if (QOrganizerItemDetailPrivate::detailPrivate(existing)->m_detailType == detailType)
+        if (existing.d->m_detailType == detailType)
             sublist.append(existing);
     }
     return sublist;
@@ -356,7 +356,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
         return false;
 
     /* Also handle organizer item type specially - only one of them. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeItemType) {
+    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeItemType) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 d->m_details.replace(i, *detail);
@@ -369,7 +369,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And description */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDescription) {
+    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDescription) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 d->m_details.replace(i, *detail);
@@ -382,7 +382,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And display label.. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeDisplayLabel) {
+    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDisplayLabel) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 d->m_details.replace(i, *detail);
@@ -395,7 +395,7 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     }
 
     /* And classification.. */
-    if (QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType == QOrganizerItemDetail::TypeClassification) {
+    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeClassification) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 d->m_details.replace(i, *detail);
@@ -453,7 +453,7 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
         return false;
 
     // Type -detail is specific case which cannot be deleted
-    if (QOrganizerItemDetail::TypeItemType == QOrganizerItemDetailPrivate::detailPrivate(*detail)->m_detailType)
+    if (QOrganizerItemDetail::TypeItemType == detail->d.constData()->m_detailType)
         return false;
 
     if (!d.constData()->m_details.contains(*detail))

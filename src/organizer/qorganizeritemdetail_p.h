@@ -92,11 +92,6 @@ public:
         static QAtomicInt counter(0);
         return counter;
     }
-
-    static const QOrganizerItemDetailPrivate *detailPrivate(const QOrganizerItemDetail &detail)
-    {
-        return detail.d.constData();
-    }
 };
 
 QTORGANIZER_END_NAMESPACE

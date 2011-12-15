@@ -55,7 +55,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 struct QOrganizerJsonDbEnumConversionData
 {
     int enumValue;
-    const QLatin1String enumStr;
+    const QString enumStr;
 };
 
 class QOrganizerJsonDbConverter
@@ -113,6 +113,16 @@ private:
     bool isSupportedDetailFilter(
         const QOrganizerItemDetailFilter &filter, QOrganizerItemDetail::DetailType detailType, int detailFieldName) const;
     QString createMatchFlagQuery(const QString &value, QOrganizerItemFilter::MatchFlags flags) const;
+
+    static const int enumMapEnd;
+    static const QOrganizerJsonDbEnumConversionData *organizerPriorityEnumMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerFrequencyEnumMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerDayEnumMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerMonthEnumMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerParticipationStatusMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerParticipationRoleMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerResponseRequirementMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerItemTypeMap();
 };
 
 QTORGANIZER_END_NAMESPACE

@@ -50,94 +50,128 @@ Q_USE_JSONDB_NAMESPACE
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-const int enumMapEnd = -1212;
-static QOrganizerJsonDbEnumConversionData qt_organizerPriorityEnumMap[] = {
-    {QOrganizerItemPriority::UnknownPriority,        QLatin1String("UnknownPriority")},
-    {QOrganizerItemPriority::ExtremelyHighPriority,  QLatin1String("HighestPriority")},
-    {QOrganizerItemPriority::ExtremelyHighPriority,  QLatin1String("ExtremelyHighPriority")},
-    {QOrganizerItemPriority::VeryHighPriority,       QLatin1String("VeryHighPriority")},
-    {QOrganizerItemPriority::HighPriority,           QLatin1String("HighPriority")},
-    {QOrganizerItemPriority::MediumPriority,         QLatin1String("MediumPriority")},
-    {QOrganizerItemPriority::LowPriority,            QLatin1String("LowPriority")},
-    {QOrganizerItemPriority::VeryLowPriority,        QLatin1String("VeryLowPriority")},
-    {QOrganizerItemPriority::ExtremelyLowPriority,   QLatin1String("ExtremelyLowPriority")},
-    {QOrganizerItemPriority::LowestPriority,         QLatin1String("LowestPriority")},
-    {enumMapEnd,                                     QLatin1String("")}
-};
+const int QOrganizerJsonDbConverter::enumMapEnd(-1212);
 
-static QOrganizerJsonDbEnumConversionData qt_organizerFrequencyEnumMap[] = {
-    {QOrganizerRecurrenceRule::Invalid,              QLatin1String("Invalid")},
-    {QOrganizerRecurrenceRule::Daily,                QLatin1String("Daily")},
-    {QOrganizerRecurrenceRule::Weekly,               QLatin1String("Weekly")},
-    {QOrganizerRecurrenceRule::Monthly,              QLatin1String("Monthly")},
-    {QOrganizerRecurrenceRule::Yearly,               QLatin1String("Yearly")},
-    {enumMapEnd,                                     QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerPriorityEnumMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerItemPriority::UnknownPriority,        QString(QStringLiteral("UnknownPriority"))},
+        {QOrganizerItemPriority::ExtremelyHighPriority,  QString(QStringLiteral("HighestPriority"))},
+        {QOrganizerItemPriority::ExtremelyHighPriority,  QString(QStringLiteral("ExtremelyHighPriority"))},
+        {QOrganizerItemPriority::VeryHighPriority,       QString(QStringLiteral("VeryHighPriority"))},
+        {QOrganizerItemPriority::HighPriority,           QString(QStringLiteral("HighPriority"))},
+        {QOrganizerItemPriority::MediumPriority,         QString(QStringLiteral("MediumPriority"))},
+        {QOrganizerItemPriority::LowPriority,            QString(QStringLiteral("LowPriority"))},
+        {QOrganizerItemPriority::VeryLowPriority,        QString(QStringLiteral("VeryLowPriority"))},
+        {QOrganizerItemPriority::ExtremelyLowPriority,   QString(QStringLiteral("ExtremelyLowPriority"))},
+        {QOrganizerItemPriority::LowestPriority,         QString(QStringLiteral("LowestPriority"))},
+        {enumMapEnd,                                     QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerDayEnumMap[] = {
-    {Qt::Monday,                                     QLatin1String("Monday")},
-    {Qt::Tuesday,                                    QLatin1String("Tuesday")},
-    {Qt::Wednesday,                                  QLatin1String("Wednesday")},
-    {Qt::Thursday,                                   QLatin1String("Thursday")},
-    {Qt::Friday,                                     QLatin1String("Friday")},
-    {Qt::Saturday,                                   QLatin1String("Saturday")},
-    {Qt::Sunday,                                     QLatin1String("Sunday")},
-    {enumMapEnd,                                     QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerFrequencyEnumMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerRecurrenceRule::Invalid,              QString(QStringLiteral("Invalid"))},
+        {QOrganizerRecurrenceRule::Daily,                QString(QStringLiteral("Daily"))},
+        {QOrganizerRecurrenceRule::Weekly,               QString(QStringLiteral("Weekly"))},
+        {QOrganizerRecurrenceRule::Monthly,              QString(QStringLiteral("Monthly"))},
+        {QOrganizerRecurrenceRule::Yearly,               QString(QStringLiteral("Yearly"))},
+        {enumMapEnd,                                     QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerMonthEnumMap[] = {
-    {QOrganizerRecurrenceRule::January,              QLatin1String("January")},
-    {QOrganizerRecurrenceRule::February,             QLatin1String("February")},
-    {QOrganizerRecurrenceRule::March,                QLatin1String("March")},
-    {QOrganizerRecurrenceRule::April,                QLatin1String("April")},
-    {QOrganizerRecurrenceRule::May,                  QLatin1String("May")},
-    {QOrganizerRecurrenceRule::June,                 QLatin1String("June")},
-    {QOrganizerRecurrenceRule::July,                 QLatin1String("July")},
-    {QOrganizerRecurrenceRule::August,               QLatin1String("August")},
-    {QOrganizerRecurrenceRule::September,            QLatin1String("September")},
-    {QOrganizerRecurrenceRule::October,              QLatin1String("October")},
-    {QOrganizerRecurrenceRule::November,             QLatin1String("November")},
-    {QOrganizerRecurrenceRule::December,             QLatin1String("December")},
-    {enumMapEnd,                                     QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerDayEnumMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {Qt::Monday,                                     QString(QStringLiteral("Monday"))},
+        {Qt::Tuesday,                                    QString(QStringLiteral("Tuesday"))},
+        {Qt::Wednesday,                                  QString(QStringLiteral("Wednesday"))},
+        {Qt::Thursday,                                   QString(QStringLiteral("Thursday"))},
+        {Qt::Friday,                                     QString(QStringLiteral("Friday"))},
+        {Qt::Saturday,                                   QString(QStringLiteral("Saturday"))},
+        {Qt::Sunday,                                     QString(QStringLiteral("Sunday"))},
+        {enumMapEnd,                                     QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerParticipationStatusMap[] = {
-    {QOrganizerEventAttendee::StatusUnknown,         QLatin1String("Unknown")},
-    {QOrganizerEventAttendee::StatusAccepted,        QLatin1String("Accepted")},
-    {QOrganizerEventAttendee::StatusDeclined,        QLatin1String("Declined")},
-    {QOrganizerEventAttendee::StatusTentative,       QLatin1String("Tentative")},
-    {QOrganizerEventAttendee::StatusDelegated,       QLatin1String("Delegated")},
-    {QOrganizerEventAttendee::StatusInProcess,       QLatin1String("InProcess")},
-    {QOrganizerEventAttendee::StatusCompleted,       QLatin1String("Completed")},
-    {enumMapEnd,                                     QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerMonthEnumMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerRecurrenceRule::January,              QString(QStringLiteral("January"))},
+        {QOrganizerRecurrenceRule::February,             QString(QStringLiteral("February"))},
+        {QOrganizerRecurrenceRule::March,                QString(QStringLiteral("March"))},
+        {QOrganizerRecurrenceRule::April,                QString(QStringLiteral("April"))},
+        {QOrganizerRecurrenceRule::May,                  QString(QStringLiteral("May"))},
+        {QOrganizerRecurrenceRule::June,                 QString(QStringLiteral("June"))},
+        {QOrganizerRecurrenceRule::July,                 QString(QStringLiteral("July"))},
+        {QOrganizerRecurrenceRule::August,               QString(QStringLiteral("August"))},
+        {QOrganizerRecurrenceRule::September,            QString(QStringLiteral("September"))},
+        {QOrganizerRecurrenceRule::October,              QString(QStringLiteral("October"))},
+        {QOrganizerRecurrenceRule::November,             QString(QStringLiteral("November"))},
+        {QOrganizerRecurrenceRule::December,             QString(QStringLiteral("December"))},
+        {enumMapEnd,                                     QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerParticipationRoleMap[] = {
-    {QOrganizerEventAttendee::RoleUnknown,             QLatin1String("Unknown")},
-    {QOrganizerEventAttendee::RoleOrganizer,           QLatin1String("Organizer")},
-    {QOrganizerEventAttendee::RoleChairperson,         QLatin1String("Chairperson")},
-    {QOrganizerEventAttendee::RoleHost,                QLatin1String("Host")},
-    {QOrganizerEventAttendee::RoleRequiredParticipant, QLatin1String("RequiredParticipant")},
-    {QOrganizerEventAttendee::RoleOptionalParticipant, QLatin1String("OptionalParticipant")},
-    {QOrganizerEventAttendee::RoleNonParticipant,      QLatin1String("NonParticipant")},
-    {enumMapEnd,                                       QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerParticipationStatusMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerEventAttendee::StatusUnknown,         QString(QStringLiteral("Unknown"))},
+        {QOrganizerEventAttendee::StatusAccepted,        QString(QStringLiteral("Accepted"))},
+        {QOrganizerEventAttendee::StatusDeclined,        QString(QStringLiteral("Declined"))},
+        {QOrganizerEventAttendee::StatusTentative,       QString(QStringLiteral("Tentative"))},
+        {QOrganizerEventAttendee::StatusDelegated,       QString(QStringLiteral("Delegated"))},
+        {QOrganizerEventAttendee::StatusInProcess,       QString(QStringLiteral("InProcess"))},
+        {QOrganizerEventAttendee::StatusCompleted,       QString(QStringLiteral("Completed"))},
+        {enumMapEnd,                                     QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerResponseRequirementMap[] = {
-    {QOrganizerEventRsvp::ResponseNotRequired,         QLatin1String("NotRequired")},
-    {QOrganizerEventRsvp::ResponseRequired,            QLatin1String("Required")},
-    {enumMapEnd,                                       QLatin1String("")}
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerParticipationRoleMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerEventAttendee::RoleUnknown,             QString(QStringLiteral("Unknown"))},
+        {QOrganizerEventAttendee::RoleOrganizer,           QString(QStringLiteral("Organizer"))},
+        {QOrganizerEventAttendee::RoleChairperson,         QString(QStringLiteral("Chairperson"))},
+        {QOrganizerEventAttendee::RoleHost,                QString(QStringLiteral("Host"))},
+        {QOrganizerEventAttendee::RoleRequiredParticipant, QString(QStringLiteral("RequiredParticipant"))},
+        {QOrganizerEventAttendee::RoleOptionalParticipant, QString(QStringLiteral("OptionalParticipant"))},
+        {QOrganizerEventAttendee::RoleNonParticipant,      QString(QStringLiteral("NonParticipant"))},
+        {enumMapEnd,                                       QString::null}
+    };
+    return map;
+}
 
-static QOrganizerJsonDbEnumConversionData qt_organizerItemTypeMap[] = {
-    {QOrganizerItemType::TypeUndefined,                   QStringLiteral("Unknown")},
-    {QOrganizerItemType::TypeEvent,                     QStringLiteral("Event")},
-    {QOrganizerItemType::TypeEventOccurrence,           QStringLiteral("EventOccurrence")},
-    {QOrganizerItemType::TypeTodo,                      QStringLiteral("Todo")},
-    {QOrganizerItemType::TypeTodoOccurrence,            QStringLiteral("TodoOccurrence")},
-    {QOrganizerItemType::TypeJournal,                   QStringLiteral("Journal")},
-    {QOrganizerItemType::TypeNote,                      QStringLiteral("Note")},
-};
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerResponseRequirementMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerEventRsvp::ResponseNotRequired,         QString(QStringLiteral("NotRequired"))},
+        {QOrganizerEventRsvp::ResponseRequired,            QString(QStringLiteral("Required"))},
+        {enumMapEnd,                                       QString::null}
+    };
+    return map;
+}
+
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerItemTypeMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerItemType::TypeUndefined,                 QString(QStringLiteral("Unknown"))},
+        {QOrganizerItemType::TypeEvent,                     QString(QStringLiteral("Event"))},
+        {QOrganizerItemType::TypeEventOccurrence,           QString(QStringLiteral("EventOccurrence"))},
+        {QOrganizerItemType::TypeTodo,                      QString(QStringLiteral("Todo"))},
+        {QOrganizerItemType::TypeTodoOccurrence,            QString(QStringLiteral("TodoOccurrence"))},
+        {QOrganizerItemType::TypeJournal,                   QString(QStringLiteral("Journal"))},
+        {QOrganizerItemType::TypeNote,                      QString(QStringLiteral("Note"))},
+        {enumMapEnd,                                        QString::null}
+    };
+    return map;
+}
 
 QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
@@ -234,7 +268,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
             QString jsonDbPriority = i.value().toString();
             if (!jsonDbPriority.isEmpty()) {
                 QOrganizerItemPriority priority;
-                priority.setPriority(static_cast<QOrganizerItemPriority::Priority>(stringToEnum(qt_organizerPriorityEnumMap, jsonDbPriority)));
+                priority.setPriority(static_cast<QOrganizerItemPriority::Priority>(stringToEnum(organizerPriorityEnumMap(), jsonDbPriority)));
                 item->saveDetail(&priority);
             }
         } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRules()) {
@@ -456,7 +490,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
     QOrganizerItemPriority priorityDetail = item.detail(QOrganizerItemPriority::DefinitionName);
     if (!priorityDetail.isEmpty()) {
-        object->insert(QOrganizerJsonDbStr::itemPriority(), enumToString(qt_organizerPriorityEnumMap, priorityDetail.priority()));
+        object->insert(QOrganizerJsonDbStr::itemPriority(), enumToString(organizerPriorityEnumMap(), priorityDetail.priority()));
     }
 
     QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
@@ -560,10 +594,10 @@ void QOrganizerJsonDbConverter::attendeeDetailToJsonDbObject(const QOrganizerEve
             value= i.value().toString();
             jsonDbField = QOrganizerJsonDbStr::attendeeId();
         } else if (i.key() == QOrganizerEventAttendee::FieldParticipationRole) {
-            value = enumToString(qt_organizerParticipationRoleMap, i.value().toInt());
+            value = enumToString(organizerParticipationRoleMap(), i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::attendeeParticipationRole();
         } else if (i.key() == QOrganizerEventAttendee::FieldParticipationStatus) {
-            value = enumToString(qt_organizerParticipationStatusMap, i.value().toInt());
+            value = enumToString(organizerParticipationStatusMap(), i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::attendeeParticipationStatus();
         }
         if (!value.isEmpty()) {
@@ -592,10 +626,10 @@ void QOrganizerJsonDbConverter::jsonDbObjectToAttendeeDetail(const QVariantMap &
             if (!value.isEmpty())
                 attendeeDetail->setAttendeeId(value);
         } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationRole()) {
-            int intValue = stringToEnum(qt_organizerParticipationRoleMap, i.value().toString());
+            int intValue = stringToEnum(organizerParticipationRoleMap(), i.value().toString());
             attendeeDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));
         } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationStatus()) {
-            int intValue = stringToEnum(qt_organizerParticipationStatusMap, i.value().toString());
+            int intValue = stringToEnum(organizerParticipationStatusMap(), i.value().toString());
             attendeeDetail->setParticipationStatus(static_cast<QOrganizerEventAttendee::ParticipationStatus>(intValue));
         }
         ++i;
@@ -622,13 +656,13 @@ void QOrganizerJsonDbConverter::rsvpDetailToJsonDbObject(const QOrganizerEventRs
             value = i.value().toDate().toString(Qt::ISODate);
             jsonDbField = QOrganizerJsonDbStr::rsvpResponseDate();
         } else if (i.key() == QOrganizerEventRsvp::FieldParticipationRole) {
-            value = enumToString(qt_organizerParticipationRoleMap, i.value().toInt());
+            value = enumToString(organizerParticipationRoleMap(), i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::attendeeParticipationRole();
         } else if (i.key() == QOrganizerEventRsvp::FieldParticipationStatus) {
-            value = enumToString(qt_organizerParticipationStatusMap, i.value().toInt());
+            value = enumToString(organizerParticipationStatusMap(), i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::attendeeParticipationStatus();
         } else if (i.key() == QOrganizerEventRsvp::FieldResponseRequirement) {
-            value = enumToString(qt_organizerResponseRequirementMap, i.value().toInt());
+            value = enumToString(organizerResponseRequirementMap(), i.value().toInt());
             jsonDbField = QOrganizerJsonDbStr::rsvpResponseRequirement();
         }
         if (!value.isEmpty()) {
@@ -661,13 +695,13 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &obje
             if (date.isValid())
                 rsvpDetail->setResponseDate(date);
         } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationRole()) {
-            int intValue = stringToEnum(qt_organizerParticipationRoleMap, i.value().toString());
+            int intValue = stringToEnum(organizerParticipationRoleMap(), i.value().toString());
             rsvpDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));
         } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationStatus()) {
-            int intValue = stringToEnum(qt_organizerParticipationStatusMap, i.value().toString());
+            int intValue = stringToEnum(organizerParticipationStatusMap(), i.value().toString());
             rsvpDetail->setParticipationStatus(static_cast<QOrganizerEventAttendee::ParticipationStatus>(intValue));
         } else if (i.key() == QOrganizerJsonDbStr::rsvpResponseRequirement()) {
-            int intValue = stringToEnum(qt_organizerResponseRequirementMap, i.value().toString());
+            int intValue = stringToEnum(organizerResponseRequirementMap(), i.value().toString());
             rsvpDetail->setResponseRequirement(static_cast<QOrganizerEventRsvp::ResponseRequirement>(intValue));
         }
         ++i;
@@ -792,7 +826,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
     if (object.contains(QOrganizerJsonDbStr::ruleFrequency())) {
         QString frequency = object.value(QOrganizerJsonDbStr::ruleFrequency()).toString();
         rule->setFrequency(static_cast<QOrganizerRecurrenceRule::Frequency>(
-                               stringToEnum(qt_organizerFrequencyEnumMap, frequency)));
+                               stringToEnum(organizerFrequencyEnumMap(), frequency)));
     }
     if (object.contains(QOrganizerJsonDbStr::ruleInterval())) {
         rule->setInterval(object.value(QOrganizerJsonDbStr::ruleInterval()).toInt());
@@ -817,14 +851,14 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
     if (object.contains(QOrganizerJsonDbStr::ruleFirstDayOfWeek())) {
         QString firstDayOfWeek = object.value(QOrganizerJsonDbStr::ruleFirstDayOfWeek()).toString();
         rule->setFirstDayOfWeek(static_cast<Qt::DayOfWeek>(
-                                    stringToEnum(qt_organizerDayEnumMap, firstDayOfWeek)));
+                                    stringToEnum(organizerDayEnumMap(), firstDayOfWeek)));
     }
     if (object.contains(QOrganizerJsonDbStr::ruleDaysOfWeek())) {
         QVariantList daysOfWeekList = object.value(QOrganizerJsonDbStr::ruleDaysOfWeek()).toList();
         QSet<Qt::DayOfWeek> daysOfWeek;
         foreach (QVariant day, daysOfWeekList)
             daysOfWeek.insert(static_cast<Qt::DayOfWeek>(
-                                  stringToEnum(qt_organizerDayEnumMap, day.toString())));
+                                  stringToEnum(organizerDayEnumMap(), day.toString())));
         rule->setDaysOfWeek(daysOfWeek);
     }
 
@@ -857,14 +891,14 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
         QSet<QOrganizerRecurrenceRule::Month> monthsOfYear;
         foreach (QVariant month, monthsOfYearList)
             monthsOfYear.insert(static_cast<QOrganizerRecurrenceRule::Month>(
-                                    stringToEnum(qt_organizerMonthEnumMap, month.toString())));
+                                    stringToEnum(organizerMonthEnumMap(), month.toString())));
         rule->setMonthsOfYear(monthsOfYear);
     }
 }
 
 void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const
 {
-    object->insert(QOrganizerJsonDbStr::ruleFrequency(), enumToString(qt_organizerFrequencyEnumMap, rule.frequency()));
+    object->insert(QOrganizerJsonDbStr::ruleFrequency(), enumToString(organizerFrequencyEnumMap(), rule.frequency()));
     object->insert(QOrganizerJsonDbStr::ruleInterval(), rule.interval());
     object->insert(QOrganizerJsonDbStr::ruleLimitCount(), rule.limitCount());
     object->insert(QOrganizerJsonDbStr::ruleLimitDate(), rule.limitDate().toString(Qt::ISODate));
@@ -877,13 +911,13 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         object->insert(QOrganizerJsonDbStr::rulePositions(), positionsList);
     }
 
-    object->insert(QOrganizerJsonDbStr::ruleFirstDayOfWeek(), enumToString(qt_organizerDayEnumMap, rule.firstDayOfWeek()));
+    object->insert(QOrganizerJsonDbStr::ruleFirstDayOfWeek(), enumToString(organizerDayEnumMap(), rule.firstDayOfWeek()));
 
     QSet<Qt::DayOfWeek> daysOfWeek = rule.daysOfWeek();
     if (!daysOfWeek.isEmpty()) {
         QVariantList daysOfWeekList;
         foreach (Qt::DayOfWeek day, daysOfWeek) {
-            daysOfWeekList.append(enumToString(qt_organizerDayEnumMap, day));
+            daysOfWeekList.append(enumToString(organizerDayEnumMap(), day));
         }
         object->insert(QOrganizerJsonDbStr::ruleDaysOfWeek(), daysOfWeekList);
     }
@@ -919,7 +953,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
     if (!monthsOfYear.isEmpty()) {
         QVariantList monthsOfYearList;
         foreach (QOrganizerRecurrenceRule::Month month, monthsOfYear) {
-            monthsOfYearList.append(enumToString(qt_organizerMonthEnumMap, month));
+            monthsOfYearList.append(enumToString(organizerMonthEnumMap(), month));
         }
         object->insert(QOrganizerJsonDbStr::ruleMonthsOfYear(), monthsOfYearList);
     }
@@ -1413,13 +1447,13 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
             && QOrganizerItemPriority::FieldPriority ==  detailField) {
             jsonDbQueryStr += equalsQueryTemplate
                 .arg(QOrganizerJsonDbStr::itemPriority())
-                .arg(enumToString(qt_organizerPriorityEnumMap, df.value().toInt()));
+                .arg(enumToString(organizerPriorityEnumMap(), df.value().toInt()));
 
         } else if (QOrganizerItemType::DefinitionName == detailType
             && QOrganizerItemType::FieldType ==  detailField) {
             jsonDbQueryStr += equalsQueryTemplate
                 .arg(JsonDbString::kTypeStr)
-                .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(qt_organizerItemTypeMap, df.value().toInt()));
+                .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(organizerItemTypeMap(), df.value().toInt()));
 
         } else if (QOrganizerItemTag::DefinitionName == detailType
             && QOrganizerItemTag::FieldTag == detailField) {
@@ -1434,17 +1468,17 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                 jsonDbQueryStr += matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::attendeeParticipationStatus())
-                        .arg(createMatchFlagQuery(enumToString(qt_organizerParticipationStatusMap, df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerParticipationStatusMap(), df.value().toInt()), df.matchFlags()));
             } else if (QOrganizerEventRsvp::FieldParticipationRole == detailField) {
                 jsonDbQueryStr += matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::attendeeParticipationRole())
-                        .arg(createMatchFlagQuery(enumToString(qt_organizerParticipationRoleMap, df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerParticipationRoleMap(), df.value().toInt()), df.matchFlags()));
             } else if (QOrganizerEventRsvp::FieldResponseRequirement == detailField) {
                 jsonDbQueryStr += matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpResponseRequirement())
-                        .arg(createMatchFlagQuery(enumToString(qt_organizerResponseRequirementMap, df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerResponseRequirementMap(), df.value().toInt()), df.matchFlags()));
             } else if (QOrganizerEventRsvp::FieldResponseDeadline == detailField) {
                 jsonDbQueryStr += matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())

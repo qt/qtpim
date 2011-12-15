@@ -48,9 +48,6 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Initialise our static private data member */
-QAtomicInt QOrganizerItemDetailPrivate::lastDetailKey(1);
-
 /*!
     \class QOrganizerItemDetail
 
@@ -365,7 +362,7 @@ int QOrganizerItemDetail::key() const
  */
 void QOrganizerItemDetail::resetKey()
 {
-    d->m_id = QOrganizerItemDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
+    d->m_id = QOrganizerItemDetailPrivate::lastDetailKey().fetchAndAddOrdered(1);
 }
 
 /*!

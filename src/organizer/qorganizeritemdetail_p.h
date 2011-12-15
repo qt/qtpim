@@ -66,7 +66,7 @@ class QOrganizerItemDetailPrivate : public QSharedData
 public:
     QOrganizerItemDetailPrivate()
         : QSharedData()
-        , m_id(lastDetailKey.fetchAndAddOrdered(1))
+        , m_id(lastDetailKey().fetchAndAddOrdered(1))
         , m_detailType(QOrganizerItemDetail::TypeUndefined)
     {
     }
@@ -87,7 +87,11 @@ public:
     QOrganizerItemDetail::DetailType m_detailType;
     QHash<int, QVariant> m_values;
 
-    static QAtomicInt lastDetailKey;
+    static QAtomicInt &lastDetailKey()
+    {
+        static QAtomicInt counter(0);
+        return counter;
+    }
 
     static const QOrganizerItemDetailPrivate *detailPrivate(const QOrganizerItemDetail &detail)
     {

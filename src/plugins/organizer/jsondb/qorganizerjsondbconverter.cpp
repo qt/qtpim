@@ -1019,7 +1019,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToAudibleReminderDetail(const QVaria
     }
 }
 
-int QOrganizerJsonDbConverter::stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, QString enumStr) const
+int QOrganizerJsonDbConverter::stringToEnum(const QOrganizerJsonDbEnumConversionData* const conversionData, const QString &enumStr) const
 {
     int i = 0;
     while (conversionData[i].enumValue != enumMapEnd) {

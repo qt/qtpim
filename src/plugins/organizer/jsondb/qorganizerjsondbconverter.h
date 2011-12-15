@@ -89,7 +89,7 @@ private:
     void audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap &object) const;
     void jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder) const;
 
-    int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, QString enumStr) const;
+    int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, const QString &enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData *const conversionData, int enumValue) const;
 
     void extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant& property) const;

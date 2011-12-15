@@ -40,6 +40,7 @@ Rectangle {
         anchors.fill: parent
         color: "white"
 
+//! [Organizer Model]
         OrganizerModel {
             id: organizer
 
@@ -59,7 +60,9 @@ Rectangle {
                 }
             }
         }
+//! [Organizer Model]
 
+//! [List View]
         ListView {
             id: calendar
             anchors.fill: parent
@@ -69,6 +72,7 @@ Rectangle {
             delegate: Text { text: model.item.displayLabel }
             model: organizer
         }
+//! [List View]
     }
 }
 //! [Basic list Complete Snippet]

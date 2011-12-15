@@ -39,73 +39,83 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemengineid.h"
+#include <qorganizercollectionengineid.h>
+
+QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerCollectionEngineId
-  \relates QOrganizerCollectionId
-  \brief The QOrganizerCollectionEngineId class uniquely identifies an item within a
-  particular engine plugin.
+    \class QOrganizerCollectionEngineId
+    \brief The QOrganizerCollectionEngineId class uniquely identifies an item within a
+           particular engine plugin.
+    \inmodule QtOrganizer
+    \ingroup organizer-backends
 
-  \inmodule QtOrganizer
-  \ingroup organizer-backends
+    Clients of the Organizer API should never use this class, while every engine implementor must
+    implement a class derived from QOrganizerCollectionEngineId.
 
-  Clients of the Organizer API should never use this class.
-  Every engine implementor must implement a class derived from
-  QOrganizerCollectionEngineId.
-
-  This class is provided so that engine implementors can implement their own
-  id class (which may contain arbitrary data, and which may implement the
-  required functions in an arbitrary manner).
+    This class is provided so that engine implementors can implement their own collection ID class
+    (which may contain arbitrary data, and which may implement the required functions in an arbitrary
+    manner).
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::~QOrganizerCollectionEngineId()
-  Cleans up any memory in use by this engine collection id.
+    Cleans up any memory in use by this engine collection ID.
+ */
+QOrganizerCollectionEngineId::~QOrganizerCollectionEngineId()
+{
+}
+
+/*!
+    \fn QOrganizerCollectionEngineId::isEqualTo(const QOrganizerCollectionEngineId *other) const
+
+    Returns true if this ID is equal to the \a other; false otherwise.
+
+    Note that when implementing this function, you do not have to check that the type is the same,
+    since the function which calls this function (in QOrganizerCollectionId) does that check for you.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::isEqualTo(const QOrganizerCollectionEngineId* other) const
-  Returns true if this id is equal to the \a other id; false otherwise.
-  Note that when implementing this function, you do not have to check that the type is the same,
-  since the function which calls this function (in QOrganizerCollectionId) does that check for you.
+    \fn QOrganizerCollectionEngineId::isLessThan(const QOrganizerCollectionEngineId *other) const
+
+    Returns true if this id is less than the \a other; false otherwise.
+
+    Note that when implementing this function, you do not have to check that the type is the same,
+    since the function which calls this function (in QOrganizerCollectionId) does that check for you.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::isLessThan(const QOrganizerCollectionEngineId* other) const
-  Returns true if this id is less than the \a other id; false otherwise.
-  Note that when implementing this function, you do not have to check that the type is the same,
-  since the function which calls this function (in QOrganizerCollectionId) does that check for you.
+    \fn QOrganizerCollectionEngineId::managerUri() const
+
+    Returns the manager URI of the constructed manager which created the ID. If the collection which
+    the ID identifies has not been deleted, the ID should still be valid in the manager identified by
+    the manager URI returned by this function.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::managerUri() const
-  Returns the manager URI of the constructed manager which created
-  the id.  If the collection which the id identifies has not been deleted,
-  the id should still be valid in the manager identified by the
-  manager URI returned by this function.
+    \fn QOrganizerCollectionEngineId::toString() const
+
+    Serializes the id to a string. It contains all of the information required to identify a particular
+    collection in the manager which created the ID, formatted according to the serialization format of
+    the manager.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::toString() const
-  Serializes the id to a string.  It contains all of the information
-  required to identify a particular collection in the manager which created
-  the id, formatted according to the serialization format of the
-  manager.
- */
-/*!
-  \fn QOrganizerCollectionEngineId::clone() const
-  Returns a deep-copy clone of this id.
-  The caller takes ownership of the returned engine collection id.
+    \fn QOrganizerCollectionEngineId::clone() const
+
+    Returns a deep-copy clone of this ID. The caller takes ownership of the returned engine collection
+    ID.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::debugStreamOut(QDebug& dbg) const
-  Streams this id out to the debug stream \a dbg.
+    \fn QOrganizerCollectionEngineId::debugStreamOut(QDebug &dbg) const
+
+    Streams this ID out to the debug stream \a dbg.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineId::hash() const
-  Returns the hash value of this id.
+    \fn QOrganizerCollectionEngineId::hash() const
+
+    Returns the hash value of this ID.
  */
 
+QTORGANIZER_END_NAMESPACE

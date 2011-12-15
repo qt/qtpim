@@ -42,34 +42,30 @@
 #ifndef QORGANIZERCOLLECTIONENGINEID_H
 #define QORGANIZERCOLLECTIONENGINEID_H
 
-#include <QString>
-#include <QSharedDataPointer>
+#include <qorganizerglobal.h>
 
-#include "qorganizerglobal.h"
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtCore/qshareddata.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class Q_ORGANIZER_EXPORT QOrganizerCollectionEngineId : public QSharedData
 {
 public:
-    virtual ~QOrganizerCollectionEngineId() {}
+    virtual ~QOrganizerCollectionEngineId();
 
-    virtual bool isEqualTo(const QOrganizerCollectionEngineId* other) const = 0;
-    virtual bool isLessThan(const QOrganizerCollectionEngineId* other) const = 0;
+    virtual bool isEqualTo(const QOrganizerCollectionEngineId *other) const = 0;
+    virtual bool isLessThan(const QOrganizerCollectionEngineId *other) const = 0;
 
     virtual QString managerUri() const = 0;
-    virtual QOrganizerCollectionEngineId* clone() const = 0;
+    virtual QOrganizerCollectionEngineId *clone() const = 0;
 
     virtual QString toString() const = 0;
 
 #ifndef QT_NO_DEBUG_STREAM
     // NOTE: on platforms where Qt is built without debug streams enabled, vtable will differ!
-    virtual QDebug& debugStreamOut(QDebug& dbg) const = 0;
-#endif
+    virtual QDebug &debugStreamOut(QDebug &dbg) const = 0;
+#endif // QT_NO_DEBUG_STREAM
+
     virtual uint hash() const = 0;
 };
 
@@ -79,5 +75,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERCOLLECTIONENGINEID_H

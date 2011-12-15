@@ -51,14 +51,13 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 // MSVC needs the function declared before the friend declaration
 class QOrganizerCollectionId;
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollectionId& key);
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerCollectionId& collectionId);
-Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerCollectionId& collectionId);
-#endif
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &collectionId);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &collectionId);
+#endif // QT_NO_DATASTREAM
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollectionId& id);
-#endif
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id);
+#endif // QT_NO_DEBUG_STREAM
 
 class QOrganizerManagerEngine;
 class QOrganizerCollectionEngineId;
@@ -67,32 +66,35 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionId
 {
 public:
     QOrganizerCollectionId();
+    explicit QOrganizerCollectionId(QOrganizerCollectionEngineId *engineId);
+    QOrganizerCollectionId(const QOrganizerCollectionId &other);
     ~QOrganizerCollectionId();
 
-    explicit QOrganizerCollectionId(QOrganizerCollectionEngineId* engineId);
-    QOrganizerCollectionId(const QOrganizerCollectionId& other);
-    QOrganizerCollectionId& operator=(const QOrganizerCollectionId& other);
+    QOrganizerCollectionId &operator=(const QOrganizerCollectionId &other);
 
-    bool operator==(const QOrganizerCollectionId& other) const;
-    bool operator!=(const QOrganizerCollectionId& other) const;
-    bool operator<(const QOrganizerCollectionId& other) const;
+    bool operator==(const QOrganizerCollectionId &other) const;
+    bool operator!=(const QOrganizerCollectionId &other) const;
+    bool operator<(const QOrganizerCollectionId &other) const;
 
     bool isNull() const;
 
     QString managerUri() const;
 
     QString toString() const;
-    static QOrganizerCollectionId fromString(const QString& idString);
+    static QOrganizerCollectionId fromString(const QString &idString);
 
 private:
     QSharedDataPointer<QOrganizerCollectionEngineId> d;
 
 #ifndef QT_NO_DEBUG_STREAM
-    Q_ORGANIZER_EXPORT friend QDebug operator<<(QDebug dbg, const QOrganizerCollectionId& id);
-#endif
-    Q_ORGANIZER_EXPORT friend uint qHash(const QOrganizerCollectionId& key);
+    Q_ORGANIZER_EXPORT friend QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id);
+#endif // QT_NO_DEBUG_STREAM
+
+    Q_ORGANIZER_EXPORT friend uint qHash(const QOrganizerCollectionId &key);
     friend class QOrganizerManagerEngine;
 };
+
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollectionId &key);
 
 QTORGANIZER_END_NAMESPACE
 
@@ -100,6 +102,6 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionId), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionId));
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionId))
 
-#endif
+#endif // QORGANIZERCOLLECTIONID_H

@@ -143,9 +143,11 @@ QStringList QOrganizerManager::availableManagers()
 }
 
 /*!
-  Splits the given \a uri into the manager, store, and parameters that it describes, and places the information into the memory addressed by \a pManagerId and \a pParams respectively.  Returns true if \a uri could be split successfully, otherwise returns false
+    Splits the given \a uri into the manager name and parameters that it describes, and places the
+    information into the memory addressed by \a pManagerName and \a pParams respectively. Returns true
+    if \a uri could be split successfully, otherwise returns false.
  */
-bool QOrganizerManager::parseUri(const QString& uri, QString* pManagerId, QMap<QString, QString>* pParams)
+bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap<QString, QString> *pParams)
 {
     // Format: qtorganizer:<managerid>:<key>=<value>&<key>=<value>
     // 1) parameters are currently a qstringlist.. should they be a map?
@@ -174,7 +176,7 @@ bool QOrganizerManager::parseUri(const QString& uri, QString* pManagerId, QMap<Q
         QStringList params = paramString.split(QRegExp(QLatin1String("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
         // If we have an empty string for paramstring, we get one entry in params,
         // so skip that case.
-        for(int i = 0; i < params.count(); i++) {
+        for (int i = 0; i < params.count(); ++i) {
             /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
             QStringList paramChunk = params.value(i).split(QLatin1String("="), QString::KeepEmptyParts);
 
@@ -195,8 +197,8 @@ bool QOrganizerManager::parseUri(const QString& uri, QString* pManagerId, QMap<Q
 
     if (pParams)
         *pParams = outParams;
-    if (pManagerId)
-        *pManagerId = managerName;
+    if (pManagerName)
+        *pManagerName = managerName;
     return true;
 }
 

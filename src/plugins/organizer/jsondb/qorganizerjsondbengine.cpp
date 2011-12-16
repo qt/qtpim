@@ -324,10 +324,7 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem>* items, QMap<int, Q
     saveReq.setItems(*items);
     startRequest(&saveReq);
     if (waitForRequestFinished(&saveReq, 0)) {
-
-        for (int i = 0; i < saveReq.items().size(); i++)
-            items->replace(i, saveReq.items()[i]);
-
+        *items = saveReq.items();
         *errorMap = saveReq.errorMap();
         *error = saveReq.error();
     }

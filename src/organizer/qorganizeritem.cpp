@@ -121,7 +121,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerItem::QOrganizerItem()
     : d(new QOrganizerItemData)
 {
-    clearDetails();
+    QOrganizerItemType organizeritemType;
+    organizeritemType.setType(QOrganizerItemType::TypeUndefined);
+    d->m_details.append(organizeritemType);
 }
 
 /*!
@@ -138,10 +140,11 @@ QOrganizerItem::QOrganizerItem(const QOrganizerItem &other)
     Constructs a new, empty item of the given type \a type.
 */
 QOrganizerItem::QOrganizerItem(QOrganizerItemType::ItemType type)
+    : d(new QOrganizerItemData)
 {
-    d = new QOrganizerItemData;
-    clearDetails();
-    setType(type);
+    QOrganizerItemType organizeritemType;
+    organizeritemType.setType(type);
+    d->m_details.append(organizeritemType);
 }
 
 /*!

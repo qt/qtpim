@@ -71,6 +71,63 @@ ContactsSavingTestCase {
         compare(model.contacts.length, 1, "model has a contact");
     }
 
+    ContactModel {
+        id: model_autoUpdate_off
+        manager: "jsondb"
+        autoUpdate: false
+    }
+
+    function test_savecontact_autoupdate_off()
+    {
+        initTestForModel(model_autoUpdate_off);
+        createContactToJsonDb({});
+        wait(100);
+        compare(spy.count,0,"no signal emissions when autoupdate if off");
+        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
+        emptyContacts(model_autoUpdate_off);
+    }
+
+    function pending_test_removecontact_autoupdate_off()
+    {
+        initTestForModel(model_autoUpdate_off);
+        createContactToJsonDb({});
+        wait(100);
+        compare(spy.count,0,"no signal emissions when autoupdate if off");
+        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
+        model_autoUpdate_off.update();
+        waitForContactsChanged();
+        compare(model_autoUpdate_off.contacts.length, 1, "model is refreshed now");
+        spy.clear();
+        var contact = model_autoUpdate_off.contacts[0];
+        spy.clear();
+        removeContactFromJsonDb(contact);
+        wait(100)
+        compare(spy.count,0,"no signal emissions when autoupdate if off");
+        console.log("SPY COUNT:" + spy.count)
+        emptyContacts(model_autoUpdate_off);
+    }
+
+    function test_updatecontact_autoupdate_off()
+    {
+        initTestForModel(model_autoUpdate_off);
+        model_autoUpdate_off.saveContact(contactToBeUpdated);
+        wait(100);
+        compare(spy.count,0,"no signal emissions when autoupdate if off");
+        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
+        model_autoUpdate_off.update();
+        waitForContactsChanged();
+        compare(model_autoUpdate_off.contacts.length, 1, "model is refreshed now");
+        spy.clear();
+
+        var contact = model_autoUpdate_off.contacts[0];
+        updateContactInJsonDb(contact, {name: {firstName: "new"}});
+        wait(100);
+        compare(spy.count,0,"no signal emissions when autoupdate if off");
+        //model is not updated so the firstName must be still the "old"
+        compare(model_autoUpdate_off.contacts[0].name.firstName, "old", "first name");
+        emptyContacts(model_autoUpdate_off);
+    }
+
     function test_createContactPassesDetailsToModel()
     {
         initTestForModel(model);

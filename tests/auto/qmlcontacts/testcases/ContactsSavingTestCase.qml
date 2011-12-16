@@ -75,6 +75,8 @@ TestCase {
         for (var i = 0; i < count; i++) {
             var id = model.contacts[0].contactId;
             model.removeContact(id);
+            if (!model.autoUpdate)
+                model.update()
             spy.wait();
         }
         compare(model.contacts.length, 0, "model is empty");

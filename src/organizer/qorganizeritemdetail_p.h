@@ -55,7 +55,7 @@
 
 #include <qorganizeritemdetail.h>
 
-#include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -85,7 +85,7 @@ public:
 
     int m_id; // internal, unique id.
     QOrganizerItemDetail::DetailType m_detailType;
-    QHash<int, QVariant> m_values;
+    QMap<int, QVariant> m_values;
 
     static QAtomicInt &lastDetailKey()
     {

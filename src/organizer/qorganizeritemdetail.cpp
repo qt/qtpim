@@ -279,7 +279,7 @@ bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganize
 uint qHash(const QOrganizerItemDetail &key)
 {
     uint hash = QT_PREPEND_NAMESPACE(qHash)(key.d->m_detailType);
-    QHash<int, QVariant>::const_iterator it = key.d->m_values.constBegin();
+    QMap<int, QVariant>::const_iterator it = key.d->m_values.constBegin();
     while (it != key.d->m_values.constEnd()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
         ++it;
@@ -408,14 +408,7 @@ bool QOrganizerItemDetail::removeValue(int field)
  */
     QMap<int, QVariant> QOrganizerItemDetail::values() const
 {
-    QMap<int, QVariant> ret;
-    QHash<int, QVariant>::const_iterator it = d->m_values.constBegin();
-    while (it != d->m_values.constEnd()) {
-        ret.insert(it.key(), it.value());
-        ++it;
-    }
-
-    return ret;
+    return d->m_values;
 }
 
 /*!

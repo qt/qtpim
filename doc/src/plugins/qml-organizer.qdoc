@@ -101,7 +101,7 @@
 
     The following sample applications show examples of API usage:
     \list
-        \o \l{qmlOrganizerListView}{Qt Quick Organizer List view}
+        \o \l{qmlorganizerlistview}{Qt Quick Organizer List view}
     \endlist
 
     \section2 Tutorials

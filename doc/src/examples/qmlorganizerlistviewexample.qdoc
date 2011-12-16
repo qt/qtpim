@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example qmlOrganizerListView
+    \example qmlorganizerlistview
     \title Qt Quick Organizer List View Example
 
     \tableofcontents
@@ -61,29 +61,47 @@
     \section2 Interface
     The application is designed to work on desktop and mobile platforms with
     minimal differences in code between the platforms.  The interface is
-    organized into a Qt Quick List View, showing the \i {Organizer List} by default.
+    organized into a QML List View, showing the Organizer Event List by default.
     Events can be added or deleted using the buttons at the bottom
-    of the contact list. Selecting an event is simply done by double clicking the
+    of the contact list. Selecting an event is simply done by clicking the
     mouse on the desired event, and using the save button to store it.
 
-    Here we see the \i {Organizer List} with some Events added by default.
+    Here we see the \l {OrganizerModel} used with a QML List View to show some Events added by default.
 
     \image qmlorganizerlistview-main.png
 
-    When editing  an Event the highlighted event now has a save button which can be
-    used to store it when you have finished modifications.
+    When editing  you click on the edit button and an Event Editor will be displayed showing
+    the display label along with  the start and end dates of the events.
 
     \image qmlorganizerlistview-edit.png
 
+    Here start and end dates or label for the event can be modified. Notice that the boundaries have been set so that
+    any character can be used in the label. However the date, month and the year are limited
+    to integers which match those fields to give some kind of simple but sensible user interaction.
+    When finished select either the cancel button or the save button and it returns to the
+    list view showing all events. If cancel button is pressed nothing will change, or if saved the modifications
+    to the event will be updated in this main list view.
+
+    Adding new events from the main list view is equally simple. Click on add new event button and the same editor
+    will be displayed with NEW in the event title as follows.
+
+    \image qmlorganizerlistview-new.png
+
+    Simply Edit this as with any other event, and cancel or save it. Cancelling will mean this new event will be lost,
+    where saving will add the new event to the main list view along with all the other existing events.
+
+    Deleting events from the main list view is simply done by pressing the delete button and the currently highlighted
+    event will be removed from the organizer list view and also the backend where this event is stored.
+
     \section2 Known Issues
     The example is not intended to be feature complete.  Only a very limited subset of detail types are
-    supported by the application.  It exercises only a very small portion of the Qt Organizer Qt Quick API.
-    It is intended to be very simple to show the API and allow the developers skilled in Qt Quick to utilise
+    supported by the application.  It exercises only a very small portion of the Qt Organizer QML API.
+    It is intended to be very simple to show the API and allow the developers skilled in QML to utilise
     this interface to its full potential.
 
     In particular:
     \list
-        \o The example only exercises the Qt Quick OrganizerModel  API to save, edit and delete Events.
+        \o The example only exercises the QML OrganizerModel  API to save, edit and delete Events.
         \o Everything is done with minimal external components or states to keep things simple and focused
            on how the API works.
         \o Editing a Date/Time is in string format. In a real application would be a more advanced

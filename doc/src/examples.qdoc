@@ -42,7 +42,7 @@
     \section2 Organizer
 
     \list
-    \o \l{qmlOrganizerListView}{Qt Quick Organizer List view}
+    \o \l{qmlorganizerlistview}{Qt Quick Organizer List view}
     \o \l{calendardemo}{Calendar Demo}
     \omit \o \l{qmlorganizer}{QML Organizer} \endomit
     \o \l{todo}{ToDo Example}

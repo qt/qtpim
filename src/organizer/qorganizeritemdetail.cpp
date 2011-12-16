@@ -406,7 +406,7 @@ bool QOrganizerItemDetail::removeValue(int field)
 /*!
     Returns the values stored in this detail as a field-to-value map.
  */
-    QMap<int, QVariant> QOrganizerItemDetail::values() const
+QMap<int, QVariant> QOrganizerItemDetail::values() const
 {
     return d->m_values;
 }

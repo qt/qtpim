@@ -49,6 +49,8 @@ TestCase {
     name: "ModelTests"
     id:modelTests
 
+    property var signalWaitTime : 300
+
     QOrganizerTestUtility {
         id: utility
     }
@@ -496,6 +498,79 @@ TestCase {
         compare(containsItems[9], false);
         compare(containsItems[10], false);
         compare(containsItems[11], false);
+    }
+
+    function modelChangedSignalTestItems() {
+        return [
+            // events
+            "import QtOrganizer 5.0 \n"
+            + "   Event {\n"
+            + "   startDateTime:'2011-10-25'\n"
+            + "   allDay: false\n"
+            + "   }",
+            "import QtOrganizer 5.0 \n"
+            + "   Event {\n"
+            + "   startDateTime:'2011-10-26'\n"
+            + "   allDay: true\n"
+            + "   }"
+        ]
+    }
+
+    // to test various usecases for modelChanged-signal
+    function test_modelChangedSignal() {
+        var managerlist = utility.getManagerList();
+        if (managerlist.length < 0) {
+            console.log("No manager to test");
+            return;
+        }
+        for (var i = 0; i < managerlist.length; i ++) {
+
+            var filter = Qt.createQmlObject("import QtOrganizer 5.0; DetailFilter{}", modelTests)
+            filter.detail = Detail.EventTime
+            filter.field = EventTime.FieldAllDay
+            filter.value = true
+
+            var model = Qt.createQmlObject(
+                    "import QtOrganizer 5.0;"
+                    + "OrganizerModel {"
+                    + "   manager: \"qtorganizer:" + managerlist[i] + ":id=qml\";"
+                    + "   startPeriod:'2009-01-01';"
+                    + "   endPeriod:'2012-12-31';"
+                    + "   autoUpdate:true; }"
+                    , modelTests);
+            console.log("## Testing plugin: " + managerlist[i]);
+            var modelChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+            modelChangedSpy.target = model
+            modelChangedSpy.signalName = "modelChanged"
+
+            // during initialisation only one modelChanged allowed
+            wait(signalWaitTime);
+            compare(modelChangedSpy.count, 1)
+
+            // prepare for rest of cases
+            utility.init(model)
+            utility.empty_calendar()
+            utility.addItemsToModel(modelChangedSignalTestItems(), modelTests)
+            compare(model.itemCount, 2)
+
+            // after filterchange only one modelChanged allowed
+            modelChangedSpy.clear()
+            model.filter = filter
+            wait(signalWaitTime);
+            compare(modelChangedSpy.count, 1)
+            compare(model.itemCount, 1)
+
+            // after manual update only one modelChanged allowed
+            model.autoUpdate = false
+            modelChangedSpy.clear()
+            model.filter = null
+            model.update()
+            wait(signalWaitTime);
+            compare(modelChangedSpy.count, 1)
+            compare(model.itemCount, 2)
+
+            utility.empty_calendar()
+        }
     }
 }
 

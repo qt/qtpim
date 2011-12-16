@@ -45,7 +45,7 @@ import QtOrganizer 5.0
 
 TestCase {
     id: testUtility
-    property var signalWaitTime : 400
+    property var signalWaitTime : 500
     property var itemChange: 0
     property var collectionChange: 1
     property SignalSpy organizerChangedSpy
@@ -297,5 +297,13 @@ TestCase {
             }
         }
         return true;
+    }
+
+    function addItemsToModel(ctrStrings, parent) {
+        for (var i=0;i<ctrStrings.length;i++) {
+            var item = create_testobject(ctrStrings[i], parent);
+            __model.saveItem(item);
+            organizerChangedSpy.wait();
+        }
     }
 }

@@ -938,6 +938,7 @@ void QDeclarativeOrganizerModel::fetchAgain()
 void QDeclarativeOrganizerModel::requestUpdated()
 {
 
+    bool reqFinished = false;
     QList<QOrganizerItem> items;
     QOrganizerItemFetchRequest* ifr = qobject_cast<QOrganizerItemFetchRequest*>(QObject::sender());
     if (ifr && ifr->isFinished()) {
@@ -946,16 +947,18 @@ void QDeclarativeOrganizerModel::requestUpdated()
         ifr->deleteLater();
         d->m_fetchRequest = 0;
         d->m_updatePending = false;
+        reqFinished = true;
     } else {
         QOrganizerItemOccurrenceFetchRequest* iofr = qobject_cast<QOrganizerItemOccurrenceFetchRequest*>(QObject::sender());
         if (iofr && iofr->isFinished()) {
             items = iofr->itemOccurrences();
             checkError(iofr);
             iofr->deleteLater();
+            reqFinished = true;
         }
     }
 
-    if (!items.isEmpty() || d->m_fullUpdate) {
+    if (!items.isEmpty() || (d->m_fullUpdate && reqFinished)) {
         d->m_fullUpdate = false;
         if (d->m_items.isEmpty()) {
             QDeclarativeOrganizerItem* di;

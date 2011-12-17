@@ -67,7 +67,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   Some functionality provided by QContactManager directly is not accessible using the asynchronous API; see
   the \l{Contacts Synchronous API}{synchronous} and \l{Contacts Asynchronous API}{asynchronous} API
-  information from the \l{Contacts}{contacts module} API documentation.
+  information from the \l{C++ Contacts}{contacts module} API documentation.
  */
 
 /*!

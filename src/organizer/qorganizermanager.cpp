@@ -69,7 +69,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 
   Some functionality provided by QOrganizerManager directly is not accessible using the asynchronous API; see
   the \l{Organizer Synchronous API}{synchronous} and \l{Organizer Asynchronous API}{asynchronous} API
-  information from the \l{Organizer}{organizer module} API documentation.
+  information from the \l{C++ Organizer}{organizer module} API documentation.
  */
 
 /*!

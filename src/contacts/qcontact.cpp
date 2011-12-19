@@ -203,7 +203,6 @@ QContact::~QContact()
     manager.  See \l QContactManager::saveContact() for more
     information.
 
-    \sa localId()
  */
 QContactId QContact::id() const
 {
@@ -228,24 +227,6 @@ void QContact::setId(const QContactId& id)
     d->m_id = id;
 }
 
-/*!
-    Returns the QContactLocalId that identifies this contact within its manager
-
-    This may have been set when the contact was retrieved from
-    a particular manager, or when the contact was first saved
-    in a manager.  The QContactLocalId is associated with a specific
-    manager, but other contacts with the same local id might exist in
-    different managers.
-
-    See \l QContactManager::saveContact() for more
-    information.
-
-   \sa id()
-*/
-QContactLocalId QContact::localId() const
-{
-    return d.constData()->m_id.localId();
-}
 
 /*!
  * Returns the type of the contact.  Every contact has exactly one type which

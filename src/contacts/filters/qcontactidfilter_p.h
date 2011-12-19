@@ -39,73 +39,82 @@
 **
 ****************************************************************************/
 
-#include "qcontactobserver.h"
+#ifndef QCONTACTIDLISTFILTER_P_H
+#define QCONTACTIDLISTFILTER_P_H
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail.  This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
+
+#include "qcontactfilter_p.h"
+#include "qcontactfilter.h"
 #include "qcontactid.h"
-#include "qcontactmanager_p.h"
+
+#include <QString>
+#include <QVariant>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactObserverPrivate
+class QContactIdFilterPrivate : public QContactFilterPrivate
 {
-    public:
-        QContactId m_contactId;
-        QWeakPointer<QContactManager> m_manager;
+public:
+    QContactIdFilterPrivate()
+        : QContactFilterPrivate()
+    {
+    }
+
+    QContactIdFilterPrivate(const QContactIdFilterPrivate& other)
+        : QContactFilterPrivate(other),
+        m_ids(other.m_ids)
+    {
+    }
+
+    bool compare(const QContactFilterPrivate* other) const
+    {
+        const QContactIdFilterPrivate *od = static_cast<const QContactIdFilterPrivate*>(other);
+        if (m_ids != od->m_ids)
+            return false;
+        return true;
+    }
+
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    {
+        if (formatVersion == 1) {
+            stream << m_ids;
+        }
+        return stream;
+    }
+
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    {
+        if (formatVersion == 1) {
+            stream >> m_ids;
+        }
+        return stream;
+    }
+
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug& debugStreamOut(QDebug& dbg) const
+    {
+        dbg.nospace() << "QContactIdFilter(";
+        dbg.nospace() << "ids=" << m_ids;
+        dbg.nospace() << ")";
+        return dbg.maybeSpace();
+    }
+#endif
+
+    Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactIdFilter, QContactFilter::IdFilter)
+
+    QList<QContactId> m_ids;
 };
 
-/*!
-  \class QContactObserver
-  \brief The QContactObserver class is a simple class that emits a signal when a single particular
-  contact is updated or deleted.
-  \inmodule QtContacts
-
-  \ingroup contacts-main
- */
-
-/*!
-  Constructs a QContactObserver to observe the contact in \a manager with the
-  given \a contactId and \a parent object.
- */
-QContactObserver::QContactObserver(QContactManager* manager,
-                                   QContactId contactId,
-                                   QObject* parent)
-    : QObject(parent),
-      d(new QContactObserverPrivate)
-{
-    d->m_contactId = contactId;
-    d->m_manager = manager;
-    QContactManagerData::registerObserver(manager, this);
-}
-
-/*!
-  Destroys this observer.
- */
-QContactObserver::~QContactObserver()
-{
-    if (!d->m_manager.isNull()) {
-        QContactManagerData::unregisterObserver(d->m_manager.data(), this);
-    }
-    delete d;
-}
-
-/*!
-  Returns the contact id of the contact that this object observes.
- */
-QContactId QContactObserver::contactId() const {
-    return d->m_contactId;
-}
-
-/*!
-  \fn QContactObserver::contactChanged()
-
-  This signal is emitted when the observed contact is changed in the manager.
- */
-
-/*!
-  \fn QContactObserver::contactRemoved()
-
-  This signal is emitted when the observed contact is removed from the manager.
- */
-
-#include "moc_qcontactobserver.cpp"
-
 QTCONTACTS_END_NAMESPACE
+
+#endif

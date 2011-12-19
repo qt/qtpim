@@ -81,13 +81,13 @@ QContactFetchByIdRequest::~QContactFetchByIdRequest()
 }
 
 /*!
-  Sets the list of ids of the contacts that the backend should retrieve to \a localIds.
+  Sets the list of ids of the contacts that the backend should retrieve to \a contactIds.
  */
-void QContactFetchByIdRequest::setLocalIds(const QList<QContactLocalId>& localIds)
+void QContactFetchByIdRequest::setIds(const QList<QContactId>& ids)
 {
     Q_D(QContactFetchByIdRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_localIds = localIds;
+    d->m_contactIds = ids;
 }
 
 /*!
@@ -108,11 +108,11 @@ void QContactFetchByIdRequest::setFetchHint(const QContactFetchHint &fetchHint)
 /*!
   Returns the list of ids of the contacts that the backend should retrieve.
  */
-QList<QContactLocalId> QContactFetchByIdRequest::localIds() const
+QList<QContactId> QContactFetchByIdRequest::contactIds() const
 {
     Q_D(const QContactFetchByIdRequest);
     QMutexLocker ml(&d->m_mutex);
-    return d->m_localIds;
+    return d->m_contactIds;
 }
 
 /*!

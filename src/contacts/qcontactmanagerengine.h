@@ -78,17 +78,17 @@ public:
     QString managerUri() const;
 
     /* Filtering */
-    virtual QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const;
+    virtual QList<QContactId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const;
     virtual QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
-    virtual QContact contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
+    virtual QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
 
     virtual bool saveContact(QContact* contact, QContactManager::Error* error);
-    virtual bool removeContact(const QContactLocalId& contactId, QContactManager::Error* error);
+    virtual bool removeContact(const QContactId& contactId, QContactManager::Error* error);
     virtual bool saveRelationship(QContactRelationship* relationship, QContactManager::Error* error);
     virtual bool removeRelationship(const QContactRelationship& relationship, QContactManager::Error* error);
 
     virtual bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error);
-    virtual bool removeContacts(const QList<QContactLocalId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error);
+    virtual bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error);
 
     /* Return a pruned or modified contact which is valid and can be saved in the backend */
     virtual QContact compatibleContact(const QContact& original, QContactManager::Error* error) const;
@@ -97,8 +97,8 @@ public:
     virtual QString synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const;
 
     /* "Self" contact id (MyCard) */
-    virtual bool setSelfContactId(const QContactLocalId& contactId, QContactManager::Error* error);
-    virtual QContactLocalId selfContactId(QContactManager::Error* error) const;
+    virtual bool setSelfContactId(const QContactId& contactId, QContactManager::Error* error);
+    virtual QContactId selfContactId(QContactManager::Error* error) const;
 
     /* Relationships between contacts */
     virtual QList<QContactRelationship> relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const;
@@ -123,24 +123,24 @@ public:
 
 Q_SIGNALS:
     void dataChanged();
-    void contactsAdded(const QList<QContactLocalId>& contactIds);
-    void contactsChanged(const QList<QContactLocalId>& contactIds);
-    void contactsRemoved(const QList<QContactLocalId>& contactIds);
-    void relationshipsAdded(const QList<QContactLocalId>& affectedContactIds);
-    void relationshipsRemoved(const QList<QContactLocalId>& affectedContactIds);
-    void selfContactIdChanged(const QContactLocalId& oldId, const QContactLocalId& newId);
+    void contactsAdded(const QList<QContactId>& contactIds);
+    void contactsChanged(const QList<QContactId>& contactIds);
+    void contactsRemoved(const QList<QContactId>& contactIds);
+    void relationshipsAdded(const QList<QContactId>& affectedContactIds);
+    void relationshipsRemoved(const QList<QContactId>& affectedContactIds);
+    void selfContactIdChanged(const QContactId& oldId, const QContactId& newId);
 
 public:
     // Async update functions
     static void updateRequestState(QContactAbstractRequest* req, QContactAbstractRequest::State state);
 
-    static void updateContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req, const QList<QContactLocalId>& result, QContactManager::Error error, QContactAbstractRequest::State);
-    static void updateContactFetchRequest(QContactFetchRequest* req, const QList<QContact>& result, QContactManager::Error error, QContactAbstractRequest::State);
-    static void updateContactRemoveRequest(QContactRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateContactSaveRequest(QContactSaveRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateRelationshipSaveRequest(QContactRelationshipSaveRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateRelationshipRemoveRequest(QContactRelationshipRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
-    static void updateRelationshipFetchRequest(QContactRelationshipFetchRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, QContactAbstractRequest::State);
+    static void updateContactIdFetchRequest(QContactIdFetchRequest *req, const QList<QContactId>& result, QContactManager::Error error, QContactAbstractRequest::State);
+    static void updateContactFetchRequest(QContactFetchRequest *req, const QList<QContact> &result, QContactManager::Error error, QContactAbstractRequest::State);
+    static void updateContactRemoveRequest(QContactRemoveRequest *req, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
+    static void updateContactSaveRequest(QContactSaveRequest *req, const QList<QContact> &result, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
+    static void updateRelationshipSaveRequest(QContactRelationshipSaveRequest *req, const QList<QContactRelationship> &result, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
+    static void updateRelationshipRemoveRequest(QContactRelationshipRemoveRequest *req, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
+    static void updateRelationshipFetchRequest(QContactRelationshipFetchRequest *req, const QList<QContactRelationship> &result, QContactManager::Error error, QContactAbstractRequest::State);
 
     // Other protected area update functions
     static void setDetailAccessConstraints(QContactDetail* detail, QContactDetail::AccessConstraints constraints);
@@ -152,9 +152,11 @@ public:
     static void addSorted(QList<QContact>* sorted, const QContact& toAdd, const QList<QContactSortOrder>& sortOrders);
     static int compareVariant(const QVariant& first, const QVariant& second, Qt::CaseSensitivity sensitivity);
     static bool testFilter(const QContactFilter& filter, const QContact& contact);
-    static QList<QContactLocalId> sortContacts(const QList<QContact>& contacts, const QList<QContactSortOrder>& sortOrders);
+    static QList<QContactId> sortContacts(const QList<QContact>& contacts, const QList<QContactSortOrder>& sortOrders);
 
     static QContactFilter canonicalizedFilter(const QContactFilter& filter);
+    static const QContactEngineId* engineContactId(const QContactId& id);
+
 
 private:
     /* QContactChangeSet is a utility class used to emit the appropriate signals */
@@ -162,7 +164,7 @@ private:
 };
 
 
-class QContactLocalIdFetchRequest;
+class QContactIdFetchRequest;
 class QContactFetchRequest;
 class QContactSaveRequest;
 class QContactRemoveRequest;
@@ -185,8 +187,7 @@ public:
 
     // Again, this is the v1 function
     QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
-    virtual QList<QContact> contacts(const QList<QContactLocalId>& localIds, const QContactFetchHint& fetchHint, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) const;
-
+    virtual QList<QContact> contacts(const QList<QContactId>& contactIds, const QContactFetchHint& fetchHint, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) const;
     static void updateContactFetchByIdRequest(QContactFetchByIdRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State);
 };
 

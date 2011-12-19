@@ -53,9 +53,9 @@ class Q_CONTACTS_EXPORT QContactObserver : public QObject
 {
     Q_OBJECT
 public:
-    QContactObserver(QContactManager* manager, QContactLocalId localId, QObject* parent = 0);
+    QContactObserver(QContactManager* manager, QContactId contactId, QObject* parent = 0);
     ~QContactObserver();
-    QContactLocalId contactLocalId() const;
+    QContactId contactId() const;
 Q_SIGNALS:
     void contactChanged();
     void contactRemoved();

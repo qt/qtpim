@@ -39,8 +39,12 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTID_P_H
-#define QCONTACTID_P_H
+
+#ifndef QCONTACTIDMOCK_H
+#define QCONTACTIDMOCK_H
+
+#include <qcontacts.h>
+#include "qcontactengineid.h"
 
 //
 //  W A R N I N G
@@ -53,35 +57,56 @@
 // We mean it.
 //
 
-#include <QString>
-#include <QSharedData>
+QTCONTACTS_USE_NAMESPACE
 
-#include <qcontactsglobal.h>
-
-QTCONTACTS_BEGIN_NAMESPACE
-
-class QContactIdPrivate : public QSharedData
+class QContactIdMock : public QContactEngineId
 {
 public:
-    QContactIdPrivate()
-    {
+    QContactIdMock(const QString& managerUri, uint id) : m_managerUri(managerUri), m_id(id) {}
+    bool isEqualTo(const QContactEngineId* other) const {
+        if (m_managerUri == static_cast<const QContactIdMock*>(other)->m_managerUri)
+            return m_id == static_cast<const QContactIdMock*>(other)->m_id;
+        return false;
+    }
+    bool isLessThan(const QContactEngineId* other) const {
+        if (m_managerUri == static_cast<const QContactIdMock*>(other)->m_managerUri)
+            return m_id < static_cast<const QContactIdMock*>(other)->m_id;
+        return m_managerUri < static_cast<const QContactIdMock*>(other)->m_managerUri;
     }
 
-    QContactIdPrivate(const QContactIdPrivate& other)
-            : QSharedData(other),
-            m_managerUri(other.m_managerUri),
-            m_localId(other.m_localId)
-    {
+    QString localId() const {
+        return QString::number(m_id);
     }
 
-    ~QContactIdPrivate()
-    {
+    QString managerUri() const {
+        return "qtcontacts:" + m_managerUri;
     }
 
+    QContactEngineId* clone() const {
+        QContactIdMock* cloned = new QContactIdMock(m_managerUri, m_id);
+        return cloned;
+    }
+
+    QDebug& debugStreamOut(QDebug& dbg) const {
+        return dbg << m_managerUri << m_id;
+    }
+
+    QString toString() const {
+        return m_managerUri + QString("::") + QString::number(m_id);
+    }
+
+    uint hash() const {
+        return qHash(toString());
+    }
+
+    static QContactId createId(const QString& managerUri, uint id)
+    {
+        return QContactId(new QContactIdMock(managerUri, id));
+    }
+
+private:
     QString m_managerUri;
-    QContactLocalId m_localId;
+    uint m_id;
 };
-
-QTCONTACTS_END_NAMESPACE
 
 #endif

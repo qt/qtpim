@@ -49,7 +49,7 @@
 #include "qdeclarativecontactchangelogfilter_p.h"
 #include "qdeclarativecontactdetailfilter_p.h"
 #include "qdeclarativecontactdetailrangefilter_p.h"
-#include "qdeclarativecontactlocalidfilter_p.h"
+#include "qdeclarativecontactidfilter_p.h"
 #include "qdeclarativecontactintersectionfilter_p.h"
 #include "qdeclarativecontactinvalidfilter_p.h"
 #include "qdeclarativecontactrelationshipfilter_p.h"

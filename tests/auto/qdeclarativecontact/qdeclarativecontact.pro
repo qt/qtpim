@@ -45,7 +45,7 @@ HEADERS += ../../../src/import/contacts/qdeclarativecontactdetail_p.h\
            ../../../src/import/contacts/filters/qdeclarativecontactchangelogfilter_p.h	\
            ../../../src/import/contacts/filters/qdeclarativecontactinvalidfilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactdetailfilter_p.h	\
-           ../../../src/import/contacts/filters/qdeclarativecontactlocalidfilter_p.h \
+           ../../../src/import/contacts/filters/qdeclarativecontactidfilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactdetailrangefilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactrelationshipfilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactfilters_p.h	 \

@@ -41,7 +41,7 @@
 
 #include "qcontact_p.h"
 #include "qcontactmanagerenginev2wrapper_p.h"
-#include "qcontactlocalidfilter.h"
+#include "qcontactidfilter.h"
 #include "qcontactabstractrequest_p.h"
 #include "qcontactfetchbyidrequest.h"
 #include <QDebug>
@@ -216,8 +216,8 @@ bool FetchByIdRequestController::start()
     Q_ASSERT(m_request);
     QContactFetchByIdRequest* originalRequest = static_cast<QContactFetchByIdRequest*>(m_request.data());
     QContactFetchRequest* qcfr = new QContactFetchRequest;
-    QContactLocalIdFilter lif;
-    lif.setIds(originalRequest->localIds());
+    QContactIdFilter lif;
+    lif.setIds(originalRequest->contactIds());
     qcfr->setFilter(lif);
     qcfr->setFetchHint(originalRequest->fetchHint());
     // normally, you'd set the manager, but in this case, we only have a bare engine:
@@ -240,22 +240,22 @@ void FetchByIdRequestController::handleFinishedSubRequest(QContactAbstractReques
     QContactManager::Error error = qcfr->error();
 
     // Build an index into the results
-    QHash<QContactLocalId, int> idMap; // value is index into unsorted
+    QHash<QContactId, int> idMap; // value is index into unsorted
     if (error == QContactManager::NoError) {
         for (int i = 0; i < contacts.size(); i++) {
-            idMap.insert(contacts[i].localId(), i);
+            idMap.insert(contacts[i].id(), i);
         }
     }
 
     // Find the order in which the results should be presented
     QContactFetchByIdRequest* request = static_cast<QContactFetchByIdRequest*>(m_request.data());
-    QList<QContactLocalId> ids(request->localIds());
+    QList<QContactId> ids(request->contactIds());
 
     // Build up the results and errors
     QList<QContact> results;
     QMap<int, QContactManager::Error> errorMap;
     for (int i = 0; i < ids.count(); i++) {
-        QContactLocalId id(ids[i]);
+        QContactId id(ids[i]);
         if (!idMap.contains(id)) {
             errorMap.insert(i, QContactManager::DoesNotExistError);
             if (error == QContactManager::NoError)
@@ -282,7 +282,7 @@ void FetchByIdRequestController::handleFinishedSubRequest(QContactAbstractReques
 bool PartialSaveRequestController::start()
 {
     // The first step is to fetch the existing contacts.
-    QList<QContactLocalId> existingContactIds;
+    QList<QContactId> existingContactIds;
     QList<int> newContactIndices;
 
     // First, remove the contacts that aren't from this manager
@@ -292,14 +292,9 @@ bool PartialSaveRequestController::start()
         // See if there's a contactId that's not from this manager
         const QContact c = contacts.at(i);
         if (c.id().managerUri() == m_engine->managerUri()) {
-            if (!c.localId().isEmpty()) {
-                m_existingIdMap.insert(i, existingContactIds.count());
-                existingContactIds.append(c.localId());
-            } else {
-                // Strange. it's just a new contact (with a managerUri set?)
-                newContactIndices.append(i);
-            }
-        } else if (!c.id().managerUri().isEmpty() || !c.localId().isEmpty()) {
+            m_existingIdMap.insert(i, existingContactIds.count());
+            existingContactIds.append(c.id());
+        } else if (!c.id().isNull()) {
             // Hmm, error (wrong manager)
             m_errorMap.insert(i, QContactManager::DoesNotExistError);
         } else {
@@ -310,7 +305,7 @@ bool PartialSaveRequestController::start()
     if (!existingContactIds.isEmpty()) {
         // Now do the fetch and wait for the result in handleFinishedSubRequest
         QContactFetchByIdRequest* cfbir = new QContactFetchByIdRequest;
-        cfbir->setLocalIds(existingContactIds);
+        cfbir->setIds(existingContactIds);
         // normally, you'd set the manager, but in this case, we only have a bare engine:
         QContactManagerEngineV2Wrapper::setEngineOfRequest(cfbir, m_v2wrapper);
         m_currentSubRequest.reset(cfbir);

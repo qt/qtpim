@@ -39,73 +39,42 @@
 **
 ****************************************************************************/
 
-#include "qcontactobserver.h"
-#include "qcontactid.h"
-#include "qcontactmanager_p.h"
+#ifndef QCONTACTENGINEID_H
+#define QCONTACTENGINEID_H
+
+#include <QString>
+#include <QSharedDataPointer>
+
+#include "qcontactsglobal.h"
+
+QT_BEGIN_NAMESPACE
+class QDataStream;
+QT_END_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactObserverPrivate
+class Q_CONTACTS_EXPORT QContactEngineId: public QSharedData
 {
-    public:
-        QContactId m_contactId;
-        QWeakPointer<QContactManager> m_manager;
+public:
+    virtual ~QContactEngineId() {}
+
+    virtual bool isEqualTo(const QContactEngineId *other) const = 0;
+    virtual bool isLessThan(const QContactEngineId *other) const = 0;
+
+    virtual QString managerUri() const = 0;
+
+    virtual QContactEngineId* clone() const = 0;
+
+    virtual QString toString() const = 0;
+
+#ifndef QT_NO_DEBUG_STREAM
+    // NOTE: on platforms where Qt is built without debug streams enabled, vtable will differ!
+    virtual QDebug& debugStreamOut(QDebug &dbg) const = 0;
+#endif
+    virtual uint hash() const = 0;
 };
 
-/*!
-  \class QContactObserver
-  \brief The QContactObserver class is a simple class that emits a signal when a single particular
-  contact is updated or deleted.
-  \inmodule QtContacts
-
-  \ingroup contacts-main
- */
-
-/*!
-  Constructs a QContactObserver to observe the contact in \a manager with the
-  given \a contactId and \a parent object.
- */
-QContactObserver::QContactObserver(QContactManager* manager,
-                                   QContactId contactId,
-                                   QObject* parent)
-    : QObject(parent),
-      d(new QContactObserverPrivate)
-{
-    d->m_contactId = contactId;
-    d->m_manager = manager;
-    QContactManagerData::registerObserver(manager, this);
-}
-
-/*!
-  Destroys this observer.
- */
-QContactObserver::~QContactObserver()
-{
-    if (!d->m_manager.isNull()) {
-        QContactManagerData::unregisterObserver(d->m_manager.data(), this);
-    }
-    delete d;
-}
-
-/*!
-  Returns the contact id of the contact that this object observes.
- */
-QContactId QContactObserver::contactId() const {
-    return d->m_contactId;
-}
-
-/*!
-  \fn QContactObserver::contactChanged()
-
-  This signal is emitted when the observed contact is changed in the manager.
- */
-
-/*!
-  \fn QContactObserver::contactRemoved()
-
-  This signal is emitted when the observed contact is removed from the manager.
- */
-
-#include "moc_qcontactobserver.cpp"
-
 QTCONTACTS_END_NAMESPACE
+
+#endif
+

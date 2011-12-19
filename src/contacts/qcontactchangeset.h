@@ -66,33 +66,33 @@ public:
     void setDataChanged(bool dataChanged);
     bool dataChanged();
 
-    QSet<QContactLocalId> addedContacts() const;
-    void insertAddedContact(QContactLocalId addedContactId);
-    void insertAddedContacts(const QList<QContactLocalId>& addedContactIds);
+    QSet<QContactId> addedContacts() const;
+    void insertAddedContact(QContactId addedContactId);
+    void insertAddedContacts(const QList<QContactId>& addedContactIds);
     void clearAddedContacts();
 
-    QSet<QContactLocalId> changedContacts() const;
-    void insertChangedContact(QContactLocalId addedContactId);
-    void insertChangedContacts(const QList<QContactLocalId>& addedContactIds);
+    QSet<QContactId> changedContacts() const;
+    void insertChangedContact(QContactId addedContactId);
+    void insertChangedContacts(const QList<QContactId>& addedContactIds);
     void clearChangedContacts();
 
-    QSet<QContactLocalId> removedContacts() const;
-    void insertRemovedContact(QContactLocalId addedContactId);
-    void insertRemovedContacts(const QList<QContactLocalId>& addedContactIds);
+    QSet<QContactId> removedContacts() const;
+    void insertRemovedContact(QContactId addedContactId);
+    void insertRemovedContacts(const QList<QContactId>& addedContactIds);
     void clearRemovedContacts();
 
-    QSet<QContactLocalId> addedRelationshipsContacts() const;
-    void insertAddedRelationshipsContact(QContactLocalId affectedContactId);
-    void insertAddedRelationshipsContacts(const QList<QContactLocalId>& affectedContactIds);
+    QSet<QContactId> addedRelationshipsContacts() const;
+    void insertAddedRelationshipsContact(QContactId affectedContactId);
+    void insertAddedRelationshipsContacts(const QList<QContactId>& affectedContactIds);
     void clearAddedRelationshipsContacts();
 
-    QSet<QContactLocalId> removedRelationshipsContacts() const;
-    void insertRemovedRelationshipsContact(QContactLocalId affectedContactId);
-    void insertRemovedRelationshipsContacts(const QList<QContactLocalId>& affectedContactIds);
+    QSet<QContactId> removedRelationshipsContacts() const;
+    void insertRemovedRelationshipsContact(QContactId affectedContactId);
+    void insertRemovedRelationshipsContacts(const QList<QContactId>& affectedContactIds);
     void clearRemovedRelationshipsContacts();
 
-    void setOldAndNewSelfContactId(const QPair<QContactLocalId, QContactLocalId>& oldAndNewContactId);
-    QPair<QContactLocalId, QContactLocalId> oldAndNewSelfContactId() const;
+    void setOldAndNewSelfContactId(const QPair<QContactId, QContactId>& oldAndNewContactId);
+    QPair<QContactId, QContactId> oldAndNewSelfContactId() const;
 
     void clearAll();
 

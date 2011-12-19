@@ -119,7 +119,7 @@ asynchronous API to perform such manager-related operations.
     newPhoneNumber.setNumber("12345");        // set the value(s) to save
     firstContact.saveDetail(&newPhoneNumber); // save the detail in the contact
     cm.saveContact(&firstContact);            // save the contact in the manager
-    cm.removeContact(firstContact.localId()); // remove the contact from the manager
+    cm.removeContact(firstContact.id()); // remove the contact from the manager
 \endcode
 
 That's it!  For more in-depth discussion of usage of the API, see the sections
@@ -303,7 +303,7 @@ The equivalent code using the synchronous API looks like:
 
 \section2 Removing a contact from a manager
 
-The client removes a contact from the manager by specifying its local id.
+The client removes a contact from the manager by specifying its id.
 
     \snippet snippets/qtcontactsdocsample/qtcontactsdocsampleasync.cpp Removing a contact from a manager
 

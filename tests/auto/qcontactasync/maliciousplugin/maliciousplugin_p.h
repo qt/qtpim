@@ -83,7 +83,7 @@ public:
     QMap<QString, QString> managerParameters() const {return QMap<QString, QString>();}
     int managerVersion() const {return 0;}
 
-    QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sort, QContactManager::Error* error) const
+    QList<QContactId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sort, QContactManager::Error* error) const
     {
         return QContactManagerEngine::contactIds(filter, sort, error);
     }
@@ -93,7 +93,7 @@ public:
         return QContactManagerEngine::contacts(filter, sort, fetch, error);
     }
 
-    QContact contact(const QContactLocalId& id, const QContactFetchHint& fetch, QContactManager::Error* error) const
+    QContact contact(const QContactId& id, const QContactFetchHint& fetch, QContactManager::Error* error) const
     {
         return QContactManagerEngine::contact(id, fetch, error);
     }
@@ -103,18 +103,18 @@ public:
         return QContactManagerEngine::saveContacts(contacts, errorMap, error);
     }
 
-    bool removeContacts(const QList<QContactLocalId>& contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
+    bool removeContacts(const QList<QContactId>& contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
     {
         return QContactManagerEngine::removeContacts(contacts, errorMap, error);
     }
 
     /* "Self" contact id (MyCard) */
-    bool setSelfContactId(const QContactLocalId& id, QContactManager::Error* error)
+    bool setSelfContactId(const QContactId& id, QContactManager::Error* error)
     {
         return QContactManagerEngine::setSelfContactId(id, error);
     }
 
-    QContactLocalId selfContactId(QContactManager::Error* error) const
+    QContactId selfContactId(QContactManager::Error* error) const
     {
         return QContactManagerEngine::selfContactId(error);
     }
@@ -190,6 +190,7 @@ class MaliciousEngineFactory : public QObject, public QContactManagerEngineFacto
 
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
+        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const;
         QString managerName() const;
 
     private:

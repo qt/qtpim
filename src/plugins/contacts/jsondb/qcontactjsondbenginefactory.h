@@ -66,6 +66,7 @@ class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QObject, public QContac
   public:
     QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error*);
     QString managerName() const;
+    QContactEngineId *createContactEngineId(const QMap<QString, QString> &parameters, const QString &idString) const;
 };
 
 QTCONTACTS_END_NAMESPACE

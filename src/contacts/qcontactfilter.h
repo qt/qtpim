@@ -84,7 +84,7 @@ public:
         RelationshipFilter,
         IntersectionFilter,
         UnionFilter,
-        LocalIdFilter,
+        IdFilter,
         DefaultFilter
     };
 

@@ -178,7 +178,7 @@ void contactManipulation()
 //! [Synchronously filtering contacts from a manager]
 
 //! [Synchronously retrieving an existing contact from a manager]
-    QContact existing = m_manager.contact(exampleContact.localId());
+    QContact existing = m_manager.contact(exampleContact.id());
 //! [Synchronously retrieving an existing contact from a manager]
 
 //! [Synchronously updating an existing contact in a manager]
@@ -188,7 +188,7 @@ void contactManipulation()
 //! [Synchronously updating an existing contact in a manager]
 
 //! [Synchronously removing a contact from a manager]
-    m_manager.removeContact(exampleContact.localId());
+    m_manager.removeContact(exampleContact.id());
 //! [Synchronously removing a contact from a manager]
 
 //! [Synchronously creating a new relationship between two contacts]
@@ -231,7 +231,7 @@ void contactManipulation()
 //! [Synchronously retrieving relationships between contacts]
 
 //! [Retrieving relationships from cache]
-    exampleGroup = m_manager.contact(exampleGroup.localId()); // refresh the group contact
+    exampleGroup = m_manager.contact(exampleGroup.id()); // refresh the group contact
     groupRelationships = exampleGroup.relationships(QContactRelationship::HasMember);
     for (int i = 0; i < groupRelationships.size(); i++) {
         if (groupRelationships.at(i).second() == exampleGroupMember.id()) {
@@ -290,7 +290,7 @@ void addContact(QContactManager* cm)
 
 void callContact(QContactManager* cm)
 {
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
 
     /* Get this contact's first phone number */
@@ -322,7 +322,7 @@ void matchCall(QContactManager* cm, const QString& incomingCallNbr)
     phoneFilter.setValue(incomingCallNbr);
     phoneFilter.setMatchFlags(QContactFilter::MatchExactly);
 
-    QList<QContactLocalId> matchingContacts = cm->contactIds(phoneFilter);
+    QList<QContactId> matchingContacts = cm->contactIds(phoneFilter);
     if (matchingContacts.size() == 0) {
         qDebug() << "Incoming call from unknown contact (" << incomingCallNbr << ")";
     } else {
@@ -337,7 +337,7 @@ void matchCall(QContactManager* cm, const QString& incomingCallNbr)
 //! [Viewing a specific detail of a contact]
 void viewSpecificDetail(QContactManager* cm)
 {
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
     qDebug() << "The first phone number of" << a.displayLabel()
              << "is" << a.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldNumber);
@@ -347,7 +347,7 @@ void viewSpecificDetail(QContactManager* cm)
 //! [Viewing the details of a contact]
 void viewDetails(QContactManager* cm)
 {
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
     qDebug() << "Viewing the details of" << a.displayLabel();
 
@@ -368,7 +368,7 @@ void viewDetails(QContactManager* cm)
 //! [Demonstration of detail sharing semantics]
 void detailSharing(QContactManager* cm)
 {
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
     qDebug() << "Demonstrating detail sharing semantics with" << a.displayLabel();
 
@@ -440,7 +440,7 @@ void detailSharing(QContactManager* cm)
 //! [Modifying an existing contact]
 void editView(QContactManager* cm)
 {
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
     qDebug() << "Modifying the details of" << a.displayLabel();
 
@@ -468,7 +468,7 @@ void editView(QContactManager* cm)
 void displayLabel()
 {
     QContactManager *manager = new QContactManager();
-    QContactLocalId myId;
+    QContactId myId;
 //! [Updating the display label of a contact]
     /* Retrieve a contact */
     QContact c = manager->contact(myId);

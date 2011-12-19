@@ -48,7 +48,7 @@
 #include <qcontactabstractrequest.h>
 #include <qcontactsaverequest.h>
 #include <qcontactfetchrequest.h>
-#include <qcontactlocalidfetchrequest.h>
+#include <qcontactidfetchrequest.h>
 #include <qcontactremoverequest.h>
 #include <qcontact.h>
 #include <qcontactchangeset.h>
@@ -95,16 +95,19 @@ private:
     void handleContactSaveRequest(QContactSaveRequest* req);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
-    void handleContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req);
+    void handleContactIdFetchRequest(QContactIdFetchRequest* req);
     void sendJsonDbNotificationsRequest();
+
     void handleContactSaveResponse(QContactSaveRequest *req, const QVariant &object, int index);
     void handleContactSavePrefetchResponse(QContactSaveRequest *req, const QVariant &object, int index);
     void handleContactFetchResponse(QContactFetchRequest *req, const QVariant &object);
     void handleContactRemoveResponse(QContactRemoveRequest *req);
-    void handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest *req, const QVariant &object);
+    void handleContactIdFetchResponse(QContactIdFetchRequest *req, const QVariant &object);
     void handleJsonDbNotificationsRequestError(QContactManager::Error error);
 
     void startTimer();
+    QString convertContactIdToUuid(QContactId &id);
+    QContactId convertUuidtoContactId(QString &id);
 
     QContactJsonDbEngine* m_engine;
     JsonDbClient* m_jsonDb;

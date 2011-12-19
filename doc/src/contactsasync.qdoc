@@ -76,7 +76,7 @@ There are four different types of operation which are supported by the asynchron
   \o Remove contacts
 \endlist
 
-These operations are supported via the QContactLocalIdFetchRequest, QContactFetchRequest,
+These operations are supported via the QContactIdFetchRequest, QContactFetchRequest,
 QContactSaveRequest and QContactRemoveRequest classes, respectively.
 
 The synchronous API offered by the QContactManager class to allow manipulation of contacts consists
@@ -87,7 +87,7 @@ of the following functions:
   \o contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
   \o contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
   \o saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
-  \o removeContacts(QList<QContactLocalId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
+  \o removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
 \endlist
 
 \section3 \bold{Relationship Manipulation}

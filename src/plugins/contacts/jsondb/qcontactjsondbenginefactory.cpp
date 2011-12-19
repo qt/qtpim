@@ -40,6 +40,7 @@
 ****************************************************************************/
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbenginefactory.h"
+#include "qcontactjsondbid.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -49,6 +50,16 @@ QContactManagerEngine* QContactJsonDbEngineFactory::engine(const QMap<QString, Q
     Q_UNUSED(error);
 
     return new QContactJsonDbEngine(); //Manager engine will take ownership of this object.
+}
+
+
+QContactEngineId *QContactJsonDbEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &idString) const
+{
+    Q_UNUSED(parameters)
+    QContactJsonDbId *retn = new QContactJsonDbId;
+    if (!idString.isEmpty())
+        retn->setContactId(idString);
+    return retn;
 }
 
 QString QContactJsonDbEngineFactory::managerName() const

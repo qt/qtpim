@@ -39,6 +39,7 @@ PUBLIC_HEADERS += \
     qcontactsglobal.h \
     qcontacts.h \
     qlatin1constant.h \
+    qcontactengineid.h \
 
 PRIVATE_HEADERS += \
     qcontact_p.h \
@@ -50,7 +51,6 @@ PRIVATE_HEADERS += \
     qcontactdetail_p.h \
     qcontactfetchhint_p.h \
     qcontactfilter_p.h \
-    qcontactid_p.h \
     qcontactmanager_p.h \
     qcontactmanagerenginev2wrapper_p.h \
     qcontactrelationship_p.h \
@@ -77,7 +77,8 @@ SOURCES += \
     qcontactmanagerenginev2wrapper_p.cpp \
     qcontactobserver.cpp \
     qcontactrelationship.cpp \
-    qcontactsortorder.cpp
+    qcontactsortorder.cpp \
+    qcontactengineid.cpp \
 
 contains(QT_CONFIG, jsondb) {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb

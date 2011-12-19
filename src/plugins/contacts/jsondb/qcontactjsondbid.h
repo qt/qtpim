@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the Qt Pim Module
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTIDLISTFILTER_P_H
-#define QCONTACTIDLISTFILTER_P_H
+#ifndef QCONTACTJSONDBID_H
+#define QCONTACTJSONDBID_H
 
 //
 //  W A R N I N G
@@ -53,65 +53,39 @@
 // We mean it.
 //
 
-#include "qcontactfilter_p.h"
-#include "qcontactfilter.h"
+#include <qcontactengineid.h>
+#include <qcontactid.h>
 
-#include <QString>
-#include <QVariant>
+#include <QtCore/qdebug.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactLocalIdFilterPrivate : public QContactFilterPrivate
+class QContactJsonDbId : public QContactEngineId
 {
 public:
-    QContactLocalIdFilterPrivate()
-        : QContactFilterPrivate()
-    {
-    }
+    QContactJsonDbId();
+    QContactJsonDbId(const QString &contactId);
+    ~QContactJsonDbId();
+    QContactJsonDbId(const QContactJsonDbId &other);
 
-    QContactLocalIdFilterPrivate(const QContactLocalIdFilterPrivate& other)
-        : QContactFilterPrivate(other),
-        m_ids(other.m_ids)
-    {
-    }
+    bool isEqualTo(const QContactEngineId *other) const;
+    bool isLessThan(const QContactEngineId *other) const;
 
-    bool compare(const QContactFilterPrivate* other) const
-    {
-        const QContactLocalIdFilterPrivate *od = static_cast<const QContactLocalIdFilterPrivate*>(other);
-        if (m_ids != od->m_ids)
-            return false;
-        return true;
-    }
+    QString managerUri() const;
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
-    {
-        if (formatVersion == 1) {
-            stream << m_ids;
-        }
-        return stream;
-    }
+    QContactEngineId *clone() const;
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
-    {
-        if (formatVersion == 1) {
-            stream >> m_ids;
-        }
-        return stream;
-    }
+    QString toString() const;
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
-    {
-        dbg.nospace() << "QContactLocalIdFilter(";
-        dbg.nospace() << "ids=" << m_ids;
-        dbg.nospace() << ")";
-        return dbg.maybeSpace();
-    }
+    QDebug &debugStreamOut(QDebug &dbg) const;
 #endif
 
-    Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactLocalIdFilter, QContactFilter::LocalIdFilter)
+    uint hash() const;
+    void setContactId(const QString &contactId);
 
-    QList<QContactLocalId> m_ids;
+private:
+    QString m_contactId;
 };
 
 QTCONTACTS_END_NAMESPACE

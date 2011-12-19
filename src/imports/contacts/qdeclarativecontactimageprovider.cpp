@@ -74,7 +74,7 @@ QImage ContactThumbnailImageProvider::requestImage(const QString &id, QSize *siz
         m_managers.insert(managerUri, manager);
     }
 
-    QContact c = manager->contact(localId);
+    QContact c = manager->contact(QContactId::fromString(localId));
 
     QImage image(
             req_size.width() > 0 ? req_size.width() : 100,

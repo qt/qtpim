@@ -75,7 +75,7 @@ public:
     enum RequestType {
         InvalidRequest = 0,
         ContactFetchRequest,
-        ContactLocalIdFetchRequest,
+        ContactIdFetchRequest,
         ContactRemoveRequest,
         ContactSaveRequest,
         DetailDefinitionFetchRequest,

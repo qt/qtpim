@@ -256,7 +256,7 @@ ApplicationWindow {
         }
 
         IdFilter {
-            id: localIdFilter
+            id: idFilter
             ids: {searchField.text}
         }
 
@@ -390,7 +390,7 @@ ApplicationWindow {
                                 contactDetailFilter.detail = detail
                                 contactDetailFilter.field = field
                             } else {
-                                currentFilter = localIdFilter
+                                currentFilter = idFilter
                             }
                         }
                     }

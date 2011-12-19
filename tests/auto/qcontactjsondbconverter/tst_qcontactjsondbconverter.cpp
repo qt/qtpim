@@ -55,12 +55,13 @@
 #include <QContactPhoneNumber>
 #include <QContactAddress>
 #include <QContactUrl>
-#include <QContactLocalIdFilter>
+#include <QContactIdFilter>
 #include <QContactId>
 
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbstring.h"
+#include "qcontactjsondbid.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -771,9 +772,10 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     // Functionality still missing
 
     // Localid filtering
-    QContactLocalIdFilter idFilter;
-    QContactLocalId testId = "123";
-    QList<QContactLocalId> ids;
+    QContactIdFilter idFilter;
+    QContactJsonDbId *engineId = new QContactJsonDbId("123");
+    QContactId testId (engineId);
+    QList<QContactId> ids;
     ids.append(testId);
     idFilter.setIds(ids);
     request.setFilter(idFilter);
@@ -821,11 +823,12 @@ void tst_QcontactJsondbConverter::convertSortOrderTest()
 void tst_QcontactJsondbConverter::convertIdTest()
 {
     QContactJsonDbConverter converter;
-    QContactJsonDbEngine engine;
-    QContactId qid;
-    QString id = "123";
-    qid = converter.convertId(id, engine);
-    QCOMPARE(qid.localId(), id);
+    QString fakeId("123");
+    QContactJsonDbId *engineId = new QContactJsonDbId(fakeId);
+    QContactId qid(engineId);
+    QString jsonId;
+    jsonId = converter.convertId(qid);
+    QCOMPARE(jsonId, fakeId);
 }
 
 

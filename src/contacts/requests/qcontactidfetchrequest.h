@@ -52,14 +52,14 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactLocalIdFetchRequestPrivate;
-class Q_CONTACTS_EXPORT QContactLocalIdFetchRequest : public QContactAbstractRequest
+class QContactIdFetchRequestPrivate;
+class Q_CONTACTS_EXPORT QContactIdFetchRequest : public QContactAbstractRequest
 {
     Q_OBJECT
 
 public:
-    QContactLocalIdFetchRequest(QObject* parent = 0);
-    ~QContactLocalIdFetchRequest();
+    QContactIdFetchRequest(QObject* parent = 0);
+    ~QContactIdFetchRequest();
 
     /* Selection, restriction and sorting */
     void setFilter(const QContactFilter& filter);
@@ -68,12 +68,12 @@ public:
     QList<QContactSortOrder> sorting() const;
 
     /* Results */
-    QList<QContactLocalId> ids() const;
+    QList<QContactId> ids() const;
 
 private:
-    Q_DISABLE_COPY(QContactLocalIdFetchRequest)
+    Q_DISABLE_COPY(QContactIdFetchRequest)
     friend class QContactManagerEngine;
-    Q_DECLARE_PRIVATE_D(d_ptr, QContactLocalIdFetchRequest)
+    Q_DECLARE_PRIVATE_D(d_ptr, QContactIdFetchRequest)
 };
 
 QTCONTACTS_END_NAMESPACE

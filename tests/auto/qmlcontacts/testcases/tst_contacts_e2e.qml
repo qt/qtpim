@@ -369,7 +369,7 @@ property Contact testContact
 
             // access contactId
             console.log("contactId is: " + JSON.stringify(contact.contactId) )
-            compare(contact.contactId, "")
+            compare(contact.contactId, "qtcontacts:::")
 
             // access manager
             console.log("manager is: " + JSON.stringify(contact.manager))

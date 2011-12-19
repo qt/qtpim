@@ -46,6 +46,13 @@
 #include <QSharedDataPointer>
 
 #include <qcontactsglobal.h>
+#include <qcontactengineid.h>
+
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qshareddata.h>
+
 
 QT_BEGIN_NAMESPACE
 class QDataStream;
@@ -53,33 +60,43 @@ QT_END_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-typedef QString QContactLocalId;
+class QContactId;
+Q_CONTACTS_EXPORT uint qHash(const QContactId& key);
 
-class QContactIdPrivate;
+class QContactManagerEngine;
+
 class Q_CONTACTS_EXPORT QContactId
 {
 public:
     QContactId();
     ~QContactId();
 
-    QContactId(const QContactId& other);
-    QContactId& operator=(const QContactId& other);
+    QContactId(const QContactId &other);
+    QContactId& operator=(const QContactId &other);
+    explicit QContactId(QContactEngineId *engineId);
 
     bool operator==(const QContactId& other) const;
     bool operator!=(const QContactId& other) const;
     bool operator<(const QContactId& other) const;
 
     QString managerUri() const;
-    QContactLocalId localId() const;
-
-    void setManagerUri(const QString& uri);
-    void setLocalId(const QContactLocalId& id);
+    bool isNull() const;
+    QString toString() const;
+    static QContactId fromString(const QString &idString);
+    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString);
+    static bool parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString);
+    static QString escapeContactIdParam(const QString &param);
 
 private:
-    QSharedDataPointer<QContactIdPrivate> d;
+    QSharedDataPointer<QContactEngineId> d;
+    friend class QContactManagerEngine;
+    Q_CONTACTS_EXPORT friend uint qHash(const QContactId &key);
+
+#ifndef QT_NO_DEBUG_STREAM
+    Q_CONTACTS_EXPORT friend QDebug operator<<(QDebug dbg, const QContactId &id);
+#endif
 };
 
-Q_CONTACTS_EXPORT uint qHash(const QContactId& key);
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactId& id);
 #endif
@@ -93,6 +110,9 @@ QTCONTACTS_END_NAMESPACE
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactId), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
+
+Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactId));
+
 
 #endif
 

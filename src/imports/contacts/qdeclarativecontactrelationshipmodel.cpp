@@ -171,8 +171,8 @@ void QDeclarativeContactRelationshipModel::setManager(const QString& manager)
 {
     if (d->m_manager == 0 || manager != d->m_manager->managerName() ) {
         d->m_manager = new QContactManager(manager,QMap<QString,QString>(), this);
-        connect(d->m_manager,SIGNAL(relationshipsAdded(const QList<QContactLocalId>&)), this, SLOT(fetchAgain()));
-        connect(d->m_manager,SIGNAL(relationshipsRemoved(const QList<QContactLocalId>&)), this, SLOT(fetchAgain()));
+        connect(d->m_manager,SIGNAL(relationshipsAdded(const QList<QContactId>&)), this, SLOT(fetchAgain()));
+        connect(d->m_manager,SIGNAL(relationshipsRemoved(const QList<QContactId>&)), this, SLOT(fetchAgain()));
         emit managerChanged();
     }
 }
@@ -276,7 +276,7 @@ QVariant QDeclarativeContactRelationshipModel::data(const QModelIndex &index, in
     if (role == RelationshipRole) {
         return QVariant::fromValue(dcr);
     } else if (role == Qt::DisplayRole) {
-        return QString("%1 %2 %3").arg(dcr->relationship().first().id().localId()).arg(dcr->relationship().relationshipType()).arg(dcr->relationship().second().id().localId());
+        return QString(QStringLiteral("%1 %2 %3")).arg(dcr->relationship().first().id().toString()).arg(dcr->relationship().relationshipType()).arg(dcr->relationship().second().id().toString());
     }
     return QVariant();
 }

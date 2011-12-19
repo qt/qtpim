@@ -254,7 +254,7 @@ QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::contact
 */
 QString QDeclarativeContact::contactId() const
 {
-    return m_id.localId();
+    return m_id.toString();
 }
 
 /*!

@@ -155,7 +155,7 @@ public:
     QDebug& debugStreamOut(QDebug& dbg) const
     {
         dbg.nospace() << "QContactFetchByIdRequest(\n"
-                      << "* localIds=" << m_localIds << ",\n"
+                      << "* contactIds=" << m_contactIds << ",\n"
                       << "* contacts=" << m_contacts << ",\n"
                       << "* fetchHint=" << m_fetchHint << ",\n"
                       << "* errorMap=" << m_errors;
@@ -164,7 +164,7 @@ public:
     }
 #endif
 
-    QList<QContactLocalId> m_localIds;
+    QList<QContactId> m_contactIds;
     QContactFetchHint m_fetchHint;
 
     QList<QContact> m_contacts;
@@ -199,31 +199,31 @@ public:
     }
 #endif
 
-    QList<QContactLocalId> m_contactIds;
+    QList<QContactId> m_contactIds;
     QMap<int, QContactManager::Error> m_errors;
 };
 
-class QContactLocalIdFetchRequestPrivate : public QContactAbstractRequestPrivate
+class QContactIdFetchRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
-    QContactLocalIdFetchRequestPrivate()
+    QContactIdFetchRequestPrivate()
         : QContactAbstractRequestPrivate()
     {
     }
 
-    ~QContactLocalIdFetchRequestPrivate()
+    ~QContactIdFetchRequestPrivate()
     {
     }
 
     QContactAbstractRequest::RequestType type() const
     {
-        return QContactAbstractRequest::ContactLocalIdFetchRequest;
+        return QContactAbstractRequest::ContactIdFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
     QDebug& debugStreamOut(QDebug& dbg) const
     {
-        dbg.nospace() << "QContactLocalIdFetchRequest("
+        dbg.nospace() << "QContactIdFetchRequest("
                       << "filter=" << m_filter << ","
                       << "sorting=" << m_sorting << ","
                       << "ids=" << m_ids;
@@ -235,7 +235,7 @@ public:
     QContactFilter m_filter;
     QList<QContactSortOrder> m_sorting;
 
-    QList<QContactLocalId> m_ids;
+    QList<QContactId> m_ids;
 };
 
 class QContactRelationshipFetchRequestPrivate : public QContactAbstractRequestPrivate

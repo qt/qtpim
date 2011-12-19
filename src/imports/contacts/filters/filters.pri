@@ -5,7 +5,7 @@ HEADERS += \
     filters/qdeclarativecontactchangelogfilter_p.h \
     filters/qdeclarativecontactdetailfilter_p.h \
     filters/qdeclarativecontactdetailrangefilter_p.h \
-    filters/qdeclarativecontactlocalidfilter_p.h \
+    filters/qdeclarativecontactidfilter_p.h \
     filters/qdeclarativecontactinvalidfilter_p.h \
     filters/qdeclarativecontactintersectionfilter_p.h \
     filters/qdeclarativecontactrelationshipfilter_p.h \

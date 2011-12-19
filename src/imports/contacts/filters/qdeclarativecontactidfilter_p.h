@@ -39,34 +39,76 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTLOCALIDFILTER_H
-#define QCONTACTLOCALIDFILTER_H
+#ifndef QDECLARATIVECONTACTIDFILTER_H
+#define QDECLARATIVECONTACTIDFILTER_H
 
-#include "qcontactfilter.h"
-#include "qcontactid.h"
+#include "qdeclarativecontactfilter_p.h"
+#include "qcontactidfilter.h"
+
+#include <QStringList>
+#include <QSet>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactLocalIdFilterPrivate;
-class Q_CONTACTS_EXPORT QContactLocalIdFilter : public QContactFilter
+class QDeclarativeContactIdFilter : public QDeclarativeContactFilter
 {
+    Q_OBJECT
+    Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
+    Q_CLASSINFO("DefaultProperty", "ids")
 public:
-    QContactLocalIdFilter();
-    QContactLocalIdFilter(const QContactFilter& other);
+    QDeclarativeContactIdFilter(QObject* parent = 0)
+        :QDeclarativeContactFilter(parent)
+    {
+        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+    }
 
-    /* Mutators */
-    void setIds(const QList<QContactLocalId>& ids);
-    void add(const QContactLocalId& id);
-    void remove(const QContactLocalId& id);
-    void clear();
+    QStringList ids() const
+    {
+        return m_ids;
+    }
 
-    /* Accessors */
-    QList<QContactLocalId> ids() const;
+    void setIds(const QStringList& ids)
+    {
+        foreach (const QString& id, ids) {
+            if (!m_ids.contains(id)) {
+                m_ids = ids;
+                emit valueChanged();
+                return;
+            }
+        }
+
+        foreach (const QString& id, m_ids) {
+            if (!ids.contains(id)) {
+                m_ids = ids;
+                emit valueChanged();
+            }
+        }
+    }
+
+    QContactFilter filter() const
+    {
+        QContactIdFilter f;
+        QList<QContactId> ids;
+
+        foreach (const QString& id, m_ids) {
+            QContactId contactId = QContactId::fromString(id);
+            ids << contactId;
+        }
+
+        f.setIds(ids);
+        return f;
+    }
+signals:
+    void valueChanged();
 
 private:
-    Q_DECLARE_CONTACTFILTER_PRIVATE(QContactLocalIdFilter)
+        QStringList m_ids;
 };
 
+
+
 QTCONTACTS_END_NAMESPACE
+
+QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactIdFilter))
 
 #endif

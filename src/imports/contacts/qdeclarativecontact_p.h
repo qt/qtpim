@@ -60,7 +60,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (bool modified READ modified)
 
     Q_PROPERTY(QDeclarativeContactType::ContactType type READ type NOTIFY contactChanged)
-    Q_PROPERTY (QContactLocalId contactId READ contactId NOTIFY contactIdChanged)
+    Q_PROPERTY (QString contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY managerChanged)
     Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactAddress* address READ address NOTIFY contactChanged)
@@ -109,7 +109,7 @@ public:
 
     QDeclarativeContactType::ContactType type() const;
 
-    QContactLocalId contactId() const;
+    QString contactId() const;
     QString manager() const;
     QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails();
 
@@ -203,8 +203,6 @@ private:
 };
 
 QTCONTACTS_END_NAMESPACE
-
-Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactLocalId))
 
 QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContact))
 

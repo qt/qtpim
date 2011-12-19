@@ -66,11 +66,12 @@
 #include "qcontactrelationshipfilter.h"
 #include "qcontactintersectionfilter.h"
 #include "qcontactunionfilter.h"
-#include "qcontactlocalidfilter.h"
+#include "qcontactidfilter.h"
 
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbstring.h"
+#include "qcontactjsondbid.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -93,12 +94,10 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     if (stringValue.isEmpty()) {
         return false;
     }
+    contact->setId(QContactId(new QContactJsonDbId(stringValue)));
 
     // TODO: other types
     contact->setType(QContactType::TypeContact);
-
-    QContactId newId = convertId(stringValue, engine);
-    contact->setId(newId);
 
     // Go through all fields in loop.
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
@@ -113,7 +112,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
                 personid->setPersonId(stringValue);
             }
             else { // if no personid is stored in backend, we return the local
-                personid->setPersonId(newId.localId());
+                personid->setPersonId(contact->id().toString());
             }
         } else if (i.key() == detailsToJsonMapping.value(QContactName::DefinitionName)) {
             //name
@@ -316,7 +315,7 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
 
     // Each contact should have at least a uuid and personid in JsonDb
     if (personid->isEmpty())
-         personid->setPersonId(newId.localId());
+         personid->setPersonId(contact->id().toString());
     detailList << personid;
 
     QContactDetail* detail;
@@ -353,11 +352,6 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
 
 bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact& contact) {
 
-    if(!(contact.id().localId().isEmpty() || contact.id().managerUri().isEmpty())) {
-        object->insert(QContactJsonDbStr::uuid(), convertId(contact.id().localId()));
-    }
-    // get all available contact details.
-    object->insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
     QList<QContactDetail> details = contact.details();
     QContactDetail detail;
     QContactName* name;
@@ -380,6 +374,13 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
     QVariantList organizations;
     QVariantList addresses;
     QVariantMap embeddedDetailsMap;
+
+    if (!contact.id().isNull()) {
+        QString jsonUuid = contact.id().toString().remove (QContactJsonDbStr::managerName());
+        object->insert (QContactJsonDbStr::uuid(), jsonUuid);
+    }
+    // get all available contact details.
+    object->insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
 
     // Quickfix for preserving possible extra fields in jsondb contact.
     // Wipe QContact fields that may be empty/deleted, preserve all other data.
@@ -622,11 +623,11 @@ QString QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *reque
         return newJsonDbQuery;
         break;
     }
-    case QContactAbstractRequest::ContactLocalIdFetchRequest: {
+    case QContactAbstractRequest::ContactIdFetchRequest: {
         newJsonDbQuery.append("[=");
         newJsonDbQuery.append(QContactJsonDbStr::uuid());
         newJsonDbQuery.append("]");
-        QContactLocalIdFetchRequest* idReq = static_cast<QContactLocalIdFetchRequest*>(request);
+        QContactIdFetchRequest* idReq = static_cast<QContactIdFetchRequest*>(request);
         QContactFilter filter = idReq->filter();
         newJsonDbQuery.append(convertFilter(filter));
         QList<QContactSortOrder> sorting = idReq->sorting();
@@ -706,13 +707,13 @@ QString QContactJsonDbConverter::convertFilter(const QContactFilter &filter) con
     case QContactFilter::ContactDetailRangeFilter: {
         break;
     }
-    case QContactFilter::LocalIdFilter: {
-        QContactLocalIdFilter idFilter = (QContactLocalIdFilter) filter;
-        QList<QContactLocalId> ids = idFilter.ids();
+    case QContactFilter::IdFilter: {
+        QContactIdFilter idFilter = (QContactIdFilter) filter;
+        QList<QContactId> ids = idFilter.ids();
         if (!ids.isEmpty()) {
             newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() +
                                   " in [");
-            foreach (QContactLocalId id, ids) {
+            foreach (const QContactId &id, ids) {
                 newJsonDbQuery.append("\"" + convertId(id) + "\"");
                 newJsonDbQuery.append(",");
             }
@@ -756,18 +757,12 @@ QString QContactJsonDbConverter::convertSortOrder(const QList<QContactSortOrder>
     return newJsonDbQuery;
 }
 
-QContactId QContactJsonDbConverter::convertId(const QString& id, const QContactJsonDbEngine& engine) const {
-    QContactId newId;
-    //QContactLocalId localId = QT_PREPEND_NAMESPACE(qHash)(id);
-    QContactLocalId localId = id;
-    newId.setLocalId(localId);
-    newId.setManagerUri(engine.managerUri());
-    return  newId;
-}
+QString QContactJsonDbConverter::convertId(const QContactId &id) const
+{
+    if (id.isNull())
+        return QString();
 
-QString QContactJsonDbConverter::convertId(const QContactLocalId& id) const {
-    // TODO: CHECK THIS AND DO IT PROPERLY !!
-    return id;
+    return id.toString().remove(QContactJsonDbStr::managerName());
 }
 
 void QContactJsonDbConverter::initializeMappings()
@@ -952,13 +947,13 @@ QString QContactJsonDbConverter::jsonDbNotificationObjectToContactType(const QVa
     return object.value(QContactJsonDbStr::type()).toString();
 }
 
-QContactLocalId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QVariantMap &object) const
+QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QVariantMap &object) const
 {
     QString jsonUuid = object.value(QContactJsonDbStr::uuid()).toString();
     if (jsonUuid.isEmpty())
-        return QContactLocalId();
+        return QContactId();
     else
-        return QContactLocalId(jsonUuid);
+        return QContactId(new QContactJsonDbId(jsonUuid));
 }
 
 QTCONTACTS_END_NAMESPACE

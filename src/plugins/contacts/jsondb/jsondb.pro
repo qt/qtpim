@@ -18,10 +18,13 @@ HEADERS += qcontactjsondbenginefactory.h \
     qcontactjsondbrequestmanager.h \
     qcontactjsondbconverter.h \
     qcontactjsondbglobal.h \
+    qcontactjsondbid.h \
     qcontactjsondbstring.h
+
 SOURCES += qcontactjsondbenginefactory.cpp \
     qcontactjsondbengine.cpp \
     qcontactjsondbrequesthandler.cpp \
     qcontactjsondbrequestmanager.cpp \
     qcontactjsondbconverter.cpp \
+    qcontactjsondbid.cpp \
     qcontactjsondbstring.cpp

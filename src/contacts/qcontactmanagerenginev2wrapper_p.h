@@ -85,19 +85,19 @@ public:
     virtual QString managerName() const {return m_engine->managerName();}
     virtual QMap<QString, QString> managerParameters() const {return m_engine->managerParameters();}
     virtual int managerVersion() const {return m_engine->managerVersion();}
-    virtual QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const {return m_engine->contactIds(filter, sortOrders, error);}
+    virtual QList<QContactId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const {return m_engine->contactIds(filter, sortOrders, error);}
     virtual QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint, QContactManager::Error* error) const {return m_engine->contacts(filter, sortOrders, fetchHint, error);}
-    virtual QContact contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const {return m_engine->contact(contactId, fetchHint, error);}
+    virtual QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const {return m_engine->contact(contactId, fetchHint, error);}
     virtual bool saveContact(QContact* contact, QContactManager::Error* error) {return m_engine->saveContact(contact, error);}
-    virtual bool removeContact(const QContactLocalId& contactId, QContactManager::Error* error) {return m_engine->removeContact(contactId, error);}
+    virtual bool removeContact(const QContactId& contactId, QContactManager::Error* error) {return m_engine->removeContact(contactId, error);}
     virtual bool saveRelationship(QContactRelationship* relationship, QContactManager::Error* error) {return m_engine->saveRelationship(relationship, error);}
     virtual bool removeRelationship(const QContactRelationship& relationship, QContactManager::Error* error) {return m_engine->removeRelationship(relationship, error);}
     virtual bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->saveContacts(contacts, errorMap, error);}
-    virtual bool removeContacts(const QList<QContactLocalId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeContacts(contactIds, errorMap, error);}
+    virtual bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeContacts(contactIds, errorMap, error);}
     virtual QContact compatibleContact(const QContact& original, QContactManager::Error* error) const {return m_engine->compatibleContact(original, error);}
     virtual QString synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const {return m_engine->synthesizedDisplayLabel(contact, error);}
-    virtual bool setSelfContactId(const QContactLocalId& contactId, QContactManager::Error* error) {return m_engine->setSelfContactId(contactId, error);}
-    virtual QContactLocalId selfContactId(QContactManager::Error* error) const {return m_engine->selfContactId(error);}
+    virtual bool setSelfContactId(const QContactId& contactId, QContactManager::Error* error) {return m_engine->setSelfContactId(contactId, error);}
+    virtual QContactId selfContactId(QContactManager::Error* error) const {return m_engine->selfContactId(error);}
     virtual QList<QContactRelationship> relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const {return m_engine->relationships(relationshipType, participant, role, error);}
     virtual bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->saveRelationships(relationships, errorMap, error);}
     virtual bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeRelationships(relationships, errorMap, error);}

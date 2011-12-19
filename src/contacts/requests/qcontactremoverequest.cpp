@@ -78,10 +78,10 @@ QContactRemoveRequest::~QContactRemoveRequest()
   Sets the id of the contact which will be removed to \a contactId.
   Equivalent to calling:
   \code
-      setContactIds(QList<QContactLocalId>() << contactIds);
+      setContactIds(QList<QContactId>() << contactIds);
   \endcode
  */
-void QContactRemoveRequest::setContactId(const QContactLocalId& contactId)
+void QContactRemoveRequest::setContactId(const QContactId& contactId)
 {
     Q_D(QContactRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -91,7 +91,7 @@ void QContactRemoveRequest::setContactId(const QContactLocalId& contactId)
 
 /*! Sets the list of ids of contacts which will be removed to \a contactIds
 */
-void QContactRemoveRequest::setContactIds(const QList<QContactLocalId>& contactIds)
+void QContactRemoveRequest::setContactIds(const QList<QContactId>& contactIds)
 {
     Q_D(QContactRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -100,7 +100,7 @@ void QContactRemoveRequest::setContactIds(const QList<QContactLocalId>& contactI
 
 /*! Returns the list of ids of contacts which will be removed
 */
-QList<QContactLocalId> QContactRemoveRequest::contactIds() const
+QList<QContactId> QContactRemoveRequest::contactIds() const
 {
     Q_D(const QContactRemoveRequest);
     QMutexLocker ml(&d->m_mutex);

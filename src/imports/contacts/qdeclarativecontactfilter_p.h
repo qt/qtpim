@@ -72,7 +72,7 @@ public:
         RelationshipFilter = QContactFilter::RelationshipFilter,
         IntersectionFilter = QContactFilter::IntersectionFilter,
         UnionFilter = QContactFilter::UnionFilter,
-        IdFilter = QContactFilter::LocalIdFilter,
+        IdFilter = QContactFilter::IdFilter,
         DefaultFilter = QContactFilter::DefaultFilter
     };
 

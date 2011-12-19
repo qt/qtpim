@@ -537,13 +537,13 @@ ContactsSavingTestCase {
 
     function removeContactFromJsonDb(contact) {
         logDebug("removeContactFromJsonDb(): remove contact id " + contact.contactId);
-
+        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
         var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
-                '[?_uuid="' + contact.contactId + '"]';
+                '[?_uuid="' + jsonUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
         var object = jsonDb.lastResult[0];
-
+        verify(object, "fetched given contact from jsondb");
         jsonDb.removeAndSignal(object);
         jsonDbSpy.wait();
 
@@ -553,10 +553,11 @@ ContactsSavingTestCase {
 
     // updates only the first name at the moment!
     function updateContactInJsonDb(contact, update) {
-        logDebug("updateContactInJsonDb(): update contact id " + contact.contactId);
+        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
+        logDebug("updateContactInJsonDb(): update contact id " + jsonUuid);
 
         var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
-                '[?_uuid="' + contact.contactId + '"]';
+                '[?_uuid="' + jsonUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
         var object = jsonDb.lastResult[0];
@@ -593,5 +594,10 @@ ContactsSavingTestCase {
             compare(actual.email.emailAddress, expected.email.emailAddress,
                     'email.emailAddress');
         }
+    }
+
+    function convertContactIdTojsonUuid(contactId) {
+        var jsonUuid = contactId.replace("qtcontacts:jsondb::","");
+        return jsonUuid;
     }
 }

@@ -186,6 +186,15 @@ void QContactManagerData::createEngine(const QString& managerName, const QMap<QS
 }
 
 
+/* Caller takes ownership of the id */
+QContactEngineId* QContactManagerData::createEngineContactId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
+{
+    loadFactories();
+    QContactManagerEngineFactory *engineFactory = m_engines.value(managerName);
+    return engineFactory ? engineFactory->createContactEngineId(parameters, engineIdString) : NULL;
+}
+
+
 void QContactManagerData::loadStaticFactories()
 {
     if (!m_discoveredStatic) {
@@ -204,6 +213,7 @@ void QContactManagerData::loadStaticFactories()
             QContactManagerEngineFactory *f = qobject_cast<QContactManagerEngineFactory*>(staticPlugins.at(i));
             if (f) {
                 QString name = f->managerName();
+
 #if !defined QT_NO_DEBUG
                 if (showDebug)
                     qDebug() << "Static: found an engine plugin" << f << "with name" << name;
@@ -317,15 +327,15 @@ void QContactManagerData::registerObserver(QContactManager* manager, QContactObs
 
     QContactManagerData* d = QContactManagerData::get(manager);
 
-    d->m_observerForContact.insert(observer->contactLocalId(), observer);
+    d->m_observerForContact.insert(observer->contactId(), observer);
 
     // If this is the first observer, connect to the engine too
     if (d->m_observerForContact.size() == 1) {
         // This takes advantage of the manager connectNotify code
-        QObject::connect(manager, SIGNAL(contactsChanged(QList<QContactLocalId>)),
-                manager, SLOT(_q_contactsUpdated(QList<QContactLocalId>)));
-        QObject::connect(manager, SIGNAL(contactsRemoved(QList<QContactLocalId>)),
-                manager, SLOT(_q_contactsDeleted(QList<QContactLocalId>)));
+        QObject::connect(manager, SIGNAL(contactsChanged(QList<QContactId>)),
+                manager, SLOT(_q_contactsUpdated(QList<QContactId>)));
+        QObject::connect(manager, SIGNAL(contactsRemoved(QList<QContactId>)),
+                manager, SLOT(_q_contactsDeleted(QList<QContactId>)));
     }
 }
 
@@ -335,24 +345,24 @@ void QContactManagerData::unregisterObserver(QContactManager* manager, QContactO
 
     QContactManagerData* d = QContactManagerData::get(manager);
 
-    QContactLocalId key = d->m_observerForContact.key(observer);
-    if (!key.isEmpty()) {
+    QContactId key = d->m_observerForContact.key(observer);
+    if (!key.isNull()) {
         d->m_observerForContact.remove(key, observer);
 
         // If there are now no more observers, disconnect from the engine
         if (d->m_observerForContact.size() == 0) {
             // This takes advantage of the manager disconnectNotify code
-            QObject::disconnect(manager, SIGNAL(contactsChanged(QList<QContactLocalId>)),
-                    manager, SLOT(_q_contactsUpdated(QList<QContactLocalId>)));
-            QObject::disconnect(manager, SIGNAL(contactsRemoved(QList<QContactLocalId>)),
-                    manager, SLOT(_q_contactsDeleted(QList<QContactLocalId>)));
+            QObject::disconnect(manager, SIGNAL(contactsChanged(QList<QContactId>)),
+                    manager, SLOT(_q_contactsUpdated(QList<QContactId>)));
+            QObject::disconnect(manager, SIGNAL(contactsRemoved(QList<QContactId>)),
+                    manager, SLOT(_q_contactsDeleted(QList<QContactId>)));
         }
     }
 }
 
-void QContactManagerData::_q_contactsUpdated(const QList<QContactLocalId>& ids)
+void QContactManagerData::_q_contactsUpdated(const QList<QContactId>& ids)
 {
-    foreach (const QContactLocalId &id, ids) {
+    foreach (const QContactId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
         foreach (QContactObserver* observer, observers) {
             QMetaObject::invokeMethod(observer, "contactChanged");
@@ -360,9 +370,9 @@ void QContactManagerData::_q_contactsUpdated(const QList<QContactLocalId>& ids)
     }
 }
 
-void QContactManagerData::_q_contactsDeleted(const QList<QContactLocalId>& ids)
+void QContactManagerData::_q_contactsDeleted(const QList<QContactId>& ids)
 {
-    foreach (const QContactLocalId &id, ids) {
+    foreach (const QContactId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
         foreach (QContactObserver* observer, observers) {
             QMetaObject::invokeMethod(observer, "contactRemoved");

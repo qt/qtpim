@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the Qt Pim Module
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -53,8 +53,10 @@ public:
     // Version
     const static int ContactJsonDbEngineVersion = 1.0;
 
-    // Engine name
+    // Engine meta-data
     inline const static QString contactJsonDbEngineName() { return QStringLiteral("jsondb"); }
+    inline const static QString managerName() { return QStringLiteral("qtcontacts:jsondb::"); }
+    inline const static QString managerUri() { return QStringLiteral("qtcontacts:jsondb:"); }
 
     // Jsondb column names
     inline const static QString type() { return QStringLiteral("_type"); }

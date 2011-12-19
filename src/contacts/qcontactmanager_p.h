@@ -88,6 +88,7 @@ public:
     void createEngine(const QString& managerName, const QMap<QString, QString>& parameters);
     static QContactManagerData* get(const QContactManager* manager);
     static QContactManagerEngineV2* engine(const QContactManager* manager);
+    static QContactEngineId* createEngineContactId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString);
 
     QContactManagerEngineV2* m_engine;
     QContactManager::Error m_lastError;
@@ -107,10 +108,10 @@ public:
     // Observer stuff
     static void registerObserver(QContactManager *m, QContactObserver* observer);
     static void unregisterObserver(QContactManager *m, QContactObserver* observer);
-    void _q_contactsUpdated(const QList<QContactLocalId>& ids);
-    void _q_contactsDeleted(const QList<QContactLocalId>& ids);
+    void _q_contactsUpdated(const QList<QContactId>& ids);
+    void _q_contactsDeleted(const QList<QContactId>& ids);
 
-    QMultiHash<QContactLocalId, QContactObserver*> m_observerForContact;
+    QMultiHash<QContactId, QContactObserver*> m_observerForContact;
 
     // Lazy connection stuff - reference counted set
     QHash<QByteArray, int> m_connectedSignals;

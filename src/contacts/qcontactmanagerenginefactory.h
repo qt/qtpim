@@ -59,6 +59,7 @@ public:
     virtual QList<int> supportedImplementationVersions() const;
     virtual ~QContactManagerEngineFactory();
     virtual QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error) = 0;
+    virtual QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const = 0;
     virtual QString managerName() const = 0;
 };
 QTCONTACTS_END_NAMESPACE

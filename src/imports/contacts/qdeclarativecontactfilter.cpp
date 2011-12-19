@@ -295,7 +295,7 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass IdFilter QDeclarativeContactLocalIdFilter
+   \qmlclass IdFilter QDeclarativeContactIdFilter
    \brief The IdFilter element provides a filter based around a list of contact ids.
 
    \ingroup qml-contacts-filters
@@ -303,7 +303,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    This element is part of the \bold{QtContacts} module.
 
-   \sa QContactLocalIdFilter
+   \sa QContactIdFilter
  */
 
 /*!

@@ -40,10 +40,18 @@
 ****************************************************************************/
 
 #include "qcontactid.h"
-#include "qcontactid_p.h"
+#include "qcontactmanager_p.h"
+#include "qcontactengineid.h"
 #include <QHash>
 #include <QDebug>
 #include <QDataStream>
+
+QT_BEGIN_NAMESPACE
+template<> QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId)>::clone()
+{
+    return d ? d->clone() : 0;
+}
+QT_END_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -56,32 +64,19 @@ QTCONTACTS_BEGIN_NAMESPACE
   a contact in a particular manager.
 
   It consists of a manager URI which identifies the manager which contains the contact,
-  and the local id of the contact in that manager.
 
-  A "null" QContactId has an empty manager URI, and an invalid QContactLocalId (0).
-
-  \sa QContactLocalId
- */
-
-/*!
-  \typedef QContactLocalId
-  \relates QContactId
-  \brief The QContactLocalId type represents the unique id of a contact within its manager.
-
-  Most operations within a \l QContactManager accept a QContactLocalId.  Some operations
-  (involving links to contacts outside a particular manager) also accept a manager URI - this
-  combination is stored in a \l QContactId.
-
-  An invalid QContactLocalId is represented by a zero (0) value.
+  A QContactId is "null" when it is default-constructed and therefore not associated with a contact in any manager.
 
   \sa QContactId
 */
 
 /*!
- * Constructs a new contact id
+ * Constructs a new contact id. The contact is said to be "null",
+   it has null engine id and isNull() for it returns true. This is the default constructor
+   \sa isNull"
  */
 QContactId::QContactId()
-        : d(new QContactIdPrivate)
+        : d(0)
 {
 }
 
@@ -98,6 +93,18 @@ QContactId::QContactId(const QContactId& other)
 {
 }
 
+/*!
+  Constructs a manager-unique id which wraps the given engine-unique contact id
+  \a engineId.  This id takes ownership of the engine-unique contact id and
+  will delete it when the id goes out of scope.  Engine implementors must not
+  delete the \a engineId or undefined behaviour will occur.
+  The created contact id is not null, if the \a engineId is not null.
+ */
+QContactId::QContactId(QContactEngineId *engineId)
+    : d(engineId)
+{
+}
+
 /*! Assigns the contact id to be equal to \a other
 */
 QContactId& QContactId::operator=(const QContactId& other)
@@ -106,18 +113,25 @@ QContactId& QContactId::operator=(const QContactId& other)
     return *this;
 }
 
-/*! Returns true if the contact id has the same manager URI and local id as \a other
+/*! Returns true if the contact id has the same manager URI
+    and they have equal engine ids. Returns true also, if both are null contact ids.
 */
 bool QContactId::operator==(const QContactId& other) const
 {
-    if (d.constData()->m_managerUri != other.d.constData()->m_managerUri)
-        return false;
-    if (d.constData()->m_localId != other.d.constData()->m_localId)
-        return false;
-    return true;
+    // if both ids are null then they are equal.
+    if (d == 0 && other.d == 0)
+        return true;
+
+    if (d && other.d) {
+        // ensure they're of the same type (and therefore comparable)
+        if (d->managerUri() == other.d->managerUri())
+            return d->isEqualTo(other.d);
+    }
+
+    return false;
 }
 
-/*! Returns true if either the manager URI or local id of the contact id is different to that of \a other
+/*! Returns true if either the manager URI or id of the contact id is different to that of \a other
 */
 bool QContactId::operator!=(const QContactId& other) const
 {
@@ -129,22 +143,30 @@ bool QContactId::operator!=(const QContactId& other) const
     manager URI of this id is alphabetically less than the manager
     URI of the \a other id.  If both ids have the same manager URI,
     this id will be considered less than the \a other id if the
-    local id of this id is less than the local id of the \a other id.
+    engine id of this id is less than the engine id of the \a other id.
 
-    The invalid, empty id consists of an empty manager URI and the
-    invalid, zero local id, and hence will be less than any non-invalid
-    id.
+    The null contact id is less than any non-null id.
 
     This operator is provided primarily to allow use of a QContactId
     as a key in a QMap.
  */
 bool QContactId::operator<(const QContactId& other) const
 {
-    const int comp = this->managerUri().compare(other.managerUri());
-    if (comp != 0)
-        return comp < 0;
 
-    return this->localId() < other.localId();
+    // a null id is always less than a non-null id.
+    if (d == 0 && other.d != 0)
+        return true;
+
+    if (d && other.d) {
+        // ensure they're of the same type (and therefore comparable)
+        if (d->managerUri() == other.d->managerUri())
+            return d->isLessThan(other.d);
+
+        // not the same type?  just compare the manager uri.
+        return d->managerUri() < other.d->managerUri();
+    }
+
+    return false;
 }
 
 /*!
@@ -152,73 +174,199 @@ bool QContactId::operator<(const QContactId& other) const
  */
 uint qHash(const QContactId &key)
 {
-    return QT_PREPEND_NAMESPACE(qHash)(key.managerUri())
-            + QT_PREPEND_NAMESPACE(qHash)(key.localId());
+    if (key.d)
+        return key.d->hash();
+    return 0;
 }
 
-#ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const QContactId& id)
-{
-    dbg.nospace() << "QContactId(" << id.managerUri() << ", " << id.localId() << ")";
-    return dbg.maybeSpace();
-}
-#endif
 
-#ifndef QT_NO_DATASTREAM
-QDataStream& operator<<(QDataStream& out, const QContactId& id)
+/*!
+Returns true if this is the null (default constructed) id which has a null engine id;
+ */
+bool QContactId::isNull() const
 {
-    quint8 formatVersion = 1; // Version of QDataStream format for QContactId
-    return out << formatVersion << id.managerUri() << id.localId();
+    return d == 0;
 }
 
-QDataStream& operator>>(QDataStream& in, QContactId& id)
+/*!
+  Escapes the contactId parameters
+ */
+QString QContactId::escapeContactIdParam(const QString &param)
 {
-    id = QContactId();
-    quint8 formatVersion;
-    in >> formatVersion;
-    if (formatVersion == 1) {
-        QString managerUri;
-        QContactLocalId localId;
-        in >> managerUri >> localId;
-        id.setManagerUri(managerUri);
-        id.setLocalId(localId);
-    } else {
-        in.setStatus(QDataStream::ReadCorruptData);
+    QString rich;
+    const int len = param.length();
+    rich.reserve(int(len * 1.1));
+    for (int i = 0; i < len; ++i) {
+        if (param.at(i) == QLatin1Char(':'))
+            rich += QLatin1String("&#58;");
+        else if (param.at(i) == QLatin1Char('='))
+            rich += QLatin1String("&equ;");
+        else if (param.at(i) == QLatin1Char('&'))
+            rich += QLatin1String("&amp;");
+        else
+            rich += param.at(i);
     }
-    return in;
+    rich.squeeze();
+    return rich;
 }
-#endif
+
+/*!
+  Builds a string from the given \a managerName, \a params and \a engineIdString
+ */
+QString QContactId::buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
+{
+    // the constructed id string will be of the form: "qtcontacts:managerName:param1=value1&param2=value2:
+    QString ret(QLatin1String("qtcontacts:%1:%2:%3"));
+
+    // we have to escape each param
+    QStringList escapedParams;
+    foreach (const QString &key, params.keys()) {
+        QString arg = params.value(key);
+        arg = QContactId::escapeContactIdParam(arg);
+        QString escapedParam = QContactId::escapeContactIdParam(key) + QLatin1Char('=') + arg;
+        escapedParams.append(escapedParam);
+    }
+
+    // and we escape the engine id string.
+    QString escapedEngineId = QContactId::escapeContactIdParam(engineIdString);
+
+    return ret.arg(managerName, escapedParams.join(QLatin1String("&")), escapedEngineId);
+}
+
+/*!
+  Parses the individual components of the given \a idString and fills the \a managerName, \a params and \a engineIdString.
+  Returns true if the parts could be parsed successfully, false otherwise.
+ */
+bool QContactId::parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString)
+{
+    QStringList colonSplit = idString.split(QLatin1Char(':'));
+
+    QString prefix = colonSplit.value(0);
+    if (prefix != QLatin1String("qtcontacts") || colonSplit.size() != 4)
+        return false; // invalid serialized string.  we cannot continue.
+
+    QString mgrName = colonSplit.value(1);
+    QString paramString = colonSplit.value(2);
+    QString engIdString = colonSplit.value(3);
+
+    // Now we have to decode each parameter
+    QMap<QString, QString> outParams;
+    if (!paramString.isEmpty()) {
+        QStringList params = paramString.split(QLatin1String("&(?!(amp;|equ;))"), QString::KeepEmptyParts);
+        // If we have an empty string for paramstring, we get one entry in params,
+        // so skip that case.
+        for (int i = 0; i < params.count(); i++) {
+            /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
+            QStringList paramChunk = params.value(i).split(QLatin1String("="), QString::KeepEmptyParts);
+
+            if (paramChunk.count() != 2)
+                return false;
+
+            QString arg = paramChunk.value(0);
+            QString param = paramChunk.value(1);
+
+            arg.replace(QLatin1String("&#58;"), QLatin1String(":"));
+            arg.replace(QLatin1String("&equ;"), QLatin1String("="));
+            arg.replace(QLatin1String("&amp;"), QLatin1String("&"));
+            param.replace(QLatin1String("&#58;"), QLatin1String(":"));
+            param.replace(QLatin1String("&equ;"), QLatin1String("="));
+            param.replace(QLatin1String("&amp;"), QLatin1String("&"));
+            if (arg.isEmpty())
+                return false;
+            outParams.insert(arg, param);
+        }
+    }
+
+    // and unescape the engine id string.
+    engIdString.replace(QLatin1String("&#58;"), QLatin1String(":"));
+    engIdString.replace(QLatin1String("&amp;"), QLatin1String("&"));
+
+    // now fill the return values.
+    if (managerName)
+        *managerName = mgrName;
+    if (params)
+        *params = outParams;
+    if (engineIdString)
+        *engineIdString = engIdString;
+
+    // and return.
+    return true;
+}
+
 
 /*!
  * Returns the URI of the manager which contains the contact identified by this id
  */
 QString QContactId::managerUri() const
 {
-    return d.constData()->m_managerUri;
+    return d ? d->managerUri() : QString();
 }
 
 /*!
- * Returns the manager-local id of the contact identified by this contact id
- */
-QContactLocalId QContactId::localId() const
+ * Returns the contact id as a string. This string can be converted back to equal contact id
+   using fromString.
+  \sa fromString
+*/
+QString QContactId::toString() const
 {
-    return d.constData()->m_localId;
+    QString mgrName;
+    QMap<QString, QString> params;
+    QString engineId;
+
+    if (d) {
+        QContactManager::parseUri(d->managerUri(), &mgrName, &params);
+        engineId = d->toString();
+    }
+
+    // having extracted the params the name, we now need to build a new string.
+    return QContactId::buildIdString(mgrName, params, engineId);
 }
 
-/*!
- * Sets the URI of the manager which contains the contact identified by this id to \a uri
- */
-void QContactId::setManagerUri(const QString& uri)
+#ifndef QT_NO_DEBUG_STREAM
+QDebug operator<<(QDebug dbg, const QContactId &id)
 {
-    d->m_managerUri = uri;
+    dbg.nospace() << "QContactId(";
+    if (id.isNull())
+        dbg.nospace() << "(null))";
+    else
+        id.d->debugStreamOut(dbg)  << ")";
+    return dbg.maybeSpace();
+}
+#endif
+
+#ifndef QT_NO_DATASTREAM
+QDataStream& operator<<(QDataStream& out, const QContactId &contactId)
+{
+    out << (contactId.toString());
+    return out;
 }
 
-/*!
- * Sets the manager-local id of the contact identified by this contact id to \a id
- */
-void QContactId::setLocalId(const QContactLocalId& id)
+QDataStream& operator>>(QDataStream &in, QContactId &id)
 {
-    d->m_localId = id;
+    QString idString;
+    in >> idString;
+    id = QContactId::fromString(idString);
+    return in;
+}
+#endif
+
+/*!
+  Deserializes the given \a idString.  Returns a default-constructed (null)
+  contact id if the given \a idString is not a valid, serialized contact id, or
+  if the manager engine from which the id came could not be found.
+  \sa toString
+ */
+QContactId QContactId::fromString(const QString &idString)
+{
+    QString managerName;
+    QMap<QString, QString> params;
+    QString engineIdString;
+
+    if (!QContactId::parseIdString(idString, &managerName, &params, &engineIdString))
+        return QContactId(); // invalid idString given.
+
+    QContactEngineId* engineId = QContactManagerData::createEngineContactId(managerName, params, engineIdString);
+    return QContactId(engineId);
 }
 
 QTCONTACTS_END_NAMESPACE

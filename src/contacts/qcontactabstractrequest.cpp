@@ -150,7 +150,7 @@ QTCONTACTS_BEGIN_NAMESPACE
   Enumerates the various possible types of asynchronous requests
   \value InvalidRequest An invalid request
   \value ContactFetchRequest A request to fetch a list of contacts
-  \value ContactLocalIdFetchRequest A request to fetch a list of local contact ids
+  \value ContactIdFetchRequest A request to fetch a list of contact ids
   \value ContactRemoveRequest A request to remove a list of contacts
   \value ContactSaveRequest A request to save a list of contacts
   \value DetailDefinitionFetchRequest A request to fetch a collection of detail definitions

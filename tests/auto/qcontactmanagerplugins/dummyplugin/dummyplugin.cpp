@@ -113,9 +113,9 @@ QString DummyEngine::managerName() const
 #endif
 }
 
-QList<QContactLocalId> DummyEngine::contacts(QContactManager::Error* error) const
+QList<QContactId> DummyEngine::contacts(QContactManager::Error* error) const
 {
-    QList<QContactLocalId> allCIds;
+    QList<QContactId> allCIds;
 
     if (allCIds.count() > 0 && *error == QContactManager::NoError)
         *error = QContactManager::DoesNotExistError;
@@ -123,14 +123,14 @@ QList<QContactLocalId> DummyEngine::contacts(QContactManager::Error* error) cons
     return allCIds;
 }
 
-QContact DummyEngine::contact(const QContactLocalId& contactId, QContactManager::Error* error) const
+QContact DummyEngine::contact(const QContactId& contactId, QContactManager::Error* error) const
 {
     Q_UNUSED(contactId);
     *error = QContactManager::DoesNotExistError;
     return QContact();
 }
 
-QContact DummyEngine::contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
+QContact DummyEngine::contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
 {
     Q_UNUSED(contactId);
     Q_UNUSED(fetchHint);
@@ -148,35 +148,34 @@ bool DummyEngine::saveContact(QContact* contact, bool batch, QContactManager::Er
 
     // success!
     QContactId newId;
-    newId.setManagerUri(managerUri());
-    newId.setLocalId("5");
     contact->setId(newId);
     *error = QContactManager::NoError;
 
     // if we need to emit signals (ie, this isn't part of a batch operation)
     // then emit the correct one.
     if (!batch) {
-        QList<QContactLocalId> emitList;
-        emitList.append(contact->id().localId());
+        QList<QContactId> emitList;
+        emitList.append(contact->id());
         emit contactsAdded(emitList);
     }
 
     return true;
 }
 
-bool DummyEngine::removeContact(const QContactLocalId& contactId, bool batch, QContactManager::Error* error)
+bool DummyEngine::removeContact(const QContactId& contactId, bool batch, QContactManager::Error* error)
 {
+    /* TODO: fix this
     if (contactId != "5") {
         *error = QContactManager::DoesNotExistError;
         return false;
-    }
+    }*/
 
     *error = QContactManager::NoError;
 
     // if we need to emit signals (ie, this isn't part of a batch operation)
     // then emit the correct one.
     if (!batch) {
-        QList<QContactLocalId> emitList;
+        QList<QContactId> emitList;
         emitList.append(contactId);
         emit contactsRemoved(emitList);
     }
@@ -215,6 +214,11 @@ QList<QVariant::Type> DummyEngine::supportedDataTypes() const
     st.append(QVariant::DateTime);
 
     return st;
+}
+
+QContactEngineId* DummyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
+{
+   return 0;
 }
 
 #include "moc_dummyplugin.cpp"

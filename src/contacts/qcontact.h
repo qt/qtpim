@@ -94,7 +94,6 @@ public:
     /* Unique ID */
     QContactId id() const;
     void setId(const QContactId& id);
-    QContactLocalId localId() const;
 
     /* Type - contact, group, metacontact, ... */
     QString type() const;

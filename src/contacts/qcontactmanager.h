@@ -125,21 +125,21 @@ public:
     QMap<int, QContactManager::Error> errorMap() const;
 
     /* Contacts - Accessors and Mutators */
-    QList<QContactLocalId> contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const;
-    QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const;
+    QList<QContactId> contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const;
+    QList<QContactId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const;
 
     QList<QContact> contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const;
     QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const;
-    QList<QContact> contacts(const QList<QContactLocalId>& localIds, const QContactFetchHint& fetchHint = QContactFetchHint(), QMap<int, QContactManager::Error>* errorMap = 0) const;
+    QList<QContact> contacts(const QList<QContactId>& contactIds, const QContactFetchHint& fetchHint = QContactFetchHint(), QMap<int, QContactManager::Error>* errorMap = 0) const;
 
-    QContact contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const;  // retrieve a contact
+    QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const;  // retrieve a contact
 
     bool saveContact(QContact* contact);                 // note: MODIFIES contact (sets the contactId)
-    bool removeContact(const QContactLocalId& contactId);      // remove the contact from the persistent store
+    bool removeContact(const QContactId& contactId);      // remove the contact from the persistent store
 
     bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - save.
     bool saveContacts(QList<QContact>* contacts, const QStringList& definitionMask, QMap<int, QContactManager::Error>* errorMap = 0); // Partial save
-    bool removeContacts(const QList<QContactLocalId>& contactIds, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - remove.
+    bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - remove.
 
     /* Return a pruned or modified contact which is valid and can be saved in the manager */
     QContact compatibleContact(const QContact& original);
@@ -149,8 +149,8 @@ public:
     void synthesizeContactDisplayLabel(QContact* contact) const;
 
     /* "Self" contact id (MyCard) */
-    bool setSelfContactId(const QContactLocalId& contactId);
-    QContactLocalId selfContactId() const;
+    bool setSelfContactId(const QContactId& contactId);
+    QContactId selfContactId() const;
 
     /* Relationships */
     QList<QContactRelationship> relationships(const QContact& participant, QContactRelationship::Role role = QContactRelationship::Either) const;
@@ -182,12 +182,12 @@ public:
 
 Q_SIGNALS:
     void dataChanged();
-    void contactsAdded(const QList<QContactLocalId>& contactIds);
-    void contactsChanged(const QList<QContactLocalId>& contactIds);
-    void contactsRemoved(const QList<QContactLocalId>& contactIds);
-    void relationshipsAdded(const QList<QContactLocalId>& affectedContactIds);
-    void relationshipsRemoved(const QList<QContactLocalId>& affectedContactIds);
-    void selfContactIdChanged(const QContactLocalId& oldId, const QContactLocalId& newId); // need both? or just new?
+    void contactsAdded(const QList<QContactId>& contactIds);
+    void contactsChanged(const QList<QContactId>& contactIds);
+    void contactsRemoved(const QList<QContactId>& contactIds);
+    void relationshipsAdded(const QList<QContactId>& affectedContactIds);
+    void relationshipsRemoved(const QList<QContactId>& affectedContactIds);
+    void selfContactIdChanged(const QContactId& oldId, const QContactId& newId); // need both? or just new?
 
 protected:
     void connectNotify(const char *signal);
@@ -199,8 +199,8 @@ private:
 
     Q_DISABLE_COPY(QContactManager)
 
-    Q_PRIVATE_SLOT(d, void _q_contactsUpdated(const QList<QContactLocalId>& ids))
-    Q_PRIVATE_SLOT(d, void _q_contactsDeleted(const QList<QContactLocalId>& ids))
+    Q_PRIVATE_SLOT(d, void _q_contactsUpdated(const QList<QContactId>& ids))
+    Q_PRIVATE_SLOT(d, void _q_contactsDeleted(const QList<QContactId>& ids))
 
     // private data pointer
     QContactManagerData* d;

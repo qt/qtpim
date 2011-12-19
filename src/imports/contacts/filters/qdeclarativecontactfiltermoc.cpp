@@ -49,7 +49,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontactdetailrangefilter_p.cpp"
 #include "moc_qdeclarativecontactintersectionfilter_p.cpp"
 #include "moc_qdeclarativecontactinvalidfilter_p.cpp"
-#include "moc_qdeclarativecontactlocalidfilter_p.cpp"
+#include "moc_qdeclarativecontactidfilter_p.cpp"
 #include "moc_qdeclarativecontactrelationshipfilter_p.cpp"
 #include "moc_qdeclarativecontactunionfilter_p.cpp"
 

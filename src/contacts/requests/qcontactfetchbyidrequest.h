@@ -62,9 +62,9 @@ public:
     ~QContactFetchByIdRequest();
 
     /* Selection, restriction and sorting */
-    void setLocalIds(const QList<QContactLocalId>& localIds);
+    void setIds(const QList<QContactId>& ids);
     void setFetchHint(const QContactFetchHint& fetchHint);
-    QList<QContactLocalId> localIds() const;
+    QList<QContactId> contactIds() const;
     QContactFetchHint fetchHint() const;
 
     /* Results */

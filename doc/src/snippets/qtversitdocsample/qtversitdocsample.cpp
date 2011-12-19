@@ -219,12 +219,10 @@ void insertWithGroups(const QList<QContact>& newContacts, QContactManager* manag
                 groupFilter.setMatchFlags(QContactFilter::MatchExactly);
                 // In practice, some detail other than the display label could be used
                 QContactDetailFilter nameFilter = QContactDisplayLabel::match(groupName);
-                QList<QContactLocalId> matchingGroups = manager->contactIds(groupFilter & nameFilter);
+                QList<QContactId> matchingGroups = manager->contactIds(groupFilter & nameFilter);
                 if (!matchingGroups.isEmpty()) {
                     // Found an existing group in the manager
                     QContactId groupId;
-                    groupId.setManagerUri(manager->managerUri());
-                    groupId.setLocalId(matchingGroups.first());
                     groupMap.insert(groupName, groupId);
                 }
                 else {
@@ -290,7 +288,7 @@ void createTagsFromGroups(QList<QContact>* contacts,
                 QContactId groupId = rel.second();
                 QContactFetchHint fetchHint;
                 fetchHint.setDetailDefinitionsHint(QStringList(QContactDisplayLabel::DefinitionName));
-                QContact contact = manager->contact(groupId.localId(), fetchHint);
+                QContact contact = manager->contact(groupId, fetchHint);
                 if (!contact.isEmpty()) {
                     groupName = contact.displayLabel();
                     groupMap.insert(groupId, groupName); // Cache the group id/name

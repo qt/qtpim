@@ -61,11 +61,11 @@ public:
     QString managerName() const;
 
     /* Contacts - Accessors and Mutators */
-    QList<QContactLocalId> contacts(QContactManager::Error* error) const;
-    QContact contact(const QContactLocalId& contactId, QContactManager::Error* error) const;
-    QContact contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
+    QList<QContactId> contacts(QContactManager::Error* error) const;
+    QContact contact(const QContactId& contactId, QContactManager::Error* error) const;
+    QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
     bool saveContact(QContact* contact, bool batch, QContactManager::Error* error);
-    bool removeContact(const QContactLocalId& contactId, bool batch, QContactManager::Error* error);
+    bool removeContact(const QContactId& contactId, bool batch, QContactManager::Error* error);
 
     /* Capabilities reporting */
     QStringList capabilities() const;
@@ -75,10 +75,10 @@ public:
     QMap<QString, QString> managerParameters() const {return QMap<QString, QString>();}
     int managerVersion() const {return 0;}
 
-    QList<QContactLocalId> contactIds(const QContactFilter&, const QList<QContactSortOrder>&, QContactManager::Error* error) const
+    QList<QContactId> contactIds(const QContactFilter&, const QList<QContactSortOrder>&, QContactManager::Error* error) const
     {
         *error = QContactManager::NotSupportedError;
-        return QList<QContactLocalId>();
+        return QList<QContactId>();
     }
 
     QList<QContact> contacts(const QContactFilter&, const QList<QContactSortOrder>&, const QContactFetchHint&, QContactManager::Error* error) const
@@ -93,7 +93,7 @@ public:
         return false;
     }
 
-    bool removeContacts(const QList<QContactLocalId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error)
+    bool removeContacts(const QList<QContactId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error)
     {
         *error = QContactManager::NotSupportedError;
         return false;
@@ -113,16 +113,15 @@ public:
     }
 
     /* "Self" contact id (MyCard) */
-    virtual bool setSelfContactId(const QContactLocalId&, QContactManager::Error* error)
+    virtual bool setSelfContactId(const QContactId&, QContactManager::Error* error)
     {
         *error = QContactManager::NotSupportedError;
         return false;
     }
 
-    virtual QContactLocalId selfContactId(QContactManager::Error* error) const
+    QContactId selfContactId(QContactManager::Error* error) const
     {
-        *error = QContactManager::NotSupportedError;
-        return 0;
+        return QContactManagerEngine::selfContactId(error);
     }
 
     /* Relationships between contacts */
@@ -192,6 +191,7 @@ class DummyEngineFactory : public QObject, public QContactManagerEngineFactory
     Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
+        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const;
         QString managerName() const;
 };
 

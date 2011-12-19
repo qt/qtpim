@@ -44,7 +44,7 @@
 #include "qdeclarativecontactmodel_p.h"
 #include "qcontactmanager.h"
 #include "qcontactdetailfilter.h"
-#include "qcontactlocalidfilter.h"
+#include "qcontactidfilter.h"
 #include "qversitreader.h"
 #include "qversitwriter.h"
 #include "qversitcontactimporter.h"
@@ -104,14 +104,14 @@ public:
     }
 
     QList<QDeclarativeContact*> m_contacts;
-    QMap<QContactLocalId, QDeclarativeContact*> m_contactMap;
+    QMap<QContactId, QDeclarativeContact*> m_contactMap;
     QContactManager* m_manager;
     QDeclarativeContactFetchHint* m_fetchHint;
     QList<QDeclarativeContactSortOrder*> m_sortOrders;
     QDeclarativeContactFilter* m_filter;
 
     QContactFetchRequest* m_fetchRequest;
-    QList<QContactLocalId> m_updatedContactIds;
+    QList<QContactId> m_updatedContactIds;
     QVersitReader m_reader;
     QVersitWriter m_writer;
     QStringList m_importProfiles;
@@ -162,9 +162,9 @@ void QDeclarativeContactModel::setManager(const QString& managerName)
     d->m_manager = new QContactManager(managerName);
 
     connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(update()));
-    connect(d->m_manager, SIGNAL(contactsAdded(QList<QContactLocalId>)), this, SLOT(onContactsAdded(QList<QContactLocalId>)));
-    connect(d->m_manager, SIGNAL(contactsRemoved(QList<QContactLocalId>)), this, SLOT(onContactsRemoved(QList<QContactLocalId>)));
-    connect(d->m_manager, SIGNAL(contactsChanged(QList<QContactLocalId>)), this, SLOT(onContactsChanged(QList<QContactLocalId>)));
+    connect(d->m_manager, SIGNAL(contactsAdded(QList<QContactId>)), this, SLOT(onContactsAdded(QList<QContactId>)));
+    connect(d->m_manager, SIGNAL(contactsRemoved(QList<QContactId>)), this, SLOT(onContactsRemoved(QList<QContactId>)));
+    connect(d->m_manager, SIGNAL(contactsChanged(QList<QContactId>)), this, SLOT(onContactsChanged(QList<QContactId>)));
 
     if (d->m_error != QContactManager::NoError) {
         d->m_error = QContactManager::NoError;
@@ -521,7 +521,14 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
   */
 void QDeclarativeContactModel::fetchContacts(const QStringList& contactIds)
 {
-    d->m_updatedContactIds = contactIds;
+    QList<QContactId> ids;
+    foreach (const QString &contactIdString, contactIds){
+        QContactId contactId = QContactId::fromString(contactIdString);
+        if (!contactId.isNull())
+            ids.append(contactId);
+    }
+
+    d->m_updatedContactIds = ids;
     d->m_updatePending = true;
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
 }
@@ -543,8 +550,6 @@ void QDeclarativeContactModel::fetchAgain()
     d->m_fetchRequest = new QContactFetchRequest(this);
     d->m_fetchRequest->setManager(d->m_manager);
     d->m_fetchRequest->setSorting(sortOrders);
-
-    d->m_updatedContactIds.clear();
     // ids are ignored and all contacts (matching the filter) are always fetched
     if (d->m_filter){
         d->m_fetchRequest->setFilter(d->m_filter->filter());
@@ -567,14 +572,14 @@ void QDeclarativeContactModel::requestUpdated()
         QList<QContact> contacts = req->contacts();
         QList<QDeclarativeContact*> dcs;
         foreach (const QContact &c, contacts) {
-            if (d->m_contactMap.contains(c.localId())) {
-                QDeclarativeContact* dc = d->m_contactMap.value(c.localId());
+            if (d->m_contactMap.contains(c.id())) {
+                QDeclarativeContact* dc = d->m_contactMap.value(c.id());
                 dc->setContact(c);
                 dcs.append(dc);
             } else {
                 QDeclarativeContact* dc = new QDeclarativeContact(this);
                 if (dc) {
-                    d->m_contactMap.insert(c.localId(), dc);
+                    d->m_contactMap.insert(c.id(), dc);
                     dc->setContact(c);
                     dcs.append(dc);
                 }
@@ -648,23 +653,25 @@ void QDeclarativeContactModel::checkError(const QContactAbstractRequest *request
     }
 }
 
-void QDeclarativeContactModel::onContactsAdded(const QList<QContactLocalId>& ids)
+void QDeclarativeContactModel::onContactsAdded(const QList<QContactId>& ids)
 {
     Q_UNUSED(ids)
     if (d->m_autoUpdate) {
-        QList<QContactLocalId> empty;
+        QStringList empty;
         fetchContacts(empty);
     }
 }
 
 /*!
-  \qmlmethod ContactModel::removeContact(int contactId)
+  \qmlmethod ContactModel::removeContact(string contactId)
   Remove the contact from the contacts store by given \a contactId.
   \sa Contact::contactId
   */
-void QDeclarativeContactModel::removeContact(QContactLocalId id)
+void QDeclarativeContactModel::removeContact(QString id)
 {
-    removeContacts(QStringList() << id);
+    QList<QString> ids;
+    ids << id;
+    removeContacts(ids);
 }
 
 /*!
@@ -676,26 +683,33 @@ void QDeclarativeContactModel::removeContact(QContactLocalId id)
 void QDeclarativeContactModel::removeContacts(const QStringList& ids)
 {
     QContactRemoveRequest* req = new QContactRemoveRequest(this);
+    QList<QContactId> contactIdsAsList;
     req->setManager(d->m_manager);
-    req->setContactIds(ids);
+
+    foreach (const QString& id, ids) {
+        QContactId contactId = QContactId::fromString(id);
+        if (!contactId.isNull())
+            contactIdsAsList.append(contactId);
+    }
+    req->setContactIds(contactIdsAsList);
 
     connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
 
     req->start();
 }
 
-void QDeclarativeContactModel::onContactsRemoved(const QList<QContactLocalId>& ids)
+void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId>& ids)
 {
     if (!d->m_autoUpdate)
         return;
 
     bool emitSignal = false;
-    foreach (const QContactLocalId& id, ids) {
+    foreach (const QContactId& id, ids) {
         if (d->m_contactMap.contains(id)) {
             int row = 0;
             //TODO:need a fast lookup
             for (; row < d->m_contacts.count(); row++) {
-                if (d->m_contacts.at(row)->contactId() == id)
+                if (d->m_contacts.at(row)->contactId() == id.toString())
                     break;
             }
 
@@ -712,18 +726,17 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactLocalId>& i
         emit contactsChanged();
 }
 
-void QDeclarativeContactModel::onContactsChanged(const QList<QContactLocalId>& ids)
+void QDeclarativeContactModel::onContactsChanged(const QList<QContactId>& ids)
 {
     if (d->m_autoUpdate) {
-        QList<QContactLocalId> updatedIds;
-        foreach (const QContactLocalId& id, ids) {
+        QStringList updatedIds;
+        foreach (const QContactId& id, ids)
             if (d->m_contactMap.contains(id)) {
-                updatedIds << id;
+                updatedIds.append(id.toString());
             }
-        }
 
         if (updatedIds.count() > 0) {
-            QList<QContactLocalId> empty;
+            QStringList empty;
             fetchContacts(empty);
         }
     }
@@ -801,6 +814,7 @@ void  QDeclarativeContactModel::sortOrder_clear(QDeclarativeListProperty<QDeclar
         emit model->sortOrdersChanged();
     }
 }
+
 
 #include "moc_qdeclarativecontactmodel_p.cpp"
 

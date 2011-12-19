@@ -118,7 +118,7 @@ bool QContactChangeSet::dataChanged()
    Returns the set of ids of contacts which have been added to
    the database.
  */
-QSet<QContactLocalId> QContactChangeSet::addedContacts() const
+QSet<QContactId> QContactChangeSet::addedContacts() const
 {
     return d.constData()->m_addedContacts;
 }
@@ -127,7 +127,7 @@ QSet<QContactLocalId> QContactChangeSet::addedContacts() const
   Inserts the given contact id \a addedContactId into the set of ids of contacts
   which have been added to the database.
  */
-void QContactChangeSet::insertAddedContact(QContactLocalId addedContactId)
+void QContactChangeSet::insertAddedContact(QContactId addedContactId)
 {
     d->m_addedContacts.insert(addedContactId);
 }
@@ -136,9 +136,9 @@ void QContactChangeSet::insertAddedContact(QContactLocalId addedContactId)
   Inserts each of the given contact ids \a addedContactIds into the set of ids of contacts
   which have been added to the database.
  */
-void QContactChangeSet::insertAddedContacts(const QList<QContactLocalId>& addedContactIds)
+void QContactChangeSet::insertAddedContacts(const QList<QContactId>& addedContactIds)
 {
-    foreach (const QContactLocalId& id, addedContactIds)
+    foreach (const QContactId& id, addedContactIds)
         d->m_addedContacts.insert(id);
 }
 
@@ -154,7 +154,7 @@ void QContactChangeSet::clearAddedContacts()
    Returns the set of ids of contacts which have been changed in
    the database.
  */
-QSet<QContactLocalId> QContactChangeSet::changedContacts() const
+QSet<QContactId> QContactChangeSet::changedContacts() const
 {
     return d.constData()->m_changedContacts;
 }
@@ -163,7 +163,7 @@ QSet<QContactLocalId> QContactChangeSet::changedContacts() const
   Inserts the given contact id \a changedContactId into the set of ids of contacts
   which have been changed to the database.
  */
-void QContactChangeSet::insertChangedContact(QContactLocalId changedContactId)
+void QContactChangeSet::insertChangedContact(QContactId changedContactId)
 {
     d->m_changedContacts.insert(changedContactId);
 }
@@ -172,9 +172,9 @@ void QContactChangeSet::insertChangedContact(QContactLocalId changedContactId)
   Inserts each of the given contact ids \a changedContactIds into the set of ids of contacts
   which have been changed to the database.
  */
-void QContactChangeSet::insertChangedContacts(const QList<QContactLocalId>& changedContactIds)
+void QContactChangeSet::insertChangedContacts(const QList<QContactId>& changedContactIds)
 {
-    foreach (const QContactLocalId& id, changedContactIds)
+    foreach (const QContactId& id, changedContactIds)
         d->m_changedContacts.insert(id);
 }
 
@@ -190,7 +190,7 @@ void QContactChangeSet::clearChangedContacts()
    Returns the set of ids of contacts which have been removed from
    the database.
  */
-QSet<QContactLocalId> QContactChangeSet::removedContacts() const
+QSet<QContactId> QContactChangeSet::removedContacts() const
 {
     return d.constData()->m_removedContacts;
 }
@@ -199,7 +199,7 @@ QSet<QContactLocalId> QContactChangeSet::removedContacts() const
   Inserts the given contact id \a removedContactId into the set of ids of contacts
   which have been removed to the database.
  */
-void QContactChangeSet::insertRemovedContact(QContactLocalId removedContactId)
+void QContactChangeSet::insertRemovedContact(QContactId removedContactId)
 {
     d->m_removedContacts.insert(removedContactId);
 }
@@ -208,9 +208,9 @@ void QContactChangeSet::insertRemovedContact(QContactLocalId removedContactId)
   Inserts each of the given contact ids \a removedContactIds into the set of ids of contacts
   which have been removed to the database.
  */
-void QContactChangeSet::insertRemovedContacts(const QList<QContactLocalId>& removedContactIds)
+void QContactChangeSet::insertRemovedContacts(const QList<QContactId>& removedContactIds)
 {
-    foreach (const QContactLocalId& id, removedContactIds)
+    foreach (const QContactId& id, removedContactIds)
         d->m_removedContacts.insert(id);
 }
 
@@ -226,7 +226,7 @@ void QContactChangeSet::clearRemovedContacts()
    Returns the set of ids of contacts which have been affected
    by the addition of relationships to the database.
  */
-QSet<QContactLocalId> QContactChangeSet::addedRelationshipsContacts() const
+QSet<QContactId> QContactChangeSet::addedRelationshipsContacts() const
 {
     return d.constData()->m_addedRelationships;
 }
@@ -235,7 +235,7 @@ QSet<QContactLocalId> QContactChangeSet::addedRelationshipsContacts() const
   Inserts the given contact id \a affectedContactId into the set of ids of contacts
   which have been affected by the addition of a relationship to the database.
  */
-void QContactChangeSet::insertAddedRelationshipsContact(QContactLocalId affectedContactId)
+void QContactChangeSet::insertAddedRelationshipsContact(QContactId affectedContactId)
 {
     d->m_addedRelationships.insert(affectedContactId);
 }
@@ -244,9 +244,9 @@ void QContactChangeSet::insertAddedRelationshipsContact(QContactLocalId affected
   Inserts each of the given contact ids \a affectedContactIds into the set of ids of contacts
   which have been affected by the addition of a relationship to the database.
  */
-void QContactChangeSet::insertAddedRelationshipsContacts(const QList<QContactLocalId>& affectedContactIds)
+void QContactChangeSet::insertAddedRelationshipsContacts(const QList<QContactId>& affectedContactIds)
 {
-    foreach (const QContactLocalId& id, affectedContactIds)
+    foreach (const QContactId& id, affectedContactIds)
         d->m_addedRelationships.insert(id);
 }
 
@@ -262,7 +262,7 @@ void QContactChangeSet::clearAddedRelationshipsContacts()
    Returns the set of ids of contacts which have been affected
    by the removal of relationships from the database.
  */
-QSet<QContactLocalId> QContactChangeSet::removedRelationshipsContacts() const
+QSet<QContactId> QContactChangeSet::removedRelationshipsContacts() const
 {
     return d.constData()->m_removedRelationships;
 }
@@ -271,7 +271,7 @@ QSet<QContactLocalId> QContactChangeSet::removedRelationshipsContacts() const
   Inserts the given contact id \a affectedContactId into the set of ids of contacts
   which have been affected by the removal of a relationship to the database.
  */
-void QContactChangeSet::insertRemovedRelationshipsContact(QContactLocalId affectedContactId)
+void QContactChangeSet::insertRemovedRelationshipsContact(QContactId affectedContactId)
 {
     d->m_removedRelationships.insert(affectedContactId);
 }
@@ -280,9 +280,9 @@ void QContactChangeSet::insertRemovedRelationshipsContact(QContactLocalId affect
   Inserts each of the given contact ids \a affectedContactIds into the set of ids of contacts
   which have been affected by the removal of a relationship to the database.
  */
-void QContactChangeSet::insertRemovedRelationshipsContacts(const QList<QContactLocalId>& affectedContactIds)
+void QContactChangeSet::insertRemovedRelationshipsContacts(const QList<QContactId>& affectedContactIds)
 {
-    foreach (const QContactLocalId& id, affectedContactIds)
+    foreach (const QContactId& id, affectedContactIds)
         d->m_removedRelationships.insert(id);
 }
 
@@ -302,7 +302,7 @@ void QContactChangeSet::clearRemovedRelationshipsContacts()
   to the old id at the point in time when emitSignals() is called,
   the QContactManagerEngine::selfContactIdChanged signal will be emitted.
  */
-void QContactChangeSet::setOldAndNewSelfContactId(const QPair<QContactLocalId, QContactLocalId> &oldAndNewContactId)
+void QContactChangeSet::setOldAndNewSelfContactId(const QPair<QContactId, QContactId> &oldAndNewContactId)
 {
     d->m_oldAndNewSelfContactId = oldAndNewContactId;
 }
@@ -315,7 +315,7 @@ void QContactChangeSet::setOldAndNewSelfContactId(const QPair<QContactLocalId, Q
    at the point in time when emitSignals() is called,
    the QContactManagerEngine::selfContactIdChanged() signal will be emitted.
  */
-QPair<QContactLocalId, QContactLocalId> QContactChangeSet::oldAndNewSelfContactId() const
+QPair<QContactId, QContactId> QContactChangeSet::oldAndNewSelfContactId() const
 {
     return d.constData()->m_oldAndNewSelfContactId;
 }
@@ -331,7 +331,7 @@ void QContactChangeSet::clearAll()
     d->m_removedContacts.clear();
     d->m_addedRelationships.clear();
     d->m_removedRelationships.clear();
-    d->m_oldAndNewSelfContactId = QPair<QContactLocalId, QContactLocalId>();
+    d->m_oldAndNewSelfContactId = QPair<QContactId, QContactId>();
 }
 
 /*!

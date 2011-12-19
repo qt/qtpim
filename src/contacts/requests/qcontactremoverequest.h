@@ -60,9 +60,9 @@ public:
     ~QContactRemoveRequest();
 
     /* Selection */
-    void setContactId(const QContactLocalId& contactId);
-    void setContactIds(const QList<QContactLocalId>& contactIds);
-    QList<QContactLocalId> contactIds() const;
+    void setContactId(const QContactId& contactId);
+    void setContactIds(const QList<QContactId>& contactIds);
+    QList<QContactId> contactIds() const;
 
     /* Results */
     QMap<int, QContactManager::Error> errorMap() const;

@@ -163,8 +163,8 @@ void AsyncRequestExample::performRequests()
     m_contactFetchRequest.waitForFinished();
 
 //! [Retrieving an existing contact from a manager]
-    QContactLocalIdFilter idListFilter;
-    idListFilter.setIds(QList<QContactLocalId>() << exampleContact.localId());
+    QContactIdFilter idListFilter;
+    idListFilter.setIds(QList<QContactId>() << exampleContact.id());
     m_contactFetchRequest.setManager(m_manager);
     m_contactFetchRequest.setFilter(idListFilter);
     m_contactFetchRequest.start();
@@ -185,7 +185,7 @@ void AsyncRequestExample::performRequests()
 //! [Removing a contact from a manager]
     connect(&m_contactRemoveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(contactRemoveRequestStateChanged(QContactAbstractRequest::State)));
     m_contactRemoveRequest.setManager(m_manager);
-    m_contactRemoveRequest.setContactIds(QList<QContactLocalId>() << exampleContact.localId());
+    m_contactRemoveRequest.setContactIds(QList<QContactId>() << exampleContact.id());
     m_contactRemoveRequest.start();
 //! [Removing a contact from a manager]
 

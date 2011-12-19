@@ -122,7 +122,7 @@ public:
 
     QDeclarativeListProperty<QDeclarativeContactSortOrder> sortOrders() ;
 
-    Q_INVOKABLE void removeContact(QContactLocalId id);
+    Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
     Q_INVOKABLE void fetchContacts(const QStringList& contactIds);
@@ -148,9 +148,9 @@ private slots:
     void fetchAgain();
     void requestUpdated();
     void onRequestStateChanged(QContactAbstractRequest::State newState);
-    void onContactsAdded(const QList<QContactLocalId>& ids);
-    void onContactsRemoved(const QList<QContactLocalId>& ids);
-    void onContactsChanged(const QList<QContactLocalId>& ids);
+    void onContactsAdded(const QList<QContactId>& ids);
+    void onContactsRemoved(const QList<QContactId>& ids);
+    void onContactsChanged(const QList<QContactId>& ids);
 
     void startImport(QVersitReader::State state);
     void contactsExported(QVersitWriter::State state);

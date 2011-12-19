@@ -86,21 +86,21 @@ public:
     QContact compatibleContact(const QContact& contact, QContactManager::Error* error) const;
 
     /* "Self" contact id (MyCard) */
-    QContactLocalId selfContactId(QContactManager::Error* errors) const;
+    QContactId selfContactId(QContactManager::Error* errors) const;
 
     /* Synthesize the display label of a contact */
     QString synthesizedDisplayLabel(const QContact &contact, QContactManager::Error *error) const;
 
     /* Filtering */
-    QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const;
+    QList<QContactId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const;
 
     /* Contacts - Accessors and Mutators */
-    QContact contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
+    QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const;
     QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint, QContactManager::Error* error ) const;
     bool saveContact(QContact* contact, QContactManager::Error* error);
-    bool removeContact(const QContactLocalId& contactId, QContactManager::Error* error);
+    bool removeContact(const QContactId& contactId, QContactManager::Error* error);
     bool saveContacts(QList<QContact>*, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular saveContact
-    bool removeContacts(const QList<QContactLocalId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular removeContact
+    bool removeContacts(const QList<QContactId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular removeContact
 
     /* Version Reporting */
     int implementationVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }

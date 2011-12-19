@@ -68,7 +68,6 @@ QContactJsonDbEngine::QContactJsonDbEngine() : d(new QContactJsonDbEngineData)
 {
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
-    qRegisterMetaType<QList<QContactLocalId> >("QList<QContactLocalId>");
     m_thread = new QThread();
     m_thread->start();
     connect(this, SIGNAL(requestReceived(QContactAbstractRequest*)),
@@ -143,12 +142,12 @@ QContact QContactJsonDbEngine::compatibleContact(const QContact& contact, QConta
 
 
 
-QContactLocalId QContactJsonDbEngine::selfContactId(QContactManager::Error* error) const
+QContactId QContactJsonDbEngine::selfContactId(QContactManager::Error* error) const
 {
     // TODO: THE IDENTIFICATION FIELD DOES NOT EXIST YET IN JSON SCHEMA!
     // Just return "NotSupported" error
     *error = QContactManager::NotSupportedError;
-    return QContactLocalId("");
+    return QContactId();
 }
 
 
@@ -212,10 +211,10 @@ QString QContactJsonDbEngine::synthesizedDisplayLabel(const QContact &contact, Q
 
 
 
-QList<QContactLocalId> QContactJsonDbEngine::contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const
+QList<QContactId> QContactJsonDbEngine::contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const
 {
     QContactJsonDbConverter converter;
-    QList<QContactLocalId> contactIds;
+    QList<QContactId> contactIds;
     QVariantMap map;
     QContactFetchRequest request;
     request.setFilter(filter);
@@ -227,22 +226,21 @@ QList<QContactLocalId> QContactJsonDbEngine::contactIds(const QContactFilter& fi
     if (*error != QContactManager::NoError) {
         if (qt_debug_jsondb_contacts())
             qDebug() << "[QContactJsonDb] Error at " << Q_FUNC_INFO << ":" << *error;
-        return QList<QContactLocalId>();
+        return QList<QContactId>();
     }
     QList<QContact> queryResults = (QList<QContact>)request.contacts();
     // found any results?
     if(queryResults.size() == 0) {
         *error = QContactManager::DoesNotExistError;
         qDebug() << "Error by function contactIds: no contacts found (DoesNotExistError)";
-        return QList<QContactLocalId>();
+        return QList<QContactId>();
     }
     // Convert results for needed format
-    QList<QContactLocalId> results;
-    QString id;
+    QList<QContactId> results;
 
-    foreach (QContact contact, queryResults) {
-        results.append(contact.localId());
-    }
+    foreach (const QContact &contact, queryResults)
+        results.append(contact.id());
+
     return results;
 }
 
@@ -286,13 +284,13 @@ QList<QContact> QContactJsonDbEngine::contacts(const QContactFilter & filter, co
 
 
 
-QContact QContactJsonDbEngine::contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
+QContact QContactJsonDbEngine::contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
 {
     QContact contact;
     QContactJsonDbConverter converter;
     QContactFetchRequest request;
-    QList<QContactLocalId> filterIds;
-    QContactLocalIdFilter idFilter;
+    QList<QContactId> filterIds;
+    QContactIdFilter idFilter;
     QString query;
     QVariantList results;
 
@@ -320,7 +318,7 @@ QContact QContactJsonDbEngine::contact(const QContactLocalId& contactId, const Q
 
     // Extract the desired results
     foreach (QContact curr, queryResults) {
-        if (curr.localId() == contactId) contact = curr;  ;
+        if (curr.id() == contactId) contact = curr;  ;
     }
     return contact;
 }
@@ -353,7 +351,7 @@ bool QContactJsonDbEngine::saveContacts(QList<QContact>* contacts, QMap<int, QCo
 
 
 
-bool QContactJsonDbEngine::removeContacts(const QList<QContactLocalId>& ids, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
+bool QContactJsonDbEngine::removeContacts(const QList<QContactId>& ids, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
 {
     Q_UNUSED(errorMap);
     QContactRemoveRequest removeReq;
@@ -388,7 +386,7 @@ bool QContactJsonDbEngine::saveContact(QContact* contact, QContactManager::Error
 
 
 
-bool QContactJsonDbEngine::removeContact(const QContactLocalId& contactId, QContactManager::Error* error)
+bool QContactJsonDbEngine::removeContact(const QContactId& contactId, QContactManager::Error* error)
 {
     Q_UNUSED(contactId)
     Q_UNUSED(error)
@@ -423,7 +421,7 @@ bool QContactJsonDbEngine::isFilterSupported(const QContactFilter& filter) const
   switch (filter.type()) {
     case QContactFilter::InvalidFilter:
     case QContactFilter::DefaultFilter:
-    case QContactFilter::LocalIdFilter:
+    case QContactFilter::IdFilter:
     case QContactFilter::ContactDetailFilter:
     case QContactFilter::ActionFilter:
     case QContactFilter::IntersectionFilter:

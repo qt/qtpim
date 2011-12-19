@@ -111,7 +111,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::contactsAdded(const QList<QContactLocalId>& contactIds);
+  \fn QContactManagerEngine::contactsAdded(const QList<QContactId>& contactIds);
 
   This signal is emitted some time after a set of contacts has been added to
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -125,7 +125,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::contactsChanged(const QList<QContactLocalId>& contactIds);
+  \fn QContactManagerEngine::contactsChanged(const QList<QContactId>& contactIds);
 
   This signal is emitted some time after a set of contacts has been modified in
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -139,7 +139,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::contactsRemoved(const QList<QContactLocalId>& contactIds);
+  \fn QContactManagerEngine::contactsRemoved(const QList<QContactId>& contactIds);
 
   This signal is emitted some time after a set of contacts has been removed from
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -153,7 +153,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::relationshipsAdded(const QList<QContactLocalId>& affectedContactIds);
+  \fn QContactManagerEngine::relationshipsAdded(const QList<QContactId>& affectedContactIds);
 
   This signal is emitted some time after a set of contacts has been added to
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -167,7 +167,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::relationshipsRemoved(const QList<QContactLocalId>& affectedContactIds);
+  \fn QContactManagerEngine::relationshipsRemoved(const QList<QContactId>& affectedContactIds);
 
   This signal is emitted some time after a set of relationships has been removed from
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -181,10 +181,10 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::selfContactIdChanged(const QContactLocalId& oldId, const QContactLocalId& newId)
+  \fn QContactManagerEngine::selfContactIdChanged(const QContactId& oldId, const QContactId& newId)
 
   This signal is emitted at some point after the id of the self-contact is changed from \a oldId to \a newId in the manager.
-  If the \a newId is the invalid, zero id, then the self contact was deleted or no self contact exists.
+  If the \a newId is the invalid, null id, then the self contact was deleted or no self contact exists.
   This signal must not be emitted if the dataChanged() signal was previously emitted for this change.
   As it is possible that other processes (or other devices) may
   have removed or changed the self contact, the timing cannot be determined.
@@ -223,13 +223,13 @@ QString QContactManagerEngine::managerUri() const
   Depending on the backend, this filtering operation may involve retrieving all the contacts.
   Any error which occurs will be saved in \a error.
  */
-QList<QContactLocalId> QContactManagerEngine::contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const
+QList<QContactId> QContactManagerEngine::contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const
 {
     Q_UNUSED(filter);
     Q_UNUSED(sortOrders);
 
     *error = QContactManager::NotSupportedError;
-    return QList<QContactLocalId>();
+    return QList<QContactId>();
 }
 
 /*!
@@ -273,7 +273,7 @@ QList<QContact> QContactManagerEngine::contacts(const QContactFilter& filter, co
 
   \sa QContactFetchHint
  */
-QContact QContactManagerEngine::contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
+QContact QContactManagerEngine::contact(const QContactId& contactId, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
 {
     Q_UNUSED(contactId);
     Q_UNUSED(fetchHint);
@@ -292,7 +292,7 @@ QContact QContactManagerEngine::contact(const QContactLocalId& contactId, const 
   \c QContactManager::NotSupportedError and the function will
   return false.
  */
-bool QContactManagerEngine::setSelfContactId(const QContactLocalId& contactId, QContactManager::Error* error)
+bool QContactManagerEngine::setSelfContactId(const QContactId& contactId, QContactManager::Error* error)
 {
     Q_UNUSED(contactId);
 
@@ -307,10 +307,10 @@ bool QContactManagerEngine::setSelfContactId(const QContactLocalId& contactId, Q
   the concept of a "self" contact, an invalid id will be returned
   and the \a error will be set to \c QContactManager::DoesNotExistError.
  */
-QContactLocalId QContactManagerEngine::selfContactId(QContactManager::Error* error) const
+QContactId QContactManagerEngine::selfContactId(QContactManager::Error* error) const
 {
     *error = QContactManager::DoesNotExistError;
-    return QContactLocalId();
+    return QContactId();
 }
 
 /*!
@@ -536,7 +536,7 @@ bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, 
      with a default QContactFilter
    \o An empty QContactIntersectionFilter will be replaced with a QContactDefaultFilter
    \o An empty QContactUnionFilter will be replaced with a QContactInvalidFilter
-   \o An empty QContactLocalIdFilter will be replaced with a QContactInvalidFilter
+   \o An empty QContactIdFilter will be replaced with a QContactInvalidFilter
    \o An intersection or union filter with a single entry will be replaced by that entry
    \o A QContactDetailFilter or QContactDetailRangeFilter with no definition name will be replaced with a QContactInvalidFilter
    \o A QContactDetailRangeFilter with no range specified will be converted to a QContactDetailFilter
@@ -631,9 +631,9 @@ QContactFilter QContactManagerEngine::canonicalizedFilter(const QContactFilter &
         }
         // unreachable
 
-        case QContactFilter::LocalIdFilter:
+        case QContactFilter::IdFilter:
         {
-            QContactLocalIdFilter f(filter);
+            QContactIdFilter f(filter);
             if (f.ids().count() == 0)
                 return QContactInvalidFilter();
         }
@@ -774,9 +774,9 @@ void QContactManagerEngine::setDetailAccessConstraints(QContactDetail *detail, Q
 /*!
   Adds the given \a contact to the database if \a contact has a
   default-constructed id, or an id with the manager URI set to the URI of
-  this manager and a local id of zero, otherwise updates the contact in
+  this manager and a id of null, otherwise updates the contact in
   the database which has the same id to be the given \a contact.
-  If the id is non-zero but does not identify any contact stored in the
+  If the id is not null but does not identify any contact stored in the
   manager, the function will return false and \a error will be set to
   \c QContactManager::DoesNotExistError.
 
@@ -818,10 +818,10 @@ bool QContactManagerEngine::saveContact(QContact* contact, QContactManager::Erro
 
   The default implementation will convert this into a call to removeContacts.
  */
-bool QContactManagerEngine::removeContact(const QContactLocalId& contactId, QContactManager::Error* error)
+bool QContactManagerEngine::removeContact(const QContactId& contactId, QContactManager::Error* error)
 {
     // Convert to a list op
-    QList<QContactLocalId> list;
+    QList<QContactId> list;
     list.append(contactId);
 
     QMap<int, QContactManager::Error> errors;
@@ -894,7 +894,7 @@ bool QContactManagerEngine::saveContacts(QList<QContact>* contacts, QMap<int, QC
 
   \sa QContactManager::removeContact()
  */
-bool QContactManagerEngine::removeContacts(const QList<QContactLocalId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
+bool QContactManagerEngine::removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
 {
     Q_UNUSED(contactIds);
     Q_UNUSED(errorMap);
@@ -1069,10 +1069,10 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
         case QContactFilter::DefaultFilter:
             return true;
 
-        case QContactFilter::LocalIdFilter:
+        case QContactFilter::IdFilter:
             {
-                const QContactLocalIdFilter idf(filter);
-                if (idf.ids().contains(contact.id().localId()))
+                const QContactIdFilter idf(filter);
+                if (idf.ids().contains(contact.id()))
                     return true;
             }
             // Fall through to end
@@ -1561,9 +1561,9 @@ void QContactManagerEngine::addSorted(QList<QContact>* sorted, const QContact& t
 
 /*! Sorts the given list of contacts \a cs according to the provided \a sortOrders
 */
-QList<QContactLocalId> QContactManagerEngine::sortContacts(const QList<QContact>& cs, const QList<QContactSortOrder>& sortOrders)
+QList<QContactId> QContactManagerEngine::sortContacts(const QList<QContact>& cs, const QList<QContactSortOrder>& sortOrders)
 {
-    QList<QContactLocalId> sortedIds;
+    QList<QContactId> sortedIds;
     QList<QContact> sortedContacts = cs;
     if (!sortOrders.isEmpty()) {
         ContactLessThan lessThan(&sortOrders);
@@ -1571,10 +1571,20 @@ QList<QContactLocalId> QContactManagerEngine::sortContacts(const QList<QContact>
     }
 
     foreach(const QContact& c, sortedContacts) {
-        sortedIds.append(c.localId());
+        sortedIds.append(c.id());
     }
     return sortedIds;
 }
+
+/*!
+  Returns the engine id from the given \a id.
+  The caller does not take ownership of the pointer, and should not delete returned id or undefined behavior may occur.
+ */
+const QContactEngineId* QContactManagerEngine::engineContactId(const QContactId& id)
+{
+    return id.d.data();
+}
+
 
 /*!
   Notifies the manager engine that the given request \a req is in the process of being destroyed.
@@ -1657,18 +1667,18 @@ void QContactManagerEngine::updateRequestState(QContactAbstractRequest* req, QCo
 
 
 /*!
-  Updates the given QContactLocalIdFetchRequest \a req with the latest results \a result, and operation error \a error.
+  Updates the given QContactIdFetchRequest \a req with the latest results \a result, and operation error \a error.
   In addition, the state of the request will be changed to \a newState.
 
   It then causes the request to emit its resultsAvailable() signal to notify clients of the request progress.
 
   If the new request state is different from the previous state, the stateChanged() signal will also be emitted from the request.
  */
-void QContactManagerEngine::updateContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req, const QList<QContactLocalId>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
+void QContactManagerEngine::updateContactIdFetchRequest(QContactIdFetchRequest* req, const QList<QContactId>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QContactLocalIdFetchRequest> ireq(req); // Take this in case the first emit deletes us
-        QContactLocalIdFetchRequestPrivate* rd = static_cast<QContactLocalIdFetchRequestPrivate*>(ireq.data()->d_ptr);
+        QWeakPointer<QContactIdFetchRequest> ireq(req); // Take this in case the first emit deletes us
+        QContactIdFetchRequestPrivate* rd = static_cast<QContactIdFetchRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_ids = result;
@@ -1919,7 +1929,7 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
         // 6) update the id of any new contacts
         // 7) transfer any errors from saving to errorMap
 
-        QList<QContactLocalId> existingContactIds;
+        QList<QContactId> existingContactIds;
 
         // Error conditions:
         // 1) bad id passed in (can't fetch)
@@ -1934,13 +1944,9 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
             // See if there's a contactId that's not from this manager
             const QContact c = contacts->at(i);
             if (c.id().managerUri() == managerUri()) {
-                if (!c.localId().isEmpty()) {
-                    existingIdMap.insert(i, existingContactIds.count());
-                    existingContactIds.append(c.localId());
-                } else {
-                    // Strange. it's just a new contact
-                }
-            } else if (!c.id().managerUri().isEmpty() || !c.localId().isEmpty()) {
+                existingIdMap.insert(i, existingContactIds.count());
+                existingContactIds.append(c.id());
+            } else if (!c.id().isNull()) {
                 // Hmm, error (wrong manager)
                 errorMap->insert(i, QContactManager::DoesNotExistError);
             } // else new contact
@@ -2018,10 +2024,10 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
 }
 
 /*!
-  Returns the list of contacts with the ids given by \a localIds.  There is a one-to-one
-  correspondence between the returned contacts and the supplied \a localIds.
+  Returns the list of contacts with the ids given by \a contactIds.  There is a one-to-one
+  correspondence between the returned contacts and the supplied \a contactIds.
 
-  If there is an invalid id in \a localIds, then an empty QContact will take its place in the
+  If there is an invalid id in \a contactIds, then an empty QContact will take its place in the
   returned list and an entry will be inserted into \a errorMap.
 
   The overall operation error will be saved in \a error.
@@ -2037,25 +2043,25 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
 
   \sa QContactFetchHint
  */
-QList<QContact> QContactManagerEngineV2::contacts(const QList<QContactLocalId> &localIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error) const
+QList<QContact> QContactManagerEngineV2::contacts(const QList<QContactId> &contactIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error) const
 {
-    QContactLocalIdFilter lif;
-    lif.setIds(localIds);
+    QContactIdFilter lif;
+    lif.setIds(contactIds);
 
     QList<QContact> unsorted = contacts(lif, QContactSortOrder(), fetchHint, error);
 
     // Build an index into the results
-    QHash<QContactLocalId, int> idMap; // value is index into unsorted
+    QHash<QContactId, int> idMap; // value is index into unsorted
     if (*error == QContactManager::NoError) {
         for (int i = 0; i < unsorted.size(); i++) {
-            idMap.insert(unsorted[i].localId(), i);
+            idMap.insert(unsorted[i].id(), i);
         }
     }
 
     // Build up the results and errors
     QList<QContact> results;
-    for (int i = 0; i < localIds.count(); i++) {
-        QContactLocalId id(localIds[i]);
+    for (int i = 0; i < contactIds.count(); i++) {
+        QContactId id(contactIds[i]);
         if (!idMap.contains(id)) {
             if (errorMap)
                 errorMap->insert(i, QContactManager::DoesNotExistError);

@@ -118,7 +118,7 @@ various sources into a single, cohesive contact.
 
 Each contact stored in a manager is identified by an \l{QContactId}{id} which
 consists of a manager identifier (URI) and the
-\l{QContactLocalId}{manager-local id} which is used to identify the contact
+QContactId manager-local id which is used to identify the contact
 in that manager.  Note that a contact stored in one manager may have the same
 local id as a different contact stored in another manager; please see the
 QContactId documentation for more information.
@@ -213,7 +213,7 @@ asynchronous requests.  It is recommended for most
 applications that the asynchronous API be used where possible.
 
 The asynchronous API is offered through various classes derived from the
-QContactAbstractRequest class, including QContactLocalIdFetchRequest,
+QContactAbstractRequest class, including QContactIdFetchRequest,
 QContactFetchRequest, QContactSaveRequest, QContactRemoveRequest,
 QContactRelationshipFetchRequest, QContactRelationshipSaveRequest,
 and QContactRelationshipRemoveRequest.

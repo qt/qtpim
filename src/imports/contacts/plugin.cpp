@@ -67,7 +67,7 @@ public:
 
         int major = 5;
         int minor = 0;
-        qRegisterMetaType<QContactLocalId>("QContactLocalId");
+        qRegisterMetaType<QContactId>("QContactId");
         qmlRegisterType<QDeclarativeContactModel>(uri, major, minor, "ContactModel");
         qmlRegisterType<QDeclarativeContact>(uri, major, minor, "Contact");
         qmlRegisterType<QDeclarativeContactFetchHint>(uri, major, minor, "FetchHint");
@@ -113,7 +113,7 @@ public:
         qmlRegisterType<QDeclarativeContactChangeLogFilter>(uri, major, minor, "ChangeLogFilter");
         qmlRegisterType<QDeclarativeContactDetailFilter>(uri, major, minor, "DetailFilter");
         qmlRegisterType<QDeclarativeContactDetailRangeFilter>(uri, major, minor, "DetailRangeFilter");
-        qmlRegisterType<QDeclarativeContactLocalIdFilter>(uri, major, minor, "IdFilter");
+        qmlRegisterType<QDeclarativeContactIdFilter>(uri, major, minor, "IdFilter");
         qmlRegisterType<QDeclarativeContactRelationshipFilter>(uri, major, minor, "RelationshipFilter");
         qmlRegisterType<QDeclarativeContactIntersectionFilter>(uri, major, minor, "IntersectionFilter");
         qmlRegisterType<QDeclarativeContactUnionFilter>(uri, major, minor, "UnionFilter");

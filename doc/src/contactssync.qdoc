@@ -94,13 +94,13 @@ The QContactManager class provides API for accessing the IDs of contacts which a
   \o contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
 \endlist
 
-The contact id retrieval functionality is also provided via asynchronous API through the QContactLocalIdFetchRequest class.
+The contact id retrieval functionality is also provided via asynchronous API through the QContactIdFetchRequest class.
 
 The synchronous, singular contact manipulation functions offered by the QContactManager class are:
 \list
-  \o contact(const QContactLocalId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \o contact(const QContactId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const
   \o saveContact(QContact* contact)
-  \o removeContact(const QContactLocalId& contactId)
+  \o removeContact(const QContactId& contactId)
 \endlist
 
 The (optional) fetch argument to the contact accessor function allows clients to tell the plugin
@@ -120,7 +120,7 @@ The synchronous, batch contact manipulation functions offered by the QContactMan
   \o contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
   \o contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
   \o saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
-  \o removeContacts(QList<QContactLocalId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
+  \o removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
 \endlist
 
 The batch save and remove functions both take an (optional) pointer to a map of errors.  If the pointer is non-null,
@@ -136,12 +136,12 @@ this functionality should report that it supports the QContactManager::SelfConta
 
 The API which provides the self-contact functionality consists of:
 \list
-  \o setSelfContactId(const QContactLocalId& contactId)
+  \o setSelfContactId(const QContactId& contactId)
   \o selfContactId() const
 \endlist
 
 In order to unset the self contact, a client may either delete the contact which is currently set as the self contact,
-or set the self contact id to be the invalid, zero id (constructed via QContactLocalId(0)).
+or set the self contact id to be null id (constructed via QContactId()).
 The self-contact manipulation functionality is only available via the synchronous API.
 
 

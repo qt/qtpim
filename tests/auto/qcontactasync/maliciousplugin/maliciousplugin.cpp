@@ -78,15 +78,15 @@ public slots:
     {
         QContactManager::Error errorResult = QContactManager::NoError;
         QMap<int, QContactManager::Error> errorsResult;
-        QList<QContactLocalId> idResult;
+        QList<QContactId> idResult;
         QList<QContact> contactResult;
         QList<QContactRelationship> relResult;
 
         mutex.lock();
         if (activeRequests.contains(req)) {
             switch(req->type()) {
-                case QContactAbstractRequest::ContactLocalIdFetchRequest:
-                    QContactManagerEngine::updateContactLocalIdFetchRequest(static_cast<QContactLocalIdFetchRequest*>(req), idResult, errorResult, QContactAbstractRequest::FinishedState);
+                case QContactAbstractRequest::ContactIdFetchRequest:
+                    QContactManagerEngine::updateContactIdFetchRequest(static_cast<QContactIdFetchRequest*>(req), idResult, errorResult, QContactAbstractRequest::FinishedState);
                     break;
 
                 case QContactAbstractRequest::ContactFetchRequest:
@@ -192,7 +192,6 @@ QString MaliciousEngineFactory::managerName() const
 {
     return QString(makename(MALICIOUSPLUGINNAME));
 }
-Q_EXPORT_PLUGIN2(MALICIOUSPLUGINTARGET, MaliciousEngineFactory);
 
 QContactManagerEngine* MaliciousEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
@@ -200,5 +199,14 @@ QContactManagerEngine* MaliciousEngineFactory::engine(const QMap<QString, QStrin
     *error = QContactManager::NoError;
     return new MaliciousAsyncManagerEngine();
 }
+
+QContactEngineId* MaliciousEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
+{
+    Q_UNUSED(parameters);
+    Q_UNUSED(engineIdString);
+    return 0;
+}
+
+Q_EXPORT_PLUGIN2(MALICIOUSPLUGINTARGET, MaliciousEngineFactory);
 
 #include "maliciousplugin.moc"

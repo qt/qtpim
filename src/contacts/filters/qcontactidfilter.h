@@ -39,70 +39,34 @@
 **
 ****************************************************************************/
 
-#ifndef QDECLARATIVECONTACTLOCALIDFILTER_H
-#define QDECLARATIVECONTACTLOCALIDFILTER_H
+#ifndef QCONTACTIDFILTER_H
+#define QCONTACTIDFILTER_H
 
-#include "qdeclarativecontactfilter_p.h"
-#include "qcontactlocalidfilter.h"
-
-#include <QStringList>
-#include <QSet>
+#include "qcontactfilter.h"
+#include "qcontactid.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QDeclarativeContactLocalIdFilter : public QDeclarativeContactFilter
+class QContactIdFilterPrivate;
+class Q_CONTACTS_EXPORT QContactIdFilter : public QContactFilter
 {
-    Q_OBJECT
-    Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged())
-    Q_CLASSINFO("DefaultProperty", "ids")
 public:
-    QDeclarativeContactLocalIdFilter(QObject* parent = 0)
-        :QDeclarativeContactFilter(parent)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
+    QContactIdFilter();
+    QContactIdFilter(const QContactFilter& other);
 
-    QStringList ids() const
-    {
-        QStringList ids;
-        foreach (const QContactLocalId& id, d.ids()) {
-            ids << id;
-        }
-        return ids;
-    }
+    /* Mutators */
+    void setIds(const QList<QContactId>& ids);
+    void add(const QContactId& id);
+    void remove(const QContactId& id);
+    void clear();
 
-    void setIds(const QStringList& ids)
-    {
-        QList<QContactLocalId> contactIds;
-
-        foreach (const QString& id, ids) {
-            QContactLocalId localId = id;
-            if (!id.isEmpty()) {
-                contactIds << localId;
-            }
-        }
-        if (contactIds.toSet() != d.ids().toSet()) {
-            d.setIds(contactIds);
-            emit valueChanged();
-        }
-    }
-
-    QContactFilter filter() const
-    {
-        return d;
-    }
-
-signals:
-    void valueChanged();
+    /* Accessors */
+    QList<QContactId> ids() const;
 
 private:
-    QContactLocalIdFilter d;
+    Q_DECLARE_CONTACTFILTER_PRIVATE(QContactIdFilter)
 };
 
-
-
 QTCONTACTS_END_NAMESPACE
-
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactLocalIdFilter))
 
 #endif

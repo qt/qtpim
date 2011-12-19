@@ -170,14 +170,14 @@ ContactsSavingTestCase {
     function test_filterByNonExistingId() {
         filter.ids = ["foo bar"];
         model.filter = filter;
-        waitForContactsChanged();
+        waitForContactsChanged();;
         compare (model.contacts.length, 0);
     }
 
     function test_filterByMultipleNonExistingIds() {
         filter.ids = ["foo", "bar", "baz", "qux"];
         model.filter = filter;
-        waitForContactsChanged();
+        waitForContactsChanged();;
         compare (model.contacts.length, 0);
     }
 

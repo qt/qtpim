@@ -55,6 +55,7 @@
 //
 
 #include <qcontactsglobal.h>
+#include <qcontactid.h>
 #include <QSharedData>
 #include <QSet>
 #include <QPair>
@@ -87,12 +88,12 @@ public:
     }
 
     bool m_dataChanged;
-    QSet<QContactLocalId> m_addedContacts;
-    QSet<QContactLocalId> m_changedContacts;
-    QSet<QContactLocalId> m_removedContacts;
-    QSet<QContactLocalId> m_addedRelationships;
-    QSet<QContactLocalId> m_removedRelationships;
-    QPair<QContactLocalId, QContactLocalId> m_oldAndNewSelfContactId;
+    QSet<QContactId> m_addedContacts;
+    QSet<QContactId> m_changedContacts;
+    QSet<QContactId> m_removedContacts;
+    QSet<QContactId> m_addedRelationships;
+    QSet<QContactId> m_removedRelationships;
+    QPair<QContactId, QContactId> m_oldAndNewSelfContactId;
 };
 
 QTCONTACTS_END_NAMESPACE

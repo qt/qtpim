@@ -63,7 +63,7 @@
 #include <QContactTimestamp>
 #include <QContactTag>
 #include <QContactOrganization>
-
+#include "qcontactidmock.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
@@ -327,7 +327,7 @@ void tst_QContactJsonDbAsync::contactFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    QList<QContactLocalId> contactIds = cm->contactIds();
+    QList<QContactId> contactIds = cm->contactIds();
     QList<QContact> contacts = cfr.contacts();
     QCOMPARE(contactIds.size(), contacts.size());
     for (int i = 0; i < contactIds.size(); i++) {
@@ -557,11 +557,11 @@ void tst_QContactJsonDbAsync::contactFetchById()
     QVERIFY(!cfr.waitForFinished());
 
     // get all contact ids
-    QList<QContactLocalId> contactIds(cm->contactIds());
+    QList<QContactId> contactIds(cm->contactIds());
 
     // "all contacts" retrieval
     cfr.setManager(cm.data());
-    cfr.setLocalIds(contactIds);
+    cfr.setIds(contactIds);
     QCOMPARE(cfr.manager(), cm.data());
     QVERIFY(!cfr.isActive());
     QVERIFY(!cfr.isFinished());
@@ -606,12 +606,12 @@ void tst_QContactJsonDbAsync::contactFetchByIdErrorHandling()
     QVERIFY(!cfrCausingErrors.waitForFinished());
 
     // Prepare non-existing contact ids for request we like to result.
-    QList<QContactLocalId> nonExistingContactIds;
-    nonExistingContactIds << "NonExistingId1" << "NonExistingId2" << "NonExistingId3";
+    QList<QContactId> nonExistingContactIds;
+    nonExistingContactIds << QContactId() << QContactId() << QContactId();
 
     // "Make contacts" retrieval with some extra checking.
     cfrCausingErrors.setManager(cm.data());
-    cfrCausingErrors.setLocalIds(nonExistingContactIds);
+    cfrCausingErrors.setIds(nonExistingContactIds);
     QCOMPARE(cfrCausingErrors.manager(), cm.data());
     QVERIFY(!cfrCausingErrors.isActive());
     QVERIFY(!cfrCausingErrors.isFinished());
@@ -684,7 +684,7 @@ void tst_QContactJsonDbAsync::contactSave()
     QList<QContact> expected = csr.contacts();
     QCOMPARE(expected.size(), 1);
     QList<QContact> result;
-    result << cm->contact(expected.first().id().localId());
+    result << cm->contact(expected.first().id());
     //some backends add extra fields, so this doesn't work:
     //QCOMPARE(result, expected);
     // XXX: really, we should use isSuperset() from tst_QContactManager, but this will do for now:
@@ -713,7 +713,7 @@ void tst_QContactJsonDbAsync::contactSave()
 
     expected = csr.contacts();
     result.clear();
-    result << cm->contact(expected.first().id().localId());
+    result << cm->contact(expected.first().id());
     //QVERIFY(compareContactLists(result, expected));
 
     //here we can't compare the whole contact details, testContact would be updated by async call because we just use QThreadSignalSpy to receive signals.
@@ -742,7 +742,7 @@ void tst_QContactJsonDbAsync::contactSave()
             // after the request has already finished.. so loop and try again.
             csr.waitForFinished();
             saveList = csr.contacts();
-            if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
+            if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).id())) {
                 QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
@@ -766,7 +766,7 @@ void tst_QContactJsonDbAsync::contactSave()
 
         // verify that the changes were not saved
         expected.clear();
-        QList<QContactLocalId> allContacts = cm->contactIds();
+        QList<QContactId> allContacts = cm->contactIds();
         for (int i = 0; i < allContacts.size(); i++) {
             expected.append(cm->contact(allContacts.at(i)));
         }
@@ -785,7 +785,7 @@ void tst_QContactJsonDbAsync::contactSave()
             // after the request has already finished.. so loop and try again.
             csr.waitForFinished();
             saveList = csr.contacts();
-            if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).localId())) {
+            if (cm->contactIds().size() > (originalCount + 1) && !cm->removeContact(saveList.at(0).id())) {
                 QSKIP("Unable to remove saved contact to test cancellation of contact save request");
             }
             saveList.clear();
@@ -807,7 +807,7 @@ void tst_QContactJsonDbAsync::contactSave()
 
         // verify that the changes were not saved
         expected.clear();
-        QList<QContactLocalId> allContacts = cm->contactIds();
+        QList<QContactId> allContacts = cm->contactIds();
         for (int i = 0; i < allContacts.size(); i++) {
             expected.append(cm->contact(allContacts.at(i)));
         }
@@ -884,23 +884,18 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
 
     // foreach (QContact testc, csr.contacts()) {
     //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().managerUri();
-    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().localId();
+    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().id();
     // }
 
     // Check errors, the group type is not supported by jsondb backend so contacts with that detail should report error.
     // Note, the returned value is actually set/remapped in to the errorMap by common code in qcontactmanagerengine
     QVERIFY(csr.errorMap().value(0) == QContactManager::InvalidContactTypeError);
-    QVERIFY(csr.contacts()[0].localId().isEmpty());
     QVERIFY(csr.errorMap().value(1) == QContactManager::NoError);
-    QVERIFY(!csr.contacts()[1].localId().isEmpty());
     QVERIFY(csr.errorMap().value(2) == QContactManager::InvalidContactTypeError);
-    QVERIFY(csr.contacts()[2].localId().isEmpty());
     QVERIFY(csr.errorMap().value(3) == QContactManager::NoError);
-    QVERIFY(!csr.contacts()[3].localId().isEmpty());
     QVERIFY(csr.errorMap().value(4) == QContactManager::NoError);
-    QVERIFY(!csr.contacts()[4].localId().isEmpty());
     QVERIFY(csr.errorMap().value(5) == QContactManager::InvalidContactTypeError);
-    QVERIFY(csr.contacts()[5].localId().isEmpty());
+    QVERIFY(csr.contacts()[5].id().isNull());
     QVERIFY(csr.error() == QContactManager::InvalidContactTypeError);
 }
 
@@ -915,8 +910,8 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QList<QContact> originalContacts(contacts);
     QCOMPARE(contacts.count(), 3);
 
-    QContactLocalId aId = contacts[0].localId();
-    QContactLocalId bId = contacts[1].localId();
+    QContactId aId = contacts[0].id();
+    QContactId bId = contacts[1].id();
 
     // Test 1: saving a contact with a changed detail masked out does nothing
     QContactPhoneNumber phn(contacts[0].detail<QContactPhoneNumber>());
@@ -990,13 +985,13 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(csr.errorMap().isEmpty());
     contacts = csr.contacts();
     QCOMPARE(contacts.size()-1, 3);  // Just check that we are dealing with the contact at index 3
-    QContactLocalId dId = contacts[3].localId();
+    QContactId dId = contacts[3].id();
     contacts[3] = cm->contact(dId);
     QVERIFY(contacts[3].details<QContactEmailAddress>().count() == 0); // not saved
     QVERIFY(contacts[3].details<QContactPhoneNumber>().count() == 0); // not saved
 
     // 5 - New contact, some details in the mask
-    QVERIFY(newContact.localId() == 0);
+    QVERIFY(newContact.id().isNull());
     QVERIFY(newContact.details<QContactEmailAddress>().count() == 1);
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts.append(newContact);
@@ -1008,7 +1003,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(csr.errorMap().isEmpty());
     contacts = csr.contacts();
     QCOMPARE(contacts.size()-1, 4);  // Just check that we are dealing with the contact at index 4
-    QContactLocalId eId = contacts[4].localId();
+    QContactId eId = contacts[4].id();
     contacts[4] = cm->contact(eId);
     QCOMPARE(contacts[4].details<QContactEmailAddress>().count(), 0); // not saved
     QCOMPARE(contacts[4].details<QContactPhoneNumber>().count(), 1); // saved
@@ -1016,7 +1011,6 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     // 6) Have a bad manager uri in the middle followed by a save error
     QContactId id3(contacts[3].id());
     QContactId badId(id3);
-    badId.setManagerUri(QString());
     contacts[3].setId(badId);
     QContactDetail badDetail("BadDetail");
     badDetail.setValue("BadField", "BadValue");
@@ -1032,8 +1026,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QCOMPARE(errorMap[4], QContactManager::InvalidDetailError);
 
     // 7) Have a non existing contact in the middle followed by a save error
-    badId = id3;
-    badId.setLocalId("987234"); // something nonexistent (hopefully)
+    badId = QContactIdMock::createId("badid", 987234); // something nonexistent (hopefully)
     contacts[3].setId(badId);
     csr.setContacts(contacts);
     csr.setDefinitionMask(QStringList("BadDetail"));
@@ -1047,7 +1040,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
 
     // 8) A list entirely of new contacts, with no details in the mask
     QList<QContact> contacts2;
-    QVERIFY(newContact.localId() == 0);
+    QVERIFY(newContact.id().isNull());
     QVERIFY(newContact.details<QContactEmailAddress>().count() == 1);
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
@@ -1059,13 +1052,13 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(csr.errorMap().isEmpty());
     contacts2 = csr.contacts();
     QCOMPARE(contacts2.size(), 1);
-    contacts2[0] = cm->contact(contacts2[0].localId());
+    contacts2[0] = cm->contact(contacts2[0].id());
     QCOMPARE(contacts2[0].details<QContactEmailAddress>().count(), 0); // not saved
     QCOMPARE(contacts2[0].details<QContactPhoneNumber>().count(), 0); // saved
 
     // 9) A list entirely of new contacts, with some details in the mask
     contacts2.clear();
-    QVERIFY(newContact.localId() == 0);
+    QVERIFY(newContact.id().isNull());
     QVERIFY(newContact.details<QContactEmailAddress>().count() == 1);
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
@@ -1077,13 +1070,13 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(csr.errorMap().isEmpty());
     contacts2 = csr.contacts();
     QCOMPARE(contacts2.size(), 1);
-    contacts2[0] = cm->contact(contacts2[0].localId());
+    contacts2[0] = cm->contact(contacts2[0].id());
     QCOMPARE(contacts2[0].details<QContactEmailAddress>().count(), 0); // not saved
     QCOMPARE(contacts2[0].details<QContactPhoneNumber>().count(), 1); // saved
 
     // 10) A list entirely of new contacts, with some details in the mask
     contacts2.clear();
-    QVERIFY(newContact.localId() == 0);
+    QVERIFY(newContact.id().isNull());
     QVERIFY(newContact.details<QContactEmailAddress>().count() == 1);
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
@@ -1191,7 +1184,7 @@ void tst_QContactJsonDbAsync::contactRemove() {
     spy.clear();
     foreach (QContact testc, csr.contacts()) {
         qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().managerUri();
-        qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().localId();
+        qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().toString();
     }
     qDebug() << "Returned errors:" << csr.errorMap();
     QVERIFY(csr.errorMap().isEmpty());
@@ -1209,7 +1202,7 @@ void tst_QContactJsonDbAsync::contactRemove() {
     QThreadSignalSpy spy2(&contactRemoveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)));
 
     // Setup valid contact ids for remove request, start it and wait for finished.
-    QList<QContactLocalId> toRemove;
+    QList<QContactId> toRemove;
     toRemove << cm.data()->contactIds();
     qDebug() << "TO REMOVE: " << toRemove;
     contactRemoveRequest.setContactIds(toRemove);
@@ -1234,12 +1227,11 @@ void tst_QContactJsonDbAsync::contactRemove() {
     QVERIFY(contactRemoveRequest.errorMap().value(6) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(7) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(8) == QContactManager::NoError);
-    QList<QContactLocalId> contactsLeft = cm.data()->contactIds();
+    QList<QContactId> contactsLeft = cm.data()->contactIds();
     QVERIFY(contactsLeft.isEmpty());
 }
 
 void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
-
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
@@ -1287,7 +1279,7 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
 
     // foreach (QContact testc, csr.contacts()) {
     //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().managerUri();
-    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().localId();
+    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().id();
     // }
     // qDebug() << "Returned errors:" << csr.errorMap();
     QVERIFY(csr.errorMap().isEmpty());
@@ -1305,8 +1297,9 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
     QThreadSignalSpy spy2(&contactRemoveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)));
 
     // Setup valid and invalid contact ids for remove request, start it and wait for finished.
-    QContactLocalId emptyId = "", failingId = "00000000-0000-0000-0000-0000000000000000";
-    QList<QContactLocalId> toRemove;
+    QContactId emptyId;
+    QContactId failingId = QContactIdMock::createId("Failing", 0);
+    QList<QContactId> toRemove;
     toRemove << emptyId << cm.data()->contactIds();
     toRemove.insert(3, emptyId);
     toRemove.insert(4, failingId);
@@ -1340,7 +1333,7 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
     QVERIFY(contactRemoveRequest.errorMap().value(14) == QContactManager::DoesNotExistError);
 
     // Check that all the contacts have been removed
-    QList<QContactLocalId> contactsLeft = cm.data()->contactIds();
+    QList<QContactId> contactsLeft = cm.data()->contactIds();
     QVERIFY(contactsLeft.isEmpty());
 }
 
@@ -1412,8 +1405,8 @@ QContactManager* tst_QContactJsonDbAsync::prepareModel(const QString& managerUri
 
     // XXX TODO: ensure that this is the case:
     // there should be no contacts in the database.
-    QList<QContactLocalId> toRemove = cm->contactIds();
-    foreach (const QContactLocalId& removeId, toRemove)
+    QList<QContactId> toRemove = cm->contactIds();
+    foreach (const QContactId& removeId, toRemove)
         cm->removeContact(removeId);
 
     QContact a, b, c;

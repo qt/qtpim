@@ -648,8 +648,8 @@ void tst_QContactFilter::relationshipFilter()
     QVERIFY(crf.relatedContact() == QContact());
 
     QContact newContact;
-    newContact.id().setManagerUri("test");
-    newContact.id().setLocalId(QContactLocalId(5));
+    /*newContact.id().setManagerUri("test");
+    newContact.id().setLocalId(QContactId(5));*/
     crf.setRelatedContact(newContact);
 
     QVERIFY(crf.relationshipType() == QString());
@@ -895,19 +895,19 @@ void tst_QContactFilter::boringFilters()
 
 void tst_QContactFilter::idListFilter()
 {
-    QContactLocalIdFilter idf;
+    QContactIdFilter idf;
 
-    QVERIFY(idf.type() == QContactFilter::LocalIdFilter);
+    QVERIFY(idf.type() == QContactFilter::IdFilter);
 
     QVERIFY(idf.ids().count() == 0);
 
-    QList<QContactLocalId> ids;
-    ids << "5" << "6" << "17";
+    QList<QContactId> ids;
+    ids << QContactId() << QContactId() << QContactId();
 
     idf.setIds(ids);
     QVERIFY(idf.ids() == ids);
 
-    idf.setIds(QList<QContactLocalId>());
+    idf.setIds(QList<QContactId>());
     QVERIFY(idf.ids().count() == 0);
 
     /* Test op= */
@@ -915,7 +915,7 @@ void tst_QContactFilter::idListFilter()
     QContactFilter f = idf;
     QVERIFY(f == idf);
 
-    QContactLocalIdFilter idf2 = f;
+    QContactIdFilter idf2 = f;
     QVERIFY(idf2 == idf);
     QVERIFY(idf2.ids() == ids);
 
@@ -927,9 +927,9 @@ void tst_QContactFilter::idListFilter()
     QVERIFY(idf2 == idf);
 
     QContactDetailFilter dfil;
-    QContactLocalIdFilter idf3(dfil);
-    QVERIFY(idf3.type() == QContactFilter::LocalIdFilter); // should be a blank id list filter
-    QContactLocalIdFilter idf4(idf);
+    QContactIdFilter idf3(dfil);
+    QVERIFY(idf3.type() == QContactFilter::IdFilter); // should be a blank id list filter
+    QContactIdFilter idf4(idf);
     QVERIFY(idf4 == idf); // should be a copy of idf.
     idf = dfil; // now assign.
     QVERIFY(idf == idf3); // again, should be a blank id list filter.
@@ -1057,15 +1057,15 @@ void tst_QContactFilter::canonicalizedFilter_data()
     }
 
     {
-        QContactLocalIdFilter qclif;
+        QContactIdFilter qclif;
         QTest::newRow("Empty local id filter")
                 << static_cast<QContactFilter>(qclif)
                 << static_cast<QContactFilter>(invalidFilter);
     }
 
     {
-        QContactLocalIdFilter qclif;
-        qclif.setIds(QList<QContactLocalId>() << "1" << "2");
+        QContactIdFilter qclif;
+        qclif.setIds(QList<QContactId>() << QContactId() << QContactId());
         QTest::newRow("Normal local id filter")
                 << static_cast<QContactFilter>(qclif)
                 << static_cast<QContactFilter>(qclif);
@@ -1431,8 +1431,8 @@ void tst_QContactFilter::datastream_data()
     }
 
     {
-        QContactLocalIdFilter filter;
-        filter.setIds(QList<QContactLocalId>() << "1" << "2" << "3");
+        QContactIdFilter filter;
+        filter.setIds(QList<QContactId>() << QContactId() << QContactId() << QContactId());
         QTest::newRow("localid") << (QContactFilter)filter;
     }
 

@@ -111,7 +111,7 @@ Rectangle {
         }
 
         GenericButton {
-            width: parent.width / 2
+            width: parent.width / 3
             buttonText: "Cancel"
 
             onClicked: {
@@ -120,7 +120,17 @@ Rectangle {
         }
 
         GenericButton {
-            width: parent.width / 2
+            width: parent.width / 3
+            buttonText: "Delete"
+
+            onClicked: {
+                organizerApplication.state = "EventListView"
+                organizer.removeItem( eventItem.itemId )
+            }
+        }
+
+        GenericButton {
+            width: parent.width / 3
             buttonText: "Save"
 
             onClicked: {

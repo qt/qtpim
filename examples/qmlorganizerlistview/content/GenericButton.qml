@@ -30,6 +30,9 @@ import QtQuick 2.0
 //![Generic Button]
 //![Create Button Rectangle]
 Rectangle {
+    signal clicked
+    property alias buttonText: buttonLabel.text
+
     radius: 5
     height: buttonLabel.height
     color: "black"
@@ -41,11 +44,6 @@ Rectangle {
         color: "black"
     }
 //![Create Button Border]
-
-//![Button Clicked]
-    signal clicked
-    property alias buttonText: buttonLabel.text
-//![Button Clicked]
 
 //![Button Text]
     Text {

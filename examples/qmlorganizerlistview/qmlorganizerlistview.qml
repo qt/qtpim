@@ -224,16 +224,6 @@ Rectangle {
 
         GenericButton {
             width: parent.width / 2
-            buttonText: "Delete Selected Event"
-
-            onClicked: {
-                organizer.removeItem(
-                            organizer.items[eventView.currentIndex].itemId)
-            }
-        }
-
-        GenericButton {
-            width: parent.width / 2
             buttonText: "Add New Event"
 
             onClicked: {

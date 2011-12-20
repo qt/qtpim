@@ -5,6 +5,7 @@ include(macros.qdocconf)
 include(compat.qdocconf)
 include(qt-cpp-ignore.qdocconf)
 include(qt-defines.qdocconf)
+include(qtpim-cpp-ignore.qdocconf)
 
 # Directories in which to search for files to document and images.
 # By default set to the root directory of the project for sources

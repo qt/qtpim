@@ -75,15 +75,7 @@ Cpp.ignoretokens        = QAXFACTORY_EXPORT \
                           Q_GADGET \
                           QWEBKIT_EXPORT \
                           Q_INVOKABLE \
-                          Q_DECL_CONSTEXPR\
-                          QTORGANIZER_BEGIN_NAMESPACE\
-                          QTORGANIZER_END_NAMESPACE\
-                          QTVERSIT_BEGIN_NAMESPACE\
-                          QTVERSIT_END_NAMESPACE\
-                          QTCONTACTS_BEGIN_NAMESPACE\
-                          QTCONTACTS_END_NAMESPACE\
-                          QTVERSITORGANIZER_BEGIN_NAMESPACE\
-                          QTVERSITORGANIZER_END_NAMESPACE
+                          Q_DECL_CONSTEXPR
 Cpp.ignoredirectives    = Q_DECLARE_HANDLE\
                           Q_DECLARE_INTERFACE \
                           Q_DECLARE_METATYPE \

@@ -43,7 +43,6 @@
 #define QORGANIZERITEMTAG_H
 
 #include <qorganizeritemdetail.h>
-#include <qorganizeritemfilter.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

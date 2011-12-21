@@ -557,8 +557,9 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItem &item)
  */
 QOrganizerItemType::ItemType QOrganizerItem::type() const
 {
-    QOrganizerItemType newType = detail<QOrganizerItemType>();
-    return newType.type();
+    // type is always the first detail
+    QOrganizerItemType type = static_cast<QOrganizerItemType>(d->m_details.at(0));
+    return type.type();
 }
 
 /*!
@@ -566,9 +567,8 @@ QOrganizerItemType::ItemType QOrganizerItem::type() const
  */
 void QOrganizerItem::setType(QOrganizerItemType::ItemType type)
 {
-    QOrganizerItemType newType = detail<QOrganizerItemType>();
-    newType.setType(type);
-    saveDetail(&newType);
+    // type is always the first detail
+    d->m_details.first().setValue(QOrganizerItemType::FieldType, type);
 }
 
 /*!

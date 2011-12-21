@@ -1744,7 +1744,7 @@ bool QOrganizerTodoTime::isAllDay() const
 
     This enumeration describes the type of the organizer item.
 
-    \value TypeUnknown          This item is of an unknown type.
+    \value TypeUndefined        This item is of an unknown type.
     \value TypeEvent            This item is an event.
     \value TypeEventOccurrence  This item is an event occurrence.
     \value TypeTodo             This item is a TODO.

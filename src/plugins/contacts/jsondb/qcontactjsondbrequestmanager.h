@@ -65,7 +65,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QContactRequestData
 {
     public:
-
     QContactRequestData() {}
     QList<QContact> m_contactList;
     QMap<int, int> m_transactionMap;
@@ -75,15 +74,28 @@ class QContactRequestData
 class QContactJsonDbRequestManager : public QObject
 {
     Q_OBJECT
+
 public:
+
+    enum TransactionType {
+        InvalidTransaction = 0,
+        OrphanTransaction,
+        NotificationsTransaction,
+        PrefetchForSaveTransaction,
+        SaveTransaction,
+        FetchTransaction,
+        LocalIdFetchTransaction,
+        RemoveTransaction
+    };
+
     QContactJsonDbRequestManager();
     ~QContactJsonDbRequestManager();
 
     void addRequest(QContactAbstractRequest* req, QList<QContact> contacts = QList<QContact>());
     void removeRequest(QContactAbstractRequest* req);
 
-    void addTransaction(QContactAbstractRequest* req, int trId, int contactIndex = -1);
-    QContactAbstractRequest* removeTransaction(int trId, int& contactIndex);
+    void addTransaction(int trId, TransactionType transactionType, QContactAbstractRequest *req = 0, int contactIndex = -1);
+    QContactAbstractRequest* removeTransaction(int trId, TransactionType &transactionType, int &contactIndex);
 
     bool setWaitCondition(QContactAbstractRequest* req, QWaitCondition* waitCondition);
     QWaitCondition* waitCondition(QContactAbstractRequest* req);
@@ -102,6 +114,7 @@ public slots:
 private:
     QMap<QContactAbstractRequest*, QContactRequestData* > m_activeRequests;
     QMap<QContactAbstractRequest*, QWaitCondition* > m_inactiveRequests;
+    QMap<int, QContactJsonDbRequestManager::TransactionType> m_transactionTypeMap;
     QMutex* m_operationMutex;
 };
 

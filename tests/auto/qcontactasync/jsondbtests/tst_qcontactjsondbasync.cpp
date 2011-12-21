@@ -889,7 +889,6 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
 
     // Check errors, the group type is not supported by jsondb backend so contacts with that detail should report error.
     // Note, the returned value is actually set/remapped in to the errorMap by common code in qcontactmanagerengine
-    // qDebug() << "Returned errors:" << csr.errorMap();
     QVERIFY(csr.errorMap().value(0) == QContactManager::InvalidContactTypeError);
     QVERIFY(csr.contacts()[0].localId().isEmpty());
     QVERIFY(csr.errorMap().value(1) == QContactManager::NoError);
@@ -902,7 +901,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QVERIFY(!csr.contacts()[4].localId().isEmpty());
     QVERIFY(csr.errorMap().value(5) == QContactManager::InvalidContactTypeError);
     QVERIFY(csr.contacts()[5].localId().isEmpty());
-
+    QVERIFY(csr.error() == QContactManager::InvalidContactTypeError);
 }
 
 

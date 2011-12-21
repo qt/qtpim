@@ -84,32 +84,46 @@ void QContactJsonDbRequestManager::removeRequest(QContactAbstractRequest* req)
     }
 }
 
-void QContactJsonDbRequestManager::addTransaction(QContactAbstractRequest* req, int trId, int contactIndex)
+void QContactJsonDbRequestManager::addTransaction(int trId, TransactionType transactionType, QContactAbstractRequest *req, int contactIndex)
 {
     QMutexLocker locker(m_operationMutex);
 
+    m_transactionTypeMap.insert(trId, transactionType);
     if (m_activeRequests.contains(req)) {
         m_activeRequests.value(req)->m_transactionMap.insert(trId, contactIndex);
     }
 }
 
-QContactAbstractRequest* QContactJsonDbRequestManager::removeTransaction(int trId, int& contactIndex)
+QContactAbstractRequest* QContactJsonDbRequestManager::removeTransaction(int trId, TransactionType &transactionType, int &contactIndex)
 {
     QMutexLocker locker(m_operationMutex);
 
+    if (m_transactionTypeMap.contains(trId)) {
+        transactionType = m_transactionTypeMap.value(trId);
+        m_transactionTypeMap.remove(trId);
+        // Notifications transaction never has QContactAbsractRequest assosiated.
+        if (transactionType == NotificationsTransaction)
+            return 0;
+    } else {
+        qWarning() << Q_FUNC_INFO << "Could not find transaction:" << trId;
+        transactionType = InvalidTransaction;
+        return 0;
+    }
     QList<QContactAbstractRequest*> reqList = m_activeRequests.keys();
     for (int i = 0; i < reqList.size(); i++) {
         QContactAbstractRequest* req = reqList.at(i);
         QMap<int, int>* transactionMap = &(m_activeRequests.value(req)->m_transactionMap);
-
         if (transactionMap->contains(trId)) {
             contactIndex = transactionMap->value(trId);
             transactionMap->remove(trId);
             return reqList.at(i);
         }
     }
+    // Request for this transaction already deleted so mark transaction as orphan.
+    transactionType = OrphanTransaction;
     return 0;
 }
+
 
 bool QContactJsonDbRequestManager::setWaitCondition(QContactAbstractRequest *req, QWaitCondition *waitCondition)
 {

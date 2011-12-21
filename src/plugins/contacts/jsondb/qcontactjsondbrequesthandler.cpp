@@ -49,9 +49,7 @@
 
 #include <jsondb-error.h>
 #include <jsondb-client.h>
-#include <private/jsondb-connection_p.h>
 #include <private/jsondb-strings_p.h>
-Q_USE_JSONDB_NAMESPACE
 #include <QDebug>
 #include <QString>
 #include <QMap>
@@ -60,7 +58,7 @@ Q_USE_JSONDB_NAMESPACE
 QTCONTACTS_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(ContactsJsonDbType, "com.nokia.mp.contacts.Contact")
-Q_DEFINE_LATIN1_CONSTANT(ContanctsJsonDbNotificationQuery, "[?_type in [\"com.nokia.mp.contacts.Contact\"]]")
+Q_DEFINE_LATIN1_CONSTANT(ContactsJsonDbNotificationQuery, "[?_type in [\"com.nokia.mp.contacts.Contact\"]]")
 
 const int QContactJsonDbRequestHandler::TIMEOUT_INTERVAL(100);
 
@@ -86,11 +84,7 @@ void QContactJsonDbRequestHandler::init()
     m_reqStateMutex = new QMutex();
     m_requestMgr = new QContactJsonDbRequestManager();
     m_converter = new QContactJsonDbConverter();
-
-    m_jsonConnection = new JsonDbConnection(this);
-    m_jsonConnection->connectToServer();
-    m_jsonDb = new JsonDbClient(m_jsonConnection);
-
+    m_jsonDb = new JsonDbClient;
     connect(m_jsonDb, SIGNAL(notified(const QString&, const QVariant&, const QString&)),
             this, SLOT(onNotified(const QString&, const QVariant&, const QString&)));
     connect(m_jsonDb, SIGNAL(response(int, const QVariant)), this,
@@ -183,68 +177,66 @@ void QContactJsonDbRequestHandler::handleRequest(QContactAbstractRequest *req)
 
 void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest* req) {
     //TODO: handle duplicates(?)
-    QContactManager::Error error = QContactManager::NoError;
+    QList<QContact> contacts = req->contacts();
     QContactManager::Error lastError = QContactManager::NoError;
     QMap<int, QContactManager::Error> errorMap;
-    QList<QContact> contacts = req->contacts();
-    QContactManagerEngine::updateContactSaveRequest(req, contacts, error, errorMap, QContactAbstractRequest::ActiveState);
+    QContactManagerEngine::updateContactSaveRequest(req, contacts, lastError, errorMap, QContactAbstractRequest::ActiveState);
     m_requestMgr->addRequest(req, contacts);
-    bool contactExist = false;
+    bool transactionsMade = false;
     for (int i = 0; i < contacts.size(); i++) {
+        QContactManager::Error error = QContactManager::NoError;
         QContact contact = contacts.at(i);
-        QVariantMap newJsonDbItem;
-        contactExist = !(contact.id().localId().isEmpty() || contact.id().managerUri().isEmpty());
-
-        // Quickfix that fetches complete contact data from jsondb to the newJsonDbItem.
-        // This way we preserve possible extra fields in jsondb contact object as.
-        if (contactExist) {
-            QContactLocalIdFilter localIdFilter;
-            localIdFilter.add(contact.localId());
-            QContactFetchRequest fetchRequest;
-            fetchRequest.setFilter(localIdFilter);
-            QString query = m_converter->queryFromRequest(&fetchRequest);
-            QVariantMap jsonDbItem = JsonDbConnection::makeQueryRequest(query);
-            jsonDbItem = JsonDbConnection::instance()->sync(jsonDbItem).value<QVariantMap>();
-            if (!jsonDbItem.isEmpty()) {
-                QVariantList jsonDbObjectList = jsonDbItem.value("data").toList();
-                if (!jsonDbObjectList.isEmpty()) {
-                    newJsonDbItem = jsonDbObjectList.at(0).toMap();
-                }
-            }
-        }
-        // End of Quickfix
-
-        error = QContactManager::NoError;
         if (!m_engine->validateContact(contact, &error)) {
-            error = QContactManager::InvalidContactTypeError;
             errorMap.insert(i,error);
             lastError = error;
-        }
-        if (error == QContactManager::NoError) {
-            if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
-                int trId;
-                if (contactExist) {
-                    trId = m_jsonDb->update(newJsonDbItem);
-                } else {
-                    trId = m_jsonDb->create(newJsonDbItem);
-                }
-                m_requestMgr->addTransaction(req, trId, i);
+            // For invalid contact in addition to reporting error we also clear the contact id.
+            QContactId contactId;
+            contactId.setLocalId (QContactLocalId());
+            contactId.setManagerUri(QString());
+            contact.setId(contactId);
+        } else {
+            if (!contact.id().localId().isEmpty()) {
+                // Update to existing contact with given id. Fetch complete contact data from jsondb before saving.
+                // This preserves possible extra fields in jsondb contact object.
+                QContactLocalIdFilter localIdFilter;
+                localIdFilter.add(contact.localId());
+                QContactFetchRequest fetchRequest;
+                fetchRequest.setFilter(localIdFilter);
+                QString fetchQuery = m_converter->queryFromRequest(&fetchRequest);
+                int trId = m_jsonDb->query(fetchQuery);
+                m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::PrefetchForSaveTransaction, req, i);
+                transactionsMade = true;
             } else {
-                error = QContactManager::BadArgumentError;
-                errorMap.insert(i,error);
-                lastError = error;
+                // If contact local id was empty, we make a create transaction for a new contact.
+                QVariantMap newJsonDbItem;
+                if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
+                    int trId = m_jsonDb->create(newJsonDbItem);
+                    m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::SaveTransaction, req, i);
+                    transactionsMade = true;
+                } else {
+                    error = QContactManager::BadArgumentError;
+                    errorMap.insert(i,error);
+                    lastError = error;
+                }
             }
         }
-
-    };
-    QContactManagerEngine::updateContactSaveRequest(req, contacts, error, errorMap, QContactAbstractRequest::ActiveState);
+    }
+    if (transactionsMade) {
+        QContactManagerEngine::updateContactSaveRequest(req, contacts, lastError, errorMap, QContactAbstractRequest::ActiveState);
+    } else {
+        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+        m_requestMgr->removeRequest(req);
+        QContactManagerEngine::updateContactSaveRequest(req, contacts, lastError, errorMap, QContactAbstractRequest::FinishedState);
+        if (waitCondition)
+            waitCondition->wakeAll();
+    }
 }
 
 void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchRequest* req) {
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
     int trId = m_jsonDb->query(newJsonDbQuery);
-    m_requestMgr->addTransaction(req, trId);
+    m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::FetchTransaction, req);
 }
 
 void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequest* req) {
@@ -259,19 +251,16 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
     bool transactionsMade = false;
     for (int i = 0; i < contactIds.size(); i++) {
         QContactLocalId contactLocalId = contactIds.at(i);
-        QContactId contactId;
-        contactId.setManagerUri(m_engine->managerUri());
         int trId;
-        bool contactExist = !(contactLocalId.isEmpty() || contactLocalId == "" || contactId.managerUri().isEmpty()); // || !contactId.managerUri().contains(contactLocalId)
-        if (contactExist) {
+        if (!contactLocalId.isEmpty()) {
             QVariantMap newJsonDbItem;
             newJsonDbItem.insert(JsonDbString::kUuidStr, contactLocalId);
             newJsonDbItem.insert(JsonDbString::kTypeStr, ContactsJsonDbType);
             trId = m_jsonDb->remove(newJsonDbItem);
-            m_requestMgr->addTransaction(req, trId, i);
+            m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::RemoveTransaction, req, i);
             transactionsMade = true;
         } else {
-            // Contact not found. DoesNotExistError to be generated for this contact id.
+            // Generate DoesNotExistsError if trying to remove contact with an empty contactLocalId.
             error = QContactManager::DoesNotExistError;
             errorMap.insert(i,error);
             lastError = error;
@@ -295,7 +284,7 @@ void QContactJsonDbRequestHandler::handleContactLocalIdFetchRequest(QContactLoca
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
     int trId = m_jsonDb->query(newJsonDbQuery);
-    m_requestMgr->addTransaction(req, trId);
+    m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::LocalIdFetchTransaction, req);
 }
 
 void QContactJsonDbRequestHandler::onNotified(const QString &notifyUuid, const QVariant &object, const QString &action)
@@ -351,41 +340,60 @@ void QContactJsonDbRequestHandler::onTimeout()
     }
 }
 
-void QContactJsonDbRequestHandler::onResponse(int id, const QVariant &object)
+void QContactJsonDbRequestHandler::onResponse(int transactionId, const QVariant &object)
 {
     QMutexLocker locker(m_reqStateMutex);
 
     int contactIndex;
-    QContactAbstractRequest* req = m_requestMgr->removeTransaction(id, contactIndex);
-
-    if (!req) {
-        if (id != m_notificationsRequestTrId) {
-            // Should never occur as only transaction lacking request insatance is for registering for jsondb notifications.
-            qWarning() << Q_FUNC_INFO << "No request for a transaction response from jsondb, trid:" << id;
-        }
+    QContactJsonDbRequestManager::TransactionType transactionType;
+    QContactAbstractRequest* req = m_requestMgr->removeTransaction( transactionId, transactionType, contactIndex);
+    // Handle responses for transactions having no QContactAbstractRequest associated.
+    switch (transactionType) {
+    case QContactJsonDbRequestManager::NotificationsTransaction: {
+        // Notification request already removed from request manager and requires no more processing.
         return;
     }
-
-    QContactManager::Error error = QContactManager::NoError;
-    switch (req->type()) {
-    case QContactAbstractRequest::ContactSaveRequest: {
+    case QContactJsonDbRequestManager::OrphanTransaction: {
+        qWarning() << Q_FUNC_INFO << "Orphaned transaction with transactionId:" << transactionId;
+        return;
+    }
+    case QContactJsonDbRequestManager::InvalidTransaction: {
+        qWarning() << Q_FUNC_INFO << "InvalidTransactionType, trId:" << transactionId;
+        return;
+    }
+    default:
+         break;
+    }
+    // Rest of the transaction responses should have assosisated QContactAbstractRequest.
+    // However, if client already has deleted the request we just give a warning.
+    if (!req) {
+        qWarning() << Q_FUNC_INFO << "Transaction id" << transactionId << "missing associated QContactAbstractRequest, response object:" << object;
+        return;
+    }
+    switch (transactionType) {
+    case QContactJsonDbRequestManager::PrefetchForSaveTransaction: {
         QContactSaveRequest* saveReq = static_cast<QContactSaveRequest*>(req);
-        handleContactSaveResponse(saveReq, object, contactIndex, error);
+        handleContactSavePrefetchResponse(saveReq, object, contactIndex);
         break;
     }
-    case QContactAbstractRequest::ContactFetchRequest: {
+    case QContactJsonDbRequestManager::SaveTransaction: {
+        QContactSaveRequest* saveReq = static_cast<QContactSaveRequest*>(req);
+        handleContactSaveResponse(saveReq, object, contactIndex);
+        break;
+    }
+    case QContactJsonDbRequestManager::FetchTransaction: {
         QContactFetchRequest* fetchReq = static_cast<QContactFetchRequest*>(req);
-        handleContactFetchResponse(fetchReq, object, error);
+        handleContactFetchResponse(fetchReq, object);
         break;
     }
-    case QContactAbstractRequest::ContactRemoveRequest: {
+    case QContactJsonDbRequestManager::RemoveTransaction: {
         QContactRemoveRequest* removeReq = static_cast<QContactRemoveRequest*>(req);
-        handleContactRemoveResponse(removeReq, object, contactIndex, error);
+        handleContactRemoveResponse(removeReq);
         break;
     }
-    case QContactAbstractRequest::ContactLocalIdFetchRequest: {
+    case QContactJsonDbRequestManager::LocalIdFetchTransaction: {
         QContactLocalIdFetchRequest* idReq = static_cast<QContactLocalIdFetchRequest*>(req);
-        handleContactLocalIdFetchResponse(idReq, object, contactIndex, error);
+        handleContactLocalIdFetchResponse(idReq, object);
         break;
     }
     default:
@@ -441,64 +449,76 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
 
         qWarning() << Q_FUNC_INFO << "Error generated from jsonDB: " + message;
     }
-    int itemIndex;
-    QContactAbstractRequest* req = m_requestMgr->removeTransaction(id, itemIndex);
-    if (!req) {
-        // Only transaction for registering for jsondb notifications lacks request instance.
-        if (id == m_notificationsRequestTrId) {
-            handleJsonDbNotificationsRequestError(error);
-        } else {
-            // Should never occur.
-            qWarning() << Q_FUNC_INFO << "No request for a transaction error response from jsondb, trid:" << id;
-        }
+    int contactIndex;
+    QContactJsonDbRequestManager::TransactionType transactionType;
+    QContactAbstractRequest* req = m_requestMgr->removeTransaction(id, transactionType, contactIndex);
+    // Handle responses for transactions having no QContactAbstractRequest associated.
+    switch (transactionType) {
+    case QContactJsonDbRequestManager::NotificationsTransaction:  {
+        handleJsonDbNotificationsRequestError(error);
         return;
     }
-    switch (req->type()) {
-    case QContactAbstractRequest::ContactFetchRequest: {
+    case QContactJsonDbRequestManager::OrphanTransaction: {
+        qWarning() << Q_FUNC_INFO << "Orphaned transaction with transactionId:" << id;
+        return;
+    }
+    case QContactJsonDbRequestManager::InvalidTransaction: {
+        qWarning() << Q_FUNC_INFO << "InvalidTransactionType, trId:" << id;
+        return;
+    }
+    default:
+         break;
+    }
+    // Rest of the transaction responses should have assosisated QContactAbstractRequest.
+    // However, if client already has deleted the request we just give a warning.
+    if (!req) {
+        qWarning() << Q_FUNC_INFO << "Transaction id" << id << "missing associated QContactAbstractRequest.";
+        return;
+    }
+    switch (transactionType) {
+    case QContactJsonDbRequestManager::FetchTransaction: {
         QList<QContact> contacts;
         if (m_requestMgr->isRequestCompleted(req)) {
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);
             QContactManagerEngine::updateContactFetchRequest (static_cast<QContactFetchRequest*>(req), contacts,
                                                           error, QContactAbstractRequest::FinishedState);
-            if (waitCondition) {
+            if (waitCondition)
                 waitCondition->wakeAll();
-            }
         } else {
             QContactManagerEngine::updateContactFetchRequest (static_cast<QContactFetchRequest*>(req), contacts,
                                                           error, QContactAbstractRequest::ActiveState);
         }
-
         break;
     }
-    case QContactAbstractRequest::ContactSaveRequest: {
+    case QContactJsonDbRequestManager::PrefetchForSaveTransaction:
+    case QContactJsonDbRequestManager::SaveTransaction: {
         QList<QContact> contacts;
         QContactSaveRequest* saveReq = static_cast<QContactSaveRequest*>(req);
         QMap<int, QContactManager::Error> errorMap = saveReq->errorMap();
         if (error != QContactManager::NoError) {
-            errorMap.insert(itemIndex, error);
+            errorMap.insert(contactIndex, error);
         }
+        qWarning() << Q_FUNC_INFO << "Save request failed for contact index" << contactIndex
+                   << "and contact id" << saveReq->contacts().at(contactIndex).id();
         if (m_requestMgr->isRequestCompleted(req)) {
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);
             QContactManagerEngine::updateContactSaveRequest(static_cast<QContactSaveRequest*>(req),contacts,
                                                             error,errorMap,QContactAbstractRequest::FinishedState);
-            if (waitCondition) {
+            if (waitCondition)
                 waitCondition->wakeAll();
-            }
         } else {
             QContactManagerEngine::updateContactSaveRequest(static_cast<QContactSaveRequest*>(req),contacts,
                                                             error,errorMap,QContactAbstractRequest::ActiveState);
         }
-
         break;
     }
-    case QContactAbstractRequest::ContactRemoveRequest: {
+    case QContactJsonDbRequestManager::RemoveTransaction: {
         QContactRemoveRequest* removeReq = static_cast<QContactRemoveRequest*>(req);
         QMap<int, QContactManager::Error> errorMap = removeReq->errorMap();
-        if (error != QContactManager::NoError) {
-            errorMap.insert(itemIndex, error);
-        }
+        if (error != QContactManager::NoError)
+            errorMap.insert(contactIndex, error);
         if (m_requestMgr->isRequestCompleted(req)) {
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);
@@ -509,6 +529,16 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
             // If request not yet completed, just add error to the requests' error map.
             QContactManagerEngine::updateContactRemoveRequest(removeReq, error, errorMap, QContactAbstractRequest::ActiveState);
         }
+        break;
+    }
+    case QContactJsonDbRequestManager::LocalIdFetchTransaction: {
+        QContactLocalIdFetchRequest* localIdFetchReq = static_cast<QContactLocalIdFetchRequest*>(req);
+        QList<QContactLocalId> ids;
+        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+        m_requestMgr->removeRequest(req);
+        QContactManagerEngine::updateContactLocalIdFetchRequest(localIdFetchReq, ids, error, QContactAbstractRequest::FinishedState);
+        if (waitCondition)
+            waitCondition->wakeAll();
         break;
     }
     default:
@@ -525,8 +555,9 @@ void QContactJsonDbRequestHandler::removeDestroyed(QObject * req)
     }
 }
 
-void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error)
+void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest *req, const QVariant &object, int index)
 {
+    QContactManager::Error lastError = req->error();
     QMap<int, QContactManager::Error> errorMap = req->errorMap();
     QString jsonUuid = object.toMap().value("_uuid").toString();
     if (!jsonUuid.isEmpty()) {
@@ -537,11 +568,13 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
             contactId.setLocalId (jsonUuid);
             contactId.setManagerUri(m_engine->managerUri());
             contact.setId(contactId);
+            QContactManager::Error error = QContactManager::NoError;
             QString displayLabel = m_engine->synthesizedDisplayLabel(contact, &error);
             if (error == QContactManager::NoError) {
                 QContactManagerEngine::setContactDisplayLabel(&contact, displayLabel);
             } else {
                 errorMap.insert(index, error);
+                lastError = error;
                 if (qt_debug_jsondb_contacts())
                     qDebug() << Q_FUNC_INFO << "ERROR in synthesizing display label: "
                          << error << "for contact " << contact;
@@ -555,18 +588,37 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
         QList<QContact> contacts = m_requestMgr->contacts(req);
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactSaveRequest(req, contacts, error, errorMap, QContactAbstractRequest::FinishedState);
+        QContactManagerEngine::updateContactSaveRequest(req, contacts, lastError, errorMap, QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
     }
 }
 
-void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchRequest *req, const QVariant &object, QContactManager::Error error)
+void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactSaveRequest *req, const QVariant &object, int index)
 {
-    QList<QContact> contacts;
-    // object is a QVariant containing QVariantMap("data", QVariantList). QVariantList is the list of QVariantMaps
-    // each representing one retrieved Contact card.
+    QVariantList jsonDbObjectList;
+    QVariantMap newJsonDbItem;
+    if (!object.isNull()) {
+        jsonDbObjectList = object.toMap().value("data").toList();
+        if (!jsonDbObjectList.isEmpty()) {
+            newJsonDbItem = jsonDbObjectList.at(0).toMap();
+            if (m_converter->toJsonContact(&newJsonDbItem, req->contacts().at(index))) {
+                int transactionId = m_jsonDb->update(newJsonDbItem);
+                m_requestMgr->addTransaction(transactionId, QContactJsonDbRequestManager::SaveTransaction, req, index);
+                return;
+            }
+        }
+    }
+    qWarning() << Q_FUNC_INFO << "Empty response from jsondb for contact id" << req->contacts().at(index).id();
+}
 
+
+void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchRequest *req, const QVariant &object)
+{
+    // Object is a QVariant containing QVariantMap("data", QVariantList).
+    // QVariantList is the list of QVariantMaps each representing one retrieved Contact card.
+    QList<QContact> contacts;
+    QContactManager::Error error;
     QVariantList jsonDbObjectList;
     if (!object.isNull()) {
         jsonDbObjectList = object.toMap().value("data").toList();
@@ -582,44 +634,20 @@ void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchReque
         waitCondition->wakeAll();
 }
 
-void QContactJsonDbRequestHandler::handleContactRemoveResponse(QContactRemoveRequest *req, const QVariant &object, int index, QContactManager::Error error)
+void QContactJsonDbRequestHandler::handleContactRemoveResponse(QContactRemoveRequest *req)
 {
-    QMap<int, QContactManager::Error> errorMap = req->errorMap();
-    QString jsonUuid = object.toMap().value("_uuid").toString();
-
-    if (!jsonUuid.isEmpty()) {
-        QContactLocalId contactLocalId = req->contactIds().at(index);
-        QContactId contactId;
-        contactId.setLocalId (jsonUuid);
-        contactId.setManagerUri(m_engine->managerUri());
-        //contact.setId(contactId);
-        // (CB) Check if the following part is needed !!
-        /*
-            QString displayLabel = m_engine->synthesizedDisplayLabel(contact, &error);
-            if (error == QContactManager::NoError) {
-                QContactManagerEngine::setContactDisplayLabel(&contact, displayLabel);
-            } else {
-                //TODO Error handling(!)
-                errorMap.insert(contactIndex, error);
-                qDebug() << "ERROR in synthesizing display label: "
-                         << error << "for contact " << contact;
-                //QContactManagerEngine::setContactDisplayLabel(contact, QString(""));
-            };
-        */
-        // (CB) Check if the following line is needed !!
-        //m_requestMgr->addContact(req, contact, contactIndex);
-    }
-
     if (m_requestMgr->isRequestCompleted(req)) {
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactRemoveRequest(req, error, errorMap, QContactAbstractRequest::FinishedState);
+        QContactManager::Error lastError = req->error();
+        QMap<int, QContactManager::Error> errorMap = req->errorMap();
+        QContactManagerEngine::updateContactRemoveRequest(req, lastError, errorMap, QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
     }
 }
 
-void QContactJsonDbRequestHandler::handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest *req, const QVariant &object, int index, QContactManager::Error error)
+void QContactJsonDbRequestHandler::handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest *req, const QVariant &object)
 {
     QList<QContactLocalId> ids;
     QVariantList jsonObjects;
@@ -629,6 +657,7 @@ void QContactJsonDbRequestHandler::handleContactLocalIdFetchResponse(QContactLoc
     foreach (QVariant jsonObject, jsonObjects) {
         ids.append(QContactLocalId(jsonObject.toString()));
     }
+    QContactManager::Error error = QContactManager::NoError;
     if (ids.isEmpty() || object.isNull())
         error = QContactManager::DoesNotExistError;
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
@@ -641,8 +670,11 @@ void QContactJsonDbRequestHandler::handleContactLocalIdFetchResponse(QContactLoc
 void QContactJsonDbRequestHandler::sendJsonDbNotificationsRequest()
 {
     if (!m_jsonDbNotificationsRequested) {
-        m_notificationsRequestTrId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
-                                                      ContanctsJsonDbNotificationQuery);
+        int transactionId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
+                                                    ContactsJsonDbNotificationQuery);
+        m_requestMgr->addTransaction(transactionId, QContactJsonDbRequestManager::NotificationsTransaction);
+        if (qt_debug_jsondb_contacts())
+            qDebug() << Q_FUNC_INFO << "Notification request transaction id: " << transactionId;
         m_jsonDbNotificationsRequested = true;
     }
 }

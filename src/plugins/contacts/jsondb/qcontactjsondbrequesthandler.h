@@ -97,18 +97,17 @@ private:
     void handleContactRemoveRequest(QContactRemoveRequest* req);
     void handleContactLocalIdFetchRequest(QContactLocalIdFetchRequest* req);
     void sendJsonDbNotificationsRequest();
-
-    void handleContactSaveResponse(QContactSaveRequest* req, const QVariant &object, int index, QContactManager::Error error);
-    void handleContactFetchResponse(QContactFetchRequest* req, const QVariant &object, QContactManager::Error error);
-    void handleContactRemoveResponse(QContactRemoveRequest* req, const QVariant &object, int index, QContactManager::Error error);
-    void handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest* req, const QVariant &object, int index, QContactManager::Error error);
+    void handleContactSaveResponse(QContactSaveRequest *req, const QVariant &object, int index);
+    void handleContactSavePrefetchResponse(QContactSaveRequest *req, const QVariant &object, int index);
+    void handleContactFetchResponse(QContactFetchRequest *req, const QVariant &object);
+    void handleContactRemoveResponse(QContactRemoveRequest *req);
+    void handleContactLocalIdFetchResponse(QContactLocalIdFetchRequest *req, const QVariant &object);
     void handleJsonDbNotificationsRequestError(QContactManager::Error error);
 
     void startTimer();
 
     QContactJsonDbEngine* m_engine;
     JsonDbClient* m_jsonDb;
-    JsonDbConnection* m_jsonConnection;
     QContactJsonDbRequestManager* m_requestMgr;
     QContactJsonDbConverter* m_converter;
     // Mutex to make request state changes atomic.
@@ -120,7 +119,6 @@ private:
     QContactChangeSet m_ccs;
     static const int TIMEOUT_INTERVAL;
     QTimer *m_timer;
-    int m_notificationsRequestTrId;
     bool m_jsonDbNotificationsRequested;
 };
 

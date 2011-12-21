@@ -88,6 +88,7 @@ QDeclarativeOrganizerItemDetail::~QDeclarativeOrganizerItemDetail()
     \o Detail.Recurrence
     \o Detail.Tag
     \o Detail.Timestamp
+    \o Detail.Version
     \o Detail.Reminder
     \o Detail.AudibleReminder
     \o Detail.EmailReminder
@@ -1880,6 +1881,66 @@ QString QDeclarativeOrganizerItemClassification::classification() const
 }
 
 
+/*!
+    \qmlclass Version QDeclarativeOrganizerItemVersion
+    \brief The Version element contains versioning information of an organizer item.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-details
+
+    \sa QOrganizerItemVersion
+ */
+QDeclarativeOrganizerItemVersion::QDeclarativeOrganizerItemVersion(QObject *parent)
+    : QDeclarativeOrganizerItemDetail(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
+    setDetail(QOrganizerItemVersion());
+}
+
+QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemVersion::type() const
+{
+    return QDeclarativeOrganizerItemDetail::Version;
+}
+
+/*!
+    \qmlproperty int Version::version
+
+    This property holds the integer version of an organizer item, which can be used as the sequence
+    number as per iCalendar spec.
+ */
+void QDeclarativeOrganizerItemVersion::setVersion(int newVersion)
+{
+    if (version() != newVersion) {
+        m_detail.setValue(QOrganizerItemVersion::FieldVersion, newVersion);
+        emit valueChanged();
+    }
+}
+
+int QDeclarativeOrganizerItemVersion::version() const
+{
+    return m_detail.value(QOrganizerItemVersion::FieldVersion).toInt();
+}
+
+/*!
+    \qmlproperty string Version::extendedVersion
+
+    This property holds the extended version of an organizer item, which can be used to represent
+    the version stored in the back-end.
+ */
+void QDeclarativeOrganizerItemVersion::setExtendedVersion(const QString &newExtendedVersion)
+{
+    if (extendedVersion() != newExtendedVersion) {
+        m_detail.setValue(QOrganizerItemVersion::FieldExtendedVersion, newExtendedVersion);
+        emit valueChanged();
+    }
+}
+
+QString QDeclarativeOrganizerItemVersion::extendedVersion() const
+{
+    QByteArray version = m_detail.value(QOrganizerItemVersion::FieldExtendedVersion).toByteArray();
+    return QString::fromLatin1(version.constData(), version.length());
+}
+
+
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createItemDetail(QDeclarativeOrganizerItemDetail::DetailType type)
 {
     QDeclarativeOrganizerItemDetail *itemDetail;
@@ -1929,6 +1990,8 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
         itemDetail = new QDeclarativeOrganizerEventRsvp;
     else if (type == QDeclarativeOrganizerItemDetail::Classification)
         itemDetail = new QDeclarativeOrganizerItemClassification;
+    else if (type == QDeclarativeOrganizerItemDetail::Version)
+        itemDetail = new QDeclarativeOrganizerItemVersion;
     else
         itemDetail = new QDeclarativeOrganizerItemDetail;
     return itemDetail;

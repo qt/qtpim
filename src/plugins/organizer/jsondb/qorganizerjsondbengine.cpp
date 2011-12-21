@@ -633,7 +633,8 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerJsonDbEngine::supportedItemDet
                      << QOrganizerItemDescription::DefinitionName
                      << QOrganizerItemComment::DefinitionName
                      << QOrganizerItemTag::DefinitionName
-                     << QOrganizerItemExtendedDetail::DefinitionName;
+                     << QOrganizerItemExtendedDetail::DefinitionName
+                     << QOrganizerItemVersion::DefinitionName;
 
     if (itemType == QOrganizerItemType::TypeEvent) {
         supportedDetails << QOrganizerItemRecurrence::DefinitionName

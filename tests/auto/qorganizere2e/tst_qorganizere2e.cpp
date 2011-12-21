@@ -377,6 +377,8 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(QOrganizerItemDetail::Detai
         attendee.setParticipationRole(QOrganizerEventAttendee::RoleRequiredParticipant);
         attendee.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
         return attendee;
+    } else if (detailType == QOrganizerItemDetail::TypeVersion) {
+        // do nothing, because it should be maintained by the back-end engine
     }
 
     return QOrganizerItemDetail();

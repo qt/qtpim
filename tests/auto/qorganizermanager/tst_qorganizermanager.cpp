@@ -214,6 +214,9 @@ private slots:
 
     void testClassification_data() { addManagers(); }
     void testClassification();
+
+    void testVersion_data() { addManagers(); }
+    void testVersion();
 };
 
 class BasicItemLocalId : public QOrganizerItemEngineId
@@ -5000,6 +5003,28 @@ void tst_QOrganizerManager::testClassification()
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
     QVERIFY(item.details<QOrganizerItemClassification>().count() == 0);
+}
+
+void tst_QOrganizerManager::testVersion()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
+    if (!mgr->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemDetail::TypeVersion))
+        QSKIP("Version detail not supported by this backend.");
+
+    QOrganizerEvent event;
+    QVERIFY(event.detail(QOrganizerItemDetail::TypeVersion).isEmpty());
+    QVERIFY(mgr->saveItem(&event));
+
+    QOrganizerItemVersion version = event.detail(QOrganizerItemDetail::TypeVersion);
+    QVERIFY(!version.isEmpty());
+
+    event.setDisplayLabel("Qt rules!");
+    QVERIFY(mgr->saveItem(&event));
+
+    QOrganizerItemVersion version2 = event.detail(QOrganizerItemDetail::TypeVersion);
+    QVERIFY(!version2.isEmpty());
+    QVERIFY((version2.version() > version.version()) || (version2.extendedVersion() != version.extendedVersion()));
 }
 
 #if defined(QT_NO_JSONDB)

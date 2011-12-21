@@ -76,6 +76,7 @@ public:
         TypeRecurrence,
         TypeTag,
         TypeTimestamp,
+        TypeVersion,
         TypeReminder,
         TypeAudibleReminder,
         TypeEmailReminder,

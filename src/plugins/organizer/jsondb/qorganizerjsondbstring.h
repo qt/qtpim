@@ -66,6 +66,7 @@ public:
     inline const static QString jsonDbCount() { return QStringLiteral("count"); }
     inline const static QString jsonDbError() { return QStringLiteral("error"); }
     inline const static QString jsonDbCode() { return QStringLiteral("code"); }
+    inline const static QString jsonDbVersion() {return QStringLiteral("_version"); }
 
     // JsonDb query string
     inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\"]]"); }

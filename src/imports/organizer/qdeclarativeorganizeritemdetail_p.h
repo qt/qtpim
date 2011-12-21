@@ -73,6 +73,7 @@ public:
         Recurrence = QOrganizerItemDetail::TypeRecurrence,
         Tag = QOrganizerItemDetail::TypeTag,
         Timestamp = QOrganizerItemDetail::TypeTimestamp,
+        Version = QOrganizerItemDetail::TypeVersion,
         Reminder = QOrganizerItemDetail::TypeReminder,
         AudibleReminder = QOrganizerItemDetail::TypeAudibleReminder,
         EmailReminder = QOrganizerItemDetail::TypeEmailReminder,
@@ -940,6 +941,34 @@ Q_SIGNALS:
 };
 
 
+class QDeclarativeOrganizerItemVersion : public QDeclarativeOrganizerItemDetail
+{
+    Q_OBJECT
+    Q_ENUMS(Field)
+    Q_PROPERTY(int version READ version WRITE setVersion NOTIFY valueChanged)
+    Q_PROPERTY(QString extendedVersion READ extendedVersion WRITE setExtendedVersion NOTIFY valueChanged)
+
+public:
+    enum Field {
+        FieldVersion = QOrganizerItemVersion::FieldVersion,
+        FieldExtendedVersion = QOrganizerItemVersion::FieldExtendedVersion
+    };
+
+    QDeclarativeOrganizerItemVersion(QObject *parent = 0);
+
+    virtual DetailType type() const;
+
+    void setVersion(int newVersion);
+    int version() const;
+
+    void setExtendedVersion(const QString &newExtendedVersion);
+    QString extendedVersion() const;
+
+Q_SIGNALS:
+    void valueChanged();
+};
+
+
 class QDeclarativeOrganizerItemDetailFactory
 {
 public:
@@ -972,5 +1001,6 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemExtended
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventAttendee))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventRsvp))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemClassification))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemVersion))
 
 #endif // QDECLARATIVEORGANIZERITEMDETAIL_H

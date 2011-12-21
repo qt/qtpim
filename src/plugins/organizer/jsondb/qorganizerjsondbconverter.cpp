@@ -231,6 +231,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
     bool hasCollectionId(false);
     bool hasGuid(false);
     bool hasItemId(false);
+    bool hasItemVersion(false);
 
     // go through all fields
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
@@ -398,6 +399,13 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 if (!location.isEmpty())
                     item->saveDetail(&location);
             }
+        } else if (i.key() == QOrganizerJsonDbStr::jsonDbVersion()) {
+            QOrganizerItemVersion itemVersion;
+            jsonDbVersionToItemVersion(i.value().toString(), &itemVersion);
+            if (!itemVersion.isEmpty()) {
+                item->saveDetail(&itemVersion);
+                hasItemVersion = true;
+            }
         } else if (i.key() == QOrganizerJsonDbStr::jsonDbType()) {
             // skip already handled before the loop
         }  else if (i.key().at(0) == QChar('_')) {
@@ -412,7 +420,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         ++i;
     }
 
-    return hasCollectionId && hasGuid && hasItemId;
+    return hasCollectionId && hasGuid && hasItemId && hasItemVersion;
 }
 
 bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, QVariantMap* object) const
@@ -566,6 +574,14 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             audibleReminderDetailToJsonDbObject(details.at(i), reminderObject);
             if (!reminderObject.isEmpty())
                 object->insert(QOrganizerJsonDbStr::itemReminder(), reminderObject);
+            break;
+        }
+
+        case QOrganizerItemDetail::TypeVersion: {
+            QString jsonDbVersion;
+            itemVersionToJsonDbVersion(details.at(i), &jsonDbVersion);
+            if (!jsonDbVersion.isEmpty())
+                object->insert(QOrganizerJsonDbStr::jsonDbVersion(), jsonDbVersion);
             break;
         }
 
@@ -987,6 +1003,27 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
         object->insert(QOrganizerJsonDbStr::collectionCustomFields(), jsonMetaData);
 
     return true;
+}
+
+void QOrganizerJsonDbConverter::jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const
+{
+    QStringList jsonDbVersions = jsonDbVersion.split(QLatin1Char('-'));
+    if (jsonDbVersions.size() != 2)
+        return;
+    int version = jsonDbVersions.at(0).toInt();
+    if (version > 0 && jsonDbVersions.at(1).length() == 32) {
+        itemVersion->setVersion(version);
+        itemVersion->setExtendedVersion(jsonDbVersions.at(1).toLatin1());
+    }
+}
+
+void QOrganizerJsonDbConverter::itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const
+{
+    int version = itemVersion.version();
+    QByteArray extendedVersion = itemVersion.extendedVersion();
+    if (version > 0 && extendedVersion.length() == 32) {
+        *jsonDbVersion = QString::number(version) + QLatin1String("-") + QString::fromLatin1(extendedVersion.constData());
+    }
 }
 
 void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const

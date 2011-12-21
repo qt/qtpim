@@ -17,6 +17,7 @@ PUBLIC_HEADERS += \
     details/qorganizeritemtag.h \
     details/qorganizeritemtimestamp.h \
     details/qorganizeritemtype.h \
+    details/qorganizeritemversion.h \
     details/qorganizeritemvisualreminder.h \
     details/qorganizeritemdetails.h \
     details/qorganizerjournaltime.h \

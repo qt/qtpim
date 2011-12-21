@@ -358,47 +358,12 @@ bool QOrganizerItem::saveDetail(QOrganizerItemDetail *detail)
     if (!detail)
         return false;
 
-    /* Also handle organizer item type specially - only one of them. */
-    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeItemType) {
-        for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                d->m_details.replace(i, *detail);
-                return true;
-            }
-        }
-        // doesn't already exist; append it.
-        d->m_details.append(*detail);
-        return true;
-    }
-
-    /* And description */
-    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDescription) {
-        for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                d->m_details.replace(i, *detail);
-                return true;
-            }
-        }
-        // doesn't already exist; append it.
-        d->m_details.append(*detail);
-        return true;
-    }
-
-    /* And display label.. */
-    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDisplayLabel) {
-        for (int i = 0; i < d.constData()->m_details.size(); i++) {
-            if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
-                d->m_details.replace(i, *detail);
-                return true;
-            }
-        }
-        // doesn't already exist; append it.
-        d->m_details.append(*detail);
-        return true;
-    }
-
-    /* And classification.. */
-    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeClassification) {
+    // we only allow one instance of these details per item
+    if (detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeItemType
+        || detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDescription
+        || detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeDisplayLabel
+        || detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeClassification
+        || detail->d.constData()->m_detailType == QOrganizerItemDetail::TypeVersion) {
         for (int i = 0; i < d.constData()->m_details.size(); i++) {
             if (detail->d.constData()->m_detailType == d.constData()->m_details.at(i).d.constData()->m_detailType) {
                 d->m_details.replace(i, *detail);

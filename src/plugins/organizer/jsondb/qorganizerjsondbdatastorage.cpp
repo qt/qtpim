@@ -414,14 +414,28 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsResponse(int index, QOrganizerM
 {
     QOrganizerItem item = m_resultItems->value(index);
     if (error == QOrganizerManager::NoError) {
-        if (item.id().isNull()) {
-            // this is a new item
-            QString jsonUuid = object.toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
-            if (!jsonUuid.isEmpty()) {
-                QOrganizerJsonDbItemId* itemId = new QOrganizerJsonDbItemId;
-                itemId->setItemId(jsonUuid);
-                item.setId(QOrganizerItemId(itemId));
+        QVariantMap jsonDbObject = object.toMap();
+        QVariantMap::const_iterator i = jsonDbObject.constBegin();
+        while (i != jsonDbObject.constEnd()) {
+            if (i.key() == QOrganizerJsonDbStr::jsonDbUuid()) {
+                if (item.id().isNull()) {
+                    // new item
+                    QString jsonDbUuid = i.value().toString();
+                    if (!jsonDbUuid.isEmpty()) {
+                        QOrganizerJsonDbItemId* itemId = new QOrganizerJsonDbItemId;
+                        itemId->setItemId(jsonDbUuid);
+                        item.setId(QOrganizerItemId(itemId));
+                    }
+                }
+            } else if (i.key() == QOrganizerJsonDbStr::jsonDbVersion()) {
+                QString jsonDbVersion = i.value().toString();
+                if (!jsonDbVersion.isEmpty()) {
+                    QOrganizerItemVersion itemVersion = item.detail(QOrganizerItemDetail::TypeVersion);
+                    m_converter.jsonDbVersionToItemVersion(jsonDbVersion, &itemVersion);
+                    item.saveDetail(&itemVersion);
+                }
             }
+            ++i;
         }
         m_resultItems->insert(index, item);
     } else {

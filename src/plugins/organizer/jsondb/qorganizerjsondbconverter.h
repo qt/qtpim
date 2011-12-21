@@ -82,7 +82,11 @@ public:
 
     bool itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap &alarmObject) const;
 
+    void jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const;
+
 private:
+    void itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const;
+
     void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
     void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;
 

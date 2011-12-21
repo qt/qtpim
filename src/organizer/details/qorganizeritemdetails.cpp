@@ -1873,4 +1873,62 @@ QVariant QOrganizerItemExtendedDetail::data() const
     return value(FieldExtendedDetailData);
 }
 
+/*!
+    \class QOrganizerItemVersion
+    \brief The QOrganizerItemVersion class provides the versioning information of an organizer item.
+    \inmodule QtOrganizer
+    \ingroup organizer-details
+ */
+
+/*!
+    \variable QOrganizerItemVersion::DefinitionName
+
+    The constant string which identifies the definition of details which are versions.
+
+    Note that this is to be removed soon, please use QOrganizerItemDetail::DetailType instead.
+ */
+const QOrganizerItemDetail::DetailType QOrganizerItemVersion::DefinitionName(QOrganizerItemDetail::TypeVersion);
+
+/*!
+    \enum QOrganizerItemVersion::VersionField
+
+    This enumeration defines the fields supported by QOrganizerItemVersion.
+    \value FieldVersion          The value stored describes the integer version of an organizer item.
+                                 It can be used as the sequence number as per iCalendar spec.
+    \value FieldExtendedVersion  The value stored describes the extended version of an organizer item.
+                                 It can be used to represent the version stored in the back-end.
+ */
+
+/*!
+    Sets the integer \a version.
+ */
+void QOrganizerItemVersion::setVersion(int version)
+{
+    setValue(FieldVersion, version);
+}
+
+/*!
+    Gets the integer version.
+ */
+int QOrganizerItemVersion::version() const
+{
+    return value(FieldVersion).toInt();
+}
+
+/*!
+    Sets the \a extendedVersion.
+ */
+void QOrganizerItemVersion::setExtendedVersion(const QByteArray &extendedVersion)
+{
+    setValue(FieldExtendedVersion, extendedVersion);
+}
+
+/*!
+    Gets the extended version.
+ */
+QByteArray QOrganizerItemVersion::extendedVersion() const
+{
+    return value(FieldExtendedVersion).toByteArray();
+}
+
 QTORGANIZER_END_NAMESPACE

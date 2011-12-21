@@ -144,6 +144,26 @@ TestCase {
         id: classification
     }
 
+    Version {
+        id: version
+    }
+
+    function test_version() {
+        compare(version.type, Detail.Version)
+
+        compare(version.version, 0)
+        compare(version.value(Version.FieldVersion), undefined)
+        version.version = 64
+        compare(version.version, 64)
+        compare(version.value(Version.FieldVersion), 64)
+
+        compare(version.extendedVersion, "")
+        compare(version.value(Version.FieldExtendedVersion), undefined)
+        version.extendedVersion = "Qt rules"
+        compare(version.extendedVersion, "Qt rules")
+        compare(version.value(Version.FieldExtendedVersion), "Qt rules")
+    }
+
     function test_extendedDetail() {
         compare(extendedDetail.type, Detail.ExtendedDetail)
 

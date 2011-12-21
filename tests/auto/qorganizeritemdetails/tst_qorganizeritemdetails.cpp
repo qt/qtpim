@@ -87,6 +87,7 @@ private slots:
     void attendee();
     void rsvp();
     void classification();
+    void version();
 };
 
 tst_QOrganizerItemDetails::tst_QOrganizerItemDetails()
@@ -956,6 +957,25 @@ void tst_QOrganizerItemDetails::classification()
     // remove
     QVERIFY(oi.removeDetail(&classification2));
     QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 0);
+}
+
+void tst_QOrganizerItemDetails::version()
+{
+    QOrganizerItemVersion version;
+    QCOMPARE(version.type(), QOrganizerItemDetail::TypeVersion);
+    QVERIFY(!version.hasValue(QOrganizerItemVersion::FieldVersion));
+    QVERIFY(!version.hasValue(QOrganizerItemVersion::FieldExtendedVersion));
+
+    version.setVersion(64);
+    QCOMPARE(version.version(), 64);
+    QVERIFY(version.hasValue(QOrganizerItemVersion::FieldVersion));
+    QVERIFY(!version.hasValue(QOrganizerItemVersion::FieldExtendedVersion));
+
+    QByteArray extendedVersion("Qt rules!");
+    version.setExtendedVersion(extendedVersion);
+    QCOMPARE(version.extendedVersion(), extendedVersion);
+    QVERIFY(version.hasValue(QOrganizerItemVersion::FieldVersion));
+    QVERIFY(version.hasValue(QOrganizerItemVersion::FieldExtendedVersion));
 }
 
 QTEST_MAIN(tst_QOrganizerItemDetails)

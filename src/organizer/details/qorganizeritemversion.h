@@ -1,10 +1,10 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
-** Contact: http://www.qt-project.org/
+** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the Qt Organizer module.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,34 +39,30 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILS_H
-#define QORGANIZERITEMDETAILS_H
+#ifndef QORGANIZERITEMVERSION_H
+#define QORGANIZERITEMVERSION_H
 
-#include <qorganizereventtime.h>
-#include <qorganizeritemcomment.h>
-#include <qorganizeritemdescription.h>
-#include <qorganizeritemdisplaylabel.h>
-#include <qorganizeritemguid.h>
-#include <qorganizeritemlocation.h>
-#include <qorganizeritemparent.h>
-#include <qorganizeritempriority.h>
-#include <qorganizeritemrecurrence.h>
-#include <qorganizeritemtag.h>
-#include <qorganizeritemtimestamp.h>
-#include <qorganizeritemtype.h>
-#include <qorganizerjournaltime.h>
-#include <qorganizertodoprogress.h>
-#include <qorganizertodotime.h>
+#include <qorganizeritemdetail.h>
 
-#include <qorganizeritemreminder.h>
-#include <qorganizeritemaudiblereminder.h>
-#include <qorganizeritememailreminder.h>
-#include <qorganizeritemvisualreminder.h>
+QTORGANIZER_BEGIN_NAMESPACE
 
-#include <qorganizeritemextendeddetail.h>
-#include <qorganizereventattendee.h>
-#include <qorganizereventrsvp.h>
-#include <qorganizeritemclassification.h>
-#include <qorganizeritemversion.h>
+class Q_ORGANIZER_EXPORT QOrganizerItemVersion : public QOrganizerItemDetail
+{
+public:
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemVersion)
 
-#endif // QORGANIZERITEMDETAILS_H
+    enum VersionField {
+        FieldVersion = 0,
+        FieldExtendedVersion
+    };
+
+    void setVersion(int version);
+    int version() const;
+
+    void setExtendedVersion(const QByteArray &extendedVersion);
+    QByteArray extendedVersion() const;
+};
+
+QTORGANIZER_END_NAMESPACE
+
+#endif // QORGANIZERITEMVERSION_H

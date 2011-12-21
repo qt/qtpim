@@ -307,6 +307,13 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         if (item.guid().isEmpty())
             item.setGuid(QUuid::createUuid().toString());
 
+        // remove version in case the item ID is reset
+        if (itemIsNew) {
+            QOrganizerItemVersion version = item.detail(QOrganizerItemDetail::TypeVersion);
+            if (!version.isEmpty())
+                item.removeDetail(&version);
+        }
+
         if (errorFound) {
             errorMap.insert(i, latestError);
         } else {
@@ -325,12 +332,9 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             if (!errorMap.contains(i.key())) {
                 alarmError = QOrganizerManager::NoError;
                 alarmId.clear();
-                if (itemIsNewStatusMap.value(i.key()))
-                    // if there were no errors when saving this item and this is a new item,
-                    // insert item with newly created item id to items list
-                    // (updated items already contain item id, so no need to insert them)
-                    items.replace(i.key(), i.value());
-                else {// Query alarm object if the item is not new one
+                items.replace(i.key(), i.value()); // always replacing because of version updating
+                if (!itemIsNewStatusMap.value(i.key())) {
+                    // Query alarm object if the item is not new one
                     itemId = i.value().id();
                     alarmId = m_storage->alarmId(&itemId, &alarmError);
                     if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {

@@ -267,8 +267,8 @@ void QVersitOrganizerExporterPrivate::encodeTimestamp(
     property.setName(QLatin1String("LAST-MODIFIED"));
     property.setValue(encodeDateTime(timestamp.lastModified().toUTC()));
     *generatedProperties << property;
-    *processedFields << QOrganizerItemTimestamp::FieldCreationTimestamp
-                     << QOrganizerItemTimestamp::FieldModificationTimestamp;
+    *processedFields << QOrganizerItemTimestamp::FieldCreated
+                     << QOrganizerItemTimestamp::FieldLastModified;
 }
 
 void QVersitOrganizerExporterPrivate::encodeRecurrence(

@@ -120,7 +120,8 @@ class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(EventTimeField)
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)// Will be removed, use "allDay" instead!
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
 
@@ -135,7 +136,7 @@ public:
 
     virtual DetailType type() const;
 
-    void setAllDay(bool allDay);
+    void setAllDay(bool isAllDay);
     bool isAllDay();
 
     void setStartDateTime(const QDateTime &datetime);
@@ -462,8 +463,8 @@ class QDeclarativeOrganizerItemTimestamp : public QDeclarativeOrganizerItemDetai
 
 public:
     enum TimestampField {
-        FieldCreated = QOrganizerItemTimestamp::FieldCreationTimestamp,
-        FieldLastModified = QOrganizerItemTimestamp::FieldModificationTimestamp
+        FieldCreated = QOrganizerItemTimestamp::FieldCreated,
+        FieldLastModified = QOrganizerItemTimestamp::FieldLastModified
     };
 
     QDeclarativeOrganizerItemTimestamp(QObject *parent = 0);
@@ -549,7 +550,8 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
     Q_ENUMS(TodoProgressField)
     Q_ENUMS(StatusType)
 
-    Q_PROPERTY(int percentage READ percentage WRITE setPercentage NOTIFY valueChanged)
+    Q_PROPERTY(int percentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
+    Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
     Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY valueChanged)
 
@@ -570,8 +572,8 @@ public:
 
     virtual DetailType type() const;
 
-    void setPercentage(int newPercentage);
-    int percentage() const;
+    void setPercentageComplete(int percentageComplete);
+    int percentageComplete() const;
 
     void setFinishedDateTime(const QDateTime &datetime);
     QDateTime finishedDateTime() const;
@@ -604,7 +606,7 @@ public:
 
     virtual DetailType type() const;
 
-    void setAllDay(bool allDay);
+    void setAllDay(bool isAllDay);
     bool isAllDay();
 
     void setStartDateTime(const QDateTime &datetime);

@@ -54,15 +54,15 @@ public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTimestamp)
 
     enum TimestampField {
-        FieldModificationTimestamp = 0,
-        FieldCreationTimestamp
+        FieldCreated = 0,
+        FieldLastModified
     };
-
-    void setLastModified(const QDateTime &timestamp);
-    QDateTime lastModified() const;
 
     void setCreated(const QDateTime &timestamp);
     QDateTime created() const;
+
+    void setLastModified(const QDateTime &timestamp);
+    QDateTime lastModified() const;
 };
 
 QTORGANIZER_END_NAMESPACE

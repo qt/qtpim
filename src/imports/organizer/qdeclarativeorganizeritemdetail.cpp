@@ -218,6 +218,7 @@ void QDeclarativeOrganizerEventTime::setAllDay(bool allDay)
 
 bool QDeclarativeOrganizerEventTime::isAllDay()
 {
+    qWarning()<<"EventTime's isAllDay-property will be removed soon. Use allDay-property instead.";
     return m_detail.value<bool>(QOrganizerEventTime::FieldAllDay);
 }
 
@@ -869,14 +870,14 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemTimestamp::
 void QDeclarativeOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
 {
     if (timestamp != created()) {
-        m_detail.setValue(QOrganizerItemTimestamp::FieldCreationTimestamp, timestamp.toUTC());
+        m_detail.setValue(QOrganizerItemTimestamp::FieldCreated, timestamp.toUTC());
         emit valueChanged();
     }
 }
 
 QDateTime QDeclarativeOrganizerItemTimestamp::created() const
 {
-    return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldCreationTimestamp).toLocalTime();
+    return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldCreated).toLocalTime();
 }
 
 /*!
@@ -887,14 +888,14 @@ QDateTime QDeclarativeOrganizerItemTimestamp::created() const
 void QDeclarativeOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
 {
     if (timestamp != lastModified()) {
-        m_detail.setValue(QOrganizerItemTimestamp::FieldModificationTimestamp, timestamp.toUTC());
+        m_detail.setValue(QOrganizerItemTimestamp::FieldLastModified, timestamp.toUTC());
         emit valueChanged();
     }
 }
 
 QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
 {
-    return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldModificationTimestamp).toLocalTime();
+    return m_detail.value<QDateTime>(QOrganizerItemTimestamp::FieldLastModified).toLocalTime();
 }
 
 
@@ -1016,23 +1017,24 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerTodoProgress::t
 }
 
 /*!
-    \qmlproperty int TodoProgress::percentage
+    \qmlproperty int TodoProgress::percentageComplete
 
     This property holds the value which contains the current completion percentage of the
     todo item.
  */
-void QDeclarativeOrganizerTodoProgress::setPercentage(int newPercentage)
+void QDeclarativeOrganizerTodoProgress::setPercentageComplete(int newPercentageComplete)
 {
-    if (newPercentage != percentage()) {
-        if (newPercentage >=0 && newPercentage <= 100) {
-            m_detail.setValue(QOrganizerTodoProgress::FieldPercentageComplete, newPercentage);
+    if (newPercentageComplete != percentageComplete()) {
+        if (newPercentageComplete >=0 && newPercentageComplete <= 100) {
+            m_detail.setValue(QOrganizerTodoProgress::FieldPercentageComplete, newPercentageComplete);
             emit valueChanged();
         }
     }
 }
 
-int QDeclarativeOrganizerTodoProgress::percentage() const
+int QDeclarativeOrganizerTodoProgress::percentageComplete() const
 {
+    qWarning()<<"TodoProgress's percentage-property will be removed soon. Use percentageComplete-property instead.";
     return m_detail.value<int>(QOrganizerTodoProgress::FieldPercentageComplete);
 }
 

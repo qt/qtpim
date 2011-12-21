@@ -463,8 +463,8 @@ TestCase {
         compare(eventTime.type, Detail.EventTime)
 
         compare(eventTime.value(EventTime.FieldAllDay), undefined)
-        eventTime.isAllDay = true
-        compare(eventTime.isAllDay, true)
+        eventTime.allDay = true
+        compare(eventTime.allDay, true)
         compare(eventTime.value(EventTime.FieldAllDay), true)
 
         compare(eventTime.value(EventTime.FieldStartDateTime), undefined)

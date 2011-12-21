@@ -383,7 +383,7 @@ void tst_QOrganizerItemDetails::timestamp()
     // test property set
     t1.setCreated(created);
     QCOMPARE(t1.created(), created);
-    QCOMPARE(t1.value(QOrganizerItemTimestamp::FieldCreationTimestamp).toDateTime(), created);
+    QCOMPARE(t1.value(QOrganizerItemTimestamp::FieldCreated).toDateTime(), created);
 
     // test property add
     QVERIFY(oi.saveDetail(&t1));
@@ -395,8 +395,8 @@ void tst_QOrganizerItemDetails::timestamp()
     t1.setLastModified(modified);
     QVERIFY(oi.saveDetail(&t1));
     QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(101).toString(), QString("label1"));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldCreationTimestamp).toDateTime(), created);
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldModificationTimestamp).toDateTime(), modified);
+    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldCreated).toDateTime(), created);
+    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldLastModified).toDateTime(), modified);
 
     // test property remove
     QVERIFY(oi.removeDetail(&t1));

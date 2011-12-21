@@ -398,7 +398,7 @@ TestCase {
             + "   Todo {\n"
             + "  startDateTime:new Date('2010-10-22T15:50:00')\n"
             + "  description: 'for exact filter - TodoTime.AllDay'\n"
-            + "  isAllDay: true\n"
+            + "  allDay: true\n"
             + "   }",
         ]
     }

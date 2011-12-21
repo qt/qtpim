@@ -273,8 +273,10 @@ class QDeclarativeOrganizerTodo : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
-    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY valueChanged)
+    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)// Will be removed, use "allDay" instead!
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
+    Q_PROPERTY(int progressPercentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
+    Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
@@ -288,8 +290,8 @@ public:
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
 
-    void setProgressPercentage(int percentage);
-    int progressPercentage() const;
+    void setPercentageComplete(int percentageComplete);
+    int percentageComplete() const;
 
     void setStartDateTime(const QDateTime &startDateTime);
     QDateTime startDateTime() const;
@@ -317,7 +319,8 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int progressPercentage READ progressPercentage WRITE setProgressPercentage NOTIFY valueChanged)
+    Q_PROPERTY(int progressPercentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
+    Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
@@ -329,8 +332,8 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 public:
     explicit QDeclarativeOrganizerTodoOccurrence(QObject *parent = 0);
 
-    void setProgressPercentage(int percentage);
-    int progressPercentage() const;
+    void setPercentageComplete(int percentageComplete);
+    int percentageComplete() const;
 
     void setOriginalDate(const QDate &date);
     QDate originalDate() const;

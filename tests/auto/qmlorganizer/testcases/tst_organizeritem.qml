@@ -131,8 +131,8 @@ TestCase {
     function test_todo() {
         compare(todo.itemType, Type.Todo)
 
-        todo.isAllDay = true;
-        compare(todo.isAllDay, true)
+        todo.allDay = true;
+        compare(todo.allDay, true)
 
         todo.progressPercentage = 64
         compare(todo.progressPercentage, 64)

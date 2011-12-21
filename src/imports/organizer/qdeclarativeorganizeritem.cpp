@@ -1323,6 +1323,7 @@ void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 
 bool QDeclarativeOrganizerTodo::isAllDay() const
 {
+    qWarning()<<"Todo's isAllDay-property will be removed soon. Use allDay-property instead.";
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
             return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->isAllDay();
@@ -1331,17 +1332,17 @@ bool QDeclarativeOrganizerTodo::isAllDay() const
 }
 
 /*!
-    \qmlproperty int Todo::progressPercentage
+    \qmlproperty int Todo::percentageComplete
 
     This property holds the percentage of progress completed on the task described by the todo item.
  */
-void QDeclarativeOrganizerTodo::setProgressPercentage(int percentage)
+void QDeclarativeOrganizerTodo::setPercentageComplete(int percentageComplete)
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
             QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
-            if (todoProgress->percentage() != percentage) {
-                todoProgress->setPercentage(percentage);
+            if (todoProgress->percentageComplete() != percentageComplete) {
+                todoProgress->setPercentageComplete(percentageComplete);
                 m_modified = true;
                 emit valueChanged();
             }
@@ -1350,17 +1351,17 @@ void QDeclarativeOrganizerTodo::setProgressPercentage(int percentage)
     }
 
     QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
-    todoProgress->setPercentage(percentage);
+    todoProgress->setPercentageComplete(percentageComplete);
     m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
 
-int QDeclarativeOrganizerTodo::progressPercentage() const
+int QDeclarativeOrganizerTodo::percentageComplete() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
-            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentage();
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentageComplete();
     }
     return 0;
 }
@@ -1591,17 +1592,17 @@ QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject
 }
 
 /*!
-    \qmlproperty int TodoOccurrence::progressPercentage
+    \qmlproperty int TodoOccurrence::percentageComplete
 
     This property holds the percentage of progress completed on the task described by the todo item.
  */
-void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
+void QDeclarativeOrganizerTodoOccurrence::setPercentageComplete(int percentageComplete)
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type()) {
             QDeclarativeOrganizerTodoProgress *todoProgress = static_cast<QDeclarativeOrganizerTodoProgress *>(detail);
-            if (todoProgress->percentage() != percentage) {
-                todoProgress->setPercentage(percentage);
+            if (todoProgress->percentageComplete() != percentageComplete) {
+                todoProgress->setPercentageComplete(percentageComplete);
                 m_modified = true;
                 emit valueChanged();
             }
@@ -1610,17 +1611,17 @@ void QDeclarativeOrganizerTodoOccurrence::setProgressPercentage(int percentage)
     }
 
     QDeclarativeOrganizerTodoProgress *todoProgress = new QDeclarativeOrganizerTodoProgress(this);
-    todoProgress->setPercentage(percentage);
+    todoProgress->setPercentageComplete(percentageComplete);
     m_details.append(todoProgress);
     m_modified = true;
     emit valueChanged();
 }
 
-int QDeclarativeOrganizerTodoOccurrence::progressPercentage() const
+int QDeclarativeOrganizerTodoOccurrence::percentageComplete() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoProgress == detail->type())
-            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentage();
+            return static_cast<QDeclarativeOrganizerTodoProgress *>(detail)->percentageComplete();
     }
     return 0;
 }

@@ -1273,8 +1273,8 @@ const QOrganizerItemDetail::DetailType QOrganizerItemTimestamp::DefinitionName(Q
     \enum QOrganizerItemTimestamp::TimestampField
 
     This enumeration defines the fields supported by QOrganizerItemTimestamp.
-    \value FieldModificationTimestamp  The value stored describes the last time the item is modified.
-    \value FieldCreationTimestamp      The value stored describes the time the item is created.
+    \value FieldCreated      The value stored describes the time the item is created.
+    \value FieldLastModified  The value stored describes the last time the item is modified.
  */
 
 /*!
@@ -1284,7 +1284,7 @@ const QOrganizerItemDetail::DetailType QOrganizerItemTimestamp::DefinitionName(Q
  */
 QDateTime QOrganizerItemTimestamp::created() const
 {
-    return value<QDateTime>(FieldCreationTimestamp);
+    return value<QDateTime>(FieldCreated);
 }
 
 /*!
@@ -1294,7 +1294,7 @@ QDateTime QOrganizerItemTimestamp::created() const
  */
 QDateTime QOrganizerItemTimestamp::lastModified() const
 {
-    return value<QDateTime>(FieldModificationTimestamp);
+    return value<QDateTime>(FieldLastModified);
 }
 
 /*!
@@ -1304,7 +1304,7 @@ QDateTime QOrganizerItemTimestamp::lastModified() const
  */
 void QOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
 {
-    setValue(FieldCreationTimestamp, timestamp);
+    setValue(FieldCreated, timestamp);
 }
 
 /*!
@@ -1314,7 +1314,7 @@ void QOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
  */
 void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
 {
-    setValue(FieldModificationTimestamp, timestamp);
+    setValue(FieldLastModified, timestamp);
 }
 
 

@@ -50,7 +50,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     request organizeritems from a organizeritems store manager.
 
   \inmodule QtOrganizer
-  \since 1.1
 
 
   For a QOrganizerCollectionSaveRequest, the resultsAvailable() signal will be emitted when the resultant
@@ -63,7 +62,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
-    \since 1.1
 */
 QOrganizerCollectionSaveRequest::QOrganizerCollectionSaveRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionSaveRequestPrivate, parent)
@@ -71,7 +69,6 @@ QOrganizerCollectionSaveRequest::QOrganizerCollectionSaveRequest(QObject* parent
 }
 
 /*! Frees memory in use by this request
-    \since 1.2
 */
 QOrganizerCollectionSaveRequest::~QOrganizerCollectionSaveRequest()
 {
@@ -79,7 +76,6 @@ QOrganizerCollectionSaveRequest::~QOrganizerCollectionSaveRequest()
 }
 
 /*! Clears the list of collections which will be saved, and sets the collection which will be saved to \a collection
-  \since 1.1
 */
 void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection& collection)
 {
@@ -90,7 +86,6 @@ void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection& 
 }
 
 /*! Sets the list of collections which will be saved to \a collections
-    \since 1.1
 */
 void QOrganizerCollectionSaveRequest::setCollections(const QList<QOrganizerCollection>& collections)
 {
@@ -101,7 +96,6 @@ void QOrganizerCollectionSaveRequest::setCollections(const QList<QOrganizerColle
 
 /*! Returns the collections which will be saved by this request if called prior to calling \l start(),
     otherwise returns the (possibly updated) collections which were saved.
-    \since 1.1
 */
 QList<QOrganizerCollection> QOrganizerCollectionSaveRequest::collections() const
 {
@@ -111,7 +105,6 @@ QList<QOrganizerCollection> QOrganizerCollectionSaveRequest::collections() const
 }
 
 /*! Returns any errors which occurred during the request
-    \since 1.1
 */
 QMap<int, QOrganizerManager::Error> QOrganizerCollectionSaveRequest::errorMap() const
 {

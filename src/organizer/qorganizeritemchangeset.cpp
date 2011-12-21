@@ -51,7 +51,6 @@ QTORGANIZER_BEGIN_NAMESPACE
    \brief The QOrganizerItemChangeSet class provides a simple API to
    simplify the emission of state-change signals from
    QOrganizerManagerEngine implementations.
-   \since 1.1
 
   \inmodule QtOrganizer
 
@@ -74,7 +73,6 @@ QOrganizerItemChangeSet::QOrganizerItemChangeSet()
 
 /*!
    Constructs a copy of the \a other change set
-  \since 1.1
  */
 QOrganizerItemChangeSet::QOrganizerItemChangeSet(const QOrganizerItemChangeSet& other)
     : d(other.d)
@@ -90,7 +88,6 @@ QOrganizerItemChangeSet::~QOrganizerItemChangeSet()
 
 /*!
    Assigns this change set to be equal to \a other
-  \since 1.1
  */
 QOrganizerItemChangeSet& QOrganizerItemChangeSet::operator=(const QOrganizerItemChangeSet& other)
 {
@@ -102,7 +99,6 @@ QOrganizerItemChangeSet& QOrganizerItemChangeSet::operator=(const QOrganizerItem
    Sets the data changed flag to \a dataChanged.  If this is set to true prior to calling \l emitSignals(),
    only the \l QOrganizerManagerEngine::dataChanged() signal will be emitted; otherwise, the appropriate
    finer-grained signals will be emitted.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::setDataChanged(bool dataChanged)
 {
@@ -111,7 +107,6 @@ void QOrganizerItemChangeSet::setDataChanged(bool dataChanged)
 
 /*!
    Returns the value of the data changed flag
-  \since 1.1
  */
 bool QOrganizerItemChangeSet::dataChanged() const
 {
@@ -121,7 +116,6 @@ bool QOrganizerItemChangeSet::dataChanged() const
 /*!
    Returns the set of ids of organizer items which have been added to
    the database.
-   \since 1.1
  */
 QSet<QOrganizerItemId> QOrganizerItemChangeSet::addedItems() const
 {
@@ -131,7 +125,6 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::addedItems() const
 /*!
   Inserts the given organizer item id \a addedOrganizerItemId into the set of ids of organizer items
   which have been added to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertAddedItem(const QOrganizerItemId& addedOrganizerItemId)
 {
@@ -141,7 +134,6 @@ void QOrganizerItemChangeSet::insertAddedItem(const QOrganizerItemId& addedOrgan
 /*!
   Inserts each of the given organizer item ids \a addedOrganizerItemIds into the set of ids of organizer items
   which have been added to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertAddedItems(const QList<QOrganizerItemId>& addedOrganizerItemIds)
 {
@@ -151,7 +143,6 @@ void QOrganizerItemChangeSet::insertAddedItems(const QList<QOrganizerItemId>& ad
 
 /*!
   Clears the set of ids of organizer items which have been added to the database
-  \since 1.1
  */
 void QOrganizerItemChangeSet::clearAddedItems()
 {
@@ -161,7 +152,6 @@ void QOrganizerItemChangeSet::clearAddedItems()
 /*!
    Returns the set of ids of organizer items which have been changed in
    the database.
-  \since 1.1
  */
 QSet<QOrganizerItemId> QOrganizerItemChangeSet::changedItems() const
 {
@@ -171,7 +161,6 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::changedItems() const
 /*!
   Inserts the given organizer item id \a changedOrganizerItemId into the set of ids of organizer items
   which have been changed to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId& changedOrganizerItemId)
 {
@@ -181,7 +170,6 @@ void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId& changedO
 /*!
   Inserts each of the given organizer item ids \a changedOrganizerItemIds into the set of ids of organizer items
   which have been changed to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertChangedItems(const QList<QOrganizerItemId>& changedOrganizerItemIds)
 {
@@ -191,7 +179,6 @@ void QOrganizerItemChangeSet::insertChangedItems(const QList<QOrganizerItemId>& 
 
 /*!
   Clears the set of ids of organizer items which have been changed to the database
-  \since 1.1
  */
 void QOrganizerItemChangeSet::clearChangedItems()
 {
@@ -201,7 +188,6 @@ void QOrganizerItemChangeSet::clearChangedItems()
 /*!
    Returns the set of ids of organizer items which have been removed from
    the database.
-   \since 1.1
  */
 QSet<QOrganizerItemId> QOrganizerItemChangeSet::removedItems() const
 {
@@ -211,7 +197,6 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::removedItems() const
 /*!
   Inserts the given organizer item id \a removedOrganizerItemId into the set of ids of organizer items
   which have been removed to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertRemovedItem(const QOrganizerItemId& removedOrganizerItemId)
 {
@@ -221,7 +206,6 @@ void QOrganizerItemChangeSet::insertRemovedItem(const QOrganizerItemId& removedO
 /*!
   Inserts each of the given organizer item ids \a removedOrganizerItemIds into the set of ids of organizer items
   which have been removed to the database.
-  \since 1.1
  */
 void QOrganizerItemChangeSet::insertRemovedItems(const QList<QOrganizerItemId>& removedOrganizerItemIds)
 {
@@ -231,7 +215,6 @@ void QOrganizerItemChangeSet::insertRemovedItems(const QList<QOrganizerItemId>& 
 
 /*!
   Clears the set of ids of organizer items which have been removed to the database
-  \since 1.1
  */
 void QOrganizerItemChangeSet::clearRemovedItems()
 {
@@ -241,7 +224,6 @@ void QOrganizerItemChangeSet::clearRemovedItems()
 
 /*!
    Clears all flags and sets of ids in this change set
-  \since 1.1
  */
 void QOrganizerItemChangeSet::clearAll()
 {
@@ -253,7 +235,6 @@ void QOrganizerItemChangeSet::clearAll()
 
 /*!
    Emits the appropriate signals from the given \a engine given the state of the change set
-   \since 1.1
  */
 void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
 {

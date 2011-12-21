@@ -76,7 +76,6 @@ Q_EXPORT_PLUGIN2(qtcontacts_memory, QContactMemoryEngineFactory)
 
   \brief The QContactMemoryEngine class provides an in-memory implementation
   of a contacts backend.
-   \since 1.0
 
   \internal
 

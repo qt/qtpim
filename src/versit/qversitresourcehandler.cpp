@@ -52,7 +52,6 @@ QTVERSIT_BEGIN_NAMESPACE
   behaviour for loading and saving files to disk when exporting and importing.
   \ingroup versit-extension
   \inmodule QtVersit
-  \since 1.0
 
   \sa QVersitContactImporter
   \sa QVersitContactExporter

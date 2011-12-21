@@ -51,7 +51,6 @@ QTCONTACTS_BEGIN_NAMESPACE
   \brief The QContactIntersectionFilter class provides a filter which intersects the results of other filters.
 
   \inmodule QtContacts
-   \since 1.0
 
    \ingroup contacts-filters
 
@@ -63,7 +62,6 @@ Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactIntersectionFilter);
 /*!
  * \fn QContactIntersectionFilter::QContactIntersectionFilter(const QContactFilter& other)
  * Constructs a copy of \a other if possible, otherwise constructs a new intersection filter
- * \since 1.0
  */
 
 /*!
@@ -77,7 +75,6 @@ QContactIntersectionFilter::QContactIntersectionFilter()
 /*!
  * Sets the filters whose criteria will be intersected to \a filters
  * \sa filters(), clear()
- * \since 1.0
  */
 void QContactIntersectionFilter::setFilters(const QList<QContactFilter>& filters)
 {
@@ -98,7 +95,6 @@ void QContactIntersectionFilter::clear()
 /*!
  * Prepends the given \a filter to the list of intersected filters
  * \sa append(), filters()
- * \since 1.0
  */
 void QContactIntersectionFilter::prepend(const QContactFilter& filter)
 {
@@ -109,7 +105,6 @@ void QContactIntersectionFilter::prepend(const QContactFilter& filter)
 /*!
  * Appends the given \a filter to the list of intersected filters
  * \sa operator<<(), prepend(), filters()
- * \since 1.0
  */
 void QContactIntersectionFilter::append(const QContactFilter& filter)
 {
@@ -120,7 +115,6 @@ void QContactIntersectionFilter::append(const QContactFilter& filter)
 /*!
  * Removes the given \a filter from the intersection list
  * \sa filters(), append(), prepend(), clear()
- * \since 1.0
  */
 void QContactIntersectionFilter::remove(const QContactFilter& filter)
 {
@@ -131,7 +125,6 @@ void QContactIntersectionFilter::remove(const QContactFilter& filter)
 /*!
  * Appends the given \a filter to the list of intersected filters
  * \sa append()
- * \since 1.0
  */
 QContactIntersectionFilter& QContactIntersectionFilter::operator<<(const QContactFilter& filter)
 {
@@ -143,7 +136,6 @@ QContactIntersectionFilter& QContactIntersectionFilter::operator<<(const QContac
 /*!
  * Returns the list of filters which form the intersection filter
  * \sa setFilters(), prepend(), append(), remove()
- * \since 1.0
  */
 QList<QContactFilter> QContactIntersectionFilter::filters() const
 {

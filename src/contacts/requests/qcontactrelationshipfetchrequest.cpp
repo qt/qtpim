@@ -51,7 +51,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   \brief The QContactRelationshipFetchRequest class allows a client to
   asynchronously request relationships from a contacts store manager.
-  \since 1.0
 
   For a QContactRelationshipFetchRequest, the resultsAvailable() signal will be emitted when the resultant
   relationships (which may be retrieved by calling relationships()), are updated, as well as if
@@ -62,7 +61,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 2.0
 
   \ingroup contacts-requests
  */
@@ -83,7 +81,6 @@ QContactRelationshipFetchRequest::~QContactRelationshipFetchRequest()
 /*! Sets the source contact criterion of the fetch request to \a firstId.
     If \a firstContact is empty, or the first contact is not set,
     the request will fetch relationships involving any first contact.
-    \since 2.0
 */
 void QContactRelationshipFetchRequest::setFirst(const QContact& firstContact)
 {
@@ -93,7 +90,6 @@ void QContactRelationshipFetchRequest::setFirst(const QContact& firstContact)
 }
 
 /*! Returns the source contact criterion of the fetch request
-    \since 2.0
  */
 QContact QContactRelationshipFetchRequest::first() const
 {
@@ -105,7 +101,6 @@ QContact QContactRelationshipFetchRequest::first() const
 /*! Sets the relationship type criterion of the fetch request to \a relationshipType.
     If \a relationshipType is empty, or the relationship type is not set,
     the request will fetch relationships of any type.
-    \since 2.0
 */
 void QContactRelationshipFetchRequest::setRelationshipType(const QString& relationshipType)
 {
@@ -115,7 +110,6 @@ void QContactRelationshipFetchRequest::setRelationshipType(const QString& relati
 }
 
 /*! Returns the relationship type criterion of the fetch request
-    \since 2.0
  */
 QString QContactRelationshipFetchRequest::relationshipType() const
 {
@@ -127,7 +121,6 @@ QString QContactRelationshipFetchRequest::relationshipType() const
 /*! Sets the destination contact criterion of the fetch request to \a secondId.
     If \a secondId is the default-constructed id, or the second contact id is not set,
     the request will fetch relationships involving any second contact.
-    \since 1.0
 */
 void QContactRelationshipFetchRequest::setSecond(const QContact& secondContact)
 {
@@ -137,7 +130,6 @@ void QContactRelationshipFetchRequest::setSecond(const QContact& secondContact)
 }
 
 /*! Returns the destination contact criterion of the fetch request
-    \since 1.0
  */
 QContact QContactRelationshipFetchRequest::second() const
 {
@@ -148,7 +140,6 @@ QContact QContactRelationshipFetchRequest::second() const
 
 
 /*! Returns the list of relationships that was the result of the request
-    \since 1.0
  */
 QList<QContactRelationship> QContactRelationshipFetchRequest::relationships() const
 {

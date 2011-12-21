@@ -66,11 +66,9 @@ QTORGANIZER_BEGIN_NAMESPACE
   \inmodule QtOrganizer
 
   \ingroup organizer-requests
-  \since 1.2
  */
 
 /*! Constructs a new item fetch request whose parent is the specified \a parent
-  \since 1.2
 */
 QOrganizerItemFetchByIdRequest::QOrganizerItemFetchByIdRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerItemFetchByIdRequestPrivate, parent)
@@ -78,7 +76,6 @@ QOrganizerItemFetchByIdRequest::QOrganizerItemFetchByIdRequest(QObject* parent)
 }
 
 /*! Frees any memory used by this request
-  \since 1.2
 */
 QOrganizerItemFetchByIdRequest::~QOrganizerItemFetchByIdRequest()
 {
@@ -87,7 +84,6 @@ QOrganizerItemFetchByIdRequest::~QOrganizerItemFetchByIdRequest()
 
 /*!
   Sets the list of ids of the items that the backend should retrieve to \a ids.
-  \since 1.2
  */
 void QOrganizerItemFetchByIdRequest::setIds(const QList<QOrganizerItemId>& ids)
 {
@@ -103,7 +99,6 @@ void QOrganizerItemFetchByIdRequest::setIds(const QList<QOrganizerItemId>& ids)
   loss when saving the item back to the manager (as the "new" restricted item will
   replace the previously saved item in the backend).
   \sa QOrganizerItemFetchHint
-  \since 1.2
  */
 void QOrganizerItemFetchByIdRequest::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
 {
@@ -114,7 +109,6 @@ void QOrganizerItemFetchByIdRequest::setFetchHint(const QOrganizerItemFetchHint 
 
 /*!
   Returns the list of ids of the items that the backend should retrieve.
-  \since 1.2
  */
 QList<QOrganizerItemId> QOrganizerItemFetchByIdRequest::ids() const
 {
@@ -130,7 +124,6 @@ QList<QOrganizerItemId> QOrganizerItemFetchByIdRequest::ids() const
   loss when saving the item back to the manager (as the "new" restricted item will
   replace the previously saved item in the backend).
   \sa QOrganizerItemFetchHint
-  \since 1.2
  */
 QOrganizerItemFetchHint QOrganizerItemFetchByIdRequest::fetchHint() const
 {
@@ -140,7 +133,6 @@ QOrganizerItemFetchHint QOrganizerItemFetchByIdRequest::fetchHint() const
 }
 
 /*! Returns the list of items retrieved by this request
-  \since 1.2
 */
 QList<QOrganizerItem> QOrganizerItemFetchByIdRequest::items() const
 {
@@ -150,7 +142,6 @@ QList<QOrganizerItem> QOrganizerItemFetchByIdRequest::items() const
 }
 
 /*! Returns the map of input definition list indices to errors which occurred
-    \since 1.2
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemFetchByIdRequest::errorMap() const
 {

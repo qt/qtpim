@@ -58,7 +58,6 @@
   through a QContactManager.
 
   \inmodule QtContacts
-   \since 1.0
 
   \ingroup contacts-main
 
@@ -125,7 +124,6 @@ QContactFilter::QContactFilter(const QContactFilter& other)
 }
 
 /*! Assigns this filter to be \a other
-   \since 1.0
 */
 QContactFilter& QContactFilter::operator=(const QContactFilter& other)
 {
@@ -149,7 +147,6 @@ QContactFilter::FilterType QContactFilter::type() const
 }
 
 /*! Returns true if the filter has the same type and criteria as \a other
-  \since 1.0
 */
 bool QContactFilter::operator==(const QContactFilter& other) const
 {

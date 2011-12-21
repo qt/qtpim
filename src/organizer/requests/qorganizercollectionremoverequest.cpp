@@ -50,7 +50,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     request organizeritems from a organizeritems store manager.
 
   \inmodule QtOrganizer
-  \since 1.1
 
 
   For a QOrganizerCollectionRemoveRequest, the resultsAvailable() signal will be emitted when the resultant
@@ -63,7 +62,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
-  \since 1.1
 */
 QOrganizerCollectionRemoveRequest::QOrganizerCollectionRemoveRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionRemoveRequestPrivate, parent)
@@ -71,7 +69,6 @@ QOrganizerCollectionRemoveRequest::QOrganizerCollectionRemoveRequest(QObject* pa
 }
 
 /*! Frees memory in use by this request
-  \since 1.2
 */
 QOrganizerCollectionRemoveRequest::~QOrganizerCollectionRemoveRequest()
 {
@@ -79,7 +76,6 @@ QOrganizerCollectionRemoveRequest::~QOrganizerCollectionRemoveRequest()
 }
 
 /*! Sets the list of ids of collections which will be removed by this request to a list containing the single element \a collectionId
-  \since 1.1
 */
 void QOrganizerCollectionRemoveRequest::setCollectionId(const QOrganizerCollectionId& collectionId)
 {
@@ -90,7 +86,6 @@ void QOrganizerCollectionRemoveRequest::setCollectionId(const QOrganizerCollecti
 }
 
 /*! Sets the list of ids of collections which will be removed by this request to \a collectionIds
-    \since 1.1
 */
 void QOrganizerCollectionRemoveRequest::setCollectionIds(const QList<QOrganizerCollectionId>& collectionIds)
 {
@@ -100,7 +95,6 @@ void QOrganizerCollectionRemoveRequest::setCollectionIds(const QList<QOrganizerC
 }
 
 /*! Returns the list of ids of collections which will be removed by this request if possible
-  \since 1.1
 */
 QList<QOrganizerCollectionId> QOrganizerCollectionRemoveRequest::collectionIds() const
 {
@@ -110,7 +104,6 @@ QList<QOrganizerCollectionId> QOrganizerCollectionRemoveRequest::collectionIds()
 }
 
 /*! Returns any errors which occurred during the request
-  \since 1.1
 */
 QMap<int, QOrganizerManager::Error> QOrganizerCollectionRemoveRequest::errorMap() const
 {

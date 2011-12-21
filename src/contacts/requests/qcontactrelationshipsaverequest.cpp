@@ -59,7 +59,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -82,7 +81,6 @@ QContactRelationshipSaveRequest::~QContactRelationshipSaveRequest()
   \code
       setRelationships(QList<QContactRelationship>() << contactRelationships);
   \endcode
-  \since 1.0
  */
 void QContactRelationshipSaveRequest::setRelationship(const QContactRelationship& contactRelationship)
 {
@@ -93,7 +91,6 @@ void QContactRelationshipSaveRequest::setRelationship(const QContactRelationship
 }
 
 /*! Sets the relationships to save to be \a contactRelationships
-    \since 1.0
 */
 void QContactRelationshipSaveRequest::setRelationships(const QList<QContactRelationship>& contactRelationships)
 {
@@ -104,7 +101,6 @@ void QContactRelationshipSaveRequest::setRelationships(const QList<QContactRelat
 
 /*! Returns the list of relationships that will be saved if called prior to calling \c start(),
     otherwise returns the list of relationships as they were saved in the contacts store
-    \since 1.0
 */
 QList<QContactRelationship> QContactRelationshipSaveRequest::relationships() const
 {
@@ -114,7 +110,6 @@ QList<QContactRelationship> QContactRelationshipSaveRequest::relationships() con
 }
 
 /*! Returns the map of input relationship list indices to errors which occurred
-    \since 1.0
 */
 QMap<int, QContactManager::Error> QContactRelationshipSaveRequest::errorMap() const
 {

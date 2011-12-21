@@ -51,7 +51,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \brief The QOrganizerItemIdFilter class provides a filter based around a list of organizer item ids
   \inmodule QtOrganizer
   \ingroup organizer-filters
-  \since 1.1
 
   It may be used to select organizer items whose ids are contained in the given list of ids.
 
@@ -63,12 +62,10 @@ Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIdFilter);
 /*!
  * \fn QOrganizerItemIdFilter::QOrganizerItemIdFilter(const QOrganizerItemFilter& other)
  * Constructs a copy of \a other if possible, otherwise constructs a new organizer item id filter
-   \since 1.1
  */
 
 /*!
  * Constructs a new organizer item id filter
-   \since 1.1
  */
 QOrganizerItemIdFilter::QOrganizerItemIdFilter()
     : QOrganizerItemFilter(new QOrganizerItemIdFilterPrivate)
@@ -78,7 +75,6 @@ QOrganizerItemIdFilter::QOrganizerItemIdFilter()
 /*!
  * Sets the list which contains the ids of possible matching organizer items to \a ids
  * \sa ids()
-   \since 1.1
  */
 void QOrganizerItemIdFilter::setIds(const QList<QOrganizerItemId>& ids)
 {
@@ -89,7 +85,6 @@ void QOrganizerItemIdFilter::setIds(const QList<QOrganizerItemId>& ids)
 /*!
  * Inserts the id \a id into the list which contains the ids of possible matching items
  * \sa setIds()
-   \since 1.1
  */
 void QOrganizerItemIdFilter::insert(const QOrganizerItemId& id)
 {
@@ -102,7 +97,6 @@ void QOrganizerItemIdFilter::insert(const QOrganizerItemId& id)
  * Removes the id \a id from the list which contains the ids of possible matching items,
  * if it is contained in the list, otherwise has no effect.
  * \sa clear()
-   \since 1.1
  */
 void QOrganizerItemIdFilter::remove(const QOrganizerItemId& id)
 {
@@ -114,7 +108,6 @@ void QOrganizerItemIdFilter::remove(const QOrganizerItemId& id)
  * Clears the list which contains the ids of possible matching items.
  * A id filter with a cleared list will match no items.
  * \sa setIds()
-   \since 1.1
  */
 void QOrganizerItemIdFilter::clear()
 {
@@ -125,7 +118,6 @@ void QOrganizerItemIdFilter::clear()
 /*!
  * Returns the list of ids of organizer items which match this filter
  * \sa setIds()
-   \since 1.1
  */
 QList<QOrganizerItemId> QOrganizerItemIdFilter::ids() const
 {

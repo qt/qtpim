@@ -53,7 +53,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \brief The QOrganizerCollection class represents a collection of items in a manager.
   \inmodule QtOrganizer
   \ingroup organizer-main
-  \since 1.1
 
   A collection has an id and optionally some metadata, and contains zero or more items.
   Each different manager will have different requirements before a collection may be saved
@@ -113,7 +112,6 @@ QOrganizerCollection::~QOrganizerCollection()
 
 /*!
   Constructs a new copy of the \a other collection
-  \since 1.1
  */
 QOrganizerCollection::QOrganizerCollection(const QOrganizerCollection& other)
     : d(other.d)
@@ -122,7 +120,6 @@ QOrganizerCollection::QOrganizerCollection(const QOrganizerCollection& other)
 
 /*!
   Assigns this collection to be equal to the \a other collection
-  \since 1.1
  */
 QOrganizerCollection& QOrganizerCollection::operator=(const QOrganizerCollection& other)
 {
@@ -133,7 +130,6 @@ QOrganizerCollection& QOrganizerCollection::operator=(const QOrganizerCollection
 /*!
   Returns true if the id of the collection is the same as that of the \a other collection.
   Does not check that the metadata of the collections is equal.
-  \since 1.1
  */
 bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 {
@@ -145,12 +141,10 @@ bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 
   Returns true if the id of the collection is not the same as that of the \a other collection.
   Does not check that the metadata of the collections is not equal.
-  \since 1.1
  */
 
 /*!
   Returns the complete id of the collection, which includes the manager uri and the manager id of the collection
-  \since 1.1
  */
 QOrganizerCollectionId QOrganizerCollection::id() const
 {
@@ -161,7 +155,6 @@ QOrganizerCollectionId QOrganizerCollection::id() const
   Sets the id of the collection to \a id.
   If the id is set to a null (default-constructed) id, saving the collection will cause the manager to save the
   collection as a new collection (if it supports that operation).
-  \since 1.1
  */
 void QOrganizerCollection::setId(const QOrganizerCollectionId& id)
 {
@@ -172,7 +165,6 @@ void QOrganizerCollection::setId(const QOrganizerCollectionId& id)
   Sets the meta data of the collection to \a metaData.
   Not all managers support arbitrary meta data for collections. Attempting to save a collection with unsupported
   meta data in a manager will cause an error in the operation.
-  \since 1.1
  */
 void QOrganizerCollection::setMetaData(const QVariantMap& metaData)
 {
@@ -181,7 +173,6 @@ void QOrganizerCollection::setMetaData(const QVariantMap& metaData)
 
 /*!
   Returns the meta data of the collection
-  \since 1.1
  */
 QVariantMap QOrganizerCollection::metaData() const
 {
@@ -195,7 +186,6 @@ QVariantMap QOrganizerCollection::metaData() const
   all possible data types for the meta data \a value.
   Attempting to save a collection with unsupported meta data in a manager will cause an error
   in the operation.
-  \since 1.1
  */
 void QOrganizerCollection::setMetaData(const QString& key, const QVariant& value)
 {
@@ -204,7 +194,6 @@ void QOrganizerCollection::setMetaData(const QString& key, const QVariant& value
 
 /*!
   Returns the meta data of the collection for the given \a key
-  \since 1.1
  */
 QVariant QOrganizerCollection::metaData(const QString& key) const
 {
@@ -212,7 +201,6 @@ QVariant QOrganizerCollection::metaData(const QString& key) const
 }
 
 /*! Returns the hash value for \a key.
-  \since 1.1
 */
 uint qHash(const QOrganizerCollection &key)
 {
@@ -230,7 +218,6 @@ uint qHash(const QOrganizerCollection &key)
 #ifndef QT_NO_DEBUG_STREAM
 /*!
   Streams the \a collection to the given debug stream \a dbg, and returns the stream.
-  \since 1.1
  */
 QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 {
@@ -248,7 +235,6 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 #ifndef QT_NO_DATASTREAM
 /*!
  * Writes \a collection to the stream \a out.
-  \since 1.1
  */
 QDataStream& operator<<(QDataStream& out, const QOrganizerCollection& collection)
 {
@@ -260,7 +246,6 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerCollection& collection
 
 /*!
  * Reads an organizer collection from stream \a in into \a collection.
-  \since 1.1
  */
 QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection)
 {

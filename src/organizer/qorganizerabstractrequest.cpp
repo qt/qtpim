@@ -58,7 +58,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   asynchronous requests to be made of a manager if it supports them.
 
   \inmodule QtOrganizer
-  \since 1.1
 
   \ingroup organizer-main
 
@@ -82,7 +81,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \fn QOrganizerAbstractRequest::stateChanged(QOrganizerAbstractRequest::State newState)
   This signal is emitted when the state of the request is changed.  The new state of
   the request will be contained in \a newState.
-  \since 1.1
  */
 
 
@@ -92,7 +90,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   the operation error which may be accessed via error(), or derived-class-specific
   results which are accessible through the derived class API.
 
-  \since 1.1
   \sa error()
  */
 
@@ -144,7 +141,6 @@ QOrganizerAbstractRequest::~QOrganizerAbstractRequest()
 /*!
   Returns true if the request is in the \c QOrganizerAbstractRequest::InactiveState state; otherwise, returns false
 
-  \since 1.1
   \sa state()
  */
 bool QOrganizerAbstractRequest::isInactive() const
@@ -156,7 +152,6 @@ bool QOrganizerAbstractRequest::isInactive() const
 /*!
   Returns true if the request is in the \c QOrganizerAbstractRequest::ActiveState state; otherwise, returns false
 
-  \since 1.1
   \sa state()
  */
 bool QOrganizerAbstractRequest::isActive() const
@@ -168,7 +163,6 @@ bool QOrganizerAbstractRequest::isActive() const
 /*!
   Returns true if the request is in the \c QOrganizerAbstractRequest::FinishedState; otherwise, returns false
 
-  \since 1.1
   \sa state()
  */
 bool QOrganizerAbstractRequest::isFinished() const
@@ -180,7 +174,6 @@ bool QOrganizerAbstractRequest::isFinished() const
 /*!
   Returns true if the request is in the \c QOrganizerAbstractRequest::CanceledState; otherwise, returns false
 
-  \since 1.1
   \sa state()
  */
 bool QOrganizerAbstractRequest::isCanceled() const
@@ -190,7 +183,6 @@ bool QOrganizerAbstractRequest::isCanceled() const
 }
 
 /*! Returns the overall error of the most recent asynchronous operation
-  \since 1.1
 */
 QOrganizerManager::Error QOrganizerAbstractRequest::error() const
 {
@@ -200,7 +192,6 @@ QOrganizerManager::Error QOrganizerAbstractRequest::error() const
 
 /*!
   Returns the type of this asynchronous request
-  \since 1.1
  */
 QOrganizerAbstractRequest::RequestType QOrganizerAbstractRequest::type() const
 {
@@ -210,7 +201,6 @@ QOrganizerAbstractRequest::RequestType QOrganizerAbstractRequest::type() const
 
 /*!
   Returns the current state of the request.
-  \since 1.1
  */
 QOrganizerAbstractRequest::State QOrganizerAbstractRequest::state() const
 {
@@ -219,7 +209,6 @@ QOrganizerAbstractRequest::State QOrganizerAbstractRequest::state() const
 }
 
 /*! Returns a pointer to the manager of which this request instance requests operations
-    \since 1.1
 */
 QOrganizerManager* QOrganizerAbstractRequest::manager() const
 {
@@ -228,7 +217,6 @@ QOrganizerManager* QOrganizerAbstractRequest::manager() const
 }
 
 /*! Sets the manager of which this request instance requests operations to \a manager
-    \since 1.1
 */
 void QOrganizerAbstractRequest::setManager(QOrganizerManager* manager)
 {
@@ -242,7 +230,6 @@ void QOrganizerAbstractRequest::setManager(QOrganizerManager* manager)
 
 /*! Attempts to start the request.  Returns false if the request is not in the \c QOrganizerAbstractRequest::Inactive, \c QOrganizerAbstractRequest::Finished or \c QOrganizerAbstractRequest::Cancelled states,
     or if the request was unable to be performed by the manager engine; otherwise returns true.
-  \since 1.1
 */
 bool QOrganizerAbstractRequest::start()
 {
@@ -259,7 +246,6 @@ bool QOrganizerAbstractRequest::start()
 
 /*! Attempts to cancel the request.  Returns false if the request is not in the \c QOrganizerAbstractRequest::Active state,
     or if the request is unable to be cancelled by the manager engine; otherwise returns true.
-    \since 1.1
 */
 bool QOrganizerAbstractRequest::cancel()
 {
@@ -276,7 +262,6 @@ bool QOrganizerAbstractRequest::cancel()
     If \a msecs is zero or negative, this function will block until the request is complete, regardless of how long it takes.
     Returns true if the request was cancelled or completed successfully within the given period, otherwise false.
     Some backends are unable to support this operation safely, and will return false immediately.
-    \since 1.1
  */
 bool QOrganizerAbstractRequest::waitForFinished(int msecs)
 {
@@ -300,7 +285,6 @@ bool QOrganizerAbstractRequest::waitForFinished(int msecs)
 #ifndef QT_NO_DEBUG_STREAM
 /*!
   Outputs \a request to the debug stream \a dbg
-  \since 1.2
  */
 QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest& request)
 {

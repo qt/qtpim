@@ -58,7 +58,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \class QOrganizerRecurrenceRule
 
   \brief The QOrganizerRecurrenceRule class describes the a rule by which a QOrganizerItem repeats.
-  \since 1.1
 
   \inmodule QtOrganizer
 
@@ -170,7 +169,6 @@ QOrganizerRecurrenceRule::~QOrganizerRecurrenceRule()
 
 /*!
  * Constructs a QOrganizerRecurrenceRule object as a copy of \a other.
-  \since 1.1
  */
 QOrganizerRecurrenceRule::QOrganizerRecurrenceRule(const QOrganizerRecurrenceRule& other)
     : d(other.d)
@@ -179,7 +177,6 @@ QOrganizerRecurrenceRule::QOrganizerRecurrenceRule(const QOrganizerRecurrenceRul
 
 /*!
  * Assigns this detail to be equal to \a other.
-  \since 1.1
  */
 QOrganizerRecurrenceRule& QOrganizerRecurrenceRule::operator=(const QOrganizerRecurrenceRule& other)
 {
@@ -188,7 +185,6 @@ QOrganizerRecurrenceRule& QOrganizerRecurrenceRule::operator=(const QOrganizerRe
 }
 /*!
   Returns true if this recurrence rule is equal to the \a other; otherwise returns false.
-  \since 1.1
  */
 bool QOrganizerRecurrenceRule::operator==(const QOrganizerRecurrenceRule& other) const
 {
@@ -217,7 +213,6 @@ bool QOrganizerRecurrenceRule::operator==(const QOrganizerRecurrenceRule& other)
  * Sets the frequency with which the item recurs to \a freq.
  *
  * This corresponds to the FREQ fragment in iCalendar's RRULE.
-  \since 1.1
  */
 void QOrganizerRecurrenceRule::setFrequency(Frequency freq)
 {
@@ -226,7 +221,6 @@ void QOrganizerRecurrenceRule::setFrequency(Frequency freq)
 
 /*!
  * Returns the frequency with which the item recurs.  The default frequency is Invalid.
-  \since 1.1
  */
 QOrganizerRecurrenceRule::Frequency QOrganizerRecurrenceRule::frequency() const
 {
@@ -241,7 +235,6 @@ QOrganizerRecurrenceRule::Frequency QOrganizerRecurrenceRule::frequency() const
  *
  * This corresponds to the COUNT fragment in iCalendar's RRULE.
  * \sa clearLimit()
-  \since 1.1
  */
 void QOrganizerRecurrenceRule::setLimit(int count)
 {
@@ -262,7 +255,6 @@ void QOrganizerRecurrenceRule::setLimit(int count)
  *
  * This corresponds to the UNTIL fragment in iCalendar's RRULE.
  * \sa clearLimit()
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setLimit(const QDate& date)
 {
@@ -276,7 +268,6 @@ void QOrganizerRecurrenceRule::setLimit(const QDate& date)
 }
 
 /*! Clear any recurrence rule limitation conditions.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::clearLimit()
 {
@@ -287,7 +278,6 @@ void QOrganizerRecurrenceRule::clearLimit()
 
 /*! Returns the type of limitation specified by the recurrence rule.  The default limit type is NoLimit (ie.
  * unlimited)
-   \since 1.1
  */
 QOrganizerRecurrenceRule::LimitType QOrganizerRecurrenceRule::limitType() const
 {
@@ -296,7 +286,6 @@ QOrganizerRecurrenceRule::LimitType QOrganizerRecurrenceRule::limitType() const
 
 /*! Returns the "count" condition specified by the recurrence rule.  The default count is -1 (ie.
  * unlimited)
-   \since 1.1
  */
 int QOrganizerRecurrenceRule::limitCount() const
 {
@@ -308,7 +297,6 @@ int QOrganizerRecurrenceRule::limitCount() const
 
 /*! Returns the end-date condition specified by the recurrence rule.  The default end date is the
  * null date (ie. no end date).
-   \since 1.1
  */
 QDate QOrganizerRecurrenceRule::limitDate() const
 {
@@ -325,7 +313,6 @@ QDate QOrganizerRecurrenceRule::limitDate() const
  * 2, the item should recur every second day.
  *
  * This corresponds to the INTERVAL fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setInterval(int interval)
 {
@@ -335,7 +322,6 @@ void QOrganizerRecurrenceRule::setInterval(int interval)
 
 /*!
  * Returns the interval of recurrence.  The default interval is 1.
-   \since 1.1
  */
 int QOrganizerRecurrenceRule::interval() const
 {
@@ -348,7 +334,6 @@ int QOrganizerRecurrenceRule::interval() const
  * Sets the days of week on which the item should recur to \a days.
  *
  * This corresponds to the BYDAY fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setDaysOfWeek(const QSet<Qt::DayOfWeek>& days)
 {
@@ -358,7 +343,6 @@ void QOrganizerRecurrenceRule::setDaysOfWeek(const QSet<Qt::DayOfWeek>& days)
 /*!
  * Returns a list of the days of week that the item should recur on.  If not set, this is the empty
  * list, which signifies that it should be implied, if necessary, by the day-of-week of the item.
-   \since 1.1
  */
 QSet<Qt::DayOfWeek> QOrganizerRecurrenceRule::daysOfWeek() const
 {
@@ -371,7 +355,6 @@ QSet<Qt::DayOfWeek> QOrganizerRecurrenceRule::daysOfWeek() const
  * month and -1 represents the last day of the month.
  *
  * This corresponds to the BYMONTHDAY fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setDaysOfMonth(const QSet<int>& days)
 {
@@ -382,7 +365,6 @@ void QOrganizerRecurrenceRule::setDaysOfMonth(const QSet<int>& days)
  * Returns a list of the days of the month that the item should recur on.  If not set, this is the
  * empty list, which signifies that it should be implied, if necessary, by the day-of-month of the
  * item.
-   \since 1.1
  */
 QSet<int> QOrganizerRecurrenceRule::daysOfMonth() const
 {
@@ -395,7 +377,6 @@ QSet<int> QOrganizerRecurrenceRule::daysOfMonth() const
  * year and -1 represents the last day of the year.
  *
  * This corresponds to the BYYEARDAY fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setDaysOfYear(const QSet<int>& days)
 {
@@ -406,7 +387,6 @@ void QOrganizerRecurrenceRule::setDaysOfYear(const QSet<int>& days)
  * Returns a list of the days of the year that the item should recur on.  If not set, this is the
  * empty list, which signifies that it should be implied, if necessary, by the day-of-year of the
  * item.
-   \since 1.1
  */
 QSet<int> QOrganizerRecurrenceRule::daysOfYear() const
 {
@@ -417,7 +397,6 @@ QSet<int> QOrganizerRecurrenceRule::daysOfYear() const
  * Sets the months on which the item should recur to \a months.
  *
  * This corresponds to the BYMONTHDAY fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setMonthsOfYear(const QSet<Month>& months)
 {
@@ -428,7 +407,6 @@ void QOrganizerRecurrenceRule::setMonthsOfYear(const QSet<Month>& months)
  * Returns a list of the months that the item should recur on.  If not set, this is the
  * empty list, which signifies that it should be implied, if necessary, by the month of the
  * item.
-   \since 1.1
  */
 QSet<QOrganizerRecurrenceRule::Month> QOrganizerRecurrenceRule::monthsOfYear() const
 {
@@ -441,7 +419,6 @@ QSet<QOrganizerRecurrenceRule::Month> QOrganizerRecurrenceRule::monthsOfYear() c
  * year and -1 represents the last week of the year.
  *
  * This corresponds to the BYWEEK fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setWeeksOfYear(const QSet<int>& weeks)
 {
@@ -452,7 +429,6 @@ void QOrganizerRecurrenceRule::setWeeksOfYear(const QSet<int>& weeks)
  * Returns a list of the weeks of the year that the item should recur on.  If not set, this is the
  * empty list, which signifies that it should be implied, if necessary, by the week number of the
  * item.
-   \since 1.1
  */
 QSet<int> QOrganizerRecurrenceRule::weeksOfYear() const
 {
@@ -471,7 +447,6 @@ QSet<int> QOrganizerRecurrenceRule::weeksOfYear() const
  * weekday of each month.
  *
  * This corresponds to the BYSETPOS fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setPositions(const QSet<int>& pos)
 {
@@ -481,7 +456,6 @@ void QOrganizerRecurrenceRule::setPositions(const QSet<int>& pos)
 /*!
  * Returns the position-list of the recurrence rule.  If not set, this is the empty list, which
  * signifies that the recurrence dates should not be restricted by position.
-   \since 1.1
  */
 QSet<int> QOrganizerRecurrenceRule::positions() const
 {
@@ -493,7 +467,6 @@ QSet<int> QOrganizerRecurrenceRule::positions() const
  * weekOfYear is set.  See the iCalendar spec for examples of its significance.
  *
  * This corresponds to the BYWKST fragment in iCalendar's RRULE.
-   \since 1.1
  */
 void QOrganizerRecurrenceRule::setFirstDayOfWeek(Qt::DayOfWeek day)
 {
@@ -502,7 +475,6 @@ void QOrganizerRecurrenceRule::setFirstDayOfWeek(Qt::DayOfWeek day)
 
 /*!
  * Returns the day that the week starts on.  If not set, this is Monday.
-   \since 1.1
  */
 Qt::DayOfWeek QOrganizerRecurrenceRule::firstDayOfWeek() const
 {
@@ -560,7 +532,6 @@ uint qHash(const QOrganizerRecurrenceRule& r)
 #ifndef QT_NO_DEBUG_STREAM
 /*!
   Outputs \a rule to the debug stream \a dbg
-  \since 1.2
  */
 QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule& rule)
 {

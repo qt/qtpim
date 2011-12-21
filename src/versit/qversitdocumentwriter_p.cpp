@@ -50,7 +50,6 @@ QTVERSIT_BEGIN_NAMESPACE
 /*!
   \class QVersitDocumentWriter
   \internal
-    \since 1.0
   \brief The QVersitDocumentWriter class provides an interface for writing a
   single versit document into a vCard text string.
  */

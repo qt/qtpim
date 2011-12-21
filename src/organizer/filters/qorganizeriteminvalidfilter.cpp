@@ -47,7 +47,6 @@
   \brief The QOrganizerItemInvalidFilter class matches no organizeritems.
   \inmodule QtOrganizer
   \ingroup organizer-filters
-  \since 1.1
 
   This class provides a filter which will never match any organizeritems
  */
@@ -103,7 +102,6 @@ public:
 
 /*!
  * Constructs a new invalid filter
-   \since 1.1
  */
 QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter()
     : QOrganizerItemFilter(new QOrganizerItemInvalidFilterPrivate)
@@ -112,7 +110,6 @@ QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter()
 
 /*!
  * Constructs a new invalid filter, ignoring the \a other filter
-   \since 1.1
  */
 QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter(const QOrganizerItemFilter& other)
     : QOrganizerItemFilter(new QOrganizerItemInvalidFilterPrivate)

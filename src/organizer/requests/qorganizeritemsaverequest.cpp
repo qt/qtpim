@@ -56,7 +56,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   the overall operation error (which may be retrieved by calling error()) is updated.
 
   \ingroup organizer-requests
-  \since 1.1
  */
 
 /*! Constructs a new organizer item save request whose parent is the specified \a parent */
@@ -66,7 +65,6 @@ QOrganizerItemSaveRequest::QOrganizerItemSaveRequest(QObject* parent)
 }
 
 /*! Frees memory in use by this request
-  \since 1.2
 */
 QOrganizerItemSaveRequest::~QOrganizerItemSaveRequest()
 {
@@ -79,7 +77,6 @@ QOrganizerItemSaveRequest::~QOrganizerItemSaveRequest()
   \code
       setItems(QList<QOrganizerItem>() << organizeritem);
   \endcode
-  \since 1.1
  */
 void QOrganizerItemSaveRequest::setItem(const QOrganizerItem& organizeritem)
 {
@@ -90,7 +87,6 @@ void QOrganizerItemSaveRequest::setItem(const QOrganizerItem& organizeritem)
 }
 
 /*! Sets the list of organizer items to be saved to \a organizeritems
-  \since 1.1
 */
 void QOrganizerItemSaveRequest::setItems(const QList<QOrganizerItem>& organizeritems)
 {
@@ -101,7 +97,6 @@ void QOrganizerItemSaveRequest::setItems(const QList<QOrganizerItem>& organizeri
 
 /*! Returns the list of organizer items which will be saved if called prior to calling \c start(),
     otherwise returns the list of organizer items as they were saved in the organizer item store
-    \since 1.1
 */
 QList<QOrganizerItem> QOrganizerItemSaveRequest::items() const
 {
@@ -111,7 +106,6 @@ QList<QOrganizerItem> QOrganizerItemSaveRequest::items() const
 }
 
 /*! Returns the map of input definition list indices to errors which occurred
-    \since 1.1
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemSaveRequest::errorMap() const
 {
@@ -141,7 +135,6 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemSaveRequest::errorMap() const
     \note Some managers do not support partial updates natively, in which case the QtOrganizer
     framework will emulate the functionality (fetching the whole item, applying the
     new restricted details, and saving the item back).
-    \since 1.2
 */
 void QOrganizerItemSaveRequest::setDefinitionMask(const QStringList &definitionMask)
 {
@@ -154,7 +147,6 @@ void QOrganizerItemSaveRequest::setDefinitionMask(const QStringList &definitionM
     Returns the list of definitions that this request will operate on.
 
     If the list is empty, the request will operate on all details.
-    \since 1.2
  */
 QStringList QOrganizerItemSaveRequest::definitionMask() const
 {

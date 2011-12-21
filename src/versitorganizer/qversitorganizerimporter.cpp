@@ -53,7 +53,6 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
 
   \ingroup versit
   \inmodule QtVersit
-  \since 1.1
 
   This class is used to convert a \l QVersitDocument (which may be produced by a
   QVersitReader) to lists of \l{QOrganizerItem}{QOrganizerItems} (which may be saved into a

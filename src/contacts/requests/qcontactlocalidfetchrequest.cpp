@@ -59,7 +59,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -77,7 +76,6 @@ QContactLocalIdFetchRequest::~QContactLocalIdFetchRequest()
 }
 
 /*! Sets the filter which will be used to select the contacts whose ids will be returned to \a filter
-    \since 1.0
 */
 void QContactLocalIdFetchRequest::setFilter(const QContactFilter& filter)
 {
@@ -88,7 +86,6 @@ void QContactLocalIdFetchRequest::setFilter(const QContactFilter& filter)
 
 /*! Sets the future sort ordering of the result of the request to \a sorting.  This function only has
     effect on the result if called prior to calling \c start()
-    \since 1.0
 */
 void QContactLocalIdFetchRequest::setSorting(const QList<QContactSortOrder>& sorting)
 {
@@ -98,7 +95,6 @@ void QContactLocalIdFetchRequest::setSorting(const QList<QContactSortOrder>& sor
 }
 
 /*! Returns the filter which will be used to select the contacts whose ids will be returned
-    \since 1.0
 */
 QContactFilter QContactLocalIdFetchRequest::filter() const
 {
@@ -108,7 +104,6 @@ QContactFilter QContactLocalIdFetchRequest::filter() const
 }
 
 /*! Returns the sort ordering which will be used to sort the result
-    \since 1.0
 */
 QList<QContactSortOrder> QContactLocalIdFetchRequest::sorting() const
 {
@@ -118,7 +113,6 @@ QList<QContactSortOrder> QContactLocalIdFetchRequest::sorting() const
 }
 
 /*! Returns the list of ids of contacts which matched the request
-    \since 1.0
 */
 QList<QContactLocalId> QContactLocalIdFetchRequest::ids() const
 {

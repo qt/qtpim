@@ -59,7 +59,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -82,7 +81,6 @@ QContactSaveRequest::~QContactSaveRequest()
   \code
       setContacts(QList<QContact>() << contact);
   \endcode
-  \since 1.0
  */
 void QContactSaveRequest::setContact(const QContact& contact)
 {
@@ -93,7 +91,6 @@ void QContactSaveRequest::setContact(const QContact& contact)
 }
 
 /*! Sets the list of contacts to be saved to \a contacts
-    \since 1.0
 */
 void QContactSaveRequest::setContacts(const QList<QContact>& contacts)
 {
@@ -105,7 +102,6 @@ void QContactSaveRequest::setContacts(const QList<QContact>& contacts)
 /*! Returns the list of contacts which will be saved if called prior to calling \c start(),
     otherwise returns the list of contacts with their ids set appropriately (successfully
     saved new contacts will have an id assigned).
-    \since 1.0
 */
 QList<QContact> QContactSaveRequest::contacts() const
 {
@@ -115,7 +111,6 @@ QList<QContact> QContactSaveRequest::contacts() const
 }
 
 /*! Returns the map of input contact list indices to errors which occurred
-    \since 1.0
 */
 QMap<int, QContactManager::Error> QContactSaveRequest::errorMap() const
 {

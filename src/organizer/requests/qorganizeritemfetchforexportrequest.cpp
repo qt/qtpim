@@ -49,7 +49,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \brief The QOrganizerItemFetchForExportRequest class allows a client to asynchronously
     request organizer items from an organizer item store manager.
   \inmodule QtOrganizer
-  \since 1.1
 
 
   For a QOrganizerItemFetchForExportRequest, the resultsAvailable() signal will be emitted when the resultant
@@ -60,7 +59,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*! Constructs a new organizer item fetch request whose parent is the specified \a parent
-  \since 1.1
 */
 QOrganizerItemFetchForExportRequest::QOrganizerItemFetchForExportRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerItemFetchForExportRequestPrivate, parent)
@@ -68,7 +66,6 @@ QOrganizerItemFetchForExportRequest::QOrganizerItemFetchForExportRequest(QObject
 }
 
 /*! Frees memory in use by this request
-  \since 1.2
 */
 QOrganizerItemFetchForExportRequest::~QOrganizerItemFetchForExportRequest()
 {
@@ -76,7 +73,6 @@ QOrganizerItemFetchForExportRequest::~QOrganizerItemFetchForExportRequest()
 }
 
 /*! Sets the organizer item filter used to determine which organizer items will be retrieved to \a filter
-  \since 1.1
 */
 void QOrganizerItemFetchForExportRequest::setFilter(const QOrganizerItemFilter& filter)
 {
@@ -86,7 +82,6 @@ void QOrganizerItemFetchForExportRequest::setFilter(const QOrganizerItemFilter& 
 }
 
 /*! Sets the sort order of the result to \a sorting.  Only has an effect if called prior to calling \c start()
-  \since 1.1
 */
 void QOrganizerItemFetchForExportRequest::setSorting(const QList<QOrganizerItemSortOrder>& sorting)
 {
@@ -102,7 +97,6 @@ void QOrganizerItemFetchForExportRequest::setSorting(const QList<QOrganizerItemS
   loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
   replace the previously saved organizer item in the backend).
   \sa QOrganizerItemFetchHint
-  \since 1.1
  */
 void QOrganizerItemFetchForExportRequest::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
 {
@@ -112,7 +106,6 @@ void QOrganizerItemFetchForExportRequest::setFetchHint(const QOrganizerItemFetch
 }
 
 /*! Sets the start period of the request to \a date. Only has an effect if called prior to calling \c start()
-  \since 1.1
 */
 void QOrganizerItemFetchForExportRequest::setStartDate(const QDateTime &date)
 {
@@ -122,7 +115,6 @@ void QOrganizerItemFetchForExportRequest::setStartDate(const QDateTime &date)
 }
 
 /*! Sets the end period of the request to \a date. Only has an effect if called prior to calling \c start()
-  \since 1.1
 */
 void QOrganizerItemFetchForExportRequest::setEndDate(const QDateTime &date)
 {
@@ -132,7 +124,6 @@ void QOrganizerItemFetchForExportRequest::setEndDate(const QDateTime &date)
 }
 
 /*! Returns the filter that will be used to select organizer items to be returned
-  \since 1.1
 */
 QOrganizerItemFilter QOrganizerItemFetchForExportRequest::filter() const
 {
@@ -142,7 +133,6 @@ QOrganizerItemFilter QOrganizerItemFetchForExportRequest::filter() const
 }
 
 /*! Returns the sort ordering that will be used sort the results of this request
-    \since 1.1
 */
 QList<QOrganizerItemSortOrder> QOrganizerItemFetchForExportRequest::sorting() const
 {
@@ -158,7 +148,6 @@ QList<QOrganizerItemSortOrder> QOrganizerItemFetchForExportRequest::sorting() co
   loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
   replace the previously saved organizer item in the backend).
   \sa QOrganizerItemFetchHint
-  \since 1.1
  */
 QOrganizerItemFetchHint QOrganizerItemFetchForExportRequest::fetchHint() const
 {
@@ -172,7 +161,6 @@ QOrganizerItemFetchHint QOrganizerItemFetchForExportRequest::fetchHint() const
    An invalid (default-constructed) date-time signifies that no lower bound is given (matches everything
    up to the end date).
    Note that an item matches if either it or any of its occurrences occur within the defined range.
-  \since 1.1
  */
 QDateTime QOrganizerItemFetchForExportRequest::startDate() const
 {
@@ -186,7 +174,6 @@ QDateTime QOrganizerItemFetchForExportRequest::startDate() const
    An invalid (default-constructed) date-time signifies that no upper bound is given (matches everything
    after the start date).
    Note that an item matches if either it or any of its occurrences occur within the defined range.
-  \since 1.1
  */
 QDateTime QOrganizerItemFetchForExportRequest::endDate() const
 {
@@ -196,7 +183,6 @@ QDateTime QOrganizerItemFetchForExportRequest::endDate() const
 }
 
 /*! Returns the list of organizer items retrieved by this request
-  \since 1.1
 */
 QList<QOrganizerItem> QOrganizerItemFetchForExportRequest::items() const
 {

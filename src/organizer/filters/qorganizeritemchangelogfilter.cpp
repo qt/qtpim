@@ -52,7 +52,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   organizer item timestamp criterion.
   \inmodule QtOrganizer
   \ingroup organizer-filters
-  \since 1.1
 
   It may be used to select organizer items which have been updated or created
   within a certain period of time.
@@ -71,12 +70,10 @@ Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemChangeLogFilter);
 /*!
  * \fn QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(const QOrganizerItemFilter& other)
  * Constructs a copy of \a other if possible, otherwise constructs a new changelog filter
-  \since 1.1
  */
 
 /*!
  * Constructs a new changelog filter which matches changes of the specified \a type
-  \since 1.1
  */
 QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(QOrganizerItemChangeLogFilter::EventType type)
     : QOrganizerItemFilter(new QOrganizerItemChangeLogFilterPrivate(type))
@@ -86,7 +83,6 @@ QOrganizerItemChangeLogFilter::QOrganizerItemChangeLogFilter(QOrganizerItemChang
 /*!
  * Sets the type of change that this filter will match against to \a type
  * \sa eventType()
-  \since 1.1
  */
 void QOrganizerItemChangeLogFilter::setEventType(QOrganizerItemChangeLogFilter::EventType type)
 {
@@ -97,7 +93,6 @@ void QOrganizerItemChangeLogFilter::setEventType(QOrganizerItemChangeLogFilter::
 /*!
  * Sets the date and time lower-bound criterion of the filter to \a since
  * \sa since()
-  \since 1.1
  */
 void QOrganizerItemChangeLogFilter::setSince(const QDateTime& since)
 {
@@ -108,7 +103,6 @@ void QOrganizerItemChangeLogFilter::setSince(const QDateTime& since)
 /*!
  * Returns the date and time lower-bound criterion of the filter
  * \sa setSince()
-   \since 1.1
  */
 QDateTime QOrganizerItemChangeLogFilter::since() const
 {
@@ -119,7 +113,6 @@ QDateTime QOrganizerItemChangeLogFilter::since() const
 /*!
  * Returns the type of change that this filter will match against
  * \sa setEventType()
-   \since 1.1
  */
 QOrganizerItemChangeLogFilter::EventType QOrganizerItemChangeLogFilter::eventType() const
 {

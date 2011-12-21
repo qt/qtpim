@@ -53,7 +53,6 @@ QTVERSIT_BEGIN_NAMESPACE
   \class QVersitContactExporterDetailHandler
   \brief The QVersitContactExporterDetailHandler class is the legacy interface for clients wishing
   to implement custom export behaviour for certain contact details.
-    \since 1.1
 
   This interface is replaced by QVersitContactExporterDetailHandlerV2.  For general information on
   extending Qt Versit, see the document on \l{Versit Plugins}.

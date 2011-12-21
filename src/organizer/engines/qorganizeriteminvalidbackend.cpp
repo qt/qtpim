@@ -50,7 +50,6 @@
   \inmodule QtOrganizer
 
   The invalid engine may be used as a reference or test engine, but does nothing.
-  \since 1.1
  */
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -60,9 +59,7 @@ QOrganizerItemInvalidEngine::QOrganizerItemInvalidEngine()
 {
 }
 
-/*! \reimp
-  \since 1.1
-*/
+/*! \reimp */
 QString QOrganizerItemInvalidEngine::managerName() const
 {
     return QString(QLatin1String("invalid"));

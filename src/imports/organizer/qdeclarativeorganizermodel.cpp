@@ -985,7 +985,6 @@ void QDeclarativeOrganizerModel::requestUpdated()
   \qmlmethod OrganizerModel::saveItem(OrganizerItem item)
   Saves asynchronously the given \a item into the organizer backend.
 
-  \since organizer 1.1.1
   */
 void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
 {
@@ -1005,7 +1004,6 @@ void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
   \qmlmethod OrganizerModel::removeItem(string itemId)
   Removes the organizer item with the given \a itemId from the backend.
 
-  \since organizer 1.1.1
   */
 void QDeclarativeOrganizerModel::removeItem(const QString& id)
 {
@@ -1018,7 +1016,6 @@ void QDeclarativeOrganizerModel::removeItem(const QString& id)
   \qmlmethod OrganizerModel::removeItems(list<string> itemId)
   Removes asynchronously the organizer items with the given \a ids from the backend.
 
-  \since organizer 1.1.1
   */
 void QDeclarativeOrganizerModel::removeItems(const QStringList& ids)
 {

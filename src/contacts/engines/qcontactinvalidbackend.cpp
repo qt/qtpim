@@ -47,7 +47,6 @@
   \class QContactInvalidEngine
 
   \inmodule QtContacts
-   \since 1.0
 
   \brief The QContactInvalidEngine class provides an implementation of
   QContactManagerEngine whose functions always return an error.
@@ -63,7 +62,6 @@ QContactInvalidEngine::QContactInvalidEngine()
 }
 
 /*! \reimp
-   \since 1.0
 */
 QString QContactInvalidEngine::managerName() const
 {

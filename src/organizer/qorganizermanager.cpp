@@ -55,7 +55,6 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
   \class QOrganizerManager
   \brief The QOrganizerManager class provides an interface which allows clients with access to organizer item information stored in a particular backend.
-  \since 1.1
 
   \inmodule QtOrganizer
   \ingroup organizer-main
@@ -77,35 +76,30 @@ QTORGANIZER_BEGIN_NAMESPACE
   This signal is emitted by the manager if its internal state changes, and it is unable to determine the changes
   which occurred, or if the manager considers the changes to be radical enough to require clients to reload all data.
   If this signal is emitted, no other signals will be emitted for the associated changes.
-  \since 1.1
  */
 
 /*!
   \fn QOrganizerManager::itemsAdded(const QList<QOrganizerItemId>& itemIds)
   This signal is emitted at some point once the items identified by \a itemIds have been added to a datastore managed by this manager.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 /*!
   \fn QOrganizerManager::itemsChanged(const QList<QOrganizerItemId>& itemIds)
   This signal is emitted at some point once the items identified by \a itemIds have been modified in a datastore managed by this manager.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 /*!
   \fn QOrganizerManager::itemsRemoved(const QList<QOrganizerItemId>& itemIds)
   This signal is emitted at some point once the items identified by \a itemIds have been removed from a datastore managed by this manager.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 /*!
   \fn QOrganizerManager::collectionsAdded(const QList<QOrganizerCollectionId>& collectionIds)
   This signal is emitted at some point once the collections identified by \a collectionIds have been added to a datastore managed by this manager.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 /*!
@@ -113,14 +107,12 @@ QTORGANIZER_BEGIN_NAMESPACE
   This signal is emitted at some point once the metadata for the collections identified by \a collectionIds have been modified in a datastore managed by this manager.
   This signal is not emitted if one of the items in this collection has changed - itemsChanged() will be emitted instead.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 /*!
   \fn QOrganizerManager::collectionsRemoved(const QList<QOrganizerCollectionId>& collectionIds)
   This signal is emitted at some point once the collections identified by \a collectionIds have been removed from a datastore managed by this manager.
   This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
-  \since 1.1
  */
 
 
@@ -132,7 +124,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     Returns a list of available manager ids that can be used when constructing
     a QOrganizerManager.  If an empty id is specified to the constructor, the
     first value in this list will be used instead.
-    \since 1.1
   */
 QStringList QOrganizerManager::availableManagers()
 {
@@ -153,7 +144,6 @@ QStringList QOrganizerManager::availableManagers()
 
 /*!
   Splits the given \a uri into the manager, store, and parameters that it describes, and places the information into the memory addressed by \a pManagerId and \a pParams respectively.  Returns true if \a uri could be split successfully, otherwise returns false
-  \since 1.1
  */
 bool QOrganizerManager::parseUri(const QString& uri, QString* pManagerId, QMap<QString, QString>* pParams)
 {
@@ -211,7 +201,6 @@ bool QOrganizerManager::parseUri(const QString& uri, QString* pManagerId, QMap<Q
 }
 
 /*! Returns a URI that completely describes a manager implementation, datastore, and the parameters with which to instantiate the manager, from the given \a managerName, \a params and an optional \a implementationVersion
-  \since 1.1
 */
 QString QOrganizerManager::buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion)
 {
@@ -243,7 +232,6 @@ QString QOrganizerManager::buildUri(const QString& managerName, const QMap<QStri
 /*!
   Constructs a QOrganizerManager whose implementation, store and parameters are specified in the given \a storeUri,
   and whose parent object is \a parent.
-  \since 1.1
  */
 QOrganizerManager* QOrganizerManager::fromUri(const QString& storeUri, QObject* parent)
 {
@@ -279,7 +267,6 @@ QOrganizerManager::QOrganizerManager(QObject* parent)
 
   If an empty \a managerName is specified, the default implementation for the platform will
   be used.
-  \since 1.1
  */
 QOrganizerManager::QOrganizerManager(const QString& managerName, const QMap<QString, QString>& parameters, QObject* parent)
     : QObject(parent),
@@ -314,7 +301,6 @@ void QOrganizerManager::createEngine(const QString& managerName, const QMap<QStr
 
   If an empty \a managerName is specified, the default implementation for the platform will be instantiated.
   If the specified implementation version is not available, the manager with the name \a managerName with the default implementation version is instantiated.
-  \since 1.1
  */
 QOrganizerManager::QOrganizerManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters, QObject* parent)
     : QObject(parent),
@@ -356,7 +342,6 @@ QOrganizerManager::~QOrganizerManager()
  */
 
 /*! Return the error code of the most recent operation
-  \since 1.1
 */
 QOrganizerManager::Error QOrganizerManager::error() const
 {
@@ -371,7 +356,6 @@ QOrganizerManager::Error QOrganizerManager::error() const
   for which the error (whose error code is stored in the value for
   that key in the map) occurred during the batch operation.
   \sa error(), saveItems(), removeItems()
-  \since 1.1
  */
 QMap<int, QOrganizerManager::Error> QOrganizerManager::errorMap() const
 {
@@ -389,7 +373,6 @@ QMap<int, QOrganizerManager::Error> QOrganizerManager::errorMap() const
   The \a fetchHint allows clients to specify which pieces of information they are interested or not interested in, to allow
   backends to optimise data retrieval if possible.  Note that it is simply a hint; backends can ignore the \a fetchHint,
   but if they do so they must return the full item.
-  \since 1.1
   */
 QList<QOrganizerItem> QOrganizerManager::itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint) const
 {
@@ -400,7 +383,6 @@ QList<QOrganizerItem> QOrganizerManager::itemOccurrences(const QOrganizerItem& p
 /*!
   Returns a list of organizer item ids that match the given \a filter, sorted according to the given list of \a sortOrders.
   Depending on the backend, this filtering operation may involve retrieving all organizer items.
-  \since 1.1
  */
 QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders) const
 {
@@ -415,7 +397,6 @@ QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter& f
   and a default-constructed (invalid) \a endDate specifies an open end date (matches anything which occurs after the \a startDate).
   If both the \a startDate and \a endDate are invalid, this function will return the ids of all items which match the \a filter criteria.
   Depending on the backend, this filtering operation may involve retrieving all organizer items.
-  \since 1.1
  */
 QList<QOrganizerItemId> QOrganizerManager::itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders) const
 {
@@ -437,7 +418,6 @@ QList<QOrganizerItemId> QOrganizerManager::itemIds(const QDateTime& startDate, c
   fetch hint, they should save it back using a partial save, masked by the same set of detail names
   in order to avoid information loss.
 
-  \since 1.1
   \sa QOrganizerItemFetchHint
  */
 QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
@@ -466,7 +446,6 @@ QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filte
   fetch hint, they should save it back using a partial save, masked by the same set of detail names
   in order to avoid information loss.
 
-  \since 1.1
   \sa QOrganizerItemFetchHint
  */
 QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
@@ -496,7 +475,6 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
   fetch hint, they should save it back using a partial save, masked by the same set of detail names
   in order to avoid information loss.
 
-  \since 1.2
   \sa QOrganizerItemFetchHint
  */
 QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, int maxCount, const QOrganizerItemFilter& filter, const QOrganizerItemFetchHint& fetchHint) const
@@ -523,7 +501,6 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
   fetch hint, they should save it back using a partial save, masked by the same set of detail names
   in order to avoid information loss.
 
-  \since 1.1
   \sa QOrganizerItemFetchHint
  */
 QList<QOrganizerItem> QOrganizerManager::itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
@@ -544,7 +521,6 @@ QList<QOrganizerItem> QOrganizerManager::itemsForExport(const QDateTime& startDa
   fetch hint, they should save it back using a partial save, masked by the same set of detail names
   in order to avoid information loss.
 
-  \since 1.1
   \sa QOrganizerItemFetchHint
  */
 QOrganizerItem QOrganizerManager::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint) const
@@ -585,7 +561,6 @@ QOrganizerItem QOrganizerManager::item(const QOrganizerItemId& itemId, const QOr
   and as such, clients should fetch an organizer item if they want the most up-to-date information
   by calling \l QOrganizerManager::item().
 
-  \since 1.1
   \sa managerUri()
  */
 bool QOrganizerManager::saveItem(QOrganizerItem* item)
@@ -603,7 +578,6 @@ bool QOrganizerManager::saveItem(QOrganizerItem* item)
   Remove the organizer item identified by \a itemId from the database.
   Returns true if the organizer item was removed successfully, otherwise
   returns false.
-  \since 1.1
  */
 bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
 {
@@ -628,7 +602,6 @@ bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
   For each newly saved organizer item that was successful, the id of the organizer item
   in the \a items list will be updated with the new value.
 
-  \since 1.1
   \sa QOrganizerManager::saveItem()
  */
 bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items)
@@ -663,7 +636,6 @@ bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items)
   For each newly saved organizer item that was successful, the id of the organizer item
   in the \a items list will be updated with the new value.
 
-  \since 1.2
   \sa QOrganizerManager::saveItem()
  */
 bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QStringList& definitionMask)
@@ -695,7 +667,6 @@ bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QStringLis
   in the \a organizeritemIds list, return false, and set the overall operation error to
   \c QOrganizerManager::DoesNotExistError.
 
-  \since 1.1
   \sa QOrganizerManager::removeItem()
  */
 bool QOrganizerManager::removeItems(const QList<QOrganizerItemId>& organizeritemIds)
@@ -711,7 +682,6 @@ bool QOrganizerManager::removeItems(const QList<QOrganizerItemId>& organizeritem
 
 /*!
   Returns the id of the default collection managed by this manager
-  \since 1.1
  */
 QOrganizerCollection QOrganizerManager::defaultCollection() const
 {
@@ -721,7 +691,6 @@ QOrganizerCollection QOrganizerManager::defaultCollection() const
 
 /*!
   Returns the collection identified by the given \a collectionId which is managed by this manager.
-  \since 1.1
  */
 QOrganizerCollection QOrganizerManager::collection(const QOrganizerCollectionId& collectionId) const
 {
@@ -731,7 +700,6 @@ QOrganizerCollection QOrganizerManager::collection(const QOrganizerCollectionId&
 
 /*!
   Returns a list of all of the collections managed by this manager.
-  \since 1.1
  */
 QList<QOrganizerCollection> QOrganizerManager::collections() const
 {
@@ -759,7 +727,6 @@ QList<QOrganizerCollection> QOrganizerManager::collections() const
   meta data key to be set in a collection, before the collection can be saved
   correctly.
 
-  \since 1.1
  */
 bool QOrganizerManager::saveCollection(QOrganizerCollection* collection)
 {
@@ -779,7 +746,6 @@ bool QOrganizerManager::saveCollection(QOrganizerCollection* collection)
 
   Attempting to remove the default collection will fail and calling \l error() will return
   QOrganizerManager::PermissionsError.
-  \since 1.1
  */
 bool QOrganizerManager::removeCollection(const QOrganizerCollectionId& collectionId)
 {
@@ -813,7 +779,6 @@ QList<QOrganizerItemType::ItemType> QOrganizerManager::supportedItemTypes() cons
 
 /*!
   Returns the engine backend implementation version number
-  \since 1.1
  */
 int QOrganizerManager::managerVersion() const
 {
@@ -821,7 +786,6 @@ int QOrganizerManager::managerVersion() const
 }
 
 /*! Returns the manager name for this QOrganizerManager
-  \since 1.1
 */
 QString QOrganizerManager::managerName() const
 {
@@ -829,7 +793,6 @@ QString QOrganizerManager::managerName() const
 }
 
 /*! Return the parameters relevant to the creation of this QOrganizerManager
-  \since 1.1
 */
 QMap<QString, QString> QOrganizerManager::managerParameters() const
 {
@@ -842,7 +805,6 @@ QMap<QString, QString> QOrganizerManager::managerParameters() const
 
 /*!
   Return the uri describing this QOrganizerManager, consisting of the manager name and any parameters.
-  \since 1.1
  */
 QString QOrganizerManager::managerUri() const
 {
@@ -850,7 +812,6 @@ QString QOrganizerManager::managerUri() const
 }
 
 /*! Return a list of QOrganizerItemId extracted from the \a items
-  \since 1.1
 */
 QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem>& items)
 {

@@ -50,7 +50,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     request collections from an organizer manager.
 
   \inmodule QtOrganizer
-  \since 1.1
 
 
   For a QOrganizerCollectionFetchRequest, the resultsAvailable() signal will be emitted when the resultant
@@ -61,7 +60,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
-  \since 1.1
 */
 QOrganizerCollectionFetchRequest::QOrganizerCollectionFetchRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionFetchRequestPrivate, parent)
@@ -69,7 +67,6 @@ QOrganizerCollectionFetchRequest::QOrganizerCollectionFetchRequest(QObject* pare
 }
 
 /*! Frees memory in use by this request
-  \since 1.2
 */
 QOrganizerCollectionFetchRequest::~QOrganizerCollectionFetchRequest()
 {
@@ -77,7 +74,6 @@ QOrganizerCollectionFetchRequest::~QOrganizerCollectionFetchRequest()
 }
 
 /*! Returns the collections retrieved by this request
-  \since 1.1
 */
 QList<QOrganizerCollection> QOrganizerCollectionFetchRequest::collections() const
 {

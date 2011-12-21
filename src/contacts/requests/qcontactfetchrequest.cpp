@@ -59,7 +59,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -77,7 +76,6 @@ QContactFetchRequest::~QContactFetchRequest()
 }
 
 /*! Sets the contact filter used to determine which contacts will be retrieved to \a filter
-   \since 1.0
 */
 void QContactFetchRequest::setFilter(const QContactFilter& filter)
 {
@@ -87,7 +85,6 @@ void QContactFetchRequest::setFilter(const QContactFilter& filter)
 }
 
 /*! Sets the sort order of the result to \a sorting.  Only has an effect if called prior to calling \c start()
-    \since 1.0
 */
 void QContactFetchRequest::setSorting(const QList<QContactSortOrder>& sorting)
 {
@@ -102,7 +99,6 @@ void QContactFetchRequest::setSorting(const QList<QContactSortOrder>& sorting)
   using a fetch hint other than the default fetch hint.  Doing so will result in information
   loss when saving the contact back to the manager (as the "new" restricted contact will
   replace the previously saved contact in the backend).
-  \since 1.0
   \sa QContactFetchHint
  */
 void QContactFetchRequest::setFetchHint(const QContactFetchHint &fetchHint)
@@ -113,7 +109,6 @@ void QContactFetchRequest::setFetchHint(const QContactFetchHint &fetchHint)
 }
 
 /*! Returns the filter that will be used to select contacts to be returned
-    \since 1.0
 */
 QContactFilter QContactFetchRequest::filter() const
 {
@@ -123,7 +118,6 @@ QContactFilter QContactFetchRequest::filter() const
 }
 
 /*! Returns the sort ordering that will be used sort the results of this request
-    \since 1.0
 */
 QList<QContactSortOrder> QContactFetchRequest::sorting() const
 {
@@ -138,7 +132,6 @@ QList<QContactSortOrder> QContactFetchRequest::sorting() const
   using a fetch hint other than the default fetch hint.  Doing so will result in information
   loss when saving the contact back to the manager (as the "new" restricted contact will
   replace the previously saved contact in the backend).
-  \since 1.0
   \sa QContactFetchHint
  */
 QContactFetchHint QContactFetchRequest::fetchHint() const
@@ -149,7 +142,6 @@ QContactFetchHint QContactFetchRequest::fetchHint() const
 }
 
 /*! Returns the list of contacts retrieved by this request
-    \since 1.0
 */
 QList<QContact> QContactFetchRequest::contacts() const
 {

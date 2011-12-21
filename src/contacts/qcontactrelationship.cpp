@@ -58,7 +58,6 @@ QTCONTACTS_BEGIN_NAMESPACE
   between a locally-stored contact and another (possibly remote) contact.
 
   \inmodule QtContacts
-   \since 2.0
 
   \ingroup contacts-main
 
@@ -139,7 +138,6 @@ QContactRelationship::~QContactRelationship()
 
 /*!
  * Creates a copy of the \a other relationship
- * \since 2.0
  */
 QContactRelationship::QContactRelationship(const QContactRelationship& other)
         : d(other.d)
@@ -148,7 +146,6 @@ QContactRelationship::QContactRelationship(const QContactRelationship& other)
 
 /*!
  * Assigns this relationship to be equal to \a other
- * \since 2.0
  */
 QContactRelationship& QContactRelationship::operator=(const QContactRelationship& other)
 {
@@ -158,7 +155,6 @@ QContactRelationship& QContactRelationship::operator=(const QContactRelationship
 
 /*!
  * Returns true if this relationship is equal to the \a other relationship, otherwise returns false.
- * \since 1.0
  */
 bool QContactRelationship::operator==(const QContactRelationship &other) const
 {
@@ -173,7 +169,6 @@ bool QContactRelationship::operator==(const QContactRelationship &other) const
 
 /*!
  * Returns the hash value for \a key.
- * \since 1.0
  */
 uint qHash(const QContactRelationship &key)
 {
@@ -193,7 +188,6 @@ QDebug operator<<(QDebug dbg, const QContactRelationship& rel)
 #ifndef QT_NO_DATASTREAM
 /*!
  * Writes \a rel to the stream \a out.
- * \since 1.0
  */
 QDataStream& operator<<(QDataStream& out, const QContactRelationship& rel)
 {
@@ -203,7 +197,6 @@ QDataStream& operator<<(QDataStream& out, const QContactRelationship& rel)
 
 /*!
  * Reads a contact relationship from stream \a in into \a rel.
- * \since 1.0
  */
 QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
 {
@@ -228,13 +221,11 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
 /*!
  * \fn QContactRelationship::operator!=(const QContactRelationship& other) const
  * Returns true if this relationship is not equal to \a other, otherwise returns false.
- * \since 2.0
  */
 
 /*!
  * Returns the locally-stored contact which has a relationship of the given type with the second contact
  * \sa relationshipType(), second(), setFirst()
- * \since 2.0
  */
 QContact QContactRelationship::first() const
 {
@@ -244,7 +235,6 @@ QContact QContactRelationship::first() const
 /*!
  * Returns the contact with which the first contact has a relationship of the given type
  * \sa relationshipType(), first()
- * \since 2.0
  */
 QContact QContactRelationship::second() const
 {
@@ -254,7 +244,6 @@ QContact QContactRelationship::second() const
 /*!
  * Returns the type of relationship which the source contact has with the destination contacts
  * \sa setRelationshipType()
- * \since 2.0
  */
 QString QContactRelationship::relationshipType() const
 {
@@ -265,7 +254,6 @@ QString QContactRelationship::relationshipType() const
  * Sets the id of the first contact in the relationship to \a firstId.  This contact
  * must be stored in the manager in which the relationship is stored, and has
  * a relationship of the specified type with the second contact.
- * \since 1.0
  * \sa first()
  */
 void QContactRelationship::setFirst(const QContact& firstContact)
@@ -276,7 +264,6 @@ void QContactRelationship::setFirst(const QContact& firstContact)
 /*!
  * Sets the second contact in the relationship to \a secondId.  The first contact
  * has a relationship of the specified type with this contact.
- * \since 1.0
  * \sa second()
  */
 void QContactRelationship::setSecond(const QContact& secondContact)
@@ -287,7 +274,6 @@ void QContactRelationship::setSecond(const QContact& secondContact)
 /*!
  * Sets the type of relationship that the source contact has with the destination contacts
  * to \a relationshipType.
- * \since 1.0
  * \sa relationshipType()
  */
 void QContactRelationship::setRelationshipType(const QString& relationshipType)

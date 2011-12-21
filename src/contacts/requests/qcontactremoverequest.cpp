@@ -58,7 +58,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -81,7 +80,6 @@ QContactRemoveRequest::~QContactRemoveRequest()
   \code
       setContactIds(QList<QContactLocalId>() << contactIds);
   \endcode
-  \since 1.0
  */
 void QContactRemoveRequest::setContactId(const QContactLocalId& contactId)
 {
@@ -92,7 +90,6 @@ void QContactRemoveRequest::setContactId(const QContactLocalId& contactId)
 }
 
 /*! Sets the list of ids of contacts which will be removed to \a contactIds
-    \since 1.0
 */
 void QContactRemoveRequest::setContactIds(const QList<QContactLocalId>& contactIds)
 {
@@ -102,7 +99,6 @@ void QContactRemoveRequest::setContactIds(const QList<QContactLocalId>& contactI
 }
 
 /*! Returns the list of ids of contacts which will be removed
-    \since 1.0
 */
 QList<QContactLocalId> QContactRemoveRequest::contactIds() const
 {
@@ -112,7 +108,6 @@ QList<QContactLocalId> QContactRemoveRequest::contactIds() const
 }
 
 /*! Returns the map of input contact list indices to errors which occurred
-    \since 1.0
 */
 QMap<int, QContactManager::Error> QContactRemoveRequest::errorMap() const
 {

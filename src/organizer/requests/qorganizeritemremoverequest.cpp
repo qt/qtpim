@@ -55,11 +55,9 @@ QTORGANIZER_BEGIN_NAMESPACE
   operation error (which may be retrieved by calling error()) is updated.
 
   \ingroup organizer-requests
-  \since 1.1
  */
 
 /*! Constructs a new organizer item remove request whose parent is the specified \a parent
-  \since 1.1
 */
 QOrganizerItemRemoveRequest::QOrganizerItemRemoveRequest(QObject* parent)
     : QOrganizerAbstractRequest(new QOrganizerItemRemoveRequestPrivate, parent)
@@ -67,7 +65,6 @@ QOrganizerItemRemoveRequest::QOrganizerItemRemoveRequest(QObject* parent)
 }
 
 /*! Frees memory in use by this request
-    \since 1.2
 */
 QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
 {
@@ -80,7 +77,6 @@ QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
   \code
       setOrganizerItemIds(QList<QOrganizerItemId>() << organizeritemIds);
   \endcode
-  \since 1.1
  */
 void QOrganizerItemRemoveRequest::setItemId(const QOrganizerItemId& organizeritemId)
 {
@@ -91,7 +87,6 @@ void QOrganizerItemRemoveRequest::setItemId(const QOrganizerItemId& organizerite
 }
 
 /*! Sets the list of ids of organizer items which will be removed to \a organizeritemIds
-    \since 1.1
 */
 void QOrganizerItemRemoveRequest::setItemIds(const QList<QOrganizerItemId>& organizeritemIds)
 {
@@ -101,7 +96,6 @@ void QOrganizerItemRemoveRequest::setItemIds(const QList<QOrganizerItemId>& orga
 }
 
 /*! Returns the list of ids of organizer items which will be removed
-    \since 1.1
 */
 QList<QOrganizerItemId> QOrganizerItemRemoveRequest::itemIds() const
 {
@@ -111,7 +105,6 @@ QList<QOrganizerItemId> QOrganizerItemRemoveRequest::itemIds() const
 }
 
 /*! Returns the map of input organizer item list indices to errors which occurred
-    \since 1.1
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemRemoveRequest::errorMap() const
 {

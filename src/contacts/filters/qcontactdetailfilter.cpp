@@ -52,7 +52,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-   \since 1.0
 
   \ingroup contacts-filters
 
@@ -64,7 +63,6 @@ Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactDetailFilter);
 /*!
  * \fn QContactDetailFilter::QContactDetailFilter(const QContactFilter& other)
  * Constructs a copy of \a other if possible, otherwise constructs a new detail filter
- * \since 1.0
  */
 
 /*!
@@ -83,7 +81,6 @@ QContactDetailFilter::QContactDetailFilter()
  * is present in a contact, that contact will match the filter, regardless of what values might be
  * stored in that detail.
  * \sa detailDefinitionName()
- * \since 1.0
  */
 void QContactDetailFilter::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
 {
@@ -97,7 +94,6 @@ void QContactDetailFilter::setDetailDefinitionName(const QString& definitionName
  * Note that if the field name criterion (set via setDetailDefinitionName())
  * of the filter is an empty string, this value will be ignored.
  * \sa value(), setDetailDefinitionName()
- * \since 1.0
  */
 void QContactDetailFilter::setValue(const QVariant& value)
 {
@@ -108,7 +104,6 @@ void QContactDetailFilter::setValue(const QVariant& value)
 /*!
  * Sets the semantics of the value matching criterion to those defined in \a flags
  * \sa matchFlags()
- * \since 1.0
  */
 void QContactDetailFilter::setMatchFlags(QContactFilter::MatchFlags flags)
 {
@@ -119,7 +114,6 @@ void QContactDetailFilter::setMatchFlags(QContactFilter::MatchFlags flags)
 /*!
  * Returns the semantics of the value matching criterion
  * \sa setMatchFlags()
- * \since 1.0
  */
 QContactFilter::MatchFlags QContactDetailFilter::matchFlags() const
 {
@@ -130,7 +124,6 @@ QContactFilter::MatchFlags QContactDetailFilter::matchFlags() const
 /*!
  * Returns the definition name of the details which will be inspected for matching values
  * \sa setDetailDefinitionName()
- * \since 1.0
  */
 QString QContactDetailFilter::detailDefinitionName() const
 {
@@ -141,7 +134,6 @@ QString QContactDetailFilter::detailDefinitionName() const
 /*!
  * Returns the name of the field which contains the value which will be matched against the value criterion
  * \sa setDetailDefinitionName()
- * \since 1.0
  */
 QString QContactDetailFilter::detailFieldName() const
 {
@@ -152,7 +144,6 @@ QString QContactDetailFilter::detailFieldName() const
 /*!
  * Returns the value criterion of the detail filter
  * \sa setValue()
- * \since 1.0
  */
 QVariant QContactDetailFilter::value() const
 {

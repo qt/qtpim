@@ -52,7 +52,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-   \since 2.0
 
   \ingroup contacts-filters
 
@@ -86,7 +85,6 @@ Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactRelationshipFilter)
 /*!
   \fn QContactRelationshipFilter::QContactRelationshipFilter(const QContactFilter& other)
   Constructs a copy of \a other if possible, else constructs a new QContactRelationshipFilter.
- * \since 2.0
  */
 
 /*!
@@ -99,7 +97,6 @@ QContactRelationshipFilter::QContactRelationshipFilter()
 
 /*!
   Sets the type of relationship which a contact must have in order to match this filter to \a relationshipType
-  \since 2.0
  */
 void QContactRelationshipFilter::setRelationshipType(const QString& relationshipType)
 {
@@ -109,7 +106,6 @@ void QContactRelationshipFilter::setRelationshipType(const QString& relationship
 
 /*!
   Returns the type of relationship that a contact must have in order to match the filter
-  \since 2.0
  */
 QString QContactRelationshipFilter::relationshipType() const
 {
@@ -119,7 +115,6 @@ QString QContactRelationshipFilter::relationshipType() const
 
 /*!
   Sets the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter to be \a relatedContact
-  \since 2.0
  */
 void QContactRelationshipFilter::setRelatedContact(const QContact &relatedContact)
 {
@@ -129,7 +124,6 @@ void QContactRelationshipFilter::setRelatedContact(const QContact &relatedContac
 
 /*!
   Returns the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter
-  \since 2.0
  */
 QContact QContactRelationshipFilter::relatedContact() const
 {
@@ -139,7 +133,6 @@ QContact QContactRelationshipFilter::relatedContact() const
 
 /*!
   Sets the role in the relationship with the tested contact that the related contact must play in order for the tested contact to match this filter to be \a relatedContactRole
-  \since 2.0
  */
 void QContactRelationshipFilter::setRelatedContactRole(QContactRelationship::Role relatedContactRole)
 {
@@ -149,7 +142,6 @@ void QContactRelationshipFilter::setRelatedContactRole(QContactRelationship::Rol
 
 /*!
   Returns the role in the relationship with the tested contact that the related contact must play in order for the tested contact to match this filter
-  \since 2.0
  */
 QContactRelationship::Role QContactRelationshipFilter::relatedContactRole() const
 {

@@ -49,7 +49,6 @@
   \inmodule QtContacts
 
   \ingroup contacts-filters
-   \since 1.0
 
   This class provides a filter which will never match any contacts
  */

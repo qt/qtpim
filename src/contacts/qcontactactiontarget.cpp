@@ -56,7 +56,6 @@ QTCONTACTS_BEGIN_NAMESPACE
   which together should be used by the action.
   \ingroup contacts-actions
   \inmodule QtContacts
-  \since 1.2
 */
 
 /*!

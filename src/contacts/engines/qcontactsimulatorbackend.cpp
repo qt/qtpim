@@ -66,7 +66,6 @@ using namespace Simulator;
 /*!
  * \class QContactSimulatorEngine
  * \brief This class provides a simulator-managed in-memory backend.
-   \since 1.0
  * \internal
  */
 

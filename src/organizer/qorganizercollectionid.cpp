@@ -60,7 +60,6 @@ QTORGANIZER_BEGIN_NAMESPACE
   \class QOrganizerCollectionId
   \brief The QOrganizerCollectionId class provides information that uniquely identifies
   a collection in a particular manager.
-  \since 1.1
 
   \inmodule QtOrganizer
 
@@ -90,7 +89,6 @@ QOrganizerCollectionId::~QOrganizerCollectionId()
   \a engineItemId.  This id takes ownership of the engine-unique item id and
   will delete it when the id goes out of scope.  Engine implementors must not
   delete the \a engineItemId or undefined behaviour will occur.
-  \since 1.1
  */
 QOrganizerCollectionId::QOrganizerCollectionId(QOrganizerCollectionEngineId* engineItemId)
     : d(engineItemId)
@@ -98,7 +96,6 @@ QOrganizerCollectionId::QOrganizerCollectionId(QOrganizerCollectionEngineId* eng
 }
 
 /*! Constructs a new collection id as a copy of \a other
-  \since 1.1
 */
 QOrganizerCollectionId::QOrganizerCollectionId(const QOrganizerCollectionId& other)
         : d(other.d)
@@ -106,7 +103,6 @@ QOrganizerCollectionId::QOrganizerCollectionId(const QOrganizerCollectionId& oth
 }
 
 /*! Assigns the collection id to be equal to \a other
-  \since 1.1
 */
 QOrganizerCollectionId& QOrganizerCollectionId::operator=(const QOrganizerCollectionId& other)
 {
@@ -115,7 +111,6 @@ QOrganizerCollectionId& QOrganizerCollectionId::operator=(const QOrganizerCollec
 }
 
 /*! Returns true if the collection id has the same manager URI and id as \a other
-  \since 1.1
 */
 bool QOrganizerCollectionId::operator==(const QOrganizerCollectionId& other) const
 {
@@ -133,7 +128,6 @@ bool QOrganizerCollectionId::operator==(const QOrganizerCollectionId& other) con
 }
 
 /*! Returns true if either the manager URI or id of the collection id is different to that of \a other
-  \since 1.1
 */
 bool QOrganizerCollectionId::operator!=(const QOrganizerCollectionId& other) const
 {
@@ -153,7 +147,6 @@ bool QOrganizerCollectionId::operator!=(const QOrganizerCollectionId& other) con
 
     This operator is provided primarily to allow use of a QOrganizerCollectionId
     as a key in a QMap.
-    \since 1.1
  */
 bool QOrganizerCollectionId::operator<(const QOrganizerCollectionId& other) const
 {
@@ -176,7 +169,6 @@ bool QOrganizerCollectionId::operator<(const QOrganizerCollectionId& other) cons
 
 /*!
   Returns true if the id part of this id is a null (default constructed) id; otherwise, returns false.
-  \since 1.1
  */
 bool QOrganizerCollectionId::isNull() const
 {
@@ -185,7 +177,6 @@ bool QOrganizerCollectionId::isNull() const
 
 /*!
  * Returns the hash value for \a key.
-  \since 1.1
  */
 uint qHash(const QOrganizerCollectionId &key)
 {
@@ -197,7 +188,6 @@ uint qHash(const QOrganizerCollectionId &key)
 #ifndef QT_NO_DEBUG_STREAM
 /*!
   Outputs \a id to the debug stream \a dbg
-  \since 1.1
  */
 QDebug operator<<(QDebug dbg, const QOrganizerCollectionId& id)
 {
@@ -213,7 +203,6 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollectionId& id)
 #ifndef QT_NO_DATASTREAM
 /*!
   Streams \a collectionId to the data stream \a out
-  \since 1.1
  */
 QDataStream& operator<<(QDataStream& out, const QOrganizerCollectionId& collectionId)
 {
@@ -223,7 +212,6 @@ QDataStream& operator<<(QDataStream& out, const QOrganizerCollectionId& collecti
 
 /*!
   Streams \a collectionId in from the data stream \a in
-  \since 1.1
  */
 QDataStream& operator>>(QDataStream& in, QOrganizerCollectionId& collectionId)
 {
@@ -244,7 +232,6 @@ QString QOrganizerCollectionId::managerUri() const
 
 /*!
   Builds a string from the given \a managerName, \a params and \a engineIdString
-  \since 1.1
  */
 inline QString buildIdString(const QString& managerName, const QMap<QString, QString>& params, const QString& engineIdString)
 {
@@ -338,7 +325,6 @@ inline bool parseIdString(const QString& idString, QString* managerName, QMap<QS
 /*!
   Serializes the id to a string.  The format of the string will be:
   "qtorganizer:managerName:constructionParams:serializedEngineLocalItemId"
-  \since 1.1
  */
 QString QOrganizerCollectionId::toString() const
 {
@@ -359,7 +345,6 @@ QString QOrganizerCollectionId::toString() const
   Deserializes the given \a idString.  Returns a default-constructed (null)
   item id if the given \a idString is not a valid, serialized item id, or
   if the manager engine from which the id came could not be found.
-  \since 1.1
  */
 QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString& idString)
 {

@@ -60,7 +60,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
   \inmodule QtContacts
-  \since 1.0
 
   \ingroup contacts-requests
  */
@@ -84,7 +83,6 @@ QContactRelationshipRemoveRequest::~QContactRelationshipRemoveRequest()
   \code
       setRelationships(QList<QContactRelationship>() << relationship);
   \endcode
-  \since 1.0
  */
 void QContactRelationshipRemoveRequest::setRelationship(const QContactRelationship& relationship)
 {
@@ -95,7 +93,6 @@ void QContactRelationshipRemoveRequest::setRelationship(const QContactRelationsh
 }
 
 /*! Sets the list of relationships which will be removed to \a relationships
-    \since 1.0
 */
 void QContactRelationshipRemoveRequest::setRelationships(const QList<QContactRelationship>& relationships)
 {
@@ -105,7 +102,6 @@ void QContactRelationshipRemoveRequest::setRelationships(const QList<QContactRel
 }
 
 /*! Returns the list of relationships which will be removed
-    \since 1.0
 */
 QList<QContactRelationship> QContactRelationshipRemoveRequest::relationships() const
 {
@@ -115,7 +111,6 @@ QList<QContactRelationship> QContactRelationshipRemoveRequest::relationships() c
 }
 
 /*! Returns the map of input contact list indices to errors which occurred
-    \since 1.0
 */
 QMap<int, QContactManager::Error> QContactRelationshipRemoveRequest::errorMap() const
 {

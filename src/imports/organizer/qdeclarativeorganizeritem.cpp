@@ -59,8 +59,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     while all details can be accessed through detail(), details(), saveDetail(), among others.
 
     \sa Event, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerManager}, {QOrganizerItem}
-
-    The OrganizerItem element is part of the \bold{QtOrganizer 5.0} module.
  */
 
 /*!
@@ -618,8 +616,6 @@ bool QDeclarativeOrganizerItem::isOccurrence() const
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The Event element is part of the \bold{QtOrganizer 5.0} module.
-
     \sa OrganizerItem, EventOccurrence, Journal, Todo, TodoOccurrence, Note, {QOrganizerEvent}
 */
 
@@ -967,7 +963,6 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The EventOccurrence element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, Journal, Todo, TodoOccurrence, Note, {QOrganizerEventOccurrence}
  */
 
@@ -1210,7 +1205,6 @@ QString QDeclarativeOrganizerEventOccurrence::parentId() const
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The Journal element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Todo, TodoOccurrence, Note, {QOrganizerJournal}
  */
 
@@ -1266,7 +1260,6 @@ QDateTime QDeclarativeOrganizerJournal::dateTime() const
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The Note element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, TodoOccurrence, {QOrganizerNote}
  */
 
@@ -1287,7 +1280,6 @@ QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The Todo element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, TodoOccurrence, Note, {QOrganizerTodo}
 */
 
@@ -1589,7 +1581,6 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-items
 
-    The TodoOccurrence element is part of the \bold{QtOrganizer 5.0} module.
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}
  */
 QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject *parent)

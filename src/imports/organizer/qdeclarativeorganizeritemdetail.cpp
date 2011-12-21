@@ -52,8 +52,6 @@ QTORGANIZER_BEGIN_NAMESPACE
     \ingroup qml-organizer-main
 
     \sa QOrganizerItemDetail
-
-    The Detail element is part of the \bold{QtOrganizer 5.0} module.
  */
 
 /*!
@@ -1924,8 +1922,6 @@ QString QDeclarativeOrganizerEventAttendee::attendeeId() const
     dates and information about organizer of the event. See more details
     from the properties themselves and the QOrganizerEventRsvp.
 
-    This element is part of the \bold{QtOrganizer 5.0} module.
-
     \sa QOrganizerEventRsvp
  */
 QDeclarativeOrganizerEventRsvp::QDeclarativeOrganizerEventRsvp(QObject *parent)
@@ -2084,8 +2080,6 @@ QString QDeclarativeOrganizerEventRsvp::organizerEmail() const
 
     The Classification detail contains classification related information. This can
     be used as a part of security model for the organizer.
-
-    This element is part of the \bold{QtOrganizer 5.0} module.
 
     \sa QOrganizerItemClassification
  */

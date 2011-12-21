@@ -711,14 +711,14 @@ void QOrganizerJsonDbDataStorage::handleCollectionsResponse(QOrganizerManager::E
 void QOrganizerJsonDbDataStorage::handleRemoveCollectionsRequest()
 {
     QVariantList collectionJsonDbUuids;
-    foreach (QOrganizerCollectionId collectionId, m_removeCollectionIds) {
-        //Get the uuid by removing the "qtorgainizer:jsondb::" prefix from id
-        QString jsonUuid = collectionId.toString();
-        jsonUuid = jsonUuid.remove(QOrganizerJsonDbStr::managerName());
+    QMap<int, QOrganizerCollectionId>::const_iterator i = m_removeCollectionIds.constBegin();
+    while (i != m_removeCollectionIds.constEnd()) {
         QVariantMap uuidObject;
-        uuidObject.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
+        uuidObject.insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineCollectionId(i.value())->toString());
         collectionJsonDbUuids.append(uuidObject);
+        ++i;
     }
+
     //Remove the item from JSONDB
     int trId = m_jsonDb->remove(collectionJsonDbUuids);
     m_transactionIds.insert(trId, 0);
@@ -781,7 +781,7 @@ void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
     //jsondb query [?type="com.nokia.mt.alarm-daemon.Alarm"][?eventUuid="<m_itemIds[0]>"][=_uuid]
     QString alarmIdQuery = QStringLiteral("[?") + QOrganizerJsonDbStr::jsonDbType() + QStringLiteral("=\"") + QOrganizerJsonDbStr::alarm() + QStringLiteral("\"]");
     alarmIdQuery += QStringLiteral("[?") + QOrganizerJsonDbStr::alarmEventUuid() + QStringLiteral("=\"");
-    alarmIdQuery += m_itemIds[0].toString().remove(QOrganizerJsonDbStr::managerName());
+    alarmIdQuery += QOrganizerManagerEngine::engineItemId(m_itemIds[0])->toString();
     alarmIdQuery += QString(QStringLiteral("\"][=%1]")).arg(QOrganizerJsonDbStr::jsonDbUuid());
     int trId = m_jsonDb->query(alarmIdQuery);
     m_transactionIds.insert(trId, 0);

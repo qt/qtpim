@@ -709,11 +709,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
     // item ID
     if (!item.id().isNull())
-        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), item.id().toString().remove(QOrganizerJsonDbStr::managerName()));
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
 
     // collection ID has already been generated in QOrganizerJsonDbRequestThread::handleItemSaveRequest() if needed
     object->insert(QOrganizerJsonDbStr::itemCollectionId(),
-                   item.collectionId().toString().remove(QOrganizerJsonDbStr::managerName()));
+                   QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
 
     return true;
 }
@@ -964,11 +964,8 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
 
 bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const
 {
-    if (!collection.id().isNull()) {
-        QString jsonUuid = collection.id().toString();
-        jsonUuid.remove (QOrganizerJsonDbStr::managerName());
-        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
-    }
+    if (!collection.id().isNull())
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineCollectionId(collection.id())->toString());
 
     object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::collection());
     object->insert(QOrganizerJsonDbStr::collectionDefaultFlag(), isDefaultCollection);
@@ -1192,7 +1189,7 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
         if (audibleReminder.hasValue(audibleReminder.FieldRepetitionDelay))
            alarmObject.insert(QOrganizerJsonDbStr::alarmSnoozeTime(), audibleReminder.repetitionDelay());
         // item Uuid to alarm event Uuid
-        alarmObject.insert(QOrganizerJsonDbStr::alarmEventUuid(), item.id().toString().remove(QOrganizerJsonDbStr::managerName()));
+        alarmObject.insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
         // item displayLabel to alarm title
         QString displayLabel(item.displayLabel());
         if (!displayLabel.isEmpty())
@@ -1454,7 +1451,7 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
         QString query;
         foreach (const QOrganizerCollectionId &id, ids) {
             if (!id.isNull())
-                query += idTemplate.arg(id.toString().remove(QOrganizerJsonDbStr::managerName()));
+                query += idTemplate.arg(QOrganizerManagerEngine::engineCollectionId(id)->toString());
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);
@@ -1478,7 +1475,7 @@ bool QOrganizerJsonDbConverter::idFilterToJsondbQuery(const QOrganizerItemFilter
         QString query;
         foreach (const QOrganizerItemId &id, ids) {
             if (!id.isNull())
-                query += uuidTemplate.arg(id.toString().remove(QOrganizerJsonDbStr::managerName()));
+                query += uuidTemplate.arg(QOrganizerManagerEngine::engineItemId(id)->toString());
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);

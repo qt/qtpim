@@ -75,6 +75,18 @@ retrieved, modified or deleted by clients using either
 
 A full list of classes can be found in the specific \l{Contacts c++ Classes} section.
 
+\section1 Getting Started
+
+To include the definitions of the module's classes, use the
+following directive:
+
+\snippet doc/src/snippets/code/moduleincludes/doc_src_qtcontacts.cpp include
+
+To link against the module, add this line to your \l qmake \c
+.pro file:
+
+\snippet doc/src/snippets/code/moduleincludes/doc_src_qtcontacts.pro contacts project modification
+
 \section1 Client-Facing API
 
 The client-facing API allows retrieval, modification and deletion of contacts,

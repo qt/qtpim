@@ -39,8 +39,12 @@
     \brief A QML plugin for the QtPim Module Organizer API.
 
     \section1 Overview
-    The identifying string for this component is \i {"QtOrganizer"}.
-    Use this in the QML \i {import} statement.
+
+    To be able to use this component the QML \i {import} statement needs to
+    reference the module before it can used. Simply add the following to the QML
+    file:
+
+     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Organizer import
 
     The Organizer API enables a client to request calendar, schedule and
     personal data from local or remote backends. The QML Organizer Plugin

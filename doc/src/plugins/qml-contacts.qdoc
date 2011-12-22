@@ -40,8 +40,11 @@
 
     \section1 Overview
 
-    The identifying string for this component is \i {"QtContacts"}.
-    Use this in the QML \i {import} statement.
+    To be able to use this component the QML \i {import} statement needs to
+    reference the module before it can used. Simply add the following to the QML
+    file:
+
+     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Contacts import
 
     The Contacts API enables client to search for contacts data from local backends and use
     filters to get only the relevant results. The QML Contacts Plugin delivers this capability in

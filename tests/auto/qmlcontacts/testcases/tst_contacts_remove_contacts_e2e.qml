@@ -107,6 +107,9 @@ ContactsSavingTestCase {
 
         model.removeContacts([id1, id2]);
         waitForContactsChanged();
+        if (model.contacts.length > 0)
+            waitForContactsChanged();
+
 
         compare(model.contacts.length, 0, "contacts is empty");
     }

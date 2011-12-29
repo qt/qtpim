@@ -60,223 +60,184 @@ ContactsSavingTestCase {
         autoUpdate:true
     }
 
-    ContactsSavingTestCase {
-        name: "ContactsModelToModelNotificationE2ETests::CreateContact"
+    Contact {
+        id: contact
+    }
 
-        Contact {
-            id: contact
-        }
+    function test_createContactShouldUpdateOtherModels()
+    {
+        initTestForModel(notifiedModel);
 
-        function test_createContactShouldUpdateOtherModels()
-        {
-            initTestForModel(notifiedModel);
-            modifiedModel.saveContact(contact);
-            waitForContactsChanged();
-            spy.clear();
-        }
+        modifiedModel.saveContact(contact);
+        waitForContactsChanged();
+        compare(notifiedModel.contacts.length, 1,
+                "contacts updated in the notified model");
+    }
 
-        SignalSpy {
-            id: modifiedModelSpy
-            target: modifiedModel
-            signalName: "contactsChanged"
-        }
-
-        function pending_test_removeContactShouldUpdateOtherModels()
-        {
-            //TODO enable this tests currently its failing due to clean up issues...
-            initTestForModel(notifiedModel);
-            modifiedModel.saveContact(contact);
-            waitForContactsChanged();
-            modifiedModel.update();
-            modifiedModelSpy.wait();
-            modifiedModelSpy.clear();
-            modifiedModel.removeContact(modifiedModel.contacts[0].contactId);
-            waitForContactsChanged();
-            compare(modifiedModelSpy.count, 0, "no signal emissions when autoupdate if off")
-            compare(notifiedModel.contacts.length, 0,
-                    "contacts removed in the notified model");
-            emptyContacts(notifiedModel);
-            emptyContacts(modifiedModel);
-        }
-
-        function test_updateContactShouldUpdateOtherModels()
-        {
-            initTestForModel(notifiedModel);
-            emptyContacts(notifiedModel);
-            modifiedModel.saveContact(contactToBeUpdated);
-            waitForContactsChanged();
-            compare(notifiedModel.contacts.length, 1,
-                    "contacts updated in the notified model");
-            modifiedModel.update();
-            modifiedModelSpy.wait();
-            var contact = modifiedModel.contacts[0];
-            contact.name.firstName = "new";
-            modifiedModel.saveContact(contact);
-            waitForContactsChanged();
-            compare(notifiedModel.contacts[0].name.firstName, "new", "first name");
-            emptyContacts(notifiedModel);
-        }
-
-        Contact {
-            id: contactToBeUpdated
-            Name {
-                firstName: "old"
-            }
-        }
-
-        Contact {
-            id: contactWithDetailToBeVerified
-            Name {
-                firstName: "contactWithDetailToBeVerified"
-            }
-        }
-
-        function test_createContactPassesDetailsToOtherModels()
-        {
-            initTestForModel(notifiedModel);
-
-            modifiedModel.saveContact(contactWithDetailToBeVerified);
-
-            waitForContactsChanged();
-            compareContactArrays(notifiedModel.contacts, [contactWithDetailToBeVerified],
-                                 "contacts updated in the notified model");
-        }
-
-        Contact {
-            id: firstOfMultipleContacts
-        }
-
-        Contact {
-            id: secondOfMultipleContacts
-        }
-
-        function test_createMultipleContactsShouldUpdateOtherModels()
-        {
-            initTestForModel(notifiedModel);
-
-            emptyContacts(notifiedModel);
-
-            modifiedModel.saveContact(firstOfMultipleContacts);
-            modifiedModel.saveContact(secondOfMultipleContacts);
-
-            waitForContactsChanged();
-            if (notifiedModel.contacts.length < 2) {
-                waitForContactsChanged();
-            }
-            compare(notifiedModel.contacts.length, 2,
-                    "contacts updated in the notified model");
-        }
-
-        function initTestCase() {
-            initTestForModel(notifiedModel);
-            waitForContactsChanged();
-            if (modifiedModel.contacts.lenght > 0)
-                 emptyContacts(notifiedModel);
-        }
-
-        function cleanup() {
-            initTestForModel(modifiedModel);
-            if (modifiedModel.contacts.lenght > 0)
-                 emptyContacts(modifiedModel);
-        }
-
-        function cleanupTestCase() {
-            initTestForModel(modifiedModel);
-            if (modifiedModel.contacts.lenght > 0)
-                 emptyContacts(modifiedModel);
+    Contact {
+        id: contactWithDetailToBeVerified
+        Name {
+            firstName: "contactWithDetailToBeVerified"
         }
     }
 
-    ContactsSavingTestCase {
-        name: "ContactsModelToModelNotificationE2ETests::UpdateContact"
+    function test_createContactPassesDetailsToOtherModels()
+    {
+        initTestForModel(notifiedModel);
 
-        Contact {
-            id: contactWithNoDetails
+        modifiedModel.saveContact(contactWithDetailToBeVerified);
+
+        waitForContactsChanged();
+        compareContactArrays(notifiedModel.contacts, [contactWithDetailToBeVerified],
+                             "contacts updated in the notified model");
+    }
+
+    Contact {
+        id: firstOfMultipleContacts
+    }
+
+    Contact {
+        id: secondOfMultipleContacts
+    }
+
+    function test_createMultipleContactsShouldUpdateOtherModels()
+    {
+        initTestForModel(notifiedModel);
+
+        emptyContacts(notifiedModel);
+
+        modifiedModel.saveContact(firstOfMultipleContacts);
+        modifiedModel.saveContact(secondOfMultipleContacts);
+
+        waitForContactsChanged();
+        if (notifiedModel.contacts.length < 2) {
+            waitForContactsChanged();
         }
+        compare(notifiedModel.contacts.length, 2,
+                "contacts updated in the notified model");
+    }
 
+    Contact {
+        id: contactToBeUpdated
         Name {
-            id: detailForContactWithNoDetails
+            firstName: "old"
+        }
+    }
+
+    function test_updateContactShouldUpdateOtherModels()
+    {
+        initTestForModel(modifiedModel);
+        modifiedModel.saveContact(contactToBeUpdated);
+        modifiedModel.update();
+        waitForContactsChanged();
+        var contact = modifiedModel.contacts[0];
+
+        initTestForModel(notifiedModel);
+        if (notifiedModel.contacts.length < 1)
+            waitForContactsChanged();
+        compare(notifiedModel.contacts.length, 1,
+                "guard: contact present in the notified model");
+
+        contact.name.firstName = "new";
+        modifiedModel.saveContact(contact);
+        waitForContactsChanged();
+
+        compare(notifiedModel.contacts[0].name.firstName, "new", "first name");
+    }
+
+    Contact {
+        id: contactWithNoDetails
+    }
+
+    Name {
+        id: detailForContactWithNoDetails
+        firstName: "detail"
+    }
+
+    function pending_updateContactByAddingDetail()
+    {
+        initTestForModel(modifiedModel);
+        modifiedModel.saveContact(contactWithNoDetails);
+        waitForContactsChanged();
+
+        initTestForModel(notifiedModel);
+
+        compareContactArrays(notifiedModel.contacts, [contactWithNoDetails], "contact present in the notified model");
+
+        initTestForModel(notifiedModel);
+
+        contactWithNoDetails.addDetail(detailForContactWithNoDetails);
+        modifiedModel.saveContact(contactWithNoDetails);
+
+        waitForContactsChanged();
+        compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
+    }
+
+    Contact {
+        id: contactWithDetail
+        Name {
+            id: detailOfContactWithDetail
             firstName: "detail"
         }
-
-        function pending_updateContactByAddingDetail()
-        {
-            initTestForModel(modifiedModel);
-            modifiedModel.saveContact(contactWithNoDetails);
-            waitForContactsChanged();
-
-            initTestForModel(notifiedModel);
-
-            compareContactArrays(notifiedModel.contacts, [contactWithNoDetails], "contact present in the notified model");
-
-            initTestForModel(notifiedModel);
-
-            contactWithNoDetails.addDetail(detailForContactWithNoDetails);
-            modifiedModel.saveContact(contactWithNoDetails);
-
-            waitForContactsChanged();
-            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
-        }
-
-        Contact {
-            id: contactWithDetail
-            Name {
-                id: detailOfContactWithDetail
-                firstName: "detail"
-            }
-        }
-
-        function pending_updateContactByRemovingDetail()
-        {
-            initTestForModel(modifiedModel);
-            modifiedModel.saveContact(contactWithDetail);
-            waitForContactsChanged();
-
-            initTestForModel(notifiedModel);
-
-            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact present in the notified model");
-
-            initTestForModel(notifiedModel);
-
-            contactWithDetail.removeDetail(detailOfContactWithDetail);
-            modifiedModel.saveContact(contactWithDetail);
-
-            waitForContactsChanged();
-            compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
-        }
-
-        function cleanup() {
-            initTestForModel(modifiedModel);
-            if (modifiedModel.contacts.lenght > 0)
-                 emptyContacts(modifiedModel);
-        }
     }
 
-    ContactsSavingTestCase {
-        name: "ContactsModelToModelNotificationE2ETests::RemoveContact"
+    function pending_updateContactByRemovingDetail()
+    {
+        initTestForModel(modifiedModel);
+        modifiedModel.saveContact(contactWithDetail);
+        waitForContactsChanged();
 
-        function pending_removeContact()
-        {
-            initTestForModel(modifiedModel);
-            modifiedModel.saveContact(contact);
+        initTestForModel(notifiedModel);
+
+        compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact present in the notified model");
+
+        initTestForModel(notifiedModel);
+
+        contactWithDetail.removeDetail(detailOfContactWithDetail);
+        modifiedModel.saveContact(contactWithDetail);
+
+        waitForContactsChanged();
+        compareContactArrays(notifiedModel.contacts, [contactWithDetail], "contact updated in the notified model");
+    }
+
+    function test_removeContactShouldUpdateOtherModel()
+    {
+        initTestForModel(modifiedModel);
+        modifiedModel.saveContact(contact);
+        modifiedModel.update();
+        waitForContactsChanged();
+        var id = modifiedModel.contacts[0].contactId;
+
+        initTestForModel(notifiedModel);
+        if (notifiedModel.contacts.length < 1)
             waitForContactsChanged();
+        compare(notifiedModel.contacts.length, 1, "guard: contact present in the notified model");
 
-            initTestForModel(notifiedModel);
+        modifiedModel.removeContact(id);
+        waitForContactsChanged();
 
-            compareContactArrays(notifiedModel.contacts, [contact], "contact present in the notified model");
+        compare(notifiedModel.contacts.length, 0, "contacts removed from the notified model");
+    }
 
-            modifiedModel.removeContact(contact);
+    function initTestCase() {
+        initTestForModel(notifiedModel);
+        waitForContactsChanged();
+        emptyContacts(notifiedModel);
+    }
 
-            expectFail("", "the other model does not receive signal")
-            waitForContactsChanged();
-            compareContactArrays(notifiedModel.contacts, [], "contacts removed from the notified model");
-        }
+    function init() {
+        initTestForModel(notifiedModel);
+        emptyContacts(notifiedModel);
+    }
 
-        function cleanup() {
-            initTestForModel(modifiedModel);
-            if (modifiedModel.contacts.lenght > 0)
-                 emptyContacts(modifiedModel);
-        }
+    function cleanup() {
+        initTestForModel(notifiedModel);
+        emptyContacts(notifiedModel);
+    }
+
+    function cleanupTestCase() {
+        initTestForModel(notifiedModel);
+        emptyContacts(notifiedModel);
     }
 
     function compareContactArrays(actual, expected, message) {

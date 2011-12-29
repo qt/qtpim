@@ -62,9 +62,20 @@ TestCase {
         return spy;
     }
 
+    function listenToContactsChanged() {
+        logDebug("listenForContactsChanged");
+        spy.clear();
+    }
+
     function waitForContactsChanged() {
         logDebug("waitForContactsChanged");
         spy.wait();
+    }
+
+    function verifyNoContactsChangedReceived() {
+        logDebug("verifyNoContactsChangedReceived");
+        wait(100);
+        compare(spy.count, 0, "no contacts changed signal received");
     }
 
     function emptyContacts(model) {

@@ -71,61 +71,8 @@ ContactsSavingTestCase {
         compare(model.contacts.length, 1, "model has a contact");
     }
 
-    ContactModel {
-        id: model_autoUpdate_off
-        manager: "jsondb"
-        autoUpdate: false
-    }
-
-    function test_savecontact_autoupdate_off()
-    {
-        initTestForModel(model_autoUpdate_off);
-        createContactToJsonDb({});
-        wait(100);
-        compare(spy.count,0,"no signal emissions when autoupdate if off");
-        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
-        emptyContacts(model_autoUpdate_off);
-    }
-
-    function pending_test_removecontact_autoupdate_off()
-    {
-        initTestForModel(model_autoUpdate_off);
-        createContactToJsonDb({});
-        wait(100);
-        compare(spy.count,0,"no signal emissions when autoupdate if off");
-        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
-        model_autoUpdate_off.update();
-        waitForContactsChanged();
-        compare(model_autoUpdate_off.contacts.length, 1, "model is refreshed now");
-        spy.clear();
-        var contact = model_autoUpdate_off.contacts[0];
-        spy.clear();
-        removeContactFromJsonDb(contact);
-        wait(100)
-        compare(spy.count,0,"no signal emissions when autoupdate if off");
-        console.log("SPY COUNT:" + spy.count)
-        emptyContacts(model_autoUpdate_off);
-    }
-
-    function test_updatecontact_autoupdate_off()
-    {
-        initTestForModel(model_autoUpdate_off);
-        model_autoUpdate_off.saveContact(contactToBeUpdated);
-        wait(100);
-        compare(spy.count,0,"no signal emissions when autoupdate if off");
-        compare(model_autoUpdate_off.contacts.length, 0, "model should be empty now");
-        model_autoUpdate_off.update();
-        waitForContactsChanged();
-        compare(model_autoUpdate_off.contacts.length, 1, "model is refreshed now");
-        spy.clear();
-
-        var contact = model_autoUpdate_off.contacts[0];
-        updateContactInJsonDb(contact, {name: {firstName: "new"}});
-        wait(100);
-        compare(spy.count,0,"no signal emissions when autoupdate if off");
-        //model is not updated so the firstName must be still the "old"
-        compare(model_autoUpdate_off.contacts[0].name.firstName, "old", "first name");
-        emptyContacts(model_autoUpdate_off);
+    Contact {
+        id: contactToBeRemovedWhenAutoUpdateIsOff
     }
 
     function test_createContactPassesDetailsToModel()
@@ -139,6 +86,19 @@ ContactsSavingTestCase {
 
         verify(model.contacts[0].name, "name exists");
         compare(model.contacts[0].name.firstName, "Test", "first name");
+    }
+
+    function test_createContactWhenAutoUpdateIsOff()
+    {
+        initTestForModel(model);
+        model.autoUpdate = false;
+
+        listenToContactsChanged();
+        createContactToJsonDb({});
+        verifyNoContactsChangedReceived();
+
+        compare(model.contacts.length, 0, "model should be empty now");
+        emptyContacts(model);
     }
 
     Contact {
@@ -161,10 +121,21 @@ ContactsSavingTestCase {
         compare(model.contacts.length, 0, "model is empty");
     }
 
-    function pending_removeMultipleContactShouldUpdateModel() {
-    }
+    function test_removeContactWhenAutoUpdateIsOff()
+    {
+        initTestForModel(model);
+        model.autoUpdate = false;
+        model.saveContact(contactToBeRemovedWhenAutoUpdateIsOff);
+        model.update();
+        waitForContactsChanged();
 
-    function pending_removeOnlySomeContactsShouldLeaveOthersAsTheyWere() {
+        var contact = model.contacts[0];
+        listenToContactsChanged();
+        removeContactFromJsonDb(contact);
+        verifyNoContactsChangedReceived();
+
+        compare(model.contacts.length, 1, "model has a contact");
+        emptyContacts(model);
     }
 
     Contact {
@@ -188,6 +159,31 @@ ContactsSavingTestCase {
 
         compare(model.contacts.length, 1, "model is not empty");
         compare(model.contacts[0].name.firstName, "new", "first name");
+    }
+
+    Contact {
+        id: contactToBeUpdatedWhenAutoUpdateIsOff
+        Name {
+            firstName: "old"
+        }
+    }
+
+    function test_updateContactWhenAutoUpdateIsOff()
+    {
+        initTestForModel(model);
+        model.autoUpdate = false;
+        model.saveContact(contactToBeUpdatedWhenAutoUpdateIsOff);
+        model.update();
+        waitForContactsChanged();
+
+        listenToContactsChanged();
+        var contact = model.contacts[0];
+        updateContactInJsonDb(contact, {name: {firstName: "new"}});
+        verifyNoContactsChangedReceived();
+
+        //model is not updated so the firstName must be still the "old"
+        compare(model.contacts[0].name.firstName, "old", "first name");
+        emptyContacts(model);
     }
 
     SortOrder {
@@ -467,12 +463,6 @@ ContactsSavingTestCase {
         model.destroy();
     }
 
-    ContactModel {
-        id: modelForCleanup
-        manager: "jsondb"
-        autoUpdate: true
-    }
-
     function cleanupContacts() {
         var modelForCleanup = Qt.createQmlObject(
                     'import QtContacts 5.0;' +
@@ -496,22 +486,22 @@ ContactsSavingTestCase {
         id: jsonDb
 
         function createAndSignal(object) {
-            console.log("createAndSignal()");
+            logDebug("createAndSignal()");
             create(object, resultCallback, errorCallback);
         }
 
         function removeAndSignal(object) {
-            console.log("removeAndSignal()");
+            logDebug("removeAndSignal()");
             remove(object, resultCallback, errorCallback);
         }
 
         function updateAndSignal(object) {
-            console.log("updateAndSignal()");
+            logDebug("updateAndSignal()");
             update(object, resultCallback, errorCallback);
         }
 
         function queryAndSignal(querystr) {
-            console.log("queryAndSignal()");
+            logDebug("queryAndSignal()");
             query(querystr, resultCallback, errorCallback);
         }
 
@@ -520,27 +510,27 @@ ContactsSavingTestCase {
         property variant lastResult: {}
 
         function resultCallback(result) {
-            console.log("resultCallback(): result received: " + JSON.stringify(result));
+            logDebug("resultCallback(): result received: " + JSON.stringify(result));
             lastResult = result.data;
             operationFinished();
         }
 
         function errorCallback(message, code) {
-            console.log("errorCallback(): code " + code + ": message: " + message);
+            logDebug("errorCallback(): code " + code + ": message: " + message);
         }
     }
 
     property SignalSpy jsonDbSpy
 
     function createContactToJsonDb(contact) {
-        console.log("createContactToJsonDb()");
+        logDebug("createContactToJsonDb()");
         contact["_type"] = "com.nokia.mp.contacts.Contact";
         jsonDb.createAndSignal(contact);
         jsonDbSpy.wait();
     }
 
     function removeContactFromJsonDb(contact) {
-        console.log("removeContactFromJsonDb(): remove contact id " + contact.contactId);
+        logDebug("removeContactFromJsonDb(): remove contact id " + contact.contactId);
 
         var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
                 '[?_uuid="' + contact.contactId + '"]';
@@ -557,7 +547,7 @@ ContactsSavingTestCase {
 
     // updates only the first name at the moment!
     function updateContactInJsonDb(contact, update) {
-        console.log("updateContactInJsonDb(): update contact id " + contact.contactId);
+        logDebug("updateContactInJsonDb(): update contact id " + contact.contactId);
 
         var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
                 '[?_uuid="' + contact.contactId + '"]';
@@ -571,7 +561,7 @@ ContactsSavingTestCase {
     }
 
     function createSpyForJsonDb() {
-        console.log("createSpyForJson()");
+        logDebug("createSpyForJson()");
         jsonDbSpy = Qt.createQmlObject(
                     "import QtTest 1.0;" +
                     "SignalSpy {" +

@@ -54,6 +54,7 @@ QTORGANIZER_END_NAMESPACE
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QComboBox;
 class QLineEdit;
 class QDateTimeEdit;
@@ -61,6 +62,7 @@ class QVBoxLayout;
 class QString;
 class QSpinBox;
 class QDateEdit;
+QT_END_NAMESPACE
 
 class EventEditPage : public QWidget
 {

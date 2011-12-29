@@ -47,11 +47,13 @@
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QDateTimeEdit;
 class QComboBox;
 class QLineEdit;
 class QTextEdit;
 class QPushButton;
+QT_END_NAMESPACE
 
 //! [0]
 class TodoEditor : public QWidget

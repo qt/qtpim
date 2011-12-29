@@ -49,10 +49,12 @@ QTORGANIZER_END_NAMESPACE
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QListWidget;
 class QListWidgetItem;
 class QVBoxLayout;
 class QString;
+QT_END_NAMESPACE
 
 class EditCalendarsPage : public QWidget
 {

@@ -52,11 +52,14 @@ QTORGANIZER_END_NAMESPACE
 QTORGANIZER_USE_NAMESPACE
 
 class TodoEditor;
+
+QT_BEGIN_NAMESPACE
 class QListWidget;
 class QStackedWidget;
 class QPushButton;
 class QListWidgetItem;
 class QCalendarWidget;
+QT_END_NAMESPACE
 
 //![0]
 class Window : public QWidget

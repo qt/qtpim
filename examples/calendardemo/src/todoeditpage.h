@@ -53,9 +53,11 @@ QTORGANIZER_END_NAMESPACE
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QComboBox;
 class QLineEdit;
 class QDateTimeEdit;
+QT_END_NAMESPACE
 
 class TodoEditPage : public QWidget
 {

@@ -50,11 +50,13 @@ QTORGANIZER_END_NAMESPACE
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QComboBox;
 class QLineEdit;
 class QCheckBox;
 class QVBoxLayout;
 class QString;
+QT_END_NAMESPACE
 
 class AddCalendarPage : public QWidget
 {

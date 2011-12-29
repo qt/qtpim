@@ -45,7 +45,6 @@
 #include <QDate>
 #include <qorganizeritemsaverequest.h>
 #include <qorganizeritemremoverequest.h>
-class QProgressDialog;
 
 QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
@@ -57,7 +56,11 @@ QTORGANIZER_USE_NAMESPACE
 #define ORGANIZER_ITEM_ROLE Qt::UserRole+1
 #define ORGANIZER_CALENDAR_ROLE Qt::UserRole+2
 
+QT_BEGIN_NAMESPACE
+class QProgressDialog;
 class QStackedWidget;
+QT_END_NAMESPACE
+
 class MonthPage;
 class DayPage;
 class EventEditPage;

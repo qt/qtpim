@@ -52,12 +52,14 @@ QTORGANIZER_END_NAMESPACE
 
 QTORGANIZER_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE
 class QComboBox;
 class QCalendarWidget;
 class QLabel;
 class QListWidget;
 class QListWidgetItem;
 class QMenu;
+QT_END_NAMESPACE
 
 class MonthPage : public QWidget
 {

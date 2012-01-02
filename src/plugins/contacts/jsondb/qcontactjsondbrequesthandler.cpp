@@ -152,8 +152,7 @@ void QContactJsonDbRequestHandler::handleRequest(QContactAbstractRequest *req)
     QContactManager::Error error = QContactManager::NoError;
     if (m_reqList.contains(req)) {
         error = QContactManager::UnspecifiedError;
-        if (qt_debug_jsondb_contacts())
-            qDebug() << "[QContactJsonDb] Trying to handle destroyed request: throwing ERROR: " << error;
+        qWarning() << Q_FUNC_INFO << "Trying to handle destroyed request: throwing ERROR: " << error;
         return;
     }
     switch (req->type()) {
@@ -267,6 +266,7 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
         if (contactExist) {
             QVariantMap newJsonDbItem;
             newJsonDbItem.insert(JsonDbString::kUuidStr, contactLocalId);
+            newJsonDbItem.insert(JsonDbString::kTypeStr, ContactsJsonDbType);
             trId = m_jsonDb->remove(newJsonDbItem);
             m_requestMgr->addTransaction(req, trId, i);
             transactionsMade = true;
@@ -361,8 +361,7 @@ void QContactJsonDbRequestHandler::onResponse(int id, const QVariant &object)
     if (!req) {
         if (id != m_notificationsRequestTrId) {
             // Should never occur as only transaction lacking request insatance is for registering for jsondb notifications.
-            if (qt_debug_jsondb_contacts())
-                qWarning() << Q_FUNC_INFO << "No request for a transaction response from jsondb, trid:" << id;
+            qWarning() << Q_FUNC_INFO << "No request for a transaction response from jsondb, trid:" << id;
         }
         return;
     }
@@ -440,9 +439,7 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
             error = QContactManager::DoesNotExistError;
         }
 
-        if (qt_debug_jsondb_contacts()) {
-            qDebug() << "[QContactJsonDb] Error generated from jsonDB: " + message;
-        }
+        qWarning() << Q_FUNC_INFO << "Error generated from jsonDB: " + message;
     }
     int itemIndex;
     QContactAbstractRequest* req = m_requestMgr->removeTransaction(id, itemIndex);
@@ -452,8 +449,7 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
             handleJsonDbNotificationsRequestError(error);
         } else {
             // Should never occur.
-            if (qt_debug_jsondb_contacts())
-                qWarning() << Q_FUNC_INFO << "No request for a transaction error response from jsondb, trid:" << id;
+            qWarning() << Q_FUNC_INFO << "No request for a transaction error response from jsondb, trid:" << id;
         }
         return;
     }
@@ -547,7 +543,7 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
             } else {
                 errorMap.insert(index, error);
                 if (qt_debug_jsondb_contacts())
-                    qDebug() << "[QContactJsonDb] ERROR in synthesizing display label: "
+                    qDebug() << Q_FUNC_INFO << "ERROR in synthesizing display label: "
                          << error << "for contact " << contact;
                 QContactManagerEngine::setContactDisplayLabel(&contact, QString(""));
             };
@@ -654,8 +650,7 @@ void QContactJsonDbRequestHandler::sendJsonDbNotificationsRequest()
 void QContactJsonDbRequestHandler::handleJsonDbNotificationsRequestError(QContactManager::Error error)
 {
     m_jsonDbNotificationsRequested = false;
-    if (qt_debug_jsondb_contacts())
-        qWarning() << Q_FUNC_INFO << "Registering for jsondb notifications failed with error:" << error;
+    qWarning() << Q_FUNC_INFO << "Registering for jsondb notifications failed with error:" << error;
 }
 
 #include "moc_qcontactjsondbrequesthandler.cpp"

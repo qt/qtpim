@@ -1329,7 +1329,6 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
     QVERIFY(contactRemoveRequest.errorMap().value(1) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(2) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(3) == QContactManager::DoesNotExistError);
-    QEXPECT_FAIL("mgr='jsondb'", "Jsondb backend returns QContactManager::UnspecifiedError", Continue);
     QVERIFY(contactRemoveRequest.errorMap().value(4) == QContactManager::DoesNotExistError);
     QVERIFY(contactRemoveRequest.errorMap().value(5) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(6) == QContactManager::NoError);
@@ -1338,9 +1337,7 @@ void tst_QContactJsonDbAsync::contactRemoveErrorHandling() {
     QVERIFY(contactRemoveRequest.errorMap().value(10) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(11) == QContactManager::NoError);
     QVERIFY(contactRemoveRequest.errorMap().value(12) == QContactManager::DoesNotExistError);
-    QEXPECT_FAIL("mgr='jsondb'", "Jsondb backend returns QContactManager::UnspecifiedError", Continue);
     QVERIFY(contactRemoveRequest.errorMap().value(13) == QContactManager::DoesNotExistError);
-    QEXPECT_FAIL("mgr='jsondb'", "Jsondb backend returns QContactManager::UnspecifiedError", Continue);
     QVERIFY(contactRemoveRequest.errorMap().value(14) == QContactManager::DoesNotExistError);
 
     // Check that all the contacts have been removed

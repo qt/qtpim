@@ -90,7 +90,6 @@ void QOrganizerJsonDbRequestThread::run()
     m_storage->start();
     loop.exec();
 
-    m_storage->initNotification();
     connect(m_storage, SIGNAL(itemAdded(QOrganizerItemId)), this, SLOT(onItemAdded(QOrganizerItemId)));
     connect(m_storage, SIGNAL(itemChanged(QOrganizerItemId)), this, SLOT(onItemChanged(QOrganizerItemId)));
     connect(m_storage, SIGNAL(itemRemoved(QOrganizerItemId)), this, SLOT(onItemRemoved(QOrganizerItemId)));

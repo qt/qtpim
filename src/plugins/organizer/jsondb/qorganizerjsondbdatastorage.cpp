@@ -176,13 +176,6 @@ QSet<QOrganizerCollectionId> QOrganizerJsonDbDataStorage::collectionIds()
     return m_collectionIds;
 }
 
-void QOrganizerJsonDbDataStorage::initNotification()
-{
-    initRequestData(RegisterNotification, 0, 0);
-    processRequest();
-    clearRequestData();
-}
-
 QString QOrganizerJsonDbDataStorage::alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error)
 {
     if (itemId->isNull())
@@ -218,9 +211,15 @@ void QOrganizerJsonDbDataStorage::run()
     m_waitMutex = new QMutex();
     m_jsonDb = new JsonDbClient(this);
 
+    // we must register notification in the same thread as the JsonDbClient lives
+    m_notificationObjectUuid = m_jsonDb->registerNotification(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate
+                                                                                        | JsonDbClient::NotifyUpdate
+                                                                                        | JsonDbClient::NotifyRemove),
+                                                              QOrganizerJsonDbStr::notificationQuery());
+
     connect(this, SIGNAL(requestInitialized()), this, SLOT(handleRequest()));
-    connect(m_jsonDb, SIGNAL(notified(const QString&, const QVariant&, const QString&)),
-            this, SLOT(onNotified(const QString&, const QVariant&, const QString&)));
+    connect(m_jsonDb, SIGNAL(notified(const QString&, const QtAddOn::JsonDb::JsonDbNotification&)),
+            this, SLOT(onNotified(const QString&, const QtAddOn::JsonDb::JsonDbNotification&)));
     connect(m_jsonDb, SIGNAL(response(int, const QVariant)), this,
             SLOT(onResponse(int, const QVariant)));
     connect(m_jsonDb, SIGNAL(error(int, int, const QString&)), this,
@@ -249,31 +248,41 @@ void QOrganizerJsonDbDataStorage::onError(int trId, int errorCode, const QString
     handleResponse(trId, error, object);
 }
 
-void QOrganizerJsonDbDataStorage::onNotified(const QString& notifyUuid, const QVariant& object, const QString& action)
+void QOrganizerJsonDbDataStorage::onNotified(const QString &notifyUuid, const QtAddOn::JsonDb::JsonDbNotification &notification)
 {
     // No mutex is needed since this slot doesn't touch any member variables.
 
     Q_UNUSED(notifyUuid)
 
-    QVariantMap jsonDbObject(object.toMap());
+    QVariantMap jsonDbObject = notification.object();
     if (jsonDbObject.isEmpty())
         return;
 
     QString jsonType(m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject));
     if (jsonType == QOrganizerJsonDbStr::event() || jsonType == QOrganizerJsonDbStr::todo()) {
-        if (action == JsonDbString::kCreateStr)
+        switch (notification.action()) {
+        case JsonDbClient::NotifyCreate:
             emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
-        else if (action == JsonDbString::kUpdateStr)
+            break;
+        case JsonDbClient::NotifyUpdate:
             emit itemChanged(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
-        else if (action == JsonDbString::kRemoveStr)
+            break;
+        case JsonDbClient::NotifyRemove:
             emit itemRemoved(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+            break;
+        }
     } else if (jsonType == QOrganizerJsonDbStr::collection()) {
-        if (action == JsonDbString::kCreateStr)
+        switch (notification.action()) {
+        case JsonDbClient::NotifyCreate:
             emit collectionAdded(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
-        else if (action == JsonDbString::kUpdateStr)
+            break;
+        case JsonDbClient::NotifyUpdate:
             emit collectionChanged(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
-        else if (action == JsonDbString::kRemoveStr)
+            break;
+        case JsonDbClient::NotifyRemove:
             emit collectionRemoved(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
+            break;
+        }
     }
 }
 
@@ -304,9 +313,6 @@ void QOrganizerJsonDbDataStorage::handleRequest()
     case RemoveCollections:
         handleRemoveCollectionsRequest();
         break;
-    case RegisterNotification:
-        handleRegisterNotificationRequest();
-        break;
     case AlarmId:
         handleAlarmIdRequest();
         break;
@@ -328,10 +334,13 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         index = m_transactionIds.value(trId);
         m_transactionIds.remove(trId);
     } else {
-        // This might happen if handling of some request was stopped due to timeout
-        // Then remaining responses may come when no request is processed and m_transactionIds
-        // has been cleared
-        return;
+        // When registering notification, no transaction ID is returned, so need to check.
+        // It might fall here if handling of some request was stopped due to timeout,
+        // then remaining responses may come when no request is processed and m_transactionIds
+        // has been cleared. In such cases, do nothing.
+        QVariantMap jsonDbObject(object.toMap());
+        if (jsonDbObject.isEmpty() || m_notificationObjectUuid != jsonDbObject.value(JsonDbString::kUuidStr).toString())
+            return;
     }
 
     switch (m_requestType) {
@@ -358,9 +367,6 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         break;
     case RemoveCollections:
         handleRemoveCollectionsResponse(error, object);
-        break;
-    case RegisterNotification:
-        handleRegisterNotificationResponse(error);
         break;
     case AlarmId:
         handleAlarmIdResponse(error, object);
@@ -742,20 +748,6 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerMana
             m_collectionIds.remove(j.value());
     }
      m_syncWaitCondition.wakeAll();
-}
-
-void QOrganizerJsonDbDataStorage::handleRegisterNotificationRequest()
-{
-    int trId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
-                                QOrganizerJsonDbStr::notificationQuery());
-    m_transactionIds.insert(trId, 0);
-}
-
-void QOrganizerJsonDbDataStorage::handleRegisterNotificationResponse(QOrganizerManager::Error error)
-{
-    if (error != QOrganizerManager::NoError)
-        qWarning("Can't register notifications!");
-    m_syncWaitCondition.wakeAll();
 }
 
 QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const QVariant &object, int errorCode)

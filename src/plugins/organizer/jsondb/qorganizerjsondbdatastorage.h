@@ -51,6 +51,7 @@
 
 #include <jsondb-error.h>
 #include <jsondb-global.h>
+#include <jsondb-notification.h>
 
 Q_ADDON_JSONDB_BEGIN_NAMESPACE
 class JsonDbClient;
@@ -66,8 +67,6 @@ QTORGANIZER_BEGIN_NAMESPACE
 // been completed. The request signal is handled in the separate thread. Handler functions typically
 // start jsondb requests. When responses are received from jsondb, results are stored to member variables
 // and waiting caller thread is woken up.
-
-// TODO: notification system
 
 
 class QOrganizerJsonDbDataStorage: public QThread
@@ -102,7 +101,6 @@ public:
     QOrganizerCollection defaultCollection();
     QSet<QOrganizerCollectionId> collectionIds();
 
-    void initNotification();
     void saveAlarm(const QOrganizerItem *item, const QString *alarmUuid, QOrganizerManager::Error *error);
     void removeAlarm(const QString *alarmUuid, QOrganizerManager::Error *error);
     QString alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error);
@@ -123,7 +121,7 @@ protected:
 
 private slots:
     void handleRequest();
-    void onNotified(const QString& notifyUuid, const QVariant& object, const QString& action);
+    void onNotified(const QString &notifyUuid, const QtAddOn::JsonDb::JsonDbNotification &notification);
     void onResponse(int trId, const QVariant& object);
     void onError(int trId, int errorCode, const QString& message);
 
@@ -139,7 +137,6 @@ private:
         SaveCollections,
         Collections,
         RemoveCollections,
-        RegisterNotification,
         AlarmId,
         SaveAlarm,
         RemoveAlarm
@@ -162,8 +159,6 @@ private:
     void handleCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
     void handleRemoveCollectionsRequest();
     void handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
-    void handleRegisterNotificationRequest();
-    void handleRegisterNotificationResponse(QOrganizerManager::Error error);
 
     void handleSaveAlarmRequest();
     void handleSaveAlarmResponse(QOrganizerManager::Error error);
@@ -187,6 +182,8 @@ private:
     // "collection cache"
     QSet<QOrganizerCollectionId> m_collectionIds;
     QOrganizerCollection m_defaultCollection;
+
+    QString m_notificationObjectUuid;
 
     // request data
 

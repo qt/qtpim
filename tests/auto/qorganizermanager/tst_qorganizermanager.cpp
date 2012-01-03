@@ -3799,6 +3799,9 @@ void tst_QOrganizerManager::partialSave()
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
+    if (cm->managerName() == QStringLiteral("jsondb"))
+        QSKIP("Partial save is not supported by JsonDb!");
+
     QList<QOrganizerItem> items;
     QOrganizerEvent event = QOrganizerEvent();
     event.setDisplayLabel("One");

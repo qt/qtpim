@@ -118,22 +118,38 @@ public:
     QMap<QString, QString> managerParameters() const;
     int managerVersion() const;
 
-    QList<QOrganizerItem> itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
-    QList<QOrganizerItemId> itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, QOrganizerManager::Error* error) const;
-    QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
-    QList<QOrganizerItem> items(const QDateTime &startDate, const QDateTime &endDate, int maxCount, const QOrganizerItemFilter &filter, const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error) const;
-    QList<QOrganizerItem> itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
-    QList<QOrganizerItem> itemsForExport(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error) const;
-    QOrganizerItem item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const;
+    // items
+    QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
+                                QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
 
-    bool saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    bool saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
-    bool removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
+    QList<QOrganizerItem> items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                const QDateTime &endDateTime, int maxCount,
+                                const QList<QOrganizerItemSortOrder> &sortOrders,
+                                const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error);
 
-    /* Collections - every item belongs to exactly one collection */
-    QOrganizerCollection defaultCollection(QOrganizerManager::Error* error) const;
-    QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const;
-    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error) const;
+    QList<QOrganizerItemId> itemIds(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                    const QDateTime &endDateTime, const QList<QOrganizerItemSortOrder> &sortOrders,
+                                    QOrganizerManager::Error *error);
+
+    QList<QOrganizerItem> itemOccurrences(const QOrganizerItem &parentItem, const QDateTime &startDateTime,
+                                          const QDateTime &endDateTime, int maxCount,
+                                          const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error);
+
+    QList<QOrganizerItem> itemsForExport(const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                         const QOrganizerItemFilter &filter,
+                                         const QList<QOrganizerItemSortOrder> &sortOrders,
+                                         const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error);
+
+    bool saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
+                   QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
+
+    bool removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
+                     QOrganizerManager::Error *error);
+
+    // collections
+    QOrganizerCollection defaultCollection(QOrganizerManager::Error* error);
+    QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
+    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
     bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);
     bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 

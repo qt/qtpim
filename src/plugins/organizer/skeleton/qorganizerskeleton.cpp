@@ -476,7 +476,11 @@ int QOrganizerItemSkeletonEngine::managerVersion() const
     return 1;
 }
 
-QList<QOrganizerItem> QOrganizerItemSkeletonEngine::itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemSkeletonEngine::itemOccurrences(const QOrganizerItem &parentItem,
+                                                                    const QDateTime &startDateTime,
+                                                                    const QDateTime &endDateTime, int maxCount,
+                                                                    const QOrganizerItemFetchHint &fetchHint,
+                                                                    QOrganizerManager::Error *error)
 {
     /*
         TODO
@@ -500,10 +504,24 @@ QList<QOrganizerItem> QOrganizerItemSkeletonEngine::itemOccurrences(const QOrgan
         We might change the signature to split up the periodStart + periodEnd / periodStart + maxCount cases.
     */
 
-    return QOrganizerManagerEngine::itemOccurrences(parentItem, periodStart, periodEnd, maxCount, fetchHint, error);
+    return QOrganizerManagerEngine::itemOccurrences(parentItem, startDateTime, endDateTime, maxCount, fetchHint, error);
 }
 
-QList<QOrganizerItemId> QOrganizerItemSkeletonEngine::itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemSkeletonEngine::itemsForExport(const QDateTime &startDateTime,
+                                                                   const QDateTime &endDateTime,
+                                                                   const QOrganizerItemFilter &filter,
+                                                                   const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                                   const QOrganizerItemFetchHint &fetchHint,
+                                                                   QOrganizerManager::Error *error)
+{
+    return QOrganizerManagerEngine::itemsForExport(startDateTime, endDateTime, filter, sortOrders, fetchHint, error);
+}
+
+QList<QOrganizerItemId> QOrganizerItemSkeletonEngine::itemIds(const QOrganizerItemFilter &filter,
+                                                              const QDateTime &startDateTime,
+                                                              const QDateTime &endDateTime,
+                                                              const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                              QOrganizerManager::Error *error)
 {
     /*
         TODO
@@ -522,7 +540,7 @@ QList<QOrganizerItemId> QOrganizerItemSkeletonEngine::itemIds(const QDateTime& s
     QList<QOrganizerItem> ret;
 
     foreach(const QOrganizerItem& item, partiallyFilteredItems) {
-        if (QOrganizerManagerEngine::isItemBetweenDates(item, startDate, endDate) && QOrganizerManagerEngine::testFilter(filter, item)) {
+        if (QOrganizerManagerEngine::isItemBetweenDates(item, startDateTime, endDateTime) && QOrganizerManagerEngine::testFilter(filter, item)) {
             QOrganizerManagerEngine::addSorted(&ret, item, sortOrders);
         }
     }
@@ -530,7 +548,10 @@ QList<QOrganizerItemId> QOrganizerItemSkeletonEngine::itemIds(const QDateTime& s
     return QOrganizerManager::extractIds(ret);
 }
 
-QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                                          const QDateTime &endDateTime, int maxCount,
+                                                          const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                          const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error)
 {
     /*
         TODO
@@ -544,14 +565,18 @@ QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QDateTime& start
         fetch at least what is mentioned in the fetch hint).
     */
 
-    Q_UNUSED(fetchHint);
+    Q_UNUSED(startDateTime)
+    Q_UNUSED(endDateTime)
+    Q_UNUSED(maxCount)
+    Q_UNUSED(fetchHint)
+
     *error = QOrganizerManager::NotSupportedError; // TODO <- remove this
 
     QList<QOrganizerItem> partiallyFilteredItems; // = ..., your code here.. [TODO]
     QList<QOrganizerItem> ret;
 
     foreach(const QOrganizerItem& item, partiallyFilteredItems) {
-        if (QOrganizerManagerEngine::isItemBetweenDates(item, startDate, endDate) && QOrganizerManagerEngine::testFilter(filter, item)) {
+        if (QOrganizerManagerEngine::isItemBetweenDates(item, startDateTime, endDateTime) && QOrganizerManagerEngine::testFilter(filter, item)) {
             QOrganizerManagerEngine::addSorted(&ret, item, sortOrders);
         }
     }
@@ -566,7 +591,8 @@ QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QDateTime& start
     return ret;
 }
 
-QOrganizerItem QOrganizerItemSkeletonEngine::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
+                                                          QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error* error)
 {
     /*
         TODO
@@ -577,10 +603,11 @@ QOrganizerItem QOrganizerItemSkeletonEngine::item(const QOrganizerItemId& itemId
         fetch at least what is mentioned in the fetch hint).
 
     */
-    return QOrganizerManagerEngine::item(itemId, fetchHint, error);
+    return QOrganizerManagerEngine::items(itemIds, fetchHint, errorMap, error);
 }
 
-bool QOrganizerItemSkeletonEngine::saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+bool QOrganizerItemSkeletonEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
+                                             QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
     /*
         TODO
@@ -599,11 +626,11 @@ bool QOrganizerItemSkeletonEngine::saveItems(QList<QOrganizerItem>* items, QMap<
 
         The item passed in should be validated according to the schema.
     */
-    return QOrganizerManagerEngine::saveItems(items, errorMap, error);
-
+    return QOrganizerManagerEngine::saveItems(items, detailMask, errorMap, error);
 }
 
-bool QOrganizerItemSkeletonEngine::removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+bool QOrganizerItemSkeletonEngine::removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
+                                               QOrganizerManager::Error *error)
 {
     /*
         TODO
@@ -618,7 +645,7 @@ bool QOrganizerItemSkeletonEngine::removeItems(const QList<QOrganizerItemId>& it
     return QOrganizerManagerEngine::removeItems(itemIds, errorMap, error);
 }
 
-QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerManager::Error* error)
 {
     /*
         TODO
@@ -633,7 +660,7 @@ QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerM
     return QOrganizerManagerEngine::defaultCollection(error);
 }
 
-QOrganizerCollection QOrganizerItemSkeletonEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerItemSkeletonEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
     /*
         TODO
@@ -645,7 +672,7 @@ QOrganizerCollection QOrganizerItemSkeletonEngine::collection(const QOrganizerCo
     return QOrganizerManagerEngine::collection(collectionId, error);
 }
 
-QList<QOrganizerCollection> QOrganizerItemSkeletonEngine::collections(QOrganizerManager::Error* error) const
+QList<QOrganizerCollection> QOrganizerItemSkeletonEngine::collections(QOrganizerManager::Error* error)
 {
     /*
         TODO
@@ -788,6 +815,8 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedF
 QList<QOrganizerItemDetail::DetailType> QOrganizerItemSkeletonEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     // TODO - return which [predefined] details this engine supports for this item type
+    Q_UNUSED(itemType)
+
     return QList<QOrganizerItemDetail::DetailType>();
 }
 

@@ -123,356 +123,168 @@ int QOrganizerJsonDbEngine::managerVersion() const
     return 1;
 }
 
-QList<QOrganizerItem> QOrganizerJsonDbEngine::itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerJsonDbEngine::itemOccurrences(const QOrganizerItem &parentItem,
+                                                              const QDateTime &startDateTime,
+                                                              const QDateTime &endDateTime, int maxCount,
+                                                              const QOrganizerItemFetchHint &fetchHint,
+                                                              QOrganizerManager::Error *error)
 {
-    /*
-        TODO
-
-        This function should create a list of occurrences that occur in the time period from the supplied item,
-        generated from the parent item.
-
-        The periodStart should always be valid, and either the periodEnd or the maxCount will be valid (if periodEnd is
-        valid, use that.  Otherwise use the count).  It's permissible to limit the number of items returned...
-
-        Basically, if the parent item is an Event, a list of EventOccurrences should be returned.  Similarly for
-        Todo/TodoOccurrence.
-
-        If there are no instances, return an empty list.
-
-        The returned items should have a QOrganizerItemParent detail that points to the parentItem and the
-        original instance that the event would have occurred on (e.g. with an exception).
-
-        They should not have recurrence information details in them.
-
-        We might change the signature to split up the periodStart + periodEnd / periodStart + maxCount cases.
-    */
-
-    return QOrganizerManagerEngine::itemOccurrences(parentItem, periodStart, periodEnd, maxCount, fetchHint, error);
+    QOrganizerItemOccurrenceFetchRequest request;
+    request.setParentItem(parentItem);
+    request.setStartDate(startDateTime);
+    request.setEndDate(endDateTime);
+    request.setMaxOccurrences(maxCount);
+    request.setFetchHint(fetchHint);
+    if (startRequest(&request)) {
+        if (waitForRequestFinished(&request, 0))
+            *error = request.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
+        return request.itemOccurrences();
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerItem>();
+    }
 }
 
-QList<QOrganizerItemId> QOrganizerJsonDbEngine::itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, QOrganizerManager::Error* error) const
+QList<QOrganizerItemId> QOrganizerJsonDbEngine::itemIds(const QOrganizerItemFilter &filter,
+                                                        const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                                        const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                        QOrganizerManager::Error *error)
 {
     QOrganizerItemIdFetchRequest idFetchReq;
-    idFetchReq.setStartDate(startDate);
-    idFetchReq.setEndDate(endDate);
+    idFetchReq.setStartDate(startDateTime);
+    idFetchReq.setEndDate(endDateTime);
     idFetchReq.setFilter(filter);
     idFetchReq.setSorting(sortOrders);
-    *error = QOrganizerManager::NoError;
-
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&idFetchReq);
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&idFetchReq, 0)) {
-        *error = idFetchReq.error();
+    if (startRequest(&idFetchReq)) {
+        if (waitForRequestFinished(&idFetchReq, 0))
+            *error = idFetchReq.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
         return idFetchReq.itemIds();
-    }
-
-    return QList<QOrganizerItemId>();
-}
-
-QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
-{
-    /*
-        TODO
-
-        Given the supplied filter and sort order, fetch the list of items [not instances] that correspond, and return them.
-
-        If you don't support the filter or sort orders, you can fetch a partially (or un-) filtered list and ask the helper
-        functions to filter and sort it for you.
-
-        The fetch hint suggests how much of the item to fetch.  You can ignore the fetch hint and fetch everything (but you must
-        fetch at least what is mentioned in the fetch hint).
-    */
-
-//    Q_UNUSED(fetchHint);
-//    *error = QOrganizerManager::NotSupportedError; // TODO <- remove this
-
-//    QList<QOrganizerItem> partiallyFilteredItems; // = ..., your code here.. [TODO]
-//    QList<QOrganizerItem> ret;
-
-//    foreach(const QOrganizerItem& item, partiallyFilteredItems) {
-//        if (QOrganizerManagerEngine::isItemBetweenDates(item, startDate, endDate) && QOrganizerManagerEngine::testFilter(filter, item)) {
-//            QOrganizerManagerEngine::addSorted(&ret, item, sortOrders);
-//        }
-//    }
-
-//    /* An alternative formulation, depending on how your engine is implemented is just:
-
-//        foreach(const QOrganizerItemId& id, itemIds(filter, sortOrders, error)) {
-//            ret.append(item(id, fetchHint, error);
-//        }
-//     */
-
-//    return ret;
-
-    QOrganizerItemFetchRequest fetchReq;
-    fetchReq.setStartDate(startDate);
-    fetchReq.setEndDate(endDate);
-    fetchReq.setFilter(filter);
-    fetchReq.setSorting(sortOrders);
-    fetchReq.setFetchHint(fetchHint);
-    *error = QOrganizerManager::NoError;
-
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&fetchReq);
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&fetchReq, 0)) {
-        *error = fetchReq.error();
-
-        // TODO temporary solution, should be moved to back-end
-        if (sortOrders.isEmpty()) {
-            QList<QOrganizerItem> items(fetchReq.items());
-            qSort(items.begin(), items.end(), QOrganizerManagerEngine::itemLessThan);
-            return items;
-        } else {
-            return fetchReq.items();
-        }
-    }
-    return QList<QOrganizerItem>();
-
-
-}
-
-QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QDateTime &startDate, const QDateTime &endDate, int maxCount, const QOrganizerItemFilter &filter, const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error) const
-{
-    // TODO implement this properly, this is copied from memory back-end
-    QList<QOrganizerItem> list = items(startDate, endDate, filter, QList<QOrganizerItemSortOrder>(), fetchHint, error);
-    return list.mid(0, maxCount);
-}
-
-QList<QOrganizerItem> QOrganizerJsonDbEngine::itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
-{
-    QOrganizerItemFetchRequest fetchReq;
-    fetchReq.setStartDate(startDate);
-    fetchReq.setEndDate(endDate);
-    fetchReq.setFilter(filter);
-    fetchReq.setSorting(sortOrders);
-    fetchReq.setFetchHint(fetchHint);
-    *error = QOrganizerManager::NoError;
-
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&fetchReq);
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&fetchReq, 0)) {
-        *error = fetchReq.error();
-        return fetchReq.items();
-    }
-    return QList<QOrganizerItem>();
-}
-
-QList<QOrganizerItem> QOrganizerJsonDbEngine::itemsForExport(const QList<QOrganizerItemId> &ids, const QOrganizerItemFetchHint &fetchHint, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error) const
-{
-    // TODO implement this properly, this is copied from memory back-end
-    QOrganizerItemIdFilter filter;
-    filter.setIds(ids);
-
-    QList<QOrganizerItem> unsorted = itemsForExport(QDateTime(), QDateTime(), filter, QOrganizerItemSortOrder(), fetchHint, error);
-
-    // Build an index into the results
-    QHash<QOrganizerItemId, int> idMap; // value is index into unsorted
-    if (*error == QOrganizerManager::NoError) {
-        for (int i = 0; i < unsorted.size(); i++) {
-            idMap.insert(unsorted[i].id(), i);
-        }
-    }
-
-    // Build up the results and errors
-    QList<QOrganizerItem> results;
-    for (int i = 0; i < ids.count(); i++) {
-        QOrganizerItemId id(ids[i]);
-        if (!idMap.contains(id)) {
-            if (errorMap)
-                errorMap->insert(i, QOrganizerManager::DoesNotExistError);
-            if (*error == QOrganizerManager::NoError)
-                *error = QOrganizerManager::DoesNotExistError;
-            results.append(QOrganizerItem());
-        } else {
-            results.append(unsorted[idMap[id]]);
-        }
-    }
-
-    return results;
-}
-
-QOrganizerItem QOrganizerJsonDbEngine::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
-{
-    /*
-        TODO
-
-        Fetch a single item by id.
-
-        The fetch hint suggests how much of the item to fetch.  You can ignore the fetch hint and fetch everything (but you must
-        fetch at least what is mentioned in the fetch hint).
-
-    */
-
-    QOrganizerItemFetchByIdRequest fetchByIdReq;
-    QList<QOrganizerItemId> ids;
-    ids.append(itemId);
-    fetchByIdReq.setIds(ids);
-    fetchByIdReq.setFetchHint(fetchHint);
-    *error = QOrganizerManager::NoError;
-
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&fetchByIdReq);
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&fetchByIdReq, 0))
-        *error = fetchByIdReq.error();
-
-    if (fetchByIdReq.items().isEmpty())
-        return QOrganizerItem();
-    else
-        return fetchByIdReq.items().at(0);
-}
-
-
-bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
-{
-    QOrganizerItemSaveRequest saveReq;
-    saveReq.setItems(*items);
-    startRequest(&saveReq);
-    if (waitForRequestFinished(&saveReq, 0)) {
-        *items = saveReq.items();
-        *errorMap = saveReq.errorMap();
-        *error = saveReq.error();
-    }
-    return *error == QOrganizerManager::NoError;
-}
-
-bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
-{
-    // TODO implement this properly, this is copied from memory back-end
-
-    // TODO should the default implementation do the right thing, or return false?
-    if (definitionMask.isEmpty()) {
-        // Non partial, just pass it on
-        return saveItems(items, errorMap, error);
     } else {
-        // Partial item save.
-        // Basically
-
-        // Need to:
-        // 1) fetch existing items
-        // 2) strip out details in definitionMask for existing items
-        // 3) copy the details from the passed in list for existing items
-        // 4) for any new items, copy the masked details to a blank item
-        // 5) save the modified ones
-        // 6) update the id of any new items
-        // 7) transfer any errors from saving to errorMap
-
-        QList<QOrganizerItemId> existingItemIds;
-
-        // Error conditions:
-        // 1) bad id passed in (can't fetch)
-        // 2) bad fetch (can't save partial update)
-        // 3) bad save error
-        // all of which needs to be returned in the error map
-
-        QHash<int, int> existingIdMap; // items index to existingItems index
-
-        // Try to figure out which of our arguments are new items
-        for (int i = 0; i < items->count(); i++) {
-            // See if there's a itemId that's not from this manager
-            const QOrganizerItem item = items->at(i);
-            if (item.id().managerUri() == managerUri()) {
-                if (!item.id().isNull()) {
-                    existingIdMap.insert(i, existingItemIds.count());
-                    existingItemIds.append(item.id());
-                } else {
-                    // Strange. it's just a new item
-                }
-            } else if (!item.id().managerUri().isEmpty() || !item.id().isNull()) {
-                // Hmm, error (wrong manager)
-                errorMap->insert(i, QOrganizerManager::DoesNotExistError);
-            } // else new item
-        }
-
-        // Now fetch the existing items
-        QMap<int, QOrganizerManager::Error> fetchErrors;
-        QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
-        QList<QOrganizerItem> existingItems = this->itemsForExport(existingItemIds, QOrganizerItemFetchHint(), &fetchErrors, &fetchError);
-
-        // Prepare the list to save
-       QList<QOrganizerItem> itemsToSave;
-        QList<int> savedToOriginalMap; // itemsToSave index to items index
-
-        for (int i = 0; i < items->count(); i++) {
-            // See if this is an existing item or a new one
-            const int fetchedIdx = existingIdMap.value(i, -1);
-            QOrganizerItem itemToSave;
-            if (fetchedIdx >= 0) {
-                // See if we had an error
-                if (fetchErrors[fetchedIdx] != QOrganizerManager::NoError) {
-                    errorMap->insert(i, fetchErrors[fetchedIdx]);
-                    continue;
-                }
-
-                // Existing item we should have fetched
-                itemToSave = existingItems.at(fetchedIdx);
-
-                // QOrganizerItemData::removeOnly() is not exported, so we can only do this...
-                foreach (QOrganizerItemDetail::DetailType mask, definitionMask) {
-                    QList<QOrganizerItemDetail> details(itemToSave.details(mask));
-                    foreach (QOrganizerItemDetail detail, details)
-                        itemToSave.removeDetail(&detail);
-                }
-            } else if (errorMap->contains(i)) {
-                // A bad argument.  Leave it out of the itemsToSave list
-                continue;
-            } else {
-                // new item
-                itemToSave.setType(items->at(i).type());
-            }
-
-            // Now copy in the details from the arguments
-            const QOrganizerItem& item = items->at(i);
-
-            // Perhaps this could do this directly rather than through saveDetail
-            // but that would duplicate the checks for display label etc
-            foreach (QOrganizerItemDetail::DetailType name, definitionMask) {
-                QList<QOrganizerItemDetail> details = item.details(name);
-                foreach (QOrganizerItemDetail detail, details)
-                    itemToSave.saveDetail(&detail);
-            }
-            savedToOriginalMap.append(i);
-            itemsToSave.append(itemToSave);
-        }
-
-        // Now save them
-        QMap<int, QOrganizerManager::Error> saveErrors;
-        QOrganizerManager::Error saveError = QOrganizerManager::NoError;
-        saveItems(&itemsToSave, &saveErrors, &saveError);
-        // Now update the passed in arguments, where necessary
-
-        // Update IDs of the items list
-        for (int i = 0; i < itemsToSave.count(); i++) {
-            (*items)[savedToOriginalMap[i]].setId(itemsToSave[i].id());
-        }
-        // Populate the errorMap with the errorMap of the attempted save
-        QMap<int, QOrganizerManager::Error>::iterator it(saveErrors.begin());
-        while (it != saveErrors.end()) {
-            if (it.value() != QOrganizerManager::NoError) {
-                errorMap->insert(savedToOriginalMap[it.key()], it.value());
-            }
-            it++;
-        }
-        return errorMap->isEmpty();
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerItemId>();
     }
 }
 
-bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                                          const QDateTime &endDateTime, int maxCount,
+                                                          const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                          const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error)
+{
+    QOrganizerItemFetchRequest request;
+    request.setFilter(filter);
+    request.setStartDate(startDateTime);
+    request.setEndDate(endDateTime);
+    request.setMaxCount(maxCount);
+    request.setSorting(sortOrders);
+    request.setFetchHint(fetchHint);
+    if (startRequest(&request)) {
+        if (waitForRequestFinished(&request, 0))
+            *error = request.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
+        return request.items();
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerItem>();
+    }
+}
+
+QList<QOrganizerItem> QOrganizerJsonDbEngine::itemsForExport(const QDateTime &startDateTime,
+                                                             const QDateTime &endDateTime,
+                                                             const QOrganizerItemFilter &filter,
+                                                             const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                             const QOrganizerItemFetchHint &fetchHint,
+                                                             QOrganizerManager::Error *error)
+{
+    QOrganizerItemFetchForExportRequest request;
+    request.setStartDate(startDateTime);
+    request.setEndDate(endDateTime);
+    request.setFilter(filter);
+    request.setSorting(sortOrders);
+    request.setFetchHint(fetchHint);
+    if (startRequest(&request)) {
+        if (waitForRequestFinished(&request, 0))
+            *error = request.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
+        return request.items();
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerItem>();
+    }
+}
+
+QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
+                                                    QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+{
+    QOrganizerItemFetchByIdRequest fetchByIdReq;
+    fetchByIdReq.setIds(itemIds);
+    fetchByIdReq.setFetchHint(fetchHint);
+    if (startRequest(&fetchByIdReq)) {
+        if (waitForRequestFinished(&fetchByIdReq, 0)) {
+            *error = fetchByIdReq.error();
+            *errorMap = fetchByIdReq.errorMap();
+        } else {
+            *error = QOrganizerManager::TimeoutError;
+        }
+        return fetchByIdReq.items();
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerItem>();
+    }
+}
+
+bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
+                                       QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+{
+    QOrganizerItemSaveRequest request;
+    request.setItems(*items);
+    request.setDetailMask(detailMask);
+    if (startRequest(&request)) {
+        if (waitForRequestFinished(&request, 0)) {
+            *error = request.error();
+            *errorMap = request.errorMap();
+        } else {
+            *error = QOrganizerManager::TimeoutError;
+        }
+        *items = request.items();
+        return (*error == QOrganizerManager::NoError);
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return false;
+    }
+}
+
+bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
+                                         QOrganizerManager::Error *error)
 {
     QOrganizerItemRemoveRequest removeReq;
     removeReq.setItemIds(itemIds);
-    startRequest(&removeReq);
-
-    if (waitForRequestFinished(&removeReq, 0)) {
-        //DoesNotExistError should be used if the id refers to a non existent item.
-        *errorMap = removeReq.errorMap();
-        *error = removeReq.error();
+    if (startRequest(&removeReq)) {
+        if (waitForRequestFinished(&removeReq, 0)) {
+            *errorMap = removeReq.errorMap();
+            *error = removeReq.error();
+        } else {
+            *error = QOrganizerManager::TimeoutError;
+        }
+        return (*error == QOrganizerManager::NoError);
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return false;
     }
-    return *error == QOrganizerManager::NoError;
 }
 
-QOrganizerCollection QOrganizerJsonDbEngine::defaultCollection(QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerJsonDbEngine::defaultCollection(QOrganizerManager::Error* error)
 {
     *error = QOrganizerManager::NoError;
     return d->m_requestHandlerThread->defaultCollection();
 }
 
-QOrganizerCollection QOrganizerJsonDbEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerJsonDbEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
     *error = QOrganizerManager::NoError;
     QList<QOrganizerCollection> collectionList = collections(error);
@@ -484,30 +296,36 @@ QOrganizerCollection QOrganizerJsonDbEngine::collection(const QOrganizerCollecti
     return QOrganizerCollection();
 }
 
-QList<QOrganizerCollection> QOrganizerJsonDbEngine::collections(QOrganizerManager::Error* error) const
+QList<QOrganizerCollection> QOrganizerJsonDbEngine::collections(QOrganizerManager::Error* error)
 {
     QOrganizerCollectionFetchRequest collectionFetchReq;
-    *error = QOrganizerManager::NoError;
-
-    const_cast<QOrganizerJsonDbEngine*>(this)->startRequest(&collectionFetchReq);
-    if (const_cast<QOrganizerJsonDbEngine*>(this)->waitForRequestFinished(&collectionFetchReq, 0)) {
-        *error = collectionFetchReq.error();
+    if (startRequest(&collectionFetchReq)) {
+        if (waitForRequestFinished(&collectionFetchReq, 0))
+            *error = collectionFetchReq.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
         return collectionFetchReq.collections();
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return QList<QOrganizerCollection>();
     }
-    return QList<QOrganizerCollection>();
 }
 
 bool QOrganizerJsonDbEngine::saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error)
 {
     QOrganizerCollectionSaveRequest collectionSaveReq;
     collectionSaveReq.setCollection(*collection);
-    startRequest(&collectionSaveReq);
-    if (waitForRequestFinished(&collectionSaveReq, 0)) {
-        // take the only collection
+    if (startRequest(&collectionSaveReq)) {
+        if (waitForRequestFinished(&collectionSaveReq, 0))
+            *error = collectionSaveReq.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
         *collection = collectionSaveReq.collections().at(0);
-        *error = collectionSaveReq.error();
+        return *error == QOrganizerManager::NoError;
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return false;
     }
-    return *error == QOrganizerManager::NoError;
 }
 
 bool QOrganizerJsonDbEngine::removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
@@ -521,11 +339,16 @@ bool QOrganizerJsonDbEngine::removeCollection(const QOrganizerCollectionId& coll
 
     QOrganizerCollectionRemoveRequest collectionRemoveReq;
     collectionRemoveReq.setCollectionId(collectionId);
-    startRequest(&collectionRemoveReq);
-    if (waitForRequestFinished(&collectionRemoveReq, 0)) {
-        *error = collectionRemoveReq.error();
+    if (startRequest(&collectionRemoveReq)) {
+        if (waitForRequestFinished(&collectionRemoveReq, 0))
+            *error = collectionRemoveReq.error();
+        else
+            *error = QOrganizerManager::TimeoutError;
+        return *error == QOrganizerManager::NoError;
+    } else {
+        *error = QOrganizerManager::NotSupportedError;
+        return false;
     }
-    return *error == QOrganizerManager::NoError;
 }
 
 bool QOrganizerJsonDbEngine::startRequest(QOrganizerAbstractRequest* req)
@@ -581,7 +404,7 @@ bool QOrganizerJsonDbEngine::startRequest(QOrganizerAbstractRequest* req)
         break;
     }
     default:
-        break;
+        return false;
     }
 
     emit requestReceived(req);

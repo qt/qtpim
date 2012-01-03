@@ -374,26 +374,34 @@ QMap<QString, QString> QOrganizerItemMemoryEngine::managerParameters() const
     return params;
 }
 
-/*! \reimp
-*/
-QOrganizerItem QOrganizerItemMemoryEngine::item(const QOrganizerItemId& organizeritemId, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
+                                                        QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(fetchHint); // no optimisations are possible in the memory backend; ignore the fetch hint.
-    QOrganizerItem retn(item(organizeritemId));
-    *error = retn.isEmpty() ? QOrganizerManager::DoesNotExistError : QOrganizerManager::NoError;
-    return retn;
+    Q_UNUSED(fetchHint)
+
+    QList<QOrganizerItem> items;
+    items.reserve(itemIds.size());
+    QOrganizerItem tmp;
+    for (int i = 0; i < itemIds.size(); ++i) {
+        tmp = item(itemIds.at(i));
+        items.append(tmp);
+        if (tmp.isEmpty())
+            errorMap->insert(i, QOrganizerManager::DoesNotExistError);
+    }
+    *error = errorMap->isEmpty() ? QOrganizerManager::NoError : QOrganizerManager::DoesNotExistError;
+    return items;
 }
 
-/*! \reimp
-*/
-QList<QOrganizerItemId> QOrganizerItemMemoryEngine::itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, QOrganizerManager::Error* error) const
+QList<QOrganizerItemId> QOrganizerItemMemoryEngine::itemIds(const QOrganizerItemFilter &filter,
+                                                            const QDateTime &startDateTime,
+                                                            const QDateTime &endDateTime,
+                                                            const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                            QOrganizerManager::Error *error)
 {
-    /* Special case the fast case */
-    if (startDate.isNull() && endDate.isNull() && filter.type() == QOrganizerItemFilter::DefaultFilter && sortOrders.count() == 0) {
+    if (startDateTime.isNull() && endDateTime.isNull() && filter.type() == QOrganizerItemFilter::DefaultFilter && sortOrders.count() == 0)
         return d->m_idToItemHash.keys();
-    } else {
-        return QOrganizerManager::extractIds(itemsForExport(startDate, endDate, filter, sortOrders, QOrganizerItemFetchHint(), error));
-    }
+    else
+        return QOrganizerManager::extractIds(itemsForExport(startDateTime, endDateTime, filter, sortOrders, QOrganizerItemFetchHint(), error));
 }
 
 QList<QDateTime> QOrganizerItemMemoryEngine::generateDateTimes(const QDateTime& initialDateTime, QOrganizerRecurrenceRule rrule, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount) const
@@ -807,11 +815,14 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     return retn.mid(0, maxCount);
 }
 
-/*! \reimp */
-QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemOccurrences(const QOrganizerItem &parentItem,
+                                                                  const QDateTime &startDateTime,
+                                                                  const QDateTime &endDateTime, int maxCount,
+                                                                  const QOrganizerItemFetchHint &fetchHint,
+                                                                  QOrganizerManager::Error *error)
 {
     Q_UNUSED(fetchHint);
-    return internalItemOccurrences(parentItem, periodStart, periodEnd, maxCount, true, error);
+    return internalItemOccurrences(parentItem, startDateTime, endDateTime, maxCount, true, error);
 }
 
 QOrganizerItem QOrganizerItemMemoryEngine::generateOccurrence(const QOrganizerItem& parentItem, const QDateTime& rdate)
@@ -877,10 +888,14 @@ QOrganizerItem QOrganizerItemMemoryEngine::generateOccurrence(const QOrganizerIt
     return instanceItem;
 }
 
-QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
+QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                                        const QDateTime &endDateTime, int maxCount,
+                                                        const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error)
 {
+    QList<QOrganizerItem> list;
     if (sortOrders.size() > 0) {
-        return internalItems(startDate, endDate, filter, sortOrders, fetchHint, error, false);
+        list = internalItems(startDateTime, endDateTime, filter, sortOrders, fetchHint, error, false);
     } else {
         QOrganizerItemSortOrder sortOrder;
         sortOrder.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
@@ -895,23 +910,26 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QDateTime& startDa
         sortOrder.setDetail(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
         sortOrders.append(sortOrder);
 
-        return internalItems(startDate, endDate, filter, sortOrders, fetchHint, error, false);
+        list = internalItems(startDateTime, endDateTime, filter, sortOrders, fetchHint, error, false);
     }
+
+    if (maxCount < 0)
+        return list;
+    else
+        return list.mid(0, maxCount);
 }
 
-QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QDateTime &startDate, const QDateTime &endDate, int maxCount, const QOrganizerItemFilter &filter, const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error) const
+QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemsForExport(const QDateTime &startDateTime,
+                                                                 const QDateTime &endDateTime,
+                                                                 const QOrganizerItemFilter &filter,
+                                                                 const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                                 const QOrganizerItemFetchHint &fetchHint,
+                                                                 QOrganizerManager::Error *error)
 {
-    QList<QOrganizerItem> list = items(
-            startDate, endDate, filter, QList<QOrganizerItemSortOrder>(), fetchHint, error);
-    return list.mid(0, maxCount);
+    return internalItems(startDateTime, endDateTime, filter, sortOrders, fetchHint, error, true);
 }
 
-QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error) const
-{
-    return internalItems(startDate, endDate, filter, sortOrders, fetchHint, error, true);
-}
-
-QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemsForExport(const QList<QOrganizerItemId> &ids, const QOrganizerItemFetchHint &fetchHint, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error) const
+QList<QOrganizerItem> QOrganizerItemMemoryEngine::itemsForExport(const QList<QOrganizerItemId> &ids, const QOrganizerItemFetchHint &fetchHint, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
     QOrganizerItemIdFilter filter;
     filter.setIds(ids);
@@ -1117,7 +1135,8 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
                 return false;
             }
 
-            QOrganizerEvent parentEvent = item(parentId, QOrganizerItemFetchHint(), &tempError);
+            QMap<int, QOrganizerManager::Error> tempErrorMap;
+            QOrganizerEvent parentEvent = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
             QDate originalDate = origin.originalDate();
             QSet<QDate> currentExceptionDates = parentEvent.exceptionDates();
             if (!currentExceptionDates.contains(originalDate)) {
@@ -1150,7 +1169,8 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
                 return false;
             }
 
-            QOrganizerTodo parentTodo = item(parentId, QOrganizerItemFetchHint(), &tempError);
+            QMap<int, QOrganizerManager::Error> tempErrorMap;
+            QOrganizerTodo parentTodo = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
             QDate originalDate = origin.originalDate();
             QSet<QDate> currentExceptionDates = parentTodo.exceptionDates();
             if (!currentExceptionDates.contains(originalDate)) {
@@ -1199,7 +1219,8 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
         if (!guid.isEmpty()) {
             if (!parentId.isNull()) {
                 QOrganizerManager::Error tempError;
-                QOrganizerItem parentItem = item(parentId, QOrganizerItemFetchHint(), &tempError);
+                QMap<int, QOrganizerManager::Error> tempErrorMap;
+                QOrganizerItem parentItem = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
                 if (guid != parentItem.guid()
                         || !typesAreRelated(theItem->type(), parentItem.type())) {
                     // parentId and guid are both set and inconsistent, or the parent is the wrong
@@ -1222,7 +1243,8 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
                     return false;
                 }
                 QOrganizerManager::Error tempError;
-                QOrganizerItem parentItem = item(parentId, QOrganizerItemFetchHint(), &tempError);
+                QMap<int, QOrganizerManager::Error> tempErrorMap;
+                QOrganizerItem parentItem = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
                 if (!typesAreRelated(theItem->type(), parentItem.type())) {
                     // the parent is the wrong type
                     *error = QOrganizerManager::InvalidOccurrenceError;
@@ -1235,7 +1257,8 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
             }
         } else if (!parentId.isNull()) {
             QOrganizerManager::Error tempError;
-            QOrganizerItem parentItem = item(parentId, QOrganizerItemFetchHint(), &tempError);
+            QMap<int, QOrganizerManager::Error> tempErrorMap;
+            QOrganizerItem parentItem = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
             if (parentItem.guid().isEmpty()
                     || !typesAreRelated(theItem->type(), parentItem.type())) {
                 // found the matching item but it has no guid, or it isn't the right type
@@ -1295,10 +1318,11 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems
     return (*error == QOrganizerManager::NoError);
 }
 
-bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &definitionMask, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
+bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
+                                           QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
     // TODO should the default implementation do the right thing, or return false?
-    if (definitionMask.isEmpty()) {
+    if (detailMask.isEmpty()) {
         // Non partial, just pass it on
         return saveItems(items, errorMap, error);
     } else {
@@ -1365,7 +1389,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
                 itemToSave = existingItems.at(fetchedIdx);
 
                 // QOrganizerItemData::removeOnly() is not exported, so we can only do this...
-                foreach (QOrganizerItemDetail::DetailType mask, definitionMask) {
+                foreach (QOrganizerItemDetail::DetailType mask, detailMask) {
                     QList<QOrganizerItemDetail> details(itemToSave.details(mask));
                     foreach (QOrganizerItemDetail detail, details)
                         itemToSave.removeDetail(&detail);
@@ -1383,7 +1407,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
 
             // Perhaps this could do this directly rather than through saveDetail
             // but that would duplicate the checks for display label etc
-            foreach (QOrganizerItemDetail::DetailType name, definitionMask) {
+            foreach (QOrganizerItemDetail::DetailType name, detailMask) {
                 QList<QOrganizerItemDetail> details = item.details(name);
                 foreach (QOrganizerItemDetail detail, details)
                     itemToSave.saveDetail(&detail);
@@ -1450,13 +1474,12 @@ bool QOrganizerItemMemoryEngine::removeItem(const QOrganizerItemId& organizerite
     return true;
 }
 
-/*! \reimp
-*/
-bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItemId>& organizeritemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
+                                             QOrganizerManager::Error *error)
 {
     Q_ASSERT(errorMap);
 
-    if (organizeritemIds.count() == 0) {
+    if (itemIds.count() == 0) {
         *error = QOrganizerManager::BadArgumentError;
         return false;
     }
@@ -1464,8 +1487,8 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItemId>& orga
     QOrganizerItemChangeSet changeSet;
     QOrganizerItemId current;
     QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-    for (int i = 0; i < organizeritemIds.count(); i++) {
-        current = organizeritemIds.at(i);
+    for (int i = 0; i < itemIds.count(); i++) {
+        current = itemIds.at(i);
         if (!removeItem(current, changeSet, error)) {
             operationError = *error;
             errorMap->insert(i, operationError);
@@ -1479,7 +1502,7 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItemId>& orga
     return (*error == QOrganizerManager::NoError);
 }
 
-QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error)
 {
     // default collection has id of 1.
     *error = QOrganizerManager::NoError;
@@ -1494,7 +1517,7 @@ QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerMan
     return QOrganizerCollection();
 }
 
-QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const
+QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
     *error = QOrganizerManager::NoError;
     for (int i = 0; i < d->m_organizerCollections.size(); ++i) {
@@ -1506,7 +1529,8 @@ QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerColl
     *error = QOrganizerManager::DoesNotExistError;
     return QOrganizerCollection();
 }
-QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerManager::Error* error) const
+
+QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerManager::Error* error)
 {
     *error = QOrganizerManager::NoError;
     return d->m_organizerCollections;
@@ -1713,7 +1737,7 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
             QDateTime endDate = r->endDate();
 
             QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-            QList<QOrganizerItem> requestedOrganizerItems = items(startDate, endDate, filter, sorting, fetchHint, &operationError);
+            QList<QOrganizerItem> requestedOrganizerItems = items(filter, startDate, endDate, -1, sorting, fetchHint, &operationError);
 
             // update the request with the results.
             if (!requestedOrganizerItems.isEmpty() || operationError != QOrganizerManager::NoError)
@@ -1797,7 +1821,7 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
             QDateTime endDate = r->endDate();
 
             QOrganizerManager::Error operationError = QOrganizerManager::NoError;
-            QList<QOrganizerItemId> requestedOrganizerItemIds = itemIds(startDate, endDate, filter, sorting, &operationError);
+            QList<QOrganizerItemId> requestedOrganizerItemIds = itemIds(filter, startDate, endDate, sorting, &operationError);
 
             if (!requestedOrganizerItemIds.isEmpty() || operationError != QOrganizerManager::NoError)
                 updateItemIdFetchRequest(r, requestedOrganizerItemIds, operationError, QOrganizerAbstractRequest::FinishedState);

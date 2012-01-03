@@ -365,327 +365,290 @@ QMap<int, QOrganizerManager::Error> QOrganizerManager::errorMap() const
 }
 
 /*!
-  Return the list of a maximum of \a maxCount organizer item instances which are occurrences of the given \a parentItem recurring item, which
-  occur between the given \a periodStart date and the given \a periodEnd date, inclusive.
+    Returns a list of a maximum of \a maxCount organizer item instances which are occurrences of
+    the given \a parentItem recurring item, which occur between the given \a startDateTime and the
+    given \a endDateTime date, inclusive.
 
-  If \a periodStart is after \a periodEnd, the operation will fail.
-  If \a maxCount is negative, it is backend specific as to how many occurrences will be returned.
-  Some backends may return no instances, others may return some limited number of occurrences.
+    A default-constructed (invalid) \a startDateTime specifies an open start date time (matches anything
+    which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
+    specifies an open end date time (matches anything which occurs after the \a startDateTime). If
+    both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
+    all items which match the \a filter criteria.
 
-  The \a fetchHint allows clients to specify which pieces of information they are interested or not interested in, to allow
-  backends to optimise data retrieval if possible.  Note that it is simply a hint; backends can ignore the \a fetchHint,
-  but if they do so they must return the full item.
+    Note that backends will decide how many occurrences are returned if \a maxCount is negative.
+
+    The \a fetchHint allows clients to specify which pieces of information they are interested or
+    not interested in, to allow backends to optimise data retrieval if possible. Note that it is
+    simply a hint; backends can ignore the \a fetchHint and return the full item. If a client makes
+    changes to an organizer item which has been retrieved with a fetch hint, they should save it
+    back using a partial save, masked by the same set of detail types in order to avoid information
+    loss.
   */
-QList<QOrganizerItem> QOrganizerManager::itemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::itemOccurrences(const QOrganizerItem &parentItem,const QDateTime &startDateTime,
+                                                         const QDateTime &endDateTime, int maxCount,
+                                                         const QOrganizerItemFetchHint &fetchHint)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->itemOccurrences(parentItem, periodStart, periodEnd, maxCount, fetchHint, &h.error);
+    return d->m_engine->itemOccurrences(parentItem, startDateTime, endDateTime, maxCount, fetchHint, &h.error);
 }
 
 /*!
-  Returns a list of organizer item ids that match the given \a filter, sorted according to the given list of \a sortOrders.
-  Depending on the backend, this filtering operation may involve retrieving all organizer items.
+    Returns a list of item IDs of persisted organizer items that match the given \a filter, sorted
+    according to the given list of \a sortOrders, for any item which occurs (or has an occurrence
+    which occurs) in the range specified by the given \a startDateTime and \a endDateTime, inclusive.
+
+    A default-constructed (invalid) \a startDateTime specifies an open start date time (matches anything
+    which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
+    specifies an open end date time (matches anything which occurs after the \a startDateTime). If
+    both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
+    all items which match the \a filter criteria.
+
+    Note that certain backends may ignore the given \a filter.
  */
-QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders) const
+QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter &filter,
+                                                   const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                                   const QList<QOrganizerItemSortOrder> &sortOrders)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->itemIds(QDateTime(), QDateTime(), filter, sortOrders, &h.error);
+    return d->m_engine->itemIds(filter, startDateTime, endDateTime, sortOrders, &h.error);
 }
 
 /*!
-  Returns a list of organizer item ids of persisted items that match the given \a filter, sorted according to the given list of \a sortOrders,
-  for any item which occurs (or has an occurrence which occurs) in the range specified by the given \a startDate and \a endDate, inclusive.
-  A default-constructed (invalid) \a startDate specifies an open start date (matches anything which occurs up until the \a endDate),
-  and a default-constructed (invalid) \a endDate specifies an open end date (matches anything which occurs after the \a startDate).
-  If both the \a startDate and \a endDate are invalid, this function will return the ids of all items which match the \a filter criteria.
-  Depending on the backend, this filtering operation may involve retrieving all organizer items.
+    \obsolete
  */
-QList<QOrganizerItemId> QOrganizerManager::itemIds(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders) const
+QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders)
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->itemIds(startDate, endDate, filter, sortOrders, &h.error);
+    return itemIds(filter, QDateTime(), QDateTime(), sortOrders);
 }
 
 /*!
-  Returns a list of organizer items that match the given \a filter, sorted according to the given list of \a sortOrders.
-
-  This function will return both persisted and generated occurrences of items which match the specified \a filter.
-
-  Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
-
-  The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
-  fetchHint is the default constructed hint, all existing details in the matching organizer items
-  will be returned.  If a client makes changes to an organizer item which has been retrieved with a
-  fetch hint, they should save it back using a partial save, masked by the same set of detail names
-  in order to avoid information loss.
-
-  \sa QOrganizerItemFetchHint
+    \obsolete
  */
-QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint)
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->items(QDateTime(), QDateTime(), filter, sortOrders, fetchHint, &h.error);
+    return items(filter, QDateTime(), QDateTime(), -1, sortOrders, fetchHint);
 }
 
 /*!
-  Returns a list of organizer items that match the given \a filter, sorted according to the given list of \a sortOrders,
-  for any item or occurrence of an item which occurs in the range specified by the given \a startDate and \a endDate, inclusive.
-  A default-constructed (invalid) \a startDate specifies an open start date (matches anything which occurs up until the \a endDate),
-  and a default-constructed (invalid) \a endDate specifies an open end date (matches anything which occurs after the \a startDate).
-  If both the \a startDate and \a endDate are invalid, this function will return all items which match the \a filter criteria.
-
-  This function will return both persisted and generated occurrences of items which match the specified criteria.
-
-  Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
-
-  If no sort order is provided, the list is returned sorted by date.
-
-  The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
-  fetchHint is the default constructed hint, all existing details in the matching organizer items
-  will be returned.  If a client makes changes to an organizer item which has been retrieved with a
-  fetch hint, they should save it back using a partial save, masked by the same set of detail names
-  in order to avoid information loss.
-
-  \sa QOrganizerItemFetchHint
+    \obsolete
  */
-QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint)
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->items(startDate, endDate, filter, sortOrders, fetchHint, &h.error);
+    return items(filter, startDate, endDate, -1, sortOrders, fetchHint);
 }
 
 /*!
-  Returns a list of organizer items in the range specified by the given \a startDate and \a endDate,
-  inclusive.  The list will contain the first \a maxCount such items which match the given \a
-  filter.  A default-constructed (invalid) \a startDate specifies an open start date (matches
-  anything which occurs up until the \a endDate), and a default-constructed (invalid) \a endDate
-  specifies an open end date (matches anything which occurs after the \a startDate).  The list is
-  sorted by date.
-
-  This function will return both persisted and generated occurrences of items which match the
-  specified criteria.
-
-  Depending on the manager implementation, this filtering operation might be slow and involve
-  retrieving all organizer items and testing them against the supplied filter - see the \l
-  supportedFilters() function.
-
-  The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
-  fetchHint is the default constructed hint, all existing details in the matching organizer items
-  will be returned.  If a client makes changes to an organizer item which has been retrieved with a
-  fetch hint, they should save it back using a partial save, masked by the same set of detail names
-  in order to avoid information loss.
-
-  \sa QOrganizerItemFetchHint
+    \obsolete
  */
-QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, int maxCount, const QOrganizerItemFilter& filter, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, int maxCount, const QOrganizerItemFilter& filter, const QOrganizerItemFetchHint& fetchHint)
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->items(startDate, endDate, maxCount, filter, fetchHint, &h.error);
+    return items(filter, startDate, endDate, maxCount, QList<QOrganizerItemSortOrder>(), fetchHint);
 }
 
 /*!
-  Returns a list of organizer items that match the given \a filter, sorted according to the given list of \a sortOrders,
-  for any item which occurs (or has an occurrence which occurs) in the range specified by the given \a startDate and \a endDate, inclusive.
-  A default-constructed (invalid) \a startDate specifies an open start date (matches anything which occurs up until the \a endDate),
-  and a default-constructed (invalid) \a endDate specifies an open end date (matches anything which occurs after the \a startDate).
-  If both the \a startDate and \a endDate are invalid, this function will return all items which match the \a filter criteria.
+    Returns a list of a maximum of \a maxCount organizer items and occurrences that match the given
+    \a filter, which occur in the range specified by the given \a startDateTime and \a endDateTime,
+    inclusive, and sorted according to the given list of \a sortOrders.
 
-  This function will only return parent items and persisted exceptions which match the specified criteria; not generated occurrences.
+    A default-constructed (invalid) \a startDateTime specifies an open start date time (matches anything
+    which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
+    specifies an open end date time (matches anything which occurs after the \a startDateTime). If
+    both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
+    all items which match the \a filter criteria.
 
-  Depending on the manager implementation, this filtering operation might be slow and involve retrieving all
-  organizer items and testing them against the supplied filter - see the \l supportedFilters() function.
+    If no sort order is provided, the list is returned sorted by date.
 
-  The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
-  fetchHint is the default constructed hint, all existing details in the matching organizer items
-  will be returned.  If a client makes changes to an organizer item which has been retrieved with a
-  fetch hint, they should save it back using a partial save, masked by the same set of detail names
-  in order to avoid information loss.
+    Note that certain backends may ignore the given \a filter.
 
-  \sa QOrganizerItemFetchHint
+    Note that backends will decide how many occurrences are returned if \a maxCount is negative.
+
+    The \a fetchHint allows clients to specify which pieces of information they are interested or
+    not interested in, to allow backends to optimise data retrieval if possible. Note that it is
+    simply a hint; backends can ignore the \a fetchHint and return the full item. If a client makes
+    changes to an organizer item which has been retrieved with a fetch hint, they should save it
+    back using a partial save, masked by the same set of detail types in order to avoid information
+    loss.
  */
-QList<QOrganizerItem> QOrganizerManager::itemsForExport(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
+                                               const QDateTime &endDateTime, int maxCount,
+                                               const QList<QOrganizerItemSortOrder> &sortOrders,
+                                               const QOrganizerItemFetchHint &fetchHint)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->itemsForExport(startDate, endDate, filter, sortOrders, fetchHint, &h.error);
+    return d->m_engine->items(filter, startDateTime, endDateTime, maxCount, sortOrders, fetchHint, &h.error);
 }
 
 /*!
-  Returns the organizer item in the database identified by \a itemId.
+    Returns a list of organizer items that match the given \a filter, sorted according to the given
+    list of \a sortOrders, for any item which occurs (or has an occurrence which occurs) in the range
+    specified by the given \a startDateTime and \a endDateTime, inclusive.
 
-  If the organizer item does not exist, an empty, default constructed QOrganizerItem will be returned,
-  and the error returned by \l error() will be \c QOrganizerManager::DoesNotExistError.
+    A default-constructed (invalid) \a startDateTime specifies an open start date time (matches anything
+    which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
+    specifies an open end date time (matches anything which occurs after the \a startDateTime). If
+    both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
+    all items which match the \a filter criteria.
 
-  The \a fetchHint parameter describes the optimization hints that a manager may take.  If the \a
-  fetchHint is the default constructed hint, all existing details in the matching organizer items
-  will be returned.  If a client makes changes to an organizer item which has been retrieved with a
-  fetch hint, they should save it back using a partial save, masked by the same set of detail names
-  in order to avoid information loss.
+    This function will only return parent items and persisted exceptions which match the specified
+    criteria; not generated occurrences.
 
-  \sa QOrganizerItemFetchHint
+    Note that certain backends may ignore the given \a filter.
+
+    The \a fetchHint allows clients to specify which pieces of information they are interested or
+    not interested in, to allow backends to optimise data retrieval if possible. Note that it is
+    simply a hint; backends can ignore the \a fetchHint and return the full item. If a client makes
+    changes to an organizer item which has been retrieved with a fetch hint, they should save it
+    back using a partial save, masked by the same set of detail types in order to avoid information
+    loss.
  */
-QOrganizerItem QOrganizerManager::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint) const
+QList<QOrganizerItem> QOrganizerManager::itemsForExport(const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                                        const QOrganizerItemFilter &filter,
+                                                        const QList<QOrganizerItemSortOrder> &sortOrders,
+                                                        const QOrganizerItemFetchHint &fetchHint)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->item(itemId, fetchHint, &h.error);
+    return d->m_engine->itemsForExport(startDateTime, endDateTime, filter, sortOrders, fetchHint, &h.error);
 }
 
 /*!
-  Adds the given \a item to the database if \a item has a
-  default-constructed id, or an id with the manager URI set to the URI of
-  this manager and a id of zero.  It will be saved in the collection whose
-  id is reported by calling item->collectionId() if the specified collection exists,
-  or if no collectionId is specified in the item, or the collectionId is the default
-  collection id, it will be saved in the collection in which the item is currently
-  saved (if it is not a new item) or in the default collection (if it is a new item).
-  As such, an item may be moved between collections with this save operation.
+    Returns the organizer items in the database identified by \a itemIds.
 
-  If the manager URI of the id of the \a item is neither empty nor equal to the URI of
-  this manager, or id of the \a item is non-zero but does not exist in the
-  manager, the operation will fail and calling error() will return
-  \c QOrganizerManager::DoesNotExistError.
+    The items fetched by the backend should have a one-to-one correspondence to the IDs passed into
+    this class.  That is, the nth item in the returned list should have an ID which is equal to the
+    nth ID in the list of IDs.  Any invalid ID should correspond to an empty QOrganizerItem.
 
-  Alternatively, the function will update the existing organizer item in the database if \a item
-  has a non-zero id and currently exists in the database.
+    The \a fetchHint allows clients to specify which pieces of information they are interested or
+    not interested in, to allow backends to optimise data retrieval if possible. Note that it is
+    simply a hint; backends can ignore the \a fetchHint and return the full item. If a client makes
+    changes to an organizer item which has been retrieved with a fetch hint, they should save it
+    back using a partial save, masked by the same set of detail types in order to avoid information
+    loss.
 
-  If the \a item contains one or more details whose definitions have
-  not yet been saved with the manager, the operation will fail and calling
-  error() will return \c QOrganizerManager::UnsupportedError.
-
-  Returns false on failure, or true on
-  success.  On successful save of an organizer item with a null id, its
-  id will be set to a new, valid id with the manager URI set to the URI of
-  this manager, and the id set to a new, valid id.  On successful save of an
-  organizer item with a null collection id, the collection id will be set to
-  the id of the default collection of the manager.
-  The manager is not required to fetch updated details of the organizer item on save,
-  and as such, clients should fetch an organizer item if they want the most up-to-date information
-  by calling \l QOrganizerManager::item().
-
-  \sa managerUri()
+    Calling \l errorMap() will return the per-input errors for the fetch. The \l QOrganizerManager::error()
+    function will only return \c QOrganizerManager::NoError if all organizer items are fetched
+    successfully.
  */
-bool QOrganizerManager::saveItem(QOrganizerItem* item)
+QList<QOrganizerItem> QOrganizerManager::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    if (item) {
-        return d->m_engine->saveItem(item, &h.error);
-    } else {
-        h.error = QOrganizerManager::BadArgumentError;
-        return false;
-    }
+    return d->m_engine->items(itemIds, fetchHint, &h.errorMap, &h.error);
 }
 
 /*!
-  Remove the organizer item identified by \a itemId from the database.
-  Returns true if the organizer item was removed successfully, otherwise
-  returns false.
+    Returns the organizer item in the database identified by \a itemId, or an empty item if the
+    specified item does not exist.
+
+    The \a fetchHint allows clients to specify which pieces of information they are interested or
+    not interested in, to allow backends to optimise data retrieval if possible. Note that it is
+    simply a hint; backends can ignore the \a fetchHint and return the full item. If a client makes
+    changes to an organizer item which has been retrieved with a fetch hint, they should save it
+    back using a partial save, masked by the same set of detail types in order to avoid information
+    loss.
+ */
+QOrganizerItem QOrganizerManager::item(const QOrganizerItemId& itemId, const QOrganizerItemFetchHint& fetchHint)
+{
+    QList<QOrganizerItem> tmp = items(QList<QOrganizerItemId>() << itemId, fetchHint);
+    if (tmp.size() > 0)
+        return tmp.at(0);
+    return QOrganizerItem();
+}
+
+/*!
+    Saves the given \a item to the backend, and returns true on success or false otherwise.
+
+    A new organizer item will be created in the backend store if the item ID of it is null. Otherwise,
+    an existing item with the same ID will be updated. If the given item ID does not exist in the
+    backend, it will result a QOrganizerManager::DoesNotExistError error.
+
+    If the collection ID of the item is null, it will be saved to the default collection. If the given
+    collection ID doesn't exist, the saving will fail.
+
+    If the \a detailMask is empty, only the details currently existing in the item will be saved.
+    Otherwise, only details masked by the \a detailMask will be saved or updated, others are kept
+    untouched. It's useful to avoid information loss if the items are retrieved with a fetch hint.
+
+    Note that upon successful saving, the backend may update the item, e.g. item ID for newly saved
+    items, GUID, timestamp, version, etc.
+
+    \sa saveItems
+ */
+bool QOrganizerManager::saveItem(QOrganizerItem *item, const QList<QOrganizerItemDetail::DetailType> &detailMask)
+{
+    QList<QOrganizerItem> items;
+    items.append(*item);
+    bool rtn = saveItems(&items, detailMask);
+    *item = items.at(0);
+    return rtn;
+}
+
+/*!
+    Removes all the item whose ID is \a itemIds, and all its occurrences. Returns true if the item
+    and occurrences are successfully removed, or false otherwise.
+
+    \sa removeItems
  */
 bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->removeItem(itemId, &h.error);
+    return removeItems(QList<QOrganizerItemId>() << itemId);
 }
 
 /*!
-  Adds the list of organizer items given by \a items list to the database.
-  Each item in the list will be saved in the collection whose
-  id is reported by calling item->collectionId() if the specified collection exists.
-  If no collectionId is specified in the item, or if the collectionId is the default
-  collection id, it will be saved in the collection in which the item is currently
-  saved (if it is not a new item) or in the default collection (if it is a new item).
-  As such, an item may be moved between collections with this save operation.
-  Returns true if the organizer items were saved successfully, otherwise false.
+    Saves the given list of \a items to the backend, and returns true on success or false otherwise.
 
-  Calling \l errorMap() will return the per-input errors for the latest batch function.
-  The \l QOrganizerManager::error() function will only return \c QOrganizerManager::NoError
-  if all organizer items were saved successfully.
+    A new organizer item will be created in the backend store if the item ID of it is null. Otherwise,
+    an existing item with the same ID will be updated. If the given item ID does not exist in the
+    backend, it will result a QOrganizerManager::DoesNotExistError error.
 
-  For each newly saved organizer item that was successful, the id of the organizer item
-  in the \a items list will be updated with the new value.
+    If the collection ID of the item is null, it will be saved to the default collection. If the given
+    collection ID doesn't exist, the saving will fail.
 
-  \sa QOrganizerManager::saveItem()
+    If the \a detailMask is empty, only the details currently existing in the item will be saved.
+    Otherwise, only details masked by the \a detailMask will be saved or updated, others are kept
+    untouched. It's useful to avoid information loss if the items are retrieved with a fetch hint.
+
+    Note that upon successful saving, the backend may update the item, e.g. item ID for newly saved
+    items, GUID, timestamp, version, etc.
+
+    Calling errorMap() will return the per-input errors for the operation. The error() function will
+    only return QOrganizerManager::NoError if all organizer items were saved successfully.
+
+    \sa saveItem
  */
-bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items)
+bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QList<QOrganizerItemDetail::DetailType> &detailMask)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     if (!items) {
         h.error = QOrganizerManager::BadArgumentError;
         return false;
     }
-
-    return d->m_engine->saveItems(items, &h.errorMap, &h.error);
+    return d->m_engine->saveItems(items, detailMask, &h.errorMap, &h.error);
 }
 
 /*!
-  Adds the list of organizer items given by \a items list to the database.
-  Each item in the list will be saved in the collection whose
-  id is reported by calling item->collectionId() if the specified collection exists.
-  If no collectionId is specified in the item, or if the collectionId is the default
-  collection id, it will be saved in the collection in which the item is currently
-  saved (if it is not a new item) or in the default collection (if it is a new item).
-  As such, an item may be moved between collections with this save operation.
-  Returns true if the organizer items were saved successfully, otherwise false.
+    Removes all the items whose ID is contained in the given list of \a itemIds, and all the occurrences
+    whose parent ID is containd in the \a itemIds. Returns true if all the items and occurrences
+    are successfully removed, or false otherwise.
 
-  This function accepts a \a definitionMask, which specifies which details of
-  the items should be updated.  Details with definition names not included in
-  the definitionMask will not be updated or added.
+    Calling errorMap() will return the per-input errors for the operation. The error() function will
+    only return QOrganizerManager::NoError if all organizer items were saved successfully.
 
-  Calling \l errorMap() will return the per-input errors for the latest batch function.
-  The \l QOrganizerManager::error() function will only return \c QOrganizerManager::NoError
-  if all organizer items were saved successfully.
-
-  For each newly saved organizer item that was successful, the id of the organizer item
-  in the \a items list will be updated with the new value.
-
-  \sa QOrganizerManager::saveItem()
+    \sa removeItem
  */
-bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QList<QOrganizerItemDetail::DetailType> &definitionMask)
+bool QOrganizerManager::removeItems(const QList<QOrganizerItemId> &itemIds)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
-    if (!items) {
+    if (itemIds.isEmpty()) {
         h.error = QOrganizerManager::BadArgumentError;
         return false;
     }
-
-    return d->m_engine->saveItems(items, definitionMask, &h.errorMap, &h.error);
+    return d->m_engine->removeItems(itemIds, &h.errorMap, &h.error);
 }
 
 /*!
-  Remove every organizer item whose id is contained in the list of organizer item ids
-  \a organizeritemIds.  Returns true if all organizer items were removed successfully,
-  otherwise false.
-
-  Calling \l errorMap() will return the per-input errors for the latest batch function.
-  The \l QOrganizerManager::error() function will
-  only return \c QOrganizerManager::NoError if all organizer items were removed
-  successfully.
-
-  If the given list of organizer item ids \a organizeritemIds is empty, the function will return false
-  and calling error() will return \c QOrganizerManager::BadArgumentError.  If the list is non-empty
-  and contains ids which do not identify a valid organizer item in the manager, the function will
-  remove any organizer items which are identified by ids in the \a organizeritemIds list, insert
-  \c QOrganizerManager::DoesNotExist entries into the error map for the indices of invalid ids
-  in the \a organizeritemIds list, return false, and set the overall operation error to
-  \c QOrganizerManager::DoesNotExistError.
-
-  \sa QOrganizerManager::removeItem()
+    Returns the default collection managed by this manager. There is always only one default collection
+    for each backend.
  */
-bool QOrganizerManager::removeItems(const QList<QOrganizerItemId>& organizeritemIds)
-{
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    if (organizeritemIds.isEmpty()) {
-        h.error = QOrganizerManager::BadArgumentError;
-        return false;
-    }
-
-    return d->m_engine->removeItems(organizeritemIds, &h.errorMap, &h.error);
-}
-
-/*!
-  Returns the id of the default collection managed by this manager
- */
-QOrganizerCollection QOrganizerManager::defaultCollection() const
+QOrganizerCollection QOrganizerManager::defaultCollection()
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->defaultCollection(&h.error);
@@ -694,7 +657,7 @@ QOrganizerCollection QOrganizerManager::defaultCollection() const
 /*!
   Returns the collection identified by the given \a collectionId which is managed by this manager.
  */
-QOrganizerCollection QOrganizerManager::collection(const QOrganizerCollectionId& collectionId) const
+QOrganizerCollection QOrganizerManager::collection(const QOrganizerCollectionId& collectionId)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->collection(collectionId, &h.error);
@@ -703,32 +666,24 @@ QOrganizerCollection QOrganizerManager::collection(const QOrganizerCollectionId&
 /*!
   Returns a list of all of the collections managed by this manager.
  */
-QList<QOrganizerCollection> QOrganizerManager::collections() const
+QList<QOrganizerCollection> QOrganizerManager::collections()
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->collections(&h.error);
 }
 
 /*!
-  Saves the given \a collection in the manager.
-  Returns true on success, false on failure.
+    Saves the given \a collection to the backend, and returns true on success or false otherwise.
 
-  Some managers do not allow modifications to collections,
-  and thus attempting to save a collection will always fail
-  when attempted in such a manager.
+    Note that certain backends may not allow modification nor adding new collections, in such cases
+    the operation will fail and result a QOrganizerManager::PermissionsError error.
 
-  Some managers do not allow adding new collections,
-  and thus attempting to save a new collection will always fail
-  when attempted in such a manager.
+    A new collection will be created in the backend store if the collection ID of it is null.
+    Otherwise, an existing collection with the same ID will be updated. If the given collection ID
+    does not exist in the backend, it will result a QOrganizerManager::DoesNotExistError error.
 
-  Some managers provide front-ends to read-only datastores, and
-  attempting to save a new collection in such a manager will
-  always fail.
-
-  Most managers will require a valid value for the \c QOrganizerCollection::KeyName
-  meta data key to be set in a collection, before the collection can be saved
-  correctly.
-
+    Note that upon successful saving, the backend may update the collection, e.g. collection ID for
+    newly saved collections.
  */
 bool QOrganizerManager::saveCollection(QOrganizerCollection* collection)
 {

@@ -1,6 +1,6 @@
 load(qt_module)
 
-QT += contacts contacts-private network declarative jsondb jsondb-private
+QT += contacts contacts-private network declarative jsondb
 
 TARGET = qtcontacts_jsondb
 target.path += $$[QT_INSTALL_PLUGINS]/contacts
@@ -17,9 +17,11 @@ HEADERS += qcontactjsondbenginefactory.h \
     qcontactjsondbrequesthandler.h \
     qcontactjsondbrequestmanager.h \
     qcontactjsondbconverter.h \
-    qcontactjsondbglobal.h
+    qcontactjsondbglobal.h \
+    qcontactjsondbstring.h
 SOURCES += qcontactjsondbenginefactory.cpp \
     qcontactjsondbengine.cpp \
     qcontactjsondbrequesthandler.cpp \
     qcontactjsondbrequestmanager.cpp \
-    qcontactjsondbconverter.cpp
+    qcontactjsondbconverter.cpp \
+    qcontactjsondbstring.cpp

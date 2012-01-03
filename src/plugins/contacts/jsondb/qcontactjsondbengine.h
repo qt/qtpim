@@ -64,8 +64,7 @@
 #include <qcontactmanager.h>
 #include <private/qcontactmanager_p.h>
 #include "qcontactjsondbenginedata.h"
-
-#define QCONTACT_JSONDB_ENGINE_VERSION 0.1
+#include "qcontactjsondbstring.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -104,8 +103,8 @@ public:
     bool removeContacts(const QList<QContactLocalId>&, QMap<int, QContactManager::Error>*, QContactManager::Error* error); // implemented in terms of the singular removeContact
 
     /* Version Reporting */
-    int implementationVersion() const { return QCONTACT_JSONDB_ENGINE_VERSION; };
-    int managerVersion() const { return QCONTACT_JSONDB_ENGINE_VERSION; };
+    int implementationVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }
+    int managerVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }
 
     /* Capabilities reporting */
     bool hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const;
@@ -119,12 +118,6 @@ public:
     bool cancelRequest(QContactAbstractRequest *req);
     bool waitForRequestProgress(QContactAbstractRequest* req, int msecs);
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs);
-
-#ifdef Q_QDOC
-    static const QLatin1Constant EngineName;
-#else
-    Q_DECLARE_LATIN1_CONSTANT (EngineName, "jsondb");
-#endif
   signals:    
     void requestReceived(QContactAbstractRequest* req);
   private:

@@ -38,26 +38,5 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "qcontactjsondbengine.h"
-#include "qcontactjsondbenginefactory.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
-
-QContactManagerEngine* QContactJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
-{
-    Q_UNUSED(parameters);
-    Q_UNUSED(error);
-
-    return new QContactJsonDbEngine(); //Manager engine will take ownership of this object.
-}
-
-QString QContactJsonDbEngineFactory::managerName() const
-{
-    return QContactJsonDbStr::contactJsonDbEngineName();
-}
-
-#include "moc_qcontactjsondbenginefactory.cpp"
-
-QTCONTACTS_END_NAMESPACE
-
-Q_EXPORT_PLUGIN2(qtcontacts_jsondb, QTCONTACTS_PREPEND_NAMESPACE(QContactJsonDbEngineFactory));
+#include <qcontactjsondbstring.h>

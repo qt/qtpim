@@ -46,19 +46,16 @@
 #include "qcontactjsondbrequestmanager.h"
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
+#include "qcontactjsondbstring.h"
 
 #include <jsondb-error.h>
 #include <jsondb-client.h>
-#include <private/jsondb-strings_p.h>
 #include <QDebug>
 #include <QString>
 #include <QMap>
 #include <QTimer>
 
 QTCONTACTS_BEGIN_NAMESPACE
-
-Q_DEFINE_LATIN1_CONSTANT(ContactsJsonDbType, "com.nokia.mp.contacts.Contact")
-Q_DEFINE_LATIN1_CONSTANT(ContactsJsonDbNotificationQuery, "[?_type in [\"com.nokia.mp.contacts.Contact\"]]")
 
 const int QContactJsonDbRequestHandler::TIMEOUT_INTERVAL(100);
 
@@ -254,8 +251,8 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
         int trId;
         if (!contactLocalId.isEmpty()) {
             QVariantMap newJsonDbItem;
-            newJsonDbItem.insert(JsonDbString::kUuidStr, contactLocalId);
-            newJsonDbItem.insert(JsonDbString::kTypeStr, ContactsJsonDbType);
+            newJsonDbItem.insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
+            newJsonDbItem.insert(QContactJsonDbStr::uuid(), contactLocalId);
             trId = m_jsonDb->remove(newJsonDbItem);
             m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::RemoveTransaction, req, i);
             transactionsMade = true;
@@ -296,21 +293,21 @@ void QContactJsonDbRequestHandler::onNotified(const QString &notifyUuid, const Q
         return;
 
     QString jsonType(m_converter->jsonDbNotificationObjectToContactType(jsonDbObject));
-    if (jsonType == ContactsJsonDbType) {
+    if (jsonType == QContactJsonDbStr::contactsJsonDbType()) {
 
         QContactLocalId contactLocalId = m_converter->jsonDbNotificationObjectToContactId(jsonDbObject);
         if (contactLocalId.isEmpty())
             return;
 
-        if (action == JsonDbString::kCreateStr) {
+        if (action == QContactJsonDbStr::actionCreate()) {
             m_ccs.insertAddedContact(contactLocalId);
             startTimer();
         }
-        else if (action == JsonDbString::kUpdateStr) {
+        else if (action == QContactJsonDbStr::actionUpdate()) {
             m_ccs.insertChangedContact(contactLocalId);
             startTimer();
         }
-        else if (action == JsonDbString::kRemoveStr) {
+        else if (action == QContactJsonDbStr::actionRemove()) {
             m_ccs.insertRemovedContact(contactLocalId);
             startTimer();
         }
@@ -671,7 +668,7 @@ void QContactJsonDbRequestHandler::sendJsonDbNotificationsRequest()
 {
     if (!m_jsonDbNotificationsRequested) {
         int transactionId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
-                                                    ContactsJsonDbNotificationQuery);
+                                             QContactJsonDbStr::contactsJsonDbNotificationQuery());
         m_requestMgr->addTransaction(transactionId, QContactJsonDbRequestManager::NotificationsTransaction);
         if (qt_debug_jsondb_contacts())
             qDebug() << Q_FUNC_INFO << "Notification request transaction id: " << transactionId;

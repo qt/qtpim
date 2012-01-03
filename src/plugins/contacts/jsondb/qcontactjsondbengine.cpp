@@ -40,9 +40,6 @@
 ****************************************************************************/
 #include <QVariantMap>
 #include <QEventLoop>
-
-#include <private/jsondb-strings_p.h>
-#include <private/jsondb-connection_p.h>
 #include <jsondb-client.h>
 Q_USE_JSONDB_NAMESPACE
 
@@ -50,13 +47,12 @@ Q_USE_JSONDB_NAMESPACE
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
 #include "qcontactpersonid.h"
+#include "qcontactjsondbstring.h"
 
 #include <QDebug>
 #include <QEventLoop>
 
 QTCONTACTS_BEGIN_NAMESPACE
-
-Q_DEFINE_LATIN1_CONSTANT (QContactJsonDbEngine::EngineName, "jsondb");
 
 /*!
   \class QContactJsonDbEngine
@@ -126,7 +122,7 @@ bool QContactJsonDbEngine::startRequest(QContactAbstractRequest* req){
 /*! \reimp */
 QString QContactJsonDbEngine::managerName() const
 {
-    return QString(EngineName.latin1());
+    return QContactJsonDbStr::contactJsonDbEngineName();
 }
 
 

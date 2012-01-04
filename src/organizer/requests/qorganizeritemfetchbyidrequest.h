@@ -42,13 +42,8 @@
 #ifndef QORGANIZERITEMFETCHBYIDREQUEST_H
 #define QORGANIZERITEMFETCHBYIDREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfetchhint.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -58,16 +53,15 @@ class Q_ORGANIZER_EXPORT QOrganizerItemFetchByIdRequest : public QOrganizerAbstr
     Q_OBJECT
 
 public:
-    QOrganizerItemFetchByIdRequest(QObject* parent = 0);
+    QOrganizerItemFetchByIdRequest(QObject *parent = 0);
     ~QOrganizerItemFetchByIdRequest();
 
-    /* Selection, restriction and sorting */
-    void setIds(const QList<QOrganizerItemId>& ids);
-    void setFetchHint(const QOrganizerItemFetchHint& fetchHint);
+    void setIds(const QList<QOrganizerItemId> &ids);
     QList<QOrganizerItemId> ids() const;
+
+    void setFetchHint(const QOrganizerItemFetchHint &fetchHint);
     QOrganizerItemFetchHint fetchHint() const;
 
-    /* Results */
     QList<QOrganizerItem> items() const;
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
@@ -79,4 +73,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMFETCHBYIDREQUEST_H

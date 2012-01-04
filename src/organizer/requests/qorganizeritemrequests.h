@@ -42,20 +42,17 @@
 #ifndef QORGANIZERITEMREQUESTS_H
 #define QORGANIZERITEMREQUESTS_H
 
-// this file includes all of the asynchronous request
-// leaf classes that are included in the public API
+#include <qorganizeritemoccurrencefetchrequest.h>
+#include <qorganizeritemfetchrequest.h>
+#include <qorganizeritemfetchbyidrequest.h>
+#include <qorganizeritemfetchforexportrequest.h>
+#include <qorganizeritemidfetchrequest.h>
+#include <qorganizeritemremoverequest.h>
+#include <qorganizeritemsaverequest.h>
 
-#include "qorganizeritemoccurrencefetchrequest.h"
-#include "qorganizeritemfetchrequest.h"
-#include "qorganizeritemfetchbyidrequest.h"
-#include "qorganizeritemfetchforexportrequest.h"
-#include "qorganizeritemidfetchrequest.h"
-#include "qorganizeritemremoverequest.h"
-#include "qorganizeritemsaverequest.h"
+#include <qorganizercollectionfetchrequest.h>
+#include <qorganizercollectionremoverequest.h>
+#include <qorganizercollectionsaverequest.h>
 
-#include "qorganizercollectionfetchrequest.h"
-#include "qorganizercollectionremoverequest.h"
-#include "qorganizercollectionsaverequest.h"
-
-#endif
+#endif // QORGANIZERITEMREQUESTS_H
 

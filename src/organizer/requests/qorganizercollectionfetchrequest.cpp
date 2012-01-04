@@ -39,41 +39,39 @@
 **
 ****************************************************************************/
 
-#include "qorganizercollectionfetchrequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizercollectionfetchrequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerCollectionFetchRequest
-  \brief The QOrganizerCollectionFetchRequest class allows a client to asynchronously
-    request collections from an organizer manager.
+    \class QOrganizerCollectionFetchRequest
+    \brief The QOrganizerCollectionFetchRequest class allows a client to asynchronously fetch collections
+           from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizeritems-requests
 
-  \inmodule QtOrganizer
-
-
-  For a QOrganizerCollectionFetchRequest, the resultsAvailable() signal will be emitted when the resultant
-  collections (which may be retrieved by calling collections()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizeritems-requests
+    This request will fetch all the collections stored in the given backend.
  */
 
-/*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new organizeritem fetch request whose parent is the specified \a parent.
 */
-QOrganizerCollectionFetchRequest::QOrganizerCollectionFetchRequest(QObject* parent)
+QOrganizerCollectionFetchRequest::QOrganizerCollectionFetchRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionFetchRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerCollectionFetchRequest::~QOrganizerCollectionFetchRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Returns the collections retrieved by this request
+/*!
+    Returns the collections retrieved by this request.
 */
 QList<QOrganizerCollection> QOrganizerCollectionFetchRequest::collections() const
 {

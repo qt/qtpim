@@ -42,15 +42,8 @@
 #ifndef QORGANIZERITEMOCCURRENCEFETCHREQUEST_H
 #define QORGANIZERITEMOCCURRENCEFETCHREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemsortorder.h"
-#include "qorganizeritemfilter.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfetchhint.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -60,22 +53,24 @@ class Q_ORGANIZER_EXPORT QOrganizerItemOccurrenceFetchRequest : public QOrganize
     Q_OBJECT
 
 public:
-    QOrganizerItemOccurrenceFetchRequest(QObject* parent = 0);
+    QOrganizerItemOccurrenceFetchRequest(QObject *parent = 0);
     ~QOrganizerItemOccurrenceFetchRequest();
 
-    void setParentItem(const QOrganizerItem& item);
-    void setStartDate(const QDateTime& date);
-    void setEndDate(const QDateTime& date);
-    void setMaxOccurrences(int maxCount);
-    void setFetchHint(const QOrganizerItemFetchHint& hint);
-
+    void setParentItem(const QOrganizerItem &item);
     QOrganizerItem parentItem() const;
+
+    void setStartDate(const QDateTime &date);
     QDateTime startDate() const;
+
+    void setEndDate(const QDateTime &date);
     QDateTime endDate() const;
+
+    void setMaxOccurrences(int maxCount);
     int maxOccurrences() const;
+
+    void setFetchHint(const QOrganizerItemFetchHint &hint);
     QOrganizerItemFetchHint fetchHint() const;
 
-    /* Results */
     QList<QOrganizerItem> itemOccurrences() const;
 
 private:
@@ -86,4 +81,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMOCCURRENCEFETCHREQUEST_H

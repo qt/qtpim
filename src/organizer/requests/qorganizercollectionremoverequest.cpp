@@ -39,45 +39,39 @@
 **
 ****************************************************************************/
 
-#include "qorganizercollectionremoverequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizercollectionremoverequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerCollectionRemoveRequest
-  \brief The QOrganizerCollectionRemoveRequest class allows a client to asynchronously
-    request organizeritems from a organizeritems store manager.
-
-  \inmodule QtOrganizer
-
-
-  For a QOrganizerCollectionRemoveRequest, the resultsAvailable() signal will be emitted when the resultant
-  organizeritems (which may be retrieved by calling organizeritems()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizeritems-requests
-
-  \inmodule QtOrganizer
+    \class QOrganizerCollectionRemoveRequest
+    \brief The QOrganizerCollectionRemoveRequest class allows a client to asynchronously remove
+           collections from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizeritems-requests
  */
 
-/*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new collection remove request whose parent is the specified \a parent.
 */
-QOrganizerCollectionRemoveRequest::QOrganizerCollectionRemoveRequest(QObject* parent)
+QOrganizerCollectionRemoveRequest::QOrganizerCollectionRemoveRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionRemoveRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerCollectionRemoveRequest::~QOrganizerCollectionRemoveRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the list of ids of collections which will be removed by this request to a list containing the single element \a collectionId
+/*!
+    Sets the ID of collection which will be removed by this request to  \a collectionId.
 */
-void QOrganizerCollectionRemoveRequest::setCollectionId(const QOrganizerCollectionId& collectionId)
+void QOrganizerCollectionRemoveRequest::setCollectionId(const QOrganizerCollectionId &collectionId)
 {
     Q_D(QOrganizerCollectionRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -85,16 +79,18 @@ void QOrganizerCollectionRemoveRequest::setCollectionId(const QOrganizerCollecti
     d->m_collectionIds.append(collectionId);
 }
 
-/*! Sets the list of ids of collections which will be removed by this request to \a collectionIds
+/*!
+    Sets the list of IDs of collections which will be removed by this request to \a collectionIds.
 */
-void QOrganizerCollectionRemoveRequest::setCollectionIds(const QList<QOrganizerCollectionId>& collectionIds)
+void QOrganizerCollectionRemoveRequest::setCollectionIds(const QList<QOrganizerCollectionId> &collectionIds)
 {
     Q_D(QOrganizerCollectionRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_collectionIds = collectionIds;
 }
 
-/*! Returns the list of ids of collections which will be removed by this request if possible
+/*!
+    Returns the list of IDs of collections which will be removed by this request.
 */
 QList<QOrganizerCollectionId> QOrganizerCollectionRemoveRequest::collectionIds() const
 {
@@ -103,7 +99,8 @@ QList<QOrganizerCollectionId> QOrganizerCollectionRemoveRequest::collectionIds()
     return d->m_collectionIds;
 }
 
-/*! Returns any errors which occurred during the request
+/*!
+    Returns any errors which occurred during the request.
 */
 QMap<int, QOrganizerManager::Error> QOrganizerCollectionRemoveRequest::errorMap() const
 {

@@ -42,15 +42,8 @@
 #ifndef QORGANIZERITEMFETCHREQUEST_H
 #define QORGANIZERITEMFETCHREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemsortorder.h"
-#include "qorganizeritemfilter.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemfetchhint.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -60,24 +53,27 @@ class Q_ORGANIZER_EXPORT QOrganizerItemFetchRequest : public QOrganizerAbstractR
     Q_OBJECT
 
 public:
-    QOrganizerItemFetchRequest(QObject* parent = 0);
+    QOrganizerItemFetchRequest(QObject *parent = 0);
     ~QOrganizerItemFetchRequest();
 
-    /* Selection, restriction and sorting */
-    void setFilter(const QOrganizerItemFilter& filter);
-    void setSorting(const QList<QOrganizerItemSortOrder>& sorting);
-    void setFetchHint(const QOrganizerItemFetchHint& fetchHint);
-    void setStartDate(const QDateTime& date);
-    void setEndDate(const QDateTime& date);
-    void setMaxCount(int maxCount);
+    void setFilter(const QOrganizerItemFilter &filter);
     QOrganizerItemFilter filter() const;
+
+    void setSorting(const QList<QOrganizerItemSortOrder> &sorting);
     QList<QOrganizerItemSortOrder> sorting() const;
+
+    void setFetchHint(const QOrganizerItemFetchHint &fetchHint);
     QOrganizerItemFetchHint fetchHint() const;
+
+    void setStartDate(const QDateTime &date);
     QDateTime startDate() const;
+
+    void setEndDate(const QDateTime &date);
     QDateTime endDate() const;
+
+    void setMaxCount(int maxCount);
     int maxCount() const;
 
-    /* Results */
     QList<QOrganizerItem> items() const;
 
 private:
@@ -88,4 +84,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMFETCHREQUEST_H

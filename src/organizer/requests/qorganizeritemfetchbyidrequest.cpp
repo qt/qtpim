@@ -39,43 +39,33 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemfetchbyidrequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemfetchbyidrequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemFetchByIdRequest
-  \brief The QOrganizerItemFetchByIdRequest class allows a client to asynchronously
-    request items from a items store manager, given a list of item IDs.
+    \class QOrganizerItemFetchByIdRequest
+    \brief The QOrganizerItemFetchByIdRequest class allows a client to asynchronously
+           fetch items from a backend, given a list of item IDs.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
 
-  The items fetched by the backend should have a one-to-one correspondence to the
-  IDs passed into this class.  That is, the nth item in the returned list should
-  have an ID which is equal to the nth ID in the list of IDs.  Any invalid ID should
-  correspond to an empty QOrganizerItem.
-
-  For a QOrganizerItemFetchByIdRequest, the resultsAvailable() signal will be emitted when the
-  resultant items (which may be retrieved by calling items()), are updated, as well
-  as if the overall operation error (which may be retrieved by calling error()) is
-  updated.
-
-  Please see the class documentation of QOrganizerAbstractRequest for more information about
-  the usage of request classes and ownership semantics.
-
-
-  \inmodule QtOrganizer
-
-  \ingroup organizer-requests
+    The items fetched by the backend should have a one-to-one correspondence to the IDs passed into
+    this class.  That is, the nth item in the returned list should have an ID which is equal to the
+    nth ID in the list of IDs.  Any invalid ID should correspond to an empty QOrganizerItem.
  */
 
-/*! Constructs a new item fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new item fetch by ID request whose parent is the specified \a parent.
 */
-QOrganizerItemFetchByIdRequest::QOrganizerItemFetchByIdRequest(QObject* parent)
+QOrganizerItemFetchByIdRequest::QOrganizerItemFetchByIdRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemFetchByIdRequestPrivate, parent)
 {
 }
 
-/*! Frees any memory used by this request
+/*!
+    Frees any memory used by this request.
 */
 QOrganizerItemFetchByIdRequest::~QOrganizerItemFetchByIdRequest()
 {
@@ -83,9 +73,9 @@ QOrganizerItemFetchByIdRequest::~QOrganizerItemFetchByIdRequest()
 }
 
 /*!
-  Sets the list of ids of the items that the backend should retrieve to \a ids.
+    Sets the list of IDs of the items that the backend should retrieve to \a ids.
  */
-void QOrganizerItemFetchByIdRequest::setIds(const QList<QOrganizerItemId>& ids)
+void QOrganizerItemFetchByIdRequest::setIds(const QList<QOrganizerItemId> &ids)
 {
     Q_D(QOrganizerItemFetchByIdRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -93,12 +83,11 @@ void QOrganizerItemFetchByIdRequest::setIds(const QList<QOrganizerItemId>& ids)
 }
 
 /*!
-  Sets the fetch hint which may be used by the backend to optimize item retrieval
-  to \a fetchHint.  A client should not make changes to a item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the item back to the manager (as the "new" restricted item will
-  replace the previously saved item in the backend).
-  \sa QOrganizerItemFetchHint
+    Sets the fetch hint which may be used by the backend to optimize item retrieval to \a fetchHint.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 void QOrganizerItemFetchByIdRequest::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
 {
@@ -108,7 +97,7 @@ void QOrganizerItemFetchByIdRequest::setFetchHint(const QOrganizerItemFetchHint 
 }
 
 /*!
-  Returns the list of ids of the items that the backend should retrieve.
+    Returns the list of IDs of the items that the backend should retrieve.
  */
 QList<QOrganizerItemId> QOrganizerItemFetchByIdRequest::ids() const
 {
@@ -118,12 +107,11 @@ QList<QOrganizerItemId> QOrganizerItemFetchByIdRequest::ids() const
 }
 
 /*!
-  Returns the fetch hint which may be used by the backend to optimize item retrieval.
-  A client should not make changes to a item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the item back to the manager (as the "new" restricted item will
-  replace the previously saved item in the backend).
-  \sa QOrganizerItemFetchHint
+    Returns the fetch hint which may be used by the backend to optimize item retrieval.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 QOrganizerItemFetchHint QOrganizerItemFetchByIdRequest::fetchHint() const
 {
@@ -132,7 +120,8 @@ QOrganizerItemFetchHint QOrganizerItemFetchByIdRequest::fetchHint() const
     return d->m_fetchHint;
 }
 
-/*! Returns the list of items retrieved by this request
+/*!
+    Returns the list of items retrieved by this request.
 */
 QList<QOrganizerItem> QOrganizerItemFetchByIdRequest::items() const
 {
@@ -141,7 +130,8 @@ QList<QOrganizerItem> QOrganizerItemFetchByIdRequest::items() const
     return d->m_items;
 }
 
-/*! Returns the map of input definition list indices to errors which occurred
+/*!
+    Returns the map of input definition list indices to errors which occurred.
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemFetchByIdRequest::errorMap() const
 {

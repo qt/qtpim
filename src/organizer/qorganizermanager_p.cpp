@@ -39,28 +39,16 @@
 **
 ****************************************************************************/
 
-#include "qorganizermanager.h"
-#include "qorganizermanager_p.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizermanagerenginefactory.h"
+#include <private/qorganizerpluginsearch_p.h>
+#include <private/qorganizermanager_p.h>
+#include <qorganizeritemobserver.h>
+#include <qorganizermanagerenginefactory.h>
 
-#include "qorganizeritem_p.h"
-
-#include <QSharedData>
-#include <QtPlugin>
-#include <QPluginLoader>
-
-#include <QDebug>
-#include <QDir>
-#include <QFile>
-
-#include "qorganizerpluginsearch_p.h"
+#include <QtCore/qpluginloader.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-/* Shared QOrganizerManager stuff here, default engine stuff below */
-QHash<QString, QOrganizerManagerEngineFactory*> QOrganizerManagerData::m_engines;
-
+QHash<QString, QOrganizerManagerEngineFactory *> QOrganizerManagerData::m_engines;
 bool QOrganizerManagerData::m_discovered;
 bool QOrganizerManagerData::m_discoveredStatic;
 QStringList QOrganizerManagerData::m_pluginPaths;
@@ -68,15 +56,14 @@ QStringList QOrganizerManagerData::m_pluginPaths;
 static void qOrganizerItemsCleanEngines()
 {
     QOrganizerManagerData::m_discovered = false;
-    QList<QOrganizerManagerEngineFactory*> factories = QOrganizerManagerData::m_engines.values();
-    for (int i=0; i < factories.count(); i++) {
+    QList<QOrganizerManagerEngineFactory *> factories = QOrganizerManagerData::m_engines.values();
+    for (int i=0; i < factories.count(); i++)
         delete factories.at(i);
-    }
     QOrganizerManagerData::m_engines.clear();
 }
 
 
-static int parameterValue(const QMap<QString, QString>& parameters, const char* key, int defaultValue)
+static int parameterValue(const QMap<QString, QString> &parameters, const char *key, int defaultValue)
 {
     if (parameters.contains(QString::fromAscii(key))) {
         bool ok;
@@ -88,7 +75,7 @@ static int parameterValue(const QMap<QString, QString>& parameters, const char* 
     return defaultValue;
 }
 
-void QOrganizerManagerData::createEngine(const QString& managerName, const QMap<QString, QString>& parameters)
+void QOrganizerManagerData::createEngine(const QString &managerName, const QMap<QString, QString> &parameters)
 {
     m_engine = 0;
 
@@ -103,15 +90,15 @@ void QOrganizerManagerData::createEngine(const QString& managerName, const QMap<
     loadStaticFactories();
 
     /* See if we got a fast hit */
-    QList<QOrganizerManagerEngineFactory*> factories = m_engines.values(builtManagerName);
+    QList<QOrganizerManagerEngineFactory *> factories = m_engines.values(builtManagerName);
     m_lastError = QOrganizerManager::NoError;
 
     while (!found) {
-        foreach (QOrganizerManagerEngineFactory* f, factories) {
+        foreach (QOrganizerManagerEngineFactory *f, factories) {
             QList<int> versions = f->supportedImplementationVersions();
-            if (implementationVersion == -1 ||//no given implementation version required
-                    versions.isEmpty() || //the manager engine factory does not report any version
-                    versions.contains(implementationVersion)) {
+            if (implementationVersion == -1 //no given implementation version required
+                || versions.isEmpty() //the manager engine factory does not report any version
+                || versions.contains(implementationVersion)) {
                 m_engine = f->engine(parameters, &m_lastError);
                 found = true;
                 break;
@@ -156,8 +143,8 @@ void QOrganizerManagerData::loadStaticFactories()
 
         /* Loop over all the static plugins */
         QObjectList staticPlugins = QPluginLoader::staticInstances();
-        for (int i=0; i < staticPlugins.count(); i++ ){
-            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory*>(staticPlugins.at(i));
+        for (int i = 0; i < staticPlugins.count(); i++ ){
+            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(staticPlugins.at(i));
             if (f) {
                 QString name = f->managerName();
 #if !defined QT_NO_DEBUG
@@ -166,11 +153,10 @@ void QOrganizerManagerData::loadStaticFactories()
 #endif
                 if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
-                    if (m_engines.keys().contains(name)) {
+                    if (m_engines.keys().contains(name))
                         qWarning() << "Static organizeritems plugin" << name << "has the same name as a currently loaded plugin; ignored";
-                    } else {
+                    else
                         m_engines.insertMulti(name, f);
-                    }
                 } else {
                     qWarning() << "Static organizeritems plugin with reserved name" << name << "ignored";
                 }
@@ -178,7 +164,6 @@ void QOrganizerManagerData::loadStaticFactories()
         }
     }
 }
-
 
 /* Plugin loader */
 void QOrganizerManagerData::loadFactories()
@@ -200,7 +185,7 @@ void QOrganizerManagerData::loadFactories()
         /* Now discover the dynamic plugins */
         for (int i=0; i < m_pluginPaths.count(); i++) {
             QPluginLoader qpl(m_pluginPaths.at(i));
-            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory*>(qpl.instance());
+            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(qpl.instance());
             if (f) {
                 QString name = f->managerName();
 #if !defined QT_NO_DEBUG
@@ -209,11 +194,10 @@ void QOrganizerManagerData::loadFactories()
 #endif
                 if (name != QLatin1String("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
-                    if (m_engines.keys().contains(name)) {
+                    if (m_engines.keys().contains(name))
                         qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";
-                    } else {
+                    else
                         m_engines.insertMulti(name, f);
-                    }
                 } else {
                     qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "with reserved name" << name << "ignored";
                 }
@@ -231,11 +215,10 @@ void QOrganizerManagerData::loadFactories()
         }
 
         QStringList engineNames;
-        foreach (QOrganizerManagerEngineFactory* f, m_engines.values()) {
+        foreach (QOrganizerManagerEngineFactory *f, m_engines.values()) {
             QStringList versions;
-            foreach (int v, f->supportedImplementationVersions()) {
+            foreach (int v, f->supportedImplementationVersions())
                 versions << QString::fromAscii("%1").arg(v);
-            }
             engineNames << QString::fromAscii("%1[%2]").arg(f->managerName()).arg(versions.join(QString::fromAscii(",")));
         }
 #if !defined QT_NO_DEBUG
@@ -246,64 +229,58 @@ void QOrganizerManagerData::loadFactories()
     }
 }
 
-/* Caller takes ownership of the id */
-QOrganizerItemEngineId* QOrganizerManagerData::createEngineItemId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
+QOrganizerItemEngineId *QOrganizerManagerData::createEngineItemId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString)
 {
+    // caller takes ownership of the ID
     loadFactories();
     QOrganizerManagerEngineFactory *engineFactory = m_engines.value(managerName);
     return engineFactory ? engineFactory->createItemEngineId(parameters, engineIdString) : NULL;
 }
 
-/* Caller takes ownership of the id */
-QOrganizerCollectionEngineId* QOrganizerManagerData::createEngineCollectionId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
+QOrganizerCollectionEngineId *QOrganizerManagerData::createEngineCollectionId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString)
 {
+    // caller takes ownership of the ID
     loadFactories();
     QOrganizerManagerEngineFactory *engineFactory = m_engines.value(managerName);
     return engineFactory ? engineFactory->createCollectionEngineId(parameters, engineIdString) : NULL;
 }
 
-// Observer stuff
-
-void QOrganizerManagerData::registerObserver(QOrganizerItemObserver* observer)
+void QOrganizerManagerData::registerObserver(QOrganizerItemObserver *observer)
 {
     m_observerForItem.insert(observer->itemId(), observer);
 }
 
-void QOrganizerManagerData::unregisterObserver(QOrganizerItemObserver* observer)
+void QOrganizerManagerData::unregisterObserver(QOrganizerItemObserver *observer)
 {
     QOrganizerItemId key = m_observerForItem.key(observer);
-    if (!key.isNull()) {
+    if (!key.isNull())
         m_observerForItem.remove(key, observer);
-    }
 }
 
-void QOrganizerManagerData::_q_itemsUpdated(const QList<QOrganizerItemId>& ids)
+void QOrganizerManagerData::_q_itemsUpdated(const QList<QOrganizerItemId> &ids)
 {
     foreach (QOrganizerItemId id, ids) {
-        QList<QOrganizerItemObserver*> observers = m_observerForItem.values(id);
-        foreach (QOrganizerItemObserver* observer, observers) {
+        QList<QOrganizerItemObserver *> observers = m_observerForItem.values(id);
+        foreach (QOrganizerItemObserver *observer, observers)
             QMetaObject::invokeMethod(observer, "itemChanged");
-        }
     }
 }
 
-void QOrganizerManagerData::_q_itemsDeleted(const QList<QOrganizerItemId>& ids)
+void QOrganizerManagerData::_q_itemsDeleted(const QList<QOrganizerItemId> &ids)
 {
     foreach (QOrganizerItemId id, ids) {
-        QList<QOrganizerItemObserver*> observers = m_observerForItem.values(id);
-        foreach (QOrganizerItemObserver* observer, observers) {
+        QList<QOrganizerItemObserver *> observers = m_observerForItem.values(id);
+        foreach (QOrganizerItemObserver *observer, observers)
             QMetaObject::invokeMethod(observer, "itemRemoved");
-        }
     }
 }
 
-// trampolines for private classes
-QOrganizerManagerData* QOrganizerManagerData::get(const QOrganizerManager* manager)
+QOrganizerManagerData *QOrganizerManagerData::get(const QOrganizerManager *manager)
 {
     return manager->d;
 }
 
-QOrganizerManagerEngine* QOrganizerManagerData::engine(const QOrganizerManager* manager)
+QOrganizerManagerEngine *QOrganizerManagerData::engine(const QOrganizerManager *manager)
 {
     if (manager)
         return manager->d->m_engine;
@@ -311,4 +288,3 @@ QOrganizerManagerEngine* QOrganizerManagerData::engine(const QOrganizerManager* 
 }
 
 QTORGANIZER_END_NAMESPACE
-

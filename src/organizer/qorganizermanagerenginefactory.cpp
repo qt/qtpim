@@ -39,95 +39,37 @@
 **
 ****************************************************************************/
 
-
-#include "qorganizermanagerenginefactory.h"
+#include <qorganizermanagerenginefactory.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerManagerEngineFactory
-  \brief The QOrganizerManagerEngineFactory class provides the interface for
- plugins that implement QOrganizerManagerEngine functionality.
+    \class QOrganizerManagerEngineFactory
+    \brief The QOrganizerManagerEngineFactory class provides the interface to implement the creation
+           of organizer manager engine instances.
+    \inmodule QtOrganizer
+    \ingroup organizer-backends
 
-  \inmodule QtOrganizer
-  \ingroup organizer-backends
+    This class should only be used by backend developers. All the functions are only called internally
+    by QOrganizerManager, and should not be called by others.
 
-  This class provides a simple interface for the creation of
-  manager engine instances.  Each factory has a specific id
-  associated with it, which forms the \c managerName parameter
-  when creating \l QOrganizerManager objects.
+    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines
+    documentation.
 
-  More information on writing a organizeritems engine plugin is available in
-  the \l{Qt Organizer Manager Engines} documentation.
-
-  \sa QOrganizerManager, QOrganizerManagerEngine
+    \sa QOrganizerManager, QOrganizerManagerEngine
  */
 
 /*!
-  A default, empty destructor.
+    A default, empty destructor.
  */
 QOrganizerManagerEngineFactory::~QOrganizerManagerEngineFactory()
 {
 }
 
 /*!
-  \fn QOrganizerManagerEngineFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
+    \fn QOrganizerManagerEngineFactory::supportedImplementationVersions() const
 
-  This function is called by the QOrganizerManager implementation to
-  create an instance of the engine provided by this factory.
-
-  The \a parameters supplied can be ignored or interpreted as desired.
-
-  If a supplied parameter results in an unfulfillable request, or some other error
-  occurs, this function may return a null pointer, and the client developer will get an
-  invalid QOrganizerManager in return.  Any error should be stored in the supplied \a error
-  reference.
- */
-
-/*!
-  \fn QOrganizerManagerEngineFactory::createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
-
-  This function is used internally when deserializing an id.  It allows the
-  deserialization functions to correctly allocate an engine-specific
-  id for an item, filled with the serialized data \a engineIdString.
-
-  Since the format of the id might be different depending on the construction
-  parameters \a parameters, these parameters are passed to the factory implementation
-  of this function.
-
-  Engine implementers must implement this function, but should not need
-  to call it.
- */
-
-/*!
-  \fn QOrganizerManagerEngineFactory::createItemEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
-
-  This function is used internally when deserializing an id.  It allows the
-  deserialization functions to correctly allocate an engine-specific
-  id for a collection, filled with the serialized data \a engineIdString.
-
-  Since the format of the id might be different depending on the construction
-  parameters \a parameters, these parameters are passed to the factory implementation
-  of this function.
-
-  Engine implementers must implement this function, but should not need
-  to call it.
- */
-
-/*!
-  \fn QOrganizerManagerEngineFactory::managerName() const
-
-  This function should return a unique string that identifies
-  the engines provided by this factory.
-
-  Typically this would be of the form "org.qt-project.Qt.SampleOrganizerEngine", with
-  the appropriate domain and engine name substituted.
- */
-
-/*!
-  \fn QOrganizerManagerEngineFactory::supportedImplementationVersions() const
-
-  This function should return a list of versions of the engine which this factory can instantiate.
+    This function should return a list of versions of the engine which this factory can instantiate.
  */
 QList<int> QOrganizerManagerEngineFactory::supportedImplementationVersions() const
 {
@@ -135,15 +77,39 @@ QList<int> QOrganizerManagerEngineFactory::supportedImplementationVersions() con
 }
 
 /*!
-  \fn QOrganizerItemEngineLocalId* QOrganizerItemManagerEngineFactory::createItemEngineLocalId() const
+    \fn QOrganizerManagerEngineFactory::engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error)
 
-  This abstract function create and return an QOrganizerItemEngineLocalId.
+    This function should return an instance of the engine provided by this factory.
+
+    The \a parameters supplied can be ignored or interpreted as desired.
+
+    If a supplied parameter results in an unfulfillable request, or some other error occurs, this
+    function may return a null pointer, and the client developer will get an invalid QOrganizerManager
+    in return. Any error should be saved in \a error.
  */
 
 /*!
-  \fn QOrganizerCollectionEngineLocalId* QOrganizerItemManagerEngineFactory::createCollectionEngineLocalId()const
+    \fn QOrganizerManagerEngineFactory::managerName() const
 
-  This abstract function create and return an QOrganizerCollectionEngineLocalId.
+    This function should return a unique string that identifies the engines provided by this factory.
+
+    Typically this would be of the form "org.qt-project.Qt.SampleOrganizerEngine", with the appropriate
+    domain and engine name substituted.
+ */
+
+/*!
+    \fn QOrganizerManagerEngineFactory::createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
+
+    This function should return an engine-specific item ID, according to the given \a parameters and
+    the \a engineIdString.
+ */
+
+/*!
+    \fn QOrganizerManagerEngineFactory::createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
+
+
+    This function should return an engine-specific collection ID, according to the given \a parameters
+    and the \a engineIdString.
  */
 
 QTORGANIZER_END_NAMESPACE

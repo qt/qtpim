@@ -39,45 +39,39 @@
 **
 ****************************************************************************/
 
-#include "qorganizercollectionsaverequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizercollectionsaverequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerCollectionSaveRequest
-  \brief The QOrganizerCollectionSaveRequest class allows a client to asynchronously
-    request organizeritems from a organizeritems store manager.
-
-  \inmodule QtOrganizer
-
-
-  For a QOrganizerCollectionSaveRequest, the resultsAvailable() signal will be emitted when the resultant
-  organizeritems (which may be retrieved by calling organizeritems()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizeritems-requests
-
-  \inmodule QtOrganizer
+    \class QOrganizerCollectionSaveRequest
+    \brief The QOrganizerCollectionSaveRequest class allows a client to asynchronously save collections
+           to a backend.
+    \inmodule QtOrganizer
+    \ingroup organizeritems-requests
  */
 
-/*! Constructs a new organizeritem fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new collection save request whose parent is the specified \a parent.
 */
-QOrganizerCollectionSaveRequest::QOrganizerCollectionSaveRequest(QObject* parent)
+QOrganizerCollectionSaveRequest::QOrganizerCollectionSaveRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerCollectionSaveRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerCollectionSaveRequest::~QOrganizerCollectionSaveRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Clears the list of collections which will be saved, and sets the collection which will be saved to \a collection
+/*!
+    Sets the collection which will be saved to \a collection.
 */
-void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection& collection)
+void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection &collection)
 {
     Q_D(QOrganizerCollectionSaveRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -85,17 +79,19 @@ void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection& 
     d->m_collections.append(collection);
 }
 
-/*! Sets the list of collections which will be saved to \a collections
+/*!
+    Sets the list of collections which will be saved to \a collections.
 */
-void QOrganizerCollectionSaveRequest::setCollections(const QList<QOrganizerCollection>& collections)
+void QOrganizerCollectionSaveRequest::setCollections(const QList<QOrganizerCollection> &collections)
 {
     Q_D(QOrganizerCollectionSaveRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_collections = collections;
 }
 
-/*! Returns the collections which will be saved by this request if called prior to calling \l start(),
-    otherwise returns the (possibly updated) collections which were saved.
+/*!
+    Returns the collections which will be saved by this request if called prior to calling start(),
+    otherwise returns the (possibly updated) collections which have been saved.
 */
 QList<QOrganizerCollection> QOrganizerCollectionSaveRequest::collections() const
 {
@@ -104,7 +100,8 @@ QList<QOrganizerCollection> QOrganizerCollectionSaveRequest::collections() const
     return d->m_collections;
 }
 
-/*! Returns any errors which occurred during the request
+/*!
+    Returns the map of input definition list indices to errors which occurred.
 */
 QMap<int, QOrganizerManager::Error> QOrganizerCollectionSaveRequest::errorMap() const
 {

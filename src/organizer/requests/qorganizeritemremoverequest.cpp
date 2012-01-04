@@ -39,32 +39,32 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemremoverequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemremoverequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemRemoveRequest
-  \brief The QOrganizerItemRemoveRequest class allows a client to asynchronously
-    request that certain organizer items be removed from a organizer items store.
-  \inmodule QtOrganizer
+    \class QOrganizerItemRemoveRequest
+    \brief The QOrganizerItemRemoveRequest class allows a client to asynchronously request that certain
+           organizer items be removed from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
 
-  For a QOrganizerItemRemoveRequest, the resultsUpdated() signal will be emitted when
-  the individual item errors (which may be retrieved by calling errorMap()) are updated, or if the overall
-  operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizer-requests
+    This request will remove the items and all the occurrences (both generated and persisted) of the
+    given items.
  */
 
-/*! Constructs a new organizer item remove request whose parent is the specified \a parent
+/*!
+    Constructs a new organizer item remove request whose parent is the specified \a parent.
 */
-QOrganizerItemRemoveRequest::QOrganizerItemRemoveRequest(QObject* parent)
+QOrganizerItemRemoveRequest::QOrganizerItemRemoveRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemRemoveRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
 {
@@ -72,30 +72,32 @@ QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
 }
 
 /*!
-  Sets the id of the organizer item which will be removed to \a organizeritemId.
-  Equivalent to calling:
-  \code
-      setOrganizerItemIds(QList<QOrganizerItemId>() << organizeritemIds);
-  \endcode
+    Sets the ID of the organizer item which will be removed to \a itemId.
+    Equivalent to calling:
+    \code
+    setOrganizerItemIds(QList<QOrganizerItemId>() << itemId);
+    \endcode
  */
-void QOrganizerItemRemoveRequest::setItemId(const QOrganizerItemId& organizeritemId)
+void QOrganizerItemRemoveRequest::setItemId(const QOrganizerItemId &itemId)
 {
     Q_D(QOrganizerItemRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_organizeritemIds.clear();
-    d->m_organizeritemIds.append(organizeritemId);
+    d->m_organizeritemIds.append(itemId);
 }
 
-/*! Sets the list of ids of organizer items which will be removed to \a organizeritemIds
+/*!
+    Sets the list of ids of organizer items which will be removed to \a itemIds.
 */
-void QOrganizerItemRemoveRequest::setItemIds(const QList<QOrganizerItemId>& organizeritemIds)
+void QOrganizerItemRemoveRequest::setItemIds(const QList<QOrganizerItemId> &itemIds)
 {
     Q_D(QOrganizerItemRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_organizeritemIds = organizeritemIds;
+    d->m_organizeritemIds = itemIds;
 }
 
-/*! Returns the list of ids of organizer items which will be removed
+/*!
+    Returns the list of IDs of organizer items which will be removed.
 */
 QList<QOrganizerItemId> QOrganizerItemRemoveRequest::itemIds() const
 {
@@ -104,7 +106,8 @@ QList<QOrganizerItemId> QOrganizerItemRemoveRequest::itemIds() const
     return d->m_organizeritemIds;
 }
 
-/*! Returns the map of input organizer item list indices to errors which occurred
+/*!
+    Returns the map of input organizer item list indices to errors which occurred.
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemRemoveRequest::errorMap() const
 {

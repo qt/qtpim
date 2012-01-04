@@ -53,16 +53,14 @@
 // We mean it.
 //
 
-#include "qorganizermanager.h"
-#include "qorganizermanager_p.h"
-#include "qorganizerabstractrequest.h"
+#include <qorganizerabstractrequest.h>
+#include <private/qorganizermanager_p.h>
 
-#include <QList>
-#include <QPointer>
-#include <QMutex>
+#include <QtCore/qmutex.h>
+#include <QtCore/qpointer.h>
 
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#include <QtCore/qdebug.h>
 #endif
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -71,9 +69,9 @@ class QOrganizerAbstractRequestPrivate
 {
 public:
     QOrganizerAbstractRequestPrivate()
-        : m_error(QOrganizerManager::NoError),
-            m_state(QOrganizerAbstractRequest::InactiveState),
-            m_manager(0)
+        : m_error(QOrganizerManager::NoError)
+        , m_state(QOrganizerAbstractRequest::InactiveState)
+        , m_manager(0)
     {
     }
 
@@ -86,24 +84,21 @@ public:
         return QOrganizerAbstractRequest::InvalidRequest;
     }
 
-    // XXX this should have been used in 1.1
-    static void notifyEngine(QOrganizerAbstractRequest* request)
+    static void notifyEngine(QOrganizerAbstractRequest *request)
     {
         Q_ASSERT(request);
-        QOrganizerAbstractRequestPrivate* d = request->d_ptr;
+        QOrganizerAbstractRequestPrivate *d = request->d_ptr;
         if (d) {
             QMutexLocker ml(&d->m_mutex);
             QOrganizerManagerEngine *engine = QOrganizerManagerData::engine(d->m_manager);
             ml.unlock();
-            if (engine) {
+            if (engine)
                 engine->requestDestroyed(request);
-            }
         }
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    // NOTE: on platforms where Qt is built without debug streams enabled, vtable will differ!
-    virtual QDebug& debugStreamOut(QDebug& dbg) const = 0;
+    virtual QDebug &debugStreamOut(QDebug &dbg) const = 0;
 #endif
 
     QOrganizerManager::Error m_error;
@@ -116,4 +111,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERABSTRACTREQUEST_P_H

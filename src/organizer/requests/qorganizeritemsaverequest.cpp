@@ -39,32 +39,29 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemsaverequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemsaverequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemSaveRequest
-  \brief The QOrganizerItemSaveRequest class allows a client to asynchronously
-    request that certain organizer items be saved to an organizer item store.
-  \inmodule QtOrganizer
-
-  For a QOrganizerItemSaveRequest, the resultsAvailable() signal will be emitted when
-  either the individual item errors (which may be retrieved by calling errorMap()), or the resultant
-  organizer items (which may be retrieved by calling items()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizer-requests
+    \class QOrganizerItemSaveRequest
+    \brief The QOrganizerItemSaveRequest class allows a client to asynchronously request that certain
+           organizer items be saved to a backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
  */
 
-/*! Constructs a new organizer item save request whose parent is the specified \a parent */
-QOrganizerItemSaveRequest::QOrganizerItemSaveRequest(QObject* parent)
+/*!
+    Constructs a new organizer item save request whose parent is the specified \a parent.
+*/
+QOrganizerItemSaveRequest::QOrganizerItemSaveRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemSaveRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerItemSaveRequest::~QOrganizerItemSaveRequest()
 {
@@ -72,31 +69,33 @@ QOrganizerItemSaveRequest::~QOrganizerItemSaveRequest()
 }
 
 /*!
-  Sets the organizer item to be saved to \a organizeritem.
-  Equivalent to calling:
-  \code
-      setItems(QList<QOrganizerItem>() << organizeritem);
-  \endcode
+    Sets the organizer item to be saved to \a item.
+    Equivalent to calling:
+    \code
+    setItems(QList<QOrganizerItem>() << item);
+    \endcode
  */
-void QOrganizerItemSaveRequest::setItem(const QOrganizerItem& organizeritem)
+void QOrganizerItemSaveRequest::setItem(const QOrganizerItem &item)
 {
     Q_D(QOrganizerItemSaveRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_organizeritems.clear();
-    d->m_organizeritems.append(organizeritem);
+    d->m_organizeritems.append(item);
 }
 
-/*! Sets the list of organizer items to be saved to \a organizeritems
+/*!
+    Sets the list of organizer items to be saved to \a items.
 */
-void QOrganizerItemSaveRequest::setItems(const QList<QOrganizerItem>& organizeritems)
+void QOrganizerItemSaveRequest::setItems(const QList<QOrganizerItem> &items)
 {
     Q_D(QOrganizerItemSaveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_organizeritems = organizeritems;
+    d->m_organizeritems = items;
 }
 
-/*! Returns the list of organizer items which will be saved if called prior to calling \c start(),
-    otherwise returns the list of organizer items as they were saved in the organizer item store
+/*!
+    Returns the list of organizer items which will be saved if called prior to calling start(),
+    otherwise returns the list of organizer items as they were saved in the organizer item store.
 */
 QList<QOrganizerItem> QOrganizerItemSaveRequest::items() const
 {
@@ -105,7 +104,8 @@ QList<QOrganizerItem> QOrganizerItemSaveRequest::items() const
     return d->m_organizeritems;
 }
 
-/*! Returns the map of input definition list indices to errors which occurred
+/*!
+    Returns the map of input definition list indices to errors which occurred.
 */
 QMap<int, QOrganizerManager::Error> QOrganizerItemSaveRequest::errorMap() const
 {

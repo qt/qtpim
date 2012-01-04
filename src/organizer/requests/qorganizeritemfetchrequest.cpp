@@ -39,51 +39,51 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemfetchrequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemfetchrequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemFetchRequest
-  \brief The QOrganizerItemFetchRequest class allows a client to asynchronously
-    request organizer items from an organizer item store manager.
-  \inmodule QtOrganizer
+    \class QOrganizerItemFetchRequest
+    \brief The QOrganizerItemFetchRequest class allows a client to asynchronously fetch organizer
+           items from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
 
-
-  For a QOrganizerItemFetchRequest, the resultsAvailable() signal will be emitted when the resultant
-  organizer item (which may be retrieved by calling items()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizer-requests
+    This request will fetch all the items and occurrences matching the specified criteria.
  */
 
-/*! Constructs a new organizer item fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new organizer item fetch request whose parent is the specified \a parent.
 */
-QOrganizerItemFetchRequest::QOrganizerItemFetchRequest(QObject* parent)
+QOrganizerItemFetchRequest::QOrganizerItemFetchRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemFetchRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerItemFetchRequest::~QOrganizerItemFetchRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the organizer item filter used to determine which organizer items will be retrieved to \a filter
+/*!
+    Sets the organizer item filter used to determine which organizer items will be retrieved to \a filter.
 */
-void QOrganizerItemFetchRequest::setFilter(const QOrganizerItemFilter& filter)
+void QOrganizerItemFetchRequest::setFilter(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemFetchRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_filter = filter;
 }
 
-/*! Sets the sort order of the result to \a sorting.  Only has an effect if called prior to calling \c start()
+/*!
+    Sets the sort order of the result to \a sorting.
 */
-void QOrganizerItemFetchRequest::setSorting(const QList<QOrganizerItemSortOrder>& sorting)
+void QOrganizerItemFetchRequest::setSorting(const QList<QOrganizerItemSortOrder> &sorting)
 {
     Q_D(QOrganizerItemFetchRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -91,12 +91,11 @@ void QOrganizerItemFetchRequest::setSorting(const QList<QOrganizerItemSortOrder>
 }
 
 /*!
-  Sets the fetch hint which may be used by the backend to optimize organizer item retrieval
-  to \a fetchHint.  A client should not make changes to a organizer item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
-  replace the previously saved organizer item in the backend).
-  \sa QOrganizerItemFetchHint
+    Sets the fetch hint which may be used by the backend to optimize item retrieval to \a fetchHint.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 void QOrganizerItemFetchRequest::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
 {
@@ -105,7 +104,11 @@ void QOrganizerItemFetchRequest::setFetchHint(const QOrganizerItemFetchHint &fet
     d->m_fetchHint = fetchHint;
 }
 
-/*! Sets the start period of the request to \a date. Only has an effect if called prior to calling \c start()
+/*!
+    Sets the start period of the request to \a date.
+
+    A default-constructed (invalid) start date time specifies an open start date time (matches anything
+    which occurs up until the end date time).
 */
 void QOrganizerItemFetchRequest::setStartDate(const QDateTime &date)
 {
@@ -114,7 +117,11 @@ void QOrganizerItemFetchRequest::setStartDate(const QDateTime &date)
     d->m_startDate = date;
 }
 
-/*! Sets the end period of the request to \a date. Only has an effect if called prior to calling \c start()
+/*!
+    Sets the end period of the request to \a date.
+
+    A default-constructed (invalid) end date time specifies an open end date time (matches anything
+    which occurs after the start date time).
 */
 void QOrganizerItemFetchRequest::setEndDate(const QDateTime &date)
 {
@@ -123,9 +130,10 @@ void QOrganizerItemFetchRequest::setEndDate(const QDateTime &date)
     d->m_endDate = date;
 }
 
-/*! Sets the maximum number of items to \a maxCount. Only has an effect if called prior to calling \c start()
- *
- * A negative value denotes that no limit will be imposed on the number of items to fetch.
+/*!
+    Sets the maximum number of items to be fetched to \a maxCount.
+
+    Note that backends will decide how many items are fetched if \a maxCount is negative.
  */
 void QOrganizerItemFetchRequest::setMaxCount(int maxCount)
 {
@@ -133,7 +141,8 @@ void QOrganizerItemFetchRequest::setMaxCount(int maxCount)
     d->m_maxCount = maxCount;
 }
 
-/*! Returns the filter that will be used to select organizer items to be returned
+/*!
+    Returns the filter that will be used to select organizer items to be returned.
 */
 QOrganizerItemFilter QOrganizerItemFetchRequest::filter() const
 {
@@ -142,7 +151,8 @@ QOrganizerItemFilter QOrganizerItemFetchRequest::filter() const
     return d->m_filter;
 }
 
-/*! Returns the sort ordering that will be used sort the results of this request
+/*!
+    Returns the sort ordering that will be used sort the results of this request.
 */
 QList<QOrganizerItemSortOrder> QOrganizerItemFetchRequest::sorting() const
 {
@@ -152,12 +162,11 @@ QList<QOrganizerItemSortOrder> QOrganizerItemFetchRequest::sorting() const
 }
 
 /*!
-  Returns the fetch hint which may be used by the backend to optimize organizer item retrieval.
-  A client should not make changes to an organizer item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
-  replace the previously saved organizer item in the backend).
-  \sa QOrganizerItemFetchHint
+    Returns the fetch hint which may be used by the backend to optimize item retrieval.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 QOrganizerItemFetchHint QOrganizerItemFetchRequest::fetchHint() const
 {
@@ -167,16 +176,7 @@ QOrganizerItemFetchHint QOrganizerItemFetchRequest::fetchHint() const
 }
 
 /*!
-  Returns the start date of the request.  The start date
-  is the lower bound of the time-period within which an
-  item must occur (that is, either it or one of its occurrences
-  must have a time-period defined by its start-date and end-date
-  which overlaps with the time-period defined in this request)
-  in order to be returned by the request.
-
-  An empty or invalid start date signifies a start date of
-  negative-infinity (that is, all items which occur at any
-  point in time, up until the end date, will be returned).
+    Returns the date-time which is the lower bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemFetchRequest::startDate() const
 {
@@ -186,16 +186,7 @@ QDateTime QOrganizerItemFetchRequest::startDate() const
 }
 
 /*!
-  Returns the end date of the request.  The end date
-  is the upper bound of the time-period within which an
-  item must occur (that is, either it or one of its occurrences
-  must have a time-period defined by its start-date and end-date
-  which overlaps with the time-period defined in this request)
-  in order to be returned by the request.
-
-  An empty or invalid end date signifies an end date of
-  positive-infinity (that is, all items which occur at any
-  point in time after the start date, will be returned).
+    Returns the date-time which is the upper bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemFetchRequest::endDate() const
 {
@@ -205,11 +196,7 @@ QDateTime QOrganizerItemFetchRequest::endDate() const
 }
 
 /*!
-  Returns the maximum number of items to return for the request.
-
-  A negative value denotes that no limit will be imposed on the number of items to fetch.
-
-  The default value is -1.
+    Returns the maximum number of items to return for the request.
  */
 int QOrganizerItemFetchRequest::maxCount() const
 {
@@ -217,7 +204,8 @@ int QOrganizerItemFetchRequest::maxCount() const
     return d->m_maxCount;
 }
 
-/*! Returns the list of organizer items retrieved by this request
+/*!
+    Returns the list of organizer items retrieved by this request.
 */
 QList<QOrganizerItem> QOrganizerItemFetchRequest::items() const
 {

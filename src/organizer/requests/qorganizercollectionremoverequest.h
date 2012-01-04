@@ -42,12 +42,8 @@
 #ifndef QORGANIZERCOLLECTIONREMOVEREQUEST_H
 #define QORGANIZERCOLLECTIONREMOVEREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizercollection.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizercollection.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -57,15 +53,13 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionRemoveRequest : public QOrganizerAb
     Q_OBJECT
 
 public:
-    QOrganizerCollectionRemoveRequest(QObject* parent = 0);
+    QOrganizerCollectionRemoveRequest(QObject *parent = 0);
     ~QOrganizerCollectionRemoveRequest();
 
-    /* Selection */
-    void setCollectionId(const QOrganizerCollectionId& collectionId);
-    void setCollectionIds(const QList<QOrganizerCollectionId>& collectionIds);
+    void setCollectionId(const QOrganizerCollectionId &collectionId);
+    void setCollectionIds(const QList<QOrganizerCollectionId> &collectionIds);
     QList<QOrganizerCollectionId> collectionIds() const;
 
-    /* Results */
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
 private:
@@ -76,4 +70,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERCOLLECTIONREMOVEREQUEST_H

@@ -42,13 +42,8 @@
 #ifndef QORGANIZERITEMIDFETCHREQUEST_H
 #define QORGANIZERITEMIDFETCHREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemsortorder.h"
-#include "qorganizeritemfilter.h"
-
-#include <QList>
-#include <QStringList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -58,20 +53,21 @@ class Q_ORGANIZER_EXPORT QOrganizerItemIdFetchRequest : public QOrganizerAbstrac
     Q_OBJECT
 
 public:
-    QOrganizerItemIdFetchRequest(QObject* parent = 0);
+    QOrganizerItemIdFetchRequest(QObject *parent = 0);
     ~QOrganizerItemIdFetchRequest();
 
-    /* Selection, restriction and sorting */
-    void setFilter(const QOrganizerItemFilter& filter);
-    void setSorting(const QList<QOrganizerItemSortOrder>& sorting);
-    void setStartDate(const QDateTime& date);
-    void setEndDate(const QDateTime& date);
+    void setFilter(const QOrganizerItemFilter &filter);
     QOrganizerItemFilter filter() const;
+
+    void setSorting(const QList<QOrganizerItemSortOrder> &sorting);
     QList<QOrganizerItemSortOrder> sorting() const;
+
+    void setStartDate(const QDateTime &date);
     QDateTime startDate() const;
+
+    void setEndDate(const QDateTime &date);
     QDateTime endDate() const;
 
-    /* Results */
     QList<QOrganizerItemId> itemIds() const;
 
 private:
@@ -82,4 +78,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMIDFETCHREQUEST_H

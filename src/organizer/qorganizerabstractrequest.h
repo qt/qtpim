@@ -42,10 +42,7 @@
 #ifndef QORGANIZERABSTRACTREQUEST_H
 #define QORGANIZERABSTRACTREQUEST_H
 
-
-#include "qorganizermanager.h"
-
-#include <QObject>
+#include <qorganizermanager.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -59,17 +56,18 @@ public:
     ~QOrganizerAbstractRequest();
 
     enum State {
-        InactiveState = 0,   // operation not yet started
-        ActiveState,         // operation started, not yet finished
-        CanceledState,       // operation is finished due to cancellation
-        FinishedState        // operation either completed successfully or failed.  No further results will become available.
+        InactiveState = 0,
+        ActiveState,
+        CanceledState,
+        FinishedState
     };
 
-    State state() const; // replaces status()
+    State state() const;
     bool isInactive() const;
     bool isActive() const;
     bool isFinished() const;
     bool isCanceled() const;
+
     QOrganizerManager::Error error() const;
 
     enum RequestType {
@@ -78,26 +76,22 @@ public:
         ItemFetchRequest,
         ItemFetchForExportRequest,
         ItemIdFetchRequest,
+        ItemFetchByIdRequest,
         ItemRemoveRequest,
         ItemSaveRequest,
         CollectionFetchRequest,
         CollectionRemoveRequest,
-        CollectionSaveRequest,
-        ItemFetchByIdRequest
+        CollectionSaveRequest
     };
 
     RequestType type() const;
 
-    /* Which manager we want to perform the asynchronous request */
     QOrganizerManager* manager() const;
-    void setManager(QOrganizerManager* manager);
+    void setManager(QOrganizerManager *manager);
 
 public Q_SLOTS:
-    /* Verbs */
     bool start();
     bool cancel();
-
-    /* waiting for stuff */
     bool waitForFinished(int msecs = 0);
 
 Q_SIGNALS:
@@ -105,19 +99,20 @@ Q_SIGNALS:
     void resultsAvailable();
 
 protected:
-    QOrganizerAbstractRequest(QOrganizerAbstractRequestPrivate* otherd, QObject* parent = 0);
-    QOrganizerAbstractRequestPrivate* d_ptr;
+    QOrganizerAbstractRequest(QOrganizerAbstractRequestPrivate *other, QObject *parent = 0);
+    QOrganizerAbstractRequestPrivate *d_ptr;
 
 private:
-    QOrganizerAbstractRequest(QObject* parent = 0) : QObject(parent), d_ptr(0) {}
+    QOrganizerAbstractRequest(QObject *parent = 0) : QObject(parent), d_ptr(0) {}
     Q_DISABLE_COPY(QOrganizerAbstractRequest)
     friend class QOrganizerManagerEngine;
     friend class QOrganizerAbstractRequestPrivate;
+
 #ifndef QT_NO_DEBUG_STREAM
-    friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest& request);
+    friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request);
 #endif
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERABSTRACTREQUEST_H

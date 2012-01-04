@@ -39,132 +39,133 @@
 **
 ****************************************************************************/
 
-#include "qorganizermanagerengine.h"
-#include "qorganizeritemengineid.h"
+#include <qorganizermanagerengine.h>
+#include <qorganizerjournal.h>
+#include <qorganizeritemdetails.h>
+#include <qorganizeritemfilters.h>
+#include <private/qorganizeritemrequests_p.h>
 
-#include "qorganizeritemdetails.h"
-#include "qorganizeritemsortorder.h"
-#include "qorganizeritemfilters.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizerabstractrequest_p.h"
-#include "qorganizeritemrequests.h"
-#include "qorganizeritemrequests_p.h"
-#include "qorganizeritems.h"
-#include "qorganizeritemfetchhint.h"
-
-#include "qorganizercollection_p.h"
-#include "qorganizeritem_p.h"
-#include "qorganizeritemdetail_p.h"
+#include <QtCore/qmutex.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerManagerEngine
-  \brief The QOrganizerManagerEngine class provides the interface for all
-  implementations of the organizer item manager backend functionality.
+    \class QOrganizerManagerEngine
+    \brief The QOrganizerManagerEngine class provides the interface to implement functionalities
+           of organizer managers.
+    \inmodule QtOrganizer
+    \ingroup organizer-backends
 
-  \inmodule QtOrganizer
-  \ingroup organizer-backends
+    This class should only be used by backend developers. Instances of this class are provided to
+    QOrganizerManager by a QOrganizerManagerEngineFactory instance, which is loaded from a plugin.
 
-  Instances of this class are usually provided by a
-  \l QOrganizerManagerEngineFactory, which is loaded from a plugin.
+    The default implementation of this interface provides a backend doing nothing, so that backend
+    developers only need to reimplement the functionalities needed.
 
-  The default implementation of this interface provides a basic
-  level of functionality for some functions so that specific engines
-  can simply implement the functionality that is supported by
-  the specific organizer items engine that is being adapted.
+    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines
+    documentation.
 
-  More information on writing an organizer engine plugin is available in
-  the \l{Qt Organizer Manager Engines} documentation.
-
-  \sa QOrganizerManager, QOrganizerManagerEngineFactory
+    \sa QOrganizerManager, QOrganizerManagerEngineFactory
  */
 
 /*!
-  \fn QOrganizerManagerEngine::QOrganizerManagerEngine()
+    \fn QOrganizerManagerEngine::dataChanged()
 
-  A default, empty constructor.
+    This signal should be emitted if the internal state of the plugin changes, and it is unable to
+    determine the changes which occurred, or if it considers the changes to be radical enough to
+    require clients to reload all data.
+
+    If this signal is emitted, no other signals will be emitted for the associated changes.
+
+    \sa itemsAdded(), itemsChanged(), itemsRemoved()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::dataChanged()
+    \fn QOrganizerManagerEngine::itemsAdded(const QList<QOrganizerItemId> &itemIds);
 
-  This signal is emitted some time after changes occur to the data managed by this
-  engine, and the engine is unable to determine which changes occurred, or if the
-  engine considers the changes to be radical enough to require clients to reload all data.
+    This signal should be emitted at some point once the items identified by \a itemIds have been
+    added to the backend.
 
-  If this signal is emitted, no other signals may be emitted for the associated changes.
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
 
-  As it is possible that other processes (or other devices) may have caused the
-  changes, the timing can not be determined.
-
-  \sa itemsAdded(), itemsChanged(), itemsRemoved()
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::itemsAdded(const QList<QOrganizerItemId>& organizeritemIds);
+    \fn QOrganizerManagerEngine::itemsChanged(const QList<QOrganizerItemId> &itemIds);
 
-  This signal is emitted some time after a set of organizer items has been added to
-  this engine where the \l dataChanged() signal was not emitted for those changes.
-  As it is possible that other processes (or other devices) may
-  have added the organizer items, the timing cannot be determined.
+    This signal should be emitted at some point once the items identified by \a itemIds have been
+    modified in the backend.
 
-  The list of ids of organizer items added is given by \a organizeritemIds.  There may be one or more
-  ids in the list.
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
 
-  \sa dataChanged()
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::itemsChanged(const QList<QOrganizerItemId>& organizeritemIds);
+    \fn QOrganizerManagerEngine::itemsRemoved(const QList<QOrganizerItemId> &itemIds);
 
-  This signal is emitted some time after a set of organizer items has been modified in
-  this engine where the \l dataChanged() signal was not emitted for those changes.
-  As it is possible that other processes (or other devices) may
-  have modified the organizer items, the timing cannot be determined.
+    This signal should be emitted at some point once the items identified by \a itemIds have been
+    removed from the backend.
 
-  The list of ids of changed organizer items is given by \a organizeritemIds.  There may be one or more
-  ids in the list.
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
 
-  \sa dataChanged()
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::itemsRemoved(const QList<QOrganizerItemId>& organizeritemIds);
+    \fn QOrganizerManagerEngine::collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds)
 
-  This signal is emitted some time after a set of organizer items has been removed from
-  this engine where the \l dataChanged() signal was not emitted for those changes.
-  As it is possible that other processes (or other devices) may
-  have removed the organizer items, the timing cannot be determined.
+    This signal should be emitted at some point once the collections identified by \a collectionIds
+    have been added to the backend.
 
-  The list of ids of removed organizer items is given by \a organizeritemIds.  There may be one or more
-  ids in the list.
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
 
-  \sa dataChanged()
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::collectionsAdded(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal should be emitted at some point once the collections identified by \a collectionIds have been added to a datastore managed by this engine.
-  This signal must not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManagerEngine::collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds)
+
+    This signal should be emitted at some point once the collections identified by \a collectionIds
+    have been changed in the backend.
+
+    This signal should not be emitted if items in the collections have been added, modified, or
+    removed.
+
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::collectionsChanged(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal should be emitted at some point once the metadata for the collections identified by \a collectionIds have been modified in a datastore managed by this engine.
-  This signal is not emitted if one of the items in this collection has changed - itemsChanged() will be emitted instead.
-  This signal must not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManagerEngine::collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds)
+
+    This signal should be emitted at some point once the collections identified by \a collectionIds
+    have been removed from the backend.
+
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManagerEngine::collectionsRemoved(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal should be emitted at some point once the collections identified by \a collectionIds have been removed from a datastore managed by this engine.
-  This signal must not be emitted if the dataChanged() signal was previously emitted for these changes.
+    Constructs an empty QOrganizerManagerEngine with the given \a parent.
  */
+QOrganizerManagerEngine::QOrganizerManagerEngine(QObject *parent)
+    : QObject(parent)
+{
+}
 
-
-
-/*! Returns the manager name for this QOrganizerManagerEngine
+/*!
+    This function should be reimplemented to return the name of this backend. The default implementation
+    returns the name "invalid".
 */
 QString QOrganizerManagerEngine::managerName() const
 {
@@ -172,18 +173,28 @@ QString QOrganizerManagerEngine::managerName() const
 }
 
 /*!
-  Returns the parameters with which this engine was constructed.  Note that
-  the engine may have discarded unused or invalid parameters at the time of
-  construction, and these will not be returned.
+    This function should be reimplemented to return the parameters used in when constructing this
+    backend. The default implementation returns an empty QMap.
+
+    If certain paramters are invalid, or discarded by the backend, they should not be returned.
  */
 QMap<QString, QString> QOrganizerManagerEngine::managerParameters() const
 {
-    return QMap<QString, QString>(); // default implementation requires no parameters.
+    return QMap<QString, QString>();
 }
 
 /*!
-  Returns the unique URI of this manager, which is built from the manager name and the parameters
-  used to construct it.
+    This function should be reimplemented to return the version of this backend. The default implementation
+    returns 0.
+ */
+int QOrganizerManagerEngine::managerVersion() const
+{
+    return 0;
+}
+
+/*!
+    Returns the unique URI of this manager, which is built from the manager name and the parameters
+    used to construct it.
  */
 QString QOrganizerManagerEngine::managerUri() const
 {
@@ -356,128 +367,8 @@ QList<QOrganizerItem> QOrganizerManagerEngine::items(const QList<QOrganizerItemI
 }
 
 /*!
-  Given an input \a filter, returns the canonical version of the filter.
-
-  Some of the following transformations may be applied:
-  \list
-   \o Any QOrganizerItemInvalidFilters contained in a union filter will be removed
-   \o Any default QOrganizerItemFilters contained in an intersection filter will be removed
-   \o Any QOrganizerItemIntersectionFilters with a QOrganizerItemInvalidFilter contained will be
-     replaced with a QOrganizerItemInvalidFilter
-   \o Any QOrganizerItemUnionFilters with a default QOrganizerItemFilter contained will be replaced
-     with a default QOrganizerItemFilter
-   \o An empty QOrganizerItemIntersectionFilter will be replaced with a QOrganizerItemDefaultFilter
-   \o An empty QOrganizerItemUnionFilter will be replaced with a QOrganizerItemInvalidFilter
-   \o An empty QOrganizerItemIdFilter will be replaced with a QOrganizerItemInvalidFilter
-   \o An intersection or union filter with a single entry will be replaced by that entry
-   \o A QOrganizerItemDetailFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
-   \o A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFilter
-  \endlist
-*/
-QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganizerItemFilter &filter)
-{
-    switch(filter.type()) {
-        case QOrganizerItemFilter::IntersectionFilter:
-        {
-            QOrganizerItemIntersectionFilter f(filter);
-            QList<QOrganizerItemFilter> filters = f.filters();
-            QList<QOrganizerItemFilter>::iterator it = filters.begin();
-
-            // XXX in theory we can remove duplicates in a set filter
-            while (it != filters.end()) {
-                QOrganizerItemFilter canon = canonicalizedFilter(*it);
-                if (canon.type() == QOrganizerItemFilter::DefaultFilter) {
-                    it = filters.erase(it);
-                } else if (canon.type() == QOrganizerItemFilter::InvalidFilter) {
-                    return QOrganizerItemInvalidFilter();
-                } else {
-                    *it = canon;
-                    ++it;
-                }
-            }
-
-            if (filters.count() == 0)
-                return QOrganizerItemFilter();
-            if (filters.count() == 1)
-                return filters.first();
-
-            f.setFilters(filters);
-            return f;
-        }
-        // unreachable
-
-        case QOrganizerItemFilter::UnionFilter:
-        {
-            QOrganizerItemUnionFilter f(filter);
-            QList<QOrganizerItemFilter> filters = f.filters();
-            QList<QOrganizerItemFilter>::iterator it = filters.begin();
-
-            // XXX in theory we can remove duplicates in a set filter
-            while (it != filters.end()) {
-                QOrganizerItemFilter canon = canonicalizedFilter(*it);
-                if (canon.type() == QOrganizerItemFilter::InvalidFilter) {
-                    it = filters.erase(it);
-                } else if (canon.type() == QOrganizerItemFilter::DefaultFilter) {
-                    return QOrganizerItemFilter();
-                } else {
-                    *it = canon;
-                    ++it;
-                }
-            }
-
-            if (filters.count() == 0)
-                return QOrganizerItemInvalidFilter();
-            if (filters.count() == 1)
-                return filters.first();
-
-            f.setFilters(filters);
-            return f;
-        }
-        // unreachable
-
-        case QOrganizerItemFilter::IdFilter:
-        {
-            QOrganizerItemIdFilter f(filter);
-            if (f.ids().count() == 0)
-                return QOrganizerItemInvalidFilter();
-        }
-        break; // fall through to return at end
-
-        case QOrganizerItemFilter::DetailRangeFilter:
-        {
-            QOrganizerItemDetailRangeFilter f(filter);
-            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
-                return QOrganizerItemInvalidFilter();
-            if (f.minValue() == f.maxValue()
-                && f.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::ExcludeUpper))
-                return QOrganizerItemInvalidFilter();
-            if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
-                QOrganizerItemDetailFilter df;
-                df.setDetail(f.detailType(), f.detailField());
-                df.setMatchFlags(f.matchFlags());
-                df.setValue(f.minValue());
-                return df;
-            }
-        }
-        break; // fall through to return at end
-
-        case QOrganizerItemFilter::DetailFilter:
-        {
-            QOrganizerItemDetailFilter f(filter);
-            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
-                return QOrganizerItemInvalidFilter();
-        }
-        break; // fall through to return at end
-
-        default:
-            break; // fall through to return at end
-    }
-    return filter;
-}
-
-
-/*!
-    Returns the list of supported filters by this engine.
+    This function should be reimplemented to return the list of filters supported by this backend.
+    The default implementation returns an empty list.
  */
 QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilters() const
 {
@@ -485,7 +376,8 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilter
 }
 
 /*!
-    Returns the list of details that are supported by this engine for the given \a itemType.
+    This function should be reimplemented to return the list of details supported by this backend
+    for the given \a itemType. The default implementation returns an empty list.
  */
 QList<QOrganizerItemDetail::DetailType> QOrganizerManagerEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
@@ -494,21 +386,12 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerManagerEngine::supportedItemDe
 }
 
 /*!
-    Returns the list of item types which are supported by this engine.
+    This function should be reimplemented to return the list of details supported by this backend
+    for the given \a itemType. The default implementation returns an empty list.
  */
 QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes() const
 {
     return QList<QOrganizerItemType::ItemType>();
-}
-
-/*!
-  \fn int QOrganizerManagerEngine::managerVersion() const
-
-  Returns the engine backend implementation version number
- */
-int QOrganizerManagerEngine::managerVersion() const
-{
-    return 0;
 }
 
 /*!
@@ -634,6 +517,126 @@ bool QOrganizerManagerEngine::removeCollection(const QOrganizerCollectionId& col
 
     *error = QOrganizerManager::NotSupportedError;
     return false;
+}
+
+/*!
+  Given an input \a filter, returns the canonical version of the filter.
+
+  Some of the following transformations may be applied:
+  \list
+   \o Any QOrganizerItemInvalidFilters contained in a union filter will be removed
+   \o Any default QOrganizerItemFilters contained in an intersection filter will be removed
+   \o Any QOrganizerItemIntersectionFilters with a QOrganizerItemInvalidFilter contained will be
+     replaced with a QOrganizerItemInvalidFilter
+   \o Any QOrganizerItemUnionFilters with a default QOrganizerItemFilter contained will be replaced
+     with a default QOrganizerItemFilter
+   \o An empty QOrganizerItemIntersectionFilter will be replaced with a QOrganizerItemDefaultFilter
+   \o An empty QOrganizerItemUnionFilter will be replaced with a QOrganizerItemInvalidFilter
+   \o An empty QOrganizerItemIdFilter will be replaced with a QOrganizerItemInvalidFilter
+   \o An intersection or union filter with a single entry will be replaced by that entry
+   \o A QOrganizerItemDetailFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
+   \o A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFilter
+  \endlist
+*/
+QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganizerItemFilter &filter)
+{
+    switch (filter.type()) {
+        case QOrganizerItemFilter::IntersectionFilter:
+        {
+            QOrganizerItemIntersectionFilter f(filter);
+            QList<QOrganizerItemFilter> filters = f.filters();
+            QList<QOrganizerItemFilter>::iterator it = filters.begin();
+
+            // XXX in theory we can remove duplicates in a set filter
+            while (it != filters.end()) {
+                QOrganizerItemFilter canon = canonicalizedFilter(*it);
+                if (canon.type() == QOrganizerItemFilter::DefaultFilter) {
+                    it = filters.erase(it);
+                } else if (canon.type() == QOrganizerItemFilter::InvalidFilter) {
+                    return QOrganizerItemInvalidFilter();
+                } else {
+                    *it = canon;
+                    ++it;
+                }
+            }
+
+            if (filters.count() == 0)
+                return QOrganizerItemFilter();
+            if (filters.count() == 1)
+                return filters.first();
+
+            f.setFilters(filters);
+            return f;
+        }
+        // unreachable
+
+        case QOrganizerItemFilter::UnionFilter:
+        {
+            QOrganizerItemUnionFilter f(filter);
+            QList<QOrganizerItemFilter> filters = f.filters();
+            QList<QOrganizerItemFilter>::iterator it = filters.begin();
+
+            // XXX in theory we can remove duplicates in a set filter
+            while (it != filters.end()) {
+                QOrganizerItemFilter canon = canonicalizedFilter(*it);
+                if (canon.type() == QOrganizerItemFilter::InvalidFilter) {
+                    it = filters.erase(it);
+                } else if (canon.type() == QOrganizerItemFilter::DefaultFilter) {
+                    return QOrganizerItemFilter();
+                } else {
+                    *it = canon;
+                    ++it;
+                }
+            }
+
+            if (filters.count() == 0)
+                return QOrganizerItemInvalidFilter();
+            if (filters.count() == 1)
+                return filters.first();
+
+            f.setFilters(filters);
+            return f;
+        }
+        // unreachable
+
+        case QOrganizerItemFilter::IdFilter:
+        {
+            QOrganizerItemIdFilter f(filter);
+            if (f.ids().count() == 0)
+                return QOrganizerItemInvalidFilter();
+        }
+        break; // fall through to return at end
+
+        case QOrganizerItemFilter::DetailRangeFilter:
+        {
+            QOrganizerItemDetailRangeFilter f(filter);
+            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
+                return QOrganizerItemInvalidFilter();
+            if (f.minValue() == f.maxValue()
+                && f.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::ExcludeUpper))
+                return QOrganizerItemInvalidFilter();
+            if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
+                QOrganizerItemDetailFilter df;
+                df.setDetail(f.detailType(), f.detailField());
+                df.setMatchFlags(f.matchFlags());
+                df.setValue(f.minValue());
+                return df;
+            }
+        }
+        break; // fall through to return at end
+
+        case QOrganizerItemFilter::DetailFilter:
+        {
+            QOrganizerItemDetailFilter f(filter);
+            if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
+                return QOrganizerItemInvalidFilter();
+        }
+        break; // fall through to return at end
+
+        default:
+            break; // fall through to return at end
+    }
+    return filter;
 }
 
 /*!
@@ -1008,8 +1011,9 @@ bool QOrganizerManagerEngine::isItemBetweenDates(const QOrganizerItem& item, con
 }
 
 /*!
- * Returns the date associated with \a item that can be used for the purpose of date-sorting
- * the item.
+    \internal
+
+    Returns the date associated with \a item that can be used for the purpose of date-sorting the item.
  */
 QDateTime getDateForSorting(const QOrganizerItem& item)
 {
@@ -1048,11 +1052,11 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
 }
 
 /*!
- * Returns true if and only if \a a is temporally less than \a b.  Items with an earlier date are
- * temporally less than items with a later date, or items with no date.  All day items are
- * temporally less than non-all day items on the same date.  For events and todos, the
- * start date is used, or if null, the end date is used.  This function defines a total ordering
- * suitable for use in a sort function.
+    Returns true if and only if \a a is temporally less than \a b.  Items with an earlier date are
+    temporally less than items with a later date, or items with no date.  All day items are
+    temporally less than non-all day items on the same date.  For events and todos, the
+    start date is used, or if null, the end date is used.  This function defines a total ordering
+    suitable for use in a sort function.
  */
 bool QOrganizerManagerEngine::itemLessThan(const QOrganizerItem& a, const QOrganizerItem& b)
 {
@@ -1141,17 +1145,21 @@ int QOrganizerManagerEngine::addSorted(QList<QOrganizerItem> *sorted, const QOrg
 }
 
 /*!
-  Returns the engine id from the given \a id.
-  The caller does not take ownership of the pointer, and should not delete returned id or undefined behavior may occur.
+    Returns the engine ID from the given item \a id.
+
+    The caller does not take ownership of the pointer, and should not delete returned id or undefined
+    behavior may occur.
  */
-const QOrganizerItemEngineId* QOrganizerManagerEngine::engineItemId(const QOrganizerItemId& id)
+const QOrganizerItemEngineId *QOrganizerManagerEngine::engineItemId(const QOrganizerItemId &id)
 {
     return id.d.data();
 }
 
 /*!
-  Returns the engine id from the given \a id.
-  The caller does not take ownership of the pointer, and should not delete returned id or undefined behavior may occur.
+    Returns the engine ID from the given collection \a id.
+
+    The caller does not take ownership of the pointer, and should not delete returned id or undefined
+    behavior may occur.
  */
 const QOrganizerCollectionEngineId* QOrganizerManagerEngine::engineCollectionId(const QOrganizerCollectionId& id)
 {
@@ -1159,85 +1167,57 @@ const QOrganizerCollectionEngineId* QOrganizerManagerEngine::engineCollectionId(
 }
 
 /*!
-  Notifies the manager engine that the given request \a req has been destroyed.
+    This function is called when the given \a request has been destroyed by the client.
 
-  This notifies the engine that:
-  \list
-  \o the client doesn't care about the request any more.  The engine can still complete it,
-     but completion is not required.
-  \o it can't reliably access any properties of the request pointer any more.  The pointer will
-     be invalid once this function returns.
-  \endlist
+    When this function is called, it means for the backend:
+    \list
+    \o The client doesn't care about the request any more. The engine can still complete it, but
+       completion is not required.
+    \o It can't reliably access any properties of the request pointer any more. The pointer will
+       be invalid once this function returns.
+    \endlist
 
-  This means that if there is a worker thread, the engine needs to let that thread know that the
-  request object is not valid and block until that thread acknowledges it.  One way to do this is to
-  have a QSet<QOrganizerAbstractRequest*> (or QMap<QOrganizerAbstractRequest,
-  MyCustomRequestState>) that tracks active requests, and insert into that set in startRequest, and
-  remove in requestDestroyed (or when it finishes or is cancelled).  Protect that set/map with a
-  mutex, and make sure you take the mutex in the worker thread before calling any of the
-  QOrganizerAbstractRequest::updateXXXXXXRequest functions.  And be careful of lock ordering
-  problems :D
+    Note that since the \a request may run in another thread, this function should be blocked until
+    the worker thread gets fully notified.
  */
-void QOrganizerManagerEngine::requestDestroyed(QOrganizerAbstractRequest* req)
+void QOrganizerManagerEngine::requestDestroyed(QOrganizerAbstractRequest *request)
 {
-    Q_UNUSED(req);
+    Q_UNUSED(request);
 }
 
 /*!
-  Asks the manager engine to begin the given request \a req which is currently in a (re)startable
-  state.  Returns true if the request was started successfully, else returns false.
+    This function is called when the client tries to start the given asynchronous \a request. Returns
+    true if the request is started successfully, or false otherwise.
 
-  Generally, the engine queues the request and processes it at some later time (probably in another
-  thread).
-
-  Once a request is started, the engine should call the updateRequestState and/or the specific
-  updateXXXXXRequest functions to mark it in the active state.
-
-  If the engine is particularly fast, or the operation involves only in memory data, the request can
-  be processed and completed without queueing it.
-
-  Note that when the client is threaded, and the request might live on a different thread, the
-  engine needs to be careful with locking.  In particular, the request might be deleted while the
-  engine is still working on it.  In this case, the requestDestroyed function will be called while
-  the request is still valid, and that function should block until the worker thread (etc.) has been
-  notified not to touch that request any more.
-
-  \sa QOrganizerAbstractRequest::start()
+    Note that the request is supposed to run in an asynchronous manner that this function should
+    return as soon as possible. Therefore, it the operation would last sometime, a worker thread
+    should be used to queue and process the request. In such cases, backend should be aware that
+    the request may be deleted by the client, and requestDestroyed() function will be called.
  */
-bool QOrganizerManagerEngine::startRequest(QOrganizerAbstractRequest* req)
+bool QOrganizerManagerEngine::startRequest(QOrganizerAbstractRequest* request)
 {
-    Q_UNUSED(req);
+    Q_UNUSED(request);
     return false;
 }
 
 /*!
-  Asks the manager engine to cancel the given request \a req which was
-  previously started and is currently in a cancellable state.
-  Returns true if cancellation of the request was started successfully,
-  otherwise returns false.
-
-  \sa startRequest(), QOrganizerAbstractRequest::cancel()
+    This function is called when the client tries to cancel the given asynchronous \a request. Returns
+    true if the request is calcelled successfully, or false otherwise.
  */
-bool QOrganizerManagerEngine::cancelRequest(QOrganizerAbstractRequest* req)
+bool QOrganizerManagerEngine::cancelRequest(QOrganizerAbstractRequest* request)
 {
-    Q_UNUSED(req);
+    Q_UNUSED(request);
     return false;
 }
 
 /*!
-  Blocks until the manager engine has completed the given request \a req
-  which was previously started, or until \a msecs milliseconds have passed.
-  Returns true if the request was completed, and false if the request was not in the
-  \c QOrganizerAbstractRequest::Active state or no progress could be reported.
-
-  It is important that this function is implemented by the engine, at least merely as a delay, since
-  clients may call it in a loop.
-
-  \sa startRequest()
+    This function is called when the client wants to be blocked until the given \a request is completed,
+    or until \a msecs milliseconds have passed. Returns true when the request is completed, or false
+    otherwise.
  */
-bool QOrganizerManagerEngine::waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs)
+bool QOrganizerManagerEngine::waitForRequestFinished(QOrganizerAbstractRequest* request, int msecs)
 {
-    Q_UNUSED(req);
+    Q_UNUSED(request);
     Q_UNUSED(msecs);
     return false;
 }

@@ -42,11 +42,8 @@
 #ifndef QORGANIZERITEMSAVEREQUEST_H
 #define QORGANIZERITEMSAVEREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritem.h"
-
-#include <QList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -56,18 +53,16 @@ class Q_ORGANIZER_EXPORT QOrganizerItemSaveRequest : public QOrganizerAbstractRe
     Q_OBJECT
 
 public:
-    QOrganizerItemSaveRequest(QObject* parent = 0);
+    QOrganizerItemSaveRequest(QObject *parent = 0);
     ~QOrganizerItemSaveRequest();
 
-    /* Selection */
-    void setItem(const QOrganizerItem& organizeritem);
-    void setItems(const QList<QOrganizerItem>& organizeritems);
+    void setItem(const QOrganizerItem &item);
+    void setItems(const QList<QOrganizerItem> &items);
+    QList<QOrganizerItem> items() const;
 
     void setDetailMask(const QList<QOrganizerItemDetail::DetailType> &detailMask);
     QList<QOrganizerItemDetail::DetailType> detailMask() const;
 
-    /* Results */
-    QList<QOrganizerItem> items() const;
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
     // to be removed
@@ -82,4 +77,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMSAVEREQUEST_H

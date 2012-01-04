@@ -39,30 +39,23 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERMANAGERENGINEFACTORY_H
 #define QORGANIZERMANAGERENGINEFACTORY_H
 
-#include <QtPlugin>
-#include <QMap>
-#include <QString>
-
-#include "qorganizermanager.h"
+#include <qorganizermanager.h>
+#include <QtCore/qplugin.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
-/* Backend plugin API interface, creates engines for us */
-class QOrganizerManagerEngine;
-class QOrganizerCollectionEngineId;
+
 class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory
 {
 public:
-    // engine factory functions
-    virtual QList<int> supportedImplementationVersions() const;
     virtual ~QOrganizerManagerEngineFactory();
-    virtual QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error) = 0;
+    virtual QList<int> supportedImplementationVersions() const;
+    virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
     virtual QString managerName() const = 0;
-    virtual QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const = 0;
-    virtual QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const = 0;
+    virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
+    virtual QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
 };
 QTORGANIZER_END_NAMESPACE
 
@@ -71,4 +64,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtOrganizer::QOrganizerManagerEngineFactory, QT_ORGANIZER_BACKEND_INTERFACE)
 QT_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERMANAGERENGINEFACTORY_H

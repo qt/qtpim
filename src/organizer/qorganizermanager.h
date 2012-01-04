@@ -39,27 +39,17 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERMANAGER_H
 #define QORGANIZERMANAGER_H
 
-#include <QObject>
+#include <qorganizercollection.h>
+#include <qorganizeritem.h>
+#include <qorganizeritemfilter.h>
+#include <qorganizeritemfetchhint.h>
+#include <qorganizeritemsortorder.h>
 
-#include <QMap>
-#include <QString>
-#include <QStringList>
-#include <QList>
-#include <QDateTime>
-
-#include "qorganizerglobal.h"
-#include "qorganizeritem.h"
-#include "qorganizeritemid.h"
-#include "qorganizeritemsortorder.h"
-#include "qorganizeritemfetchhint.h"
-#include "qorganizeritemfilter.h"
-
-#include "qorganizercollection.h"
-#include "qorganizercollectionid.h"
+#include <QtCore/qdatetime.h>
+#include <QtCore/qstringlist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -71,24 +61,25 @@ class Q_ORGANIZER_EXPORT QOrganizerManager : public QObject
 
 public:
 #if Q_QDOC // qdoc's parser fails to recognise the default map argument
-    explicit QOrganizerManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = 0, QObject* parent = 0);
-    QOrganizerManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = 0, QObject* parent = 0);
+    explicit QOrganizerManager(const QString &managerName = QString(), const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
+    QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
 #else
-    explicit QOrganizerManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = 0);
-    QOrganizerManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = 0);
+    explicit QOrganizerManager(const QString &managerName = QString(), const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);
+    QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);
 #endif
-    explicit QOrganizerManager(QObject* parent);
-
-    static QOrganizerManager* fromUri(const QString& uri, QObject* parent = 0);
+    explicit QOrganizerManager(QObject *parent);
     ~QOrganizerManager();
 
-    QString managerName() const;                       // e.g. "Symbian"
-    QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
-    QString managerUri() const;                        // managerName + managerParameters
-    int managerVersion() const;
+    static QOrganizerManager *fromUri(const QString &uri, QObject *parent = 0);
+    static QStringList availableManagers();
 
-    static bool parseUri(const QString& uri, QString* managerName, QMap<QString, QString>* params); // replaces the above.
-    static QString buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion = -1);
+    QString managerName() const;
+    QMap<QString, QString> managerParameters() const;
+    int managerVersion() const;
+    QString managerUri() const;
+
+    static bool parseUri(const QString &uri, QString *managerName, QMap<QString, QString> *params);
+    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion = -1);
 
     // error reporting
     enum Error {
@@ -153,15 +144,13 @@ public:
     bool saveCollection(QOrganizerCollection* collection);
     bool removeCollection(const QOrganizerCollectionId& collectionId);
 
-    /* Functionality reporting */
+    // functionality reporting
     QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
     QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
-    /* return a list of available backends for which a QOrganizerManager can be constructed. */
-    static QStringList availableManagers();
-
-    static QList<QOrganizerItemId> extractIds(const QList<QOrganizerItem>& items);
+    // helper
+    static QList<QOrganizerItemId> extractIds(const QList<QOrganizerItem> &items);
 
     // to be removed
     QList<QOrganizerItemId> itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders);
@@ -171,25 +160,24 @@ public:
 
 Q_SIGNALS:
     void dataChanged();
-    void itemsAdded(const QList<QOrganizerItemId>& itemIds);
-    void itemsChanged(const QList<QOrganizerItemId>& itemIds);
-    void itemsRemoved(const QList<QOrganizerItemId>& itemIds);
-    void collectionsAdded(const QList<QOrganizerCollectionId>& collectionIds);
-    void collectionsChanged(const QList<QOrganizerCollectionId>& collectionIds);
-    void collectionsRemoved(const QList<QOrganizerCollectionId>& collectionIds);
+    void itemsAdded(const QList<QOrganizerItemId> &itemIds);
+    void itemsChanged(const QList<QOrganizerItemId> &itemIds);
+    void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
+    void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds);
 
 private:
     friend class QOrganizerManagerData;
-    void createEngine(const QString& managerName, const QMap<QString, QString>& parameters);
     Q_DISABLE_COPY(QOrganizerManager)
+    QOrganizerManagerData *d;
 
-    Q_PRIVATE_SLOT(d, void _q_itemsUpdated(const QList<QOrganizerItemId>& ids))
-    Q_PRIVATE_SLOT(d, void _q_itemsDeleted(const QList<QOrganizerItemId>& ids))
+    void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
 
-    // private data pointer
-    QOrganizerManagerData* d;
+    Q_PRIVATE_SLOT(d, void _q_itemsUpdated(const QList<QOrganizerItemId> &ids))
+    Q_PRIVATE_SLOT(d, void _q_itemsDeleted(const QList<QOrganizerItemId> &ids))
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERMANAGER_H

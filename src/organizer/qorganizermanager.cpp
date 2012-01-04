@@ -39,92 +39,115 @@
 **
 ****************************************************************************/
 
-#include "qorganizermanager.h"
-
-#include "qorganizeritem_p.h"
-#include "qorganizeritemfilter.h"
-#include "qorganizermanager_p.h"
-#include "qorganizeritemfetchhint.h"
-
-#include <QSharedData>
-#include <QPair>
-#include <QSet>
+#include <private/qorganizermanager_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerManager
-  \brief The QOrganizerManager class provides an interface which allows clients with access to organizer item information stored in a particular backend.
+    \class QOrganizerManager
+    \brief The QOrganizerManager class provides an interface which allows clients with access to
+           organizer item and collection information stored in a particular backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-main
 
-  \inmodule QtOrganizer
-  \ingroup organizer-main
+    This class provides synchronous methods to retrieve and manipulate organizer item information,
+    collection information, as well as functionality reporting and error information reporting.
 
-  This class provides an abstraction of a datastore or aggregation of datastores which contains organizer item information.
-  It provides methods to retrieve and manipulate organizer item information, collection information and supported schema definitions.
-  It also provides metadata and error information reporting.
+    Clients can also use the use-case-specific classes derived from QOrganizerAbstractRequest to
+    retrieve and manipulate organizer items and collections in an asynchronous manner. However,
+    certain functionality (e.g. backend functionality reporting) can not be accessed using the
+    asynchronous APIs.
 
-  The functions provided by QOrganizerManager are purely synchronous; to access the same functionality in an
-  asynchronous manner, clients should use the use-case-specific classes derived from QOrganizerAbstractRequest.
-
-  Some functionality provided by QOrganizerManager directly is not accessible using the asynchronous API; see
-  the \l{Organizer Synchronous API}{synchronous} and \l{Organizer Asynchronous API}{asynchronous} API
-  information from the \l{C++ Organizer}{organizer module} API documentation.
+    See the \l{Organizer Synchronous API}{synchronous} and \l{Organizer Asynchronous API}{asynchronous}
+    API information from the \l{C++ Organizer}{organizer module} API documentation for more details.
  */
 
 /*!
-  \fn QOrganizerManager::dataChanged()
-  This signal is emitted by the manager if its internal state changes, and it is unable to determine the changes
-  which occurred, or if the manager considers the changes to be radical enough to require clients to reload all data.
-  If this signal is emitted, no other signals will be emitted for the associated changes.
+    \fn QOrganizerManager::dataChanged()
+
+    This signal is emitted by the manager if its internal state changes, and it is unable to determine
+    the changes which occurred, or if the manager considers the changes to be radical enough to require
+    clients to reload all data.
+
+    If this signal is emitted, no other signals will be emitted for the associated changes.
+
+    \sa itemsAdded(), itemsChanged(), itemsRemoved()
  */
 
 /*!
-  \fn QOrganizerManager::itemsAdded(const QList<QOrganizerItemId>& itemIds)
-  This signal is emitted at some point once the items identified by \a itemIds have been added to a datastore managed by this manager.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::itemsAdded(const QList<QOrganizerItemId> &itemIds)
+
+    This signal is emitted at some point once the items identified by \a itemIds have been added to
+    a datastore managed by this manager.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManager::itemsChanged(const QList<QOrganizerItemId>& itemIds)
-  This signal is emitted at some point once the items identified by \a itemIds have been modified in a datastore managed by this manager.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::itemsChanged(const QList<QOrganizerItemId> &itemIds)
+
+    This signal is emitted at some point once the items identified by \a itemIds have been modified
+    in a datastore managed by this manager.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManager::itemsRemoved(const QList<QOrganizerItemId>& itemIds)
-  This signal is emitted at some point once the items identified by \a itemIds have been removed from a datastore managed by this manager.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::itemsRemoved(const QList<QOrganizerItemId> &itemIds)
+
+    This signal is emitted at some point once the items identified by \a itemIds have been removed
+    from a datastore managed by this manager.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManager::collectionsAdded(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal is emitted at some point once the collections identified by \a collectionIds have been added to a datastore managed by this manager.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds)
+
+    This signal is emitted at some point once the collections identified by \a collectionIds have
+    been added to a datastore managed by this manager.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManager::collectionsChanged(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal is emitted at some point once the metadata for the collections identified by \a collectionIds have been modified in a datastore managed by this manager.
-  This signal is not emitted if one of the items in this collection has changed - itemsChanged() will be emitted instead.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds)
+
+    This signal is emitted at some point once the metadata for the collections identified by \a collectionIds
+    have been modified in a datastore managed by this manager.
+
+    This signal will not be emitted if items in the collections have been added, modified, or removed.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
 
 /*!
-  \fn QOrganizerManager::collectionsRemoved(const QList<QOrganizerCollectionId>& collectionIds)
-  This signal is emitted at some point once the collections identified by \a collectionIds have been removed from a datastore managed by this manager.
-  This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+    \fn QOrganizerManager::collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds)
+
+    This signal is emitted at some point once the collections identified by \a collectionIds have
+    been removed from a datastore managed by this manager.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
  */
-
-
 
 #define makestr(x) (#x)
 #define makename(x) makestr(x)
 
 /*!
-    Returns a list of available manager ids that can be used when constructing
-    a QOrganizerManager.  If an empty id is specified to the constructor, the
-    first value in this list will be used instead.
-  */
+    Returns a list of available manager names that can be used to construct a QOrganizerManager.
+ */
 QStringList QOrganizerManager::availableManagers()
 {
     QStringList ret;
@@ -134,9 +157,8 @@ QStringList QOrganizerManager::availableManagers()
 
     // now swizzle the default engine to pole position
 #if defined(Q_ORGANIZER_DEFAULT_ENGINE)
-    if (ret.removeAll(QLatin1String(makename(Q_ORGANIZER_DEFAULT_ENGINE)))) {
+    if (ret.removeAll(QLatin1String(makename(Q_ORGANIZER_DEFAULT_ENGINE))))
         ret.prepend(QLatin1String(makename(Q_ORGANIZER_DEFAULT_ENGINE)));
-    }
 #endif
 
     return ret;
@@ -202,15 +224,17 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap
     return true;
 }
 
-/*! Returns a URI that completely describes a manager implementation, datastore, and the parameters with which to instantiate the manager, from the given \a managerName, \a params and an optional \a implementationVersion
-*/
-QString QOrganizerManager::buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion)
+/*!
+    Returns a URI that describes a manager name, parameters, and version with which to instantiate
+    a manager object, from the given \a managerName, \a params and an optional \a implementationVersion.
+ */
+QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion)
 {
     QString ret(QLatin1String("qtorganizer:%1:%2"));
     // we have to escape each param
     QStringList escapedParams;
     QStringList keys = params.keys();
-    for (int i=0; i < keys.size(); i++) {
+    for (int i=0; i < keys.size(); ++i) {
         QString key = keys.at(i);
         QString arg = params.value(key);
         arg = arg.replace(QLatin1Char('&'), QLatin1String("&amp;"));
@@ -232,54 +256,53 @@ QString QOrganizerManager::buildUri(const QString& managerName, const QMap<QStri
 }
 
 /*!
-  Constructs a QOrganizerManager whose implementation, store and parameters are specified in the given \a storeUri,
-  and whose parent object is \a parent.
+    Constructs a QOrganizerManager whose name, parameters, and version are specified in the given
+    \a uri, and whose parent object is \a parent.
  */
-QOrganizerManager* QOrganizerManager::fromUri(const QString& storeUri, QObject* parent)
+QOrganizerManager *QOrganizerManager::fromUri(const QString &uri, QObject *parent)
 {
-    if (storeUri.isEmpty()) {
+    if (uri.isEmpty()) {
         return new QOrganizerManager(QString(), QMap<QString, QString>(), parent);
     } else {
         QString id;
         QMap<QString, QString> parameters;
-        if (parseUri(storeUri, &id, &parameters)) {
+        if (parseUri(uri, &id, &parameters))
             return new QOrganizerManager(id, parameters, parent);
-        } else {
-            // invalid
+        else
             return new QOrganizerManager(QLatin1String("invalid"), QMap<QString, QString>(), parent);
-        }
     }
 }
 
 /*!
-  Constructs a QOrganizerManager whose parent QObject is \a parent.
-  The default implementation for the platform will be created.
+    Constructs a QOrganizerManager whose parent object is \a parent.
+
+    The default backend, i.e. the first one returned by the availableManagers() function, for the
+    platform will be created.
  */
-QOrganizerManager::QOrganizerManager(QObject* parent)
-    : QObject(parent),
-    d(new QOrganizerManagerData)
+QOrganizerManager::QOrganizerManager(QObject *parent)
+    : QObject(parent), d(new QOrganizerManagerData)
 {
     createEngine(QString(), QMap<QString, QString>());
 }
 
 /*!
-  Constructs a QOrganizerManager whose implementation is identified by \a managerName with the given \a parameters.
+    Constructs a QOrganizerManager whose backend is identified by \a managerName with the given
+    \a parameters, and the parent object is \a parent.
 
-  The \a parent QObject will be used as the parent of this QOrganizerManager.
-
-  If an empty \a managerName is specified, the default implementation for the platform will
-  be used.
+    The default backend, i.e. the first one returned by the availableManagers() function, for the
+    platform will be created, if the \a managerName is empty. If the backend identified by \a managerName
+    does not exist, an invalid backend is created.
  */
-QOrganizerManager::QOrganizerManager(const QString& managerName, const QMap<QString, QString>& parameters, QObject* parent)
-    : QObject(parent),
-    d(new QOrganizerManagerData)
+QOrganizerManager::QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters, QObject *parent)
+    : QObject(parent), d(new QOrganizerManagerData)
 {
     createEngine(managerName, parameters);
 }
 
-void QOrganizerManager::createEngine(const QString& managerName, const QMap<QString, QString>& parameters)
+void QOrganizerManager::createEngine(const QString &managerName, const QMap<QString, QString> &parameters)
 {
     d->createEngine(managerName, parameters);
+
     connect(d->m_engine, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
     connect(d->m_engine, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SIGNAL(itemsAdded(QList<QOrganizerItemId>)));
     connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SIGNAL(itemsChanged(QList<QOrganizerItemId>)));
@@ -287,77 +310,81 @@ void QOrganizerManager::createEngine(const QString& managerName, const QMap<QStr
     connect(d->m_engine, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)));
-
-    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)),
-            this, SLOT(_q_itemsUpdated(QList<QOrganizerItemId>)));
-    connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)),
-            this, SLOT(_q_itemsDeleted(QList<QOrganizerItemId>)));
-
+    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(_q_itemsUpdated(QList<QOrganizerItemId>)));
+    connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(_q_itemsDeleted(QList<QOrganizerItemId>)));
 }
 
 /*!
-  Constructs a QOrganizerManager whose backend has the name \a managerName and version \a implementationVersion, where the manager
-  is constructed with the provided \a parameters.
+    Constructs a QOrganizerManager whose backend is identified by \a managerName with the given
+    \a parameters and \a implementationVersion, and the parent object is \a parent.
 
-  The \a parent QObject will be used as the parent of this QOrganizerManager.
+    The default backend, i.e. the first one returned by the availableManagers() function, for the
+    platform will be created, if the \a managerName is empty. If the backend identified by \a managerName
+    does not exist, an invalid backend is created.
 
-  If an empty \a managerName is specified, the default implementation for the platform will be instantiated.
-  If the specified implementation version is not available, the manager with the name \a managerName with the default implementation version is instantiated.
+    If the specified \a implementationVersion is not available, the manager with the name \a managerName
+    and a default implementation version is instantiated.
  */
-QOrganizerManager::QOrganizerManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters, QObject* parent)
-    : QObject(parent),
-    d(new QOrganizerManagerData)
+QOrganizerManager::QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters, QObject *parent)
+    : QObject(parent), d(new QOrganizerManagerData)
 {
     QMap<QString, QString> params = parameters;
     params[QString(QLatin1String(QTORGANIZER_IMPLEMENTATION_VERSION_NAME))] = QString::number(implementationVersion);
     createEngine(managerName, params);
 }
 
-/*! Frees the memory used by the QOrganizerManager */
+/*!
+    Frees the memory used by the QOrganizerManager.
+ */
 QOrganizerManager::~QOrganizerManager()
 {
     delete d;
 }
 
 /*!
-  \enum QOrganizerManager::Error
+    \enum QOrganizerManager::Error
 
-  This enum specifies an error that occurred during the most recent operation:
+    This enum specifies an error that occurred during the most recent operation:
 
-  \value NoError The most recent operation was successful
-  \value DoesNotExistError The most recent operation failed because the requested organizer item or detail definition does not exist
-  \value AlreadyExistsError The most recent operation failed because the specified organizer item or detail definition already exists
-  \value InvalidDetailError The most recent operation failed because the specified organizer detail definition already exists
-  \value LockedError The most recent operation failed because the datastore specified is currently locked
-  \value DetailAccessError The most recent operation failed because a detail was modified or removed and its access method does not allow that
-  \value PermissionsError The most recent operation failed because the caller does not have permission to perform the operation
-  \value OutOfMemoryError The most recent operation failed due to running out of memory
-  \value NotSupportedError The most recent operation failed because the requested operation is not supported in the specified store
-  \value BadArgumentError The most recent operation failed because one or more of the parameters to the operation were invalid
-  \value UnspecifiedError The most recent operation failed for an undocumented reason
-  \value VersionMismatchError The most recent operation failed because the backend of the manager is not of the required version
-  \value LimitReachedError The most recent operation failed because the limit for that type of object has been reached
-  \value InvalidItemTypeError The most recent operation failed because the item given was of an invalid type for the operation
-  \value InvalidCollectionError The most recent operation failed because the collection is invalid
-  \value InvalidOccurrenceError The most recent operation failed because it was an attempt to save an occurrence without a correct InstanceOrigin detail
-  \value TimeoutError The most recent operation failed because it took longer than expected.  It may be possible to try again.
+    \value NoError The most recent operation was successful
+    \value DoesNotExistError The most recent operation failed because the requested organizer item or detail definition does not exist
+    \value AlreadyExistsError The most recent operation failed because the specified organizer item or detail definition already exists
+    \value InvalidDetailError The most recent operation failed because the specified organizer detail definition already exists
+    \value LockedError The most recent operation failed because the datastore specified is currently locked
+    \value DetailAccessError The most recent operation failed because a detail was modified or removed and its access method does not allow that
+    \value PermissionsError The most recent operation failed because the caller does not have permission to perform the operation
+    \value OutOfMemoryError The most recent operation failed due to running out of memory
+    \value NotSupportedError The most recent operation failed because the requested operation is not supported in the specified store
+    \value BadArgumentError The most recent operation failed because one or more of the parameters to the operation were invalid
+    \value UnspecifiedError The most recent operation failed for an undocumented reason
+    \value VersionMismatchError The most recent operation failed because the backend of the manager is not of the required version
+    \value LimitReachedError The most recent operation failed because the limit for that type of object has been reached
+    \value InvalidItemTypeError The most recent operation failed because the item given was of an invalid type for the operation
+    \value InvalidCollectionError The most recent operation failed because the collection is invalid
+    \value InvalidOccurrenceError The most recent operation failed because it was an attempt to save an occurrence without a correct InstanceOrigin detail
+    \value TimeoutError The most recent operation failed because it took longer than expected.  It may be possible to try again.
  */
 
-/*! Return the error code of the most recent operation
-*/
+/*!
+    Return the error code of the most recent operation.
+
+    \sa errorMap()
+ */
 QOrganizerManager::Error QOrganizerManager::error() const
 {
     return d->m_lastError;
 }
 
 /*!
-  Returns per-input error codes for the most recent operation.
-  This function only returns meaningful information if the most
-  recent operation was a batch operation.
-  Each key in the map is the index of the element in the input list
-  for which the error (whose error code is stored in the value for
-  that key in the map) occurred during the batch operation.
-  \sa error(), saveItems(), removeItems()
+    Returns per-input error codes for the most recent operation.
+
+    This function only returns meaningful information if the most recent operation was a batch
+    operation.
+
+    Each key in the map is the index of the element in the input list for which the error (whose
+    error code is stored in the value for that key in the map) occurred during the batch operation.
+
+    \sa error(), saveItems(), removeItems()
  */
 QMap<int, QOrganizerManager::Error> QOrganizerManager::errorMap() const
 {
@@ -460,7 +487,7 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
 
     Note that certain backends may ignore the given \a filter.
 
-    Note that backends will decide how many occurrences are returned if \a maxCount is negative.
+    Note that backends will decide how many items are returned if \a maxCount is negative.
 
     The \a fetchHint allows clients to specify which pieces of information they are interested or
     not interested in, to allow backends to optimise data retrieval if possible. Note that it is
@@ -697,14 +724,16 @@ bool QOrganizerManager::saveCollection(QOrganizerCollection* collection)
 }
 
 /*!
-  Removes the collection identified by the given \a collectionId (and all items in the collection)
-  from the manager if the given \a collectionId exists.
-  Returns true on success, false on failure.
+    Removes the collection identified by the given \a collectionId (and all items in the collection)
+    from the manager. Returns true on success, false on failure.
 
-  Attempting to remove the default collection will fail and calling \l error() will return
-  QOrganizerManager::PermissionsError.
+    If the given \a collectionId does not exist, the operation will fail and QOrganizerManager::DoesNotExistError
+    will be returned when calling error().
+
+    If the given \a collectionId refers to the default collection, the operation will fail and
+    QOrganizerManager::PermissionsError will be returned when calling error().
  */
-bool QOrganizerManager::removeCollection(const QOrganizerCollectionId& collectionId)
+bool QOrganizerManager::removeCollection(const QOrganizerCollectionId &collectionId)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->removeCollection(collectionId, &h.error);
@@ -735,21 +764,25 @@ QList<QOrganizerItemType::ItemType> QOrganizerManager::supportedItemTypes() cons
 }
 
 /*!
-  Returns the engine backend implementation version number
+    Returns the engine backend implementation version number.
  */
 int QOrganizerManager::managerVersion() const
 {
     return d->m_engine->managerVersion();
 }
 
-/*! Returns the manager name for this QOrganizerManager
+/*!
+    Returns the manager name for the backend.
 */
 QString QOrganizerManager::managerName() const
 {
     return d->m_engine->managerName();
 }
 
-/*! Return the parameters relevant to the creation of this QOrganizerManager
+/*!
+    Return the parameters used when creating the backend.
+
+    Note that if certain paramters are invalid, or discarded by the backend, they will not be returned.
 */
 QMap<QString, QString> QOrganizerManager::managerParameters() const
 {
@@ -761,23 +794,21 @@ QMap<QString, QString> QOrganizerManager::managerParameters() const
 }
 
 /*!
-  Return the uri describing this QOrganizerManager, consisting of the manager name and any parameters.
+    Return the URI describing the backend.
  */
 QString QOrganizerManager::managerUri() const
 {
     return d->m_engine->managerUri();
 }
 
-/*! Return a list of QOrganizerItemId extracted from the \a items
+/*!
+    Return a list of QOrganizerItemId extracted from the \a items.
 */
-QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem>& items)
+QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem> &items)
 {
     QList<QOrganizerItemId> ids;
-#if QT_VERSION > 0x040700
     ids.reserve(items.count());
-#endif
-
-    foreach(const QOrganizerItem& item, items)
+    foreach (const QOrganizerItem &item, items)
         ids.append(item.id());
     return ids;
 }

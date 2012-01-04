@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGER_P_H
 #define QCONTACTMANAGER_P_H
 
@@ -54,26 +53,19 @@
 // We mean it.
 //
 
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QString>
-
-#include "qorganizermanager.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizeritemobserver.h"
+#include <qorganizermanager.h>
+#include <qorganizermanagerengine.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
+class QOrganizerItemObserver;
 class QOrganizerManagerEngineFactory;
 
-/* Data and stuff that is shared amongst all backends */
 class QOrganizerManagerData
 {
 public:
     QOrganizerManagerData()
-        : m_engine(0),
-        m_lastError(QOrganizerManager::NoError)
+        : m_engine(0), m_lastError(QOrganizerManager::NoError)
     {
     }
 
@@ -82,38 +74,38 @@ public:
         delete m_engine;
     }
 
-    void createEngine(const QString& managerName, const QMap<QString, QString>& parameters);
-    static QOrganizerManagerData* get(const QOrganizerManager* manager);
-    static QOrganizerManagerEngine* engine(const QOrganizerManager* manager);
-    static QOrganizerItemEngineId* createEngineItemId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString);
-    static QOrganizerCollectionEngineId* createEngineCollectionId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString);
+    void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
+    static QOrganizerManagerData *get(const QOrganizerManager *manager);
+    static QOrganizerManagerEngine *engine(const QOrganizerManager *manager);
+    static QOrganizerItemEngineId *createEngineItemId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
+    static QOrganizerCollectionEngineId *createEngineCollectionId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
 
-    QOrganizerManagerEngine* m_engine;
+    QOrganizerManagerEngine *m_engine;
     QOrganizerManager::Error m_lastError;
     QMap<int, QOrganizerManager::Error> m_lastErrorMap;
 
-    /* Manager plugins */
-    static QHash<QString, QOrganizerManagerEngineFactory*> m_engines;
+    // manager plugins
+    static QHash<QString, QOrganizerManagerEngineFactory *> m_engines;
     static bool m_discovered;
     static bool m_discoveredStatic;
     static QStringList m_pluginPaths;
     static void loadFactories();
     static void loadStaticFactories();
 
-    // Observer stuff
-    void registerObserver(QOrganizerItemObserver* observer);
-    void unregisterObserver(QOrganizerItemObserver* observer);
-    void _q_itemsUpdated(const QList<QOrganizerItemId>& ids);
-    void _q_itemsDeleted(const QList<QOrganizerItemId>& ids);
+    // observer stuff
+    void registerObserver(QOrganizerItemObserver *observer);
+    void unregisterObserver(QOrganizerItemObserver *observer);
+    void _q_itemsUpdated(const QList<QOrganizerItemId> &ids);
+    void _q_itemsDeleted(const QList<QOrganizerItemId> &ids);
+    QMultiHash<QOrganizerItemId, QOrganizerItemObserver *> m_observerForItem;
 
-    QMultiHash<QOrganizerItemId, QOrganizerItemObserver*> m_observerForItem;
-    static QOrganizerManagerData* managerData(const QOrganizerManager*m) {return m->d;}
-
-private:
-    Q_DISABLE_COPY(QOrganizerManagerData)
+    // helpers
+    static QOrganizerManagerData *managerData(const QOrganizerManager *m) { return m->d; }
 };
 
-/*
+/*!
+    \internal
+
     Helper to hold the error state of a synchronous operation - when destructed, updates the
     manager's last error variables to the result of this operation.  This means that during
     callbacks the error state can't be modified behind the engines back. and it's more conceptually
@@ -122,10 +114,8 @@ private:
 class QOrganizerManagerSyncOpErrorHolder
 {
 public:
-    QOrganizerManagerSyncOpErrorHolder(const QOrganizerManager* m, QMap<int, QOrganizerManager::Error> *pUserError = 0)
-        : error(QOrganizerManager::NoError),
-        data(QOrganizerManagerData::managerData(m)),
-        userError(pUserError)
+    QOrganizerManagerSyncOpErrorHolder(const QOrganizerManager *m, QMap<int, QOrganizerManager::Error> *pUserError = 0)
+        : error(QOrganizerManager::NoError), data(QOrganizerManagerData::managerData(m)), userError(pUserError)
     {
     }
 
@@ -138,11 +128,11 @@ public:
     }
 
     QOrganizerManager::Error error;
-    QOrganizerManagerData* data;
+    QOrganizerManagerData *data;
     QMap<int, QOrganizerManager::Error> errorMap;
     QMap<int, QOrganizerManager::Error> *userError;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QCONTACTMANAGER_P_H

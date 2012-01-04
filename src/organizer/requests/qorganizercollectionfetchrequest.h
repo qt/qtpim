@@ -42,13 +42,8 @@
 #ifndef QORGANIZERCOLLECTIONFETCHREQUEST_H
 #define QORGANIZERCOLLECTIONFETCHREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizercollection.h"
-#include "qorganizermanager.h"
-
-#include <QList>
-#include <QMap>
+#include <qorganizerabstractrequest.h>
+#include <qorganizercollection.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -58,13 +53,9 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionFetchRequest : public QOrganizerAbs
     Q_OBJECT
 
 public:
-    QOrganizerCollectionFetchRequest(QObject* parent = 0);
+    QOrganizerCollectionFetchRequest(QObject *parent = 0);
     ~QOrganizerCollectionFetchRequest();
 
-    /* Selection, restriction and sorting */
-    // none.  you get all collections from the manager.
-
-    /* Results */
     QList<QOrganizerCollection> collections() const;
 
 private:
@@ -75,4 +66,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERCOLLECTIONFETCHREQUEST_H

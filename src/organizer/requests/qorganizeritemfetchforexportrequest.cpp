@@ -39,51 +39,52 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemfetchforexportrequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemfetchforexportrequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemFetchForExportRequest
-  \brief The QOrganizerItemFetchForExportRequest class allows a client to asynchronously
-    request organizer items from an organizer item store manager.
-  \inmodule QtOrganizer
+    \class QOrganizerItemFetchForExportRequest
+    \brief The QOrganizerItemFetchForExportRequest class allows a client to asynchronously fetch
+           organizer items for export from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
 
-
-  For a QOrganizerItemFetchForExportRequest, the resultsAvailable() signal will be emitted when the resultant
-  organizer item (which may be retrieved by calling items()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizer-requests
+    This request will only fetch parent items and persisted exceptions which match the specified
+    criteria, and no generated occurrences will be fetched.
  */
 
-/*! Constructs a new organizer item fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new organizer item fetch for export request whose parent is the specified \a parent.
 */
-QOrganizerItemFetchForExportRequest::QOrganizerItemFetchForExportRequest(QObject* parent)
+QOrganizerItemFetchForExportRequest::QOrganizerItemFetchForExportRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemFetchForExportRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerItemFetchForExportRequest::~QOrganizerItemFetchForExportRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the organizer item filter used to determine which organizer items will be retrieved to \a filter
+/*!
+    Sets the organizer item filter used to determine which organizer items will be retrieved to \a filter.
 */
-void QOrganizerItemFetchForExportRequest::setFilter(const QOrganizerItemFilter& filter)
+void QOrganizerItemFetchForExportRequest::setFilter(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemFetchForExportRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_filter = filter;
 }
 
-/*! Sets the sort order of the result to \a sorting.  Only has an effect if called prior to calling \c start()
+/*!
+    Sets the sort order of the result to \a sorting.
 */
-void QOrganizerItemFetchForExportRequest::setSorting(const QList<QOrganizerItemSortOrder>& sorting)
+void QOrganizerItemFetchForExportRequest::setSorting(const QList<QOrganizerItemSortOrder> &sorting)
 {
     Q_D(QOrganizerItemFetchForExportRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -91,12 +92,11 @@ void QOrganizerItemFetchForExportRequest::setSorting(const QList<QOrganizerItemS
 }
 
 /*!
-  Sets the fetch hint which may be used by the backend to optimize organizer item retrieval
-  to \a fetchHint.  A client should not make changes to a organizer item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
-  replace the previously saved organizer item in the backend).
-  \sa QOrganizerItemFetchHint
+    Sets the fetch hint which may be used by the backend to optimize item retrieval to \a fetchHint.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 void QOrganizerItemFetchForExportRequest::setFetchHint(const QOrganizerItemFetchHint &fetchHint)
 {
@@ -105,7 +105,11 @@ void QOrganizerItemFetchForExportRequest::setFetchHint(const QOrganizerItemFetch
     d->m_fetchHint = fetchHint;
 }
 
-/*! Sets the start period of the request to \a date. Only has an effect if called prior to calling \c start()
+/*!
+    Sets the start period of the request to \a date.
+
+    A default-constructed (invalid) start date time specifies an open start date time (matches anything
+    which occurs up until the end date time).
 */
 void QOrganizerItemFetchForExportRequest::setStartDate(const QDateTime &date)
 {
@@ -114,7 +118,11 @@ void QOrganizerItemFetchForExportRequest::setStartDate(const QDateTime &date)
     d->m_startDate = date;
 }
 
-/*! Sets the end period of the request to \a date. Only has an effect if called prior to calling \c start()
+/*!
+    Sets the end period of the request to \a date.
+
+    A default-constructed (invalid) end date time specifies an open end date time (matches anything
+    which occurs after the start date time).
 */
 void QOrganizerItemFetchForExportRequest::setEndDate(const QDateTime &date)
 {
@@ -123,7 +131,8 @@ void QOrganizerItemFetchForExportRequest::setEndDate(const QDateTime &date)
     d->m_endDate = date;
 }
 
-/*! Returns the filter that will be used to select organizer items to be returned
+/*!
+    Returns the filter that will be used to select organizer items to be returned.
 */
 QOrganizerItemFilter QOrganizerItemFetchForExportRequest::filter() const
 {
@@ -132,7 +141,8 @@ QOrganizerItemFilter QOrganizerItemFetchForExportRequest::filter() const
     return d->m_filter;
 }
 
-/*! Returns the sort ordering that will be used sort the results of this request
+/*!
+    Returns the sort ordering that will be used to sort the results of this request.
 */
 QList<QOrganizerItemSortOrder> QOrganizerItemFetchForExportRequest::sorting() const
 {
@@ -142,12 +152,11 @@ QList<QOrganizerItemSortOrder> QOrganizerItemFetchForExportRequest::sorting() co
 }
 
 /*!
-  Returns the fetch hint which may be used by the backend to optimize organizer item retrieval.
-  A client should not make changes to an organizer item which has been retrieved
-  using a fetch hint other than the default fetch hint.  Doing so will result in information
-  loss when saving the organizer item back to the manager (as the "new" restricted organizer item will
-  replace the previously saved organizer item in the backend).
-  \sa QOrganizerItemFetchHint
+    Returns the fetch hint which may be used by the backend to optimize item retrieval.
+
+    A client should not make changes to a item which has been retrieved using a fetch hint other than
+    the default fetch hint.  Doing so will result in information loss when saving the item back to
+    the manager (as the "new" restricted item will replace the previously saved item in the backend).
  */
 QOrganizerItemFetchHint QOrganizerItemFetchForExportRequest::fetchHint() const
 {
@@ -157,10 +166,7 @@ QOrganizerItemFetchHint QOrganizerItemFetchForExportRequest::fetchHint() const
 }
 
 /*!
-   Returns the date-time which is the lower bound for the range in which items will be returned.
-   An invalid (default-constructed) date-time signifies that no lower bound is given (matches everything
-   up to the end date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
+    Returns the date-time which is the lower bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemFetchForExportRequest::startDate() const
 {
@@ -170,10 +176,7 @@ QDateTime QOrganizerItemFetchForExportRequest::startDate() const
 }
 
 /*!
-   Returns the date-time which is the upper bound for the range in which items will be returned.
-   An invalid (default-constructed) date-time signifies that no upper bound is given (matches everything
-   after the start date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
+    Returns the date-time which is the upper bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemFetchForExportRequest::endDate() const
 {
@@ -182,7 +185,8 @@ QDateTime QOrganizerItemFetchForExportRequest::endDate() const
     return d->m_endDate;
 }
 
-/*! Returns the list of organizer items retrieved by this request
+/*!
+    Returns the list of organizer items retrieved by this request.
 */
 QList<QOrganizerItem> QOrganizerItemFetchForExportRequest::items() const
 {

@@ -39,52 +39,49 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemidfetchrequest.h"
-#include "qorganizeritemrequests_p.h"
+#include <qorganizeritemidfetchrequest.h>
+#include <private/qorganizeritemrequests_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerItemIdFetchRequest
-  \brief The QOrganizerItemIdFetchRequest class allows a client to asynchronously
-    request a list of organizer item ids from a organizer item store manager.
-  \inmodule QtOrganizer
-
-
-  For a QOrganizerItemIdFetchRequest, the resultsAvailable() signal will be emitted when the resultant
-  manager organizer item ids (which may be retrieved by calling ids()), are updated, as well as if
-  the overall operation error (which may be retrieved by calling error()) is updated.
-
-  \ingroup organizer-requests
+    \class QOrganizerItemIdFetchRequest
+    \brief The QOrganizerItemIdFetchRequest class allows a client to asynchronously fetch organizer
+           item IDs from a backend.
+    \inmodule QtOrganizer
+    \ingroup organizer-requests
  */
 
-/*! Constructs a new organizer item id fetch request whose parent is the specified \a parent
+/*!
+    Constructs a new organizer item ID fetch request whose parent is the specified \a parent.
 */
-QOrganizerItemIdFetchRequest::QOrganizerItemIdFetchRequest(QObject* parent)
+QOrganizerItemIdFetchRequest::QOrganizerItemIdFetchRequest(QObject *parent)
     : QOrganizerAbstractRequest(new QOrganizerItemIdFetchRequestPrivate, parent)
 {
 }
 
-/*! Frees memory in use by this request
+/*!
+    Frees memory in use by this request.
 */
 QOrganizerItemIdFetchRequest::~QOrganizerItemIdFetchRequest()
 {
     QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the filter which will be used to select the organizer items whose ids will be returned to \a filter
+/*!
+    Sets the filter which will be used to select the organizer items whose IDs will be returned to \a filter.
 */
-void QOrganizerItemIdFetchRequest::setFilter(const QOrganizerItemFilter& filter)
+void QOrganizerItemIdFetchRequest::setFilter(const QOrganizerItemFilter &filter)
 {
     Q_D(QOrganizerItemIdFetchRequest);
     QMutexLocker ml(&d->m_mutex);
     d->m_filter = filter;
 }
 
-/*! Sets the future sort ordering of the result of the request to \a sorting.  This function only has
-    effect on the result if called prior to calling \c start()
+/*!
+    Sets the future sort ordering of the result of the request to \a sorting.
 */
-void QOrganizerItemIdFetchRequest::setSorting(const QList<QOrganizerItemSortOrder>& sorting)
+void QOrganizerItemIdFetchRequest::setSorting(const QList<QOrganizerItemSortOrder> &sorting)
 {
     Q_D(QOrganizerItemIdFetchRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -92,11 +89,11 @@ void QOrganizerItemIdFetchRequest::setSorting(const QList<QOrganizerItemSortOrde
 }
 
 /*!
-   Sets the date-time which is the lower bound for the range for items whose ids will be returned to \a date.
-   An invalid (default-constructed) date-time signifies that no lower bound is given (matches everything
-   up to the end date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
- */
+    Sets the start period of the request to \a date.
+
+    A default-constructed (invalid) start date time specifies an open start date time (matches anything
+    which occurs up until the end date time).
+*/
 void QOrganizerItemIdFetchRequest::setStartDate(const QDateTime &date)
 {
     Q_D(QOrganizerItemIdFetchRequest);
@@ -105,11 +102,11 @@ void QOrganizerItemIdFetchRequest::setStartDate(const QDateTime &date)
 }
 
 /*!
-   Sets the date-time which is the upper bound for the range for items whose ids will be returned to \a date.
-   An invalid (default-constructed) date-time signifies that no upper bound is given (matches everything
-   after the start date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
- */
+    Sets the end period of the request to \a date.
+
+    A default-constructed (invalid) end date time specifies an open end date time (matches anything
+    which occurs after the start date time).
+*/
 void QOrganizerItemIdFetchRequest::setEndDate(const QDateTime &date)
 {
     Q_D(QOrganizerItemIdFetchRequest);
@@ -117,7 +114,8 @@ void QOrganizerItemIdFetchRequest::setEndDate(const QDateTime &date)
     d->m_endDate = date;
 }
 
-/*! Returns the filter which will be used to select the organizer items whose ids will be returned
+/*!
+    Returns the filter which will be used to select the organizer items whose IDs will be returned.
 */
 QOrganizerItemFilter QOrganizerItemIdFetchRequest::filter() const
 {
@@ -126,7 +124,8 @@ QOrganizerItemFilter QOrganizerItemIdFetchRequest::filter() const
     return d->m_filter;
 }
 
-/*! Returns the sort ordering which will be used to sort the result
+/*!
+    Returns the sort ordering which will be used to sort the result.
 */
 QList<QOrganizerItemSortOrder> QOrganizerItemIdFetchRequest::sorting() const
 {
@@ -136,10 +135,7 @@ QList<QOrganizerItemSortOrder> QOrganizerItemIdFetchRequest::sorting() const
 }
 
 /*!
-   Returns the date-time which is the lower bound for the range for items whose ids will be returned.
-   An invalid (default-constructed) date-time signifies that no lower bound is given (matches everything
-   up until the end date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
+    Returns the date-time which is the lower bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemIdFetchRequest::startDate() const
 {
@@ -149,10 +145,7 @@ QDateTime QOrganizerItemIdFetchRequest::startDate() const
 }
 
 /*!
-   Returns the date-time which is the upper bound for the range for items whose ids will be returned.
-   An invalid (default-constructed) date-time signifies that no upper bound is given (matches everything
-   after the start date).
-   Note that an item matches if either it or any of its occurrences occur within the defined range.
+    Returns the date-time which is the upper bound for the range in which items will be returned.
  */
 QDateTime QOrganizerItemIdFetchRequest::endDate() const
 {
@@ -161,7 +154,8 @@ QDateTime QOrganizerItemIdFetchRequest::endDate() const
     return d->m_endDate;
 }
 
-/*! Returns the list of ids of organizer items which matched the request
+/*!
+    Returns the list of IDs of organizer items retrieved by this request.
 */
 QList<QOrganizerItemId> QOrganizerItemIdFetchRequest::itemIds() const
 {

@@ -42,11 +42,8 @@
 #ifndef QORGANIZERITEMREMOVEREQUEST_H
 #define QORGANIZERITEMREMOVEREQUEST_H
 
-#include "qorganizerglobal.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemfilter.h"
-
-#include <QList>
+#include <qorganizerabstractrequest.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -56,15 +53,13 @@ class Q_ORGANIZER_EXPORT QOrganizerItemRemoveRequest : public QOrganizerAbstract
     Q_OBJECT
 
 public:
-    QOrganizerItemRemoveRequest(QObject* parent = 0);
+    QOrganizerItemRemoveRequest(QObject *parent = 0);
     ~QOrganizerItemRemoveRequest();
 
-    /* Selection */
-    void setItemId(const QOrganizerItemId& organizeritemId);
-    void setItemIds(const QList<QOrganizerItemId>& organizeritemIds);
+    void setItemId(const QOrganizerItemId &itemId);
+    void setItemIds(const QList<QOrganizerItemId> &itemIds);
     QList<QOrganizerItemId> itemIds() const;
 
-    /* Results */
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
 private:
@@ -75,4 +70,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMREMOVEREQUEST_H

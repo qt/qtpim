@@ -39,36 +39,21 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERMANAGERENGINE_H
 #define QORGANIZERMANAGERENGINE_H
 
-#include <QSharedData>
-#include <QMap>
-#include <QSet>
-#include <QString>
-#include <QDateTime>
-#include <QVariant>
-#include <QObject>
-
-#include "qorganizercollection.h"
-#include "qorganizercollectionid.h"
-#include "qorganizeritem.h"
-#include "qorganizermanager.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemfetchhint.h"
-#include "qorganizeritemrequests.h"
+#include <qorganizermanager.h>
+#include <qorganizerabstractrequest.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerItemFilter;
-class QOrganizerItemSortOrder;
-class QOrganizerItemEngineId;
-
-/* Forward decls, since these don't actually exist yet */
-class QOrganizerItemOccurrenceFetchRequest;
+class QOrganizerCollectionFetchRequest;
+class QOrganizerCollectionRemoveRequest;
+class QOrganizerCollectionSaveRequest;
 class QOrganizerItemIdFetchRequest;
+class QOrganizerItemFetchByIdRequest;
 class QOrganizerItemFetchRequest;
+class QOrganizerItemOccurrenceFetchRequest;
 class QOrganizerItemRemoveRequest;
 class QOrganizerItemSaveRequest;
 class QOrganizerItemFetchForExportRequest;
@@ -78,14 +63,11 @@ class Q_ORGANIZER_EXPORT QOrganizerManagerEngine : public QObject
     Q_OBJECT
 
 public:
-    QOrganizerManagerEngine() {}
+    QOrganizerManagerEngine(QObject *parent = 0);
 
-    /* URI reporting */
     virtual QString managerName() const;
-    virtual QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
+    virtual QMap<QString, QString> managerParameters() const;
     virtual int managerVersion() const;
-
-    /* Default and only implementation of this */
     QString managerUri() const;
 
     // items
@@ -117,67 +99,84 @@ public:
                              QOrganizerManager::Error *error);
 
     // collections
-    virtual QOrganizerCollection defaultCollection(QOrganizerManager::Error* error);
-    virtual QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
-    virtual QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
-    virtual bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);
-    virtual bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
+    virtual QOrganizerCollection defaultCollection(QOrganizerManager::Error *error);
+    virtual QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
+    virtual QList<QOrganizerCollection> collections(QOrganizerManager::Error *error);
+    virtual bool saveCollection(QOrganizerCollection *collection, QOrganizerManager::Error *error);
+    virtual bool removeCollection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
 
-    /* Asynchronous Request Support */
-    virtual void requestDestroyed(QOrganizerAbstractRequest* req);
-    virtual bool startRequest(QOrganizerAbstractRequest* req);
-    virtual bool cancelRequest(QOrganizerAbstractRequest* req);
-    virtual bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
+    // asynchronous request support
+    virtual void requestDestroyed(QOrganizerAbstractRequest *request);
+    virtual bool startRequest(QOrganizerAbstractRequest *request);
+    virtual bool cancelRequest(QOrganizerAbstractRequest *request);
+    virtual bool waitForRequestFinished(QOrganizerAbstractRequest *request, int msecs);
 
-    /* Capabilities reporting */
+    static void updateRequestState(QOrganizerAbstractRequest *request, QOrganizerAbstractRequest::State state);
+
+    static void updateItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest *request, const QList<QOrganizerItem> &result,
+                                                 QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
+
+    static void updateItemIdFetchRequest(QOrganizerItemIdFetchRequest *request, const QList<QOrganizerItemId> &result,
+                                         QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
+
+    static void updateItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *request, const QList<QOrganizerItem> &result,
+                                           QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error> &errorMap,
+                                           QOrganizerAbstractRequest::State);
+
+    static void updateItemFetchRequest(QOrganizerItemFetchRequest *request, const QList<QOrganizerItem> &result,
+                                       QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
+
+    static void updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest *request, const QList<QOrganizerItem> &result,
+                                                QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
+
+    static void updateItemRemoveRequest(QOrganizerItemRemoveRequest *request, QOrganizerManager::Error error,
+                                        const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
+
+    static void updateItemSaveRequest(QOrganizerItemSaveRequest *request, const QList<QOrganizerItem> &result, QOrganizerManager::Error error,
+                                      const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
+
+    static void updateCollectionFetchRequest(QOrganizerCollectionFetchRequest *request, const QList<QOrganizerCollection> &result,
+                                             QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
+
+    static void updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest *request, QOrganizerManager::Error error,
+                                              const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
+
+    static void updateCollectionSaveRequest(QOrganizerCollectionSaveRequest *request, const QList<QOrganizerCollection> &result,
+                                            QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error> &errorMap,
+                                            QOrganizerAbstractRequest::State newState);
+
+    // functionality reporting
     virtual QList<QOrganizerItemFilter::FilterType> supportedFilters() const;
     virtual QList<QOrganizerItemDetail::DetailType> supportedItemDetails(QOrganizerItemType::ItemType itemType) const;
     virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
+    // helper
+    static const QOrganizerItemEngineId *engineItemId(const QOrganizerItemId &itemId);
+    static const QOrganizerCollectionEngineId *engineCollectionId(const QOrganizerCollectionId &collectionId);
+
+    static int addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders);
+    static int compareItem(const QOrganizerItem &a, const QOrganizerItem &b, const QList<QOrganizerItemSortOrder> &sortOrders);
+    static int compareVariant(const QVariant &a, const QVariant &b, Qt::CaseSensitivity sensitivity);
+    static bool isItemBetweenDates(const QOrganizerItem &item, const QDateTime &startPeriod, const QDateTime &endPeriod);
+    static bool itemLessThan(const QOrganizerItem &a, const QOrganizerItem &b);
+    static bool testFilter(const QOrganizerItemFilter &filter, const QOrganizerItem &item);
+    static QOrganizerItemFilter canonicalizedFilter(const QOrganizerItemFilter &filter);
+
 Q_SIGNALS:
     void dataChanged();
-    void itemsAdded(const QList<QOrganizerItemId>& itemIds);
-    void itemsChanged(const QList<QOrganizerItemId>& itemIds);
-    void itemsRemoved(const QList<QOrganizerItemId>& itemIds);
-    void collectionsAdded(const QList<QOrganizerCollectionId>& collectionIds);
-    void collectionsChanged(const QList<QOrganizerCollectionId>& collectionIds);
-    void collectionsRemoved(const QList<QOrganizerCollectionId>& collectionIds);
-
-public:
-    // Async update functions
-    static void updateRequestState(QOrganizerAbstractRequest* req, QOrganizerAbstractRequest::State state);
-
-    static void updateItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
-    static void updateItemIdFetchRequest(QOrganizerItemIdFetchRequest* req, const QList<QOrganizerItemId>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
-    static void updateItemFetchByIdRequest(QOrganizerItemFetchByIdRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State);
-    static void updateItemFetchRequest(QOrganizerItemFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
-    static void updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
-    static void updateItemRemoveRequest(QOrganizerItemRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateItemSaveRequest(QOrganizerItemSaveRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateCollectionFetchRequest(QOrganizerCollectionFetchRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState);
-    static void updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-    static void updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState);
-
-    // Other protected area update functions
-    static const QOrganizerItemEngineId* engineItemId(const QOrganizerItemId& id);
-    static const QOrganizerCollectionEngineId* engineCollectionId(const QOrganizerCollectionId& id);
-
-    /* Helper functions */
-    static bool isItemBetweenDates(const QOrganizerItem& item, const QDateTime& startPeriod, const QDateTime& endPeriod);
-    static bool itemLessThan(const QOrganizerItem& a, const QOrganizerItem& b);
-    static int compareItem(const QOrganizerItem& a, const QOrganizerItem& b, const QList<QOrganizerItemSortOrder>& sortOrders);
-    static int addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders);
-    static int compareVariant(const QVariant& first, const QVariant& second, Qt::CaseSensitivity sensitivity);
-    static bool testFilter(const QOrganizerItemFilter& filter, const QOrganizerItem& item);
-
-    static QOrganizerItemFilter canonicalizedFilter(const QOrganizerItemFilter& filter);
+    void itemsAdded(const QList<QOrganizerItemId> &itemIds);
+    void itemsChanged(const QList<QOrganizerItemId> &itemIds);
+    void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
+    void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds);
 
 private:
-    /* QOrganizerItemChangeSet is a utility class used to emit the appropriate signals */
+    Q_DISABLE_COPY(QOrganizerManagerEngine)
     friend class QOrganizerItemChangeSet;
     friend class QOrganizerCollectionChangeSet;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERMANAGERENGINE_H

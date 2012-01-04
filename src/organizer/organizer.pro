@@ -17,7 +17,6 @@ include(details/details.pri)
 include(items/items.pri)
 include(requests/requests.pri)
 include(filters/filters.pri)
-include(engines/engines.pri)
 
 PUBLIC_HEADERS += \
     qorganizercollection.h \

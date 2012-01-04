@@ -54,7 +54,6 @@
 #include <QDir>
 #include <QFile>
 
-#include "qorganizeriteminvalidbackend_p.h"
 #include "qorganizerpluginsearch_p.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -139,7 +138,7 @@ void QOrganizerManagerData::createEngine(const QString& managerName, const QMap<
     if (!m_engine) {
         if (m_lastError == QOrganizerManager::NoError)
             m_lastError = QOrganizerManager::DoesNotExistError;
-        m_engine = new QOrganizerItemInvalidEngine();
+        m_engine = new QOrganizerManagerEngine();
     }
 }
 

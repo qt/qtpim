@@ -168,7 +168,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 */
 QString QOrganizerManagerEngine::managerName() const
 {
-    return QString(QLatin1String("base"));
+    return QString(QLatin1String("invalid"));
 }
 
 /*!
@@ -506,6 +506,10 @@ QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes(
 
   Returns the engine backend implementation version number
  */
+int QOrganizerManagerEngine::managerVersion() const
+{
+    return 0;
+}
 
 /*!
     This function should be reimplemented to support synchronous calls to save organizer items.

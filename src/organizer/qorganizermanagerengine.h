@@ -81,9 +81,9 @@ public:
     QOrganizerManagerEngine() {}
 
     /* URI reporting */
-    virtual QString managerName() const = 0;                       // e.g. "Symbian"
+    virtual QString managerName() const;
     virtual QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
-    virtual int managerVersion() const = 0;
+    virtual int managerVersion() const;
 
     /* Default and only implementation of this */
     QString managerUri() const;

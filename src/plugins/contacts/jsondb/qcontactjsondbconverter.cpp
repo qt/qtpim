@@ -46,7 +46,7 @@
 #include <QCryptographicHash>
 
 #include <private/jsondb-strings_p.h>
-QT_ADDON_JSONDB_USE_NAMESPACE
+Q_USE_JSONDB_NAMESPACE
 
 #include "qcontactdetail.h"
 #include "qcontacttype.h"

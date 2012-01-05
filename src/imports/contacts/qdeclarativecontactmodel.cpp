@@ -208,6 +208,13 @@ void QDeclarativeContactModel::update()
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
 }
 
+/*!
+  \qmlmethod ContactModel::cancelUpdate()
+
+  Cancel any unfinished requests to update the contacts in the model.
+
+  \sa ContactModel::autoUpdate  ContactModel::update
+  */
 void QDeclarativeContactModel::cancelUpdate()
 {
     if (d->m_fetchRequest) {
@@ -418,7 +425,7 @@ void QDeclarativeContactModel::setFetchHint(QDeclarativeContactFetchHint* fetchH
 /*!
   \qmlproperty list<Contact> ContactModel::contacts
 
-  This property holds a list of co#include "moc_qdeclarativecontactmodel_p.cpp"ntacts.
+  This property holds the list of contacts.
 
   \sa Contact
   */

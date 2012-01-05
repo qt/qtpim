@@ -44,6 +44,7 @@
 #include <QVariantList>
 #include <QDebug>
 #include <QCryptographicHash>
+#include <QUuid>
 
 #include <private/jsondb-strings_p.h>
 Q_USE_JSONDB_NAMESPACE
@@ -765,7 +766,6 @@ QString QContactJsonDbConverter::convertSortOrder(const QList<QContactSortOrder>
     return newJsonDbQuery;
 }
 
-#include <quuid.h>
 QContactId QContactJsonDbConverter::convertId(const QString& id, const QContactJsonDbEngine& engine) const {
     QContactId newId;
     //QContactLocalId localId = QT_PREPEND_NAMESPACE(qHash)(id);

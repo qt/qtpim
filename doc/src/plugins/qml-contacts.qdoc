@@ -208,7 +208,7 @@
 
     The following sample applications show examples of API usage:
     \list
-        \o TODO: a qml contacts example needs adding here!!!
+        \o \l{qmlcontactslistview}{Qt Quick Contacts List view}
     \endlist
 
     \section2 Tutorials

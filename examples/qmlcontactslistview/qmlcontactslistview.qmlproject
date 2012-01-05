@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the documentation of the Qt Toolkit.
+** This file is part of the documentation of the Qt Pim Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -24,29 +24,21 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+import QmlProject 1.1
 
-/*!
-    \page all-qtpim-examples.html
-    \title Qt PIM Examples
+Project {
+    mainFile: "qmlcontactslistview.qml"
 
-    Qt Pim module within Qt 5 comes with a number of modules. These are Contacts, Organizer and Versit. There are
-     a variety of examples that cover the entire range of the the PIM api's.  You will find them in thier own
-    documentation but are also accessible from here.
-
-    \section2 Contacts
-
-    \list
-    \o \l{qmlcontactslistview}{Qt Quick Contacts List view}
-    \endlist
-
-    \section2 Organizer
-
-    \list
-    \o \l{qmlorganizerlistview}{Qt Quick Organizer List view}
-    \o \l{calendardemo}{Calendar Demo}
-    \omit \o \l{qmlorganizer}{QML Organizer} \endomit
-    \o \l{todo}{ToDo Example}
-    \endlist
-
-*/
-
+    /* Include .qml, .js, and image files from current directory and subdirectories */
+    QmlFiles {
+        directory: "."
+    }
+    JavaScriptFiles {
+        directory: "."
+    }
+    ImageFiles {
+        directory: "."
+    }
+    /* List of plugin directories passed to QML runtime */
+    // importPaths: [ "../exampleplugin" ]
+}

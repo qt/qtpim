@@ -44,8 +44,6 @@
 #include "qorganizerjsondbstring.h"
 #include "qorganizer.h"
 
-#include <private/jsondb-strings_p.h>
-
 Q_USE_JSONDB_NAMESPACE
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -222,7 +220,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
 {
     // first handle mandatory fields
 
-    QString jsonDbUuid = object.value(JsonDbString::kUuidStr).toString();
+    QString jsonDbUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonDbUuid.isEmpty())
         return false;
     item->setId(QOrganizerItemId(new QOrganizerJsonDbItemId(jsonDbUuid)));
@@ -232,7 +230,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         return false;
     item->setGuid(guid);
 
-    QString jsonDbType = object.value(JsonDbString::kTypeStr).toString();
+    QString jsonDbType = object.value(QOrganizerJsonDbStr::jsonDbType()).toString();
     if (jsonDbType == QOrganizerJsonDbStr::event())
         item->setType(QOrganizerItemType::TypeEvent);
     else if (jsonDbType == QOrganizerJsonDbStr::todo())
@@ -390,8 +388,8 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 jsonDbObjectToLocationDetail(locationMap, &location);
                 item->saveDetail(&location);
             }
-        } else if (i.key() == JsonDbString::kUuidStr
-            || i.key() == JsonDbString::kTypeStr
+        } else if (i.key() == QOrganizerJsonDbStr::jsonDbUuid()
+            || i.key() == QOrganizerJsonDbStr::jsonDbType()
             || i.key() == QOrganizerJsonDbStr::itemCollectionId()
             || i.key() == QOrganizerJsonDbStr::itemGuid()) {
             // skip the mandatory fields, as they're already parsed
@@ -419,7 +417,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
     if (item.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEvent event = static_cast<QOrganizerEvent>(item);
-        object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::event());
+        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::event());
 
         QOrganizerEventTime eventTime = event.detail(QOrganizerEventTime::DefinitionName);
         if (eventTime.hasValue(QOrganizerEventTime::FieldStartDateTime))
@@ -435,7 +433,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         exceptionDates = event.exceptionDates();
     } else if (item.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodo todo = static_cast<QOrganizerTodo>(item);
-        object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::todo());
+        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::todo());
 
         QOrganizerTodoTime todoTime = todo.detail(QOrganizerTodoTime::DefinitionName);
         if (todoTime.hasValue(QOrganizerTodoTime::FieldStartDateTime))
@@ -455,7 +453,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
     if (!item.id().isNull()) {
         QString jsonUuid = item.id().toString().remove (QOrganizerJsonDbStr::managerName());
-        object->insert (JsonDbString::kUuidStr, jsonUuid);
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
     }
     object->insert(QOrganizerJsonDbStr::itemCollectionId(),
                    item.collectionId().toString().remove(QOrganizerJsonDbStr::managerName()));
@@ -744,7 +742,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &
 
 bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)
 {
-    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    QString jsonUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonUuid.isEmpty()) {
         return false;
     }
@@ -783,10 +781,10 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
     if (!collection.id().isNull()) {
         QString jsonUuid = collection.id().toString();
         jsonUuid.remove (QOrganizerJsonDbStr::managerName());
-        object->insert(JsonDbString::kUuidStr, jsonUuid);
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
     }
 
-    object->insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::collection());
+    object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::collection());
     object->insert(QOrganizerJsonDbStr::collectionDefaultFlag(), isDefaultCollection);
 
     QVariantMap metaData = collection.metaData();
@@ -972,7 +970,7 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
     // audibleReminder and start time details are mandatory for alarm object
     if (!audibleReminder.isEmpty() && alarmStartTime.isValid()) {
         // alarm object
-        alarmObject.insert(JsonDbString::kTypeStr, QOrganizerJsonDbStr::alarm());
+        alarmObject.insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
         // alarm start time
         if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
             alarmStartTime = alarmStartTime.addSecs(-audibleReminder.secondsBeforeStart());//Nagetive value
@@ -1215,12 +1213,12 @@ bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFi
 
 QString QOrganizerJsonDbConverter::jsonDbNotificationObjectToOrganizerType(const QVariantMap &object) const
 {
-    return object.value(JsonDbString::kTypeStr).toString();
+    return object.value(QOrganizerJsonDbStr::jsonDbType()).toString();
 }
 
 QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(const QVariantMap &object) const
 {
-    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    QString jsonUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonUuid.isEmpty())
         return QOrganizerItemId();
     else
@@ -1229,7 +1227,7 @@ QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(con
 
 QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QVariantMap &object) const
 {
-    QString jsonUuid = object.value(JsonDbString::kUuidStr).toString();
+    QString jsonUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonUuid.isEmpty())
         return QOrganizerCollectionId();
     else
@@ -1452,7 +1450,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerItemType::DefinitionName == detailType
             && QOrganizerItemType::FieldType ==  detailField) {
             jsonDbQueryStr += equalsQueryTemplate
-                .arg(JsonDbString::kTypeStr)
+                .arg(QOrganizerJsonDbStr::jsonDbType())
                 .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(organizerItemTypeMap(), df.value().toInt()));
 
         } else if (QOrganizerItemTag::DefinitionName == detailType

@@ -46,7 +46,6 @@
 #include "qorganizerjsondbstring.h"
 
 #include <jsondb-client.h>
-#include <private/jsondb-strings_p.h>
 #include <jsondb-error.h>
 
 Q_USE_JSONDB_NAMESPACE
@@ -339,7 +338,7 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         // then remaining responses may come when no request is processed and m_transactionIds
         // has been cleared. In such cases, do nothing.
         QVariantMap jsonDbObject(object.toMap());
-        if (jsonDbObject.isEmpty() || m_notificationObjectUuid != jsonDbObject.value(JsonDbString::kUuidStr).toString())
+        if (jsonDbObject.isEmpty() || m_notificationObjectUuid != jsonDbObject.value(QOrganizerJsonDbStr::jsonDbUuid()).toString())
             return;
     }
 
@@ -417,7 +416,7 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsResponse(int index, QOrganizerM
     if (error == QOrganizerManager::NoError) {
         if (item.id().isNull()) {
             // this is a new item
-            QString jsonUuid = object.toMap().value(JsonDbString::kUuidStr).toString();
+            QString jsonUuid = object.toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
             if (!jsonUuid.isEmpty()) {
                 QOrganizerJsonDbItemId* itemId = new QOrganizerJsonDbItemId;
                 itemId->setItemId(jsonUuid);
@@ -474,7 +473,7 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
         // Each representing one retrieved OrganizerItem
         QVariantList jsonDbObjectList;
         if (!object.isNull())
-            jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
+            jsonDbObjectList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
 
         for (int i = 0; i < jsonDbObjectList.size(); i++) {
             QOrganizerItem item;
@@ -511,7 +510,7 @@ void QOrganizerJsonDbDataStorage::handleItemsByIdResponse(QOrganizerManager::Err
         QMap<QOrganizerItemId, QOrganizerItem> itemMap;
         QVariantList jsonDbObjectList;
         if (!object.isNull())
-            jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
+            jsonDbObjectList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
 
         int i;
         for (i = 0; i < jsonDbObjectList.size(); i++) {
@@ -542,7 +541,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsRequest()
         jsonUuid = jsonUuid.remove(QOrganizerJsonDbStr::managerName());
 
         QVariantMap jsonDbRemoveItem;
-        jsonDbRemoveItem.insert(JsonDbString::kUuidStr, jsonUuid);
+        jsonDbRemoveItem.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
 
         //Remove the item from JSONDB
         int trId = m_jsonDb->remove(jsonDbRemoveItem);
@@ -578,14 +577,14 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdRequest()
 
 void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdResponse(const QVariant &object)
 {
-    int deletedCount = object.toMap().value(JsonDbString::kCountStr).toInt();
+    int deletedCount = object.toMap().value(QOrganizerJsonDbStr::jsonDbCount()).toInt();
     //Check if some items are delete from request
     if (deletedCount > 0) {
-        QList<QVariant> jsoItemList = object.toMap().value(JsonDbString::kDataStr).toList();
+        QList<QVariant> jsoItemList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
         //Make the item change set
         for (int i = 0; i < jsoItemList.size(); i++) {
             //Get delete item id
-            QString uuid = QOrganizerJsonDbStr::managerName() + jsoItemList.at(i).toMap().value(JsonDbString::kUuidStr).toString();
+            QString uuid = QOrganizerJsonDbStr::managerName() + jsoItemList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
             QOrganizerItemId itemId = QOrganizerItemId::fromString(uuid);
             m_itemIds.append(itemId);
         }
@@ -637,7 +636,7 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsResponse(int index, QOrga
     if (error == QOrganizerManager::NoError) {
         if (collection.id().isNull()) {
             // this is a new collection
-            QString jsonUuid = object.toMap().value(JsonDbString::kUuidStr).toString();
+            QString jsonUuid = object.toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
             if (!jsonUuid.isEmpty()) {
                 QOrganizerJsonDbCollectionId* collectionId = new QOrganizerJsonDbCollectionId;
                 collectionId->setCollectionId(jsonUuid);
@@ -675,7 +674,7 @@ void QOrganizerJsonDbDataStorage::handleCollectionsResponse(QOrganizerManager::E
 
         QVariantList jsonDbObjectList;
         if (!object.isNull())
-            jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
+            jsonDbObjectList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
 
         for (int i = 0; i < jsonDbObjectList.size(); i++) {
             QOrganizerCollection collection;
@@ -703,7 +702,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsRequest()
         QString jsonUuid = collectionId.toString();
         jsonUuid = jsonUuid.remove(QOrganizerJsonDbStr::managerName());
         QVariantMap uuidObject;
-        uuidObject.insert(JsonDbString::kUuidStr, jsonUuid);
+        uuidObject.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);
         collectionJsonDbUuids.append(uuidObject);
     }
     //Remove the item from JSONDB
@@ -713,7 +712,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsRequest()
 
 void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant &object)
 {
-    int deletedCount = object.toMap().value(JsonDbString::kCountStr).toInt();
+    int deletedCount = object.toMap().value(QOrganizerJsonDbStr::jsonDbCount()).toInt();
     if (QOrganizerManager::NoError == error) {
         //Request collection remove count
         int requestCount = m_removeCollectionIds.size();
@@ -725,16 +724,16 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerMana
     } else {
         //Error happened and not all collection were removed
         //Figure out the removed and non-removed collections
-        QList<QVariant> jsonErrorList = object.toMap().value(JsonDbString::kErrorStr).toList();
+        QList<QVariant> jsonErrorList = object.toMap().value(QOrganizerJsonDbStr::jsonDbError()).toList();
 
         //Check each error and update error map
         for (int i = 0; i < jsonErrorList.size(); i++) {
-            QString uuid = QOrganizerJsonDbStr::managerName() + jsonErrorList.at(i).toMap().value(JsonDbString::kUuidStr).toString();
+            QString uuid = QOrganizerJsonDbStr::managerName() + jsonErrorList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
             QOrganizerCollectionId collectionId = QOrganizerCollectionId::fromString(uuid);
             //Find out the item index
             int errorIndex = m_removeCollectionIds.key(collectionId, -1);
             if (errorIndex != -1) {
-                JsonDbError::ErrorCode errorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorList.at(i).toMap().value(JsonDbString::kErrorStr).toInt());
+                JsonDbError::ErrorCode errorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbError()).toInt());
                 QOrganizerManager::Error removeError = m_converter.jsondbErrorToOrganizerError(errorCode);
                 m_errorMap->insert(errorIndex, removeError);
             }
@@ -754,11 +753,11 @@ QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const 
 {
     JsonDbError::ErrorCode jsonErrorCode;
 
-    QVariant jsonErrorObject = object.toMap().value(JsonDbString::kErrorStr);
+    QVariant jsonErrorObject = object.toMap().value(QOrganizerJsonDbStr::jsonDbError());
     if (jsonErrorObject.isNull() || jsonErrorObject.toList().isEmpty())
         jsonErrorCode = static_cast<JsonDbError::ErrorCode>(errorCode);
     else
-        jsonErrorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorObject.toList().at(0).toMap().value(JsonDbString::kCodeStr).toInt());
+        jsonErrorCode = static_cast<JsonDbError::ErrorCode>(jsonErrorObject.toList().at(0).toMap().value(QOrganizerJsonDbStr::jsonDbCode()).toInt());
 
     return m_converter.jsondbErrorToOrganizerError (jsonErrorCode);
 }
@@ -766,10 +765,10 @@ QOrganizerManager::Error QOrganizerJsonDbDataStorage::handleErrorResponse(const 
 void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
 {
     //jsondb query [?type="com.nokia.mt.alarm-daemon.Alarm"][?eventUuid="<m_itemIds[0]>"][=_uuid]
-    QString alarmIdQuery = QStringLiteral("[?") + JsonDbString::kTypeStr + QStringLiteral("=\"") + QOrganizerJsonDbStr::alarm() + QStringLiteral("\"]");
+    QString alarmIdQuery = QStringLiteral("[?") + QOrganizerJsonDbStr::jsonDbType() + QStringLiteral("=\"") + QOrganizerJsonDbStr::alarm() + QStringLiteral("\"]");
     alarmIdQuery += QStringLiteral("[?") + QOrganizerJsonDbStr::alarmEventUuid() + QStringLiteral("=\"");
     alarmIdQuery += m_itemIds[0].toString().remove(QOrganizerJsonDbStr::managerName());
-    alarmIdQuery += QString(QStringLiteral("\"][=%1]")).arg(JsonDbString::kUuidStr);
+    alarmIdQuery += QString(QStringLiteral("\"][=%1]")).arg(QOrganizerJsonDbStr::jsonDbUuid());
     int trId = m_jsonDb->query(alarmIdQuery);
     m_transactionIds.insert(trId, 0);
 }
@@ -778,7 +777,7 @@ void QOrganizerJsonDbDataStorage::handleAlarmIdResponse(QOrganizerManager::Error
 {
     QVariantList jsonDbObjectList;
     if (QOrganizerManager::NoError == error && !object.isNull()) {
-        jsonDbObjectList = object.toMap().value(JsonDbString::kDataStr).toList();
+        jsonDbObjectList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
         if (jsonDbObjectList.size() == 1)
             m_alarmId = jsonDbObjectList.at(0).toString();
         else if (jsonDbObjectList.size() > 1) {
@@ -799,7 +798,7 @@ void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
         if (m_alarmId.isEmpty())
             trId = m_jsonDb->create(jsonDbAlarm);
         else {
-            jsonDbAlarm.insert(JsonDbString::kUuidStr, m_alarmId);
+            jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), m_alarmId);
             trId = m_jsonDb->update(jsonDbAlarm);
         }
         m_transactionIds.insert(trId, 0);
@@ -822,7 +821,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveAlarmRequest()
 {
     if (!m_alarmId.isEmpty()) {
         QVariantMap jsonDbRemoveItem;
-        jsonDbRemoveItem.insert(JsonDbString::kUuidStr, m_alarmId);
+        jsonDbRemoveItem.insert(QOrganizerJsonDbStr::jsonDbUuid(), m_alarmId);
         int trId = m_jsonDb->remove(jsonDbRemoveItem);
         m_transactionIds.insert(trId, 0);
     } else {

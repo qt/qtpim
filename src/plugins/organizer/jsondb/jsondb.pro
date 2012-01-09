@@ -1,6 +1,6 @@
 load(qt_module)
 
-QT += organizer network jsondb jsondb-private
+QT += organizer network jsondb
 
 TARGET = qtorganizer_jsondb
 target.path += $$[QT_INSTALL_PLUGINS]/organizer

@@ -58,6 +58,14 @@ public:
 
     const static QString &jsonDbSchemaPrefix();
 
+    // JsonDb strings
+    const static QString &jsonDbUuid();
+    const static QString &jsonDbType();
+    const static QString &jsonDbData();
+    const static QString &jsonDbCount();
+    const static QString &jsonDbError();
+    const static QString &jsonDbCode();
+
     // JsonDb query string
     const static QString &jsonDbQueryAllItems();
     const static QString &jsonDbQueryAllCollections();

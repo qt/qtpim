@@ -68,6 +68,43 @@ const QString &QOrganizerJsonDbStr::jsonDbSchemaPrefix()
     return string;
 }
 
+// JsonDb strings
+const QString &QOrganizerJsonDbStr::jsonDbUuid()
+{
+    static const QString string(QStringLiteral("_uuid"));
+    return string;
+}
+
+const QString &QOrganizerJsonDbStr::jsonDbType()
+{
+    static const QString string(QStringLiteral("_type"));
+    return string;
+}
+
+const QString &QOrganizerJsonDbStr::jsonDbData()
+{
+    static const QString string(QStringLiteral("data"));
+    return string;
+}
+
+const QString &QOrganizerJsonDbStr::jsonDbCount()
+{
+    static const QString string(QStringLiteral("count"));
+    return string;
+}
+
+const QString &QOrganizerJsonDbStr::jsonDbError()
+{
+    static const QString string(QStringLiteral("error"));
+    return string;
+}
+
+const QString &QOrganizerJsonDbStr::jsonDbCode()
+{
+    static const QString string(QStringLiteral("code"));
+    return string;
+}
+
 // JsonDb query string
 const QString &QOrganizerJsonDbStr::jsonDbQueryAllItems()
 {

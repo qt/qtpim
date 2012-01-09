@@ -44,7 +44,7 @@
 
 /*!
     \class QOrganizerItemFilter
-    \brief The QOrganizerItemFilter class is used to filter items made available through a QOrganizerManager.
+    \brief The QOrganizerItemFilter class is used to filter items made available through a backend.
     \inmodule QtOrganizer
     \ingroup organizer-main
 

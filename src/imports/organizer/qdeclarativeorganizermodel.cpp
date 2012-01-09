@@ -49,6 +49,7 @@
 #include <QFile>
 
 #include <qorganizeritemrequests.h>
+#include <QtCore/qmath.h>
 
 QTVERSITORGANIZER_USE_NAMESPACE
 

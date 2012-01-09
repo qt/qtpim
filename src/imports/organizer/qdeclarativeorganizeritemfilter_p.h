@@ -42,15 +42,8 @@
 #ifndef QDECLARATIVEORGANIZERITEMFILTER_P_H
 #define QDECLARATIVEORGANIZERITEMFILTER_P_H
 
-#include <QSet>
-
-#include <qdeclarative.h>
-#include <QDeclarativeExtensionPlugin>
-#include <qorganizeritemfilters.h>
-#include <QDeclarativeListProperty>
-#include <QDeclarativeParserStatus>
-
 #include "qdeclarativeorganizeritemdetail_p.h"
+#include <qorganizeritemfilters.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -58,35 +51,25 @@ class QDeclarativeOrganizerItemFilter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(FilterType type READ type NOTIFY filterChanged)
-
     Q_ENUMS(FilterType)
     Q_FLAGS(MatchFlags)
+    Q_PROPERTY(FilterType type READ type NOTIFY filterChanged)
+
 public:
-    QDeclarativeOrganizerItemFilter(QObject *parent=0)
-        :QObject(parent)
-    {
-        //for grouped filter: intersect /union filters
-        if (parent && qobject_cast<QDeclarativeOrganizerItemFilter*>(parent)) {
-            connect(this, SIGNAL(filterChanged()), parent, SIGNAL(filterChanged()));
-        }
-    }
+    QDeclarativeOrganizerItemFilter(QObject *parent = 0);
 
     enum FilterType {
+        DefaultFilter = QOrganizerItemFilter::DefaultFilter,
         InvalidFilter = QOrganizerItemFilter::InvalidFilter,
-        DetailFilter = QOrganizerItemFilter::DetailFilter,
-        DetailRangeFilter = QOrganizerItemFilter::DetailRangeFilter,
         IntersectionFilter = QOrganizerItemFilter::IntersectionFilter,
         UnionFilter = QOrganizerItemFilter::UnionFilter,
-        IdFilter = QOrganizerItemFilter::IdFilter,
         CollectionFilter = QOrganizerItemFilter::CollectionFilter,
-        DefaultFilter = QOrganizerItemFilter::DefaultFilter
+        DetailFilter = QOrganizerItemFilter::DetailFilter,
+        DetailRangeFilter = QOrganizerItemFilter::DetailRangeFilter,
+        IdFilter = QOrganizerItemFilter::IdFilter
     };
 
-    FilterType type() const {
-        return static_cast<QDeclarativeOrganizerItemFilter::FilterType>(filter().type());
-    }
-
+    FilterType type() const;
 
     enum MatchFlag {
         MatchExactly = QOrganizerItemFilter::MatchExactly,
@@ -98,13 +81,23 @@ public:
     };
     Q_DECLARE_FLAGS(MatchFlags, MatchFlag)
 
-    virtual QOrganizerItemFilter filter() const
-    {
-        return QOrganizerItemFilter();
-    }
+    // used by model
+    virtual QOrganizerItemFilter filter() const;
 
-signals:
+Q_SIGNALS:
     void filterChanged();
+};
+
+
+class QDeclarativeOrganizerItemInvalidFilter : public QDeclarativeOrganizerItemFilter
+{
+    Q_OBJECT
+
+public:
+    QDeclarativeOrganizerItemInvalidFilter(QObject *parent = 0);
+
+    // used by model
+    QOrganizerItemFilter filter() const;
 };
 
 
@@ -115,73 +108,69 @@ class QDeclarativeOrganizerItemCompoundFilter : public QDeclarativeOrganizerItem
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
-    explicit QDeclarativeOrganizerItemCompoundFilter(QObject* parent = 0) : QDeclarativeOrganizerItemFilter(parent)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
-    virtual ~QDeclarativeOrganizerItemCompoundFilter() {}
-    // 'READ' accessor for the filters, basically this is also a 'WRITE' accessor
-    // as per QDeclarativeListProperty's design.
+    explicit QDeclarativeOrganizerItemCompoundFilter(QObject *parent = 0);
+    virtual ~QDeclarativeOrganizerItemCompoundFilter();
+
     QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> filters();
 
-    static void filters_append(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop, QDeclarativeOrganizerItemFilter* filter);
-    static int filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop);
-    static QDeclarativeOrganizerItemFilter* filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop, int index);
-    static void filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop);
+    static void filters_append(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop, QDeclarativeOrganizerItemFilter *filter);
+    static int filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop);
+    static QDeclarativeOrganizerItemFilter *filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop, int index);
+    static void filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop);
 
-signals:
+Q_SIGNALS:
     void valueChanged();
 
 protected:
-    QList<QDeclarativeOrganizerItemFilter*> m_filters;
+    QList<QDeclarativeOrganizerItemFilter *> m_filters;
 };
 
-//collection filter
+
+class QDeclarativeOrganizerItemIntersectionFilter : public QDeclarativeOrganizerItemCompoundFilter
+{
+    Q_OBJECT
+
+public:
+    QDeclarativeOrganizerItemIntersectionFilter(QObject *parent = 0);
+
+    // used by model
+    QOrganizerItemFilter filter() const;
+};
+
+
+class QDeclarativeOrganizerItemUnionFilter : public QDeclarativeOrganizerItemCompoundFilter
+{
+    Q_OBJECT
+public:
+    QDeclarativeOrganizerItemUnionFilter(QObject *parent = 0);
+
+    // used by model
+    QOrganizerItemFilter filter() const;
+};
+
+
 class QDeclarativeOrganizerItemCollectionFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
+
 public:
-    QDeclarativeOrganizerItemCollectionFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
+    QDeclarativeOrganizerItemCollectionFilter(QObject *parent = 0);
 
-    QStringList ids() const
-    {
-        return m_ids;
-    }
+    QStringList ids() const;
+    void setIds(const QStringList &ids);
 
-    void setIds(const QStringList& ids)
-    {
-        foreach (const QString& id, ids) {
-            if (!m_ids.contains(id)) {
-                m_ids = ids;
-                emit valueChanged();
-                return;
-            }
-        }
-
-        foreach (const QString& id, m_ids) {
-            if (!ids.contains(id)) {
-                m_ids = ids;
-                emit valueChanged();
-                return;
-            }
-        }
-    }
-
+    // used by model
     QOrganizerItemFilter filter() const;
 
-signals:
+Q_SIGNALS:
     void valueChanged();
 
 private:
     QStringList m_ids;
 };
 
-//detail filter
+
 class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QDeclarativeParserStatus
 {
     Q_OBJECT
@@ -210,14 +199,14 @@ public:
     QDeclarativeOrganizerItemFilter::MatchFlags matchFlags() const;
     void setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags);
 
-    // internal
+    // used by model
     QOrganizerItemFilter filter() const;
 
 signals:
     void valueChanged();
 
 private:
-    void setDetailDefinitionName();
+    void setDetail();
 
     QDeclarativeOrganizerItemDetail::DetailType m_detail;
     int m_field;
@@ -226,10 +215,11 @@ private:
 };
 
 
-//detail range filter
 class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter, public QDeclarativeParserStatus
 {
     Q_OBJECT
+    Q_ENUMS(RangeFlag)
+    Q_FLAGS(RangeFlags)
     Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged)
     Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
@@ -237,8 +227,6 @@ class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerI
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_INTERFACES(QDeclarativeParserStatus)
-    Q_ENUMS(RangeFlag)
-    Q_FLAGS(RangeFlags)
 
 public:
     enum RangeFlag {
@@ -273,14 +261,14 @@ public:
     QVariant maxValue() const;
     void setMaxValue(const QVariant &value);
 
-    // internal
+    // used by model
     QOrganizerItemFilter filter() const;
 
 signals:
     void valueChanged();
 
 private:
-    void setDetailDefinitionName();
+    void setDetail();
 
     QDeclarativeOrganizerItemDetail::DetailType m_detail;
     int m_field;
@@ -290,124 +278,37 @@ private:
 };
 
 
-//id filter
 class QDeclarativeOrganizerItemIdFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantList ids READ ids WRITE setIds NOTIFY valueChanged)
+    Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
 
 public:
-    QDeclarativeOrganizerItemIdFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
+    QDeclarativeOrganizerItemIdFilter(QObject *parent = 0);
 
+    QStringList ids() const;
+    void setIds(const QStringList &ids);
+
+    // used by model
     QOrganizerItemFilter filter() const;
 
-    QVariantList ids() const
-    {
-        return m_ids;
-    }
-
-    void setIds(const QVariantList& ids)
-    {
-        foreach (const QVariant& id, ids) {
-            if (!m_ids.contains(id)) {
-                m_ids = ids;
-                emit valueChanged();
-                return;
-            }
-        }
-
-        foreach (const QVariant& id, m_ids) {
-            if (!ids.contains(id)) {
-                m_ids = ids;
-                emit valueChanged();
-            }
-        }
-    }
-
-signals:
+Q_SIGNALS:
     void valueChanged();
 
 private:
-    QVariantList m_ids;
-};
-
-
-//intersection filter
-class QDeclarativeOrganizerItemIntersectionFilter : public QDeclarativeOrganizerItemCompoundFilter
-{
-    Q_OBJECT
-public:
-    QDeclarativeOrganizerItemIntersectionFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemCompoundFilter(parent)
-    {
-    }
-
-    QOrganizerItemFilter filter() const
-    {
-        QList<QOrganizerItemFilter> filters;
-        foreach (const QDeclarativeOrganizerItemFilter* filter, m_filters) {
-            filters << filter->filter();
-        }
-        QOrganizerItemIntersectionFilter f;
-        f.setFilters(filters);
-        return f;
-    }
-};
-
-
-//union filter
-class QDeclarativeOrganizerItemUnionFilter : public QDeclarativeOrganizerItemCompoundFilter
-{
-    Q_OBJECT
-public:
-    QDeclarativeOrganizerItemUnionFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemCompoundFilter(parent)
-    {
-    }
-
-    QOrganizerItemFilter filter() const
-    {
-        QList<QOrganizerItemFilter> filters;
-        foreach (const QDeclarativeOrganizerItemFilter* filter, m_filters) {
-            filters << filter->filter();
-        }
-        QOrganizerItemUnionFilter f;
-        f.setFilters(filters);
-        return f;
-    }
-};
-
-//invalid filter
-class QDeclarativeOrganizerItemInvalidFilter : public QDeclarativeOrganizerItemFilter
-{
-    Q_OBJECT
-public:
-    QDeclarativeOrganizerItemInvalidFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent)
-    {
-    }
-
-    QOrganizerItemFilter filter() const
-    {
-        return QOrganizerItemInvalidFilter();
-    }
-
+    QStringList m_ids;
 };
 
 QTORGANIZER_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemInvalidFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCompoundFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIntersectionFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemUnionFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCollectionFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailRangeFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIdFilter))
-QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIntersectionFilter))
-QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemUnionFilter))
-QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemInvalidFilter))
 
-#endif
+#endif // QDECLARATIVEORGANIZERITEMFILTER_P_H

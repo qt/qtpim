@@ -756,6 +756,24 @@ QVariantList QDeclarativeOrganizerItemRecurrence::exceptionDates() const
     return dates;
 }
 
+void QDeclarativeOrganizerItemRecurrence::_saveRecurrenceRules()
+{
+    QSet<QOrganizerRecurrenceRule> rules;
+    foreach (const QDeclarativeOrganizerRecurrenceRule *r, m_recurrenceRules)
+        rules << r->rule();
+    m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceRules, QVariant::fromValue(rules));
+    emit valueChanged();
+}
+
+void QDeclarativeOrganizerItemRecurrence::_saveExceptionRules()
+{
+    QSet<QOrganizerRecurrenceRule> rules;
+    foreach (const QDeclarativeOrganizerRecurrenceRule *r, m_exceptionRules)
+        rules << r->rule();
+    m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionRules, QVariant::fromValue(rules));
+    emit valueChanged();
+}
+
 void QDeclarativeOrganizerItemRecurrence::rrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
                                                       QDeclarativeOrganizerRecurrenceRule *item)
 {

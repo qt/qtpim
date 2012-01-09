@@ -46,7 +46,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
     \class QOrganizerItemCollectionFilter
-    \brief The QOrganizerItemCollectionFilter class provides a filter based around the collection one'
+    \brief The QOrganizerItemCollectionFilter class provides a filter based around the collection one
            organizer item belongs to.
     \inmodule QtOrganizer
     \ingroup organizeritems-filters

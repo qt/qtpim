@@ -394,32 +394,14 @@ Q_SIGNALS:
     void valueChanged();
 
 private Q_SLOTS:
-    void _saveRecurrenceRules()
-    {
-        QSet<QOrganizerRecurrenceRule> rules;
-        foreach (const QDeclarativeOrganizerRecurrenceRule* r, m_recurrenceRules) {
-            rules << r->rule();
-        }
-        m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceRules, QVariant::fromValue(rules));
-        emit valueChanged();
-    }
-
-    void _saveExceptionRules()
-    {
-        QSet<QOrganizerRecurrenceRule> rules;
-        foreach (const QDeclarativeOrganizerRecurrenceRule* r, m_exceptionRules) {
-            rules << r->rule();
-        }
-        m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionRules, QVariant::fromValue(rules));
-
-        emit valueChanged();
-    }
+    void _saveRecurrenceRules();
+    void _saveExceptionRules();
 
 private:
     static void rrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
     static void xrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
     static int  rule_count(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
-    static QDeclarativeOrganizerRecurrenceRule * rule_at(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx);
+    static QDeclarativeOrganizerRecurrenceRule *rule_at(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx);
     static void  rrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
     static void  xrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
 

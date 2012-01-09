@@ -40,75 +40,324 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizeritemfilter_p.h"
-#include "qdeclarativeorganizermodel_p.h"
-#include "qorganizeritemid.h"
-#include "qorganizercollectionid.h"
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass Filter QDeclarativeOrganizerItemFilter
-   \brief The Filter element is used as a property of OrganizerModel, to allow
-   selection of organizer items which have certain details or properties.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-main
-
-   \sa QOrganizerItemFilter
+    \qmlclass Filter QDeclarativeOrganizerItemFilter
+    \brief The Filter element is used to filter items made available through a backend.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-main
+    \sa QOrganizerItemFilter
  */
 
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemFilter::QDeclarativeOrganizerItemFilter(QObject *parent)
+    : QObject(parent)
+{
+    //for grouped filter: intersect /union filters
+    if (parent && qobject_cast<QDeclarativeOrganizerItemFilter *>(parent))
+        connect(this, SIGNAL(filterChanged()), parent, SIGNAL(filterChanged()));
+}
 
 /*!
-  \qmlproperty enumeration Filter::type
+    \qmlproperty enumeration Filter::type
 
-  This property holds the type value of this filter. It can be one of:
+    This property holds the type value of this filter. It can be one of:
+    \list
+    \o Filter.DefaultFilter       A filter which matches everything (default).
+    \o Filter.InvalidFilter       An invalid filter which matches nothing.
+    \o Filter.IntersectionFilter  A filter which matches all organizer items that are matched by all
+                                  filters it includes.
+    \o Filter.UnionFilter         A filter which matches any organizer item that is matched by any
+                                  of the filters it includes.
+    \o Filter.CollectionFilter    A filter which matches any organizer item that is matched by collection.
+    \o Filter.DetailFilter        A filter which matches organizer items containing one or more details
+                                  of a particular type with a particular value.
+    \o Filter.DetailRangeFilter   A filter which matches organizer items containing one or more details
+                                  of a particular type whose values are within a particular range.
+    \o Filter.IdFilter            A filter which matches any organizer item whose ID is contained in
+                                  a particular list of organizer item IDs.
+    \endlist
+ */
+QDeclarativeOrganizerItemFilter::FilterType QDeclarativeOrganizerItemFilter::type() const
+{
+    return static_cast<QDeclarativeOrganizerItemFilter::FilterType>(filter().type());
+}
 
-  \list
-  \o Filter.DefaultFilter - A filter which matches everything (default).
-  \o Filter.InvalidFilter - An invalid filter which matches nothing.
-  \o Filter.DetailFilter - A filter which matches organizer items containing one or more details of a particular definition with a particular value.
-  \o Filter.DetailRangeFilter - A filter which matches organizer items containing one or more details of a particular definition whose values are within a particular range.
-  \o Filter.CollectionFilter - A filter which matches any organizer item that is matched by collection.
-  \o Filter.IntersectionFilter - A filter which matches all organizer items that are matched by all filters it includes.
-  \o Filter.UnionFilter - A filter which matches any organizer item that is matched by any of the filters it includes.
-  \o Filter.IdFilter - A filter which matches any organizer item whose local id is contained in a particular list of organizer item local ids.
-  \endlist
-  */
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemFilter::filter() const
+{
+    return QOrganizerItemFilter();
+}
 
 
 /*!
-   \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
-   \brief The \l DetailFilter element provides a filter based around a detail value criterion.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
+    \qmlclass InvalidFilter QDeclarativeOrganizerItemInvalidFilter
+    \brief the InvalidFilter element provides a filter which will never match any organizer items.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa QOrganizerItemInvalidFilter
+ */
 
-   Simple example how to utilize DetailFilter element together with OrganizerModel and ListView elements:
-   \code
-   Rectangle {
-       height: 400; width: 400;
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemInvalidFilter::QDeclarativeOrganizerItemInvalidFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+{
+}
 
-       OrganizerModel{
-           id: organizer
-           startPeriod: "2009-01-01"
-           endPeriod: "2012-12-31"
-           filter: todoFilter
-       }
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemInvalidFilter::filter() const
+{
+    return QOrganizerItemInvalidFilter();
+}
 
-       DetailFilter {
-           id: todoFilter
-           detail: Detail.Type
-           field: Type.FieldType
-           value: Type.Todo
-       }
 
-       ListView {
-           width: parent.width; height: parent.height;
-           model: organizer.items
-           delegate: Text {text: displayLabel}
-       }
-   }
-   \endcode
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemCompoundFilter::QDeclarativeOrganizerItemCompoundFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
 
-   \sa QOrganizerItemDetailFilter
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemCompoundFilter::~QDeclarativeOrganizerItemCompoundFilter()
+{
+}
+
+/*!
+    \internal
+ */
+QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> QDeclarativeOrganizerItemCompoundFilter::filters()
+{
+    return QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>(this, 0, filters_append, filters_count, filters_at, filters_clear);
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemCompoundFilter::filters_append(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop,
+                                                             QDeclarativeOrganizerItemFilter *filter)
+{
+    QDeclarativeOrganizerItemCompoundFilter *compoundFilter = static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object);
+    compoundFilter->m_filters.append(filter);
+    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(valueChanged()));
+    emit compoundFilter->valueChanged();
+}
+
+/*!
+    \internal
+ */
+int QDeclarativeOrganizerItemCompoundFilter::filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop)
+{
+    return static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object)->m_filters.count();
+}
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemFilter *QDeclarativeOrganizerItemCompoundFilter::filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop, int index)
+{
+    return static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object)->m_filters.at(index);
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop)
+{
+    QDeclarativeOrganizerItemCompoundFilter *filter = static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object);
+    if (!filter->m_filters.isEmpty()) {
+        filter->m_filters.clear();
+        emit filter->valueChanged();
+    }
+}
+
+
+/*!
+    \qmlclass IntersectionFilter QDeclarativeOrganizerItemIntersectionFilter
+    \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa QOrganizerItemIntersectionFilter
+ */
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemIntersectionFilter::QDeclarativeOrganizerItemIntersectionFilter(QObject *parent)
+    : QDeclarativeOrganizerItemCompoundFilter(parent)
+{
+}
+
+/*!
+    \qmlproperty list<filter> IntersectionFilter::filters
+
+    This property holds the list of filters which form the intersection filter.
+ */
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemIntersectionFilter::filter() const
+{
+    QList<QOrganizerItemFilter> filters;
+    foreach (const QDeclarativeOrganizerItemFilter *filter, m_filters)
+        filters << filter->filter();
+    QOrganizerItemIntersectionFilter f;
+    f.setFilters(filters);
+    return f;
+}
+
+
+/*!
+    \qmlclass UnionFilter QDeclarativeOrganizerItemUnionFilter
+    \brief The UnionFilter element provides a filter which unions the results of other filters.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa QOrganizerItemUnionFilter
+ */
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemUnionFilter::QDeclarativeOrganizerItemUnionFilter(QObject *parent)
+    : QDeclarativeOrganizerItemCompoundFilter(parent)
+{
+}
+
+/*!
+    \qmlproperty list<filter> UnionFilter::filters
+
+    This property holds the list of filters which form the union filter.
+ */
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemUnionFilter::filter() const
+{
+    QList<QOrganizerItemFilter> filters;
+    foreach (const QDeclarativeOrganizerItemFilter *filter, m_filters)
+        filters << filter->filter();
+    QOrganizerItemUnionFilter f;
+    f.setFilters(filters);
+    return f;
+}
+
+
+/*!
+    \qmlclass CollectionFilter QDeclarativeOrganizerItemCollectionFilter
+    \brief The CollectionFilter element provides a filter based around the collection one organizer
+           item belongs to.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa Collection
+ */
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemCollectionFilter::QDeclarativeOrganizerItemCollectionFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
+
+/*!
+    \qmlproperty list<string> CollectionFilter::ids
+
+    This property holds the list of IDs of organizer collections which the items should belong to.
+ */
+QStringList QDeclarativeOrganizerItemCollectionFilter::ids() const
+{
+    return m_ids;
+}
+
+void QDeclarativeOrganizerItemCollectionFilter::setIds(const QStringList &ids)
+{
+    foreach (const QString &id, ids) {
+        if (!m_ids.contains(id)) {
+            m_ids = ids;
+            emit valueChanged();
+            return;
+        }
+    }
+
+    foreach (const QString &id, m_ids) {
+        if (!ids.contains(id)) {
+            m_ids = ids;
+            emit valueChanged();
+            return;
+        }
+    }
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
+{
+    QOrganizerItemCollectionFilter f;
+    QSet<QOrganizerCollectionId> ids;
+
+    foreach (const QVariant &id, m_ids) {
+        QOrganizerCollectionId cId = QOrganizerCollectionId::fromString(id.toString());
+        if (!cId.isNull())
+            ids << cId;
+    }
+
+    f.setCollectionIds(ids);
+    return f;
+}
+
+
+/*!
+    \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
+    \brief The DetailFilter element provides a filter based around a detail value criterion.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+
+    Simple example how to utilize DetailFilter element together with OrganizerModel and ListView elements:
+    \code
+    Rectangle {
+        height: 400; width: 400;
+
+        OrganizerModel{
+            id: organizer
+            startPeriod: "2009-01-01"
+            endPeriod: "2012-12-31"
+            filter: todoFilter
+        }
+
+        DetailFilter {
+            id: todoFilter
+            detail: Detail.Type
+            field: Type.FieldType
+            value: Type.Todo
+        }
+
+        ListView {
+            width: parent.width; height: parent.height;
+            model: organizer.items
+            delegate: Text {text: displayLabel}
+        }
+    }
+    \endcode
+
+    \sa QOrganizerItemDetailFilter
  */
 
 /*!
@@ -135,7 +384,7 @@ void QDeclarativeOrganizerItemDetailFilter::classBegin()
  */
 void QDeclarativeOrganizerItemDetailFilter::componentComplete()
 {
-    setDetailDefinitionName();
+    setDetail();
     m_componentCompleted = true;
 }
 
@@ -155,7 +404,7 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemD
     if (m_detail != detail) {
         m_detail = detail;
         if (m_componentCompleted)
-            setDetailDefinitionName();
+            setDetail();
     }
 }
 
@@ -179,7 +428,7 @@ void QDeclarativeOrganizerItemDetailFilter::setField(int field)
     if (field != m_field) {
         m_field = field;
         if (m_componentCompleted)
-            setDetailDefinitionName();
+            setDetail();
     }
 }
 
@@ -221,7 +470,7 @@ void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
   \o MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
   \o MatchCaseSensitive - The search is case sensitive.
   \endlist
-  */
+ */
 QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailFilter::matchFlags() const
 {
     QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
@@ -250,7 +499,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
 /*!
     \internal
  */
-void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
+void QDeclarativeOrganizerItemDetailFilter::setDetail()
 {
     d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit valueChanged();
@@ -258,12 +507,11 @@ void QDeclarativeOrganizerItemDetailFilter::setDetailDefinitionName()
 
 
 /*!
-   \qmlclass DetailRangeFilter QDeclarativeOrganizerItemDetailRangeFilter
-   \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa QOrganizerItemDetailRangeFilter
+    \qmlclass DetailRangeFilter QDeclarativeOrganizerItemDetailRangeFilter
+    \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa QOrganizerItemDetailRangeFilter
  */
 
 /*!
@@ -290,7 +538,7 @@ void QDeclarativeOrganizerItemDetailRangeFilter::classBegin()
  */
 void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
 {
-    setDetailDefinitionName();
+    setDetail();
     m_componentCompleted = true;
 }
 
@@ -310,7 +558,7 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizer
     if (m_detail != detail) {
         m_detail = detail;
         if (m_componentCompleted)
-            setDetailDefinitionName();
+            setDetail();
     }
 }
 
@@ -334,7 +582,7 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setField(int field)
     if (field != m_field || m_componentCompleted) {
         m_field = field;
         if (m_componentCompleted)
-            setDetailDefinitionName();
+            setDetail();
         emit filterChanged();
     }
 }
@@ -437,7 +685,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
 /*!
     \internal
  */
-void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
+void QDeclarativeOrganizerItemDetailRangeFilter::setDetail()
 {
     d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit valueChanged();
@@ -445,143 +693,65 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetailDefinitionName()
 
 
 /*!
-   \qmlclass IntersectionFilter QDeclarativeOrganizerItemIntersectionFilter
-   \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa QOrganizerItemIntersectionFilter
+    \qmlclass IdFilter QDeclarativeOrganizerItemIdFilter
+    \brief The IdFilter element provides a filter based around a list of organizer item IDs.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+    \sa {QOrganizerItemIdFilter}
  */
 
 /*!
-  \qmlproperty list<filter> IntersectionFilter::filters
-
-  This property holds the list of filters which form the intersection filter.
-  */
-
-
-/*!
-   \qmlclass UnionFilter QDeclarativeOrganizerItemUnionFilter
-   \brief The UnionFilter element provides a filter which unions the results of other filters.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa QOrganizerItemUnionFilter
+    \internal
  */
+QDeclarativeOrganizerItemIdFilter::QDeclarativeOrganizerItemIdFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
 
 /*!
-  \qmlproperty list<filter> UnionFilter::filters
+    \qmlproperty list<string> IdFilter::ids
 
-  This property holds the list of filters which form the union filter.
-  */
-
-/*!
-   \qmlclass IdFilter QDeclarativeOrganizerItemIdFilter
-   \brief The IdFilter element provides a filter based around a list of organizer item ids.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa {QOrganizerItemIdFilter}
+    This property holds the list of IDs of organizer items which match this filter.
  */
+QStringList QDeclarativeOrganizerItemIdFilter::ids() const
+{
+    return m_ids;
+}
+
+void QDeclarativeOrganizerItemIdFilter::setIds(const QStringList &ids)
+{
+    foreach (const QString& id, ids) {
+        if (!m_ids.contains(id)) {
+            m_ids = ids;
+            emit valueChanged();
+            return;
+        }
+    }
+
+    foreach (const QString& id, m_ids) {
+        if (!ids.contains(id)) {
+            m_ids = ids;
+            emit valueChanged();
+        }
+    }
+}
 
 /*!
-  \qmlproperty list<string> IdFilter::ids
-
-  This property holds the list of ids of organizer items which match this filter.
-  */
-
-
-/*!
-   \qmlclass CollectionFilter QDeclarativeOrganizerItemCollectionFilter
-   \brief The CollectionFilter element provides a filter based around a list of organizer item ids.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-   \sa Collection
+    \internal
  */
-
-
-/*!
-  \qmlproperty list<variant> CollectionFilter::ids
-
-  This property holds the list of ids of organizer items which match this filter.
-
- */
-
-/*!
-   \qmlclass InvalidFilter QDeclarativeOrganizerItemInvalidFilter
-   \brief the InvalidFilter element provides a filter which will never match any organizer items.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa QOrganizerItemInvalidFilter
- */
-
-
 QOrganizerItemFilter QDeclarativeOrganizerItemIdFilter::filter() const
 {
     QOrganizerItemIdFilter f;
     QList<QOrganizerItemId> ids;
-
-    foreach(const QVariant& id, m_ids) {
-        QOrganizerItemId itemId = QOrganizerItemId::fromString(id.toString());
+    foreach (const QString& id, m_ids) {
+        QOrganizerItemId itemId = QOrganizerItemId::fromString(id);
         if (!itemId.isNull())
             ids << itemId;
     }
 
     f.setIds(ids);
     return f;
-}
-QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
-{
-    QOrganizerItemCollectionFilter f;
-    QSet<QOrganizerCollectionId> ids;
-
-    foreach(const QVariant& id, m_ids) {
-        QOrganizerCollectionId cId = QOrganizerCollectionId::fromString(id.toString());
-        if (!cId.isNull())
-            ids << cId;
-    }
-
-    f.setCollectionIds(ids);
-    return f;
-}
-
-QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> QDeclarativeOrganizerItemCompoundFilter::filters()
-{
-    return QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>(this,
-                                                          0, // opaque data parameter
-                                                          filters_append,
-                                                          filters_count,
-                                                          filters_at,
-                                                          filters_clear);
-}
-
-void QDeclarativeOrganizerItemCompoundFilter::filters_append(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop, QDeclarativeOrganizerItemFilter* filter)
-{
-    QDeclarativeOrganizerItemCompoundFilter* compoundFilter = static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object);
-    compoundFilter->m_filters.append(filter);
-    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(valueChanged()));
-    emit compoundFilter->valueChanged();
-}
-
-int QDeclarativeOrganizerItemCompoundFilter::filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop)
-{
-    // The 'prop' is in a sense 'this' for this static function (as given in filters() function)
-    return static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object)->m_filters.count();
-}
-
-QDeclarativeOrganizerItemFilter* QDeclarativeOrganizerItemCompoundFilter::filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop, int index)
-{
-    return static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object)->m_filters.at(index);
-}
-
-void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter>* prop)
-{
-    QDeclarativeOrganizerItemCompoundFilter* filter = static_cast<QDeclarativeOrganizerItemCompoundFilter*>(prop->object);
-    if (!filter->m_filters.isEmpty()) {
-        filter->m_filters.clear();
-        emit filter->valueChanged();
-    }
 }
 
 #include "moc_qdeclarativeorganizeritemfilter_p.cpp"

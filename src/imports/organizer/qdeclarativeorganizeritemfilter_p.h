@@ -76,7 +76,6 @@ public:
         InvalidFilter = QOrganizerItemFilter::InvalidFilter,
         DetailFilter = QOrganizerItemFilter::DetailFilter,
         DetailRangeFilter = QOrganizerItemFilter::DetailRangeFilter,
-        ChangeLogFilter = QOrganizerItemFilter::ChangeLogFilter,
         IntersectionFilter = QOrganizerItemFilter::IntersectionFilter,
         UnionFilter = QOrganizerItemFilter::UnionFilter,
         IdFilter = QOrganizerItemFilter::IdFilter,
@@ -135,59 +134,6 @@ signals:
 
 protected:
     QList<QDeclarativeOrganizerItemFilter*> m_filters;
-};
-
-//changelog filter
-class QDeclarativeOrganizerItemChangeLogFilter : public QDeclarativeOrganizerItemFilter
-{
-    Q_OBJECT
-    Q_PROPERTY(QDateTime since READ since WRITE setSince NOTIFY valueChanged)
-    Q_PROPERTY(EventType eventType READ eventType WRITE setEventType NOTIFY valueChanged)
-
-    Q_ENUMS(EventType)
-
-public:
-    enum EventType {
-        EventAdded = QOrganizerItemChangeLogFilter::EventAdded,
-        EventChanged = QOrganizerItemChangeLogFilter::EventChanged,
-        EventRemoved = QOrganizerItemChangeLogFilter::EventRemoved
-    };
-
-    QDeclarativeOrganizerItemChangeLogFilter(QObject *parent = 0)
-        :QDeclarativeOrganizerItemFilter(parent)
-    {
-        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-    }
-
-    QDateTime since() const { return d.since(); }
-    void setSince(const QDateTime& datetime)
-    {
-        if (datetime != since()) {
-            emit valueChanged();
-            d.setSince(datetime);
-        }
-    }
-
-    EventType eventType() const { return static_cast<QDeclarativeOrganizerItemChangeLogFilter::EventType>(d.eventType()); }
-    void setEventType(EventType type)
-    {
-        if (type != eventType()) {
-            d.setEventType(static_cast<QOrganizerItemChangeLogFilter::EventType>(type));
-            emit valueChanged();
-        }
-    }
-
-    QOrganizerItemFilter filter() const
-    {
-        return d;
-    }
-
-signals:
-    void valueChanged();
-
-private:
-    QOrganizerItemChangeLogFilter d;
-
 };
 
 //collection filter
@@ -456,7 +402,6 @@ QTORGANIZER_END_NAMESPACE
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCompoundFilter))
-QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemChangeLogFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCollectionFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailRangeFilter))

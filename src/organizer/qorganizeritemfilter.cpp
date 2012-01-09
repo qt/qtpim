@@ -61,8 +61,6 @@
                                and value.
     \value DetailRangeFilter   A filter which matches items containing a detail of a particular type,
                                whose values are within a particular range.
-    \value ChangeLogFilter     A filter which matches items whose timestamps have been updated since
-                               some particular date and time.
     \value IntersectionFilter  A filter which matches all items that are matched by all filters it includes.
     \value UnionFilter         A filter which matches any organizer item that is matched by any of the
                                filters it includes.
@@ -198,9 +196,6 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter)
                 break;
             case QOrganizerItemFilter::DetailRangeFilter:
                 filter = QOrganizerItemDetailRangeFilter();
-                break;
-            case QOrganizerItemFilter::ChangeLogFilter:
-                filter = QOrganizerItemChangeLogFilter();
                 break;
             case QOrganizerItemFilter::IntersectionFilter:
                 filter = QOrganizerItemIntersectionFilter();

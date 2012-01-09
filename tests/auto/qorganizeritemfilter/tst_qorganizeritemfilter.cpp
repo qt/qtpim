@@ -69,7 +69,6 @@ private slots:
     void unionFilter();
     void detailFilter();
     void detailRangeFilter();
-    void changeLogFilter();
     void boringFilters();
     void idListFilter();
     void collectionFilter();
@@ -435,62 +434,6 @@ void tst_QOrganizerItemFilter::unionFilter()
     QVERIFY(bf3.filters().isEmpty());
 }
 
-
-void tst_QOrganizerItemFilter::changeLogFilter()
-{
-    QOrganizerItemChangeLogFilter cf;
-    QOrganizerItemChangeLogFilter cfadded(QOrganizerItemChangeLogFilter::EventAdded);
-    QOrganizerItemChangeLogFilter cfchanged(QOrganizerItemChangeLogFilter::EventChanged);
-    QOrganizerItemChangeLogFilter cfremoved(QOrganizerItemChangeLogFilter::EventRemoved);
-
-    QVERIFY(cf.type() == QOrganizerItemFilter::ChangeLogFilter);
-    QVERIFY(cf.eventType() == QOrganizerItemChangeLogFilter::EventAdded);
-
-    QVERIFY(cfadded.type() == QOrganizerItemFilter::ChangeLogFilter);
-    QVERIFY(cfadded.eventType() == QOrganizerItemChangeLogFilter::EventAdded);
-
-    QVERIFY(cfchanged.type() == QOrganizerItemFilter::ChangeLogFilter);
-    QVERIFY(cfchanged.eventType() == QOrganizerItemChangeLogFilter::EventChanged);
-
-    QVERIFY(cfremoved.type() == QOrganizerItemFilter::ChangeLogFilter);
-    QVERIFY(cfremoved.eventType() == QOrganizerItemChangeLogFilter::EventRemoved);
-
-
-    /* Just to break the naming scheme */
-    cfchanged.setEventType(QOrganizerItemChangeLogFilter::EventAdded);
-    QVERIFY(cfchanged.eventType() == QOrganizerItemChangeLogFilter::EventAdded);
-
-    QVERIFY(cf.since() == QDateTime());
-
-    QDateTime now = QDateTime::currentDateTime();
-    cf.setSince(now);
-
-    QVERIFY(cf.since() == now);
-
-    cf.setSince(QDateTime());
-    QVERIFY(cf.since() == QDateTime());
-
-    /* Test op= */
-    QOrganizerItemFilter f = cf;
-    QVERIFY(f == cf);
-
-    QOrganizerItemChangeLogFilter cf2 = f;
-    QVERIFY(cf2 == cf);
-
-    /* Self assignment should do nothing */
-    cf2 = cf2;
-    QVERIFY(cf2 == cf);
-
-    QOrganizerItemDetailFilter dfil;
-    QOrganizerItemChangeLogFilter cf3(dfil);
-    QVERIFY(cf3.type() == QOrganizerItemFilter::ChangeLogFilter);
-    QOrganizerItemChangeLogFilter cf4(cf);
-    QVERIFY(cf4 == cf);
-    cf = dfil;
-    QVERIFY(cf == cf3);
-    cf = cf3;
-    cf.setEventType(QOrganizerItemChangeLogFilter::EventRemoved); // force a detach
-}
 
 void tst_QOrganizerItemFilter::detailFilter()
 {
@@ -1307,13 +1250,6 @@ void tst_QOrganizerItemFilter::datastream_data()
     }
 
     {
-        QOrganizerItemChangeLogFilter filter;
-        filter.setEventType(QOrganizerItemChangeLogFilter::EventAdded);
-        filter.setSince(QDateTime(QDate(2010, 6, 1), QTime(1, 2, 3)));
-        QTest::newRow("changelog") << (QOrganizerItemFilter)filter;
-    }
-
-    {
         QOrganizerItemDetailFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
@@ -1382,13 +1318,6 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
     {
         QOrganizerItemFilter filter;
         QTest::newRow("default") << filter << "QOrganizerItemFilter((null))";
-    }
-
-    {
-        QOrganizerItemChangeLogFilter filter;
-        filter.setEventType(QOrganizerItemChangeLogFilter::EventAdded);
-        filter.setSince(QDateTime(QDate(2010, 6, 1), QTime(1, 2, 3)));
-        QTest::newRow("changelog") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemChangeLogFilter(eventType=0,since=QDateTime(\"Tue Jun 1 01:02:03 2010\") ))";
     }
 
     {

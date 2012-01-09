@@ -235,7 +235,6 @@ public:
         supported << QOrganizerItemFilter::InvalidFilter
                   << QOrganizerItemFilter::DetailFilter
                   << QOrganizerItemFilter::DetailRangeFilter
-                  << QOrganizerItemFilter::ChangeLogFilter
                   << QOrganizerItemFilter::IntersectionFilter
                   << QOrganizerItemFilter::UnionFilter
                   << QOrganizerItemFilter::IdFilter

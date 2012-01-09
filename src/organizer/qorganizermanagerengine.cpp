@@ -885,27 +885,6 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
             }
             break;
 
-        case QOrganizerItemFilter::ChangeLogFilter:
-            {
-                QOrganizerItemChangeLogFilter ccf(filter);
-
-                // See what we can do...
-                QOrganizerItemTimestamp ts = item.detail(QOrganizerItemDetail::TypeTimestamp);
-
-                // See if timestamps are even supported
-                if (ts.isEmpty())
-                    break;
-
-                if (ccf.eventType() == QOrganizerItemChangeLogFilter::EventAdded)
-                    return ccf.since() <= ts.created();
-                if (ccf.eventType() == QOrganizerItemChangeLogFilter::EventChanged)
-                    return ccf.since() <= ts.lastModified();
-
-                // You can't emulate a removed..
-                // Fall through to end
-            }
-            break;
-
         case QOrganizerItemFilter::IntersectionFilter:
             {
                 /* XXX In theory we could reorder the terms to put the native tests first */

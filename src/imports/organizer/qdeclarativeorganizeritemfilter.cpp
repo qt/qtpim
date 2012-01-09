@@ -67,37 +67,10 @@ QTORGANIZER_BEGIN_NAMESPACE
   \o Filter.InvalidFilter - An invalid filter which matches nothing.
   \o Filter.DetailFilter - A filter which matches organizer items containing one or more details of a particular definition with a particular value.
   \o Filter.DetailRangeFilter - A filter which matches organizer items containing one or more details of a particular definition whose values are within a particular range.
-  \o Filter.ChangeLogFilter - A filter which matches organizer items whose timestamps have been updated since some particular date and time.
   \o Filter.CollectionFilter - A filter which matches any organizer item that is matched by collection.
   \o Filter.IntersectionFilter - A filter which matches all organizer items that are matched by all filters it includes.
   \o Filter.UnionFilter - A filter which matches any organizer item that is matched by any of the filters it includes.
   \o Filter.IdFilter - A filter which matches any organizer item whose local id is contained in a particular list of organizer item local ids.
-  \endlist
-  */
-
-/*!
-   \qmlclass ChangeLogFilter QDeclarativeOrganizerItemChangeLogFilter
-   \brief The ChangeLogFilter element provides a filter based around a organizer item timestamp criterion.
-   \inqmlmodule QtOrganizer
-   \ingroup qml-organizer-filters
-
-   \sa QOrganizerItemChangeLogFilter
- */
-
-/*!
-  \qmlproperty date ChangeLogFilter::since
-
-  This property holds the date and time lower-bound criterion of the filter.
-  */
-
-/*!
-  \qmlproperty enumeration ChangeLogFilter::eventType
-
-  This property holds the type of change that this filter will match against. The value can be one of:
-  \list
-  \o ChangeLogFilter.EventAdded
-  \o ChangeLogFilter.EventChanged
-  \o ChangeLogFilter.EventRemoved
   \endlist
   */
 

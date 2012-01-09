@@ -2847,40 +2847,6 @@ void tst_QOrganizerManager::testFilterFunction()
     // test for item not in the range
     QVERIFY(!QOrganizerManagerEngine::testFilter(fdrf, item));
 
-    // Test for QOrganizerItemFilter::ChangeLogFilter:
-    QOrganizerItemChangeLogFilter fclf;
-    fclf.setEventType(QOrganizerItemChangeLogFilter::EventAdded);
-    fclf.setSince(QDateTime(QDate(2010,10,8)));
-    // should fail as item does not have timestamp detail
-    QVERIFY(!QOrganizerManagerEngine::testFilter(fclf, item));
-
-    // add valid timestamp detail
-    QOrganizerItemTimestamp oit;
-    oit.setCreated(QDateTime(QDate(2010,10,9)));
-    oit.setLastModified(QDateTime(QDate(2010,10,9)));
-    item.saveDetail(&oit);
-
-    // check for created date
-    QVERIFY(QOrganizerManagerEngine::testFilter(fclf, item));
-
-    fclf.setSince(QDateTime(QDate(2010,10,10)));
-    // should fail because date is older then item creation date
-    QVERIFY(!QOrganizerManagerEngine::testFilter(fclf, item));
-
-    fclf.setSince(QDateTime(QDate(2010,10,8)));
-    fclf.setEventType(QOrganizerItemChangeLogFilter::EventChanged);
-    // check for modified date
-    QVERIFY(QOrganizerManagerEngine::testFilter(fclf, item));
-
-    fclf.setSince(QDateTime(QDate(2010,10,10)));
-    // should fail because date is older then item modification date
-    QVERIFY(!QOrganizerManagerEngine::testFilter(fclf, item));
-
-    fclf.setSince(QDateTime(QDate(2010,10,8)));
-    fclf.setEventType(QOrganizerItemChangeLogFilter::EventRemoved);
-    // should always fail since can't be checked
-    QVERIFY(!QOrganizerManagerEngine::testFilter(fclf, item));
-
     // Test for QOrganizerItemFilter::IntersectionFilter:
     QOrganizerItemIntersectionFilter oiif;
     oiif.setFilters(QList<QOrganizerItemFilter>() << fif << fdf);

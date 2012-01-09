@@ -46,7 +46,6 @@
 // provided by the Qt Organizer API.
 
 #include <qorganizeritemunionfilter.h>
-#include <qorganizeritemchangelogfilter.h>
 #include <qorganizeritemdetailfilter.h>
 #include <qorganizeritemdetailrangefilter.h>
 #include <qorganizeritemintersectionfilter.h>

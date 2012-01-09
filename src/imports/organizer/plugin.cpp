@@ -108,7 +108,6 @@ public:
 
         //filters
         qmlRegisterType<QDeclarativeOrganizerItemFilter>(uri, major, minor, "Filter");
-        qmlRegisterType<QDeclarativeOrganizerItemChangeLogFilter>(uri, major, minor, "ChangeLogFilter");
         qmlRegisterType<QDeclarativeOrganizerItemCollectionFilter>(uri, major, minor, "CollectionFilter");
         qmlRegisterType<QDeclarativeOrganizerItemDetailFilter>(uri, major, minor, "DetailFilter");
         qmlRegisterType<QDeclarativeOrganizerItemDetailRangeFilter>(uri, major, minor, "DetailRangeFilter");

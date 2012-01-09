@@ -72,7 +72,6 @@ public:
         InvalidFilter = 0,
         DetailFilter,
         DetailRangeFilter,
-        ChangeLogFilter,
         IntersectionFilter,
         UnionFilter,
         IdFilter,

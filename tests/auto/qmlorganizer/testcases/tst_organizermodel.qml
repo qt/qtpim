@@ -117,17 +117,6 @@ TestCase {
                     + "   }\n"
                     + "}\n"
                 },
-                {tag: "With changelog filter",
-                 code: "import QtOrganizer 5.0\n"
-                    + "OrganizerModel {\n"
-                    + "   id:organizerModelId\n"
-                    + "   filter:ChangeLogFilter{\n"
-                    + "       id:filter\n"
-                    + "       eventType:ChangeLogFilter.EventAdded\n"
-                    + "       since:'2010-08-12T13:22:01'\n"
-                    + "   }\n"
-                    + "}\n"
-                },
                 {tag: "With collection filter",
                  code: "import QtOrganizer 5.0\n"
                     + "OrganizerModel {\n"

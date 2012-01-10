@@ -63,35 +63,30 @@ ContactsSavingTestCase {
         id: contact3
     }
 
+    SignalSpy {
+        id: contactsFetchedSpy
+        signalName: "contactsFetched"
+        target: model
+    }
+
     // Tests
 
     function test_fetchOnlySomeIdsLeavesContactsUnchanged() {
         var id = model.contacts[0].contactId;
 
-        model.fetchContacts([id]);
-        waitForContactsChanged();
-
+        var trid = model.fetchContacts([id]);
+        contactsFetchedSpy.wait();
+        verify(trid >= 0, "valid fetch transaction id")
         compare(model.contacts.length, 3);
-    }
-
-    function test_fetchOnlySomeIdsLeavesOriginalContactStillValid() {
-        var contact = model.contacts[0];
-        var id = contact.contactId;
-
-        model.fetchContacts([id]);
-        waitForContactsChanged();
-
-        verify(contact, "contact is defined");
-        verify(contact.contactId, "contact id is defined");
     }
 
     function test_fetchOnlySomeIdsLeavesOriginalContactInTheModel() {
         var contact = model.contacts[0];
         var id = contact.contactId;
 
-        model.fetchContacts([id]);
-        waitForContactsChanged();
-
+        var trid = model.fetchContacts([id]);
+        contactsFetchedSpy.wait();
+        verify(trid >= 0, "valid fetch transaction id")
         verify(contact === model.contacts[0], "still contains the contact");
     }
 
@@ -109,37 +104,11 @@ ContactsSavingTestCase {
         compare(model.contacts[2], contact3, "contact3");
     }
 
-    function test_fetchEmptyWillFetchAllContacts() {
-        var id1 = model.contacts[0].contactId;
-        var id2 = model.contacts[1].contactId;
-        var id3 = model.contacts[2].contactId;
-
-        model.fetchContacts([]);
-        waitForContactsChanged();
-
-        compare(model.contacts.length, 3);
-        compare(model.contacts[0].contactId, id1, "id1");
-        compare(model.contacts[1].contactId, id2, "id2");
-        compare(model.contacts[2].contactId, id3, "id3");
-    }
-
-    function test_fetchEmptyLeavesOriginalContactStillValid() {
-        var contact = model.contacts[0];
-
-        model.fetchContacts([]);
-        waitForContactsChanged();
-
-        verifyIsDefined(contact);
-        verifyIsDefined(contact.contactId);
-    }
-
-    function test_fetchEmptyLeavesOriginalContactInTheModel() {
-        var contact = model.contacts[0];
-
-        model.fetchContacts([]);
-        waitForContactsChanged();
-
-        verify(contact === model.contacts[0], "still contains the contact")
+    function test_fetchEmptyReturnsInvalidTrid() {
+        var trid = model.fetchContacts([]);
+        expectFail("", "invalid transaction should not emit any signal")
+        contactsFetchedSpy.wait();
+        compare(trid, -1, "transaction id for invalid fetch is equal to -1");
     }
 
     // Init & teardown

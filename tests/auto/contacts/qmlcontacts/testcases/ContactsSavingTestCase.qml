@@ -80,7 +80,7 @@ TestCase {
 
     function emptyContacts(model) {
         logDebug("emptyContacts");
-        model.fetchContacts([]);
+        model.update();
         spy.wait();
         var count = model.contacts.length;
         for (var i = 0; i < count; i++) {

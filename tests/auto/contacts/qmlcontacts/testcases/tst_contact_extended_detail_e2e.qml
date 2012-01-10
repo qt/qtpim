@@ -47,7 +47,7 @@ ContactsSavingTestCase {
     name: "ContactsExtendedDetailE2ETests"
 
     ContactModel {
-        id: modelForSaveAndFetch
+        id: model
         autoUpdate:true
     }
 
@@ -64,7 +64,7 @@ ContactsSavingTestCase {
 
     function test_withBoolean()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForBoolean);
+        var fetchedExtendedDetail = saveAndUpdate(contactForBoolean);
         compare(fetchedExtendedDetail.name, "boolean", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myBoolean, "extendDetail.data");
     }
@@ -82,7 +82,7 @@ ContactsSavingTestCase {
 
     function test_withColor()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForColor);
+        var fetchedExtendedDetail = saveAndUpdate(contactForColor);
         compare(fetchedExtendedDetail.name, "color", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myColor, "extendDetail.data");
     }
@@ -100,9 +100,9 @@ ContactsSavingTestCase {
 
     function test_withDate()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForDate);
+        var fetchedExtendedDetail = saveAndUpdate(contactForDate);
         compare(fetchedExtendedDetail.name, "date", "extendDetail.name");
-        if (modelForSaveAndFetch.manager == "jsondb") {
+        if (model.manager == "jsondb") {
             // In jsondb date is a bit tricky as UTC format with trailing Zulu is used.
             // Also backend does not convert it back but returns a string in the zulu format.
             compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00Z", "extendDetail.data");
@@ -124,7 +124,7 @@ ContactsSavingTestCase {
 
     function test_withDouble()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForDouble);
+        var fetchedExtendedDetail = saveAndUpdate(contactForDouble);
         compare(fetchedExtendedDetail.name, "double", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myDouble, "extendDetail.data");
     }
@@ -142,7 +142,7 @@ ContactsSavingTestCase {
 
     function test_withInt()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForInt);
+        var fetchedExtendedDetail = saveAndUpdate(contactForInt);
         compare(fetchedExtendedDetail.name, "int", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myInt, "extendDetail.data");
     }
@@ -160,7 +160,7 @@ ContactsSavingTestCase {
 
     function test_withNegativeInt()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForNegativeInt);
+        var fetchedExtendedDetail = saveAndUpdate(contactForNegativeInt);
         compare(fetchedExtendedDetail.name, "negativeInt", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myNegativeInt, "extendDetail.data");
     }
@@ -178,7 +178,7 @@ ContactsSavingTestCase {
 
     function test_withReal()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForReal );
+        var fetchedExtendedDetail = saveAndUpdate(contactForReal );
         compare(fetchedExtendedDetail.name, "real", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myReal, "extendDetail.data");
     }
@@ -196,7 +196,7 @@ ContactsSavingTestCase {
 
     function test_withNegReal()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForNegativeReal);
+        var fetchedExtendedDetail = saveAndUpdate(contactForNegativeReal);
         compare(fetchedExtendedDetail.name, "negativeReal", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myNegativeReal, "extendDetail.data");
     }
@@ -214,7 +214,7 @@ ContactsSavingTestCase {
 
     function test_withString()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForString);
+        var fetchedExtendedDetail = saveAndUpdate(contactForString);
         compare(fetchedExtendedDetail.name, "string", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myString, "extendDetail.data");
     }
@@ -232,7 +232,7 @@ ContactsSavingTestCase {
 
     function test_withUrl()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForUrl);
+        var fetchedExtendedDetail = saveAndUpdate(contactForUrl);
         compare(fetchedExtendedDetail.name, "url", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myUrl, "extendDetail.data");
     }
@@ -251,7 +251,7 @@ ContactsSavingTestCase {
 
     function test_withVariant()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForVariant);
+        var fetchedExtendedDetail = saveAndUpdate(contactForVariant);
         compare(fetchedExtendedDetail.name, "stringInVariant", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myVariant, "extendDetail.data Variant");
         compare(fetchedExtendedDetail.data, stringForVariant, "extendDetail.data String");
@@ -271,7 +271,7 @@ ContactsSavingTestCase {
 
     function test_withIntList()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForIntList);
+        var fetchedExtendedDetail = saveAndUpdate(contactForIntList);
         compare(fetchedExtendedDetail.name, "intList", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myIntList, "extendDetail.data");
     }
@@ -289,7 +289,7 @@ ContactsSavingTestCase {
 
     function test_withStringList()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForStringList);
+        var fetchedExtendedDetail = saveAndUpdate(contactForStringList);
         compare(fetchedExtendedDetail.name, "stringList", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myStringList, "extendDetail.data");
     }
@@ -307,7 +307,7 @@ ContactsSavingTestCase {
 
     function test_withVariantList()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForVariantList);
+        var fetchedExtendedDetail = saveAndUpdate(contactForVariantList);
         compare(fetchedExtendedDetail.name, "variantList", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myVariantList, "extendDetail.data");
     }
@@ -325,7 +325,7 @@ ContactsSavingTestCase {
 
     function test_withEmbeddedVariantsList()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForEmbeddedVariantLists);
+        var fetchedExtendedDetail = saveAndUpdate(contactForEmbeddedVariantLists);
         compare(fetchedExtendedDetail.name, "embeddedVariantLists", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myEmbeddedVariantLists, "extendDetail.data");
 
@@ -344,7 +344,7 @@ ContactsSavingTestCase {
 
     function test_withDeeblyEmbeddedVariantLists()
     {
-        var fetchedExtendedDetail = saveAndFetch(contactForDeeblyEmbeddedVariantLists);
+        var fetchedExtendedDetail = saveAndUpdate(contactForDeeblyEmbeddedVariantLists);
         compare(fetchedExtendedDetail.name, "deeblyEmbeddedVariantLists", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myDeeblyEmbeddedVariantLists, "extendDetail.data");
     }
@@ -360,7 +360,7 @@ ContactsSavingTestCase {
     {
         var myMapData = { key1: 1, key2: 2, key3: 3}
         contactForMap.extendedDetail.data = myMapData;
-        var fetchedExtendedDetail = saveAndFetch(contactForMap);
+        var fetchedExtendedDetail = saveAndUpdate(contactForMap);
         compare(fetchedExtendedDetail.name, "mapData", "extendDetail.name");
         compare(fetchedExtendedDetail.data, myMapData, "extendDetail.data");
     }
@@ -383,7 +383,7 @@ ContactsSavingTestCase {
 
     function test_extendedDetailsListProperty_multipleDetails()
     {
-        var fetchedContact = saveAndFetchContact(contactWithThreeExtendedDetails);
+        var fetchedContact = saveAndUpdateContact(contactWithThreeExtendedDetails);
         var fetchedExtendedDetails = fetchedContact.extendedDetails;
         compare(fetchedExtendedDetails.length, 3, "extendedDetails.length");
         compare(fetchedExtendedDetails[0], fetchedContact.extendedDetail, "extendedDetail == extendedDetails[0]");
@@ -402,7 +402,7 @@ ContactsSavingTestCase {
 
     function test_extendedDetailsListProperty_oneDetail()
     {
-        var fetchedContact = saveAndFetchContact(contactWithOneExtendedDetail);
+        var fetchedContact = saveAndUpdateContact(contactWithOneExtendedDetail);
         var fetchedExtendedDetails = fetchedContact.extendedDetails;
         compare(fetchedExtendedDetails.length, 1, "extendedDetails.length");
         compare(fetchedExtendedDetails[0], fetchedContact.extendedDetail, "extendedDetail == extendedDetails[0]");
@@ -415,7 +415,7 @@ ContactsSavingTestCase {
 
     function test_extendedDetailsListProperty_noDetails()
     {
-        var fetchedExtendedDetails = saveAndFetchContact(contactWithoutExtendedDetails).extendedDetails;
+        var fetchedExtendedDetails = saveAndUpdateContact(contactWithoutExtendedDetails).extendedDetails;
         compare(fetchedExtendedDetails.length, 0, "extendedDetails.length");
         verify(!fetchedExtendedDetails[0], "extendedDetails[0] is undefined");
     }
@@ -434,7 +434,7 @@ ContactsSavingTestCase {
 
     function test_extendedDetailsListProperty_removing_one_detail()
     {
-        var fetchedExtendedDetails = saveAndFetchContact(contactWithTwoExtendedDetails).extendedDetails;
+        var fetchedExtendedDetails = saveAndUpdateContact(contactWithTwoExtendedDetails).extendedDetails;
         compare(fetchedExtendedDetails.length, 2, "extendedDetails.length");
         contactWithTwoExtendedDetails.removeDetail(contactWithTwoExtendedDetails.extendedDetails[1])
         compare(contactWithTwoExtendedDetails.extendedDetails.length, 1, "extendedDetails.length");
@@ -442,24 +442,24 @@ ContactsSavingTestCase {
 
     // TODO: Test more QML and Javascript types.
 
-    function saveAndFetch(contact)
+    function saveAndUpdate(contact)
     {
-        modelForSaveAndFetch.saveContact(contact);
+        model.saveContact(contact);
         waitForContactsChanged();
 
-        modelForSaveAndFetch.fetchContacts([]);
+        model.update();
         waitForContactsChanged();
-        return modelForSaveAndFetch.contacts[0].extendedDetail;
+        return model.contacts[0].extendedDetail;
     }
 
-    function saveAndFetchContact(contact)
+    function saveAndUpdateContact(contact)
     {
-        modelForSaveAndFetch.saveContact(contact);
+        model.saveContact(contact);
         waitForContactsChanged();
 
-        modelForSaveAndFetch.fetchContacts([]);
+        model.update();
         waitForContactsChanged();
-        return modelForSaveAndFetch.contacts[0];
+        return model.contacts[0];
     }
 
     function compareExtendedDetails(actual, expected)
@@ -471,23 +471,20 @@ ContactsSavingTestCase {
     // Init & teardown
 
     function initTestCase() {
-        initTestForModel(modelForSaveAndFetch);
+        initTestForModel(model);
         waitForContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
-        emptyContacts(modelForSaveAndFetch);
+        emptyContacts(model);
     }
 
     function init() {
-        initTestForModel(modelForSaveAndFetch);
+        initTestForModel(model);
     }
 
     function cleanup() {
-        emptyContacts(modelForSaveAndFetch);
+        emptyContacts(model);
     }
 
-    function cleanupTestCase() {
-        modelForSaveAndFetch.autoUpdate = false;
-    }
 }

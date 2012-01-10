@@ -58,6 +58,12 @@ ContactsSavingTestCase {
         filter: filter
     }
 
+    SignalSpy {
+        id: contactsFetchedSpy
+        signalName: "contactsFetched"
+        target: model
+    }
+
     Contact {
         id: contact1;
     }
@@ -273,14 +279,15 @@ ContactsSavingTestCase {
         filter.ids = [id];
         model.filter = filter;
         waitForContactsChanged();
+        var trid = model.fetchContacts([id]);
+        contactsFetchedSpy.wait();
+        verify(trid >= 0, "valid fetch transaction id")
 
-        model.fetchContacts([id]);
-        waitForContactsChanged();
-
-        compare(model.contacts[0].contactId, id);
+        compare(model.contacts.length, 1, "contacts length");
+        compare(model.contacts[0].contactId, id, "contact is still present");
     }
 
-    function test_filterAndFetchSomeNonMatchingIds() {
+    function test_filterAndFetchNonMatchingIdsDoesNotChangeModel() {
         var contact = model.contacts[0];
         var id = contact.contactId;
         var idOfAnotherContact = model.contacts[1].contactId;
@@ -290,8 +297,9 @@ ContactsSavingTestCase {
         model.filter = filter;
         waitForContactsChanged();
 
-        model.fetchContacts([idOfAnotherContact]);
-        waitForContactsChanged();
+        var trid = model.fetchContacts([idOfAnotherContact]);
+        contactsFetchedSpy.wait();
+        verify(trid >= 0, "valid fetch transaction id")
 
         compare(model.contacts.length, 1, "contacts length");
         compare(model.contacts[0].contactId, id, "contact is still present");

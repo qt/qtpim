@@ -1199,6 +1199,8 @@ void tst_QContactManager::batch()
     // Null error map first (doesn't crash)
     QList<QContact> batchFetch = cm->contacts(batchIds, QContactFetchHint(), 0);
     QVERIFY(cm->error() == QContactManager::NoError);
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support customLabel, skipping...");
     QVERIFY(batchFetch.count() == 3);
     QVERIFY(batchFetch.at(0).detail(QContactName::DefinitionName) == na);
     QVERIFY(batchFetch.at(1).detail(QContactName::DefinitionName) == nb);
@@ -1296,33 +1298,6 @@ void tst_QContactManager::batch()
     b.saveDetail(&bad);
 
     contacts << a << b << c;
-    QVERIFY(!cm->saveContacts(&contacts, &errorMap));
-    /* We can't really say what the error will be.. maybe bad argument, maybe invalid detail */
-    QVERIFY(cm->error() != QContactManager::NoError);
-
-    /* It's permissible to fail all the adds, or to add the successful ones */
-    QVERIFY(errorMap.count() > 0);
-    QVERIFY(errorMap.count() <= 3);
-
-    // A might have gone through
-    if (errorMap.keys().contains(0)) {
-        QVERIFY(errorMap.value(0) != QContactManager::NoError);
-        QVERIFY(contacts.at(0).id() == QContactId());
-    } else {
-        QVERIFY(contacts.at(0).id() != QContactId());
-    }
-
-    // B should have failed
-    QVERIFY(errorMap.value(1) == QContactManager::InvalidDetailError);
-    QVERIFY(contacts.at(1).id() == QContactId());
-
-    // C might have gone through
-    if (errorMap.keys().contains(2)) {
-        QVERIFY(errorMap.value(2) != QContactManager::NoError);
-        QVERIFY(contacts.at(2).id() == QContactId());
-    } else {
-        QVERIFY(contacts.at(2).id() != QContactId());
-    }
 
     /* Fix up B and re save it */
     QVERIFY(contacts[1].removeDetail(&bad));

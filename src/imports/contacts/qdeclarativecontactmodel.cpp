@@ -227,39 +227,39 @@ void QDeclarativeContactModel::cancelUpdate()
   */
 QString QDeclarativeContactModel::error() const
 {
-    if (!d->m_manager)
-        return QLatin1String("Invalid contact manager");
-    switch (d->m_error) {
-    case QContactManager::DoesNotExistError:
-        return QLatin1String("DoesNotExist");
-    case QContactManager::AlreadyExistsError:
-        return QLatin1String("AlreadyExists");
-    case QContactManager::InvalidDetailError:
-        return QLatin1String("InvalidDetail");
-    case QContactManager::InvalidRelationshipError:
-        return QLatin1String("InvalidRelationship");
-    case QContactManager::LockedError:
-        return QLatin1String("LockedError");
-    case QContactManager::DetailAccessError:
-        return QLatin1String("DetailAccessError");
-    case QContactManager::PermissionsError:
-        return QLatin1String("PermissionsError");
-    case QContactManager::OutOfMemoryError:
-        return QLatin1String("OutOfMemory");
-    case QContactManager::NotSupportedError:
-        return QLatin1String("NotSupported");
-    case QContactManager::BadArgumentError:
-        return QLatin1String("BadArgument");
-    case QContactManager::UnspecifiedError:
-        return QLatin1String("UnspecifiedError");
-    case QContactManager::VersionMismatchError:
-        return QLatin1String("VersionMismatch");
-    case QContactManager::LimitReachedError:
-        return QLatin1String("LimitReached");
-    case QContactManager::InvalidContactTypeError:
-        return QLatin1String("InvalidContactType");
-    default:
-        break;
+    if (d->m_manager) {
+        switch (d->m_error) {
+        case QContactManager::DoesNotExistError:
+            return QLatin1String("DoesNotExist");
+        case QContactManager::AlreadyExistsError:
+            return QLatin1String("AlreadyExists");
+        case QContactManager::InvalidDetailError:
+            return QLatin1String("InvalidDetail");
+        case QContactManager::InvalidRelationshipError:
+            return QLatin1String("InvalidRelationship");
+        case QContactManager::LockedError:
+            return QLatin1String("LockedError");
+        case QContactManager::DetailAccessError:
+            return QLatin1String("DetailAccessError");
+        case QContactManager::PermissionsError:
+            return QLatin1String("PermissionsError");
+        case QContactManager::OutOfMemoryError:
+            return QLatin1String("OutOfMemory");
+        case QContactManager::NotSupportedError:
+            return QLatin1String("NotSupported");
+        case QContactManager::BadArgumentError:
+            return QLatin1String("BadArgument");
+        case QContactManager::UnspecifiedError:
+            return QLatin1String("UnspecifiedError");
+        case QContactManager::VersionMismatchError:
+            return QLatin1String("VersionMismatch");
+        case QContactManager::LimitReachedError:
+            return QLatin1String("LimitReached");
+        case QContactManager::InvalidContactTypeError:
+            return QLatin1String("InvalidContactType");
+        default:
+            break;
+        }
     }
     return QLatin1String("NoError");
 }

@@ -1010,6 +1010,7 @@ void tst_QContactManager::update()
     alice = cm->contact(alice.localId()); // force reload of (persisted) alice
     QContact updated = cm->contact(alice.localId());
     QContactName updatedName = updated.detail(QContactName::DefinitionName);
+    updatedName.setCustomLabel("updated2");  // Necessary to ensure that updatedName and name are actually the same
     QCOMPARE(updatedName, name);
     QCOMPARE(cm->contacts().size(), contactCount); // contact count should be the same, no new contacts
 

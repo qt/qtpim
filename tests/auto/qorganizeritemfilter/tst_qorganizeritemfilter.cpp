@@ -1439,25 +1439,25 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
     {
         QOrganizerItemDetailRangeFilter filter;
         // Testing the empty fields
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=0,detailField=-1,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=0,detailField=-1,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method setDetail
         filter.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method rangeFlags
         filter.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the method matchFlags
         filter.setMatchFlags(QOrganizerItemFilter::MatchCaseSensitive);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=16,rangeFlags=0))";
 
         // Contains is not allowed
         filter.setMatchFlags(QOrganizerItemFilter::MatchCaseSensitive | QOrganizerItemFilter::MatchContains);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=16,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=16,rangeFlags=0))";
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         // Testing the minValue and maxValue
         filter.setRange(5, 10);
@@ -1465,39 +1465,39 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
 
         // Testing the setRange
         filter.setRange(QVariant(), 11);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(6, QVariant());
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(int, 6) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(QVariant(), QVariant());
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
         filter.setRange(5, 10, QOrganizerItemDetailRangeFilter::ExcludeLower);
         QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(int, 5) ,maxValue=QVariant(int, 10) ,matchFlags=0,rangeFlags=2))";  // *
 
         filter.setRange(QVariant(), 11, QOrganizerItemDetailRangeFilter::IncludeUpper);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=1))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(int, 11) ,matchFlags=0,rangeFlags=1))";
 
         filter.setRange(6, QVariant(), QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::IncludeUpper);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(int, 6) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=3))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(int, 6) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=3))";
 
     filter.setRange(QVariant(), QVariant(), QOrganizerItemDetailRangeFilter::ExcludeUpper | QOrganizerItemDetailRangeFilter::IncludeLower);
-        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+        QTest::newRow("detailRange") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
     // Test op=
     QOrganizerItemFilter f = filter;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
     QOrganizerItemDetailRangeFilter filter2 = f;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
     filter2 = filter;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
 
     // Self assignment should do nothing
     filter2 = filter2;
-    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(, ) ,maxValue=QVariant(, ) ,matchFlags=0,rangeFlags=0))";
+    QTest::newRow("detailRange") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemDetailRangeFilter(detailType=7,detailField=2,minValue=QVariant(void, QVariant::Invalid) ,maxValue=QVariant(void, QVariant::Invalid) ,matchFlags=0,rangeFlags=0))";
     }
 
     {
@@ -1574,7 +1574,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         filter3.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
 
         filter << filter1 << filter2;
-        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=2,detailField=0,value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=3,detailField=0,value=QVariant(, ) ,matchFlags=0))) ))";
+        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=2,detailField=0,value=QVariant(void, QVariant::Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=3,detailField=0,value=QVariant(void, QVariant::Invalid) ,matchFlags=0))) ))";
     }
 
     {
@@ -1598,7 +1598,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
 
         QOrganizerItemUnionFilter bf;
         bf << df << df2;
-        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=2,detailField=0,value=QVariant(, ) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=3,detailField=0,value=QVariant(, ) ,matchFlags=0))) ))";
+        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=2,detailField=0,value=QVariant(void, QVariant::Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=3,detailField=0,value=QVariant(void, QVariant::Invalid) ,matchFlags=0))) ))";
     }
 
 }

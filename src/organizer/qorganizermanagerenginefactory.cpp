@@ -112,4 +112,13 @@ QList<int> QOrganizerManagerEngineFactory::supportedImplementationVersions() con
     and the \a engineIdString.
  */
 
+/*!
+    \internal
+    \reimp
+ */
+QStringList QOrganizerManagerEngineFactory::keys() const
+{
+    return QStringList() << managerName();
+}
+
 QTORGANIZER_END_NAMESPACE

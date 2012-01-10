@@ -39,12 +39,13 @@
 **
 ****************************************************************************/
 
-#include <private/qorganizerpluginsearch_p.h>
 #include <private/qorganizermanager_p.h>
 #include <qorganizeritemobserver.h>
 #include <qorganizermanagerenginefactory.h>
 
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/qpluginloader.h>
+#include <QtCore/private/qfactoryloader_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -52,6 +53,10 @@ QHash<QString, QOrganizerManagerEngineFactory *> QOrganizerManagerData::m_engine
 bool QOrganizerManagerData::m_discovered;
 bool QOrganizerManagerData::m_discoveredStatic;
 QStringList QOrganizerManagerData::m_pluginPaths;
+
+#ifndef QT_NO_LIBRARY
+Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader, (QT_ORGANIZER_BACKEND_INTERFACE, QStringLiteral("/organizer")))
+#endif
 
 static void qOrganizerItemsCleanEngines()
 {
@@ -175,19 +180,16 @@ void QOrganizerManagerData::loadFactories()
     // Always do this..
     loadStaticFactories();
 
-    QStringList plugins;
-    plugins = mobilityPlugins(QLatin1String("organizer"));
-
-    if (!m_discovered || plugins != m_pluginPaths) {
+    QFactoryLoader *l = loader();
+    QStringList keys = l->keys();
+    if (!m_discovered || keys != m_pluginPaths) {
         m_discovered = true;
-        m_pluginPaths = plugins;
+        m_pluginPaths = keys;
 
-        /* Now discover the dynamic plugins */
-        for (int i=0; i < m_pluginPaths.count(); i++) {
-            QPluginLoader qpl(m_pluginPaths.at(i));
-            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(qpl.instance());
+        for (int i = 0; i < keys.size(); ++i) {
+            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(l->instance(keys.at(i)));
             if (f) {
-                QString name = f->managerName();
+                const QString name = f->managerName();
 #if !defined QT_NO_DEBUG
                 if (showDebug)
                     qDebug() << "Dynamic: found a organizer engine plugin" << f << "with name" << name;
@@ -203,13 +205,11 @@ void QOrganizerManagerData::loadFactories()
                 }
             }
 
-            /* Debugging */
 #if !defined QT_NO_DEBUG
             if (showDebug && !f) {
-                qDebug() << "Unknown plugin:" << qpl.errorString();
-                if (qpl.instance()) {
-                    qDebug() << "[qobject:" << qpl.instance() << "]";
-                }
+                qDebug() << "Unknown plugin!";
+                if (l->instance(keys.at(i)))
+                    qDebug() << "[qobject:" << l->instance(keys.at(i)) << "]";
             }
 #endif
         }
@@ -222,9 +222,8 @@ void QOrganizerManagerData::loadFactories()
             engineNames << QString::fromAscii("%1[%2]").arg(f->managerName()).arg(versions.join(QString::fromAscii(",")));
         }
 #if !defined QT_NO_DEBUG
-        if (showDebug) {
+        if (showDebug)
             qDebug() << "Found engines:" << engineNames;
-        }
 #endif
     }
 }

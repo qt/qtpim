@@ -71,7 +71,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryFactory : public QObject, public QOrganizerManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory)
+    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory:QFactoryInterface)
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
     QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;

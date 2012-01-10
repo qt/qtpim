@@ -6,7 +6,7 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_organizer.pri
 
-QT = core 
+QT = core core-private
 
 DEFINES += QT_BUILD_ORGANIZER_LIB QT_MAKEDLL
 
@@ -41,7 +41,6 @@ PUBLIC_HEADERS += \
     qorganizer.h
 
 PRIVATE_HEADERS += \
-    qorganizerpluginsearch_p.h \
     qorganizercollection_p.h \
     qorganizercollectionchangeset_p.h \
     qorganizerabstractrequest_p.h \

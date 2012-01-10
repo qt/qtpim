@@ -43,11 +43,12 @@
 #define QORGANIZERMANAGERENGINEFACTORY_H
 
 #include <qorganizermanager.h>
+#include <QtCore/qfactoryinterface.h>
 #include <QtCore/qplugin.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory
+class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory : public QFactoryInterface
 {
 public:
     virtual ~QOrganizerManagerEngineFactory();
@@ -56,6 +57,8 @@ public:
     virtual QString managerName() const = 0;
     virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
     virtual QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
+
+    QStringList keys() const;
 };
 QTORGANIZER_END_NAMESPACE
 

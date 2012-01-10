@@ -41,8 +41,6 @@
 
 #include <QStringList>
 #include <private/jsondb-connection_p.h>
-#include <private/jsondb-strings_p.h>
-
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbconverter.h"
 
@@ -51,7 +49,6 @@ QTCONTACTS_USE_NAMESPACE
 QContactJsonDbBackup::QContactJsonDbBackup()
 {
 //qDebug() << "INITIAL data: " << m_backupData;
-int dummyValue = 0;
     backupJsonDb();
 //qDebug() << "Backed-up data: " << m_backupData;
 //dummyValue=wasteSomeTime();
@@ -146,7 +143,6 @@ bool QContactJsonDbBackup::loadTestData() {
     QContactSaveRequest csr;
 
     // save new contacts
-    int originalCount = 5;
     QContact testContact;
     QContactName nameDetail = testContact.detail<QContactName>();
     nameDetail.setFirstName("Harry");

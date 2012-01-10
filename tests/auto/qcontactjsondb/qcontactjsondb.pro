@@ -8,6 +8,7 @@ SOURCES += tst_qcontactjsondbengine.cpp \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbrequesthandler.cpp \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbrequestmanager.cpp \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbconverter.cpp \
+           ../../../src/plugins/contacts/jsondb/qcontactjsondbstring.cpp \
            qcontactjsondbbackup.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -21,3 +22,4 @@ HEADERS += \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbrequesthandler.h \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbrequestmanager.h \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbconverter.h \
+           ../../../src/plugins/contacts/jsondb/qcontactjsondbstring.h

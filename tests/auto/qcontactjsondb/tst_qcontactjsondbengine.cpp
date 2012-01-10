@@ -46,11 +46,9 @@
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbconverter.h"
-
 #include <jsondb-error.h>
 #include <jsondb-client.h>
 #include <private/jsondb-connection_p.h>
-#include <private/jsondb-strings_p.h>
 
 Q_USE_JSONDB_NAMESPACE
 

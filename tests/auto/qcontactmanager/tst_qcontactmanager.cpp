@@ -829,27 +829,6 @@ void tst_QContactManager::add()
         QCOMPARE(added, alice);
     }
 
-    // now try adding a contact that does not exist in the database with non-zero id
-    if (cm->managerName() == "symbiansim") {
-        // TODO: symbiansim backend fails this test currently. Will be fixed later.
-        QWARN("This manager has a known issue with saving a non-zero id contact. Skipping this test step.");
-    } else if (cm->managerName() == QStringLiteral("tracker")) {
-        // tracker backend does not support checking if a contact exists.
-        // The tracker database is shared, and there is no way to check if a contact exists and then overwrite it
-        // in a single transaction.
-        QWARN("The tracker backend does not support checking for existance of a contact. Skipping this test step.");
-    } else {
-        QContact nonexistent = createContact("nonexistent", "contact", "");
-        QVERIFY(cm->saveContact(&nonexistent));       // should work
-        QVERIFY(cm->removeContact(nonexistent.id().localId())); // now nonexistent has an id which does not exist
-        QVERIFY(!cm->saveContact(&nonexistent));      // hence, should fail
-        QCOMPARE(cm->error(), QContactManager::DoesNotExistError);
-        nonexistent.setId(QContactId());
-        QVERIFY(cm->saveContact(&nonexistent));       // after setting id to zero, should save
-        QVERIFY(cm->removeContact(nonexistent.id().localId()));
-    }
-
-
     // now a contact with many details of a particular definition
     // if the detail is not unique it should then support minimum of two of the same kind
     const int nrOfdetails = 2;

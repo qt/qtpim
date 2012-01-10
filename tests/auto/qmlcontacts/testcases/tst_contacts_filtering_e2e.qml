@@ -54,7 +54,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: model
-        manager: "jsondb"
         autoUpdate: true
         filter: filter
     }

@@ -48,7 +48,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modelSortedByFirstName
-        manager: "jsondb"
         autoUpdate:true
         sortOrders: [
             SortOrder {
@@ -91,7 +90,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modelSortedByLastName
-        manager: "jsondb"
         autoUpdate:true
         sortOrders: [
             SortOrder {
@@ -134,7 +132,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modelSortedByEmailAddress
-        manager: "jsondb"
         autoUpdate:true
         sortOrders: [
             SortOrder {
@@ -177,7 +174,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modelSortedByLastAndFirstName
-        manager: "jsondb"
         autoUpdate:true
         sortOrders: [
             SortOrder {

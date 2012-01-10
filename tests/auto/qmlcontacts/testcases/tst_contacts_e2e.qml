@@ -109,7 +109,7 @@ property Contact testContact
         {
             var model = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;}", testHelper);
+                    "ContactModel {id:model;autoUpdate:true;}", testHelper);
             var spy = Qt.createQmlObject("import QtTest 1.0;" +
                     "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
             contactsChangedSpy = spy;
@@ -266,7 +266,7 @@ property Contact testContact
         {
             var model2 = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "ContactModel {id:model2;manager:\"jsondb\";autoUpdate:true;}", testHelper);
+                    "ContactModel {id:model2;autoUpdate:true;}", testHelper);
             var spy2 = Qt.createQmlObject("import QtTest 1.0;" +
                     "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
             contactsChangedSpy = spy2;
@@ -295,7 +295,7 @@ property Contact testContact
             //TODO add a test case to remove the same detail N times and remove a detail which doesnt exist etc...
             var model = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "ContactModel {id:model;manager:\"jsondb\";autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
+                    "ContactModel {id:model;autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
             var tmp = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
                     "Contact {Name{}}", testHelper);

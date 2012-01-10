@@ -48,7 +48,6 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modelForSaveAndFetch
-        manager: "jsondb"
         autoUpdate:true
     }
 

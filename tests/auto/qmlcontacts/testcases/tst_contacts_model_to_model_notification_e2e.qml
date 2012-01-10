@@ -49,14 +49,12 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modifiedModel
-        manager: "jsondb"
         autoUpdate: false
         // otherwise this model will distract the test helper functions
     }
 
     ContactModel {
         id: notifiedModel
-        manager: "jsondb"
         autoUpdate:true
     }
 

@@ -1339,18 +1339,20 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
 void QOrganizerJsonDbConverter::extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant *property) const
 {
     // TODO check potential conflicts with predefined detail
-    if (extendedDetail.name().isEmpty() || extendedDetail.data().isNull())
+
+    QVariant data = extendedDetail.data();
+    if (extendedDetail.name().isEmpty() || data.isNull())
         return;
 
-    if (extendedDetail.data().canConvert(QVariant::String)) {
-        property->setValue(extendedDetail.data().toString());
-    } else if (extendedDetail.data().type() == QVariant::List) {
+    if (data.canConvert(QVariant::String)) {
+        property->setValue(data.toString());
+    } else if (data.type() == QVariant::List) {
         QVariantList variantList;
-        dataToList(extendedDetail.data(), &variantList);
+        dataToList(data, &variantList);
         property->setValue(variantList);
-    } else if (extendedDetail.data().type() == QVariant::Map) {
+    } else if (data.type() == QVariant::Map) {
         QVariantMap variantMap;
-        dataToMap(extendedDetail.data(), &variantMap);
+        dataToMap(data, &variantMap);
         property->setValue(variantMap);
     }
 }

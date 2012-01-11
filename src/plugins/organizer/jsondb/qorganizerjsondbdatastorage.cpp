@@ -469,7 +469,7 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
 
     //Apply Filter and get jsondb query expression
     QString filterString;
-    if (m_converter.compoundFilterToJsondbQuery(m_filter, filterString)) {
+    if (m_converter.compoundFilterToJsondbQuery(m_filter, &filterString)) {
         newJsonDbQuery += filterString;
         int trId = m_jsonDb->query(newJsonDbQuery);
         // we don't care about item index when fetching items --> 0 index
@@ -583,7 +583,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdRequest()
     QOrganizerItemCollectionFilter collectonFilter;
     collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(m_removeItemCollectionIds));
     QString filterString;
-    m_converter.singleFilterToJsondbQuery(collectonFilter, filterString);
+    m_converter.singleFilterToJsondbQuery(collectonFilter, &filterString);
     jsondbQuery += filterString;
     int trId = m_jsonDb->remove(jsondbQuery);
     m_transactionIds.insert(trId, 0);
@@ -692,8 +692,8 @@ void QOrganizerJsonDbDataStorage::handleCollectionsResponse(QOrganizerManager::E
 
         for (int i = 0; i < jsonDbObjectList.size(); i++) {
             QOrganizerCollection collection;
-            bool isDefaultCollection;
-            if (m_converter.jsonDbObjectToCollection(jsonDbObjectList.at(i).toMap(), &collection, isDefaultCollection)) {
+            bool isDefaultCollection(false);
+            if (m_converter.jsonDbObjectToCollection(jsonDbObjectList.at(i).toMap(), &collection, &isDefaultCollection)) {
                 if (isDefaultCollection) {
                     // Keeping default collection up-to-date in memory
                     m_defaultCollection = collection;
@@ -807,7 +807,7 @@ void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
 {
     bool requestSent = false;
     QVariantMap jsonDbAlarm;
-    if (m_converter.itemToJsondbAlarmObject(m_items.at(0), jsonDbAlarm)) {
+    if (m_converter.itemToJsondbAlarmObject(m_items.at(0), &jsonDbAlarm)) {
         int trId;
         if (m_alarmId.isEmpty())
             trId = m_jsonDb->create(jsonDbAlarm);

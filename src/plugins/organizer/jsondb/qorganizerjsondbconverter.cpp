@@ -519,7 +519,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
                 break;
 
             QVariant property;
-            extendedDetailToJsonDbProperty(details.at(i), property);
+            extendedDetailToJsonDbProperty(details.at(i), &property);
             if (!property.isNull())
                 object->insert(name, property);
             break;
@@ -603,7 +603,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 
         case QOrganizerItemDetail::TypeAudibleReminder: {
             QVariantMap reminderObject;
-            audibleReminderDetailToJsonDbObject(details.at(i), reminderObject);
+            audibleReminderDetailToJsonDbObject(details.at(i), &reminderObject);
             if (!reminderObject.isEmpty())
                 object->insert(QOrganizerJsonDbStr::itemReminder(), reminderObject);
             break;
@@ -975,7 +975,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &
     }
 }
 
-bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool& isDefaultCollection)
+bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& object, QOrganizerCollection* collection, bool *isDefaultCollection)
 {
     bool hasCollectionId(false);
 
@@ -1006,7 +1006,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
         } else if (i.key() == QOrganizerJsonDbStr::collectionDefaultFlag()) {
             QVariant isDefault = i.value();
             if (isDefault.canConvert(QVariant::Bool))
-                isDefaultCollection = isDefault.toBool();
+                *isDefaultCollection = isDefault.toBool();
         } else if (i.key() == QOrganizerJsonDbStr::collectionCustomFields()) {
             QVariantMap customFields = i.value().toMap();
             if (!customFields.isEmpty()) {
@@ -1218,7 +1218,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
     }
 }
 
-bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap &alarmObject) const
+bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap *alarmObject) const
 {
     bool ret = false;
     QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
@@ -1231,35 +1231,35 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
     // audibleReminder and start time details are mandatory for alarm object
     if (!audibleReminder.isEmpty() && alarmStartTime.isValid()) {
         // alarm object
-        alarmObject.insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
+        alarmObject->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
         // alarm start time
         if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
             alarmStartTime = alarmStartTime.addSecs(-audibleReminder.secondsBeforeStart());//Nagetive value
-        alarmObject.insert(QOrganizerJsonDbStr::alarmISODate(), alarmStartTime.toUTC().toString(Qt::ISODate));
+        alarmObject->insert(QOrganizerJsonDbStr::alarmISODate(), alarmStartTime.toUTC().toString(Qt::ISODate));
         // repetition count to alarm snooze count
         if (audibleReminder.hasValue(audibleReminder.FieldRepetitionCount))
-           alarmObject.insert(QOrganizerJsonDbStr::alarmSnoozeCount(), audibleReminder.repetitionCount());
+           alarmObject->insert(QOrganizerJsonDbStr::alarmSnoozeCount(), audibleReminder.repetitionCount());
         // repetition delay to alarm snooze time
         if (audibleReminder.hasValue(audibleReminder.FieldRepetitionDelay))
-           alarmObject.insert(QOrganizerJsonDbStr::alarmSnoozeTime(), audibleReminder.repetitionDelay());
+           alarmObject->insert(QOrganizerJsonDbStr::alarmSnoozeTime(), audibleReminder.repetitionDelay());
         // item Uuid to alarm event Uuid
-        alarmObject.insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
+        alarmObject->insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
         // item displayLabel to alarm title
         QString displayLabel(item.displayLabel());
         if (!displayLabel.isEmpty())
-            alarmObject.insert(QOrganizerJsonDbStr::alarmTitle(), displayLabel);
+            alarmObject->insert(QOrganizerJsonDbStr::alarmTitle(), displayLabel);
         // item description to alarm description
         QString description(item.description());
         if (!description.isEmpty())
-            alarmObject.insert(QOrganizerJsonDbStr::alarmDescription(), description);
+            alarmObject->insert(QOrganizerJsonDbStr::alarmDescription(), description);
         // set calender app as alarm identifier
-        alarmObject.insert(QOrganizerJsonDbStr::alarmIdentifier(), QOrganizerJsonDbStr::alarmCalenderIdentifier());
+        alarmObject->insert(QOrganizerJsonDbStr::alarmIdentifier(), QOrganizerJsonDbStr::alarmCalenderIdentifier());
         ret = true;
     }
     return ret;
 }
 
-void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap &object) const
+void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap *object) const
 {
     const QMap<int, QVariant> reminderValues = itemReminder.values();
     QMap<int, QVariant>::const_iterator i = reminderValues.constBegin();
@@ -1281,7 +1281,7 @@ void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrgan
             jsonDbField = QOrganizerJsonDbStr::itemReminderDataUrl();
         }
         if (value.isValid())
-            object.insert(jsonDbField, value);
+            object->insert(jsonDbField, value);
         ++i;
     }
 }
@@ -1336,26 +1336,26 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
     return conversionData[0].enumStr;
 }
 
-void QOrganizerJsonDbConverter::extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant &property) const
+void QOrganizerJsonDbConverter::extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant *property) const
 {
     // TODO check potential conflicts with predefined detail
     if (extendedDetail.name().isEmpty() || extendedDetail.data().isNull())
         return;
 
     if (extendedDetail.data().canConvert(QVariant::String)) {
-        property.setValue(extendedDetail.data().toString());
+        property->setValue(extendedDetail.data().toString());
     } else if (extendedDetail.data().type() == QVariant::List) {
         QVariantList variantList;
-        dataToList(extendedDetail.data(), variantList);
-        property.setValue(variantList);
+        dataToList(extendedDetail.data(), &variantList);
+        property->setValue(variantList);
     } else if (extendedDetail.data().type() == QVariant::Map) {
         QVariantMap variantMap;
-        dataToMap(extendedDetail.data(), variantMap);
-        property.setValue(variantMap);
+        dataToMap(extendedDetail.data(), &variantMap);
+        property->setValue(variantMap);
     }
 }
 
-void QOrganizerJsonDbConverter::dataToList(const QVariant &data, QVariantList &list) const
+void QOrganizerJsonDbConverter::dataToList(const QVariant &data, QVariantList *list) const
 {
     if (data.type() != QVariant::List)
         return;
@@ -1366,18 +1366,18 @@ void QOrganizerJsonDbConverter::dataToList(const QVariant &data, QVariantList &l
             continue;
 
         if (variant.canConvert(QVariant::String)) {
-            list.append(variant.toString());
+            list->append(variant.toString());
         } else if (variant.type() == QVariant::List) {
             dataToList(variant, list);
         } else if (variant.type() == QVariant::Map) {
             QVariantMap map;
-            dataToMap(variant, map);
-            list.append(map);
+            dataToMap(variant, &map);
+            list->append(map);
         }
     }
 }
 
-void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map) const
+void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap *map) const
 {
     if (data.type() != QVariant::Map)
         return;
@@ -1387,22 +1387,22 @@ void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap &map
     while (i != originalMap.constEnd()) {
         if (i.value().isValid() && !i.value().isNull()) {
             if (i.value().canConvert(QVariant::String)) {
-                map.insert(i.key(), i.value().toString());
+                map->insert(i.key(), i.value().toString());
             } else if (i.value().type() == QVariant::List) {
                 QVariantList list;
-                dataToList(i.value(), list);
-                map.insert(i.key(), list);
+                dataToList(i.value(), &list);
+                map->insert(i.key(), list);
             } else if (i.value().type() == QVariant::Map) {
                 QVariantMap embedMap;
-                dataToMap(i.value(), embedMap);
-                map.insert(i.key(), embedMap);
+                dataToMap(i.value(), &embedMap);
+                map->insert(i.key(), embedMap);
             }
         }
         ++i;
     }
 }
 
-bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
 {
     bool isValidFilter = true;
     switch (filter.type()) {
@@ -1413,8 +1413,8 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
             //query filter1 filter2 filter3 ...
             //query [?definition="value"][?definition="value"][?definition="value"]
             QString filterStr;
-            if (compoundFilterToJsondbQuery(filter, filterStr))
-                jsonDbQueryStr += filterStr;
+            if (compoundFilterToJsondbQuery(filter, &filterStr))
+                *jsonDbQueryStr += filterStr;
             else //For intersection filter, single filter invalid means empty result from jsondb query
                 isValidFilter = false;
         }
@@ -1428,15 +1428,15 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
             //query filter1 filter2 filter3 ...
             //query [?definition="value" | definition="value" | definition="value"]
             QString filterStr;
-            if (compoundFilterToJsondbQuery(filter, filterStr)) {
-                jsonDbQueryStr += filterStr;
+            if (compoundFilterToJsondbQuery(filter, &filterStr)) {
+                *jsonDbQueryStr += filterStr;
                 validFilterCount ++;
             } else {//For union filter, single filter invalid means we could skip this filter
                 continue;
             }
         }
         if (validFilterCount > 0)
-            jsonDbQueryStr.replace(QStringLiteral("][?"), QStringLiteral(" | ")); //replace the "][?" to " | "
+            jsonDbQueryStr->replace(QStringLiteral("][?"), QStringLiteral(" | ")); //replace the "][?" to " | "
         else //no valid filter means empty item list from jsondb
             isValidFilter = false;
         return isValidFilter;
@@ -1447,12 +1447,12 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
     }
 
     if (!isValidFilter)
-        jsonDbQueryStr.clear();
+        jsonDbQueryStr->clear();
 
     return isValidFilter;
 }
 
-bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString& jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString *jsonDbQueryStr) const
 {
     bool isValidFilter = true;
     switch (filter.type()) {
@@ -1495,7 +1495,7 @@ QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToColl
         return QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonUuid));
 }
 
-bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
 {
     bool isValidFilter = true;
     const QOrganizerItemCollectionFilter cf(filter);
@@ -1509,7 +1509,7 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);
-            jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryCollectionIdsTemplate().arg(query);
+            *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryCollectionIdsTemplate().arg(query);
         } else {
             isValidFilter = false;
         }
@@ -1519,7 +1519,7 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
     return isValidFilter;
 }
 
-bool QOrganizerJsonDbConverter::idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
 {
     bool isValidFilter = true;
     const QOrganizerItemIdFilter idf(filter);
@@ -1533,7 +1533,7 @@ bool QOrganizerJsonDbConverter::idFilterToJsondbQuery(const QOrganizerItemFilter
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);
-            jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryUuidsTemplate().arg(query);
+            *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryUuidsTemplate().arg(query);
         } else {
             isValidFilter = false;
         }
@@ -1596,7 +1596,7 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
     return isValidFilter;
 }
 
-bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString &jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
 {
     /*
     Jsondb backend specific notes related to OrganizerItemDetailFilter
@@ -1640,139 +1640,139 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
 
         if (QOrganizerEventTime::DefinitionName == detailType) {
             if (QOrganizerEventTime::FieldStartDateTime ==  detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::eventStartDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+                jsonDbQueryStr->append(equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::eventStartDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerEventTime::FieldEndDateTime == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::eventEndDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+                jsonDbQueryStr->append(equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::eventEndDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerEventTime::FieldAllDay == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::eventIsAllDay()).arg(valueString);
+                jsonDbQueryStr->append(equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::eventIsAllDay()).arg(valueString));
             }
 
         } else if (QOrganizerTodoTime::DefinitionName == detailType) {
             if (QOrganizerTodoTime::FieldStartDateTime == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::todoStartDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+                jsonDbQueryStr->append(equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::todoStartDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerTodoTime::FieldDueDateTime == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::todoDueDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+                jsonDbQueryStr->append(equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::todoDueDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerTodoTime::FieldAllDay == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate.arg(QOrganizerJsonDbStr::todoIsAllDay()).arg(valueString);
+                jsonDbQueryStr->append(equalsQueryTemplate.arg(QOrganizerJsonDbStr::todoIsAllDay()).arg(valueString));
             }
 
         } else if (QOrganizerItemDetail::TypeTodoProgress == detailType) {
             if (QOrganizerTodoProgress::FieldFinishedDateTime == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
+                jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::todoFinishedDateTime())
-                    .arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+                    .arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerTodoProgress::FieldPercentageComplete == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
+                jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::todoProgressPercentage())
-                    .arg(df.value().toInt());
+                    .arg(df.value().toInt()));
             } else if (QOrganizerTodoProgress::FieldStatus == detailField) {
-                jsonDbQueryStr += equalsQueryTemplate
+                jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::todoStatus())
-                    .arg(enumToString(organizerTodoStatusMap(), df.value().toInt()));
+                    .arg(enumToString(organizerTodoStatusMap(), df.value().toInt())));
             }
 
         } else if (QOrganizerItemComment::DefinitionName == detailType
             && QOrganizerItemComment::FieldComment == detailField) {
-            jsonDbQueryStr += containsQueryTemplate.arg(QOrganizerJsonDbStr::itemComments()).arg(valueString);
+            jsonDbQueryStr->append(containsQueryTemplate.arg(QOrganizerJsonDbStr::itemComments()).arg(valueString));
 
         } else if (QOrganizerItemDescription::DefinitionName == detailType
             && QOrganizerItemDescription::FieldDescription == detailField) {
-            jsonDbQueryStr += matchFlagQueryTemplate
-                .arg(QOrganizerJsonDbStr::itemDescription()).arg(createMatchFlagQuery(valueString, df.matchFlags()));
+            jsonDbQueryStr->append(matchFlagQueryTemplate
+                .arg(QOrganizerJsonDbStr::itemDescription()).arg(createMatchFlagQuery(valueString, df.matchFlags())));
 
         } else if (QOrganizerItemDisplayLabel::DefinitionName == detailType
             && QOrganizerItemDisplayLabel::FieldLabel == detailField) {
-           jsonDbQueryStr += matchFlagQueryTemplate
+           jsonDbQueryStr->append(matchFlagQueryTemplate
                 .arg(QOrganizerJsonDbStr::itemName())
-                .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                .arg(createMatchFlagQuery(valueString, df.matchFlags())));
 
         } else if (QOrganizerItemGuid::DefinitionName == detailType
             && QOrganizerItemGuid::FieldGuid ==  detailField) {
-            jsonDbQueryStr += matchFlagQueryTemplate
+            jsonDbQueryStr->append(matchFlagQueryTemplate
                 .arg(QOrganizerJsonDbStr::itemGuid())
-                .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                .arg(createMatchFlagQuery(valueString, df.matchFlags())));
 
         } else if (QOrganizerItemLocation::DefinitionName == detailType) {
             if (QOrganizerItemLocation::FieldLabel ==  detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                     .arg(QOrganizerJsonDbStr::itemLocation())
                     .arg(QOrganizerJsonDbStr::itemLocationLabel())
-                    .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                    .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerItemLocation::FieldLongitude ==  detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate3
+                jsonDbQueryStr->append(matchFlagQueryTemplate3
                     .arg(QOrganizerJsonDbStr::itemLocation())
                     .arg(QOrganizerJsonDbStr::itemLocationGeo())
                     .arg(QOrganizerJsonDbStr::itemLocationGeoLongitude())
-                    .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                    .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerItemLocation::FieldLatitude ==  detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate3
+                jsonDbQueryStr->append(matchFlagQueryTemplate3
                     .arg(QOrganizerJsonDbStr::itemLocation())
                     .arg(QOrganizerJsonDbStr::itemLocationGeo())
                     .arg(QOrganizerJsonDbStr::itemLocationGeoLatitude())
-                    .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                    .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             }
 
         } else if (QOrganizerItemPriority::DefinitionName == detailType
             && QOrganizerItemPriority::FieldPriority ==  detailField) {
-            jsonDbQueryStr += equalsQueryTemplate
+            jsonDbQueryStr->append(equalsQueryTemplate
                 .arg(QOrganizerJsonDbStr::itemPriority())
-                .arg(enumToString(organizerPriorityEnumMap(), df.value().toInt()));
+                .arg(enumToString(organizerPriorityEnumMap(), df.value().toInt())));
 
         } else if (QOrganizerItemType::DefinitionName == detailType
             && QOrganizerItemType::FieldType ==  detailField) {
-            jsonDbQueryStr += equalsQueryTemplate
+            jsonDbQueryStr->append(equalsQueryTemplate
                 .arg(QOrganizerJsonDbStr::jsonDbType())
-                .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(organizerItemTypeMap(), df.value().toInt()));
+                .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(organizerItemTypeMap(), df.value().toInt())));
 
         } else if (QOrganizerItemTag::DefinitionName == detailType
             && QOrganizerItemTag::FieldTag == detailField) {
-            jsonDbQueryStr += containsQueryTemplate.arg(QOrganizerJsonDbStr::itemTags()).arg(valueString);
+            jsonDbQueryStr->append(containsQueryTemplate.arg(QOrganizerJsonDbStr::itemTags()).arg(valueString));
 
         } else if (QOrganizerItemExtendedDetail::DefinitionName == detailType
              && QOrganizerItemExtendedDetail::FieldExtendedDetailName ==  detailField) {
-            jsonDbQueryStr += existsQueryTemplate.arg(valueString);
+            jsonDbQueryStr->append(existsQueryTemplate.arg(valueString));
 
         } else if (QOrganizerEventRsvp::DefinitionName == detailType) {
             if (QOrganizerEventRsvp::FieldParticipationStatus == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::attendeeParticipationStatus())
-                        .arg(createMatchFlagQuery(enumToString(organizerParticipationStatusMap(), df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerParticipationStatusMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldParticipationRole == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::attendeeParticipationRole())
-                        .arg(createMatchFlagQuery(enumToString(organizerParticipationRoleMap(), df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerParticipationRoleMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseRequirement == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpResponseRequirement())
-                        .arg(createMatchFlagQuery(enumToString(organizerResponseRequirementMap(), df.value().toInt()), df.matchFlags()));
+                        .arg(createMatchFlagQuery(enumToString(organizerResponseRequirementMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseDeadline == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpResponseDeadline())
-                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags()));
+                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseDate == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpResponseDate())
-                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags()));
+                        .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldOrganizerName == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpOrganizerName())
-                        .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                        .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldOrganizerEmail == detailField) {
-                jsonDbQueryStr += matchFlagQueryTemplate2
+                jsonDbQueryStr->append(matchFlagQueryTemplate2
                         .arg(QOrganizerJsonDbStr::rsvp())
                         .arg(QOrganizerJsonDbStr::rsvpOrganizerEmail())
-                        .arg(createMatchFlagQuery(valueString, df.matchFlags()));
+                        .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             }
         }
     }

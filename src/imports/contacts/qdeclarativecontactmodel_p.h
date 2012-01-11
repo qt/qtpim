@@ -139,7 +139,6 @@ signals:
 
 public slots:
     void update();
-    void cancelUpdate();
     void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
     void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
 
@@ -147,6 +146,7 @@ private slots:
     void clearContacts();
     void fetchAgain();
     void requestUpdated();
+    void doUpdate();
     void onRequestStateChanged(QContactAbstractRequest::State newState);
     void onContactsAdded(const QList<QContactId>& ids);
     void onContactsRemoved(const QList<QContactId>& ids);

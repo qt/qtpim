@@ -90,10 +90,8 @@ public:
         :m_manager(0),
         m_fetchHint(0),
         m_filter(0),
-        m_fetchRequest(0),
         m_error(QContactManager::NoError),
         m_autoUpdate(true),
-        m_updatePending(false),
         m_componentCompleted(false)
     {
     }
@@ -110,7 +108,6 @@ public:
     QList<QDeclarativeContactSortOrder*> m_sortOrders;
     QDeclarativeContactFilter* m_filter;
 
-    QContactFetchRequest* m_fetchRequest;
     QList<QContactId> m_updatedContactIds;
     QVersitReader m_reader;
     QVersitWriter m_writer;
@@ -119,7 +116,6 @@ public:
     QContactManager::Error m_error;
 
     bool m_autoUpdate;
-    bool m_updatePending;
     bool m_componentCompleted;
 };
 
@@ -132,10 +128,10 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     roleNames.insert(ContactRole, "contact");
     setRoleNames(roleNames);
 
-    connect(this, SIGNAL(managerChanged()), SLOT(update()));
-    connect(this, SIGNAL(filterChanged()), SLOT(update()));
-    connect(this, SIGNAL(fetchHintChanged()), SLOT(update()));
-    connect(this, SIGNAL(sortOrdersChanged()), SLOT(update()));
+    connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(filterChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
     
     //import vcard
     connect(&d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
@@ -175,9 +171,10 @@ void QDeclarativeContactModel::setManager(const QString& managerName)
 }
 void QDeclarativeContactModel::componentComplete()
 {
-    d->m_componentCompleted = true;
     if (!d->m_manager)
         setManager(QString());
+
+    d->m_componentCompleted = true;
 
     if (d->m_autoUpdate)
         update();
@@ -202,27 +199,15 @@ bool QDeclarativeContactModel::autoUpdate() const
 
 void QDeclarativeContactModel::update()
 {
-    if (!d->m_componentCompleted || d->m_updatePending)
+    if (!d->m_componentCompleted)
         return;
-    d->m_updatePending = true; // Disallow possible duplicate request triggering
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
 }
 
-/*!
-  \qmlmethod ContactModel::cancelUpdate()
-
-  Cancel any unfinished requests to update the contacts in the model.
-
-  \sa ContactModel::autoUpdate  ContactModel::update
-  */
-void QDeclarativeContactModel::cancelUpdate()
+void QDeclarativeContactModel::doUpdate()
 {
-    if (d->m_fetchRequest) {
-        d->m_fetchRequest->cancel();
-        d->m_fetchRequest->deleteLater();
-        d->m_fetchRequest = 0;
-        d->m_updatePending = false;
-    }
+    if (d->m_autoUpdate)
+        update();
 }
 
 /*!
@@ -529,7 +514,6 @@ void QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
     }
 
     d->m_updatedContactIds = ids;
-    d->m_updatePending = true;
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
 }
 void QDeclarativeContactModel::clearContacts()
@@ -541,32 +525,30 @@ void QDeclarativeContactModel::clearContacts()
 
 void QDeclarativeContactModel::fetchAgain()
 {
-    cancelUpdate();
-
     QList<QContactSortOrder> sortOrders;
     foreach (QDeclarativeContactSortOrder* so, d->m_sortOrders) {
         sortOrders.append(so->sortOrder());
     }
-    d->m_fetchRequest = new QContactFetchRequest(this);
-    d->m_fetchRequest->setManager(d->m_manager);
-    d->m_fetchRequest->setSorting(sortOrders);
+    QContactFetchRequest* fetchRequest = new QContactFetchRequest(this);
+    fetchRequest->setManager(d->m_manager);
+    fetchRequest->setSorting(sortOrders);
+
     // ids are ignored and all contacts (matching the filter) are always fetched
     if (d->m_filter){
-        d->m_fetchRequest->setFilter(d->m_filter->filter());
+        fetchRequest->setFilter(d->m_filter->filter());
     } else {
-        d->m_fetchRequest->setFilter(QContactFilter());
+        fetchRequest->setFilter(QContactFilter());
     }
 
-    d->m_fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
+    fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
 
-    connect(d->m_fetchRequest,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
+    connect(fetchRequest,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
 
-    d->m_fetchRequest->start();
+    fetchRequest->start();
 }
 
 void QDeclarativeContactModel::requestUpdated()
 {
-    //Don't use d->m_fetchRequest, this pointer might be invalid if cancelUpdate() was called, use QObject::sender() instead.
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
     if (req && req->isFinished()) {
         QList<QContact> contacts = req->contacts();
@@ -605,8 +587,6 @@ void QDeclarativeContactModel::requestUpdated()
         emit contactsChanged();
         checkError(req);
         req->deleteLater();
-        d->m_fetchRequest = 0;
-        d->m_updatePending = false;
     }
 }
 

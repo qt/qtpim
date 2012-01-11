@@ -1344,7 +1344,11 @@ void QOrganizerJsonDbConverter::extendedDetailToJsonDbProperty(const QOrganizerI
     if (extendedDetail.name().isEmpty() || data.isNull())
         return;
 
-    if (data.canConvert(QVariant::String)) {
+    if (data.type() < QVariant::Map) {
+        // JsonDb can directly save these types: bool, int, uint, qlonglong, qulonglong, double, QChar
+        // so no conversion is needed
+        property->setValue(data);
+    } else if (data.canConvert(QVariant::String)) {
         property->setValue(data.toString());
     } else if (data.type() == QVariant::List) {
         QVariantList variantList;
@@ -1367,7 +1371,11 @@ void QOrganizerJsonDbConverter::dataToList(const QVariant &data, QVariantList *l
         if (variant.isNull())
             continue;
 
-        if (variant.canConvert(QVariant::String)) {
+        if (variant.type() < QVariant::Map) {
+            // JsonDb can directly save these types: bool, int, uint, qlonglong, qulonglong, double, QChar
+            // so no conversion is needed
+            list->append(variant);
+        } else if (variant.canConvert(QVariant::String)) {
             list->append(variant.toString());
         } else if (variant.type() == QVariant::List) {
             dataToList(variant, list);
@@ -1388,7 +1396,11 @@ void QOrganizerJsonDbConverter::dataToMap(const QVariant &data, QVariantMap *map
     QMap<QString, QVariant>::const_iterator i = originalMap.constBegin();
     while (i != originalMap.constEnd()) {
         if (i.value().isValid() && !i.value().isNull()) {
-            if (i.value().canConvert(QVariant::String)) {
+            if (i.value().type() < QVariant::Map) {
+                // JsonDb can directly save these types: bool, int, uint, qlonglong, qulonglong, double, QChar
+                // so no conversion is needed
+                map->insert(i.key(), i.value());
+            } else if (i.value().canConvert(QVariant::String)) {
                 map->insert(i.key(), i.value().toString());
             } else if (i.value().type() == QVariant::List) {
                 QVariantList list;

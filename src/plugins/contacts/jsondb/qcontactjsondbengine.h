@@ -89,6 +89,9 @@ public:
     /* "Self" contact id (MyCard) */
     QContactLocalId selfContactId(QContactManager::Error* errors) const;
 
+    /* Synthesize the display label of a contact */
+    QString synthesizedDisplayLabel(const QContact &contact, QContactManager::Error *error) const;
+
     /* Filtering */
     QList<QContactLocalId> contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, QContactManager::Error* error) const;
 

@@ -2385,12 +2385,20 @@ void tst_QContactManager::selfContactId()
     // early out if the manager doesn't support self contact id saving
     QContactLocalId selfContact = cm->selfContactId();
     if (!cm->hasFeature(QContactManager::SelfContact)) {
-        // ensure that the error codes / return values are meaningful failures.
-        QEXPECT_FAIL("mgr='maemo5'", "maemo5 supports getting the self contact but not setting it.", Continue);
-        QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-        QVERIFY(!cm->setSelfContactId(QContactLocalId(123)));
-        QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        QSKIP("Manager does not support the concept of a self-contact");
+        if (cm->managerName() == "jsondb")
+        {
+            QVERIFY(cm->error() == QContactManager::NotSupportedError);
+            QSKIP("JSONDB backend does not support selfContact at the moment, skipping...");
+        }
+        else
+        {
+            // ensure that the error codes / return values are meaningful failures.
+            QEXPECT_FAIL("mgr='maemo5'", "maemo5 supports getting the self contact but not setting it.", Continue);
+            QVERIFY(cm->error() == QContactManager::DoesNotExistError);
+            QVERIFY(!cm->setSelfContactId(QContactLocalId(123)));
+            QVERIFY(cm->error() == QContactManager::NotSupportedError);
+            QSKIP("Manager does not support the concept of a self-contact");
+        }
     }
 
     // create a new "self" contact and retrieve its Id

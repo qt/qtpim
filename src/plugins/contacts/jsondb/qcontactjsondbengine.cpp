@@ -361,7 +361,6 @@ bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, c
     case QContactManager::Anonymous:
     case QContactManager::ChangeLogs:
     case QContactManager::DetailOrdering:
-    case QContactManager::SelfContact:
         return true;
     default:
         return false;

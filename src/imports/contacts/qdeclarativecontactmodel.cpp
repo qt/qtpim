@@ -393,9 +393,12 @@ QDeclarativeContactFilter* QDeclarativeContactModel::filter() const
 void QDeclarativeContactModel::setFilter(QDeclarativeContactFilter* filter)
 {
     if (d->m_filter != filter) {
+        if (d->m_filter) {
+            disconnect(d->m_filter, SIGNAL(filterChanged()), this, SLOT(update()));
+        }
         d->m_filter = filter;
         if (d->m_filter) {
-            connect(d->m_filter, SIGNAL(filterChanged()), SLOT(update()));
+            connect(d->m_filter, SIGNAL(filterChanged()), SLOT(update()), Qt::UniqueConnection);
         }
         emit filterChanged();
     }

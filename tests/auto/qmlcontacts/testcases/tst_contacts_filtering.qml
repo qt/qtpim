@@ -81,11 +81,11 @@ ContactsSavingTestCase {
         emptyContacts(model);
 
         model.saveContact(contact1);
-        waitForContactsChanged();;
+        waitForContactsChanged();
         model.saveContact(contact2);
-        waitForContactsChanged();;
+        waitForContactsChanged();
         model.saveContact(contact3);
-        waitForContactsChanged();;
+        waitForContactsChanged();
     }
 
     // Clean database
@@ -100,7 +100,7 @@ ContactsSavingTestCase {
     // Clear filter
     function cleanup() {
         model.filter = null;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 3);
     }
 
@@ -111,7 +111,7 @@ ContactsSavingTestCase {
                 "}",
                 this);
         model.filter = newFilter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare(model.contacts.length, 1);
     }
 
@@ -123,7 +123,7 @@ ContactsSavingTestCase {
     function filterById(id) {
         filter.ids = [id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 1);
         compare(model.contacts[0].contactId, id);
     }
@@ -149,7 +149,7 @@ ContactsSavingTestCase {
         var id2 = model.contacts[1].contactId;
         filter.ids = [id1, id2];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 2);
         compare(model.contacts[0].contactId, id1);
         compare(model.contacts[1].contactId, id2);
@@ -170,14 +170,14 @@ ContactsSavingTestCase {
     function test_filterByNonExistingId() {
         filter.ids = ["foo bar"];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 0);
     }
 
     function test_filterByMultipleNonExistingIds() {
         filter.ids = ["foo", "bar", "baz", "qux"];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 0);
     }
 
@@ -185,7 +185,7 @@ ContactsSavingTestCase {
         var id = model.contacts[0].contactId;
         filter.ids = ["foo bar", id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 1);
         compare(model.contacts[0].contactId, id);
     }
@@ -193,14 +193,14 @@ ContactsSavingTestCase {
     function test_filterByEmptyList() {
         filter.ids = [];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 3);
     }
 
     function test_filterByTwoOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 1);
     }
 
@@ -208,14 +208,14 @@ ContactsSavingTestCase {
     function test_filterByTwoCouplesOfOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[1].contactId];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 2);
     }
 
     function test_filterByAlternatingOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[0].contactId];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
         compare (model.contacts.length, 2);
     }
 
@@ -225,7 +225,7 @@ ContactsSavingTestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -239,7 +239,7 @@ ContactsSavingTestCase {
 
         filter.ids = [idOfAnotherContact];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -252,13 +252,13 @@ ContactsSavingTestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         contact = model.contacts[0];
 
         filter.ids = [id, idOfAnotherContact];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -272,10 +272,10 @@ ContactsSavingTestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         model.fetchContacts([id]);
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         compare(model.contacts[0].contactId, id);
     }
@@ -288,12 +288,38 @@ ContactsSavingTestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         model.fetchContacts([idOfAnotherContact]);
-        waitForContactsChanged();;
+        waitForContactsChanged();
 
         compare(model.contacts.length, 1, "contacts length");
         compare(model.contacts[0].contactId, id, "contact is still present");
+    }
+
+    IdFilter {
+        id: oldFilter
+        ids: []
+    }
+
+    IdFilter {
+        id: newFilter
+        ids: []
+    }
+
+    function test_afterSettingANewFilterChangingTheOldFilterDoesNotChangeModel() {
+        var id = model.contacts[0].contactId;
+        oldFilter.ids = [id];
+        model.filter = oldFilter;
+        waitForContactsChanged();
+
+        newFilter.ids = [id];
+        model.filter = newFilter;
+        waitForContactsChanged();
+
+        listenToContactsChanged();
+        oldFilter.ids = []; // change the old filter
+
+        verifyNoContactsChangedReceived();
     }
 }

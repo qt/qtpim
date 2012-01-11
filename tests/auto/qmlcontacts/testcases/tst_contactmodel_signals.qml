@@ -43,58 +43,73 @@ import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
 
-TestCase {
-    name: "ContactsSavingTestCase"
-    id: contactsSavingTestCase
+ContactsSignalingTestCase {
+    name: "ContactModelSignalsTests"
+    id: contactModelSignalsTests
 
-    property SignalSpy spy
-    property bool debug: false
-
-    function initTestForModel(model) {
-        logDebug("initTestForModel");
-        spy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsSavingTestCase);
-        spy.target = model;
-        spy.signalName = "contactsChanged";
-        return spy;
+    // This test case is a unit test for contact model
+    // so it does not require updates to contacts.
+    ContactModel {
+        id: model
+        autoUpdate: false
     }
 
-    function listenToContactsChanged() {
-        logDebug("listenForContactsChanged");
-        spy.clear();
+    IdFilter {
+        id: filter
+        ids: []
     }
 
-    function waitForContactsChanged() {
-        logDebug("waitForContactsChanged");
-        spy.wait();
+    function test_settingTheFilterSendsSignal() {
+        listenToSignalFromObject("filterChanged", model)
+        model.filter = filter;
+        verifySignalReceived();
     }
 
-    function verifyNoContactsChangedReceived() {
-        logDebug("verifyNoContactsChangedReceived");
-        wait(500);
-        compare(spy.count, 0, "no contacts changed signal received");
+    IdFilter {
+        id: oldFilter
+        ids: []
     }
 
-    function emptyContacts(model) {
-        logDebug("emptyContacts");
-        model.fetchContacts([]);
-        spy.wait();
-        var count = model.contacts.length;
-        for (var i = 0; i < count; i++) {
-            var id = model.contacts[0].contactId;
-            model.removeContact(id);
-            if (!model.autoUpdate)
-                model.update()
-            spy.wait();
-        }
-        compare(model.contacts.length, 0, "model is empty");
+    IdFilter {
+        id: newFilter
+        ids: []
     }
 
-    function logDebug(message) {
-        if (debug)
-            console.log(message);
+    function test_changingTheFilterSendsSignal() {
+        model.filter = oldFilter;
+
+        listenToSignalFromObject("filterChanged", model)
+        model.filter = newFilter;
+        verifySignalReceived();
+    }
+
+    IdFilter {
+        id: nonNullFilter
+        ids: []
+    }
+
+    function test_removingTheFilterSendsSignal() {
+        model.filter = nonNullFilter;
+
+        listenToSignalFromObject("filterChanged", model)
+        model.filter = null;
+        verifySignalReceived();
+    }
+
+    IdFilter {
+        id: theSameFilter
+        ids: []
+    }
+
+    function test_settingTheSameFilterDoesNotSendSignal() {
+        model.filter = theSameFilter;
+
+        listenToSignalFromObject("filterChanged", model)
+        model.filter = theSameFilter;
+        verifyNoSignalReceived();
+    }
+
+    function init() {
+        initSignalingTest();
     }
 }

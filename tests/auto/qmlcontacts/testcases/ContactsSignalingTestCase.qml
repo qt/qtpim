@@ -44,53 +44,35 @@ import QtTest 1.0
 import QtContacts 5.0
 
 TestCase {
-    name: "ContactsSavingTestCase"
-    id: contactsSavingTestCase
+    name: "ContactsSignalingTestCase"
+    id: contactsSignalingTestCase
 
     property SignalSpy spy
     property bool debug: false
 
-    function initTestForModel(model) {
-        logDebug("initTestForModel");
-        spy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsSavingTestCase);
-        spy.target = model;
-        spy.signalName = "contactsChanged";
-        return spy;
+    function initSignalingTest() {
+        logDebug("initSignalingTest");
+        spy = Qt.createQmlObject("import QtTest 1.0;" +
+                                 "SignalSpy {}",
+                                 contactsSignalingTestCase);
     }
 
-    function listenToContactsChanged() {
-        logDebug("listenForContactsChanged");
+    function listenToSignalFromObject(signalName, object) {
+        logDebug("listenToSignalFromObject");
+        spy.target = object;
+        spy.signalName = signalName;
         spy.clear();
     }
 
-    function waitForContactsChanged() {
-        logDebug("waitForContactsChanged");
+    function verifySignalReceived() {
+        logDebug("verifySignalReceived");
         spy.wait();
     }
 
-    function verifyNoContactsChangedReceived() {
-        logDebug("verifyNoContactsChangedReceived");
+    function verifyNoSignalReceived() {
+        logDebug("verifyNoSignalReceived");
         wait(500);
-        compare(spy.count, 0, "no contacts changed signal received");
-    }
-
-    function emptyContacts(model) {
-        logDebug("emptyContacts");
-        model.fetchContacts([]);
-        spy.wait();
-        var count = model.contacts.length;
-        for (var i = 0; i < count; i++) {
-            var id = model.contacts[0].contactId;
-            model.removeContact(id);
-            if (!model.autoUpdate)
-                model.update()
-            spy.wait();
-        }
-        compare(model.contacts.length, 0, "model is empty");
+        compare(spy.count, 0, "no signal received");
     }
 
     function logDebug(message) {

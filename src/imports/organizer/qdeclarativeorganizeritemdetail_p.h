@@ -541,7 +541,7 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
 public:
     enum TodoProgressField {
         FieldStatus = QOrganizerTodoProgress::FieldStatus,
-        FieldPercentage = QOrganizerTodoProgress::FieldPercentageComplete,
+        FieldPercentageComplete = QOrganizerTodoProgress::FieldPercentageComplete,
         FieldFinishedDateTime = QOrganizerTodoProgress::FieldFinishedDateTime
     };
 

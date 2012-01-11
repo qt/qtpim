@@ -472,7 +472,7 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerJsonDbEngine::supportedItemDet
         supportedDetails << QOrganizerItemRecurrence::DefinitionName
                          << QOrganizerTodoTime::DefinitionName
                          << QOrganizerItemPriority::DefinitionName
-//                         << QOrganizerTodoProgress::DefinitionName
+                         << QOrganizerTodoProgress::DefinitionName
                          << QOrganizerItemReminder::DefinitionName
                          << QOrganizerItemAudibleReminder::DefinitionName;
     } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {

@@ -378,12 +378,15 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Todo {\n"
             + "  startDateTime:'2010-10-23T15:00:00Z'\n"
+            + "  status:TodoProgress.InProgress\n"
+            + "  percentageComplete:89\n"
             + "  description: 'for exact filter - Type'\n"
             + "   }",
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Todo {\n"
             + "  startDateTime: new Date('2010-10-23T15:48:00')\n"
+            + "  percentageComplete:89\n"
             + "  description: 'for exact filter - TodoTime.StartDateTime'\n"
             + "   }",
             "import QtQuick 2.0\n"
@@ -418,6 +421,10 @@ TestCase {
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00Z")},//notice, date-object with Z
             {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: true},
+            {tag: "exact filter - TodoProgress.Status", expectedItemsAmount: 1,
+                filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldStatus, filterValue: TodoProgress.InProgress},
+            {tag: "exact filter - TodoProgress.PercentageComplete", expectedItemsAmount: 2,
+                filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldPercentageComplete, filterValue: 89},
             {tag: "exact filter - Comment", expectedItemsAmount: 1,
                 filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "my comment",
                 separateDetailCtrStr: "import QtQuick 2.0\n"
@@ -741,7 +748,6 @@ TestCase {
         return [
             // filtering certain details/definitions are currently not supported
             {tag: "Unsupported details, JournalTime", filterDetail: Detail.JournalTime },
-            {tag: "Unsupported details, TodoProgress", filterDetail: Detail.TodoProgress },
             {tag: "Unsupported details, Reminder", filterDetail: Detail.Reminder },
             {tag: "Unsupported details, AudibleReminder", filterDetail: Detail.AudibleReminder },
             {tag: "Unsupported details, VisualReminder", filterDetail: Detail.VisualReminder },
@@ -752,6 +758,7 @@ TestCase {
             // filtering matchflags are not supported for all the types
             {tag: "Unsupported matchflag, EventTime", filterDetail: Detail.EventTime, matchFlags: Filter.MatchContains },
             {tag: "Unsupported matchflag, TodoTime", filterDetail: Detail.TodoTime, matchFlags: Filter.MatchStartsWith },
+            {tag: "Unsupported matchflag, TodoProgress", filterDetail: Detail.TodoProgress, matchFlags: Filter.MatchStartsWith },
             {tag: "Unsupported matchflag, Comment", filterDetail: Detail.Comment, matchFlags: Filter.MatchContains },
             {tag: "Unsupported matchflag, Location - Longitude", filterDetail: Detail.Location,
                 filterField: Location.FieldLongitude, matchFlags: Filter.MatchEndsWith },
@@ -776,7 +783,13 @@ TestCase {
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: "mystringie" },
             {tag: "Unsupported string value, TodoTime - AllDay",
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: "mystringie" },
-            // missing TodoProgress-, all different Reminders -details/fields (tested already on Unsupported details-part)
+            {tag: "Unsupported string value, TodoProgress - FinishedDateTime",
+                filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldFinishedDateTime, filterValue: "mystringie" },
+            {tag: "Unsupported string value, TodoProgress - Status",
+                filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldStatus, filterValue: "mystringie" },
+            {tag: "Unsupported string value, TodoProgress - PercentageComplete",
+                filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldPercentageComplete, filterValue: "mystringie" },
+            // missing all different Reminders -details/fields (tested already on Unsupported details-part)
             {tag: "Unsupported string value, Location - Longitude",
                 filterDetail: Detail.Location, filterField: Location.FieldLongitude, filterValue: "mystringie" },
             {tag: "Unsupported string value, Location - Latitude",

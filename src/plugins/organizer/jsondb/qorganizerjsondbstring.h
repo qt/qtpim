@@ -109,6 +109,9 @@ public:
     inline const static QString todoStartDateTime() { return QStringLiteral("startDateTime"); }
     inline const static QString todoDueDateTime() { return QStringLiteral("dueDateTime"); }
     inline const static QString todoIsAllDay() { return QStringLiteral("isAllDay"); }
+    inline const static QString todoFinishedDateTime() { return QStringLiteral("finishedDateTime"); }
+    inline const static QString todoProgressPercentage() { return QStringLiteral("progressPercentage"); }
+    inline const static QString todoStatus() { return QStringLiteral("status"); }
 
     //Collection properties
     inline const static QString collection() { return QStringLiteral("com.nokia.mp.organizer.Collection"); }

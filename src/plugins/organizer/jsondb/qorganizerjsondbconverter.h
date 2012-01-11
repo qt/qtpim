@@ -127,6 +127,7 @@ private:
     static const QOrganizerJsonDbEnumConversionData *organizerParticipationRoleMap();
     static const QOrganizerJsonDbEnumConversionData *organizerResponseRequirementMap();
     static const QOrganizerJsonDbEnumConversionData *organizerItemTypeMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerTodoStatusMap();
 
     static const int jsonDbVersionLength;
 };

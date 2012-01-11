@@ -172,6 +172,17 @@ const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerIt
     return map;
 }
 
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerTodoStatusMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerTodoProgress::StatusNotStarted,          QString(QStringLiteral("NotStarted"))},
+        {QOrganizerTodoProgress::StatusInProgress,          QString(QStringLiteral("InProgress"))},
+        {QOrganizerTodoProgress::StatusComplete,            QString(QStringLiteral("Complete"))},
+        {enumMapEnd,                                        QString::null}
+    };
+    return map;
+}
+
 QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
 }
@@ -407,6 +418,26 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 item->saveDetail(&itemVersion);
                 hasItemVersion = true;
             }
+        } else if (i.key() == QOrganizerJsonDbStr::todoFinishedDateTime()) {
+            QDateTime finishedDateTime = QDateTime::fromString(i.value().toString(), Qt::ISODate);
+            if (finishedDateTime.isValid()) {
+                QOrganizerTodoProgress todoProgress = item->detail(QOrganizerItemDetail::TypeTodoProgress);
+                todoProgress.setFinishedDateTime(finishedDateTime);
+                item->saveDetail(&todoProgress);
+            }
+        } else if (i.key() == QOrganizerJsonDbStr::todoProgressPercentage()) {
+            int progressPercentage = i.value().toInt();
+            if (progressPercentage >= 0 && progressPercentage <= 100) {
+                QOrganizerTodoProgress todoProgress = item->detail(QOrganizerItemDetail::TypeTodoProgress);
+                todoProgress.setPercentageComplete(progressPercentage);
+                item->saveDetail(&todoProgress);
+            }
+        } else if (i.key() == QOrganizerJsonDbStr::todoStatus()) {
+            QOrganizerTodoProgress::Status todoStatus =
+                    static_cast<QOrganizerTodoProgress::Status>(stringToEnum(organizerTodoStatusMap(), i.value().toString()));
+            QOrganizerTodoProgress todoProgress = item->detail(QOrganizerItemDetail::TypeTodoProgress);
+            todoProgress.setStatus(todoStatus);
+            item->saveDetail(&todoProgress);
         } else if (i.key() == QOrganizerJsonDbStr::jsonDbType()) {
             // skip already handled before the loop
         }  else if (i.key().at(0) == QChar('_')) {
@@ -672,6 +703,37 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             break;
         }
 
+        case QOrganizerItemDetail::TypeTodoProgress: {
+            if (itemType != QOrganizerItemType::TypeTodo)
+                break;const QMap<int, QVariant> values = details.at(i).values();
+            QMap<int, QVariant>::const_iterator j = values.constBegin();
+            while (j != values.constEnd()) {
+                switch (j.key()) {
+                case QOrganizerTodoProgress::FieldFinishedDateTime: {
+                    QDateTime finishedDateTime = j.value().toDateTime();
+                    if (finishedDateTime.isValid())
+                        object->insert(QOrganizerJsonDbStr::todoFinishedDateTime(), finishedDateTime.toUTC().toString(Qt::ISODate));
+                    break;
+                }
+                case QOrganizerTodoProgress::FieldPercentageComplete: {
+                    int percentageComplete = j.value().toInt();
+                    if (percentageComplete >= 0 && percentageComplete <= 100)
+                        object->insert(QOrganizerJsonDbStr::todoProgressPercentage(), percentageComplete);
+                    break;
+                }
+                case QOrganizerTodoProgress::FieldStatus: {
+                    object->insert(QOrganizerJsonDbStr::todoStatus(),
+                                   enumToString(organizerTodoStatusMap(), j.value().toInt()));
+                    break;
+                }
+                default:
+                    break;
+                }
+                ++j;
+            }
+            break;
+        }
+
 //        case QOrganizerItemDetail::TypeUndefined:
 //        case QOrganizerItemDetail::TypeClassification:
 //        case QOrganizerItemDetail::TypeItemType:
@@ -681,7 +743,6 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
 //        case QOrganizerItemDetail::TypeEmailReminder:
 //        case QOrganizerItemDetail::TypeVisualReminder:
 //        case QOrganizerItemDetail::TypeJournalTime:
-//        case QOrganizerItemDetail::TypeTodoProgress:
         default:
             break;
         }
@@ -1491,7 +1552,6 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
         // no support when any of the fields is empty
         isValidFilter = false;
     } else if (QOrganizerJournalTime::DefinitionName == detailType
-        || QOrganizerTodoProgress::DefinitionName == detailType
         || QOrganizerItemReminder::DefinitionName == detailType
         || QOrganizerItemAudibleReminder::DefinitionName == detailType
         || QOrganizerItemVisualReminder::DefinitionName == detailType
@@ -1505,6 +1565,7 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
     } else if (QOrganizerItemFilter::MatchExactly != filter.matchFlags()
         && (QOrganizerEventTime::DefinitionName == detailType
         || QOrganizerTodoTime::DefinitionName == detailType
+        || QOrganizerTodoProgress::DefinitionName == detailType
         || QOrganizerItemComment::DefinitionName == detailType
         || (QOrganizerItemLocation::DefinitionName == detailType && (QOrganizerItemLocation::FieldLatitude == detailFieldName || QOrganizerItemLocation::FieldLongitude == detailFieldName))
         || QOrganizerItemPriority::DefinitionName == detailType
@@ -1598,6 +1659,21 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                     .arg(QOrganizerJsonDbStr::todoDueDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
             } else if (QOrganizerTodoTime::FieldAllDay == detailField) {
                 jsonDbQueryStr += equalsQueryTemplate.arg(QOrganizerJsonDbStr::todoIsAllDay()).arg(valueString);
+            }
+
+        } else if (QOrganizerItemDetail::TypeTodoProgress == detailType) {
+            if (QOrganizerTodoProgress::FieldFinishedDateTime == detailField) {
+                jsonDbQueryStr += equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::todoFinishedDateTime())
+                    .arg(df.value().toDateTime().toUTC().toString(Qt::ISODate));
+            } else if (QOrganizerTodoProgress::FieldPercentageComplete == detailField) {
+                jsonDbQueryStr += equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::todoProgressPercentage())
+                    .arg(df.value().toInt());
+            } else if (QOrganizerTodoProgress::FieldStatus == detailField) {
+                jsonDbQueryStr += equalsQueryTemplate
+                    .arg(QOrganizerJsonDbStr::todoStatus())
+                    .arg(enumToString(organizerTodoStatusMap(), df.value().toInt()));
             }
 
         } else if (QOrganizerItemComment::DefinitionName == detailType

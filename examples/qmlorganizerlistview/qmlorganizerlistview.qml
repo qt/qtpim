@@ -228,7 +228,7 @@ Rectangle {
 
             onClicked: {
                 organizerApplication.state = "EventEditorView"
-                eventEditor.eventItem = createEmptyItem()
+                eventEditor.eventItem = organizerApplication.createEmptyItem()
             }
         }
     }

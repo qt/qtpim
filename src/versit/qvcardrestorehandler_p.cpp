@@ -46,6 +46,19 @@
 #include <QDateTime>
 #include <QUrl>
 
+/*
+    When these conditions are satisfied, QStringLiteral is implemented by
+    gcc's statement-expression extension.  However, in this file it will
+    not work, because "statement-expressions are not allowed outside functions
+    nor in template-argument lists".
+
+    Fall back to the less-performant QLatin1String in this case.
+*/
+#if defined(QStringLiteral) && defined(QT_UNICODE_LITERAL_II) && defined(Q_CC_GNU) && !defined(Q_COMPILER_LAMBDA)
+# undef QStringLiteral
+# define QStringLiteral QLatin1String
+#endif
+
 QTVERSIT_BEGIN_NAMESPACE
 
 const QString QVCardRestoreHandler::PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));

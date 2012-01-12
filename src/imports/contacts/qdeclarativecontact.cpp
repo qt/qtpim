@@ -174,31 +174,6 @@ void QDeclarativeContact::setModified()
     \o Contact.Group
     \endlist
 */
-void QDeclarativeContact::setType(int newType)
-{
-    bool found(false);
-    QDeclarativeContactType *contactType = 0;
-
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Type == detail->detailType()) {
-            contactType = static_cast<QDeclarativeContactType *>(detail);
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        contactType = new QDeclarativeContactType(this);
-        m_details.append(contactType);
-    }
-
-    if ( contactType->type() != (static_cast<QDeclarativeContactType::ContactType>(newType)) ) {
-        contactType->setType(static_cast<QDeclarativeContactType::ContactType>(newType));
-        m_modified = true;
-        emit contactChanged();
-    }
-}
-
 QDeclarativeContactType::ContactType QDeclarativeContact::type() const
 {
     foreach (QDeclarativeContactDetail *detail, m_details) {

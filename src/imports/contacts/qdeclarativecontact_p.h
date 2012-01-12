@@ -59,7 +59,7 @@ class QDeclarativeContact : public QObject
     // basic information
     Q_PROPERTY (bool modified READ modified)
 
-    Q_PROPERTY(QDeclarativeContactType::ContactType type READ type WRITE setType NOTIFY contactChanged)
+    Q_PROPERTY(QDeclarativeContactType::ContactType type READ type NOTIFY contactChanged)
     Q_PROPERTY (QContactLocalId contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY managerChanged)
     Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
@@ -107,8 +107,6 @@ public:
     QContact contact() const;
     bool modified() const;
 
-    // use int instead of QDeclarativeContactDetail::ContactType as a work-around for QTBUG-20639
-    void setType(int type);
     QDeclarativeContactType::ContactType type() const;
 
     QContactLocalId contactId() const;

@@ -329,17 +329,17 @@ void QOrganizerJsonDbDataStorage::handleRequest()
 void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Error error, const QVariant& object)
 {
     int index;
-    if (m_transactionIds.contains(trId)) {
+    if (m_notificationObjectUuid == object.toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString()) {
+        // When registering notification, no transaction ID is returned, so need to check.
+        return;
+    } else if (m_transactionIds.contains(trId)) {
         index = m_transactionIds.value(trId);
         m_transactionIds.remove(trId);
     } else {
-        // When registering notification, no transaction ID is returned, so need to check.
         // It might fall here if handling of some request was stopped due to timeout,
         // then remaining responses may come when no request is processed and m_transactionIds
         // has been cleared. In such cases, do nothing.
-        QVariantMap jsonDbObject(object.toMap());
-        if (jsonDbObject.isEmpty() || m_notificationObjectUuid != jsonDbObject.value(QOrganizerJsonDbStr::jsonDbUuid()).toString())
-            return;
+        return;
     }
 
     switch (m_requestType) {

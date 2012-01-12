@@ -49,17 +49,8 @@
 #include "../qcontactmanagerdataholder.h"
 #include "../qcontactchangeset.h"
 #include "../../jsondbprocess.h"
+#include "../qcontactidmock.h"
 
-#if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)
-  // for the symbianManager() test.
-  #include <e32std.h>
-  #include <cntdb.h>
-  #include <cntdbobs.h>
-  #include <e32base.h>
-  #include <s32mem.h>
-  #include <cntitem.h>
-  #include <cntfldst.h>
-#endif
 #if defined(USE_VERSIT_PLZ)
 // This makes it easier to create specific QContacts
 #include "qversitcontactimporter.h"
@@ -144,12 +135,6 @@ private slots:
     /* Special test with special data */
     void uriParsing();
     void nameSynthesis();
-
-    /* Backend-specific tests */
-#if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)
-    void symbianManager();
-    void symbianManager_data() {addManagers();}
-#endif
 
     /* Tests that are run on all managers */
     void metadata();
@@ -315,6 +300,7 @@ QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& p
 
 QContactEngineId* LazyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
 {
+    return new QContactIdMock("",1);
 }
 
 tst_QContactManager::tst_QContactManager()
@@ -781,13 +767,7 @@ void tst_QContactManager::ctors()
 
 
     // Finally test the platform specific engines are actually the defaults
-#if defined(Q_OS_SYMBIAN)
-    QCOMPARE(defaultStore, QString("symbian"));
-#elif defined(Q_WS_MAEMO_6)
-    QCOMPARE(defaultStore, QString("tracker"));
-#elif defined(Q_WS_MAEMO_5)
-    QCOMPARE(defaultStore, QString("maemo5"));
-#elif defined(QT_JSONDB_ENABLED)
+#if defined(QT_JSONDB_ENABLED)
     QCOMPARE(defaultStore, QString("jsondb"));
 #elif !defined(QT_NO_JSONDB)
     QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
@@ -1028,116 +1008,6 @@ void tst_QContactManager::update()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->managerName() == QStringLiteral("maemo5")) {
-        // we specifically want to test the update semantics of the maemo5 backend
-        // since there are various complexities relating to roster contacts.
-        QContact mt;
-        QContactName mtn;
-        mtn.setFirstName("test");
-        mtn.setLastName("maemo");
-        QContactPhoneNumber pn;
-        pn.setNumber("12345");
-
-        mt.saveDetail(&mtn);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QVERIFY(mt.details<QContactPhoneNumber>().count() == 0);
-
-        // now save a single phonenumber
-        mt.saveDetail(&pn);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QVERIFY(mt.details<QContactPhoneNumber>().count() == 1);
-
-        // edit some other existing detail and save (shouldn't duplicate the phone number)
-        mtn.setMiddleName("middle");
-        mt.saveDetail(&mtn);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QCOMPARE(mt.details<QContactPhoneNumber>().count(), 1);
-
-        // add some other detail and save (shouldn't duplicate the phone number)
-        QContactEmailAddress mte;
-        mte.setEmailAddress("test@test.com");
-        mt.saveDetail(&mte);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QCOMPARE(mt.details<QContactPhoneNumber>().count(), 1);
-
-        // add another phone number detail and save (should create a single other phone number)
-        QContactPhoneNumber pn2;
-        pn2.setNumber("98765");
-        mt.saveDetail(&pn2);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QCOMPARE(mt.details<QContactPhoneNumber>().count(), 2);
-
-        // here we do something tricky: we save one of the previously saved phone numbers
-        // in a _different_ contact, and see if that causes problems with the overwrite vs new detail code.
-        QContactPhoneNumber pn2Copy = pn2;
-        QContact mt2;
-        QContactName mt2n;
-        mt2n.setFirstName("test2");
-        mt2.saveDetail(&mt2n);
-        QContactPhoneNumber shouldBeNew = pn;
-        mt2.saveDetail(&shouldBeNew);
-        QVERIFY(cm->saveContact(&mt2));
-        mt2 = cm->contact(mt2.id());
-        QCOMPARE(mt2.details<QContactPhoneNumber>().count(), 1);
-        mt2.saveDetail(&pn2);
-        QVERIFY(cm->saveContact(&mt2));
-        mt2 = cm->contact(mt2.id());
-        QCOMPARE(mt2.details<QContactPhoneNumber>().count(), 2);
-        pn2 = pn2Copy; // reset just in case backend added some fields.
-
-        // remove the other phone number detail, shouldn't cause side effects to the first...
-        // NOTE: we need to reload the details before attempting to remove/edit them
-        // because the backend can change the ids.
-        QList<QContactPhoneNumber> pnums = mt.details<QContactPhoneNumber>();
-        foreach (const QContactPhoneNumber& pd, pnums) {
-            if (pd.number() == pn2.number())
-                pn2 = pd;
-            else if (pd.number() == pn.number())
-                pn = pd;
-        }
-        mt.removeDetail(&pn2);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id()); // force reload of (persisted) contact
-        QCOMPARE(mt.details<QContactPhoneNumber>().count(), 1);
-
-        // edit the original phone number detail, shouldn't duplicate the phone number
-        // NOTE: we need to reload the details before attempting to remove/edit them
-        // because the backend can change the ids.
-        pnums = mt.details<QContactPhoneNumber>();
-        foreach (const QContactPhoneNumber& pd, pnums) {
-            if (pd.number() == pn2.number())
-                pn2 = pd;
-            else if (pd.number() == pn.number())
-                pn = pd;
-        }
-        pn.setNumber("54321");
-        mt.saveDetail(&pn);
-        cm->saveContact(&mt);
-        mt = cm->contact(mt.id());
-        QCOMPARE(mt.details<QContactPhoneNumber>().count(), 1);
-        QVERIFY(mt.detail<QContactPhoneNumber>() == pn);
-
-        // we also should do the same test for other details (for example, gender).
-        // if the backend cannot save multiple copies of a detail (eg, gender always overwrites)
-        // it should FAIL the save operation if the contact has multiple of that detail type,
-        // and set error to QContactManager::LimitReachedError.
-        QContactGender mtg, mtg2;
-        mtg.setGender(QContactGender::GenderFemale);
-        mtg2.setGender(QContactGender::GenderMale);
-        mt.saveDetail(&mtg);
-        QVERIFY(cm->saveContact(&mt)); // one gender is fine
-        mt.saveDetail(&mtg2);
-        QVERIFY(!cm->saveContact(&mt)); // two is not
-        //QCOMPARE(cm->error(), QContactManager::LimitReachedError); // should be LimitReachedError.
-        mt = cm->contact(mt.id());
-        QVERIFY(mt.details<QContactGender>().count() == 1);
-    }
-
     /* Save a new contact first */
     int contactCount = cm->contacts().size();
     QContact alice = createContact("Alice", "inWonderland", "1234567");
@@ -1172,7 +1042,6 @@ void tst_QContactManager::update()
     // This test is dangerous, since backends can add timestamps etc...
     detailCount += 1;
     QCOMPARE(detailCount, alice.details().size()); // adding a detail should cause the detail count to increase by one.
-
     /* Test that removal of fields in a detail works */
     QContactPhoneNumber phn = alice.detail<QContactPhoneNumber>();
     phn.setNumber("1234567");
@@ -1205,10 +1074,6 @@ void tst_QContactManager::update()
     //QCOMPARE(detailCount, alice.details().size()); // removing a detail should cause the detail count to decrease by one.
 
     if (cm->hasFeature(QContactManager::Groups)) {
-        if (cm->managerName() == QStringLiteral("tracker")) {
-            QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test .");
-            return;
-        }
         // Try changing types - not allowed
         // from contact -> group
         alice.setType(QContactType::TypeGroup);
@@ -1413,11 +1278,6 @@ void tst_QContactManager::batch()
     QVERIFY(cm->contact(c.id()).id() == QContactId());
     QVERIFY(cm->contact(c.id()).isEmpty());
     QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-
-    if (cm->managerName() == QStringLiteral("tracker")) {
-        QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test .");
-        return;
-    }
 
     /* Now try removing with all invalid ids (e.g. the ones we just removed) */
     ids.clear();
@@ -2055,24 +1915,11 @@ void tst_QContactManager::signalEmission()
     QContactName nc2, nc3;
     saveContactName(&c2, &nc2, "Mark");
     saveContactName(&c3, &nc3, "Garry");
-#if defined(Q_OS_SYMBIAN)
-    // TODO: symbiansim backend fails this test currently. Commented out for
-    // now. Will be fixed later.
-    if(!uri.contains("symbiansim")) {
-        QVERIFY(!m1->saveContact(&c)); // saving contact with nonexistent id fails
-    }
-#endif
     QVERIFY(m1->saveContact(&c2));
     QVERIFY(m1->saveContact(&c3));
-    if (uri.contains(QStringLiteral("tracker"))) {
-        // tracker backend coalesces signals for performance reasons
-        QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCM, modSigCount);
-        QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCA, addSigCount);
-    } else {
-        QTRY_COMPARE(spyCM.count(), modSigCount);
-        QTRY_VERIFY(spyCA.count() > addSigCount);
-        addSigCount = spyCA.count();
-    }
+    QTRY_COMPARE(spyCM.count(), modSigCount);
+    QTRY_VERIFY(spyCA.count() > addSigCount);
+    addSigCount = spyCA.count();
 
     spyCOM1->clear();
     spyCOR1->clear();
@@ -2086,21 +1933,12 @@ void tst_QContactManager::signalEmission()
     // verify multiple modifies works as advertised
     saveContactName(&c2, &nc2, "M.");
     QVERIFY(m1->saveContact(&c2));
-    if (uri.contains(QStringLiteral("tracker"))) {
-        // tracker backend coalesces signals for performance reasons, so wait a little
-         QTest::qWait(1000);
-    }
     saveContactName(&c2, &nc2, "Mark");
     saveContactName(&c3, &nc3, "G.");
     QVERIFY(m1->saveContact(&c2));
     QVERIFY(m1->saveContact(&c3));
-    if (uri.contains(QStringLiteral("tracker"))) {
-        // tracker backend coalesces signals for performance reasons
-        QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCM, modSigCount);
-    } else {
-        QTRY_VERIFY(spyCM.count() > modSigCount);
-        modSigCount = spyCM.count();
-    }
+    QTRY_VERIFY(spyCM.count() > modSigCount);
+    modSigCount = spyCM.count();
     QTRY_VERIFY(spyCOM2->count() > 0);
     QTRY_VERIFY(spyCOM3->count() > 0);
     QCOMPARE(spyCOM1->count(), 0);
@@ -2110,18 +1948,9 @@ void tst_QContactManager::signalEmission()
     remSigCount += 1;
     m1->removeContact(c2.id());
     remSigCount += 1;
-    if (uri.contains(QStringLiteral("tracker"))) {
-        // tracker backend coalesces signals for performance reasons
-        QTRY_COMPARE_SIGNALS_LOCALID_COUNT(spyCR, remSigCount);
-    }
     QTRY_VERIFY(spyCOR2->count() > 0);
     QTRY_VERIFY(spyCOR3->count() > 0);
     QCOMPARE(spyCOR1->count(), 0);
-
-    if (! uri.contains(QStringLiteral("tracker"))) {
-        // The tracker backend does not support checking for existance of a contact.
-        QVERIFY(!m1->removeContact(c.id())); // not saved.
-    }
 
     /* Now test the batch equivalents */
     spyCA.clear();
@@ -2376,8 +2205,7 @@ void tst_QContactManager::actionPreferences()
 
 void tst_QContactManager::changeSet()
 {
-    QContactId id;
-
+    QContactId id = QContactIdMock::createId("a", 1);
     QContactChangeSet changeSet;
     QVERIFY(changeSet.addedContacts().isEmpty());
     QVERIFY(changeSet.changedContacts().isEmpty());
@@ -2461,7 +2289,7 @@ void tst_QContactManager::fetchHint()
     hint.setOptimizationHints(QContactFetchHint::NoBinaryBlobs);
     QCOMPARE(hint.optimizationHints(), QContactFetchHint::NoBinaryBlobs);
     QStringList rels;
-    rels << QString(QStringLiteral(QContactRelationship::HasMember));
+    rels << QContactRelationship::HasMember();
     hint.setRelationshipTypesHint(rels);
     QCOMPARE(hint.relationshipTypesHint(), rels);
     QList<QContactDetail::DetailType> types;
@@ -2590,8 +2418,7 @@ void tst_QContactManager::detailOrders()
     QVERIFY(details.at(1).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextWork);
     QVERIFY(details.at(2).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextOther);
     
-    number2 = a.details(QContactPhoneNumber::Type).at(1);
-
+    number2 = details.at(1);
     QVERIFY(a.removeDetail(&number2));
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
@@ -2621,20 +2448,21 @@ void tst_QContactManager::detailOrders()
     address2.setContexts(QContactAddress::ContextWork);
     address3.setContexts(QContactAddress::ContextOther);
 
-    a.saveDetail(&address1);
-    a.saveDetail(&address2);
-    a.saveDetail(&address3);
+    QVERIFY(a.saveDetail(&address1));
+    QVERIFY(a.saveDetail(&address2));
+    QVERIFY(a.saveDetail(&address3));
 
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
-    
     details = a.details(QContactAddress::Type);
-    QVERIFY(details.count() == 1); // 1 location - they're unique
+    QCOMPARE(details.count(), 3); // 1 location - they're unique
 
     // Detail keys for the moment are not persistent through an contact save / fetch
     address3 = details.at(0);
 
     QVERIFY(a.removeDetail(&address3)); // remove the most recent.
+    address2 = details.at(1);  // It is necessary to re-load the detail to ensure that its key is correct
+    QVERIFY(a.removeDetail(&address2));
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
     details = a.details(QContactAddress::Type);
@@ -2670,6 +2498,8 @@ void tst_QContactManager::detailOrders()
     email3 = details.at(0);
 
     QVERIFY(a.removeDetail(&email3)); // remove the most recent.
+    email2 = details.at(1);  // It is necessary to re-load the detail to ensure that its key is correct
+    QVERIFY(a.removeDetail(&email2));
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
     details = a.details(QContactEmailAddress::Type);
@@ -2717,13 +2547,13 @@ void tst_QContactManager::relationships()
         QContactRelationship r1, r2, r3;
         r1.setFirst(source);
         r1.setSecond(dest1);
-        r1.setRelationshipType(QContactRelationship::HasManager);
+        r1.setRelationshipType(QContactRelationship::HasManager());
         r2.setFirst(source);
         r2.setSecond(dest2);
-        r2.setRelationshipType(QContactRelationship::HasManager);
+        r2.setRelationshipType(QContactRelationship::HasManager());
         r3.setFirst(source);
         r3.setSecond(dest3);
-        r3.setRelationshipType(QContactRelationship::HasManager);
+        r3.setRelationshipType(QContactRelationship::HasManager());
 
         QList<QContactRelationship> batchList;
         batchList << r2 << r3;
@@ -2749,19 +2579,19 @@ void tst_QContactManager::relationships()
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
 
 
-        retrieveList = cm->relationships(QContactRelationship::HasManager, source, QContactRelationship::First);
+        retrieveList = cm->relationships(QContactRelationship::HasManager(), source, QContactRelationship::First);
         QVERIFY(retrieveList.isEmpty());
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        retrieveList = cm->relationships(QContactRelationship::HasManager, source, QContactRelationship::Second);
+        retrieveList = cm->relationships(QContactRelationship::HasManager(), source, QContactRelationship::Second);
         QVERIFY(retrieveList.isEmpty());
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        retrieveList = cm->relationships(QContactRelationship::HasManager, source, QContactRelationship::Either);
+        retrieveList = cm->relationships(QContactRelationship::HasManager(), source, QContactRelationship::Either);
         QVERIFY(retrieveList.isEmpty());
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        retrieveList = cm->relationships(QContactRelationship::HasManager, source);
+        retrieveList = cm->relationships(QContactRelationship::HasManager(), source);
         QVERIFY(retrieveList.isEmpty());
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
-        retrieveList = cm->relationships(QContactRelationship::HasManager);
+        retrieveList = cm->relationships(QContactRelationship::HasManager());
         QVERIFY(retrieveList.isEmpty());
         QVERIFY(cm->error() == QContactManager::NotSupportedError);
         return;
@@ -2769,16 +2599,16 @@ void tst_QContactManager::relationships()
 
     // Get supported relationship types
     QStringList availableRelationshipTypes;
-    if (cm->isRelationshipTypeSupported(QContactRelationship::HasMember))
-        availableRelationshipTypes << QContactRelationship::HasMember;    
-    if (cm->isRelationshipTypeSupported(QContactRelationship::HasAssistant))
-        availableRelationshipTypes << QContactRelationship::HasAssistant;
-    if (cm->isRelationshipTypeSupported(QContactRelationship::HasManager))
-        availableRelationshipTypes << QContactRelationship::HasManager;
-    if (cm->isRelationshipTypeSupported(QContactRelationship::HasSpouse))
-        availableRelationshipTypes << QContactRelationship::HasSpouse;
-    if (cm->isRelationshipTypeSupported(QContactRelationship::IsSameAs))
-        availableRelationshipTypes << QContactRelationship::IsSameAs;
+    if (cm->isRelationshipTypeSupported(QContactRelationship::HasMember()))
+        availableRelationshipTypes << QContactRelationship::HasMember();
+    if (cm->isRelationshipTypeSupported(QContactRelationship::HasAssistant()))
+        availableRelationshipTypes << QContactRelationship::HasAssistant();
+    if (cm->isRelationshipTypeSupported(QContactRelationship::HasManager()))
+        availableRelationshipTypes << QContactRelationship::HasManager();
+    if (cm->isRelationshipTypeSupported(QContactRelationship::HasSpouse()))
+        availableRelationshipTypes << QContactRelationship::HasSpouse();
+    if (cm->isRelationshipTypeSupported(QContactRelationship::IsSameAs()))
+        availableRelationshipTypes << QContactRelationship::IsSameAs();
 
     // Check arbitrary relationship support
     if (cm->hasFeature(QContactManager::ArbitraryRelationshipTypes)) {
@@ -2787,8 +2617,8 @@ void tst_QContactManager::relationships()
             availableRelationshipTypes.insert(0, "test-arbitrary-relationship-type");
         else {
             availableRelationshipTypes.append("test-arbitrary-relationship-type");
-            availableRelationshipTypes.append(QContactRelationship::HasMember);
-            availableRelationshipTypes.append(QContactRelationship::HasAssistant);
+            availableRelationshipTypes.append(QContactRelationship::HasMember());
+            availableRelationshipTypes.append(QContactRelationship::HasAssistant());
         }
     }
 
@@ -2799,7 +2629,7 @@ void tst_QContactManager::relationships()
 
     // Some backends (eg. symbian) require that when type is "HasMember" 
     // then "first" contact must be a group.
-    if (availableRelationshipTypes.at(0) == QContactRelationship::HasMember) {
+    if (availableRelationshipTypes.at(0) == QContactRelationship::HasMember()) {
         cm->removeContact(source.id());
         source.setId(QContactId());
         source.setType(QContactType::TypeGroup);
@@ -3051,11 +2881,6 @@ void tst_QContactManager::relationships()
     source = cm->contact(source.id());
     QVERIFY(!source.relatedContacts().contains(dest2)); // and it shouldn't appear in cache.
 
-    if (cm->managerName() == QStringLiteral("tracker")) {
-        QWARN("The tracker backend does not support checking for existance of a contact. Skipping rest of test.");
-        return;
-    }
-
     // now clean up and remove our dests.
     QVERIFY(cm->removeContact(source.id()));
     QVERIFY(cm->removeContact(dest3.id()));
@@ -3300,6 +3125,8 @@ void tst_QContactManager::lateDeletion()
 
 void tst_QContactManager::lazyConnections()
 {
+    QSKIP("Skipping: Lazy manager engine does not currently work with new plugin system!");
+    //TODO: adapt lazy manager engine to new plugin system
     QMap<QString, QString> parameters;
     parameters["version"] = QString("1");
     QContactManager lazy1("testlazy", parameters);

@@ -249,6 +249,13 @@ ContactsSavingTestCase {
         spy4.wait();
     }
 
+    function cleanupTestCase() {
+        finishTestForModel(modelSortedByFirstName);
+        finishTestForModel(modelSortedByLastName);
+        finishTestForModel(modelSortedByEmailAddress);
+        finishTestForModel(modelSortedByLastAndFirstName);
+    }
+
     function compareContactArrays(actual, expected) {
         compare(actual.length, expected.length, "length");
         for (var i = 0; i < expected.length; i++) {

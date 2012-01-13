@@ -125,6 +125,11 @@ ContactsSavingTestCase {
         emptyContacts(model);
     }
 
+    function cleanupTestCase() {
+        emptyContacts(model);
+        finishTestForModel(model);
+    }
+
     // Helpers
 
     function verifyIsUndefined(object) {

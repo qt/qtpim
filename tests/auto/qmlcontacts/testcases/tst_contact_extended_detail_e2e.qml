@@ -487,4 +487,8 @@ ContactsSavingTestCase {
     function cleanup() {
         emptyContacts(modelForSaveAndFetch);
     }
+
+    function cleanupTestCase() {
+        modelForSaveAndFetch.autoUpdate = false;
+    }
 }

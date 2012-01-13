@@ -241,6 +241,7 @@ property Contact testContact
             model.filter = null;
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testHelper.emptyContactsDb();
+            model.autoUpdate = false;
         }
         DetailFilter {
            id:firstNameFilter
@@ -284,6 +285,7 @@ property Contact testContact
             compare (model2.contacts[0].phoneNumber.subTypes[0], data.organizations[0].phoneSubTypeString)
             compare (model2.contacts[0].phoneNumber.contexts[0],data.organizations[0].contexts)
             testHelper.emptyContactsDb();
+            model2.autoUpdate = false;
         }
 
         function test_addAndRemoveDetails()
@@ -333,6 +335,7 @@ property Contact testContact
             verify(!testContact.detail(ContactDetail.Email))
             compare(model.contacts.length, 1)
             testHelper.emptyContactsDb();
+            model.autoUpdate = false;
         }
 
         property Component component

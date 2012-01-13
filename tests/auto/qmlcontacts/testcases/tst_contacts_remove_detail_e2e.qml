@@ -157,6 +157,7 @@ ContactsSavingTestCase {
 
     function cleanupTestCase() {
         emptyContacts(model);
+        finishTestForModel(model);
     }
 
     // Helpers

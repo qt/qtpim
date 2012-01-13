@@ -238,6 +238,8 @@ ContactsSavingTestCase {
     function cleanupTestCase() {
         initTestForModel(notifiedModel);
         emptyContacts(notifiedModel);
+        finishTestForModel(notifiedModel);
+        finishTestForModel(modifiedModel);
     }
 
     function compareContactArrays(actual, expected, message) {

@@ -172,6 +172,7 @@ ContactsSavingTestCase {
     function cleanupTestCase() {
         initTestForModel(model);
         emptyContacts(model);
+        finishTestForModel(model);
     }
 
     // Helpers

@@ -93,6 +93,11 @@ TestCase {
         compare(model.contacts.length, 0, "model is empty");
     }
 
+    function finishTestForModel(model) {
+        logDebug("finishTestForModel");
+        model.autoUpdate = false;
+    }
+
     function logDebug(message) {
         if (debug)
             console.log(message);

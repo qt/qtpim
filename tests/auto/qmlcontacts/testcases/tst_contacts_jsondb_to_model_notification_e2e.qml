@@ -60,6 +60,11 @@ ContactsSavingTestCase {
                     contactsJsonDbToModelNotificationE2ETests);
     }
 
+    function destroyModel() {
+        model.autoUpdate = false;
+        model.destroy();
+    }
+
     function test_createContactShouldUpdateModel()
     {
         initTestForModel(model);
@@ -460,7 +465,7 @@ ContactsSavingTestCase {
 
     function cleanup() {
         cleanupContacts();
-        model.destroy();
+        destroyModel();
     }
 
     function cleanupContacts() {
@@ -475,6 +480,7 @@ ContactsSavingTestCase {
 
         emptyContacts(modelForCleanup);
 
+        modelForCleanup.autoUpdate = false;
         modelForCleanup.destroy();
     }
 

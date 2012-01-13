@@ -95,6 +95,7 @@ ContactsSavingTestCase {
             waitForContactsChanged();
         }
         emptyContacts(model);
+        finishTestForModel(model);
     }
 
     // Clear filter

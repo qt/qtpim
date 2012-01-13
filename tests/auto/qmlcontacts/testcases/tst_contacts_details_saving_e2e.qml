@@ -338,6 +338,11 @@ ContactsSavingTestCase {
         emptyContacts(model);
     }
 
+    function cleanupTestCase() {
+        emptyContacts(model);
+        finishTestForModel(model);
+    }
+
     function saveAndRefreshContact() {
         model.saveContact(contact)
         waitForContactsChanged();

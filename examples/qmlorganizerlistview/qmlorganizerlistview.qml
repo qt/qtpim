@@ -239,7 +239,6 @@ Rectangle {
         id: eventEditor
         anchors.fill: parent
         color: "white"
-        opacity: 0
     }
 //![Event Editor]
 
@@ -249,14 +248,22 @@ Rectangle {
             name: "EventListView"
             PropertyChanges {
                 target: eventEditor
-                opacity: 0
+                visible: false
+            }
+            PropertyChanges {
+                target: eventView
+                visible: true
             }
         },
         State {
             name: "EventEditorView"
             PropertyChanges {
                 target: eventEditor
-                opacity: 1
+                visible: true
+            }
+            PropertyChanges {
+                target: eventView
+                visible: false
             }
         }
     ]

@@ -52,130 +52,131 @@ class QOrganizerJsonDbStr
 {
 public:
     //Jsondb manager name
-    const static QString &managerName();
-    const static QString &managerUri();
-    const static QString &jsonDbEngineId();
+    inline const static QString managerName() { return QStringLiteral("qtorganizer:jsondb::"); }
 
-    const static QString &jsonDbSchemaPrefix();
+    inline const static QString managerUri() { return QStringLiteral("qtorganizer:jsondb:"); }
+    inline const static QString jsonDbEngineId() { return QStringLiteral("jsondb"); }
+
+    inline const static QString jsonDbSchemaPrefix() { return QStringLiteral("com.nokia.mp.organizer."); }
 
     // JsonDb strings
-    const static QString &jsonDbUuid();
-    const static QString &jsonDbType();
-    const static QString &jsonDbData();
-    const static QString &jsonDbCount();
-    const static QString &jsonDbError();
-    const static QString &jsonDbCode();
+    inline const static QString jsonDbUuid() { return QStringLiteral("_uuid"); }
+    inline const static QString jsonDbType() { return QStringLiteral("_type"); }
+    inline const static QString jsonDbData() { return QStringLiteral("data"); }
+    inline const static QString jsonDbCount() { return QStringLiteral("count"); }
+    inline const static QString jsonDbError() { return QStringLiteral("error"); }
+    inline const static QString jsonDbCode() { return QStringLiteral("code"); }
 
     // JsonDb query string
-    const static QString &jsonDbQueryAllItems();
-    const static QString &jsonDbQueryAllCollections();
+    inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\"]]"); }
+    inline const static QString jsonDbQueryAllCollections() { return QStringLiteral("[?_type=\"com.nokia.mp.organizer.Collection\"]"); }
 
-    const static QString &jsonDbQueryCollectionIdsTemplate();
-    const static QString &jsonDbQueryUuidsTemplate();
+    inline const static QString jsonDbQueryCollectionIdsTemplate() { return QStringLiteral("[?collectionId in [%1]]"); }
+    inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
 
     //Organizer item string
-    const static QString &itemName();
-    const static QString &itemCollectionId();
-    const static QString &itemDescription();
-    const static QString &itemComments();
-    const static QString &itemLocation();
-    const static QString &itemPriority();
-    const static QString &itemTags();
-    const static QString &itemGuid();
+    inline const static QString itemName() { return QStringLiteral("displayName"); }
+    inline const static QString itemCollectionId() { return QStringLiteral("collectionId"); }
+    inline const static QString itemDescription() { return QStringLiteral("description"); }
+    inline const static QString itemComments() { return QStringLiteral("comments"); }
+    inline const static QString itemLocation() { return QStringLiteral("location"); }
+    inline const static QString itemPriority() { return QStringLiteral("Priority"); }
+    inline const static QString itemTags() { return QStringLiteral("tags"); }
+    inline const static QString itemGuid() { return QStringLiteral("guid"); }
 
     //Location sub properties
-    const static QString &itemLocationLabel();
-    const static QString &itemLocationGeo();
-    const static QString &itemLocationGeoLatitude();
-    const static QString &itemLocationGeoLongitude();
+    inline const static QString itemLocationLabel() { return QStringLiteral("displayName"); }
+    inline const static QString itemLocationGeo() { return QStringLiteral("geo"); }
+    inline const static QString itemLocationGeoLatitude() { return QStringLiteral("latitude"); }
+    inline const static QString itemLocationGeoLongitude() { return QStringLiteral("longitude"); }
 
     //Item reminder properties
-    const static QString &itemReminder();
-    const static QString &itemReminderSecBeforeStart();
-    const static QString &itemReminderRepCount();
-    const static QString &itemReminderRepDelay();
-    const static QString &itemReminderDataUrl();
+    inline const static QString itemReminder() { return QStringLiteral("reminder"); }
+    inline const static QString itemReminderSecBeforeStart() { return QStringLiteral("secondsBeforeStart"); }
+    inline const static QString itemReminderRepCount() { return QStringLiteral("repetitionCount"); }
+    inline const static QString itemReminderRepDelay() { return QStringLiteral("repetitionDelay"); }
+    inline const static QString itemReminderDataUrl() { return QStringLiteral("dataUrl"); }
 
     //Event item
-    const static QString &event();
-    const static QString &eventStartDateTime();
-    const static QString &eventEndDateTime();
-    const static QString &eventIsAllDay();
+    inline const static QString event() { return QStringLiteral("com.nokia.mp.organizer.Event"); }
+    inline const static QString eventStartDateTime() { return QStringLiteral("startDateTime"); }
+    inline const static QString eventEndDateTime() { return QStringLiteral("endDateTime"); }
+    inline const static QString eventIsAllDay() { return QStringLiteral("isAllDay"); }
 
     //To-do item
-    const static QString &todo();
-    const static QString &todoStartDateTime();
-    const static QString &todoDueDateTime();
-    const static QString &todoIsAllDay();
+    inline const static QString todo() { return QStringLiteral("com.nokia.mp.organizer.Todo"); }
+    inline const static QString todoStartDateTime() { return QStringLiteral("startDateTime"); }
+    inline const static QString todoDueDateTime() { return QStringLiteral("dueDateTime"); }
+    inline const static QString todoIsAllDay() { return QStringLiteral("isAllDay"); }
 
     //Collection properties
-    const static QString &collection();
-    const static QString &collectionDefaultFlag();
-    const static QString &collectionName();
-    const static QString &collectionDescription();
-    const static QString &collectionColor();
-    const static QString &collectionImage();
-    const static QString &collectionCustomFields();
+    inline const static QString collection() { return QStringLiteral("com.nokia.mp.organizer.Collection"); }
+    inline const static QString collectionDefaultFlag() { return QStringLiteral("isDefaultCollection"); }
+    inline const static QString collectionName() { return QStringLiteral("displayName"); }
+    inline const static QString collectionDescription() { return QStringLiteral("description"); }
+    inline const static QString collectionColor() { return QStringLiteral("color"); }
+    inline const static QString collectionImage() { return QStringLiteral("image"); }
+    inline const static QString collectionCustomFields() { return QStringLiteral("customFields"); }
 
-    const static QString &defaultCollectionName();
+    inline const static QString defaultCollectionName() { return QStringLiteral("defaultCollection"); }
 
     // Recurrence sub properties
-    const static QString &itemRecurrenceDates();
-    const static QString &itemExceptioneDates();
-    const static QString &itemExceptionRules();
-    const static QString &itemRecurrenceRules();
+    inline const static QString itemRecurrenceDates() { return QStringLiteral("recurrenceDates"); }
+    inline const static QString itemExceptioneDates() { return QStringLiteral("exceptionDates"); }
+    inline const static QString itemExceptionRules() { return QStringLiteral("exceptionRules"); }
+    inline const static QString itemRecurrenceRules() { return QStringLiteral("recurrenceRules"); }
 
 
     // Recurrence rule properties
-    const static QString &ruleFirstDayOfWeek();
-    const static QString &ruleFrequency();
-    const static QString &ruleInterval();
-    const static QString &ruleLimitCount();
-    const static QString &ruleLimitDate();
-    const static QString &rulePositions();
-    const static QString &ruleDaysOfWeek();
-    const static QString &ruleDaysOfMonth();
-    const static QString &ruleDaysOfYear();
-    const static QString &ruleWeeksOfYear();
-    const static QString &ruleMonthsOfYear();
+    inline const static QString ruleFirstDayOfWeek() { return QStringLiteral("firstDayOfWeek"); }
+    inline const static QString ruleFrequency() { return QStringLiteral("frequency"); }
+    inline const static QString ruleInterval() { return QStringLiteral("interval"); }
+    inline const static QString ruleLimitCount() { return QStringLiteral("limitCount"); }
+    inline const static QString ruleLimitDate() { return QStringLiteral("limitDate"); }
+    inline const static QString rulePositions() { return QStringLiteral("positions"); }
+    inline const static QString ruleDaysOfWeek() { return QStringLiteral("daysOfWeek"); }
+    inline const static QString ruleDaysOfMonth() { return QStringLiteral("daysOfMonth"); }
+    inline const static QString ruleDaysOfYear() { return QStringLiteral("daysOfYear"); }
+    inline const static QString ruleWeeksOfYear() { return QStringLiteral("weeksOfYear"); }
+    inline const static QString ruleMonthsOfYear() { return QStringLiteral("monthsOfYear"); }
 
     // Attendee properties
-    const static QString &attendee();
-    const static QString &attendeeName();
-    const static QString &attendeeEmailAddress();
-    const static QString &attendeeId();
-    const static QString &attendeeParticipationStatus();
-    const static QString &attendeeParticipationRole();
+    inline const static QString attendee() { return QStringLiteral("attendee"); }
+    inline const static QString attendeeName() { return QStringLiteral("name"); }
+    inline const static QString attendeeEmailAddress() { return QStringLiteral("emailAddress"); }
+    inline const static QString attendeeId() { return QStringLiteral("attendeeId"); }
+    inline const static QString attendeeParticipationStatus() { return QStringLiteral("participationState"); }
+    inline const static QString attendeeParticipationRole() { return QStringLiteral("participationRole"); }
 
     // Rsvp properties
-    const static QString &rsvp();
-    const static QString &rsvpOrganizerName();
-    const static QString &rsvpOrganizerEmail();
-    const static QString &rsvpResponseRequirement();
-    const static QString &rsvpResponseDate();
-    const static QString &rsvpResponseDeadline();
+    inline const static QString rsvp() { return QStringLiteral("rsvp"); }
+    inline const static QString rsvpOrganizerName() { return QStringLiteral("organizerName"); }
+    inline const static QString rsvpOrganizerEmail() { return QStringLiteral("organizerEmail"); }
+    inline const static QString rsvpResponseRequirement() { return QStringLiteral("responseRequirement"); }
+    inline const static QString rsvpResponseDate() { return QStringLiteral("responseDate"); }
+    inline const static QString rsvpResponseDeadline() { return QStringLiteral("responseDeadline"); }
 
     // Alarm Jsondb schema
-    const static QString &alarm();
-    const static QString &alarmISODate();
-    const static QString &alarmSnoozeTime();
-    const static QString &alarmSnoozeCount();
-    const static QString &alarmIdentifier();
-    const static QString &alarmTitle();
-    const static QString &alarmDescription();
-    const static QString &alarmEventUuid();
-    const static QString &alarmCalenderIdentifier();
+    inline const static QString alarm() { return QStringLiteral("com.nokia.mt.alarm-daemon.Alarm"); }
+    inline const static QString alarmISODate() { return QStringLiteral("isoDate"); }
+    inline const static QString alarmSnoozeTime() { return QStringLiteral("snoozeTime"); }
+    inline const static QString alarmSnoozeCount() { return QStringLiteral("snoozeCount"); }
+    inline const static QString alarmIdentifier() { return QStringLiteral("identifier"); }
+    inline const static QString alarmTitle() { return QStringLiteral("title"); }
+    inline const static QString alarmDescription() { return QStringLiteral("description"); }
+    inline const static QString alarmEventUuid() { return QStringLiteral("eventUuid"); }
+    inline const static QString alarmCalenderIdentifier() { return QStringLiteral("com.nokia.mt.calendar"); }
 
     //warning string
-    const static QString &warningMoreItemDelete();
-    const static QString &warningCollectionMissing();
-    const static QString &warningCollectionRemove();
-    const static QString &warningDefaultCollectionRemove();
-    const static QString &warningDefaultCollectionChange();
-    const static QString &warningDefaultCollectionCreate();
+    inline const static QString warningMoreItemDelete() { return QStringLiteral("Items are delete from jsondb!!"); }
+    inline const static QString warningCollectionMissing() { return QStringLiteral("No default collection! error code:"); }
+    inline const static QString warningCollectionRemove() { return QStringLiteral("Number of items deleted from jsondb is not equal to request!!"); }
+    inline const static QString warningDefaultCollectionRemove() { return QStringLiteral("Default collection can not be removed!"); }
+    inline const static QString warningDefaultCollectionChange() { return QStringLiteral("Default collection can not be changed!"); }
+    inline const static QString warningDefaultCollectionCreate() { return QStringLiteral("Same name as default collection!"); }
 
     // Notification
-    const static QString &notificationQuery();
+    inline const static QString notificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\", \"com.nokia.mp.organizer.Collection\"]]"); }
 };
 
 QTORGANIZER_END_NAMESPACE

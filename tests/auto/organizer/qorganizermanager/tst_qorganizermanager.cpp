@@ -4959,6 +4959,73 @@ void tst_QOrganizerManager::testExtendedDetail()
     }
 
     QVERIFY(mgr->removeItem(event.id()));
+
+    // for JsonDb backend, we allow custom fields for reminder, rsvp, and location
+    if (mgr->managerName() == QString(QStringLiteral("jsondb"))) {
+        QOrganizerItemAudibleReminder audibleReminder;
+        audibleReminder.setSecondsBeforeStart(1989);
+        audibleReminder.setRepetition(6, 4);
+        audibleReminder.setDataUrl(QUrl(QString(QStringLiteral("http://www.qt-project.org/"))));
+
+        QOrganizerItemExtendedDetail extendedDetailForReminder;
+        extendedDetailForReminder.setName(QString(QStringLiteral("reminder")));
+        QVariantMap data;
+        data.insert(QString(QStringLiteral("Qt")), QString(QStringLiteral("Everywhere")));
+        data.insert(QString(QStringLiteral("URL")), QUrl(QString(QStringLiteral("http://www.qt-project.org/"))));
+        extendedDetailForReminder.setData(data);
+
+        QOrganizerEvent eventForReminder;
+        eventForReminder.setStartDateTime(QDateTime::fromString(QString(QStringLiteral("2012-02-01T00:11:22")), Qt::ISODate));
+        eventForReminder.saveDetail(&audibleReminder);
+        eventForReminder.saveDetail(&extendedDetailForReminder);
+        QVERIFY(mgr->saveItem(&eventForReminder));
+
+        QOrganizerItem fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForReminder.id()).at(0);
+        QVERIFY(fetchedItem == eventForReminder);
+
+        QOrganizerEventRsvp rsvp;
+        rsvp.setOrganizerName(QString(QStringLiteral("Qt")));
+
+        QOrganizerItemExtendedDetail extendedDetailForRsvp;
+        extendedDetailForRsvp.setName(QString(QStringLiteral("rsvp")));
+        extendedDetailForRsvp.setData(data);
+
+        QOrganizerEvent eventForRsvp;
+        eventForRsvp.saveDetail(&rsvp);
+        eventForRsvp.saveDetail(&extendedDetailForRsvp);
+        QVERIFY(mgr->saveItem(&eventForRsvp));
+
+        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForRsvp.id()).at(0);
+        QVERIFY(fetchedItem == eventForRsvp);
+
+        QOrganizerItemLocation location;
+        location.setLatitude(19.84);
+
+        QOrganizerItemExtendedDetail extendedDetailForLocation;
+        extendedDetailForLocation.setName(QString(QStringLiteral("location")));
+        extendedDetailForLocation.setData(data);
+
+        QOrganizerEvent eventForLocation;
+        eventForLocation.saveDetail(&location);
+        eventForLocation.saveDetail(&extendedDetailForLocation);
+        QVERIFY(mgr->saveItem(&eventForLocation));
+
+        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForLocation.id()).at(0);
+        QVERIFY(fetchedItem == eventForLocation);
+
+        QOrganizerEvent eventForAll;
+        eventForAll.setStartDateTime(QDateTime::fromString(QString(QStringLiteral("2012-02-01T00:11:22")), Qt::ISODate));
+        eventForAll.saveDetail(&audibleReminder);
+        eventForAll.saveDetail(&extendedDetailForReminder);
+        eventForAll.saveDetail(&rsvp);
+        eventForAll.saveDetail(&extendedDetailForRsvp);
+        eventForAll.saveDetail(&location);
+        eventForAll.saveDetail(&extendedDetailForLocation);
+        QVERIFY(mgr->saveItem(&eventForAll));
+
+        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForAll.id()).at(0);
+        QVERIFY(fetchedItem == eventForAll);
+    }
 }
 
 void tst_QOrganizerManager::testAttendee()

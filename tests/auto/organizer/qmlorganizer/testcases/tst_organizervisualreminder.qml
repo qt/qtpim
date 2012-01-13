@@ -73,7 +73,7 @@ Rectangle {
                     { tag: " 3 properties",
                       code: "import QtOrganizer 5.0;"
                         + "VisualReminder {"
-                        + "    repetitionCount: -1; "
+                        + "    repetitionCount: 0; "
                         + "    secondsBeforeStart: 100;}"
                     },
                     { tag: " 4 properties",
@@ -132,9 +132,25 @@ Rectangle {
                 utility.init(model);
                 utility.empty_calendar();
                 //------Create and save the detail test------//
+                utility.debug("Create and save the detail test", debugFlag);
                 visualReminderDetail.dataUrl = "http://www.test0.com";
                 visualReminderEvent.addDetail(visualReminderDetail);
-                model.saveItem(visualReminderEvent);
+                if (managerName == "jsondb") {
+                    // custom fields allowed in JsonDb for audible reminder
+                    // simple test here, since already fully tested in C++
+                    var extendedDetail = Qt.createQmlObject(
+                        "import QtOrganizer 5.0;"
+                        + "ExtendedDetail {"
+                        + "  name: \"reminder\";"
+                        + "  data: \{"
+                        + "    Qt: \"Everywhere\";"
+                        + "    Url: \"http://www.qt-project.org/\";"
+                        + "  }"
+                        + "}"
+                        , test);
+                    visualReminderEvent.addDetail(extendedDetail);
+                }
+                model.saveItem(event);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);
                 compare(model.itemCount, 1)
@@ -149,12 +165,12 @@ Rectangle {
                 savedEventDetail.dataUrl = "http://www.test222.com";
                 savedEventDetail.message = "visual reminder message";
                 savedEventDetail.secondsBeforeStart = 300;
-                savedEventDetail.repetitionCount = -1;
+                savedEventDetail.repetitionCount = 0;
 
                 visualReminderDetail.dataUrl = "http://www.test222.com";
                 visualReminderDetail.message = "visual reminder message";
                 visualReminderDetail.secondsBeforeStart = 300;
-                visualReminderDetail.repetitionCount = -1;
+                visualReminderDetail.repetitionCount = 0;
 
                 savedVisualEvent.setDetail(savedEventDetail);
 

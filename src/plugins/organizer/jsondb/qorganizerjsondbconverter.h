@@ -91,7 +91,8 @@ private:
     void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;
 
     void audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap *object) const;
-    void jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder) const;
+    void jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder,
+                                             QOrganizerItemExtendedDetail *extendedDetail) const;
 
     int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, const QString &enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData *const conversionData, int enumValue) const;
@@ -102,10 +103,12 @@ private:
     void jsonDbObjectToAttendeeDetail(const QVariantMap &object, QOrganizerEventAttendee *attendeeDetail) const;
 
     void rsvpDetailToJsonDbObject(const QOrganizerEventRsvp &rsvpDetail, QVariantMap *object) const;
-    void jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail) const;
+    void jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail,
+                                  QOrganizerItemExtendedDetail *extendedDetail) const;
 
     void locationDetailToJsonDbObject(const QOrganizerItemLocation &locationDetail, QVariantMap *object) const;
-    void jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail) const;
+    void jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail,
+                                      QOrganizerItemExtendedDetail *extendedDetail) const;
 
     void dataToList(const QVariant &data, QVariantList *list) const;
     void dataToMap(const QVariant &data, QVariantMap *map) const;

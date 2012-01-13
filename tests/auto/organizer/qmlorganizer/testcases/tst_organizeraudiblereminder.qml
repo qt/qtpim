@@ -74,7 +74,7 @@ Rectangle {
                     { tag: "  3 properties",
                       code: "import QtOrganizer 5.0;"
                         + "AudibleReminder {"
-                        + "    repetitionCount: -1; "
+                        + "    repetitionCount: 0; "
                         + "    secondsBeforeStart: 100;}"
                     },
                     { tag: "  4 properties",
@@ -126,6 +126,21 @@ Rectangle {
                 utility.debug("Create and save the detail test", debugFlag);
                 audibleReminderDetail.dataUrl = "http://www.test0.com";
                 event.addDetail(audibleReminderDetail);
+                if (managerName == "jsondb") {
+                    // custom fields allowed in JsonDb for audible reminder
+                    // simple test here, since already fully tested in C++
+                    var extendedDetail = Qt.createQmlObject(
+                            "import QtOrganizer 5.0;"
+                            + "ExtendedDetail {"
+                            + "  name: \"reminder\";"
+                            + "  data: \{"
+                            + "    Qt: \"Everywhere\";"
+                            + "    Url: \"http://www.qt-project.org/\";"
+                            + "  }"
+                            + "}"
+                            , test);
+                    event.addDetail(extendedDetail);
+                }
                 model.saveItem(event);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);
@@ -141,11 +156,11 @@ Rectangle {
                 var savedEventDetail = savedEvent.detail(Detail.AudibleReminder);
                 savedEventDetail.dataUrl = "http://www.test222.com";
                 savedEventDetail.secondsBeforeStart = 300;
-                savedEventDetail.repetitionCount = -1;
+                savedEventDetail.repetitionCount = 0;
 
                 audibleReminderDetail.dataUrl = "http://www.test222.com";
                 audibleReminderDetail.secondsBeforeStart = 300;
-                audibleReminderDetail.repetitionCount = -1;
+                audibleReminderDetail.repetitionCount = 0;
 
                 savedEvent.setDetail(savedEventDetail);
 

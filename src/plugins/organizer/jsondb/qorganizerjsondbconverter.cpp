@@ -401,10 +401,14 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         } else if (i.key() == QOrganizerJsonDbStr::eventRsvp()) {
             QVariantMap rsvpMap = i.value().toMap();
             if (!rsvpMap.isEmpty()) {
+                // custom fields are supported for RSVP
                 QOrganizerEventRsvp rsvp;
-                jsonDbObjectToRsvpDetail(rsvpMap, &rsvp);
+                QOrganizerItemExtendedDetail extendedDetail;
+                jsonDbObjectToRsvpDetail(rsvpMap, &rsvp, &extendedDetail);
                 if (!rsvp.isEmpty())
                     item->saveDetail(&rsvp);
+                if (!extendedDetail.isEmpty())
+                    item->saveDetail((&extendedDetail));
             }
         } else if (i.key() == QOrganizerJsonDbStr::itemOccurrenceParent()) {
             QOrganizerItemParent parentDetail = item->detail(QOrganizerItemParent::DefinitionName);
@@ -420,18 +424,26 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         } else if (i.key() == QOrganizerJsonDbStr::itemReminder()) {
             QVariantMap reminderMap = i.value().toMap();
             if (!reminderMap.isEmpty()) {
+                // custom fields are supported for reminders
                 QOrganizerItemAudibleReminder audibleReminder;
-                jsonDbObjectToAudibleReminderDetail(reminderMap, &audibleReminder);
+                QOrganizerItemExtendedDetail extendedDetail;
+                jsonDbObjectToAudibleReminderDetail(reminderMap, &audibleReminder, &extendedDetail);
                 if (!audibleReminder.isEmpty())
                     item->saveDetail(&audibleReminder);
+                if (!extendedDetail.isEmpty())
+                    item->saveDetail((&extendedDetail));
             }
         } else if (i.key() == QOrganizerJsonDbStr::eventLocation()) {
             QVariantMap locationMap = i.value().toMap();
             if (!locationMap.isEmpty()) {
+                // custom fields are supported for reminders
                 QOrganizerItemLocation location;
-                jsonDbObjectToLocationDetail(locationMap, &location);
+                QOrganizerItemExtendedDetail extendedDetail;
+                jsonDbObjectToLocationDetail(locationMap, &location, &extendedDetail);
                 if (!location.isEmpty())
                     item->saveDetail(&location);
+                if (!extendedDetail.isEmpty())
+                    item->saveDetail((&extendedDetail));
             }
         } else if (i.key() == QOrganizerJsonDbStr::jsonDbVersion()) {
             QOrganizerItemVersion itemVersion;
@@ -550,15 +562,32 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         }
 
         case QOrganizerItemDetail::TypeExtendedDetail: {
-            // TODO use namespace or other techniques to protect pre-defined fields, design needed
-            QString name = details.at(i).value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
-            if (name.isEmpty() || name.at(0) == QChar('_'))
-                break;
-
             QVariant property;
             extendedDetailToJsonDbProperty(details.at(i), &property);
-            if (!property.isNull())
+            if (!property.isNull()) {
+                // custom fields are allowed for reminder, rsvp, and location
+                // in such cases, those values in extended details will be merged with reminder (or other) object in JsonDb
+                // for all other cases, the extended detail is stored as "name: data" in JsonDb
+                QString name = details.at(i).value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
+                if (name == QOrganizerJsonDbStr::itemReminder()
+                    || (itemType == QOrganizerItemType::TypeEvent && (name == QOrganizerJsonDbStr::eventRsvp()
+                                                                      || name == QOrganizerJsonDbStr::eventLocation()))) {
+                    QVariantMap existing = object->value(name).toMap();
+                    if (existing.isEmpty()) {
+                        object->insert(name, property);
+                    } else {
+                        QVariantMap::const_iterator i = existing.constBegin();
+                        QVariantMap newExtendedDetailProperty = property.toMap();
+                        while (i != existing.constEnd()) {
+                            newExtendedDetailProperty.insert(i.key(), i.value());
+                            ++i;
+                        }
+                        object->insert(name, newExtendedDetailProperty);
+                    }
+                    break;
+                }
                 object->insert(name, property);
+            }
             break;
         }
 
@@ -568,10 +597,25 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             break;
 
         case QOrganizerItemDetail::TypeLocation: {
+            // in JsonDb, only events can have locations
+            if (itemType != QOrganizerItemType::TypeEvent)
+                break;
             QVariantMap locationObject;
             locationDetailToJsonDbObject(details.at(i), &locationObject);
-            if (!locationObject.isEmpty())
-                object->insert(QOrganizerJsonDbStr::eventLocation(), locationObject);
+            if (!locationObject.isEmpty()) {
+                // check for possible custom fields
+                QVariantMap location = object->value(QOrganizerJsonDbStr::eventLocation()).toMap();
+                if (location.isEmpty()) {
+                    object->insert(QOrganizerJsonDbStr::eventLocation(), locationObject);
+                } else {
+                    QVariantMap::const_iterator i = locationObject.constBegin();
+                    while (i != locationObject.constEnd()) {
+                        location.insert(i.key(), i.value());
+                        ++i;
+                    }
+                    object->insert(QOrganizerJsonDbStr::eventLocation(), location);
+                }
+            }
             break;
         }
 
@@ -653,8 +697,20 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         case QOrganizerItemDetail::TypeAudibleReminder: {
             QVariantMap reminderObject;
             audibleReminderDetailToJsonDbObject(details.at(i), &reminderObject);
-            if (!reminderObject.isEmpty())
-                object->insert(QOrganizerJsonDbStr::itemReminder(), reminderObject);
+            if (!reminderObject.isEmpty()) {
+                // check for possible custom fields
+                QVariantMap reminder = object->value(QOrganizerJsonDbStr::itemReminder()).toMap();
+                if (reminder.isEmpty()) {
+                    object->insert(QOrganizerJsonDbStr::itemReminder(), reminderObject);
+                } else {
+                    QVariantMap::const_iterator i = reminderObject.constBegin();
+                    while (i != reminderObject.constEnd()) {
+                        reminder.insert(i.key(), i.value());
+                        ++i;
+                    }
+                    object->insert(QOrganizerJsonDbStr::itemReminder(), reminder);
+                }
+            }
             break;
         }
 
@@ -681,8 +737,20 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
                 break;
             QVariantMap rsvpObject;
             rsvpDetailToJsonDbObject(details.at(i), &rsvpObject);
-            if (!rsvpObject.isEmpty())
-                object->insert(QOrganizerJsonDbStr::eventRsvp(), rsvpObject);
+            if (!rsvpObject.isEmpty()) {
+                // check for possible custom fields
+                QVariantMap rsvp = object->value(QOrganizerJsonDbStr::eventRsvp()).toMap();
+                if (rsvp.isEmpty()) {
+                    object->insert(QOrganizerJsonDbStr::eventRsvp(), rsvpObject);
+                } else {
+                    QVariantMap::const_iterator i = rsvpObject.constBegin();
+                    while (i != rsvpObject.constEnd()) {
+                        rsvp.insert(i.key(), i.value());
+                        ++i;
+                    }
+                    object->insert(QOrganizerJsonDbStr::eventRsvp(), rsvp);
+                }
+            }
             break;
         }
 
@@ -931,17 +999,18 @@ void QOrganizerJsonDbConverter::rsvpDetailToJsonDbObject(const QOrganizerEventRs
     }
 }
 
-void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail) const
+void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail,
+                                                         QOrganizerItemExtendedDetail *extendedDetail) const
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
-    QString value;
+    QVariantMap customFields;
     while (i != object.constEnd()) {
         if (i.key() == QOrganizerJsonDbStr::eventRsvpOrganizerName()) {
-            value = i.value().toString();
+            QString value = i.value().toString();
             if (!value.isEmpty())
                 rsvpDetail->setOrganizerName(value);
         } else if (i.key() == QOrganizerJsonDbStr::eventRsvpOrganizerEmail()) {
-            value = i.value().toString();
+            QString value = i.value().toString();
             if (!value.isEmpty())
                 rsvpDetail->setOrganizerEmail(value);
         } else if (i.key() == QOrganizerJsonDbStr::eventRsvpResponseDeadline()) {
@@ -961,8 +1030,14 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &obje
         } else if (i.key() == QOrganizerJsonDbStr::eventRsvpResponseRequirement()) {
             int intValue = stringToEnum(organizerResponseRequirementMap(), i.value().toString());
             rsvpDetail->setResponseRequirement(static_cast<QOrganizerEventRsvp::ResponseRequirement>(intValue));
+        } else {
+            customFields.insert(i.key(), i.value());
         }
         ++i;
+    }
+    if (!customFields.isEmpty()) {
+        extendedDetail->setName(QOrganizerJsonDbStr::eventRsvp());
+        extendedDetail->setData(customFields);
     }
 }
 
@@ -1000,9 +1075,11 @@ void QOrganizerJsonDbConverter::locationDetailToJsonDbObject(const QOrganizerIte
         object->insert(QOrganizerJsonDbStr::eventLocationGeo(), geoObject);
 }
 
-void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail) const
+void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail,
+                                                             QOrganizerItemExtendedDetail *extendedDetail) const
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
+    QVariantMap customFields;
     while (i != object.constEnd()) {
         if (i.key() == QOrganizerJsonDbStr::eventLocationDisplayName()) {
             QString label = i.value().toString();
@@ -1024,9 +1101,15 @@ void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &
 
                 ++j;
             }
+        } else {
+            customFields.insert(i.key(), i.value());
         }
 
         ++i;
+    }
+    if (!customFields.isEmpty()) {
+        extendedDetail->setName(QOrganizerJsonDbStr::eventLocation());
+        extendedDetail->setData(customFields);
     }
 }
 
@@ -1326,52 +1409,55 @@ void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrgan
 {
     const QMap<int, QVariant> reminderValues = itemReminder.values();
     QMap<int, QVariant>::const_iterator i = reminderValues.constBegin();
-    QVariant value;
-    QString jsonDbField;
     while (i != reminderValues.constEnd()) {
-        value.clear();
         if (i.key() == QOrganizerItemAudibleReminder::FieldSecondsBeforeStart) {
-            value = i.value().toInt();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderSecBeforeStart();
+            if (i.value().toInt() > 0)
+                object->insert(QOrganizerJsonDbStr::itemReminderSecBeforeStart(), i.value());
         } else if (i.key() == QOrganizerItemAudibleReminder::FieldRepetitionCount) {
-            value = i.value().toInt();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderRepetitionCount();
+            if (i.value().toInt() > 0)
+                object->insert(QOrganizerJsonDbStr::itemReminderRepetitionCount(), i.value());
         } else if (i.key() == QOrganizerItemAudibleReminder::FieldRepetitionDelay) {
-            value = i.value().toInt();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderRepetitionDelay();
+            if (i.value().toInt() > 0)
+                object->insert(QOrganizerJsonDbStr::itemReminderRepetitionDelay(), i.value());
         } else if (i.key() == QOrganizerItemAudibleReminder::FieldDataUrl) {
-            value = i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderDataUrl();
+            if (i.value().toUrl().isValid())
+                object->insert(QOrganizerJsonDbStr::itemReminderDataUrl(), i.value());
         }
-        if (value.isValid())
-            object->insert(jsonDbField, value);
         ++i;
     }
 }
 
-void QOrganizerJsonDbConverter::jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder) const
+void QOrganizerJsonDbConverter::jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder,
+                                                                    QOrganizerItemExtendedDetail *extendedDetail) const
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
-    int field;
-    QVariant value;
+    QVariantMap customFields;
     while (i != object.constEnd()) {
-        value.clear();
         if (i.key() == QOrganizerJsonDbStr::itemReminderSecBeforeStart()) {
-            field = QOrganizerItemAudibleReminder::FieldSecondsBeforeStart;
-            value = i.value().toInt();
+            bool ok = false;
+            int seconds = i.value().toInt(&ok);
+            if (ok && seconds >= 0)
+                itemReminder->setValue(QOrganizerItemAudibleReminder::FieldSecondsBeforeStart, seconds);
         } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepetitionCount()) {
-            field = QOrganizerItemAudibleReminder::FieldRepetitionCount;
-            value = i.value().toInt();
+            int repetitionCount = i.value().toInt();
+            if (repetitionCount > 0)
+                itemReminder->setValue(QOrganizerItemAudibleReminder::FieldRepetitionCount, repetitionCount);
         } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepetitionDelay()) {
-            field = QOrganizerItemAudibleReminder::FieldRepetitionDelay;
-            value = i.value().toInt();
+            int repetitionDelay = i.value().toInt();
+            if (repetitionDelay > 0)
+                itemReminder->setValue(QOrganizerItemAudibleReminder::FieldRepetitionDelay, repetitionDelay);
         } else if (i.key() == QOrganizerJsonDbStr::itemReminderDataUrl()) {
-            field = QOrganizerItemAudibleReminder::FieldDataUrl;
-            value = i.value().toString();
+            QUrl url = i.value().toUrl();
+            if (url.isValid())
+                itemReminder->setValue(QOrganizerItemAudibleReminder::FieldDataUrl, url);
+        } else {
+            customFields.insert(i.key(), i.value());
         }
-        if (value.isValid())
-            itemReminder->setValue(field, value);
         ++i;
+    }
+    if (!customFields.isEmpty()) {
+        extendedDetail->setName(QOrganizerJsonDbStr::itemReminder());
+        extendedDetail->setData(customFields);
     }
 }
 
@@ -1401,11 +1487,31 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
 
 void QOrganizerJsonDbConverter::extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant *property) const
 {
-    // TODO check potential conflicts with predefined detail
-
+    QString name = extendedDetail.name();
     QVariant data = extendedDetail.data();
-    if (extendedDetail.name().isEmpty() || data.isNull())
+    if (name.isEmpty() || data.isNull())
         return;
+
+    // check potential conflicts with predefined detail
+    // XXX this should be removed once we get the item validation funtion
+    if (name.at(0) == QChar('_')
+        || (name == QOrganizerJsonDbStr::itemReminder() && data.type() != QVariant::Map)
+        || (name == QOrganizerJsonDbStr::eventRsvp() && data.type() != QVariant::Map)
+        || (name == QOrganizerJsonDbStr::eventLocation() && data.type() != QVariant::Map)
+        || name == QOrganizerJsonDbStr::itemDisplayName() || name == QOrganizerJsonDbStr::itemCollectionUuid()
+        || name == QOrganizerJsonDbStr::itemDescription() || name == QOrganizerJsonDbStr::itemComments()
+        || name == QOrganizerJsonDbStr::itemPriority() || name == QOrganizerJsonDbStr::itemTags()
+        || name == QOrganizerJsonDbStr::itemGuid()
+        || name == QOrganizerJsonDbStr::itemRecurrenceDates() || name == QOrganizerJsonDbStr::itemRecurrenceRules()
+        || name == QOrganizerJsonDbStr::itemExceptionDates() || name == QOrganizerJsonDbStr::itemExceptionRules()
+        || name == QOrganizerJsonDbStr::eventStartDateTime() /*|| name == QOrganizerJsonDbStr::todoStartDateTime()*/
+        || name == QOrganizerJsonDbStr::eventEndDateTime() || name == QOrganizerJsonDbStr::todoDueDateTime()
+        || name == QOrganizerJsonDbStr::eventIsAllDay() /*|| name == QOrganizerJsonDbStr::todoIsAllDay()*/
+        || name == QOrganizerJsonDbStr::eventAttendees()
+        || name == QOrganizerJsonDbStr::todoFinishedDateTime() || name == QOrganizerJsonDbStr::todoProgressPercentage()
+        || name == QOrganizerJsonDbStr::todoStatus()) {
+        return;
+    }
 
     if (data.type() < QVariant::Map) {
         // JsonDb can directly save these types: bool, int, uint, qlonglong, qulonglong, double, QChar

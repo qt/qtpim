@@ -10,6 +10,10 @@ qmldir.files += $$PWD/qmldir
 qmldir.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
 INSTALLS += qmldir
 
+qmlplugintypes.files += $$PWD/plugins.qmltypes
+qmlplugintypes.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
+INSTALLS += qmlplugintypes
+
 QT += declarative contacts versit
 
 # Input

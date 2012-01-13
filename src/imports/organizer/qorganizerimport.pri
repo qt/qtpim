@@ -13,16 +13,29 @@ isEmpty(TARGET) {
     error("qimportbase.pri: You must provide a TARGET!")
 }
 
+# Copy qmldir file to build folder
 QMLDIRFILE = $${_PRO_FILE_PWD_}/qmldir
-copy2build.input = QMLDIRFILE
-copy2build.output = $$QT.organizer.imports/$$TARGETPATH/qmldir
-!contains(TEMPLATE_PREFIX, vc):copy2build.variable_out = PRE_TARGETDEPS
-copy2build.commands = $$QMAKE_COPY ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
-copy2build.name = COPY ${QMAKE_FILE_IN}
-copy2build.CONFIG += no_link
-# `clean' should leave the build in a runnable state, which means it shouldn't delete qmldir
-copy2build.CONFIG += no_clean
-QMAKE_EXTRA_COMPILERS += copy2build
+copyqmldir2build.input = QMLDIRFILE
+copyqmldir2build.output = $$QT.organizer.imports/$$TARGETPATH/qmldir
+
+!contains(TEMPLATE_PREFIX, vc):copyqmldir2build.variable_out = PRE_TARGETDEPS
+copyqmldir2build.commands = $$QMAKE_COPY ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
+copyqmldir2build.name = COPY ${QMAKE_FILE_IN}
+copyqmldir2build.CONFIG += no_link
+copyqmldir2build.CONFIG += no_clean
+QMAKE_EXTRA_COMPILERS += copyqmldir2build
+
+# Copy plugins.qmltypes file to build folder
+QMLTYPEFILE = $${_PRO_FILE_PWD_}/plugins.qmltypes
+copyqmltypes2build.input = QMLTYPEFILE
+copyqmltypes2build.output = $$QT.organizer.imports/$$TARGETPATH/plugins.qmltypes
+
+!contains(TEMPLATE_PREFIX, vc):copyqmltypes2build.variable_out = PRE_TARGETDEPS
+copyqmltypes2build.commands = $$QMAKE_COPY ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
+copyqmltypes2build.name = COPY ${QMAKE_FILE_IN}
+copyqmltypes2build.CONFIG += no_link
+copyqmltypes2build.CONFIG += no_clean
+QMAKE_EXTRA_COMPILERS += copyqmltypes2build
 
 TARGET = $$qtLibraryTarget($$TARGET)
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols

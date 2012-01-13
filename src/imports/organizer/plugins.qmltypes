@@ -1,0 +1,1145 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "QAbstractItemModel"
+        prototype: "QObject"
+        Signal {
+            name: "dataChanged"
+            Parameter { name: "topLeft"; type: "QModelIndex" }
+            Parameter { name: "bottomRight"; type: "QModelIndex" }
+            Parameter { name: "roles"; type: "QSet<int>" }
+        }
+        Signal {
+            name: "dataChanged"
+            Parameter { name: "topLeft"; type: "QModelIndex" }
+            Parameter { name: "bottomRight"; type: "QModelIndex" }
+        }
+        Signal {
+            name: "headerDataChanged"
+            Parameter { name: "orientation"; type: "Qt::Orientation" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "layoutChanged"
+            Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
+        }
+        Signal { name: "layoutChanged" }
+        Signal {
+            name: "layoutAboutToBeChanged"
+            Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
+        }
+        Signal { name: "layoutAboutToBeChanged" }
+        Signal {
+            name: "rowsAboutToBeInserted"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "rowsInserted"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "rowsAboutToBeRemoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "rowsRemoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "columnsAboutToBeInserted"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "columnsInserted"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "columnsAboutToBeRemoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal {
+            name: "columnsRemoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "first"; type: "int" }
+            Parameter { name: "last"; type: "int" }
+        }
+        Signal { name: "modelAboutToBeReset" }
+        Signal { name: "modelReset" }
+        Signal {
+            name: "rowsAboutToBeMoved"
+            Parameter { name: "sourceParent"; type: "QModelIndex" }
+            Parameter { name: "sourceStart"; type: "int" }
+            Parameter { name: "sourceEnd"; type: "int" }
+            Parameter { name: "destinationParent"; type: "QModelIndex" }
+            Parameter { name: "destinationRow"; type: "int" }
+        }
+        Signal {
+            name: "rowsMoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "start"; type: "int" }
+            Parameter { name: "end"; type: "int" }
+            Parameter { name: "destination"; type: "QModelIndex" }
+            Parameter { name: "row"; type: "int" }
+        }
+        Signal {
+            name: "columnsAboutToBeMoved"
+            Parameter { name: "sourceParent"; type: "QModelIndex" }
+            Parameter { name: "sourceStart"; type: "int" }
+            Parameter { name: "sourceEnd"; type: "int" }
+            Parameter { name: "destinationParent"; type: "QModelIndex" }
+            Parameter { name: "destinationColumn"; type: "int" }
+        }
+        Signal {
+            name: "columnsMoved"
+            Parameter { name: "parent"; type: "QModelIndex" }
+            Parameter { name: "start"; type: "int" }
+            Parameter { name: "end"; type: "int" }
+            Parameter { name: "destination"; type: "QModelIndex" }
+            Parameter { name: "column"; type: "int" }
+        }
+        Method { name: "submit"; type: "bool" }
+        Method { name: "revert" }
+    }
+    Component { name: "QAbstractListModel"; prototype: "QAbstractItemModel" }
+    Component {
+        name: "QDeclarativeOrganizerCollection"
+        prototype: "QObject"
+        exports: ["Collection 5.0"]
+        Property { name: "collectionId"; type: "string" }
+        Property { name: "name"; type: "string" }
+        Property { name: "description"; type: "string" }
+        Property { name: "color"; type: "QColor" }
+        Property { name: "image"; type: "QUrl" }
+        Signal { name: "valueChanged" }
+        Method {
+            name: "setMetaData"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "QVariant" }
+        }
+        Method {
+            name: "metaData"
+            type: "QVariant"
+            Parameter { name: "key"; type: "string" }
+        }
+    }
+    Component {
+        name: "QDeclarativeOrganizerEvent"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["Event 5.0"]
+        Property { name: "allDay"; type: "bool" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "endDateTime"; type: "QDateTime" }
+        Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
+        Property {
+            name: "recurrence"
+            type: "QDeclarativeOrganizerItemRecurrence"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "location"; type: "string" }
+        Property {
+            name: "attendees"
+            type: "QDeclarativeOrganizerEventAttendee"
+            isList: true
+            isReadonly: true
+        }
+        Signal { name: "valueChanged" }
+        Method {
+            name: "setDetail"
+            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
+        }
+        Method {
+            name: "removeDetail"
+            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
+        }
+        Method { name: "clearDetails" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerEventAttendee"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["EventAttendee 5.0"]
+        Enum {
+            name: "EventAttendeeField"
+            values: {
+                "FieldName": 0,
+                "FieldEmailAddress": 1,
+                "FieldAddendeeId": 2,
+                "FieldParticipationStatus": 3,
+                "FieldParticipationRole": 4
+            }
+        }
+        Enum {
+            name: "ParticipationStatus"
+            values: {
+                "StatusUnknown": 0,
+                "StatusAccepted": 1,
+                "StatusDeclined": 2,
+                "StatusTentative": 3,
+                "StatusDelegated": 4,
+                "StatusInProcess": 5,
+                "StatusCompleted": 6
+            }
+        }
+        Enum {
+            name: "ParticipationRole"
+            values: {
+                "RoleUnknown": 0,
+                "RoleOrganizer": 1,
+                "RoleChairperson": 2,
+                "RoleHost": 3,
+                "RoleRequiredParticipant": 4,
+                "RoleOptionalParticipant": 5,
+                "RoleNonParticipant": 6
+            }
+        }
+        Property { name: "name"; type: "string" }
+        Property { name: "emailAddress"; type: "string" }
+        Property { name: "attendeeId"; type: "string" }
+        Property { name: "participationStatus"; type: "ParticipationStatus" }
+        Property { name: "participationRole"; type: "ParticipationRole" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerEventOccurrence"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["EventOccurrence 5.0"]
+        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "endDateTime"; type: "QDateTime" }
+        Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
+        Property { name: "location"; type: "string" }
+        Property { name: "parentId"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerEventRsvp"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["EventRsvp 5.0"]
+        Enum {
+            name: "EventRsvpField"
+            values: {
+                "FieldParticipationStatus": 0,
+                "FieldParticipationRole": 1,
+                "FieldResponseRequirement": 2,
+                "FieldResponseDeadline": 3,
+                "FieldResponseDate": 4,
+                "FieldOrganizerName": 5,
+                "FieldOrganizerEmail": 6
+            }
+        }
+        Enum {
+            name: "ResponseRequirement"
+            values: {
+                "ResponseNotRequired": 0,
+                "ResponseRequired": 1
+            }
+        }
+        Property {
+            name: "participationStatus"
+            type: "QDeclarativeOrganizerEventAttendee::ParticipationStatus"
+        }
+        Property {
+            name: "participationRole"
+            type: "QDeclarativeOrganizerEventAttendee::ParticipationRole"
+        }
+        Property { name: "responseRequirement"; type: "ResponseRequirement" }
+        Property { name: "responseDeadline"; type: "QDate" }
+        Property { name: "responseDate"; type: "QDate" }
+        Property { name: "organizerName"; type: "string" }
+        Property { name: "organizerEmail"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerEventTime"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["EventTime 5.0"]
+        Enum {
+            name: "EventTimeField"
+            values: {
+                "FieldStartDateTime": 0,
+                "FieldEndDateTime": 1,
+                "FieldAllDay": 2
+            }
+        }
+        Property { name: "isAllDay"; type: "bool" }
+        Property { name: "allDay"; type: "bool" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "endDateTime"; type: "QDateTime" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItem"
+        defaultProperty: "itemDetails"
+        prototype: "QObject"
+        exports: ["OrganizerItem 5.0"]
+        Property { name: "modified"; type: "bool"; isReadonly: true }
+        Property { name: "itemType"; type: "QDeclarativeOrganizerItemType::ItemType"; isReadonly: true }
+        Property {
+            name: "itemDetails"
+            type: "QDeclarativeOrganizerItemDetail"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "itemId"; type: "string"; isReadonly: true }
+        Property { name: "manager"; type: "string"; isReadonly: true }
+        Property { name: "collectionId"; type: "string" }
+        Property { name: "description"; type: "string" }
+        Property { name: "displayLabel"; type: "string" }
+        Property { name: "guid"; type: "string" }
+        Property { name: "isOccurrence"; type: "bool"; isReadonly: true }
+        Property { name: "isFloatingTime"; type: "bool"; isReadonly: true }
+        Property { name: "itemStartTime"; type: "QDateTime"; isReadonly: true }
+        Property { name: "itemEndTime"; type: "QDateTime"; isReadonly: true }
+        Signal { name: "itemChanged" }
+        Method {
+            name: "detail"
+            type: "QDeclarativeOrganizerItemDetail*"
+            Parameter { name: "type"; type: "int" }
+        }
+        Method {
+            name: "details"
+            type: "QVariantList"
+            Parameter { name: "type"; type: "int" }
+        }
+        Method {
+            name: "setDetail"
+            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
+        }
+        Method {
+            name: "removeDetail"
+            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
+        }
+        Method { name: "clearDetails" }
+        Method { name: "save" }
+        Method {
+            name: "addDetail"
+            type: "bool"
+            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
+        }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemAudibleReminder"
+        prototype: "QDeclarativeOrganizerItemReminder"
+        exports: ["AudibleReminder 5.0"]
+        Enum {
+            name: "AudibleReminderField"
+            values: {
+                "FieldDataUrl": 102
+            }
+        }
+        Property { name: "dataUrl"; type: "QUrl" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemChangeLogFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["ChangeLogFilter 5.0"]
+        Enum {
+            name: "EventType"
+            values: {
+                "EventAdded": 0,
+                "EventChanged": 1,
+                "EventRemoved": 2
+            }
+        }
+        Property { name: "since"; type: "QDateTime" }
+        Property { name: "eventType"; type: "EventType" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemClassification"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Classification 5.0"]
+        Enum {
+            name: "Field"
+            values: {
+                "FieldClassification": 0
+            }
+        }
+        Property { name: "classification"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemCollectionFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["CollectionFilter 5.0"]
+        Property { name: "ids"; type: "QStringList" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemComment"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Comment 5.0"]
+        Enum {
+            name: "CommentField"
+            values: {
+                "FieldComment": 0
+            }
+        }
+        Property { name: "comment"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemCompoundFilter"
+        defaultProperty: "filters"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        Property {
+            name: "filters"
+            type: "QDeclarativeOrganizerItemFilter"
+            isList: true
+            isReadonly: true
+        }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDescription"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Description 5.0"]
+        Enum {
+            name: "DescriptionField"
+            values: {
+                "FieldDescription": 0
+            }
+        }
+        Property { name: "description"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDetail"
+        prototype: "QObject"
+        exports: ["Detail 5.0"]
+        Enum {
+            name: "DetailType"
+            values: {
+                "Undefined": 0,
+                "Classification": 1,
+                "Comment": 2,
+                "Description": 3,
+                "DisplayLabel": 4,
+                "ItemType": 5,
+                "Guid": 6,
+                "Location": 7,
+                "Parent": 8,
+                "Priority": 9,
+                "Recurrence": 10,
+                "Tag": 11,
+                "Timestamp": 12,
+                "Reminder": 13,
+                "AudibleReminder": 14,
+                "EmailReminder": 15,
+                "VisualReminder": 16,
+                "ExtendedDetail": 17,
+                "EventAttendee": 18,
+                "EventRsvp": 19,
+                "EventTime": 20,
+                "JournalTime": 21,
+                "TodoTime": 22,
+                "TodoProgress": 23
+            }
+        }
+        Property { name: "type"; type: "DetailType"; isReadonly: true }
+        Property { name: "fieldNames"; type: "QList<int>"; isReadonly: true }
+        Signal { name: "detailChanged" }
+        Method {
+            name: "value"
+            type: "QVariant"
+            Parameter { name: "key"; type: "int" }
+        }
+        Method {
+            name: "setValue"
+            type: "bool"
+            Parameter { name: "key"; type: "int" }
+            Parameter { name: "value"; type: "QVariant" }
+        }
+        Method {
+            name: "removeValue"
+            type: "bool"
+            Parameter { name: "key"; type: "int" }
+        }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDetailFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["DetailFilter 5.0"]
+        Property { name: "value"; type: "QVariant" }
+        Property { name: "matchFlags"; type: "QDeclarativeOrganizerItemFilter::MatchFlags" }
+        Property { name: "field"; type: "int" }
+        Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDetailRangeFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["DetailRangeFilter 5.0"]
+        Enum {
+            name: "RangeFlag"
+            values: {
+                "IncludeLower": 0,
+                "IncludeUpper": 1,
+                "ExcludeLower": 2,
+                "ExcludeUpper": 0
+            }
+        }
+        Enum {
+            name: "RangeFlags"
+            values: {
+                "IncludeLower": 0,
+                "IncludeUpper": 1,
+                "ExcludeLower": 2,
+                "ExcludeUpper": 0
+            }
+        }
+        Property { name: "min"; type: "QVariant" }
+        Property { name: "max"; type: "QVariant" }
+        Property { name: "matchFlags"; type: "QDeclarativeOrganizerItemFilter::MatchFlags" }
+        Property { name: "rangeFlags"; type: "RangeFlags" }
+        Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
+        Property { name: "field"; type: "int" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDisplayLabel"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["DisplayLabel 5.0"]
+        Enum {
+            name: "DisplayLabelField"
+            values: {
+                "FieldLabel": 0
+            }
+        }
+        Property { name: "label"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemEmailReminder"
+        prototype: "QDeclarativeOrganizerItemReminder"
+        exports: ["EmailReminder 5.0"]
+        Enum {
+            name: "EmailReminderField"
+            values: {
+                "FieldSubject": 102,
+                "FieldBody": 103,
+                "FieldRecipients": 105,
+                "FieldAttachments": 104
+            }
+        }
+        Property { name: "body"; type: "string" }
+        Property { name: "subject"; type: "string" }
+        Property { name: "recipients"; type: "QStringList" }
+        Property { name: "attachments"; type: "QVariantList" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemExtendedDetail"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["ExtendedDetail 5.0"]
+        Enum {
+            name: "ExtendedDetailField"
+            values: {
+                "FieldName": 0,
+                "FieldData": 1
+            }
+        }
+        Property { name: "name"; type: "string" }
+        Property { name: "data"; type: "QVariant" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemFetchHint"
+        prototype: "QObject"
+        exports: ["FetchHint 5.0"]
+        Enum {
+            name: "OptimizationHint"
+            values: {
+                "AllRequired": 0,
+                "NoActionPreferences": 2,
+                "NoBinaryBlobs": 4
+            }
+        }
+        Enum {
+            name: "OptimizationHints"
+            values: {
+                "AllRequired": 0,
+                "NoActionPreferences": 2,
+                "NoBinaryBlobs": 4
+            }
+        }
+        Property { name: "optimizationHints"; type: "OptimizationHints" }
+        Signal { name: "fetchHintChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemFilter"
+        prototype: "QObject"
+        exports: ["Filter 5.0"]
+        Enum {
+            name: "FilterType"
+            values: {
+                "InvalidFilter": 0,
+                "DetailFilter": 1,
+                "DetailRangeFilter": 2,
+                "ChangeLogFilter": 3,
+                "IntersectionFilter": 4,
+                "UnionFilter": 5,
+                "IdFilter": 6,
+                "CollectionFilter": 7,
+                "DefaultFilter": 8
+            }
+        }
+        Enum {
+            name: "MatchFlags"
+            values: {
+                "MatchExactly": 0,
+                "MatchContains": 1,
+                "MatchStartsWith": 2,
+                "MatchEndsWith": 3,
+                "MatchFixedString": 8,
+                "MatchCaseSensitive": 16
+            }
+        }
+        Property { name: "type"; type: "FilterType"; isReadonly: true }
+        Signal { name: "filterChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemGuid"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Guid 5.0"]
+        Enum {
+            name: "GuidField"
+            values: {
+                "FieldGuid": 0
+            }
+        }
+        Property { name: "guid"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemIdFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["IdFilter 5.0"]
+        Property { name: "ids"; type: "QVariantList" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemIntersectionFilter"
+        defaultProperty: "filters"
+        prototype: "QDeclarativeOrganizerItemCompoundFilter"
+        exports: ["IntersectionFilter 5.0"]
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemInvalidFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["InvalidFilter 5.0"]
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemLocation"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Location 5.0"]
+        Enum {
+            name: "LocationField"
+            values: {
+                "FieldLabel": 2,
+                "FieldLatitude": 0,
+                "FieldLongitude": 1
+            }
+        }
+        Property { name: "latitude"; type: "double" }
+        Property { name: "longitude"; type: "double" }
+        Property { name: "label"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemParent"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Parent 5.0"]
+        Enum {
+            name: "ParentField"
+            values: {
+                "FieldParentId": 0,
+                "FieldOriginalDate": 1
+            }
+        }
+        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "parentId"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemPriority"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Priority 5.0"]
+        Enum {
+            name: "PriorityField"
+            values: {
+                "FieldPriority": 0
+            }
+        }
+        Enum {
+            name: "Priority"
+            values: {
+                "Unknown": 0,
+                "Highest": 1,
+                "ExtremelyHigh": 2,
+                "VeryHigh": 3,
+                "High": 4,
+                "Medium": 5,
+                "Low": 6,
+                "VeryLow": 7,
+                "ExtremelyLow": 8,
+                "Lowest": 9
+            }
+        }
+        Property { name: "priority"; type: "Priority" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemRecurrence"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Recurrence 5.0"]
+        Enum {
+            name: "RecurrenceField"
+            values: {
+                "FieldRecurrenceRules": 0,
+                "FieldExceptionRules": 1,
+                "FieldRecurrenceDates": 2,
+                "FieldExceptionDates": 3
+            }
+        }
+        Property {
+            name: "recurrenceRules"
+            type: "QDeclarativeOrganizerRecurrenceRule"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "exceptionRules"
+            type: "QDeclarativeOrganizerRecurrenceRule"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "recurrenceDates"; type: "QVariantList" }
+        Property { name: "exceptionDates"; type: "QVariantList" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemReminder"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Reminder 5.0"]
+        Enum {
+            name: "ReminderField"
+            values: {
+                "FieldRepetitionCount": 1,
+                "FieldRepetitionDelay": 2,
+                "FieldSecondsBeforeStart": 0
+            }
+        }
+        Enum {
+            name: "ReminderType"
+            values: {
+                "NoReminder": 0,
+                "VisualReminder": 1,
+                "AudibleReminder": 2,
+                "EmailReminder": 3
+            }
+        }
+        Property { name: "reminderType"; type: "ReminderType"; isReadonly: true }
+        Property { name: "repetitionCount"; type: "int" }
+        Property { name: "repetitionDelay"; type: "int" }
+        Property { name: "secondsBeforeStart"; type: "int" }
+        Signal { name: "reminderChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemSortOrder"
+        prototype: "QObject"
+        exports: ["SortOrder 5.0"]
+        Enum {
+            name: "BlankPolicy"
+            values: {
+                "BlanksFirst": 0,
+                "BlanksLast": 1
+            }
+        }
+        Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
+        Property { name: "field"; type: "int" }
+        Property { name: "blankPolicy"; type: "BlankPolicy" }
+        Property { name: "direction"; type: "Qt::SortOrder" }
+        Property { name: "sensitivity"; type: "Qt::CaseSensitivity" }
+        Signal { name: "sortOrderChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemTag"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Tag 5.0"]
+        Enum {
+            name: "TagField"
+            values: {
+                "FieldTag": 0
+            }
+        }
+        Property { name: "tag"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemTimestamp"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Timestamp 5.0"]
+        Enum {
+            name: "TimestampField"
+            values: {
+                "FieldCreated": 0,
+                "FieldLastModified": 1
+            }
+        }
+        Property { name: "created"; type: "QDateTime" }
+        Property { name: "lastModified"; type: "QDateTime" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemType"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["Type 5.0"]
+        Enum {
+            name: "ItemTypeField"
+            values: {
+                "FieldType": 0
+            }
+        }
+        Enum {
+            name: "ItemType"
+            values: {
+                "Undefined": 0,
+                "Event": 1,
+                "EventOccurrence": 2,
+                "Todo": 3,
+                "TodoOccurrence": 4,
+                "Journal": 5,
+                "Note": 6
+            }
+        }
+        Property { name: "itemType"; type: "ItemType" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemUnionFilter"
+        defaultProperty: "filters"
+        prototype: "QDeclarativeOrganizerItemCompoundFilter"
+        exports: ["UnionFilter 5.0"]
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemVisualReminder"
+        prototype: "QDeclarativeOrganizerItemReminder"
+        exports: ["VisualReminder 5.0"]
+        Enum {
+            name: "VisualReminderField"
+            values: {
+                "FieldDataUrl": 103,
+                "FieldMessage": 102
+            }
+        }
+        Property { name: "message"; type: "string" }
+        Property { name: "dataUrl"; type: "QUrl" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerJournal"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["Journal 5.0"]
+        Property { name: "dateTime"; type: "QDateTime" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerJournalTime"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["JournalTime 5.0"]
+        Enum {
+            name: "JournalTimeField"
+            values: {
+                "FieldEntryDateTime": 0
+            }
+        }
+        Property { name: "entryDateTime"; type: "QDateTime" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerModel"
+        prototype: "QAbstractListModel"
+        exports: ["OrganizerModel 5.0"]
+        Property { name: "manager"; type: "string" }
+        Property { name: "managerName"; type: "string"; isReadonly: true }
+        Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
+        Property { name: "autoUpdate"; type: "bool" }
+        Property { name: "startPeriod"; type: "QDateTime" }
+        Property { name: "endPeriod"; type: "QDateTime" }
+        Property { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+        Property { name: "fetchHint"; type: "QDeclarativeOrganizerItemFetchHint"; isPointer: true }
+        Property {
+            name: "sortOrders"
+            type: "QDeclarativeOrganizerItemSortOrder"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "items"; type: "QDeclarativeOrganizerItem"; isList: true; isReadonly: true }
+        Property {
+            name: "collections"
+            type: "QDeclarativeOrganizerCollection"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "error"; type: "string"; isReadonly: true }
+        Property { name: "itemCount"; type: "int"; isReadonly: true }
+        Signal { name: "modelChanged" }
+        Signal {
+            name: "itemsFetched"
+            Parameter { name: "requestId"; type: "int" }
+            Parameter { name: "fetchedItems"; type: "QVariantList" }
+        }
+        Method { name: "update" }
+        Method { name: "cancelUpdate" }
+        Method {
+            name: "exportItems"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "exportItems"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "importItems"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "importItems"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "removeItem"
+            Parameter { name: "id"; type: "string" }
+        }
+        Method {
+            name: "removeItems"
+            Parameter { name: "ids"; type: "QStringList" }
+        }
+        Method {
+            name: "saveItem"
+            Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "itemIds"; type: "QStringList" }
+        }
+        Method {
+            name: "removeCollection"
+            Parameter { name: "collectionId"; type: "string" }
+        }
+        Method {
+            name: "saveCollection"
+            Parameter { name: "collection"; type: "QDeclarativeOrganizerCollection"; isPointer: true }
+        }
+        Method { name: "fetchCollections" }
+        Method {
+            name: "containsItems"
+            type: "QList<bool>"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "interval"; type: "int" }
+        }
+        Method {
+            name: "containsItems"
+            type: "bool"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+        }
+        Method {
+            name: "containsItems"
+            type: "bool"
+            Parameter { name: "start"; type: "QDateTime" }
+        }
+        Method {
+            name: "itemsByTimePeriod"
+            type: "QVariantList"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+        }
+        Method {
+            name: "itemsByTimePeriod"
+            type: "QVariantList"
+            Parameter { name: "start"; type: "QDateTime" }
+        }
+        Method { name: "itemsByTimePeriod"; type: "QVariantList" }
+        Method {
+            name: "item"
+            type: "QDeclarativeOrganizerItem*"
+            Parameter { name: "id"; type: "string" }
+        }
+        Method {
+            name: "itemIds"
+            type: "QStringList"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+        }
+        Method {
+            name: "itemIds"
+            type: "QStringList"
+            Parameter { name: "start"; type: "QDateTime" }
+        }
+        Method { name: "itemIds"; type: "QStringList" }
+        Method { name: "defaultCollection"; type: "QDeclarativeOrganizerCollection*" }
+        Method {
+            name: "collection"
+            type: "QDeclarativeOrganizerCollection*"
+            Parameter { name: "collectionId"; type: "string" }
+        }
+    }
+    Component {
+        name: "QDeclarativeOrganizerNote"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["Note 5.0"]
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerRecurrenceRule"
+        prototype: "QObject"
+        exports: ["RecurrenceRule 5.0"]
+        Enum {
+            name: "Frequency"
+            values: {
+                "Invalid": 0,
+                "Daily": 1,
+                "Weekly": 2,
+                "Monthly": 3,
+                "Yearly": 4
+            }
+        }
+        Enum {
+            name: "Month"
+            values: {
+                "January": 1,
+                "February": 2,
+                "March": 3,
+                "April": 4,
+                "May": 5,
+                "June": 6,
+                "July": 7,
+                "August": 8,
+                "September": 9,
+                "October": 10,
+                "November": 11,
+                "December": 12
+            }
+        }
+        Property { name: "frequency"; type: "Frequency" }
+        Property { name: "limit"; type: "QVariant" }
+        Property { name: "interval"; type: "int" }
+        Property { name: "daysOfWeek"; type: "QVariantList" }
+        Property { name: "daysOfMonth"; type: "QVariantList" }
+        Property { name: "daysOfYear"; type: "QVariantList" }
+        Property { name: "monthsOfYear"; type: "QVariantList" }
+        Property { name: "positions"; type: "QVariantList" }
+        Property { name: "firstDayOfWeek"; type: "Qt::DayOfWeek" }
+        Signal { name: "recurrenceRuleChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerTodo"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["Todo 5.0"]
+        Property { name: "isAllDay"; type: "bool" }
+        Property { name: "allDay"; type: "bool" }
+        Property { name: "progressPercentage"; type: "int" }
+        Property { name: "percentageComplete"; type: "int" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "dueDateTime"; type: "QDateTime" }
+        Property { name: "finishedDateTime"; type: "QDateTime" }
+        Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
+        Property { name: "status"; type: "QDeclarativeOrganizerTodoProgress::StatusType" }
+        Property {
+            name: "recurrence"
+            type: "QDeclarativeOrganizerItemRecurrence"
+            isReadonly: true
+            isPointer: true
+        }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerTodoOccurrence"
+        defaultProperty: "itemDetails"
+        prototype: "QDeclarativeOrganizerItem"
+        exports: ["TodoOccurrence 5.0"]
+        Property { name: "progressPercentage"; type: "int" }
+        Property { name: "percentageComplete"; type: "int" }
+        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "dueDateTime"; type: "QDateTime" }
+        Property { name: "finishedDateTime"; type: "QDateTime" }
+        Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
+        Property { name: "status"; type: "QDeclarativeOrganizerTodoProgress::StatusType" }
+        Property { name: "parentId"; type: "string" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerTodoProgress"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["TodoProgress 5.0"]
+        Enum {
+            name: "TodoProgressField"
+            values: {
+                "FieldStatus": 2,
+                "FieldPercentage": 1,
+                "FieldFinishedDateTime": 0
+            }
+        }
+        Enum {
+            name: "StatusType"
+            values: {
+                "NotStarted": 0,
+                "InProgress": 1,
+                "Complete": 2
+            }
+        }
+        Property { name: "percentage"; type: "int" }
+        Property { name: "percentageComplete"; type: "int" }
+        Property { name: "finishedDateTime"; type: "QDateTime" }
+        Property { name: "status"; type: "StatusType" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerTodoTime"
+        prototype: "QDeclarativeOrganizerItemDetail"
+        exports: ["TodoTime 5.0"]
+        Enum {
+            name: "TodoTimeField"
+            values: {
+                "FieldStartDateTime": 0,
+                "FieldDueDateTime": 1,
+                "FieldAllDay": 2
+            }
+        }
+        Property { name: "allDay"; type: "bool" }
+        Property { name: "startDateTime"; type: "QDateTime" }
+        Property { name: "dueDateTime"; type: "QDateTime" }
+        Signal { name: "valueChanged" }
+    }
+}

@@ -242,8 +242,8 @@ private:
 tst_QOrganizerItemAsync::tst_QOrganizerItemAsync()
 {
     // ensure we can load all of the plugins we need to.
-    QString path = QApplication::applicationDirPath() + "/dummyplugin/plugins";
-    QApplication::addLibraryPath(path);
+    QString path = QCoreApplication::applicationDirPath() + QStringLiteral("/dummyplugin/plugins");
+    QCoreApplication::addLibraryPath(path);
 
     qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
 }

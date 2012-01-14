@@ -233,8 +233,8 @@ private:
 tst_QContactJsonDbAsync::tst_QContactJsonDbAsync()
 {
     // ensure we can load all of the plugins we need to.
-    QString path = QApplication::applicationDirPath() + "/dummyplugin/plugins";
-    QApplication::addLibraryPath(path);
+    QString path = QCoreApplication::applicationDirPath() + "/dummyplugin/plugins";
+    QCoreApplication::addLibraryPath(path);
 
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
 }

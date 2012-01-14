@@ -53,15 +53,25 @@ Rectangle {
     //![Grid Editable Data]
 
         //![Create Event Title]
-        Row {
+
+        Column {
             spacing: 2
 
             Text {
+                id: editorTitleLabel
                 text: "Event Label:"
             }
-            TextEdit {
-                id: displayLabel
-                text: (eventItem) ? eventItem.displayLabel : ""
+            Rectangle {
+                id: organizerTitle
+                border.color: "black"
+                border.width: 2
+                radius: 5
+                width: displayLabel.width
+                height: displayLabel.height
+                TextEdit {
+                    id: displayLabel
+                    text: (eventItem) ? eventItem.displayLabel : ""
+                }
             }
         }
         //![Create Event Title]
@@ -70,6 +80,7 @@ Rectangle {
         Text {
             text: "Start:"
         }
+
         //![Start Title]
 
         //![Events Start Date]

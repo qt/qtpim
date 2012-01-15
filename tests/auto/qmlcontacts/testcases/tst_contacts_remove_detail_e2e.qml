@@ -43,19 +43,13 @@ import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
 
-TestCase {
+ContactsSavingTestCase {
     id: testcase
     name: "ContactsRemoveDetailE2ETests"
 
     ContactModel {
         id: model
         autoUpdate: true
-    }
-
-    SignalSpy {
-        id: spy
-        signalName: "contactsChanged"
-        target: model
     }
 
     // Tests
@@ -145,28 +139,27 @@ TestCase {
     // Init & teardown
 
     function initTestCase() {
-        spy.wait()
+        initTestForModel(model);
+        waitForContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
-        cleanup()
+        emptyContacts(model);
+    }
+
+    function init() {
+        initTestForModel(model);
     }
 
     function cleanup() {
-        var amt = model.contacts.length
-        for (var i = 0; i < amt; i++) {
-            var id = model.contacts[0].contactId
-            model.removeContact(id)
-            spy.wait()
-        }
-        compare(model.contacts.length, 0, "model is empty")
+        emptyContacts(model);
+    }
+
+    function cleanupTestCase() {
+        emptyContacts(model);
     }
 
     // Helpers
-
-    function waitForContactsChanged() {
-        spy.wait();
-    }
 
     function verifyIsUndefined(object) {
         verify(!object, "Object " + object + " is undefined");

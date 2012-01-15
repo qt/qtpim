@@ -43,7 +43,7 @@ import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
 
-TestCase {
+ContactsSavingTestCase {
 
     name: "ContactsFilteringTests"
 
@@ -57,12 +57,6 @@ TestCase {
         manager: "jsondb"
         autoUpdate: true
         filter: filter
-    }
-
-    SignalSpy {
-        id: contactsChangedSpy
-        signalName: "contactsChanged"
-        target: model
     }
 
     Contact {
@@ -79,33 +73,34 @@ TestCase {
 
     // Clean and populate the database with test contacts
     function initTestCase() {
-        contactsChangedSpy.wait();
-
-        cleanupTestCase();
+        initTestForModel(model);
+        waitForContactsChanged();
+        // The wait is needed so the model is populated
+        // (e.g. with garbage left from previous test runs)
+        // before cleanup() is called.
+        emptyContacts(model);
 
         model.saveContact(contact1);
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         model.saveContact(contact2);
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         model.saveContact(contact3);
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
     }
 
     // Clean database
     function cleanupTestCase() {
-        var amt = model.contacts.length;
-        for (var i = 0; i < amt; ++i) {
-            var id = model.contacts[0].contactId;
-            model.removeContact(id);
-            contactsChangedSpy.wait();
+        if (model.filter) {
+            model.filter = null;
+            waitForContactsChanged();
         }
-        compare(model.contacts.length, 0);
+        emptyContacts(model);
     }
 
     // Clear filter
     function cleanup() {
         model.filter = null;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 3);
     }
 
@@ -116,7 +111,7 @@ TestCase {
                 "}",
                 this);
         model.filter = newFilter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare(model.contacts.length, 1);
     }
 
@@ -128,7 +123,7 @@ TestCase {
     function filterById(id) {
         filter.ids = [id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 1);
         compare(model.contacts[0].contactId, id);
     }
@@ -154,7 +149,7 @@ TestCase {
         var id2 = model.contacts[1].contactId;
         filter.ids = [id1, id2];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 2);
         compare(model.contacts[0].contactId, id1);
         compare(model.contacts[1].contactId, id2);
@@ -175,14 +170,14 @@ TestCase {
     function test_filterByNonExistingId() {
         filter.ids = ["foo bar"];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 0);
     }
 
     function test_filterByMultipleNonExistingIds() {
         filter.ids = ["foo", "bar", "baz", "qux"];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 0);
     }
 
@@ -190,7 +185,7 @@ TestCase {
         var id = model.contacts[0].contactId;
         filter.ids = ["foo bar", id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 1);
         compare(model.contacts[0].contactId, id);
     }
@@ -198,14 +193,14 @@ TestCase {
     function test_filterByEmptyList() {
         filter.ids = [];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 3);
     }
 
     function test_filterByTwoOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 1);
     }
 
@@ -213,14 +208,14 @@ TestCase {
     function test_filterByTwoCouplesOfOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[1].contactId];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 2);
     }
 
     function test_filterByAlternatingOverlappingIds() {
         filter.ids = [model.contacts[0].contactId, model.contacts[1].contactId, model.contacts[0].contactId];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
         compare (model.contacts.length, 2);
     }
 
@@ -230,7 +225,7 @@ TestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -244,7 +239,7 @@ TestCase {
 
         filter.ids = [idOfAnotherContact];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -257,13 +252,13 @@ TestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         contact = model.contacts[0];
 
         filter.ids = [id, idOfAnotherContact];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         verify(contact, "contact is defined");
         verify(contact.contactId, "contact id is defined");
@@ -277,10 +272,10 @@ TestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         model.fetchContacts([id]);
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         compare(model.contacts[0].contactId, id);
     }
@@ -293,10 +288,10 @@ TestCase {
 
         filter.ids = [id];
         model.filter = filter;
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         model.fetchContacts([idOfAnotherContact]);
-        contactsChangedSpy.wait();
+        waitForContactsChanged();;
 
         compare(model.contacts.length, 1, "contacts length");
         compare(model.contacts[0].contactId, id, "contact is still present");

@@ -329,7 +329,6 @@ QContact QContactJsonDbEngine::contact(const QContactId& contactId, const QConta
 bool QContactJsonDbEngine::saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
 {
     QContactSaveRequest saveReq;
-    *error = QContactManager::NoError;
 
     saveReq.setContacts(*contacts);
     doSyncRequest(&saveReq, 5000);
@@ -337,13 +336,11 @@ bool QContactJsonDbEngine::saveContacts(QList<QContact>* contacts, QMap<int, QCo
     if (*error != QContactManager::NoError) {
         if (qt_debug_jsondb_contacts())
             qDebug() << "[QContactJsonDb] Error at " << Q_FUNC_INFO << ":" << *error;
-        return false;
     }
 
     for (int i = 0; i < saveReq.contacts().size(); i++)
         contacts->replace(i, saveReq.contacts()[i]);
     *errorMap = saveReq.errorMap();
-    *error = saveReq.error();
     return *error == QContactManager::NoError;  // No problem detected, return NoError
 }
 
@@ -353,14 +350,13 @@ bool QContactJsonDbEngine::saveContacts(QList<QContact>* contacts, QMap<int, QCo
 
 bool QContactJsonDbEngine::removeContacts(const QList<QContactId>& ids, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
 {
-    Q_UNUSED(errorMap);
     QContactRemoveRequest removeReq;
-    *error = QContactManager::NoError;
     removeReq.setContactIds(ids);
     doSyncRequest(&removeReq, 5000);
     *error = removeReq.error();
+    *errorMap = removeReq.errorMap();
     if (*error != QContactManager::NoError) {
-        qDebug() << "Error at function removeContacts:" << *error;
+        qWarning() << "Error at function removeContacts:" << *error;
         return false;
     } else {
         return true;

@@ -120,6 +120,7 @@ public:
     virtual bool isFilterSupported(const QContactFilter &filter) const;
     virtual QList<QVariant::Type> supportedDataTypes() const;
     virtual QStringList supportedContactTypes() const;
+    virtual QStringList supportedContactDetailTypes() const;
 
 Q_SIGNALS:
     void dataChanged();

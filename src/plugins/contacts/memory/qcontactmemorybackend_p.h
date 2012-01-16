@@ -225,6 +225,11 @@ public:
     {
         return QContactManagerEngine::supportedContactTypes();
     }
+    virtual QStringList supportedContactDetailTypes() const
+    {
+        return QContactManagerEngine::supportedContactDetailTypes();
+    }
+
 
 protected:
     QContactMemoryEngine(QContactMemoryEngineData *data);

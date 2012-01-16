@@ -728,8 +728,47 @@ QStringList QContactManagerEngine::supportedContactTypes() const
  */
 
 /*!
+  Returns the list of contact detail types which are supported by this engine.
+ */
+QStringList QContactManagerEngine::supportedContactDetailTypes() const
+{
+    QStringList supportedDetails;
+    supportedDetails << QContactAddress::DefinitionName
+                     << QContactAnniversary::DefinitionName
+                     << QContactAvatar::DefinitionName
+                     << QContactBirthday::DefinitionName
+                     << QContactDisplayLabel::DefinitionName
+                     << QContactEmailAddress::DefinitionName
+                     << QContactExtendedDetail::DefinitionName
+                     << QContactFamily::DefinitionName
+                     << QContactFavorite::DefinitionName
+                     << QContactGender::DefinitionName
+                     << QContactGeoLocation::DefinitionName
+                     << QContactGlobalPresence::DefinitionName
+                     << QContactGuid::DefinitionName
+                     << QContactHobby::DefinitionName
+                     << QContactName::DefinitionName
+                     << QContactNickname::DefinitionName
+                     << QContactNote::DefinitionName
+                     << QContactOnlineAccount::DefinitionName
+                     << QContactOrganization::DefinitionName
+                     << QContactPersonId::DefinitionName
+                     << QContactPhoneNumber::DefinitionName
+                     << QContactPresence::DefinitionName
+                     << QContactRingtone::DefinitionName
+                     << QContactSyncTarget::DefinitionName
+                     << QContactTag::DefinitionName
+                     << QContactThumbnail::DefinitionName
+                     << QContactTimestamp::DefinitionName
+                     << QContactType::DefinitionName
+                     << QContactUrl::DefinitionName;
+    return supportedDetails;
+}
+
+/*!
   Checks that the given contact \a contact does not have a type which
-  is not supported.
+  is not supported. It also checks if the details of the given
+  \a contact are valid or not.
   Note that this function is unable to ensure that all the details of
   \a contact are supported by a certain back-end. It also cannot
   check that the access constraints (such as CreateOnly and ReadOnly)
@@ -751,6 +790,17 @@ bool QContactManagerEngine::validateContact(const QContact &contact, QContactMan
     if ( (!contact.id().isNull()) && (contact.id().managerUri() != this->managerUri())) {
         *error = QContactManager::DoesNotExistError;
         return false;
+    }
+
+    QList<QContactDetail> contactDetailList = contact.details();
+    for (int i=0; i<contactDetailList.count(); i++)
+    {
+        QContactDetail currentDetail = contactDetailList.value(i);
+        if (!supportedContactDetailTypes().contains(currentDetail.definitionName()))
+        {
+            *error = QContactManager::InvalidDetailError;
+            return false;
+        }
     }
 
     *error = QContactManager::NoError;

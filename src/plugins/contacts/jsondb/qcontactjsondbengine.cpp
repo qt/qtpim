@@ -124,14 +124,52 @@ QString QContactJsonDbEngine::managerName() const
     return QContactJsonDbStr::contactJsonDbEngineName();
 }
 
-
+QStringList QContactJsonDbEngine::supportedContactDetailTypes() const
+{
+    QStringList supportedDetails;
+    supportedDetails << QContactAddress::DefinitionName
+                     << QContactAvatar::DefinitionName
+                     << QContactBirthday::DefinitionName
+                     << QContactDisplayLabel::DefinitionName
+                     << QContactEmailAddress::DefinitionName
+                     << QContactExtendedDetail::DefinitionName
+                     << QContactGender::DefinitionName
+                     << QContactName::DefinitionName
+                     << QContactNickname::DefinitionName
+                     << QContactNote::DefinitionName
+                     << QContactOrganization::DefinitionName
+                     << QContactPersonId::DefinitionName
+                     << QContactPhoneNumber::DefinitionName
+                     << QContactRingtone::DefinitionName
+                     << QContactType::DefinitionName
+                     << QContactUrl::DefinitionName;
+    return supportedDetails;
+}
 
 
 
 bool QContactJsonDbEngine::validateContact(const QContact& contact, QContactManager::Error* error) const
 {
-    return QContactManagerEngine::validateContact(contact, error);
+    QContactManagerEngine::validateContact(contact, error);
+    if ((*error == QContactManager::InvalidContactTypeError) || (*error == QContactManager::DoesNotExistError))
+        return false;
+
+    QList<QContactDetail> contactDetailList = contact.details();
+
+    for (int i=0; i<contactDetailList.count(); i++)
+    {
+        QContactDetail currentDetail = contactDetailList.value(i);
+        if (!supportedContactDetailTypes().contains(currentDetail.definitionName()))
+        {
+            *error = QContactManager::InvalidDetailError;
+            return false;
+        }
+    }
+
+    *error = QContactManager::NoError;
+    return true;
 }
+
 
 QContact QContactJsonDbEngine::compatibleContact(const QContact& contact, QContactManager::Error* error) const
 {

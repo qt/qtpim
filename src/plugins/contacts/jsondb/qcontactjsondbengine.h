@@ -111,6 +111,7 @@ public:
     bool isFilterSupported(const QContactFilter& filter) const;
     QList<QVariant::Type> supportedDataTypes() const;
     QStringList supportedContactTypes() const {return (QStringList() << QContactType::TypeContact);}
+    QStringList supportedContactDetailTypes() const;
 
     /* Asynchronous Request Support - synchronous versions until thread worker is stable */
     void requestDestroyed(QContactAbstractRequest *req);

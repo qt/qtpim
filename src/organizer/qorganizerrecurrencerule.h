@@ -39,32 +39,21 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERRECURRENCERULE_H
 #define QORGANIZERRECURRENCERULE_H
 
 #include <qorganizerglobal.h>
-
-#include <QString>
-#include <QDateTime>
-#include <QSet>
-#include <QHash>
+#include <QtCore/qdatetime.h>
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif
 
 QTORGANIZER_BEGIN_NAMESPACE
-class QOrganizerRecurrenceRulePrivate;
 
+class QOrganizerRecurrenceRulePrivate;
 class Q_ORGANIZER_EXPORT QOrganizerRecurrenceRule
 {
 public:
-    QOrganizerRecurrenceRule();
-    ~QOrganizerRecurrenceRule();
-    QOrganizerRecurrenceRule(const QOrganizerRecurrenceRule& other);
-    QOrganizerRecurrenceRule& operator=(const QOrganizerRecurrenceRule& other);
-    bool operator==(const QOrganizerRecurrenceRule& other) const;
-    // enums
     enum Frequency {
         Invalid = 0,
         Daily,
@@ -94,11 +83,18 @@ public:
         DateLimit
     };
 
+    QOrganizerRecurrenceRule();
+    QOrganizerRecurrenceRule(const QOrganizerRecurrenceRule &other);
+    ~QOrganizerRecurrenceRule();
+
+    QOrganizerRecurrenceRule &operator=(const QOrganizerRecurrenceRule &other);
+    bool operator==(const QOrganizerRecurrenceRule &other) const;
+
     void setFrequency(Frequency freq);
     Frequency frequency() const;
 
     void setLimit(int count);
-    void setLimit(const QDate& date);
+    void setLimit(const QDate &date);
     void clearLimit();
 
     LimitType limitType() const;
@@ -106,35 +102,27 @@ public:
     QDate limitDate() const;
 
     void setInterval(int interval);
-    int interval() const; // units of frequency
+    int interval() const;
 
-    // Defaults for the below: empty
-    // eg: Monday,Wednesday,Thursday == every Mon, Wed and Thurs.
-    void setDaysOfWeek(const QSet<Qt::DayOfWeek>& days);
+    void setDaysOfWeek(const QSet<Qt::DayOfWeek> &days);
     QSet<Qt::DayOfWeek> daysOfWeek() const;
-    // eg: 31,-3 == 31st day of month (if it exists) and 3rd-last day of month
-    void setDaysOfMonth(const QSet<int>& days);
+
+    void setDaysOfMonth(const QSet<int> &days);
     QSet<int> daysOfMonth() const;
-    // eg: 47th,-5 == 47th and 5th-last day of year
-    void setDaysOfYear(const QSet<int>& days);
+
+    void setDaysOfYear(const QSet<int> &days);
     QSet<int> daysOfYear() const;
-    // eg: January,February == during Jan and Feb
-    void setMonthsOfYear(const QSet<Month>& months);
+
+    void setMonthsOfYear(const QSet<Month> &months);
     QSet<Month> monthsOfYear() const;
-    // eg. 13,53,-3 == weeks 13 and 53 (if it exists) and the 3rd-last week of the year
-    void setWeeksOfYear(const QSet<int>& weeks);
+
+    void setWeeksOfYear(const QSet<int> &weeks);
     QSet<int> weeksOfYear() const;
 
-    // Default: Monday
-    // sets the day that the week starts on (significant for Weekly with interval > 1, and for weekOfYear)
     void setFirstDayOfWeek(Qt::DayOfWeek day);
     Qt::DayOfWeek firstDayOfWeek() const;
 
-    // eg. frequency = Monthly, dayOfWeek = Tuesday, positions = 1,-1 means first and last Tuesday
-    // of every month.
-    // All other criteria are applied first, then for each time period as specified by frequency,
-    // dates are selected via the 1-based indices specified by position.
-    void setPositions(const QSet<int>& pos);
+    void setPositions(const QSet<int> &pos);
     QSet<int> positions() const;
 
 private:
@@ -142,10 +130,10 @@ private:
 };
 
 //hash functions
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerRecurrenceRule& rule);
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerRecurrenceRule &rule);
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule& rule);
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule);
 #endif
 
 inline uint qHash(QOrganizerRecurrenceRule::Month month)
@@ -168,4 +156,4 @@ Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule));
 Q_DECLARE_METATYPE(QSet<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>);
 Q_DECLARE_METATYPE(QSet<QDate>);
 
-#endif
+#endif // QORGANIZERRECURRENCERULE_H

@@ -39,37 +39,33 @@
 **
 ****************************************************************************/
 
-#include "qorganizeritemobserver.h"
-#include "qorganizeritemid.h"
-#include "qorganizermanager_p.h"
+#include <qorganizeritemobserver.h>
+#include <private/qorganizermanager_p.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemObserverPrivate
 {
-    public:
-        QOrganizerItemId m_id;
-        QWeakPointer<QOrganizerManager> m_manager;
-        QOrganizerManagerData* m_managerPrivate;
+public:
+    QOrganizerItemId m_id;
+    QWeakPointer<QOrganizerManager> m_manager;
+    QOrganizerManagerData *m_managerPrivate;
 };
 
 /*!
-  \class QOrganizerItemObserver
-  \brief The QOrganizerItemObserver class is a simple class that emits a signal when a single
-  particular item is updated or deleted.
-  \inmodule QtOrganizer
-
-  \ingroup organizer-main
+    \class QOrganizerItemObserver
+    \brief The QOrganizerItemObserver class is a simple class that emits a signal when a single
+           particular item is updated or deleted.
+    \inmodule QtOrganizer
+    \ingroup organizer-main
  */
 
 /*!
-  Constructs a QOrganizerItemObserver to observe the item in \a manager with the given \a itemId and a \a parent object.
+    Constructs a QOrganizerItemObserver to observe the item in \a manager with the given \a itemId
+    and a \a parent object.
  */
-QOrganizerItemObserver::QOrganizerItemObserver(QOrganizerManager* manager,
-                                               const QOrganizerItemId& itemId,
-                                               QObject* parent)
-    : QObject(parent),
-      d(new QOrganizerItemObserverPrivate)
+QOrganizerItemObserver::QOrganizerItemObserver(QOrganizerManager *manager, const QOrganizerItemId &itemId, QObject *parent)
+    : QObject(parent), d(new QOrganizerItemObserverPrivate)
 {
     d->m_id = itemId;
     d->m_manager = manager;
@@ -78,33 +74,33 @@ QOrganizerItemObserver::QOrganizerItemObserver(QOrganizerManager* manager,
 }
 
 /*!
-  Destroys this observer.
+    Destroys this observer.
  */
 QOrganizerItemObserver::~QOrganizerItemObserver()
 {
-    if (d->m_manager.data()) {
+    if (d->m_manager.data())
         d->m_managerPrivate->unregisterObserver(this);
-    }
     delete d;
 }
 
 /*!
-  Returns the id of the item that this object observes.
+    Returns the ID of the item that this object observes.
  */
-QOrganizerItemId QOrganizerItemObserver::itemId() const {
+QOrganizerItemId QOrganizerItemObserver::itemId() const
+{
     return d->m_id;
 }
 
 /*!
-  \fn void QOrganizerItemObserver::itemChanged()
+    \fn void QOrganizerItemObserver::itemChanged()
 
-  This signal is emitted when the observed item is changed in the manager.
+    This signal is emitted when the observed item is changed in the manager.
  */
 
 /*!
-  \fn void QOrganizerItemObserver::itemRemoved()
+    \fn void QOrganizerItemObserver::itemRemoved()
 
-  This signal is emitted when the observed item is removed from the manager.
+    This signal is emitted when the observed item is removed from the manager.
  */
 
 #include "moc_qorganizeritemobserver.cpp"

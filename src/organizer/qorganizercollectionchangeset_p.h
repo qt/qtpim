@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERCOLLECTIONCHANGESET_P_H
 #define QORGANIZERCOLLECTIONCHANGESET_P_H
 
@@ -54,9 +53,7 @@
 // We mean it.
 //
 
-#include <qorganizerglobal.h>
 #include <qorganizercollectionid.h>
-
 #include <QtCore/qset.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -65,18 +62,17 @@ class QOrganizerCollectionChangeSetData : public QSharedData
 {
 public:
     QOrganizerCollectionChangeSetData()
-        : QSharedData(),
-        m_dataChanged(false)
+        : QSharedData(), m_dataChanged(false)
     {
     }
 
     QOrganizerCollectionChangeSetData(const QOrganizerCollectionChangeSetData& other)
         : QSharedData(other),
-        m_dataChanged(other.m_dataChanged),
-        m_addedCollections(other.m_addedCollections),
-        m_changedCollections(other.m_changedCollections),
-        m_removedCollections(other.m_removedCollections),
-        m_modifiedCollections(other.m_modifiedCollections)
+          m_dataChanged(other.m_dataChanged),
+          m_addedCollections(other.m_addedCollections),
+          m_changedCollections(other.m_changedCollections),
+          m_removedCollections(other.m_removedCollections),
+          m_modifiedCollections(other.m_modifiedCollections)
     {
     }
 
@@ -93,4 +89,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERCOLLECTIONCHANGESET_P_H

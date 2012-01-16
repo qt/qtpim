@@ -39,11 +39,9 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERCOLLECTIONCHANGESET_H
 #define QORGANIZERCOLLECTIONCHANGESET_H
 
-#include <qorganizerglobal.h>
 #include <qorganizercollectionid.h>
 #include <qorganizermanager.h>
 
@@ -57,27 +55,27 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionChangeSet
 {
 public:
     QOrganizerCollectionChangeSet();
-    QOrganizerCollectionChangeSet(const QOrganizerCollectionChangeSet& other);
+    QOrganizerCollectionChangeSet(const QOrganizerCollectionChangeSet &other);
     ~QOrganizerCollectionChangeSet();
 
-    QOrganizerCollectionChangeSet& operator=(const QOrganizerCollectionChangeSet& other);
+    QOrganizerCollectionChangeSet &operator=(const QOrganizerCollectionChangeSet &other);
 
     void setDataChanged(bool dataChanged);
     bool dataChanged() const;
 
     QSet<QOrganizerCollectionId> addedCollections() const;
-    void insertAddedCollection(const QOrganizerCollectionId& addedCollectionId);
-    void insertAddedCollections(const QList<QOrganizerCollectionId>& addedCollectionIds);
+    void insertAddedCollection(const QOrganizerCollectionId &collectionId);
+    void insertAddedCollections(const QList<QOrganizerCollectionId> &collectionIds);
     void clearAddedCollections();
 
     QSet<QOrganizerCollectionId> changedCollections() const;
-    void insertChangedCollection(const QOrganizerCollectionId& addedCollectionId);
-    void insertChangedCollections(const QList<QOrganizerCollectionId>& addedCollectionIds);
+    void insertChangedCollection(const QOrganizerCollectionId &collectionId);
+    void insertChangedCollections(const QList<QOrganizerCollectionId> &collectionIds);
     void clearChangedCollections();
 
     QSet<QOrganizerCollectionId> removedCollections() const;
-    void insertRemovedCollection(const QOrganizerCollectionId& addedCollectionId);
-    void insertRemovedCollections(const QList<QOrganizerCollectionId>& addedCollectionIds);
+    void insertRemovedCollection(const QOrganizerCollectionId &collectionId);
+    void insertRemovedCollections(const QList<QOrganizerCollectionId> &collectionIds);
     void clearRemovedCollections();
 
     QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > modifiedCollections() const;
@@ -93,4 +91,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERCOLLECTIONCHANGESET_H

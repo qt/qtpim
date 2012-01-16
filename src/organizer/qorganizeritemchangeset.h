@@ -39,16 +39,13 @@
 **
 ****************************************************************************/
 
-
 #ifndef QORGANIZERITEMCHANGESET_H
 #define QORGANIZERITEMCHANGESET_H
 
-#include <qorganizerglobal.h>
 #include <qorganizeritemid.h>
 #include <qorganizermanager.h>
 
 #include <QtCore/qset.h>
-#include <QtCore/qshareddata.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -58,27 +55,27 @@ class Q_ORGANIZER_EXPORT QOrganizerItemChangeSet
 {
 public:
     QOrganizerItemChangeSet();
-    QOrganizerItemChangeSet(const QOrganizerItemChangeSet& other);
+    QOrganizerItemChangeSet(const QOrganizerItemChangeSet &other);
     ~QOrganizerItemChangeSet();
 
-    QOrganizerItemChangeSet& operator=(const QOrganizerItemChangeSet& other);
+    QOrganizerItemChangeSet &operator=(const QOrganizerItemChangeSet &other);
 
     void setDataChanged(bool dataChanged);
     bool dataChanged() const;
 
     QSet<QOrganizerItemId> addedItems() const;
-    void insertAddedItem(const QOrganizerItemId& addedItemId);
-    void insertAddedItems(const QList<QOrganizerItemId>& addedItemIds);
+    void insertAddedItem(const QOrganizerItemId &itemId);
+    void insertAddedItems(const QList<QOrganizerItemId> &itemIds);
     void clearAddedItems();
 
     QSet<QOrganizerItemId> changedItems() const;
-    void insertChangedItem(const QOrganizerItemId& addedItemId);
-    void insertChangedItems(const QList<QOrganizerItemId>& addedItemIds);
+    void insertChangedItem(const QOrganizerItemId &itemId);
+    void insertChangedItems(const QList<QOrganizerItemId> &itemIds);
     void clearChangedItems();
 
     QSet<QOrganizerItemId> removedItems() const;
-    void insertRemovedItem(const QOrganizerItemId& addedItemId);
-    void insertRemovedItems(const QList<QOrganizerItemId>& addedItemIds);
+    void insertRemovedItem(const QOrganizerItemId &itemId);
+    void insertRemovedItems(const QList<QOrganizerItemId> &itemIds);
     void clearRemovedItems();
 
     QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > modifiedItems() const;
@@ -94,4 +91,4 @@ private:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMCHANGESET_H

@@ -40,33 +40,23 @@
 ****************************************************************************/
 
 #include <qorganizercollectionchangeset.h>
-#include "qorganizercollectionchangeset_p.h"
+#include <private/qorganizercollectionchangeset_p.h>
 #include <qorganizermanagerengine.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-   \class QOrganizerCollectionChangeSet
+    \class QOrganizerCollectionChangeSet
+    \brief The QOrganizerCollectionChangeSet class provides a simple API to simplify the emission
+           of state-change signals for collections from QOrganizerManagerEngine implementations.
+    \inmodule QtOrganizer
+    \ingroup organizer-backends
 
-   \brief The QOrganizerCollectionChangeSet class provides a simple API to
-   simplify the emission of state-change signals from QOrganizerManagerEngine
-   implementations.
-
-  \inmodule QtOrganizer
-
-
-
-   This class can be utilized by backend implementations to ensure
-   correct emission of the \l QOrganizerManagerEngine::dataChanged(),
-   \l QOrganizerManagerEngine::itemsAdded(),
-   \l QOrganizerManagerEngine::itemsChanged() and
-   \l QOrganizerManagerEngine::itemsRemoved().
-
-   \sa QOrganizerManagerEngine
+    This class should only be used by backend developers.
  */
 
 /*!
-   Constructs a new change set
+    Constructs a new change set.
  */
 QOrganizerCollectionChangeSet::QOrganizerCollectionChangeSet()
     : d(new QOrganizerCollectionChangeSetData)
@@ -74,33 +64,34 @@ QOrganizerCollectionChangeSet::QOrganizerCollectionChangeSet()
 }
 
 /*!
-   Constructs a copy of the \a other change set
+    Constructs a copy of the \a other change set.
  */
-QOrganizerCollectionChangeSet::QOrganizerCollectionChangeSet(const QOrganizerCollectionChangeSet& other)
+QOrganizerCollectionChangeSet::QOrganizerCollectionChangeSet(const QOrganizerCollectionChangeSet &other)
     : d(other.d)
 {
 }
 
 /*!
-   Frees the memory used by this change set
+    Frees the memory used by this change set.
  */
 QOrganizerCollectionChangeSet::~QOrganizerCollectionChangeSet()
 {
 }
 
 /*!
-   Assigns this change set to be equal to \a other
+    Assigns this change set to be equal to \a other.
  */
-QOrganizerCollectionChangeSet& QOrganizerCollectionChangeSet::operator=(const QOrganizerCollectionChangeSet& other)
+QOrganizerCollectionChangeSet &QOrganizerCollectionChangeSet::operator=(const QOrganizerCollectionChangeSet &other)
 {
     d = other.d;
     return *this;
 }
 
 /*!
-   Sets the data changed flag to \a dataChanged.  If this is set to true prior to calling \l emitSignals(),
-   only the \l QOrganizerManagerEngine::dataChanged() signal will be emitted; otherwise, the appropriate
-   finer-grained signals will be emitted.
+    Sets the data changed flag to \a dataChanged.
+
+    If this is set to true prior to calling emitSignals(), only the QOrganizerManagerEngine::dataChanged()
+    signal will be emitted; otherwise, the appropriate finer-grained signals will be emitted.
  */
 void QOrganizerCollectionChangeSet::setDataChanged(bool dataChanged)
 {
@@ -108,7 +99,7 @@ void QOrganizerCollectionChangeSet::setDataChanged(bool dataChanged)
 }
 
 /*!
-   Returns the value of the data changed flag
+    Returns the value of the data changed flag.
  */
 bool QOrganizerCollectionChangeSet::dataChanged() const
 {
@@ -116,8 +107,7 @@ bool QOrganizerCollectionChangeSet::dataChanged() const
 }
 
 /*!
-   Returns the set of ids of collections which have been added to
-   the database.
+    Returns the set of IDs of collections which have been added to the database.
  */
 QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::addedCollections() const
 {
@@ -125,29 +115,29 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::addedCollections() c
 }
 
 /*!
-  Inserts the given collection id \a addedOrganizerCollectionId into the set of ids of collections
-  which have been added to the database.
+    Inserts the given \a collectionId into the set of IDs of collections which have been added to
+    the database.
  */
-void QOrganizerCollectionChangeSet::insertAddedCollection(const QOrganizerCollectionId& addedOrganizerCollectionId)
+void QOrganizerCollectionChangeSet::insertAddedCollection(const QOrganizerCollectionId &collectionId)
 {
-    d->m_addedCollections.insert(addedOrganizerCollectionId);
-    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(addedOrganizerCollectionId, QOrganizerManager::Add));
+    d->m_addedCollections.insert(collectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(collectionId, QOrganizerManager::Add));
 }
 
 /*!
-  Inserts each of the given collection ids \a addedOrganizerCollectionIds into
-  the set of ids of collections which have been added to the database.
+    Inserts each of the given \a collectionIds into the set of IDs of collections which have been
+    added to the database.
  */
-void QOrganizerCollectionChangeSet::insertAddedCollections(const QList<QOrganizerCollectionId>& addedOrganizerCollectionIds)
+void QOrganizerCollectionChangeSet::insertAddedCollections(const QList<QOrganizerCollectionId> &collectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, addedOrganizerCollectionIds) {
+    foreach (const QOrganizerCollectionId &id, collectionIds) {
         d->m_addedCollections.insert(id);
         d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Add));
     }
 }
 
 /*!
-  Clears the set of ids of collections which have been added to the database
+    Clears the set of IDs of collections which have been added to the database.
  */
 void QOrganizerCollectionChangeSet::clearAddedCollections()
 {
@@ -155,8 +145,7 @@ void QOrganizerCollectionChangeSet::clearAddedCollections()
 }
 
 /*!
-   Returns the set of ids of collections which have been changed in
-   the database.
+    Returns the set of IDs of collections which have been changed in the database.
  */
 QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::changedCollections() const
 {
@@ -164,29 +153,29 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::changedCollections()
 }
 
 /*!
-  Inserts the given collection id \a changedOrganizerCollectionId into the set of ids of collections
-  which have been changed to the database.
+    Inserts the given \a collectionId into the set of IDs of collections which have been changed in
+    the database.
  */
-void QOrganizerCollectionChangeSet::insertChangedCollection(const QOrganizerCollectionId& changedOrganizerCollectionId)
+void QOrganizerCollectionChangeSet::insertChangedCollection(const QOrganizerCollectionId &collectionId)
 {
-    d->m_changedCollections.insert(changedOrganizerCollectionId);
-    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(changedOrganizerCollectionId, QOrganizerManager::Change));
+    d->m_changedCollections.insert(collectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(collectionId, QOrganizerManager::Change));
 }
 
 /*!
-  Inserts each of the given collection ids \a changedOrganizerCollectionIds into the set of ids of collections
-  which have been changed to the database.
+    Inserts each of the given \a collectionIds into the set of IDs of collections which have been
+    changed in the database.
  */
-void QOrganizerCollectionChangeSet::insertChangedCollections(const QList<QOrganizerCollectionId>& changedOrganizerCollectionIds)
+void QOrganizerCollectionChangeSet::insertChangedCollections(const QList<QOrganizerCollectionId> &collectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, changedOrganizerCollectionIds) {
+    foreach (const QOrganizerCollectionId &id, collectionIds) {
         d->m_changedCollections.insert(id);
         d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Change));
     }
 }
 
 /*!
-  Clears the set of ids of collections which have been changed to the database
+    Clears the set of IDs of collections which have been changed in the database.
  */
 void QOrganizerCollectionChangeSet::clearChangedCollections()
 {
@@ -194,8 +183,7 @@ void QOrganizerCollectionChangeSet::clearChangedCollections()
 }
 
 /*!
-   Returns the set of ids of collections which have been removed from
-   the database.
+    Returns the set of IDs of collections which have been removed from the database.
  */
 QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::removedCollections() const
 {
@@ -203,29 +191,29 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::removedCollections()
 }
 
 /*!
-  Inserts the given collection id \a removedOrganizerCollectionId into the set of ids of collections
-  which have been removed to the database.
+    Inserts the given \a collectionId into the set of IDs of collections which have been removed from
+    the database.
  */
-void QOrganizerCollectionChangeSet::insertRemovedCollection(const QOrganizerCollectionId& removedOrganizerCollectionId)
+void QOrganizerCollectionChangeSet::insertRemovedCollection(const QOrganizerCollectionId &collectionId)
 {
-    d->m_removedCollections.insert(removedOrganizerCollectionId);
-    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(removedOrganizerCollectionId, QOrganizerManager::Remove));
+    d->m_removedCollections.insert(collectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(collectionId, QOrganizerManager::Remove));
 }
 
 /*!
-  Inserts each of the given collection ids \a removedOrganizerCollectionIds into the set of ids of collections
-  which have been removed to the database.
+    Inserts each of the given \a collectionIds into the set of IDs of collections which have been
+    removed from the database.
  */
-void QOrganizerCollectionChangeSet::insertRemovedCollections(const QList<QOrganizerCollectionId>& removedOrganizerCollectionIds)
+void QOrganizerCollectionChangeSet::insertRemovedCollections(const QList<QOrganizerCollectionId> &collectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, removedOrganizerCollectionIds) {
+    foreach (const QOrganizerCollectionId &id, collectionIds) {
         d->m_removedCollections.insert(id);
         d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Remove));
     }
 }
 
 /*!
-  Clears the set of ids of collections which have been removed to the database
+    Clears the set of ids of collections which have been removed from the database.
  */
 void QOrganizerCollectionChangeSet::clearRemovedCollections()
 {
@@ -233,9 +221,9 @@ void QOrganizerCollectionChangeSet::clearRemovedCollections()
 }
 
 /*!
-   Returns the list of ids of organizer collections which have been added, changed or removed from
-   the database. The list includes information about which database operation was done. The ids and
-   operations are ordered so that the first operation is first in the list.
+    Returns the list of ids of organizer collections which have been added, changed or removed from
+    the database. The list includes information about which database operation was done. The ids and
+    operations are ordered so that the first operation is first in the list.
  */
 QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > QOrganizerCollectionChangeSet::modifiedCollections() const
 {
@@ -243,7 +231,7 @@ QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > QOrganizerCo
 }
 
 /*!
-  Clears the list of ids of organizer collections which have been added, changed or removed from the database
+    Clears the list of ids of organizer collections which have been added, changed or removed from the database
  */
 void QOrganizerCollectionChangeSet::clearModifiedCollections()
 {
@@ -251,7 +239,7 @@ void QOrganizerCollectionChangeSet::clearModifiedCollections()
 }
 
 /*!
-   Clears all flags and sets of ids in this change set
+    Clears all flags and sets of IDs in this change set.
  */
 void QOrganizerCollectionChangeSet::clearAll()
 {
@@ -263,7 +251,8 @@ void QOrganizerCollectionChangeSet::clearAll()
 }
 
 /*!
-   Emits the appropriate signals from the given \a engine given the state of the change set
+    Emits the appropriate signals from the given \a engine given the state of the change set. Note
+    that the flags and sets of IDs are not cleared after signals are emitted.
  */
 void QOrganizerCollectionChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
 {

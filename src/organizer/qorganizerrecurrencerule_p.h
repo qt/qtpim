@@ -53,9 +53,7 @@
 // We mean it.
 //
 
-#include <QSet>
-#include <QSharedData>
-#include "qorganizerrecurrencerule.h"
+#include <qorganizerrecurrencerule.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -63,30 +61,20 @@ class QOrganizerRecurrenceRulePrivate : public QSharedData
 {
 public:
     QOrganizerRecurrenceRulePrivate()
-            : QSharedData(),
-            frequency(QOrganizerRecurrenceRule::Invalid),
-            limitCount(-1),
-            limitType(QOrganizerRecurrenceRule::NoLimit),
-            interval(1),
-            firstDayOfWeek(Qt::Monday)
+        : QSharedData(), frequency(QOrganizerRecurrenceRule::Invalid),
+          limitCount(-1), limitType(QOrganizerRecurrenceRule::NoLimit),
+          interval(1), firstDayOfWeek(Qt::Monday)
     {
-
     }
 
-    QOrganizerRecurrenceRulePrivate(const QOrganizerRecurrenceRulePrivate& other)
-            : QSharedData(other),
-            frequency(other.frequency),
-            limitCount(other.limitCount),
-            limitDate(other.limitDate),
-            limitType(other.limitType),
-            interval(other.interval),
-            daysOfWeek(other.daysOfWeek),
-            daysOfMonth(other.daysOfMonth),
-            daysOfYear(other.daysOfYear),
-            monthsOfYear(other.monthsOfYear),
-            weeksOfYear(other.weeksOfYear),
-            positions(other.positions),
-            firstDayOfWeek(other.firstDayOfWeek)
+    QOrganizerRecurrenceRulePrivate(const QOrganizerRecurrenceRulePrivate &other)
+        : QSharedData(other), frequency(other.frequency),
+          limitCount(other.limitCount), limitDate(other.limitDate),
+          limitType(other.limitType), interval(other.interval),
+          daysOfWeek(other.daysOfWeek), daysOfMonth(other.daysOfMonth),
+          daysOfYear(other.daysOfYear), monthsOfYear(other.monthsOfYear),
+          weeksOfYear(other.weeksOfYear), positions(other.positions),
+          firstDayOfWeek(other.firstDayOfWeek)
 
     {
     }
@@ -111,4 +99,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERRECURRENCERULE_P_H

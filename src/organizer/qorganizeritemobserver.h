@@ -51,19 +51,21 @@ class QOrganizerItemObserverPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemObserver : public QObject
 {
     Q_OBJECT
+
 public:
-    QOrganizerItemObserver(QOrganizerManager* manager, const QOrganizerItemId& itemId, QObject* parent = 0);
+    QOrganizerItemObserver(QOrganizerManager *manager, const QOrganizerItemId &itemId, QObject *parent = 0);
     ~QOrganizerItemObserver();
     QOrganizerItemId itemId() const;
-signals:
+
+Q_SIGNALS:
     void itemChanged();
     void itemRemoved();
 
 private:
     Q_DISABLE_COPY(QOrganizerItemObserver)
-    QOrganizerItemObserverPrivate* d;
+    QOrganizerItemObserverPrivate *d;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERITEMOBSERVER_H

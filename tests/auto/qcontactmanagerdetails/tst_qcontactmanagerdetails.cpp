@@ -456,7 +456,7 @@ void tst_QContactManagerDetails::testEmptyExtendedDetail()
     QContactExtendedDetail emptyDetail;
     QVERIFY(c.saveDetail(&emptyDetail));
     if (uri == "qtcontacts:jsondb:") {
-        QSKIP("This manager does not store empty extended details, so skipping empty extended detail test!", SkipSingle);
+        QSKIP("This manager does not store empty extended details, so skipping empty extended detail test!");
     } else {
         saveAndVerifyContact(cm.data(), c);
     }
@@ -486,7 +486,7 @@ void tst_QContactManagerDetails::testExtendedDetail()
     QVERIFY (c2.saveDetail(&extendedDetail1));
     saveAndVerifyContact(cm.data(), c2);
 
-    QSKIP("TODO: skipping random order extended detail saving due to an issue in QContact comparison operator", SkipSingle);
+    QSKIP("TODO: skipping random order extended detail saving due to an issue in QContact comparison operator");
     // Adding same details but in different order
     QContact c3;
     QVERIFY (c3.saveDetail(&extendedDetail1));

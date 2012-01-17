@@ -151,10 +151,8 @@ Rectangle {
         manager: "memory"
 
         Component.onCompleted: {
-            if (managerName == "memory") {
                 organizer.importItems(Qt.resolvedUrl(
                                           "content/organizer_ical_test.ics"))
-            }
         }
     }
 //![Organizer Model]

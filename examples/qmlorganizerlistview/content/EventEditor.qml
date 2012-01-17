@@ -39,10 +39,7 @@ Rectangle {
                                            + "," + startEvent.date)
         eventItem.endDateTime = new Date(endEvent.year + "," + endEvent.month
                                          + "," + endEvent.date)
-        if (eventItem.itemId != "qtorganizer:::")
-            organizer.saveItem(eventItem.itemId)
-        else
-            organizer.saveItem(eventItem)
+        organizer.saveItem(eventItem)
     }
     //![Save Item Function]
 
@@ -136,7 +133,7 @@ Rectangle {
 
             onClicked: {
                 organizerApplication.state = "EventListView"
-                organizer.removeItem( eventItem.itemId )
+                organizer.removeItem( eventItem.itemIdi )
             }
         }
 

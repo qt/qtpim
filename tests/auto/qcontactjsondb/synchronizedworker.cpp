@@ -39,25 +39,24 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTJSONDBBACKUP_H
-#define QCONTACTJSONDBBACKUP_H
+#include "synchronizedworker.h"
 
-#include "synchronizedjsondbclient.h"
-
-class QContactJsonDbBackup
+SynchronizedWorker::SynchronizedWorker(QObject *parent) :
+    QEventLoop(parent)
 {
-public:
-    QContactJsonDbBackup();
-    ~QContactJsonDbBackup();
-    bool loadTestData();
-private:
-    bool backupJsonDb();
-    bool clearJsonDb();
-    bool revertJsonDb();
-    bool doRequest(const QVariantList& objects, bool isInsert);
-int  wasteSomeTime();
-    QVariantList m_backupData;
-    SynchronizedJsonDbClient* m_dbClient;
-};
+}
 
-#endif // QCONTACTJSONDBBACKUP_H
+QVariant SynchronizedWorker::getDbObject(int id)
+{
+    if (!m_dbObjects.contains(id)) {
+        return QVariant();
+    } else {
+        return m_dbObjects.take(id);
+    }
+}
+
+void SynchronizedWorker::onDbResponse(int id, const QVariant &object)
+{
+    m_dbObjects.insert(id, object);
+    QEventLoop::quit();
+}

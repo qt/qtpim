@@ -39,25 +39,29 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTJSONDBBACKUP_H
-#define QCONTACTJSONDBBACKUP_H
+#ifndef SYNCHRONIZEDJSONDBCLIENT_H
+#define SYNCHRONIZEDJSONDBCLIENT_H
 
-#include "synchronizedjsondbclient.h"
+#include <QVariantMap>
+#include <QString>
+#include <jsondb-client.h>
+#include "synchronizedworker.h"
 
-class QContactJsonDbBackup
+Q_USE_JSONDB_NAMESPACE
+
+class SynchronizedJsonDbClient
 {
 public:
-    QContactJsonDbBackup();
-    ~QContactJsonDbBackup();
-    bool loadTestData();
+    SynchronizedJsonDbClient();
+    ~SynchronizedJsonDbClient();
+    QVariantMap query(const QString &query);
+    QVariantMap create(const QVariantMap &query);
+    QVariantMap update(const QVariantMap &query);
+    QVariantMap remove(const QVariantMap &query);
 private:
-    bool backupJsonDb();
-    bool clearJsonDb();
-    bool revertJsonDb();
-    bool doRequest(const QVariantList& objects, bool isInsert);
-int  wasteSomeTime();
-    QVariantList m_backupData;
-    SynchronizedJsonDbClient* m_dbClient;
+    QVariantMap getResults(int trId);
+    JsonDbClient* m_dbClient;
+    SynchronizedWorker* m_worker;
 };
 
-#endif // QCONTACTJSONDBBACKUP_H
+#endif // SYNCHRONIZEDJSONDBCLIENT_H

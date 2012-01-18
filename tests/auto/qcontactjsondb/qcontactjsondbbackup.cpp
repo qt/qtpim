@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include <QStringList>
-#include <private/jsondb-connection_p.h>
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbconverter.h"
 
@@ -48,23 +47,13 @@ QTCONTACTS_USE_NAMESPACE
 
 QContactJsonDbBackup::QContactJsonDbBackup()
 {
-//qDebug() << "INITIAL data: " << m_backupData;
+    m_dbClient = new SynchronizedJsonDbClient();
     backupJsonDb();
-//qDebug() << "Backed-up data: " << m_backupData;
-//dummyValue=wasteSomeTime();
-//qDebug() << "Dummyvalue:" << dummyValue;
     clearJsonDb();
-//dummyValue=wasteSomeTime();
-//qDebug() << "Dummyvalue:" << dummyValue;
-/*
-    revertJsonDb();
-qDebug() << "Database after restore: " << m_backupData;
-dummyValue=wasteSomeTime();
-qDebug() << "Dummyvalue:" << dummyValue;
-*/
-
- // TODO(?): loadTestData() and the revertJsonDb have issues. It looks like the Uuid field creates problems when trying to add/restore contacts: Illegal result 2 "New object should not have _uuid" 
-// Using a new version for the time being...
+    // TODO(?): loadTestData() and the revertJsonDb have issues.
+    // It looks like the Uuid field creates problems when trying to add/restore
+    // contacts: Illegal result 2 "New object should not have _uuid"
+    // Using a new version for the time being...
     loadTestData();
 }
 
@@ -74,10 +63,10 @@ qDebug() << "Dummyvalue:" << dummyValue;
 
 QContactJsonDbBackup::~QContactJsonDbBackup()
 {
-/*
-    clearJsonDb();
-    revertJsonDb();
-*/
+    if (m_dbClient) {
+        delete m_dbClient;
+        m_dbClient = NULL;
+    }
 }
 
 
@@ -85,60 +74,6 @@ QContactJsonDbBackup::~QContactJsonDbBackup()
 
 
 bool QContactJsonDbBackup::loadTestData() {
-/*
-    QStringList uuids;
-    QStringList firstNames;
-    QStringList surNames;
-    QStringList emails;
-    QStringList phones;
-
-    uuids << "aaaaaa" << "bbbbbb" << "cccccc" << "dddddd" << "eeeeee" << "ffffff";
-    firstNames << "Adam" << "Broc" << "Carey" << "David" << "Eric" << "Frank";
-    surNames << "Cianciarulo" << "Glover" << "Hart" << "Pingree" << "Eggens" << "Latham";
-    emails << "adam.cianciarulo@mx.com" << "broc.glover@mx.com" << "carey.hart@mx.com"
-           << "david.pingree@mx.com" << "eric.eggens@mx.com" << "frank.latham@mx.com";
-    phones << "1111111" << "2222222" << "3333333" << "4444444" << "5555555" << "6666666";
-
-    QVariantList contacts;
-    for(int i = 0; i < uuids.size(); ++i) {
-        QVariantMap map;
-        //map.insert(JsonDbString::kUuidStr, uuids.at(i));
-        map.insert(JsonDbString::kTypeStr, "Contact");
-        map.insert(JsonDbString::kVersionStr, "V0" + uuids.at(i));
-        QVariantMap name;
-        name.insert("firstName", firstNames.at(i));
-        name.insert("lastName", surNames.at(i));
-        map.insert("name", name);
-        QVariantMap email;
-        email.insert("subType", "home");
-        email.insert("value", emails.at(i));
-        map.insert("emails", email);
-        QVariantMap phone;
-        phone.insert("subType", "home");
-        phone.insert("value", phones.at(i));
-        map.insert("phoneNumbers", phone);
-        map.insert("photoUuid", "0");
-        contacts << map;
-    }
-    return doRequest(contacts, true);
-*/
-
-/*
-    for (int i = 0; i < numContacts; i++) {
-        QContact c;
-        QContactName name;
-        name.setFirstName("John");
-        name.setMiddleName(QString::number(i));
-        name.setLastName("Doe");
-        QContactPhoneNumber phone;
-        QString number = "555-100"+QString::number(i);
-        phone.setNumber(number);
-        c.saveDetail(&name);
-        c.saveDetail(&phone);
-        contacts.append(c);
-    }
-*/
-
     QContactManager cm;
     QContactSaveRequest csr;
 
@@ -220,10 +155,8 @@ bool QContactJsonDbBackup::loadTestData() {
 
 
 bool QContactJsonDbBackup::backupJsonDb() {
-    //QString query = "[?_type=\"Contact\"]";
     QString query = "[?_type=\"com.nokia.mp.contacts.Contact\"]";
-    QVariantMap map = JsonDbConnection::makeQueryRequest(query);
-    map = JsonDbConnection::instance()->sync(map).value<QVariantMap>();
+    QVariantMap map = m_dbClient->query(query);
     m_backupData = map["data"].value<QVariantList>();
     return true;
 }
@@ -254,11 +187,10 @@ bool QContactJsonDbBackup::doRequest(const QVariantList& objects, bool isInsert)
     for(int i = 0; i < objects.size(); ++i) {
         item = objects[i].value<QVariantMap>();
         if(isInsert) {
-            map = JsonDbConnection::makeCreateRequest(item);
+            map = m_dbClient->create(item);
         } else {
-            map = JsonDbConnection::makeRemoveRequest(item);
+            map = m_dbClient->remove(item);
         }
-        JsonDbConnection::instance()->sync(map);
     }
     return true;
 }

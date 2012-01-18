@@ -39,25 +39,49 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTJSONDBBACKUP_H
-#define QCONTACTJSONDBBACKUP_H
-
+#include <QEventLoop>
+#include <QVariant>
+#include <QDebug>
 #include "synchronizedjsondbclient.h"
 
-class QContactJsonDbBackup
+SynchronizedJsonDbClient::SynchronizedJsonDbClient()
 {
-public:
-    QContactJsonDbBackup();
-    ~QContactJsonDbBackup();
-    bool loadTestData();
-private:
-    bool backupJsonDb();
-    bool clearJsonDb();
-    bool revertJsonDb();
-    bool doRequest(const QVariantList& objects, bool isInsert);
-int  wasteSomeTime();
-    QVariantList m_backupData;
-    SynchronizedJsonDbClient* m_dbClient;
-};
+    m_dbClient = new JsonDbClient();
+    m_worker = new SynchronizedWorker();
+}
 
-#endif // QCONTACTJSONDBBACKUP_H
+SynchronizedJsonDbClient::~SynchronizedJsonDbClient()
+{
+    if (m_worker) {
+        delete m_worker;
+        m_worker = NULL;
+    }
+}
+
+QVariantMap SynchronizedJsonDbClient::query(const QString &query)
+{
+    return getResults(m_dbClient->query(query));
+}
+
+QVariantMap SynchronizedJsonDbClient::create(const QVariantMap &query)
+{
+    return getResults(m_dbClient->create(query));
+}
+
+QVariantMap SynchronizedJsonDbClient::update(const QVariantMap &query)
+{
+    return getResults(m_dbClient->update(query));
+}
+
+QVariantMap SynchronizedJsonDbClient::remove(const QVariantMap &query)
+{
+    return getResults(m_dbClient->remove(query));
+}
+
+QVariantMap SynchronizedJsonDbClient::getResults(int trId)
+{
+    QObject::connect(m_dbClient, SIGNAL(response(int, QVariant)),
+                     m_worker, SLOT(onDbResponse(int, QVariant)));
+    m_worker->exec(); // Wait for db client to finish
+    return m_worker->getDbObject(trId).toMap();
+}

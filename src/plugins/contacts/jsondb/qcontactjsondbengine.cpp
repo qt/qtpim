@@ -413,7 +413,6 @@ bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, c
   switch (feature) {
     case QContactManager::Anonymous:
     case QContactManager::ChangeLogs:
-    case QContactManager::DetailOrdering:
         return true;
     default:
         return false;

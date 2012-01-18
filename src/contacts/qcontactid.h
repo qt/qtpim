@@ -61,7 +61,7 @@ QT_END_NAMESPACE
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactId;
-Q_CONTACTS_EXPORT uint qHash(const QContactId& key);
+Q_CONTACTS_EXPORT uint qHash(const QContactId &key);
 
 class QContactManagerEngine;
 
@@ -75,9 +75,9 @@ public:
     QContactId& operator=(const QContactId &other);
     explicit QContactId(QContactEngineId *engineId);
 
-    bool operator==(const QContactId& other) const;
-    bool operator!=(const QContactId& other) const;
-    bool operator<(const QContactId& other) const;
+    bool operator==(const QContactId &other) const;
+    bool operator!=(const QContactId &other) const;
+    bool operator<(const QContactId &other) const;
 
     QString managerUri() const;
     bool isNull() const;
@@ -98,11 +98,11 @@ private:
 };
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactId& id);
+Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactId &id);
 #endif
 #ifndef QT_NO_DATASTREAM
-Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactId& id);
-Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactId& id);
+Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream &out, const QContactId &id);
+Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream &in, QContactId &id);
 #endif
 
 QTCONTACTS_END_NAMESPACE

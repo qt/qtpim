@@ -519,7 +519,7 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
 
   \sa Contact::contactId
   */
-void QDeclarativeContactModel::fetchContacts(const QStringList& contactIds)
+void QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
 {
     QList<QContactId> ids;
     foreach (const QString &contactIdString, contactIds){
@@ -680,7 +680,7 @@ void QDeclarativeContactModel::removeContact(QString id)
   \sa Contact::contactId
   */
 
-void QDeclarativeContactModel::removeContacts(const QStringList& ids)
+void QDeclarativeContactModel::removeContacts(const QStringList &ids)
 {
     QContactRemoveRequest* req = new QContactRemoveRequest(this);
     QList<QContactId> contactIdsAsList;
@@ -698,13 +698,13 @@ void QDeclarativeContactModel::removeContacts(const QStringList& ids)
     req->start();
 }
 
-void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId>& ids)
+void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 {
     if (!d->m_autoUpdate)
         return;
 
     bool emitSignal = false;
-    foreach (const QContactId& id, ids) {
+    foreach (const QContactId &id, ids) {
         if (d->m_contactMap.contains(id)) {
             int row = 0;
             //TODO:need a fast lookup
@@ -726,7 +726,7 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId>& ids)
         emit contactsChanged();
 }
 
-void QDeclarativeContactModel::onContactsChanged(const QList<QContactId>& ids)
+void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &ids)
 {
     if (d->m_autoUpdate) {
         QStringList updatedIds;

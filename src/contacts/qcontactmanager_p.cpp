@@ -108,7 +108,7 @@ static void qContactsCleanEngines()
     QContactManagerData::m_aliveEngines.clear();
 }
 
-static int parameterValue(const QMap<QString, QString>& parameters, const char* key, int defaultValue)
+static int parameterValue(const QMap<QString, QString> &parameters, const char *key, int defaultValue)
 {
     if (parameters.contains(QString::fromAscii(key))) {
         bool ok;
@@ -120,7 +120,7 @@ static int parameterValue(const QMap<QString, QString>& parameters, const char* 
     return defaultValue;
 }
 
-void QContactManagerData::createEngine(const QString& managerName, const QMap<QString, QString>& parameters)
+void QContactManagerData::createEngine(const QString &managerName, const QMap<QString, QString> &parameters)
 {
     m_engine = 0;
 
@@ -187,7 +187,7 @@ void QContactManagerData::createEngine(const QString& managerName, const QMap<QS
 
 
 /* Caller takes ownership of the id */
-QContactEngineId* QContactManagerData::createEngineContactId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString)
+QContactEngineId* QContactManagerData::createEngineContactId(const QString &managerName, const QMap<QString, QString>& parameters, const QString &engineIdString)
 {
     loadFactories();
     QContactManagerEngineFactory *engineFactory = m_engines.value(managerName);
@@ -320,7 +320,7 @@ void QContactManagerData::loadFactories()
 
 // Observer stuff
 
-void QContactManagerData::registerObserver(QContactManager* manager, QContactObserver* observer)
+void QContactManagerData::registerObserver(QContactManager *manager, QContactObserver *observer)
 {
     if (!manager)
         return;
@@ -339,7 +339,7 @@ void QContactManagerData::registerObserver(QContactManager* manager, QContactObs
     }
 }
 
-void QContactManagerData::unregisterObserver(QContactManager* manager, QContactObserver* observer)
+void QContactManagerData::unregisterObserver(QContactManager *manager, QContactObserver *observer)
 {
     Q_ASSERT(manager);
 
@@ -360,7 +360,7 @@ void QContactManagerData::unregisterObserver(QContactManager* manager, QContactO
     }
 }
 
-void QContactManagerData::_q_contactsUpdated(const QList<QContactId>& ids)
+void QContactManagerData::_q_contactsUpdated(const QList<QContactId> &ids)
 {
     foreach (const QContactId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
@@ -370,7 +370,7 @@ void QContactManagerData::_q_contactsUpdated(const QList<QContactId>& ids)
     }
 }
 
-void QContactManagerData::_q_contactsDeleted(const QList<QContactId>& ids)
+void QContactManagerData::_q_contactsDeleted(const QList<QContactId> &ids)
 {
     foreach (const QContactId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
@@ -381,12 +381,12 @@ void QContactManagerData::_q_contactsDeleted(const QList<QContactId>& ids)
 }
 
 // trampolines for private classes
-QContactManagerData* QContactManagerData::get(const QContactManager* manager)
+QContactManagerData* QContactManagerData::get(const QContactManager *manager)
 {
     return manager->d;
 }
 
-QContactManagerEngineV2* QContactManagerData::engine(const QContactManager* manager)
+QContactManagerEngineV2* QContactManagerData::engine(const QContactManager *manager)
 {
     if (manager)
         return manager->d->m_engine;

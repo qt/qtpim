@@ -85,10 +85,10 @@ public:
     }
 
 
-    void createEngine(const QString& managerName, const QMap<QString, QString>& parameters);
-    static QContactManagerData* get(const QContactManager* manager);
-    static QContactManagerEngineV2* engine(const QContactManager* manager);
-    static QContactEngineId* createEngineContactId(const QString& managerName, const QMap<QString, QString>& parameters, const QString& engineIdString);
+    void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
+    static QContactManagerData* get(const QContactManager *manager);
+    static QContactManagerEngineV2* engine(const QContactManager *manager);
+    static QContactEngineId* createEngineContactId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
 
     QContactManagerEngineV2* m_engine;
     QContactManager::Error m_lastError;
@@ -97,8 +97,8 @@ public:
     /* Manager plugins */
     static QHash<QString, QContactManagerEngineFactory*> m_engines;
     static QSet<QContactManager*> m_aliveEngines;
-    static QContactManagerData* managerData(QContactManager* manager) {return manager->d;}
-    static QContactManagerData* managerData(const QContactManager* manager) {return manager->d;} // laziness to avoid const_cast
+    static QContactManagerData* managerData(QContactManager *manager) {return manager->d;}
+    static QContactManagerData* managerData(const QContactManager *manager) {return manager->d;} // laziness to avoid const_cast
     static QList<QContactActionManagerPlugin*> m_actionManagers;
     static bool m_discoveredStatic;
     static QStringList m_pluginPaths;
@@ -106,10 +106,10 @@ public:
     static void loadStaticFactories();
 
     // Observer stuff
-    static void registerObserver(QContactManager *m, QContactObserver* observer);
-    static void unregisterObserver(QContactManager *m, QContactObserver* observer);
-    void _q_contactsUpdated(const QList<QContactId>& ids);
-    void _q_contactsDeleted(const QList<QContactId>& ids);
+    static void registerObserver(QContactManager *m, QContactObserver *observer);
+    static void unregisterObserver(QContactManager *m, QContactObserver *observer);
+    void _q_contactsUpdated(const QList<QContactId> &ids);
+    void _q_contactsDeleted(const QList<QContactId> &ids);
 
     QMultiHash<QContactId, QContactObserver*> m_observerForContact;
 
@@ -118,7 +118,7 @@ public:
 
     // If this is a wrapperv2, connect to the wrappee signals directly rather
     // than bouncing them twice
-    QObject* m_signalSource; // where the signals we proxy come from - either m_engine or a v1engine that is wrapped
+    QObject *m_signalSource; // where the signals we proxy come from - either m_engine or a v1engine that is wrapped
 
 private:
     Q_DISABLE_COPY(QContactManagerData)
@@ -133,7 +133,7 @@ private:
 class QContactManagerSyncOpErrorHolder
 {
 public:
-    QContactManagerSyncOpErrorHolder(const QContactManager* m, QMap<int, QContactManager::Error> *pUserError = 0)
+    QContactManagerSyncOpErrorHolder(const QContactManager *m, QMap<int, QContactManager::Error> *pUserError = 0)
         : error(QContactManager::NoError),
         data(QContactManagerData::managerData(m)),
         userError(pUserError)

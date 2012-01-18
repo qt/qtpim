@@ -88,7 +88,7 @@ QContactId::~QContactId()
 }
 
 /*! Constructs a new contact id as a copy of \a other */
-QContactId::QContactId(const QContactId& other)
+QContactId::QContactId(const QContactId &other)
         : d(other.d)
 {
 }
@@ -107,7 +107,7 @@ QContactId::QContactId(QContactEngineId *engineId)
 
 /*! Assigns the contact id to be equal to \a other
 */
-QContactId& QContactId::operator=(const QContactId& other)
+QContactId& QContactId::operator=(const QContactId &other)
 {
     d = other.d;
     return *this;
@@ -116,7 +116,7 @@ QContactId& QContactId::operator=(const QContactId& other)
 /*! Returns true if the contact id has the same manager URI
     and they have equal engine ids. Returns true also, if both are null contact ids.
 */
-bool QContactId::operator==(const QContactId& other) const
+bool QContactId::operator==(const QContactId &other) const
 {
     // if both ids are null then they are equal.
     if (d == 0 && other.d == 0)
@@ -133,7 +133,7 @@ bool QContactId::operator==(const QContactId& other) const
 
 /*! Returns true if either the manager URI or id of the contact id is different to that of \a other
 */
-bool QContactId::operator!=(const QContactId& other) const
+bool QContactId::operator!=(const QContactId &other) const
 {
     return !(*this == other);
 }
@@ -150,7 +150,7 @@ bool QContactId::operator!=(const QContactId& other) const
     This operator is provided primarily to allow use of a QContactId
     as a key in a QMap.
  */
-bool QContactId::operator<(const QContactId& other) const
+bool QContactId::operator<(const QContactId &other) const
 {
 
     // a null id is always less than a non-null id.
@@ -335,7 +335,7 @@ QDebug operator<<(QDebug dbg, const QContactId &id)
 #endif
 
 #ifndef QT_NO_DATASTREAM
-QDataStream& operator<<(QDataStream& out, const QContactId &contactId)
+QDataStream& operator<<(QDataStream &out, const QContactId &contactId)
 {
     out << (contactId.toString());
     return out;

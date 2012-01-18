@@ -66,7 +66,7 @@ public:
     QString convertSortOrder(const QList<QContactSortOrder>& sortOrders) const;
     QString jsonDbNotificationObjectToContactType(const QVariantMap &object) const;
     QContactId jsonDbNotificationObjectToContactId(const QVariantMap &object) const;
-    QString convertId(const QContactId& id) const;
+    QString convertId(const QContactId &id) const;
     QHash<QString, QString> detailsToJsonMapping;
     QHash<QString, QString> contactNameFieldsMapping;
     QHash<QString, QString> organizationFieldsMapping;

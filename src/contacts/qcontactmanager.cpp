@@ -144,7 +144,7 @@ QStringList QContactManager::availableManagers()
 /*!
   Splits the given \a uri into the manager, store, and parameters that it describes, and places the information into the memory addressed by \a pManagerId and \a pParams respectively.  Returns true if \a uri could be split successfully, otherwise returns false
  */
-bool QContactManager::parseUri(const QString& uri, QString* pManagerId, QMap<QString, QString>* pParams)
+bool QContactManager::parseUri(const QString &uri, QString *pManagerId, QMap<QString, QString> *pParams)
 {
     // Format: qtcontacts:<managerid>:<key>=<value>&<key>=<value>
     // 1) parameters are currently a qstringlist.. should they be a map?
@@ -206,7 +206,7 @@ bool QContactManager::parseUri(const QString& uri, QString* pManagerId, QMap<QSt
    manager with the \l fromUri() function, or wish to set the manager URI field in a QContactId
    manually (for synchronization or other purposes).  Most clients will not need to use this function.
 */
-QString QContactManager::buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion)
+QString QContactManager::buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion)
 {
     QString ret(QLatin1String("qtcontacts:%1:%2"));
     // we have to escape each param
@@ -235,7 +235,7 @@ QString QContactManager::buildUri(const QString& managerName, const QMap<QString
   Constructs a QContactManager whose implementation version, manager name and specific parameters
   are specified in the given \a managerUri, and whose parent object is \a parent.
  */
-QContactManager* QContactManager::fromUri(const QString& managerUri, QObject* parent)
+QContactManager* QContactManager::fromUri(const QString &managerUri, QObject *parent)
 {
     if (managerUri.isEmpty()) {
         return new QContactManager(QString(), QMap<QString, QString>(), parent);
@@ -255,7 +255,7 @@ QContactManager* QContactManager::fromUri(const QString& managerUri, QObject* pa
   Constructs a QContactManager whose parent QObject is \a parent.
   The default implementation for the platform will be created.
  */
-QContactManager::QContactManager(QObject* parent)
+QContactManager::QContactManager(QObject *parent)
     : QObject(parent),
     d(new QContactManagerData)
 {
@@ -270,14 +270,14 @@ QContactManager::QContactManager(QObject* parent)
   If an empty \a managerName is specified, the default implementation for the platform will
   be used.
  */
-QContactManager::QContactManager(const QString& managerName, const QMap<QString, QString>& parameters, QObject* parent)
+QContactManager::QContactManager(const QString &managerName, const QMap<QString, QString> &parameters, QObject *parent)
     : QObject(parent),
     d(new QContactManagerData)
 {
     createEngine(managerName, parameters);
 }
 
-void QContactManager::createEngine(const QString& managerName, const QMap<QString, QString>& parameters)
+void QContactManager::createEngine(const QString &managerName, const QMap<QString, QString> &parameters)
 {
     d->createEngine(managerName, parameters);
 
@@ -293,7 +293,7 @@ void QContactManager::createEngine(const QString& managerName, const QMap<QStrin
   If an empty \a managerName is specified, the default implementation for the platform will be instantiated.
   If the specified implementation version is not available, the manager with the name \a managerName with the default implementation version is instantiated.
  */
-QContactManager::QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters, QObject* parent)
+QContactManager::QContactManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters, QObject *parent)
     : QObject(parent),
     d(new QContactManagerData)
 {
@@ -427,7 +427,7 @@ QMap<int, QContactManager::Error> QContactManager::errorMap() const
 /*!
   Return the list of contact ids, sorted according to the given list of \a sortOrders
  */
-QList<QContactId> QContactManager::contactIds(const QList<QContactSortOrder>& sortOrders) const
+QList<QContactId> QContactManager::contactIds(const QList<QContactSortOrder> &sortOrders) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->contactIds(QContactFilter(), sortOrders, &h.error);
@@ -437,7 +437,7 @@ QList<QContactId> QContactManager::contactIds(const QList<QContactSortOrder>& so
   Returns a list of contact ids that match the given \a filter, sorted according to the given list of \a sortOrders.
   Depending on the backend, this filtering operation may involve retrieving all the contacts.
  */
-QList<QContactId> QContactManager::contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders) const
+QList<QContactId> QContactManager::contactIds(const QContactFilter &filter, const QList<QContactSortOrder> &sortOrders) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->contactIds(filter, sortOrders, &h.error);
@@ -454,7 +454,7 @@ QList<QContactId> QContactManager::contactIds(const QContactFilter& filter, cons
 
   \sa QContactFetchHint
  */
-QList<QContact> QContactManager::contacts(const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint) const
+QList<QContact> QContactManager::contacts(const QList<QContactSortOrder> &sortOrders, const QContactFetchHint &fetchHint) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->contacts(QContactFilter(), sortOrders, fetchHint, &h.error);
@@ -474,7 +474,7 @@ QList<QContact> QContactManager::contacts(const QList<QContactSortOrder>& sortOr
 
   \sa QContactFetchHint
  */
-QList<QContact> QContactManager::contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint) const
+QList<QContact> QContactManager::contacts(const QContactFilter &filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint &fetchHint) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->contacts(filter, sortOrders, fetchHint, &h.error);
@@ -495,7 +495,7 @@ QList<QContact> QContactManager::contacts(const QContactFilter& filter, const QL
 
   \sa QContactFetchHint
  */
-QContact QContactManager::contact(const QContactId& contactId, const QContactFetchHint& fetchHint) const
+QContact QContactManager::contact(const QContactId &contactId, const QContactFetchHint &fetchHint) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->contact(contactId, fetchHint, &h.error);
@@ -519,7 +519,7 @@ QContact QContactManager::contact(const QContactId& contactId, const QContactFet
 
   \sa QContactFetchHint
  */
-QList<QContact> QContactManager::contacts(const QList<QContactId>& contactIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap) const
+QList<QContact> QContactManager::contacts(const QList<QContactId> &contactIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap) const
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
@@ -562,7 +562,7 @@ QList<QContact> QContactManager::contacts(const QList<QContactId>& contactIds, c
 
   \sa managerUri()
  */
-bool QContactManager::saveContact(QContact* contact)
+bool QContactManager::saveContact(QContact *contact)
 {
     QContactManagerSyncOpErrorHolder h(this);
 
@@ -580,7 +580,7 @@ bool QContactManager::saveContact(QContact* contact)
   Returns true if the contact was removed successfully, otherwise
   returns false.
  */
-bool QContactManager::removeContact(const QContactId& contactId)
+bool QContactManager::removeContact(const QContactId &contactId)
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->removeContact(contactId, &h.error);
@@ -600,7 +600,7 @@ bool QContactManager::removeContact(const QContactId& contactId)
 
   \sa QContactManager::saveContact()
  */
-bool QContactManager::saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
+bool QContactManager::saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
@@ -630,7 +630,7 @@ bool QContactManager::saveContacts(QList<QContact>* contacts, QMap<int, QContact
 
   \sa QContactManager::saveContact()
  */
-bool QContactManager::saveContacts(QList<QContact>* contacts, const QStringList& definitionMask, QMap<int, QContactManager::Error>* errorMap)
+bool QContactManager::saveContacts(QList<QContact> *contacts, const QStringList &definitionMask, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
@@ -666,7 +666,7 @@ bool QContactManager::saveContacts(QList<QContact>* contacts, const QStringList&
 
   \sa QContactManager::removeContact()
  */
-bool QContactManager::removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap)
+bool QContactManager::removeContacts(const QList<QContactId> &contactIds, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
@@ -684,7 +684,7 @@ bool QContactManager::removeContacts(const QList<QContactId>& contactIds, QMap<i
   in the contact are ignored entirely when considering compatibility with the backend, as they are
   saved and validated separately.
  */
-QContact QContactManager::compatibleContact(const QContact& original)
+QContact QContactManager::compatibleContact(const QContact &original)
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->compatibleContact(original, &h.error);
@@ -699,7 +699,7 @@ QContact QContactManager::compatibleContact(const QContact& original)
 
   \sa synthesizeContactDisplayLabel()
  */
-QString QContactManager::synthesizedContactDisplayLabel(const QContact& contact) const
+QString QContactManager::synthesizedContactDisplayLabel(const QContact &contact) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->synthesizedDisplayLabel(contact, &h.error);
@@ -744,7 +744,7 @@ void QContactManager::synthesizeContactDisplayLabel(QContact *contact) const
   \c QContactManager::NotSupportedError and the function will
   return false.
  */
-bool QContactManager::setSelfContactId(const QContactId& contactId)
+bool QContactManager::setSelfContactId(const QContactId &contactId)
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->setSelfContactId(contactId, &h.error);
@@ -767,7 +767,7 @@ QContactId QContactManager::selfContactId() const
   Returns a list of relationships in which the contact \a participant participates in the given \a role.
   If \a participant is empty, \a role is ignored and all relationships are returned.
  */
-QList<QContactRelationship> QContactManager::relationships(const QContact& participant, QContactRelationship::Role role) const
+QList<QContactRelationship> QContactManager::relationships(const QContact &participant, QContactRelationship::Role role) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->relationships(QString(), participant, role, &h.error);
@@ -778,7 +778,7 @@ QList<QContactRelationship> QContactManager::relationships(const QContact& parti
   If \a participant is empty, \a role is ignored and all relationships of the given \a relationshipType are returned.
   If \a relationshipType is empty, relationships of any type are returned.
  */
-QList<QContactRelationship> QContactManager::relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role) const
+QList<QContactRelationship> QContactManager::relationships(const QString &relationshipType, const QContact &participant, QContactRelationship::Role role) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->relationships(relationshipType, participant, role, &h.error);
@@ -797,7 +797,7 @@ QList<QContactRelationship> QContactManager::relationships(const QString& relati
   If the given \a relationship could not be saved in the database (due to backend limitations)
   the function will return \c false and error will be set to \c QContactManager::NotSupportedError.
  */
-bool QContactManager::saveRelationship(QContactRelationship* relationship)
+bool QContactManager::saveRelationship(QContactRelationship *relationship)
 {
     QContactManagerSyncOpErrorHolder h(this);
     if (relationship) {
@@ -813,7 +813,7 @@ bool QContactManager::saveRelationship(QContactRelationship* relationship)
   The deprecated \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
  */
-bool QContactManager::saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap)
+bool QContactManager::saveRelationships(QList<QContactRelationship> *relationships, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
@@ -831,7 +831,7 @@ bool QContactManager::saveRelationships(QList<QContactRelationship>* relationshi
   relationship exists in the manager, the error will be set to \c QContactManager::DoesNotExistError and this function
   will return false.
  */
-bool QContactManager::removeRelationship(const QContactRelationship& relationship)
+bool QContactManager::removeRelationship(const QContactRelationship &relationship)
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->removeRelationship(relationship, &h.error);
@@ -843,7 +843,7 @@ bool QContactManager::removeRelationship(const QContactRelationship& relationshi
   The deprecated \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
  */
-bool QContactManager::removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap)
+bool QContactManager::removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
     return d->m_engine->removeRelationships(relationships, &h.errorMap, &h.error);
@@ -865,7 +865,7 @@ bool QContactManager::removeRelationships(const QList<QContactRelationship>& rel
 /*!
   Returns true if the given feature \a feature is supported by the manager, for the specified type of contact \a contactType
  */
-bool QContactManager::hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const
+bool QContactManager::hasFeature(QContactManager::ManagerFeature feature, const QString &contactType) const
 {
     return d->m_engine->hasFeature(feature, contactType);
 }
@@ -887,7 +887,7 @@ QList<QVariant::Type> QContactManager::supportedDataTypes() const
   that have changed since a given time depends on having that information
   available.  In these cases, the filter will fail.
  */
-bool QContactManager::isFilterSupported(const QContactFilter& filter) const
+bool QContactManager::isFilterSupported(const QContactFilter &filter) const
 {
     return d->m_engine->isFilterSupported(filter);
 }
@@ -901,7 +901,7 @@ bool QContactManager::isFilterSupported(const QContactFilter& filter) const
   in the relationship).  In this case, it will still return true.  It will only return false
   if the relationship is entirely unsupported for the given type of contact.
  */
-bool QContactManager::isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType) const
+bool QContactManager::isRelationshipTypeSupported(const QString &relationshipType, const QString &contactType) const
 {
     return d->m_engine->isRelationshipTypeSupported(relationshipType, contactType);
 }

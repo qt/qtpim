@@ -56,7 +56,7 @@ class QDeclarativeContactIdFilter : public QDeclarativeContactFilter
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "ids")
 public:
-    QDeclarativeContactIdFilter(QObject* parent = 0)
+    QDeclarativeContactIdFilter(QObject *parent = 0)
         :QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
@@ -67,9 +67,9 @@ public:
         return m_ids;
     }
 
-    void setIds(const QStringList& ids)
+    void setIds(const QStringList &ids)
     {
-        foreach (const QString& id, ids) {
+        foreach (const QString &id, ids) {
             if (!m_ids.contains(id)) {
                 m_ids = ids;
                 emit valueChanged();
@@ -77,7 +77,7 @@ public:
             }
         }
 
-        foreach (const QString& id, m_ids) {
+        foreach (const QString &id, m_ids) {
             if (!ids.contains(id)) {
                 m_ids = ids;
                 emit valueChanged();
@@ -90,7 +90,7 @@ public:
         QContactIdFilter f;
         QList<QContactId> ids;
 
-        foreach (const QString& id, m_ids) {
+        foreach (const QString &id, m_ids) {
             QContactId contactId = QContactId::fromString(id);
             ids << contactId;
         }

@@ -841,6 +841,9 @@ void tst_QContactAsync::contactIdFetch()
         break;
     }
 
+    // Error cases not tested here as can not generate common error case
+    // for all backends. For example, for jsondb backend can not generate
+    // error at all.
 }
 
 void tst_QContactAsync::contactRemove()

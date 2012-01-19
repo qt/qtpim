@@ -91,7 +91,7 @@ QContactManagerEngineFactory::~QContactManagerEngineFactory()
   This function should return a unique string that identifies
   the engines provided by this factory.
 
-  Typically this would be of the form "com.nokia.qt.contacts.engines.memory", with
+  Typically this would be of the form "org.qt-project.Qt.SampleContactEngine", with
   the appropriate domain and engine name substituted.
  */
 

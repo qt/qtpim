@@ -82,7 +82,7 @@
 #  endif
 #endif
 
-#define QTORGANIZER_VERSION_NAME "com.nokia.qt.organizer.api.version"
-#define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "com.nokia.qt.organizer.implementation.version"
+#define QTORGANIZER_VERSION_NAME "org.qt-project.Qt.organizer.api.version"
+#define QTORGANIZER_IMPLEMENTATION_VERSION_NAME "org.qt-project.Qt.organizer.implementation.version"
 
 #endif

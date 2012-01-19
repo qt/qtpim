@@ -116,7 +116,7 @@ Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
 /*!
   \fn QString QVersitContactHandlerFactory::name() const
   This function should return a unique string that identifies the handlers provided by this factory.
-  Typically, this will be of the form "com.nokia.qt.mobility.versit.samplehandler" with the
+  Typically, this will be of the form "org.qt-project.Qt.SampleVersitContactHandler" with the
   appropriate domain and handler name substituted.
  */
 

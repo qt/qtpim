@@ -94,7 +94,7 @@ public:
 
 QString Plugin2::name() const
 {
-    return "com.nokia.qt.mobility.versit.plugin2";
+    return QStringLiteral("org.qt-project.Qt.QVersitContactPluginsTest.Plugin2");
 }
 
 int Plugin2::index() const

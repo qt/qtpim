@@ -96,7 +96,7 @@ private:
 QTCONTACTS_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(QtContacts::QContactActionManagerPlugin, "com.nokia.qt.contacts.actionmanagerplugin/1.0")
+Q_DECLARE_INTERFACE(QtContacts::QContactActionManagerPlugin, "org.qt-project.Qt.QContactActionManagerPlugin")
 QT_END_NAMESPACE
 
 #endif

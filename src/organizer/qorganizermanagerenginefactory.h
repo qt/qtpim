@@ -67,7 +67,7 @@ public:
 QTORGANIZER_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-#define QT_ORGANIZER_BACKEND_INTERFACE "com.nokia.qt.organizer.enginefactory/1.0"
+#define QT_ORGANIZER_BACKEND_INTERFACE "org.qt-project.Qt.QOrganizerManagerEngineFactory"
 Q_DECLARE_INTERFACE(QtOrganizer::QOrganizerManagerEngineFactory, QT_ORGANIZER_BACKEND_INTERFACE)
 QT_END_NAMESPACE
 

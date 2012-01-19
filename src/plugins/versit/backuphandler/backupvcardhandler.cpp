@@ -115,7 +115,7 @@ QSet<QString> BackupVCardHandlerFactory::profiles() const
 
 QString BackupVCardHandlerFactory::name() const
 {
-    return QStringLiteral("com.nokia.qt.pim.versit.backuphandler");
+    return QStringLiteral("org.qt-project.Qt.BackupVCardHandlerFactory");
 }
 
 int BackupVCardHandlerFactory::index() const

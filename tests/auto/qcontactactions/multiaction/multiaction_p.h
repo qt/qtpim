@@ -80,7 +80,7 @@ QTM_USE_NAMESPACE
    Company "Example VoIP Solutions" wants to provide a "Call" action with different implementations.
        -> it provides a SINGLE plugin which provides two actions, both of which are:
            - ServiceName = "Example VoIP Solution"
-           - InterfaceName = "com.nokia.qt.mobility.contacts.action" (QContactActionFactory::InterfaceName)
+           - InterfaceName = "org.qt-project.Qt.SampleContactsActionPlugin" (QContactActionFactory::InterfaceName)
            - Major Version = "1"
            - Minor Version = "1"
            - ActionName = "call" (this is a custom property in the service interface xml)

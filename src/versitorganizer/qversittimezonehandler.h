@@ -83,7 +83,7 @@ public:
 
 QTVERSITORGANIZER_END_NAMESPACE
 
-#define QT_VERSIT_TIMEZONE_HANDLER_INTERFACE "com.nokia.qt.versitorganizer.timezonehandler/1.0"
+#define QT_VERSIT_TIMEZONE_HANDLER_INTERFACE "org.qt-project.Qt.QVersitTimeZoneHandler"
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtVersitOrganizer::QVersitTimeZoneHandler, QT_VERSIT_TIMEZONE_HANDLER_INTERFACE)
 QT_END_NAMESPACE

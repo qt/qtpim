@@ -94,7 +94,7 @@ QSet<QString> VCardPreserverFactory::profiles() const
 
 QString VCardPreserverFactory::name() const
 {
-    return QStringLiteral("com.nokia.qt.pim.versit.vcardpreserver");
+    return QStringLiteral("org.qt-project.Qt.VCardPreserverFactory");
 }
 
 int VCardPreserverFactory::index() const

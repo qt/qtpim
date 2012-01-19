@@ -79,7 +79,7 @@ public:
 
 QTVERSITORGANIZER_END_NAMESPACE
 
-#define QT_VERSIT_ORGANIZER_HANDLER_INTERFACE "com.nokia.qt.versitorganizerhandlerfactory/1.0"
+#define QT_VERSIT_ORGANIZER_HANDLER_INTERFACE "org.qt-project.Qt.QVersitOrganizerHandlerFactory"
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtVersitOrganizer::QVersitOrganizerHandlerFactory, QT_VERSIT_ORGANIZER_HANDLER_INTERFACE)
 QT_END_NAMESPACE

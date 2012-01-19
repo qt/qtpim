@@ -78,7 +78,7 @@ public:
 #ifdef Q_QDOC
     static const QLatin1Constant InterfaceName;
 #else
-    Q_DECLARE_LATIN1_CONSTANT(InterfaceName, "com.nokia.qt.mobility.contacts.action");
+    Q_DECLARE_LATIN1_CONSTANT(InterfaceName, "org.qt-project.Qt.QContactActionFactory")
 #endif
 
 protected:

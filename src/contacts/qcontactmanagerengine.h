@@ -193,7 +193,7 @@ public:
 QTCONTACTS_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineV2, "com.nokia.qt.contacts.engine/2.0")
+Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineV2, "org.qt-project.Qt.QContactManagerEngineV2")
 QT_END_NAMESPACE
 
 #endif

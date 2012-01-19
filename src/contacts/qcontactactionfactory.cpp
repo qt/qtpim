@@ -115,7 +115,7 @@ QContactActionFactory::~QContactActionFactory()
   \variable QContactActionFactory::InterfaceName
   The name of the interface that action plugins should implement.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactActionFactory::InterfaceName, "com.nokia.qt.mobility.contacts.action");
+Q_DEFINE_LATIN1_CONSTANT(QContactActionFactory::InterfaceName, "org.qt-project.Qt.QContactActionFactory")
 
 bool QContactActionFactory::supportsContact(const QContact& contact, const QContactActionDescriptor& which) const
 {

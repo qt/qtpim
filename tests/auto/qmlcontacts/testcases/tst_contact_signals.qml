@@ -724,30 +724,6 @@ TestCase {
     }
 
     Contact {
-        id: contactWithType1
-        type: Type.Contact
-    }
-
-    function test_contact_type_change_emits_signal()
-    {
-        listenToSignalFromObject("contactChanged", contactWithType1);
-        contactWithType1.type = Type.Group;
-        verifySignalReceived();
-    }
-
-    Contact {
-        id: contactWithType2
-        type: Type.Contact
-    }
-
-    function test_contact_type_emits_no_signal_when_value_does_not_change()
-    {
-        listenToSignalFromObject("contactChanged", contactWithType2);
-        contactWithType2.type = contactWithType2.type;
-        verifyNoSignalReceived();
-    }
-
-    Contact {
         id: contactWithUrl1
         Url {
             url: "http://old"

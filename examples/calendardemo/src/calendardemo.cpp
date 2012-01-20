@@ -139,14 +139,9 @@ CalendarDemo::~CalendarDemo()
 void CalendarDemo::buildMenu()
 {
     // Build Options menu
-#if defined(Q_OS_WINCE)
-    // These platforms need their menu items added directly to the menu bar.
-    QMenuBar *optionsMenu = menuBar();
-#else
     QMenu *optionsMenu = new QMenu("&Options", this);
     // We add the options menu to the softkey manually later
     menuBar()->addMenu(optionsMenu);
-#endif
     // Add editing options in the menu for Symbian (other platforms get buttons)
     QOrganizerManager defaultManager;
     QList<QOrganizerItemType::ItemType> supportedItemTypes = defaultManager.supportedItemTypes();

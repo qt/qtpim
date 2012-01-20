@@ -785,8 +785,6 @@ void tst_QContactManager::ctors()
     QCOMPARE(defaultStore, QString("maemo5"));
 #elif defined(QT_JSONDB_ENABLED)
     QCOMPARE(defaultStore, QString("jsondb"));
-#elif defined(Q_OS_WINCE)
-    QCOMPARE(defaultStore, QString("wince"));
 #else
     QCOMPARE(defaultStore, QString("invalid"));
 #endif
@@ -850,7 +848,6 @@ void tst_QContactManager::add()
     QContact retrievedContactable = cm->contact(veryContactable.id().localId());
     if (!isSuperset(retrievedContactable, veryContactable)) {
         dumpContactDifferences(veryContactable, retrievedContactable);
-        QEXPECT_FAIL("mgr='wince'", "Number of phones supported mismatch", Continue);
         QCOMPARE(veryContactable, retrievedContactable);
     }
 }

@@ -741,9 +741,7 @@ void tst_QOrganizerManager::ctors()
 
 
     // Finally test the platform specific engines are actually the defaults
-#if defined(Q_OS_WINCE)
-    QCOMPARE(defaultStore, QString("wince"));
-#elif !defined(QT_NO_JSONDB)
+#if !defined(QT_NO_JSONDB)
     QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("invalid"));
@@ -898,8 +896,6 @@ void tst_QOrganizerManager::add()
 //    QOrganizerItem retrievedMegaitem = cm->item(megaevent.id());
 //    if (!isSuperset(retrievedMegaitem, megaevent)) {
 //        dumpOrganizerItemDifferences(megaevent, retrievedMegaitem);
-//        QEXPECT_FAIL("mgr='wince'", "Address Display Label mismatch", Continue);
-        
 //    }
 
     // now a item with many details of a particular definition

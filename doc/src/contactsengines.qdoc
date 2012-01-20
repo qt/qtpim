@@ -138,14 +138,6 @@ The Maemo 5 (Fremantle) engine supports asynchronous and synchronous requests, b
 group contacts or relationships of any kind.  It does not allow clients to set a particular contact
 as the "self" contact.  It persists all data in the system addressbook.
 
-\section3 \bold{Windows CE Engine}
-
-The Windows CE engine identifies itself as the "wince" engine, and is only available
-on the Windows Mobile 6.0 platform.
-
-It supports a subset of the default schema, and supports both the asynchronous and synchronous
-interfaces to the datastore.  It persists saved data to the system addressbook.
-
 \section1 Information For Engine Implementors
 
 Some developers may wish to provide implementations of QContactManagerEngine for use by clients.

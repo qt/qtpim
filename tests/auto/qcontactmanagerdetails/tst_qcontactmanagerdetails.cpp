@@ -50,7 +50,6 @@ QTCONTACTS_USE_NAMESPACE
 // to get QFETCH to work with the template expression...
 typedef QMap<QString,QString> tst_QContactManagerDetails_QStringMap;
 Q_DECLARE_METATYPE(tst_QContactManagerDetails_QStringMap)
-Q_DECLARE_METATYPE(QList<QContactLocalId>)
 
 
 class tst_QContactManagerDetails : public QObject
@@ -156,11 +155,11 @@ bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QConta
         return false;
 
     // Check the id
-    if( original.localId() == 0 )
+    if (original.id().isNull())
         return false;
 
     // Load same contact from database
-    loaded = cm->contact( original.localId() );
+    loaded = cm->contact(original.id());
     if( cm->error() )
         return false;
 
@@ -172,6 +171,7 @@ bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QConta
     removeDetail<QContactGuid>(loaded);
     removeDetail<QContactTimestamp>(original);
     removeDetail<QContactTimestamp>(loaded);
+    removeDetail<QContactPersonId>(loaded);
 
     return true;
 }
@@ -326,7 +326,6 @@ void tst_QContactManagerDetails::testName()
     n.setLastName( "last" );
     n.setSuffix( "suffix" );
     c.saveDetail( &n );
-
     saveAndVerifyContact( cm.data(), c );
 }
 
@@ -335,19 +334,24 @@ void tst_QContactManagerDetails::testNickName()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContact c;
+    QContact originalContact;
 
     QContactNickname n1;
     n1.setNickname("nickname1");
-    c.saveDetail( &n1 );
+    originalContact.saveDetail(&n1);
 
-    saveAndVerifyContact( cm.data(), c );
+    saveAndVerifyContact(cm.data(), originalContact);
 
     QContactNickname n2;
     n2.setNickname("nickname2");
-    c.saveDetail( &n2 );
+    originalContact.saveDetail(&n2);
 
-    saveAndVerifyContact( cm.data(), c );
+    QContact loadedContact;
+    QVERIFY(saveAndLoadContact(cm.data(), originalContact, loadedContact));
+    if (uri == "qtcontacts:jsondb:")
+        QEXPECT_FAIL("", "JsonDb backend does not support QContactNickname properly!", Abort);
+    QCOMPARE(loadedContact.details().count(), originalContact.details().count());
+    QCOMPARE(loadedContact, originalContact);
 }
 
 void tst_QContactManagerDetails::testOrganisation()
@@ -420,14 +424,19 @@ void tst_QContactManagerDetails::testUrl()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    QContact c;
+    QContact originalContact;
 
     QContactUrl u;
     u.setUrl("http://failblog.org");
     u.setSubType(QContactUrl::SubTypeHomePage);
-    c.saveDetail( &u );
+    originalContact.saveDetail(&u);
 
-    saveAndVerifyContact( cm.data(), c );
+    QContact loadedContact;
+    QVERIFY(saveAndLoadContact(cm.data(), originalContact, loadedContact));
+    QCOMPARE( loadedContact.details().count(), originalContact.details().count() );
+    if (uri == "qtcontacts:jsondb:")
+        QEXPECT_FAIL("", "JsonDb backend does not support QContactUrl detail properly!", Abort);
+    QCOMPARE( loadedContact, originalContact );
 }
 
 void tst_QContactManagerDetails::testRingtone()
@@ -486,7 +495,6 @@ void tst_QContactManagerDetails::testExtendedDetail()
     QVERIFY (c2.saveDetail(&extendedDetail1));
     saveAndVerifyContact(cm.data(), c2);
 
-    QSKIP("TODO: skipping random order extended detail saving due to an issue in QContact comparison operator");
     // Adding same details but in different order
     QContact c3;
     QVERIFY (c3.saveDetail(&extendedDetail1));

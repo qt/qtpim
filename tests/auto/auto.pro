@@ -12,7 +12,7 @@ SUBDIRS += \
     qcontactdetails \
     qcontactfilter \
 #    qcontactmanager \
-#    qcontactmanagerdetails \
+    qcontactmanagerdetails \
     qcontactmanagerplugins \
     qcontactrelationship \
 #    qdeclarativecontact

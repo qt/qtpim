@@ -83,13 +83,6 @@ contains(QT_CONFIG, jsondb) {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb
 }
 
-simulator {
-    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=simulator
-
-    SOURCES += contactconnection_simulator.cpp engines/qcontactmemorybackenddata_simulator.cpp
-    PRIVATE_HEADERS += contactconnection_simulator_p.h engines/qcontactmemorybackenddata_simulator_p.h
-}
-
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 
 HEADERS += qtcontactsversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS

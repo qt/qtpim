@@ -855,14 +855,6 @@ bool QContactMemoryEngine::isFilterSupported(const QContactFilter& filter) const
     return false;
 }
 
-// trampoline for data access from simulator
-QContactMemoryEngineData* QContactMemoryEngineData::data(QContactMemoryEngine* engine)
-{
-    if (engine)
-        return engine->d;
-    return 0;
-}
-
 #include "moc_qcontactmemorybackend_p.cpp"
 
 QTCONTACTS_END_NAMESPACE

@@ -330,7 +330,6 @@ ContactsSavingTestCase {
         waitForContactsChanged();
 
         createContactToJsonDb({name: {firstName: "B"}});
-        waitForContactsChanged();
 
         compare(model.contacts.length, 0, "contacts length");
     }
@@ -409,9 +408,7 @@ ContactsSavingTestCase {
         compare(model.contacts.length, 0, "model is empty");
 
         updateContactInJsonDb({contactId: id}, {name: {firstName: "A"}});
-
         waitForContactsChanged();
-
         compare(model.contacts.length, 1, "model is not empty");
         compare(model.contacts[0].name.firstName, "A", "first name");
     }
@@ -438,9 +435,7 @@ ContactsSavingTestCase {
         compare(model.contacts.length, 1, "model is not empty");
 
         updateContactInJsonDb({contactId: id}, {name: {firstName: "B"}});
-
         waitForContactsChanged();
-
         compare(model.contacts.length, 0, "model is empty");
     }
 

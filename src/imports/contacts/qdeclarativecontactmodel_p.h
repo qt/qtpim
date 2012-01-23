@@ -144,7 +144,7 @@ public:
     Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
-    Q_INVOKABLE void fetchContacts(const QStringList& contactIds);
+    Q_INVOKABLE int fetchContacts(const QStringList& contactIds);
     Q_INVOKABLE void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
     Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
 
@@ -158,6 +158,7 @@ signals:
     void autoUpdateChanged();
     void exportCompleted(ExportError error, QUrl url);
     void importCompleted(ImportError error, QUrl url);
+    void contactsFetched(int requestId, const QVariantList &fetchedContacts);
 
 public slots:
     void update();
@@ -171,14 +172,23 @@ private slots:
     void onContactsAdded(const QList<QContactId>& ids);
     void onContactsRemoved(const QList<QContactId>& ids);
     void onContactsChanged(const QList<QContactId>& ids);
-
     void startImport(QVersitReader::State state);
     void contactsExported(QVersitWriter::State state);
 
-private:
-    void checkError(const QContactAbstractRequest *request);
+    // handle fetch request from onContactsAdded()
+    void onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State state);
 
+    // handle fetch request from onContactsChanged()
+    void onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State state);
+
+    // handle fetch request from fetchContacts()
+    void onFetchContactsRequestStateChanged(QContactAbstractRequest::State state);
+
+private:
     QDeclarativeContactModelPrivate* d;
+    QList<QContactId> m_updatedIds;
+    void checkError(const QContactAbstractRequest *request);
+    int contactIndex(const QDeclarativeContact* contact);
 };
 
 QTCONTACTS_END_NAMESPACE

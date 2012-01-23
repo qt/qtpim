@@ -809,6 +809,11 @@ Module {
             Parameter { name: "error"; type: "ImportError" }
             Parameter { name: "url"; type: "QUrl" }
         }
+        Signal {
+            name: "contactsFetched"
+            Parameter { name: "requestId"; type: "int" }
+            Parameter { name: "fetchedContacts"; type: "QVariantList" }
+        }
         Method { name: "update" }
         Method {
             name: "removeContact"

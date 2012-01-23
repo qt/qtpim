@@ -43,15 +43,16 @@
 
 #include "qdeclarativecontactmodel_p.h"
 #include "qcontactmanager.h"
+#include "qcontactmanagerengine.h"
 #include "qcontactdetailfilter.h"
 #include "qcontactidfilter.h"
+#include "qcontactintersectionfilter.h"
 #include "qversitreader.h"
 #include "qversitwriter.h"
 #include "qversitcontactimporter.h"
 #include "qversitcontactexporter.h"
 #include <QColor>
 #include <QHash>
-#include <QDebug>
 #include <QPixmap>
 #include <QFile>
 #include <QMap>
@@ -120,6 +121,8 @@ public:
     bool m_componentCompleted;
     QUrl m_lastExportUrl;
     QUrl m_lastImportUrl;
+    QAtomicInt m_lastRequestId;
+    QHash<QContactAbstractRequest *, int> m_requestIdHash;
 };
 
 QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
@@ -486,7 +489,6 @@ void QDeclarativeContactModel::contacts_clear(QDeclarativeListProperty<QDeclarat
   \qmlproperty list<SortOrder> ContactModel::sortOrders
 
   This property holds a list of sort orders used by the contacts model.
-
   \sa SortOrder
   */
 QDeclarativeListProperty<QDeclarativeContactSortOrder> QDeclarativeContactModel::sortOrders()
@@ -527,23 +529,69 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
 }
 
 /*!
-  \qmlmethod ContactModel::fetchContacts(list<string> contactIds)
-  Fetch a list of contacts from the contacts store by given \a contactIds.
+    \qmlmethod int ContactModel::fetchContacts(list<string> contactIds)
 
-  \sa Contact::contactId
+    Starts a request to fetch contacts by the given \a contactIds, and returns the unique ID of this request.
+    -1 is returned if the request can't be started.
+
+    Note that the contacts fetched won't be added to the model, but can be accessed through the onContactsFetched
+    handler.
+
+    \sa onContactsFetched()
   */
-void QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
+int QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
 {
-    QList<QContactId> ids;
-    foreach (const QString &contactIdString, contactIds){
-        QContactId contactId = QContactId::fromString(contactIdString);
-        if (!contactId.isNull())
-            ids.append(contactId);
-    }
+    if (contactIds.isEmpty())
+        return -1;
 
-    d->m_updatedContactIds = ids;
-    QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+    QContactFetchByIdRequest *fetchRequest = new QContactFetchByIdRequest(this);
+    connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
+            this, SLOT(onFetchContactsRequestStateChanged(QContactAbstractRequest::State)));
+    fetchRequest->setManager(d->m_manager);
+
+    QList<QContactId> ids;
+    foreach (const QString &contactId, contactIds)
+        ids.append(QContactId::fromString(contactId));
+    fetchRequest->setIds(ids);
+    if (fetchRequest->start()) {
+        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
+        d->m_requestIdHash.insert(fetchRequest, requestId);
+        return requestId;
+    } else
+        return -1;
 }
+
+/*!
+    \internal
+ */
+void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstractRequest::State state)
+{
+    if (state != QContactAbstractRequest::FinishedState || !sender())
+        return;
+
+    QContactFetchByIdRequest *request = qobject_cast<QContactFetchByIdRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+
+    int requestId(d->m_requestIdHash.value(request, -1));
+    if (requestId == -1)
+        qWarning()<<Q_FUNC_INFO<<"transaction not found from the request hash";
+    QVariantList list;
+    if (request->error() == QContactManager::NoError) {
+        QList<QContact> contacts(request->contacts());
+        foreach (const QContact &contact, contacts) {
+            QDeclarativeContact *declarativeContact(0);
+            declarativeContact = new QDeclarativeContact(this);
+            declarativeContact->setContact(contact);
+            list.append(QVariant::fromValue((QObject *)declarativeContact));
+        }
+    }
+    emit contactsFetched(requestId, list);
+    request->deleteLater();
+}
+
 void QDeclarativeContactModel::clearContacts()
 {
     qDeleteAll(d->m_contacts);
@@ -663,10 +711,24 @@ void QDeclarativeContactModel::checkError(const QContactAbstractRequest *request
 
 void QDeclarativeContactModel::onContactsAdded(const QList<QContactId>& ids)
 {
-    Q_UNUSED(ids)
-    if (d->m_autoUpdate) {
-        QStringList empty;
-        fetchContacts(empty);
+    if (d->m_autoUpdate && !ids.isEmpty()) {
+        QContactFetchRequest *fetchRequest = new QContactFetchRequest(this);
+        connect(fetchRequest,SIGNAL(stateChanged(QContactAbstractRequest::State)),
+                this, SLOT(onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State)));
+        fetchRequest->setManager(d->m_manager);
+        fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
+
+        QContactIdFilter idFilter;
+        idFilter.setIds(ids);
+        if (d->m_filter) {
+            QContactIntersectionFilter filter;
+            filter.append(d->m_filter->filter());
+            filter.append(idFilter);
+            fetchRequest->setFilter(filter);
+        } else {
+            fetchRequest->setFilter(idFilter);
+        }
+        fetchRequest->start();
     }
 }
 
@@ -706,6 +768,7 @@ void QDeclarativeContactModel::removeContacts(const QStringList &ids)
     req->start();
 }
 
+
 void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 {
     if (!d->m_autoUpdate)
@@ -734,19 +797,28 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
         emit contactsChanged();
 }
 
-void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &ids)
+void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &contactIdList)
 {
-    if (d->m_autoUpdate) {
-        QStringList updatedIds;
-        foreach (const QContactId& id, ids)
-            if (d->m_contactMap.contains(id)) {
-                updatedIds.append(id.toString());
-            }
+    if (d->m_autoUpdate && !contactIdList.isEmpty()) {
+        foreach (const QContactId &contactId, contactIdList)
+            if (d->m_contactMap.contains(contactId))
+                m_updatedIds.append(contactId);
 
-        if (updatedIds.count() > 0) {
-            QStringList empty;
-            fetchContacts(empty);
-        }
+        QContactFetchRequest *fetchRequest = new QContactFetchRequest(this);
+        connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
+                this, SLOT(onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State)));
+        fetchRequest->setManager(d->m_manager);
+        fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
+        QContactIdFilter idFilter;
+        idFilter.setIds(contactIdList);
+        if (d->m_filter) {
+            QContactIntersectionFilter filter;
+            filter.append(d->m_filter->filter());
+            filter.append(idFilter);
+            fetchRequest->setFilter(filter);
+        } else
+            fetchRequest->setFilter(idFilter);
+        fetchRequest->start();
     }
 }
 
@@ -821,6 +893,141 @@ void  QDeclarativeContactModel::sortOrder_clear(QDeclarativeListProperty<QDeclar
         model->d->m_sortOrders.clear();
         emit model->sortOrdersChanged();
     }
+}
+/*!
+    \internal
+
+    It's invoked by the fetch request from onContactsAdded().
+ */
+void QDeclarativeContactModel::onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State state)
+{
+
+    if (state != QContactAbstractRequest::FinishedState || !sender())
+        return;
+    QContactFetchRequest *request = qobject_cast<QContactFetchRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+
+    if (request->error() == QContactManager::NoError) {
+        QList<QContact> fetchedContacts(request->contacts());
+        bool contactsAdded = false;
+        foreach (const QContact &c,fetchedContacts) {
+            if (d->m_contactMap.contains(c.id())) {
+                qWarning() <<Q_FUNC_INFO <<"contact to be added already exists in the model";
+                continue;
+            }
+            QDeclarativeContact* dc = new QDeclarativeContact(this);
+            dc->setContact(c);
+            int index = contactIndex(dc);
+            beginInsertRows(QModelIndex(), index, index);
+            d->m_contacts.insert(index, dc);
+            d->m_contactMap.insert(c.id(), dc);
+            if (!contactsAdded)
+                contactsAdded = true;
+            endInsertRows();
+        }
+        if (contactsAdded)
+            emit contactsChanged();
+    }
+    request->deleteLater();
+}
+
+
+/*!
+    \internal
+
+    It's invoked by the fetch request from onContactsChanged().
+ */
+void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State state)
+{
+    if (state != QContactAbstractRequest::FinishedState || !sender())
+        return;
+
+    QContactFetchRequest *request = qobject_cast<QContactFetchRequest *>(sender());
+    if (!request)
+        return;
+
+    checkError(request);
+    bool contactsUpdated = false;
+    //handle updated contacts which needs removal from model
+    if (request->error() == QContactManager::DoesNotExistError) {
+        QList<QContact> fetchedContacts(request->contacts());
+        if (fetchedContacts.isEmpty() && !m_updatedIds.isEmpty()) {
+            foreach (QContactId id, m_updatedIds) {
+                for (int i=0;i<d->m_contacts.size();++i) {
+                    if (d->m_contacts.at(i)->contactId() == id.toString()) {
+                        beginRemoveRows(QModelIndex(), i, i);
+                        d->m_contacts.removeAt(i);
+                        d->m_contactMap.remove(id);
+                        endRemoveRows();
+                        contactsUpdated = true;
+                    }
+                }
+            }
+        }
+    } else if (request->error() == QContactManager::NoError) {
+        QList<QContact> fetchedContacts(request->contacts());
+        foreach (const QContact &fetchedContact, fetchedContacts) {
+            QString contactIdString(fetchedContact.id().toString());
+            bool fetchedContactFound = false;
+            for (int i = 0; i < d->m_contacts.size(); ++i) {
+                //handle updated contacts which should be updated in the model
+                if (d->m_contacts.at(i)->contactId() == contactIdString) {
+                    QDeclarativeContact* dc = d->m_contacts.at(i);
+                    dc->setContact(fetchedContact);
+                    int index = contactIndex(dc);
+                    beginInsertRows(QModelIndex(), index, index);
+                    d->m_contactMap.remove(fetchedContact.id());
+                    d->m_contacts.removeAt(i);
+                    d->m_contacts.insert(index, dc);
+                    d->m_contactMap.insert(fetchedContact.id(),dc);
+                    if (!contactsUpdated)
+                        contactsUpdated = true;
+                    endInsertRows();
+                    fetchedContactFound = true;
+                }
+            }
+            //handle updated contacts which needs to be added in the model
+            if (!fetchedContactFound) {
+                QDeclarativeContact* dc = new QDeclarativeContact(this);
+                dc->setContact(fetchedContact);
+                int index = contactIndex(dc);
+                beginInsertRows(QModelIndex(), index, index);
+                d->m_contacts.insert(index, dc);
+                d->m_contactMap.insert(fetchedContact.id(),dc);
+                contactsUpdated = true;
+                endInsertRows();
+            }
+        }
+    }
+
+    if (contactsUpdated)
+        emit contactsChanged();
+
+    request->deleteLater();
+}
+
+int QDeclarativeContactModel::contactIndex(const QDeclarativeContact* contact)
+{
+    if (d->m_sortOrders.count() > 0) {
+        QList<QContactSortOrder> mSortOrders;
+        foreach (QDeclarativeContactSortOrder *sortOrder, d->m_sortOrders)
+            mSortOrders.append(sortOrder->sortOrder());
+        for (int i = 0; i < d->m_contacts.size(); i++) {
+            // check to see if the new contact should be inserted here
+            int comparison = QContactManagerEngine::compareContact(d->m_contacts.at(i)->contact(),
+                                                                   contact->contact(),
+                                                                   mSortOrders);
+            //if the contacts are equal or cannot be compared
+            //we return the current position.The default case is if the new contact
+            //should appear before the compared contact in m_contacts
+            if (comparison >= 0)
+                return i;
+        }
+    }
+    return d->m_contacts.size();
 }
 
 

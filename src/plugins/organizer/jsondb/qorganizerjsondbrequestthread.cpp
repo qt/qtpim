@@ -587,7 +587,7 @@ void QOrganizerJsonDbRequestThread::initDefaultCollection()
     QOrganizerCollection defaultCollection = m_storage->defaultCollection();
     if (defaultCollection.id().isNull()) {
         QOrganizerManager::Error error;
-        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QOrganizerJsonDbStr::defaultCollectionName());
+        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QOrganizerJsonDbStr::defaultCollectionDisplayName());
         m_storage->createDefaultCollection(&defaultCollection, &error);
     }
 }

@@ -234,9 +234,9 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
 
     // must handle type before reaching the loop
     QString jsonDbType = object.value(QOrganizerJsonDbStr::jsonDbType()).toString();
-    if (jsonDbType == QOrganizerJsonDbStr::event()) {
+    if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventType()) {
         item->setType(QOrganizerItemType::TypeEvent);
-    } else if (jsonDbType == QOrganizerJsonDbStr::todo()) {
+    } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbTodoType()) {
         item->setType(QOrganizerItemType::TypeTodo);
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType()) {
         item->setType(QOrganizerItemType::TypeEvent);
@@ -267,7 +267,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 return false;
             item->setId(QOrganizerItemId(new QOrganizerJsonDbItemId(jsonDbUuid)));
             hasItemId = true;
-        } else if (i.key() == QOrganizerJsonDbStr::itemCollectionId()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemCollectionUuid()) {
             QString jsonDbCollectionId = i.value().toString();
             if (jsonDbCollectionId.isEmpty())
                 return false;
@@ -279,7 +279,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 return false;
             item->setGuid(guid);
             hasGuid = true;
-        } else if (i.key() == QOrganizerJsonDbStr::itemName()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemDisplayName()) {
             QString displayLabel = i.value().toString();
             if (!displayLabel.isEmpty())
                 item->setDisplayLabel(displayLabel);
@@ -341,7 +341,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 recurrence.setRecurrenceDates(recurrenceDates);
                 item->saveDetail(&recurrence);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::itemExceptioneDates()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemExceptionDates()) {
             QSet<QDate> exceptionDates;
             QVariantList exceptionDatesList = i.value().toList();
             foreach (const QVariant &exceptionDate, exceptionDatesList)
@@ -392,7 +392,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 todoTime.setAllDay(isAllDay);
                 item->saveDetail(&todoTime);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::attendee()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventAttendees()) {
             QVariantList attendeeObjectList = i.value().toList();
             foreach (const QVariant &attendeeObject, attendeeObjectList) {
                 QOrganizerEventAttendee attendee;
@@ -400,7 +400,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 if (!attendee.isEmpty())
                     item->saveDetail(&attendee);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::rsvp()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvp()) {
             QVariantMap rsvpMap = i.value().toMap();
             if (!rsvpMap.isEmpty()) {
                 QOrganizerEventRsvp rsvp;
@@ -416,7 +416,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
                 if (!audibleReminder.isEmpty())
                     item->saveDetail(&audibleReminder);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::itemLocation()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventLocation()) {
             QVariantMap locationMap = i.value().toMap();
             if (!locationMap.isEmpty()) {
                 QOrganizerItemLocation location;
@@ -480,11 +480,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
     QOrganizerItemType::ItemType itemType = static_cast<QOrganizerItemType::ItemType>(details.at(0).value(QOrganizerItemType::FieldType).toInt());
     switch (itemType) {
     case QOrganizerItemType::TypeEvent:
-        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::event());
+        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::jsonDbEventType());
         break;
 
     case QOrganizerItemType::TypeTodo:
-        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::todo());
+        object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::jsonDbTodoType());
         break;
 
 //    case QOrganizerItemType::TypeUndefined:
@@ -525,7 +525,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         case QOrganizerItemDetail::TypeDisplayLabel: {
             QString displayLabel = details.at(i).value(QOrganizerItemDisplayLabel::FieldLabel).toString();
             if (!displayLabel.isEmpty())
-                object->insert(QOrganizerJsonDbStr::itemName(), displayLabel);
+                object->insert(QOrganizerJsonDbStr::itemDisplayName(), displayLabel);
             break;
         }
 
@@ -551,7 +551,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             QVariantMap locationObject;
             locationDetailToJsonDbObject(details.at(i), &locationObject);
             if (!locationObject.isEmpty())
-                object->insert(QOrganizerJsonDbStr::itemLocation(), locationObject);
+                object->insert(QOrganizerJsonDbStr::eventLocation(), locationObject);
             break;
         }
 
@@ -650,7 +650,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
             QVariantMap rsvpObject;
             rsvpDetailToJsonDbObject(details.at(i), &rsvpObject);
             if (!rsvpObject.isEmpty())
-                object->insert(QOrganizerJsonDbStr::rsvp(), rsvpObject);
+                object->insert(QOrganizerJsonDbStr::eventRsvp(), rsvpObject);
             break;
         }
 
@@ -769,7 +769,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::itemComments(), comments);
 
     if (!exceptionDates.isEmpty())
-        object->insert(QOrganizerJsonDbStr::itemExceptioneDates(), exceptionDates);
+        object->insert(QOrganizerJsonDbStr::itemExceptionDates(), exceptionDates);
 
     if (!recurrenceDates.isEmpty())
         object->insert(QOrganizerJsonDbStr::itemRecurrenceDates(), recurrenceDates);
@@ -778,7 +778,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::itemTags(), tags);
 
     if (!attendees.isEmpty())
-        object->insert(QOrganizerJsonDbStr::attendee(), attendees);
+        object->insert(QOrganizerJsonDbStr::eventAttendees(), attendees);
 
     if (!exceptionRules.isEmpty())
         object->insert(QOrganizerJsonDbStr::itemExceptionRules(), exceptionRules);
@@ -791,7 +791,7 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem& item, Q
         object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
 
     // collection ID has already been generated in QOrganizerJsonDbRequestThread::handleItemSaveRequest() if needed
-    object->insert(QOrganizerJsonDbStr::itemCollectionId(),
+    object->insert(QOrganizerJsonDbStr::itemCollectionUuid(),
                    QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
 
     return true;
@@ -806,19 +806,19 @@ void QOrganizerJsonDbConverter::attendeeDetailToJsonDbObject(const QOrganizerEve
     while (i != detailValues.constEnd()) {
         if (i.key() == QOrganizerEventAttendee::FieldName) {
             value = i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::attendeeName();
+            jsonDbField = QOrganizerJsonDbStr::eventAttendeeName();
         } else if (i.key() == QOrganizerEventAttendee::FieldEmailAddress) {
             value = i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::attendeeEmailAddress();
+            jsonDbField = QOrganizerJsonDbStr::eventAttendeeEmailAddress();
         } else if (i.key() == QOrganizerEventAttendee::FieldAttendeeId) {
             value= i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::attendeeId();
+            jsonDbField = QOrganizerJsonDbStr::eventAttendeeUuid();
         } else if (i.key() == QOrganizerEventAttendee::FieldParticipationRole) {
             value = enumToString(organizerParticipationRoleMap(), i.value().toInt());
-            jsonDbField = QOrganizerJsonDbStr::attendeeParticipationRole();
+            jsonDbField = QOrganizerJsonDbStr::eventAttendeeParticipationRole();
         } else if (i.key() == QOrganizerEventAttendee::FieldParticipationStatus) {
             value = enumToString(organizerParticipationStatusMap(), i.value().toInt());
-            jsonDbField = QOrganizerJsonDbStr::attendeeParticipationStatus();
+            jsonDbField = QOrganizerJsonDbStr::eventAttendeeParticipationStatus();
         }
         if (!value.isEmpty()) {
             object->insert(jsonDbField, value);
@@ -833,22 +833,22 @@ void QOrganizerJsonDbConverter::jsonDbObjectToAttendeeDetail(const QVariantMap &
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
     QString value;
     while (i != object.constEnd()) {
-        if (i.key() == QOrganizerJsonDbStr::attendeeName()) {
+        if (i.key() == QOrganizerJsonDbStr::eventAttendeeName()) {
             value = i.value().toString();
             if (!value.isEmpty())
                 attendeeDetail->setName(value);
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeEmailAddress()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventAttendeeEmailAddress()) {
             value = i.value().toString();
             if (!value.isEmpty())
                 attendeeDetail->setEmailAddress(value);
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeId()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventAttendeeUuid()) {
             value = i.value().toString();
             if (!value.isEmpty())
                 attendeeDetail->setAttendeeId(value);
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationRole()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventAttendeeParticipationRole()) {
             int intValue = stringToEnum(organizerParticipationRoleMap(), i.value().toString());
             attendeeDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationStatus()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventAttendeeParticipationStatus()) {
             int intValue = stringToEnum(organizerParticipationStatusMap(), i.value().toString());
             attendeeDetail->setParticipationStatus(static_cast<QOrganizerEventAttendee::ParticipationStatus>(intValue));
         }
@@ -865,25 +865,25 @@ void QOrganizerJsonDbConverter::rsvpDetailToJsonDbObject(const QOrganizerEventRs
     while (i != rsvpValues.constEnd()) {
         if (i.key() == QOrganizerEventRsvp::FieldOrganizerName) {
             value = i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::rsvpOrganizerName();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpOrganizerName();
         } else if (i.key() == QOrganizerEventRsvp::FieldOrganizerEmail) {
             value = i.value().toString();
-            jsonDbField = QOrganizerJsonDbStr::rsvpOrganizerEmail();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpOrganizerEmail();
         } else if (i.key() == QOrganizerEventRsvp::FieldResponseDeadline) {
             value = i.value().toDate().toString(Qt::ISODate);
-            jsonDbField = QOrganizerJsonDbStr::rsvpResponseDeadline();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpResponseDeadline();
         } else if (i.key() == QOrganizerEventRsvp::FieldResponseDate) {
             value = i.value().toDate().toString(Qt::ISODate);
-            jsonDbField = QOrganizerJsonDbStr::rsvpResponseDate();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpResponseDate();
         } else if (i.key() == QOrganizerEventRsvp::FieldParticipationRole) {
             value = enumToString(organizerParticipationRoleMap(), i.value().toInt());
-            jsonDbField = QOrganizerJsonDbStr::attendeeParticipationRole();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpParticipationRole();
         } else if (i.key() == QOrganizerEventRsvp::FieldParticipationStatus) {
             value = enumToString(organizerParticipationStatusMap(), i.value().toInt());
-            jsonDbField = QOrganizerJsonDbStr::attendeeParticipationStatus();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpParticipationStatus();
         } else if (i.key() == QOrganizerEventRsvp::FieldResponseRequirement) {
             value = enumToString(organizerResponseRequirementMap(), i.value().toInt());
-            jsonDbField = QOrganizerJsonDbStr::rsvpResponseRequirement();
+            jsonDbField = QOrganizerJsonDbStr::eventRsvpResponseRequirement();
         }
         if (!value.isEmpty()) {
             object->insert(jsonDbField, value);
@@ -898,29 +898,29 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRsvpDetail(const QVariantMap &obje
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
     QString value;
     while (i != object.constEnd()) {
-        if (i.key() == QOrganizerJsonDbStr::rsvpOrganizerName()) {
+        if (i.key() == QOrganizerJsonDbStr::eventRsvpOrganizerName()) {
             value = i.value().toString();
             if (!value.isEmpty())
                 rsvpDetail->setOrganizerName(value);
-        } else if (i.key() == QOrganizerJsonDbStr::rsvpOrganizerEmail()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpOrganizerEmail()) {
             value = i.value().toString();
             if (!value.isEmpty())
                 rsvpDetail->setOrganizerEmail(value);
-        } else if (i.key() == QOrganizerJsonDbStr::rsvpResponseDeadline()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpResponseDeadline()) {
             QDate date = i.value().toDate();
             if (date.isValid())
                 rsvpDetail->setResponseDeadline(date);
-        } else if (i.key() == QOrganizerJsonDbStr::rsvpResponseDate()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpResponseDate()) {
             QDate date = i.value().toDate();
             if (date.isValid())
                 rsvpDetail->setResponseDate(date);
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationRole()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpParticipationRole()) {
             int intValue = stringToEnum(organizerParticipationRoleMap(), i.value().toString());
             rsvpDetail->setParticipationRole(static_cast<QOrganizerEventAttendee::ParticipationRole>(intValue));
-        } else if (i.key() == QOrganizerJsonDbStr::attendeeParticipationStatus()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpParticipationStatus()) {
             int intValue = stringToEnum(organizerParticipationStatusMap(), i.value().toString());
             rsvpDetail->setParticipationStatus(static_cast<QOrganizerEventAttendee::ParticipationStatus>(intValue));
-        } else if (i.key() == QOrganizerJsonDbStr::rsvpResponseRequirement()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventRsvpResponseRequirement()) {
             int intValue = stringToEnum(organizerResponseRequirementMap(), i.value().toString());
             rsvpDetail->setResponseRequirement(static_cast<QOrganizerEventRsvp::ResponseRequirement>(intValue));
         }
@@ -938,19 +938,19 @@ void QOrganizerJsonDbConverter::locationDetailToJsonDbObject(const QOrganizerIte
         case QOrganizerItemLocation::FieldLabel: {
             QString label = i.value().toString();
             if (!label.isEmpty())
-                object->insert(QOrganizerJsonDbStr::itemLocationLabel(), label);
+                object->insert(QOrganizerJsonDbStr::eventLocationDisplayName(), label);
             break;
         }
         case QOrganizerItemLocation::FieldLatitude: {
             QVariant latitude = i.value();
             if (latitude.canConvert(QVariant::Double))
-                geoObject.insert(QOrganizerJsonDbStr::itemLocationGeoLatitude(), latitude.toDouble());
+                geoObject.insert(QOrganizerJsonDbStr::eventLocationGeoLatitude(), latitude.toDouble());
             break;
         }
         case QOrganizerItemLocation::FieldLongitude: {
             QVariant longitude = i.value();
             if (longitude.canConvert(QVariant::Double))
-                geoObject.insert(QOrganizerJsonDbStr::itemLocationGeoLongitude(), longitude.toDouble());
+                geoObject.insert(QOrganizerJsonDbStr::eventLocationGeoLongitude(), longitude.toDouble());
             break;
         }
         default:
@@ -959,26 +959,26 @@ void QOrganizerJsonDbConverter::locationDetailToJsonDbObject(const QOrganizerIte
         ++i;
     }
     if (!geoObject.isEmpty())
-        object->insert(QOrganizerJsonDbStr::itemLocationGeo(), geoObject);
+        object->insert(QOrganizerJsonDbStr::eventLocationGeo(), geoObject);
 }
 
 void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail) const
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
     while (i != object.constEnd()) {
-        if (i.key() == QOrganizerJsonDbStr::itemLocationLabel()) {
+        if (i.key() == QOrganizerJsonDbStr::eventLocationDisplayName()) {
             QString label = i.value().toString();
             if (!label.isEmpty())
                 locationDetail->setLabel(label);
-        } else if (i.key() == QOrganizerJsonDbStr::itemLocationGeo()) {
+        } else if (i.key() == QOrganizerJsonDbStr::eventLocationGeo()) {
             QVariantMap geoObject = i.value().toMap();
             QMap<QString, QVariant>::const_iterator j = geoObject.constBegin();
             while (j != geoObject.constEnd()) {
-                if (j.key() == QOrganizerJsonDbStr::itemLocationGeoLatitude()) {
+                if (j.key() == QOrganizerJsonDbStr::eventLocationGeoLatitude()) {
                     QVariant latitude = j.value();
                     if (latitude.canConvert(QVariant::Double))
                         locationDetail->setLatitude(latitude.toDouble());
-                } else if (j.key() == QOrganizerJsonDbStr::itemLocationGeoLongitude()) {
+                } else if (j.key() == QOrganizerJsonDbStr::eventLocationGeoLongitude()) {
                     QVariant longitude = j.value();
                     if (longitude.canConvert(QVariant::Double))
                         locationDetail->setLongitude(longitude.toDouble());
@@ -1004,7 +1004,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
                 return false;
             collection->setId(QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonUuid)));
             hasCollectionId = true;
-        } else if (i.key() == QOrganizerJsonDbStr::collectionName()) {
+        } else if (i.key() == QOrganizerJsonDbStr::collectionDisplayName()) {
             QString name = i.value().toString();
             if (!name.isEmpty())
                 collection->setMetaData(QOrganizerCollection::KeyName, name);
@@ -1016,7 +1016,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
             QString color = i.value().toString();
             if (!color.isEmpty())
                 collection->setMetaData(QOrganizerCollection::KeyColor, color);
-        } else if (i.key() == QOrganizerJsonDbStr::collectionImage()) {
+        } else if (i.key() == QOrganizerJsonDbStr::collectionImageUrl()) {
             QString image = i.value().toString();
             if (!image.isEmpty())
                 collection->setMetaData(QOrganizerCollection::KeyImage, image);
@@ -1024,15 +1024,10 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
             QVariant isDefault = i.value();
             if (isDefault.canConvert(QVariant::Bool))
                 *isDefaultCollection = isDefault.toBool();
-        } else if (i.key() == QOrganizerJsonDbStr::collectionCustomFields()) {
-            QVariantMap customFields = i.value().toMap();
-            if (!customFields.isEmpty()) {
-                QMap<QString, QVariant>::const_iterator j = customFields.constBegin();
-                while (j != customFields.constEnd()) {
-                    collection->setMetaData(j.key(), j.value());
-                    ++j;
-                }
-            }
+        } else {
+            // custom meta data
+            if (!i.key().isEmpty() && !i.value().isNull())
+                collection->setMetaData(i.key(), i.value());
         }
 
         ++i;
@@ -1043,40 +1038,49 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QVariantMap& obje
 
 bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollection& collection, bool isDefaultCollection, QVariantMap* object) const
 {
-    if (!collection.id().isNull())
-        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineCollectionId(collection.id())->toString());
-
-    object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::collection());
-    object->insert(QOrganizerJsonDbStr::collectionDefaultFlag(), isDefaultCollection);
-
-    QVariantMap metaData = collection.metaData();
-    QVariantMap jsonMetaData;
-    QList<QString> metaDataKeys = metaData.keys();
-    foreach (QString key, metaDataKeys) {
-        //Jsondb accepts string and stringlist type value
-        if (collection.metaData(key).canConvert(QVariant::String)) {
-            collection.metaData(key).toString();
-            if (key == QOrganizerCollection::KeyName)
-                object->insert(QOrganizerJsonDbStr::collectionName(), collection.metaData(QOrganizerCollection::KeyName).toString());
-            else if (key == QOrganizerCollection::KeyDescription)
-                object->insert(QOrganizerJsonDbStr::collectionDescription(), collection.metaData(QOrganizerCollection::KeyDescription).toString());
-            else if (key == QOrganizerCollection::KeyColor)
-                object->insert(QOrganizerJsonDbStr::collectionColor(), collection.metaData(QOrganizerCollection::KeyColor).toString());
-            else if (key == QOrganizerCollection::KeyImage)
-                object->insert(QOrganizerJsonDbStr::collectionImage(), collection.metaData(QOrganizerCollection::KeyImage).toString());
-            else
-                jsonMetaData.insert(key, metaData.value(key).toString());
-        } else if (!collection.metaData(key).canConvert(QVariant::StringList)
-                   && key != QOrganizerCollection::KeyName
-                   && key != QOrganizerCollection::KeyDescription
-                   && key != QOrganizerCollection::KeyColor
-                   && key != QOrganizerCollection::KeyImage) {
-            jsonMetaData.insert(key, metaData.value(key));
-        }
+    QOrganizerCollectionId collectionId = collection.id();
+    if (!collectionId.isNull()) {
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(),
+                       QOrganizerManagerEngine::engineCollectionId(collectionId)->toString());
     }
 
-    if (!jsonMetaData.isEmpty())
-        object->insert(QOrganizerJsonDbStr::collectionCustomFields(), jsonMetaData);
+    object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::jsonDbCollectionType());
+
+    if (isDefaultCollection)
+        object->insert(QOrganizerJsonDbStr::collectionDefaultFlag(), isDefaultCollection);
+
+    QVariantMap metaData = collection.metaData();
+    QVariantMap::const_iterator i = metaData.constBegin();
+    while (i != metaData.constEnd()) {
+        if (i.key() == QOrganizerCollection::KeyColor) {
+            QString colorString = i.value().toString();
+            if (!colorString.isEmpty())
+                object->insert(QOrganizerJsonDbStr::collectionColor(), colorString);
+        } else if (i.key() == QOrganizerCollection::KeyDescription) {
+            QString descriptionString = i.value().toString();
+            if (!descriptionString.isEmpty())
+                object->insert(QOrganizerJsonDbStr::collectionDescription(), descriptionString);
+        } else if (i.key() == QOrganizerCollection::KeyImage) {
+            QString imageString = i.value().toString();
+            if (!imageString.isEmpty())
+                object->insert(QOrganizerJsonDbStr::collectionImageUrl(), imageString);
+        } else if (i.key() == QOrganizerCollection::KeyName) {
+            QString displayNameString = i.value().toString();
+            if (!displayNameString.isEmpty())
+                object->insert(QOrganizerJsonDbStr::collectionDisplayName(), displayNameString);
+        } else {
+            // custom meta data
+            QString valueString = i.value().toString();
+            if (!i.key().isEmpty() && !valueString.isEmpty()
+                && (i.key().at(0) != QChar('_') || i.key() == QOrganizerJsonDbStr::jsonDbVersion())
+                && i.key() != QOrganizerJsonDbStr::collectionDefaultFlag()) {
+                // XXX Should we allow complex data structure, i.e. list or map, for custom meta data?
+                object->insert(i.key(), valueString);
+            }
+        }
+
+        ++i;
+    }
 
     return true;
 }
@@ -1098,27 +1102,27 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
 {
     QMap<QString, QVariant>::const_iterator i = object.constBegin();
     while (i != object.constEnd()) {
-        if (i.key() == QOrganizerJsonDbStr::ruleFrequency()) {
+        if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleFrequency()) {
             QString frequency = i.value().toString();
             if (!frequency.isEmpty())
                 rule->setFrequency(static_cast<QOrganizerRecurrenceRule::Frequency>(stringToEnum(organizerFrequencyEnumMap(), frequency)));
-        } else if (i.key() == QOrganizerJsonDbStr::ruleInterval()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleInterval()) {
             int interval = i.value().toInt();
             if (interval >= 0)
                 rule->setInterval(interval);
-        } else if (i.key() == QOrganizerJsonDbStr::ruleLimitCount()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleLimitCount()) {
             int limitCount = i.value().toInt();
             if (limitCount >= 0)
                 rule->setLimit(limitCount);
-        } else if (i.key() == QOrganizerJsonDbStr::ruleLimitDate()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleLimitDate()) {
             QDate limitDate = i.value().toDate();
             if (limitDate.isValid())
                 rule->setLimit(limitDate);
-        } else if (i.key() == QOrganizerJsonDbStr::ruleFirstDayOfWeek()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleFirstDayOfWeek()) {
             QString firstDayOfWeek = i.value().toString();
             if (!firstDayOfWeek.isEmpty())
                 rule->setFirstDayOfWeek(static_cast<Qt::DayOfWeek>(stringToEnum(organizerDayEnumMap(), firstDayOfWeek)));
-        } else if (i.key() == QOrganizerJsonDbStr::rulePositions()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRulePositions()) {
             QVariantList positionsList = i.value().toList();
             if (!positionsList.isEmpty()) {
                 QSet<int> positionsSet;
@@ -1126,7 +1130,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
                     positionsSet.insert(position.toInt());
                 rule->setPositions(positionsSet);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ruleDaysOfWeek()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfWeek()) {
             QVariantList daysOfWeekList = i.value().toList();
             if (!daysOfWeekList.isEmpty()) {
                 QSet<Qt::DayOfWeek> daysOfWeek;
@@ -1134,7 +1138,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
                     daysOfWeek.insert(static_cast<Qt::DayOfWeek>(stringToEnum(organizerDayEnumMap(), day.toString())));
                 rule->setDaysOfWeek(daysOfWeek);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ruleDaysOfMonth()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfMonth()) {
             QVariantList daysOfMonthList = i.value().toList();
             if (!daysOfMonthList.isEmpty()) {
                 QSet<int> daysOfMonth;
@@ -1142,7 +1146,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
                     daysOfMonth.insert(day.toInt());
                 rule->setDaysOfMonth(daysOfMonth);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ruleDaysOfYear()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfYear()) {
             QVariantList daysOfYearList = i.value().toList();
             if (!daysOfYearList.isEmpty()) {
                 QSet<int> daysOfYear;
@@ -1150,7 +1154,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
                     daysOfYear.insert(day.toInt());
                 rule->setDaysOfYear(daysOfYear);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ruleWeeksOfYear()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleWeeksOfYear()) {
             QVariantList weeksOfYearList = i.value().toList();
             if (!weeksOfYearList.isEmpty()) {
                 QSet<int> weeksOfYear;
@@ -1158,7 +1162,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
                     weeksOfYear.insert(week.toInt());
                 rule->setWeeksOfYear(weeksOfYear);
             }
-        } else if (i.key() == QOrganizerJsonDbStr::ruleMonthsOfYear()) {
+        } else if (i.key() == QOrganizerJsonDbStr::itemRecurrenceRuleMonthsOfYear()) {
             QVariantList monthsOfYearList = i.value().toList();
             if (!monthsOfYearList.isEmpty()) {
                 QSet<QOrganizerRecurrenceRule::Month> monthsOfYear;
@@ -1174,20 +1178,20 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& 
 
 void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule& rule, QVariantMap* object) const
 {
-    object->insert(QOrganizerJsonDbStr::ruleFrequency(), enumToString(organizerFrequencyEnumMap(), rule.frequency()));
-    object->insert(QOrganizerJsonDbStr::ruleInterval(), rule.interval());
-    object->insert(QOrganizerJsonDbStr::ruleLimitCount(), rule.limitCount());
-    object->insert(QOrganizerJsonDbStr::ruleLimitDate(), rule.limitDate().toString(Qt::ISODate));
+    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFrequency(), enumToString(organizerFrequencyEnumMap(), rule.frequency()));
+    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleInterval(), rule.interval());
+    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitCount(), rule.limitCount());
+    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitDate(), rule.limitDate().toString(Qt::ISODate));
     QSet<int> positions = rule.positions();
     if (!positions.isEmpty()) {
         QVariantList positionsList;
         foreach (int position, positions) {
             positionsList.append(position);
         }
-        object->insert(QOrganizerJsonDbStr::rulePositions(), positionsList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRulePositions(), positionsList);
     }
 
-    object->insert(QOrganizerJsonDbStr::ruleFirstDayOfWeek(), enumToString(organizerDayEnumMap(), rule.firstDayOfWeek()));
+    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFirstDayOfWeek(), enumToString(organizerDayEnumMap(), rule.firstDayOfWeek()));
 
     QSet<Qt::DayOfWeek> daysOfWeek = rule.daysOfWeek();
     if (!daysOfWeek.isEmpty()) {
@@ -1195,7 +1199,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         foreach (Qt::DayOfWeek day, daysOfWeek) {
             daysOfWeekList.append(enumToString(organizerDayEnumMap(), day));
         }
-        object->insert(QOrganizerJsonDbStr::ruleDaysOfWeek(), daysOfWeekList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfWeek(), daysOfWeekList);
     }
 
     QSet<int> daysOfMonth = rule.daysOfMonth();
@@ -1204,7 +1208,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         foreach (int day, daysOfMonth) {
             daysOfMonthList.append(day);
         }
-        object->insert(QOrganizerJsonDbStr::ruleDaysOfMonth(), daysOfMonthList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfMonth(), daysOfMonthList);
     }
 
     QSet<int> daysOfYear = rule.daysOfYear();
@@ -1213,7 +1217,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         foreach (int day, daysOfYear) {
             daysOfYearList.append(day);
         }
-        object->insert(QOrganizerJsonDbStr::ruleDaysOfYear(), daysOfYearList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfYear(), daysOfYearList);
     }
 
     QSet<int> weeksOfYear = rule.weeksOfYear();
@@ -1222,7 +1226,7 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         foreach (int week, weeksOfYear) {
             weeksOfYearList.append(week);
         }
-        object->insert(QOrganizerJsonDbStr::ruleWeeksOfYear(), weeksOfYearList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleWeeksOfYear(), weeksOfYearList);
     }
 
     QSet<QOrganizerRecurrenceRule::Month> monthsOfYear = rule.monthsOfYear();
@@ -1231,49 +1235,43 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
         foreach (QOrganizerRecurrenceRule::Month month, monthsOfYear) {
             monthsOfYearList.append(enumToString(organizerMonthEnumMap(), month));
         }
-        object->insert(QOrganizerJsonDbStr::ruleMonthsOfYear(), monthsOfYearList);
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleMonthsOfYear(), monthsOfYearList);
     }
 }
 
 bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap *alarmObject) const
 {
-    bool ret = false;
-    QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemAudibleReminder::DefinitionName);
-    QDateTime alarmStartTime;
-    if (item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeEventOccurrence)
-        alarmStartTime = item.detail(QOrganizerEventTime::DefinitionName).value<QDateTime>(QOrganizerEventTime::FieldStartDateTime);
-    else if (item.type() == QOrganizerItemType::TypeTodo || item.type() == QOrganizerItemType::TypeTodoOccurrence)
-        alarmStartTime = item.detail(QOrganizerTodoTime::DefinitionName).value<QDateTime>(QOrganizerTodoTime::FieldStartDateTime);
+    QOrganizerItemId id = item.id();
+    if (id.isNull())
+        return false;
+    alarmObject->insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(id)->toString());
 
-    // audibleReminder and start time details are mandatory for alarm object
-    if (!audibleReminder.isEmpty() && alarmStartTime.isValid()) {
-        // alarm object
-        alarmObject->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
-        // alarm start time
-        if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
-            alarmStartTime = alarmStartTime.addSecs(-audibleReminder.secondsBeforeStart());//Nagetive value
-        alarmObject->insert(QOrganizerJsonDbStr::alarmISODate(), alarmStartTime.toUTC().toString(Qt::ISODate));
-        // repetition count to alarm snooze count
-        if (audibleReminder.hasValue(audibleReminder.FieldRepetitionCount))
-           alarmObject->insert(QOrganizerJsonDbStr::alarmSnoozeCount(), audibleReminder.repetitionCount());
-        // repetition delay to alarm snooze time
-        if (audibleReminder.hasValue(audibleReminder.FieldRepetitionDelay))
-           alarmObject->insert(QOrganizerJsonDbStr::alarmSnoozeTime(), audibleReminder.repetitionDelay());
-        // item Uuid to alarm event Uuid
-        alarmObject->insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
-        // item displayLabel to alarm title
-        QString displayLabel(item.displayLabel());
-        if (!displayLabel.isEmpty())
-            alarmObject->insert(QOrganizerJsonDbStr::alarmTitle(), displayLabel);
-        // item description to alarm description
-        QString description(item.description());
-        if (!description.isEmpty())
-            alarmObject->insert(QOrganizerJsonDbStr::alarmDescription(), description);
-        // set calender app as alarm identifier
-        alarmObject->insert(QOrganizerJsonDbStr::alarmIdentifier(), QOrganizerJsonDbStr::alarmCalenderIdentifier());
-        ret = true;
-    }
-    return ret;
+    QDateTime alarmDueDateTime;
+    QOrganizerItemType::ItemType itemType = item.type();
+    if (itemType == QOrganizerItemType::TypeEvent || itemType == QOrganizerItemType::TypeEventOccurrence)
+        alarmDueDateTime = item.detail(QOrganizerItemDetail::TypeEventTime).value(QOrganizerEventTime::FieldStartDateTime).toDateTime();
+    else if (itemType == QOrganizerItemType::TypeTodo || itemType == QOrganizerItemType::TypeTodoOccurrence)
+        alarmDueDateTime = item.detail(QOrganizerItemDetail::TypeTodoTime).value(QOrganizerTodoTime::FieldStartDateTime).toDateTime();
+    else
+        return false;
+    if (!alarmDueDateTime.isValid())
+        return false;
+    alarmObject->insert(QOrganizerJsonDbStr::alarmDueDateTime(), alarmDueDateTime.toUTC().toString(Qt::ISODate));
+
+    QString alarmDisplayName = item.displayLabel();
+    if (!alarmDisplayName.isEmpty())
+        alarmObject->insert(QOrganizerJsonDbStr::alarmDisplayName(), alarmDisplayName);
+
+    QString alarmDescription = item.description();
+    if (!alarmDescription.isEmpty())
+        alarmObject->insert(QOrganizerJsonDbStr::alarmDescription(), alarmDescription);
+
+    alarmObject->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
+    alarmObject->insert(QOrganizerJsonDbStr::alarmEnabled(), QVariant::fromValue(true));
+    alarmObject->insert(QOrganizerJsonDbStr::alarmLauncherIdentifier(), QOrganizerJsonDbStr::alarmCalendarIdentifier());
+    alarmObject->insert(QOrganizerJsonDbStr::alarmType(), QOrganizerJsonDbStr::alarmTypeCalendar());
+
+    return true;
 }
 
 void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap *object) const
@@ -1284,15 +1282,15 @@ void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrgan
     QString jsonDbField;
     while (i != reminderValues.constEnd()) {
         value.clear();
-        if (i.key() == QOrganizerItemReminder::FieldSecondsBeforeStart) {
+        if (i.key() == QOrganizerItemAudibleReminder::FieldSecondsBeforeStart) {
             value = i.value().toInt();
             jsonDbField = QOrganizerJsonDbStr::itemReminderSecBeforeStart();
-        } else if (i.key() == QOrganizerItemReminder::FieldRepetitionCount) {
+        } else if (i.key() == QOrganizerItemAudibleReminder::FieldRepetitionCount) {
             value = i.value().toInt();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderRepCount();
-        } else if (i.key() == QOrganizerItemReminder::FieldRepetitionDelay) {
+            jsonDbField = QOrganizerJsonDbStr::itemReminderRepetitionCount();
+        } else if (i.key() == QOrganizerItemAudibleReminder::FieldRepetitionDelay) {
             value = i.value().toInt();
-            jsonDbField = QOrganizerJsonDbStr::itemReminderRepDelay();
+            jsonDbField = QOrganizerJsonDbStr::itemReminderRepetitionDelay();
         } else if (i.key() == QOrganizerItemAudibleReminder::FieldDataUrl) {
             value = i.value().toString();
             jsonDbField = QOrganizerJsonDbStr::itemReminderDataUrl();
@@ -1311,17 +1309,17 @@ void QOrganizerJsonDbConverter::jsonDbObjectToAudibleReminderDetail(const QVaria
     while (i != object.constEnd()) {
         value.clear();
         if (i.key() == QOrganizerJsonDbStr::itemReminderSecBeforeStart()) {
-            field = QOrganizerItemReminder::FieldSecondsBeforeStart;
+            field = QOrganizerItemAudibleReminder::FieldSecondsBeforeStart;
             value = i.value().toInt();
-        } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepCount()) {
-            field = QOrganizerItemReminder::FieldRepetitionCount;
+        } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepetitionCount()) {
+            field = QOrganizerItemAudibleReminder::FieldRepetitionCount;
             value = i.value().toInt();
-        } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepDelay()) {
-            field = QOrganizerItemReminder::FieldRepetitionDelay;
+        } else if (i.key() == QOrganizerJsonDbStr::itemReminderRepetitionDelay()) {
+            field = QOrganizerItemAudibleReminder::FieldRepetitionDelay;
             value = i.value().toInt();
         } else if (i.key() == QOrganizerJsonDbStr::itemReminderDataUrl()) {
             field = QOrganizerItemAudibleReminder::FieldDataUrl;
-            value = QUrl(i.value().toString());
+            value = i.value().toString();
         }
         if (value.isValid())
             itemReminder->setValue(field, value);
@@ -1540,7 +1538,7 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);
-            *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryCollectionIdsTemplate().arg(query);
+            *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryCollectionUuidsTemplate().arg(query);
         } else {
             isValidFilter = false;
         }
@@ -1721,7 +1719,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerItemDisplayLabel::DefinitionName == detailType
             && QOrganizerItemDisplayLabel::FieldLabel == detailField) {
            jsonDbQueryStr->append(matchFlagQueryTemplate
-                .arg(QOrganizerJsonDbStr::itemName())
+                .arg(QOrganizerJsonDbStr::itemDisplayName())
                 .arg(createMatchFlagQuery(valueString, df.matchFlags())));
 
         } else if (QOrganizerItemGuid::DefinitionName == detailType
@@ -1733,20 +1731,20 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerItemLocation::DefinitionName == detailType) {
             if (QOrganizerItemLocation::FieldLabel ==  detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                    .arg(QOrganizerJsonDbStr::itemLocation())
-                    .arg(QOrganizerJsonDbStr::itemLocationLabel())
+                    .arg(QOrganizerJsonDbStr::eventLocation())
+                    .arg(QOrganizerJsonDbStr::eventLocationDisplayName())
                     .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerItemLocation::FieldLongitude ==  detailField) {
                 jsonDbQueryStr->append(equalsQueryTemplate3
-                    .arg(QOrganizerJsonDbStr::itemLocation())
-                    .arg(QOrganizerJsonDbStr::itemLocationGeo())
-                    .arg(QOrganizerJsonDbStr::itemLocationGeoLongitude())
+                    .arg(QOrganizerJsonDbStr::eventLocation())
+                    .arg(QOrganizerJsonDbStr::eventLocationGeo())
+                    .arg(QOrganizerJsonDbStr::eventLocationGeoLongitude())
                     .arg(valueString));
             } else if (QOrganizerItemLocation::FieldLatitude ==  detailField) {
                 jsonDbQueryStr->append(equalsQueryTemplate3
-                    .arg(QOrganizerJsonDbStr::itemLocation())
-                    .arg(QOrganizerJsonDbStr::itemLocationGeo())
-                    .arg(QOrganizerJsonDbStr::itemLocationGeoLatitude())
+                    .arg(QOrganizerJsonDbStr::eventLocation())
+                    .arg(QOrganizerJsonDbStr::eventLocationGeo())
+                    .arg(QOrganizerJsonDbStr::eventLocationGeoLatitude())
                     .arg(valueString));
             }
 
@@ -1773,38 +1771,38 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerEventRsvp::DefinitionName == detailType) {
             if (QOrganizerEventRsvp::FieldParticipationStatus == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::attendeeParticipationStatus())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpParticipationStatus())
                         .arg(createMatchFlagQuery(enumToString(organizerParticipationStatusMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldParticipationRole == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::attendeeParticipationRole())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpParticipationRole())
                         .arg(createMatchFlagQuery(enumToString(organizerParticipationRoleMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseRequirement == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::rsvpResponseRequirement())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpResponseRequirement())
                         .arg(createMatchFlagQuery(enumToString(organizerResponseRequirementMap(), df.value().toInt()), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseDeadline == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::rsvpResponseDeadline())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpResponseDeadline())
                         .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldResponseDate == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::rsvpResponseDate())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpResponseDate())
                         .arg(createMatchFlagQuery(df.value().toDate().toString(Qt::ISODate), df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldOrganizerName == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::rsvpOrganizerName())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpOrganizerName())
                         .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerEventRsvp::FieldOrganizerEmail == detailField) {
                 jsonDbQueryStr->append(matchFlagQueryTemplate2
-                        .arg(QOrganizerJsonDbStr::rsvp())
-                        .arg(QOrganizerJsonDbStr::rsvpOrganizerEmail())
+                        .arg(QOrganizerJsonDbStr::eventRsvp())
+                        .arg(QOrganizerJsonDbStr::eventRsvpOrganizerEmail())
                         .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             }
         }

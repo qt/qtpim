@@ -214,7 +214,7 @@ void QOrganizerJsonDbDataStorage::run()
     m_notificationObjectUuid = m_jsonDb->registerNotification(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate
                                                                                         | JsonDbClient::NotifyUpdate
                                                                                         | JsonDbClient::NotifyRemove),
-                                                              QOrganizerJsonDbStr::notificationQuery());
+                                                              QOrganizerJsonDbStr::jsonDbNotificationQuery());
 
     connect(this, SIGNAL(requestInitialized()), this, SLOT(handleRequest()));
     connect(m_jsonDb, SIGNAL(notified(const QString&, const QtAddOn::JsonDb::JsonDbNotification&)),
@@ -258,7 +258,7 @@ void QOrganizerJsonDbDataStorage::onNotified(const QString &notifyUuid, const Qt
         return;
 
     QString jsonType(m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject));
-    if (jsonType == QOrganizerJsonDbStr::event() || jsonType == QOrganizerJsonDbStr::todo()) {
+    if (jsonType == QOrganizerJsonDbStr::jsonDbEventType() || jsonType == QOrganizerJsonDbStr::jsonDbTodoType()) {
         switch (notification.action()) {
         case JsonDbClient::NotifyCreate:
             emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
@@ -270,7 +270,7 @@ void QOrganizerJsonDbDataStorage::onNotified(const QString &notifyUuid, const Qt
             emit itemRemoved(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
             break;
         }
-    } else if (jsonType == QOrganizerJsonDbStr::collection()) {
+    } else if (jsonType == QOrganizerJsonDbStr::jsonDbCollectionType()) {
         switch (notification.action()) {
         case JsonDbClient::NotifyCreate:
             emit collectionAdded(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
@@ -460,7 +460,7 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
         // For now we fetch the whole item, even though more optimal would be to fetch
         // only uuid, startdate and enddate fields
 
-        //jsondb query [?type="com.nokia.mp.organizer.Item"][=_uuid]
+        //jsondb query [?type="com.nokia.mt.organizer.Item"][=_uuid]
         //newJsonDbQuery += "[=_uuid]";
         break;
     default:

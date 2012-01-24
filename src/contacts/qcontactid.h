@@ -83,12 +83,13 @@ public:
     bool isNull() const;
     QString toString() const;
     static QContactId fromString(const QString &idString);
-    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString);
-    static bool parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString);
-    static QString escapeContactIdParam(const QString &param);
 
 private:
+    static bool parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString);
+    static QString escapeUriParam(const QString &param);
+
     QSharedDataPointer<QContactEngineId> d;
+    friend class QContactManager;
     friend class QContactManagerEngine;
     Q_CONTACTS_EXPORT friend uint qHash(const QContactId &key);
 

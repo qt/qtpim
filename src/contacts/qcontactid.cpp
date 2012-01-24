@@ -73,7 +73,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 /*!
  * Constructs a new contact id. The contact is said to be "null",
    it has null engine id and isNull() for it returns true. This is the default constructor
-   \sa isNull"
+
+   \sa isNull()
  */
 QContactId::QContactId()
         : d(0)
@@ -189,9 +190,9 @@ bool QContactId::isNull() const
 }
 
 /*!
-  Escapes the contactId parameters
+  Escapes the parameters for inclusion to URIs
  */
-QString QContactId::escapeContactIdParam(const QString &param)
+QString QContactId::escapeUriParam(const QString &param)
 {
     QString rich;
     const int len = param.length();
@@ -208,29 +209,6 @@ QString QContactId::escapeContactIdParam(const QString &param)
     }
     rich.squeeze();
     return rich;
-}
-
-/*!
-  Builds a string from the given \a managerName, \a params and \a engineIdString
- */
-QString QContactId::buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
-{
-    // the constructed id string will be of the form: "qtcontacts:managerName:param1=value1&param2=value2:
-    QString ret(QLatin1String("qtcontacts:%1:%2:%3"));
-
-    // we have to escape each param
-    QStringList escapedParams;
-    foreach (const QString &key, params.keys()) {
-        QString arg = params.value(key);
-        arg = QContactId::escapeContactIdParam(arg);
-        QString escapedParam = QContactId::escapeContactIdParam(key) + QLatin1Char('=') + arg;
-        escapedParams.append(escapedParam);
-    }
-
-    // and we escape the engine id string.
-    QString escapedEngineId = QContactId::escapeContactIdParam(engineIdString);
-
-    return ret.arg(managerName, escapedParams.join(QLatin1String("&")), escapedEngineId);
 }
 
 /*!
@@ -303,23 +281,21 @@ QString QContactId::managerUri() const
 }
 
 /*!
- * Returns the contact id as a string. This string can be converted back to equal contact id
+   Returns the contact id as a string. This string can be converted back to equal contact id
    using fromString.
-  \sa fromString
+
+  \sa fromString()
 */
 QString QContactId::toString() const
 {
-    QString mgrName;
-    QMap<QString, QString> params;
-    QString engineId;
-
+    // rely on engine id to supply the full manager uri
     if (d) {
-        QContactManager::parseUri(d->managerUri(), &mgrName, &params);
-        engineId = d->toString();
+        QString result("%1:%2");
+        QString managerUri = d->managerUri();
+        QString escapedEngineId = QContactId::escapeUriParam(d->toString());
+        return result.arg(managerUri, escapedEngineId);
     }
-
-    // having extracted the params the name, we now need to build a new string.
-    return QContactId::buildIdString(mgrName, params, engineId);
+    return QString("qtcontacts:::");
 }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -354,7 +330,8 @@ QDataStream& operator>>(QDataStream &in, QContactId &id)
   Deserializes the given \a idString.  Returns a default-constructed (null)
   contact id if the given \a idString is not a valid, serialized contact id, or
   if the manager engine from which the id came could not be found.
-  \sa toString
+
+  \sa toString()
  */
 QContactId QContactId::fromString(const QString &idString)
 {

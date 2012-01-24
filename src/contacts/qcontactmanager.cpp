@@ -203,7 +203,7 @@ bool QContactManager::parseUri(const QString &uri, QString *pManagerId, QMap<QSt
    Returns a URI that completely describes a manager implementation, datastore, and the parameters
    with which to instantiate the manager, from the given \a managerName, \a params and an optional
    \a implementationVersion.  This function is generally useful only if you intend to construct a
-   manager with the \l fromUri() function, or wish to set the manager URI field in a QContactId
+   manager with the \l fromUri() function, or wish to construct a contact id
    manually (for synchronization or other purposes).  Most clients will not need to use this function.
 */
 QString QContactManager::buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion)
@@ -215,8 +215,8 @@ QString QContactManager::buildUri(const QString &managerName, const QMap<QString
     for (int i=0; i < keys.size(); i++) {
         QString key = keys.at(i);
         QString arg = params.value(key);
-        arg = QContactId::escapeContactIdParam(arg);
-        key = QContactId::escapeContactIdParam(key);
+        arg = QContactId::escapeUriParam(arg);
+        key = QContactId::escapeUriParam(key);
         key = key + QLatin1Char('=') + arg;
         escapedParams.append(key);
     }
@@ -527,9 +527,8 @@ QList<QContact> QContactManager::contacts(const QList<QContactId> &contactIds, c
 }
 
 /*!
-  Adds the given \a contact to the database if \a contact has a
-  default-constructed id, or an id with the manager URI set to the URI of
-  this manager and a id of null.
+  Adds the given \a contact to the database if \a contact has
+  the (default constructed) null id.
 
   If the manager URI of the id of the \a contact is neither empty nor equal to the URI of
   this manager, or id of the \a contact is not null but does not exist in the
@@ -553,8 +552,8 @@ QList<QContact> QContactManager::contacts(const QList<QContactId> &contactIds, c
 
   Returns false on failure, or true on
   success.  On successful save of an contact with a null id, its
-  id will be set to a new, valid id with the manager URI set to the URI of
-  this manager, and the id set to a new, valid id
+  id will be set to a new, non-null id.
+
   The manager will automatically synthesize the display label of the contact when it is saved.
   The manager is not required to fetch updated details of the contact on save,
   and as such, clients should fetch a contact if they want the most up-to-date information

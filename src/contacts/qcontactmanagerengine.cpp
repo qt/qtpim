@@ -304,7 +304,7 @@ bool QContactManagerEngine::setSelfContactId(const QContactId& contactId, QConta
   Returns the id of the "self" contact which has previously been set.
   If no "self" contact has been set, or if the self contact was removed
   from the manager after being set, or if the backend does not support
-  the concept of a "self" contact, an invalid id will be returned
+  the concept of a "self" contact, the null id will be returned
   and the \a error will be set to \c QContactManager::DoesNotExistError.
  */
 QContactId QContactManagerEngine::selfContactId(QContactManager::Error* error) const
@@ -777,8 +777,7 @@ void QContactManagerEngine::setDetailAccessConstraints(QContactDetail *detail, Q
 
 /*!
   Adds the given \a contact to the database if \a contact has a
-  default-constructed id, or an id with the manager URI set to the URI of
-  this manager and a id of null, otherwise updates the contact in
+  null id, otherwise updates the contact in
   the database which has the same id to be the given \a contact.
   If the id is not null but does not identify any contact stored in the
   manager, the function will return false and \a error will be set to
@@ -1579,16 +1578,6 @@ QList<QContactId> QContactManagerEngine::sortContacts(const QList<QContact>& cs,
     }
     return sortedIds;
 }
-
-/*!
-  Returns the engine id from the given \a id.
-  The caller does not take ownership of the pointer, and should not delete returned id or undefined behavior may occur.
- */
-const QContactEngineId* QContactManagerEngine::engineContactId(const QContactId& id)
-{
-    return id.d.data();
-}
-
 
 /*!
   Notifies the manager engine that the given request \a req is in the process of being destroyed.

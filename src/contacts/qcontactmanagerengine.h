@@ -155,7 +155,6 @@ public:
     static QList<QContactId> sortContacts(const QList<QContact> &contacts, const QList<QContactSortOrder> &sortOrders);
 
     static QContactFilter canonicalizedFilter(const QContactFilter &filter);
-    static const QContactEngineId* engineContactId(const QContactId &id);
 
 
 private:

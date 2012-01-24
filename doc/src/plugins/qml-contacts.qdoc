@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -29,28 +29,28 @@
     \group qml-contacts
     \ingroup qtpim
     \ingroup qtpim-qml
-    \title Contacts QML Plugin
-    QML Support for the QtPim Module Contacts API.
+    \title Contacts QML API
+    QML Support for the Contacts API.
 
     \page qml-contacts.html
 
-    \title Contacts QML Plugin
+    \title Contacts QML API
 
-    \brief A QML plugin for the QtPim Module Contacts API.
+    \brief A QML plugin for the Contacts API.
 
     \section1 Overview
 
-    To be able to use this component the QML \i {import} statement needs to
+    To be able to use this component the QML \e {import} statement needs to
     reference the module before it can used. Simply add the following to the QML
     file:
 
      \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Contacts import
 
     The Contacts API enables client to search for contacts data from local backends and use
-    filters to get only the relevant results. The QML Contacts Plugin delivers this capability in
+    filters to get only the relevant results. The QML Contacts API delivers this capability in
     easy to use form.
 
-    The following describes the API. You can also study the \l{Qt PIM Examples}{Examples}
+    The following describes the API. You can also study the \l{Qt Personal Information Management Examples}{Examples}
     or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
 
     \section2 Contact Model

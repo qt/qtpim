@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -29,28 +29,28 @@
     \group qml-organizer
     \ingroup qtpim
     \ingroup qtpim-qml
-    \title Organizer QML Plugin
-    QML Support for the QtPim Module Organizer API.
+    \title Organizer QML API
+    QML Support for the Organizer API.
 
     \page qml-organizer.html
 
-    \title Organizer QML Plugin
+    \title Organizer QML API
 
-    \brief A QML plugin for the QtPim Module Organizer API.
+    \brief A QML plugin for the Organizer API.
 
     \section1 Overview
 
-    To be able to use this component the QML \i {import} statement needs to
+    To be able to use this component the QML \e {import} statement needs to
     reference the module before it can used. Simply add the following to the QML
     file:
 
      \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Organizer import
 
     The Organizer API enables a client to request calendar, schedule and
-    personal data from local or remote backends. The QML Organizer Plugin
+    personal data from local or remote backends. The QML Organizer API
     delivers these capabilities in an easy to use form.
 
-    The following describes the API. You can also study the \l{Qt PIM Examples}{Examples}
+    The following describes the API. You can also study the \l{Qt Personal Information Management Examples}{Examples}
     or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
 
     \section2 Organizer Items

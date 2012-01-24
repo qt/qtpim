@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -33,7 +33,7 @@
 
     \section1 Events List
 
-    This example shows how to write a simple Calendar Event List with the \l {Organizer QML Plugin}{Organizer QML Plugin}
+    This example shows how to write a simple Calendar Event List with the \l {Organizer QML API}{Organizer QML API}
 
     \section2 Motivation
     This application was written to provide an example to developers of how to use the Qt Quick Organizer and
@@ -49,10 +49,10 @@
     \o import Event lists as ICal\reg *
     \endlist
 
-    [*] \i{iCal iCalendar is a standard \l{http://tools.ietf.org/html/rfc5545}{(RFC 5545)} for calendar data exchange}
+    [*]\e {iCal iCalendar is a standard \l{http://tools.ietf.org/html/rfc5545}{(RFC 5545)} for calendar data exchange}
 
     \section2 Use Case
-    Most people have a need to store Calendar reminders for various events ranging from Weddings, hairdresser appointments,
+    Most people have a need to store Calendar reminders for various events ranging from weddings, hairdresser appointments,
     work meetings to reccuring football training every week.
     This sample application provides a simple Event List  book that allows users
     to retrieve their Calendar Events and modify them, delete them or add new events using either volatile memory of the

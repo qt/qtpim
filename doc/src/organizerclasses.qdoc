@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -30,14 +30,14 @@
 \title Organizer c++ Classes
 \page organizerclasses.html
 
-    \group QtPim
+    \group qtpim
     \title organizer c++ Classes
 
     \section1 Overview
 
-    \section2 Introducing the QtPim module
+    \section2 Introducing the Organizer API
 
-    The QtOrganizer API allows access to calendar event information.
+    The Organizer API allows access to calendar event information.
     It is not a single API but a collection of APIs and frameworks which
     For more details, see the \l {C++ Organizer} {Organizer API overview}.
     The following are the classes involved in this API.

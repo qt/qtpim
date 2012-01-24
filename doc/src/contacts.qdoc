@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -40,7 +40,7 @@ remote backends.
 \ingroup qtpim-c++
 
 The Contacts API enables a client to request contact data from local or
-remote backends. This is part of the QtPim Module.
+remote backends. This is part of the Qt PIM AddOn.
 
 \tableofcontents
 
@@ -289,7 +289,7 @@ Some examples of common usage of the API may be found
 
 \section1 Building and compiling
 
-To build the library, see the QtPim  installation instructions.
+To build the library, see the Qt PIM AddOn installation instructions.
 
 \section1 Reference documentation
 
@@ -300,7 +300,7 @@ To build the library, see the QtPim  installation instructions.
 \section2 "Contact Details" Leaf Classes
 
 Several subclasses of \l{QContactDetail} are provided as part of the
-QtPim Module Contacts API.  They are general in design but are intended
+Qt PIM AddOn Contacts API.  They are general in design but are intended
 to fulfill specific use-cases.  Please note that certain backends may
 choose not to support one or more of these subclasses as they appear here;
 they may offer their own which provide similar functionality.
@@ -351,7 +351,7 @@ For more information on this topic, see please see the documentation on
 
 \section2 Synchronization and Serialization
 
-The Contacts API is used by another QtPim module: the \l {C++ Versit} {Versit}* module.  It allows
+The Contacts API is used by another Qt PIM AddOn module: the \l {C++ Versit} {Versit}* module.  It allows
 serialization of a QContact into a vCard document, and vice versa.
 
 [*] Versit \reg is a trademark of the Internet Mail Consortium.
@@ -366,6 +366,6 @@ See also: \l{Contacts API Usage}
 
 \section1 QML Elements
 
-For details on the QML support provided for the Contacts API see the documentation for the \l {Contacts QML Plugin}.
+For details on the QML support provided for the Contacts API see the documentation for the \l {Contacts QML API}.
 */
 

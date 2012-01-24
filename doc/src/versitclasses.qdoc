@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Moudle.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -29,15 +29,14 @@
 \title Versit c++ Classes
 \page versitclasses.html
 
-    \group QtPim
+    \group qtpim
     \title Versit c++ Classes
 
     \section1 Overview
 
-    \section2 Introducing the QtPim module
+    \section2 Introducing the Versit API
 
-    The Versit API
-    It is not a single API but a collection of APIs and frameworks which
+    The Versit API is not a single API but a collection of APIs and frameworks.
     For more details, see the \l {C++ Versit} {Versit API overview}.
     The following are the classes involved in this API.
 

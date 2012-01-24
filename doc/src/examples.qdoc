@@ -27,10 +27,10 @@
 
 /*!
     \page all-qtpim-examples.html
-    \title Qt PIM Examples
+    \title Qt Personal Information Management Examples
 
-    Qt Pim module within Qt 5 comes with a number of modules. These are Contacts, Organizer and Versit. There are
-     a variety of examples that cover the entire range of the the PIM api's.  You will find them in thier own
+    Qt PIM AddOn within Qt 5 comes with a number of modules. These are Contacts, Organizer and Versit. There are
+     a variety of examples that cover the entire range of the the PIM api's.  You will find them in their own
     documentation but are also accessible from here.
 
     \section2 Contacts

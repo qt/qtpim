@@ -47,3 +47,5 @@ import QtOrganizer 5.0
 import QtContacts 5.0
 //! [Contacts import]
 
+Rectangle {
+}

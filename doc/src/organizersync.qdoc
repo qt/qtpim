@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -54,11 +54,10 @@ applications that the asynchronous API be used where possible.
 \section1 Using The API
 
 The synchronous API offered by the Organizer Items module is available through the QOrganizerManager
-class.  It consists of three major categories:
+class.  It consists of two major categories:
 \list
   \o Organizer Item Manipulation
   \o Item Collection Manipulation
-  \o Schema Manipulation
 \endlist
 
 

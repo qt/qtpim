@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -33,7 +33,7 @@
 
     \section1 Contacts List
 
-    This example shows how to write a simple Contacts browsing application with the \l {Contacts QML Plugin}{Contacts QML Plugin}
+    This example shows how to write a simple Contacts browsing application with the \l {Contacts QML API}{Contacts QML API}
 
     \section2 Motivation
     This application was written to provide an example to developers of how to use the Qt Quick Contacts APIs.
@@ -61,7 +61,7 @@
     Selecting the contact is simply done by clicking the mouse on the desired list element,
     that opens the selected contact in editing view.
 
-    Here we see the \l {ContactsModel} used with a QML List View to show a basic information of contacts.
+    Here we see the \l {ContactModel} used with a QML List View to show a basic information of contacts.
 
     \image qmlcontactslistview-main.png
 

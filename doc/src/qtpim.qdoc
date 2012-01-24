@@ -4,7 +4,7 @@ w/****************************************************************************
 ** All rights reserved.
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the documentation of the Qt Pim Module.
+** This file is part of the documentation of the Qt PIM Module.
 **
 ** $QT_BEGIN_LICENSE:FDL$
 ** GNU Free Documentation License
@@ -29,32 +29,29 @@ w/****************************************************************************
 \title Qt PIM Overview
 \page qtpim.html
 
-    \group QtPim
+    \group qtpim
     \title Qt PIM Addon
 
     \startpage qtpim.html  Qt Reference Documentation
     \title Qt5 Personal Information Management Reference Documentation
 
-    \brief An overview of the Qt5 Personal Information management AddOn Module.
+    \brief An overview of the Qt5 Personal Information Management AddOn Module.
 
     \tableofcontents
 
-
     \section1 Overview
 
-    \section2 Introducing the Qt Personal Information management Addon module
+    \section2 Introducing the Qt Personal Information Management Addon module
 
-    Qt PIM addon module covers Personal Information Management (PIM).
+    Qt PIM AddOn covers Personal Information Management (PIM).
     It is a collection of APIs and frameworks which
     allows you to develop applications using contacts and calendar
     data and versit functionality for exporting and importing data.
 
-    This release contains the following APIs
-
-    To create simple and effective PIM createUI using QML:
+    To create simple and effective UI use the QML API for Contacts or Organizer:
     \annotatedlist  qtpim-qml
 
-    To use low level, non UI, PIM related functionality:
+    To use low level, non UI, PIM related functionality use the C++ Contacts, Organizer or Versit API:
     \annotatedlist  qtpim-c++
 
     These APIs give the developer a range of desirable functions for a
@@ -84,7 +81,7 @@ w/****************************************************************************
     To get started with Qt PIM see the
     \list
         \o \l {Quickstart guide}{Quickstart Guide}
-        \o \l {Qt PIM Examples}{Examples}
+        \o \l {Qt Personal Information Management Examples}{Examples}
         \o \l {Qt Personal Information Management Tutorials}{Tutorials}
 
     \endlist
@@ -107,8 +104,8 @@ w/****************************************************************************
     In cases where UI is not needed the following also exist as c++ interfaces.
 
     \list
-        \o \l {Contacts QML Plugin}{Contacts QML Plugin}
-        \o \l {Organizer QML Plugin}{Organizer QML Plugin}
+        \o \l {Contacts QML API}{Contacts QML API}
+        \o \l {Organizer QML API}{Organizer QML API}
     \endlist
 
     \section2 Contacts

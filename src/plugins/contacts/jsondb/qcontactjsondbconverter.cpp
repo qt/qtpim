@@ -554,11 +554,12 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
         // extended details
         else if (detail.definitionName() == QContactExtendedDetail::DefinitionName) {
             extendedDetail = static_cast<QContactExtendedDetail *>(&detail);
-            if ( !(extendedDetail->name().at(0) == QChar('_')) ) {
+            QString extDetailName = extendedDetail->name();
+            if ( (!extDetailName.isEmpty()) && ((extDetailName.at(0) != QChar('_'))) ) {
                 QVariant property;
                 extendedDetailToJsonDbProperty(*extendedDetail, property);
                 if (!property.isNull())
-                    object->insert(extendedDetail->name(), property);
+                    object->insert(extDetailName, property);
             }
         }
         // display label

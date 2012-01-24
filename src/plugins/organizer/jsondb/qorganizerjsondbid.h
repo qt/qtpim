@@ -81,7 +81,7 @@ public:
 #endif
 
     uint hash() const;
-    void setItemId(QString itemId);
+    void setItemId(const QString &itemId);
 
 private:
     QString m_itemId;
@@ -109,7 +109,7 @@ public:
 #endif
 
     uint hash() const;
-    void setCollectionId(QString collectionId);
+    void setCollectionId(const QString &collectionId);
 
 private:
     QString m_collectionId;

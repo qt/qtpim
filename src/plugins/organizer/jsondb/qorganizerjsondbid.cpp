@@ -120,7 +120,7 @@ uint QOrganizerJsonDbItemId::hash() const
     return QT_PREPEND_NAMESPACE(qHash)(m_itemId);
 }
 
-void QOrganizerJsonDbItemId::setItemId(QString itemId)
+void QOrganizerJsonDbItemId::setItemId(const QString &itemId)
 {
     m_itemId = itemId;
 }
@@ -201,7 +201,7 @@ uint QOrganizerJsonDbCollectionId::hash() const
     return QT_PREPEND_NAMESPACE(qHash)(m_collectionId);
 }
 
-void QOrganizerJsonDbCollectionId::setCollectionId(QString collectionId)
+void QOrganizerJsonDbCollectionId::setCollectionId(const QString &collectionId)
 {
     m_collectionId = collectionId;
 }

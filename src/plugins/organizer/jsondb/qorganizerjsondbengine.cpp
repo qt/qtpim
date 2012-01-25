@@ -342,13 +342,6 @@ bool QOrganizerJsonDbEngine::saveCollection(QOrganizerCollection* collection, QO
 
 bool QOrganizerJsonDbEngine::removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
-    //Check if it is the default collection
-    // TODO: move this check to request handler thread
-    if (defaultCollection (error).id() == collectionId) {
-        *error = QOrganizerManager::PermissionsError;
-        return false;
-    }
-
     QOrganizerCollectionRemoveRequest collectionRemoveReq;
     collectionRemoveReq.setCollectionId(collectionId);
     if (startRequest(&collectionRemoveReq)) {

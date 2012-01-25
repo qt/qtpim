@@ -192,12 +192,8 @@ public:
     inline const static QString alarmTypeCalendar() { return QStringLiteral("Calendar"); }
 
     //warning string
-    inline const static QString warningMoreItemDelete() { return QStringLiteral("Items are delete from jsondb!!"); }
-    inline const static QString warningCollectionMissing() { return QStringLiteral("No default collection! error code:"); }
     inline const static QString warningCollectionRemove() { return QStringLiteral("Number of items deleted from jsondb is not equal to request!!"); }
     inline const static QString warningDefaultCollectionRemove() { return QStringLiteral("Default collection can not be removed!"); }
-    inline const static QString warningDefaultCollectionChange() { return QStringLiteral("Default collection can not be changed!"); }
-    inline const static QString warningDefaultCollectionCreate() { return QStringLiteral("Same name as default collection!"); }
 };
 
 QTORGANIZER_END_NAMESPACE

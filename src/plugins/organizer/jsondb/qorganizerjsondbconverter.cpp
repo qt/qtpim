@@ -230,14 +230,27 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsondbErrorToOrganizerError(
 
 bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QOrganizerItem* item) const
 {
+    QVariantMap objectToParse;
+
     // must handle type before reaching the loop
     QString jsonDbType = object.value(QOrganizerJsonDbStr::jsonDbType()).toString();
-    if (jsonDbType == QOrganizerJsonDbStr::event())
+    if (jsonDbType == QOrganizerJsonDbStr::event()) {
         item->setType(QOrganizerItemType::TypeEvent);
-    else if (jsonDbType == QOrganizerJsonDbStr::todo())
+    } else if (jsonDbType == QOrganizerJsonDbStr::todo()) {
         item->setType(QOrganizerItemType::TypeTodo);
-    else
+    } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType()) {
+        item->setType(QOrganizerItemType::TypeEvent);
+        item->setExtendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic(), true);
+
+        // the data is stored in the "value" field, so dirty code here ;)
+        objectToParse = object.value(QOrganizerJsonDbStr::jsonDbValue()).toMap();
+        objectToParse.insert(QOrganizerJsonDbStr::jsonDbUuid(), object.value(QOrganizerJsonDbStr::jsonDbUuid()));
+    } else {
         return false;
+    }
+
+    if (objectToParse.isEmpty())
+        objectToParse = object;
 
     // other mandatory fields
     bool hasCollectionId(false);
@@ -246,8 +259,8 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
     bool hasItemVersion(false);
 
     // go through all fields
-    QMap<QString, QVariant>::const_iterator i = object.constBegin();
-    while (i != object.constEnd()) {
+    QMap<QString, QVariant>::const_iterator i = objectToParse.constBegin();
+    while (i != objectToParse.constEnd()) {
         if (i.key() == QOrganizerJsonDbStr::jsonDbUuid()) {
             QString jsonDbUuid = i.value().toString();
             if (jsonDbUuid.isEmpty())
@@ -451,6 +464,10 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QVariantMap& object, QO
         }
         ++i;
     }
+
+    // view object is guaranteed to be correct when generated, and missing several mandatory fields as nomral objects
+    if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType())
+        return true;
 
     return hasCollectionId && hasGuid && hasItemId && hasItemVersion;
 }

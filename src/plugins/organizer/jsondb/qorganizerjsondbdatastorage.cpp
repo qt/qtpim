@@ -474,6 +474,11 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
         int trId = m_jsonDb->query(newJsonDbQuery);
         // we don't care about item index when fetching items --> 0 index
         m_transactionIds.insert(trId, 0);
+
+        // can't query normal object and view object at the same time
+        // TODO only query view objects for when needed
+        trId = m_jsonDb->query(QOrganizerJsonDbStr::jsonDbQueryEventViews() + filterString);
+        m_transactionIds.insert(trId, 0);
     } else {
         *m_error = QOrganizerManager::BadArgumentError;
         m_syncWaitCondition.wakeAll();
@@ -499,7 +504,10 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
     } else {
         *m_error = error;
     }
-    m_syncWaitCondition.wakeAll();
+
+    // when querying view objects, 2 queries are fired, so need to check
+    if (m_transactionIds.isEmpty())
+        m_syncWaitCondition.wakeAll();
 }
 
 void QOrganizerJsonDbDataStorage::handleItemsByIdRequest()

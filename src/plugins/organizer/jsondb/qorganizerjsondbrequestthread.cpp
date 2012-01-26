@@ -307,6 +307,13 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         if (item.guid().isEmpty())
             item.setGuid(QUuid::createUuid().toString());
 
+        // check for view object
+        if (item.extendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
+            item.setExtendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
+            item.setId(QOrganizerItemId());
+            itemIsNew = true;
+        }
+
         // remove version in case the item ID is reset
         if (itemIsNew) {
             QOrganizerItemVersion version = item.detail(QOrganizerItemDetail::TypeVersion);

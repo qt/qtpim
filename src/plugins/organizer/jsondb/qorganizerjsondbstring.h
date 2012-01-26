@@ -67,13 +67,19 @@ public:
     inline const static QString jsonDbError() { return QStringLiteral("error"); }
     inline const static QString jsonDbCode() { return QStringLiteral("code"); }
     inline const static QString jsonDbVersion() {return QStringLiteral("_version"); }
+    inline const static QString jsonDbValue() { return QStringLiteral("value"); }
 
     // JsonDb query string
     inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mp.organizer.Event\", \"com.nokia.mp.organizer.Todo\"]]"); }
+    inline const static QString jsonDbQueryEventViews() { return QStringLiteral("[?_type=\"com.nokia.mp.organizer.EventView\"]"); }
     inline const static QString jsonDbQueryAllCollections() { return QStringLiteral("[?_type=\"com.nokia.mp.organizer.Collection\"]"); }
 
     inline const static QString jsonDbQueryCollectionIdsTemplate() { return QStringLiteral("[?collectionId in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
+
+    // event views
+    inline const static QString jsonDbEventViewType() { return QStringLiteral("com.nokia.mp.organizer.EventView"); }
+    inline const static QString eventIsSynthetic() { return QStringLiteral("isSynthetic"); }
 
     //Organizer item string
     inline const static QString itemName() { return QStringLiteral("displayName"); }

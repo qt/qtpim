@@ -700,6 +700,7 @@ void QOrganizerItem::setExtendedDetailData(const QString &name, const QVariant &
     foreach (QOrganizerItemExtendedDetail detail, extendedDetails) {
         if (name == detail.name()) {
             detail.setData(data);
+            saveDetail(&detail);
             return;
         }
     }

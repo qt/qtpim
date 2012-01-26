@@ -47,26 +47,26 @@ ContactsSavingTestCase {
     name: "ContactsSortingTests"
 
     ContactModel {
-        id: modelSortedByFirstName
+        id: model
         autoUpdate:true
-        sortOrders: [
-            SortOrder {
-                detail: ContactDetail.Name
-                field: Name.FirstName
-                direction: Qt.AscendingOrder
-            }
-        ]
+    }
+
+    SortOrder {
+        id: sortOrderByFirstName
+        detail: ContactDetail.Name
+        field: Name.FirstName
+        direction: Qt.AscendingOrder
     }
 
     Contact {
-        id: contact1
+        id: contactWithFirstName1
         Name {
             firstName: "A"
         }
     }
 
     Contact {
-        id: contact2
+        id: contactWithFirstName2
         Name {
             firstName: "B"
         }
@@ -74,30 +74,22 @@ ContactsSavingTestCase {
 
     function test_sortByFirstName()
     {
-        initTestForModel(modelSortedByFirstName);
-
-        emptyContacts(modelSortedByFirstName);
-
-        modelSortedByFirstName.saveContact(contact2);
-        waitForContactsChanged();
-        modelSortedByFirstName.saveContact(contact1);
+        model.sortOrders = [sortOrderByFirstName];
         waitForContactsChanged();
 
-        compareContactArrays(modelSortedByFirstName.contacts, [contact1, contact2]);
+        model.saveContact(contactWithFirstName2);
+        waitForContactsChanged();
+        model.saveContact(contactWithFirstName1);
+        waitForContactsChanged();
 
-        emptyContacts(modelSortedByFirstName);
+        compareContactArrays(model.contacts, [contactWithFirstName1, contactWithFirstName2]);
     }
 
-    ContactModel {
-        id: modelSortedByLastName
-        autoUpdate:true
-        sortOrders: [
-            SortOrder {
-                detail: ContactDetail.Name
-                field: Name.LastName
-                direction: Qt.AscendingOrder
-            }
-        ]
+    SortOrder {
+        id: sortOrderByLastName
+        detail: ContactDetail.Name
+        field: Name.LastName
+        direction: Qt.AscendingOrder
     }
 
     Contact {
@@ -116,30 +108,22 @@ ContactsSavingTestCase {
 
     function test_sortByLastName()
     {
-        initTestForModel(modelSortedByLastName);
-
-        emptyContacts(modelSortedByLastName);
-
-        modelSortedByLastName.saveContact(contactWithLastName2);
-        waitForContactsChanged();
-        modelSortedByLastName.saveContact(contactWithLastName1);
+        model.sortOrders = [sortOrderByLastName];
         waitForContactsChanged();
 
-        compareContactArrays(modelSortedByLastName.contacts, [contactWithLastName1, contactWithLastName2]);
+        model.saveContact(contactWithLastName2);
+        waitForContactsChanged();
+        model.saveContact(contactWithLastName1);
+        waitForContactsChanged();
 
-        emptyContacts(modelSortedByLastName);
+        compareContactArrays(model.contacts, [contactWithLastName1, contactWithLastName2]);
     }
 
-    ContactModel {
-        id: modelSortedByEmailAddress
-        autoUpdate:true
-        sortOrders: [
-            SortOrder {
-                detail: ContactDetail.Email
-                field: EmailAddress.EmailAddress
-                direction: Qt.AscendingOrder
-            }
-        ]
+    SortOrder {
+        id: sortOrderByEmailAddress
+        detail: ContactDetail.Email
+        field: EmailAddress.EmailAddress
+        direction: Qt.AscendingOrder
     }
 
     Contact {
@@ -158,35 +142,15 @@ ContactsSavingTestCase {
 
     function test_sortByEmail()
     {
-        initTestForModel(modelSortedByEmailAddress);
-
-        emptyContacts(modelSortedByEmailAddress);
-
-        modelSortedByEmailAddress.saveContact(contactWithEmailAddress2);
-        waitForContactsChanged();
-        modelSortedByEmailAddress.saveContact(contactWithEmailAddress1);
+        model.sortOrders = [sortOrderByEmailAddress];
         waitForContactsChanged();
 
-        compareContactArrays(modelSortedByEmailAddress.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
+        model.saveContact(contactWithEmailAddress2);
+        waitForContactsChanged();
+        model.saveContact(contactWithEmailAddress1);
+        waitForContactsChanged();
 
-        emptyContacts(modelSortedByEmailAddress);
-    }
-
-    ContactModel {
-        id: modelSortedByLastAndFirstName
-        autoUpdate:true
-        sortOrders: [
-            SortOrder {
-                detail: ContactDetail.Name
-                field: Name.FirstName
-                direction: Qt.AscendingOrder
-            },
-            SortOrder {
-                detail: ContactDetail.Name
-                field: Name.LastName
-                direction: Qt.AscendingOrder
-            }
-        ]
+        compareContactArrays(model.contacts, [contactWithEmailAddress1, contactWithEmailAddress2]);
     }
 
     Contact {
@@ -215,44 +179,155 @@ ContactsSavingTestCase {
 
     function test_sortByLastAndFirstName()
     {
-        if (modelSortedByLastAndFirstName.manager == "jsondb")
-            skip("Not yet supported properly in the contacts jsondb backend.");
-        initTestForModel(modelSortedByLastAndFirstName);
-
-        emptyContacts(modelSortedByLastAndFirstName);
-
-        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName3);
-        waitForContactsChanged();
-        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName2);
-        waitForContactsChanged();
-        modelSortedByLastAndFirstName.saveContact(contactWithFirstAndLastName1);
+        skip("Backends do not support this at the moment.")
+        model.sortOrders = [sortOrderByFirstName, sortOrderByLastName];
         waitForContactsChanged();
 
-        compareContactArrays(modelSortedByLastAndFirstName.contacts,
+        model.saveContact(contactWithFirstAndLastName3);
+        waitForContactsChanged();
+        model.saveContact(contactWithFirstAndLastName2);
+        waitForContactsChanged();
+        model.saveContact(contactWithFirstAndLastName1);
+        waitForContactsChanged();
+
+        compareContactArrays(model.contacts,
                              [contactWithFirstAndLastName1, contactWithFirstAndLastName2,
                              contactWithFirstAndLastName3]);
-
-        emptyContacts(modelSortedByLastAndFirstName);
     }
 
-    function initTestCase() {
-        var spy1 = initTestForModel(modelSortedByFirstName);
-        var spy2 = initTestForModel(modelSortedByLastName);
-        var spy3 = initTestForModel(modelSortedByEmailAddress);
-        var spy4 = initTestForModel(modelSortedByLastAndFirstName);
+    SortOrder {
+        id: sortOrderInDefaultOrder
+        detail: ContactDetail.Name
+        field: Name.FirstName
+    }
 
-        spy1.wait();
-        spy2.wait();
-        spy3.wait();
-        spy4.wait();
+    Contact {
+        id: contactInDefaultOrder1
+        Name {
+            firstName: "A"
+        }
+    }
+
+    Contact {
+        id: contactInDefaultOrder2
+        Name {
+            firstName: "B"
+        }
+    }
+
+    function test_sortInDefaultOrder()
+    {
+        model.sortOrders = [sortOrderInDefaultOrder];
+        waitForContactsChanged();
+
+        model.saveContact(contactInDefaultOrder2);
+        waitForContactsChanged();
+        model.saveContact(contactInDefaultOrder1);
+        waitForContactsChanged();
+
+        compareContactArrays(model.contacts, [contactInDefaultOrder1,
+                                              contactInDefaultOrder2]);
+    }
+
+    SortOrder {
+        id: sortOrderInAscendingOrder
+        detail: ContactDetail.Name
+        field: Name.FirstName
+        direction: Qt.AscendingOrder
+    }
+
+    Contact {
+        id: contactInAscendingOrder1
+        Name {
+            firstName: "A"
+        }
+    }
+
+    Contact {
+        id: contactInAscendingOrder2
+        Name {
+            firstName: "B"
+        }
+    }
+
+    function test_sortInAscendingOrder()
+    {
+        model.sortOrders = [sortOrderInAscendingOrder];
+        waitForContactsChanged();
+
+        model.saveContact(contactInAscendingOrder2);
+        waitForContactsChanged();
+        model.saveContact(contactInAscendingOrder1);
+        waitForContactsChanged();
+
+        compareContactArrays(model.contacts, [contactInAscendingOrder1,
+                                              contactInAscendingOrder2]);
+    }
+
+    SortOrder {
+        id: sortOrderInDescendingOrder
+        detail: ContactDetail.Name
+        field: Name.FirstName
+        direction: Qt.DescendingOrder
+    }
+
+    Contact {
+        id: contactInDescendingOrder1
+        Name {
+            firstName: "B"
+        }
+    }
+
+    Contact {
+        id: contactInDescendingOrder2
+        Name {
+            firstName: "A"
+        }
+    }
+
+    function test_sortInDescendingOrder()
+    {
+        model.sortOrders = [sortOrderInDescendingOrder];
+        waitForContactsChanged();
+
+        model.saveContact(contactInDescendingOrder2);
+        waitForContactsChanged();
+        model.saveContact(contactInDescendingOrder1);
+        waitForContactsChanged();
+
+        compareContactArrays(model.contacts, [contactInDescendingOrder1,
+                                              contactInDescendingOrder2]);
+    }
+
+    // Init & teardown
+
+    function initTestCase() {
+        initTestForModel(model);
+        waitForContactsChanged();
+        // The wait is needed so the model is populated
+        // (e.g. with garbage left from previous test runs)
+        // before cleanup() is called.
+        emptyContacts(model);
+    }
+
+    function init() {
+        initTestForModel(model);
+        emptyContacts(model);
+    }
+
+    function cleanup() {
+        if (model.sortOrders.length > 0) {
+            model.sortOrders = [];
+            waitForContactsChanged();
+        }
+        emptyContacts(model);
     }
 
     function cleanupTestCase() {
-        finishTestForModel(modelSortedByFirstName);
-        finishTestForModel(modelSortedByLastName);
-        finishTestForModel(modelSortedByEmailAddress);
-        finishTestForModel(modelSortedByLastAndFirstName);
+        finishTestForModel(model);
     }
+
+    // Helper functions
 
     function compareContactArrays(actual, expected) {
         compare(actual.length, expected.length, "length");

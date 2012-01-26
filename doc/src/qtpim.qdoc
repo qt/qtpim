@@ -26,11 +26,8 @@ w/****************************************************************************
 ****************************************************************************/
 
 /*!
-\title Qt PIM Overview
-\page qtpim.html
-
+    \page qtpim.html
     \group qtpim
-    \title Qt PIM Addon
 
     \startpage qtpim.html  Qt Reference Documentation
     \title Qt5 Personal Information Management Reference Documentation

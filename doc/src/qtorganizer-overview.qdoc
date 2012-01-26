@@ -1,0 +1,101 @@
+w/****************************************************************************
+**
+** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: http://www.qt-project.org/
+**
+** This file is part of the documentation of the Qt PIM Module.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \page qtorganizer-overview.html
+    \group qtpim
+
+    \startpage qtpim.html  Qt Reference Documentation
+    \title Qt5 Organizer API Reference Documentation
+
+    \brief An overview of the Qt Organizer API.
+
+    \tableofcontents
+
+    \section1 Overview
+
+    \section2 Introducing Qt Organizer API set
+
+    The Organizer API is part of a collection of  \l{Qt5 Personal Information Management
+    Reference Documentation}{Personal Information Management (PIM)} API's allowing
+    access to Calendar information.
+
+    With the Organizer API typical use cases are:
+
+        \list
+        \o Access a list of calendar events from the calendar database
+        supported by the selected backend.
+        \o Be able to import iCalendar events into your selected calendar
+        database
+        \o Be able to share your events by exporting iCalendar content.
+        \endlist
+
+    The following documentation leads you through what
+    you can do, getting started, some simple examples and tutorials.
+
+    \section1 Getting Started
+    To get started with Qt Organizer API  see the
+    \list
+        \o \l {Quickstart guide}{Quickstart Guide}
+        \o \l {Qt Personal Information Management Examples}{Examples}
+        \o \l {Qt Personal Information Management Tutorials}{Tutorials}
+
+    \endlist
+
+    \section2 QML API
+
+    The power of QML can be explored to create very powerful yet simple UI
+    applications, and the Organizer QML API makes this possible.
+
+    It is encouraged whenever doing developing a UI application to utilise
+    the power of QML and these API's.
+
+    \list
+        \o \l {Organizer QML API}{Organizer QML API}
+    \endlist
+
+    \section2 C++ Organizer API
+
+    An API for management of calendar, scheduling and personal data
+    from local or remote backends.   It includes the ability to create,
+    edit, list, delete and lookup organizer information whether it is stored
+    locally or remotely.
+
+    \list
+        \o \l {C++ Organizer} {Organizer C++ API}.
+    \endlist
+
+    \section2 Versit (Organizer)
+
+    This is a continuation of the Versit API to interface the Organizer API
+    with iCalendar documents using the same framework as for vCards.
+
+    \list
+        \o \l {C++ Versit}{Versit API}.
+    \endlist
+
+*/

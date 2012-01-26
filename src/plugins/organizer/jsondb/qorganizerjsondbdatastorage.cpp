@@ -571,7 +571,7 @@ void QOrganizerJsonDbDataStorage::handleItemsByIdRequest()
     const QString uuidTemplate(QStringLiteral("\"%1\","));
     QString itemQuery;
     for (int i = 0; i < m_itemIds.size(); ++i)
-        itemQuery += uuidTemplate.arg(m_itemIds.at(i).toString().remove(QOrganizerJsonDbStr::managerName()));
+        itemQuery += uuidTemplate.arg(m_itemIds.at(i).isNull() ? QString() : QOrganizerManagerEngine::engineItemId(m_itemIds.at(i))->toString());
 
     // remove the last ","
     itemQuery.truncate(itemQuery.length() - 1);
@@ -614,9 +614,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsRequest()
 {
     //loop to remove all the items from the remove items ids list
     for (int i = 0; i < m_itemIds.size(); i++) {
-        //Get the uuid by removing the "qtorgainizer:jsondb::" prefix from id
-        QString jsonUuid = m_itemIds.at(i).toString();
-        jsonUuid = jsonUuid.remove(QOrganizerJsonDbStr::managerName());
+        QString jsonUuid = m_itemIds.at(i).isNull() ? QString() : QOrganizerManagerEngine::engineItemId(m_itemIds.at(i))->toString();
 
         QVariantMap jsonDbRemoveItem;
         jsonDbRemoveItem.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonUuid);

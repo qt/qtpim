@@ -61,8 +61,9 @@ public:
     bool toJsonContact(QVariantMap* object, const QContact& contact);
     bool updateContexts(const QVariantMap& object, QContactDetail* detail);
     bool updateContexts(const QContactDetail& detail, QVariantMap* object);
-    QString queryFromRequest(QContactAbstractRequest* request);
-    QString convertFilter(const QContactFilter& filter) const;
+    bool queryFromRequest(QContactAbstractRequest* request,QString &jsonDbQueryStr);
+    bool singleFilterToJsondbQuery(const QContactFilter& filter,QString &jsonDbQueryStr) const;
+    bool compoundFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     QString convertSortOrder(const QList<QContactSortOrder>& sortOrders) const;
     QString jsonDbNotificationObjectToContactType(const QVariantMap &object) const;
     QContactId jsonDbNotificationObjectToContactId(const QVariantMap &object) const;
@@ -83,6 +84,8 @@ private:
     void extendedDetailToJsonDbProperty(const QContactExtendedDetail &extendedDetail, QVariant& property) const;
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
+    bool idFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
+    bool detailFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
 
     static const int jsonDbVersionLength;
 };

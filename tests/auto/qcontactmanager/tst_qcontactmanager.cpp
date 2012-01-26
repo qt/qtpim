@@ -180,6 +180,8 @@ private slots:
     void changeSet();
     void fetchHint();
     void lazyConnections();
+    void testInterSectionOfIdFilters();
+    void testInterSectionOfIdAndDetailFilters();
 
     /* Special test with special data */
     void uriParsing_data();
@@ -202,6 +204,8 @@ private slots:
     void relationships_data() {addManagers();}
     void contactType_data() {addManagers();}
     void lateDeletion_data() {addManagers();}
+    void testInterSectionOfIdFilters_data() {addManagers();}
+    void testInterSectionOfIdAndDetailFilters_data() {addManagers();}
 };
 
 // Helper class that connects to a signal on ctor, and disconnects on dtor
@@ -859,6 +863,171 @@ void tst_QContactManager::add()
         dumpContactDifferences(veryContactable, retrievedContactable);
         QCOMPARE(veryContactable, retrievedContactable);
     }
+}
+
+void tst_QContactManager::testInterSectionOfIdAndDetailFilters()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    //prepare filter data
+    QContact alice = createContact("Alice", "inWonderland", "1234567");
+    QVERIFY(cm->saveContact(&alice));
+
+    QContact john = createContact("John", "inFinland", "2345678");
+    QVERIFY(cm->saveContact(&john));
+
+    QContactIdFilter idFilter1;
+    QList<QContactId> contactIdList;
+    contactIdList.append(alice.id());
+    idFilter1.setIds(contactIdList);
+
+    QContactDetailFilter df;
+    df.setDetailDefinitionName(QContactName::DefinitionName,QContactName::FieldFirstName);
+    df.setValue("Alice");
+
+    contactIdList.clear();
+
+    QContactIntersectionFilter isf;
+    isf.append(idFilter1);
+    isf.append(df);
+
+    //Intersection filter of a matching Idfilter and detailfilter
+    QList<QContact> contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 1);
+
+    contactIdList.clear();
+
+    //Intersection filter of a non matching Idfilter and detailfilter
+    isf.remove(df);
+    df.setValue("John");
+    isf.append(df);
+
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 0);
+}
+
+void tst_QContactManager::testInterSectionOfIdFilters()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    //prepare filter data
+    QContact alice = createContact("Alice", "inWonderland", "1234567");
+    QVERIFY(cm->saveContact(&alice));
+
+    QContact john = createContact("John", "inFinland", "2345678");
+    QVERIFY(cm->saveContact(&john));
+
+    QContactIdFilter idFilter1;
+    QList<QContactId> contactIdList;
+    contactIdList.append(alice.id());
+    idFilter1.setIds(contactIdList);
+
+    QContactIdFilter idFilter2;
+    contactIdList.clear();
+    contactIdList.append(john.id());
+    idFilter2.setIds(contactIdList);
+
+    contactIdList.clear();
+
+    //Test intersection filter with two different idFilters
+    QContactIntersectionFilter isf;
+    isf.append(idFilter1);
+    isf.append(idFilter2);
+
+    QList<QContact> contactList = cm->contacts(idFilter1);
+    QCOMPARE(contactList.size(), 1);
+    QCOMPARE(contactList.at(0).id(), alice.id());
+
+    contactIdList.clear();
+
+    //When we intersect with two idFilters each having different
+    //contact Ids the result should be zero
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 0);
+
+
+    //Test intersection filter with two idFilters
+    //each having same contactid as other the result should be 1
+    isf.remove(idFilter2);
+    contactIdList.append(alice.id());
+    idFilter2.setIds(contactIdList);
+
+    contactIdList.clear();
+
+    isf.append(idFilter2);
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 1);
+
+    contactIdList.clear();
+
+    // Test intersection filter with two idFilters
+    // idFilter1 has alice's contactId
+    // And idfilter2 has alice's and John's contactId
+    // The result should be one and its alice
+
+    contactIdList << alice.id() << john.id();
+    idFilter2.setIds(contactIdList);
+    isf.append(idFilter2);
+
+    contactIdList.clear();
+
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 1);
+    QCOMPARE(contactList.at(0).id(), alice.id());
+
+    //clean up filters and the contactIdList
+    isf.remove(idFilter2);
+    isf.remove(idFilter1);
+    contactIdList.clear();
+
+    //Test with null contactId filter: idFilter1 has one contact and idFilter2 has null id
+    //idFilters with null id should not return any thing so result should be zero
+    contactIdList.append(alice.id());
+    idFilter1.setIds(contactIdList);
+    contactIdList.clear();
+    contactIdList.append(QContactId());
+    idFilter2.setIds(contactIdList);
+    isf.append(idFilter1);
+    isf.append(idFilter2);
+    QCOMPARE(isf.filters().size(), 2);
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 0);
+
+    //clean up filters and the contactIdList
+    isf.remove(idFilter2);
+    isf.remove(idFilter1);
+    contactIdList.clear();
+
+    //Three filters: intersection of two IdFilters each having the same contact id
+    //as the other with an IdFilter having one different contactId the result should be zero
+    contactIdList.append(alice.id());
+    idFilter1.setIds(contactIdList);
+    contactIdList.clear();
+
+    contactIdList.append(john.id());
+    idFilter2.setIds(contactIdList);
+    contactIdList.clear();
+
+    QContactIdFilter idFilter3;
+    contactIdList.append(john.id());
+    idFilter3.setIds(contactIdList);
+    contactIdList.clear();
+
+    isf.append(idFilter1);
+    isf.append(idFilter2);
+    isf.append(idFilter3);
+
+    QCOMPARE(isf.filters().size(), 3);
+    contactList = cm->contacts(isf);
+    QCOMPARE(contactList.size(), 0);
+
+    //clean up filters and the contactIdList
+    isf.remove(idFilter1);
+    isf.remove(idFilter2);
+    isf.remove(idFilter3);
+    contactIdList.clear();
 }
 
 void tst_QContactManager::update()
@@ -3534,7 +3703,6 @@ void tst_QContactManager::compareVariant_data()
     QTest::newRow("datetimes dt4 = dt4") << QVariant(dt4) << QVariant(dt4) << Qt::CaseInsensitive << 0;
     QTest::newRow("datetimes dt5 = dt5") << QVariant(dt5) << QVariant(dt5) << Qt::CaseInsensitive << 0;
 }
-
 
 QTEST_MAIN(tst_QContactManager)
 #include "tst_qcontactmanager.moc"

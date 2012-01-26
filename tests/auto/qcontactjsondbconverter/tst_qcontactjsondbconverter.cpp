@@ -76,7 +76,7 @@ private Q_SLOTS:
     void toJsonContactTest();
     void updateContextsTest();
     void queryFromRequestTest();
-    void convertFilterTest();
+    void convertCompoundFilterTest();
     void convertSortOrderTest();
     void convertIdTest();
 private:
@@ -753,13 +753,9 @@ void tst_QcontactJsondbConverter::updateContextsTest()
 }
 
 
-
-
-
 void tst_QcontactJsondbConverter::queryFromRequestTest()
 {
     QContactJsonDbConverter converter;
-    QContactJsonDbEngine engine;
     // ContactSaveRequest
     // Functionality still missing
 
@@ -769,40 +765,53 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     QContactDetailFilter detailFilter;
     detailFilter.setDetailDefinitionName(QContactName::DefinitionName);
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QString jsonDbQuery;
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name exists]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Contactdetail with field and value
     detailFilter.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
     detailFilter.setValue("John");
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name.firstName=\"John\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Contactdetail with matchflags
     // Contains flag
     detailFilter.setMatchFlags(QContactFilter::MatchContains);
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name.firstName=~\"/*John*/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Exactly flag
     detailFilter.setMatchFlags(QContactFilter::MatchExactly);
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name.firstName=\"John\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Starts with flag
     detailFilter.setMatchFlags(QContactFilter::MatchStartsWith);
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name.firstName =~ \"/John*/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Ends with flag
     detailFilter.setMatchFlags(QContactFilter::MatchEndsWith);
     request.setFilter(detailFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?name.firstName =~ \"/*John/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
 
     // Detail range filtering
     // Functionality still missing
 
-    // Localid filtering
+    // contactId filtering
     QContactIdFilter idFilter;
     QContactJsonDbId *engineId = new QContactJsonDbId("123");
     QContactId testId (engineId);
@@ -810,8 +819,10 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     ids.append(testId);
     idFilter.setIds(ids);
     request.setFilter(idFilter);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?_uuid in [\"123\"]]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
 
     // Sortings
     QContactSortOrder sort;
@@ -819,27 +830,51 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     sort.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
     sort.setDirection(Qt::DescendingOrder);
     request.setSorting(QList<QContactSortOrder>() << sort);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?_uuid in [\"123\"]][\\name.firstName]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
     // Sort by lastname, ascending
     sort.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
     sort.setDirection(Qt::AscendingOrder);
     request.setSorting(QList<QContactSortOrder>() << sort);
-    QCOMPARE(converter.queryFromRequest(&request),
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
              QString("[?_type=\"%1\"][?_uuid in [\"123\"]][/name.lastName]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
 }
 
 
-
-
-
-void tst_QcontactJsondbConverter::convertFilterTest()
+void tst_QcontactJsondbConverter::convertCompoundFilterTest()
 {
-    // Functionality still missing
+    QContactJsonDbConverter converter;
+
+    // prepare ContactId filter
+    QContactIdFilter idFilter;
+    QContactJsonDbId *engineId = new QContactJsonDbId("123");
+    QContactId testId (engineId);
+    QList<QContactId> ids;
+    ids.append(testId);
+    idFilter.setIds(ids);
+
+    //prepare detail filter
+    QContactDetailFilter detailFilter;
+    detailFilter.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    detailFilter.setValue("John");
+
+    //prepare Intersection of contactIdFilter and detailFilter
+    QContactIntersectionFilter isf;
+    isf.append(detailFilter);
+    isf.append(idFilter);
+
+    // now convert the Intersection Filter to Jsondb query
+    QContactFilter filter(isf);
+    QString filterStr;
+    QVERIFY(converter.compoundFilterToJsondbQuery(filter,filterStr));
+    QCOMPARE(filterStr,
+             QString("[?name.firstName=\"John\"][?_uuid in [\"123\"]]"));
+    filterStr.clear();
 }
-
-
-
 
 
 void tst_QcontactJsondbConverter::convertSortOrderTest()

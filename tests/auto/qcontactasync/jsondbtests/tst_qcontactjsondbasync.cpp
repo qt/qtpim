@@ -208,6 +208,8 @@ private slots:
     void contactSave_data() { addManagers(); }
     void contactSaveErrorHandling();
     void contactSaveErrorHandling_data() { addManagers(); }
+    void contactSaveRemovedContacts();
+    void contactSaveRemovedContacts_data() { addManagers(); }
     void contactPartialSave();
     void contactPartialSave_data() { addManagers(); }
     void contactPartialSaveAsync();
@@ -899,6 +901,48 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QVERIFY(csr.error() == QContactManager::InvalidContactTypeError);
 }
 
+void tst_QContactJsonDbAsync::contactSaveRemovedContacts()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactSaveRequest csr;
+
+    // Make three test contacts.
+    QContactName nameDetail;
+    nameDetail.setFirstName("Test1");
+    QContact testContact1;
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test2");
+    QContact testContact2;
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test3");
+    QContact testContact3;
+    testContact3.saveDetail(&nameDetail);
+    QList<QContact> testContacts;
+    testContacts << testContact1 << testContact2 << testContact3;
+
+    // Save all three test contacts.
+    csr.setManager(cm.data());
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
+    QCOMPARE(csr.error(), QContactManager::NoError);
+
+    // And then remove all of them.
+    QList<QContactId> contactIds = cm->contactIds();
+    QVERIFY(cm->removeContacts(contactIds));
+
+    // Try now to save again the same three test contacts with the ids of
+    // just removed contacts to fail and check proper error code.
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.error(), QContactManager::DoesNotExistError);
+}
 
 void tst_QContactJsonDbAsync::contactPartialSave()
 {

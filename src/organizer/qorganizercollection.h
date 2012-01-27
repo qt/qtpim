@@ -79,10 +79,10 @@ public:
     QVariant metaData(const QString& key) const;
 
     /* Default meta data keys */
-    const static QString KeyName;
-    const static QString KeyDescription;
-    const static QString KeyColor;
-    const static QString KeyImage;
+    static const QString KeyName;
+    static const QString KeyDescription;
+    static const QString KeyColor;
+    static const QString KeyImage;
 
 private:
     friend class QOrganizerManagerEngine;

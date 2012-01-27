@@ -86,7 +86,7 @@ protected:
     className() : QOrganizerItemReminder(DefinitionName) {} \
     className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, DefinitionName) {} \
     className& operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    const static DetailType DefinitionName;
+    static const DetailType DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 

@@ -55,9 +55,9 @@ public:
         FieldClassification = 0
     };
 
-    const static QString Public;
-    const static QString Private;
-    const static QString Confidential;
+    static const QString Public;
+    static const QString Private;
+    static const QString Confidential;
 
     void setClassification(const QString &classification);
     QString classification() const;

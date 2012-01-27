@@ -144,7 +144,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &det
     className() : QOrganizerItemDetail(DefinitionName) {} \
     className(const QOrganizerItemDetail &other) : QOrganizerItemDetail(other, DefinitionName) {} \
     className &operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    const static DetailType DefinitionName;
+    static const DetailType DefinitionName;
 
 QTORGANIZER_END_NAMESPACE
 

@@ -44,6 +44,8 @@ import QtTest 1.0
 import QtContacts 5.0
 
 ContactsSavingTestCase {
+
+    id: testcase
     name: "ContactsFilteringByDetailE2ETests"
 
     ContactModel {
@@ -51,17 +53,13 @@ ContactsSavingTestCase {
         autoUpdate: true
     }
 
-    DetailFilter {
-        id: filterByFirstName
-        detail: ContactDetail.Name
-        field: Name.FirstName
-        matchFlags: Filter.MatchExactly
-    }
-
     Contact {
         id: contact1;
         Name {
             firstName: "A"
+        }
+        PhoneNumber {
+            number: "1111111111"
         }
     }
 
@@ -70,56 +68,10 @@ ContactsSavingTestCase {
         Name {
             firstName: "B"
         }
-    }
-
-    function test_filterByDetail() {
-        model.saveContact(contact1);
-        waitForContactsChanged();
-        model.saveContact(contact2);
-        waitForContactsChanged();
-
-        filterByFirstName.value = "A";
-        model.filter = filterByFirstName;
-        waitForContactsChanged();
-
-        compare(model.contacts.length, 1);
-        compare(model.contacts[0].name.firstName, "A");
-    }
-
-    Contact {
-        id: contactNotMatching;
-        Name {
-            firstName: "A"
+        PhoneNumber {
+            number: "2222222222"
         }
     }
-
-    function test_filterByDetailValueWhichDoesNotMatchAny() {
-        model.saveContact(contactNotMatching);
-        waitForContactsChanged();
-
-        filterByFirstName.value = "B";
-        model.filter = filterByFirstName;
-        waitForContactsChanged();
-
-        compare(model.contacts.length, 0);
-    }
-
-    Contact {
-        id: contactWithoutFirstName;
-    }
-
-    function test_filterByDetailWhenContactDoesNotHaveValueForThatDetail() {
-        model.saveContact(contactWithoutFirstName);
-        waitForContactsChanged();
-
-        filterByFirstName.value = "A";
-        model.filter = filterByFirstName;
-        waitForContactsChanged();
-
-        compare(model.contacts.length, 0);
-    }
-
-    // Init & teardown
 
     function initTestCase() {
         initTestForModel(model);
@@ -127,28 +79,174 @@ ContactsSavingTestCase {
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
-        cleanupModel();
+        emptyContacts(model);
+        model.saveContact(contact1);
+        waitForContactsChanged();
+        model.saveContact(contact2);
+        waitForContactsChanged();
+        compare(model.contacts.length, 2);
     }
 
-    function init() {
-        initTestForModel(model);
-        cleanupModel();
+    function createDetailFilter(detail, field, value, matchFlags) {
+        var filter = Qt.createQmlObject(
+                    "import QtContacts 5.0;" +
+                    "DetailFilter {}",
+                    testcase);
+
+        filter.detail = detail
+        filter.field = field
+        filter.value = value
+        filter.matchFlags = matchFlags
+        return filter;
     }
+
+    function createPhoneNumberFilter(value, matchFlags) {
+        return createDetailFilter(ContactDetail.PhoneNumber, PhoneNumber.Number, value, matchFlags);
+    }
+
+    function createFirstNameFilter(value, matchFlags) {
+        return createDetailFilter(ContactDetail.Name, Name.FirstName, value, matchFlags);
+    }
+
+    function test_filterByDetail_data() {
+        return [{
+                    tag: "Phone number, match exactly, identical value",
+                    filter: createPhoneNumberFilter(contact1.phoneNumber.number, Filter.MatchExactly),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match exactly, no match",
+                    filter: createPhoneNumberFilter("1111", Filter.MatchExactly),
+                    matches: []
+                },
+                {
+                    tag: "Phone number, match exactly, empty string",
+                    filter: createPhoneNumberFilter("", Filter.MatchExactly),
+                    matches: []
+                },
+                {
+                    tag: "Phone number, match contains, identical value",
+                    filter: createPhoneNumberFilter(contact1.phoneNumber.number, Filter.MatchContains),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match contains, no match",
+                    filter: createPhoneNumberFilter(" ", Filter.MatchContains),
+                    matches: []
+                },
+                {
+                    tag: "Phone number, match contains, matching substring",
+                    filter: createPhoneNumberFilter("1111", Filter.MatchContains),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match contains, empty string",
+                    filter: createPhoneNumberFilter("", Filter.MatchContains),
+                    matches: [contact1, contact2]
+                },
+                {
+                    tag: "Phone number, match starts with, identical value",
+                    filter: createPhoneNumberFilter(contact1.phoneNumber.number, Filter.MatchStartsWith),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match starts with, no match",
+                    filter: createPhoneNumberFilter(" ", Filter.MatchStartsWith),
+                    matches: []
+                },
+                {
+                    tag: "Phone number, match starts with, matching substring",
+                    filter: createPhoneNumberFilter("1111", Filter.MatchStartsWith),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match starts with, empty string",
+                    filter: createPhoneNumberFilter("", Filter.MatchStartsWith),
+                    matches: [contact1, contact2]
+                },
+                {
+                    tag: "Phone number, match ends with, identical value",
+                    filter: createPhoneNumberFilter(contact1.phoneNumber.number, Filter.MatchEndsWith),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match ends with, no match",
+                    filter: createPhoneNumberFilter(" ", Filter.MatchEndsWith),
+                    matches: []
+                },
+                {
+                    tag: "Phone number, match ends with, matching substring",
+                    filter: createPhoneNumberFilter("1111", Filter.MatchEndsWith),
+                    matches: [contact1]
+                },
+                {
+                    tag: "Phone number, match ends with, empty string",
+                    filter: createPhoneNumberFilter("", Filter.MatchEndsWith),
+                    matches: [contact1, contact2]
+                },
+                {
+                    tag: "First name, match exactly, identical value",
+                    filter: createFirstNameFilter(contact1.name.firstName, Filter.MatchExactly),
+                    matches: [contact1]
+                },
+                {
+                    tag: "First name, match exactly, no match",
+                    filter: createFirstNameFilter("C", Filter.MatchExactly),
+                    matches: []
+                },
+                {
+                    tag: "Last name, match exactly, no contact has a value for last name",
+                    filter: createDetailFilter(ContactDetail.Name, Name.LastName, "NoContactHasThisAsLastName", Filter.MatchExactly),
+                    matches: []
+                },
+               ]
+    }
+
+    function test_filterByDetail(data) {
+        model.filter = data.filter;
+        waitForContactsChanged();
+        compare(model.contacts.length, data.matches.length, data.tag);
+        // Compare filtered set to expected set
+        for (var i = 0; i < model.contacts.length; i++) {
+            var match = false;
+            for (var j = 0; j < data.matches.length; j++) {
+                if (model.contacts[i].name.firstName == data.matches[j].name.firstName &&
+                    model.contacts[i].phoneNumber.number == data.matches[j].phoneNumber.number)
+                    match = true;
+            }
+            compare(match, true);
+        }
+        console.log("PASS");
+    }
+
+    function test_settingMatchFlagDoesChangeTheContacts() {
+        var filter = createPhoneNumberFilter("1111", Filter.MatchExactly);
+        model.filter = filter;
+        waitForContactsChanged();
+        compare(model.contacts.length, 0);
+        model.filter.matchFlags = Filter.MatchContains;
+        waitForContactsChanged();
+        compare(model.contacts.length, 1);
+        model.filter.matchFlags = Filter.MatchStartsWith;
+        waitForContactsChanged();
+        compare(model.contacts.length, 1);
+        model.filter.matchFlags = Filter.MatchEndsWith;
+        waitForContactsChanged();
+        compare(model.contacts.length, 1);
+    }
+
+    // Teardown
 
     function cleanup() {
-        cleanupModel();
-    }
-
-    function cleanupTestCase() {
-        cleanupModel();
-        finishTestForModel(model);
-    }
-
-    function cleanupModel() {
         if (model.filter) {
             model.filter = null;
             waitForContactsChanged();
         }
-        emptyContacts(model);
     }
+
+    function cleanupTestCase() {
+        emptyContacts(model);
+        finishTestForModel(model);
+    }
+
 }

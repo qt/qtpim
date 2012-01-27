@@ -84,60 +84,6 @@ The in-memory engine supports the default schema, and provides all functionality
 the Contacts API; however, all data is stored in-memory and is not persisted in any
 way.
 
-\section3 \bold{Symbian Engine}
-
-The Symbian engine identifies itself as the "symbian" engine, and is only available on the
-Symbian S60 3.1, S60 3.2, S60 5.0 and Symbian^3 platforms.
-
-The Symbian engine supports a modified version of the default schema.  The schema supported
-by the Symbian engine depends on which version of the platform is being used.
-
-The symbian engine allows clients to use both the asynchronous and synchronous interfaces,
-and supports various different relationships, supports setting the self-contact, and
-persists all saved data to the system addressbook.
-
-\section3 \bold{Symbian Sim Engine}
-
-The Symbian Sim engine identifies itself as the "symbiansim" engine, and is only available
-on Symbian platforms.  It is an extremely limited engine which supports a very small
-subset of the default schema, and can be constructed with a "store" parameter to set which contact
-store to interact with.  The value of the "store" parameter may be either "ADN", "FDN" or "SDN".
-
-\section3 \bold{Maemo 5 (Fremantle) Engine}
-
-The Maemo 5 (Fremantle) engine identifies itself as the "maemo5" engine, but is only available
-on the Maemo 5 (Fremantle) platform which has the correct libraries installed (including
-lib-osso-abook).
-
-The Maemo 5 (Fremantle) engine supports a modified version of the default schema.
-In particular, it does not support the following details which are provided in the default schema:
-\list
-  \o QContactAnniversary
-  \o QContactAvatar (it does, however, support QContactThumbnail details)
-  \o QContactGeoLocation
-  \o QContactGlobalPresence
-  \o QContactPresence
-  \o QContactRingtone
-  \o QContactSyncTarget
-  \o QContactTag
-\endlist
-
-Furthermore, it supports only a subset of the fields and values supported by the default schema
-versions of various details.  The limitations are as follows:
-\list
-  \o It does not support the \c QContactDetail::Context field for any details other than QContactPhoneNumber, QContactEmailAddress and QContactAddress details, and only supports the contexts \c QContactDetail::ContextHome and \c QContactDetail::ContextWork
-  \o It does not support the \c QContactAddress::FieldSubTypes field of QContactAddress details
-  \o It does not support the \c QContactName::FieldCustomLabel, \c QContactName::FieldSuffix, \c QContactName::FieldPrefix or \c QContactName::FieldMiddleName fields of QContactName details
-  \o It does not support the \c QContactOnlineAccount::FieldSubTypes field of QContactOnlineAccount details
-  \o It does not support the \c QContactUrl::FieldSubTypes field of QContactUrl details
-  \o It supports only the \c QContactOrganization::DisplayLabel field of QContactOrganization details
-  \o It supports only the \c QContactPhoneNumber::SubTypeMobile and \c QContactPhoneNumber::SubTypeVoice values for the \c QContactPhoneNumber::FieldSubTypes field of QContactPhoneNumber details
-\endlist
-
-The Maemo 5 (Fremantle) engine supports asynchronous and synchronous requests, but does not support
-group contacts or relationships of any kind.  It does not allow clients to set a particular contact
-as the "self" contact.  It persists all data in the system addressbook.
-
 \section1 Information For Engine Implementors
 
 Some developers may wish to provide implementations of QContactManagerEngine for use by clients.

@@ -53,6 +53,7 @@ class QDeclarativeOrganizerCollection : public QObject
 {
     Q_OBJECT
 
+    Q_ENUMS(MetaDataKey)
     Q_PROPERTY(QString collectionId READ id WRITE setId NOTIFY valueChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
@@ -60,6 +61,14 @@ class QDeclarativeOrganizerCollection : public QObject
     Q_PROPERTY(QUrl image READ image WRITE setImage NOTIFY valueChanged)
 
 public:
+    enum MetaDataKey {
+        KeyName = QOrganizerCollection::KeyName,
+        KeyDescription = QOrganizerCollection::KeyDescription,
+        KeyColor = QOrganizerCollection::KeyColor,
+        KeyImage = QOrganizerCollection::KeyImage,
+        KeyExtended = QOrganizerCollection::KeyExtended
+    };
+
     QDeclarativeOrganizerCollection(QObject *parent = 0);
 
     QString id() const;
@@ -77,12 +86,19 @@ public:
     QUrl image() const;
     void setImage(const QUrl &url);
 
-    Q_INVOKABLE void setMetaData(const QString &key, const QVariant &value);
-    Q_INVOKABLE QVariant metaData(const QString &key) const;
+    Q_INVOKABLE void setMetaData(QOrganizerCollection::MetaDataKey key, const QVariant &value);
+    Q_INVOKABLE QVariant metaData(QOrganizerCollection::MetaDataKey key) const;
+
+    Q_INVOKABLE void setExtendedMetaData(const QString &key, const QVariant &value);
+    Q_INVOKABLE QVariant extendedMetaData(const QString &key) const;
 
     // used by model
     QOrganizerCollection collection() const;
     void setCollection(const QOrganizerCollection & collection);
+
+    // obsolete
+    Q_INVOKABLE void setMetaData(const QString &key, const QVariant &value);
+    Q_INVOKABLE QVariant metaData(const QString &key) const;
 
 Q_SIGNALS:
     void valueChanged();

@@ -232,27 +232,15 @@ void EventEditPage::eventChanged(QOrganizerManager *manager, const QOrganizerEve
     }
 
     // resolve metadata field that contains calendar name (if any)
-    QString calendarNameMetadataKey;
     m_collections = m_manager->collections();
-    if (!m_collections.isEmpty()) {
-        QOrganizerCollection firstCollection = m_collections[0];
-        QVariantMap metadata = firstCollection.metaData();
-        QList<QString> metaDataKeys = metadata.keys();
-        foreach(QString key, metaDataKeys) {
-            if (key.indexOf("name", 0, Qt::CaseInsensitive) != -1) {
-                calendarNameMetadataKey = key;
-                break;
-            }
-        }
-    }
     int index = 0;
     int eventCalendarIndex = -1;
     foreach(QOrganizerCollection collection, m_collections) {
         // We currently have no way of stringifying ids
         //QString visibleName = "Calendar id = " + QString::number(collection.id().localId());
-        QString visibleName = "Calendar " + QString::number(index);
-        if (!calendarNameMetadataKey.isNull())
-            visibleName = collection.metaData(calendarNameMetadataKey).toString();
+        QString visibleName = collection.metaData(QOrganizerCollection::KeyName).toString();
+        if (visibleName.isEmpty())
+            visibleName = "Calendar " + QString::number(index);
 
         m_calendarComboBox->addItem(visibleName);
         if (collection.id() == event.collectionId())

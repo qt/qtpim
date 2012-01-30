@@ -81,15 +81,14 @@ void tst_QOrganizerCollection::metaData()
 {
     QOrganizerCollection c;
     QVERIFY(c.metaData().isEmpty());
-    c.setMetaData("test", 5);
-    QVERIFY(c.metaData().contains("test"));
-    QCOMPARE(c.metaData(QString("test")).toInt(), 5);
+    c.setExtendedMetaData(QString(QStringLiteral("test")), 5);
+    QCOMPARE(c.extendedMetaData(QString(QStringLiteral("test"))).toInt(), 5);
 
-    QVariantMap mdm;
-    mdm.insert("test2", 6);
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> mdm;
+    mdm.insert(QOrganizerCollection::KeyName, QString(QStringLiteral("test2")));
     c.setMetaData(mdm);
     QCOMPARE(c.metaData(), mdm);
-    QCOMPARE(c.metaData(QString("test2")).toInt(), 6);
+    QCOMPARE(c.metaData(QOrganizerCollection::KeyName).toString(), QString(QStringLiteral("test2")));
 }
 
 class BasicCollectionLocalId : public QOrganizerCollectionEngineId
@@ -242,18 +241,18 @@ void tst_QOrganizerCollection::hash()
     QOrganizerCollectionId id(makeId("a", 1));
     QOrganizerCollection c1;
     c1.setId(id);
-    c1.setMetaData("key", "value");
+    c1.setExtendedMetaData("key", "value");
     QOrganizerCollection c2;
     c2.setId(id);
-    c2.setMetaData("key", "value");
+    c2.setExtendedMetaData("key", "value");
     QOrganizerCollection c3;
     c3.setId(id);
-    c3.setMetaData("key", "another value");
+    c3.setExtendedMetaData("key", "another value");
     QOrganizerCollection c4; // no details
     c4.setId(id);
     QOrganizerCollection c5;
     c5.setId(id);
-    c5.setMetaData("key", "value");
+    c5.setExtendedMetaData("key", "value");
     QVERIFY(qHash(c1) == qHash(c2));
     QVERIFY(qHash(c1) != qHash(c3));
     QVERIFY(qHash(c1) != qHash(c4));
@@ -265,7 +264,7 @@ void tst_QOrganizerCollection::datastream()
     // collection datastreaming
     QByteArray buffer;
     QOrganizerCollection collectionIn;
-    collectionIn.setMetaData("key", "value");
+    collectionIn.setExtendedMetaData("key", "value");
     QOrganizerCollection collectionOut;
     QOrganizerCollectionId originalId;
 

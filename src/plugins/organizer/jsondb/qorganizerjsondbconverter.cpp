@@ -1166,6 +1166,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &obje
 {
     bool hasCollectionId(false);
 
+    QVariantMap extendedMetaData;
     QJsonObject::const_iterator i = object.constBegin();
     while (i != object.constEnd()) {
         if (i.key() == QOrganizerJsonDbStr::jsonDbUuid()) {
@@ -1199,11 +1200,14 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &obje
         } else {
             // custom meta data
             if (i.key().at(0) != QChar('_') && !i.key().isEmpty() && !i.value().isNull())
-                collection->setMetaData(i.key(), i.value().toVariant());
+                extendedMetaData.insert(i.key(), i.value().toVariant());
         }
 
         ++i;
     }
+
+    if (!extendedMetaData.isEmpty())
+        collection->setMetaData(QOrganizerCollection::KeyExtended, extendedMetaData);
 
     return hasCollectionId;
 }
@@ -1220,8 +1224,8 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
     if (isDefaultCollection)
         object->insert(QOrganizerJsonDbStr::collectionDefaultFlag(), isDefaultCollection);
 
-    QVariantMap metaData = collection.metaData();
-    QVariantMap::const_iterator i = metaData.constBegin();
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> metaData = collection.metaData();
+    QMap<QOrganizerCollection::MetaDataKey, QVariant>::const_iterator i = metaData.constBegin();
     while (i != metaData.constEnd()) {
         if (i.key() == QOrganizerCollection::KeyColor) {
             QString colorString = i.value().toString();
@@ -1239,14 +1243,20 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
             QString displayNameString = i.value().toString();
             if (!displayNameString.isEmpty())
                 object->insert(QOrganizerJsonDbStr::collectionDisplayName(), displayNameString);
-        } else {
-            // custom meta data
-            QString valueString = i.value().toString();
-            if (!i.key().isEmpty() && !valueString.isEmpty()
-                && (i.key().at(0) != QChar('_') || i.key() == QOrganizerJsonDbStr::jsonDbVersion())
-                && i.key() != QOrganizerJsonDbStr::collectionDefaultFlag()) {
-                // XXX Should we allow complex data structure, i.e. list or map, for custom meta data?
-                object->insert(i.key(), valueString);
+        } else if (i.key() == QOrganizerCollection::KeyExtended) {
+            QVariantMap variantMap = i.value().toMap();
+            if (!variantMap.isEmpty()) {
+                QVariantMap::const_iterator j = variantMap.constBegin();
+                while (j != variantMap.constEnd()) {
+                    QString valueString = j.value().toString();
+                    if (!j.key().isEmpty() && !valueString.isEmpty()
+                        && (j.key().at(0) != QChar('_') || j.key() == QOrganizerJsonDbStr::jsonDbVersion())
+                        && j.key() != QOrganizerJsonDbStr::collectionDefaultFlag()) {
+                        // XXX Should we allow complex data structure, i.e. list or map, for custom meta data?
+                        object->insert(j.key(), valueString);
+                    }
+                    ++j;
+                }
             }
         }
 

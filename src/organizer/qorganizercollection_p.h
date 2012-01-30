@@ -53,6 +53,7 @@
 // We mean it.
 //
 
+#include <qorganizercollection.h>
 #include <qorganizercollectionid.h>
 
 #include <QtCore/qvariant.h>
@@ -76,7 +77,7 @@ public:
     {
     }
 
-    QVariantMap m_metaData;
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> m_metaData;
     QOrganizerCollectionId m_id;
 };
 

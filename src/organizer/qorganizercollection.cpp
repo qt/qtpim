@@ -39,25 +39,11 @@
 **
 ****************************************************************************/
 
-#include <qorganizercollection.h>
 #include <private/qorganizercollection_p.h>
 
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif // QT_NO_DEBUG_STREAM
-
-/*
-    When these conditions are satisfied, QStringLiteral is implemented by
-    gcc's statement-expression extension.  However, in this file it will
-    not work, because "statement-expressions are not allowed outside functions
-    nor in template-argument lists".
-
-    Fall back to the less-performant QLatin1String in this case.
-*/
-#if defined(QStringLiteral) && defined(QT_UNICODE_LITERAL_II) && defined(Q_CC_GNU) && !defined(Q_COMPILER_LAMBDA)
-# undef QStringLiteral
-# define QStringLiteral QLatin1String
-#endif
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -85,28 +71,16 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-  \variable QOrganizerCollection::KeyName
-  The constant key value which identifies the name meta data of a collection.
- */
-const QString QOrganizerCollection::KeyName(QStringLiteral("Name"));
+    \enum QOrganizerCollection::MetaDataKey
 
-/*!
-  \variable QOrganizerCollection::KeyDescription
-  The constant key value which identifies the description meta data of a collection.
- */
-const QString QOrganizerCollection::KeyDescription(QStringLiteral("Description"));
+    This enumeration describes the key of the organizer collection metadata.
 
-/*!
-  \variable QOrganizerCollection::KeyColor
-  The constant key value which identifies the color meta data of a collection.
+    \value KeyName         This metadata describes the name of the collection.
+    \value KeyDescription  This metadata gives a description of the collection.
+    \value KeyColor        This metadata describes the color of the collection.
+    \value KeyImage        This metadata describes the image of the collection.
+    \value KeyExtended     This is an extened metadata, which is stored as a QVariantMap.
  */
-const QString QOrganizerCollection::KeyColor(QStringLiteral("Color"));
-
-/*!
-  \variable QOrganizerCollection::KeyImage
-  The constant key value which identifies the image meta data of a collection.
- */
-const QString QOrganizerCollection::KeyImage(QStringLiteral("Image"));
 
 /*!
     Constructs a new collection.
@@ -151,7 +125,7 @@ bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
         return false;
     }
 
-    QVariantMap::const_iterator i = d->m_metaData.constBegin();
+    QMap<QOrganizerCollection::MetaDataKey, QVariant>::const_iterator i = d->m_metaData.constBegin();
     while (i != d->m_metaData.constEnd()) {
         if (i.value() != other.d->m_metaData.value(i.key()))
             return false;
@@ -186,9 +160,9 @@ void QOrganizerCollection::setId(const QOrganizerCollectionId &id)
 }
 
 /*!
-    Sets the meta data of the collection to \a metaData.
+    Sets the metadata of the collection to be \a metaData.
  */
-void QOrganizerCollection::setMetaData(const QVariantMap &metaData)
+void QOrganizerCollection::setMetaData(const QMap<QOrganizerCollection::MetaDataKey, QVariant> &metaData)
 {
     d->m_metaData = metaData;
 }
@@ -196,7 +170,7 @@ void QOrganizerCollection::setMetaData(const QVariantMap &metaData)
 /*!
     Returns the meta data of the collection.
  */
-QVariantMap QOrganizerCollection::metaData() const
+QMap<QOrganizerCollection::MetaDataKey, QVariant> QOrganizerCollection::metaData() const
 {
     return d->m_metaData;
 }
@@ -204,17 +178,72 @@ QVariantMap QOrganizerCollection::metaData() const
 /*!
     Sets the meta data of the collection for the given \a key to the given \a value.
  */
-void QOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
+void QOrganizerCollection::setMetaData(MetaDataKey key, const QVariant &value)
 {
     d->m_metaData.insert(key, value);
 }
 
 /*!
+    Sets the value of the extended metadata with the given \a key to \a value.
+ */
+void QOrganizerCollection::setExtendedMetaData(const QString &key, const QVariant &value)
+{
+    QVariantMap variantMap = d->m_metaData.value(QOrganizerCollection::KeyExtended).toMap();
+    variantMap.insert(key, value);
+    d->m_metaData.insert(QOrganizerCollection::KeyExtended, variantMap);
+}
+
+/*!
+    Returns the value of extended metadata with the given \a key.
+ */
+QVariant QOrganizerCollection::extendedMetaData(const QString &key) const
+{
+    return d->m_metaData.value(QOrganizerCollection::KeyExtended).toMap().value(key);
+}
+
+/*!
+    \obsolete
+ */
+void QOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
+{
+    if (key == QString(QStringLiteral("Name"))) {
+        d->m_metaData.insert(KeyName, value);
+    } else if (key == QString(QStringLiteral("Description"))) {
+        d->m_metaData.insert(KeyDescription, value);
+    } else if (key == QString(QStringLiteral("Color"))) {
+        d->m_metaData.insert(KeyColor, value);
+    } else if (key == QString(QStringLiteral("Image"))) {
+        d->m_metaData.insert(KeyImage, value);
+    } else {
+        QVariantMap variantMap = d->m_metaData.value(KeyExtended).toMap();
+        variantMap.insert(key, value);
+        d->m_metaData.insert(KeyExtended, variantMap);
+    }
+}
+
+/*!
     Returns the meta data of the collection for the given \a key.
+ */
+QVariant QOrganizerCollection::metaData(MetaDataKey key) const
+{
+    return d->m_metaData.value(key);
+}
+
+/*!
+    \obsolete
  */
 QVariant QOrganizerCollection::metaData(const QString &key) const
 {
-    return d->m_metaData.value(key);
+    if (key == QString(QStringLiteral("Name")))
+        d->m_metaData.value(KeyName);
+    else if (key == QString(QStringLiteral("Description")))
+        d->m_metaData.value(KeyDescription);
+    else if (key == QString(QStringLiteral("Color")))
+        d->m_metaData.value(KeyColor);
+    else if (key == QString(QStringLiteral("Image")))
+        d->m_metaData.value(KeyImage);
+
+    return d->m_metaData.value(KeyExtended).toMap().value(key);
 }
 
 /*!
@@ -223,13 +252,20 @@ QVariant QOrganizerCollection::metaData(const QString &key) const
 uint qHash(const QOrganizerCollection &key)
 {
     uint hash = qHash(key.id());
-    QVariantMap metadata = key.metaData();
-    QVariantMap::const_iterator it;
-    for (it = metadata.constBegin(); it != metadata.constEnd(); ++it) {
-        hash += qHash(it.key())
-                + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
+    QMap<QOrganizerCollection::MetaDataKey, QVariant>::const_iterator i = key.d->m_metaData.constBegin();
+    while (i != key.d->m_metaData.constEnd()) {
+        if (i.key() == QOrganizerCollection::KeyExtended) {
+            QVariantMap variantMap = i.value().toMap();
+            QVariantMap::const_iterator j = variantMap.constBegin();
+            while (j != variantMap.constEnd()) {
+                hash += QT_PREPEND_NAMESPACE(qHash)(j.key()) + QT_PREPEND_NAMESPACE(qHash)(j.value().toString());
+                ++j;
+            }
+        } else {
+            hash += QT_PREPEND_NAMESPACE(qHash)(i.key()) + QT_PREPEND_NAMESPACE(qHash)(i.value().toString());
+        }
+        ++i;
     }
-
     return hash;
 }
 
@@ -240,10 +276,12 @@ uint qHash(const QOrganizerCollection &key)
 QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 {
     dbg.nospace() << "QOrganizerCollection(id=" << collection.id();
-    QVariantMap metadata = collection.metaData();
-    QVariantMap::const_iterator it;
-    for (it = metadata.constBegin(); it != metadata.constEnd(); ++it) {
-        dbg.nospace() << ", " << it.key() << '=' << it.value();
+
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> metaData = collection.metaData();
+    QMap<QOrganizerCollection::MetaDataKey, QVariant>::const_iterator i = metaData.constBegin();
+    while (i != metaData.constEnd()) {
+        dbg.nospace() << ", " << i.key() << '=' << i.value();
+        ++i;
     }
     dbg.nospace() << ')';
     return dbg.maybeSpace();
@@ -271,16 +309,16 @@ QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection)
     in >> formatVersion;
     if (formatVersion == 1) {
         QString idString;
-        QVariantMap metadata;
-        in >> idString >> metadata;
+        QMap<int, QVariant> values;
+        in >> idString >> values;
 
         collection = QOrganizerCollection();
         collection.setId(QOrganizerCollectionId::fromString(idString));
 
-        QMapIterator<QString, QVariant> it(metadata);
-        while (it.hasNext()) {
-            it.next();
-            collection.setMetaData(it.key(), it.value());
+        QMap<int, QVariant>::const_iterator i = values.constBegin();
+        while (i != values.constEnd()) {
+            collection.setMetaData(static_cast<QOrganizerCollection::MetaDataKey>(i.key()), i.value());
+            ++i;
         }
     } else {
         in.setStatus(QDataStream::ReadCorruptData);

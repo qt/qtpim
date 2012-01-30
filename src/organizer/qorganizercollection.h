@@ -46,11 +46,23 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
+// MSVC needs the function declared before the friend declaration
+class QOrganizerCollection;
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
+
 class QOrganizerManagerEngine;
 class QOrganizerCollectionData;
 class Q_ORGANIZER_EXPORT QOrganizerCollection
 {
 public:
+    enum MetaDataKey {
+        KeyName = 0,
+        KeyDescription,
+        KeyColor,
+        KeyImage,
+        KeyExtended
+    };
+
     QOrganizerCollection();
     ~QOrganizerCollection();
 
@@ -63,23 +75,24 @@ public:
     QOrganizerCollectionId id() const;
     void setId(const QOrganizerCollectionId &id);
 
-    void setMetaData(const QVariantMap &metaData);
-    QVariantMap metaData() const;
+    void setMetaData(MetaDataKey key, const QVariant &value);
+    QVariant metaData(MetaDataKey key) const;
 
+    void setMetaData(const QMap<QOrganizerCollection::MetaDataKey, QVariant> &metaData);
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> metaData() const;
+
+    void setExtendedMetaData(const QString &key, const QVariant &value);
+    QVariant extendedMetaData(const QString &key) const;
+
+    // obsolete
     void setMetaData(const QString &key, const QVariant &value);
     QVariant metaData(const QString &key) const;
 
-    static const QString KeyName;
-    static const QString KeyDescription;
-    static const QString KeyColor;
-    static const QString KeyImage;
-
 private:
+    friend uint qHash(const QOrganizerCollection &key);
     friend class QOrganizerManagerEngine;
     QSharedDataPointer<QOrganizerCollectionData> d;
 };
-
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollection &collection);

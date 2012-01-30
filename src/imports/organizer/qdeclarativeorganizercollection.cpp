@@ -137,9 +137,28 @@ void QDeclarativeOrganizerCollection::setImage(const QUrl &url)
 }
 
 /*!
-    \qmlmethod Collection::setMetaData(string key, var value)
+    \qmlmethod Collection::setMetaData(enum key, var value)
 
-    Sets the meta data of the collection for the given \a key to the given \a value.
+    Sets the meta data of the collection for the given \a key to the given \a value. Possible keys
+    include:
+    \list
+    \o Collection.KeyName
+    \o Collection.KeyDescription
+    \o Collection.KeyColor
+    \o Collection.KeyImage
+    \o Collection.KeyExtended
+    \endlist
+ */
+void QDeclarativeOrganizerCollection::setMetaData(QOrganizerCollection::MetaDataKey key, const QVariant &value)
+{
+    if (metaData(key) != value) {
+        d.setMetaData(key, value);
+        emit valueChanged();
+    }
+}
+
+/*!
+    \obsolete
  */
 void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
 {
@@ -150,13 +169,47 @@ void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVar
 }
 
 /*!
-    \qmlmethod var Collection::metaData(string key)
+    \qmlmethod var Collection::metaData(enum key)
 
-    Returns the meta data stored in this collection for the given \a key.
+    Returns the meta data stored in this collection for the given \a key. Possible keys include:
+    \list
+    \o Collection.KeyName
+    \o Collection.KeyDescription
+    \o Collection.KeyColor
+    \o Collection.KeyImage
+    \o Collection.KeyExtended
+    \endlist
+ */
+QVariant QDeclarativeOrganizerCollection::metaData(QOrganizerCollection::MetaDataKey key) const
+{
+    return d.metaData(key);
+}
+
+/*!
+    \obsolete
  */
 QVariant QDeclarativeOrganizerCollection::metaData(const QString &key) const
 {
     return d.metaData(key);
+}
+
+/*!
+    Sets the value of the extended metadata with the given \a key to \a value.
+ */
+void QDeclarativeOrganizerCollection::setExtendedMetaData(const QString &key, const QVariant &value)
+{
+    if (extendedMetaData(key) != value) {
+        d.setExtendedMetaData(key, value);
+        emit valueChanged();
+    }
+}
+
+/*!
+    Returns the value of extended metadata with the given \a key.
+ */
+QVariant QDeclarativeOrganizerCollection::extendedMetaData(const QString &key) const
+{
+    return d.extendedMetaData(key);
 }
 
 /*!

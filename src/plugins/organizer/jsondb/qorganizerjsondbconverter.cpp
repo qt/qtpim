@@ -1194,7 +1194,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &obje
                 *isDefaultCollection = i.value().toBool();
         } else {
             // custom meta data
-            if (!i.key().isEmpty() && !i.value().isNull())
+            if (i.key().at(0) != QChar('_') && !i.key().isEmpty() && !i.value().isNull())
                 collection->setMetaData(i.key(), i.value().toVariant());
         }
 

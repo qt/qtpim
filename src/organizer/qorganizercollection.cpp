@@ -141,19 +141,29 @@ QOrganizerCollection &QOrganizerCollection::operator=(const QOrganizerCollection
 }
 
 /*!
-    Returns true if the ID of the collection is the same as that of the \a other collection.
-    Does not check that the metadata of the collections is equal.
+    Returns true if the collection is the same as that of the \a other collection, false if either
+    the ID or any of the stored metadata are not the same.
  */
 bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 {
-    return d->m_id == other.d->m_id;
+    if (d->m_id != other.d->m_id
+        || d->m_metaData.size() != other.d->m_metaData.size()) {
+        return false;
+    }
+
+    QVariantMap::const_iterator i = d->m_metaData.constBegin();
+    while (i != d->m_metaData.constEnd()) {
+        if (i.value() != other.d->m_metaData.value(i.key()))
+            return false;
+        ++i;
+    }
+    return true;
 }
 
 /*!
     \fn QOrganizerCollection::operator!=(const QOrganizerCollection &other) const
 
-    Returns true if the ID of the collection is not the same as that of the \a other collection.
-    Does not check that the metadata of the collections is not equal.
+    Returns true if the collection is not the same as the \a other collection.
  */
 
 /*!

@@ -2566,12 +2566,10 @@ void tst_QOrganizerItemAsync::collectionSave()
     QCOMPARE(expected.size(), 1);
     QList<QOrganizerCollection> result;
     result << oim->collection(csr.collections().at(0).id());
+
     // find the saved one, compare.
-    foreach (const QOrganizerCollection& col, result) {
-        if (col.id() == expected.at(0).id()) {
-            QVERIFY(col == expected.at(0)); // XXX TODO: if we change the semantic so that save merely updates the id...?
-        }
-    }
+    foreach (const QOrganizerCollection &col, result)
+        QVERIFY(col.id() == expected.at(0).id());
 
     // update a previously saved collection
     QVERIFY(!result.isEmpty()); // make sure that we were able to retrieve the required collection.

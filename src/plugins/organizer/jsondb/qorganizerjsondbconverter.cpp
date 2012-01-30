@@ -48,6 +48,7 @@ Q_USE_JSONDB_NAMESPACE
 
 QTORGANIZER_BEGIN_NAMESPACE
 
+const int QOrganizerJsonDbConverter::jsonDbVersionLength(32);
 const int QOrganizerJsonDbConverter::enumMapEnd(-1212);
 
 const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerPriorityEnumMap()
@@ -1004,23 +1005,15 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
 
 void QOrganizerJsonDbConverter::jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const
 {
-    QStringList jsonDbVersions = jsonDbVersion.split(QLatin1Char('-'));
-    if (jsonDbVersions.size() != 2)
-        return;
-    int version = jsonDbVersions.at(0).toInt();
-    if (version > 0 && jsonDbVersions.at(1).length() == 32) {
-        itemVersion->setVersion(version);
-        itemVersion->setExtendedVersion(jsonDbVersions.at(1).toLatin1());
-    }
+    if (jsonDbVersion.length() == jsonDbVersionLength)
+        itemVersion->setExtendedVersion(jsonDbVersion.toLatin1());
 }
 
 void QOrganizerJsonDbConverter::itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const
 {
-    int version = itemVersion.version();
     QByteArray extendedVersion = itemVersion.extendedVersion();
-    if (version > 0 && extendedVersion.length() == 32) {
-        *jsonDbVersion = QString::number(version) + QLatin1String("-") + QString::fromLatin1(extendedVersion.constData());
-    }
+    if (extendedVersion.length() == jsonDbVersionLength)
+        *jsonDbVersion = QString::fromLatin1(extendedVersion.constData());
 }
 
 void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QVariantMap& object, QOrganizerRecurrenceRule* rule) const

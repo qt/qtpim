@@ -42,13 +42,6 @@
 #ifndef QORGANIZERCOLLECTION_H
 #define QORGANIZERCOLLECTION_H
 
-#include <QVariantMap>
-#include <QVariant>
-#include <QString>
-#include <QList>
-#include <QSharedDataPointer>
-
-#include <qorganizeritemid.h>
 #include <qorganizercollectionid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -59,26 +52,23 @@ class Q_ORGANIZER_EXPORT QOrganizerCollection
 {
 public:
     QOrganizerCollection();
-
     ~QOrganizerCollection();
 
-    QOrganizerCollection(const QOrganizerCollection& other);
-    QOrganizerCollection& operator=(const QOrganizerCollection& other);
+    QOrganizerCollection(const QOrganizerCollection &other);
+    QOrganizerCollection &operator=(const QOrganizerCollection &other);
 
     bool operator==(const QOrganizerCollection &other) const;
     bool operator!=(const QOrganizerCollection &other) const {return !(other == *this);}
 
-    /* Every collection has an id */
     QOrganizerCollectionId id() const;
-    void setId(const QOrganizerCollectionId& id);
+    void setId(const QOrganizerCollectionId &id);
 
-    void setMetaData(const QVariantMap& metaData);
+    void setMetaData(const QVariantMap &metaData);
     QVariantMap metaData() const;
 
-    void setMetaData(const QString& key, const QVariant& value);
-    QVariant metaData(const QString& key) const;
+    void setMetaData(const QString &key, const QVariant &value);
+    QVariant metaData(const QString &key) const;
 
-    /* Default meta data keys */
     static const QString KeyName;
     static const QString KeyDescription;
     static const QString KeyColor;
@@ -89,15 +79,16 @@ private:
     QSharedDataPointer<QOrganizerCollectionData> d;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection& key);
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
+
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection);
-#endif
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollection &collection);
+#endif // QT_NO_DEBUG_STREAM
 
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream& operator<<(QDataStream& out, const QOrganizerCollection& collection);
-Q_ORGANIZER_EXPORT QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection);
-#endif
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerCollection &collection);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection);
+#endif // QT_NO_DATASTREAM
 
 QTORGANIZER_END_NAMESPACE
 
@@ -105,5 +96,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollection), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QORGANIZERCOLLECTION_H

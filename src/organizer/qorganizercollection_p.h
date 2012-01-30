@@ -53,14 +53,9 @@
 // We mean it.
 //
 
-#include <QVariant>
-#include <QMap>
-#include <QSharedData>
-#include <QList>
-#include <QString>
+#include <qorganizercollectionid.h>
 
-#include "qorganizercollectionid.h"
-#include "qorganizeritemid.h"
+#include <QtCore/qvariant.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -68,16 +63,12 @@ class QOrganizerCollectionData : public QSharedData
 {
 public:
     QOrganizerCollectionData()
-            : QSharedData()
+        : QSharedData()
     {
     }
 
-    QOrganizerCollectionData(const QOrganizerCollectionData& other)
-            : QSharedData(other),
-            m_metaData(other.m_metaData),
-            m_id(other.m_id),
-            m_datastore(other.m_datastore),
-            m_itemIds(other.m_itemIds)
+    QOrganizerCollectionData(const QOrganizerCollectionData &other)
+        : QSharedData(other), m_metaData(other.m_metaData), m_id(other.m_id)
     {
     }
 
@@ -87,10 +78,8 @@ public:
 
     QVariantMap m_metaData;
     QOrganizerCollectionId m_id;
-    QString m_datastore;
-    QList<QOrganizerItemId> m_itemIds;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERCOLLECTION_P_H

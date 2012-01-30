@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
+#include <qorganizercollection.h>
+#include <private/qorganizercollection_p.h>
 
-#include "qorganizercollection.h"
-#include "qorganizercollection_p.h"
-#include "qorganizercollectionid.h"
-
-#include <QDebug>
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif // QT_NO_DEBUG_STREAM
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -62,26 +62,26 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerCollection
-  \brief The QOrganizerCollection class represents a collection of items in a manager.
-  \inmodule QtOrganizer
-  \ingroup organizer-main
+    \class QOrganizerCollection
+    \brief The QOrganizerCollection class represents a collection of items in a manager.
+    \inmodule QtOrganizer
+    \ingroup organizer-main
 
-  A collection has an id and optionally some metadata, and contains zero or more items.
-  Each different manager will have different requirements before a collection may be saved
-  in it.  Some managers do not allow collections to be saved at all, while others may require
-  a collection to have some minimal amount of meta data defined in it prior to save.
-  For example, most managers require a valid value for the \c QOrganizerCollection::KeyName
-  meta data key to be set prior to save.
+    A collection has an ID and optionally some metadata, and contains zero or more items.
+    Each different manager will have different requirements before a collection may be saved
+    in it.  Some managers do not allow collections to be saved at all, while others may require
+    a collection to have some minimal amount of meta data defined in it prior to save.
+    For example, most managers require a valid value for the QOrganizerCollection::KeyName
+    meta data key to be set prior to save.
 
-  Every QOrganizerItem is contained within a collection when stored in a manager.
-  To save an item in a collection, the client should call \l QOrganizerItem::setCollectionId()
-  on the item, passing in the id of the destination collection as the argument, and then
-  save the item in the manager.  To move an item from one collection to another, the client
-  must fetch the item from the manager, set the collection id in the item to the id of the
-  collection to which the client wishes the item to be moved, and then resave the item in the
-  manager.  That is, the collection which an item is part of is treated as a property of the
-  item.
+    Every QOrganizerItem is contained within a collection when stored in a manager.
+    To save an item in a collection, the client should call QOrganizerItem::setCollectionId()
+    on the item, passing in the ID of the destination collection as the argument, and then
+    save the item in the manager.  To move an item from one collection to another, the client
+    must fetch the item from the manager, set the collection ID in the item to the ID of the
+    collection to which the client wishes the item to be moved, and then resave the item in the
+    manager.  That is, the collection which an item is part of is treated as a property of the
+    item.
  */
 
 /*!
@@ -109,7 +109,7 @@ const QString QOrganizerCollection::KeyColor(QStringLiteral("Color"));
 const QString QOrganizerCollection::KeyImage(QStringLiteral("Image"));
 
 /*!
-  Constructs a new collection
+    Constructs a new collection.
  */
 QOrganizerCollection::QOrganizerCollection()
     : d(new QOrganizerCollectionData)
@@ -117,32 +117,32 @@ QOrganizerCollection::QOrganizerCollection()
 }
 
 /*!
-  Cleans up any memory in use by the collection
+    Cleans up any memory in use by the collection.
  */
 QOrganizerCollection::~QOrganizerCollection()
 {
 }
 
 /*!
-  Constructs a new copy of the \a other collection
+    Constructs a new copy of the \a other collection.
  */
-QOrganizerCollection::QOrganizerCollection(const QOrganizerCollection& other)
+QOrganizerCollection::QOrganizerCollection(const QOrganizerCollection &other)
     : d(other.d)
 {
 }
 
 /*!
-  Assigns this collection to be equal to the \a other collection
+    Assigns this collection to be equal to the \a other collection.
  */
-QOrganizerCollection& QOrganizerCollection::operator=(const QOrganizerCollection& other)
+QOrganizerCollection &QOrganizerCollection::operator=(const QOrganizerCollection &other)
 {
     this->d = other.d;
     return *this;
 }
 
 /*!
-  Returns true if the id of the collection is the same as that of the \a other collection.
-  Does not check that the metadata of the collections is equal.
+    Returns true if the ID of the collection is the same as that of the \a other collection.
+    Does not check that the metadata of the collections is equal.
  */
 bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 {
@@ -150,14 +150,14 @@ bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 }
 
 /*!
-  \fn QOrganizerCollection::operator!=(const QOrganizerCollection &other) const
+    \fn QOrganizerCollection::operator!=(const QOrganizerCollection &other) const
 
-  Returns true if the id of the collection is not the same as that of the \a other collection.
-  Does not check that the metadata of the collections is not equal.
+    Returns true if the ID of the collection is not the same as that of the \a other collection.
+    Does not check that the metadata of the collections is not equal.
  */
 
 /*!
-  Returns the complete id of the collection, which includes the manager uri and the manager id of the collection
+    Returns the ID of the collection.
  */
 QOrganizerCollectionId QOrganizerCollection::id() const
 {
@@ -165,27 +165,26 @@ QOrganizerCollectionId QOrganizerCollection::id() const
 }
 
 /*!
-  Sets the id of the collection to \a id.
-  If the id is set to a null (default-constructed) id, saving the collection will cause the manager to save the
-  collection as a new collection (if it supports that operation).
+    Sets the ID of the collection to \a id.
+
+    If the ID is set to a null (default-constructed) ID, saving the collection will cause the manager
+    to save the collection as a new collection.
  */
-void QOrganizerCollection::setId(const QOrganizerCollectionId& id)
+void QOrganizerCollection::setId(const QOrganizerCollectionId &id)
 {
     d->m_id = id;
 }
 
 /*!
-  Sets the meta data of the collection to \a metaData.
-  Not all managers support arbitrary meta data for collections. Attempting to save a collection with unsupported
-  meta data in a manager will cause an error in the operation.
+    Sets the meta data of the collection to \a metaData.
  */
-void QOrganizerCollection::setMetaData(const QVariantMap& metaData)
+void QOrganizerCollection::setMetaData(const QVariantMap &metaData)
 {
     d->m_metaData = metaData;
 }
 
 /*!
-  Returns the meta data of the collection
+    Returns the meta data of the collection.
  */
 QVariantMap QOrganizerCollection::metaData() const
 {
@@ -193,28 +192,24 @@ QVariantMap QOrganizerCollection::metaData() const
 }
 
 /*!
-  Sets the meta data of the collection for the given \a key to the given \a value.
-  Not all managers support all of the standard meta data keys (see \l QOrganizerCollection),
-  and some will support extra or even arbitrary keys.  Similarly, not all managers support
-  all possible data types for the meta data \a value.
-  Attempting to save a collection with unsupported meta data in a manager will cause an error
-  in the operation.
+    Sets the meta data of the collection for the given \a key to the given \a value.
  */
-void QOrganizerCollection::setMetaData(const QString& key, const QVariant& value)
+void QOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
 {
     d->m_metaData.insert(key, value);
 }
 
 /*!
-  Returns the meta data of the collection for the given \a key
+    Returns the meta data of the collection for the given \a key.
  */
-QVariant QOrganizerCollection::metaData(const QString& key) const
+QVariant QOrganizerCollection::metaData(const QString &key) const
 {
     return d->m_metaData.value(key);
 }
 
-/*! Returns the hash value for \a key.
-*/
+/*!
+    Returns the hash value for \a key.
+ */
 uint qHash(const QOrganizerCollection &key)
 {
     uint hash = qHash(key.id());
@@ -230,7 +225,7 @@ uint qHash(const QOrganizerCollection &key)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
-  Streams the \a collection to the given debug stream \a dbg, and returns the stream.
+    Streams the \a collection to the given debug stream \a dbg, and returns the stream.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 {
@@ -243,24 +238,24 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
     dbg.nospace() << ')';
     return dbg.maybeSpace();
 }
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 #ifndef QT_NO_DATASTREAM
 /*!
- * Writes \a collection to the stream \a out.
+    Writes \a collection to the stream \a out.
  */
-QDataStream& operator<<(QDataStream& out, const QOrganizerCollection& collection)
+QDataStream &operator<<(QDataStream &out, const QOrganizerCollection &collection)
 {
-    quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerCollection
+    quint8 formatVersion = 1;
     return out << formatVersion
                << collection.id().toString()
                << collection.metaData();
 }
 
 /*!
- * Reads an organizer collection from stream \a in into \a collection.
+    Reads an organizer collection from stream \a in into \a collection.
  */
-QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection)
+QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection)
 {
     quint8 formatVersion;
     in >> formatVersion;
@@ -282,6 +277,6 @@ QDataStream& operator>>(QDataStream& in, QOrganizerCollection& collection)
     }
     return in;
 }
-#endif
+#endif // QT_NO_DATASTREAM
 
 QTORGANIZER_END_NAMESPACE

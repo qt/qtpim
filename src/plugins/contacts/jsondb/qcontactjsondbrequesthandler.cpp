@@ -248,7 +248,7 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
     for (int i = 0; i < contactIds.size(); i++) {
         QContactId contactId = contactIds.at(i);
         int trId;
-        if (!(contactId.isNull())) {
+        if ( (!(contactId.isNull())) && (contactId.managerUri() == QContactJsonDbStr::managerUri()) ) {
             QVariantMap newJsonDbItem;
             newJsonDbItem.insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
             newJsonDbItem.insert(QContactJsonDbStr::uuid(), convertContactIdToUuid(contactId));
@@ -256,7 +256,8 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
             m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::RemoveTransaction, req, i);
             transactionsMade = true;
         } else {
-            // Generate DoesNotExistsError if trying to remove contact with an empty contactId.
+            // Generate DoesNotExistsError if trying to remove contact with a null id or belonging to
+            // another contact manager engine.
             error = QContactManager::DoesNotExistError;
             errorMap.insert(i,error);
             lastError = error;

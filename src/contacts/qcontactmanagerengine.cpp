@@ -748,6 +748,10 @@ bool QContactManagerEngine::validateContact(const QContact &contact, QContactMan
         *error = QContactManager::InvalidContactTypeError;
         return false;
     }
+    if ( (!contact.id().isNull()) && (contact.id().managerUri() != this->managerUri())) {
+        *error = QContactManager::DoesNotExistError;
+        return false;
+    }
 
     *error = QContactManager::NoError;
     return true;

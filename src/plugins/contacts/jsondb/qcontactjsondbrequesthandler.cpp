@@ -200,14 +200,14 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
                 QContactFetchRequest fetchRequest;
                 fetchRequest.setFilter(localIdFilter);
                 QString fetchQuery = m_converter->queryFromRequest(&fetchRequest);
-                int trId = m_jsonDb->query(fetchQuery);
+                int trId = m_jsonDb->query(fetchQuery, 0, -1, QContactJsonDbStr::defaultPartition());
                 m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::PrefetchForSaveTransaction, req, i);
                 transactionsMade = true;
             } else {
                 // No prefetch needed, just create a new contact.
                 QVariantMap newJsonDbItem;
                 if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
-                    int trId = m_jsonDb->create(newJsonDbItem);
+                    int trId = m_jsonDb->create(newJsonDbItem, QContactJsonDbStr::defaultPartition());
                     m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::SaveTransaction, req, i);
                     transactionsMade = true;
                 } else {
@@ -232,7 +232,7 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
 void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchRequest* req) {
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
-    int trId = m_jsonDb->query(newJsonDbQuery);
+    int trId = m_jsonDb->query(newJsonDbQuery, 0, -1, QContactJsonDbStr::defaultPartition());
     m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::FetchTransaction, req);
 }
 
@@ -253,7 +253,7 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
             QVariantMap newJsonDbItem;
             newJsonDbItem.insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
             newJsonDbItem.insert(QContactJsonDbStr::uuid(), convertContactIdToUuid(contactId));
-            trId = m_jsonDb->remove(newJsonDbItem);
+            trId = m_jsonDb->remove(newJsonDbItem, QContactJsonDbStr::defaultPartition());
             m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::RemoveTransaction, req, i);
             transactionsMade = true;
         } else {
@@ -281,7 +281,7 @@ void QContactJsonDbRequestHandler::handleContactIdFetchRequest(QContactIdFetchRe
 {
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery = m_converter->queryFromRequest(req);
-    int trId = m_jsonDb->query(newJsonDbQuery);
+    int trId = m_jsonDb->query(newJsonDbQuery, 0, -1, QContactJsonDbStr::defaultPartition());
     m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::LocalIdFetchTransaction, req);
 }
 
@@ -608,7 +608,7 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactSav
             // Convert QContact to jsondb contact over the prefetched jsondb contact and save it.
             newJsonDbItem = jsonDbObjectList.at(0).toMap();
             if (m_converter->toJsonContact(&newJsonDbItem, req->contacts().at(index))) {
-                int transactionId = m_jsonDb->update(newJsonDbItem);
+                int transactionId = m_jsonDb->update(newJsonDbItem, QContactJsonDbStr::defaultPartition());
                 m_requestMgr->addTransaction(transactionId, QContactJsonDbRequestManager::SaveTransaction, req, index);
                 return;
             } else {
@@ -694,7 +694,7 @@ void QContactJsonDbRequestHandler::sendJsonDbNotificationsRequest()
 {
     if (!m_jsonDbNotificationsRequested) {
         int transactionId = m_jsonDb->notify(JsonDbClient::NotifyTypes(JsonDbClient::NotifyCreate | JsonDbClient::NotifyUpdate | JsonDbClient::NotifyRemove),
-                                             QContactJsonDbStr::contactsJsonDbNotificationQuery());
+                                             QContactJsonDbStr::contactsJsonDbNotificationQuery(), QContactJsonDbStr::defaultPartition());
         m_requestMgr->addTransaction(transactionId, QContactJsonDbRequestManager::NotificationsTransaction);
         if (qt_debug_jsondb_contacts())
             qDebug() << Q_FUNC_INFO << "Notification request transaction id: " << transactionId;

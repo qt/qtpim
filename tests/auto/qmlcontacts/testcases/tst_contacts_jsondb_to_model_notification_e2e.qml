@@ -42,7 +42,7 @@
 import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
-import QtJsonDb 1.0
+import QtJsonDb 1.0 as JsonDb
 
 ContactsSavingTestCase {
     name: "ContactsJsonDbToModelNotificationE2ETests"
@@ -488,12 +488,12 @@ ContactsSavingTestCase {
         createSpyForJsonDb();
     }
 
-    Partition {
+    JsonDb.Partition {
         id: dummyPartition
         name: ""
     }
 
-    Query {
+    JsonDb.Query {
         id: dummyQuery
         partition: dummyPartition
     }
@@ -504,10 +504,10 @@ ContactsSavingTestCase {
         return dummyQuery.start ? true : false;
     }
 
-    Partition {
+    JsonDb.Partition {
         id: jsonDb
 
-        // use the default partition
+        // this needs to match QContactJsonDbStr::defaultPartition
         name: ""
 
         function createAndSignal(object) {
@@ -549,7 +549,7 @@ ContactsSavingTestCase {
 
         function resultCallback(error, result) {
             if (error) {
-                logDebug("resultCallback(): error: code " + code + ": message: " + message);
+                console.log("resultCallback(): error: code " + error.code + ": message: " + error.message);
                 return;
             }
 

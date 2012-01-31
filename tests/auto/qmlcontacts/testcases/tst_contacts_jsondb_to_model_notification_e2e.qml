@@ -42,7 +42,7 @@
 import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
-import QtAddOn.JsonDb 1.0
+import QtJsonDb 1.0
 
 ContactsSavingTestCase {
     name: "ContactsJsonDbToModelNotificationE2ETests"
@@ -488,41 +488,81 @@ ContactsSavingTestCase {
         createSpyForJsonDb();
     }
 
-    JsonDb {
+    Partition {
+        id: dummyPartition
+        name: ""
+    }
+
+    Query {
+        id: dummyQuery
+        partition: dummyPartition
+    }
+
+    // This function detects if an older version is in use
+    // To be removed when all environments provide the new API
+    function areWeUsingTheOldJsonDbApi() {
+        return dummyQuery.start ? true : false;
+    }
+
+    Partition {
         id: jsonDb
+
+        // use the default partition
+        name: ""
 
         function createAndSignal(object) {
             logDebug("createAndSignal()");
-            create(object, resultCallback, errorCallback);
+            create(object, resultCallback);
         }
 
         function removeAndSignal(object) {
             logDebug("removeAndSignal()");
-            remove(object, resultCallback, errorCallback);
+            remove(object, resultCallback);
         }
 
         function updateAndSignal(object) {
             logDebug("updateAndSignal()");
-            update(object, resultCallback, errorCallback);
+            update(object, resultCallback);
         }
+
+        property variant queryObject
 
         function queryAndSignal(querystr) {
             logDebug("queryAndSignal()");
-            query(querystr, resultCallback, errorCallback);
+            if (areWeUsingTheOldJsonDbApi()) {
+                logDebug("queryAndSignal(): old API");
+                queryObject = createQuery(querystr, -1, {}, jsonDb);
+                queryObject.finished.connect(queryResultCallback);
+                queryObject.start();
+            }
+            else {
+                logDebug("queryAndSignal(): new API");
+                queryObject = createQuery(querystr, 0, -1, {}, jsonDb);
+                queryObject.finished.connect(queryResultCallback);
+                queryObject.exec();
+            }
         }
 
         signal operationFinished
 
         property variant lastResult: {}
 
-        function resultCallback(result) {
+        function resultCallback(error, result) {
+            if (error) {
+                logDebug("resultCallback(): error: code " + code + ": message: " + message);
+                return;
+            }
+
             logDebug("resultCallback(): result received: " + JSON.stringify(result));
-            lastResult = result.data;
+            lastResult = result.items;
             operationFinished();
         }
 
-        function errorCallback(message, code) {
-            logDebug("errorCallback(): code " + code + ": message: " + message);
+        function queryResultCallback() {
+            var result = queryObject.takeResults();
+            logDebug("queryResultCallback(): result received: " + JSON.stringify(result));
+            lastResult = result;
+            operationFinished();
         }
     }
 

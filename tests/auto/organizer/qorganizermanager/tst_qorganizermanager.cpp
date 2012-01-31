@@ -56,8 +56,6 @@
 
 QTORGANIZER_USE_NAMESPACE
 
-#define QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromAscii(QTORGANIZER_VERSION_NAME)); \
-                                                          params.remove(QString::fromAscii(QTORGANIZER_IMPLEMENTATION_VERSION_NAME))
 // to get QFETCH to work with the template expression...
 typedef QMap<QString,QString> tst_QOrganizerManager_QStringMap;
 Q_DECLARE_METATYPE(tst_QOrganizerManager_QStringMap)
@@ -613,15 +611,11 @@ void tst_QOrganizerManager::uriParsing()
         QCOMPARE(manager, outmanager);
         QVERIFY(QOrganizerManager::parseUri(uri, 0, &outparameters));
 
-        QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(outparameters);
-
         QCOMPARE(parameters, outparameters);
 
         outmanager.clear();
         outparameters.clear();
         QVERIFY(QOrganizerManager::parseUri(uri, &outmanager, &outparameters));
-
-        QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(outparameters);
 
         QCOMPARE(manager, outmanager);
         QCOMPARE(parameters, outparameters);
@@ -633,7 +627,6 @@ void tst_QOrganizerManager::uriParsing()
         QVERIFY(QOrganizerManager::parseUri(uri, &outmanager, 0) == false);
         QVERIFY(outmanager.isEmpty());
         QVERIFY(QOrganizerManager::parseUri(uri, 0, &outparameters) == false);
-        QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(outparameters);
         QVERIFY(outparameters.isEmpty());
 
         /* make sure the in parameters don't change with a bad split */
@@ -642,7 +635,6 @@ void tst_QOrganizerManager::uriParsing()
         QVERIFY(QOrganizerManager::parseUri(uri, &outmanager, 0) == false);
         QCOMPARE(manager, outmanager);
         QVERIFY(QOrganizerManager::parseUri(uri, 0, &outparameters) == false);
-        QORGANIZERITEMMANAGER_REMOVE_VERSIONS_FROM_URI(outparameters);
         QCOMPARE(parameters, outparameters);
     }
 }
@@ -1837,12 +1829,6 @@ void tst_QOrganizerManager::invalidManager()
     /* Create an invalid manager */
     QOrganizerManager manager("this should never work");
     QVERIFY(manager.managerName() == "invalid");
-    QVERIFY(manager.managerVersion() == 0);
-
-    /* also, test the other ctor behaviour is sane also */
-    QOrganizerManager anotherManager("this should never work", 15);
-    QVERIFY(anotherManager.managerName() == "invalid");
-    QVERIFY(anotherManager.managerVersion() == 0);
 
     /* Now test that all the operations fail */
     QVERIFY(manager.itemIds().count() == 0);

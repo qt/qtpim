@@ -208,15 +208,6 @@ QMap<QString, QString> QOrganizerManagerEngine::managerParameters() const
 }
 
 /*!
-    This function should be reimplemented to return the version of this backend. The default implementation
-    returns 0.
- */
-int QOrganizerManagerEngine::managerVersion() const
-{
-    return 0;
-}
-
-/*!
     Returns the unique URI of this manager, which is built from the manager name and the parameters
     used to construct it.
  */

@@ -177,8 +177,6 @@ public:
     /* URI reporting */
     QString managerName() const;
     QMap<QString, QString> managerParameters() const;
-    /*! \reimp */
-    int managerVersion() const {return 1;}
 
     // items
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,

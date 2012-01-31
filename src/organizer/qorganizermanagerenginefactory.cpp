@@ -67,16 +67,6 @@ QOrganizerManagerEngineFactory::~QOrganizerManagerEngineFactory()
 }
 
 /*!
-    \fn QOrganizerManagerEngineFactory::supportedImplementationVersions() const
-
-    This function should return a list of versions of the engine which this factory can instantiate.
- */
-QList<int> QOrganizerManagerEngineFactory::supportedImplementationVersions() const
-{
-    return QList<int>();
-}
-
-/*!
     \fn QOrganizerManagerEngineFactory::engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error)
 
     This function should return an instance of the engine provided by this factory.

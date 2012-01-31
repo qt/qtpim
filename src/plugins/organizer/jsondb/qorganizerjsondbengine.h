@@ -110,7 +110,6 @@ public:
     /* URI reporting */
     QString managerName() const;
     QMap<QString, QString> managerParameters() const;
-    int managerVersion() const;
 
     // items
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,

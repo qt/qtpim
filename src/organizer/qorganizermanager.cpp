@@ -60,6 +60,22 @@ QTORGANIZER_BEGIN_NAMESPACE
 
     See the \l{Organizer Synchronous API}{synchronous} and \l{Organizer Asynchronous API}{asynchronous}
     API information from the \l{C++ Organizer}{organizer module} API documentation for more details.
+
+    When constructing a QOrganizerManager instance, certain parameters can be given to provide more
+    control, e.g. to specify the version of the backend it wants to construct. Note that the parameters
+    returned when calling managerParameters() are not necessarily the same as the ones passed in,
+    since certain parameters might be discarded or added by the backend.
+ */
+
+/*!
+    \macro QTORGANIZER_BACKEND_VERSION
+    \relates QOrganizerManager
+
+    This macro tells the parameter is to specify the version the backend that the customer wants to
+    create.
+
+    If the specified version is not available, a backend with the given name and a default version
+    will be created for this manager.
  */
 
 /*!
@@ -226,9 +242,9 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap
 
 /*!
     Returns a URI that describes a manager name, parameters, and version with which to instantiate
-    a manager object, from the given \a managerName, \a params and an optional \a implementationVersion.
+    a manager object, from the given \a managerName and \a params.
  */
-QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion)
+QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QString, QString> &params)
 {
     QString ret(QLatin1String("qtorganizer:%1:%2"));
     // we have to escape each param
@@ -243,13 +259,6 @@ QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QStri
         key = key.replace(QLatin1Char('='), QLatin1String("&equ;"));
         key = key + QLatin1Char('=') + arg;
         escapedParams.append(key);
-    }
-
-    if (implementationVersion != -1) {
-        QString versionString = QString(QLatin1String(QTORGANIZER_IMPLEMENTATION_VERSION_NAME));
-        versionString += QString::fromAscii("=");
-        versionString += QString::number(implementationVersion);
-        escapedParams.append(versionString);
     }
 
     return ret.arg(managerName, escapedParams.join(QLatin1String("&")));
@@ -317,25 +326,6 @@ void QOrganizerManager::createEngine(const QString &managerName, const QMap<QStr
 }
 
 /*!
-    Constructs a QOrganizerManager whose backend is identified by \a managerName with the given
-    \a parameters and \a implementationVersion, and the parent object is \a parent.
-
-    The default backend, i.e. the first one returned by the availableManagers() function, for the
-    platform will be created, if the \a managerName is empty. If the backend identified by \a managerName
-    does not exist, an invalid backend is created.
-
-    If the specified \a implementationVersion is not available, the manager with the name \a managerName
-    and a default implementation version is instantiated.
- */
-QOrganizerManager::QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters, QObject *parent)
-    : QObject(parent), d(new QOrganizerManagerData)
-{
-    QMap<QString, QString> params = parameters;
-    params[QString(QLatin1String(QTORGANIZER_IMPLEMENTATION_VERSION_NAME))] = QString::number(implementationVersion);
-    createEngine(managerName, params);
-}
-
-/*!
     Frees the memory used by the QOrganizerManager.
  */
 QOrganizerManager::~QOrganizerManager()
@@ -359,7 +349,6 @@ QOrganizerManager::~QOrganizerManager()
     \value NotSupportedError The most recent operation failed because the requested operation is not supported in the specified store
     \value BadArgumentError The most recent operation failed because one or more of the parameters to the operation were invalid
     \value UnspecifiedError The most recent operation failed for an undocumented reason
-    \value VersionMismatchError The most recent operation failed because the backend of the manager is not of the required version
     \value LimitReachedError The most recent operation failed because the limit for that type of object has been reached
     \value InvalidItemTypeError The most recent operation failed because the item given was of an invalid type for the operation
     \value InvalidCollectionError The most recent operation failed because the collection is invalid
@@ -812,14 +801,6 @@ QList<QOrganizerItemType::ItemType> QOrganizerManager::supportedItemTypes() cons
 }
 
 /*!
-    Returns the engine backend implementation version number.
- */
-int QOrganizerManager::managerVersion() const
-{
-    return d->m_engine->managerVersion();
-}
-
-/*!
     Returns the manager name for the backend.
 */
 QString QOrganizerManager::managerName() const
@@ -828,17 +809,22 @@ QString QOrganizerManager::managerName() const
 }
 
 /*!
-    Return the parameters used when creating the backend.
+    Return the parameters used by the backend.
 
     Note that if certain paramters are invalid, or discarded by the backend, they will not be returned.
+    Also, the backend might add certain parameters when being constructed.
 */
 QMap<QString, QString> QOrganizerManager::managerParameters() const
 {
-    QMap<QString, QString> params = d->m_engine->managerParameters();
+    return d->m_engine->managerParameters();
+}
 
-    params.remove(QString::fromAscii(QTORGANIZER_VERSION_NAME));
-    params.remove(QString::fromAscii(QTORGANIZER_IMPLEMENTATION_VERSION_NAME));
-    return params;
+/*!
+    This is now obsoleted, and will be removed soon. Please parse the version from managerParameters().
+ */
+int QOrganizerManager::managerVersion() const
+{
+    return managerParameters().value(QTORGANIZER_BACKEND_VERSION).toInt();
 }
 
 /*!

@@ -644,8 +644,6 @@ QString QDeclarativeOrganizerModel::error() const
             return QLatin1String("BadArgument");
         case QOrganizerManager::UnspecifiedError:
             return QLatin1String("UnspecifiedError");
-        case QOrganizerManager::VersionMismatchError:
-            return QLatin1String("VersionMismatch");
         case QOrganizerManager::LimitReachedError:
             return QLatin1String("LimitReached");
         case QOrganizerManager::InvalidItemTypeError:

@@ -67,26 +67,11 @@ static void qOrganizerItemsCleanEngines()
     QOrganizerManagerData::m_engines.clear();
 }
 
-
-static int parameterValue(const QMap<QString, QString> &parameters, const char *key, int defaultValue)
-{
-    if (parameters.contains(QString::fromAscii(key))) {
-        bool ok;
-        int version = parameters.value(QString::fromAscii(key)).toInt(&ok);
-
-        if (ok)
-            return version;
-    }
-    return defaultValue;
-}
-
 void QOrganizerManagerData::createEngine(const QString &managerName, const QMap<QString, QString> &parameters)
 {
     m_engine = 0;
 
     QString builtManagerName = managerName.isEmpty() ? QOrganizerManager::availableManagers().value(0) : managerName;
-
-    int implementationVersion = parameterValue(parameters, QTORGANIZER_IMPLEMENTATION_VERSION_NAME, -1);
 
     bool found = false;
     bool loadedDynamic = false;
@@ -100,11 +85,8 @@ void QOrganizerManagerData::createEngine(const QString &managerName, const QMap<
 
     while (!found) {
         foreach (QOrganizerManagerEngineFactory *f, factories) {
-            QList<int> versions = f->supportedImplementationVersions();
-            if (implementationVersion == -1 //no given implementation version required
-                || versions.isEmpty() //the manager engine factory does not report any version
-                || versions.contains(implementationVersion)) {
-                m_engine = f->engine(parameters, &m_lastError);
+            m_engine = f->engine(parameters, &m_lastError);
+            if (m_engine) {
                 found = true;
                 break;
             }
@@ -118,13 +100,6 @@ void QOrganizerManagerData::createEngine(const QString &managerName, const QMap<
         loadFactories();
         factories = m_engines.values(builtManagerName);
         loadedDynamic = true;
-    }
-
-    // XXX remove this
-    // the engine factory could lie to us, so check the real implementation version
-    if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
-        m_lastError = QOrganizerManager::VersionMismatchError;
-        m_engine = 0;
     }
 
     if (!m_engine) {
@@ -213,18 +188,6 @@ void QOrganizerManagerData::loadFactories()
             }
 #endif
         }
-
-        QStringList engineNames;
-        foreach (QOrganizerManagerEngineFactory *f, m_engines.values()) {
-            QStringList versions;
-            foreach (int v, f->supportedImplementationVersions())
-                versions << QString::fromAscii("%1").arg(v);
-            engineNames << QString::fromAscii("%1[%2]").arg(f->managerName()).arg(versions.join(QString::fromAscii(",")));
-        }
-#if !defined QT_NO_DEBUG
-        if (showDebug)
-            qDebug() << "Found engines:" << engineNames;
-#endif
     }
 }
 

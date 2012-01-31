@@ -69,7 +69,6 @@ class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory : public QObject, public
 
 public:
     virtual ~QOrganizerManagerEngineFactory();
-    virtual QList<int> supportedImplementationVersions() const;
     virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
     virtual QString managerName() const = 0;
     virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;

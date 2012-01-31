@@ -61,13 +61,11 @@ class Q_ORGANIZER_EXPORT QOrganizerManager : public QObject
 
 public:
 #if Q_QDOC // qdoc's parser fails to recognise the default map argument
-    explicit QOrganizerManager(const QString &managerName = QString(), const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
-    QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
+    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
 #else
-    explicit QOrganizerManager(const QString &managerName = QString(), const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);
-    QOrganizerManager(const QString &managerName, int implementationVersion, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);
+    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);
 #endif
-    explicit QOrganizerManager(QObject *parent);
+    explicit QOrganizerManager(QObject *parent = 0);
     ~QOrganizerManager();
 
     static QOrganizerManager *fromUri(const QString &uri, QObject *parent = 0);
@@ -79,7 +77,7 @@ public:
     QString managerUri() const;
 
     static bool parseUri(const QString &uri, QString *managerName, QMap<QString, QString> *params);
-    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion = -1);
+    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params);
 
     // error reporting
     enum Error {
@@ -94,7 +92,6 @@ public:
         NotSupportedError,
         BadArgumentError,
         UnspecifiedError,
-        VersionMismatchError,
         LimitReachedError,
         InvalidItemTypeError,
         InvalidCollectionError,

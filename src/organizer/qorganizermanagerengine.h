@@ -69,7 +69,6 @@ public:
 
     virtual QString managerName() const;
     virtual QMap<QString, QString> managerParameters() const;
-    virtual int managerVersion() const;
     QString managerUri() const;
 
     // items

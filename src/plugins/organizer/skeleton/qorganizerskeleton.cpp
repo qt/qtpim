@@ -469,12 +469,6 @@ QMap<QString, QString> QOrganizerItemSkeletonEngine::managerParameters() const
     return QMap<QString, QString>();
 }
 
-int QOrganizerItemSkeletonEngine::managerVersion() const
-{
-    /* TODO - implement this appropriately.  This is strictly defined by the engine, so return whatever you like */
-    return 1;
-}
-
 QList<QOrganizerItem> QOrganizerItemSkeletonEngine::itemOccurrences(const QOrganizerItem &parentItem,
                                                                     const QDateTime &startDateTime,
                                                                     const QDateTime &endDateTime, int maxCount,

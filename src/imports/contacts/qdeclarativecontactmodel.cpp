@@ -55,6 +55,7 @@
 #include <QPixmap>
 #include <QFile>
 #include <QMap>
+#include <QUrl>
 
 #include "qcontactrequests.h"
 
@@ -117,6 +118,8 @@ public:
 
     bool m_autoUpdate;
     bool m_componentCompleted;
+    QUrl m_lastExportUrl;
+    QUrl m_lastImportUrl;
 };
 
 QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
@@ -280,9 +283,10 @@ static QString urlToLocalFileName(const QUrl& url)
 }
 
 /*!
-  \qmlmethod ContactModel::importContacts(url url, list<string> profiles)
+  \qmlmethod void ContactModel::importContacts(url url, list<string> profiles)
 
   Import contacts from a vcard by the given \a url and optional \a profiles.
+  Only one import operation can be active at a time.
   Supported profiles are:
   \list
   \o "Sync"  Imports contacts in sync mode, currently, this is the same as passing in an empty list, and is generally what you want.
@@ -297,22 +301,31 @@ static QString urlToLocalFileName(const QUrl& url)
   */
 void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList& profiles)
 {
-   d->m_importProfiles = profiles;
+    ImportError importError = ImportNoError;
+    d->m_importProfiles = profiles;
 
-   //TODO: need to allow download vcard from network
-   QFile*  file = new QFile(urlToLocalFileName(url));
-   bool ok = file->open(QIODevice::ReadOnly);
-   if (ok) {
-      d->m_reader.setDevice(file);
-      d->m_reader.startReading();
-   }
+    //TODO: need to allow download vcard from network
+    QFile*  file = new QFile(urlToLocalFileName(url));
+    bool ok = file->open(QIODevice::ReadOnly);
+    if (ok) {
+        d->m_reader.setDevice(file);
+        if (d->m_reader.startReading()) {
+            d->m_lastImportUrl = url;
+            return;
+        }
+        importError = QDeclarativeContactModel::ImportError(d->m_reader.error());
+    } else {
+        importError = ImportIOError;
+    }
+    emit importCompleted(importError, d->m_lastImportUrl);
 }
 
 /*!
-  \qmlmethod ContactModel::exportContacts(url url, list<string> profiles)
+  \qmlmethod void ContactModel::exportContacts(url url, list<string> profiles)
 
   Export contacts into a vcard file to the given \a url by optional \a profiles.
   At the moment only the local file url is supported in export method.
+  Also, only one export operation can be active at a time.
   Supported profiles are:
   \list
   \o "Sync"  exports contacts in sync mode, currently, this is the same as passing in an empty list, and is generally what you want.
@@ -327,24 +340,33 @@ void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList
   */
 void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList& profiles)
 {
+    // Writer is capable of handling only one request at the time.
+    ExportError exportError = ExportNotReadyError;
+    if (d->m_writer.state() != QVersitWriter::ActiveState) {
+        QString profile = profiles.isEmpty()? QString() : profiles.at(0);
+        //only one profile string supported now.
+        QVersitContactExporter exporter(profile);
 
-   QString profile = profiles.isEmpty()? QString() : profiles.at(0);
-    //only one profile string supported now
-   QVersitContactExporter exporter(profile);
+        QList<QContact> contacts;
+        foreach (QDeclarativeContact* dc, d->m_contacts) {
+            contacts.append(dc->contact());
+        }
 
-   QList<QContact> contacts;
-   foreach (QDeclarativeContact* dc, d->m_contacts) {
-       contacts.append(dc->contact());
-   }
-
-   exporter.exportContacts(contacts, QVersitDocument::VCard30Type);
-   QList<QVersitDocument> documents = exporter.documents();
-   QFile* file = new QFile(urlToLocalFileName(url));
-   bool ok = file->open(QIODevice::WriteOnly);
-   if (ok) {
-      d->m_writer.setDevice(file);
-      d->m_writer.startWriting(documents);
-   }
+        exporter.exportContacts(contacts, QVersitDocument::VCard30Type);
+        QList<QVersitDocument> documents = exporter.documents();
+        QFile* file = new QFile(urlToLocalFileName(url));
+        bool ok = file->open(QIODevice::WriteOnly);
+        if (ok) {
+            d->m_writer.setDevice(file);
+            if (d->m_writer.startWriting(documents)) {
+                d->m_lastExportUrl = url;
+                return;
+            }
+        } else {
+            exportError = ExportIOError;
+        }
+    }
+    emit exportCompleted(exportError, d->m_lastExportUrl);
 }
 
 void QDeclarativeContactModel::contactsExported(QVersitWriter::State state)
@@ -352,6 +374,8 @@ void QDeclarativeContactModel::contactsExported(QVersitWriter::State state)
     if (state == QVersitWriter::FinishedState || state == QVersitWriter::CanceledState) {
          delete d->m_writer.device();
          d->m_writer.setDevice(0);
+         emit exportCompleted(QDeclarativeContactModel::ExportError(d->m_writer.error()),
+                            d->m_lastExportUrl);
     }
 }
 
@@ -457,7 +481,7 @@ void QDeclarativeContactModel::contacts_clear(QDeclarativeListProperty<QDeclarat
 /*!
   \qmlproperty list<SortOrder> ContactModel::sortOrders
 
-  This property holds a list of sort orders used by the organizer model.
+  This property holds a list of sort orders used by the contacts model.
 
   \sa SortOrder
   */
@@ -487,7 +511,6 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
             }
             if (d->m_manager->saveContacts(&contacts)) {
                 qmlInfo(this) << tr("contacts imported.");
-                update();
             } else {
                 if (d->m_error != d->m_manager->error()) {
                     d->m_error = d->m_manager->error();
@@ -495,6 +518,8 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
                 }
             }
         }
+        emit importCompleted(QDeclarativeContactModel::ImportError(d->m_reader.error()),
+                                 d->m_lastImportUrl);
     }
 }
 

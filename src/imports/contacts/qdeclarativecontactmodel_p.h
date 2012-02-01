@@ -76,6 +76,8 @@ class QDeclarativeContactModel : public QAbstractListModel, public QDeclarativeP
     Q_PROPERTY(QDeclarativeContactFetchHint* fetchHint READ fetchHint WRITE setFetchHint NOTIFY fetchHintChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContact> contacts READ contacts NOTIFY contactsChanged)
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContactSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
+    Q_ENUMS(ExportError)
+    Q_ENUMS(ImportError)
     Q_INTERFACES(QDeclarativeParserStatus)
 
 public:
@@ -83,6 +85,23 @@ public:
 
     enum {
         ContactRole =  Qt::UserRole + 500
+    };
+
+    enum ExportError {
+        ExportNoError          = QVersitWriter::NoError,
+        ExportUnspecifiedError = QVersitWriter::UnspecifiedError,
+        ExportIOError          = QVersitWriter::IOError,
+        ExportOutOfMemoryError = QVersitWriter::OutOfMemoryError,
+        ExportNotReadyError    = QVersitWriter::NotReadyError
+    };
+
+    enum ImportError {
+        ImportNoError          = QVersitReader::NoError,
+        ImportUnspecifiedError = QVersitReader::UnspecifiedError,
+        ImportIOError          = QVersitReader::IOError,
+        ImportOutOfMemoryError = QVersitReader::OutOfMemoryError,
+        ImportNotReadyError    = QVersitReader::NotReadyError,
+        ImportParseError       = QVersitReader::ParseError
     };
 
     QString manager() const;
@@ -126,6 +145,8 @@ public:
     Q_INVOKABLE void removeContacts(const QStringList& ids);
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
     Q_INVOKABLE void fetchContacts(const QStringList& contactIds);
+    Q_INVOKABLE void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
+    Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
 
 signals:
     void managerChanged();
@@ -133,14 +154,13 @@ signals:
     void errorChanged();
     void fetchHintChanged();
     void contactsChanged();
-    void vcardChanged();
     void sortOrdersChanged();
     void autoUpdateChanged();
+    void exportCompleted(ExportError error, QUrl url);
+    void importCompleted(ImportError error, QUrl url);
 
 public slots:
     void update();
-    void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
-    void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
 
 private slots:
     void clearContacts();

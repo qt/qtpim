@@ -171,6 +171,10 @@ TestCase {
         id: url
     }
 
+    Version {
+        id: version
+    }
+
     property url myUrl: "http://nokia.com"
     property variant myEmptyVariant
     property variant myStringVariant: "String data in a variant"
@@ -615,6 +619,20 @@ TestCase {
         url.subType = Url.HomePage
         expectFail("", "The values are equal but comparison fails due to conversion issues")
         compare(url.subType, Url.HomePage)   // This fails...
+    }
+
+    function test_version() {
+        compare(version.sequenceNumber, 0)
+        compare(version.value("SequenceNumber"), undefined)
+        version.sequenceNumber = 64
+        compare(version.sequenceNumber, 64)
+        compare(version.value("SequenceNumber"), 64)
+
+        compare(version.extendedVersion, "")
+        compare(version.value("ExtendedVersion"), undefined)
+        version.extendedVersion = "Qt rules"
+        compare(version.extendedVersion, "Qt rules")
+        compare(version.value("ExtendedVersion"), "Qt rules")
     }
 
 

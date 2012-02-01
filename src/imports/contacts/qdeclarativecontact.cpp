@@ -687,6 +687,16 @@ QDeclarativeListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
 }
 
 /*!
+    \qmlproperty Version Contact::version
+
+    This property holds the version detail of the Contact object.
+*/
+QDeclarativeContactVersion*  QDeclarativeContact::version()
+{
+    return getDetail<QDeclarativeContactVersion>(QDeclarativeContactDetail::Version);
+}
+
+/*!
     \qmlproperty Hobby Contact::hobby
 
     This property holds the hobby detail of the Contact object.

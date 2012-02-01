@@ -30,6 +30,7 @@ PUBLIC_HEADERS += \
     details/qcontacttimestamp.h \
     details/qcontacttype.h \
     details/qcontacturl.h \
+    details/qcontactversion.h \
     details/qcontactpersonid.h \
     details/qcontactextendeddetail.h
 

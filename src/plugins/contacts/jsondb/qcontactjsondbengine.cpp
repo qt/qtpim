@@ -142,7 +142,8 @@ QStringList QContactJsonDbEngine::supportedContactDetailTypes() const
                      << QContactPhoneNumber::DefinitionName
                      << QContactRingtone::DefinitionName
                      << QContactType::DefinitionName
-                     << QContactUrl::DefinitionName;
+                     << QContactUrl::DefinitionName
+                     << QContactVersion::DefinitionName;
     return supportedDetails;
 }
 

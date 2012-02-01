@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtPIM module of the Qt Toolkit.
+** This file is part of the Qt Mobility Components.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,39 +39,37 @@
 **
 ****************************************************************************/
 
-#include "qdeclarativecontactdetails_p.h"
+#ifndef QCONTACTVERSION_H
+#define QCONTACTVERSION_H
+
+#include <qcontactsglobal.h>
+#include "qcontactdetail.h"
+#include "qcontact.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-#include "moc_qdeclarativecontactaddress_p.cpp"
-#include "moc_qdeclarativecontactanniversary_p.cpp"
-#include "moc_qdeclarativecontactavatar_p.cpp"
-#include "moc_qdeclarativecontactbirthday_p.cpp"
-#include "moc_qdeclarativecontactdisplaylabel_p.cpp"
-#include "moc_qdeclarativecontactemailaddress_p.cpp"
-#include "moc_qdeclarativecontactextendeddetail_p.cpp"
-#include "moc_qdeclarativecontactfamily_p.cpp"
-#include "moc_qdeclarativecontactfavorite_p.cpp"
-#include "moc_qdeclarativecontactgender_p.cpp"
-#include "moc_qdeclarativecontactgeolocation_p.cpp"
-#include "moc_qdeclarativecontactglobalpresence_p.cpp"
-#include "moc_qdeclarativecontactguid_p.cpp"
-#include "moc_qdeclarativecontacthobby_p.cpp"
-#include "moc_qdeclarativecontactname_p.cpp"
-#include "moc_qdeclarativecontactnickname_p.cpp"
-#include "moc_qdeclarativecontactnote_p.cpp"
-#include "moc_qdeclarativecontactonlineaccount_p.cpp"
-#include "moc_qdeclarativecontactorganization_p.cpp"
-#include "moc_qdeclarativecontactphonenumber_p.cpp"
-#include "moc_qdeclarativecontactpresence_p.cpp"
-#include "moc_qdeclarativecontactringtone_p.cpp"
-#include "moc_qdeclarativecontactsynctarget_p.cpp"
-#include "moc_qdeclarativecontactthumbnail_p.cpp"
-#include "moc_qdeclarativecontacttag_p.cpp"
-#include "moc_qdeclarativecontacttype_p.cpp"
-#include "moc_qdeclarativecontacttimestamp_p.cpp"
-#include "moc_qdeclarativecontacturl_p.cpp"
-#include "moc_qdeclarativecontactversion_p.cpp"
-#include "moc_qdeclarativecontactpersonid_p.cpp"
+/* Leaf class */
+class Q_CONTACTS_EXPORT QContactVersion : public QContactDetail
+{
+public:
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactVersion, "Version")
+    const static QString FieldSequenceNumber;
+    const static QString FieldExtendedVersion;
+
+    void setSequenceNumber(int sequenceNumber) {setValue(FieldSequenceNumber, sequenceNumber);};
+    int sequenceNumber() const {return value(FieldSequenceNumber).toInt();};
+
+    void setExtendedVersion(const QByteArray &extendedVersion)
+    {
+        setValue(FieldExtendedVersion, extendedVersion);
+    };
+
+    QByteArray extendedVersion() const
+    {
+        return value(FieldExtendedVersion).toByteArray();
+    };
+};
 
 QTCONTACTS_END_NAMESPACE
+
+#endif

@@ -94,6 +94,7 @@ public:
         Timestamp,
         Type,
         Url,
+        Version,
         Unknown = 100
     };
 

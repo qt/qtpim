@@ -61,6 +61,7 @@ public:
     // Jsondb column names
     inline const static QString type() { return QStringLiteral("_type"); }
     inline const static QString uuid() { return QStringLiteral("_uuid"); }
+    inline const static QString version() { return QStringLiteral("_version"); }
 
     // Jsondb field names
     inline const static QString nameDefinitionName() { return QStringLiteral("name"); }

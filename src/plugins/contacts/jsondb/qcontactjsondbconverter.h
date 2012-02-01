@@ -67,6 +67,9 @@ public:
     QString jsonDbNotificationObjectToContactType(const QVariantMap &object) const;
     QContactId jsonDbNotificationObjectToContactId(const QVariantMap &object) const;
     QString convertId(const QContactId &id) const;
+    void jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const;
+    void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
+
     QHash<QString, QString> detailsToJsonMapping;
     QHash<QString, QString> contactNameFieldsMapping;
     QHash<QString, QString> organizationFieldsMapping;
@@ -80,6 +83,8 @@ private:
     void extendedDetailToJsonDbProperty(const QContactExtendedDetail &extendedDetail, QVariant& property) const;
     void dataToList(const QVariant &data, QVariantList &list) const;
     void dataToMap(const QVariant &data, QVariantMap &map) const;
+
+    static const int jsonDbVersionLength;
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -89,6 +89,7 @@ private slots:
     void timestamp();
     void type();
     void url();
+    void version();
 
     // custom definition testing
     void custom();
@@ -1338,6 +1339,44 @@ void tst_QContactDetails::url()
     QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 0);
 }
 
+void tst_QContactDetails::version()
+{
+    QContact c;
+    QContactVersion v1, v2;
+    QByteArray extendedVersion("Qt rules!");
+    QByteArray anotherExtendedVersion("Qt rules again!");
+    // test property set
+    v1.setSequenceNumber(64);
+    QCOMPARE(v1.sequenceNumber(), 64);
+    QCOMPARE(v1.value(QContactVersion::FieldSequenceNumber).toInt(), 64);
+    v1.setExtendedVersion(extendedVersion);
+    QCOMPARE(v1.extendedVersion(), extendedVersion);
+    QCOMPARE(v1.value(QContactVersion::FieldExtendedVersion).toByteArray(), extendedVersion);
+
+    // test property add
+    QVERIFY(c.saveDetail(&v1));
+    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 1);
+    QCOMPARE(QContactVersion(c.details(QContactVersion::DefinitionName).value(0)).sequenceNumber(), v1.sequenceNumber());
+    QCOMPARE(QContactVersion(c.details(QContactVersion::DefinitionName).value(0)).extendedVersion(), v1.extendedVersion());
+    QVERIFY(c.saveDetail(&v2));
+    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 2);
+
+    // test property update
+    v1.setSequenceNumber(65);
+    v1.setExtendedVersion(anotherExtendedVersion);
+    QVERIFY(c.saveDetail(&v1));
+    QCOMPARE(c.details(QContactVersion::DefinitionName).value(0).value(QContactVersion::FieldSequenceNumber).toInt(), 65);
+    QCOMPARE(c.details(QContactVersion::DefinitionName).value(0).value(QContactVersion::FieldExtendedVersion).toByteArray(),
+             anotherExtendedVersion);
+
+    // test property remove
+    QVERIFY(c.removeDetail(&v1));
+    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 1);
+    QVERIFY(c.removeDetail(&v2));
+    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 0);
+    QVERIFY(c.removeDetail(&v2) == false);
+    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 0);
+}
 
 // define a custom detail to test inheritance/slicing
 class CustomTestDetail : public QContactDetail

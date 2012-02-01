@@ -29,6 +29,7 @@ HEADERS += \
     details/qdeclarativecontacttimestamp_p.h \
     details/qdeclarativecontacttype_p.h \
     details/qdeclarativecontacturl_p.h \
+    details/qdeclarativecontactversion_p.h \
     details/qdeclarativecontacthobby_p.h \
     details/qdeclarativecontactpersonid_p.h \
     details/qdeclarativecontactextendeddetail_p.h

@@ -75,6 +75,8 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
+const int QContactJsonDbConverter::jsonDbVersionLength(32);
+
 QContactJsonDbConverter::QContactJsonDbConverter()
 {
     initializeMappings();
@@ -114,6 +116,11 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
             else { // if no personid is stored in backend, we return the local
                 personid->setPersonId(contact->id().toString());
             }
+        } else if (i.key() == QContactJsonDbStr::version()) {
+            //version
+            QContactVersion* contactVersion = new QContactVersion();
+            jsonDbVersionToContactVersion(i.value().toString(), contactVersion);
+            detailList << contactVersion;
         } else if (i.key() == detailsToJsonMapping.value(QContactName::DefinitionName)) {
             //name
             QContactName* name = new QContactName();
@@ -360,6 +367,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
     QContactPhoneNumber* number;
     QContactAddress* address;
     QContactUrl* url;
+    QContactVersion* version;
     QContactOrganization* organization;
     QContactBirthday* birthday;
     QContactAvatar* avatar;
@@ -550,6 +558,14 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             updateContexts(*url, &urlMap);
             urls.append(urlMap);
             object->insert(detailsToJsonMapping.value(QContactUrl::DefinitionName), urls);
+        }
+        // version
+        else if ( (detail.definitionName() == QContactVersion::DefinitionName) ) {
+            version = static_cast<QContactVersion *>(&detail);
+            QString jsonDbVersion;
+            contactVersionToJsonDbVersion(*version, &jsonDbVersion);
+            if (!jsonDbVersion.isEmpty())
+                object->insert(QContactJsonDbStr::version(), jsonDbVersion);
         }
         // extended details
         else if (detail.definitionName() == QContactExtendedDetail::DefinitionName) {
@@ -955,6 +971,19 @@ QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QV
         return QContactId();
     else
         return QContactId(new QContactJsonDbId(jsonUuid));
+}
+
+void QContactJsonDbConverter::jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const
+{
+    if (jsonDbVersion.length() == jsonDbVersionLength)
+        contactVersion->setExtendedVersion(jsonDbVersion.toLatin1());
+}
+
+void QContactJsonDbConverter::contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const
+{
+    QByteArray extendedVersion = contactVersion.extendedVersion();
+    if (extendedVersion.length() == jsonDbVersionLength)
+        *jsonDbVersion = QString::fromLatin1(extendedVersion.constData());
 }
 
 QTCONTACTS_END_NAMESPACE

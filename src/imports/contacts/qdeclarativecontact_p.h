@@ -91,6 +91,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactTag*  tag READ tag NOTIFY contactChanged)
     Q_PROPERTY (QUrl thumbnail READ thumbnail WRITE setThumbnail NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
@@ -149,6 +150,7 @@ public:
     QUrl  thumbnail() const;
     void  setThumbnail(const QUrl& url);
     QDeclarativeContactUrl*  url();
+    QDeclarativeContactVersion*  version();
     QDeclarativeListProperty<QDeclarativeContactUrl>  urls();
     QDeclarativeContactHobby*  hobby();
     QDeclarativeContactPersonId* personid();

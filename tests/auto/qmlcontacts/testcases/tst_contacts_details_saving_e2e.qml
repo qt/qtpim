@@ -316,6 +316,23 @@ ContactsSavingTestCase {
         compare(detail.contexts[0], "Home", "contexts")
     }
 
+    Version {
+        id: version
+    }
+
+    function test_version() {
+        version.sequenceNumber = 64
+        version.extendedVersion = "Qt rules"
+        contact.addDetail(version)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Version)
+        verify(detail.sequenceNumber != undefined)
+        if (model.manager == "jsondb") {
+            compare(detail.sequenceNumber, 0, "sequenceNumber is always 0 for jsondb")
+            compare(detail.extendedVersion.length, 32, "jsondb extended version field is 32 characters long")
+        }
+    }
+
     // Init & teardown
 
     function initTestCase() {

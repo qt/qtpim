@@ -194,6 +194,7 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
     \o ContactDetail.Tag
     \o ContactDetail.Timestamp
     \o ContactDetail.Url
+    \o ContactDetail.Version
     \o ContactDetail.Unknown
     \endlist
 
@@ -301,6 +302,8 @@ QString QDeclarativeContactDetail::definitionName(QDeclarativeContactDetail::Con
         return QContactTimestamp::DefinitionName;
     case QDeclarativeContactDetail::Url:
         return QContactUrl::DefinitionName;
+    case QDeclarativeContactDetail::Version:
+        return QContactVersion::DefinitionName;
     case QDeclarativeContactDetail::PersonId:
         return QContactPersonId::DefinitionName;
     default:
@@ -364,6 +367,8 @@ QDeclarativeContactDetail::ContactDetailType QDeclarativeContactDetail::detailTy
         return QDeclarativeContactDetail::Timestamp;
     if (definitionName == QContactUrl::DefinitionName)
         return QDeclarativeContactDetail::Url;
+    if (definitionName == QContactVersion::DefinitionName)
+        return QDeclarativeContactDetail::Version;
     if (definitionName == QContactPersonId::DefinitionName)
         return QDeclarativeContactDetail::PersonId;
 #ifndef QT_NO_DEBUG
@@ -425,6 +430,8 @@ QString QDeclarativeContactDetail::fieldName(QDeclarativeContactDetail::ContactD
         return QDeclarativeContactTimestamp::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::Url:
         return QDeclarativeContactUrl::fieldNameFromFieldType(fieldType);
+    case QDeclarativeContactDetail::Version:
+        return QDeclarativeContactVersion::fieldNameFromFieldType(fieldType);
     case QDeclarativeContactDetail::PersonId:
         return QDeclarativeContactPersonId::fieldNameFromFieldType(fieldType);
     default:
@@ -491,6 +498,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactType;
     else if (type == QDeclarativeContactDetail::Url)
         contactDetail = new QDeclarativeContactUrl;
+    else if (type == QDeclarativeContactDetail::Version)
+        contactDetail = new QDeclarativeContactVersion;
     else if (type == QDeclarativeContactDetail::Hobby)
         contactDetail = new QDeclarativeContactHobby;
     else if (type == QDeclarativeContactDetail::PersonId)
@@ -555,6 +564,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactType;
     else if (definitionName == QContactUrl::DefinitionName)
         contactDetail = new QDeclarativeContactUrl;
+    else if (definitionName == QContactVersion::DefinitionName)
+        contactDetail = new QDeclarativeContactVersion;
     else if (definitionName == QContactHobby::DefinitionName)
         contactDetail = new QDeclarativeContactHobby;
     else if (definitionName == QContactPersonId::DefinitionName)

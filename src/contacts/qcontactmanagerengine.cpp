@@ -761,7 +761,8 @@ QStringList QContactManagerEngine::supportedContactDetailTypes() const
                      << QContactThumbnail::DefinitionName
                      << QContactTimestamp::DefinitionName
                      << QContactType::DefinitionName
-                     << QContactUrl::DefinitionName;
+                     << QContactUrl::DefinitionName
+                     << QContactVersion::DefinitionName;
     return supportedDetails;
 }
 

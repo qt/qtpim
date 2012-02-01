@@ -172,6 +172,7 @@ bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QConta
     removeDetail<QContactTimestamp>(original);
     removeDetail<QContactTimestamp>(loaded);
     removeDetail<QContactPersonId>(loaded);
+    removeDetail<QContactVersion>(loaded);
 
     return true;
 }

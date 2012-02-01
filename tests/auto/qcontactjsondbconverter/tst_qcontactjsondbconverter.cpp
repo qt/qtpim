@@ -318,6 +318,23 @@ void tst_QcontactJsondbConverter::toQContactTest()
     contact.clearDetails();
 
 
+    // version
+    initializeJsonContact(jsonContact);
+    const char *versionString = "12345678901234567890123456789012";
+    QString jsonVersion(versionString);
+    QByteArray expectedExtendedVersion(versionString);
+    jsonContact.insert("_version", jsonVersion);
+    QVERIFY(converter.toQContact(jsonContact, &contact, engine));
+    detail = contact.detail(QContactVersion::DefinitionName);
+    QVERIFY(!detail.isEmpty());
+    QContactVersion* version = static_cast<QContactVersion*>(&detail);
+    QVERIFY(version != NULL);
+    QCOMPARE(version->extendedVersion(), expectedExtendedVersion);
+    QCOMPARE(version->sequenceNumber(), 0);
+    // cleanup
+    jsonData.clear();
+    contact.clearDetails();
+
     // extended detail with simple string data
     initializeJsonContact(jsonContact);
     jsonContact.insert("simpleStringDetail", "Simple string as detail data.");
@@ -619,7 +636,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testFields.clear();
 
 
-    // url
+    // Test url conversion
     QContactUrl url;
     url.setUrl("http://www.acme.com");
     contact.saveDetail(&url);
@@ -631,6 +648,20 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     contact.clearDetails();
     jsonContact.clear();
     testFields.clear();
+
+
+    // Test version conversion
+    QContactVersion version;
+    const char *jsonVersion = "12345678901234567890123456789012";
+    QByteArray originalVersion(jsonVersion);
+    version.setExtendedVersion(originalVersion);
+    contact.saveDetail(&version);
+    QVERIFY(converter.toJsonContact(&jsonContact, contact));
+    // test fields
+    QCOMPARE(jsonContact[QContactJsonDbStr::version()].value<QString>(), QString(jsonVersion));
+    // cleanup
+    contact.clearDetails();
+    jsonContact.clear();
 
 
     // extended detail with a simple string as data.

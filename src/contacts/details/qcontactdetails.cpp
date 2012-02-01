@@ -2774,6 +2774,60 @@ const QString QContactExtendedDetail::FieldData(QStringLiteral("Data"));
     Gets the data of this extended detail.
  */
 
+/* ==================== QContactVersion ======================= */
+/*!
+    \class QContactVersion
+    \brief The QContactVersion class provides the versioning information of a QContact object.
+    \inmodule QtContacts
+    \ingroup contacts-details
+ */
+
+/*!
+    \variable QContactVersion::DefinitionName
+
+    The constant string which identifies the definition of details which are extended details.
+ */
+const QString QContactVersion::DefinitionName(QStringLiteral("Version"));
+
+/*!
+    \variable QContactVersion::FieldSequenceNumber
+
+    Contains the integer sequence number of a QContact object.
+ */
+const QString QContactVersion::FieldSequenceNumber(QStringLiteral("SequenceNumber"));
+
+/*!
+    \variable QContactVersion::FieldExtendedVersion
+
+    Contains the extended version of a QContact object. It can be used to represent the version stored
+    in the back-end in cases when the back-end specific version cannot be represented only by a sequence number.
+ */
+const QString QContactVersion::FieldExtendedVersion(QStringLiteral("ExtendedVersion"));
+
+/*!
+    \fn void QContactVersion::setSequenceNumber(int sequenceNumber)
+
+    Sets the integer \a sequenceNumber.
+ */
+
+/*!
+    \fn int QContactVersion::sequenceNumber() const
+
+    Gets the integer sequenceNumber.
+ */
+
+/*!
+    \fn void QContactVersion::setExtendedVersion(const QByteArray &extendedVersion)
+
+    Sets the \a extendedVersion.
+ */
+
+/*!
+    \fn QByteArray QContactVersion::extendedVersion() const
+
+    Gets the extendedVersion.
+ */
+
 /* ==================== Convenience Filters ======================= */
 
 /*!

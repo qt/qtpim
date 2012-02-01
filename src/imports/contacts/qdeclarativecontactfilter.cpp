@@ -399,9 +399,10 @@ QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QDeclar
 void QDeclarativeContactCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeContactFilter>* prop)
 {
     QDeclarativeContactCompoundFilter* filter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
-    qDeleteAll(filter->m_filters);
-    filter->m_filters.clear();
-    emit filter->filterChanged();
+    if (!filter->m_filters.isEmpty()) {
+        filter->m_filters.clear();
+        emit filter->filterChanged();
+    }
 }
 
 #include "moc_qdeclarativecontactfilter_p.cpp"

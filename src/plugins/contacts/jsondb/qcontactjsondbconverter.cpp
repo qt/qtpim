@@ -444,7 +444,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             QVariantMap genderMap;
             gender = static_cast<QContactGender *>(&detail);
             if(!gender->gender().isEmpty())
-                genderMap[detailsToJsonMapping.value(QContactGender::FieldGender)] = gender->gender();
+                genderMap[detailsToJsonMapping.value(QContactGender::DefinitionName)] = gender->gender();
             object->insert(detailsToJsonMapping.value(QContactGender::DefinitionName), genderMap);
         }
         //organization

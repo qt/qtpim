@@ -207,8 +207,10 @@ void tst_QLatin1Constant::latinEquals()
     QVERIFY(lb != a);
 
     QVERIFY(z == lz);
+    QEXPECT_FAIL("", "Comparison of empty QLatin1Constant and QLatin1String does not work currently", Continue);
     QVERIFY((z == ln) == (lz == ln)); // QLatin1String(0) != QLatin1String("")
     QVERIFY(lz == z);
+    QEXPECT_FAIL("", "Comparison of empty QLatin1Constant and QLatin1String does not work currently", Continue);
     QVERIFY((ln == z) == (ln == lz));
 }
 

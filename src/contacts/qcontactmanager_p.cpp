@@ -59,10 +59,6 @@
 #include <QDir>
 #include <QFile>
 
-#if defined(Q_OS_SYMBIAN)
-# include <f32file.h>
-#endif
-
 #include "qcontactinvalidbackend_p.h"
 #include "qcontactspluginsearch_p.h"
 
@@ -300,7 +296,7 @@ void QContactManagerData::loadFactories()
             }
 #endif
         }
-        
+
         QStringList engineNames;
         foreach (QContactManagerEngineFactory* f, m_engines.values()) {
             QStringList versions;

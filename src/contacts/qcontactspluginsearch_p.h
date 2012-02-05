@@ -49,36 +49,9 @@
 #include <QDir>
 #include <QDebug>
 
-#if defined(Q_OS_SYMBIAN)
-# include <f32file.h>
-#endif
-
 QTCONTACTS_BEGIN_NAMESPACE
 
-#if defined(Q_OS_SYMBIAN)
-static inline bool qSymbian_CheckDir(const QDir& dir, RFs& rfs)
-{
-    bool pathFound = false;
-    // In Symbian, going cdUp() in a c:/private/<uid3>/ will result in *platsec* error at fileserver (requires AllFiles capability)
-    // Also, trying to cd() to a nonexistent directory causes *platsec* error. This does not cause functional harm, but should
-    // nevertheless be changed to use native Symbian methods to avoid unnecessary platsec warnings (as per qpluginloader.cpp).
-    // Use native Symbian code to check for directory existence, because checking
-    // for files from under non-existent protected dir like E:/private/<uid> using
-    // QDir::exists causes platform security violations on most apps.
-    QString nativePath = QDir::toNativeSeparators(dir.absolutePath());
-    TPtrC ptr = TPtrC16(static_cast<const TUint16*>(nativePath.utf16()), nativePath.length());
-    TUint attributes;
-    TInt err = rfs.Att(ptr, attributes);
-    if (err == KErrNone) {
-        // yes, the directory exists.
-        pathFound = true;
-    }
-    return pathFound;
-}
-#define CHECKDIR(dir) qSymbian_CheckDir(dir, rfs)
-#else
 #define CHECKDIR(dir) (dir).exists()
-#endif
 
 inline QStringList mobilityPlugins(const QString& plugintype)
 {
@@ -93,11 +66,6 @@ inline QStringList mobilityPlugins(const QString& plugintype)
 #if !defined QT_NO_DEBUG
     if (showDebug)
         qDebug() << "Plugin paths:" << paths;
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-    RFs rfs;
-    qt_symbian_throwIfError(rfs.Connect());
 #endif
 
     // Temp variable to avoid multiple identical paths
@@ -164,9 +132,6 @@ inline QStringList mobilityPlugins(const QString& plugintype)
         }
     }
 
-#if defined(Q_OS_SYMBIAN)
-    rfs.Close();
-#endif
     return  plugins;
 }
 

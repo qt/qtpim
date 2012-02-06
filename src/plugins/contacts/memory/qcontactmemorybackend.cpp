@@ -64,10 +64,10 @@ QContactManagerEngine* QContactMemoryEngineFactory::engine(const QMap<QString, Q
 }
 
 
-QContactEngineId* QContactMemoryEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &idString) const
+QContactEngineId* QContactMemoryEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
 {
     Q_UNUSED(parameters);
-    QContactMemoryEngineId *retn = new QContactMemoryEngineId(idString);
+    QContactMemoryEngineId *retn = new QContactMemoryEngineId(parameters, engineIdString);
     return retn;
 }
 
@@ -899,14 +899,11 @@ QContactMemoryEngineId::QContactMemoryEngineId(const QContactMemoryEngineId &oth
 {
 }
 
-QContactMemoryEngineId::QContactMemoryEngineId(const QString &idString)
+QContactMemoryEngineId::QContactMemoryEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString)
     : QContactEngineId()
 {
-    int temp = 0;
-    int colonIndex = idString.indexOf(QLatin1String(":"), 0);
-    m_contactId = idString.mid(temp, (colonIndex-temp)).toUInt();
-    temp = colonIndex + 1;
-    m_managerUri = idString.mid(temp);
+    m_contactId = engineIdString.toInt();
+    m_managerUri = QContactManager::buildUri("memory", parameters);
 }
 
 bool QContactMemoryEngineId::isEqualTo(const QContactEngineId *other) const
@@ -933,7 +930,7 @@ QString QContactMemoryEngineId::managerUri() const
 
 QString QContactMemoryEngineId::toString() const
 {
-    return (QString::number(m_contactId) % QLatin1Char(':') % m_managerUri);
+    return QString::number(m_contactId);
 }
 
 QContactEngineId* QContactMemoryEngineId::clone() const
@@ -944,7 +941,7 @@ QContactEngineId* QContactMemoryEngineId::clone() const
 #ifndef QT_NO_DEBUG_STREAM
 QDebug& QContactMemoryEngineId::debugStreamOut(QDebug &dbg) const
 {
-    dbg.nospace() << "QContactMemoryEngineId(" << m_contactId << "," << m_managerUri << ")";
+    dbg.nospace() << "QContactMemoryEngineId(" << m_managerUri << "," << m_contactId << ")";
     return dbg.maybeSpace();
 }
 #endif

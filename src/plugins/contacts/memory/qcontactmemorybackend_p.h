@@ -77,7 +77,7 @@ class QContactMemoryEngineFactory : public QObject, public QContactManagerEngine
 public:
     QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error*);
     QString managerName() const;
-    QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &idString) const;
+    QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
 };
 
 class QContactMemoryEngineData : public QSharedData
@@ -138,7 +138,7 @@ public:
     ~QContactMemoryEngineId();
     QContactMemoryEngineId(quint32 contactId, const QString &managerUri);
     QContactMemoryEngineId(const QContactMemoryEngineId &other);
-    QContactMemoryEngineId(const QString &idString);
+    QContactMemoryEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString);
 
     bool isEqualTo(const QContactEngineId *other) const;
     bool isLessThan(const QContactEngineId *other) const;

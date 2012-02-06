@@ -1646,10 +1646,11 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
 
     if (isValidFilter) { // proceed with jsondb query construction, if filter is valid
         const QString equalsQueryTemplate(QStringLiteral("[?%1=\"%2\"]"));
+        const QString equalsQueryTemplate2(QStringLiteral("[?%1=%2]"));
+        const QString equalsQueryTemplate3(QStringLiteral("[?%1.%2.%3=%4]"));
         const QString containsQueryTemplate(QStringLiteral("[?%1 contains \"%2\"]"));
         const QString matchFlagQueryTemplate(QStringLiteral("[?%1%2\"]"));
         const QString matchFlagQueryTemplate2(QStringLiteral("[?%1.%2%3\"]"));
-        const QString matchFlagQueryTemplate3(QStringLiteral("[?%1.%2.%3%4\"]"));
         const QString existsQueryTemplate(QStringLiteral("[?%1 exists]"));
 
         if (QOrganizerEventTime::DefinitionName == detailType) {
@@ -1660,7 +1661,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                 jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::eventEndDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerEventTime::FieldAllDay == detailField) {
-                jsonDbQueryStr->append(equalsQueryTemplate
+                jsonDbQueryStr->append(equalsQueryTemplate2
                     .arg(QOrganizerJsonDbStr::eventIsAllDay()).arg(valueString));
             }
 
@@ -1672,7 +1673,8 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                 jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::todoDueDateTime()).arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerTodoTime::FieldAllDay == detailField) {
-                jsonDbQueryStr->append(equalsQueryTemplate.arg(QOrganizerJsonDbStr::todoIsAllDay()).arg(valueString));
+                jsonDbQueryStr->append(equalsQueryTemplate2
+                    .arg(QOrganizerJsonDbStr::todoIsAllDay()).arg(valueString));
             }
 
         } else if (QOrganizerItemDetail::TypeTodoProgress == detailType) {
@@ -1681,7 +1683,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                     .arg(QOrganizerJsonDbStr::todoFinishedDateTime())
                     .arg(df.value().toDateTime().toUTC().toString(Qt::ISODate)));
             } else if (QOrganizerTodoProgress::FieldPercentageComplete == detailField) {
-                jsonDbQueryStr->append(equalsQueryTemplate
+                jsonDbQueryStr->append(equalsQueryTemplate2
                     .arg(QOrganizerJsonDbStr::todoProgressPercentage())
                     .arg(df.value().toInt()));
             } else if (QOrganizerTodoProgress::FieldStatus == detailField) {
@@ -1718,17 +1720,17 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
                     .arg(QOrganizerJsonDbStr::itemLocationLabel())
                     .arg(createMatchFlagQuery(valueString, df.matchFlags())));
             } else if (QOrganizerItemLocation::FieldLongitude ==  detailField) {
-                jsonDbQueryStr->append(matchFlagQueryTemplate3
+                jsonDbQueryStr->append(equalsQueryTemplate3
                     .arg(QOrganizerJsonDbStr::itemLocation())
                     .arg(QOrganizerJsonDbStr::itemLocationGeo())
                     .arg(QOrganizerJsonDbStr::itemLocationGeoLongitude())
-                    .arg(createMatchFlagQuery(valueString, df.matchFlags())));
+                    .arg(valueString));
             } else if (QOrganizerItemLocation::FieldLatitude ==  detailField) {
-                jsonDbQueryStr->append(matchFlagQueryTemplate3
+                jsonDbQueryStr->append(equalsQueryTemplate3
                     .arg(QOrganizerJsonDbStr::itemLocation())
                     .arg(QOrganizerJsonDbStr::itemLocationGeo())
                     .arg(QOrganizerJsonDbStr::itemLocationGeoLatitude())
-                    .arg(createMatchFlagQuery(valueString, df.matchFlags())));
+                    .arg(valueString));
             }
 
         } else if (QOrganizerItemPriority::DefinitionName == detailType

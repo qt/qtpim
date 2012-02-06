@@ -127,9 +127,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 QStringList QContactManager::availableManagers()
 {
     QStringList ret;
-    ret << QLatin1String("invalid");
     QContactManagerData::loadFactories();
     ret.append(QContactManagerData::m_engines.keys());
+
+    ret << QLatin1String("invalid");
 
     // now swizzle the default engine to pole position
 #if defined(Q_CONTACTS_DEFAULT_ENGINE)

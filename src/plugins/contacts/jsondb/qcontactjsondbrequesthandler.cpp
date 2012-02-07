@@ -304,7 +304,7 @@ void QContactJsonDbRequestHandler::handleContactIdFetchRequest(QContactIdFetchRe
     QString newJsonDbQuery;
     if (m_converter->queryFromRequest(req, newJsonDbQuery)) {
         int trId = m_jsonDb->query(newJsonDbQuery, 0, -1, QContactJsonDbStr::defaultPartition());
-        m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::LocalIdFetchTransaction, req);
+        m_requestMgr->addTransaction(trId, QContactJsonDbRequestManager::ContactIdFetchTransaction, req);
     } else {
         error = QContactManager::BadArgumentError;
         const QList<QContactId> emptyContactList;
@@ -421,7 +421,7 @@ void QContactJsonDbRequestHandler::onResponse(int transactionId, const QVariant 
         handleContactRemoveResponse(removeReq);
         break;
     }
-    case QContactJsonDbRequestManager::LocalIdFetchTransaction: {
+    case QContactJsonDbRequestManager::ContactIdFetchTransaction: {
         QContactIdFetchRequest* idReq = static_cast<QContactIdFetchRequest*>(req);
         handleContactIdFetchResponse(idReq, object);
         break;
@@ -559,7 +559,7 @@ void QContactJsonDbRequestHandler::onError(int id, int code, const QString &mess
         }
         break;
     }
-    case QContactJsonDbRequestManager::LocalIdFetchTransaction: {
+    case QContactJsonDbRequestManager::ContactIdFetchTransaction: {
         QContactIdFetchRequest* idFetchReq = static_cast<QContactIdFetchRequest*>(req);
         QList<QContactId> ids;
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);

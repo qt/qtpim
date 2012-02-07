@@ -84,7 +84,7 @@ public:
         PrefetchForSaveTransaction,
         SaveTransaction,
         FetchTransaction,
-        LocalIdFetchTransaction,
+        ContactIdFetchTransaction,
         RemoveTransaction
     };
 

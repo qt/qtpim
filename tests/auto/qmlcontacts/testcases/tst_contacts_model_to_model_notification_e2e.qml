@@ -224,6 +224,8 @@ ContactsSavingTestCase {
     }
 
     function init() {
+        if (notifiedModel.manager == 'memory')
+            skip("memory backend does not support this at the moment");
         initTestForModel(notifiedModel);
         emptyContacts(notifiedModel);
     }

@@ -149,7 +149,8 @@ ContactsSavingTestCase {
         compare(detail.middleName, "B.")
         compare(detail.lastName, "Doe")
         compare(detail.suffix, "Sr.")
-        expectFail("", "contexts are not supported at the moment")
+        if (model.manager == 'jsondb')
+            expectFail("", "contexts are not supported at the moment")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], "Home", "contexts")
     }
@@ -214,15 +215,19 @@ ContactsSavingTestCase {
         var detail = contact.detail(ContactDetail.Organization)
         compare(detail.name, "Name")
         compare(detail.logoUrl, "http://qt.nokia.com")
-        expectFail("", "TODO: department is not working as expected at the moment");
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO: department is not working as expected at the moment");
         compare(detail.department[0], "Department")
-        expectFail("", "TODO: location is not working as expected at the moment");
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO: location is not working as expected at the moment");
         compare(detail.location, "Location")
-        expectFail("", "TODO: role is not working as expected at the moment");
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO: role is not working as expected at the moment");
         compare(detail.role, "Role")
         compare(detail.title, "Title")
         compare(detail.assistantName, "Assistant name")
-        expectFail("", "TODO:  startDate is not working as expected at the moment");
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO:  startDate is not working as expected at the moment");
         compare(new Date(detail.startDate), new Date(2012, 12, 01))
         expectFail("", "TODO: endDate is not working as expected at the moment");
         compare(detail.endDate, new Date(2012, 12, 03))
@@ -263,7 +268,8 @@ ContactsSavingTestCase {
         compare(detail.number, "1")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], "Home", "contexts")
-        expectFail("", "TODO: This is not working as expected at the moment")
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO: This is not working as expected at the moment")
         compare(detail.subTypes.length, phonenumber.subTypes.length)
     }
 

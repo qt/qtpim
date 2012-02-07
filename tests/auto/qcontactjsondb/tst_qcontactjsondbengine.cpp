@@ -470,7 +470,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
     QCOMPARE( convertedVariantMap["mapItemQString"].toString(),QString("QString item in QVariantMap"));
     QCOMPARE( convertedVariantMap["mapItemVariant"].toString(),QString("QString item as QVariant in QVariantMap"));
     variantList = convertedVariantMap["mapItemVariantList"].toList();
-    QCOMPARE(variantList.size(), 4);
+    QCOMPARE(variantList.size(), 3);
     QCOMPARE( variantList[0].toString(), QString("QString item in QVariantList in QVarianMap"));
     QCOMPARE( variantList[1].toInt(), 4);
     QCOMPARE( variantList[2].toString(), QString("Another QString item in QVariantList in QVariantMap"));

@@ -1368,8 +1368,8 @@ public:
     QString testLabel() const { return value(FieldTestLabel).toString(); }
 };
 
-const QString CustomTestDetail::FieldTestLabel(QStringLiteral("TestLabel"));
-const QString CustomTestDetail::DefinitionName(QStringLiteral("CustomTestDetail"));
+const QString CustomTestDetail::FieldTestLabel(QLatin1String("TestLabel"));
+const QString CustomTestDetail::DefinitionName(QLatin1String("CustomTestDetail"));
 
 void tst_QContactDetails::custom()
 {

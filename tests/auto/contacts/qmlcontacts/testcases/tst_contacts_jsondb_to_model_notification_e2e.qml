@@ -480,137 +480,23 @@ ContactsSavingTestCase {
     }
 
     function initJsonDbAccess() {
-        createSpyForJsonDb();
+        jsonDbTestHelper.initTestHelper();
     }
 
-    JsonDb.Partition {
-        id: dummyPartition
-        name: ""
+    ContactsJsonDbTestHelper {
+        id: jsonDbTestHelper
     }
-
-    JsonDb.Query {
-        id: dummyQuery
-        partition: dummyPartition
-    }
-
-    // This function detects if an older version is in use
-    // To be removed when all environments provide the new API
-    function areWeUsingTheOldJsonDbApi() {
-        return dummyQuery.start ? true : false;
-    }
-
-    JsonDb.Partition {
-        id: jsonDb
-
-        // this needs to match QContactJsonDbStr::defaultPartition
-        name: ""
-
-        function createAndSignal(object) {
-            logDebug("createAndSignal()");
-            create(object, resultCallback);
-        }
-
-        function removeAndSignal(object) {
-            logDebug("removeAndSignal()");
-            remove(object, resultCallback);
-        }
-
-        function updateAndSignal(object) {
-            logDebug("updateAndSignal()");
-            update(object, resultCallback);
-        }
-
-        property variant queryObject
-
-        function queryAndSignal(querystr) {
-            logDebug("queryAndSignal()");
-            if (areWeUsingTheOldJsonDbApi()) {
-                logDebug("queryAndSignal(): old API");
-                queryObject = createQuery(querystr, -1, {}, jsonDb);
-                queryObject.finished.connect(queryResultCallback);
-                queryObject.start();
-            }
-            else {
-                logDebug("queryAndSignal(): new API");
-                queryObject = createQuery(querystr, 0, -1, {}, jsonDb);
-                queryObject.finished.connect(queryResultCallback);
-                queryObject.exec();
-            }
-        }
-
-        signal operationFinished
-
-        property variant lastResult: {}
-
-        function resultCallback(error, result) {
-            if (error) {
-                console.log("resultCallback(): error: code " + error.code + ": message: " + error.message);
-                return;
-            }
-
-            logDebug("resultCallback(): result received: " + JSON.stringify(result));
-            lastResult = result.items;
-            operationFinished();
-        }
-
-        function queryResultCallback() {
-            var result = queryObject.takeResults();
-            logDebug("queryResultCallback(): result received: " + JSON.stringify(result));
-            lastResult = result;
-            operationFinished();
-        }
-    }
-
-    property SignalSpy jsonDbSpy
 
     function createContactToJsonDb(contact) {
-        logDebug("createContactToJsonDb()");
-        contact["_type"] = "com.nokia.mp.contacts.Contact";
-        jsonDb.createAndSignal(contact);
-        jsonDbSpy.wait();
+        jsonDbTestHelper.createContactToJsonDb(contact);
     }
 
     function removeContactFromJsonDb(contact) {
-        logDebug("removeContactFromJsonDb(): remove contact id " + contact.contactId);
-        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
-        var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
-                '[?_uuid="' + jsonUuid + '"]';
-        jsonDb.queryAndSignal(query);
-        jsonDbSpy.wait();
-        var object = jsonDb.lastResult[0];
-        verify(object, "fetched given contact from jsondb");
-        jsonDb.removeAndSignal(object);
-        jsonDbSpy.wait();
-
-        jsonDb.queryAndSignal('[?_type="com.nokia.mp.contacts.Contact"]');
-        jsonDbSpy.wait();
+        jsonDbTestHelper.removeContactFromJsonDb(contact);
     }
 
-    // updates only the first name at the moment!
     function updateContactInJsonDb(contact, update) {
-        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
-        logDebug("updateContactInJsonDb(): update contact id " + jsonUuid);
-
-        var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
-                '[?_uuid="' + jsonUuid + '"]';
-        jsonDb.queryAndSignal(query);
-        jsonDbSpy.wait();
-        var object = jsonDb.lastResult[0];
-
-        object.name.firstName = update.name.firstName;
-        jsonDb.updateAndSignal(object);
-        jsonDbSpy.wait();
-    }
-
-    function createSpyForJsonDb() {
-        logDebug("createSpyForJson()");
-        jsonDbSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsJsonDbToModelNotificationE2ETests);
-        jsonDbSpy.target = jsonDb;
-        jsonDbSpy.signalName = "operationFinished"
+        jsonDbTestHelper.updateContactInJsonDb(contact, update);
     }
 
     function compareContactArrays(actual, expected) {

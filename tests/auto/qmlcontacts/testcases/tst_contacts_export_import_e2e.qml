@@ -65,6 +65,9 @@ ContactsVersitTestCase {
         }
     }
 
+    // Base for vcard file names.
+    property string vcardFileNameBase: 'tst_contacts_export_import_e2e_'
+
     function test_contactExportImportWithTinyContactExportSignaling() {
 
         var signalSpy = initTestForTargetListeningToSignal(model, "exportCompleted");
@@ -74,7 +77,7 @@ ContactsVersitTestCase {
         waitForContactsChanged();
 
         // Export contacts to vcard file.
-        var vcardFilePath = Qt.resolvedUrl("tst_contacts_versit_export_import_e2e.vcard");
+        var vcardFilePath = Qt.resolvedUrl(vcardFileNameBase + "1.vcard");
         model.exportContacts(vcardFilePath, ["Sync"]);
         waitForTargetSignal(signalSpy);
 

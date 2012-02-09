@@ -24,6 +24,8 @@ OTHER_FILES += \
     testcases/tst_contacts_clear_details_e2e.qml \
     testcases/tst_contacts_details_saving_e2e.qml \
     testcases/tst_contacts_e2e.qml \
+    testcases/tst_contacts_export_import_e2e.qml \
+    testcases/tst_contacts_export_import_signaling_e2e.qml \
     testcases/tst_contacts_fetch_contacts_e2e.qml \
     testcases/tst_contacts_filtering_by_detail_e2e.qml \
     testcases/tst_contacts_filtering_e2e.qml \
@@ -32,7 +34,5 @@ OTHER_FILES += \
     testcases/tst_contacts_remove_contacts_e2e.qml \
     testcases/tst_contacts_remove_detail_e2e.qml \
     testcases/tst_contacts_save_contact_e2e.qml \
-    testcases/tst_contacts_sorting_e2e.qml \
-    testcases/tst_contacts_versit_export_import_e2e.qml \
-    testcases/tst_contacts_versit_export_signaling.qml
+    testcases/tst_contacts_sorting_e2e.qml
 QT += qmltest contacts versit

@@ -301,23 +301,27 @@ static QString urlToLocalFileName(const QUrl& url)
   */
 void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList& profiles)
 {
-    ImportError importError = ImportNoError;
-    d->m_importProfiles = profiles;
+    // Reader is capable of handling only one request at the time.
+    ImportError importError = ImportNotReadyError;
+    if (d->m_reader.state() != QVersitReader::ActiveState) {
 
-    //TODO: need to allow download vcard from network
-    QFile*  file = new QFile(urlToLocalFileName(url));
-    bool ok = file->open(QIODevice::ReadOnly);
-    if (ok) {
-        d->m_reader.setDevice(file);
-        if (d->m_reader.startReading()) {
-            d->m_lastImportUrl = url;
-            return;
+        d->m_importProfiles = profiles;
+
+        //TODO: need to allow download vcard from network
+        QFile*  file = new QFile(urlToLocalFileName(url));
+        bool ok = file->open(QIODevice::ReadOnly);
+        if (ok) {
+            d->m_reader.setDevice(file);
+            if (d->m_reader.startReading()) {
+                d->m_lastImportUrl = url;
+                return;
+            }
+            importError = QDeclarativeContactModel::ImportError(d->m_reader.error());
+        } else {
+            importError = ImportIOError;
         }
-        importError = QDeclarativeContactModel::ImportError(d->m_reader.error());
-    } else {
-        importError = ImportIOError;
     }
-    emit importCompleted(importError, d->m_lastImportUrl);
+    emit importCompleted(importError, url);
 }
 
 /*!
@@ -362,11 +366,12 @@ void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList
                 d->m_lastExportUrl = url;
                 return;
             }
+            exportError = QDeclarativeContactModel::ExportError(d->m_writer.error());
         } else {
             exportError = ExportIOError;
         }
     }
-    emit exportCompleted(exportError, d->m_lastExportUrl);
+    emit exportCompleted(exportError, url);
 }
 
 void QDeclarativeContactModel::contactsExported(QVersitWriter::State state)
@@ -374,8 +379,7 @@ void QDeclarativeContactModel::contactsExported(QVersitWriter::State state)
     if (state == QVersitWriter::FinishedState || state == QVersitWriter::CanceledState) {
          delete d->m_writer.device();
          d->m_writer.setDevice(0);
-         emit exportCompleted(QDeclarativeContactModel::ExportError(d->m_writer.error()),
-                            d->m_lastExportUrl);
+         emit exportCompleted(QDeclarativeContactModel::ExportError(d->m_writer.error()), d->m_lastExportUrl);
     }
 }
 
@@ -518,8 +522,7 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
                 }
             }
         }
-        emit importCompleted(QDeclarativeContactModel::ImportError(d->m_reader.error()),
-                                 d->m_lastImportUrl);
+        emit importCompleted(QDeclarativeContactModel::ImportError(d->m_reader.error()), d->m_lastImportUrl);
     }
 }
 

@@ -3122,5 +3122,8 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
     // TODO: cleanup once test is complete
 }
 
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
+Q_DECLARE_METATYPE(QList<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId)>)
+
 QTEST_MAIN(tst_QOrganizerItemAsync)
 #include "tst_qorganizeritemasync.moc"

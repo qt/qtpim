@@ -127,7 +127,7 @@ Module {
         exports: ["Contact 5.0"]
         Property { name: "modified"; type: "bool"; isReadonly: true }
         Property { name: "type"; type: "QDeclarativeContactType::ContactType"; isReadonly: true }
-        Property { name: "contactId"; type: "QContactLocalId"; isReadonly: true }
+        Property { name: "contactId"; type: "string"; isReadonly: true }
         Property { name: "manager"; type: "string"; isReadonly: true }
         Property {
             name: "contactDetails"
@@ -248,6 +248,12 @@ Module {
         Property { name: "tag"; type: "QDeclarativeContactTag"; isReadonly: true; isPointer: true }
         Property { name: "thumbnail"; type: "QUrl" }
         Property { name: "url"; type: "QDeclarativeContactUrl"; isReadonly: true; isPointer: true }
+        Property {
+            name: "version"
+            type: "QDeclarativeContactVersion"
+            isReadonly: true
+            isPointer: true
+        }
         Property { name: "urls"; type: "QDeclarativeContactUrl"; isList: true; isReadonly: true }
         Property { name: "hobby"; type: "QDeclarativeContactHobby"; isReadonly: true; isPointer: true }
         Property {
@@ -450,6 +456,7 @@ Module {
                 "Timestamp": 26,
                 "Type": 27,
                 "Url": 28,
+                "Version": 29,
                 "Unknown": 100
             }
         }
@@ -741,13 +748,7 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactIntersectionFilter"
-        defaultProperty: "filters"
-        prototype: "QDeclarativeContactCompoundFilter"
-        exports: ["IntersectionFilter 5.0"]
-    }
-    Component {
-        name: "QDeclarativeContactLocalIdFilter"
+        name: "QDeclarativeContactIdFilter"
         defaultProperty: "ids"
         prototype: "QDeclarativeContactFilter"
         exports: ["IdFilter 5.0"]
@@ -755,9 +756,36 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
+        name: "QDeclarativeContactIntersectionFilter"
+        defaultProperty: "filters"
+        prototype: "QDeclarativeContactCompoundFilter"
+        exports: ["IntersectionFilter 5.0"]
+    }
+    Component {
         name: "QDeclarativeContactModel"
         prototype: "QAbstractListModel"
         exports: ["ContactModel 5.0"]
+        Enum {
+            name: "ExportError"
+            values: {
+                "ExportNoError": 0,
+                "ExportUnspecifiedError": 1,
+                "ExportIOError": 2,
+                "ExportOutOfMemoryError": 3,
+                "ExportNotReadyError": 4
+            }
+        }
+        Enum {
+            name: "ImportError"
+            values: {
+                "ImportNoError": 0,
+                "ImportUnspecifiedError": 1,
+                "ImportIOError": 2,
+                "ImportOutOfMemoryError": 3,
+                "ImportNotReadyError": 4,
+                "ImportParseError": 5
+            }
+        }
         Property { name: "manager"; type: "string" }
         Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
         Property { name: "error"; type: "string"; isReadonly: true }
@@ -771,30 +799,20 @@ Module {
             isList: true
             isReadonly: true
         }
-        Signal { name: "vcardChanged" }
+        Signal {
+            name: "exportCompleted"
+            Parameter { name: "error"; type: "ExportError" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Signal {
+            name: "importCompleted"
+            Parameter { name: "error"; type: "ImportError" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
         Method { name: "update" }
-        Method { name: "cancelUpdate" }
-        Method {
-            name: "exportContacts"
-            Parameter { name: "url"; type: "QUrl" }
-            Parameter { name: "profiles"; type: "QStringList" }
-        }
-        Method {
-            name: "exportContacts"
-            Parameter { name: "url"; type: "QUrl" }
-        }
-        Method {
-            name: "importContacts"
-            Parameter { name: "url"; type: "QUrl" }
-            Parameter { name: "profiles"; type: "QStringList" }
-        }
-        Method {
-            name: "importContacts"
-            Parameter { name: "url"; type: "QUrl" }
-        }
         Method {
             name: "removeContact"
-            Parameter { name: "id"; type: "QContactLocalId" }
+            Parameter { name: "id"; type: "string" }
         }
         Method {
             name: "removeContacts"
@@ -807,6 +825,24 @@ Module {
         Method {
             name: "fetchContacts"
             Parameter { name: "contactIds"; type: "QStringList" }
+        }
+        Method {
+            name: "importContacts"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "importContacts"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "exportContacts"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "exportContacts"
+            Parameter { name: "url"; type: "QUrl" }
         }
     }
     Component {
@@ -1212,6 +1248,21 @@ Module {
         }
         Property { name: "url"; type: "string" }
         Property { name: "subType"; type: "QVariant" }
+        Signal { name: "valueChanged" }
+    }
+    Component {
+        name: "QDeclarativeContactVersion"
+        prototype: "QDeclarativeContactDetail"
+        exports: ["Version 5.0"]
+        Enum {
+            name: "FieldType"
+            values: {
+                "FieldSequenceNumber": 0,
+                "FieldExtendedVersion": 1
+            }
+        }
+        Property { name: "sequenceNumber"; type: "int" }
+        Property { name: "extendedVersion"; type: "string" }
         Signal { name: "valueChanged" }
     }
 }

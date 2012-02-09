@@ -689,15 +689,9 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
             delete d->m_reader->device();
             d->m_reader->setDevice(0);
 
-            if (d->m_manager) {
-                if (d->m_manager->saveItems(&items)) {
-                    update();
-                } else {
-                    if (d->m_error != d->m_manager->error()) {
-                        d->m_error = d->m_manager->error();
-                        emit errorChanged();
-                    }
-                }
+            if (d->m_manager && !d->m_manager->saveItems(&items) && d->m_error != d->m_manager->error()) {
+                d->m_error = d->m_manager->error();
+                emit errorChanged();
             }
         }
         emit importCompleted(QDeclarativeOrganizerModel::ImportError(d->m_reader->error()), d->m_lastImportUrl);

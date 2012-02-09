@@ -215,6 +215,8 @@ ContactsSavingTestCase {
 
     function test_sortByLastAndFirstName()
     {
+        if (modelSortedByLastAndFirstName.manager == "jsondb")
+            skip("Not yet supported properly in the contacts jsondb backend.");
         initTestForModel(modelSortedByLastAndFirstName);
 
         emptyContacts(modelSortedByLastAndFirstName);

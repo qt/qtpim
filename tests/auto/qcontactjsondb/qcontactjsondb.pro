@@ -2,6 +2,11 @@ include(../auto.pri)
 
 QT += contacts contacts-private jsondb
 
+contains(QT_CONFIG, jsondbcompat): {
+    QT -= jsondb
+    QT += jsondbcompat
+}
+
 SOURCES += tst_qcontactjsondbengine.cpp \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbenginefactory.cpp \
            ../../../src/plugins/contacts/jsondb/qcontactjsondbengine.cpp \

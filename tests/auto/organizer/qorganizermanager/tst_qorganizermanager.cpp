@@ -1620,7 +1620,7 @@ void tst_QOrganizerManager::batch()
 
     QVERIFY(!cm->removeItems(QList<QOrganizerItemId>()));
     QVERIFY(cm->error() == QOrganizerManager::BadArgumentError);
-    
+
     // Use note & todo item depending on backend support
     QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
@@ -1629,14 +1629,14 @@ void tst_QOrganizerManager::batch()
         type = QOrganizerItemType::TypeTodo;
     else
         QSKIP("This manager does not support note or todo item");
-    
+
     QOrganizerItem a;
     QOrganizerItem b;
     QOrganizerItem c;
     a.setType(type);
     b.setType(type);
     c.setType(type);
-    
+
     /* Now add 3 items, all valid */
     QOrganizerItemDisplayLabel da;
     da.setValue(QOrganizerItemDisplayLabel::FieldLabel, "XXXXXX A Note");

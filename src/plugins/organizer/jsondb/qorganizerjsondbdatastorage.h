@@ -49,15 +49,11 @@
 #include "qorganizer.h"
 #include "qorganizerjsondbconverter.h"
 
-#include <jsondb-error.h>
-#include <jsondb-global.h>
-#include <jsondb-notification.h>
+#include <QtJsonDb/qjsondbconnection.h>
+#include <QtJsonDb/qjsondbwatcher.h>
 
-Q_ADDON_JSONDB_BEGIN_NAMESPACE
-class JsonDbClient;
-class JsonDbConnection;
-Q_ADDON_JSONDB_END_NAMESPACE
-Q_USE_JSONDB_NAMESPACE
+QT_USE_NAMESPACE_JSONDB
+
 QTORGANIZER_BEGIN_NAMESPACE
 
 // The purpose of this class is to provide synchronous access to jsondb and also hide jsondb
@@ -74,7 +70,6 @@ class QOrganizerJsonDbDataStorage: public QThread
     Q_OBJECT
 
 public:
-
     enum FetchType {
         NoFetch,
         FetchItems,
@@ -91,8 +86,6 @@ public:
                                 const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, FetchType type = FetchItems, const QOrganizerItemId &parentId = QOrganizerItemId());
     QList<QOrganizerItem> itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    QList<QOrganizerItemId> removeItemsByCollectionId(const QList<QOrganizerCollectionId>& collectionIds);
-    QList<QOrganizerItemId> removeItemsByParentId(const QList<QOrganizerItemId>& parentIds);
 
     void saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
@@ -122,20 +115,20 @@ protected:
 
 private slots:
     void handleRequest();
-    void onNotified(const QString &notifyUuid, const QtAddOn::JsonDb::JsonDbNotification &notification);
-    void onResponse(int trId, const QVariant& object);
-    void onError(int trId, int errorCode, const QString& message);
+
+    void onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode error, const QString &message);
+    void onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode error, const QString &message);
+    void onJsonDbRequestFinished();
+    void onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error, const QString &message);
+    void onJsonDbWatcherNotificationsAvailable();
 
 private:
-
     enum RequestType {
         Invalid,
         SaveItems,
         Items,
         ItemsById,
         RemoveItems,
-        RemoveItemsByCollectionId,
-        RemoveItemsByParentId,
         SaveCollections,
         Collections,
         RemoveCollections,
@@ -144,34 +137,35 @@ private:
         RemoveAlarm
     };
 
-    void handleResponse(int trId, QOrganizerManager::Error error, const QVariant& object);
+    void handleResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleSaveItemsRequest();
-    void handleSaveItemsResponse(int index, QOrganizerManager::Error error, const QVariant& object);
+    void handleSaveItemsResponse(int index, QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleItemsRequest();
-    void handleItemsResponse(QOrganizerManager::Error error, const QVariant& object);
+    void handleItemsResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleItemsByIdRequest();
-    void handleItemsByIdResponse(QOrganizerManager::Error error, const QVariant& object);
+    void handleItemsByIdResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleRemoveItemsRequest();
     void handleRemoveItemsResponse(int index, QOrganizerManager::Error error);
-    void handleRemoveItemsByCollectionIdRequest();
-    void handleRemoveItemsByCollectionIdResponse(const QVariant& object);
-    void handleRemoveItemsByParentIdRequest();
-    void handleRemoveItemsByParentIdResponse(const QVariant& object);
     void handleSaveCollectionsRequest();
-    void handleSaveCollectionsResponse(int index, QOrganizerManager::Error error, const QVariant& object);
+    void handleSaveCollectionsResponse(int index, QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleCollectionsRequest();
-    void handleCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
+    void handleCollectionsResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleRemoveCollectionsRequest();
-    void handleRemoveCollectionsResponse(QOrganizerManager::Error error, const QVariant& object);
-
+    void handleRemoveCollectionsResponse(QOrganizerManager::Error error);
     void handleSaveAlarmRequest();
     void handleSaveAlarmResponse(QOrganizerManager::Error error);
     void handleAlarmIdRequest();
-    void handleAlarmIdResponse(QOrganizerManager::Error error, const QVariant &object);
+    void handleAlarmIdResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
     void handleRemoveAlarmRequest();
     void handleRemoveAlarmResponse(QOrganizerManager::Error error);
 
-    QOrganizerManager::Error handleErrorResponse(const QVariant& object, int errorCode);
+    enum JsonDbRequestType {
+        JsonDbReadRequest = 0,
+        JsonDbCreateRequest,
+        JsonDbUpdateRequest,
+        JsonDbRemoveRequest
+    };
+    bool makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query = QString(), const QList<QJsonObject> &objects = QList<QJsonObject>());
 
     void processRequest();
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
@@ -181,7 +175,8 @@ private:
     QWaitCondition m_syncWaitCondition;
 
     QOrganizerJsonDbConverter m_converter;
-    JsonDbClient* m_jsonDb;
+    QJsonDbConnection *m_jsonDbConnection;
+    QJsonDbWatcher *m_jsonDbWatcher;
 
     // "collection cache"
     QSet<QOrganizerCollectionId> m_collectionIds;
@@ -193,7 +188,7 @@ private:
 
     // common
     RequestType m_requestType;
-    QMap<int, int> m_transactionIds; // map from transaction id to item/collection index
+    QMap<QJsonDbRequest *, int> m_requestIndexMap;  // map from request to item / collection index
     QMap<int, QOrganizerManager::Error>* m_errorMap;
     QOrganizerManager::Error* m_error;
 

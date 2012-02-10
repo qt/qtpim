@@ -78,6 +78,7 @@ public:
 
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
+    inline const static QString jsonDbQueryAlarmsTemplate() { return QStringLiteral("[?type=\"com.nokia.mt.alarm.Alarm\"][?eventUuid=\"%1\"]"); }
 
     inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
 
@@ -99,8 +100,8 @@ public:
     inline const static QString itemDisplayName() { return QStringLiteral("displayName"); }
     inline const static QString itemGuid() { return QStringLiteral("guid"); }
     inline const static QString itemTags() { return QStringLiteral("tags"); }
-
     inline const static QString itemPriority() { return QStringLiteral("priority"); }
+
     inline const static QString itemRecurrenceDates() { return QStringLiteral("recurrenceDates"); }
     inline const static QString itemRecurrenceRules() { return QStringLiteral("recurrenceRules"); }
     inline const static QString itemExceptionDates() { return QStringLiteral("exceptionDates"); }
@@ -126,7 +127,7 @@ public:
     inline const static QString itemRecurrenceRuleLimitCount() { return QStringLiteral("limitCount"); }
     inline const static QString itemRecurrenceRuleLimitDate() { return QStringLiteral("limitDate"); }
 
-    // occurrence item parents
+    // occurrence item parent
     inline const static QString itemOccurrenceParent() { return QStringLiteral("parentUuid"); }
     inline const static QString itemOccurrenceOriginalDate() { return QStringLiteral("originalDate"); }
 
@@ -171,6 +172,7 @@ public:
     // TODOs
     inline const static QString jsonDbTodoType() { return QStringLiteral("com.nokia.mt.organizer.Todo"); }
     inline const static QString jsonDbTodoOccurrenceType() { return QStringLiteral("com.nokia.mt.organizer.TodoOccurrence"); }
+
     inline const static QString todoStartDateTime() { return QStringLiteral("startDateTime"); }
     inline const static QString todoDueDateTime() { return QStringLiteral("dueDateTime"); }
     inline const static QString todoIsAllDay() { return QStringLiteral("isAllDay"); }

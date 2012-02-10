@@ -2,11 +2,6 @@ load(qt_module)
 
 QT += organizer network jsondb
 
-contains(QT_CONFIG, jsondbcompat): {
-    QT -= jsondb
-    QT += jsondbcompat
-}
-
 TARGET = qtorganizer_jsondb
 target.path += $$[QT_INSTALL_PLUGINS]/organizer
 INSTALLS += target

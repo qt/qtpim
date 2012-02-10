@@ -707,64 +707,44 @@ void QOrganizerJsonDbRequestThread::handleCollectionFetchRequest(QOrganizerColle
 }
 
 void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* collectionRemoveReq)
-{   
+{
     QMap<int, QOrganizerManager::Error> errorMap;
-    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
+    QOrganizerManager::Error lastError = QOrganizerManager::NoError;
     QList<QOrganizerCollectionId> collectionIds = collectionRemoveReq->collectionIds();
     m_requestMgr->setActive(collectionRemoveReq);
-    //List after removing the invalid collection ids such as empty id and default collection id
-    //This is for removing the collection items,
+    // only contain valid ones, i.e. default collection, empty, non-existing ones are removed
     QMap<int, QOrganizerCollectionId> validCollectionIds;
-
-    //Check the request list and build jsondb remove list
-    for (int i = 0; i < collectionIds.size(); i++) {
-        QOrganizerCollectionId collectionId = collectionIds[i];
-        if (collectionId == m_storage->defaultCollection().id()) {
-            //Default collection cannot be removed
-            latestError = QOrganizerManager::PermissionsError;
-            errorMap.insert(i, latestError);
-            QString warning = QOrganizerJsonDbStr::warningDefaultCollectionRemove();
-            qWarning () << warning;
+    for (int i = 0; i < collectionIds.size(); ++i) {
+        if (collectionIds.at(i) == m_storage->defaultCollection().id()) {
+            lastError = QOrganizerManager::PermissionsError;
+            errorMap.insert(i, lastError);
+            qWarning() << QOrganizerJsonDbStr::warningDefaultCollectionRemove();
         } else if (m_storage->collectionIds().contains(collectionIds.at(i))) {
-            validCollectionIds.insert(i, collectionIds[i]);
+            validCollectionIds.insert(i, collectionIds.at(i));
         } else {
-            latestError = QOrganizerManager::BadArgumentError;
-            errorMap.insert(i, latestError);
+            lastError = QOrganizerManager::BadArgumentError;
+            errorMap.insert(i, lastError);
         }
     }
-
+    int errorCount = errorMap.size();
     if (!validCollectionIds.isEmpty()) {
-        m_storage->removeCollections(validCollectionIds, &errorMap, &latestError);
-        QList<QOrganizerCollectionId> removedCollectionIds;
-        for (int i = 0; i < collectionIds.size(); i++) {
-            if (!errorMap.contains(i))
-                removedCollectionIds.append(collectionIds.at(i));
-        }
-        if (!removedCollectionIds.isEmpty()) {
-            QList<QOrganizerItemId> idList = m_storage->removeItemsByCollectionId(removedCollectionIds);
-            if (!idList.isEmpty()) {// remove alarm objects
-                QOrganizerManager::Error alarmError;
-                QString alarmId;
-                foreach (const QOrganizerItemId &id, idList) {
-                    alarmError = QOrganizerManager::NoError;
-                    alarmId = m_storage->alarmId(&id, &alarmError);
-                    if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty())
-                        m_storage->removeAlarm(&alarmId, &alarmError);
-                    else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
-                        int count = 0;
-                        do {//Try to delete all the alarm objects
-                            m_storage->removeAlarm(&alarmId, &alarmError);
-                            alarmId = m_storage->alarmId(&id, &alarmError);
-                            ++count;//Prevent infinite loop
-                        } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
-                    }
-                }
-            }
+        m_storage->removeCollections(validCollectionIds, &errorMap, &lastError);
+        // either all removed, or none removed
+        if (errorCount == errorMap.size()) {
+            // remove all items in those collections
+            QOrganizerItemCollectionFilter collectonFilter;
+            collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(validCollectionIds.values()));
+            QList<QOrganizerItem> items = m_storage->items(QDateTime(), QDateTime(), collectonFilter, QList<QOrganizerItemSortOrder>(),
+                                                           QOrganizerItemFetchHint(), &lastError, QOrganizerJsonDbDataStorage::FetchItemIds);
+            QList<QOrganizerItemId> itemIds;
+            for (int i = 0; i < items.length(); ++i)
+                itemIds.append(items.at(i).id());
+            removeItems(itemIds, &lastError, &errorMap);
         }
     }
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionRemoveReq);
-    QOrganizerManagerEngine::updateCollectionRemoveRequest(collectionRemoveReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+    QOrganizerManagerEngine::updateCollectionRemoveRequest(collectionRemoveReq, lastError, errorMap, QOrganizerAbstractRequest::FinishedState);
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -778,7 +758,6 @@ void QOrganizerJsonDbRequestThread::initDefaultCollection()
         m_storage->createDefaultCollection(&defaultCollection, &error);
     }
 }
-
 
 // Save helpers
 
@@ -1101,14 +1080,15 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
 
 void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &itemIds, QOrganizerManager::Error *error, QMap<int, QOrganizerManager::Error> *errorMap)
 {
-    QMap<int, QOrganizerManager::Error> fetchErrorMap;
-    QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
+    QMap<int, QOrganizerManager::Error> tmpErrorMap;
+    QOrganizerManager::Error tmpError = QOrganizerManager::NoError;
     QList<QOrganizerItemId> removedParentIds;
+    QList<QOrganizerItemId> occurrenceIds;
 
     if (!itemIds.isEmpty()) {
         // fetch items to find out if there are any persisted occurrences or parent items
         // among them
-        QList<QOrganizerItem> items = m_storage->itemsById(itemIds, &fetchErrorMap, &fetchError);
+        QList<QOrganizerItem> items = m_storage->itemsById(itemIds, &tmpErrorMap, &tmpError);
         foreach (QOrganizerItem item, items) {
             if ((item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeTodo)
                     && !item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
@@ -1120,10 +1100,28 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
 
         // remove all persisted occurrences of removed parent items
         if (!removedParentIds.isEmpty()) {
-            QList<QOrganizerItemId> removedOccurrences = m_storage->removeItemsByParentId(removedParentIds);
-            if (!removedOccurrences.isEmpty())
-                removeAlarmObjects(removedOccurrences, QMap<int, QOrganizerManager::Error>());
+            // get all exception occurrence ids
+
+            QOrganizerItemUnionFilter unionFilter;
+            for (int i = 0; i < removedParentIds.size(); i++) {
+                QOrganizerItemDetailFilter detailFilter;
+                detailFilter.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
+                detailFilter.setValue(QVariant::fromValue(removedParentIds[i]));
+                unionFilter.append(detailFilter);
+            }
+
+            tmpError = QOrganizerManager::NoError;
+            QList<QOrganizerItem> occurrences = m_storage->items(QDateTime(), QDateTime(), unionFilter, QList<QOrganizerItemSortOrder>(), QOrganizerItemFetchHint(), &tmpError);
+
+            for (int j = 0; j < occurrences.size(); j++) {
+                occurrenceIds.append(occurrences[j].id());
+            }
         }
+
+        tmpErrorMap.clear();
+        tmpError = QOrganizerManager::NoError;
+        m_storage->removeItems(occurrenceIds, &tmpErrorMap, &tmpError);
+        removeAlarmObjects(occurrenceIds, tmpErrorMap);
     }
 }
 
@@ -1148,16 +1146,10 @@ void QOrganizerJsonDbRequestThread::removeAlarmObjects(const QList<QOrganizerIte
                     ++count;
                 } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
             }
-            // not inserting an error if event is successfully removed but alarm object cannot be removed
-//            if (QOrganizerManager::NoError != alarmError) {
-//                latestError = alarmError;
-//                errorMap.insert(index, alarmError);
-//            }
         }
         ++index;
     }
 }
-
 
 #include "moc_qorganizerjsondbrequestthread.cpp"
 

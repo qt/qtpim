@@ -46,9 +46,11 @@
 
 #include "qorganizer.h"
 
-#include <jsondb-error.h>
+#include <QtJsonDb/qjsondbconnection.h>
+#include <QtJsonDb/qjsondbreadrequest.h>
+#include <QtJsonDb/qjsondbwriterequest.h>
 
-Q_USE_JSONDB_NAMESPACE
+QT_USE_NAMESPACE_JSONDB
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -63,55 +65,51 @@ class QOrganizerJsonDbConverter
 public:
     QOrganizerJsonDbConverter();
 
-    QOrganizerManager::Error jsondbErrorToOrganizerError(JsonDbError::ErrorCode jsonErrorCode);
+    QOrganizerManager::Error jsonDbConnectionErrorToOrganizerError(QJsonDbConnection::ErrorCode error) const;
+    QOrganizerManager::Error jsonDbRequestErrorToOrganizerError(QJsonDbRequest::ErrorCode error) const;
 
-    bool jsonDbObjectToItem(const QVariantMap &object, QOrganizerItem *item) const;
-    bool itemToJsonDbObject(const QOrganizerItem &item, QVariantMap *object) const;
+    bool jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item) const;
+    bool itemToJsonDbObject(const QOrganizerItem &item, QJsonObject *object) const;
 
-    bool jsonDbObjectToCollection(const QVariantMap &object, QOrganizerCollection *collection, bool *isDefaultCollection);
-    bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QVariantMap *object) const;
+    bool jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection) const;
+    bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QJsonObject *object) const;
 
     // filter handling
     bool singleFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
     bool compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
 
     // notification handling
-    QString jsonDbNotificationObjectToOrganizerType(const QVariantMap &object) const;
-    QOrganizerItemId jsonDbNotificationObjectToItemId(const QVariantMap &object) const;
-    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QVariantMap &object) const;
+    QString jsonDbNotificationObjectToOrganizerType(const QJsonObject &object) const;
+    QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object) const;
+    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object) const;
 
-    bool itemToJsondbAlarmObject(const QOrganizerItem &item, QVariantMap *alarmObject) const;
+    bool itemToJsondbAlarmObject(const QOrganizerItem &item, QJsonObject *alarmObject) const;
 
     void jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const;
 
 private:
     void itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const;
 
-    void jsonDbObjectToRecurrenceRule(const QVariantMap &object, QOrganizerRecurrenceRule *rule) const;
-    void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QVariantMap *object) const;
+    void jsonDbObjectToRecurrenceRule(const QJsonObject &object, QOrganizerRecurrenceRule *rule) const;
+    void recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QJsonObject *object) const;
 
-    void audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QVariantMap *object) const;
-    void jsonDbObjectToAudibleReminderDetail(const QVariantMap &object, QOrganizerItemAudibleReminder *itemReminder,
+    void audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QJsonObject *object) const;
+    void jsonDbObjectToAudibleReminderDetail(const QJsonObject &object, QOrganizerItemAudibleReminder *itemReminder,
                                              QOrganizerItemExtendedDetail *extendedDetail) const;
 
     int stringToEnum(const QOrganizerJsonDbEnumConversionData *const conversionData, const QString &enumStr) const;
     QString enumToString(const QOrganizerJsonDbEnumConversionData *const conversionData, int enumValue) const;
 
-    void extendedDetailToJsonDbProperty(const QOrganizerItemExtendedDetail &extendedDetail, QVariant *property) const;
+    void attendeeDetailToJsonDbObject(const QOrganizerEventAttendee &attendeeDetail, QJsonObject *object) const;
+    void jsonDbObjectToAttendeeDetail(const QJsonObject &object, QOrganizerEventAttendee *attendeeDetail) const;
 
-    void attendeeDetailToJsonDbObject(const QOrganizerEventAttendee &attendeeDetail, QVariantMap *object) const;
-    void jsonDbObjectToAttendeeDetail(const QVariantMap &object, QOrganizerEventAttendee *attendeeDetail) const;
-
-    void rsvpDetailToJsonDbObject(const QOrganizerEventRsvp &rsvpDetail, QVariantMap *object) const;
-    void jsonDbObjectToRsvpDetail(const QVariantMap &object, QOrganizerEventRsvp *rsvpDetail,
+    void rsvpDetailToJsonDbObject(const QOrganizerEventRsvp &rsvpDetail, QJsonObject *object) const;
+    void jsonDbObjectToRsvpDetail(const QJsonObject &object, QOrganizerEventRsvp *rsvpDetail,
                                   QOrganizerItemExtendedDetail *extendedDetail) const;
 
-    void locationDetailToJsonDbObject(const QOrganizerItemLocation &locationDetail, QVariantMap *object) const;
-    void jsonDbObjectToLocationDetail(const QVariantMap &object, QOrganizerItemLocation *locationDetail,
+    void locationDetailToJsonDbObject(const QOrganizerItemLocation &locationDetail, QJsonObject *object) const;
+    void jsonDbObjectToLocationDetail(const QJsonObject &object, QOrganizerItemLocation *locationDetail,
                                       QOrganizerItemExtendedDetail *extendedDetail) const;
-
-    void dataToList(const QVariant &data, QVariantList *list) const;
-    void dataToMap(const QVariant &data, QVariantMap *map) const;
 
     // separate filter type specific handling
     bool collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;

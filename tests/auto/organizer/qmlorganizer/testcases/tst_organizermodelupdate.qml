@@ -268,6 +268,8 @@ TestCase {
             model.autoUpdate = true;
             model.startPeriod = new Date('2011-12-01');
             model.endPeriod = new Date('2012-04-30');
+            // wait to make sure the model is updated if the database is not empty
+            wait(500);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
             for (j = 0; j < data.definitions.length; j++) {
@@ -1009,7 +1011,7 @@ TestCase {
             modelChangedSpy.wait()
         }
         wait(500);
-        compare(model.itemIds().length, 0)
+        compare(model.items.length, 0)
     }
 
     function createTestItemFromData(data) {

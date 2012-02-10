@@ -227,37 +227,51 @@ QString QOrganizerItemId::managerUri() const
 }
 
 /*!
+  \internal
+
+  Escape the id string
+ */
+QString escapeIdString(const QString &string)
+{
+    QString rich;
+    const int len = string.length();
+    rich.reserve(int(len * 1.5));
+    for (int i = 0; i < len; ++i) {
+        if (string.at(i) == QLatin1Char(':'))
+            rich += QLatin1String("&#58;");
+        else if (string.at(i) == QLatin1Char('='))
+            rich += QLatin1String("&equ;");
+        else if (string.at(i) == QLatin1Char('&'))
+            rich += QLatin1String("&amp;");
+        else
+            rich += string.at(i);
+    }
+    rich.squeeze();
+    return rich;
+}
+
+/*!
     \internal
 
     Builds a string from the given \a managerName, \a params and \a engineIdString.
  */
 inline QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
 {
-    // the constructed id string will be of the form: "qtorganizer:managerName:param1=value1&param2=value2:
-    QString ret(QLatin1String("qtorganizer:%1:%2:%3"));
+    // the constructed id string will be of the form: "qtcontacts:managerName:param1=value1&param2=value2:
+    QString ret(QStringLiteral("qtorganizer:%1:%2:%3"));
 
     // we have to escape each param
     QStringList escapedParams;
-    QStringList keys = params.keys();
-    for (int i = 0; i < keys.size(); i++) {
-        QString key = keys.at(i);
-        QString arg = params.value(key);
-        arg = arg.replace(QLatin1Char('&'), QLatin1String("&amp;"));
-        arg = arg.replace(QLatin1Char('='), QLatin1String("&equ;"));
-        arg = arg.replace(QLatin1Char(':'), QLatin1String("&#58;"));
-        key = key.replace(QLatin1Char('&'), QLatin1String("&amp;"));
-        key = key.replace(QLatin1Char('='), QLatin1String("&equ;"));
-        key = key.replace(QLatin1Char(':'), QLatin1String("&#58;"));
-        key = key + QLatin1Char('=') + arg;
-        escapedParams.append(key);
+    QString arg;
+    foreach (const QString &key, params.keys()) {
+        arg = params.value(key);
+        escapedParams.append(escapeIdString(key) + QLatin1Char('=') + escapeIdString(arg));
     }
 
     // and we escape the engine id string.
-    QString escapedEngineId = engineIdString;
-    escapedEngineId.replace(QLatin1Char('&'), QLatin1String("&amp;"));
-    escapedEngineId.replace(QLatin1Char(':'), QLatin1String("&#58;"));
+    QString escapedEngineId = escapeIdString(engineIdString);
 
-    return ret.arg(managerName, escapedParams.join(QLatin1String("&")), escapedEngineId);
+    return ret.arg(managerName, escapedParams.join(QStringLiteral("&")), escapedEngineId);
 }
 
 /*!

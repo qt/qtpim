@@ -268,11 +268,6 @@ bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
     return true;
 }
 
-bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganizerItemDetail &other)
-{
-    return (one.type() < other.type());
-}
-
 /*!
     Returns the hash value for \a key.
  */

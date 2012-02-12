@@ -59,8 +59,6 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-bool compareOrganizerItemDetail(const QOrganizerItemDetail &one, const QOrganizerItemDetail &other);
-
 class QOrganizerItemDetailPrivate : public QSharedData
 {
 public:

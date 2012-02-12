@@ -90,8 +90,7 @@ public:
         TypeTodoProgress
     };
 
-    QOrganizerItemDetail();
-    QOrganizerItemDetail(DetailType detailType);
+    QOrganizerItemDetail(DetailType detailType = TypeUndefined);
     QOrganizerItemDetail(const QOrganizerItemDetail &other);
     ~QOrganizerItemDetail();
 

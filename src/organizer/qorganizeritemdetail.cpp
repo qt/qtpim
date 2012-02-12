@@ -154,20 +154,11 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-    Constructs a new, empty detail.
- */
-QOrganizerItemDetail::QOrganizerItemDetail()
-    : d(new QOrganizerItemDetailPrivate)
-{
-}
-
-/*!
     Constructs a new, empty detail of the \a detailType.
  */
 QOrganizerItemDetail::QOrganizerItemDetail(DetailType detailType)
-    : d(new QOrganizerItemDetailPrivate)
+    : d(new QOrganizerItemDetailPrivate(detailType))
 {
-    d->m_detailType = detailType;
 }
 
 /*!
@@ -187,12 +178,10 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other)
 */
 QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other, DetailType expectedDetailType)
 {
-    if (other.d->m_detailType == expectedDetailType) {
+    if (other.d->m_detailType == expectedDetailType)
         d = other.d;
-    } else {
-        d = new QOrganizerItemDetailPrivate;
-        d->m_detailType = expectedDetailType;
-    }
+    else
+        d = new QOrganizerItemDetailPrivate(expectedDetailType);
 }
 
 /*!
@@ -215,12 +204,10 @@ QOrganizerItemDetail &QOrganizerItemDetail::operator=(const QOrganizerItemDetail
 QOrganizerItemDetail &QOrganizerItemDetail::assign(const QOrganizerItemDetail &other, DetailType expectedDetailType)
 {
     if (this != &other) {
-        if (other.d->m_detailType == expectedDetailType) {
+        if (other.d->m_detailType == expectedDetailType)
             d = other.d;
-        } else {
-            d = new QOrganizerItemDetailPrivate;
-            d->m_detailType = expectedDetailType;
-        }
+        else
+            d = new QOrganizerItemDetailPrivate(expectedDetailType);
     }
     return *this;
 }

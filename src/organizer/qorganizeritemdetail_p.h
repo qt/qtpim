@@ -62,10 +62,10 @@ QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerItemDetailPrivate : public QSharedData
 {
 public:
-    QOrganizerItemDetailPrivate()
+    QOrganizerItemDetailPrivate(QOrganizerItemDetail::DetailType detailType)
         : QSharedData()
         , m_id(lastDetailKey().fetchAndAddOrdered(1))
-        , m_detailType(QOrganizerItemDetail::TypeUndefined)
+        , m_detailType(detailType)
     {
     }
 

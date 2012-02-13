@@ -3087,7 +3087,7 @@ void tst_QOrganizerManager::itemFilterFetch()
     dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
     QCOMPARE(cm->items(dfil).count(), 1);
     // 6
-    dfil.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
+    dfil.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
     dfil.setValue("DetailOfMine");
     QCOMPARE(cm->items(dfil).count(), 1);
 }

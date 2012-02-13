@@ -228,7 +228,7 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QO
         item->setType(QOrganizerItemType::TypeEventOccurrence);
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType()) {
         item->setType(QOrganizerItemType::TypeEvent);
-        item->setExtendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic(), true);
+        item->setData(QOrganizerJsonDbStr::eventIsSynthetic(), true);
 
         // the data is stored in the "value" field, so dirty code here ;)
         objectToParse = object.value(QOrganizerJsonDbStr::jsonDbValue()).toObject();
@@ -580,11 +580,11 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem &item, Q
         }
 
         case QOrganizerItemDetail::TypeExtendedDetail: {
-            QString name = details.at(i).value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
+            QString name = details.at(i).value(QOrganizerItemExtendedDetail::FieldName).toString();
             if (name.isEmpty())
                 break;
 
-            QJsonValue data = QJsonValue::fromVariant(details.at(i).value(QOrganizerItemExtendedDetail::FieldExtendedDetailData));
+            QJsonValue data = QJsonValue::fromVariant(details.at(i).value(QOrganizerItemExtendedDetail::FieldData));
             if (data.isNull())
                 break;
 
@@ -1853,7 +1853,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
             }
 
         } else if (QOrganizerItemDetail::TypeExtendedDetail == detailType
-             && QOrganizerItemExtendedDetail::FieldExtendedDetailName ==  detailField) {
+             && QOrganizerItemExtendedDetail::FieldName ==  detailField) {
             jsonDbQueryStr->append(existsQueryTemplate.arg(valueString));
 
         } else if (QOrganizerItemDetail::TypeEventRsvp == detailType) {

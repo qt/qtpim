@@ -755,8 +755,8 @@ class QDeclarativeOrganizerItemExtendedDetail : public QDeclarativeOrganizerItem
 
 public:
     enum ExtendedDetailField {
-        FieldName = QOrganizerItemExtendedDetail::FieldExtendedDetailName,
-        FieldData = QOrganizerItemExtendedDetail::FieldExtendedDetailData
+        FieldName = QOrganizerItemExtendedDetail::FieldName,
+        FieldData = QOrganizerItemExtendedDetail::FieldData
     };
 
     QDeclarativeOrganizerItemExtendedDetail(QObject *parent = 0);

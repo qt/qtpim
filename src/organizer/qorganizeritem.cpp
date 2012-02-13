@@ -667,13 +667,13 @@ void QOrganizerItem::setGuid(const QString &guid)
 /*!
     Returns the data of the extended detail with the given \a name.
  */
-QVariant QOrganizerItem::extendedDetailData(const QString &name) const
+QVariant QOrganizerItem::data(const QString &name) const
 {
     for (int i = 0; i < d->m_details.size(); ++i) {
         const QOrganizerItemDetail &detail = d->m_details.at(i);
         if (detail.d->m_detailType == QOrganizerItemDetail::TypeExtendedDetail
-            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString() == name) {
-            return detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
+            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldName).toString() == name) {
+            return detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldData);
         }
     }
     return QVariant();
@@ -682,14 +682,14 @@ QVariant QOrganizerItem::extendedDetailData(const QString &name) const
 /*!
     Sets the \a data of a extended detail with the given \a name.
  */
-void QOrganizerItem::setExtendedDetailData(const QString &name, const QVariant &data)
+void QOrganizerItem::setData(const QString &name, const QVariant &data)
 {
     for (int i = 0; i < d->m_details.size(); ++i) {
         const QOrganizerItemDetail &detail = d->m_details.at(i);
         if (detail.d->m_detailType == QOrganizerItemDetail::TypeExtendedDetail
-            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString() == name) {
+            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldName).toString() == name) {
             QOrganizerItemDetail newDetail = d->m_details.at(i);
-            newDetail.d->m_values.insert(QOrganizerItemExtendedDetail::FieldExtendedDetailData, data);
+            newDetail.d->m_values.insert(QOrganizerItemExtendedDetail::FieldData, data);
             saveDetail(&newDetail);
             return;
         }

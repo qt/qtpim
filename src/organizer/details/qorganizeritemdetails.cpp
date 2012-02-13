@@ -1629,7 +1629,7 @@ QString QOrganizerItemClassification::classification() const
  */
 void QOrganizerItemExtendedDetail::setName(const QString &name)
 {
-    setValue(FieldExtendedDetailName, name);
+    setValue(FieldName, name);
 }
 
 /*!
@@ -1639,7 +1639,7 @@ void QOrganizerItemExtendedDetail::setName(const QString &name)
  */
 QString QOrganizerItemExtendedDetail::name() const
 {
-    return value(FieldExtendedDetailName).toString();
+    return value(FieldName).toString();
 }
 
 /*!
@@ -1649,7 +1649,7 @@ QString QOrganizerItemExtendedDetail::name() const
  */
 void QOrganizerItemExtendedDetail::setData(const QVariant &data)
 {
-    setValue(FieldExtendedDetailData, data);
+    setValue(FieldData, data);
 }
 
 /*!
@@ -1659,7 +1659,7 @@ void QOrganizerItemExtendedDetail::setData(const QVariant &data)
  */
 QVariant QOrganizerItemExtendedDetail::data() const
 {
-    return value(FieldExtendedDetailData);
+    return value(FieldData);
 }
 
 /*!

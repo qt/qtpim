@@ -107,8 +107,8 @@ public:
     QString guid() const;
     void setGuid(const QString &guid);
 
-    QVariant extendedDetailData(const QString &name) const;
-    void setExtendedDetailData(const QString &name, const QVariant &data);
+    QVariant data(const QString &name) const;
+    void setData(const QString &name, const QVariant &data);
 
 protected:
     explicit QOrganizerItem(QOrganizerItemType::ItemType type);

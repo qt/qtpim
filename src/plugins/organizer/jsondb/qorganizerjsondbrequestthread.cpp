@@ -376,8 +376,8 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
 
         // check for view object
-        if (item.extendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
-            item.setExtendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
+        if (item.data(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
+            item.setData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
             item.setId(QOrganizerItemId());
             itemIsNew = true;
         }

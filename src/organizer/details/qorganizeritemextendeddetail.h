@@ -54,8 +54,8 @@ public:
 #endif
 
     enum ExtendedDetailField {
-        FieldExtendedDetailName = 0,
-        FieldExtendedDetailData
+        FieldName = 0,
+        FieldData
     };
 
     void setName(const QString &name);

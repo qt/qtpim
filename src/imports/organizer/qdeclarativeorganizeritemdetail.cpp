@@ -1534,14 +1534,14 @@ QDeclarativeOrganizerItemExtendedDetail::DetailType QDeclarativeOrganizerItemExt
 void QDeclarativeOrganizerItemExtendedDetail::setName(const QString &newDetailName)
 {
     if (newDetailName != name()) {
-        m_detail.setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailName, newDetailName);
+        m_detail.setValue(QOrganizerItemExtendedDetail::FieldName, newDetailName);
         emit valueChanged();
     }
 }
 
 QString QDeclarativeOrganizerItemExtendedDetail::name() const
 {
-    return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString();
+    return m_detail.value(QOrganizerItemExtendedDetail::FieldName).toString();
 }
 
 /*!
@@ -1552,14 +1552,14 @@ QString QDeclarativeOrganizerItemExtendedDetail::name() const
 void QDeclarativeOrganizerItemExtendedDetail::setData(const QVariant &newData)
 {
     if (newData != data()) {
-        setValue(QOrganizerItemExtendedDetail::FieldExtendedDetailData, newData);
+        setValue(QOrganizerItemExtendedDetail::FieldData, newData);
         emit valueChanged();
     }
 }
 
 QVariant QDeclarativeOrganizerItemExtendedDetail::data() const
 {
-    return m_detail.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
+    return m_detail.value(QOrganizerItemExtendedDetail::FieldData);
 }
 
 /*!

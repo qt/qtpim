@@ -381,7 +381,7 @@ void QDeclarativeContactCompoundFilter::filters_append(QDeclarativeListProperty<
 {
     QDeclarativeContactCompoundFilter* compoundFilter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
     compoundFilter->m_filters.append(filter);
-    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(filterChanged()));
+    QObject::connect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(filterChanged()), Qt::UniqueConnection);
     emit compoundFilter->filterChanged();
 }
 
@@ -398,10 +398,13 @@ QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QDeclar
 
 void QDeclarativeContactCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeContactFilter>* prop)
 {
-    QDeclarativeContactCompoundFilter* filter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
-    if (!filter->m_filters.isEmpty()) {
-        filter->m_filters.clear();
-        emit filter->filterChanged();
+    QDeclarativeContactCompoundFilter* compoundFilter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
+    if (!compoundFilter->m_filters.isEmpty()) {
+        foreach (QDeclarativeContactFilter* filter, compoundFilter->m_filters) {
+            QObject::disconnect(filter, SIGNAL(filterChanged()), compoundFilter, SIGNAL(filterChanged()));
+        }
+        compoundFilter->m_filters.clear();
+        emit compoundFilter->filterChanged();
     }
 }
 

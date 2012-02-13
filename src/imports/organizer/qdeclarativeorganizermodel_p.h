@@ -91,6 +91,7 @@ public:
 
     explicit QDeclarativeOrganizerModel(QObject *parent = 0);
     explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = 0);
+    ~QDeclarativeOrganizerModel();
 
     QString error() const;
     int itemCount() const;
@@ -213,7 +214,8 @@ private:
     static int collection_count(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p);
     static QDeclarativeOrganizerCollection* collection_at(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, int idx);
 
-    QDeclarativeOrganizerModelPrivate* d;
+    QScopedPointer<QDeclarativeOrganizerModelPrivate> d_ptr;
+    Q_DECLARE_PRIVATE(QDeclarativeOrganizerModel)
 };
 
 QTORGANIZER_END_NAMESPACE

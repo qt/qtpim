@@ -866,6 +866,8 @@ bool QContactManagerEngine::saveContact(QContact* contact, QContactManager::Erro
 /*!
   Remove the contact identified by \a contactId from the database,
   and also removes any relationships in which the contact was involved.
+  After the contact has been removed it can not be updated or re-created
+  with the same contact id anymore.
   Returns true if the contact was removed successfully, otherwise
   returns false.
 

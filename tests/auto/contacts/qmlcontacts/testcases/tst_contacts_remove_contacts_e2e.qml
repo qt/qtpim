@@ -45,6 +45,7 @@ import QtContacts 5.0
 
 ContactsSavingTestCase {
     name: "ContactsRemoveContactsE2ETests"
+    id: contactsRemoveContactsE2ETests
 
     ContactModel {
         id: model
@@ -112,6 +113,21 @@ ContactsSavingTestCase {
 
         compare(model.contacts.length, 0, "contacts is empty");
     }
+
+    function test_saveRemovedContactFails() {
+        var id1 = model.contacts[0].contactId;
+        var contactToFirstRemoveAndThenSave = model.contacts[0];
+
+        model.removeContacts([id1]);
+        waitForContactsChanged();
+
+        var errorSpy = initTestForTargetListeningToSignal(model, "errorChanged");
+        model.saveContact(contactToFirstRemoveAndThenSave);
+        waitForTargetSignal(errorSpy);
+
+        compare(model.error, "DoesNotExist", "model.error");
+    }
+
 
     // Init & teardown
 

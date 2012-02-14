@@ -211,6 +211,8 @@ private slots:
     void contactSaveErrorHandling_data() { addManagers(); }
     void contactSaveRemovedContacts();
     void contactSaveRemovedContacts_data() { addManagers(); }
+    void contactSaveRemovedContactsWithCleanIds();
+    void contactSaveRemovedContactsWithCleanIds_data() { addManagers(); }
     void contactPartialSave();
     void contactPartialSave_data() { addManagers(); }
     void contactPartialSaveAsync();
@@ -244,6 +246,7 @@ tst_QContactJsonDbAsync::tst_QContactJsonDbAsync()
     QCoreApplication::addLibraryPath(path);
 
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
 }
 
 tst_QContactJsonDbAsync::~tst_QContactJsonDbAsync()
@@ -953,6 +956,51 @@ void tst_QContactJsonDbAsync::contactSaveRemovedContacts()
     QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
     QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
     QCOMPARE(csr.error(), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsonDbAsync::contactSaveRemovedContactsWithCleanIds()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactSaveRequest csr;
+
+    // Make three test contacts.
+    QContactName nameDetail;
+    nameDetail.setFirstName("Testing1");
+    QContact testContact1;
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Testing2");
+    QContact testContact2;
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Testing3");
+    QContact testContact3;
+    testContact3.saveDetail(&nameDetail);
+    QList<QContact> testContacts;
+    testContacts << testContact1 << testContact2 << testContact3;
+
+    // Save all three test contacts.
+    csr.setManager(cm.data());
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
+    QCOMPARE(csr.error(), QContactManager::NoError);
+
+    // And then remove all of them.
+    QList<QContactId> contactIds = cm->contactIds();
+    QVERIFY(cm->removeContacts(contactIds));
+
+    // Use the same contacts but clean their ids before saving them.
+    QList<QContact> contactsWithCleanIds = csr.contacts();
+    contactsWithCleanIds[0].setId(QContactId());
+    contactsWithCleanIds[1].setId(QContactId());
+    contactsWithCleanIds[2].setId(QContactId());
+    csr.setContacts(contactsWithCleanIds);
+
+    // Save and check no errors occured.
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.error(), QContactManager::NoError);
 }
 
 void tst_QContactJsonDbAsync::contactPartialSave()

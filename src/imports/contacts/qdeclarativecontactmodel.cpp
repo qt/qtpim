@@ -734,6 +734,7 @@ void QDeclarativeContactModel::onContactsAdded(const QList<QContactId>& ids)
 /*!
   \qmlmethod ContactModel::removeContact(string contactId)
   Remove the contact from the contacts store by given \a contactId.
+  After removing a contact it is not possible to save it again.
   \sa Contact::contactId
   */
 void QDeclarativeContactModel::removeContact(QString id)

@@ -78,6 +78,24 @@ TestCase {
         compare(spy.count, 0, "no contacts changed signal received");
     }
 
+    function initTestForTargetListeningToSignal(target, signalName)
+    {
+        logDebug("initTestForTargetListeningToSignal");
+        var spy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "}",
+                    contactsSavingTestCase);
+        spy.target = target;
+        spy.signalName = signalName;
+        return spy;
+    }
+
+    function waitForTargetSignal(spy) {
+        logDebug("waitForTargetSignal");
+        spy.wait();
+    }
+
     function emptyContacts(model) {
         logDebug("emptyContacts");
         model.update();

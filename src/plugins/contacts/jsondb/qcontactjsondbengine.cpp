@@ -60,8 +60,9 @@ QTCONTACTS_BEGIN_NAMESPACE
   The JsonDb engine.
  */
 
-QContactJsonDbEngine::QContactJsonDbEngine() : d(new QContactJsonDbEngineData)
+QContactJsonDbEngine::QContactJsonDbEngine(const QMap<QString, QString>& parameters) : d(new QContactJsonDbEngineData)
 {
+    Q_UNUSED(parameters);
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
     qRegisterMetaType<QContactId>("QContactId");

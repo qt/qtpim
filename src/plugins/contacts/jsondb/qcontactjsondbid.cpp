@@ -44,21 +44,25 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-QContactJsonDbId::QContactJsonDbId()
-    : QContactEngineId()
-    , m_contactId(QString())
+QContactJsonDbId::QContactJsonDbId(const QString &engineId)
 {
-}
-
-QContactJsonDbId::QContactJsonDbId(const QUuid &contactId)
-    : QContactEngineId()
-    , m_contactId(contactId)
-{
+    QStringList splitEngineId = engineId.split("/");
+    if (splitEngineId.size() == 2) {
+        m_uuid = splitEngineId.last();
+        m_storageLocation = QContactAbstractRequest::StorageLocation(
+                    splitEngineId.first().toInt());
+    }
 }
 
 QContactJsonDbId::QContactJsonDbId(const QContactJsonDbId &other)
-    : QContactEngineId(),
-      m_contactId(other.m_contactId)
+    : m_uuid(other.m_uuid),
+      m_storageLocation(other.m_storageLocation)
+{
+}
+
+QContactJsonDbId::QContactJsonDbId(const QUuid &uuid, const QContactAbstractRequest::StorageLocation &storageLocation)
+    : m_uuid(uuid),
+      m_storageLocation(storageLocation)
 {
 }
 
@@ -68,14 +72,19 @@ QContactJsonDbId::~QContactJsonDbId()
 
 bool QContactJsonDbId::isEqualTo(const QContactEngineId *other) const
 {
-    QUuid otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
-    return (m_contactId == otherContactId);
+    const QContactJsonDbId *otherJsonDbId = static_cast<const QContactJsonDbId *>(other);
+    QUuid otherUuid = otherJsonDbId->m_uuid;
+    QContactAbstractRequest::StorageLocation otherStorageLocation = otherJsonDbId->m_storageLocation;
+    return ((m_uuid == otherUuid) && (m_storageLocation == otherStorageLocation));
 }
 
 bool QContactJsonDbId::isLessThan(const QContactEngineId *other) const
 {
-    QUuid otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
-    return (m_contactId < otherContactId);
+    const QContactJsonDbId *otherJsonDbId = static_cast<const QContactJsonDbId *>(other);
+    QUuid otherUuid = otherJsonDbId->m_uuid;
+    QContactAbstractRequest::StorageLocation otherStorageLocation = otherJsonDbId->m_storageLocation;
+    return ((m_storageLocation < otherStorageLocation) ||
+            ((m_storageLocation == otherStorageLocation) && (m_uuid < otherUuid)));
 }
 
 QString QContactJsonDbId::managerUri() const
@@ -85,20 +94,21 @@ QString QContactJsonDbId::managerUri() const
 
 QContactEngineId *QContactJsonDbId::clone() const
 {
-    return new QContactJsonDbId(m_contactId);
+    return new QContactJsonDbId(m_uuid, m_storageLocation);
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug &QContactJsonDbId::debugStreamOut(QDebug &dbg) const
 {
-    dbg.nospace() << "QContactJsonDbId(" << m_contactId << ")";
+    dbg.nospace() << "QContactJsonDbId(" << this->toString() << ")";
     return dbg.maybeSpace();
 }
 #endif
 
 QString QContactJsonDbId::toString() const
 {
-    return m_contactId.toString();
+    QString stringifiedIdFormat("%1/%2");
+    return stringifiedIdFormat.arg(QString::number(m_storageLocation)).arg(m_uuid.toString());
 }
 
 uint QContactJsonDbId::hash() const
@@ -117,12 +127,23 @@ uint QContactJsonDbId::hash() const
       qHash() individual data members and combine the results somehow.
      */
 
-    return QT_PREPEND_NAMESPACE(qHash)(m_contactId);
+    return QT_PREPEND_NAMESPACE(qHash)(this->toString());
 }
 
-void QContactJsonDbId::setContactId(const QString &contactId)
+/*!
+ * Returns the jsondb uuid of the contact
+ */
+QUuid QContactJsonDbId::uuid() const
 {
-    m_contactId = contactId;
+    return m_uuid;
+}
+
+/*!
+ * Returns the storage location where the contact is stored in
+ */
+QContactAbstractRequest::StorageLocation QContactJsonDbId::storageLocation() const
+{
+    return m_storageLocation;
 }
 
 QTCONTACTS_END_NAMESPACE

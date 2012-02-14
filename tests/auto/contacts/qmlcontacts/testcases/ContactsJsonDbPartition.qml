@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtPim module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -39,44 +39,11 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACTENGINEID_H
-#define QCONTACTENGINEID_H
+import QtQuick 2.0
+import QtContacts 5.0
 
-#include <QString>
-#include <QSharedDataPointer>
-
-#include "qcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
-
-QTCONTACTS_BEGIN_NAMESPACE
-
-class Q_CONTACTS_EXPORT QContactEngineId: public QSharedData
-{
-public:
-    virtual ~QContactEngineId() {}
-
-    virtual bool isEqualTo(const QContactEngineId *other) const = 0;
-    virtual bool isLessThan(const QContactEngineId *other) const = 0;
-
-    virtual QString managerUri() const = 0;
-    virtual QContactAbstractRequest::StorageLocation storageLocation() const;
-
-    virtual QContactEngineId* clone() const = 0;
-
-    virtual QString toString() const = 0;
-
-#ifndef QT_NO_DEBUG_STREAM
-    // NOTE: on platforms where Qt is built without debug streams enabled, vtable will differ!
-    virtual QDebug& debugStreamOut(QDebug &dbg) const = 0;
-#endif
-    virtual uint hash() const = 0;
-};
-
-QTCONTACTS_END_NAMESPACE
-
-#endif
-
+Item {
+    property int storageLocation
+    property string name
+    property ContactsJsonDbTestHelper testHelper
+}

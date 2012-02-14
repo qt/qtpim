@@ -75,6 +75,32 @@ QContactIdFetchRequest::~QContactIdFetchRequest()
     QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
+/*!
+  Sets the storage location from where the contact ids will be retrieved.
+  Storage locations is a flag so it is possible to define multiple locations in it.
+  \sa QContactAbstractRequest::StorageLocation
+  \sa QContactAbstractRequest::StorageLocations
+ */
+void QContactIdFetchRequest::setStorageLocations(QContactAbstractRequest::StorageLocations storageLocations)
+{
+    Q_D(QContactIdFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    d->m_storageLocations = storageLocations;
+}
+
+/*!
+  Returns the storage locations from where the contact ids will be retrieved.
+  \sa QContactAbstractRequest::StorageLocation
+  \sa QContactAbstractRequest::StorageLocations
+
+ */
+QContactAbstractRequest::StorageLocations QContactIdFetchRequest::storageLocations() const
+{
+    Q_D(const QContactIdFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_storageLocations;
+}
+
 /*! Sets the filter which will be used to select the contacts whose ids will be returned to \a filter
 */
 void QContactIdFetchRequest::setFilter(const QContactFilter& filter)

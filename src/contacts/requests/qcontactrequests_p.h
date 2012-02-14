@@ -69,7 +69,8 @@ class QContactSaveRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactSaveRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(),
+          m_storageLocation(QContactAbstractRequest::UserDataStorage)
     {
     }
 
@@ -88,7 +89,8 @@ public:
         dbg.nospace() << "QContactSaveRequest(";
         dbg.nospace() << "contacts=" << m_contacts << ","
                       << "typeMask=" << m_typeMask << ","
-                      << "errorMap=" << m_errors;
+                      << "errorMap=" << m_errors << ","
+                      << "storageLocation=" << m_storageLocation;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
@@ -97,13 +99,15 @@ public:
     QList<QContact> m_contacts;
     QMap<int, QContactManager::Error> m_errors;
     QList<QContactDetail::DetailType> m_typeMask;
+    QContactAbstractRequest::StorageLocation m_storageLocation;
 };
 
 class QContactFetchRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactFetchRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(),
+          m_storageLocations(QContactAbstractRequest::UserDataStorage)
     {
     }
 
@@ -122,7 +126,8 @@ public:
         dbg.nospace() << "QContactFetchRequest("
                       << "filter=" << m_filter << ","
                       << "sorting=" << m_sorting << ","
-                      << "fetchHint=" << m_fetchHint;
+                      << "fetchHint=" << m_fetchHint << ","
+                      << "storageLocations=" << m_storageLocations;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
@@ -133,6 +138,7 @@ public:
     QContactFetchHint m_fetchHint;
 
     QList<QContact> m_contacts;
+    QContactAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QContactFetchByIdRequestPrivate : public QContactAbstractRequestPrivate
@@ -208,7 +214,8 @@ class QContactIdFetchRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactIdFetchRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(),
+          m_storageLocations(QContactAbstractRequest::UserDataStorage)
     {
     }
 
@@ -227,7 +234,8 @@ public:
         dbg.nospace() << "QContactIdFetchRequest("
                       << "filter=" << m_filter << ","
                       << "sorting=" << m_sorting << ","
-                      << "ids=" << m_ids;
+                      << "ids=" << m_ids << ","
+                      << "storageLocations=" << m_storageLocations;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
@@ -237,6 +245,7 @@ public:
     QList<QContactSortOrder> m_sorting;
 
     QList<QContactId> m_ids;
+    QContactAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QContactRelationshipFetchRequestPrivate : public QContactAbstractRequestPrivate

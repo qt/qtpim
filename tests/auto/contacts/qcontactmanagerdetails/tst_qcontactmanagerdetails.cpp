@@ -43,8 +43,8 @@
 #include <QDateTime>
 #include <QtContacts>
 
-#include "../qcontactmanagerdataholder.h"
-#include "../../jsondbprocess.h"
+#include "qcontactmanagerdataholder.h"
+#include "jsondbprocess.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -76,7 +76,7 @@ private:
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
-    JsonDbProcess jsondbProcess;
+    JsonDbProcess m_jsondbProcess;
 
 private slots:
     void initTestCase();
@@ -150,8 +150,11 @@ void tst_QContactManagerDetails::addManagers()
 void tst_QContactManagerDetails::initTestCase()
 {
     // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb"))
-        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+    if (QContactManager::availableManagers().contains("jsondb")) {
+        QString partitions_json = QFINDTESTDATA("partitions.json");
+        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
+    }
 
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
@@ -161,7 +164,7 @@ void tst_QContactManagerDetails::cleanupTestCase()
     managerDataHolder.reset(0);
 
     if (QContactManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
+        m_jsondbProcess.terminate();
 }
 
 bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QContact &original, QContact &loaded )

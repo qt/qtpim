@@ -53,8 +53,13 @@ void SynchronizedWorker::onJsonDbRequestFinished()
     QEventLoop::quit();
 }
 
+void SynchronizedWorker::onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode requestError, QString message)
+{
+    qWarning() << Q_FUNC_INFO << "Jsondb request error:" << requestError << "message:" << message;
+    QEventLoop::quit();
+}
+
 void SynchronizedWorker::onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode connectionError, const QString &message)
 {
     qWarning() << Q_FUNC_INFO << "Jsondb connection error:" << connectionError << "message:" << message;
 }
-

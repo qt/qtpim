@@ -44,8 +44,12 @@
 #include <QDebug>
 #include <QtJsonDb/qjsondbreadrequest.h>
 #include <QtJsonDb/qjsondbwriterequest.h>
+#include "qcontactjsondbstring.h"
 #include "synchronizedjsondbclient.h"
 
+#include "qcontactjsondbstring.h"
+
+QTCONTACTS_USE_NAMESPACE
 
 SynchronizedJsonDbClient::SynchronizedJsonDbClient()
 {
@@ -62,35 +66,43 @@ SynchronizedJsonDbClient::~SynchronizedJsonDbClient()
     delete m_jsonDbConnection;
 }
 
-QList<QJsonObject> SynchronizedJsonDbClient::query(const QString &query)
+QList<QJsonObject> SynchronizedJsonDbClient::query(const QString &query, QString partition)
 {
     QJsonDbRequest *request;
     request = new QJsonDbReadRequest(query, m_worker);
+    request->setPartition(partition);
     return getResults(request);
 }
 
-QList<QJsonObject> SynchronizedJsonDbClient::create(const QJsonObject &object)
+QList<QJsonObject> SynchronizedJsonDbClient::create(const QJsonObject &objects, QString partition)
 {
     QJsonDbRequest *request;
-    request = new QJsonDbCreateRequest(object, m_worker);
+    request = new QJsonDbCreateRequest(objects, m_worker);
+    request->setPartition(partition);
     return getResults(request);
 }
 
-QList<QJsonObject> SynchronizedJsonDbClient::update(const QJsonObject &object)
+QList<QJsonObject> SynchronizedJsonDbClient::update(const QJsonObject &objects, QString partition)
 {
-    QJsonDbRequest *request = new QJsonDbUpdateRequest(object, m_worker);
+    QJsonDbRequest *request = new QJsonDbUpdateRequest(objects, m_worker);
+    request->setPartition(partition);
     return getResults(request);
 }
 
-QList<QJsonObject> SynchronizedJsonDbClient::remove(const QJsonObject &object)
+QList<QJsonObject> SynchronizedJsonDbClient::remove(const QJsonObject &objects, QString partition)
 {
-    QJsonDbRequest *request = new QJsonDbRemoveRequest(object,m_worker);
+    QJsonDbRequest *request = new QJsonDbRemoveRequest(objects,m_worker);
+    request->setPartition(partition);
     return getResults(request);
 }
 
 QList<QJsonObject> SynchronizedJsonDbClient::getResults(QJsonDbRequest *request)
 {
     QObject::connect(request, SIGNAL(finished()), m_worker, SLOT(onJsonDbRequestFinished()));
+
+    QObject::connect(request, SIGNAL(error(QtJsonDb::QJsonDbRequest::ErrorCode,QString)),
+                     m_worker, SLOT(onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode, QString)));
+
     if (m_jsonDbConnection->send(request)) {
         m_worker->exec(); // Wait for db client to finish
         QList<QJsonObject> results = request->takeResults();

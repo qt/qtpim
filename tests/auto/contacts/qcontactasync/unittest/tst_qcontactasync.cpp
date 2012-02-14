@@ -65,9 +65,9 @@
 #include <QContactName>
 #include <QContactIdFilter>
 
-#include "../../../jsondbprocess.h"
-#include "../../qcontactidmock.h"
-#include "../../qcontactmanagerdataholder.h" //QContactManagerDataHolder
+#include "jsondbprocess.h"
+#include "qcontactidmock.h"
+#include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -248,7 +248,7 @@ private:
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
-    JsonDbProcess jsondbProcess;
+    JsonDbProcess m_jsondbProcess;
 
 };
 
@@ -259,27 +259,29 @@ tst_QContactAsync::tst_QContactAsync()
     QCoreApplication::addLibraryPath(path);
 
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
+
+    // Start JsonDb daemon if needed
+    if (QContactManager::availableManagers().contains("jsondb")) {
+        QString partitions_json = QFINDTESTDATA("partitions.json");
+        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
+    }
 }
 
 tst_QContactAsync::~tst_QContactAsync()
 {
+    if (QContactManager::availableManagers().contains("jsondb"))
+        m_jsondbProcess.terminate();
 }
 
 void tst_QContactAsync::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb"))
-        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
-
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
 
 void tst_QContactAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QContactManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
 }
 
 bool tst_QContactAsync::compareContactLists(QList<QContact> lista, QList<QContact> listb)
@@ -2173,7 +2175,10 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
     cm->saveContact(&a);
     cm->saveContact(&b);
     cm->saveContact(&c);
-    
+
+    if (cm->contacts().size() != 3)
+        qWarning() << Q_FUNC_INFO << "Failed to prepare model!";
+
     if (cm->managerName() == "jsondb") {
         return cm;
     }

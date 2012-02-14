@@ -74,7 +74,7 @@ property Contact testContact
             contactsChangedSpy.target = model;
             contactsChangedSpy.clear()
             testHelper.model = model;
-            waitForContactsChanged (contactsChangedSpy.count + 1)
+            waitForContactsChanged (1)
             testHelper.emptyContactsDb();
             testContact = tmp;
             var phone = Qt.createQmlObject("import QtContacts 5.0;" +
@@ -91,8 +91,9 @@ property Contact testContact
             testContact.addDetail(nick)
             testContact.addDetail(label)
             testContact.addDetail(mail)
+            contactsChangedSpy.clear()
             model.saveContact(testContact)
-            waitForContactsChanged (contactsChangedSpy.count + 1)
+            waitForContactsChanged (1)
             testContact = model.contacts[0]
             compare(testContact.phoneNumber.number,"99999999")
             compare(testContact.nickname.nickname,"jack")
@@ -102,8 +103,9 @@ property Contact testContact
             testContact.removeDetail(testContact.detail(ContactDetail.DisplayLabel));
             testContact.removeDetail(testContact.detail(ContactDetail.PhoneNumber));
             testContact.removeDetail(testContact.detail(ContactDetail.Email));
+            contactsChangedSpy.clear()
             model.saveContact(testContact)
-            waitForContactsChanged (contactsChangedSpy.count + 1)
+            waitForContactsChanged (1)
             testContact = model.contacts[0]
             verify(!testContact.detail(ContactDetail.NickName))
             verify(!testContact.detail(ContactDetail.DisplayLabel))

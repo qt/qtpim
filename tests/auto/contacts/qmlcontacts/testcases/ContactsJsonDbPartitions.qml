@@ -42,57 +42,20 @@
 import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
-import QtJsonDb 1.0 as JsonDb
 
-// Top-level element should have a default property to allow declaring elements
-// inline (jsonDb element below). Component does not, so Item is used here
-// although this is not a visual element.
 Item {
-    id: contactsJsonDbPartitionTestHelper
+    property alias userPartition: userPartition
+    property alias systemPartition: systemPartition
 
-    function initTestHelper() {
-        logDebug("initTestHelper()");
-        createSpyForJsonDb();
+    ContactsJsonDbPartition {
+        id: userPartition
+        storageLocation: ContactModel.UserDataStorage
+        name: "com.nokia.mt.User"
     }
 
-    function createPartitionToJsonDb(partitionName) {
-        logDebug("createPartitionToJsonDb()");
-
-        var query = '[?_type="Partition"]' +
-                '[?name="' + partitionName + '"]';
-        jsonDb.queryAndSignal(query);
-        jsonDbSpy.wait();
-        if (jsonDb.lastResult.length > 0)
-            return;
-
-        var partition = {
-            "_type": "Partition",
-            "name": partitionName
-        }
-        jsonDb.createAndSignal(partition);
-        jsonDbSpy.wait();
-    }
-
-    function removePartitionFromJsonDb(partitionName) {
-        logDebug("removePartitionFromJsonDb()");
-        // JsonDb does not allow updates to partitions at the moment
-    }
-
-    SignalingJsonDb {
-        id: jsonDb
-    }
-
-    property SignalSpy jsonDbSpy
-
-    function createSpyForJsonDb() {
-        logDebug("createSpyForJson()");
-        jsonDbSpy = Qt.createQmlObject(
-                    "import QtTest 1.0;" +
-                    "SignalSpy {" +
-                    "}",
-                    contactsJsonDbPartitionTestHelper);
-        jsonDbSpy.target = jsonDb;
-        jsonDbSpy.signalName = "operationFinished"
+    ContactsJsonDbPartition {
+        id: systemPartition
+        storageLocation: ContactModel.SystemStorage
+        name: "com.nokia.mt.System"
     }
 }
-

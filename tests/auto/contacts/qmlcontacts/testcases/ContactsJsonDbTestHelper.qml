@@ -50,7 +50,7 @@ import QtJsonDb 1.0 as JsonDb
 Item {
     id: contactsJsonDbTestHelper
 
-    property alias partition: jsonDb.name
+    property alias partition: jsonDb.partition
 
     function initTestHelper() {
         logDebug("initTestHelper()");
@@ -66,27 +66,34 @@ Item {
 
     function removeContactFromJsonDb(contact) {
         logDebug("removeContactFromJsonDb(): remove contact id " + contact.contactId);
-        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
+        var contactUuid = convertContactIdToJsonDbUuid(contact.contactId);
+        removeContactWithUuidFromJsonDb(contactUuid);
+    }
+
+    function removeContactWithUuidFromJsonDb(contactUuid) {
+        logDebug("removeContactWithUuidFromJsonDb(): contact uuid " + contactUuid);
         var query = '[?_type="com.nokia.mt.contacts.Contact"]' +
-                '[?_uuid="' + jsonUuid + '"]';
+                '[?_uuid="' + contactUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
         var object = jsonDb.lastResult[0];
         verify(object, "fetched given contact from jsondb");
         jsonDb.removeAndSignal(object);
         jsonDbSpy.wait();
-
-        jsonDb.queryAndSignal('[?_type="com.nokia.mt.contacts.Contact"]');
-        jsonDbSpy.wait();
     }
 
     // updates only the first name at the moment!
     function updateContactInJsonDb(contact, update) {
-        var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
-        logDebug("updateContactInJsonDb(): update contact id " + jsonUuid);
+        var jsonUuid = convertContactIdToJsonDbUuid(contact.contactId);
+        updateContactWithUuidInJsonDb(jsonUuid, update);
+    }
+
+    // updates only the first name at the moment!
+    function updateContactWithUuidInJsonDb(contactUuid, update) {
+        logDebug("updateContactWithUuidInJsonDb(): contact uuid " + contactUuid);
 
         var query = '[?_type="com.nokia.mt.contacts.Contact"]' +
-                '[?_uuid="' + jsonUuid + '"]';
+                '[?_uuid="' + contactUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
         var object = jsonDb.lastResult[0];
@@ -94,6 +101,15 @@ Item {
         object.name.firstName = update.name.firstName;
         jsonDb.updateAndSignal(object);
         jsonDbSpy.wait();
+    }
+
+    function queryContactsInJsonDb() {
+        logDebug("queryContactsInJsonDb()");
+
+        var query = '[?_type="com.nokia.mt.contacts.Contact"]';
+        jsonDb.queryAndSignal(query);
+        jsonDbSpy.wait();
+        return jsonDb.lastResult;
     }
 
     function emptyContacts() {
@@ -107,6 +123,22 @@ Item {
             jsonDb.removeAndSignal(contacts[i]);
             jsonDbSpy.wait();
         }
+    }
+
+    function convertJsonDbUuidAndStorageLocationToContactId(contactUuid, storageLocation) {
+        return 'qtcontacts:jsondb::' + storageLocation + '/' + contactUuid;
+    }
+
+    function convertContactIdToJsonDbUuid(contactId) {
+        var idParts = contactId.split(':');
+        var engineId = lastItemInArray(idParts);
+        var engineIdParts = engineId.split('/');
+        var jsonDbUuid = lastItemInArray(engineIdParts);
+        return jsonDbUuid;
+    }
+
+    function lastItemInArray(array) {
+        return array[array.length - 1];
     }
 
     SignalingJsonDb {
@@ -124,6 +156,13 @@ Item {
                     contactsJsonDbTestHelper);
         jsonDbSpy.target = jsonDb;
         jsonDbSpy.signalName = "operationFinished"
+    }
+
+    property bool debug: false
+
+    function logDebug(message) {
+        if (debug)
+            console.log('ContactsJsonDbTestHelper.' + message);
     }
 }
 

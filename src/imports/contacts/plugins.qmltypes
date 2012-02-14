@@ -803,7 +803,15 @@ Module {
                 "ImportParseError": 5
             }
         }
+        Enum {
+            name: "StorageLocation"
+            values: {
+                "UserDataStorage": 1,
+                "SystemStorage": 2
+            }
+        }
         Property { name: "manager"; type: "string" }
+        Property { name: "storageLocations"; type: "int" }
         Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
         Property { name: "error"; type: "string"; isReadonly: true }
         Property { name: "autoUpdate"; type: "bool" }
@@ -839,6 +847,11 @@ Module {
         Method {
             name: "removeContacts"
             Parameter { name: "ids"; type: "QStringList" }
+        }
+        Method {
+            name: "saveContact"
+            Parameter { name: "dc"; type: "QDeclarativeContact"; isPointer: true }
+            Parameter { name: "storageLocation"; type: "StorageLocation" }
         }
         Method {
             name: "saveContact"

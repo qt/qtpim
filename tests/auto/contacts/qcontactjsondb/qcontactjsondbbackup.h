@@ -43,8 +43,10 @@
 #define QCONTACTJSONDBBACKUP_H
 
 #include <QList>
-
+#include <qcontactsglobal.h>
 #include "synchronizedjsondbclient.h"
+
+QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbBackup
 {
@@ -54,13 +56,15 @@ public:
     bool loadTestData();
     bool cleanJsonDb();
 private:
-    bool backupJsonDb();
-    bool clearJsonDb();
+    void backupJsonDb();
     bool revertJsonDb();
-    bool doRequest(const QList<QJsonObject>  &objects, bool isInsert);
+    bool addContacts(const QList<QJsonObject>  &objects, QString partition = QString());
+    bool deleteContacts(const QList<QJsonObject>  &objects, QString partition = QString());
 int  wasteSomeTime();
-    QList<QJsonObject> m_backupData;
+    QList<QJsonObject> m_backupData, m_backupDataSystem, m_backupDataUser;
     SynchronizedJsonDbClient* m_dbClient;
 };
+
+QTCONTACTS_END_NAMESPACE
 
 #endif // QCONTACTJSONDBBACKUP_H

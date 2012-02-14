@@ -46,6 +46,9 @@
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbconverter.h"
+
+#include "qcontactjsondbid.h"
+
 #include "synchronizedjsondbclient.h"
 #include "jsondbprocess.h"
 
@@ -82,8 +85,41 @@ private Q_SLOTS:
     void testContactUpdate();
     void testExtendedDetailsFromJsonDb();
     void testExtendedDetailsToJsonDb();
+    void testSaveAndFetchToDefaultStorage();
+    void testSaveAndFetchToUserDataStorage();
+    void testSaveAndFetchToSystemStorage();
+    void testSaveAndFetchToDefaultAndUserDataStorages();
+    void testSaveAndFetchToDefaulAndSystemStorages();
+    void testMultiFetchFromUserAndSystemStorages();
+    void testErrorsOnFetchFromWrongStorage();
+    void testFetchWithIdsFromTwoStoragesInIdFilter();
+    void testFetchErrorWithIdsFromWrongStorageInIdFilter();
+    void testRemoveFromDefaultStorage();
+    void testRemoveFromUserStorage();
+    void testRemoveFromSystemStorage();
+    void testRemoveFromUserAndSystemStorages();
+    void testUpdateToUserDataStorage();
+    void testUpdateToSystemDataStorage();
+    void testWrongUpdateToDefaultStorage();
+    void testWrongUpdateToSystemStorage();
+    void testIdFetchRequestFromUserAndSystemStorages();
+    void testSynchronousSaveAndFetchToDefaultStorage();
 
 private:
+    void createPartition(const QString partition);
+    QContactId saveTestContact(QContactManager &cm, QString &firstName);
+    QContactId saveTestContact(QContactManager &cm, QString &firstName, QContactAbstractRequest::StorageLocation storageLocation);
+
+    QContactManager::Error updateTestContact(QContactManager &cm, QContact &contact, QContactId &contactId);
+    QContactManager::Error updateTestContact(QContactManager &cm, QContact &contact, QContactId &contactId, QContactAbstractRequest::StorageLocation storageLocation);
+
+    QList<QContact> fetchTestContacts(QContactManager &cm, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
+
+    QContactManager::Error fetchTestContactByIdFilter(QContactManager &cm, QContactId &id, QContact &contact, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
+    QContactManager::Error fetchTestContactsByIdFilter(QContactManager &cm, QList<QContactId> &ids, QList<QContact> &contacts, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
+
+    QContactManager::Error removeTestContact(QContactManager &cm, QContactId &contactId);
+
     QContactJsonDbEngine* m_engine;
     QContactJsonDbBackup* m_myBackup;
     SynchronizedJsonDbClient* m_dbClient;
@@ -92,45 +128,873 @@ private:
 
 void tst_QContactJsondbEngine::initTestCase()
 {
-    QVERIFY2(m_jsondbProcess.start(), "Failed to start JsonDb process");
+    // Backup and clear jsondb.
+    if (!m_myBackup) {
+        m_myBackup = new QContactJsonDbBackup;
+        m_myBackup->cleanJsonDb();
+    }
 }
 
 void tst_QContactJsondbEngine::init()
 {
-    // clears the database and loads desired test data
-    m_myBackup = new QContactJsonDbBackup;
-    m_myBackup->loadTestData(); // TODO: Proper fetching for test data.
+    m_myBackup->cleanJsonDb();
+    QVERIFY2(m_myBackup->loadTestData(), "Failed to load test data"); // TODO: Proper fetching for test data.
 }
 
 void tst_QContactJsondbEngine::cleanup()
 {
-    if (m_myBackup) {
-        m_myBackup->cleanJsonDb();
-        delete m_myBackup;
-    }
 }
 
 void tst_QContactJsondbEngine::cleanupTestCase()
 {
-    m_jsondbProcess.terminate();
+    if (m_myBackup) {
+        delete m_myBackup;
+        m_myBackup = 0;
+    }
 }
 
-tst_QContactJsondbEngine::tst_QContactJsondbEngine()
+tst_QContactJsondbEngine::tst_QContactJsondbEngine():m_myBackup(0)
 {
     m_engine = new QContactJsonDbEngine();
     m_dbClient = new SynchronizedJsonDbClient();
+
+    QString partitions_json = QFINDTESTDATA("partitions.json");
+    QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+    QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
 }
 
 tst_QContactJsondbEngine::~tst_QContactJsondbEngine()
 {
-    if(m_engine) {
-        delete m_engine;
-        m_engine = NULL;
+    delete m_engine;
+    delete m_dbClient;
+    m_jsondbProcess.terminate();
+}
+
+void tst_QContactJsondbEngine::createPartition(const QString partition)
+{
+    // Check if partition already exist.
+    QString partitionQuery = "[?_type=\"Partition\"][?name=\"" + partition + "\"]";
+    QList<QJsonObject> queryResponse = m_dbClient->query(partitionQuery);
+
+    qDebug() << Q_FUNC_INFO << "partition check response:" << queryResponse;
+
+    // If no such partition, create one.
+    if (queryResponse.isEmpty()) {
+        QJsonObject object;
+        object.insert(QLatin1String("_type"), QLatin1String("Partition"));
+        object.insert(QLatin1String("name"), partition);
+        QVariantMap partitionCreateResponse = m_dbClient->create(object).first().toVariantMap();
+        qWarning() << Q_FUNC_INFO << "Created partition:" << partition << "with reponse:" << partitionCreateResponse;
+        return;
     }
-    if (m_dbClient) {
-        delete m_dbClient;
-        m_dbClient = NULL;
+    // Debug, remove when this works.
+    qDebug() << Q_FUNC_INFO << "Partition query response for partition:" << partition << "is" << queryResponse;
+}
+
+QContactId tst_QContactJsondbEngine::saveTestContact(QContactManager &cm, QString &firstName)
+{
+    QContactName nameDetail;
+    nameDetail.setFirstName(firstName);
+    nameDetail.setLastName("StorageLocationTestContact");
+
+    QContact testContact;
+    testContact.saveDetail(&nameDetail);
+
+    QContactSaveRequest saveRequest;
+    saveRequest.setManager(&cm);
+    saveRequest.setContact(testContact);
+    saveRequest.start();
+    saveRequest.waitForFinished();
+    return saveRequest.contacts().first().id();
+}
+
+QContactId tst_QContactJsondbEngine::saveTestContact(QContactManager &cm, QString &firstName, QContactAbstractRequest::StorageLocation storageLocation)
+{
+    QContactName nameDetail;
+    nameDetail.setFirstName(firstName);
+    nameDetail.setLastName("StorageLocationTestContact");
+
+    QContact testContact;
+    testContact.saveDetail(&nameDetail);
+
+    QContactSaveRequest saveRequest;
+    saveRequest.setManager(&cm);
+    saveRequest.setContact(testContact);
+    saveRequest.setStorageLocation(storageLocation);
+    saveRequest.start();
+    saveRequest.waitForFinished();
+    return saveRequest.contacts().first().id();
+}
+
+QContactManager::Error tst_QContactJsondbEngine::updateTestContact(QContactManager &cm, QContact &contact, QContactId &contactId)
+{
+    QContactSaveRequest saveRequest;
+    saveRequest.setManager(&cm);
+    saveRequest.setContact(contact);
+    saveRequest.start();
+    saveRequest.waitForFinished();
+    contactId = saveRequest.contacts().first().id();
+    return saveRequest.error();
+}
+
+QContactManager::Error tst_QContactJsondbEngine::updateTestContact(QContactManager &cm, QContact &contact, QContactId &contactId, QContactAbstractRequest::StorageLocation storageLocation)
+{
+    QContactSaveRequest saveRequest;
+    saveRequest.setManager(&cm);
+    saveRequest.setContact(contact);
+    saveRequest.setStorageLocation(storageLocation);
+    saveRequest.start();
+    saveRequest.waitForFinished();
+    contactId = saveRequest.contacts().first().id();
+    return saveRequest.error();
+}
+
+QList<QContact> tst_QContactJsondbEngine::fetchTestContacts(QContactManager &cm, QContactAbstractRequest::StorageLocations storageLocations)
+{
+    QContactFetchRequest fetchRequest;
+    fetchRequest.setManager(&cm);
+    if (storageLocations)
+        fetchRequest.setStorageLocations(storageLocations);
+    fetchRequest.start();
+    fetchRequest.waitForFinished();
+    QList<QContact> contacts = fetchRequest.contacts();
+    return contacts;
+}
+
+QContactManager::Error tst_QContactJsondbEngine::fetchTestContactsByIdFilter(QContactManager &cm, QList<QContactId> &ids, QList<QContact> &contacts, QContactAbstractRequest::StorageLocations storageLocations)
+{
+    QContactIdFilter idFilter;
+    foreach (QContactId id, ids)
+        idFilter.add(id);
+
+    QContactFetchRequest fetchRequest;
+    fetchRequest.setManager(&cm);
+    fetchRequest.setFilter(idFilter);
+    if (storageLocations)
+        fetchRequest.setStorageLocations(storageLocations);
+    fetchRequest.start();
+    fetchRequest.waitForFinished();
+    if (fetchRequest.contacts().isEmpty())
+        contacts = QList<QContact>();
+    else
+        contacts = fetchRequest.contacts();
+    return fetchRequest.error();
+}
+
+QContactManager::Error tst_QContactJsondbEngine::fetchTestContactByIdFilter(QContactManager &cm, QContactId &id, QContact &contact, QContactAbstractRequest::StorageLocations storageLocations)
+{
+    QContactIdFilter idFilter;
+    idFilter.add(id);
+
+    QContactFetchRequest fetchRequest;
+    fetchRequest.setManager(&cm);
+    fetchRequest.setFilter(idFilter);
+    if (storageLocations)
+        fetchRequest.setStorageLocations(storageLocations);
+    fetchRequest.start();
+    fetchRequest.waitForFinished();
+    if (!fetchRequest.contacts().isEmpty())
+        contact = fetchRequest.contacts().first();
+    return fetchRequest.error();
+}
+
+QContactManager::Error tst_QContactJsondbEngine::removeTestContact(QContactManager &cm, QContactId &contactId)
+{
+    QContactRemoveRequest removeRequest;
+    removeRequest.setManager(&cm);
+    removeRequest.setContactId(contactId);
+    removeRequest.start();
+    removeRequest.waitForFinished();
+    return removeRequest.error();
+}
+
+void tst_QContactJsondbEngine::testSaveAndFetchToDefaultStorage()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Test save and fetch to default storage.
+    QString name("SaveToDefault");
+    saveTestContact(cm, name);
+    QList<QContact> contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount+1);
+    bool contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == name) contactFound=true;
     }
+    QVERIFY(contactFound == true);
+
+    // Check explicitely that fetch from userData storage gives the same.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount+1);
+    contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == name) contactFound=true;
+    }
+    QVERIFY(contactFound == true);
+
+    // Verify the system storage is not affected (it should be cleaned by test init).
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testSaveAndFetchToUserDataStorage()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Test save and fetch to userdata storage.
+    QString name("SaveToUser");
+    saveTestContact(cm, name, QContactAbstractRequest::UserDataStorage);
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount+1);
+    bool contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == name) contactFound=true;
+    }
+    QVERIFY(contactFound == true);
+
+    // Verify the fetch from default gives the same.
+    contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount+1);
+    contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == name) contactFound=true;
+    }
+    QVERIFY(contactFound == true);
+
+    // Verify the system storage is not affected (it should be cleaned by test init).
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testSaveAndFetchToSystemStorage()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Test save and fetch to system storage.
+    QString saveName("SaveToSystem");
+    QContactId originalId = saveTestContact(cm, saveName, QContactAbstractRequest::SystemStorage);
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 1);
+    QCOMPARE(contacts.first().id(), originalId);
+    QCOMPARE(contacts.first().detail<QContactName>().firstName(), saveName);
+
+    // Verify userData storage is not affected.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount);
+    bool contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == saveName) contactFound = true;
+    }
+    QVERIFY(!contactFound);
+
+    // Verify default storage is not affected.
+    contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount);
+    contactFound = false;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == saveName) contactFound = true;
+    }
+    QVERIFY(!contactFound);
+}
+
+void tst_QContactJsondbEngine::testSaveAndFetchToDefaultAndUserDataStorages()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save test contact to default and userData storages.
+    QString nameForDefaultStorageContact("SaveToDefault");
+    QContactId contactIdDefaultStorage = saveTestContact(cm, nameForDefaultStorageContact);
+    QString nameForUserStorageContact("SaveToUser");
+    QContactId contactIdUserdataStorage = saveTestContact(cm, nameForUserStorageContact, QContactAbstractRequest::UserDataStorage);
+
+    // Check that fetch from default storage gives them both back to us.
+    QList<QContact> contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount+2);
+    int contactsWithNameInDefaultStorage = 0;
+    int contactsWithNameInUserStorage = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForDefaultStorageContact) {
+            QCOMPARE(curr.id(), contactIdDefaultStorage);
+            contactsWithNameInDefaultStorage++;
+        }
+        if (curr.detail<QContactName>().firstName() == nameForUserStorageContact) {
+            QCOMPARE(curr.id(), contactIdUserdataStorage);
+            contactsWithNameInUserStorage++;
+        }
+    }
+    QCOMPARE(contactsWithNameInDefaultStorage, 1);
+    QCOMPARE(contactsWithNameInUserStorage, 1);
+
+    // Verify the fetch from the userData gives the same.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount+2);
+    contactsWithNameInDefaultStorage = 0;
+    contactsWithNameInUserStorage = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForDefaultStorageContact) {
+            QCOMPARE(curr.id(), contactIdDefaultStorage);
+            contactsWithNameInDefaultStorage++;
+        }
+        if (curr.detail<QContactName>().firstName() == nameForUserStorageContact) {
+            QCOMPARE(curr.id(), contactIdUserdataStorage);
+            contactsWithNameInUserStorage++;
+        }
+    }
+    QCOMPARE(contactsWithNameInDefaultStorage, 1);
+    QCOMPARE(contactsWithNameInUserStorage, 1);
+
+    // Verify the system storage is not affected (it should be cleaned by test init).
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testSaveAndFetchToDefaulAndSystemStorages()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save test contact to default and system storages.
+    QString nameForDefaultStorageContact("SaveToDefault");
+    QContactId contactIdForDefaultStorageContact = saveTestContact(cm, nameForDefaultStorageContact);
+
+    QString nameForSystemStorageContact("SaveToSystem");
+    QContactId contactIdForSystemStorageContact = saveTestContact(cm, nameForSystemStorageContact, QContactAbstractRequest::SystemStorage);
+
+    // Check that fetch from default storage gives the right contact back to us.
+    QList<QContact> contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount+1);
+    int contactsFound = 0;
+    foreach (QContact current, contacts) {
+        if (current.detail<QContactName>().firstName() == nameForDefaultStorageContact) {
+            QCOMPARE(current.id(), contactIdForDefaultStorageContact);
+            contactsFound++;
+        }
+    }
+    QCOMPARE(contactsFound, 1);
+
+    // Check that fetch from system storage gives the right contact back to us.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 1);
+    QCOMPARE(contacts.first().id(), contactIdForSystemStorageContact);
+    QCOMPARE(contacts.first().detail<QContactName>().firstName(), nameForSystemStorageContact);
+}
+
+void tst_QContactJsondbEngine::testMultiFetchFromUserAndSystemStorages()
+{
+    // Get original count of contacts in the defaul storage.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save test contact to default and system storages.
+    QString nameForDefaultStorageContact("FetchFromDefault");
+    QContactId idForDefaultStorageContact =  saveTestContact(cm, nameForDefaultStorageContact);
+
+    QString nameForSystemStorageContact("FetchFromSystem");
+    QContactId idForSystemStorageContact = saveTestContact(cm, nameForSystemStorageContact, QContactAbstractRequest::SystemStorage);
+
+    // Check that fetch from both storages at the same time gives the right contacts back to us.
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage | QContactAbstractRequest::UserDataStorage);
+    QEXPECT_FAIL("","Fetch from multiple partitions only partly implemented.", Continue);
+    QCOMPARE(contacts.size(), originalCount+2);
+
+    int contactsDefaultFound = 0;
+    int contactsSystemFound = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForDefaultStorageContact) {
+            contactsDefaultFound++;
+            QCOMPARE(curr.id(), idForDefaultStorageContact);
+        }
+        if (curr.detail<QContactName>().firstName() == nameForSystemStorageContact) {
+            contactsSystemFound++;
+            QCOMPARE(curr.id(), idForSystemStorageContact);
+        }
+    }
+
+    QCOMPARE(contactsDefaultFound, 1);
+    QEXPECT_FAIL("","Fetch from multiple partitions only partly implemented.", Continue);
+    QCOMPARE(contactsSystemFound, 1);
+}
+
+void tst_QContactJsondbEngine::testErrorsOnFetchFromWrongStorage()
+{
+    // Save a test contact to system storage and fetch by Id from default and user storages.
+    QContactManager cm;
+    QString name("FetchError");
+    QContactId originalId = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+    QContact contact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact), QContactManager::DoesNotExistError);
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact, QContactAbstractRequest::UserDataStorage), QContactManager::DoesNotExistError);
+
+    // Save a test contact to default storage and fetch from system storage.
+    originalId = saveTestContact(cm, name);
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact, QContactAbstractRequest::SystemStorage), QContactManager::DoesNotExistError);
+
+    // Save a test contact to user storage and fetch from system storage.
+    originalId = saveTestContact(cm, name, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact, QContactAbstractRequest::SystemStorage), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsondbEngine::testFetchWithIdsFromTwoStoragesInIdFilter()
+{
+    // Save two test contacts to both user and system storages and fetch by Id one from both of them.
+    QContactManager cm;
+    QString name("FetchErrorMultipleIds");
+    QContactId contactIdDefault = saveTestContact(cm, name);
+    contactIdDefault = saveTestContact(cm, name);
+    QContactId contactIdSystem = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+    contactIdSystem = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+
+    QList<QContactId> ids;
+    ids << contactIdDefault << contactIdSystem;
+    QList<QContact> contacts;
+
+    // Check we get only the right contact from default storage (user storage) when no storage defined.
+    QCOMPARE(fetchTestContactsByIdFilter(cm, ids, contacts), QContactManager::NoError);
+    QCOMPARE(contacts.size(), 1);
+    QCOMPARE(contacts.first().id(), contactIdDefault);
+    QCOMPARE(contacts.first().detail<QContactName>().firstName(), name);
+
+    // Check we get only the right contact from system storage when explicitely defining the storage.
+    QCOMPARE(fetchTestContactsByIdFilter(cm, ids, contacts, QContactAbstractRequest::SystemStorage), QContactManager::NoError);
+    QCOMPARE(contacts.size(), 1);
+    QCOMPARE(contacts.first().id(), contactIdSystem);
+    QCOMPARE(contacts.first().detail<QContactName>().firstName(), name);
+}
+
+void tst_QContactJsondbEngine::testFetchErrorWithIdsFromWrongStorageInIdFilter()
+{
+    // Save two test contacts to both user and system storages.
+    QContactManager cm;
+    QString name("FetchErrorMultipleIds");
+    QContactId contactIdDefault = saveTestContact(cm, name);
+    contactIdDefault = saveTestContact(cm, name);
+    QContactId contactIdSystem = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+    contactIdSystem = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+
+    // Check fetch error when none of the ids in filter match with the default storage location.
+    QList<QContactId> idsNotInDefaultStorage;
+    idsNotInDefaultStorage << contactIdSystem << contactIdSystem;
+    QList<QContact> contacts;
+    QCOMPARE(fetchTestContactsByIdFilter(cm, idsNotInDefaultStorage, contacts), QContactManager::DoesNotExistError);
+    QCOMPARE(contacts.size(), 0);
+
+    // Check fetch error when none of the ids in filter match with the system storage location.
+    QList<QContactId> idsNotInSystemStorage;
+    idsNotInSystemStorage << contactIdDefault << contactIdDefault;
+    QCOMPARE(fetchTestContactsByIdFilter(cm, idsNotInSystemStorage, contacts, QContactAbstractRequest::SystemStorage), QContactManager::DoesNotExistError);
+    QCOMPARE(contacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testRemoveFromDefaultStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    int originalCountInSystemStorage = contacts.size();
+
+    // Save and remove test contact to default storage and check it is not there.
+    QString name("RemoveFromDefault");
+    QContactId id = saveTestContact(cm, name);
+    QCOMPARE(removeTestContact(cm, id), QContactManager::NoError);
+
+    // Check the contact is removed from the default storage.
+    contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount);
+    foreach (QContact curr, contacts) {
+        QVERIFY(curr.detail<QContactName>().firstName() != name);
+        QVERIFY(curr.id() != id);
+    }
+
+    // Check remove did not affect to amount of contacts in the system storage.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), originalCountInSystemStorage);
+
+    // Check re-remove fails with proper error code.
+    QCOMPARE(removeTestContact(cm, id), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsondbEngine::testRemoveFromUserStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    int originalCountInSystemStorage = contacts.size();
+
+    // Save a test contact to user data storage and then remove it.
+    QString name("RemoveFromUser");
+    QContactId id = saveTestContact(cm, name, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(removeTestContact(cm, id), QContactManager::NoError);
+
+    // Check the contact is removed from the user data storage.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount);
+    foreach (QContact curr, contacts) {
+        QVERIFY(curr.detail<QContactName>().firstName() != name);
+        QVERIFY(curr.id() != id);
+    }
+
+    // Check remove did not affect to amount of contacts in the system storage.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), originalCountInSystemStorage);
+
+    // Check re-remove fails with proper error code.
+    QCOMPARE(removeTestContact(cm, id), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsondbEngine::testRemoveFromSystemStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save test contact to system storage.
+    QString name("RemoveFromSystem");
+    QContactId id = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+
+    // Check that remove from system storage succeeds.
+    QCOMPARE(removeTestContact(cm, id), QContactManager::NoError);
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
+
+    // Check remove did not affect to amount of contacts in the user data storage.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount);
+
+    // Check re-remove fails with proper error code.
+    QCOMPARE(removeTestContact(cm, id), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsondbEngine::testRemoveFromUserAndSystemStorages()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save test contact to default and system storages.
+    QString nameForDefaultStorageContact("RemoveFromDefault");
+    QContactId idForDefaultStorageContact = saveTestContact(cm, nameForDefaultStorageContact);
+
+    QString nameForSystemStorageContact("RemoveFromSystem");
+    QContactId idForSystemStorageContact = saveTestContact(cm, nameForSystemStorageContact, QContactAbstractRequest::SystemStorage);
+
+    // Check that remove from system storage succeeds.
+    QCOMPARE(removeTestContact(cm, idForSystemStorageContact), QContactManager::NoError);
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
+
+    // Check that fetch from default storage still has the right number of contacts and a test contact.
+    contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount+1);
+    int contactsFound = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForDefaultStorageContact) contactsFound++;
+    }
+    QCOMPARE(contactsFound, 1);
+
+    // Check remove from user data storage succeeds.
+    QCOMPARE(removeTestContact(cm, idForDefaultStorageContact), QContactManager::NoError);
+    contacts = fetchTestContacts(cm);
+    QCOMPARE(contacts.size(), originalCount);
+    contactsFound = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForDefaultStorageContact)
+            contactsFound++;
+    }
+    QCOMPARE(contactsFound, 0);
+
+    // Check re-remove for both contacts fails with proper error codes.
+    QCOMPARE(removeTestContact(cm, idForSystemStorageContact), QContactManager::DoesNotExistError);
+    QCOMPARE(removeTestContact(cm, idForDefaultStorageContact), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactJsondbEngine::testUpdateToUserDataStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save a test contact to user data storage and fetch it back.
+    QString name("UpdateToUser");
+    QContactId originalId = saveTestContact(cm, name, QContactAbstractRequest::UserDataStorage);
+    QContact contact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact), QContactManager::NoError);
+    QCOMPARE(contact.id(), originalId);
+    QCOMPARE(contact.detail<QContactName>().firstName(), name);
+
+    // Update contact with new lastname specific for this test case.
+    QString updatedLastName("UpdatedToUserData");
+    QContactName nameDetail = contact.detail(QContactDetail::TypeName);
+    nameDetail.setLastName(updatedLastName);
+    contact.saveDetail(&nameDetail);
+    QContactId idFromUpdate;
+    QVERIFY(updateTestContact(cm, contact, idFromUpdate) == QContactManager::NoError);
+    QCOMPARE (idFromUpdate, originalId);
+
+    // Fetch with id filter and verify contact data.
+    QContact fetchedContact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, fetchedContact), QContactManager::NoError);
+    QCOMPARE(fetchedContact.id(), originalId);
+    QCOMPARE(fetchedContact.detail<QContactName>().firstName(), name);
+    QCOMPARE(fetchedContact.detail<QContactName>().lastName(), updatedLastName);
+
+    // Verify the default storage contacts amount.
+    QList<QContact> defaultStorageContacts = fetchTestContacts(cm);
+    QCOMPARE(defaultStorageContacts.size(), originalCount + 1);
+
+    // Verify the user storage contacts amount.
+    QList<QContact> userdataContacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(userdataContacts.size(), originalCount +1);
+
+    // Verify the system storage is not affected (it should be clean by test init).
+    QList<QContact> systemStorageContacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(systemStorageContacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testUpdateToSystemDataStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save and fetch test contact to user data storage.
+    QString name("UpdateToSystem");
+    QContactId originalId = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+    QContact contact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact, QContactAbstractRequest::SystemStorage), QContactManager::NoError);
+    QCOMPARE(contact.id(), originalId);
+    QCOMPARE(contact.detail<QContactName>().firstName(), name);
+
+    // Update contact with new lastname specific for this test case.
+    QString updatedLastName("UpdatedToSystemRestricted");
+    QContactName nameDetail = contact.detail(QContactDetail::TypeName);
+    nameDetail.setLastName(updatedLastName);
+    contact.saveDetail(&nameDetail);
+    QContactId idFromUpdate;
+    QVERIFY(updateTestContact(cm, contact, idFromUpdate) == QContactManager::NoError);
+    QCOMPARE (idFromUpdate, originalId);
+
+    // Fetch with id filter and verify contact data.
+    QContact fetchedContact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, fetchedContact, QContactAbstractRequest::SystemStorage), QContactManager::NoError);
+    QCOMPARE(fetchedContact.id(), originalId);
+    QCOMPARE(fetchedContact.detail<QContactName>().firstName(), name);
+    QCOMPARE(fetchedContact.detail<QContactName>().lastName(), updatedLastName);
+
+    // Verify the cointact is in the system storage.
+    QList<QContact> systemStorageContacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(systemStorageContacts.size(), 1);
+
+    // Verify the default storage contacts amount.
+    QList<QContact> defaultStorageContacts = fetchTestContacts(cm);
+    QCOMPARE(defaultStorageContacts.size(), originalCount);
+
+    // Verify the user storage contacts amount.
+    QList<QContact> userdataContacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(userdataContacts.size(), originalCount);
+}
+
+void tst_QContactJsondbEngine::testWrongUpdateToDefaultStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save and fetch test contact to system storage.
+    QString name("WrongUpdateToDefault");
+    QContactId originalId = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+    QContact contact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact, QContactAbstractRequest::SystemStorage), QContactManager::NoError);
+    QCOMPARE(contact.id(), originalId);
+    QCOMPARE(contact.detail<QContactName>().firstName(), name);
+
+    // Try to update contact to "wrong" storage location.
+    // By documentation it should go to it's home storage instead of defined one.
+    QString updatedLastName("UpdateToWrongStorageGoestoHomeStorage");
+    QContactName nameDetail = contact.detail(QContactDetail::TypeName);
+    nameDetail.setLastName(updatedLastName);
+    contact.saveDetail(&nameDetail);
+    QContactId idFromUpdate;
+    QCOMPARE(updateTestContact(cm, contact, idFromUpdate), QContactManager::NoError);
+    QCOMPARE (idFromUpdate, originalId);
+
+    // Fetch with id filter from default to verify proper error code.
+    QContact fetchedContact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, fetchedContact), QContactManager::DoesNotExistError);
+
+    // Verify the default storage contacts amount did not change.
+    QList<QContact> defaultStorageContacts = fetchTestContacts(cm);
+    QCOMPARE(defaultStorageContacts.size(), originalCount);
+
+    // Verify the user storage contacts amount did not change.
+    QList<QContact> userdataContacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(userdataContacts.size(), originalCount);
+
+    // Verify the system storage, there should be only the updated test contact.
+    QList<QContact> systemStorageContacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(systemStorageContacts.size(), 1);
+    QCOMPARE(systemStorageContacts.first().detail<QContactName>().firstName(), name);
+    QCOMPARE(systemStorageContacts.first().detail<QContactName>().lastName(), updatedLastName);
+}
+
+void tst_QContactJsondbEngine::testWrongUpdateToSystemStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save and fetch test contact to default storage.
+    QString name("WrongUpdateToSystem");
+    QContactId originalId = saveTestContact(cm, name);
+    QContact contact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, contact), QContactManager::NoError);
+    QCOMPARE(contact.id(), originalId);
+    QCOMPARE(contact.detail<QContactName>().firstName(), name);
+
+    // Try to update contact to "wrong" storage location.
+    // By documentation it should go to 'home' storage instead.
+    QString updatedLastName("UpdateToWrongStorageGoesToHomeStorage");
+    QContactName nameDetail = contact.detail(QContactDetail::TypeName);
+    nameDetail.setLastName(updatedLastName);
+    contact.saveDetail(&nameDetail);
+    QContactId idFromUpdate;
+    QCOMPARE(updateTestContact(cm, contact, idFromUpdate, QContactAbstractRequest::SystemStorage), QContactManager::NoError);
+    QCOMPARE (idFromUpdate, originalId);
+
+    // Fetch with id filter frp, system storage to verify the correct error code.
+    QContact fetchedContact;
+    QCOMPARE(fetchTestContactByIdFilter(cm, originalId, fetchedContact, QContactAbstractRequest::SystemStorage), QContactManager::DoesNotExistError);
+
+    // Verify the default storage contacts amount and updated test contact there.
+    QList<QContact> defaultStorageContacts = fetchTestContacts(cm);
+    QCOMPARE(defaultStorageContacts.size(), originalCount + 1);
+    bool contactFound = false;
+    foreach (QContact curr, defaultStorageContacts) {
+        if (curr.detail<QContactName>().firstName() == name) {
+            contactFound = true;
+            QCOMPARE(curr.detail<QContactName>().lastName(), updatedLastName);
+        }
+    }
+    QVERIFY(contactFound == true);
+
+    // Verify the user storage contacts amount.
+    QList<QContact> userdataContacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(userdataContacts.size(), originalCount +1);
+
+    // Verify the system storage is not affected (it should be clean by test init).
+    QList<QContact> systemStorageContacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(systemStorageContacts.size(), 0);
+}
+
+void tst_QContactJsondbEngine::testIdFetchRequestFromUserAndSystemStorages()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+    QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    int originalCountInSystemStorage = contacts.size();
+
+    // Save a test contact to both user and system storage.
+    QString name("FetchByIdTest");
+    QContactId contactIdDefault = saveTestContact(cm, name);
+    QContactId contactIdSystem = saveTestContact(cm, name, QContactAbstractRequest::SystemStorage);
+
+    // Fetch ids using id fetch request.
+    QContactIdFetchRequest idFetchRequest;
+    idFetchRequest.setManager(&cm);
+    idFetchRequest.setStorageLocations(QContactAbstractRequest::UserDataStorage | QContactAbstractRequest::SystemStorage);
+    idFetchRequest.start();
+    idFetchRequest.waitForFinished();
+
+    QCOMPARE(idFetchRequest.error(), QContactManager::NoError);
+
+    // Check we get the right ids.
+    QCOMPARE(idFetchRequest.ids().size(), originalCount + originalCountInSystemStorage + 2);
+    bool contactIdDefaultFound = false;
+    bool contactIdSystemFound = false;
+    foreach (QContactId id, idFetchRequest.ids()) {
+        if (id == contactIdDefault) contactIdDefaultFound = true;
+        if (id == contactIdSystem) contactIdSystemFound = true;
+    }
+    QVERIFY(contactIdDefaultFound);
+    QVERIFY(contactIdSystemFound);
+}
+
+void tst_QContactJsondbEngine::testSynchronousSaveAndFetchToDefaultStorage()
+{
+    // Get original count of contacts in the defaul and system storages.
+    QContactManager cm;
+    int originalCount = cm.contactIds().size();
+
+    // Save two test contacts to default partition.
+    QContact testContact;
+    QContactName nameDetail;
+    nameDetail.setFirstName("Test Contact 1");
+    testContact.saveDetail(&nameDetail);
+    QList<QContact> saveList;
+    saveList << testContact;
+    QContact testContact2;
+    QContactName nameDetail2;
+    nameDetail2.setFirstName("Test Contact 2");
+    testContact2.saveDetail(&nameDetail2);
+    saveList << testContact2;
+
+    bool returnValue = cm.saveContacts(&saveList);
+    QVERIFY(returnValue == true);
+    QCOMPARE (cm.contactIds().size(), originalCount+2);
+
+    // Fetch and check contacts from the default partition.
+    QList<QContactId> ids = cm.contactIds();
+    QList<QContact> contacts = cm.contacts(ids);
+    QCOMPARE(contacts.size(), originalCount+2);
+    int contactsWithTest1 = 0;
+    int contactsWithTest2 = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>() == nameDetail) {
+            contactsWithTest1++;
+            QCOMPARE(curr.id(), saveList.at(0).id());
+        }
+        if (curr.detail<QContactName>() == nameDetail2) {
+            contactsWithTest2++;
+            QCOMPARE(curr.id(), saveList.at(1).id());
+        }
+    }
+    QCOMPARE(contactsWithTest1, 1);
+    QCOMPARE(contactsWithTest2, 1);
+
+    // Fetch contacts from userData storage explicitely and check they are
+    // there as the userData storage should be the default storage.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::UserDataStorage);
+    QCOMPARE(contacts.size(), originalCount+2);
+    contactsWithTest1 = 0;
+    contactsWithTest2 = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>() == nameDetail) {
+            contactsWithTest1++;
+            QCOMPARE(curr.id(), saveList.at(0).id());
+        }
+        if (curr.detail<QContactName>() == nameDetail2) {
+            contactsWithTest2++;
+            QCOMPARE(curr.id(), saveList.at(1).id());
+        }
+    }
+    QCOMPARE(contactsWithTest1, 1);
+    QCOMPARE(contactsWithTest2, 1);
+
+    // Fetch contacts from the system storage to verify new contact is not available
+    // there. The storage should be clean by test init.
+    contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage);
+    QCOMPARE(contacts.size(), 0);
 }
 
 void tst_QContactJsondbEngine::testSelfContactId() {
@@ -263,7 +1127,7 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     QContactManager cm;
     QContactIdFilter idFilter;
     QList<QContactSortOrder> sortOrders;
-    QList<QContact> contacts = cm.contacts(idFilter, sortOrders);
+    QList<QContact> contacts = cm.contacts(sortOrders); // fetch all contacts
     QVERIFY(contacts.size() > 0);
 
     // Take first of them as test contact for update test.
@@ -290,7 +1154,7 @@ void tst_QContactJsondbEngine::testContactUpdate() {
         jsonContact.insert("emails", embeddedEmail);
     }
     // Save test contact with extra fields directly to the jsondb.
-    QVariantMap jsonResponse = m_dbClient->update(jsonContact).first().toVariantMap();
+    QVariantMap jsonResponse = m_dbClient->update(jsonContact, QContactJsonDbStr::userDataPartition()).first().toVariantMap();
 
     // Update the test contact through the QContacts API with some details.
     QContactName nameDetail = testContact.detail<QContactName>();
@@ -323,7 +1187,7 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     // Fetch directly from jsondb the test contact data.
     QString finalQuery;
     QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
-    QVariantMap finalJsonContact = m_dbClient->query(finalQuery).first().toVariantMap();
+    QVariantMap finalJsonContact = m_dbClient->query(finalQuery, QContactJsonDbStr::userDataPartition()).first().toVariantMap();
     QVERIFY(!finalJsonContact.isEmpty());
 
     QVariantMap embeddedDetailsMap = finalJsonContact["details"].value<QVariantMap>();
@@ -344,7 +1208,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsFromJsonDb() {
     QContactManager cm;
     QContactIdFilter idFilter;
     QList<QContactSortOrder> sortOrders;
-    QList<QContact> contacts = cm.contacts(idFilter, sortOrders);
+    QList<QContact> contacts = cm.contacts(sortOrders); // fetch all contacts
     QVERIFY(contacts.size() > 0);
 
     // Take first of them as test contact.
@@ -376,7 +1240,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsFromJsonDb() {
     jsonContact.insert("details", embeddedDetails);
 
     // Save test contact with unknown properties directly to the jsondb.
-    QVariantMap jsonResponse = m_dbClient->update(jsonContact).first().toVariantMap();
+    QVariantMap jsonResponse = m_dbClient->update(jsonContact,QContactJsonDbStr::userDataPartition()).first().toVariantMap();
 
     // Check that the unknown properties come up as extended details.
     QList<QContact> contactsNow = cm.contacts(idFilter, sortOrders);
@@ -419,7 +1283,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
     QContactManager cm;
     QContactIdFilter idFilter;
     QList<QContactSortOrder> sortOrders;
-    QList<QContact> contacts = cm.contacts(idFilter, sortOrders);
+    QList<QContact> contacts = cm.contacts(sortOrders); // fetch all contacts
     QVERIFY(contacts.size() > 0);
 
     // Take first of them as test contact for update test.
@@ -462,7 +1326,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
     QContactJsonDbConverter jsonDbConverter;
     QString finalQuery;
     QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
-    QVariantMap jsonContact = m_dbClient->query(finalQuery).first().toVariantMap();
+    QVariantMap jsonContact = m_dbClient->query(finalQuery, QContactJsonDbStr::userDataPartition()).first().toVariantMap();
 
     // Check simple extended detail got correctly to jsondb.
     QCOMPARE(jsonContact["extendedDetailQString"].value<QVariant>().toString(),QString("Simple QString as extended detail."));
@@ -747,10 +1611,14 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     }
 
     // retrieve contacts filtering by local ID
+    QList<QContactId> ids = myContactManager.contactIds(sortOrders); // retrieve all ids
+
+    // Retrieve an empty list of ids
     QContactIdFilter idf;
     QVERIFY(idf.type() == QContactFilter::IdFilter);
     QVERIFY(idf.ids().count() == 0);
-    QList<QContactId> ids = myContactManager.contactIds(idf, sortOrders);
+    contacts = myContactManager.contacts(idf, sortOrders);
+    QVERIFY(contacts.size() == 0);
 
     // Retrieve only the first ID
     QContactId firstId = ids.first();

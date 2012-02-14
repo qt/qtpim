@@ -63,8 +63,8 @@
 #include <QContactTimestamp>
 #include <QContactTag>
 #include <QContactOrganization>
-#include "../../qcontactidmock.h"
-#include "../../../jsondbprocess.h"
+#include "qcontactidmock.h"
+#include "jsondbprocess.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
@@ -234,7 +234,7 @@ private:
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
-    JsonDbProcess jsondbProcess;
+    JsonDbProcess m_jsondbProcess;
 
 };
 
@@ -247,16 +247,19 @@ tst_QContactJsonDbAsync::tst_QContactJsonDbAsync()
 
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
     qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+
+    QString partitions_json = QFINDTESTDATA("partitions.json");
+    QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+    QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
 }
 
 tst_QContactJsonDbAsync::~tst_QContactJsonDbAsync()
 {
+    m_jsondbProcess.terminate();
 }
 
 void tst_QContactJsonDbAsync::initTestCase()
 {
-    QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
-
     //TODO FIXME
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
@@ -264,8 +267,6 @@ void tst_QContactJsonDbAsync::initTestCase()
 void tst_QContactJsonDbAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    jsondbProcess.terminate();
 }
 
 void tst_QContactJsonDbAsync::addManagers(QStringList stringlist)
@@ -1588,6 +1589,9 @@ QContactManager* tst_QContactJsonDbAsync::prepareModel(const QString& managerUri
     cm->saveContact(&a);
     cm->saveContact(&b);
     cm->saveContact(&c);
+
+    if (cm->contacts().size() != 3)
+        qWarning() << Q_FUNC_INFO << "Failed to prepare model!";
 
     return cm;
 

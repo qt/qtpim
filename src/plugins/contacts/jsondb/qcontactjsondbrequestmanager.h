@@ -103,7 +103,7 @@ public:
     QContactSaveRequest* removePrefetchRequest(QContactFetchRequest *prefetchReq);
 
     void addRequest(QJsonDbRequest *jsonDbRequest, RequestType requestType, QContactAbstractRequest *req = 0, int contactIndex = -1);
-    QContactAbstractRequest* removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex);
+    QContactAbstractRequest* removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex, QString *partitionName);
 
     bool setWaitCondition(QContactAbstractRequest* req, QWaitCondition* waitCondition);
     QWaitCondition* waitCondition(QContactAbstractRequest* req);

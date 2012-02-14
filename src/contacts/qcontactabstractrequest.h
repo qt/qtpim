@@ -90,6 +90,12 @@ public:
     QContactManager* manager() const;
     void setManager(QContactManager* manager);
 
+    enum StorageLocation {
+        UserDataStorage = 0x1,
+        SystemStorage = 0x2
+    };
+    Q_DECLARE_FLAGS(StorageLocations, StorageLocation)
+
 public Q_SLOTS:
     /* Verbs */
     bool start();
@@ -120,6 +126,7 @@ private:
 
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(QContactAbstractRequest::StorageLocations)
 
 QTCONTACTS_END_NAMESPACE
 

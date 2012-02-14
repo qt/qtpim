@@ -71,6 +71,10 @@ public:
     QList<QContact> contacts() const;
     QMap<int, QContactManager::Error> errorMap() const;
 
+    // Storage location setter and getter
+    void setStorageLocation(QContactAbstractRequest::StorageLocation storageLocation);
+    QContactAbstractRequest::StorageLocation storageLocation() const;
+
 private:
     Q_DISABLE_COPY(QContactSaveRequest)
     friend class QContactManagerEngine;

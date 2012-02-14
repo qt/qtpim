@@ -55,7 +55,6 @@ ContactsSavingTestCase {
     ContactModel {
         id: model
         autoUpdate: true
-        filter: filter
     }
 
     SignalSpy {
@@ -200,11 +199,11 @@ ContactsSavingTestCase {
         compare(model.contacts[0].contactId, id);
     }
 
-    function test_filterByEmptyList() {
+    function test_filterByEmptyIdList() {
         filter.ids = [];
         model.filter = filter;
         waitForContactsChanged();
-        compare (model.contacts.length, 3);
+        compare (model.contacts.length, 0);
     }
 
     function test_filterByTwoOverlappingIds() {

@@ -169,6 +169,15 @@ QTCONTACTS_BEGIN_NAMESPACE
  */
 
 /*!
+  \enum QContactAbstractRequest::StorageLocation
+  Enumerates the different storage locations for a request.
+  \value UserDataStorage A storage location where user data is stored.
+  \value SystemStorage A storage location where system files are stored.
+
+  Depending on the backend implementation, the access rights for different storage locations might vary.
+*/
+
+/*!
   \fn QContactAbstractRequest::QContactAbstractRequest(QObject* parent)
   Constructs a new, invalid asynchronous request with the specified \a parent
  */

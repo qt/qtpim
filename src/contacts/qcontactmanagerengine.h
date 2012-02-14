@@ -141,6 +141,7 @@ public:
     static void setContactRelationships(QContact *contact, const QList<QContactRelationship> &relationships);
 
     /* Helper functions */
+    static const QContactEngineId *engineId(const QContactId &contactId);
     static int compareContact(const QContact &a, const QContact &b, const QList<QContactSortOrder> &sortOrders);
     static void addSorted(QList<QContact>* sorted, const QContact &toAdd, const QList<QContactSortOrder> &sortOrders);
     static int compareVariant(const QVariant &first, const QVariant &second, Qt::CaseSensitivity sensitivity);

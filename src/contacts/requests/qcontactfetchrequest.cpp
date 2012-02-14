@@ -75,7 +75,37 @@ QContactFetchRequest::~QContactFetchRequest()
     QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the contact filter used to determine which contacts will be retrieved to \a filter
+/*!
+  Sets the storage location from where the contacts will be retrieved.
+
+  StorageLocations is a flag so it is possible to define multiple locations in it.
+  However, some backend implementations may accept only one flag to be set. In case multiple
+  flags are set fetching is done from the default storage location.
+  \sa QContactAbstractRequest::StorageLocation
+  \sa QContactAbstractRequest::StorageLocations
+ */
+void QContactFetchRequest::setStorageLocations(QContactAbstractRequest::StorageLocations storageLocations)
+{
+    Q_D(QContactFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    d->m_storageLocations = storageLocations;
+}
+
+/*!
+  Returns the storage locations from where the contacts will be retrieved.
+  \sa QContactAbstractRequest::StorageLocation
+  \sa QContactAbstractRequest::StorageLocations
+
+ */
+QContactAbstractRequest::StorageLocations QContactFetchRequest::storageLocations() const
+{
+    Q_D(const QContactFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_storageLocations;
+}
+
+/*!
+  Sets the contact filter used to determine which contacts will be retrieved to \a filter.
 */
 void QContactFetchRequest::setFilter(const QContactFilter& filter)
 {

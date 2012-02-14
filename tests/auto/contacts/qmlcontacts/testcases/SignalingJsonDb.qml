@@ -47,7 +47,7 @@ import QtJsonDb 1.0
 Partition {
     id: jsonDb
 
-    name: ""
+    property alias partition: jsonDb.name
 
     function createAndSignal(object) {
         logDebug("createAndSignal()");
@@ -99,7 +99,7 @@ Partition {
 
     function logDebug(message) {
         if (debug)
-            console.log(message);
+            console.log('SignalingJsonDb.' + message);
     }
 }
 

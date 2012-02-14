@@ -55,6 +55,7 @@
 
 #include <qcontactengineid.h>
 #include <qcontactid.h>
+#include <qcontactabstractrequest.h>
 
 #include <QtCore/qdebug.h>
 
@@ -69,10 +70,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QContactJsonDbId : public QContactEngineId
 {
 public:
-    QContactJsonDbId();
-    QContactJsonDbId(const QUuid &contactId);
-    ~QContactJsonDbId();
+    explicit QContactJsonDbId(const QString &engineId);
+    QContactJsonDbId(const QUuid &uuid, const QContactAbstractRequest::StorageLocation &storageLocation);
     QContactJsonDbId(const QContactJsonDbId &other);
+    ~QContactJsonDbId();
 
     bool isEqualTo(const QContactEngineId *other) const;
     bool isLessThan(const QContactEngineId *other) const;
@@ -88,10 +89,13 @@ public:
 #endif
 
     uint hash() const;
-    void setContactId(const QString &contactId);
+
+    QUuid uuid() const;
+    QContactAbstractRequest::StorageLocation storageLocation() const;
 
 private:
-    QUuid m_contactId;
+    QUuid m_uuid;
+    QContactAbstractRequest::StorageLocation m_storageLocation;
 };
 
 QTCONTACTS_END_NAMESPACE

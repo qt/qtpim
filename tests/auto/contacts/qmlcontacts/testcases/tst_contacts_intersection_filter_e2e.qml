@@ -194,9 +194,16 @@ ContactsSavingTestCase {
                     intersection: [contact1B]
                 },
                 {
-                    tag: "Intersection filter with empty filter set",
+                    tag: "Intersection filter with empty filter set (manager: jsondb)",
+                    manager: "jsondb",
                     filters: [],
                     intersection: [contact1A, contact2A, contact3A, contact1B, contact2B, contact3B]
+                },
+                {
+                    tag: "Intersection filter with empty filter set (manager: memory)",
+                    manager: "memory",
+                    filters: [],
+                    intersection: []
                 },
                 {
                     tag: "Intersection filter with a single detail filter",
@@ -207,6 +214,8 @@ ContactsSavingTestCase {
     }
 
     function test_intersectionFilter(data) {
+        if (data.manager && data.manager !== model.manager)
+            skip("Test not applicable to this manager");
         intersectionFilter.filters = data.filters;
         model.filter = intersectionFilter;
         waitForContactsChanged();

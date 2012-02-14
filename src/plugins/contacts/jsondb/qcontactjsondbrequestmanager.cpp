@@ -109,7 +109,7 @@ void QContactJsonDbRequestManager::addRequest(QJsonDbRequest *jsonDbRequest, Req
     }
 }
 
-QContactAbstractRequest* QContactJsonDbRequestManager::removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex)
+QContactAbstractRequest* QContactJsonDbRequestManager::removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex, QString *partitionName)
 {
     QMutexLocker locker(m_operationMutex);
     if (m_jsonDbRequestTypeMap.contains(jsonDbRequest)) {
@@ -127,6 +127,7 @@ QContactAbstractRequest* QContactJsonDbRequestManager::removeRequest(QJsonDbRequ
         QContactAbstractRequest* req = reqList.at(i);
         QMap<QJsonDbRequest*, int>* requestMap = &(m_activeRequests.value(req)->m_jsonDbRequestMap);
         if (requestMap->contains(jsonDbRequest)) {
+            *partitionName = jsonDbRequest->partition();
             contactIndex = requestMap->value(jsonDbRequest);
             requestMap->remove(jsonDbRequest);
             return reqList.at(i);

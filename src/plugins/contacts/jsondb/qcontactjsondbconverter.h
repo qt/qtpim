@@ -56,8 +56,8 @@ public:
     QContactJsonDbConverter();
     ~QContactJsonDbConverter();
     QContactManager::Error jsonDbRequestErrorToContactError(QJsonDbRequest::ErrorCode error) const;
-    bool toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine);
-    bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error);
+    bool toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine, const QString &partitionName);
+    bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error, const QString &partitionName);
     bool toJsonContact(QJsonObject* object, const QContact& contact);
     bool updateContexts(const QJsonObject& object, QContactDetail* detail);
     bool updateContexts(const QContactDetail& detail, QJsonObject* object);
@@ -65,11 +65,13 @@ public:
     bool singleFilterToJsondbQuery(const QContactFilter& filter,QString &jsonDbQueryStr) const;
     bool compoundFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     QString convertSortOrder(const QList<QContactSortOrder>& sortOrders) const;
-    QContactId jsonDbNotificationObjectToContactId(const QJsonObject &object) const;
-    QString convertId(const QContactId &id) const;
+    QContactId jsonDbNotificationObjectToContactId(const QJsonObject &object, QContactAbstractRequest::StorageLocation storageLocation) const;
+    QString contactIdToUuid(const QContactId &id) const;
+    QContactId uuidtoContactId(QString &uuid, const QString &partitionName) const;
     void jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const;
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
     bool sanitizePhoneNumberString(QString *phoneNumberString) const;
+    const QStringList storageLocationsToPartitionNames(QContactAbstractRequest::StorageLocations storageLocations);
 
     QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
     QHash<int, QString> contactNameFieldsMapping;
@@ -78,6 +80,7 @@ public:
     QHash<int, QString> phoneNumbersSubtypesMapping;
     QHash<int, QString> genderValuesMapping;
     QHash<QContactDetail::DetailContext, QString> contextsToJsonMapping;
+    QHash<QContactAbstractRequest::StorageLocation, QString> storageLocationMapping;
 
 private:
     void initializeMappings();

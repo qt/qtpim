@@ -46,10 +46,10 @@
 #include <QtCore/qnumeric.h>
 
 #include <QtContacts>
-#include "../qcontactmanagerdataholder.h"
-#include "../qcontactchangeset.h"
-#include "../../jsondbprocess.h"
-#include "../qcontactidmock.h"
+#include "qcontactmanagerdataholder.h"
+#include "qcontactchangeset.h"
+#include "jsondbprocess.h"
+#include "qcontactidmock.h"
 
 #if defined(USE_VERSIT_PLZ)
 // This makes it easier to create specific QContacts
@@ -120,7 +120,7 @@ private:
     QContact createContact(QString firstName, QString lastName, QString phoneNumber);
     void saveContactName(QContact *contact,QContactName *contactName, const QString &name) const;
 
-    JsonDbProcess jsondbProcess;
+    JsonDbProcess m_jsondbProcess;
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
@@ -298,8 +298,11 @@ tst_QContactManager::~tst_QContactManager()
 void tst_QContactManager::initTestCase()
 {
     // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb"))
-        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+    if (QContactManager::availableManagers().contains("jsondb")) {
+        QString partitions_json = QFINDTESTDATA("partitions.json");
+        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
+    }
 
     managerDataHolder.reset(new QContactManagerDataHolder());
 
@@ -315,7 +318,7 @@ void tst_QContactManager::cleanupTestCase()
     managerDataHolder.reset(0);
 
     if (QContactManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
+        m_jsondbProcess.terminate();
 }
 
 void tst_QContactManager::dumpContactDifferences(const QContact& ca, const QContact& cb)

@@ -62,7 +62,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 const int QContactJsonDbRequestHandler::TIMEOUT_INTERVAL(100);
 
 QContactJsonDbRequestHandler::QContactJsonDbRequestHandler()
-    : m_engine(0), m_jsonDbConnection(0), m_jsonDbWatcher(0), m_timer(0)
+    : m_engine(0), m_jsonDbConnection(0), m_timer(0)
 {
 }
 
@@ -84,15 +84,20 @@ void QContactJsonDbRequestHandler::init()
     connect(m_jsonDbConnection, SIGNAL(error(QtJsonDb::QJsonDbConnection::ErrorCode,QString)),
             this, SLOT(onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode,QString)));
     m_jsonDbConnection->connectToServer();
-    m_jsonDbWatcher = new QJsonDbWatcher(this);
-    m_jsonDbWatcher->setWatchedActions(QJsonDbWatcher::All);
-    m_jsonDbWatcher->setQuery(QContactJsonDbStr::contactsJsonDbNotificationQuery());
-    m_jsonDbWatcher->setPartition(QContactJsonDbStr::defaultPartition());
-    connect(m_jsonDbWatcher, SIGNAL(error(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)),
-            this, SLOT(onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)));
-    connect(m_jsonDbWatcher, SIGNAL(notificationsAvailable(int)),
-            this, SLOT(onJsonDbWatcherNotificationsAvailable()));
-    m_jsonDbConnection->addWatcher(m_jsonDbWatcher);
+    Q_ASSERT(storageLocationToPartition(QContactAbstractRequest::UserDataStorage) !=
+            storageLocationToPartition(QContactAbstractRequest::SystemStorage));
+    createWatcherForStorageLocation(QContactAbstractRequest::UserDataStorage);
+    createWatcherForStorageLocation(QContactAbstractRequest::SystemStorage);
+}
+
+void QContactJsonDbRequestHandler::createWatcherForStorageLocation(QContactAbstractRequest::StorageLocation storageLocation)
+{
+    QJsonDbWatcher* jsonDbWatcher = new QJsonDbWatcher(this);
+    jsonDbWatcher->setWatchedActions(QJsonDbWatcher::All);
+    jsonDbWatcher->setQuery(QContactJsonDbStr::contactsJsonDbNotificationQuery());
+    jsonDbWatcher->setPartition(storageLocationToPartition(storageLocation));
+    new QContactJsonDbPartitionWatcher(this, jsonDbWatcher, storageLocation);
+    m_jsonDbConnection->addWatcher(jsonDbWatcher);
 }
 
 void QContactJsonDbRequestHandler::setEngine(QContactJsonDbEngine *engine)
@@ -198,11 +203,13 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
                 QString fetchQuery;
                 bool isValid = m_converter->queryFromRequest(fetchRequest, fetchQuery);
                 if (isValid) {
+                    QString partition = storageLocationToPartition(extractStorageLocation(contact.id()));
                     m_requestMgr->addRequest(fetchRequest);
                     m_requestMgr->addPrefetchRequest(fetchRequest, saveReq);
                     if (!makeJsonDbRequest(fetchRequest,
                                            QContactJsonDbRequestManager::PrefetchForSaveRequest,
                                            i,
+                                           partition,
                                            fetchQuery)) {
                         error = QContactManager::TimeoutError;
                         errorMap.insert(i,error);
@@ -217,9 +224,11 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
                 // No prefetch needed, just create a new contact.
                 QJsonObject newJsonDbItem;
                 if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
+                    QString partition = storageLocationToPartition(saveReq->storageLocation());
                     if (!makeJsonDbRequest(saveReq,
                                            QContactJsonDbRequestManager::SaveRequest,
                                            i,
+                                           partition,
                                            QString(),
                                            QList<QJsonObject>() << newJsonDbItem)) {
                         error = QContactManager::TimeoutError;
@@ -245,17 +254,43 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
     }
 }
 
+QString QContactJsonDbRequestHandler::storageLocationToPartition(
+        QContactAbstractRequest::StorageLocations storageLocation)
+{
+    QContactAbstractRequest::StorageLocations targetStorageLocation =
+            storageLocationsOrDefault(storageLocation);
+    return m_converter->storageLocationsToPartitionNames(targetStorageLocation).first();
+}
+
+QContactAbstractRequest::StorageLocations QContactJsonDbRequestHandler::storageLocationsOrDefault(
+        QContactAbstractRequest::StorageLocations storageLocation)
+{
+    return storageLocation ? storageLocation : QContactAbstractRequest::UserDataStorage;
+}
+
+QContactAbstractRequest::StorageLocations QContactJsonDbRequestHandler::extractStorageLocation(const QContactId &id)
+{
+    const QContactEngineId *engineId = QContactManagerEngine::engineId(id);
+    return engineId->storageLocation();
+}
+
 void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchRequest* req) {
 
     QContactManager::Error error = QContactManager::NoError;
     QString newJsonDbQuery;
     m_requestMgr->addRequest(req);
     if (m_converter->queryFromRequest(req, newJsonDbQuery)) {
-        if (!makeJsonDbRequest(req,
-                               QContactJsonDbRequestManager::FetchRequest,
-                               0,
-                               newJsonDbQuery)) {
-            error = QContactManager::TimeoutError;
+        QContactAbstractRequest::StorageLocations storageLocations = storageLocationsOrDefault(req->storageLocations());
+        QStringList partitions = m_converter->storageLocationsToPartitionNames(storageLocations);
+        foreach (const QString &partition, partitions) {
+            if (!makeJsonDbRequest(req,
+                                   QContactJsonDbRequestManager::FetchRequest,
+                                   0,
+                                   partition,
+                                   newJsonDbQuery)) {
+                error = QContactManager::TimeoutError;
+                break;
+            }
         }
     } else
         error = QContactManager::BadArgumentError;
@@ -283,12 +318,15 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
         QContactManager::Error error = QContactManager::NoError;
         QContactId contactId = contactIds.at(i);
         if ( (!(contactId.isNull())) && (contactId.managerUri() == QContactJsonDbStr::managerUri()) ) {
+            QString partition = storageLocationToPartition(extractStorageLocation(contactId));
+
             QJsonObject newJsonDbContact;
             newJsonDbContact.insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
-            newJsonDbContact.insert(QContactJsonDbStr::uuid(), convertContactIdToUuid(contactId));
+            newJsonDbContact.insert(QContactJsonDbStr::uuid(), m_converter->contactIdToUuid(contactId));
             if (!makeJsonDbRequest(req,
                                    QContactJsonDbRequestManager::RemoveRequest,
                                    i,
+                                   partition,
                                    QString(),
                                    QList<QJsonObject>() << newJsonDbContact)) {
                 error = QContactManager::TimeoutError;
@@ -324,46 +362,56 @@ void QContactJsonDbRequestHandler::handleContactIdFetchRequest(QContactIdFetchRe
     m_requestMgr->addRequest(req);
     QString newJsonDbQuery;
     if (m_converter->queryFromRequest(req, newJsonDbQuery)) {
-        if (!makeJsonDbRequest(req,
+        QContactAbstractRequest::StorageLocations storageLocations = storageLocationsOrDefault(req->storageLocations());
+        QStringList partitions = m_converter->storageLocationsToPartitionNames(storageLocations);
+        foreach (const QString &partition, partitions) {
+            if (!makeJsonDbRequest(req,
                                QContactJsonDbRequestManager::ContactIdFetchRequest,
                                0,
-                               newJsonDbQuery))
-            error = QContactManager::TimeoutError;
-    } else
+                               partition,
+                               newJsonDbQuery)) {
+                error = QContactManager::TimeoutError;
+                break;
+            }
+        }
+    } else {
         error = QContactManager::BadArgumentError;
+    }
 
+    const QList<QContactId> emptyContactIdList;
     if (error!=QContactManager::NoError) {
-        const QList<QContactId> emptyContactList;
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
-        QContactManagerEngine::updateContactIdFetchRequest(req,emptyContactList,error,
+        QContactManagerEngine::updateContactIdFetchRequest(req,emptyContactIdList,error,
                                                            QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
+    } else {
+        QContactManagerEngine::updateContactIdFetchRequest(req,emptyContactIdList,error,
+                                                           QContactAbstractRequest::ActiveState);
     }
 }
 
-void QContactJsonDbRequestHandler::onJsonDbWatcherNotificationsAvailable()
+void QContactJsonDbRequestHandler::onJsonDbWatcherNotificationsAvailable(QJsonDbWatcher *jsonDbWatcher,
+                                                                         QContactAbstractRequest::StorageLocation storageLocation)
 {
     // There is no need for mutex locker since we do not access any request from here.
-    QList<QJsonDbNotification> notifications = m_jsonDbWatcher->takeNotifications();
+    QList<QJsonDbNotification> notifications = jsonDbWatcher->takeNotifications();
     foreach (const QJsonDbNotification &notification, notifications) {
         QJsonObject jsonDbObject = notification.object();
+        QContactId contactId = m_converter->jsonDbNotificationObjectToContactId(jsonDbObject, storageLocation);
         switch (notification.action()) {
         case QJsonDbWatcher::Created: {
-            QContactId contactId = m_converter->jsonDbNotificationObjectToContactId(jsonDbObject);
             m_ccs.insertAddedContact(contactId);
             startTimer();
             break;
         }
         case QJsonDbWatcher::Updated: {
-            QContactId contactId = m_converter->jsonDbNotificationObjectToContactId(jsonDbObject);
             m_ccs.insertChangedContact(contactId);
             startTimer();
             break;
         }
         case QJsonDbWatcher::Removed: {
-            QContactId contactId = m_converter->jsonDbNotificationObjectToContactId(jsonDbObject);
             m_ccs.insertRemovedContact(contactId);
             startTimer();
             break;
@@ -404,7 +452,8 @@ void QContactJsonDbRequestHandler::handleResponse(QJsonDbRequest *jsonDbRequest)
 
     int contactIndex;
     QContactJsonDbRequestManager::RequestType requestType;
-    QContactAbstractRequest *req = m_requestMgr->removeRequest(jsonDbRequest, requestType, contactIndex);
+    QString partitionName;
+    QContactAbstractRequest *req = m_requestMgr->removeRequest(jsonDbRequest, requestType, contactIndex, &partitionName);
     // Handle responses for requests having no QContactAbstractRequest associated.
     switch (requestType) {
     case QContactJsonDbRequestManager::OrphanRequest: {
@@ -438,7 +487,7 @@ void QContactJsonDbRequestHandler::handleResponse(QJsonDbRequest *jsonDbRequest)
     }
     case QContactJsonDbRequestManager::FetchRequest: {
         QContactFetchRequest* fetchReq = static_cast<QContactFetchRequest*>(req);
-        handleContactFetchResponse(fetchReq, jsonDbRequest);
+        handleContactFetchResponse(fetchReq, jsonDbRequest, partitionName);
         break;
     }
     case QContactJsonDbRequestManager::RemoveRequest: {
@@ -472,7 +521,8 @@ void QContactJsonDbRequestHandler::onJsonDbRequestError(QtJsonDb::QJsonDbRequest
 
     int contactIndex;
     QContactJsonDbRequestManager::RequestType jsonDbRequestType;
-    QContactAbstractRequest *req = m_requestMgr->removeRequest(request, jsonDbRequestType, contactIndex);
+    QString partitionName;
+    QContactAbstractRequest *req = m_requestMgr->removeRequest(request, jsonDbRequestType, contactIndex, &partitionName);
 
     switch (jsonDbRequestType) {
     case QContactJsonDbRequestManager::OrphanRequest: {
@@ -586,10 +636,9 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
         QString jsonUuid = object.value(QContactJsonDbStr::uuid()).toString();
         if (!jsonUuid.isEmpty()) {
             QContact contact = req->contacts().at(index);
-            QContactManager::Error error = QContactManager::NoError;
             bool isNewContact = (contact.id().isNull() || contact.id().managerUri().isEmpty());
             if (isNewContact) {
-                contact.setId(convertUuidtoContactId(jsonUuid));
+                contact.setId(m_converter->uuidtoContactId(jsonUuid, jsonDbRequest->partition()));
             }
             m_requestMgr->addContact(req, contact, index);
         }
@@ -619,10 +668,13 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactFet
             qWarning() << Q_FUNC_INFO << "Empty prefetch response from jsondb.";
         } else {
             // Convert QContact to jsondb contact over the prefetched jsondb contact and save it.
+            QString partition = storageLocationToPartition(
+                        extractStorageLocation(saveReq->contacts().at(index).id()));
             if (m_converter->toJsonContact(&object, saveReq->contacts().at(index))) {
                 if (!makeJsonDbRequest(saveReq,
                                        QContactJsonDbRequestManager::UpdateRequest,
                                        i,
+                                       partition,
                                        QString(),
                                        QList<QJsonObject>() << object))
                     lastError = QContactManager::TimeoutError;
@@ -656,7 +708,7 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactFet
 }
 
 
-void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchRequest *req, QJsonDbRequest *jsonDbRequest)
+void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchRequest *req, QJsonDbRequest *jsonDbRequest, const QString &partitionName)
 {
     QList<QContact> contacts;
     QContactManager::Error error = QContactManager::NoError;
@@ -667,7 +719,7 @@ void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchReque
         QJsonObject object = jsonDbObjectList.at(i);
         QContact contact;
         if (!object.isEmpty()) {
-            m_converter->toQContact(object, &contact, *m_engine);
+            m_converter->toQContact(object, &contact, *m_engine, partitionName);
             contacts.append(contact);
         }
     }
@@ -696,44 +748,32 @@ void QContactJsonDbRequestHandler::handleContactRemoveResponse(QContactRemoveReq
 
 void QContactJsonDbRequestHandler::handleContactIdFetchResponse(QContactIdFetchRequest* req, QJsonDbRequest *jsonDbRequest)
 {
-    QList<QContactId> ids;
+    QList<QContactId>  ids = req->ids();
     QList<QJsonObject> jsonObjects = jsonDbRequest->takeResults();
     for (int i = 0; i < jsonObjects.size(); ++i) {
         QJsonObject object = jsonObjects.at(i);
         QString uuid = object.value(QContactJsonDbStr::uuid()).toString();
-        ids.append(convertUuidtoContactId(uuid));
+        ids.append(m_converter->uuidtoContactId(uuid, jsonDbRequest->partition()));
     }
     QContactManager::Error error = req->error();
     if (ids.isEmpty() || jsonObjects.isEmpty())
         error = QContactManager::DoesNotExistError;
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
-    m_requestMgr->removeRequest(req);
-    QContactManagerEngine::updateContactIdFetchRequest(req, ids, error, QContactAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
-}
 
-QString QContactJsonDbRequestHandler::convertContactIdToUuid(QContactId &id)
-{
-    return id.toString().remove(QContactJsonDbStr::managerName());
-}
-
-QContactId QContactJsonDbRequestHandler::convertUuidtoContactId(QString &id)
-{
-    return QContactId(new QContactJsonDbId(id));
-}
-
-void QContactJsonDbRequestHandler::onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error,
-                                                        QString message)
-{
-    // TODO handle the error when partition is supported
-    if (error!=QJsonDbWatcher::NoError)
-        qCritical()<<Q_FUNC_INFO<<"error"<<error<<"message"<<message;
+    if (m_requestMgr->isRequestCompleted(req)) {
+        QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
+        m_requestMgr->removeRequest(req);
+        QContactManagerEngine::updateContactIdFetchRequest(req, ids, error, QContactAbstractRequest::FinishedState);
+        if (waitCondition)
+            waitCondition->wakeAll();
+    } else {
+        QContactManagerEngine::updateContactIdFetchRequest(req, ids, error, QContactAbstractRequest::ActiveState);
+    }
 }
 
 bool QContactJsonDbRequestHandler::makeJsonDbRequest(QContactAbstractRequest *contactRequest,
                                                      QContactJsonDbRequestManager::RequestType jsonDbRequestType,
                                                      int index,
+                                                     const QString &partition,
                                                      const QString &query,
                                                      const QList<QJsonObject> &objects)
 {
@@ -762,8 +802,7 @@ bool QContactJsonDbRequestHandler::makeJsonDbRequest(QContactAbstractRequest *co
         break;
     }
 
-    request->setPartition(QContactJsonDbStr::defaultPartition());
-
+    request->setPartition(partition);
     connect(request, SIGNAL(error(QtJsonDb::QJsonDbRequest::ErrorCode,QString)),
             this, SLOT(onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode,
                                             QString)));
@@ -784,6 +823,31 @@ void QContactJsonDbRequestHandler::onJsonDbRequestFinished()
     if (request)
         handleResponse(request);
 }
+
+QContactJsonDbPartitionWatcher::QContactJsonDbPartitionWatcher(QContactJsonDbRequestHandler *requestHandler,
+                                                               QJsonDbWatcher *jsonDbWatcher,
+                                                               QContactAbstractRequest::StorageLocation storageLocation)
+    : QObject(requestHandler), m_requestHandler(requestHandler), m_jsonDbWatcher(jsonDbWatcher), m_storageLocation(storageLocation)
+{
+    connect(m_jsonDbWatcher, SIGNAL(error(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)),
+            this, SLOT(onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)));
+    connect(m_jsonDbWatcher, SIGNAL(notificationsAvailable(int)),
+            this, SLOT(onJsonDbWatcherNotificationsAvailable()));
+}
+
+void QContactJsonDbPartitionWatcher::onJsonDbWatcherNotificationsAvailable()
+{
+    m_requestHandler->onJsonDbWatcherNotificationsAvailable(m_jsonDbWatcher, m_storageLocation);
+}
+
+void QContactJsonDbPartitionWatcher::onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error,
+                                                          QString message)
+{
+    // TODO handle the error when partition is supported
+    if (error!=QJsonDbWatcher::NoError)
+        qCritical()<<Q_FUNC_INFO<<"error"<<error<<"message"<<message;
+}
+
 
 #include "moc_qcontactjsondbrequesthandler.cpp"
 

@@ -121,8 +121,11 @@ public:
     inline const static QString actionUpdate() { return QStringLiteral("update"); }
     inline const static QString actionRemove() { return QStringLiteral("remove"); }
 
+    // partition names
+    inline const static QString userDataPartition() { return QStringLiteral("com.nokia.mt.User"); }
+    inline const static QString systemPartition() { return QStringLiteral("com.nokia.mt.System"); }
+
     // Queries related
-    inline const static QString defaultPartition() { return QStringLiteral(""); }
     inline const static QString contactsJsonDbType() { return QStringLiteral("com.nokia.mt.contacts.Contact"); }
     inline const static QString contactsJsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.contacts.Contact\"]]"); }
     inline const static QString uuidSelectQuery() { return QStringLiteral("[={_uuid:_uuid}]"); }

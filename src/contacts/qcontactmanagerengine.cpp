@@ -1430,6 +1430,17 @@ void QContactManagerEngine::setContactRelationships(QContact* contact, const QLi
 
 
 /*!
+    Returns the engine ID from the given contact \a id.
+
+    The caller does not take ownership of the pointer, and should not delete returned id or undefined
+    behavior may occur.
+ */
+const QContactEngineId *QContactManagerEngine::engineId(const QContactId &contactId)
+{
+    return contactId.d.data();
+}
+
+/*!
   Compares two contacts (\a a and \a b) using the given list of \a sortOrders.  Returns a negative number if \a a should appear
   before \a b according to the sort order, a positive number if \a a should appear after \a b according to the sort order,
   and zero if the two are unable to be sorted.

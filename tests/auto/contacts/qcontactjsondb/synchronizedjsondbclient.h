@@ -46,25 +46,32 @@
 #include <QString>
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbrequest.h>
-
+#include <qcontactsglobal.h>
 #include "synchronizedworker.h"
+#include "qcontactjsondbstring.h"
 
 QT_USE_NAMESPACE_JSONDB
+
+QTCONTACTS_BEGIN_NAMESPACE
 
 class SynchronizedJsonDbClient
 {
 public:
     SynchronizedJsonDbClient();
     ~SynchronizedJsonDbClient();
-    QList<QJsonObject> query(const QString &query);
-    QList<QJsonObject> create(const QJsonObject &object);
-    QList<QJsonObject> update(const QJsonObject &object);
-    QList<QJsonObject> remove(const QJsonObject &object);
+
+    QList<QJsonObject> query(const QString &query, QString partition = QContactJsonDbStr::userDataPartition());
+    QList<QJsonObject> create(const QJsonObject &query, QString partition = QContactJsonDbStr::userDataPartition());
+    QList<QJsonObject> update(const QJsonObject &query, QString partition = QContactJsonDbStr::userDataPartition());
+    QList<QJsonObject> remove(const QJsonObject &query, QString partition = QContactJsonDbStr::userDataPartition());
+
 private:
     QList<QJsonObject> getResults(QJsonDbRequest *request);
 
     QJsonDbConnection *m_jsonDbConnection;
     SynchronizedWorker* m_worker;
 };
+
+QTCONTACTS_END_NAMESPACE
 
 #endif // SYNCHRONIZEDJSONDBCLIENT_H

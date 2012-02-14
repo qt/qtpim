@@ -42,18 +42,15 @@
 #include <QList>
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbconverter.h"
+#include "qcontactjsondbstring.h"
 
-QTCONTACTS_USE_NAMESPACE
+QTCONTACTS_BEGIN_NAMESPACE
 
 QContactJsonDbBackup::QContactJsonDbBackup()
 {
     m_dbClient = new SynchronizedJsonDbClient();
     backupJsonDb();
-    clearJsonDb();
 }
-
-
-
 
 
 QContactJsonDbBackup::~QContactJsonDbBackup()
@@ -61,7 +58,6 @@ QContactJsonDbBackup::~QContactJsonDbBackup()
     revertJsonDb();
     delete m_dbClient;
 }
-
 
 
 
@@ -133,64 +129,71 @@ bool QContactJsonDbBackup::loadTestData() {
     testContact.saveDetail(&phoneNumberDetail);
     saveList << testContact;
 
-    csr.setManager(QContactManager::fromUri(cm.managerUri()));
-    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
-    //csr.setContact(testContact);
+    csr.setManager(&cm);
     csr.setContacts(saveList);
     csr.start();
-    csr.waitForFinished();
-    csr.isFinished();
+    if (!csr.waitForFinished())
+        return false;
+    if (csr.error() != QContactManager::NoError)
+        return false;
 
-    QList<QContact> expected = csr.contacts();
     return true;
 }
 
 
 
 
-
-bool QContactJsonDbBackup::backupJsonDb() {
+void QContactJsonDbBackup::backupJsonDb()
+{
+    // Backup partitions for testing.
     QString query = "[?_type=\"com.nokia.mt.contacts.Contact\"]";
-    QList<QJsonObject> map = m_dbClient->query(query);
-    m_backupData = map;
-    return true;
+    m_backupDataSystem = m_dbClient->query(query, QContactJsonDbStr::systemPartition());
+    m_backupDataUser = m_dbClient->query(query, QContactJsonDbStr::userDataPartition());
 }
 
 
-
-
-
-bool QContactJsonDbBackup::clearJsonDb() {
-    return doRequest(m_backupData, false);
-}
-
-
-
-
-bool QContactJsonDbBackup::revertJsonDb() {
-    return doRequest(m_backupData, true);
+bool QContactJsonDbBackup::revertJsonDb()
+{
+    bool requestStatus = cleanJsonDb();
+    requestStatus = requestStatus && addContacts(m_backupDataSystem, QContactJsonDbStr::systemPartition());
+    requestStatus = requestStatus && addContacts(m_backupDataUser, QContactJsonDbStr::userDataPartition());
+    m_backupDataSystem.clear();
+    m_backupDataUser.clear();
+    return requestStatus;
 }
 
 
 bool QContactJsonDbBackup::cleanJsonDb()
 {
     QString query = "[?_type=\"com.nokia.mt.contacts.Contact\"]";
-    QList<QJsonObject> map = m_dbClient->query(query);
-    return doRequest(map, false);
+
+    QList<QJsonObject> map = m_dbClient->query(query, QContactJsonDbStr::systemPartition());
+    bool requestStatus = deleteContacts(map, QContactJsonDbStr::systemPartition());
+    map = m_dbClient->query(query, QContactJsonDbStr::userDataPartition());
+    requestStatus = requestStatus &&  deleteContacts(map, QContactJsonDbStr::userDataPartition());
+    return requestStatus;
 }
 
 
-bool QContactJsonDbBackup::doRequest(const QList<QJsonObject>  &objects, bool isInsert) {
-    QString query;
+bool QContactJsonDbBackup::addContacts(const QList<QJsonObject>  &objects, QString partition) {
+
+    QList<QJsonObject> map;
+    for (int i = 0; i < objects.size(); ++i) {
+        QJsonObject item;
+        item = objects[i];
+        map = m_dbClient->create(item, partition);
+    }
+    return true;
+}
+
+
+bool QContactJsonDbBackup::deleteContacts(const QList<QJsonObject>  &objects, QString partition) {
+
     QList<QJsonObject> map;
     for(int i = 0; i < objects.size(); ++i) {
         QJsonObject item;
         item = objects[i];
-        if(isInsert) {
-            map = m_dbClient->create(item);
-        } else {
-            map = m_dbClient->remove(item);
-        }
+        map = m_dbClient->remove(item, partition);
     }
     return true;
 }
@@ -209,3 +212,5 @@ int QContactJsonDbBackup::wasteSomeTime() {
     }
     return x;
 }
+
+QTCONTACTS_END_NAMESPACE

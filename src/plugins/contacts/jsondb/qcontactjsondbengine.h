@@ -72,13 +72,9 @@ class QContactJsonDbEngine : public QContactManagerEngine
 {
     Q_OBJECT
 
-    // XXX
 public:
-
-    // static JsonDbEngine *createJsonDbEngine(const QMap<QString, QString>& parameters); xxx organizer does this way, contacts not, check!
-
     ~QContactJsonDbEngine();
-    QContactJsonDbEngine();
+    QContactJsonDbEngine(const QMap<QString, QString> &parameters = (QMap<QString, QString>()));
     QContactJsonDbEngine& operator=(const QContactJsonDbEngine& other);
 
     QString managerName() const;

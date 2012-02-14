@@ -48,6 +48,11 @@ ContactsSavingTestCase {
     name: "ContactsJsonDbToModelNotificationE2ETests"
     id: contactsJsonDbToModelNotificationE2ETests
 
+    ContactsJsonDbPartitions {
+        id: jsonDbPartitions
+    }
+    property string jsonDbPartitionForDefaultStorageLocation: jsonDbPartitions.userPartition.name
+
     property ContactModel model
 
     function createModel() {
@@ -485,6 +490,7 @@ ContactsSavingTestCase {
 
     ContactsJsonDbTestHelper {
         id: jsonDbTestHelper
+        partition: contactsJsonDbToModelNotificationE2ETests.jsonDbPartitionForDefaultStorageLocation
     }
 
     function createContactToJsonDb(contact) {
@@ -515,10 +521,5 @@ ContactsSavingTestCase {
             compare(actual.email.emailAddress, expected.email.emailAddress,
                     'email.emailAddress');
         }
-    }
-
-    function convertContactIdTojsonUuid(contactId) {
-        var jsonUuid = contactId.replace("qtcontacts:jsondb::","");
-        return jsonUuid;
     }
 }

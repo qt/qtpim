@@ -84,7 +84,8 @@ QContactJsonDbConverter::~QContactJsonDbConverter()
 {
 }
 
-bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine) {
+bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine, const QString &partitionName) {
+    Q_UNUSED(engine)
     QList<QContactDetail*> detailList;
     QJsonObject temporaryJsonObject;
     QString stringValue;
@@ -93,7 +94,10 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
     if (stringValue.isEmpty()) {
         return false;
     }
-    contact->setId(QContactId(new QContactJsonDbId(stringValue)));
+
+    QContactAbstractRequest::StorageLocation storageLocation;
+    storageLocation = storageLocationMapping.key(partitionName);
+    contact->setId(QContactId(new QContactJsonDbId(stringValue, storageLocation)));
 
     // TODO: other types
     contact->setType(QContactType::TypeContact);
@@ -401,10 +405,9 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
     QJsonArray addresses;
     QJsonObject embeddedDetailsObject;
 
-    if (!contact.id().isNull()) {
-        QString jsonUuid = contact.id().toString().remove (QContactJsonDbStr::managerName());
-        object->insert (QContactJsonDbStr::uuid(), jsonUuid);
-    }
+    if (!contact.id().isNull())
+        object->insert (QContactJsonDbStr::uuid(), contactIdToUuid(contact.id()));
+
     // get all available contact details.
     object->insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
 
@@ -886,11 +889,13 @@ bool QContactJsonDbConverter::idFilterToJsondbQuery(const QContactFilter &filter
         newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() +
                               " in [");
         foreach (const QContactId &id, ids) {
-            newJsonDbQuery.append("\"" + convertId(id) + "\"");
+            newJsonDbQuery.append("\"" + contactIdToUuid(id) + "\"");
             newJsonDbQuery.append(",");
         }
         newJsonDbQuery.chop(1);
         newJsonDbQuery.append("]]");
+    } else {
+        newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() + " in []]");
     }
     return true;
 }
@@ -922,12 +927,21 @@ QString QContactJsonDbConverter::convertSortOrder(const QList<QContactSortOrder>
     return newJsonDbQuery;
 }
 
-QString QContactJsonDbConverter::convertId(const QContactId &id) const
+QString QContactJsonDbConverter::contactIdToUuid(const QContactId &id) const
 {
     if (id.isNull())
         return QString();
+    const QContactJsonDbId *jsonDbId =
+            static_cast<const QContactJsonDbId *>(QContactManagerEngine::engineId(id));
+    return jsonDbId->uuid().toString();
+}
 
-    return id.toString().remove(QContactJsonDbStr::managerName());
+QContactId QContactJsonDbConverter::uuidtoContactId(QString &uuid, const QString &partitionName) const
+{
+    QContactAbstractRequest::StorageLocation storageLocation;
+    storageLocation = storageLocationMapping.key(partitionName);
+    QContactJsonDbId *jsonId = new QContactJsonDbId(uuid, storageLocation);
+    return QContactId(jsonId);
 }
 
 void QContactJsonDbConverter::initializeMappings()
@@ -977,13 +991,15 @@ void QContactJsonDbConverter::initializeMappings()
     contextsToJsonMapping.insert(QContactDetail::ContextHome, QContactJsonDbStr::contextHome());
     contextsToJsonMapping.insert(QContactDetail::ContextWork, QContactJsonDbStr::contextWork());
     contextsToJsonMapping.insert(QContactDetail::ContextOther, QContactJsonDbStr::contextOther());
+    storageLocationMapping.insert(QContactAbstractRequest::UserDataStorage, QContactJsonDbStr::userDataPartition());
+    storageLocationMapping.insert(QContactAbstractRequest::SystemStorage, QContactJsonDbStr::systemPartition());
     //TODO: FINISH THE MAPPING(S)
     //MISSING DETAILS / FIELDS (TO BE ADDED ALSO TO PARSING LOGIC):
     // - QContactTimestamp
     // - QContactOnlineAccount
 }
 
-bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error)
+bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error, const QString &partitionName)
 {//TODO: ERROR HANDLING
     if (jsonObjects.isEmpty()) {
         error = QContactManager::DoesNotExistError;
@@ -991,7 +1007,7 @@ bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects,
     }
     for (int i = 0; i < jsonObjects.size(); i++) {
         QContact contact;
-        if (this->toQContact(jsonObjects.at(i), &contact, engine)) {
+        if (this->toQContact(jsonObjects.at(i), &contact, engine, partitionName)) {
             convertedContacts.append(contact);
         }
     }
@@ -1026,13 +1042,13 @@ QDateTime QContactJsonDbConverter::toContactDate(const QString &dateString) cons
     return date;
 }
 
-QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QJsonObject &object) const
+QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QJsonObject &object, QContactAbstractRequest::StorageLocation storageLocation) const
 {
     QString jsonUuid = object.value(QContactJsonDbStr::uuid()).toString();
     if (jsonUuid.isEmpty())
         return QContactId();
     else
-        return QContactId(new QContactJsonDbId(jsonUuid));
+        return QContactId(new QContactJsonDbId(jsonUuid, storageLocation));
 }
 
 void QContactJsonDbConverter::jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const
@@ -1110,6 +1126,19 @@ bool QContactJsonDbConverter::sanitizePhoneNumberString(QString *phoneNumberStri
     } else {
         return false;
     }
+}
+
+const QStringList QContactJsonDbConverter::storageLocationsToPartitionNames(
+        QContactAbstractRequest::StorageLocations storageLocations)
+{
+    QStringList partitionNames;
+
+    if (QContactAbstractRequest::UserDataStorage & storageLocations)
+        partitionNames.append(storageLocationMapping[QContactAbstractRequest::UserDataStorage]);
+    if (QContactAbstractRequest::SystemStorage & storageLocations)
+        partitionNames.append(storageLocationMapping[QContactAbstractRequest::SystemStorage]);
+
+    return partitionNames;
 }
 
 QTCONTACTS_END_NAMESPACE

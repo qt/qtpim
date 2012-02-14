@@ -47,6 +47,7 @@
 #include <QMap>
 
 #include <QtJsonDb/qjsondbconnection.h>
+#include <QJsonDbRequest>
 
 QT_USE_NAMESPACE_JSONDB
 
@@ -59,6 +60,7 @@ public:
 
 public slots:
     void onJsonDbRequestFinished();
+    void onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode requestError, QString message);
     void onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode connectionError, const QString &message);
 
 signals:

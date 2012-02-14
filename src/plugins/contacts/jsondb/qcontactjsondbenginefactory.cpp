@@ -46,20 +46,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 QContactManagerEngine* QContactJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
-    Q_UNUSED(parameters);
     Q_UNUSED(error);
 
-    return new QContactJsonDbEngine(); //Manager engine will take ownership of this object.
+    return new QContactJsonDbEngine(parameters); //Manager engine will take ownership of this object.
 }
 
 
-QContactEngineId *QContactJsonDbEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &idString) const
+QContactEngineId *QContactJsonDbEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
 {
     Q_UNUSED(parameters)
-    QContactJsonDbId *retn = new QContactJsonDbId;
-    if (!idString.isEmpty())
-        retn->setContactId(idString);
-    return retn;
+    return new QContactJsonDbId(engineIdString);
 }
 
 QString QContactJsonDbEngineFactory::managerName() const

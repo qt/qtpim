@@ -46,7 +46,6 @@
 #include <QSharedDataPointer>
 
 #include <qcontactsglobal.h>
-#include <qcontactengineid.h>
 
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
@@ -63,6 +62,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QContactId;
 Q_CONTACTS_EXPORT uint qHash(const QContactId &key);
 
+class QContactEngineId;
 class QContactManagerEngine;
 
 class Q_CONTACTS_EXPORT QContactId

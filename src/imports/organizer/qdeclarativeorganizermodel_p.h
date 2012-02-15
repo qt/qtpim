@@ -82,12 +82,30 @@ class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativ
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
+    Q_ENUMS(ExportError)
+    Q_ENUMS(ImportError)
     Q_INTERFACES(QDeclarativeParserStatus)
 public:
     enum {
         OrganizerItemRole = Qt::UserRole + 500
     };
 
+    enum ExportError {
+        ExportNoError          = QVersitWriter::NoError,
+        ExportUnspecifiedError = QVersitWriter::UnspecifiedError,
+        ExportIOError          = QVersitWriter::IOError,
+        ExportOutOfMemoryError = QVersitWriter::OutOfMemoryError,
+        ExportNotReadyError    = QVersitWriter::NotReadyError
+    };
+
+    enum ImportError {
+        ImportNoError          = QVersitReader::NoError,
+        ImportUnspecifiedError = QVersitReader::UnspecifiedError,
+        ImportIOError          = QVersitReader::IOError,
+        ImportOutOfMemoryError = QVersitReader::OutOfMemoryError,
+        ImportNotReadyError    = QVersitReader::NotReadyError,
+        ImportParseError       = QVersitReader::ParseError
+    };
 
     explicit QDeclarativeOrganizerModel(QObject *parent = 0);
     explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = 0);
@@ -140,6 +158,10 @@ public:
     Q_INVOKABLE QStringList itemIds(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime());
     Q_INVOKABLE QDeclarativeOrganizerCollection* defaultCollection();
     Q_INVOKABLE QDeclarativeOrganizerCollection* collection(const QString& collectionId);
+
+    Q_INVOKABLE void importItems(const QUrl& url, const QStringList& profiles = QStringList());
+    Q_INVOKABLE void exportItems(const QUrl& url, const QStringList& profiles = QStringList());
+
     bool autoUpdate() const;
     void setAutoUpdate(bool autoUpdate);
 
@@ -160,12 +182,12 @@ signals:
     void autoUpdateChanged();
     void collectionsChanged();
     void itemsFetched(int requestId, const QVariantList &fetchedItems);
+    void exportCompleted(ExportError error, QUrl url);
+    void importCompleted(ImportError error, QUrl url);
 
 public slots:
     void update();
     void cancelUpdate();
-    void exportItems(const QUrl& url, const QStringList& profiles=QStringList());
-    void importItems(const QUrl& url, const QStringList& profiles=QStringList());
 
 private slots:
     void doUpdate();

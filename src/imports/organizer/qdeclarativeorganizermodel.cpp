@@ -47,9 +47,11 @@
 #include <qversitorganizerexporter.h>
 #include "qdeclarativeorganizercollection_p.h"
 #include <QFile>
+#include <QUrl>
 
 #include <qorganizeritemrequests.h>
 #include <QtCore/qmath.h>
+
 
 QTVERSITORGANIZER_USE_NAMESPACE
 
@@ -138,6 +140,8 @@ public:
 
     QAtomicInt m_lastRequestId;
     QHash<QOrganizerAbstractRequest *, int> m_requestIdHash;
+    QUrl m_lastExportUrl;
+    QUrl m_lastImportUrl;
 };
 
 /*!
@@ -352,21 +356,40 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   \qmlmethod OrganizerModel::importItems(url url, list<string> profiles)
 
   Import organizer items from a vcalendar by the given \a url and optional \a profiles.
+  Only one import operation can be active at a time.
  */
 void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList &profiles)
 {
     Q_D(QDeclarativeOrganizerModel);
-    d->m_importProfiles = profiles;
-    //TODO: need to allow download vcard from network
-    QFile *file = new QFile(urlToLocalFileName(url));
-    if (file->open(QIODevice::ReadOnly)) {
-        if (!d->m_reader) {
-            d->m_reader = new QVersitReader;
-            connect(d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
+
+    ImportError importError = ImportNotReadyError;
+
+    // Reader is capable of handling only one request at the time.
+  if (!d->m_reader || (d->m_reader->state() != QVersitReader::ActiveState)) {
+
+        d->m_importProfiles = profiles;
+
+        //TODO: need to allow download vcard from network
+        QFile *file = new QFile(urlToLocalFileName(url));
+        if (file->open(QIODevice::ReadOnly)) {
+            if (!d->m_reader) {
+                d->m_reader = new QVersitReader;
+                connect(d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
+            }
+
+            d->m_reader->setDevice(file);
+            if (d->m_reader->startReading()) {
+                d->m_lastImportUrl = url;
+                return;
+            }
+            importError = QDeclarativeOrganizerModel::ImportError(d->m_reader->error());
+        } else {
+            importError = ImportIOError;
         }
-        d->m_reader->setDevice(file);
-        d->m_reader->startReading();
-    }
+  }
+
+    // If cannot startReading because already running then report the import error now
+    emit importCompleted(importError, url);
 }
 
 /*!
@@ -377,30 +400,44 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList 
 void QDeclarativeOrganizerModel::exportItems(const QUrl &url, const QStringList &profiles)
 {
     Q_D(QDeclarativeOrganizerModel);
-    QString profile = profiles.isEmpty() ? QString() : profiles.at(0);
+    ExportError exportError = ExportNotReadyError;
 
-    QVersitOrganizerExporter exporter(profile);
-    QList<QOrganizerItem> items;
-    foreach (QDeclarativeOrganizerItem *di, d->m_items)
-        items.append(di->item());
+    // Writer is capable of handling only one request at the time.
+    if (!d->m_writer || (d->m_writer->state() != QVersitWriter::ActiveState)) {
 
-    exporter.exportItems(items, QVersitDocument::VCard30Type);
-    QVersitDocument document = exporter.document();
-    QFile *file = new QFile(urlToLocalFileName(url));
-    if (file->open(QIODevice::ReadWrite)) {
-        if (!d->m_writer) {
-            d->m_writer = new QVersitWriter;
-            connect(d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(itemsExported(QVersitWriter::State)));
+        QString profile = profiles.isEmpty() ? QString() : profiles.at(0);
+
+        QVersitOrganizerExporter exporter(profile);
+        QList<QOrganizerItem> items;
+        foreach (QDeclarativeOrganizerItem *di, d->m_items)
+            items.append(di->item());
+
+        exporter.exportItems(items, QVersitDocument::VCard30Type);
+        QVersitDocument document = exporter.document();
+        QFile *file = new QFile(urlToLocalFileName(url));
+        if (file->open(QIODevice::ReadWrite)) {
+            if (!d->m_writer) {
+                d->m_writer = new QVersitWriter;
+                connect(d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(itemsExported(QVersitWriter::State)));
+            }
+            d->m_writer->setDevice(file);
+            if (d->m_writer->startWriting(document)) {
+                d->m_lastExportUrl = url;
+                return;
+            }
+            exportError = QDeclarativeOrganizerModel::ExportError(d->m_writer->error());
+        } else {
+            exportError = ExportIOError;
         }
-        d->m_writer->setDevice(file);
-        d->m_writer->startWriting(document);
     }
+    emit exportCompleted(exportError, url);
 }
 
 void QDeclarativeOrganizerModel::itemsExported(QVersitWriter::State state)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (state == QVersitWriter::FinishedState || state == QVersitWriter::CanceledState) {
+         emit exportCompleted(QDeclarativeOrganizerModel::ExportError(d->m_writer->error()), d->m_lastExportUrl);
          delete d->m_writer->device();
          d->m_writer->setDevice(0);
     }
@@ -591,7 +628,6 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
     if (state == QVersitReader::FinishedState || state == QVersitReader::CanceledState) {
         if (!d->m_reader->results().isEmpty()) {
             QVersitOrganizerImporter importer;
-
             importer.importDocument(d->m_reader->results().at(0));
             QList<QOrganizerItem> items = importer.items();
             delete d->m_reader->device();
@@ -608,6 +644,7 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
                 }
             }
         }
+        emit importCompleted(QDeclarativeOrganizerModel::ImportError(d->m_reader->error()), d->m_lastImportUrl);
     }
 }
 

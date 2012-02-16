@@ -54,16 +54,26 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactAnniversary : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAnniversary, "Anniversary")
-    const static QString FieldCalendarId;
-    const static QString FieldOriginalDate;
-    const static QString FieldEvent;
-    const static QString FieldSubType;
-    const static QString SubTypeWedding;
-    const static QString SubTypeEngagement;
-    const static QString SubTypeHouse;
-    const static QString SubTypeEmployment;
-    const static QString SubTypeMemorial;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAnniversary)
+#else
+    static const DetailType Type;
+#endif
+
+    enum AnniversaryField {
+        FieldCalendarId = 0,
+        FieldOriginalDate,
+        FieldEvent,
+        FieldSubType
+    };
+
+    enum SubType {
+        SubTypeWedding = 0,
+        SubTypeEngagement,
+        SubTypeHouse,
+        SubTypeEmployment,
+        SubTypeMemorial
+    };
 
     void setOriginalDate(const QDate& date) {setValue(FieldOriginalDate, date);}
     QDate originalDate() const {return value<QDate>(FieldOriginalDate);}
@@ -75,8 +85,8 @@ public:
     void setEvent(const QString& event) {setValue(FieldEvent, event);}
     QString event() const {return value(FieldEvent).toString();}
 
-    void setSubType(const QString& subType) {setValue(FieldSubType, subType);}
-    QString subType() const {return value(FieldSubType).toString();}
+    void setSubType(const QContactAnniversary::SubType &subType) {setValue(FieldSubType, static_cast<int>(subType));}
+    QContactAnniversary::SubType subType() const {return static_cast<QContactAnniversary::SubType>(value<int>(FieldSubType));}
 };
 
 QTCONTACTS_END_NAMESPACE

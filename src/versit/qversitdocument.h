@@ -43,7 +43,6 @@
 #define QVERSITDOCUMENT_H
 
 #include <qversitglobal.h>
-
 #include <QList>
 #include <QSharedDataPointer>
 #include <QVariant>

@@ -67,7 +67,7 @@ QDeclarativeContactSortOrder::QDeclarativeContactSortOrder(QObject* parent)
 
   \sa ContactDetail::type
   */
-void QDeclarativeContactSortOrder::setDetail(const QVariant& detailType)
+void QDeclarativeContactSortOrder::setDetail(const int detailType)
 {
     if (m_detail != detailType) {
         m_detail = detailType;
@@ -76,7 +76,7 @@ void QDeclarativeContactSortOrder::setDetail(const QVariant& detailType)
 
 }
 
-QVariant QDeclarativeContactSortOrder::detail() const
+int QDeclarativeContactSortOrder::detail() const
 {
     return m_detail;
 }
@@ -86,7 +86,7 @@ QVariant QDeclarativeContactSortOrder::detail() const
   This property holds the detail field type of the details which will be inspected to perform sorting.
   For each detail elements, there are predefined field types.
   */
-void QDeclarativeContactSortOrder::setField(const QVariant& fieldType)
+void QDeclarativeContactSortOrder::setField(const int fieldType)
 {
     if (m_field != fieldType) {
         m_field = fieldType;
@@ -94,7 +94,7 @@ void QDeclarativeContactSortOrder::setField(const QVariant& fieldType)
     }
 }
 
-QVariant QDeclarativeContactSortOrder::field() const
+int QDeclarativeContactSortOrder::field() const
 {
     return m_field;
 }
@@ -167,32 +167,15 @@ void QDeclarativeContactSortOrder::componentComplete()
 
 QContactSortOrder QDeclarativeContactSortOrder::sortOrder()
 {
-    QString ddn;
-    if (m_detail.type() != QVariant::String) {
-        ddn = QDeclarativeContactDetail::definitionName(static_cast<QDeclarativeContactDetail::ContactDetailType>(m_detail.toInt()));
-    } else {
-        ddn = m_detail.toString();
-    }
-
-    QString dfn;
-    if (m_field.type() != QVariant::String) {
-       QDeclarativeContactDetail::ContactDetailType dt = QDeclarativeContactDetail::detailType(ddn);
-       dfn = QDeclarativeContactDetail::fieldName(dt, m_field.toInt());
-    } else {
-        dfn = m_field.toString();
-    }
-
-    m_sortOrder.setDetailDefinitionName(ddn, dfn);
-    m_detail = ddn;
-    m_field = dfn;
+    m_sortOrder.setDetailType(static_cast<QContactDetail::DetailType>(m_detail), m_field);
     return m_sortOrder;
 }
 
 void QDeclarativeContactSortOrder::setSortOrder(const QContactSortOrder& sortOrder)
 {
     m_sortOrder = sortOrder;
-    m_field = sortOrder.detailFieldName();
-    m_detail = sortOrder.detailDefinitionName();
+    m_field = sortOrder.detailField();
+    m_detail = sortOrder.detailType();
     emit sortOrderChanged();
 }
 

@@ -242,8 +242,8 @@ QList<QContactId> QContactManagerEngine::contactIds(const QContactFilter& filter
   action preferences in the matching contacts will be returned.
 
   If a non-default fetch hint is supplied, and the client wishes to make changes to the contacts,
-  they should ensure that only a detail definition hint is supplied and that when saving it back, a
-  definition mask should be used which corresponds to the detail definition hint.  This is to ensure
+  they should ensure that only a detail type hint is supplied and that when saving it back, a
+  type mask should be used which corresponds to the detail type hint.  This is to ensure
   that no data is lost by overwriting an existing contact with a restricted version of it.
 
   \sa QContactFetchHint
@@ -440,10 +440,9 @@ QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, 
 {
     // synthesize the display name from the name of the contact, or, failing that, the organisation of the contact.
     *error = QContactManager::NoError;
-    QList<QContactDetail> allNames = contact.details(QContactName::DefinitionName);
+    QList<QContactDetail> allNames = contact.details(QContactName::Type);
 
     const QLatin1String space(" ");
-
     // synthesize the display label from the name.
     for (int i=0; i < allNames.size(); i++) {
         const QContactName& name = allNames.at(i);
@@ -488,7 +487,7 @@ QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, 
     }
 
     /* Well, we had no non empty names. if we have orgs, fall back to those */
-    QList<QContactDetail> allOrgs = contact.details(QContactOrganization::DefinitionName);
+    QList<QContactDetail> allOrgs = contact.details(QContactOrganization::Type);
     for (int i=0; i < allOrgs.size(); i++) {
         const QContactOrganization& org = allOrgs.at(i);
         if (!org.name().isEmpty()) {
@@ -513,7 +512,7 @@ void QContactManagerEngine::setContactDisplayLabel(QContact* contact, const QStr
 /*!
   Returns true if the given \a feature is supported by this engine for contacts of the given \a contactType
  */
-bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const
+bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const
 {
     Q_UNUSED(feature);
     Q_UNUSED(contactType);
@@ -538,7 +537,7 @@ bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, 
    \o An empty QContactUnionFilter will be replaced with a QContactInvalidFilter
    \o An empty QContactIdFilter will be replaced with a QContactInvalidFilter
    \o An intersection or union filter with a single entry will be replaced by that entry
-   \o A QContactDetailFilter or QContactDetailRangeFilter with no definition name will be replaced with a QContactInvalidFilter
+   \o A QContactDetailFilter or QContactDetailRangeFilter with no detail type will be replaced with a QContactInvalidFilter
    \o A QContactDetailRangeFilter with no range specified will be converted to a QContactDetailFilter
   \endlist
 */
@@ -642,14 +641,14 @@ QContactFilter QContactManagerEngine::canonicalizedFilter(const QContactFilter &
         case QContactFilter::ContactDetailRangeFilter:
         {
             QContactDetailRangeFilter f(filter);
-            if (f.detailDefinitionName().isEmpty())
+            if (f.detailType() == QContactDetail::TypeUndefined)
                 return QContactInvalidFilter();
             if (f.minValue() == f.maxValue()
                 && f.rangeFlags() == (QContactDetailRangeFilter::ExcludeLower | QContactDetailRangeFilter::ExcludeUpper))
                 return QContactInvalidFilter();
             if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
                 QContactDetailFilter df;
-                df.setDetailDefinitionName(f.detailDefinitionName(), f.detailFieldName());
+                df.setDetailType(f.detailType(), f.detailField());
                 df.setMatchFlags(f.matchFlags());
                 df.setValue(f.minValue());
                 return df;
@@ -660,7 +659,7 @@ QContactFilter QContactManagerEngine::canonicalizedFilter(const QContactFilter &
         case QContactFilter::ContactDetailFilter:
         {
             QContactDetailFilter f(filter);
-            if (f.detailDefinitionName().isEmpty())
+            if (f.detailType() == QContactDetail::TypeUndefined)
                 return QContactInvalidFilter();
         }
         break; // fall through to return at end
@@ -701,7 +700,7 @@ QList<QVariant::Type> QContactManagerEngine::supportedDataTypes() const
   in the relationship).  In this case, it will still return true.  It will only return false
   if the relationship is entirely unsupported for the given type of contact.
  */
-bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType) const
+bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relationshipType, const QContactType::TypeValues  contactType) const
 {
     Q_UNUSED(relationshipType);
     Q_UNUSED(contactType);
@@ -712,13 +711,15 @@ bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relations
 /*!
   Returns the list of contact types which are supported by this engine.
   This is a convenience function, equivalent to retrieving the allowable values
-  for the \c QContactType::FieldType field of the QContactType definition
+  for the \c QContactType::FieldType field of the QContactType detail
   which is valid in this engine.
  */
-QStringList QContactManagerEngine::supportedContactTypes() const
+QList<QContactType::TypeValues> QContactManagerEngine::supportedContactTypes() const
 {
-    return QStringList() << QContactType::TypeContact
-                         << QContactType::TypeGroup;
+    QList<QContactType::TypeValues> list;
+    list << QContactType::TypeContact
+         << QContactType::TypeGroup;
+    return list;
 }
 
 /*!
@@ -730,39 +731,39 @@ QStringList QContactManagerEngine::supportedContactTypes() const
 /*!
   Returns the list of contact detail types which are supported by this engine.
  */
-QStringList QContactManagerEngine::supportedContactDetailTypes() const
+QList<QContactDetail::DetailType> QContactManagerEngine::supportedContactDetailTypes() const
 {
-    QStringList supportedDetails;
-    supportedDetails << QContactAddress::DefinitionName
-                     << QContactAnniversary::DefinitionName
-                     << QContactAvatar::DefinitionName
-                     << QContactBirthday::DefinitionName
-                     << QContactDisplayLabel::DefinitionName
-                     << QContactEmailAddress::DefinitionName
-                     << QContactExtendedDetail::DefinitionName
-                     << QContactFamily::DefinitionName
-                     << QContactFavorite::DefinitionName
-                     << QContactGender::DefinitionName
-                     << QContactGeoLocation::DefinitionName
-                     << QContactGlobalPresence::DefinitionName
-                     << QContactGuid::DefinitionName
-                     << QContactHobby::DefinitionName
-                     << QContactName::DefinitionName
-                     << QContactNickname::DefinitionName
-                     << QContactNote::DefinitionName
-                     << QContactOnlineAccount::DefinitionName
-                     << QContactOrganization::DefinitionName
-                     << QContactPersonId::DefinitionName
-                     << QContactPhoneNumber::DefinitionName
-                     << QContactPresence::DefinitionName
-                     << QContactRingtone::DefinitionName
-                     << QContactSyncTarget::DefinitionName
-                     << QContactTag::DefinitionName
-                     << QContactThumbnail::DefinitionName
-                     << QContactTimestamp::DefinitionName
-                     << QContactType::DefinitionName
-                     << QContactUrl::DefinitionName
-                     << QContactVersion::DefinitionName;
+    QList<QContactDetail::DetailType> supportedDetails;
+    supportedDetails << QContactAddress::Type
+                     << QContactAnniversary::Type
+                     << QContactAvatar::Type
+                     << QContactBirthday::Type
+                     << QContactDisplayLabel::Type
+                     << QContactEmailAddress::Type
+                     << QContactExtendedDetail::Type
+                     << QContactFamily::Type
+                     << QContactFavorite::Type
+                     << QContactGender::Type
+                     << QContactGeoLocation::Type
+                     << QContactGlobalPresence::Type
+                     << QContactGuid::Type
+                     << QContactHobby::Type
+                     << QContactName::Type
+                     << QContactNickname::Type
+                     << QContactNote::Type
+                     << QContactOnlineAccount::Type
+                     << QContactOrganization::Type
+                     << QContactPersonId::Type
+                     << QContactPhoneNumber::Type
+                     << QContactPresence::Type
+                     << QContactRingtone::Type
+                     << QContactSyncTarget::Type
+                     << QContactTag::Type
+                     << QContactThumbnail::Type
+                     << QContactTimestamp::Type
+                     << QContactType::Type
+                     << QContactUrl::Type
+                     << QContactVersion::Type;
     return supportedDetails;
 }
 
@@ -797,7 +798,7 @@ bool QContactManagerEngine::validateContact(const QContact &contact, QContactMan
     for (int i=0; i<contactDetailList.count(); i++)
     {
         QContactDetail currentDetail = contactDetailList.value(i);
-        if (!supportedContactDetailTypes().contains(currentDetail.definitionName()))
+        if (!supportedContactDetailTypes().contains(currentDetail.type()))
         {
             *error = QContactManager::InvalidDetailError;
             return false;
@@ -1135,18 +1136,18 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
         case QContactFilter::ContactDetailFilter:
             {
                 const QContactDetailFilter cdf(filter);
-                if (cdf.detailDefinitionName().isEmpty())
+                if (cdf.detailType() == QContactDetail::TypeUndefined)
                     return false;
 
                 /* See if this contact has one of these details in it */
-                const QList<QContactDetail>& details = contact.details(cdf.detailDefinitionName());
+                const QList<QContactDetail>& details = contact.details(cdf.detailType());
 
                 if (details.count() == 0)
                     return false; /* can't match */
 
                 /* See if we need to check the values */
-                if (cdf.detailFieldName().isEmpty())
-                    return true;  /* just testing for the presence of a detail of the specified definition */
+                if (cdf.detailField() == -1)
+                    return true;  /* just testing for the presence of a detail of the specified type */
 
                 /* Now figure out what tests we are doing */
                 const bool valueTest = cdf.value().isValid();
@@ -1158,7 +1159,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                         const QContactDetail& detail = details.at(j);
 
                         /* Check that the field is present and has a non-empty value */
-                        if (detail.values().contains(cdf.detailFieldName()) && !detail.value(cdf.detailFieldName()).isNull())
+                        if (detail.values().contains(cdf.detailField()) && !detail.value(cdf.detailField()).isNull())
                             return true;
                     }
                     return false;
@@ -1185,7 +1186,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Look at every detail in the set of details and compare */
                     for (int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& valueString = detail.value(cdf.detailFieldName()).toString();
+                        const QString& valueString = detail.value(cdf.detailField()).toString();
                         QString preprocessedValueString;
                         for (int i = 0; i < valueString.size(); i++) {
                             QChar current = valueString.at(i).toLower();
@@ -1222,7 +1223,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Look at every detail in the set of details and compare */
                     for (int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& valueString = detail.value(cdf.detailFieldName()).toString().toLower();
+                        const QString& valueString = detail.value(cdf.detailField()).toString().toLower();
 
                         // preprocess the valueString
                         QString preprocessedValue;
@@ -1271,7 +1272,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Value equality test */
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QString& var = detail.value(cdf.detailFieldName()).toString();
+                        const QString& var = detail.value(cdf.detailField()).toString();
                         const QString& needle = cdf.value().toString();
                         if (matchStarts && var.startsWith(needle, cs))
                             return true;
@@ -1288,7 +1289,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Value equality test */
                     for(int j = 0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QVariant& var = detail.value(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailField());
                         if (!var.isNull() && compareVariant(var, cdf.value(), cs) == 0)
                             return true;
                     }
@@ -1301,24 +1302,24 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                 /* The only supported flags are: MatchExactly, MatchFixedString, MatchCaseSensitive */
 
                 const QContactDetailRangeFilter cdf(filter);
-                if (cdf.detailDefinitionName().isEmpty())
+                if (cdf.detailType() == QContactDetail::TypeUndefined)
                     return false; /* we do not know which field to check */
 
                 /* See if this contact has one of these details in it */
-                const QList<QContactDetail>& details = contact.details(cdf.detailDefinitionName());
+                const QList<QContactDetail>& details = contact.details(cdf.detailType());
 
                 if (details.count() == 0)
                     return false; /* can't match */
 
                 /* Check for a detail presence test */
-                if (cdf.detailFieldName().isEmpty())
+                if (cdf.detailField() == -1)
                     return true;
 
                 /* See if this is a field presence test */
                 if (!cdf.minValue().isValid() && !cdf.maxValue().isValid()) {
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        if (detail.values().contains(cdf.detailFieldName()))
+                        if (detail.values().contains(cdf.detailField()))
                             return true;
                     }
                     return false;
@@ -1344,9 +1345,9 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                         const QContactDetail& detail = details.at(j);
 
                         // The detail has to have a field of this type in order to be compared.
-                        if (!detail.value(cdf.detailFieldName()).isValid())
+                        if (!detail.value(cdf.detailField()).isValid())
                             continue;
-                        const QString& var = detail.value(cdf.detailFieldName()).toString();
+                        const QString& var = detail.value(cdf.detailField()).toString();
                         if (testMin && compareStrings(var, minVal, cs) < minComp)
                             continue;
                         if (testMax && compareStrings(var, maxVal, cs) >= maxComp)
@@ -1361,7 +1362,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     /* Nope, testing the values as a variant */
                     for(int j=0; j < details.count(); j++) {
                         const QContactDetail& detail = details.at(j);
-                        const QVariant& var = detail.value(cdf.detailFieldName());
+                        const QVariant& var = detail.value(cdf.detailField());
 
                         // The detail has to have a field of this type in order to be compared.
                         if (!var.isValid())
@@ -1422,7 +1423,7 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                 QContactChangeLogFilter ccf(filter);
 
                 // See what we can do...
-                QContactTimestamp ts = contact.detail(QContactTimestamp::DefinitionName);
+                QContactTimestamp ts = contact.detail(QContactTimestamp::Type);
 
                 // See if timestamps are even supported
                 if (ts.isEmpty())
@@ -1548,8 +1549,8 @@ int QContactManagerEngine::compareContact(const QContact& a, const QContact& b, 
             break;
 
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
-        const QVariant& bVal = b.detail(sortOrder.detailDefinitionName()).value(sortOrder.detailFieldName());
+        const QVariant& aVal = a.detail(sortOrder.detailType()).value(sortOrder.detailField());
+        const QVariant& bVal = b.detail(sortOrder.detailType()).value(sortOrder.detailField());
 
         bool aIsNull = false;
         bool bIsNull = false;
@@ -1934,8 +1935,8 @@ QList<QContact> QContactManagerEngineV2::contacts(const QContactFilter& filter, 
 /*!
   For each contact in \a contacts, either add it to the database or update an existing one.
 
-  This function accepts a \a definitionMask, which specifies which details of the contacts should be
-  updated.  Details with definition names not included in the definitionMask will not be updated
+  This function accepts a \a typeMask, which specifies which details of the contacts should be
+  updated.  Details with types not included in the typeMask will not be updated
   or added.
 
   The manager should populate \a errorMap (the map of indices of the \a contacts list to the error
@@ -1954,10 +1955,10 @@ QList<QContact> QContactManagerEngineV2::contacts(const QContactFilter& filter, 
 
   Any errors encountered during this operation should be stored to \a error.
  */
-bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStringList &definitionMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error)
+bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QList<QContactDetail::DetailType> &typeMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error)
 {
     // TODO should the default implementation do the right thing, or return false?
-    if (definitionMask.isEmpty()) {
+    if (typeMask.isEmpty()) {
         // Non partial, just pass it on
         return saveContacts(contacts, errorMap, error);
     } else {
@@ -1966,7 +1967,7 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
 
         // Need to:
         // 1) fetch existing contacts
-        // 2) strip out details in definitionMask for existing contacts
+        // 2) strip out details in typeMask for existing contacts
         // 3) copy the details from the passed in list for existing contacts
         // 4) for any new contacts, copy the masked details to a blank contact
         // 5) save the modified ones
@@ -1999,12 +2000,13 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
         // Now fetch the existing contacts
         QMap<int, QContactManager::Error> fetchErrors;
         QContactManager::Error fetchError = QContactManager::NoError;
-        QList<QContact> existingContacts = this->contacts(existingContactIds, QContactFetchHint(), &fetchErrors, &fetchError);
+        QList<QContact> existingContacts = this->contacts(existingContactIds, QContactFetchHint(),
+                                                          &fetchErrors, &fetchError);
 
         // Prepare the list to save
         QList<QContact> contactsToSave;
         QList<int> savedToOriginalMap; // contactsToSave index to contacts index
-        QSet<QString> mask = definitionMask.toSet();
+        QSet<QContactDetail::DetailType> mask = typeMask.toSet();
 
         for (int i = 0; i < contacts->count(); i++) {
             // See if this is an existing contact or a new one
@@ -2032,8 +2034,8 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
 
             // Perhaps this could do this directly rather than through saveDetail
             // but that would duplicate the checks for display label etc
-            foreach (const QString& name, mask) {
-                QList<QContactDetail> details = c.details(name);
+            foreach (QContactDetail::DetailType type, mask) {
+                QList<QContactDetail> details = c.details(type);
                 foreach(QContactDetail detail, details) {
                     contactToSave.saveDetail(&detail);
                 }
@@ -2081,8 +2083,8 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QStr
   action preferences in the matching contacts will be returned.
 
   If a non-default fetch hint is supplied, and the client wishes to make changes to the contacts,
-  they should ensure that only a detail definition hint is supplied and that when saving it back, a
-  definition mask should be used which corresponds to the detail definition hint.  This is to ensure
+  they should ensure that only a detail type hint is supplied and that when saving it back, a
+  type mask should be used which corresponds to the detail type hint.  This is to ensure
   that no data is lost by overwriting an existing contact with a restricted version of it.
 
   \sa QContactFetchHint

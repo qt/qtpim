@@ -65,15 +65,15 @@ class QDeclarativeContactGeoLocation : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Label = 0,
-        Latitude,
-        Longitude,
-        Accuracy,
-        Altitude,
-        AltitudeAccuracy,
-        Heading,
-        Speed,
-        Timestamp
+        Label = QContactGeoLocation::FieldLabel,
+        Latitude = QContactGeoLocation::FieldLatitude,
+        Longitude = QContactGeoLocation::FieldLongitude,
+        Accuracy = QContactGeoLocation::FieldAccuracy,
+        Altitude = QContactGeoLocation::FieldAltitude,
+        AltitudeAccuracy = QContactGeoLocation::FieldAltitudeAccuracy,
+        Heading = QContactGeoLocation::FieldHeading,
+        Speed = QContactGeoLocation::FieldSpeed,
+        Timestamp = QContactGeoLocation::FieldTimestamp
     };
 
     QDeclarativeContactGeoLocation(QObject* parent = 0)
@@ -82,37 +82,11 @@ public:
         setDetail(QContactGeoLocation());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Geolocation;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Label:
-            return QContactGeoLocation::FieldLabel;
-        case Latitude:
-            return QContactGeoLocation::FieldLatitude;
-        case Longitude:
-            return QContactGeoLocation::FieldLongitude;
-        case Accuracy:
-            return QContactGeoLocation::FieldAccuracy;
-        case Altitude:
-            return QContactGeoLocation::FieldAltitude;
-        case AltitudeAccuracy:
-            return QContactGeoLocation::FieldAltitudeAccuracy;
-        case Heading:
-            return QContactGeoLocation::FieldHeading;
-        case Speed:
-            return QContactGeoLocation::FieldSpeed;
-        case Timestamp:
-            return QContactGeoLocation::FieldTimestamp;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setLabel(const QString& v)
     {
         if (!readOnly() && v != label()) {

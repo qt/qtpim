@@ -65,15 +65,15 @@ class QDeclarativeContactOrganization : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Name = 0,
-        LogoUrl,
-        Department,
-        Location,
-        Role,
-        Title,
-        AssistantName,
-        StartDate,
-        EndDate
+        Name = QContactOrganization::FieldName,
+        LogoUrl = QContactOrganization::FieldLogoUrl,
+        Department = QContactOrganization::FieldDepartment,
+        Location = QContactOrganization::FieldLocation,
+        Role = QContactOrganization::FieldRole,
+        Title = QContactOrganization::FieldTitle,
+        AssistantName = QContactOrganization::FieldAssistantName,
+        StartDate = QContactOrganization::FieldStartDate,
+        EndDate = QContactOrganization::FieldEndDate
     };
 
     QDeclarativeContactOrganization(QObject* parent = 0)
@@ -82,37 +82,11 @@ public:
         setDetail(QContactOrganization());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Organization;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Name:
-            return QContactOrganization::FieldName;
-        case LogoUrl:
-            return QContactOrganization::FieldLogoUrl;
-        case Department:
-            return QContactOrganization::FieldDepartment;
-        case Location:
-            return QContactOrganization::FieldLocation;
-        case Role:
-            return QContactOrganization::FieldRole;
-        case Title:
-            return QContactOrganization::FieldTitle;
-        case AssistantName:
-            return QContactOrganization::FieldAssistantName;
-        case StartDate:
-            return QContactOrganization::FieldStartDate;
-        case EndDate:
-            return QContactOrganization::FieldEndDate;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setName(const QString& v)
     {
         if (!readOnly() && v != name()) {

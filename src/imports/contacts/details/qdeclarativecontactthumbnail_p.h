@@ -53,7 +53,7 @@ class  QDeclarativeContactThumbnail : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Thumbnail
+        Thumbnail = QContactThumbnail::FieldThumbnail
     };
     QDeclarativeContactThumbnail(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -71,21 +71,9 @@ public:
         }
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Thumbnail;
-    }
-
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Thumbnail:
-            return QContactThumbnail::FieldThumbnail;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
     }
 signals:
     void valueChanged();

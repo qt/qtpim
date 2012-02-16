@@ -56,29 +56,21 @@ class QDeclarativeContactType : public QDeclarativeContactDetail
     Q_CLASSINFO("DefaultProperty", "type")
 public:
     enum FieldType {
-        TypeField = 0
+        TypeField = QContactType::FieldType
     };
 
     enum ContactType {
-        Contact = 0,
-        Group
+        Unspecified = 0,
+        Contact = QContactType::TypeContact,
+        Group = QContactType::TypeGroup
     };
 
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Type;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case TypeField:
-            return QContactType::FieldType;
-        default:
-            break;
-        }
-        return "";
-    }
+
     QDeclarativeContactType(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
     {
@@ -88,19 +80,21 @@ public:
 
     void setType(ContactType newType)
     {
-         if (!readOnly())  {
-            if (newType == Contact)
-                detail().setValue(QContactType::FieldType, QContactType::TypeContact);
-            else if (newType == Group)
-                detail().setValue(QContactType::FieldType, QContactType::TypeGroup);
-         }
+        if (!readOnly() && newType!=type())  {
+            switch (newType) {
+            case Contact:
+            case Group:
+                detail().setValue(QContactType::FieldType, newType);
+                break;
+            default:
+                detail().setValue(QContactType::FieldType, Unspecified);
+            }
+        }
     }
+
     ContactType type() const
     {
-        QString typeString = detail().value(QContactType::FieldType).toString();
-        if (typeString == QContactType::TypeContact)
-            return Contact;
-        return Group;
+        return static_cast<ContactType>(detail().value(QContactType::FieldType).toInt());
     }
 signals:
     void valueChanged();

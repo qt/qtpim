@@ -63,14 +63,14 @@ public:
                            QContact* contact)
     {
         Q_UNUSED(document)
-        QContactDetail detail("TestDetail");
-        detail.setValue("Plugin", 3);
+        QContactDetail detail(QContactDetail::TypeExtendedDetail);
+        detail.setValue(0, 3);
         contact->saveDetail(&detail);
     }
     void detailProcessed(const QContact& contact,
                          const QContactDetail& detail,
                          const QVersitDocument& document,
-                         QSet<QString>* processedFields,
+                         QSet<int>* processedFields,
                          QList<QVersitProperty>* toBeRemoved,
                          QList<QVersitProperty>* toBeAdded)
     {

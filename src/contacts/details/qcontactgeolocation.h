@@ -56,16 +56,23 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactGeoLocation : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGeoLocation, "GeoLocation")
-    const static QString FieldLabel;
-    const static QString FieldLatitude;
-    const static QString FieldLongitude;
-    const static QString FieldAccuracy;
-    const static QString FieldAltitude;
-    const static QString FieldAltitudeAccuracy;
-    const static QString FieldHeading;
-    const static QString FieldSpeed;
-    const static QString FieldTimestamp;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGeoLocation)
+#else
+    static const DetailType Type;
+#endif
+
+    enum GeoLocationField {
+        FieldLabel = 0,
+        FieldLatitude,
+        FieldLongitude,
+        FieldAccuracy,
+        FieldAltitude,
+        FieldAltitudeAccuracy,
+        FieldHeading,
+        FieldSpeed,
+        FieldTimestamp
+    };
 
     void setLabel(const QString& label) {setValue(FieldLabel, label);}
     QString label() const {return value(FieldLabel).toString();}

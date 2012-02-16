@@ -539,8 +539,8 @@ QList<QContact> QContactManager::contacts(const QList<QContactId> &contactIds, c
   Alternatively, the function will update the existing contact in the database if \a contact
   has a id which is not null and currently exists in the database.
 
-  If the \a contact contains one or more details whose definitions have
-  not yet been saved with the manager, the operation will fail and calling
+  If the \a contact contains one or more details whose types are not
+  supported by the used engine, the operation will fail and calling
   error() will return \c QContactManager::UnsupportedError.
 
   If the \a contact has had its relationships reordered, the manager
@@ -616,9 +616,9 @@ bool QContactManager::saveContacts(QList<QContact> *contacts, QMap<int, QContact
   Adds the list of contacts given by \a contacts list to the database.
   Returns true if the contacts were saved successfully, otherwise false.
 
-  This function accepts a \a definitionMask, which specifies which details of
-  the contacts should be updated.  Details with definition names not included in
-  the definitionMask will not be updated or added.
+  This function accepts a \a typeMask, which specifies which details of
+  the contacts should be updated.  Details with types not included in
+  the typeMask will not be updated or added.
 
   The deprecated \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
@@ -630,12 +630,12 @@ bool QContactManager::saveContacts(QList<QContact> *contacts, QMap<int, QContact
 
   \sa QContactManager::saveContact()
  */
-bool QContactManager::saveContacts(QList<QContact> *contacts, const QStringList &definitionMask, QMap<int, QContactManager::Error> *errorMap)
+bool QContactManager::saveContacts(QList<QContact> *contacts, const QList<QContactDetail::DetailType> &typeMask, QMap<int, QContactManager::Error> *errorMap)
 {
     QContactManagerSyncOpErrorHolder h(this, errorMap);
 
     if (contacts) {
-        return d->m_engine->saveContacts(contacts, definitionMask, &h.errorMap, &h.error);
+        return d->m_engine->saveContacts(contacts, typeMask, &h.errorMap, &h.error);
     } else {
         h.error = QContactManager::BadArgumentError;
         return false;
@@ -865,7 +865,7 @@ bool QContactManager::removeRelationships(const QList<QContactRelationship> &rel
 /*!
   Returns true if the given feature \a feature is supported by the manager, for the specified type of contact \a contactType
  */
-bool QContactManager::hasFeature(QContactManager::ManagerFeature feature, const QString &contactType) const
+bool QContactManager::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
 {
     return d->m_engine->hasFeature(feature, contactType);
 }
@@ -901,7 +901,7 @@ bool QContactManager::isFilterSupported(const QContactFilter &filter) const
   in the relationship).  In this case, it will still return true.  It will only return false
   if the relationship is entirely unsupported for the given type of contact.
  */
-bool QContactManager::isRelationshipTypeSupported(const QString &relationshipType, const QString &contactType) const
+bool QContactManager::isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType) const
 {
     return d->m_engine->isRelationshipTypeSupported(relationshipType, contactType);
 }
@@ -909,10 +909,10 @@ bool QContactManager::isRelationshipTypeSupported(const QString &relationshipTyp
 /*!
   Returns the list of contact types which are supported by this manager.
   This is a convenience function, equivalent to retrieving the allowable values
-  for the \c QContactType::FieldType field of the QContactType definition
+  for the \c QContactType::FieldType field of the QContactType detail
   which is valid in this manager.
  */
-QStringList QContactManager::supportedContactTypes() const
+QList<QContactType::TypeValues> QContactManager::supportedContactTypes() const
 {
     return d->m_engine->supportedContactTypes();
 }

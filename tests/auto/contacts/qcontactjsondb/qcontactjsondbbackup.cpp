@@ -88,7 +88,9 @@ bool QContactJsonDbBackup::loadTestData() {
     emailDetail.setContexts(QContactDetail::ContextHome);
     testContact.saveDetail(&emailDetail);
     QContactPhoneNumber phoneNumberDetail;
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    QList<int> mySubTypes;
+    mySubTypes << QContactPhoneNumber::SubTypeMobile;
+    phoneNumberDetail.setSubTypes(mySubTypes);
     phoneNumberDetail.setNumber("+358507654321");
     testContact.saveDetail(&phoneNumberDetail);
     QList<QContact> saveList;
@@ -100,7 +102,7 @@ bool QContactJsonDbBackup::loadTestData() {
     emailDetail.setEmailAddress("Paul.Thomson@ovi.com");
     emailDetail.setContexts(QContactDetail::ContextHome);
     testContact.saveDetail(&emailDetail);
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    phoneNumberDetail.setSubTypes(mySubTypes);
     phoneNumberDetail.setNumber("+358507654321");
     testContact.saveDetail(&phoneNumberDetail);
     saveList << testContact;
@@ -111,7 +113,7 @@ bool QContactJsonDbBackup::loadTestData() {
     emailDetail.setEmailAddress("Julie.King@ovi.com");
     emailDetail.setContexts(QContactDetail::ContextHome);
     testContact.saveDetail(&emailDetail);
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    phoneNumberDetail.setSubTypes(mySubTypes);
     phoneNumberDetail.setNumber("+3585012345");
     testContact.saveDetail(&phoneNumberDetail);
     saveList << testContact;
@@ -122,7 +124,7 @@ bool QContactJsonDbBackup::loadTestData() {
     emailDetail.setEmailAddress("Angelina.Row@ovi.com");
     emailDetail.setContexts(QContactDetail::ContextHome);
     testContact.saveDetail(&emailDetail);
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    phoneNumberDetail.setSubTypes(mySubTypes);
     phoneNumberDetail.setNumber("+3585012345");
     testContact.saveDetail(&phoneNumberDetail);
     saveList << testContact;
@@ -133,7 +135,7 @@ bool QContactJsonDbBackup::loadTestData() {
     emailDetail.setEmailAddress("Natalie.Watson@ovi.com");
     emailDetail.setContexts(QContactDetail::ContextHome);
     testContact.saveDetail(&emailDetail);
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    phoneNumberDetail.setSubTypes(mySubTypes);
     phoneNumberDetail.setNumber("+358507654321");
     testContact.saveDetail(&phoneNumberDetail);
     saveList << testContact;

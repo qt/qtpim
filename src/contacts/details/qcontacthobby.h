@@ -53,8 +53,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactHobby : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactHobby, "Hobby")
-    const static QString FieldHobby;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactHobby)
+#else
+    static const DetailType Type;
+#endif
+
+    enum HobbyField {
+        FieldHobby = 0
+    };
 
     void setHobby(const QString& hobby) {setValue(FieldHobby, hobby);}
     QString hobby() const {return value(FieldHobby).toString();}

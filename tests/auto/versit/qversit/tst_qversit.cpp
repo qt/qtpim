@@ -151,12 +151,11 @@ void tst_QVersit::testImportVCardFiles()
             QContact expected = i.next();
             QList<QContactDetail> expectedDetails = expected.details();
             foreach(QContactDetail expectedDetail, expectedDetails) {
-                QString name = expectedDetail.definitionName();
-                QContactDetail parsedDetail = parsed.detail(name);
+                QContactDetail::DetailType type = expectedDetail.type();
+                QContactDetail parsedDetail = parsed.detail(type);
                 if (parsedDetail != expectedDetail) {
-                    qDebug() << "Detail: " << name.toAscii();
-                    qDebug() << "Actual:" << parsedDetail.values();
-                    qDebug() << "Expected:" << expectedDetail.values();
+                    qDebug() << "Actual:" << parsedDetail.value(1);
+                    qDebug() << "Expected:" << expectedDetail.value(1);
                     QCOMPARE(parsedDetail, expectedDetail);
                 }
             }
@@ -273,7 +272,7 @@ void tst_QVersit::testImportVCardFiles_data()
         contact.saveDetail(&nickname);
         QContactPhoneNumber assistantphone;
         assistantphone.setNumber(QLatin1String("1234"));
-        assistantphone.setSubTypes(QContactPhoneNumber::SubTypeAssistant);
+        assistantphone.setSubTypes(QList<int> () << QContactPhoneNumber::SubTypeAssistant);
         contact.saveDetail(&assistantphone);
         QContactGeoLocation geo;
         geo.setLatitude(32.0);
@@ -293,7 +292,6 @@ void tst_QVersit::testBackupVCard()
 {
     // Test that using the backup profile, a contact, when exported and imported again, is unaltered.
     QFETCH(QContact, contact);
-
     QVersitContactExporter exporter(QVersitContactHandlerFactory::ProfileBackup);
     QVERIFY(exporter.exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     QList<QVersitDocument> documents = exporter.documents();
@@ -345,15 +343,18 @@ void tst_QVersit::testBackupVCard_data()
         name.setFirstName(QLatin1String("first"));
         name.setLastName(QLatin1String("last"));
         name.setCustomLabel(QLatin1String("custom"));
-        name.setValue(QLatin1String("RandomField1"), QLatin1String("RandomValue1"));
-        name.setValue(QLatin1String("RandomField2"), QLatin1String("RandomValue1"));
+        name.setValue(123456, QLatin1String("RandomValue1"));
+        name.setValue(123457, QLatin1String("RandomValue1"));
         contact.saveDetail(&name);
-        QContactDetail customDetail1("CustomDetail");
-        customDetail1.setValue(QLatin1String("CustomField11"), QLatin1String("Value11"));
-        customDetail1.setValue(QLatin1String("CustomField12"), QLatin1String("Value12"));
+        QContactDetail customDetail1(QContactDetail::TypeExtendedDetail);
+        customDetail1.setValue(QContactExtendedDetail::FieldName, QLatin1String("CustomDetail1"));
+        customDetail1.setValue(123456, QLatin1String("Value11"));
+        customDetail1.setValue(123457, QLatin1String("Value12"));
         contact.saveDetail(&customDetail1);
-        QContactDetail customDetail2("CustomDetail");
-        customDetail2.setValue(QLatin1String("CustomField21"), QLatin1String("Value21"));
+        QContactDetail customDetail2(QContactDetail::TypeExtendedDetail);
+        customDetail2.setValue(QContactExtendedDetail::FieldName, QLatin1String("CustomDetail2"));
+        customDetail2.setValue(123456, QLatin1String("Value21"));
+        customDetail2.setValue(123457, QLatin1String("Value22"));
         contact.saveDetail(&customDetail2);
         contact.setType(QContactType::TypeContact);
         QContactManagerEngine::setContactDisplayLabel(&contact, QLatin1String("custom"));
@@ -366,52 +367,53 @@ void tst_QVersit::testBackupVCard_data()
     name.setCustomLabel(QLatin1String("name"));
     contact.saveDetail(&name);
     QContactManagerEngine::setContactDisplayLabel(&contact, QLatin1String("name"));
-    QContactDetail customDetail("CustomDetail");
-    customDetail.setValue(QLatin1String("CustomField"), QByteArray("blob"));
+    QContactDetail customDetail(QContactDetail::TypeExtendedDetail);
+    customDetail.setValue(QContactExtendedDetail::FieldName, QLatin1String("CustomDetailBlob"));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QByteArray("blob"));
     contact.saveDetail(&customDetail);
     QTest::newRow("binary field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), QDate(2010, 5, 18));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QDate(2010, 5, 18));
     contact.saveDetail(&customDetail);
     QTest::newRow("date field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), QTime(11, 25));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QTime(11, 25));
     contact.saveDetail(&customDetail);
     QTest::newRow("time field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), QDateTime(QDate(2010, 5, 18), QTime(11, 25)));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QDateTime(QDate(2010, 5, 18), QTime(11, 25)));
     contact.saveDetail(&customDetail);
     QTest::newRow("datetime field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), (int)42);
+    customDetail.setValue(QContactExtendedDetail::FieldData, (int)42);
     contact.saveDetail(&customDetail);
     QTest::newRow("integer field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), UINT_MAX);
+    customDetail.setValue(QContactExtendedDetail::FieldData, UINT_MAX);
     contact.saveDetail(&customDetail);
     QTest::newRow("unsigned integer field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), QUrl(QLatin1String("http://www.nokia.com/")));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QUrl(QLatin1String("http://www.nokia.com/")));
     contact.saveDetail(&customDetail);
     QTest::newRow("url field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), (bool)true);
+    customDetail.setValue(QContactExtendedDetail::FieldData, (bool)true);
     contact.saveDetail(&customDetail);
     QTest::newRow("bool field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), (bool)false);
+    customDetail.setValue(QContactExtendedDetail::FieldData, (bool)false);
     contact.saveDetail(&customDetail);
     QTest::newRow("false bool field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), (double)3.14159265);
+    customDetail.setValue(QContactExtendedDetail::FieldData, (double)3.14159265);
     contact.saveDetail(&customDetail);
     QTest::newRow("double field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), (float)3.14159265);
+    customDetail.setValue(QContactExtendedDetail::FieldData, (float)3.14159265);
     contact.saveDetail(&customDetail);
     QTest::newRow("float field") << contact;
 
-    customDetail.setValue(QLatin1String("CustomField"), RED);
+    customDetail.setValue(QContactExtendedDetail::FieldData, RED);
     contact.saveDetail(&customDetail);
     QTest::newRow("enum field") << contact;
 }
@@ -531,8 +533,9 @@ void tst_QVersit::testPreserveVCardWithBackup()
 
     // Make a little change
     QVERIFY(contacts.size() >= 1);
-    QContactDetail customDetail("CustomDetail");
-    customDetail.setValue(QLatin1String("CustomField"), QLatin1String("value"));
+    QContactDetail customDetail(QContactDetail::TypeExtendedDetail);
+    customDetail.setValue(QContactExtendedDetail::FieldName, QLatin1String("CUSTOMDETAIL"));
+    customDetail.setValue(QContactExtendedDetail::FieldData, QLatin1String("value"));
     contacts[0].saveDetail(&customDetail);
 
     // Export them

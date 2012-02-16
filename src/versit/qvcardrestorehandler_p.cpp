@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qvcardrestorehandler_p.h"
-#include "qcontactdetail.h"
+#include <qcontactdetail.h>
 #include "qversitproperty.h"
 #include <QList>
 #include <QDateTime>
@@ -62,7 +62,7 @@
 QTVERSIT_BEGIN_NAMESPACE
 
 const QString QVCardRestoreHandler::PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));
-const QString QVCardRestoreHandler::DetailDefinitionParameter(QStringLiteral("DETAIL"));
+const QString QVCardRestoreHandler::DetailTypeParameter(QStringLiteral("DETAIL"));
 const QString QVCardRestoreHandler::FieldParameter(QStringLiteral("FIELD"));
 const QString QVCardRestoreHandler::DatatypeParameter(QStringLiteral("DATATYPE"));
 const QString QVCardRestoreHandler::DatatypeParameterVariant(QStringLiteral("VARIANT"));
@@ -134,21 +134,20 @@ bool QVCardRestoreHandler::propertyProcessed(
     if (property.name() == PropertyName) {
         if (property.groups().size() != 1)
             return false;
-        QMultiHash<QString,QString> parameters = property.parameters();
-        QString definitionName = parameters.value(DetailDefinitionParameter);
+        QMultiHash<QString, QString> parameters = property.parameters();
+        QContactDetail::DetailType detailType = QContactDetail::DetailType(parameters.value(DetailTypeParameter).toUInt());
         QString fieldName = parameters.value(FieldParameter);
-
         // Find a detail previously seen with the same definitionName, which was generated from
         // a property from the same group
-        QContactDetail detail(definitionName);
+        QContactDetail detail(detailType);
         foreach (const QContactDetail& previousDetail, mDetailGroupMap.detailsInGroup(group)) {
-            if (previousDetail.definitionName() == definitionName) {
+            if (previousDetail.type() == detailType) {
                 detail = previousDetail;
             }
         }
         // If not found, it's a new empty detail with the definitionName set.
 
-        detail.setValue(fieldName, deserializeValue(property));
+        detail.setValue(fieldName.toInt(), deserializeValue(property));
 
         // Replace the equivalent detail in updatedDetails with the new one
         QMutableListIterator<QContactDetail> it(*updatedDetails);

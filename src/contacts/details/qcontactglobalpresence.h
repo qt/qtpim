@@ -57,13 +57,20 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactGlobalPresence : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGlobalPresence, "GlobalPresence")
-    const static QString FieldTimestamp;
-    const static QString FieldNickname;
-    const static QString FieldPresenceState;
-    const static QString FieldPresenceStateText;
-    const static QString FieldPresenceStateImageUrl;
-    const static QString FieldCustomMessage;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGlobalPresence)
+#else
+    static const DetailType Type;
+#endif
+
+    enum GlobalPresenceField {
+        FieldTimestamp = 0,
+        FieldNickname,
+        FieldPresenceState,
+        FieldPresenceStateText,
+        FieldPresenceStateImageUrl,
+        FieldCustomMessage
+    };
 
     void setTimestamp(const QDateTime& timestamp) {setValue(FieldTimestamp, timestamp);}
     QDateTime timestamp() const {return value<QDateTime>(FieldTimestamp);}

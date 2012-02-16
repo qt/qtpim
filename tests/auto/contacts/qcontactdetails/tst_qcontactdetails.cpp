@@ -90,9 +90,6 @@ private slots:
     void type();
     void url();
     void version();
-
-    // custom definition testing
-    void custom();
 };
 
 tst_QContactDetails::tst_QContactDetails()
@@ -124,6 +121,7 @@ void tst_QContactDetails::address()
     a1.setStreet("68 Imaginary Avenue");
     a1.setCountry("Australia");
     QCOMPARE(a1.street(), QString("68 Imaginary Avenue"));
+    QCOMPARE(a1.country(), QString("Australia"));
     a1.setStreet("1234");
     QCOMPARE(a1.street(), QString("1234"));
     a1.setPostOfficeBox("PO Box 5678");
@@ -131,33 +129,33 @@ void tst_QContactDetails::address()
 
 
     // Sub types
-    a1.setSubTypes(QContactAddress::SubTypeDomestic);
-    QCOMPARE(a1.subTypes(), QStringList() << QContactAddress::SubTypeDomestic);
+    a1.setSubTypes(QList<int>() << QContactAddress::SubTypeDomestic);
+    QCOMPARE(a1.subTypes(), QList<int>() << QContactAddress::SubTypeDomestic);
 
-    QStringList sl;
+    QList<int> sl;
     sl << QContactAddress::SubTypeParcel << QContactAddress::SubTypePostal;
     a1.setSubTypes(sl);
     QCOMPARE(a1.subTypes(), sl);
 
     // test property add
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAddress::DefinitionName).count(), 1);
-    QCOMPARE(QContactAddress(c.details(QContactAddress::DefinitionName).value(0)).street(), a1.street());
+    QCOMPARE(c.details(QContactAddress::Type).count(), 1);
+    QCOMPARE(QContactAddress(c.details(QContactAddress::Type).value(0)).street(), a1.street());
     a2.setStreet("Test");
     QVERIFY(c.saveDetail(&a2));
-    QCOMPARE(c.details(QContactAddress::DefinitionName).count(), 2);
+    QCOMPARE(c.details(QContactAddress::Type).count(), 2);
 
     // test property update
-    a1.setValue("label","label1");
+    a1.setValue(QContactAddress::FieldContext, "label1");
     a1.setStreet("12345");
     QVERIFY(c.saveDetail(&a1));
 
     // test property remove
     QVERIFY(c.removeDetail(&a1));
-    QCOMPARE(c.details(QContactAddress::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactAddress::Type).count(), 1);
     QVERIFY(c.removeDetail(&a2));
     QVERIFY(!c.removeDetail(&a2)); // cannot remove twice
-    QCOMPARE(c.details(QContactAddress::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAddress::Type).count(), 0);
 
     QContactAddress a3;
 
@@ -187,10 +185,10 @@ void tst_QContactDetails::address()
     a3.setCountry("");
 
     // subtypes
-    a3.setSubTypes(QContactAddress::SubTypeDomestic);
-    QCOMPARE(a3.subTypes(), QStringList(QContactAddress::SubTypeDomestic));
-    a3.setSubTypes(QStringList() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
-    QCOMPARE(a3.subTypes(), QStringList() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
+    a3.setSubTypes(QList<int>() << QContactAddress::SubTypeDomestic);
+    QCOMPARE(a3.subTypes(), QList<int>() << QContactAddress::SubTypeDomestic);
+    a3.setSubTypes(QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
+    QCOMPARE(a3.subTypes(), QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
 }
 
 void tst_QContactDetails::anniversary()
@@ -210,7 +208,7 @@ void tst_QContactDetails::anniversary()
     QCOMPARE(a1.value(QContactAnniversary::FieldEvent).toString(), QString("4321"));
     a1.setSubType(QContactAnniversary::SubTypeWedding);
     QCOMPARE(a1.subType(), QContactAnniversary::SubTypeWedding);
-    QCOMPARE(a1.value(QContactAnniversary::FieldSubType).toString(), QContactAnniversary::SubTypeWedding);
+    QCOMPARE(static_cast<QContactAnniversary::SubType>(a1.value<int>(QContactAnniversary::FieldSubType)), QContactAnniversary::SubTypeWedding);
 
     a1.setOriginalDate(currDate);
     QCOMPARE(a1.originalDate(), currDate);
@@ -226,25 +224,25 @@ void tst_QContactDetails::anniversary()
 
     // test property add
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).count(), 1);
-    QCOMPARE(QContactAnniversary(c.details(QContactAnniversary::DefinitionName).value(0)).event(), a1.event());
+    QCOMPARE(c.details(QContactAnniversary::Type).count(), 1);
+    QCOMPARE(QContactAnniversary(c.details(QContactAnniversary::Type).value(0)).event(), a1.event());
 
     // test property update
-    a1.setValue("label","label1");
+    a1.setValue(QContactAnniversary::FieldContext, "label1");
     a1.setCalendarId("12345");
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).value(0).value(QContactAnniversary::FieldCalendarId).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactAnniversary::Type).value(0).value(QContactAnniversary::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactAnniversary::Type).value(0).value(QContactAnniversary::FieldCalendarId).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&a1));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAnniversary::Type).count(), 0);
     QVERIFY(c.saveDetail(&a2));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactAnniversary::Type).count(), 1);
     QVERIFY(c.removeDetail(&a2));
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAnniversary::Type).count(), 0);
     QVERIFY(c.removeDetail(&a2) == false);
-    QCOMPARE(c.details(QContactAnniversary::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAnniversary::Type).count(), 0);
 }
 
 void tst_QContactDetails::avatar()
@@ -265,25 +263,25 @@ void tst_QContactDetails::avatar()
 
     // test property add
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).count(), 1);
-    QCOMPARE(QContactAvatar(c.details(QContactAvatar::DefinitionName).value(0)).imageUrl(), a1.imageUrl());
+    QCOMPARE(c.details(QContactAvatar::Type).count(), 1);
+    QCOMPARE(QContactAvatar(c.details(QContactAvatar::Type).value(0)).imageUrl(), a1.imageUrl());
 
     // test property update
-    a1.setValue("label","label1");
+    a1.setValue(QContactAvatar::FieldContext, "label1");
     a1.setImageUrl(QUrl("12345"));
     QVERIFY(c.saveDetail(&a1));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).value(0).value<QUrl>(QContactAvatar::FieldImageUrl), QUrl("12345"));
+    QCOMPARE(c.details(QContactAvatar::Type).value(0).value(QContactAvatar::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactAvatar::Type).value(0).value<QUrl>(QContactAvatar::FieldImageUrl), QUrl("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&a1));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAvatar::Type).count(), 0);
     QVERIFY(c.saveDetail(&a2));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactAvatar::Type).count(), 1);
     QVERIFY(c.removeDetail(&a2));
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAvatar::Type).count(), 0);
     QVERIFY(c.removeDetail(&a2) == false);
-    QCOMPARE(c.details(QContactAvatar::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactAvatar::Type).count(), 0);
 }
 
 void tst_QContactDetails::birthday()
@@ -313,27 +311,27 @@ void tst_QContactDetails::birthday()
 
     // test property add
     QVERIFY(c.saveDetail(&b1));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).count(), 1);
-    QCOMPARE(QContactBirthday(c.details(QContactBirthday::DefinitionName).value(0)).date(), b1.date());
+    QCOMPARE(c.details(QContactBirthday::Type).count(), 1);
+    QCOMPARE(QContactBirthday(c.details(QContactBirthday::Type).value(0)).date(), b1.date());
 
     // test property update
-    b1.setValue("label","label1");
+    b1.setValue(QContactBirthday::FieldContext, "label1");
     b1.setDate(currDate.addDays(3));
     b1.setCalendarId("12345");
     QVERIFY(c.saveDetail(&b1));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value<QDate>(QContactBirthday::FieldBirthday), currDate.addDays(3));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).value(0).value(QContactBirthday::FieldCalendarId).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactBirthday::Type).value(0).value(QContactBirthday::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactBirthday::Type).value(0).value<QDate>(QContactBirthday::FieldBirthday), currDate.addDays(3));
+    QCOMPARE(c.details(QContactBirthday::Type).value(0).value(QContactBirthday::FieldCalendarId).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&b1));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactBirthday::Type).count(), 0);
     QVERIFY(c.saveDetail(&b2));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactBirthday::Type).count(), 1);
     QVERIFY(c.removeDetail(&b2));
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactBirthday::Type).count(), 0);
     QVERIFY(c.removeDetail(&b2) == false);
-    QCOMPARE(c.details(QContactBirthday::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactBirthday::Type).count(), 0);
 }
 
 void tst_QContactDetails::displayLabel()
@@ -352,7 +350,7 @@ void tst_QContactDetails::displayLabel()
 
     // test property add [== fail]
     QVERIFY(!c.saveDetail(&d2));
-    QCOMPARE(c.details(QContactDisplayLabel::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 1);
 
     // test property update [== fail]
     d1 = c.detail<QContactDisplayLabel>();
@@ -375,25 +373,25 @@ void tst_QContactDetails::emailAddress()
 
     // test property add
     QVERIFY(c.saveDetail(&e1));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 1);
-    QCOMPARE(QContactEmailAddress(c.details(QContactEmailAddress::DefinitionName).value(0)).emailAddress(), e1.emailAddress());
+    QCOMPARE(c.details(QContactEmailAddress::Type).count(), 1);
+    QCOMPARE(QContactEmailAddress(c.details(QContactEmailAddress::Type).value(0)).emailAddress(), e1.emailAddress());
 
     // test property update
-    e1.setValue("label","label1");
+    e1.setValue(QContactEmailAddress::FieldContext, "label1");
     e1.setEmailAddress("12345");
     QVERIFY(c.saveDetail(&e1));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).value(0).value(QContactEmailAddress::FieldEmailAddress).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactEmailAddress::Type).value(0).value(QContactEmailAddress::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactEmailAddress::Type).value(0).value(QContactEmailAddress::FieldEmailAddress).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&e1));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactEmailAddress::Type).count(), 0);
     QVERIFY(c.saveDetail(&e2));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactEmailAddress::Type).count(), 1);
     QVERIFY(c.removeDetail(&e2));
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactEmailAddress::Type).count(), 0);
     QVERIFY(c.removeDetail(&e2) == false);
-    QCOMPARE(c.details(QContactEmailAddress::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactEmailAddress::Type).count(), 0);
 }
 
 void tst_QContactDetails::extendedDetail()
@@ -404,36 +402,36 @@ void tst_QContactDetails::extendedDetail()
     // test property set
     v1.setValue(1);
     extD1.setName("detail1");
-    extD1.setData(v1);
+    extD1.setValue(QContactExtendedDetail::FieldData, v1);
 
     QCOMPARE(extD1.name(), QString("detail1"));
     QCOMPARE(extD1.data(), v1);
 
     // test property add
     QVERIFY(c.saveDetail(&extD1));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 1);
-    QCOMPARE(QContactExtendedDetail(c.details(QContactExtendedDetail::DefinitionName).value(0)).name(), extD1.name());
+    QCOMPARE(c.details(QContactExtendedDetail::Type).count(), 1);
+    QCOMPARE(QContactExtendedDetail(c.details(QContactExtendedDetail::Type).value(0)).name(), extD1.name());
 
     // test property update
-    extD1.setValue("label","label1");
+    extD1.setValue(QContactExtendedDetail::FieldContext, "label1");
     extD1.setName("newDetail1");
-    extD1.setValue("variantField", v1);
+    extD1.setData(v1);
     QVERIFY(c.saveDetail(&extD1));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value("variantField").toInt(), v1.toInt());
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).value(0).value(QContactExtendedDetail::FieldName).toString(), QString("newDetail1"));
+    QCOMPARE(c.details(QContactExtendedDetail::Type).value(0).value(QContactExtendedDetail::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactExtendedDetail::Type).value(0).value(QContactExtendedDetail::FieldData).toInt(), v1.toInt());
+    QCOMPARE(c.details(QContactExtendedDetail::Type).value(0).value(QContactExtendedDetail::FieldName).toString(), QString("newDetail1"));
 
     // test property remove
     QVERIFY(c.removeDetail(&extD1));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactExtendedDetail::Type).count(), 0);
     extD2 = extD1;
 
     QVERIFY(c.saveDetail(&extD2));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactExtendedDetail::Type).count(), 1);
     QVERIFY(c.removeDetail(&extD2));
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactExtendedDetail::Type).count(), 0);
     QVERIFY(c.removeDetail(&extD2) == false);
-    QCOMPARE(c.details(QContactExtendedDetail::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactExtendedDetail::Type).count(), 0);
 }
 
 void tst_QContactDetails::family()
@@ -448,28 +446,28 @@ void tst_QContactDetails::family()
 
     // test property add
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).count(), 1);
-    QCOMPARE(QContactFamily(c.details(QContactFamily::DefinitionName).value(0)).spouse(), f1.spouse());
+    QCOMPARE(c.details(QContactFamily::Type).count(), 1);
+    QCOMPARE(QContactFamily(c.details(QContactFamily::Type).value(0)).spouse(), f1.spouse());
 
     // test property update
-    f1.setValue("label","label1");
+    f1.setValue(QContactFamily::FieldContext, "label1");
     f1.setSpouse("12345");
     f1.setChildren(QStringList("54321"));
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value(QContactFamily::FieldSpouse).toString(), QString("12345"));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).value(0).value<QStringList>(QContactFamily::FieldChildren), QStringList("54321"));
+    QCOMPARE(c.details(QContactFamily::Type).value(0).value(QContactFamily::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactFamily::Type).value(0).value(QContactFamily::FieldSpouse).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactFamily::Type).value(0).value<QStringList>(QContactFamily::FieldChildren), QStringList("54321"));
 
     // test property remove
     f2.setSpouse("1111");
     QVERIFY(c.removeDetail(&f1));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFamily::Type).count(), 0);
     QVERIFY(c.saveDetail(&f2));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactFamily::Type).count(), 1);
     QVERIFY(c.removeDetail(&f2));
-    QCOMPARE(c.details(QContactFamily::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFamily::Type).count(), 0);
     QVERIFY(c.removeDetail(&f2) == false);
-    QCOMPARE(c.details(QContactFamily::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFamily::Type).count(), 0);
 }
 
 void tst_QContactDetails::favorite()
@@ -489,29 +487,29 @@ void tst_QContactDetails::favorite()
 
     // test property add
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).count(), 1);
-    QCOMPARE(QContactFavorite(c.details(QContactFavorite::DefinitionName).value(0)).isFavorite(), f1.isFavorite());
+    QCOMPARE(c.details(QContactFavorite::Type).count(), 1);
+    QCOMPARE(QContactFavorite(c.details(QContactFavorite::Type).value(0)).isFavorite(), f1.isFavorite());
 
     // test property update
-    f1.setValue("label","label1");
+    f1.setValue(QContactFavorite::FieldContext, "label1");
     f1.setFavorite(false);
     f1.setIndex(5);
     QVERIFY(c.saveDetail(&f1));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value<bool>(QContactFavorite::FieldFavorite), false);
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).value(0).value<int>(QContactFavorite::FieldIndex), 5);
+    QCOMPARE(c.details(QContactFavorite::Type).value(0).value(QContactFavorite::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactFavorite::Type).value(0).value<bool>(QContactFavorite::FieldFavorite), false);
+    QCOMPARE(c.details(QContactFavorite::Type).value(0).value<int>(QContactFavorite::FieldIndex), 5);
     QCOMPARE(c.details<QContactFavorite>().value(0).index(), 5);
 
     // test property remove
     f2.setFavorite(true);
     QVERIFY(c.removeDetail(&f1));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFavorite::Type).count(), 0);
     QVERIFY(c.saveDetail(&f2));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactFavorite::Type).count(), 1);
     QVERIFY(c.removeDetail(&f2));
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFavorite::Type).count(), 0);
     QVERIFY(c.removeDetail(&f2) == false);
-    QCOMPARE(c.details(QContactFavorite::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactFavorite::Type).count(), 0);
 }
 
 void tst_QContactDetails::gender()
@@ -520,31 +518,30 @@ void tst_QContactDetails::gender()
     QContactGender g1, g2;
 
     // test property set
-    g1.setGender("1234");
-    QCOMPARE(g1.gender(), QString("1234"));
-    QCOMPARE(g1.value(QContactGender::FieldGender).toString(), QString("1234"));
+    g1.setGender(QContactGender::GenderFemale);
+    QCOMPARE(g1.gender(), QContactGender::GenderFemale);
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGender::DefinitionName).count(), 1);
-    QCOMPARE(QContactGender(c.details(QContactGender::DefinitionName).value(0)).gender(), g1.gender());
+    QCOMPARE(c.details(QContactGender::Type).count(), 1);
+    QCOMPARE(QContactGender(c.details(QContactGender::Type).value(0)).gender(), g1.gender());
 
     // test property update
-    g1.setValue("label","label1");
-    g1.setGender("12345");
+    g1.setValue(QContactGender::FieldContext, "label1");
+    g1.setGender(QContactGender::GenderMale);
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactGender::DefinitionName).value(0).value(QContactGender::FieldGender).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactGender::Type).value(0).value(QContactGender::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGender::Type).value(0).value(QContactGender::FieldGender).toInt(), (int)QContactGender::GenderMale);
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
-    QCOMPARE(c.details(QContactGender::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGender::Type).count(), 0);
     QVERIFY(c.saveDetail(&g2));
-    QCOMPARE(c.details(QContactGender::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactGender::Type).count(), 1);
     QVERIFY(c.removeDetail(&g2));
-    QCOMPARE(c.details(QContactGender::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGender::Type).count(), 0);
     QVERIFY(c.removeDetail(&g2) == false);
-    QCOMPARE(c.details(QContactGender::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGender::Type).count(), 0);
 }
 
 void tst_QContactDetails::geolocation()
@@ -584,23 +581,23 @@ void tst_QContactDetails::geolocation()
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).count(), 1);
-    QCOMPARE(QContactGeoLocation(c.details(QContactGeoLocation::DefinitionName).value(0)).label(), g1.label());
+    QCOMPARE(c.details(QContactGeoLocation::Type).count(), 1);
+    QCOMPARE(QContactGeoLocation(c.details(QContactGeoLocation::Type).value(0)).label(), g1.label());
 
     // test property update
     g1.setLabel("12345");
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).value(0).value(QContactGeoLocation::FieldLabel).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactGeoLocation::Type).value(0).value(QContactGeoLocation::FieldLabel).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGeoLocation::Type).count(), 0);
     QVERIFY(c.saveDetail(&g2));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactGeoLocation::Type).count(), 1);
     QVERIFY(c.removeDetail(&g2));
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGeoLocation::Type).count(), 0);
     QVERIFY(c.removeDetail(&g2) == false);
-    QCOMPARE(c.details(QContactGeoLocation::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGeoLocation::Type).count(), 0);
 }
 
 void tst_QContactDetails::globalPresence()
@@ -631,15 +628,15 @@ void tst_QContactDetails::globalPresence()
 
     // test property add
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).count(), 1);
-    QCOMPARE(QContactGlobalPresence(c.details(QContactGlobalPresence::DefinitionName).value(0)).presenceStateText(), p1.presenceStateText());
+    QCOMPARE(c.details(QContactGlobalPresence::Type).count(), 1);
+    QCOMPARE(QContactGlobalPresence(c.details(QContactGlobalPresence::Type).value(0)).presenceStateText(), p1.presenceStateText());
 
     // test property update
-    p1.setValue("label","label1");
+    p1.setValue(QContactGlobalPresence::FieldContext, "label1");
     p1.setPresenceStateText("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).value(0).value(QContactGlobalPresence::FieldPresenceStateText).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactGlobalPresence::Type).value(0).value(QContactGlobalPresence::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGlobalPresence::Type).value(0).value(QContactGlobalPresence::FieldPresenceStateText).toString(), QString("12345"));
 
     p2.setTimestamp(ts);
     p2.setNickname(QString("test"));
@@ -658,13 +655,13 @@ void tst_QContactDetails::globalPresence()
 
     // test property remove
     QVERIFY(c.removeDetail(&p1));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGlobalPresence::Type).count(), 0);
     QVERIFY(c.saveDetail(&p2));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactGlobalPresence::Type).count(), 1);
     QVERIFY(c.removeDetail(&p2));
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGlobalPresence::Type).count(), 0);
     QVERIFY(c.removeDetail(&p2) == false);
-    QCOMPARE(c.details(QContactGlobalPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGlobalPresence::Type).count(), 0);
 }
 
 void tst_QContactDetails::guid()
@@ -679,25 +676,25 @@ void tst_QContactDetails::guid()
 
     // test property add
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).count(), 1);
-    QCOMPARE(QContactGuid(c.details(QContactGuid::DefinitionName).value(0)).guid(), g1.guid());
+    QCOMPARE(c.details(QContactGuid::Type).count(), 1);
+    QCOMPARE(QContactGuid(c.details(QContactGuid::Type).value(0)).guid(), g1.guid());
 
     // test property update
-    g1.setValue("label","label1");
+    g1.setValue(QContactGuid::FieldContext, "label1");
     g1.setGuid("12345");
     QVERIFY(c.saveDetail(&g1));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).value(0).value(QContactGuid::FieldGuid).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactGuid::Type).value(0).value(QContactGuid::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactGuid::Type).value(0).value(QContactGuid::FieldGuid).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&g1));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGuid::Type).count(), 0);
     QVERIFY(c.saveDetail(&g2));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactGuid::Type).count(), 1);
     QVERIFY(c.removeDetail(&g2));
-    QCOMPARE(c.details(QContactGuid::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGuid::Type).count(), 0);
     QVERIFY(c.removeDetail(&g2) == false);
-    QCOMPARE(c.details(QContactGuid::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactGuid::Type).count(), 0);
 }
 
 void tst_QContactDetails::hobby()
@@ -712,26 +709,26 @@ void tst_QContactDetails::hobby()
 
     // test property add
     QVERIFY(c.saveDetail(&h1));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).count(), 1);
-    QCOMPARE(QContactHobby(c.details(QContactHobby::DefinitionName).value(0)).hobby(), h1.hobby());
+    QCOMPARE(c.details(QContactHobby::Type).count(), 1);
+    QCOMPARE(QContactHobby(c.details(QContactHobby::Type).value(0)).hobby(), h1.hobby());
 
     // test property update
-    h1.setValue("label","label1");
+    h1.setValue(QContactHobby::FieldContext, "label1");
     h1.setHobby("12345");
     QVERIFY(c.saveDetail(&h1));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).value(0).value(QContactHobby::FieldHobby).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactHobby::Type).value(0).value(QContactHobby::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactHobby::Type).value(0).value(QContactHobby::FieldHobby).toString(), QString("12345"));
 
     // test property remove
     h2.setHobby("1111");
     QVERIFY(c.removeDetail(&h1));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactHobby::Type).count(), 0);
     QVERIFY(c.saveDetail(&h2));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactHobby::Type).count(), 1);
     QVERIFY(c.removeDetail(&h2));
-    QCOMPARE(c.details(QContactHobby::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactHobby::Type).count(), 0);
     QVERIFY(c.removeDetail(&h2) == false);
-    QCOMPARE(c.details(QContactHobby::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactHobby::Type).count(), 0);
 }
 
 void tst_QContactDetails::name()
@@ -763,26 +760,26 @@ void tst_QContactDetails::name()
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactName::Type).count(), 1);
     n2.setFirstName("Billy");
     n2.setLastName("Galoshes");
     QVERIFY(c.saveDetail(&n2));
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 2);
+    QCOMPARE(c.details(QContactName::Type).count(), 2);
 
     // test property update
-    n1.setValue("label","label1");
+    n1.setValue(QContactName::FieldContext, "label1");
     QVERIFY(c.saveDetail(&n1));
 
     // test property remove
     QVERIFY(c.removeDetail(&n1)); // remove
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactName::Type).count(), 1);
     QVERIFY(c.saveDetail(&n2));   // save but already added; count remains the same.
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactName::Type).count(), 1);
     QVERIFY(c.removeDetail(&n2)); // remove it
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactName::Type).count(), 0);
     QVERIFY(!c.removeDetail(&n2));// remove now fails
     QVERIFY(c.saveDetail(&n1));   // save the original name
-    QCOMPARE(c.details(QContactName::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactName::Type).count(), 1);
 }
 
 void tst_QContactDetails::nickname()
@@ -797,25 +794,25 @@ void tst_QContactDetails::nickname()
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).count(), 1);
-    QCOMPARE(QContactNickname(c.details(QContactNickname::DefinitionName).value(0)).nickname(), n1.nickname());
+    QCOMPARE(c.details(QContactNickname::Type).count(), 1);
+    QCOMPARE(QContactNickname(c.details(QContactNickname::Type).value(0)).nickname(), n1.nickname());
 
     // test property update
-    n1.setValue("label","label1");
+    n1.setValue(QContactNickname::FieldContext, "label1");
     n1.setNickname("12345");
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).value(0).value(QContactNickname::FieldNickname).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactNickname::Type).value(0).value(QContactNickname::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactNickname::Type).value(0).value(QContactNickname::FieldNickname).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&n1));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNickname::Type).count(), 0);
     QVERIFY(c.saveDetail(&n2));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactNickname::Type).count(), 1);
     QVERIFY(c.removeDetail(&n2));
-    QCOMPARE(c.details(QContactNickname::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNickname::Type).count(), 0);
     QVERIFY(c.removeDetail(&n2) == false);
-    QCOMPARE(c.details(QContactNickname::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNickname::Type).count(), 0);
 }
 
 void tst_QContactDetails::note()
@@ -830,25 +827,25 @@ void tst_QContactDetails::note()
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNote::DefinitionName).count(), 1);
-    QCOMPARE(QContactNote(c.details(QContactNote::DefinitionName).value(0)).note(), n1.note());
+    QCOMPARE(c.details(QContactNote::Type).count(), 1);
+    QCOMPARE(QContactNote(c.details(QContactNote::Type).value(0)).note(), n1.note());
 
     // test property update
-    n1.setValue("label","label1");
+    n1.setValue(QContactNote::FieldContext, "label1");
     n1.setNote("orange gypsum");
     QVERIFY(c.saveDetail(&n1));
-    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactNote::DefinitionName).value(0).value(QContactNote::FieldNote).toString(), QString("orange gypsum"));
+    QCOMPARE(c.details(QContactNote::Type).value(0).value(QContactNote::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactNote::Type).value(0).value(QContactNote::FieldNote).toString(), QString("orange gypsum"));
 
     // test property remove
     QVERIFY(c.removeDetail(&n1));
-    QCOMPARE(c.details(QContactNote::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNote::Type).count(), 0);
     QVERIFY(c.saveDetail(&n2));
-    QCOMPARE(c.details(QContactNote::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactNote::Type).count(), 1);
     QVERIFY(c.removeDetail(&n2));
-    QCOMPARE(c.details(QContactNote::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNote::Type).count(), 0);
     QVERIFY(c.removeDetail(&n2) == false);
-    QCOMPARE(c.details(QContactNote::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactNote::Type).count(), 0);
 }
 
 void tst_QContactDetails::onlineAccount()
@@ -864,10 +861,10 @@ void tst_QContactDetails::onlineAccount()
     QCOMPARE(o1.protocol(), QContactOnlineAccount::ProtocolJabber);
 
     // Sub types
-    o1.setSubTypes(QContactOnlineAccount::SubTypeSip);
-    QCOMPARE(o1.subTypes(), QStringList() << QContactOnlineAccount::SubTypeSip);
+    o1.setSubTypes(QList<int>() << QContactOnlineAccount::SubTypeSip);
+    QCOMPARE(o1.subTypes(), QList<int>() << QContactOnlineAccount::SubTypeSip);
 
-    QStringList sl;
+    QList<int> sl;
     sl << QContactOnlineAccount::SubTypeImpp << QContactOnlineAccount::SubTypeVideoShare;
     o1.setSubTypes(sl);
     QCOMPARE(o1.subTypes(), sl);
@@ -877,34 +874,34 @@ void tst_QContactDetails::onlineAccount()
 
     // test property add
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).count(), 1);
-    QCOMPARE(QContactOnlineAccount(c.details(QContactOnlineAccount::DefinitionName).value(0)).accountUri(), o1.accountUri());
-    QCOMPARE(QContactOnlineAccount(c.details(QContactOnlineAccount::DefinitionName).value(0)).accountUri(), o1.accountUri());
+    QCOMPARE(c.details(QContactOnlineAccount::Type).count(), 1);
+    QCOMPARE(QContactOnlineAccount(c.details(QContactOnlineAccount::Type).value(0)).accountUri(), o1.accountUri());
+    QCOMPARE(QContactOnlineAccount(c.details(QContactOnlineAccount::Type).value(0)).accountUri(), o1.accountUri());
 
     // test property update
     QStringList caps;
     caps << "cap1" << "cap3" << "cap4";
-    o1.setValue("label","label1");
+    o1.setValue(QContactOnlineAccount::FieldContext, "label1");
     o1.setAccountUri("test2@nokia.com");
     o1.setServiceProvider("some provider");
     o1.setCapabilities(caps);
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldAccountUri).toString(), QString("test2@nokia.com"));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value<QStringList>(QContactOnlineAccount::FieldCapabilities), caps);
+    QCOMPARE(c.details(QContactOnlineAccount::Type).value(0).value(QContactOnlineAccount::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactOnlineAccount::Type).value(0).value(QContactOnlineAccount::FieldAccountUri).toString(), QString("test2@nokia.com"));
+    QCOMPARE(c.details(QContactOnlineAccount::Type).value(0).value<QStringList>(QContactOnlineAccount::FieldCapabilities), caps);
     QCOMPARE(c.details<QContactOnlineAccount>().value(0).capabilities(), caps);
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).value(0).value(QContactOnlineAccount::FieldServiceProvider).toString(), QString("some provider"));
+    QCOMPARE(c.details(QContactOnlineAccount::Type).value(0).value(QContactOnlineAccount::FieldServiceProvider).toString(), QString("some provider"));
     QCOMPARE(c.details<QContactOnlineAccount>().value(0).serviceProvider(), QString("some provider"));
 
     // test property remove
     QVERIFY(c.removeDetail(&o1));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOnlineAccount::Type).count(), 0);
     QVERIFY(c.saveDetail(&o2));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactOnlineAccount::Type).count(), 1);
     QVERIFY(c.removeDetail(&o2));
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOnlineAccount::Type).count(), 0);
     QVERIFY(c.removeDetail(&o2) == false);
-    QCOMPARE(c.details(QContactOnlineAccount::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOnlineAccount::Type).count(), 0);
 }
 
 void tst_QContactDetails::organization()
@@ -939,23 +936,23 @@ void tst_QContactDetails::organization()
 
     // test property add
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).count(), 1);
-    QCOMPARE(QContactOrganization(c.details(QContactOrganization::DefinitionName).value(0)).name(), o1.name());
+    QCOMPARE(c.details(QContactOrganization::Type).count(), 1);
+    QCOMPARE(QContactOrganization(c.details(QContactOrganization::Type).value(0)).name(), o1.name());
 
     // test property update
     o1.setName("organization two");
     QVERIFY(c.saveDetail(&o1));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).value(0).value(QContactOrganization::FieldName).toString(), QString("organization two"));
+    QCOMPARE(c.details(QContactOrganization::Type).value(0).value(QContactOrganization::FieldName).toString(), QString("organization two"));
 
     // test property remove
     QVERIFY(c.removeDetail(&o1));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOrganization::Type).count(), 0);
     QVERIFY(c.saveDetail(&o2));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactOrganization::Type).count(), 1);
     QVERIFY(c.removeDetail(&o2));
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOrganization::Type).count(), 0);
     QVERIFY(c.removeDetail(&o2) == false);
-    QCOMPARE(c.details(QContactOrganization::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactOrganization::Type).count(), 0);
 
     // organization-specific API testing
     o1.setDepartment(QStringList(QString("Imaginary Dept")));
@@ -964,11 +961,11 @@ void tst_QContactDetails::organization()
     o1.setName("Utopian Megacorporation");
     o1.setTitle("Generic Employee");
     c.saveDetail(&o1);
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value<QStringList>(QContactOrganization::FieldDepartment) == QStringList(QString("Imaginary Dept")));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldLocation).toString() == QString("Utopia"));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value<QUrl>(QContactOrganization::FieldLogoUrl) == QUrl("logo.png"));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldName).toString() == QString("Utopian Megacorporation"));
-    QVERIFY(c.detail(QContactOrganization::DefinitionName).value(QContactOrganization::FieldTitle).toString() == QString("Generic Employee"));
+    QVERIFY(c.detail(QContactOrganization::Type).value<QStringList>(QContactOrganization::FieldDepartment) == QStringList(QString("Imaginary Dept")));
+    QVERIFY(c.detail(QContactOrganization::Type).value(QContactOrganization::FieldLocation).toString() == QString("Utopia"));
+    QVERIFY(c.detail(QContactOrganization::Type).value<QUrl>(QContactOrganization::FieldLogoUrl) == QUrl("logo.png"));
+    QVERIFY(c.detail(QContactOrganization::Type).value(QContactOrganization::FieldName).toString() == QString("Utopian Megacorporation"));
+    QVERIFY(c.detail(QContactOrganization::Type).value(QContactOrganization::FieldTitle).toString() == QString("Generic Employee"));
 }
 
 void tst_QContactDetails::phoneNumber()
@@ -982,42 +979,43 @@ void tst_QContactDetails::phoneNumber()
     QCOMPARE(p1.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
 
     // Sub types
-    p1.setSubTypes(QContactPhoneNumber::SubTypeCar);
-    QCOMPARE(p1.subTypes(), QStringList() << QContactPhoneNumber::SubTypeCar);
+    p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeCar);
+    QCOMPARE(p1.subTypes(), QList<int>() << QContactPhoneNumber::SubTypeCar);
 
-    QStringList sl;
+    QList<int> sl;
     sl << QContactPhoneNumber::SubTypeMobile << QContactPhoneNumber::SubTypeFax;
     p1.setSubTypes(sl);
     QCOMPARE(p1.subTypes(), sl);
 
     // test property add
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).count(), 1);
-    QCOMPARE(QContactPhoneNumber(c.details(QContactPhoneNumber::DefinitionName).value(0)).number(), p1.number());
+    QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 1);
+    QCOMPARE(QContactPhoneNumber(c.details(QContactPhoneNumber::Type).value(0)).number(), p1.number());
 
     // test property update
-    p1.setValue("label","label1");
+    p1.setValue(QContactPhoneNumber::FieldContext, "label1");
     p1.setNumber("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).value(0).value(QContactPhoneNumber::FieldNumber).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactPhoneNumber::Type).value(0).value(QContactPhoneNumber::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactPhoneNumber::Type).value(0).value(QContactPhoneNumber::FieldNumber).toString(), QString("12345"));
 
-    p1.setSubTypes(QContactPhoneNumber::SubTypeDtmfMenu);
+    p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeDtmfMenu);
     c.saveDetail(&p1);
-    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldSubTypes).toStringList() == QStringList(QContactPhoneNumber::SubTypeDtmfMenu));
-    p1.setSubTypes(QStringList() << QContactPhoneNumber::SubTypeModem << QContactPhoneNumber::SubTypeFax);
+
+    QCOMPARE(c.detail(QContactPhoneNumber::Type).value<QList<int> >(QContactPhoneNumber::FieldSubTypes), QList<int>() << QContactPhoneNumber::SubTypeDtmfMenu);
+    p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeModem << QContactPhoneNumber::SubTypeFax);
     c.saveDetail(&p1);
-    QVERIFY(c.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldSubTypes).toStringList() == p1.subTypes());
+    QVERIFY(c.detail(QContactPhoneNumber::Type).value<QList<int> >(QContactPhoneNumber::FieldSubTypes) == p1.subTypes());
 
     // test property remove
     QVERIFY(c.removeDetail(&p1));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 0);
     QVERIFY(c.saveDetail(&p2));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 1);
     QVERIFY(c.removeDetail(&p2));
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 0);
     QVERIFY(c.removeDetail(&p2) == false);
-    QCOMPARE(c.details(QContactPhoneNumber::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 0);
 }
 
 void tst_QContactDetails::presence()
@@ -1048,15 +1046,15 @@ void tst_QContactDetails::presence()
 
     // test property add
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).count(), 1);
-    QCOMPARE(QContactPresence(c.details(QContactPresence::DefinitionName).value(0)).presenceStateText(), p1.presenceStateText());
+    QCOMPARE(c.details(QContactPresence::Type).count(), 1);
+    QCOMPARE(QContactPresence(c.details(QContactPresence::Type).value(0)).presenceStateText(), p1.presenceStateText());
 
     // test property update
-    p1.setValue("label","label1");
+    p1.setValue(QContactPresence::FieldContext, "label1");
     p1.setPresenceStateText("12345");
     QVERIFY(c.saveDetail(&p1));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).value(0).value(QContactPresence::FieldPresenceStateText).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactPresence::Type).value(0).value(QContactPresence::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactPresence::Type).value(0).value(QContactPresence::FieldPresenceStateText).toString(), QString("12345"));
 
     p2.setTimestamp(ts);
     p2.setNickname(QString("test"));
@@ -1067,13 +1065,13 @@ void tst_QContactDetails::presence()
 
     // test property remove
     QVERIFY(c.removeDetail(&p1));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPresence::Type).count(), 0);
     QVERIFY(c.saveDetail(&p2));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactPresence::Type).count(), 1);
     QVERIFY(c.removeDetail(&p2));
-    QCOMPARE(c.details(QContactPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPresence::Type).count(), 0);
     QVERIFY(c.removeDetail(&p2) == false);
-    QCOMPARE(c.details(QContactPresence::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactPresence::Type).count(), 0);
 }
 
 void tst_QContactDetails::ringtone()
@@ -1096,25 +1094,25 @@ void tst_QContactDetails::ringtone()
 
     // test property add
     QVERIFY(c.saveDetail(&r1));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).count(), 1);
-    QCOMPARE(QContactRingtone(c.details(QContactRingtone::DefinitionName).value(0)).audioRingtoneUrl(), r1.audioRingtoneUrl());
+    QCOMPARE(c.details(QContactRingtone::Type).count(), 1);
+    QCOMPARE(QContactRingtone(c.details(QContactRingtone::Type).value(0)).audioRingtoneUrl(), r1.audioRingtoneUrl());
 
     // test property update
-    r1.setValue("label","label1");
+    r1.setValue(QContactRingtone::FieldContext, "label1");
     r1.setAudioRingtoneUrl(QUrl("audioUrl2"));
     QVERIFY(c.saveDetail(&r1));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).value(0).value<QUrl>(QContactRingtone::FieldAudioRingtoneUrl), QUrl("audioUrl2"));
+    QCOMPARE(c.details(QContactRingtone::Type).value(0).value(QContactRingtone::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactRingtone::Type).value(0).value<QUrl>(QContactRingtone::FieldAudioRingtoneUrl), QUrl("audioUrl2"));
 
     // test property remove
     QVERIFY(c.removeDetail(&r1));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactRingtone::Type).count(), 0);
     QVERIFY(c.saveDetail(&r2));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactRingtone::Type).count(), 1);
     QVERIFY(c.removeDetail(&r2));
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactRingtone::Type).count(), 0);
     QVERIFY(c.removeDetail(&r2) == false);
-    QCOMPARE(c.details(QContactRingtone::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactRingtone::Type).count(), 0);
 }
 
 void tst_QContactDetails::syncTarget()
@@ -1129,25 +1127,25 @@ void tst_QContactDetails::syncTarget()
 
     // test property add
     QVERIFY(c.saveDetail(&s1));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).count(), 1);
-    QCOMPARE(QContactSyncTarget(c.details(QContactSyncTarget::DefinitionName).value(0)).syncTarget(), s1.syncTarget());
+    QCOMPARE(c.details(QContactSyncTarget::Type).count(), 1);
+    QCOMPARE(QContactSyncTarget(c.details(QContactSyncTarget::Type).value(0)).syncTarget(), s1.syncTarget());
 
     // test property update
-    s1.setValue("label","label1");
+    s1.setValue(QContactSyncTarget::FieldContext, "label1");
     s1.setSyncTarget("12345");
     QVERIFY(c.saveDetail(&s1));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).value(0).value(QContactSyncTarget::FieldSyncTarget).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactSyncTarget::Type).value(0).value(QContactSyncTarget::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactSyncTarget::Type).value(0).value(QContactSyncTarget::FieldSyncTarget).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(c.removeDetail(&s1));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactSyncTarget::Type).count(), 0);
     QVERIFY(c.saveDetail(&s2));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactSyncTarget::Type).count(), 1);
     QVERIFY(c.removeDetail(&s2));
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactSyncTarget::Type).count(), 0);
     QVERIFY(c.removeDetail(&s2) == false);
-    QCOMPARE(c.details(QContactSyncTarget::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactSyncTarget::Type).count(), 0);
 }
 
 void tst_QContactDetails::tag()
@@ -1162,25 +1160,25 @@ void tst_QContactDetails::tag()
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTag::DefinitionName).count(), 1);
-    QCOMPARE(QContactTag(c.details(QContactTag::DefinitionName).value(0)).tag(), t1.tag());
+    QCOMPARE(c.details(QContactTag::Type).count(), 1);
+    QCOMPARE(QContactTag(c.details(QContactTag::Type).value(0)).tag(), t1.tag());
     QVERIFY(c.saveDetail(&t2));
-    QCOMPARE(c.details(QContactTag::DefinitionName).count(), 2);
+    QCOMPARE(c.details(QContactTag::Type).count(), 2);
 
     // test property update
-    t1.setValue("label","label1");
+    t1.setValue(QContactTag::FieldContext, "label1");
     t1.setTag("green");
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactTag::DefinitionName).value(0).value(QContactTag::FieldTag).toString(), QString("green"));
+    QCOMPARE(c.details(QContactTag::Type).value(0).value(QContactTag::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactTag::Type).value(0).value(QContactTag::FieldTag).toString(), QString("green"));
 
     // test property remove
     QVERIFY(c.removeDetail(&t1));
-    QCOMPARE(c.details(QContactTag::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactTag::Type).count(), 1);
     QVERIFY(c.removeDetail(&t2));
-    QCOMPARE(c.details(QContactTag::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactTag::Type).count(), 0);
     QVERIFY(c.removeDetail(&t2) == false);
-    QCOMPARE(c.details(QContactTag::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactTag::Type).count(), 0);
 }
 
 void tst_QContactDetails::thumbnail()
@@ -1195,30 +1193,30 @@ void tst_QContactDetails::thumbnail()
     QCOMPARE(t1.value<QImage>(QContactThumbnail::FieldThumbnail), i1);
 
     // Make sure we have none to start with
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactThumbnail::Type).count(), 0);
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).count(), 1);
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::DefinitionName).value(0)).thumbnail(), t1.thumbnail());
+    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
+    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), t1.thumbnail());
 
     // test property update
-    t1.setValue("label","label1");
+    t1.setValue(QContactThumbnail::FieldContext, "label1");
     t1.setThumbnail(i2);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).value(0).value<QImage>(QContactThumbnail::FieldThumbnail), i2);
+    QCOMPARE(c.details(QContactThumbnail::Type).value(0).value(QContactThumbnail::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactThumbnail::Type).value(0).value<QImage>(QContactThumbnail::FieldThumbnail), i2);
 
     // Uniqueness is not currently enforced
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
     t2.setThumbnail(i1);
     QVERIFY(c.saveDetail(&t2));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).count(), 2); // save should overwrite!
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::DefinitionName).value(0)).thumbnail(), i1);
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::DefinitionName).value(0)).thumbnail(), t2.thumbnail());
+    QCOMPARE(c.details(QContactThumbnail::Type).count(), 2); // save should overwrite!
+    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), i1);
+    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), t2.thumbnail());
 
     QVERIFY(c.removeDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
 }
 
 void tst_QContactDetails::timestamp()
@@ -1235,27 +1233,27 @@ void tst_QContactDetails::timestamp()
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).count(), 1);
-    QCOMPARE(QContactTimestamp(c.details(QContactTimestamp::DefinitionName).value(0)).created(), t1.created());
+    QCOMPARE(c.details(QContactTimestamp::Type).count(), 1);
+    QCOMPARE(QContactTimestamp(c.details(QContactTimestamp::Type).value(0)).created(), t1.created());
 
     // test property update
-    t1.setValue("label","label1");
+    t1.setValue(QContactTimestamp::FieldContext, "label1");
     t1.setLastModified(modified);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).value(0).value(QContactTimestamp::FieldModificationTimestamp).toDateTime(), modified);
+    QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
+    QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldModificationTimestamp).toDateTime(), modified);
 
     // test property remove
     QVERIFY(c.removeDetail(&t1));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactTimestamp::Type).count(), 0);
     t2.setCreated(created.addSecs(15));
     QVERIFY(c.saveDetail(&t2));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactTimestamp::Type).count(), 1);
     QVERIFY(c.removeDetail(&t2));
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactTimestamp::Type).count(), 0);
     QVERIFY(c.removeDetail(&t2) == false);
-    QCOMPARE(c.details(QContactTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactTimestamp::Type).count(), 0);
 }
 
 void tst_QContactDetails::type()
@@ -1266,28 +1264,28 @@ void tst_QContactDetails::type()
     // test property set
     t1.setType(QContactType::TypeGroup);
     QCOMPARE(t1.type(), QContactType::TypeGroup);
-    QCOMPARE(t1.value(QContactType::FieldType).toString(), QContactType::TypeGroup);
+    QCOMPARE(static_cast<QContactType::TypeValues>(t1.value<int>(QContactType::FieldType)), QContactType::TypeGroup);
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactType::DefinitionName).count(), 1);
-    QCOMPARE(QContactType(c.details(QContactType::DefinitionName).value(0)).type(), t1.type());
+    QCOMPARE(c.details(QContactType::Type).count(), 1);
+    QCOMPARE(QContactType(c.details(QContactType::Type).value(0)).type(), t1.type());
 
     // test property update
     t1.setType(QContactType::TypeContact);
     QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactType::DefinitionName).value(0).value(QContactType::FieldType).toString(), QContactType::TypeContact);
+    QCOMPARE(static_cast<QContactType::TypeValues>(c.details(QContactType::Type).value(0).value<int>(QContactType::FieldType)), QContactType::TypeContact);
 
     // test property remove
     QVERIFY(!c.removeDetail(&t1)); // cannot remove type
-    QCOMPARE(c.details(QContactType::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactType::Type).count(), 1);
     t2.setType(QContactType::TypeGroup);
     QVERIFY(c.saveDetail(&t2)); // overwrites t1
-    QCOMPARE(c.details(QContactType::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactType::Type).count(), 1);
     QVERIFY(!c.removeDetail(&t2)); // cannot remove type - "succeeds" but count remains unchanged
-    QCOMPARE(c.details(QContactType::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactType::Type).count(), 1);
     QVERIFY(!c.removeDetail(&t2));
-    QCOMPARE(c.details(QContactType::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactType::Type).count(), 1);
 }
 
 void tst_QContactDetails::url()
@@ -1302,19 +1300,19 @@ void tst_QContactDetails::url()
 
     u1.setSubType(QContactUrl::SubTypeHomePage);
     QCOMPARE(u1.subType(), QContactUrl::SubTypeHomePage);
-    QCOMPARE(u1.value(QContactUrl::FieldSubType).toString(), QContactUrl::SubTypeHomePage);
+    QCOMPARE(static_cast<QContactUrl::SubType>(u1.value<int>(QContactUrl::FieldSubType)), QContactUrl::SubTypeHomePage);
 
     // test property add
     QVERIFY(c.saveDetail(&u1));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 1);
-    QCOMPARE(QContactUrl(c.details(QContactUrl::DefinitionName).value(0)).url(), u1.url());
+    QCOMPARE(c.details(QContactUrl::Type).count(), 1);
+    QCOMPARE(QContactUrl(c.details(QContactUrl::Type).value(0)).url(), u1.url());
 
     // test property update
-    u1.setValue("label","label1");
+    u1.setValue(QContactUrl::FieldContext, "label1");
     u1.setUrl("12345");
     QVERIFY(c.saveDetail(&u1));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value("label").toString(), QString("label1"));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).value(0).value(QContactUrl::FieldUrl).toString(), QString("12345"));
+    QCOMPARE(c.details(QContactUrl::Type).value(0).value(QContactUrl::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactUrl::Type).value(0).value(QContactUrl::FieldUrl).toString(), QString("12345"));
 
     // now as above, but with the QUrl setter.
     QUrl urlValue("http://www.example.com");
@@ -1322,7 +1320,7 @@ void tst_QContactDetails::url()
     u3.setUrl(urlValue);
     QCOMPARE(u3.url(), urlValue.toString());
     QVERIFY(c.saveDetail(&u3));
-    QVERIFY(c.details(QContactUrl::DefinitionName).contains(u3));
+    QVERIFY(c.details(QContactUrl::Type).contains(u3));
     u3.setUrl(QString(QLatin1String("http://www.anotherexample.com")));
     QCOMPARE(u3.url(), QString(QLatin1String("http://www.anotherexample.com")));
     QVERIFY(c.saveDetail(&u3));
@@ -1330,13 +1328,13 @@ void tst_QContactDetails::url()
     // test property remove
     QVERIFY(c.removeDetail(&u3));
     QVERIFY(c.removeDetail(&u1));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactUrl::Type).count(), 0);
     QVERIFY(c.saveDetail(&u2));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactUrl::Type).count(), 1);
     QVERIFY(c.removeDetail(&u2));
-    QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactUrl::Type).count(), 0);
     QVERIFY(c.removeDetail(&u2) == false);
-    QCOMPARE(c.details(QContactUrl::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactUrl::Type).count(), 0);
 }
 
 void tst_QContactDetails::version()
@@ -1355,150 +1353,28 @@ void tst_QContactDetails::version()
 
     // test property add
     QVERIFY(c.saveDetail(&v1));
-    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 1);
-    QCOMPARE(QContactVersion(c.details(QContactVersion::DefinitionName).value(0)).sequenceNumber(), v1.sequenceNumber());
-    QCOMPARE(QContactVersion(c.details(QContactVersion::DefinitionName).value(0)).extendedVersion(), v1.extendedVersion());
+    QCOMPARE(c.details(QContactVersion::Type).count(), 1);
+    QCOMPARE(QContactVersion(c.details(QContactVersion::Type).value(0)).sequenceNumber(), v1.sequenceNumber());
+    QCOMPARE(QContactVersion(c.details(QContactVersion::Type).value(0)).extendedVersion(), v1.extendedVersion());
     QVERIFY(c.saveDetail(&v2));
-    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 2);
+    QCOMPARE(c.details(QContactVersion::Type).count(), 2);
 
     // test property update
     v1.setSequenceNumber(65);
     v1.setExtendedVersion(anotherExtendedVersion);
     QVERIFY(c.saveDetail(&v1));
-    QCOMPARE(c.details(QContactVersion::DefinitionName).value(0).value(QContactVersion::FieldSequenceNumber).toInt(), 65);
-    QCOMPARE(c.details(QContactVersion::DefinitionName).value(0).value(QContactVersion::FieldExtendedVersion).toByteArray(),
+    QCOMPARE(c.details(QContactVersion::Type).value(0).value(QContactVersion::FieldSequenceNumber).toInt(), 65);
+    QCOMPARE(c.details(QContactVersion::Type).value(0).value(QContactVersion::FieldExtendedVersion).toByteArray(),
              anotherExtendedVersion);
 
     // test property remove
     QVERIFY(c.removeDetail(&v1));
-    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 1);
+    QCOMPARE(c.details(QContactVersion::Type).count(), 1);
     QVERIFY(c.removeDetail(&v2));
-    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactVersion::Type).count(), 0);
     QVERIFY(c.removeDetail(&v2) == false);
-    QCOMPARE(c.details(QContactVersion::DefinitionName).count(), 0);
+    QCOMPARE(c.details(QContactVersion::Type).count(), 0);
 }
-
-// define a custom detail to test inheritance/slicing
-class CustomTestDetail : public QContactDetail
-{
-public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(CustomTestDetail, "CustomTestDetail")
-    const static QString FieldTestLabel;
-
-    ~CustomTestDetail()
-    {
-        // we define a dtor which does some random stuff
-        // to test that the virtual dtor works as expected.
-
-        int *temp = 0;
-        int random = qrand();
-        random += 1;
-        if (random > 0) {
-            temp = new int;
-            *temp = 5;
-        }
-
-        if (temp) {
-            delete temp;
-        }
-    }
-
-    void setTestLabel(const QString& testLabel) { setValue(FieldTestLabel, testLabel); }
-    QString testLabel() const { return value(FieldTestLabel).toString(); }
-};
-
-const QString CustomTestDetail::FieldTestLabel(QLatin1String("TestLabel"));
-const QString CustomTestDetail::DefinitionName(QLatin1String("CustomTestDetail"));
-
-void tst_QContactDetails::custom()
-{
-    QContact c;
-
-    // first, test a custom definition detail
-    QContactDetail c1("mycustom"), c2("mycustom");
-
-    // test property set
-    c1.setValue("custom", "1234");
-    QCOMPARE(c1.value("custom").toString(), QString("1234"));
-
-    // test property add
-    QVERIFY(c.saveDetail(&c1));
-    QCOMPARE(c.details("mycustom").count(), 1);
-    QCOMPARE((c.details("mycustom").value(0)).value("custom"), c1.value("custom"));
-
-    // test property update
-    c1.setValue("label","label1");
-    c1.setValue("custom", "12345");
-    QVERIFY(c.saveDetail(&c1));
-
-    // test property remove
-    QVERIFY(c.removeDetail(&c1));
-    QCOMPARE(c.details("mycustom").count(), 0);
-    QVERIFY(c.saveDetail(&c2));
-    QCOMPARE(c.details("mycustom").count(), 1);
-    QVERIFY(c.removeDetail(&c2));
-    QCOMPARE(c.details("mycustom").count(), 0);
-    QVERIFY(c.removeDetail(&c2) == false);
-    QCOMPARE(c.details("mycustom").count(), 0);
-
-
-    // then, test a custom subclass (we don't test registration of the custom definition, however)
-    CustomTestDetail ctd1, ctd2;
-    ctd1.setTestLabel("this is a test");
-    ctd2.setTestLabel("test 2");
-    QCOMPARE(ctd1.testLabel(), QString("this is a test"));
-
-    // prior to add
-    QCOMPARE(c.details("CustomTestDetail").count(), 0);
-    QCOMPARE(c.details<CustomTestDetail>().count(), 0);
-
-    // test detail add
-    QVERIFY(c.saveDetail(&ctd1));
-    QCOMPARE(c.details("CustomTestDetail").count(), 1);
-    QCOMPARE(c.details<CustomTestDetail>().count(), 1);
-    QCOMPARE(c.details<CustomTestDetail>().first().testLabel(), QString("this is a test"));
-
-    // test detail update
-    ctd1.setTestLabel("this is a modified test");
-    QVERIFY(c.saveDetail(&ctd1)); // should merely update
-    QCOMPARE(c.details("CustomTestDetail").count(), 1);
-    QCOMPARE(c.details<CustomTestDetail>().count(), 1);
-    QCOMPARE(c.details<CustomTestDetail>().first().testLabel(), QString("this is a modified test"));
-
-    // test detail remove
-    QVERIFY(c.removeDetail(&ctd1));
-    QCOMPARE(c.details("CustomTestDetail").count(), 0);
-    QCOMPARE(c.details<CustomTestDetail>().count(), 0);
-
-    // now test how custom details interact with foreach loops.
-    QVERIFY(c.saveDetail(&ctd1));
-    QVERIFY(c.saveDetail(&ctd2));
-    QVERIFY(c.saveDetail(&c1));
-
-    // first, definition agnostic foreach.
-    foreach (const QContactDetail& det, c.details()) {
-        QCOMPARE(det.definitionName().isEmpty(), false);
-    }
-
-    // second, definition parameter foreach, with assignment.
-    foreach (const QContactDetail& det, c.details("CustomTestDetail")) {
-        CustomTestDetail customDet = det;
-        QCOMPARE(det.definitionName(), QString("CustomTestDetail"));
-        QCOMPARE(customDet.testLabel().isEmpty(), false);
-    }
-
-    // third, definition parameter foreach, with cast.
-    foreach (const QContactDetail& det, c.details("CustomTestDetail")) {
-        QCOMPARE(static_cast<CustomTestDetail>(det).definitionName(), QString("CustomTestDetail"));
-        QCOMPARE(static_cast<CustomTestDetail>(det).testLabel().isEmpty(), false);
-    }
-
-    // fourth, parametrized foreach.
-    foreach (const CustomTestDetail& det, c.details<CustomTestDetail>()) {
-        QCOMPARE(det.definitionName(), QString("CustomTestDetail"));
-    }
-}
-
 
 QTEST_MAIN(tst_QContactDetails)
 #include "tst_qcontactdetails.moc"

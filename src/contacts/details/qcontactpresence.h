@@ -56,13 +56,20 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactPresence : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPresence, "Presence")
-    const static QString FieldTimestamp;
-    const static QString FieldNickname;
-    const static QString FieldPresenceState;
-    const static QString FieldPresenceStateText;
-    const static QString FieldPresenceStateImageUrl;
-    const static QString FieldCustomMessage;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPresence)
+#else
+    static const DetailType Type;
+#endif
+
+    enum PresenceField {
+        FieldTimestamp = 0,
+        FieldNickname,
+        FieldPresenceState,
+        FieldPresenceStateText,
+        FieldPresenceStateImageUrl,
+        FieldCustomMessage
+    };
 
     enum PresenceState {
         PresenceUnknown = 0,
@@ -71,7 +78,7 @@ public:
         PresenceBusy,
         PresenceAway,
         PresenceExtendedAway,
-        PresenceOffline,
+        PresenceOffline
     };
 
     void setTimestamp(const QDateTime& timestamp) {setValue(FieldTimestamp, timestamp);}

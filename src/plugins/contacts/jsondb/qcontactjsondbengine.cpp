@@ -124,26 +124,26 @@ QString QContactJsonDbEngine::managerName() const
     return QContactJsonDbStr::contactJsonDbEngineName();
 }
 
-QStringList QContactJsonDbEngine::supportedContactDetailTypes() const
+QList<QContactDetail::DetailType> QContactJsonDbEngine::supportedContactDetailTypes() const
 {
-    QStringList supportedDetails;
-    supportedDetails << QContactAddress::DefinitionName
-                     << QContactAvatar::DefinitionName
-                     << QContactBirthday::DefinitionName
-                     << QContactDisplayLabel::DefinitionName
-                     << QContactEmailAddress::DefinitionName
-                     << QContactExtendedDetail::DefinitionName
-                     << QContactGender::DefinitionName
-                     << QContactName::DefinitionName
-                     << QContactNickname::DefinitionName
-                     << QContactNote::DefinitionName
-                     << QContactOrganization::DefinitionName
-                     << QContactPersonId::DefinitionName
-                     << QContactPhoneNumber::DefinitionName
-                     << QContactRingtone::DefinitionName
-                     << QContactType::DefinitionName
-                     << QContactUrl::DefinitionName
-                     << QContactVersion::DefinitionName;
+    QList<QContactDetail::DetailType> supportedDetails;
+    supportedDetails << QContactAddress::Type
+                     << QContactAvatar::Type
+                     << QContactBirthday::Type
+                     << QContactDisplayLabel::Type
+                     << QContactEmailAddress::Type
+                     << QContactExtendedDetail::Type
+                     << QContactGender::Type
+                     << QContactName::Type
+                     << QContactNickname::Type
+                     << QContactNote::Type
+                     << QContactOrganization::Type
+                     << QContactPersonId::Type
+                     << QContactPhoneNumber::Type
+                     << QContactRingtone::Type
+                     << QContactType::Type
+                     << QContactUrl::Type
+                     << QContactVersion::Type;
     return supportedDetails;
 }
 
@@ -160,7 +160,7 @@ bool QContactJsonDbEngine::validateContact(const QContact& contact, QContactMana
     for (int i=0; i<contactDetailList.count(); i++)
     {
         QContactDetail currentDetail = contactDetailList.value(i);
-        if (!supportedContactDetailTypes().contains(currentDetail.definitionName()))
+        if (!supportedContactDetailTypes().contains(currentDetail.type()))
         {
             *error = QContactManager::InvalidDetailError;
             return false;
@@ -194,8 +194,7 @@ QString QContactJsonDbEngine::synthesizedDisplayLabel(const QContact &contact, Q
 {
     // synthesize the display name from the name of the contact, or, failing that, the organisation of the contact.
     *error = QContactManager::NoError;
-    QList<QContactDetail> allNames = contact.details(QContactName::DefinitionName);
-
+    QList<QContactDetail> allNames = contact.details(QContactName::Type);
     const QLatin1String space(" ");
 
     // synthesize the display label from the name.
@@ -237,7 +236,7 @@ QString QContactJsonDbEngine::synthesizedDisplayLabel(const QContact &contact, Q
     }
 
     /* Well, we had no non empty names. if we have orgs, fall back to those */
-    QList<QContactDetail> allOrgs = contact.details(QContactOrganization::DefinitionName);
+    QList<QContactDetail> allOrgs = contact.details(QContactOrganization::Type);
     for (int i=0; i < allOrgs.size(); i++) {
         const QContactOrganization& org = allOrgs.at(i);
         if (!org.name().isEmpty()) {
@@ -439,7 +438,7 @@ bool QContactJsonDbEngine::removeContact(const QContactId& contactId, QContactMa
     else return true;
 }
 
-bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const {
+bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const {
   if (!supportedContactTypes().contains(contactType)) {
         return false;
   };

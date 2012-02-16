@@ -55,8 +55,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactDisplayLabel : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactDisplayLabel, "DisplayLabel")
-    const static QString FieldLabel;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactDisplayLabel)
+#else
+    static const DetailType Type;
+#endif
+
+    enum DisplayLabelField {
+        FieldLabel = 0
+    };
 
     QString label() const {return value(FieldLabel).toString();}
 

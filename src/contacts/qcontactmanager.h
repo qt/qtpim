@@ -138,7 +138,7 @@ public:
     bool removeContact(const QContactId& contactId);      // remove the contact from the persistent store
 
     bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - save.
-    bool saveContacts(QList<QContact>* contacts, const QStringList& definitionMask, QMap<int, QContactManager::Error>* errorMap = 0); // Partial save
+    bool saveContacts(QList<QContact>* contacts, const QList<QContactDetail::DetailType>& typeMask, QMap<int, QContactManager::Error>* errorMap = 0); // Partial save
     bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - remove.
 
     /* Return a pruned or modified contact which is valid and can be saved in the manager */
@@ -171,11 +171,11 @@ public:
         Anonymous,
         ChangeLogs
     };
-    bool hasFeature(QContactManager::ManagerFeature feature, const QString& contactType = QContactType::TypeContact) const;
-    bool isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType = QContactType::TypeContact) const;
+    bool hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType = QContactType::TypeContact) const;
+    bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType = QContactType::TypeContact) const;
     QList<QVariant::Type> supportedDataTypes() const;
     bool isFilterSupported(const QContactFilter& filter) const;
-    QStringList supportedContactTypes() const;
+    QList<QContactType::TypeValues> supportedContactTypes() const;
 
     /* return a list of available backends for which a QContactManager can be constructed. */
     static QStringList availableManagers();

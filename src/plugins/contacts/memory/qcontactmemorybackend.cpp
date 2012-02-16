@@ -279,7 +279,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
             return false;
         }
 
-        QContactTimestamp ts = theContact->detail(QContactTimestamp::DefinitionName);
+        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
         ts.setLastModified(QDateTime::currentDateTime());
         QContactManagerEngine::setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
         theContact->saveDetail(&ts);
@@ -300,7 +300,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         }
 
         /* New contact */
-        QContactTimestamp ts = theContact->detail(QContactTimestamp::DefinitionName);
+        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
         ts.setLastModified(QDateTime::currentDateTime());
         ts.setCreated(ts.lastModified());
         setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
@@ -801,7 +801,7 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 /*!
  * \reimp
  */
-bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, const QString &contactType) const
+bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const
 {
     if (!supportedContactTypes().contains(contactType))
         return false;
@@ -825,7 +825,7 @@ bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, c
 /*!
  * \reimp
  */
-bool QContactMemoryEngine::isRelationshipTypeSupported(const QString &relationshipType, const QString &contactType) const
+bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationshipType, const QContactType::TypeValues contactType) const
 {
     // the memory backend supports arbitrary relationship types
     // but some relationship types don't make sense for groups.

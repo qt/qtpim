@@ -55,8 +55,8 @@ class  QDeclarativeContactAvatar : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        ImageUrl = 0,
-        VideoUrl
+        ImageUrl = QContactAvatar::FieldImageUrl,
+        VideoUrl = QContactAvatar::FieldVideoUrl
     };
     QDeclarativeContactAvatar(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -82,24 +82,11 @@ public:
     }
     QUrl videoUrl() const {return detail().value<QUrl>(QContactAvatar::FieldVideoUrl);}
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Avatar;
     }
 
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case ImageUrl:
-            return QContactAvatar::FieldImageUrl;
-        case VideoUrl:
-            return QContactAvatar::FieldVideoUrl;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
 signals:
     void valueChanged();
 

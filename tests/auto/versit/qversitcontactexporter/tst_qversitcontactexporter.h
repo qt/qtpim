@@ -100,7 +100,7 @@ private:
     // Test Utility Functions
     QContact createContactWithName(QString name);
     int countProperties(const QVersitDocument& document);
-    QContactDetail findDetailByName(QList<QContactDetail> details, QString search);
+    QContactDetail findDetailByType(QList<QContactDetail> details, QContactDetail::DetailType search);
     QVersitProperty findPropertyByName(const QVersitDocument& document,const QString& propertyName);
 
 private: // Data

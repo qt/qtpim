@@ -106,7 +106,7 @@ void tst_QContactFilter::classHierarchy()
     /* Test "casting" up and down the hierarchy */
     QContactDetailRangeFilter drf;
     QVERIFY(drf.type() == QContactFilter::ContactDetailRangeFilter);
-    drf.setDetailDefinitionName("Frog", "Croak");
+    drf.setDetailType(QContactDetail::TypeExtendedDetail, QContactExtendedDetail::FieldName);
     drf.setRange(1, 20);
 
     QContactFilter f = drf;
@@ -114,8 +114,8 @@ void tst_QContactFilter::classHierarchy()
 
     QContactDetailRangeFilter drf2 = f;
     QVERIFY(drf2.type() == QContactFilter::ContactDetailRangeFilter);
-    QVERIFY(drf2.detailDefinitionName() == "Frog");
-    QVERIFY(drf2.detailFieldName() == "Croak");
+    QVERIFY(drf2.detailType() == QContactDetail::TypeExtendedDetail);
+    QVERIFY(drf2.detailField() == QContactExtendedDetail::FieldName);
     QVERIFY(drf2.maxValue() == 20);
     QVERIFY(drf2.minValue() == 1);
 
@@ -124,20 +124,20 @@ void tst_QContactFilter::classHierarchy()
         QContactFilter f2 = drf2;
     }
     QVERIFY(drf2.type() == QContactFilter::ContactDetailRangeFilter);
-    QVERIFY(drf2.detailDefinitionName() == "Frog");
-    QVERIFY(drf2.detailFieldName() == "Croak");
+    QVERIFY(drf2.detailType() == QContactDetail::TypeExtendedDetail);
+    QVERIFY(drf2.detailField() == QContactExtendedDetail::FieldName);
     QVERIFY(drf2.maxValue() == 20);
     QVERIFY(drf2.minValue() == 1);
 
     {
         QContactDetailRangeFilter rf2 = drf2;
-        rf2.setDetailDefinitionName("Toad");
-        QVERIFY(rf2.detailDefinitionName() == "Toad");
-        QVERIFY(drf2.detailDefinitionName() == "Frog");
+        rf2.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
+        QVERIFY(rf2.detailType() == QContactDetail::TypeAddress);
+        QVERIFY(drf2.detailType() == QContactDetail::TypeExtendedDetail);
     }
     QVERIFY(drf2.type() == QContactFilter::ContactDetailRangeFilter);
-    QVERIFY(drf2.detailDefinitionName() == "Frog");
-    QVERIFY(drf2.detailFieldName() == "Croak");
+    QVERIFY(drf2.detailType() == QContactDetail::TypeExtendedDetail);
+    QVERIFY(drf2.detailField() == QContactExtendedDetail::FieldName);
     QVERIFY(drf2.maxValue() == 20);
     QVERIFY(drf2.minValue() == 1);
 
@@ -177,13 +177,13 @@ void tst_QContactFilter::intersectionFilter()
 {
     /* Test boolean ops */
     QContactDetailFilter df;
-    df.setDetailDefinitionName("Frog");
+    df.setDetailType(QContactDetail::TypeExtendedDetail, QContactExtendedDetail::FieldName);
 
     QContactDetailFilter df2;
-    df2.setDetailDefinitionName("Toad");
+    df2.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
 
     QContactDetailFilter df3;
-    df3.setDetailDefinitionName("Hippopotamus");
+    df3.setDetailType(QContactDetail::TypePhoneNumber, QContactPhoneNumber::FieldNumber);
 
     QContactIntersectionFilter bf;
     bf << df << df2;
@@ -264,13 +264,13 @@ void tst_QContactFilter::unionFilter()
 {
     /* Test boolean ops */
     QContactDetailFilter df;
-    df.setDetailDefinitionName("Frog");
+    df.setDetailType(QContactDetail::TypeExtendedDetail, QContactExtendedDetail::FieldName);
 
     QContactDetailFilter df2;
-    df2.setDetailDefinitionName("Toad");
+    df2.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
 
     QContactDetailFilter df3;
-    df3.setDetailDefinitionName("Hippopotamus");
+    df3.setDetailType(QContactDetail::TypePhoneNumber, QContactPhoneNumber::FieldNumber);
 
     QContactUnionFilter bf;
     bf << df << df2;
@@ -450,21 +450,20 @@ void tst_QContactFilter::detailFilter()
     QContactDetailFilter df;
 
     QVERIFY(df.type() == QContactFilter::ContactDetailFilter);
-
-    QVERIFY(df.detailDefinitionName().isEmpty());
-    QVERIFY(df.detailFieldName().isEmpty());
+    QVERIFY(df.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(df.detailField() == -1);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
-    df.setDetailDefinitionName("Definition");
-    QVERIFY(df.detailDefinitionName() == "Definition");
-    QVERIFY(df.detailFieldName().isEmpty());
+    df.setDetailType(QContactDetail::TypeAddress);
+    QVERIFY(df.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df.detailField() == -1);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
-    df.setDetailDefinitionName("Definition", "Field");
-    QVERIFY(df.detailDefinitionName() == "Definition");
-    QVERIFY(df.detailFieldName() == "Field");
+    df.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
+    QVERIFY(df.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df.detailField() == QContactAddress::FieldStreet);
     QVERIFY(df.matchFlags() == 0);
     QVERIFY(df.value().isNull());
 
@@ -483,8 +482,8 @@ void tst_QContactFilter::detailFilter()
 
     QContactDetailFilter df2 = f;
     QVERIFY(df2 == df);
-    QVERIFY(df2.detailDefinitionName() == "Definition");
-    QVERIFY(df2.detailFieldName() == "Field");
+    QVERIFY(df2.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df2.detailField() == QContactAddress::FieldStreet);
 
     /* Self assignment should do nothing */
     df2 = df2;
@@ -496,45 +495,45 @@ void tst_QContactFilter::detailFilter()
     /* Directly */
     df2 = rf;
     QVERIFY(df2.type() == QContactFilter::ContactDetailFilter);
-    QVERIFY(df2.detailDefinitionName().isEmpty());
-    QVERIFY(df2.detailFieldName().isEmpty());
+    QVERIFY(df2.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value().isNull());
 
     /* reset it */
     df2 = df;
-    QVERIFY(df2.detailDefinitionName() == "Definition");
-    QVERIFY(df2.detailFieldName() == "Field");
+    QVERIFY(df2.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df2.detailField() == QContactAddress::FieldStreet);
 
     /* Through base class */
     f = rf;
     df2 = f;
-    QVERIFY(df2.detailDefinitionName().isEmpty());
-    QVERIFY(df2.detailFieldName().isEmpty());
+    QVERIFY(df2.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value().isNull());
 
     /* Now test copy ctor */
     QContactDetailFilter df3(rf);
     QVERIFY(df3.type() == QContactFilter::ContactDetailFilter);
-    QVERIFY(df3.detailDefinitionName().isEmpty());
-    QVERIFY(df3.detailFieldName().isEmpty());
+    QVERIFY(df3.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(df3.detailField() == -1);
     QVERIFY(df3.value().isNull());
 
     /* reset it */
     df3 = df;
-    QVERIFY(df3.detailDefinitionName() == "Definition");
-    QVERIFY(df3.detailFieldName() == "Field");
+    QVERIFY(df3.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df3.detailField() == QContactAddress::FieldStreet);
 
     /* Now test copy ctor through base class */
     QContactDetailFilter df4(f);
     QVERIFY(df4.type() == QContactFilter::ContactDetailFilter);
-    QVERIFY(df4.detailDefinitionName().isEmpty());
-    QVERIFY(df4.detailFieldName().isEmpty());
+    QVERIFY(df4.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(df4.detailField() == -1);
     QVERIFY(df4.value().isNull());
 
     /* reset it */
     df4 = df;
-    QVERIFY(df4.detailDefinitionName() == "Definition");
-    QVERIFY(df4.detailFieldName() == "Field");
+    QVERIFY(df4.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(df4.detailField() == QContactAddress::FieldStreet);
 }
 
 void tst_QContactFilter::detailRangeFilter()
@@ -543,26 +542,26 @@ void tst_QContactFilter::detailRangeFilter()
 
     QVERIFY(rf.type() == QContactFilter::ContactDetailRangeFilter);
 
-    QVERIFY(rf.detailDefinitionName().isEmpty());
-    QVERIFY(rf.detailFieldName().isEmpty());
+    QVERIFY(rf.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(rf.detailField() == -1);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
     QVERIFY(rf.maxValue().isNull());
     QVERIFY(rf.rangeFlags() == (QContactDetailRangeFilter::ExcludeUpper | QContactDetailRangeFilter::IncludeLower));
 
-    rf.setDetailDefinitionName("Definition");
-    QVERIFY(rf.detailDefinitionName() == "Definition");
-    QVERIFY(rf.detailFieldName().isEmpty());
+    rf.setDetailType(QContactDetail::TypeExtendedDetail);
+    QVERIFY(rf.detailType() == QContactDetail::TypeExtendedDetail);
+    QVERIFY(rf.detailField() == -1);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
     QVERIFY(rf.maxValue().isNull());
     QVERIFY(rf.rangeFlags() == (QContactDetailRangeFilter::ExcludeUpper | QContactDetailRangeFilter::IncludeLower));
 
-    rf.setDetailDefinitionName("Definition", "Field");
-    QVERIFY(rf.detailDefinitionName() == "Definition");
-    QVERIFY(rf.detailFieldName() == "Field");
+    rf.setDetailType(QContactDetail::TypeExtendedDetail, QContactExtendedDetail::FieldName);
+    QVERIFY(rf.detailType() == QContactDetail::TypeExtendedDetail);
+    QVERIFY(rf.detailField() == QContactExtendedDetail::FieldName);
     QVERIFY(rf.matchFlags() == 0);
 
     QVERIFY(rf.minValue().isNull());
@@ -693,8 +692,8 @@ void tst_QContactFilter::sortObject()
 
     /* Defaults */
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -703,8 +702,8 @@ void tst_QContactFilter::sortObject()
     /* Blank Policy */
     sortorder.setBlankPolicy(QContactSortOrder::BlanksFirst);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -712,8 +711,8 @@ void tst_QContactFilter::sortObject()
 
     sortorder.setBlankPolicy(QContactSortOrder::BlanksLast);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
@@ -723,8 +722,8 @@ void tst_QContactFilter::sortObject()
     sortorder.setDirection(Qt::DescendingOrder);
     QVERIFY(sortorder.direction() == Qt::DescendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder != QContactSortOrder());
@@ -732,8 +731,8 @@ void tst_QContactFilter::sortObject()
     sortorder.setDirection(Qt::AscendingOrder);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder == QContactSortOrder());
@@ -742,8 +741,8 @@ void tst_QContactFilter::sortObject()
     sortorder.setCaseSensitivity(Qt::CaseInsensitive);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseInsensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder != QContactSortOrder());
@@ -751,86 +750,64 @@ void tst_QContactFilter::sortObject()
     sortorder.setCaseSensitivity(Qt::CaseSensitive);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
     QVERIFY(!sortorder.isValid());
     QVERIFY(sortorder == QContactSortOrder());
 
     /* Definitions */
-    sortorder.setDetailDefinitionName(QString(), QString());
+    sortorder.setDetailType(QContactDetail::DetailType(), -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
-    sortorder.setDetailDefinitionName("", QString());
+    sortorder.setDetailType(QContactDetail::TypeUndefined, -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
-    sortorder.setDetailDefinitionName(QString(), "");
+    sortorder.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailDefinitionName("", "");
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailDefinitionName("Definition", QString());
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QContactSortOrder());
-
-    sortorder.setDetailDefinitionName("Definition", "Detail");
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName() == "Definition");
-    QVERIFY(sortorder.detailFieldName() == "Detail");
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(sortorder.detailField() == QContactAddress::FieldStreet);
     QVERIFY(sortorder.isValid());
 
-    sortorder.setDetailDefinitionName(QString(), "Detail");
+    sortorder.setDetailType(QContactDetail::DetailType(), QContactAddress::FieldStreet);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailDefinitionName().isEmpty());
-    QVERIFY(sortorder.detailFieldName().isEmpty());
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
+    QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
 
     /* Copy ctor */
-    sortorder.setDetailDefinitionName("Definition", "Detail");
+    sortorder.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
     sortorder.setBlankPolicy(QContactSortOrder::BlanksFirst);
     sortorder.setDirection(Qt::DescendingOrder);
     QVERIFY(sortorder.direction() == Qt::DescendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailDefinitionName() == "Definition");
-    QVERIFY(sortorder.detailFieldName() == "Detail");
+    QVERIFY(sortorder.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(sortorder.detailField() == QContactAddress::FieldStreet);
     QVERIFY(sortorder.isValid());
 
     QContactSortOrder other(sortorder);
     QVERIFY(other.direction() == Qt::DescendingOrder);
     QVERIFY(other.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(other.detailDefinitionName() == "Definition");
-    QVERIFY(other.detailFieldName() == "Detail");
+    QVERIFY(other.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(other.detailField() == QContactAddress::FieldStreet);
     QVERIFY(other.isValid());
     QVERIFY(other == sortorder);
     QVERIFY(!(other != sortorder));
 
-    other.setDetailDefinitionName("Another Definition", "Detail");
+    other.setDetailType(QContactDetail::TypePhoneNumber, QContactAddress::FieldStreet);
     QVERIFY(other != sortorder);
 
-    other.setDetailDefinitionName("Definition", "Another Detail");
+    other.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldRegion);
     QVERIFY(other != sortorder);
 
     /* Assignment operator */
@@ -838,8 +815,8 @@ void tst_QContactFilter::sortObject()
     another = other;
     QVERIFY(another.direction() == Qt::DescendingOrder);
     QVERIFY(another.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(another.detailDefinitionName() == "Definition");
-    QVERIFY(another.detailFieldName() == "Another Detail");
+    QVERIFY(another.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(another.detailField() == QContactAddress::FieldRegion);
     QVERIFY(another.isValid());
     QVERIFY(another == other);
     QVERIFY(!(other != another));
@@ -848,8 +825,8 @@ void tst_QContactFilter::sortObject()
     another = another;
     QVERIFY(another.direction() == Qt::DescendingOrder);
     QVERIFY(another.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(another.detailDefinitionName() == "Definition");
-    QVERIFY(another.detailFieldName() == "Another Detail");
+    QVERIFY(another.detailType() == QContactDetail::TypeAddress);
+    QVERIFY(another.detailField() == QContactAddress::FieldRegion);
     QVERIFY(another.isValid());
     QVERIFY(another == other);
     QVERIFY(!(other != another));
@@ -1073,9 +1050,9 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         QContactDetailFilter expected;
-        expected.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        expected.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         QTest::newRow("Null valued range filter")
                 << static_cast<QContactFilter>(qcdrf)
                 << static_cast<QContactFilter>(expected);
@@ -1083,11 +1060,11 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QContactDetailFilter expected;
-        expected.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        expected.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         expected.setValue(QLatin1String("a"));
         expected.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Equal valued range filter")
@@ -1097,7 +1074,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"),
                QContactDetailRangeFilter::ExcludeLower | QContactDetailRangeFilter::ExcludeUpper);
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
@@ -1108,7 +1085,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("b"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Normal range filter")
@@ -1118,11 +1095,11 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdrf.setRange(QVariant(QVariant::String), QVariant(QVariant::String)); // null bounds
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QContactDetailFilter qcdf;
-        qcdf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdf.setMatchFlags(QContactFilter::MatchFixedString);
         qcdf.setValue(QVariant(QVariant::String));
         QTest::newRow("Null valued range filter")
@@ -1132,7 +1109,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
         qcdrf.setRange(QVariant(QVariant::String), QLatin1String("a")); // min is null
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("One sided range filter")
@@ -1218,7 +1195,7 @@ void tst_QContactFilter::testFilter_data()
                 << false;
 
         QContactDetailFilter dfWithEmptyValue;
-        dfWithEmptyValue.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+        dfWithEmptyValue.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         dfWithEmptyValue.setMatchFlags(QContactFilter::MatchExactly);
         dfWithEmptyValue.setValue("");
 
@@ -1228,7 +1205,7 @@ void tst_QContactFilter::testFilter_data()
                 << false;
 
         QContactDetailFilter dfWithEmptyFieldName;
-        dfWithEmptyFieldName.setDetailDefinitionName(QContactName::DefinitionName);
+        dfWithEmptyFieldName.setDetailType(QContactName::Type);
         dfWithEmptyFieldName.setMatchFlags(QContactFilter::MatchExactly);
         dfWithEmptyFieldName.setValue("");
 
@@ -1294,7 +1271,7 @@ void tst_QContactFilter::testFilter_data()
         org.setDepartment(QStringList("one")); // Single department as a stringlist
         contact.saveDetail(&org);
         QContactDetailFilter df;
-        df.setDetailDefinitionName(QContactOrganization::DefinitionName, QContactOrganization::FieldDepartment);
+        df.setDetailType(QContactOrganization::Type, QContactOrganization::FieldDepartment);
 
         // First case sensitive
         df.setMatchFlags(QContactDetailFilter::MatchCaseSensitive);
@@ -1414,7 +1391,7 @@ void tst_QContactFilter::datastream_data()
 
     {
         QContactDetailFilter filter;
-        filter.setDetailDefinitionName("detail", "field");
+        filter.setDetailType(QContactDetail::TypeAddress, QContactPhoneNumber::FieldNumber);
         filter.setMatchFlags(QContactFilter::MatchEndsWith);
         filter.setValue("ski");
         QTest::newRow("detail") << (QContactFilter)filter;

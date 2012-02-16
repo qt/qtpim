@@ -53,18 +53,28 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactAddress : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAddress, "Address")
-    const static QString FieldStreet;
-    const static QString FieldLocality;
-    const static QString FieldRegion;
-    const static QString FieldPostcode;
-    const static QString FieldCountry;
-    const static QString FieldSubTypes;
-    const static QString FieldPostOfficeBox;
-    const static QString SubTypeParcel;
-    const static QString SubTypePostal;
-    const static QString SubTypeDomestic;
-    const static QString SubTypeInternational;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactAddress)
+#else
+    static const DetailType Type;
+#endif
+
+    enum AddressField {
+        FieldStreet = 0,
+        FieldLocality,
+        FieldRegion,
+        FieldPostcode,
+        FieldCountry,
+        FieldSubTypes,
+        FieldPostOfficeBox
+    };
+
+    enum SubType {
+        SubTypeParcel = 0,
+        SubTypePostal,
+        SubTypeDomestic,
+        SubTypeInternational
+    };
 
     void setStreet(const QString& street) {setValue(FieldStreet, street);}
     QString street() const {return value(FieldStreet).toString();}
@@ -79,9 +89,8 @@ public:
     void setPostOfficeBox(const QString& postOfficeBox) {setValue(FieldPostOfficeBox, postOfficeBox);}
     QString postOfficeBox() const {return value(FieldPostOfficeBox).toString();}
 
-    void setSubTypes(const QStringList& subTypes) {setValue(FieldSubTypes, subTypes);}
-    void setSubTypes(const QString& subType) {setValue(FieldSubTypes, QStringList(subType));}
-    QStringList subTypes() const {return value<QStringList>(FieldSubTypes);}
+    void setSubTypes(const QList<int> &subTypes) {setValue(FieldSubTypes, QVariant::fromValue(subTypes));}
+    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
 
     // Convenience filter
     static QContactFilter match(const QString& subString);

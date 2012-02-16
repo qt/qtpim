@@ -120,12 +120,12 @@ QMap<int, QContactManager::Error> QContactSaveRequest::errorMap() const
 }
 
 /*!
-    Set the list of definitions to restrict saving to \a definitionMask.  This allows you to perform
+    Set the list of definitions to restrict saving to \a typeMask.  This allows you to perform
     partial save (and remove) operations on existing contacts.
 
-    If \a definitionMask is empty (the default), no restrictions will apply, and the passed
-    in contacts will be saved as is.  Otherwise, only details whose definitions are in
-    the list will be saved.  If a definition name is present in the list, but there are no
+    If \a typeMask is empty (the default), no restrictions will apply, and the passed
+    in contacts will be saved as is.  Otherwise, only details whose types are in
+    the typeMask will be saved.  If a type is present in the list, but there are no
     corresponding details in the contact passed into this request, any existing details in
     the manager for that contact will be removed.
 
@@ -141,11 +141,11 @@ QMap<int, QContactManager::Error> QContactSaveRequest::errorMap() const
     framework will emulate the functionality (fetching the whole contact, applying the
     new restricted details, and saving the contact back).
 */
-void QContactSaveRequest::setDefinitionMask(const QStringList &definitionMask)
+void QContactSaveRequest::setTypeMask(const QList<QContactDetail::DetailType> &typeMask)
 {
     Q_D(QContactSaveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_definitionMask = definitionMask;
+    d->m_typeMask = typeMask;
 }
 
 /*!
@@ -153,11 +153,11 @@ void QContactSaveRequest::setDefinitionMask(const QStringList &definitionMask)
 
     If the list is empty, the request will operate on all details.
  */
-QStringList QContactSaveRequest::definitionMask() const
+QList<QContactDetail::DetailType> QContactSaveRequest::typeMask() const
 {
     Q_D(const QContactSaveRequest);
     QMutexLocker ml(&d->m_mutex);
-    return d->m_definitionMask;
+    return d->m_typeMask;
 }
 
 #include "moc_qcontactsaverequest.cpp"

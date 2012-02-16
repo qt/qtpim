@@ -57,8 +57,8 @@ class QDeclarativeContactExtendedDetail : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Name = 0,
-        Data
+        Name = QContactExtendedDetail::FieldName,
+        Data = QContactExtendedDetail::FieldData
     };
 
     QDeclarativeContactExtendedDetail (QObject *parent = 0)
@@ -68,7 +68,7 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::ExtendedDetail;
     }
@@ -97,18 +97,6 @@ public:
     QVariant data() const
     {
         return detail().value(QContactExtendedDetail::FieldData);
-    }
-
-    static QString fieldNameFromFieldType(int type)
-    {
-        switch (type) {
-        case Name:
-            return QContactExtendedDetail::FieldName;
-        case Data:
-            return QContactExtendedDetail::FieldData;
-        }
-        qmlInfo(0) << tr("invalid field type:") << type;
-        return QString();
     }
 
 signals:

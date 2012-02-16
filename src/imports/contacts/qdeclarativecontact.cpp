@@ -79,12 +79,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
 // call-back function templates for list properties
-template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+template <typename T, QDeclarativeContactDetail::DetailType detailType>
 static void list_property_append(QDeclarativeListProperty<T> *, T *)
 {
 }
 
-template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+template <typename T, QDeclarativeContactDetail::DetailType detailType>
 static int list_property_count(QDeclarativeListProperty<T> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
@@ -94,7 +94,7 @@ static int list_property_count(QDeclarativeListProperty<T> *property)
         return 0;
 }
 
-template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+template <typename T, QDeclarativeContactDetail::DetailType detailType>
 static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
@@ -104,7 +104,7 @@ static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
         return 0;
 }
 
-template <typename T, QDeclarativeContactDetail::ContactDetailType detailType>
+template <typename T, QDeclarativeContactDetail::DetailType detailType>
 static void list_property_clear(QDeclarativeListProperty<T> *)
 {
 }
@@ -129,7 +129,7 @@ void QDeclarativeContact::setContact(const QContact& contact)
     m_details.clear();
     QList<QContactDetail> details(contact.details());
     foreach (const QContactDetail &detail, details) {
-        QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail.definitionName());
+        QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(static_cast<QDeclarativeContactDetail::DetailType>(detail.type()));
         contactDetail->setDetail(detail);
         connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
         m_details.append(contactDetail);

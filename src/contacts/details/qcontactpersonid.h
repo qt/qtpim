@@ -54,8 +54,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactPersonId : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPersonId, "Personid")
-    const static QString FieldPersonId;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPersonId)
+#else
+    static const DetailType Type;
+#endif
+
+    enum PersonIdField {
+        FieldPersonId = 0
+    };
 
     void setPersonId(const QString& personId) {setValue(FieldPersonId, personId);}
     QString personId() const {return value(FieldPersonId).toString();}

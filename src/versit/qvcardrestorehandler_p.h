@@ -44,7 +44,7 @@
 
 #include <qversitglobal.h>
 #include <qcontactdetail.h>
-
+#include <qcontact.h>
 QTCONTACTS_USE_NAMESPACE
 
 QTVERSIT_BEGIN_NAMESPACE
@@ -73,7 +73,7 @@ public:
     void documentProcessed();
 
     const static QString PropertyName;
-    const static QString DetailDefinitionParameter;
+    const static QString DetailTypeParameter;
     const static QString FieldParameter;
     const static QString DatatypeParameter;
     const static QString DatatypeParameterVariant;

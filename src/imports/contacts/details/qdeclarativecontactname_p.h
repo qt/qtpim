@@ -62,12 +62,12 @@ class QDeclarativeContactName : public QDeclarativeContactDetail
     Q_CLASSINFO("DefaultProperty", "firstName")
 public:
     enum FieldType {
-        Prefix = 0,
-        FirstName,
-        MiddleName,
-        LastName,
-        Suffix,
-        CustomLabel
+        Prefix = QContactName::FieldPrefix,
+        FirstName = QContactName::FieldFirstName,
+        MiddleName = QContactName::FieldMiddleName,
+        LastName = QContactName::FieldLastName,
+        Suffix = QContactName::FieldSuffix,
+        CustomLabel = QContactName::FieldCustomLabel
     };
 
     QDeclarativeContactName(QObject* parent = 0)
@@ -76,31 +76,11 @@ public:
         setDetail(QContactName());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Name;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Prefix:
-            return QContactName::FieldPrefix;
-        case FirstName:
-            return QContactName::FieldFirstName;
-        case MiddleName:
-            return QContactName::FieldMiddleName;
-        case LastName:
-            return QContactName::FieldLastName;
-        case Suffix:
-            return QContactName::FieldSuffix;
-        case CustomLabel:
-            return QContactName::FieldCustomLabel;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     QString prefix() const {return detail().value(QContactName::FieldPrefix).toString();}
     QString firstName() const {return detail().value(QContactName::FieldFirstName).toString();}
     QString middleName() const {return detail().value(QContactName::FieldMiddleName).toString();}

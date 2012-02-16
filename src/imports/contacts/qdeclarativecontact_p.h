@@ -179,10 +179,10 @@ private slots:
 private:
     Q_DISABLE_COPY(QDeclarativeContact)
 
-    template<typename T> T* getDetail(const QDeclarativeContactDetail::ContactDetailType &definitionName)
+    template<typename T> T* getDetail(const QDeclarativeContactDetail::DetailType &type)
     {
         foreach (QDeclarativeContactDetail *detail, m_details) {
-            if (definitionName == detail->detailType())
+            if (type == detail->detailType())
             {
                 T* tempDetail = static_cast<T *>(detail);
                 return tempDetail;

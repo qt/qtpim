@@ -98,6 +98,11 @@ public:
     inline const static QString organizationFieldStartDate() { return QStringLiteral("startDate"); }
     inline const static QString organizationFieldEndDate() { return QStringLiteral("endDate"); }
 
+    //JsonDb enums
+    inline const static QString genderMale() { return QStringLiteral("male"); }
+    inline const static QString genderFemale() { return QStringLiteral("female"); }
+    inline const static QString genderOther() { return QStringLiteral("other"); }
+
     // Jsondb Contexts and Subtypes
     inline const static QString contextHome() { return QStringLiteral("home"); }
     inline const static QString contextWork() { return QStringLiteral("work"); }

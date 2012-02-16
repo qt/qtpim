@@ -75,7 +75,7 @@ void QContactManagerEngineV2Wrapper::requestDestroyed(QContactAbstractRequest* r
 bool QContactManagerEngineV2Wrapper::startRequest(QContactAbstractRequest* req)
 {
     if ((req->type() == QContactAbstractRequest::ContactSaveRequest
-            && !static_cast<QContactSaveRequest*>(req)->definitionMask().isEmpty())
+            && !static_cast<QContactSaveRequest*>(req)->typeMask().isEmpty())
         || (req->type() == QContactAbstractRequest::ContactFetchByIdRequest)) {
         RequestController* controller;
         if (req->type() == QContactAbstractRequest::ContactFetchByIdRequest)
@@ -317,7 +317,7 @@ bool PartialSaveRequestController::start()
         // Special case for the case where every contact is new - we don't need to bother fetching
         // any existing contacts - just prune them down to the mask and do the save request.
         QList<QContact> contactsToSave;
-        QSet<QString> mask(request()->definitionMask().toSet());
+        QSet<QContactDetail::DetailType> mask(request()->typeMask().toSet());
         for (int i = 0; i < newContactIndices.count(); i++) {
             QContact contactToSave;
             partiallyCopyDetails(&contactToSave, contacts[newContactIndices[i]], mask);
@@ -345,7 +345,7 @@ void PartialSaveRequestController::handleFinishedSubRequest(QContactAbstractRequ
         QMap<int, QContactManager::Error> fetchErrors(cfbir->errorMap());
         QList<QContact> existingContacts(cfbir->contacts());
         QList<QContact> contacts(request()->contacts());
-        QSet<QString> mask(request()->definitionMask().toSet());
+        QSet<QContactDetail::DetailType> mask(request()->typeMask().toSet());
         for (int i = 0; i < contacts.count(); i++) {
             // See if this is an existing contact or a new one
             const int fetchedIdx = m_existingIdMap.value(i, -1);
@@ -414,11 +414,11 @@ void PartialSaveRequestController::handleFinishedSubRequest(QContactAbstractRequ
 
 /* Copy details specified in \a mask from contact \a from to contact \a to */
 void PartialSaveRequestController::partiallyCopyDetails(QContact* to, const QContact& from,
-                                                        const QSet<QString>& mask) {
+                                                        const QSet<QContactDetail::DetailType>& mask) {
     // Perhaps this could do this directly rather than through saveDetail
     // but that would duplicate the checks for display label etc
-    foreach (const QString& name, mask) {
-        QList<QContactDetail> details = from.details(name);
+    foreach (QContactDetail::DetailType type, mask) {
+        QList<QContactDetail> details = from.details(type);
         foreach(QContactDetail detail, details) {
             to->saveDetail(&detail);
         }

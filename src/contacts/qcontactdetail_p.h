@@ -76,7 +76,7 @@ public:
     QContactDetailPrivate(const QContactDetailPrivate& other)
         : QSharedData(other),
         m_id(other.m_id),
-        m_definitionName(other.m_definitionName),
+        m_type(other.m_type),
         m_values(other.m_values),
         m_access(other.m_access)
     {
@@ -87,8 +87,8 @@ public:
     }
 
     int m_id; // internal, unique id.
-    QString m_definitionName;
-    QHash<QString, QVariant> m_values;
+    QContactDetail::DetailType m_type;
+    QMap<int, QVariant> m_values;
     QContactDetail::AccessConstraints m_access;
 
     static QAtomicInt lastDetailKey;

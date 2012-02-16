@@ -299,7 +299,7 @@ void tst_QContactMemUsage::multiple()
         QMemUsed m("PhoneNumber with number and subtype");
         QContactPhoneNumber p;
         p.setNumber("1234");
-        p.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+        p.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeMobile);
     }
 
     {

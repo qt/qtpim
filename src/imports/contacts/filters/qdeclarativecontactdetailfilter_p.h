@@ -52,8 +52,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactDetailFilter : public QDeclarativeContactFilter, public QDeclarativeParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY valueChanged())
-    Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY valueChanged())
+    Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged())
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged())
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged())
     Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged())
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -69,57 +69,35 @@ public:
     void classBegin() {}
     void componentComplete()
     {
-        setDetailDefinitionName();
         m_componentCompleted = true;
     }
 
-    void setDetailDefinitionName()
+    void setDetail(QDeclarativeContactDetail::DetailType detail)
     {
-        QString ddn;
-        if (m_detail.type() != QVariant::String) {
-            ddn = QDeclarativeContactDetail::definitionName(static_cast<QDeclarativeContactDetail::ContactDetailType>(m_detail.toInt()));
-        } else {
-            ddn = m_detail.toString();
-        }
-
-        QString dfn;
-        if (m_field.type() != QVariant::String) {
-           QDeclarativeContactDetail::ContactDetailType dt = static_cast<QDeclarativeContactDetail::ContactDetailType>(QDeclarativeContactDetail::detailType(ddn));
-           dfn = QDeclarativeContactDetail::fieldName(dt, m_field.toInt());
-        } else {
-            dfn = m_field.toString();
-        }
-        d.setDetailDefinitionName(ddn, dfn);
-        m_detail = ddn;
-        m_field = dfn;
+        if (m_detail != detail) {
+            m_detail = detail;
+            d.setDetailType(static_cast<QContactDetail::DetailType>(m_detail),
+                            m_field);
+            emit valueChanged();
+         }
     }
 
-    void setDetail(const QVariant& detailType)
-    {
-        if (detailType != m_detail || m_componentCompleted) {
-            m_detail = detailType;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-            emit filterChanged();
-        }
-    }
-
-    QVariant detail() const
+    QDeclarativeContactDetail::DetailType detail() const
     {
         return m_detail;
     }
 
-    void setField(const QVariant& fieldType)
+    void setField(int field)
     {
-        if (fieldType != m_field || m_componentCompleted) {
-            m_field = fieldType;
-            if (m_componentCompleted)
-                setDetailDefinitionName();
-            emit filterChanged();
+        if (field != m_field) {
+            m_field = field;
+            d.setDetailType(static_cast<QContactDetail::DetailType>(m_detail),
+                            m_field);
+            emit valueChanged();
         }
     }
 
-    QVariant field() const
+    int field() const
     {
         return m_field;
     }
@@ -163,8 +141,8 @@ signals:
 
 private:
     bool m_componentCompleted;
-    QVariant m_field;
-    QVariant m_detail;
+    int m_field;
+    QDeclarativeContactDetail::DetailType m_detail;
     QContactDetailFilter d;
 };
 

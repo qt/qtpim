@@ -50,9 +50,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactExtendedDetail : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactExtendedDetail, "ExtendedDetail")
-    const static QString FieldName;
-    const static QString FieldData;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactExtendedDetail)
+#else
+    static const DetailType Type;
+#endif
+
+    enum ExtendedDetailField {
+        FieldName = 0,
+        FieldData
+    };
 
     void setName(const QString &name)
     {

@@ -55,10 +55,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   \ingroup contacts-filters
 
-  It may be used to select contacts which contain a detail of a particular definition with a particular value
+  It may be used to select contacts which contain a detail of a particular type with a particular value
  */
 
-Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactDetailFilter);
+Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactDetailFilter)
 
 /*!
  * \fn QContactDetailFilter::QContactDetailFilter(const QContactFilter& other)
@@ -74,26 +74,26 @@ QContactDetailFilter::QContactDetailFilter()
 }
 
 /*!
- * Sets the name of the detail definition of which details will be matched to \a definitionName, and the name of the field in
- * details of that definition which will contain the value criterion to \a fieldName.
- * If \a definitionName is empty, the detail filter will match no contacts.  If \a fieldName
- * is empty, the detail filter acts like a "detail exists" filter; if any detail of the specified definition
- * is present in a contact, that contact will match the filter, regardless of what values might be
- * stored in that detail.
- * \sa detailDefinitionName()
+ * Sets the type of the detail type of which details will be matched to \a type, and the name of the field in
+ * details of that type which will contain the value criterion to \a field.
+ * If \a type is QContactDetail::TypeUndefined, the detail filter will match no contacts.  If \a field
+ * is not specified, or equal to -1, the detail filter acts like a "detail exists" filter; if any
+ * detail of the specified type is present in a contact, that contact will match the filter, regardless
+ * of what values might be stored in that detail.
+ * \sa detailType()
  */
-void QContactDetailFilter::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
+void QContactDetailFilter::setDetailType(QContactDetail::DetailType type, int field)
 {
     Q_D(QContactDetailFilter);
-    d->m_defId = definitionName;
-    d->m_fieldId = fieldName;
+    d->m_type = type;
+    d->m_fieldId = field;
 }
 
 /*!
  * Sets the value criterion of the filter to \a value.
- * Note that if the field name criterion (set via setDetailDefinitionName())
+ * Note that if the field name criterion (set via setDetailType())
  * of the filter is an empty string, this value will be ignored.
- * \sa value(), setDetailDefinitionName()
+ * \sa value(), setDetailType()
  */
 void QContactDetailFilter::setValue(const QVariant& value)
 {
@@ -122,20 +122,20 @@ QContactFilter::MatchFlags QContactDetailFilter::matchFlags() const
 }
 
 /*!
- * Returns the definition name of the details which will be inspected for matching values
- * \sa setDetailDefinitionName()
+ * Returns the type of the details which will be inspected for matching values
+ * \sa setDetailType()
  */
-QString QContactDetailFilter::detailDefinitionName() const
+QContactDetail::DetailType QContactDetailFilter::detailType() const
 {
     Q_D(const QContactDetailFilter);
-    return d->m_defId;
+    return d->m_type;
 }
 
 /*!
- * Returns the name of the field which contains the value which will be matched against the value criterion
- * \sa setDetailDefinitionName()
+ * Returns the detail field containing the value which will be matched against the value criterion
+ * \sa setDetailType()
  */
-QString QContactDetailFilter::detailFieldName() const
+int QContactDetailFilter::detailField() const
 {
     Q_D(const QContactDetailFilter);
     return d->m_fieldId;

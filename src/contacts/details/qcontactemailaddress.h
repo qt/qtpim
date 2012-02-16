@@ -55,8 +55,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactEmailAddress : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactEmailAddress, "EmailAddress")
-    const static QString FieldEmailAddress;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactEmailAddress)
+#else
+    static const DetailType Type;
+#endif
+
+    enum EmailAddressField {
+        FieldEmailAddress = 0
+    };
 
     void setEmailAddress(const QString& emailAddress) {setValue(FieldEmailAddress, emailAddress);}
     QString emailAddress() const {return value(FieldEmailAddress).toString();}

@@ -55,19 +55,28 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactUrl : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactUrl, "Url")
-    const static QString FieldUrl;
-    const static QString FieldSubType;
-    const static QString SubTypeHomePage;
-    const static QString SubTypeBlog;
-    const static QString SubTypeFavourite;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactUrl)
+#else
+    static const DetailType Type;
+#endif
+
+    enum UrlField {
+        FieldUrl = 0,
+        FieldSubType
+    };
+    enum SubType {
+        SubTypeHomePage = 0,
+        SubTypeBlog,
+        SubTypeFavourite
+    };
 
     void setUrl(const QString& url) {setValue(FieldUrl, url);}
     void setUrl(const QUrl& url) {setValue(FieldUrl, url.toString());}
     QString url() const {return value(FieldUrl).toString();}
 
-    void setSubType(const QString& subType) {setValue(FieldSubType, subType);}
-    QString subType() const {return value(FieldSubType).toString();}
+    void setSubType(const QContactUrl::SubType &subType) {setValue(FieldSubType, static_cast<int>(subType));}
+    QContactUrl::SubType subType() const {return static_cast<QContactUrl::SubType>(value<int>(FieldSubType));}
 };
 
 QTCONTACTS_END_NAMESPACE

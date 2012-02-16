@@ -116,7 +116,7 @@ public:
     void detailProcessed(const QContact& contact,
                          const QContactDetail& detail,
                          const QVersitDocument& document,
-                         QSet<QString>* processedFields,
+                         QSet<int>* processedFields,
                          QList<QVersitProperty>* toBeRemoved,
                          QList<QVersitProperty>* toBeAdded)
     {
@@ -136,7 +136,7 @@ public:
 
     QContact mContact;
     QContactDetail mDetail;
-    QSet<QString> mProcessedFields;
+    QSet<int> mProcessedFields;
     QVersitDocument mDocument;
     QList<QVersitProperty> mToBeRemoved;
     QList<QVersitProperty> mToBeAdded;
@@ -255,28 +255,33 @@ void tst_QVersitContactExporter::testEmptyContact()
 
 void tst_QVersitContactExporter::testContactDetailHandler()
 {
+    int invalidData = 123456;
     MyQVersitContactExporterDetailHandler detailHandler;;
     mExporter->setDetailHandler(&detailHandler);
 
     // Test1: Un-supported Avatar Test
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactDetail unknownDetail;
-    unknownDetail.setValue(QLatin1String("Unknown"), QLatin1String("Detail"));
+    unknownDetail.setValue(invalidData, QLatin1String("Detail"));
     contact.saveDetail(&unknownDetail);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     QVersitDocument document = mExporter->documents().first();
     QCOMPARE(countProperties(document), 0);
     QList<QContactDetail> unknownDetails = detailHandler.mUnknownDetails;
     QVERIFY(unknownDetails.size() > 0);
-    QString definitionName = unknownDetail.definitionName();
-    QContactDetail detail = findDetailByName(unknownDetails,definitionName);
-    QCOMPARE(definitionName, detail.definitionName());
+    QContactDetail::DetailType type = unknownDetail.type();
+    QContactDetail detail = findDetailByType(unknownDetails,type);
+    QCOMPARE(type, detail.type());
 
     // Test2: Un-supported Online Account
     QContactOnlineAccount onlineAccount;
     QString testUri = QLatin1String("sip:abc@temp.com");
     onlineAccount.setAccountUri(testUri);
-    onlineAccount.setSubTypes(QLatin1String("unsupported"));
+    QList<int> expectedSubtypes;
+
+    expectedSubtypes << invalidData;
+
+    onlineAccount.setSubTypes(expectedSubtypes);
     contact.saveDetail(&onlineAccount);
     detailHandler.clear();
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -284,9 +289,9 @@ void tst_QVersitContactExporter::testContactDetailHandler()
     QCOMPARE(countProperties(document), 0);
     unknownDetails = detailHandler.mUnknownDetails;
     QVERIFY(unknownDetails.size() > 0);
-    definitionName = onlineAccount.definitionName();
-    detail = findDetailByName(unknownDetails, definitionName);
-    QCOMPARE(definitionName, detail.definitionName());
+    type = onlineAccount.type();
+    detail = findDetailByType(unknownDetails, type);
+    QCOMPARE(type, detail.type());
 
     QVERIFY(mExporter->detailHandler() == &detailHandler);
     mExporter->setDetailHandler(static_cast<QVersitContactExporterDetailHandler*>(0));
@@ -294,13 +299,14 @@ void tst_QVersitContactExporter::testContactDetailHandler()
 
 void tst_QVersitContactExporter::testContactDetailHandlerV2()
 {
+    int invalidData = 123456;
     MyQVersitContactExporterDetailHandlerV2 detailHandler;
     mExporter->setDetailHandler(&detailHandler);
 
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactPhoneNumber phone;
-    phone.setNumber(QLatin1String("1234"));
-    phone.setValue(QLatin1String("ExtraField"), QLatin1String("Value"));
+    phone.setNumber(QStringLiteral("1234"));
+    phone.setValue(invalidData, QLatin1String("Value"));
     contact.saveDetail(&phone);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
 
@@ -412,9 +418,12 @@ void tst_QVersitContactExporter::testEncodePhoneNumber()
 {
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactPhoneNumber phoneNumber;
+    QContactPhoneNumber::SubType expectedSubType = QContactPhoneNumber::SubTypeMobile;
+    QList<int> expectedSubTypes;
+    expectedSubTypes << expectedSubType;
     phoneNumber.setNumber(QLatin1String("12345678"));
     phoneNumber.setContexts(QContactDetail::ContextHome);
-    phoneNumber.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    phoneNumber.setSubTypes(expectedSubTypes);
     contact.saveDetail(&phoneNumber);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     QVersitDocument document = mExporter->documents().first();
@@ -433,7 +442,9 @@ void tst_QVersitContactExporter::testEncodePhoneNumber()
     QContactPhoneNumber assistantNumber;
     assistantNumber.setNumber(QLatin1String("4321"));
     assistantNumber.setContexts(QContactDetail::ContextWork);
-    assistantNumber.setSubTypes(QContactPhoneNumber::SubTypeAssistant);
+    expectedSubTypes.clear();
+    expectedSubTypes << QContactPhoneNumber::SubTypeAssistant;
+    assistantNumber.setSubTypes(expectedSubTypes);
     contact.saveDetail(&assistantNumber);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     document = mExporter->documents().first();
@@ -470,7 +481,10 @@ void tst_QVersitContactExporter::testEncodeStreetAddress()
 {
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactAddress address;
-
+    QContactAddress::SubType expectedSubType;
+    QList<int> expectedSubTypes;
+    expectedSubType = QContactAddress::SubTypePostal;
+    expectedSubTypes << expectedSubType;
     address.setPostOfficeBox(QLatin1String("1234"));
     address.setCountry(QLatin1String("Finland"));
     address.setPostcode(QLatin1String("00440"));
@@ -478,7 +492,7 @@ void tst_QVersitContactExporter::testEncodeStreetAddress()
     address.setStreet(QLatin1String("HKKI; 1X 90"));
     address.setLocality(QLatin1String("Helsinki"));
     address.setContexts(QContactDetail::ContextHome);
-    address.setSubTypes(QContactAddress::SubTypePostal);
+    address.setSubTypes(expectedSubTypes);
     contact.saveDetail(&address);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard21Type));
     QVersitDocument document = mExporter->documents().first();
@@ -945,7 +959,7 @@ void tst_QVersitContactExporter::testEncodeParameters()
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactPhoneNumber phoneNumber;
     phoneNumber.setNumber(QLatin1String("12345678"));
-    QStringList subtypes;
+    QList<int> subtypes;
     subtypes.append(QContactPhoneNumber::SubTypeMobile);
     subtypes.append(QContactPhoneNumber::SubTypeVideo);
     // Add a not supported subtype in vCard, to make sure its not encoded.
@@ -977,7 +991,7 @@ void tst_QVersitContactExporter::testEncodeGender()
     QVersitProperty property = findPropertyByName(document, QLatin1String("X-GENDER"));
     QVERIFY(!property.isEmpty());
     QCOMPARE(property.parameters().count(), 0);
-    QCOMPARE(property.value(), gender.gender());
+    //TODO: Add a helper function in this test module to convert gender versity property to gender enum
 }
 
 void tst_QVersitContactExporter::testEncodeNickName()
@@ -1079,10 +1093,16 @@ void tst_QVersitContactExporter::testEncodeOnlineAccount()
     QContact contact(createContactWithName(QLatin1String("asdf")));
     QContactOnlineAccount onlineAccount;
     QString accountUri(QLatin1String("sip:abc@temp.com"));
+    QList<int> expectedSubTypes;
+    QContactOnlineAccount::SubType expectedSubType;
+    int invalidData = 123456;
+
     onlineAccount.setAccountUri(accountUri);
 
     // Video sharing
-    onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeVideoShare);
+    expectedSubType = QContactOnlineAccount::SubTypeVideoShare;
+    expectedSubTypes << expectedSubType;
+    onlineAccount.setSubTypes(expectedSubTypes);
     onlineAccount.setContexts(QContactDetail::ContextHome);
     contact.saveDetail(&onlineAccount);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -1100,7 +1120,10 @@ void tst_QVersitContactExporter::testEncodeOnlineAccount()
     QCOMPARE(property.value(), accountUri);
 
     // VoIP
-    onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeSipVoip);
+    expectedSubTypes.clear();
+    expectedSubType = QContactOnlineAccount::SubTypeSipVoip;
+    expectedSubTypes << expectedSubType;
+    onlineAccount.setSubTypes(expectedSubTypes);
     onlineAccount.setContexts(QContactDetail::ContextWork);
     contact.saveDetail(&onlineAccount);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -1118,7 +1141,10 @@ void tst_QVersitContactExporter::testEncodeOnlineAccount()
     QCOMPARE(property.value(), accountUri);
 
     // Plain SIP
-    onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeSip);
+    expectedSubTypes.clear();
+    expectedSubType = QContactOnlineAccount::SubTypeSip;
+    expectedSubTypes << expectedSubType;
+    onlineAccount.setSubTypes(expectedSubTypes);
     onlineAccount.setContexts(QContactDetail::ContextWork);
     contact.saveDetail(&onlineAccount);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -1134,7 +1160,10 @@ void tst_QVersitContactExporter::testEncodeOnlineAccount()
     QCOMPARE(property.value(), accountUri);
 
     // IMPP / X-IMPP
-    onlineAccount.setSubTypes(QContactOnlineAccount::SubTypeImpp);
+    expectedSubTypes.clear();
+    expectedSubType = QContactOnlineAccount::SubTypeImpp;
+    expectedSubTypes << expectedSubType;
+    onlineAccount.setSubTypes(expectedSubTypes);
     onlineAccount.setContexts(QContactDetail::ContextHome);
     contact.saveDetail(&onlineAccount);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -1150,7 +1179,10 @@ void tst_QVersitContactExporter::testEncodeOnlineAccount()
     QCOMPARE(property.value(), accountUri);
 
     // Other subtypes not converted
-    onlineAccount.setSubTypes(QLatin1String("INVALIDSUBTYPE"));
+    expectedSubTypes.clear();
+    expectedSubType = static_cast<QContactOnlineAccount::SubType>(invalidData);
+    expectedSubTypes << expectedSubType;
+    onlineAccount.setSubTypes(expectedSubTypes);
     contact.saveDetail(&onlineAccount);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     document = mExporter->documents().first();
@@ -1296,13 +1328,13 @@ int tst_QVersitContactExporter::countProperties(const QVersitDocument& document)
     return count;
 }
 
-QContactDetail tst_QVersitContactExporter::findDetailByName(
+QContactDetail tst_QVersitContactExporter::findDetailByType(
     QList<QContactDetail> details,
-    QString search)
+    QContactDetail::DetailType search)
 {
     QContactDetail detail;
     for (int i= 0; i < details.count(); i++) {
-        if ( details.at(i).definitionName() == search )
+        if ( details.at(i).type() == search )
             detail = details.at(i);
     }
     return detail;

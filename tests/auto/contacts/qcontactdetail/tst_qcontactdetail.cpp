@@ -40,8 +40,9 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-
+#include <QContactDetail>
 #include <qcontacts.h>
+
 #include <QSet>
 
 //TESTED_COMPONENT=src/contacts
@@ -88,25 +89,6 @@ void tst_QContactDetail::cleanup()
 {
 }
 
-/* Test class that doesn't do the right thing */
-class NonMacroCustomDetail : public QContactDetail
-{
-public:
-    NonMacroCustomDetail() : QContactDetail("malicious") {}
-    void doAssign(const QContactDetail& other) {assign(other, "malicious");}
-    NonMacroCustomDetail(const QContactDetail& other)
-        : QContactDetail(other, "malicious") {}
-};
-
-class NonMacroCustomDetail2 : public QContactDetail
-{
-public:
-    NonMacroCustomDetail2() : QContactDetail(QString("malicious")) {}
-    void doAssign(const QContactDetail& other) {assign(other, QString("malicious"));}
-    NonMacroCustomDetail2(const QContactDetail& other)
-        : QContactDetail(other, QString("malicious")) {}
-};
-
 void tst_QContactDetail::classHierarchy()
 {
     QContactDetail f1;
@@ -118,12 +100,12 @@ void tst_QContactDetail::classHierarchy()
     QContactPhoneNumber p1;
     p1.setNumber("123456");
     QVERIFY(!p1.isEmpty());
-    QVERIFY(p1.definitionName() == QContactPhoneNumber::DefinitionName);
+    QVERIFY(p1.type() == QContactPhoneNumber::Type);
 
     QContactName m1;
     m1.setFirstName("Bob");
     QVERIFY(!m1.isEmpty());
-    QVERIFY(m1.definitionName() == QContactName::DefinitionName);
+    QVERIFY(m1.type() == QContactName::Type);
 
     QVERIFY(p1 != m1);
     QVERIFY(f1 == f2);
@@ -175,7 +157,7 @@ void tst_QContactDetail::classHierarchy()
     /* Bad assignment */
     p2 = m1; // assign a name to a phone number
     QVERIFY(p2 != m1);
-    QVERIFY(p2.definitionName() == QContactPhoneNumber::DefinitionName); // should still be a phone number though
+    QVERIFY(p2.type() == QContactPhoneNumber::Type); // should still be a phone number though
     QVERIFY(p2.isEmpty());
 
     /* copy ctor */
@@ -185,7 +167,7 @@ void tst_QContactDetail::classHierarchy()
     /* another bad assignment */
     m2 = p2; // phone number to a name
     QVERIFY(m2 != m1);
-    QVERIFY(m2.definitionName() == QContactName::DefinitionName);
+    QVERIFY(m2.type() == QContactName::Type);
     QVERIFY(m2.isEmpty());
 
     /* Check contexts are considered for equality */
@@ -199,19 +181,19 @@ void tst_QContactDetail::classHierarchy()
     /* Copy ctor from valid type */
     QContactDetail f3(p2);
     QVERIFY(f3 == p2);
-    QVERIFY(f3.definitionName() == QContactPhoneNumber::DefinitionName);
+    QVERIFY(f3.type() == QContactPhoneNumber::Type);
 
     /* Copy ctor from invalid type */
     QContactPhoneNumber p3(m1);
     QVERIFY(p3 != m1);
-    QVERIFY(p3.definitionName() == QContactPhoneNumber::DefinitionName);
+    QVERIFY(p3.type() == QContactPhoneNumber::Type);
     QVERIFY(p3.isEmpty());
 
     /* Copy ctore from invalid type, through base type */
     f3 = m1;
     QContactPhoneNumber p4(f3);
     QVERIFY(p4 != f3);
-    QVERIFY(p4.definitionName() == QContactPhoneNumber::DefinitionName);
+    QVERIFY(p4.type() == QContactPhoneNumber::Type);
     QVERIFY(p4.isEmpty());
 
     /* Try a reference */
@@ -238,57 +220,6 @@ void tst_QContactDetail::classHierarchy()
     QVERIFY(ref.value(QContactPhoneNumber::FieldNumber) == "654321");
     QVERIFY(p1 == ref);
     QVERIFY(ref == p1);
-
-    /* Random other test */
-    NonMacroCustomDetail md;
-    QVERIFY(md.definitionName() == "malicious");
-    QVERIFY(md.setValue("key", "value"));
-    QVERIFY(!md.isEmpty());
-    md.doAssign(md); // self assignment
-    QVERIFY(!md.isEmpty());
-    QVERIFY(md.value("key") == "value");
-
-    QContactDetail mdv;
-    mdv = md;
-    QVERIFY(mdv.definitionName() == "malicious");
-    QVERIFY(mdv.value("key") == "value");
-
-    md = mdv;
-    QVERIFY(md.definitionName() == "malicious");
-    QVERIFY(md.value("key") == "value");
-
-    NonMacroCustomDetail2 md2;
-    QVERIFY(md2.setValue("key", "value"));
-    QVERIFY(md2.definitionName() == "malicious");
-    QVERIFY(md2.value("key") == "value");
-    md2.doAssign(md);
-    QVERIFY(md2 == md);
-    md2 = md;
-    QVERIFY(md.definitionName() == "malicious");
-    QVERIFY(md.value("key") == "value");
-
-    // Self assignment
-    md2.doAssign(md2);
-    QVERIFY(md2.definitionName() == "malicious");
-    QVERIFY(md2.value("key") == "value");
-
-    md.doAssign(md2);
-    QVERIFY(md == md2);
-
-    // Assigning something else
-    QContactPhoneNumber pn;
-    pn.setNumber("12345");
-    md2.doAssign(pn);
-    QVERIFY(md2.isEmpty());
-    QVERIFY(md2.definitionName() == "malicious");
-
-    NonMacroCustomDetail mdb(pn);
-    QVERIFY(mdb.isEmpty());
-    QVERIFY(mdb.definitionName() == "malicious");
-
-    NonMacroCustomDetail2 md2b(pn);
-    QVERIFY(md2b.isEmpty());
-    QVERIFY(md2b.definitionName() == "malicious");
 }
 
 void tst_QContactDetail::assignment()
@@ -322,7 +253,7 @@ void tst_QContactDetail::templates()
     QVERIFY(c.saveDetail(&p1));
     QVERIFY(c.saveDetail(&p2));
 
-    QList<QContactDetail> l = c.details("PhoneNumber");
+    QList<QContactDetail> l = c.details(QContactPhoneNumber::Type);
 
     QCOMPARE(l.count(), 2);
     QCOMPARE(QContactPhoneNumber(l.at(0)), p1);
@@ -346,27 +277,25 @@ void tst_QContactDetail::contexts()
     QVERIFY(!d.contexts().contains(QContactDetail::ContextOther));
     QVERIFY(!d.contexts().contains(QContactDetail::ContextHome));
 
-    QStringList contexts;
+    QList<int> contexts;
     contexts.append(QContactDetail::ContextHome);
     contexts.append(QContactDetail::ContextOther);
-    contexts.append("CustomContext"); // note: won't (necessarily) validate but will work in QCD.
     d.setContexts(contexts);
-    QVERIFY(d.contexts().count() == 3);
+    QVERIFY(d.contexts().count() == 2);
     QVERIFY(!d.contexts().contains(QContactDetail::ContextWork));
     QVERIFY(d.contexts().contains(QContactDetail::ContextOther));
     QVERIFY(d.contexts().contains(QContactDetail::ContextHome));
-    QVERIFY(d.contexts().contains("CustomContext"));
     QCOMPARE(d.contexts(), contexts);
 
     // test that contexts are values.
-    QCOMPARE(d.value<QStringList>(QContactDetail::FieldContext), d.contexts());
+    QCOMPARE(d.value<QList<int> >(QContactDetail::FieldContext), d.contexts());
 }
 
 void tst_QContactDetail::values()
 {
     QContactDetail p;
-
-    QCOMPARE(p.values(), QVariantMap());
+    QMap<int, QVariant> emptyValues;
+    QCOMPARE(p.values(), emptyValues);
 
     QDateTime dt = QDateTime::currentDateTime();
     QTime t = dt.time();
@@ -376,312 +305,200 @@ void tst_QContactDetail::values()
 
     QDateTime ddt(d); // DateTime version of a Date (QTime())
 
-    p.setValue("string", "This is a string");
-    p.setValue("date", d);
-    p.setValue("datetime", dt);
-    p.setValue("int", (int)6);
+    QVERIFY(p.setValue(QContactAddress::FieldStreet, "This is a string"));
+    QVERIFY(p.setValue(QContactAddress::FieldLocality, d));
+    QVERIFY(p.setValue(QContactAddress::FieldRegion, dt));
+    QVERIFY(p.setValue(QContactAddress::FieldPostcode, (int)6));
+    QVERIFY(p.setValue(QContactAddress::FieldSubTypes, d.toString(Qt::ISODate)));
+    QVERIFY(p.setValue(QContactAddress::FieldPostOfficeBox, dt.toString(Qt::ISODate)));
 
-    p.setValue("stringdate", d.toString(Qt::ISODate));
-    p.setValue("stringdatetime", dt.toString(Qt::ISODate));
-
-    // Test the setter that takes a QString
-    p.setValue(QLatin1String("stringint"), "123");
-
-    // and the setter that takes a QL1C
-    p.setValue(QContactPhoneNumber::FieldNumber, "1234");
-
-    /* Presence test (const char * version) */
-    QVERIFY(p.hasValue("string"));
-    QVERIFY(p.hasValue("date"));
-    QVERIFY(p.hasValue("datetime"));
-    QVERIFY(p.hasValue("int"));
-    QVERIFY(p.hasValue("stringdate"));
-    QVERIFY(p.hasValue("stringdatetime"));
-    QVERIFY(p.hasValue("stringint"));
-    QVERIFY(p.hasValue(QContactPhoneNumber::FieldNumber));
-    QVERIFY(!p.hasValue("non existent field"));
-
-    /* QLatin1Constant version */
-    QVERIFY(p.hasValue(QContactPhoneNumber::FieldNumber));
+    // Presence test (const char * version)
+    QVERIFY(p.hasValue(QContactAddress::FieldStreet));
+    QVERIFY(p.hasValue(QContactAddress::FieldLocality));
+    QVERIFY(p.hasValue(QContactAddress::FieldRegion));
+    QVERIFY(p.hasValue(QContactAddress::FieldPostcode));
+    QVERIFY(p.hasValue(QContactAddress::FieldSubTypes));
+    QVERIFY(p.hasValue(QContactAddress::FieldPostOfficeBox));
     QVERIFY(!p.hasValue(QContactAddress::FieldCountry));
 
-    /* Again with QString version */
-    QVERIFY(p.hasValue(QLatin1String("string")));
-    QVERIFY(p.hasValue(QLatin1String("date")));
-    QVERIFY(p.hasValue(QLatin1String("datetime")));
-    QVERIFY(p.hasValue(QLatin1String("int")));
-    QVERIFY(p.hasValue(QLatin1String("stringdate")));
-    QVERIFY(p.hasValue(QLatin1String("stringdatetime")));
-    QVERIFY(p.hasValue(QLatin1String("stringint")));
-    QVERIFY(p.hasValue(QContactPhoneNumber::FieldNumber));
-    QVERIFY(!p.hasValue(QLatin1String("non existent field")));
+    // string accessors with const char* key
+    QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString("This is a string"));
+    QCOMPARE(p.value(QContactAddress::FieldLocality).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldPostcode).toString(), QString("6"));
+    QCOMPARE(p.value(QContactAddress::FieldSubTypes).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldPostOfficeBox).toString(), dt.toString(Qt::ISODate));
 
-    /* string accessors with const char* key */
-    QCOMPARE(p.value("string").toString(), QString("This is a string"));
-    QCOMPARE(p.value("date").toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("datetime").toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("int").toString(), QString("6"));
-    QCOMPARE(p.value("stringdate").toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringdatetime").toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringint").toString(), QString("123"));
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
-
-    /* string accessor with QL1C key */
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
-
-    /* string accessors with QString key */
-    QCOMPARE(p.value(QLatin1String("string")).toString(), QString("This is a string"));
-    QCOMPARE(p.value(QLatin1String("date")).toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("datetime")).toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("int")).toString(), QString("6"));
-    QCOMPARE(p.value(QLatin1String("stringdate")).toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("stringdatetime")).toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value(QLatin1String("stringint")).toString(), QString("123"));
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
-
-    /* Variant accessor with const char * key */
-    QCOMPARE(p.value("string"), QVariant(QString("This is a string")));
-    QCOMPARE(p.value("date"), QVariant(d));
-    QCOMPARE(p.value("datetime"), QVariant(dt));
-    QCOMPARE(p.value("int"), QVariant((int)6));
-    QCOMPARE(p.value("stringdate"), QVariant(d.toString(Qt::ISODate)));
-    QCOMPARE(p.value("stringdatetime"), QVariant(dt.toString(Qt::ISODate)));
-    QCOMPARE(p.value("stringint"), QVariant(QString("123")));
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber), QVariant(QString("1234")));
-
-    /* Variant accessor with QL1C key */
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber), QVariant(QString("1234")));
-
-    /* Variant accessor with QString key */
-    QCOMPARE(p.value(QLatin1String("string")), QVariant(QString("This is a string")));
-    QCOMPARE(p.value(QLatin1String("date")), QVariant(d));
-    QCOMPARE(p.value(QLatin1String("datetime")), QVariant(dt));
-    QCOMPARE(p.value(QLatin1String("int")), QVariant((int)6));
-    QCOMPARE(p.value(QLatin1String("stringdate")), QVariant(d.toString(Qt::ISODate)));
-    QCOMPARE(p.value(QLatin1String("stringdatetime")), QVariant(dt.toString(Qt::ISODate)));
-    QCOMPARE(p.value(QLatin1String("stringint")), QVariant(QString("123")));
-    QCOMPARE(p.value(QContactPhoneNumber::FieldNumber), QVariant(QString("1234")));
+    // Variant accessor with const char * key
+    QCOMPARE(p.value(QContactAddress::FieldStreet), QVariant(QString("This is a string")));
+    QCOMPARE(p.value(QContactAddress::FieldLocality), QVariant(d));
+    QCOMPARE(p.value(QContactAddress::FieldRegion), QVariant(dt));
+    QCOMPARE(p.value(QContactAddress::FieldPostcode), QVariant((int)6));
+    QCOMPARE(p.value(QContactAddress::FieldSubTypes), QVariant(d.toString(Qt::ISODate)));
+    QCOMPARE(p.value(QContactAddress::FieldPostOfficeBox), QVariant(dt.toString(Qt::ISODate)));
 
     /* Typed accessors, string first, const char* key */
-    QCOMPARE(p.value<QString>("string"), QString("This is a string"));
-    QCOMPARE(p.value<QString>("date"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("datetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("int"), QString("6"));
-    QCOMPARE(p.value<QString>("stringdate"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("stringdatetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("stringint"), QString("123"));
-    QCOMPARE(p.value<QString>(QContactPhoneNumber::FieldNumber), QString("1234"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldStreet), QString("This is a string"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldLocality), d.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldPostcode), QString("6"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldSubTypes), d.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldPostOfficeBox), dt.toString(Qt::ISODate));
 
     /* Now individual original types */
-    QCOMPARE(p.value<QDate>("date"), d);
-    QCOMPARE(p.value<QDateTime>("datetime"), dt);
-    QCOMPARE(p.value<int>("int"), 6);
-
-    /* now latin constant keys */
-    QCOMPARE(p.value<QString>(QContactPhoneNumber::FieldNumber), QString("1234"));
-
-    /* Typed accessors, string first, QString key */
-    QCOMPARE(p.value<QString>(QLatin1String("string")), QString("This is a string"));
-    QCOMPARE(p.value<QString>(QLatin1String("date")), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QLatin1String("datetime")), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QLatin1String("int")), QString("6"));
-    QCOMPARE(p.value<QString>(QLatin1String("stringdate")), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QLatin1String("stringdatetime")), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QLatin1String("stringint")), QString("123"));
-    QCOMPARE(p.value<QString>(QContactPhoneNumber::FieldNumber), QString("1234"));
-    QCOMPARE(p.value<QDate>(QLatin1String("date")), d);
-    QCOMPARE(p.value<QDateTime>(QLatin1String("datetime")), dt);
-    QCOMPARE(p.value<int>(QLatin1String("int")), 6);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldLocality), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldRegion), dt);
+    QCOMPARE(p.value<int>(QContactAddress::FieldPostcode), 6);
 
     /* Now cross types that should fail */
     QDate id;
     QDateTime idt;
-    QCOMPARE(p.value<QDate>("string"), id);
-    QCOMPARE(p.value<QDate>("int"), id);
-    QCOMPARE(p.value<QDate>("stringint"), id);
-    QCOMPARE(p.value<QDateTime>("string"), idt);
-    QCOMPARE(p.value<QDateTime>("int"), idt);
-    QCOMPARE(p.value<QDateTime>("stringint"), idt);
-    QCOMPARE(p.value<int>("date"), 0);
-    QCOMPARE(p.value<int>("datetime"), 0);
-    QCOMPARE(p.value<int>("string"), 0);
-    QCOMPARE(p.value<int>("stringdate"), 0);
-    QCOMPARE(p.value<int>("stringdatetime"), 0);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldStreet), id);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldPostcode), id);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldStreet), idt);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldPostcode), idt);
+    QCOMPARE(p.value<int>(QContactAddress::FieldLocality), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldRegion), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldStreet), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldSubTypes), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldPostOfficeBox), 0);
 
     /* Cross types that should work.. */
-    QCOMPARE(p.value<int>("stringint"), 123);
-    QCOMPARE(p.value<QDate>("stringdate"), d);
-    QCOMPARE(p.value<QDateTime>("stringdatetime"), dt);
-    QCOMPARE(p.value<QDate>("datetime"), d);
-    QCOMPARE(p.value<QDate>("stringdatetime"), d);
-    QCOMPARE(p.value<QDateTime>("date"), ddt);
-    QCOMPARE(p.value<QDateTime>("stringdate"), ddt);
+    QCOMPARE(p.value<int>(QContactAddress::FieldPostcode), 6);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldSubTypes), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldPostOfficeBox), dt);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldRegion), d);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldPostOfficeBox), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldLocality), ddt);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldSubTypes), ddt);
 
     /* Now set everything again */
-    QVariantMap emptyValues;
-    QVariantMap values = p.values();
-    QStringList keys = values.keys();
-    foreach (const QString& key, keys)
+    QMap<int, QVariant> values = p.values();
+    QList<int> keys = values.keys();
+    foreach (int key, keys)
         QVERIFY(p.setValue(key, QVariant()));
 
     QCOMPARE(p.values(), emptyValues);
     QVERIFY(p.values().count() == 0);
-    QVERIFY(!p.hasValue("string"));
-    QVERIFY(!p.hasValue("date"));
-    QVERIFY(!p.hasValue("datetime"));
-    QVERIFY(!p.hasValue("int"));
-    QVERIFY(!p.hasValue("stringdate"));
-    QVERIFY(!p.hasValue("stringdatetime"));
-    QVERIFY(!p.hasValue("stringint"));
-    QVERIFY(!p.hasValue("non existent field"));
+    QVERIFY(!p.hasValue(QContactAddress::FieldStreet));
+    QVERIFY(!p.hasValue(QContactAddress::FieldLocality));
+    QVERIFY(!p.hasValue(QContactAddress::FieldRegion));
+    QVERIFY(!p.hasValue(QContactAddress::FieldPostcode));
+    QVERIFY(!p.hasValue(QContactAddress::FieldSubTypes));
+    QVERIFY(!p.hasValue(QContactAddress::FieldPostOfficeBox));
 
-    QVERIFY(p.value("string").toString() == QString());
-    QVERIFY(p.value("string") == QVariant());
+    QVERIFY(p.value(QContactAddress::FieldStreet).toString() == QString());
+    QVERIFY(p.value(QContactAddress::FieldStreet) == QVariant());
 
-    values.insert("string", "This is a string");
-    values.insert("date", d);
-    values.insert("datetime", dt);
-    values.insert("int", (int)6);
+    values.insert(QContactAddress::FieldStreet, "This is a string");
+    values.insert(QContactAddress::FieldLocality, d);
+    values.insert(QContactAddress::FieldRegion, dt);
+    values.insert(QContactAddress::FieldPostcode, (int)6);
 
-    values.insert("stringdate", d.toString(Qt::ISODate));
-    values.insert("stringdatetime", dt.toString(Qt::ISODate));
-    values.insert("stringint", "123");
-    values.insert("string", QString("This is a string"));
+    values.insert(QContactAddress::FieldSubTypes, d.toString(Qt::ISODate));
+    values.insert(QContactAddress::FieldPostOfficeBox, dt.toString(Qt::ISODate));
+    values.insert(QContactAddress::FieldStreet, QString("This is a string"));
 
     /* Set values */
     keys = values.keys();
-    foreach (const QString& key, keys)
+    foreach (int key, keys)
         QVERIFY(p.setValue(key, values.value(key)));
 
     /* Now repeat the tests with our bulk set map */
-    QVERIFY(p.hasValue("string"));
-    QVERIFY(p.hasValue("date"));
-    QVERIFY(p.hasValue("datetime"));
-    QVERIFY(p.hasValue("int"));
-    QVERIFY(p.hasValue("stringdate"));
-    QVERIFY(p.hasValue("stringdatetime"));
-    QVERIFY(p.hasValue("stringint"));
-    QVERIFY(!p.hasValue("non existent field"));
+    QVERIFY(p.hasValue(QContactAddress::FieldStreet));
+    QVERIFY(p.hasValue(QContactAddress::FieldLocality));
+    QVERIFY(p.hasValue(QContactAddress::FieldRegion));
+    QVERIFY(p.hasValue(QContactAddress::FieldPostcode));
+    QVERIFY(p.hasValue(QContactAddress::FieldSubTypes));
+    QVERIFY(p.hasValue(QContactAddress::FieldPostOfficeBox));
 
     /* String accessors */
-    QCOMPARE(p.value("string").toString(), QString("This is a string"));
-    QCOMPARE(p.value("date").toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("datetime").toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("int").toString(), QString("6"));
-    QCOMPARE(p.value("stringdate").toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringdatetime").toString(), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value("stringint").toString(), QString("123"));
+    QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString("This is a string"));
+    QCOMPARE(p.value(QContactAddress::FieldLocality).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldPostcode).toString(), QString("6"));
+    QCOMPARE(p.value(QContactAddress::FieldSubTypes).toString(), d.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldPostOfficeBox).toString(), dt.toString(Qt::ISODate));
 
     /* Typed accessors, string first */
-    QCOMPARE(p.value<QString>("string"), QString("This is a string"));
-    QCOMPARE(p.value<QString>("date"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("datetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("int"), QString("6"));
-    QCOMPARE(p.value<QString>("stringdate"), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("stringdatetime"), dt.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>("stringint"), QString("123"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldStreet), QString("This is a string"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldLocality), d.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldPostcode), QString("6"));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldSubTypes), d.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldPostOfficeBox), dt.toString(Qt::ISODate));
 
     /* Now individual original types */
-    QCOMPARE(p.value<QDate>("date"), d);
-    QCOMPARE(p.value<QDateTime>("datetime"), dt);
-    QCOMPARE(p.value<int>("int"), 6);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldLocality), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldRegion), dt);
+    QCOMPARE(p.value<int>(QContactAddress::FieldPostcode), 6);
 
     /* Now cross types that should fail */
-    QCOMPARE(p.value<QDate>("string"), id);
-    QCOMPARE(p.value<QDate>("int"), id);
-    QCOMPARE(p.value<QDate>("stringint"), id);
-    QCOMPARE(p.value<QDateTime>("string"), idt);
-    QCOMPARE(p.value<QDateTime>("int"), idt);
-    QCOMPARE(p.value<QDateTime>("stringint"), idt);
-    QCOMPARE(p.value<int>("date"), 0);
-    QCOMPARE(p.value<int>("datetime"), 0);
-    QCOMPARE(p.value<int>("string"), 0);
-    QCOMPARE(p.value<int>("stringdate"), 0);
-    QCOMPARE(p.value<int>("stringdatetime"), 0);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldStreet), id);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldPostcode), id);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldStreet), idt);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldPostcode), idt);
+    QCOMPARE(p.value<int>(QContactAddress::FieldLocality), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldRegion), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldStreet), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldSubTypes), 0);
+    QCOMPARE(p.value<int>(QContactAddress::FieldPostOfficeBox), 0);
 
     /* Cross types that should work.. */
-    QCOMPARE(p.value<int>("stringint"), 123);
-    QCOMPARE(p.value<QDate>("stringdate"), d);
-    QCOMPARE(p.value<QDateTime>("stringdatetime"), dt);
-    QCOMPARE(p.value<QDate>("datetime"), d);
-    QCOMPARE(p.value<QDate>("stringdatetime"), d);
-    QCOMPARE(p.value<QDateTime>("date"), ddt);
-    QCOMPARE(p.value<QDateTime>("stringdate"), ddt);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldSubTypes), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldPostOfficeBox), dt);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldRegion), d);
+    QCOMPARE(p.value<QDate>(QContactAddress::FieldPostOfficeBox), d);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldLocality), ddt);
+    QCOMPARE(p.value<QDateTime>(QContactAddress::FieldSubTypes), ddt);
 
     /* Reset again */
     values = p.values();
     keys = values.keys();
-    foreach (const QString& key, keys)
+    foreach (int key, keys)
         QVERIFY(p.setValue(key, QVariant()));
     QCOMPARE(p.values(), emptyValues);
 
-    /* Check that we can add a null variant */
-    //QVERIFY(p.setValue("nullvariant", QVariant()));
-    //QVERIFY(p.hasValue("nullvariant"));
-    //QCOMPARE(p.value("nullvariant"), QString());
-    //QCOMPARE(p.value("nullvariant"), QVariant());
-    //QVERIFY(p.removeValue("nullvariant"));
-    //QVERIFY(p.values().count() == 0);
-
-    /* Check that adding a value, then setting it to null updates it */
-    //QVERIFY(p.setValue("string", QString("string value")));
-    //QCOMPARE(p.values().count(), 1);
-    //QCOMPARE(p.value("string"), QString("string value"));
-    //QVERIFY(p.setValue("string", QVariant()));
-    //QCOMPARE(p.values().count(), 1);
-    //QVERIFY(p.hasValue("string"));
-    //QVERIFY(p.removeValue("string"));
-    //QCOMPARE(p.values().count(), 0);
-
-    /* See if adding a null QString triggers the same behaviour */
-    //QVERIFY(p.setValue("string", QString("string value")));
-    //QCOMPARE(p.values().count(), 1);
-    //QCOMPARE(p.value("string"), QString("string value"));
-    //QVERIFY(p.setValue("string", QString()));
-    //QCOMPARE(p.values().count(), 1);
-    //QVERIFY(p.hasValue("string"));
-    //QVERIFY(p.removeValue("string"));
-    //QCOMPARE(p.values().count(), 0);
-
     /* Check adding a null value removes the field */
-    p.setValue("string", "stringvalue");
-    QVERIFY(p.values().contains("string"));
-    QVERIFY(p.value("string") == QString("stringvalue"));
-    p.setValue("string", QVariant());
-    QVERIFY(!p.values().contains("string"));
+    p.setValue(QContactAddress::FieldStreet, "stringvalue");
+    QVERIFY(p.values().contains(QContactAddress::FieldStreet));
+    QVERIFY(p.value(QContactAddress::FieldStreet) == QString("stringvalue"));
+    p.setValue(QContactAddress::FieldStreet, QVariant());
+    QVERIFY(!p.values().contains(QContactAddress::FieldStreet));
 
     /* Check adding a field whose value is an empty string */
-    p.setValue("string", "");
-    QVERIFY(p.values().contains("string"));
-    QVERIFY(p.value("string") == QString(""));
+    p.setValue(QContactAddress::FieldStreet, "");
+    QVERIFY(p.values().contains(QContactAddress::FieldStreet));
+    QVERIFY(p.value(QContactAddress::FieldStreet) == QString(""));
 
     /* Check accessing a missing value */
-    QCOMPARE(p.value("nonexistent").toString(), QString());
-    QVERIFY(p.setValue("nonexistent", "changed my mind"));
-    QCOMPARE(p.value("nonexistent").toString(), QString("changed my mind"));
+    QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString());
+    QVERIFY(p.setValue(QContactAddress::FieldStreet, "changed my mind"));
+    QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString("changed my mind"));
 
     /* Check removing a missing value */
-    QVERIFY(!p.removeValue("does not exist"));
-    QVERIFY(!p.removeValue(QLatin1String("does not exist")));
     QVERIFY(!p.removeValue(QContactAddress::FieldCountry));
 
-    p.setValue("stringint", "555");
-    p.setValue(QContactPhoneNumber::FieldNumber, "1234");
+    p.setValue(QContactAddress::FieldCountry, "555");
+    p.setValue(QContactAddress::FieldPostOfficeBox, "1234");
 
     /* Check removing a real value */
-    QVERIFY(p.removeValue("string"));
-    QVERIFY(p.removeValue(QLatin1String("stringint")));
-    QVERIFY(p.removeValue(QContactPhoneNumber::FieldNumber));
+    QVERIFY(p.removeValue(QContactAddress::FieldStreet));
+    QVERIFY(p.removeValue(QContactAddress::FieldCountry));
+    QVERIFY(p.removeValue(QContactAddress::FieldPostOfficeBox));
 }
 
 void tst_QContactDetail::hash()
 {
-    QContactDetail detail1("definition");
-    detail1.setValue("key", "value");
-    QContactDetail detail2("definition");
-    detail2.setValue("key", "value");
-    QContactDetail detail3("definition");
-    detail3.setValue("key", "different value");
+    QContactExtendedDetail detail1;
+    detail1.setName("key");
+    detail1.setData(QVariant("value"));
+    QContactExtendedDetail detail2;
+    detail2.setName("key");
+    detail2.setData(QVariant("value"));
+    QContactExtendedDetail detail3;
+    detail3.setName("key");
+    detail3.setData(QVariant("different value"));
     QVERIFY(qHash(detail1) == qHash(detail2));
     QVERIFY(qHash(detail1) != qHash(detail3));
     QSet<QContactDetail> set;
@@ -695,15 +512,17 @@ void tst_QContactDetail::datastream()
 {
     QByteArray buffer;
     QDataStream stream1(&buffer, QIODevice::WriteOnly);
-    QContactDetail detailIn("definition");
-    detailIn.setValue("key1", "value1");
-    detailIn.setValue("key2", "value2");
+    QContactExtendedDetail detailIn;
+    detailIn.setName("key1");
+    detailIn.setData(QVariant("value1"));
+    detailIn.setName("key2");
+    detailIn.setData(QVariant("value2"));
     stream1 << detailIn;
 
     QVERIFY(buffer.size() > 0);
 
     QDataStream stream2(buffer);
-    QContactDetail detailOut;
+    QContactExtendedDetail detailOut;
     stream2 >> detailOut;
     QCOMPARE(detailOut, detailIn);
 }

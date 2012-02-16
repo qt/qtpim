@@ -68,6 +68,8 @@ class QContactDetailRangeFilterPrivate : public QContactFilterPrivate
 public:
     QContactDetailRangeFilterPrivate()
         : QContactFilterPrivate(),
+        m_typeId(QContactDetail::TypeUndefined),
+        m_fieldId(-1),
         m_flags(0),
         m_rangeflags(0)
     {
@@ -75,7 +77,7 @@ public:
 
     QContactDetailRangeFilterPrivate(const QContactDetailRangeFilterPrivate& other)
         : QContactFilterPrivate(other),
-        m_defId(other.m_defId),
+        m_typeId(other.m_typeId),
         m_fieldId(other.m_fieldId),
         m_minValue(other.m_minValue),
         m_maxValue(other.m_maxValue),
@@ -87,7 +89,7 @@ public:
     bool compare(const QContactFilterPrivate* other) const
     {
         const QContactDetailRangeFilterPrivate *od = static_cast<const QContactDetailRangeFilterPrivate*>(other);
-        if (m_defId != od->m_defId)
+        if (m_typeId != od->m_typeId)
             return false;
         if (m_fieldId != od->m_fieldId)
             return false;
@@ -105,7 +107,7 @@ public:
     QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
-            stream << m_defId << m_fieldId << m_minValue << m_maxValue
+            stream << m_typeId << m_fieldId << m_minValue << m_maxValue
                 << static_cast<quint32>(m_flags)
                 << static_cast<quint32>(m_rangeflags);
         }
@@ -117,9 +119,11 @@ public:
         if (formatVersion == 1) {
             quint32 flags;
             quint32 rangeFlags;
-            stream >> m_defId >> m_fieldId >> m_minValue >> m_maxValue >> flags >> rangeFlags;
+            quint32 type;
+            stream >> type >> m_fieldId >> m_minValue >> m_maxValue >> flags >> rangeFlags;
             m_flags = QContactFilter::MatchFlags(flags);
             m_rangeflags = QContactDetailRangeFilter::RangeFlags(rangeFlags);
+            m_typeId = QContactDetail::DetailType(type);
         }
         return stream;
     }
@@ -128,8 +132,8 @@ public:
     QDebug& debugStreamOut(QDebug& dbg) const
     {
         dbg.nospace() << "QContactDetailRangeFilter(";
-        dbg.nospace() << "detailDefinitionName=" << m_defId << ","
-                      << "detailFieldName=" << m_fieldId << ","
+        dbg.nospace() << "detailType=" << static_cast<quint32>(m_typeId) << ","
+                      << "detailField=" << m_fieldId << ","
                       << "minValue=" << m_minValue << ","
                       << "maxValue=" << m_maxValue << ","
                       << "matchFlags=" << static_cast<quint32>(m_flags) << ","
@@ -141,8 +145,8 @@ public:
 
     Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactDetailRangeFilter, QContactFilter::ContactDetailRangeFilter)
 
-    QString m_defId;
-    QString m_fieldId;
+    QContactDetail::DetailType m_typeId;
+    int m_fieldId;
     QVariant m_minValue;
     QVariant m_maxValue;
     QContactFilter::MatchFlags m_flags;

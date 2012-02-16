@@ -81,15 +81,16 @@ void tst_QVersitContactPlugins::testImporterPlugins() {
     document.addProperty(property);
     QVERIFY(importer.importDocuments(QList<QVersitDocument>() << document));
     QCOMPARE(importer.contacts().size(), 1);
-    QList<QContactDetail> details(importer.contacts().first().details("TestDetail"));
+    QList<QContactDetail> details(importer.contacts().first().details(QContactDetail::TypeExtendedDetail));
     QCOMPARE(details.size(), 5);
+    int pluginField = 0;
     // The plugins have had their index set such that they should be executed in reverse order
     // Check that they are all loaded, and run in the correct order
-    QCOMPARE(details.at(0).value<int>("Plugin"), 5);
-    QCOMPARE(details.at(1).value<int>("Plugin"), 4);
-    QCOMPARE(details.at(2).value<int>("Plugin"), 3);
-    QCOMPARE(details.at(3).value<int>("Plugin"), 2);
-    QCOMPARE(details.at(4).value<int>("Plugin"), 1);
+    QCOMPARE(details.at(0).value<int>(pluginField), 5);
+    QCOMPARE(details.at(1).value<int>(pluginField), 4);
+    QCOMPARE(details.at(2).value<int>(pluginField), 3);
+    QCOMPARE(details.at(3).value<int>(pluginField), 2);
+    QCOMPARE(details.at(4).value<int>(pluginField), 1);
 }
 
 void tst_QVersitContactPlugins::testExporterPlugins() {

@@ -56,7 +56,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactFetchHint : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QStringList detailDefinitionsHint READ detailDefinitionsHint WRITE setDetailDefinitionsHint NOTIFY fetchHintChanged )
+    Q_PROPERTY(QList<int> detailTypesHint READ detailTypesHint WRITE setDetailTypesHint NOTIFY fetchHintChanged )
     Q_PROPERTY(QStringList relationshipTypesHint READ relationshipTypesHint WRITE setRelationshipTypesHint NOTIFY fetchHintChanged )
     Q_PROPERTY(OptimizationHints optimizationHints READ optimizationHints WRITE setOptimizationHints NOTIFY fetchHintChanged )
     Q_PROPERTY(int imageWidth READ preferredImageWidth WRITE setPreferredImageWidth NOTIFY fetchHintChanged )
@@ -72,8 +72,8 @@ public:
     Q_DECLARE_FLAGS(OptimizationHints, OptimizationHint)
 
     QDeclarativeContactFetchHint(QObject* parent = 0);
-    QStringList detailDefinitionsHint() const;
-    void setDetailDefinitionsHint(const QStringList& definitionNames);
+    QList<int> detailTypesHint() const;
+    void setDetailTypesHint(const QList<int> &detailTypes);
 
     QStringList relationshipTypesHint() const;
     void setRelationshipTypesHint(const QStringList& relationshipTypes);

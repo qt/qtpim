@@ -62,12 +62,12 @@ class QDeclarativeContactPresence : public QDeclarativeContactDetail
     Q_CLASSINFO("DefaultProperty", "state")
 public:
     enum FieldType {
-        Timestamp = 0,
-        Nickname,
-        State,
-        StateText,
-        ImageUrl,
-        CustomMessage
+        Timestamp = QContactPresence::FieldTimestamp,
+        Nickname = QContactPresence::FieldNickname,
+        State = QContactPresence::FieldPresenceState,
+        StateText = QContactPresence::FieldPresenceStateText,
+        ImageUrl = QContactPresence::FieldPresenceStateImageUrl,
+        CustomMessage = QContactPresence::FieldCustomMessage
     };
 
     enum PresenceStateType {
@@ -86,31 +86,11 @@ public:
         setDetail(QContactPresence());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Presence;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Timestamp:
-            return QContactPresence::FieldTimestamp;
-        case Nickname:
-            return QContactPresence::FieldNickname;
-        case State:
-            return QContactPresence::FieldPresenceState;
-        case StateText:
-            return QContactPresence::FieldPresenceStateText;
-        case ImageUrl:
-            return QContactPresence::FieldPresenceStateImageUrl;
-        case CustomMessage:
-            return QContactPresence::FieldCustomMessage;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setTimestamp(const QDateTime& v)
     {
         if (!readOnly() && v != timestamp()) {

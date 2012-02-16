@@ -58,8 +58,8 @@ class QDeclarativeContactVersion : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        FieldSequenceNumber = 0,
-        FieldExtendedVersion
+        SequenceNumber = QContactVersion::FieldSequenceNumber,
+        ExtendedVersion = QContactVersion::FieldExtendedVersion
     };
 
     QDeclarativeContactVersion(QObject* parent = 0)
@@ -68,23 +68,12 @@ public:
         setDetail(QContactVersion());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Version;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case FieldSequenceNumber:
-            return QContactVersion::FieldSequenceNumber;
-        case FieldExtendedVersion:
-            return QContactVersion::FieldExtendedVersion;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setSequenceNumber(int newSequenceNumber)
     {
         if (!readOnly() && newSequenceNumber != sequenceNumber()) {

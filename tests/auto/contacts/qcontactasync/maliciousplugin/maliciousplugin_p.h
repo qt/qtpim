@@ -151,14 +151,14 @@ public:
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs) {return QContactManagerEngine::waitForRequestFinished(req, msecs);}
 
     /* Capabilities reporting */
-    bool hasFeature(QContactManager::ManagerFeature feat, const QString& contactType) const
+    bool hasFeature(QContactManager::ManagerFeature feat, QContactType::TypeValues type) const
     {
-        return QContactManagerEngine::hasFeature(feat, contactType);
+        return QContactManagerEngine::hasFeature(feat, type);
     }
 
-    bool isRelationshipTypeSupported(const QString& relType, const QString& ctype) const
+    bool isRelationshipTypeSupported(const QString& relType, QContactType::TypeValues type) const
     {
-        return QContactManagerEngine::isRelationshipTypeSupported(relType, ctype);
+        return QContactManagerEngine::isRelationshipTypeSupported(relType, type);
     }
 
     bool isFilterSupported(const QContactFilter& fil) const
@@ -170,7 +170,7 @@ public:
     {
         return QContactManagerEngine::supportedDataTypes();
     }
-    QStringList supportedContactTypes() const
+    QList<QContactType::TypeValues> supportedContactTypes() const
     {
         return QContactManagerEngine::supportedContactTypes();
     }

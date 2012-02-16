@@ -59,26 +59,26 @@ class QDeclarativeContactAddress : public QDeclarativeContactDetail
     Q_PROPERTY(QString region READ region WRITE setRegion  NOTIFY valueChanged)
     Q_PROPERTY(QString postcode READ postcode WRITE setPostcode  NOTIFY valueChanged)
     Q_PROPERTY(QString country READ country WRITE setCountry  NOTIFY valueChanged)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY valueChanged)
+    Q_PROPERTY(QList<int> subTypes READ subTypes WRITE setSubTypes NOTIFY valueChanged)
     Q_PROPERTY(QString postOfficeBox READ postOfficeBox WRITE setPostOfficeBox  NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(AddressSubType)
 public:
     enum FieldType {
-        Street = 0,
-        Locality,
-        Region,
-        Postcode,
-        Country,
-        SubTypes,
-        PostOfficeBox
+        Street = QContactAddress::FieldStreet,
+        Locality = QContactAddress::FieldLocality,
+        Region = QContactAddress::FieldRegion,
+        Postcode = QContactAddress::FieldPostcode,
+        Country = QContactAddress::FieldCountry,
+        SubTypes = QContactAddress::FieldSubTypes,
+        PostOfficeBox = QContactAddress::FieldPostOfficeBox
     };
 
     enum AddressSubType {
-        Parcel = 0,
-        Postal,
-        Domestic,
-        International
+        Parcel = QContactAddress::SubTypeParcel,
+        Postal = QContactAddress::SubTypePostal,
+        Domestic = QContactAddress::SubTypeDomestic,
+        International = QContactAddress::SubTypeInternational
     };
 
     QDeclarativeContactAddress(QObject* parent = 0)
@@ -88,34 +88,11 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Address;
     }
 
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Street:
-            return QContactAddress::FieldStreet;
-        case Locality:
-            return QContactAddress::FieldLocality;
-        case Region:
-            return QContactAddress::FieldRegion;
-        case Postcode:
-            return QContactAddress::FieldPostcode;
-        case Country:
-            return QContactAddress::FieldCountry;
-        case SubTypes:
-            return QContactAddress::FieldSubTypes;
-        case PostOfficeBox:
-            return QContactAddress::FieldPostOfficeBox;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
     void setStreet(const QString& v)
     {
         if (!readOnly() && v != street()) {
@@ -165,42 +142,19 @@ public:
     }
     QString postOfficeBox() const {return detail().value(QContactAddress::FieldPostOfficeBox).toString();}
 
-    void setSubTypes(const QVariant& subTypes)
+    void setSubTypes(const QList<int>& subTypes)
     {
-        QStringList savedList;
-        foreach (const QVariant subType, subTypes.toList()) {
-            switch (static_cast<AddressSubType>(subType.value<int>()))
-            {
-            case Parcel:
-                savedList << QContactAddress::SubTypeParcel;
-                break;
-            case Postal:
-                savedList << QContactAddress::SubTypePostal;
-                break;
-            case Domestic:
-                savedList << QContactAddress::SubTypeDomestic;
-                break;
-            case International:
-                savedList << QContactAddress::SubTypeInternational;
-                break;
-            default:
-                qmlInfo(this) << tr("Unknown sub type.");
-                break;
+        QList<int>  oldList = detail().value< QList<int>  >(QContactAddress::FieldSubTypes);
 
-            }
-        }
-
-        QStringList oldList = detail().value<QStringList>(QContactAddress::FieldSubTypes);
-
-        if (!readOnly() && savedList.toSet() != oldList.toSet()) {
-            detail().setValue(QContactAddress::FieldSubTypes, savedList);
+        if (!readOnly() && subTypes.toSet() != oldList.toSet()) {
+            detail().setValue(QContactAddress::FieldSubTypes, QVariant::fromValue(subTypes));
             emit valueChanged();
         }
     }
 
-    QVariant subTypes() const
+    QList<int> subTypes() const
     {
-        return QVariant::fromValue(detail().value<QStringList>(QContactAddress::FieldSubTypes));
+        return detail().value< QList<int> >(QContactAddress::FieldSubTypes);
     }
 signals:
     void valueChanged();

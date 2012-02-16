@@ -43,6 +43,7 @@
 #define QCONTACTDETAILFILTER_H
 
 #include "qcontactfilter.h"
+#include "qcontactdetail.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -54,15 +55,15 @@ public:
     QContactDetailFilter(const QContactFilter& other);
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definition, const QString& fieldName = QString());
+    void setDetailType(QContactDetail::DetailType type, int field = -1);
     void setMatchFlags(QContactFilter::MatchFlags flags);
 
     /* Filter Criterion */
     void setValue(const QVariant& value);
 
     /* Accessors */
-    QString detailDefinitionName() const;
-    QString detailFieldName() const;
+    QContactDetail::DetailType detailType() const;
+    int detailField() const;
     QContactFilter::MatchFlags matchFlags() const;
 
     QVariant value() const;

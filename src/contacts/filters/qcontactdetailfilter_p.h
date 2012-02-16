@@ -55,6 +55,7 @@
 
 #include "qcontactfilter_p.h"
 #include "qcontactfilter.h"
+#include "qcontactdetail.h"
 
 #include <QString>
 #include <QVariant>
@@ -65,14 +66,16 @@ class QContactDetailFilterPrivate : public QContactFilterPrivate
 {
 public:
     QContactDetailFilterPrivate()
-        : QContactFilterPrivate(),
-        m_flags(0)
+        : QContactFilterPrivate()
+        , m_type(QContactDetail::TypeUndefined)
+        , m_fieldId(-1)
+        , m_flags(0)
     {
     }
 
     QContactDetailFilterPrivate(const QContactDetailFilterPrivate& other)
         : QContactFilterPrivate(other),
-        m_defId(other.m_defId),
+        m_type(other.m_type),
         m_fieldId(other.m_fieldId),
         m_exactValue(other.m_exactValue),
         m_flags(other.m_flags)
@@ -82,7 +85,7 @@ public:
     bool compare(const QContactFilterPrivate* other) const
     {
         const QContactDetailFilterPrivate *od = static_cast<const QContactDetailFilterPrivate*>(other);
-        if (m_defId != od->m_defId)
+        if (m_type != od->m_type)
             return false;
         if (m_fieldId != od->m_fieldId)
             return false;
@@ -96,7 +99,7 @@ public:
     QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
-            stream << m_defId << m_fieldId << m_exactValue << static_cast<quint32>(m_flags);
+            stream << static_cast<quint32>(m_type) << m_fieldId << m_exactValue << static_cast<quint32>(m_flags);
         }
         return stream;
     }
@@ -105,8 +108,10 @@ public:
     {
         if (formatVersion == 1) {
             quint32 flags;
-            stream >> m_defId >> m_fieldId >> m_exactValue >> flags;
+            quint32 type;
+            stream >> type >> m_fieldId >> m_exactValue >> flags;
             m_flags = QContactFilter::MatchFlags(flags);
+            m_type = QContactDetail::DetailType(type);
         }
         return stream;
     }
@@ -114,7 +119,7 @@ public:
     QDebug& debugStreamOut(QDebug& dbg) const
     {
         dbg.nospace() << "QContactDetailFilter(";
-        dbg.nospace() << "detailDefinitionName=" << m_defId << ","
+        dbg.nospace() << "detailType=" << static_cast<quint32>(m_type) << ","
                       << "detailFieldName=" << m_fieldId << ","
                       << "value=" << m_exactValue << ","
                       << "matchFlags=" << static_cast<quint32>(m_flags);
@@ -124,8 +129,8 @@ public:
 #endif
     Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactDetailFilter, QContactFilter::ContactDetailFilter)
 
-    QString m_defId;
-    QString m_fieldId;
+    QContactDetail::DetailType m_type;
+    int m_fieldId;
     QVariant m_exactValue;
     QContactFilter::MatchFlags m_flags;
 };

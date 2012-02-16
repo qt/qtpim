@@ -91,8 +91,7 @@ property Contact testContact
                             startDate:"1995-10-01T00:00:00",
                             phoneNumber: "9999",
                             phoneSubType: PhoneNumber.Landline,
-                            phoneSubTypeString: "Landline",
-                            contexts:"Home"
+                            contexts: ContactDetail.ContextHome
                         },
                     ]
                 }
@@ -125,7 +124,7 @@ property Contact testContact
             compare (model2.contacts[0].organization.logoUrl, data.organizations[0].logoUrl)
             compare (model2.contacts[0].phoneNumber.number, data.organizations[0].phoneNumber)
             compare (Qt.formatDateTime(model2.contacts[0].organization.startDate,Qt.ISODate), data.organizations[0].startDate)
-            compare (model2.contacts[0].phoneNumber.subTypes[0], data.organizations[0].phoneSubTypeString)
+            compare (model2.contacts[0].phoneNumber.subTypes[0], data.organizations[0].phoneSubType)
             compare (model2.contacts[0].phoneNumber.contexts[0],data.organizations[0].contexts)
             testHelper.emptyContactsDb();
             model2.autoUpdate = false;
@@ -208,7 +207,7 @@ property Contact testContact
 
             // access Type
             console.log("type is: " + contact.type)
-            compare(contact.type, 0)  // Type is Contact and not Group
+            compare(contact.type, Type.Contact)  // Type is Contact and not Group
 
             // access contactId
             console.log("contactId is: " + JSON.stringify(contact.contactId) )

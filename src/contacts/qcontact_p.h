@@ -60,6 +60,7 @@
 #include <QMultiHash>
 
 #include <qcontacts.h>
+#include <qcontactdetail.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -88,8 +89,8 @@ public:
     QMap<QString, int> m_preferences;
 
     // Helper function
-    void removeOnly(const QString& definitionName);
-    void removeOnly(const QSet<QString>& definitionNames);
+    void removeOnly(QContactDetail::DetailType type);
+    void removeOnly(const QSet<QContactDetail::DetailType>& types);
 
     // Trampoline
     static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}

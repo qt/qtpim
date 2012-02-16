@@ -51,59 +51,67 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactDetail : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(ContactDetailType type READ detailType NOTIFY detailChanged)
-    Q_PROPERTY(QString definitionName READ definitionName NOTIFY detailChanged)
-    Q_PROPERTY(QStringList contexts READ contexts WRITE setContexts NOTIFY detailChanged)
+    Q_PROPERTY(DetailType type READ detailType NOTIFY detailChanged)
+    Q_PROPERTY(QList<int> contexts READ contexts WRITE setContexts NOTIFY detailChanged)
     Q_PROPERTY(QString detailUri READ detailUri WRITE setDetailUri NOTIFY detailChanged)
     Q_PROPERTY(QStringList linkedDetailUris READ linkedDetailUris WRITE setLinkedDetailUris NOTIFY detailChanged)
-    Q_PROPERTY(QStringList fieldNames READ fieldNames NOTIFY detailChanged)
+    Q_PROPERTY(QList<int> fields READ fields NOTIFY detailChanged)
     Q_PROPERTY(bool readOnly READ readOnly NOTIFY detailChanged)
     Q_PROPERTY(bool removable READ removable NOTIFY detailChanged)
-    Q_ENUMS(ContactDetailType)
+
+    Q_ENUMS(DetailType)
+    Q_ENUMS(ContextField)
 public:
     QDeclarativeContactDetail(QObject* parent = 0);
 
 
-    enum ContactDetailType {
-        Address = 0,
-        Anniversary,
-        Avatar,
-        Birthday,
-        DisplayLabel,
-        Email,
-        ExtendedDetail,
-        Family,
-        Favorite,
-        Gender,
-        Geolocation,
-        GlobalPresence,
-        Guid,
-        Hobby,
-        Name,
-        NickName,
-        Note,
-        OnlineAccount,
-        Organization,
-        PersonId,
-        PhoneNumber,
-        Presence,
-        Ringtone,
-        SyncTarget,
-        Tag,
-        Thumbnail,
-        Timestamp,
-        Type,
-        Url,
-        Version,
-        Unknown = 100
+    enum DetailType {
+        Address = QContactDetail::TypeAddress,
+        Anniversary = QContactDetail::TypeAnniversary,
+        Avatar = QContactDetail::TypeAvatar,
+        Birthday = QContactDetail::TypeBirthday,
+        DisplayLabel = QContactDetail::TypeDisplayLabel,
+        Email = QContactDetail::TypeEmailAddress,
+        ExtendedDetail = QContactDetail::TypeExtendedDetail,
+        Family = QContactDetail::TypeFamily,
+        Favorite = QContactDetail::TypeFavorite,
+        Gender = QContactDetail::TypeGender,
+        Geolocation = QContactDetail::TypeGeoLocation,
+        GlobalPresence = QContactDetail::TypeGlobalPresence,
+        Guid = QContactDetail::TypeGuid,
+        Hobby = QContactDetail::TypeHobby,
+        Name = QContactDetail::TypeName,
+        NickName = QContactDetail::TypeNickname,
+        Note = QContactDetail::TypeNote,
+        OnlineAccount = QContactDetail::TypeOnlineAccount,
+        Organization = QContactDetail::TypeOrganization,
+        PersonId = QContactDetail::TypePersonId,
+        PhoneNumber = QContactDetail::TypePhoneNumber,
+        Presence = QContactDetail::TypePresence,
+        Ringtone = QContactDetail::TypeRingtone,
+        SyncTarget = QContactDetail::TypeSyncTarget,
+        Tag = QContactDetail::TypeTag,
+        Thumbnail = QContactDetail::TypeThumbnail,
+        Timestamp = QContactDetail::TypeTimestamp,
+        Type = QContactDetail::TypeType,
+        Url = QContactDetail::TypeUrl,
+        Version = QContactDetail::TypeVersion,
+        Unknown = QContactDetail::TypeUndefined
+    };
+
+    enum ContextField {
+        FieldContext = QContactDetail::FieldContext,
+        ContextHome = QContactDetail::ContextHome,
+        ContextWork = QContactDetail::ContextWork,
+        ContextOther = QContactDetail::ContextOther
     };
 
     ~QDeclarativeContactDetail();
 
     // QML functions
-    Q_INVOKABLE QVariant value(const QString& key) const;
-    Q_INVOKABLE bool setValue(const QString& key, const QVariant& value);
-    Q_INVOKABLE bool removeValue(const QString& key);
+    Q_INVOKABLE QVariant value(int field) const;
+    Q_INVOKABLE bool setValue(int field, const QVariant& value);
+    Q_INVOKABLE bool removeValue(int field);
 
     QContactDetail& detail();
     const QContactDetail& detail() const;
@@ -112,23 +120,17 @@ public:
     bool readOnly() const;
     bool removable() const;
 
-    QString definitionName() const;
-    QStringList contexts() const;
-    void setContexts(const QStringList& context);
+    QList<int> contexts() const;
+    void setContexts(const QList<int>& context);
 
     QString detailUri() const;
     void setDetailUri(const QString& detailUri);
 
     QStringList linkedDetailUris() const;
     void setLinkedDetailUris(const QStringList& linkedDetailUris);
-    virtual ContactDetailType detailType() const;
+    virtual DetailType detailType() const;
 
-    QStringList fieldNames() const;
-
-    static QString definitionName(ContactDetailType type) ;
-    static ContactDetailType detailType(const QString& definitionName) ;
-    static QString fieldName(ContactDetailType detailType, int fieldType);
-
+    QList<int> fields() const;
 Q_SIGNALS:
     void detailChanged();
 
@@ -139,8 +141,7 @@ protected:
 class QDeclarativeContactDetailFactory
 {
 public:
-    static QDeclarativeContactDetail *createContactDetail(QDeclarativeContactDetail::ContactDetailType type);
-    static QDeclarativeContactDetail *createContactDetail(const QString &definitionName);
+    static QDeclarativeContactDetail *createContactDetail(const QDeclarativeContactDetail::DetailType type);
 };
 
 QTCONTACTS_END_NAMESPACE

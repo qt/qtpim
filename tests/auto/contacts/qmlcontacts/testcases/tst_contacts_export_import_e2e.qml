@@ -60,7 +60,7 @@ ContactsSavingTestCase {
         }
 
         PhoneNumber {
-            contexts: 'Other'
+            contexts: ContactDetail.ContextOther
             number: "5874983729"
         }
     }

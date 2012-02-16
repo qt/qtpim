@@ -54,14 +54,21 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactGender : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGender, "Gender")
-    const static QString FieldGender;
-    const static QString GenderMale;
-    const static QString GenderFemale;
-    const static QString GenderUnspecified;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGender)
+#else
+    static const DetailType Type;
+#endif
 
-    void setGender(const QString& gender) {setValue(FieldGender, gender);}
-    QString gender() const {return value(FieldGender).toString();}
+    enum GenderField {
+        FieldGender = 0,
+        GenderMale,
+        GenderFemale,
+        GenderUnspecified
+    };
+
+    void setGender(const GenderField gender) {setValue(FieldGender, static_cast<int>(gender));}
+    GenderField gender() const {return static_cast<GenderField>(value<int>(FieldGender));}
 };
 
 QTCONTACTS_END_NAMESPACE

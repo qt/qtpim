@@ -102,11 +102,11 @@ public:
     virtual bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->saveRelationships(relationships, errorMap, error);}
     virtual bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error) {return m_engine->removeRelationships(relationships, errorMap, error);}
     virtual bool validateContact(const QContact& contact, QContactManager::Error* error) const {return m_engine->validateContact(contact, error);}
-    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const {return m_engine->hasFeature(feature, contactType);}
-    virtual bool isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType) const {return m_engine->isRelationshipTypeSupported(relationshipType, contactType);}
+    virtual bool hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const {return m_engine->hasFeature(feature, contactType);}
+    virtual bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType) const {return m_engine->isRelationshipTypeSupported(relationshipType, contactType);}
     virtual bool isFilterSupported(const QContactFilter& filter) const {return m_engine->isFilterSupported(filter);}
     virtual QList<QVariant::Type> supportedDataTypes() const {return m_engine->supportedDataTypes();}
-    virtual QStringList supportedContactTypes() const {return m_engine->supportedContactTypes();}
+    virtual QList<QContactType::TypeValues> supportedContactTypes() const {return m_engine->supportedContactTypes();}
 
 private Q_SLOTS:
     void requestStateChanged(QContactAbstractRequest::State state);
@@ -181,7 +181,7 @@ protected:
     void handleFinishedSubRequest(QContactAbstractRequest* req);
 
 private:
-    void partiallyCopyDetails(QContact* to, const QContact& from, const QSet<QString>& mask);
+    void partiallyCopyDetails(QContact* to, const QContact& from, const QSet<QContactDetail::DetailType> &mask);
     QContactSaveRequest* request() { return static_cast<QContactSaveRequest*>(m_request.data()); }
 
     QContactManagerEngine* m_engine;

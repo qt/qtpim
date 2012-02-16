@@ -406,7 +406,7 @@ void tst_QContactManagerDetails::testPhoneNumber()
     // General landline number
     QContactPhoneNumber n2;
     n2.setNumber( "2" );
-    n2.setSubTypes( QContactPhoneNumber::SubTypeLandline );
+    n2.setSubTypes( QList<int>() << QContactPhoneNumber::SubTypeLandline );
     c.saveDetail( &n2 );
 
     saveAndVerifyContact( cm.data(), c );
@@ -416,14 +416,14 @@ void tst_QContactManagerDetails::testPhoneNumber()
     // home mobile number
     QContactPhoneNumber n1;
     n1.setNumber( "1" );
-    n1.setSubTypes( QContactPhoneNumber::SubTypeMobile );
+    n1.setSubTypes( QList<int>() << QContactPhoneNumber::SubTypeMobile );
     n1.setContexts( QContactDetail::ContextHome );
     c2.saveDetail( &n1 );
 
     // work landline number
     QContactPhoneNumber n3;
     n3.setNumber( "3" );
-    n3.setSubTypes( QContactPhoneNumber::SubTypeLandline );
+    n3.setSubTypes( QList<int>() << QContactPhoneNumber::SubTypeLandline );
     n3.setContexts( QContactDetail::ContextWork );
     c2.saveDetail( &n3 );
 

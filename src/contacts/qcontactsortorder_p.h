@@ -54,6 +54,7 @@
 //
 
 #include "qcontactsortorder.h"
+#include "qcontactdetail.h"
 
 #include <QSharedData>
 
@@ -67,6 +68,8 @@ public:
             , m_blankPolicy(QContactSortOrder::BlanksLast)
             , m_direction(Qt::AscendingOrder)
             , m_sensitivity(Qt::CaseSensitive)
+            , m_type(QContactDetail::TypeUndefined)
+            , m_field(-1)
     {
     }
 
@@ -77,8 +80,8 @@ public:
     QContactSortOrder::BlankPolicy m_blankPolicy;
     Qt::SortOrder m_direction;
     Qt::CaseSensitivity m_sensitivity;
-    QString m_definitionName;
-    QString m_fieldName;
+    QContactDetail::DetailType m_type;
+    int m_field;
 };
 
 QTCONTACTS_END_NAMESPACE

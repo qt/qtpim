@@ -56,28 +56,37 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactPhoneNumber : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPhoneNumber, "PhoneNumber")
-    const static QString FieldNumber;
-    const static QString FieldSubTypes;
-    const static QString SubTypeLandline;
-    const static QString SubTypeMobile;
-    const static QString SubTypeFax;
-    const static QString SubTypePager;
-    const static QString SubTypeVoice;
-    const static QString SubTypeModem;
-    const static QString SubTypeVideo;
-    const static QString SubTypeCar;
-    const static QString SubTypeBulletinBoardSystem;
-    const static QString SubTypeMessagingCapable;
-    const static QString SubTypeAssistant;
-    const static QString SubTypeDtmfMenu;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactPhoneNumber)
+#else
+    static const DetailType Type;
+#endif
+
+    enum PhoneNumberField {
+        FieldNumber = 0,
+        FieldSubTypes
+    };
+
+    enum SubType {
+        SubTypeLandline = 0,
+        SubTypeMobile,
+        SubTypeFax,
+        SubTypePager,
+        SubTypeVoice,
+        SubTypeModem,
+        SubTypeVideo,
+        SubTypeCar,
+        SubTypeBulletinBoardSystem,
+        SubTypeMessagingCapable,
+        SubTypeAssistant,
+        SubTypeDtmfMenu
+    };
 
     void setNumber(const QString& number) {setValue(FieldNumber, number);}
     QString number() const {return value(FieldNumber).toString();}
 
-    void setSubTypes(const QStringList& subTypes) {setValue(FieldSubTypes, subTypes);}
-    void setSubTypes(const QString& subType) {setValue(FieldSubTypes, QStringList(subType));}
-    QStringList subTypes() const {return value<QStringList>(FieldSubTypes);}
+    void setSubTypes(const QList<int> &subTypes) {setValue(FieldSubTypes, QVariant::fromValue(subTypes));}
+    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
 
     // Convenience filter
     static QContactFilter match(const QString& number);

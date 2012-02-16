@@ -65,19 +65,28 @@ QDeclarativeContactFetchHint::QDeclarativeContactFetchHint(QObject* parent)
 }
 
 /*!
-  \qmlproperty list<string> FetchHint::detailDefinitionsHint
+  \qmlproperty list<int> FetchHint::detailTypesHint
 
-  This property holds a list of definition names that identify detail definitions of which details
+  This property holds a list of contact detail types
   the manager should (at a minimum) retrieve when fetching contacts.
   */
-QStringList QDeclarativeContactFetchHint::detailDefinitionsHint() const
+QList<int> QDeclarativeContactFetchHint::detailTypesHint() const
 {
-    return m_fetchHint.detailDefinitionsHint();
+    QList<int> savedList;
+    foreach (const QContactDetail::DetailType &detailTypeHint, m_fetchHint.detailTypesHint()) {
+        savedList << static_cast<int>(detailTypeHint);
+    }
+
+    return savedList;
 }
-void QDeclarativeContactFetchHint::setDetailDefinitionsHint(const QStringList& definitionNames)
+void QDeclarativeContactFetchHint::setDetailTypesHint(const QList<int> &detailTypes)
 {
-    if (definitionNames.toSet() != m_fetchHint.detailDefinitionsHint().toSet()) {
-        m_fetchHint.setDetailDefinitionsHint(definitionNames);
+    if (detailTypes.toSet() != detailTypesHint().toSet()) {
+        QList<QContactDetail::DetailType> convertedDetailTypes;
+        foreach (const int detailType, detailTypes) {
+            convertedDetailTypes << static_cast<QContactDetail::DetailType>(detailType);
+        }
+        m_fetchHint.setDetailTypesHint(convertedDetailTypes);
         emit fetchHintChanged();
     }
 }

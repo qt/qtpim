@@ -56,7 +56,7 @@ class QDeclarativeContactHobby : public QDeclarativeContactDetail
     Q_CLASSINFO("DefaultProperty", "hobby")
 public:
     enum FieldType {
-        Hobby = 0
+        Hobby = QContactHobby::FieldHobby
     };
     QDeclarativeContactHobby(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -65,21 +65,11 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Hobby;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Hobby:
-            return QContactHobby::FieldHobby;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setHobby(const QString& v)
     {
         if (!readOnly() && v != hobby()) {

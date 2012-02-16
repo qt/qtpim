@@ -53,8 +53,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactSortOrder :public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
-    Q_PROPERTY(QVariant field READ field WRITE setField NOTIFY sortOrderChanged)
+    Q_PROPERTY(int detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity caseSensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
@@ -70,13 +70,13 @@ public:
 
     QDeclarativeContactSortOrder(QObject* parent = 0);
 
-    void setDetail(const QVariant& detailType);
+    void setDetail(const int detailType);
 
-    QVariant detail() const;
+    int detail() const;
 
-    void setField(const QVariant& fieldType);
+    void setField(const int fieldType);
 
-    QVariant field() const;
+    int field() const;
 
     //from QDeclarativeParserStatus
     void classBegin() {}
@@ -94,8 +94,8 @@ public:
 signals:
     void sortOrderChanged();
 private:
-    QVariant m_field;
-    QVariant m_detail;
+    int m_field;
+    int m_detail;
     QContactSortOrder m_sortOrder;
 };
 

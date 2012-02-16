@@ -55,8 +55,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactGuid : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGuid, "Guid")
-    const static QString FieldGuid;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactGuid)
+#else
+    static const DetailType Type;
+#endif
+
+    enum GuidField {
+        FieldGuid = 0
+    };
 
     void setGuid(const QString& guid) {setValue(FieldGuid, guid);}
     QString guid() const {return value(FieldGuid).toString();}

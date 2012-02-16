@@ -41,6 +41,7 @@
 
 #include "vcardpreserver.h"
 #include <qversitproperty.h>
+#include <QContactExtendedDetail>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -71,16 +72,16 @@ public:
     void detailProcessed(const QContact& contact,
                          const QContactDetail& detail,
                          const QVersitDocument& document,
-                         QSet<QString>* processedFields,
+                         QSet<int>* processedFields,
                          QList<QVersitProperty>* toBeRemoved,
                          QList<QVersitProperty>* toBeAdded);
     void contactProcessed(const QContact& contact,
                           QVersitDocument* document);
 };
 
-const QString DetailName(QStringLiteral("Custom"));
-const QString KeyField(QStringLiteral("Key"));
-const QString ValueField(QStringLiteral("Value"));
+const QContactDetail::DetailType DetailType(QContactDetail::TypeExtendedDetail);
+const QContactExtendedDetail::ExtendedDetailField KeyField(QContactExtendedDetail::FieldName);
+const QContactExtendedDetail::ExtendedDetailField ValueField(QContactExtendedDetail::FieldData);
 
 
 QSet<QString> VCardPreserverFactory::profiles() const
@@ -125,7 +126,7 @@ void VCardPreserver::propertyProcessed(const QVersitDocument& document,
     if (!updatedDetails->isEmpty() || *alreadyProcessed) {
         return;
     }
-    QContactDetail detail(DetailName);
+    QContactDetail detail(DetailType);
     detail.setValue(KeyField, property.name());
     detail.setValue(ValueField, property.value());
     updatedDetails->append(detail);
@@ -142,14 +143,14 @@ void VCardPreserver::documentProcessed(const QVersitDocument& document,
 void VCardPreserver::detailProcessed(const QContact& contact,
                                      const QContactDetail& detail,
                                      const QVersitDocument& document,
-                                     QSet<QString>* processedFields,
+                                     QSet<int>* processedFields,
                                      QList<QVersitProperty>* toBeRemoved,
                                      QList<QVersitProperty>* toBeAdded)
 {
     Q_UNUSED(contact)
     Q_UNUSED(document)
     Q_UNUSED(toBeRemoved)
-    if (detail.definitionName() == DetailName
+    if (detail.type() == DetailType
             && processedFields->isEmpty()) {
         QString key(detail.value(KeyField).toString());
         QString value(detail.value(ValueField).toString());

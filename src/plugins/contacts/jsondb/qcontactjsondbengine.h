@@ -107,11 +107,11 @@ public:
     int managerVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }
 
     /* Capabilities reporting */
-    bool hasFeature(QContactManager::ManagerFeature feature, const QString& contactType) const;
+    bool hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const;
     bool isFilterSupported(const QContactFilter& filter) const;
     QList<QVariant::Type> supportedDataTypes() const;
-    QStringList supportedContactTypes() const {return (QStringList() << QContactType::TypeContact);}
-    QStringList supportedContactDetailTypes() const;
+    QList<QContactType::TypeValues>  supportedContactTypes() const {return (QList<QContactType::TypeValues> () << QContactType::TypeContact);}
+    QList<QContactDetail::DetailType> supportedContactDetailTypes() const;
 
     /* Asynchronous Request Support - synchronous versions until thread worker is stable */
     void requestDestroyed(QContactAbstractRequest *req);

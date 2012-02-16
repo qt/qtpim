@@ -55,7 +55,7 @@ class QDeclarativeContactEmailAddress : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        EmailAddress = 0
+        EmailAddress = QContactEmailAddress::FieldEmailAddress
     };
     QDeclarativeContactEmailAddress(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -64,20 +64,9 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Email;
-    }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case EmailAddress:
-            return QContactEmailAddress::FieldEmailAddress;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
     }
 
     void setEmailAddress(const QString& v)

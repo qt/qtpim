@@ -353,7 +353,7 @@ void tst_QContactJsonDbAsync::contactFetch()
     // The test case does not fail because the sizes of contactIds and contacts
     // lists below are the same.
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactUrl::DefinitionName, QContactUrl::FieldUrl);
+    dfil.setDetailType(QContactUrl::Type, QContactUrl::FieldUrl);
     cfr.setFilter(dfil);
     QVERIFY(cfr.filter() == dfil);
     QVERIFY(!cfr.cancel()); // not started
@@ -376,7 +376,7 @@ void tst_QContactJsonDbAsync::contactFetch()
 
     // sort order
     QContactSortOrder sortOrder;
-    sortOrder.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    sortOrder.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     QList<QContactSortOrder> sorting;
     sorting.append(sortOrder);
     cfr.setFilter(fil);
@@ -405,9 +405,11 @@ void tst_QContactJsonDbAsync::contactFetch()
     cfr.setFilter(fil);
     cfr.setSorting(sorting);
     QContactFetchHint fetchHint;
-    fetchHint.setDetailDefinitionsHint(QStringList(QContactName::DefinitionName));
+    QList<QtContacts::QContactDetail::DetailType> typeHints;
+    typeHints << QContactName::Type;
+    fetchHint.setDetailTypesHint(typeHints);
     cfr.setFetchHint(fetchHint);
-    QCOMPARE(cfr.fetchHint().detailDefinitionsHint(), QStringList(QContactName::DefinitionName));
+    QCOMPARE(cfr.fetchHint().detailTypesHint(), typeHints);
     QVERIFY(!cfr.cancel()); // not started
     QVERIFY(cfr.start());
     QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
@@ -452,8 +454,8 @@ void tst_QContactJsonDbAsync::contactFetch()
         foreach (const QContactDetail& det, expectedDetails) {
             // ignore backend synthesised details
             // again, this requires a "default contact details" function to work properly.
-            if (det.definitionName() == QContactDisplayLabel::DefinitionName
-                || det.definitionName() == QContactTimestamp::DefinitionName) {
+            if (det.type() == QContactDisplayLabel::Type
+                || det.type() == QContactTimestamp::Type) {
                 continue;
             }
 
@@ -966,6 +968,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QContactId aId = contacts[0].id();
     QContactId bId = contacts[1].id();
 
+    // Using this value as invalid detail type
+    const QContactDetail::DetailType badDetailType = QContactDetail::DetailType(12345);
+
     // Test 1: saving a contact with a changed detail masked out does nothing
     QContactPhoneNumber phn(contacts[0].detail<QContactPhoneNumber>());
     phn.setNumber("new number");
@@ -974,7 +979,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QContactSaveRequest csr;
     csr.setManager(cm.data());
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    QList<QContactDetail::DetailType> typeMasks;
+    typeMasks << QContactEmailAddress::Type;
+    csr.setTypeMask(typeMasks);
     qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
     QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
     QVERIFY(csr.start());
@@ -995,7 +1002,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     email.setEmailAddress("me@example.com");
     contacts[1].saveDetail(&email);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1016,7 +1023,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(contacts[1].details<QContactEmailAddress>().count() == 0);
     QVERIFY(contacts[1].details<QContactPhoneNumber>().count() == 0);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1031,7 +1038,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     newContact.saveDetail(&phn);
     contacts.append(newContact);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactOnlineAccount::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactOnlineAccount::Type;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1049,7 +1058,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts.append(newContact);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactPhoneNumber::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactPhoneNumber::Type;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1062,14 +1073,22 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QCOMPARE(contacts[4].details<QContactPhoneNumber>().count(), 1); // saved
 
     // 6) Have a bad manager uri in the middle followed by a save error
+
+    // ########### This has been changed to compile,
+    // # TODO: ### but might not work like it should be.
+    // ###########
+
     QContactId id3(contacts[3].id());
     QContactId badId(id3);
     contacts[3].setId(badId);
-    QContactDetail badDetail("BadDetail");
-    badDetail.setValue("BadField", "BadValue");
+    QContactExtendedDetail badDetail; //(QContactDetail::TypeExtendedDetail);
+    badDetail.setName("BadField");
+    badDetail.setData("BadValue");
     contacts[4].saveDetail(&badDetail);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList("BadDetail"));
+    typeMasks.clear();
+    typeMasks << badDetailType;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.error() != QContactManager::NoError);
@@ -1082,7 +1101,7 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     badId = QContactIdMock::createId("badid", 987234); // something nonexistent (hopefully)
     contacts[3].setId(badId);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList("BadDetail"));
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.error() != QContactManager::NoError);
@@ -1098,7 +1117,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList(QContactOrganization::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypeOrganization;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1116,7 +1137,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList(QContactPhoneNumber::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypePhoneNumber;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1137,7 +1160,9 @@ void tst_QContactJsonDbAsync::contactPartialSave()
     contacts2[0].setId(badId);
     contacts2[1].saveDetail(&badDetail);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList("BadDetail"));
+    typeMasks.clear();
+    typeMasks << badDetailType;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.error() != QContactManager::NoError);
@@ -1183,7 +1208,9 @@ void tst_QContactJsonDbAsync::contactPartialSaveAsync()
     saveRequest = new QContactSaveRequest();
     saveRequest->setManager(cm);
     saveRequest->setContacts(contacts);
-    saveRequest->setDefinitionMask(QStringList(QContactTag::DefinitionName));
+    QList<QContactDetail::DetailType> typeMasks;
+    typeMasks << QContactDetail::TypeTag;
+    saveRequest->setTypeMask(typeMasks);
     saveRequest->start();
     QTest::qWait(1000);
     QVERIFY(saveRequest->isFinished());

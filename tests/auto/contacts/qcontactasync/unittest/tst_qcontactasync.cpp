@@ -319,8 +319,8 @@ bool tst_QContactAsync::compareContacts(QContact ca, QContact cb)
             }
             
             // Special handling for timestamp
-            if (ad.definitionName() == QContactTimestamp::DefinitionName &&
-                bd.definitionName() == QContactTimestamp::DefinitionName) {
+            if (ad.type() == QContactTimestamp::Type &&
+                bd.type() == QContactTimestamp::Type) {
                 QContactTimestamp at = static_cast<QContactTimestamp>(ad);
                 QContactTimestamp bt = static_cast<QContactTimestamp>(bd);
                 if (at.created().toString() == bt.created().toString() &&
@@ -367,11 +367,11 @@ bool tst_QContactAsync::compareIgnoringTimestamps(const QContact& ca, const QCon
                 break;
             }
 
-            if (d.definitionName() == QContactTimestamp::DefinitionName) {
+            if (d.type() == QContactTimestamp::Type) {
                 a.removeDetail(&d);
             }
 
-            if (d2.definitionName() == QContactTimestamp::DefinitionName) {
+            if (d2.type() == QContactTimestamp::Type) {
                 b.removeDetail(&d2);
             }
         }
@@ -456,7 +456,7 @@ void tst_QContactAsync::contactFetch()
 
     // asynchronous detail filtering
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactUrl::DefinitionName, QContactUrl::FieldUrl);
+    dfil.setDetailType(QContactUrl::Type, QContactUrl::FieldUrl);
     cfr.setFilter(dfil);
     QVERIFY(cfr.filter() == dfil);
     QVERIFY(!cfr.cancel()); // not started
@@ -479,7 +479,7 @@ void tst_QContactAsync::contactFetch()
 
     // sort order
     QContactSortOrder sortOrder;
-    sortOrder.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    sortOrder.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     QList<QContactSortOrder> sorting;
     sorting.append(sortOrder);
     cfr.setFilter(fil);
@@ -508,9 +508,11 @@ void tst_QContactAsync::contactFetch()
     cfr.setFilter(fil);
     cfr.setSorting(sorting);
     QContactFetchHint fetchHint;
-    fetchHint.setDetailDefinitionsHint(QStringList(QContactName::DefinitionName));
+    QList<QContactDetail::DetailType> typeHints;
+    typeHints << QContactName::Type;
+    fetchHint.setDetailTypesHint(typeHints);
     cfr.setFetchHint(fetchHint);
-    QCOMPARE(cfr.fetchHint().detailDefinitionsHint(), QStringList(QContactName::DefinitionName));
+    QCOMPARE(cfr.fetchHint().detailTypesHint(), typeHints);
     QVERIFY(!cfr.cancel()); // not started
     QVERIFY(cfr.start());
     QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
@@ -555,8 +557,8 @@ void tst_QContactAsync::contactFetch()
         foreach (const QContactDetail& det, expectedDetails) {
             // ignore backend synthesised details
             // again, this requires a "default contact details" function to work properly.
-            if (det.definitionName() == QContactDisplayLabel::DefinitionName
-                || det.definitionName() == QContactTimestamp::DefinitionName) {
+            if (det.type() == QContactDisplayLabel::Type
+                || det.type() == QContactTimestamp::Type) {
                 continue;
             }
 
@@ -744,7 +746,7 @@ void tst_QContactAsync::contactIdFetch()
 
     // asynchronous detail filtering
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactUrl::DefinitionName, QContactUrl::FieldUrl);
+    dfil.setDetailType(QContactUrl::Type, QContactUrl::FieldUrl);
     cfr.setFilter(dfil);
     QVERIFY(cfr.filter() == dfil);
     QVERIFY(!cfr.cancel()); // not started
@@ -764,7 +766,7 @@ void tst_QContactAsync::contactIdFetch()
 
     // sort order
     QContactSortOrder sortOrder;
-    sortOrder.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    sortOrder.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     QList<QContactSortOrder> sorting;
     sorting.append(sortOrder);
     cfr.setFilter(fil);
@@ -878,7 +880,7 @@ void tst_QContactAsync::contactRemove()
     // specific contact removal via detail filter
     int originalCount = cm->contactIds().size();
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactUrl::DefinitionName);
+    dfil.setDetailType(QContactUrl::Type);
     crr.setContactIds(cm->contactIds(dfil));
     crr.setManager(cm.data());
     QCOMPARE(crr.manager(), cm.data());
@@ -906,7 +908,7 @@ void tst_QContactAsync::contactRemove()
     QVERIFY(cm->contactIds(dfil).isEmpty());
 
     // remove all contacts
-    dfil.setDetailDefinitionName(QContactDisplayLabel::DefinitionName); // delete everything.
+    dfil.setDetailType(QContactDisplayLabel::Type); // delete everything.
     crr.setContactIds(cm->contactIds(dfil));
     
     QVERIFY(!crr.cancel()); // not started
@@ -1201,7 +1203,9 @@ void tst_QContactAsync::contactPartialSave()
     QContactSaveRequest csr;
     csr.setManager(cm.data());
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    QList<QContactDetail::DetailType> typeMasks;
+    typeMasks << QContactDetail::TypeEmailAddress;
+    csr.setTypeMask(typeMasks);
     qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
     QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
     QVERIFY(csr.start());
@@ -1222,7 +1226,7 @@ void tst_QContactAsync::contactPartialSave()
     email.setEmailAddress("me@example.com");
     contacts[1].saveDetail(&email);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1242,7 +1246,7 @@ void tst_QContactAsync::contactPartialSave()
     QVERIFY(contacts[1].details<QContactEmailAddress>().count() == 0);
     QVERIFY(contacts[1].details<QContactPhoneNumber>().count() == 0);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactEmailAddress::DefinitionName));
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1257,7 +1261,9 @@ void tst_QContactAsync::contactPartialSave()
     newContact.saveDetail(&phn);
     contacts.append(newContact);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactOnlineAccount::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypeOnlineAccount;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1275,7 +1281,9 @@ void tst_QContactAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts.append(newContact);
     csr.setContacts(contacts);
-    csr.setDefinitionMask(QStringList(QContactPhoneNumber::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypePhoneNumber;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1316,7 +1324,9 @@ void tst_QContactAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList(QContactOrganization::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypeOrganization;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1334,7 +1344,9 @@ void tst_QContactAsync::contactPartialSave()
     QVERIFY(newContact.details<QContactPhoneNumber>().count() == 1);
     contacts2.append(newContact);
     csr.setContacts(contacts2);
-    csr.setDefinitionMask(QStringList(QContactPhoneNumber::DefinitionName));
+    typeMasks.clear();
+    typeMasks << QContactDetail::TypePhoneNumber;
+    csr.setTypeMask(typeMasks);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QCOMPARE(csr.error(), QContactManager::NoError);
@@ -1398,7 +1410,9 @@ void tst_QContactAsync::contactPartialSaveAsync()
     saveRequest = new QContactSaveRequest();
     saveRequest->setManager(cm);
     saveRequest->setContacts(contacts);
-    saveRequest->setDefinitionMask(QStringList(QContactTag::DefinitionName));
+    QList<QContactDetail::DetailType> typeMasks;
+    typeMasks << QContactDetail::TypeTag;
+    saveRequest->setTypeMask(typeMasks);
     saveRequest->start();
     QTest::qWait(1000);
     QVERIFY(saveRequest->waitForFinished());
@@ -1474,7 +1488,7 @@ void tst_QContactAsync::relationshipFetch()
     QContact aContact;
     foreach (const QContactId& currId, contacts) {
         QContact curr = cm->contact(currId);
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Aaron")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Aaron")) {
             aContact = curr;
             break;
         }
@@ -1500,7 +1514,7 @@ void tst_QContactAsync::relationshipFetch()
     QContact bContact;
     foreach (const QContactId& currId, contacts) {
         QContact curr = cm->contact(currId);
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Bob")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Bob")) {
             bContact = curr;
             break;
         }
@@ -1528,7 +1542,7 @@ void tst_QContactAsync::relationshipFetch()
     QContact cContact;
     foreach (const QContactId& currId, contacts) {
         QContact curr = cm->contact(currId);
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Borris")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Borris")) {
             cContact = curr;
             break;
         }
@@ -1642,15 +1656,15 @@ void tst_QContactAsync::relationshipRemove()
     QContact aContact, bContact, cContact;
     foreach (const QContactId& currId, contacts) {
         QContact curr = cm->contact(currId);
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Aaron")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Aaron")) {
             aContact = curr;
             continue;
         }
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Bob")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Bob")) {
             bContact = curr;
             continue;
         }
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Borris")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Borris")) {
             cContact = curr;
             continue;
         }
@@ -1802,11 +1816,11 @@ void tst_QContactAsync::relationshipSave()
     QContact cContact, aContact, bContact;
     foreach (const QContactId& currId, contacts) {
         QContact curr = cm->contact(currId);
-        if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Borris")) {
+        if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Borris")) {
             cContact = curr;
-        } else if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Bob")) {
+        } else if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Bob")) {
             bContact = curr;
-        } else if (curr.detail(QContactName::DefinitionName).value(QContactName::FieldFirstName) == QString("Aaron")) {
+        } else if (curr.detail(QContactName::Type).value(QContactName::FieldFirstName) == QString("Aaron")) {
             aContact = curr;
         }
     }

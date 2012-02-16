@@ -55,8 +55,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactThumbnail : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactThumbnail, "Thumbnail")
-    const static QString FieldThumbnail;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactThumbnail)
+#else
+    static const DetailType Type;
+#endif
+
+    enum ThumbnailField {
+        FieldThumbnail = 0
+    };
 
     void setThumbnail(const QImage& thumbnail) {setValue(FieldThumbnail, thumbnail);}
     QImage thumbnail() const {return value<QImage>(FieldThumbnail);}

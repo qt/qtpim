@@ -53,9 +53,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactFavorite : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFavorite, "Favorite")
-    const static QString FieldFavorite;
-    const static QString FieldIndex;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFavorite)
+#else
+    static const DetailType Type;
+#endif
+
+    enum FavoriteField {
+        FieldFavorite = 0,
+        FieldIndex
+    };
 
     void setFavorite(bool isFavorite) {setValue(FieldFavorite, isFavorite);}
     bool isFavorite() const {return value(FieldFavorite).toBool();}

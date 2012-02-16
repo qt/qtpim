@@ -107,13 +107,14 @@ private:
     bool createFamily(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNameValueDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createCustomLabel(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
-    QStringList extractContexts(const QVersitProperty& property) const;
+    bool createGender(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    QList<int> extractContexts(const QVersitProperty& property) const;
     QStringList extractSubTypes(const QVersitProperty& property) const;
     QString takeFirst(QList<QString>& list) const;
     QDateTime parseDateTime(QString text, bool *justDate = 0) const;
     QString saveContentToFile(const QVersitProperty& property, const QByteArray& data) const;
     bool saveDataFromProperty(const QVersitProperty& property, QString* location, QByteArray* data) const;
-    void saveDetailWithContext(QList<QContactDetail>* updatedDetails, QContactDetail detail, const QStringList& contexts);
+    void saveDetailWithContext(QList<QContactDetail>* updatedDetails, QContactDetail detail, const QList<int>& contexts);
 
 public: // Data
     QList<QContact> mContacts;
@@ -126,9 +127,9 @@ public: // Data
     QVersitResourceHandler* mResourceHandler;
     QVCardRestoreHandler mRestoreHandler;
 
-    QHash<QString,QPair<QString,QString> > mDetailMappings;
-    QHash<QString,QString> mContextMappings;
-    QHash<QString,QString> mSubTypeMappings;
+    QHash<QString, QPair<QContactDetail::DetailType, int> > mDetailMappings;
+    QMap< QPair<QContactDetail::DetailType, int>, QString> mSubTypeMappings;
+    QHash< int ,QString> mContextMappings;
 };
 
 QTVERSIT_END_NAMESPACE

@@ -54,10 +54,17 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactRingtone : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactRingtone, "Ringtone")
-    const static QString FieldAudioRingtoneUrl;
-    const static QString FieldVideoRingtoneUrl;
-    const static QString FieldVibrationRingtoneUrl;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactRingtone)
+#else
+    static const DetailType Type;
+#endif
+
+    enum RingtoneField {
+    FieldAudioRingtoneUrl = 0,
+    FieldVideoRingtoneUrl,
+    FieldVibrationRingtoneUrl
+    };
 
     void setAudioRingtoneUrl(const QUrl& audioRingtoneUrl) {setValue(FieldAudioRingtoneUrl, audioRingtoneUrl);}
     QUrl audioRingtoneUrl() const {return value<QUrl>(FieldAudioRingtoneUrl);}

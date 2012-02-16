@@ -55,8 +55,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   \ingroup contacts-filters
 
-  It may be used to select contacts which contain a detail of a particular definition with a particular value that lies in
-  a range (either open or closed).
+  It may be used to select contacts which contain a detail of a particular type
+  with a particular value that lies in a range (either open or closed).
  */
 
 Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactDetailRangeFilter);
@@ -123,15 +123,15 @@ void QContactDetailRangeFilter::setMatchFlags(QContactFilter::MatchFlags flags)
 }
 
 /*!
- * Sets the name of the detail definition of which type details will be inspected for matching values to \a definitionName,
- * and the name of the field which will be inspected in details of that definition to \a fieldName.
- * \sa detailDefinitionName(), detailFieldName()
+ * Sets the type of the detail definition of which type details will be inspected for matching values to \a type,
+ * and the name of the field which will be inspected in details of that definition to \a field.
+ * \sa detailType(), detailField()
  */
-void QContactDetailRangeFilter::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
+void QContactDetailRangeFilter::setDetailType(QContactDetail::DetailType type, int field)
 {
     Q_D(QContactDetailRangeFilter);
-    d->m_defId = definitionName;
-    d->m_fieldId = fieldName;
+    d->m_typeId = type;
+    d->m_fieldId = field;
 }
 
 /*!
@@ -145,20 +145,20 @@ QContactFilter::MatchFlags QContactDetailRangeFilter::matchFlags() const
 }
 
 /*!
- * Returns the definition name of the details which will be inspected for matching values
- * \sa setDetailDefinitionName()
+ * Returns the type of the details which will be inspected for matching values
+ * \sa setDetailType()
  */
-QString QContactDetailRangeFilter::detailDefinitionName() const
+QContactDetail::DetailType QContactDetailRangeFilter::detailType() const
 {
     Q_D(const QContactDetailRangeFilter);
-    return d->m_defId;
+    return d->m_typeId;
 }
 
 /*!
- * Returns the name of the field which contains the value which will be matched against the value criterion
- * \sa setDetailDefinitionName()
+ * Returns the detail field containinig the value which will be matched against the value criterion
+ * \sa setDetailType()
  */
-QString QContactDetailRangeFilter::detailFieldName() const
+int QContactDetailRangeFilter::detailField() const
 {
     Q_D(const QContactDetailRangeFilter);
     return d->m_fieldId;

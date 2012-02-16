@@ -54,8 +54,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactTag : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTag, "Tag")
-    const static QString FieldTag;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTag)
+#else
+    static const DetailType Type;
+#endif
+
+    enum TagField {
+        FieldTag = 0
+    };
 
     void setTag(const QString& tag) {setValue(FieldTag, tag);}
     QString tag() const {return value(FieldTag).toString();}

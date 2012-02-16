@@ -216,16 +216,16 @@ public:
     virtual bool waitForRequestFinished(QContactAbstractRequest *req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QString &contactType) const;
-    virtual bool isRelationshipTypeSupported(const QString &relationshipType, const QString &contactType) const;
+    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const;
+    virtual bool isRelationshipTypeSupported(const QString &relationshipType, const QContactType::TypeValues contactType) const;
     virtual bool isFilterSupported(const QContactFilter &filter) const;
     virtual QList<QVariant::Type> supportedDataTypes() const;
     /*! \reimp */
-    virtual QStringList supportedContactTypes() const
+    virtual QList<QContactType::TypeValues> supportedContactTypes() const
     {
         return QContactManagerEngine::supportedContactTypes();
     }
-    virtual QStringList supportedContactDetailTypes() const
+    virtual QList<QContactDetail::DetailType> supportedContactDetailTypes() const
     {
         return QContactManagerEngine::supportedContactDetailTypes();
     }

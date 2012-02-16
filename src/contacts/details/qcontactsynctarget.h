@@ -55,8 +55,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactSyncTarget : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactSyncTarget, "SyncTarget")
-    const static QString FieldSyncTarget;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactSyncTarget)
+#else
+    static const DetailType Type;
+#endif
+
+    enum SyncTargetField {
+        FieldSyncTarget = 0
+    };
 
     void setSyncTarget(const QString& syncTarget) {setValue(FieldSyncTarget, syncTarget);}
     QString syncTarget() const {return value(FieldSyncTarget).toString();}

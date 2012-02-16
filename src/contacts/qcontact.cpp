@@ -235,35 +235,22 @@ void QContact::setId(const QContactId& id)
  *
  * \sa setType()
  */
-QString QContact::type() const
+
+QContactType::TypeValues QContact::type() const
 {
     // type is detail 1
-    QString type = d.constData()->m_details.at(1).value(QContactType::FieldType).toString();
-    if (type.isEmpty())
-        return QContactType::TypeContact;
+    QContactType::TypeValues type = static_cast<QContactType::TypeValues>(d.constData()->m_details.at(1).value(QContactType::FieldType).toInt());
     return type;
 }
+
 
 /*!
  * Sets the type of the contact to the given \a type.
  */
-void QContact::setType(const QString& type)
+void QContact::setType(const QContactType::TypeValues& type)
 {
     // type is detail 1
-    QContactType newType;
-    newType.setType(type);
-    newType.d->m_access = QContactDetail::Irremovable;
-
-    d->m_details[1] = newType;
-}
-
-/*!
- * Sets the type of the contact to the given \a type detail.
- */
-void QContact::setType(const QContactType& type)
-{
-    // type is detail 1
-    d->m_details[1] = type;
+    d->m_details[1].setValue(QContactType::FieldType, type);
     d->m_details[1].d->m_access = QContactDetail::Irremovable;
 }
 
@@ -309,7 +296,7 @@ QStringList QContact::tags() const
  */
 void QContact::clearTags()
 {
-    d->removeOnly(QContactTag::DefinitionName);
+    d->removeOnly(QContactTag::Type);
 }
 
 /*!
@@ -331,16 +318,18 @@ void QContact::addTag(const QString& tag)
  */
 void QContact::setTags(const QStringList& tags)
 {
-    d->removeOnly(QContactTag::DefinitionName);
+    d->removeOnly(QContactTag::Type);
     foreach (const QString& tag, tags) {
         addTag(tag);
     }
 }
 
+
+
 /*!
-    \fn QContactDetail QContact::detail(const QLatin1Constant& definitionName) const
-    Returns the first detail stored in the contact which with the given \a definitionName.
-    The \a definitionName argument is typically the detail name constant provided by a
+    \fn QContactDetail QContact::detail(QContactDetail::DetailType type) const
+    Returns the first detail stored in the contact which with the given \a type.
+    The \a type argument is typically the detail type constant provided by a
     specific subclass of QContactDetail.  For example:
 
     \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 0
@@ -350,12 +339,28 @@ void QContact::setTags(const QStringList& tags)
 
     \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 1
 */
+QContactDetail QContact::detail(QContactDetail::DetailType type) const
+{
+    // If type not defined, return first detail
+    if (type == QContactDetail::TypeUndefined)
+        return d.constData()->m_details.first();
+
+    // build the sub-list of matching details.
+    for (int i = 0; i < d.constData()->m_details.size(); i++) {
+        const QContactDetail& existing = d.constData()->m_details.at(i);
+        if (QContactDetailPrivate::detailPrivate(existing)->m_type == type) {
+            return existing;
+        }
+    }
+
+    return QContactDetail();
+}
 
 /*!
-    \fn QList<QContactDetail> QContact::details(const QString& definitionName) const
-    Returns a list of details of the given \a definitionName.
+    \fn QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
+    Returns a list of details of the given \a type.
 
-    The \a definitionName argument is typically the detail name constant provided by a
+    The \a type argument is typically the detail type constant provided by a
     specific subclass of QContactDetail.  For example:
 
     \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 2
@@ -365,51 +370,18 @@ void QContact::setTags(const QStringList& tags)
 
     \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 3
 */
-
-
-/*!
-    Returns the first detail stored in the contact with the given \a definitionName
-*/
-QContactDetail QContact::detail(const QString& definitionName) const
-{
-    if (definitionName.isEmpty())
-        return d.constData()->m_details.first();
-
-    // build the sub-list of matching details.
-    for (int i = 0; i < d.constData()->m_details.size(); i++) {
-        const QContactDetail& existing = d.constData()->m_details.at(i);
-        if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
-            return existing;
-        }
-    }
-
-    return QContactDetail();
-}
-
-/*! Returns a list of details with the given \a definitionName
-    The definitionName string can be determined by the DefinitionName attribute
-    of defined objects (e.g. QContactPhoneNumber::DefinitionName) or by
-    requesting a list of all the definitions synchronously with
-    \l {QContactManager::detailDefinitions()}{detailDefinitions()} or
-    asynchronously with a
-    \l {QContactDetailDefinitionFetchRequest}{detail definition fetch request},
-    and then inspecting the
-    \l{QContactDetailDefinition::name()}{name()} of each
-    definition.  If \a definitionName is empty, all details of any definition
-    will be returned.
- */
-QList<QContactDetail> QContact::details(const QString& definitionName) const
+QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
 {
     // build the sub-list of matching details.
     QList<QContactDetail> sublist;
 
     // special case
-    if (definitionName.isEmpty()) {
+    if (type == QContactDetail::TypeUndefined) {
         sublist = d.constData()->m_details;
     } else {
         for (int i = 0; i < d->m_details.size(); i++) {
             const QContactDetail& existing = d.constData()->m_details.at(i);
-            if (QContactDetailPrivate::detailPrivate(existing)->m_definitionName == definitionName) {
+            if (QContactDetailPrivate::detailPrivate(existing)->m_type == type) {
                 sublist.append(existing);
             }
         }
@@ -459,14 +431,14 @@ bool QContact::saveDetail(QContactDetail* detail)
         return false;
 
     /* Also handle contact type specially - only one of them. */
-    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactType::DefinitionName) {
+    if (QContactDetailPrivate::detailPrivate(*detail)->m_type == QContactType::Type) {
         detail->d->m_access |= QContactDetail::Irremovable;
         d->m_details[1] = *detail;
         return true;
     }
 
     /* And display label.. */
-    if (QContactDetailPrivate::detailPrivate(*detail)->m_definitionName == QContactDisplayLabel::DefinitionName) {
+    if (QContactDetailPrivate::detailPrivate(*detail)->m_type == QContactDisplayLabel::Type) {
         return false;
     }
 
@@ -474,7 +446,8 @@ bool QContact::saveDetail(QContactDetail* detail)
     // ie, the one with the same type and id, but different value or attributes.
     for (int i = 0; i < d.constData()->m_details.size(); i++) {
         const QContactDetail& curr = d.constData()->m_details.at(i);
-        if (detail->d.constData()->m_definitionName == curr.d.constData()->m_definitionName && detail->d.constData()->m_id == curr.d.constData()->m_id) {
+        if (detail->d.constData()->m_type == curr.d.constData()->m_type &&
+                detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
             detail->d->m_access = d.constData()->m_details[i].accessConstraints();
             // Found the old version.  Replace it with this one.
@@ -824,24 +797,24 @@ QMap<QString, QContactDetail> QContact::preferredDetails() const
 
 
 /* Helper functions for QContactData */
-void QContactData::removeOnly(const QString& definitionName)
+void QContactData::removeOnly(QContactDetail::DetailType type)
 {
     QList<QContactDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
         // XXX this doesn't check type or display label
-        if (dit->definitionName() == definitionName)
+        if (dit->type() == type)
             dit = m_details.erase(dit);
         else
             ++dit;
     }
 }
 
-void QContactData::removeOnly(const QSet<QString> &definitionNames)
+void QContactData::removeOnly(const QSet<QContactDetail::DetailType>& types)
 {
     QList<QContactDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
         // XXX this doesn't check type or display label
-        if (definitionNames.contains(dit->definitionName()))
+        if (types.contains(dit->type()))
             dit = m_details.erase(dit);
         else
             ++dit;

@@ -66,7 +66,7 @@ ContactsSavingTestCase {
         address.region = "Region"
         address.postcode = "Postcode"
         address.country = "Country"
-        address.contexts = ["Home"]
+        address.contexts = [ContactDetail.ContextHome]
         contact.addDetail(address)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Address)
@@ -76,7 +76,7 @@ ContactsSavingTestCase {
         compare(detail.postcode, "Postcode")
         compare(detail.country, "Country")
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
     Avatar {
@@ -109,13 +109,13 @@ ContactsSavingTestCase {
 
     function test_emailAddress() {
         emailaddress.emailAddress = "test@qt.nokia.com"
-        emailaddress.contexts = ["Home"]
+        emailaddress.contexts = [ContactDetail.ContextHome]
         contact.addDetail(emailaddress)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Email)
         compare(detail.emailAddress, "test@qt.nokia.com")
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
     Gender {
@@ -140,7 +140,7 @@ ContactsSavingTestCase {
         name.middleName = "B."
         name.lastName = "Doe"
         name.suffix = "Sr."
-        name.contexts = ["Home"]
+        name.contexts = [ContactDetail.ContextHome]
         contact.addDetail(name)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Name)
@@ -152,7 +152,7 @@ ContactsSavingTestCase {
         if (model.manager == 'jsondb')
             expectFail("", "contexts are not supported at the moment")
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
     Nickname {
@@ -261,16 +261,19 @@ ContactsSavingTestCase {
                     PhoneNumber.Video,
                 ]
         phonenumber.number = "1"
-        phonenumber.contexts = ["Home"]
+        phonenumber.contexts = [ContactDetail.ContextHome]
         contact.addDetail(phonenumber)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.PhoneNumber)
         compare(detail.number, "1")
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO: This is not working as expected at the moment")
-        compare(detail.subTypes.length, phonenumber.subTypes.length)
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
+        if (model.manager == 'jsondb') {
+            compare(detail.subTypes.length, 1, "jsondb phone number subtypes length")
+            compare(detail.subTypes[0], phonenumber.subTypes[0])
+        } else {
+            compare(detail.subTypes.length, phonenumber.subTypes.length)
+        }
     }
 
     function test_phoneNumberOneSubtype() {
@@ -313,13 +316,13 @@ ContactsSavingTestCase {
 
     function test_url() {
         url.url = "http://qt.nokia.com"
-        url.contexts = ["Home"]
+        url.contexts = [ContactDetail.ContextHome]
         contact.addDetail(url)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Url)
         compare(detail.url, "http://qt.nokia.com")
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
     Version {

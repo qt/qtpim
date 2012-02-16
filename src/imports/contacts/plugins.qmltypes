@@ -335,7 +335,7 @@ Module {
         Property { name: "region"; type: "string" }
         Property { name: "postcode"; type: "string" }
         Property { name: "country"; type: "string" }
-        Property { name: "subTypes"; type: "QVariant" }
+        Property { name: "subTypes"; type: "QList<int>" }
         Property { name: "postOfficeBox"; type: "string" }
         Signal { name: "valueChanged" }
     }
@@ -355,12 +355,11 @@ Module {
         Enum {
             name: "AnniversarySubType"
             values: {
-                "Unknown": 0,
-                "Wedding": 1,
-                "Engagement": 2,
-                "House": 3,
-                "Employment": 4,
-                "Memorial": 5
+                "Wedding": 0,
+                "Engagement": 1,
+                "House": 2,
+                "Employment": 3,
+                "Memorial": 4
             }
         }
         Property { name: "calendarId"; type: "string" }
@@ -425,73 +424,81 @@ Module {
         prototype: "QObject"
         exports: ["ContactDetail 5.0"]
         Enum {
-            name: "ContactDetailType"
+            name: "DetailType"
             values: {
-                "Address": 0,
-                "Anniversary": 1,
-                "Avatar": 2,
-                "Birthday": 3,
-                "DisplayLabel": 4,
-                "Email": 5,
-                "ExtendedDetail": 6,
-                "Family": 7,
-                "Favorite": 8,
-                "Gender": 9,
-                "Geolocation": 10,
-                "GlobalPresence": 11,
-                "Guid": 12,
-                "Hobby": 13,
-                "Name": 14,
-                "NickName": 15,
-                "Note": 16,
-                "OnlineAccount": 17,
-                "Organization": 18,
-                "PersonId": 19,
-                "PhoneNumber": 20,
-                "Presence": 21,
-                "Ringtone": 22,
-                "SyncTarget": 23,
-                "Tag": 24,
-                "Thumbnail": 25,
-                "Timestamp": 26,
-                "Type": 27,
-                "Url": 28,
-                "Version": 29,
-                "Unknown": 100
+                "Address": 1,
+                "Anniversary": 2,
+                "Avatar": 3,
+                "Birthday": 4,
+                "DisplayLabel": 5,
+                "Email": 6,
+                "ExtendedDetail": 7,
+                "Family": 8,
+                "Favorite": 9,
+                "Gender": 10,
+                "Geolocation": 11,
+                "GlobalPresence": 12,
+                "Guid": 13,
+                "Hobby": 14,
+                "Name": 15,
+                "NickName": 16,
+                "Note": 17,
+                "OnlineAccount": 18,
+                "Organization": 19,
+                "PersonId": 20,
+                "PhoneNumber": 21,
+                "Presence": 22,
+                "Ringtone": 23,
+                "SyncTarget": 24,
+                "Tag": 25,
+                "Thumbnail": 26,
+                "Timestamp": 27,
+                "Type": 28,
+                "Url": 29,
+                "Version": 30,
+                "Unknown": 0
             }
         }
-        Property { name: "type"; type: "ContactDetailType"; isReadonly: true }
-        Property { name: "definitionName"; type: "string"; isReadonly: true }
-        Property { name: "contexts"; type: "QStringList" }
+        Enum {
+            name: "ContextField"
+            values: {
+                "FieldContext": 5000,
+                "ContextHome": 0,
+                "ContextWork": 1,
+                "ContextOther": 2
+            }
+        }
+        Property { name: "type"; type: "DetailType"; isReadonly: true }
+        Property { name: "contexts"; type: "QList<int>" }
         Property { name: "detailUri"; type: "string" }
         Property { name: "linkedDetailUris"; type: "QStringList" }
-        Property { name: "fieldNames"; type: "QStringList"; isReadonly: true }
+        Property { name: "fields"; type: "QList<int>"; isReadonly: true }
         Property { name: "readOnly"; type: "bool"; isReadonly: true }
         Property { name: "removable"; type: "bool"; isReadonly: true }
         Signal { name: "detailChanged" }
         Method {
             name: "value"
             type: "QVariant"
-            Parameter { name: "key"; type: "string" }
+            Parameter { name: "field"; type: "int" }
         }
         Method {
             name: "setValue"
             type: "bool"
-            Parameter { name: "key"; type: "string" }
+            Parameter { name: "field"; type: "int" }
             Parameter { name: "value"; type: "QVariant" }
         }
         Method {
             name: "removeValue"
             type: "bool"
-            Parameter { name: "key"; type: "string" }
+            Parameter { name: "field"; type: "int" }
         }
     }
     Component {
         name: "QDeclarativeContactDetailFilter"
         prototype: "QDeclarativeContactFilter"
         exports: ["DetailFilter 5.0"]
-        Property { name: "detail"; type: "QVariant" }
-        Property { name: "field"; type: "QVariant" }
+        Property { name: "detail"; type: "QDeclarativeContactDetail::DetailType" }
+        Property { name: "field"; type: "int" }
         Property { name: "value"; type: "QVariant" }
         Property { name: "matchFlags"; type: "MatchFlags" }
     }
@@ -508,8 +515,8 @@ Module {
                 "ExcludeUpper": 0
             }
         }
-        Property { name: "detail"; type: "QVariant" }
-        Property { name: "field"; type: "QVariant" }
+        Property { name: "detail"; type: "QDeclarativeContactDetail::DetailType" }
+        Property { name: "field"; type: "int" }
         Property { name: "min"; type: "QVariant" }
         Property { name: "max"; type: "QVariant" }
         Property { name: "matchFlags"; type: "MatchFlags" }
@@ -602,7 +609,7 @@ Module {
                 "NoBinaryBlobs": 4
             }
         }
-        Property { name: "detailDefinitionsHint"; type: "QStringList" }
+        Property { name: "detailTypesHint"; type: "QList<int>" }
         Property { name: "relationshipTypesHint"; type: "QStringList" }
         Property { name: "optimizationHints"; type: "OptimizationHints" }
         Property { name: "imageWidth"; type: "int" }
@@ -658,8 +665,9 @@ Module {
         Enum {
             name: "GenderType"
             values: {
-                "Male": 0,
-                "Female": 1
+                "Male": 1,
+                "Female": 2,
+                "Unspecified": 3
             }
         }
         Property { name: "gender"; type: "GenderType" }
@@ -912,24 +920,23 @@ Module {
             values: {
                 "AccountUri": 0,
                 "ServiceProvider": 1,
-                "Capabilities": 2,
-                "SubTypes": 3
+                "Capabilities": 3,
+                "SubTypes": 4
             }
         }
         Enum {
             name: "OnlineAccountSubType"
             values: {
-                "Unknown": 0,
-                "Sip": 1,
-                "SipVoip": 2,
-                "Impp": 3,
-                "VideoShare": 4
+                "Sip": 0,
+                "SipVoip": 1,
+                "Impp": 2,
+                "VideoShare": 3
             }
         }
         Property { name: "accountUri"; type: "string" }
         Property { name: "serviceProvider"; type: "string" }
         Property { name: "capabilities"; type: "QStringList" }
-        Property { name: "subTypes"; type: "QVariant" }
+        Property { name: "subTypes"; type: "QList<int>" }
         Signal { name: "valueChanged" }
     }
     Component {
@@ -991,23 +998,22 @@ Module {
         Enum {
             name: "PhoneNumberSubType"
             values: {
-                "Unknown": 0,
-                "Landline": 1,
-                "Mobile": 2,
-                "Fax": 3,
-                "Pager": 4,
-                "Voice": 5,
-                "Modem": 6,
-                "Video": 7,
-                "Car": 8,
-                "BulletinBoardSystem": 9,
-                "MessagingCapable": 10,
-                "Assistant": 11,
-                "DtmfMenu": 12
+                "Landline": 0,
+                "Mobile": 1,
+                "Fax": 2,
+                "Pager": 3,
+                "Voice": 4,
+                "Modem": 5,
+                "Video": 6,
+                "Car": 7,
+                "BulletinBoardSystem": 8,
+                "MessagingCapable": 9,
+                "Assistant": 10,
+                "DtmfMenu": 11
             }
         }
         Property { name: "number"; type: "string" }
-        Property { name: "subTypes"; type: "QVariant" }
+        Property { name: "subTypes"; type: "QList<int>" }
         Signal { name: "valueChanged" }
     }
     Component {
@@ -1141,8 +1147,8 @@ Module {
                 "BlanksLast": 1
             }
         }
-        Property { name: "detail"; type: "QVariant" }
-        Property { name: "field"; type: "QVariant" }
+        Property { name: "detail"; type: "int" }
+        Property { name: "field"; type: "int" }
         Property { name: "direction"; type: "Qt::SortOrder" }
         Property { name: "blankPolicy"; type: "BlankPolicy" }
         Property { name: "caseSensitivity"; type: "Qt::CaseSensitivity" }
@@ -1218,6 +1224,7 @@ Module {
         Enum {
             name: "ContactType"
             values: {
+                "Unspecified": 0,
                 "Contact": 0,
                 "Group": 1
             }
@@ -1246,13 +1253,13 @@ Module {
             name: "UrlSubType"
             values: {
                 "Unknown": 0,
-                "HomePage": 1,
-                "Blog": 2,
-                "Favourite": 3
+                "HomePage": 0,
+                "Blog": 1,
+                "Favourite": 2
             }
         }
         Property { name: "url"; type: "string" }
-        Property { name: "subType"; type: "QVariant" }
+        Property { name: "subType"; type: "UrlSubType" }
         Signal { name: "valueChanged" }
     }
     Component {
@@ -1262,8 +1269,8 @@ Module {
         Enum {
             name: "FieldType"
             values: {
-                "FieldSequenceNumber": 0,
-                "FieldExtendedVersion": 1
+                "SequenceNumber": 0,
+                "ExtendedVersion": 1
             }
         }
         Property { name: "sequenceNumber"; type: "int" }

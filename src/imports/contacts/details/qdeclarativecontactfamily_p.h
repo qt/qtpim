@@ -57,8 +57,8 @@ class QDeclarativeContactFamily : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Spouse = 0,
-        Children
+        Spouse = QContactFamily::FieldSpouse,
+        Children = QContactFamily::FieldChildren
     };
     QDeclarativeContactFamily(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -66,23 +66,11 @@ public:
         setDetail(QContactFamily());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Family;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Spouse:
-            return QContactFamily::FieldSpouse;
-        case Children:
-            return QContactFamily::FieldChildren;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setSpouse(const QString& v)
     {
         if (!readOnly() && v != spouse()) {

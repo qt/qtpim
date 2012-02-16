@@ -54,8 +54,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactNickname : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactNickname, "Nickname")
-    const static QString FieldNickname;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactNickname)
+#else
+    static const DetailType Type;
+#endif
+
+    enum NicknameField {
+        FieldNickname = 0
+    };
 
     void setNickname(const QString& nickname) {setValue(FieldNickname, nickname);}
     QString nickname() const {return value(FieldNickname).toString();}

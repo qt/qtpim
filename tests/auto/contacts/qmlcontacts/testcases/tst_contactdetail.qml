@@ -204,8 +204,7 @@ TestCase {
 
         compare(address.subTypes, [])
         address.subTypes = [Address.Postal]
-        expectFail("", "The values are equal but comparison fails due to conversion issues")
-        compare(address.subTypes, [Address.Postal])  // This fails....
+        compare(address.subTypes, [Address.Postal])
 
         compare(address.postOfficeBox, "")
         address.postOfficeBox = "510"
@@ -256,15 +255,15 @@ TestCase {
         compare(detailCommon.type, ContactDetail.Unknown, "type");
         compare(detailCommon.detailUri, "", "detailUri");
         compare(detailCommon.linkedDetailUris, [], "linkedDetailUris");
-        compare(detailCommon.fieldNames, [], "fieldNames");
+        compare(detailCommon.fields, [], "fields");
         compare(detailCommon.readOnly, false, "readOnly");
         compare(detailCommon.removable, true, "removable");
     }
 
     function test_detail_contexts() {
         compare(detailContexts.contexts, [], "contexts");
-        detailContexts.contexts = ["Home"];
-        compare(detailContexts.contexts, ["Home"], "context");
+        detailContexts.contexts = [ContactDetail.ContextHome];
+        compare(detailContexts.contexts, [ContactDetail.ContextHome], "context");
     }
 
     function test_displayLabel() {
@@ -476,8 +475,7 @@ TestCase {
 
         compare(onlineAccount.subTypes, [])
         onlineAccount.subTypes = [OnlineAccount.Sip];
-        expectFail("", "The values are equal but comparison fails due to conversion issues")
-        compare(onlineAccount.subTypes, [OnlineAccount.Sip])   // This fails...
+        compare(onlineAccount.subTypes, [OnlineAccount.Sip])
     }
 
 
@@ -533,8 +531,7 @@ TestCase {
 
         compare(phonenumber.subTypes, [])
         phonenumber.subTypes = [PhoneNumber.Landline]
-        expectFail("", "The values are equal but comparison fails due to conversion issues")
-                    compare(phonenumber.subTypes, [PhoneNumber.Landline])  // This fails....
+        compare(phonenumber.subTypes, [PhoneNumber.Landline])
     }
 
     function test_presence() {
@@ -605,6 +602,8 @@ TestCase {
 
 
     function test_type() {
+        compare(type.type, Type.Unspecified)
+        type.type = Type.Group;
         compare(type.type, Type.Group)
         type.type = Type.Contact;
         compare(type.type, Type.Contact)
@@ -617,22 +616,21 @@ TestCase {
         compare(url.url.toString(), "http://acme.com")
 
         url.subType = Url.HomePage
-        expectFail("", "The values are equal but comparison fails due to conversion issues")
-        compare(url.subType, Url.HomePage)   // This fails...
+        compare(url.subType, Url.HomePage)
     }
 
     function test_version() {
         compare(version.sequenceNumber, 0)
-        compare(version.value("SequenceNumber"), undefined)
+        compare(version.value(Version.SequenceNumber), undefined)
         version.sequenceNumber = 64
         compare(version.sequenceNumber, 64)
-        compare(version.value("SequenceNumber"), 64)
+        compare(version.value(Version.SequenceNumber), 64)
 
         compare(version.extendedVersion, "")
-        compare(version.value("ExtendedVersion"), undefined)
+        compare(version.value(Version.ExtendedVersion), undefined)
         version.extendedVersion = "Qt rules"
         compare(version.extendedVersion, "Qt rules")
-        compare(version.value("ExtendedVersion"), "Qt rules")
+        compare(version.value(Version.ExtendedVersion), "Qt rules")
     }
 
 

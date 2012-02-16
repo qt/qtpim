@@ -55,7 +55,7 @@ class QDeclarativeContactPersonId : public QDeclarativeContactDetail
     Q_CLASSINFO("DefaultProperty", "personid")
 public:
     enum FieldType {
-        Personid = 0
+        Personid = QContactPersonId::FieldPersonId
     };
 
     QDeclarativeContactPersonId(QObject* parent = 0)
@@ -64,21 +64,11 @@ public:
         setDetail(QContactPersonId());
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::PersonId;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Personid:
-            return QContactPersonId::FieldPersonId;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setPersonid(const QString& v)
     {
         if (!readOnly() && v != personid()) {

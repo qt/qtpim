@@ -55,24 +55,38 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactOnlineAccount : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactOnlineAccount, "OnlineAccount")
-    const static QString FieldAccountUri;
-    const static QString FieldServiceProvider;
-    const static QString FieldProtocol;
-    const static QString FieldCapabilities;
-    const static QString FieldSubTypes;
-    const static QString SubTypeSip;
-    const static QString SubTypeSipVoip;
-    const static QString SubTypeImpp;
-    const static QString SubTypeVideoShare;
-    const static QString ProtocolAim;
-    const static QString ProtocolIcq;
-    const static QString ProtocolIrc;
-    const static QString ProtocolJabber;
-    const static QString ProtocolMsn;
-    const static QString ProtocolQq;
-    const static QString ProtocolSkype;
-    const static QString ProtocolYahoo;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactOnlineAccount)
+#else
+    static const DetailType Type;
+#endif
+
+    enum OnlineAccountField {
+        FieldAccountUri = 0,
+        FieldServiceProvider,
+        FieldProtocol,
+        FieldCapabilities,
+        FieldSubTypes
+    };
+
+    enum SubType {
+        SubTypeSip = 0,
+        SubTypeSipVoip,
+        SubTypeImpp,
+        SubTypeVideoShare
+    };
+
+    enum Protocol {
+        ProtocolUnknown = 0,
+        ProtocolAim,
+        ProtocolIcq,
+        ProtocolIrc,
+        ProtocolJabber,
+        ProtocolMsn,
+        ProtocolQq,
+        ProtocolSkype,
+        ProtocolYahoo
+    };
 
     void setAccountUri(const QString& accountUri) {setValue(FieldAccountUri, accountUri);}
     QString accountUri() const {return value(FieldAccountUri).toString();}
@@ -80,15 +94,14 @@ public:
     void setServiceProvider(const QString& serviceProvider) {setValue(FieldServiceProvider, serviceProvider);}
     QString serviceProvider() const {return value(FieldServiceProvider).toString();}
 
-    void setProtocol(const QString& protocol) {setValue(FieldProtocol, protocol);}
-    QString protocol() const {return value(FieldProtocol).toString();}
+    void setProtocol(Protocol protocol) {setValue(FieldProtocol, protocol);}
+    Protocol protocol() const {return Protocol(value(FieldProtocol).toInt());}
 
     void setCapabilities(const QStringList& capabilities) {setValue(FieldCapabilities, capabilities);}
     QStringList capabilities() const {return value<QStringList>(FieldCapabilities);}
 
-    void setSubTypes(const QStringList& subTypes) {setValue(FieldSubTypes, subTypes);}
-    void setSubTypes(const QString& subType) {setValue(FieldSubTypes, QStringList(subType));}
-    QStringList subTypes() const {return value<QStringList>(FieldSubTypes);}
+    void setSubTypes(const QList<int> &subTypes) {setValue(FieldSubTypes, QVariant::fromValue(subTypes));}
+    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
 };
 
 QTCONTACTS_END_NAMESPACE

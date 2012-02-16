@@ -318,7 +318,7 @@ void callContact(QContactManager* cm)
 void matchCall(QContactManager* cm, const QString& incomingCallNbr)
 {
     QContactDetailFilter phoneFilter;
-    phoneFilter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    phoneFilter.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     phoneFilter.setValue(incomingCallNbr);
     phoneFilter.setMatchFlags(QContactFilter::MatchExactly);
 
@@ -340,7 +340,7 @@ void viewSpecificDetail(QContactManager* cm)
     QList<QContactId> contactIds = cm->contactIds();
     QContact a = cm->contact(contactIds.first());
     qDebug() << "The first phone number of" << a.displayLabel()
-             << "is" << a.detail(QContactPhoneNumber::DefinitionName).value(QContactPhoneNumber::FieldNumber);
+             << "is" << a.detail(QContactPhoneNumber::Type).value(QContactPhoneNumber::FieldNumber);
 }
 //! [Viewing a specific detail of a contact]
 
@@ -356,7 +356,7 @@ void viewDetails(QContactManager* cm)
         QContactDetail detail = allDetails.at(i);
         QVariantMap fields = detail.variantValues();
 
-        qDebug("\tDetail #%d (%s):", i, detail.definitionName().toAscii().constData());
+        qDebug("\tDetail #%d (%d):", i, detail.type());
         foreach (const QString& fieldKey, fields.keys()) {
             qDebug() << "\t\t" << fieldKey << "(" << fields.value(fieldKey).dataType() << ") =" << detail.value(fieldKey);
         }
@@ -445,7 +445,7 @@ void editView(QContactManager* cm)
     qDebug() << "Modifying the details of" << a.displayLabel();
 
     /* Change the first phone number */
-    QList<QContactDetail> numbers = a.details(QContactPhoneNumber::DefinitionName);
+    QList<QContactDetail> numbers = a.details(QContactPhoneNumber::Type);
     QContactPhoneNumber phone = numbers.value(0);
     phone.setNumber("123-4445");
 
@@ -491,7 +491,7 @@ void RequestExample::performRequest()
 {
     // retrieve any contact whose first name is "Alice"
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue("Alice");
     dfil.setMatchFlags(QContactFilter::MatchExactly);
 
@@ -535,13 +535,13 @@ void shortsnippets()
     QContact groupContact;
     {
         //! [0]
-        QContactDetail detail = contact.detail(QContactName::DefinitionName);
+        QContactDetail detail = contact.detail(QContactName::Type);
         //! [0]
         //! [1]
         QContactName name = contact.detail<QContactName>();
         //! [1]
         //! [2]
-        QList<QContactDetail> details = contact.details(QContactPhoneNumber::DefinitionName);
+        QList<QContactDetail> details = contact.details(QContactPhoneNumber::Type);
         //! [2]
         //! [3]
         QList<QContactPhoneNumber> phoneNumbers = contact.details<QContactPhoneNumber>();

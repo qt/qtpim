@@ -58,6 +58,7 @@
 #include <qcontactrelationshipfilter.h>
 #include <qcontactsortorder.h>
 #include <qcontact.h>
+#include <qcontactdetail.h>
 
 #include <QStringList>
 #include <QList>
@@ -86,7 +87,7 @@ public:
     {
         dbg.nospace() << "QContactSaveRequest(";
         dbg.nospace() << "contacts=" << m_contacts << ","
-                      << "definitionMask=" << m_definitionMask << ","
+                      << "typeMask=" << m_typeMask << ","
                       << "errorMap=" << m_errors;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
@@ -95,7 +96,7 @@ public:
 
     QList<QContact> m_contacts;
     QMap<int, QContactManager::Error> m_errors;
-    QStringList m_definitionMask;
+    QList<QContactDetail::DetailType> m_typeMask;
 };
 
 class QContactFetchRequestPrivate : public QContactAbstractRequestPrivate

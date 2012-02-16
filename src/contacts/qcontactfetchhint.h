@@ -47,6 +47,8 @@
 #include <QSharedData>
 #include <QSize>
 #include "qcontactsglobal.h"
+#include "qcontactdetail.h"
+#include "qcontact.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -58,8 +60,8 @@ public:
     ~QContactFetchHint();
     QContactFetchHint& operator=(const QContactFetchHint& other);
 
-    QStringList detailDefinitionsHint() const;
-    void setDetailDefinitionsHint(const QStringList& definitionNames);
+    QList<QContactDetail::DetailType> detailTypesHint() const;
+    void setDetailTypesHint(const QList<QContactDetail::DetailType> &types);
 
     QStringList relationshipTypesHint() const;
     void setRelationshipTypesHint(const QStringList& relationshipTypes);

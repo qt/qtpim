@@ -55,9 +55,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactFamily : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFamily, "Family")
-    const static QString FieldSpouse;
-    const static QString FieldChildren;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactFamily)
+#else
+    static const DetailType Type;
+#endif
+
+    enum FamilyField {
+        FieldSpouse = 0,
+        FieldChildren
+    };
 
     void setSpouse(const QString& spouseName) {setValue(FieldSpouse, spouseName);}
     QString spouse() const {return value(FieldSpouse).toString();}

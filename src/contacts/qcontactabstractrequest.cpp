@@ -153,9 +153,6 @@ QTCONTACTS_BEGIN_NAMESPACE
   \value ContactIdFetchRequest A request to fetch a list of contact ids
   \value ContactRemoveRequest A request to remove a list of contacts
   \value ContactSaveRequest A request to save a list of contacts
-  \value DetailDefinitionFetchRequest A request to fetch a collection of detail definitions
-  \value DetailDefinitionRemoveRequest A request to remove a list of detail definitions
-  \value DetailDefinitionSaveRequest A request to save a list of detail definitions
   \value RelationshipFetchRequest A request to fetch relationships between contacts
   \value RelationshipRemoveRequest A request to remove any relationships which match the request criteria
   \value RelationshipSaveRequest A request to save a list of relationships

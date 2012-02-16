@@ -96,9 +96,8 @@ public:
     void setId(const QContactId& id);
 
     /* Type - contact, group, metacontact, ... */
-    QString type() const;
-    void setType(const QString& type);
-    void setType(const QContactType& type);
+    QContactType::TypeValues type() const;
+    void setType(const QContactType::TypeValues& type);
 
     /* The (backend synthesized, or set with QCME::setContactDisplayLabel()) display label of the contact */
     QString displayLabel() const;
@@ -113,13 +112,13 @@ public:
     void clearDetails();
 
     /* Access details of particular type */
-    QContactDetail detail(const QString& definitionId) const;
-    QList<QContactDetail> details(const QString& definitionName = QString()) const;
+    QContactDetail detail(QContactDetail::DetailType type) const;
+    QList<QContactDetail> details(QContactDetail::DetailType type = QContactDetail::TypeUndefined) const;
 
     /* Templated (type-specific) detail retrieval */
     template<typename T> QList<T> details() const
     {
-        QList<QContactDetail> props = details(T::DefinitionName);
+        QList<QContactDetail> props = details(T::Type);
         QList<T> ret;
         for (int i=0; i<props.count(); i++)
             ret.append(T(props.at(i)));
@@ -128,7 +127,7 @@ public:
 
     template<typename T> T detail() const
     {
-        return T(detail(T::DefinitionName));
+        return T(detail(T::Type));
     }
 
     /* generic detail addition/removal functions */

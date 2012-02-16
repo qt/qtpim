@@ -55,14 +55,24 @@
 //
 
 #include <qversitglobal.h>
+#include <qcontactdetail.h>
 #include <QString>
+
+QTCONTACTS_USE_NAMESPACE
 
 QTVERSIT_BEGIN_NAMESPACE
 
 // Mapping between a string in versit specifications and Qt contacts
-struct VersitMapping {
+struct VersitContextMapping {
     const char* versitString;
-    const QString contactString;
+    const int contactContext;
+};
+
+// Mapping between a string in versit specifications and Qt contacts
+struct VersitSubTypeMapping {
+    const char* versitString;
+    const QContactDetail::DetailType detailType;
+    const int contactSubType;
 };
 
 struct VersitFileExtensionMapping {
@@ -71,10 +81,10 @@ struct VersitFileExtensionMapping {
 };
 
 // Mapping between a string in versit specifications and Qt contact details
-struct VersitDetailMapping {
+struct VersitContactDetailMapping {
     const char* versitPropertyName;
-    const QString detailDefinitionName;
-    const QString detailFieldName;
+    const QContactDetail::DetailType detailType;
+    const int detailField;
 };
 
 //! [File extension mappings]

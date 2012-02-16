@@ -53,16 +53,27 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactType : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactType, "Type")
-    const static QString FieldType;
-    const static QString TypeContact;
-    const static QString TypeGroup;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactType)
+#else
+    static const DetailType Type;
+#endif
 
-    void setType(const QString& type) {setValue(FieldType, type);}
-    QString type() const {return value(FieldType).toString();}
+    enum TypeField {
+        FieldType = 0
+    };
+    enum TypeValues {
+        TypeContact = 0,
+        TypeGroup
+    };
+
+    void setType(const TypeValues type) {setValue(FieldType, type);}
+    TypeValues type() const {return static_cast<TypeValues>(value<int>(FieldType));}
 };
 
 QTCONTACTS_END_NAMESPACE
+
+Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactType::TypeValues))
 
 #endif
 

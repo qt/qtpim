@@ -80,7 +80,7 @@ public:
     void detailProcessed(const QContact& contact,
                          const QContactDetail& detail,
                          const QVersitDocument& document,
-                         QSet<QString>* processedFields,
+                         QSet<int>* processedFields,
                          QList<QVersitProperty>* toBeRemoved,
                          QList<QVersitProperty>* toBeAdded);
     void contactProcessed(const QContact& contact,
@@ -93,7 +93,7 @@ private:
 };
 
 const QString PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));
-const QString DetailDefinitionParameter(QStringLiteral("DETAIL"));
+const QString DetailTypeParameter(QStringLiteral("DETAIL"));
 const QString FieldParameter(QStringLiteral("FIELD"));
 const QString DatatypeParameter(QStringLiteral("DATATYPE"));
 const QString DatatypeParameterVariant(QStringLiteral("VARIANT"));
@@ -163,7 +163,7 @@ void BackupVCardHandler::detailProcessed(
         const QContact& contact,
         const QContactDetail& detail,
         const QVersitDocument& document,
-        QSet<QString>* processedFields,
+        QSet<int>* processedFields,
         QList<QVersitProperty>* toBeRemoved,
         QList<QVersitProperty>* toBeAdded)
 {
@@ -172,19 +172,19 @@ void BackupVCardHandler::detailProcessed(
     Q_UNUSED(toBeRemoved)
     if (detail.accessConstraints().testFlag(QContactDetail::ReadOnly))
         return;
-    QVariantMap fields = detail.values();
+    QMap<int, QVariant> fields = detail.values();
     // fields from the same detail have the same group so the importer can collate them
     QString detailGroup = GroupPrefix + QString::number(mDetailNumber++);
     int toBeAddedCount = toBeAdded->count();
     bool propertiesSynthesized = false;
-    for (QVariantMap::const_iterator it = fields.constBegin(); it != fields.constEnd(); it++) {
+    for (QMap<int, QVariant>::const_iterator it = fields.constBegin(); it != fields.constEnd(); it++) {
         if (!processedFields->contains(it.key()) && !it.value().toString().isEmpty()) {
             // Generate a property for the unknown field
             QVersitProperty property;
             property.setGroups(QStringList(detailGroup));
             property.setName(PropertyName);
-            property.insertParameter(DetailDefinitionParameter, detail.definitionName());
-            property.insertParameter(FieldParameter, it.key());
+            property.insertParameter(DetailTypeParameter, QString::number(detail.type()));
+            property.insertParameter(FieldParameter, QString::number(it.key()));
 
             serializeValue(&property, it.value());
 

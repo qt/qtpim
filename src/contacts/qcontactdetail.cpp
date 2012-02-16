@@ -63,15 +63,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 /* Initialise our static private data member */
 QAtomicInt QContactDetailPrivate::lastDetailKey(1);
 
-/* Definitions of predefined string constants */
-const QString QContactDetail::FieldDetailUri(QStringLiteral("DetailUri"));
-const QString QContactDetail::FieldLinkedDetailUris(QStringLiteral("LinkedDetailUris"));
-const QString QContactDetail::FieldContext(QStringLiteral("Context"));
-const QString QContactDetail::ContextOther(QStringLiteral("Other"));
-const QString QContactDetail::ContextHome(QStringLiteral("Home"));
-const QString QContactDetail::ContextWork(QStringLiteral("Work"));
-
-
 /*!
   \class QContactDetail
 
@@ -82,16 +73,11 @@ const QString QContactDetail::ContextWork(QStringLiteral("Work"));
   All of the information for a contact is stored in one or more QContactDetail objects.
 
   A detail is a group of logically related bits of data - for example, a street address is a single
-  detail that has multiple fields (number, region, country etc).  Every QContactDetail has the name of an
-  associated QContactDetailDefinition that describes the fields, their data type, and any
-  restrictions on their values.  Different contact managers might have different detail definitions
-  for the same name, depending on their capabilities.  For example, for the QContactName definition name,
+  detail that has multiple fields (number, region, country etc).
+  Different contact managers might have different fields
+  for the same detail type, depending on their capabilities.  For example, for the QContactName detail
   one manager might not support the middle name field, while a different manager may add an extra field for
   specific extra information not present in the default schema.
-
-  Both the names of all the fields, and the name of the associated QContactDetailDefinition are stored
-  as 8-bit strings encoded in Latin 1 for memory conservation.  Note, however, that the values stored
-  in each field are not constrained in this way, and full unicode QStrings or QVariant data can be stored.
 
   One field which is common to all details is the context field.  This field is intended to store one or
   more contexts that this detail is associated with.  Commonly this will be something like
@@ -133,28 +119,28 @@ const QString QContactDetail::ContextWork(QStringLiteral("Work"));
   QContactPhoneNumber number;
   number.setNumber("555-1212");
   // number.value(QContactPhoneNumber::FieldNumber) == "555-1212";
-  // number.definitionName() == QContactPhoneNumber::DefinitionName
+  // number.type() == QContactPhoneNumber::Type
 
   QContactDetail detail = number;
   // detail.value(QContactPhoneNumber::FieldNumber) == "555-1212";
-  // detail.definitionName() == QContactPhoneNumber::DefinitionName
+  // detail.type() == QContactPhoneNumber::Type
 
   QContactPhoneNumber otherNumber = detail;
   // otherNumber.number() == "555-1212";
-  // otherNumber.definitionName() == QContactPhoneNumber::DefinitionName
+  // otherNumber.type() == QContactPhoneNumber::Type
 
   QContactAddress address = detail;
   // address is now a default constructed QContactAddress
   // address.value(QContactPhoneNumber::FieldNumber) is empty
-  // address.definitionName() == QContactAddress::DefinitionName
+  // address.type() == QContactAddress::Type
 
   QContactAddress otherAddress = number;
   // otherAddress is now a default constructed QContactAddress
   // otherAddress.value(QContactPhoneNumber::FieldNumber) is empty
-  // otherAddress.definitionName() == QContactAddress::DefinitionName
+  // otherAddress.type() == QContactAddress::Type
   \endcode
 
-  \sa QContact, QContactDetailDefinition, QContactDetailFilter, QContactDetailRangeFilter, Q_DECLARE_CUSTOM_CONTACT_DETAIL
+  \sa QContact, QContactDetail::DetailType, QContactDetailFilter, QContactDetailRangeFilter, Q_DECLARE_CUSTOM_CONTACT_DETAIL
  */
 
 /*!
@@ -163,8 +149,7 @@ const QString QContactDetail::ContextWork(QStringLiteral("Work"));
 
   Macro for simplifying declaring custom (leaf) detail classes.
 
-  The first argument is the name of the class, and the second argument
-  is a Latin-1 string literal naming the detail type.
+  The first argument is the detail type of the class.
 
   If you are creating a convenience class for a type of QContactDetail,
   you should use this macro when declaring your class to ensure that
@@ -179,6 +164,45 @@ const QString QContactDetail::ContextWork(QStringLiteral("Work"));
  */
 
 /*!
+   \enum QContactDetail::DetailType
+
+   This enumeration defines the detail types provided by the contacts API.
+   \value TypeUndefined Convenience value used to represent unknown / undefined detail types.
+   \value TypeAddress Detail type of a QContactAddress detail.
+   \value TypeAnniversary Detail type of a QContactAnniversary detail.
+   \value TypeAvatar Detail type of a QContactAvatar detail.
+   \value TypeBirthday Detail type of a QContactBirthday detail.
+   \value TypeDisplayLabel Detail type of a QContactDisplayLabel detail.
+   \value TypeEmailAddress Detail type of a QContactEmailAddress detail.
+   \value TypeExtendedDetail Detail type of a QContactExtendedDetail detail.
+   \value TypeFamily Detail type of a QContactFamily detail.
+   \value TypeFavorite Detail type of a QContactFavorite detail.
+   \value TypeGender Detail type of a QContactGender detail.
+   \value TypeGeoLocation Detail type of a QContactGeoLocation detail.
+   \value TypeGlobalPresence Detail type of a QContactGlobalPresence detail.
+   \value TypeGuid Detail type of a QContactGuid detail.
+   \value TypeHobby Detail type of a QContactHobby detail.
+   \value TypeName Detail type of a QContactName detail.
+   \value TypeNickname Detail type of a QContactNickname detail.
+   \value TypeNote Detail type of a QContactNote detail.
+   \value TypeOnlineAccount Detail type of a QContactOnlineAccount detail.
+   \value TypeOrganization Detail type of a QContactOrganization detail.
+   \value TypePersonId Detail type of a QContactPersonId detail.
+   \value TypePhoneNumber Detail type of a QContactPhoneNumber detail.
+   \value TypePresence Detail type of a QContactPresence detail.
+   \value TypeRingtone Detail type of a QContactRingtone detail.
+   \value TypeSyncTarget Detail type of a QContactSyncTarget detail.
+   \value TypeTag Detail type of a QContactTag detail.
+   \value TypeThumbnail Detail type of a QContactThumbnail detail.
+   \value TypeTimestamp Detail type of a QContactTimestamp detail.
+   \value TypeType Detail type of a QContactType detail.
+   \value TypeUrl Detail type of a QContactUrl detail.
+   \value TypeVersion  Detail type of a QContactVersion detail.
+
+   \sa type()
+ */
+
+/*!
   \fn QContactDetail::operator!=(const QContactDetail& other) const
   Returns true if the values or id of this detail is different to those of the \a other detail
  */
@@ -189,16 +213,16 @@ const QString QContactDetail::ContextWork(QStringLiteral("Work"));
 QContactDetail::QContactDetail()
     : d(new QContactDetailPrivate)
 {
+    d->m_type = QContactDetail::TypeUndefined;
 }
 
 /*!
-    Constructs a new, empty detail of the definition identified by \a thisDefinitionId.
-    The definitionId must be restricted to the Latin 1 character set.
+    Constructs a new, empty detail of the type identified by \a type.
  */
-QContactDetail::QContactDetail(const QString& thisDefinitionId)
+QContactDetail::QContactDetail(QContactDetail::DetailType type)
     : d(new QContactDetailPrivate)
 {
-    d->m_definitionName = thisDefinitionId;
+    d->m_type = type;
 }
 
 /*! Constructs a detail that is a copy of \a other
@@ -211,17 +235,17 @@ QContactDetail::QContactDetail(const QContactDetail& other)
 /*!
     \internal
 
-    Constructs a detail that is a copy of \a other if \a other is of the expected definition
-    identified by \a expectedDefinitionId, else constructs a new, empty detail of the
-    definition identified by the \a expectedDefinitionId
+    Constructs a detail that is a copy of \a other if \a other is of the expected type
+    identified by \a expectedType, else constructs a new, empty detail of the
+    type identified by the \a expectedType
 */
-QContactDetail::QContactDetail(const QContactDetail& other, const QString& expectedDefinitionId)
+QContactDetail::QContactDetail(const QContactDetail& other, DetailType expectedType)
 {
-    if (other.d.constData()->m_definitionName == expectedDefinitionId) {
+    if (other.d.constData()->m_type == expectedType) {
         d = other.d;
     } else {
         d = new QContactDetailPrivate;
-        d->m_definitionName = expectedDefinitionId;
+        d->m_type = expectedType;
     }
 }
 
@@ -236,18 +260,18 @@ QContactDetail& QContactDetail::operator=(const QContactDetail& other)
 /*!
     \internal
 
-    Assigns this detail to \a other if the definition of \a other is that identified
-    by the given \a expectedDefinitionId, else assigns this detail to be a new, empty
-    detail of the definition identified by the given \a expectedDefinitionId
+    Assigns this detail to \a other if the type of \a other is that identified
+    by the given \a expectedType, else assigns this detail to be a new, empty
+    detail of the type identified by the given \a expectedType
 */
-QContactDetail& QContactDetail::assign(const QContactDetail& other, const QString& expectedDefinitionId)
+QContactDetail& QContactDetail::assign(const QContactDetail& other, DetailType expectedType)
 {
     if (this != &other) {
-        if (other.d.constData()->m_definitionName == expectedDefinitionId) {
+        if (other.d.constData()->m_type == expectedType) {
             d = other.d;
         } else {
             d = new QContactDetailPrivate;
-            d->m_definitionName = expectedDefinitionId;
+            d->m_type = expectedType;
         }
     }
     return *this;
@@ -259,30 +283,37 @@ QContactDetail::~QContactDetail()
 }
 
 /*!
-    Returns the (unique) name of the definition which defines the semantics and structure of this detail.
-    The actual QContactDetailDefinition should be retrieved from the relevant QContactManager using this name.
+    Returns the (unique) enum of the type which defines the semantics and structure of this detail.
  */
-QString QContactDetail::definitionName() const
+QContactDetail::DetailType QContactDetail::type() const
 {
-    return d.constData()->m_definitionName;
+    return d.constData()->m_type;
 }
 
 /*!
-    Compares this detail to \a other.  Returns true if the definition, access constraints and values of \a other are equal to those of this detail.
+    Compares this detail to \a other.  Returns true if the type, access constraints and values of \a other are equal to those of this detail.
     The keys of each detail are not considered during the comparison, in order to allow details from different contacts to
     be compared according to their values.
  */
 bool QContactDetail::operator==(const QContactDetail& other) const
 {
-    if (! (d.constData()->m_definitionName == other.d.constData()->m_definitionName))
+    if (! (d.constData()->m_type == other.d.constData()->m_type))
         return false;
 
     if (d.constData()->m_access != other.d.constData()->m_access)
         return false;
 
-    if (d.constData()->m_values != other.d.constData()->m_values)
+    if (d.constData()->m_values.size() != other.d.constData()->m_values.size())
         return false;
-
+    foreach (const QVariant &value, d.constData()->m_values.values()) {
+        if (value.canConvert< QList<int> >()) {
+                if (other.d.constData()->m_values.value(d.constData()->m_values.key(value)).value< QList<int> >() != value.value< QList<int> >()) {
+                    return false;
+                }
+        } else if (!other.d.constData()->m_values.values().contains(value)) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -291,11 +322,11 @@ bool QContactDetail::operator==(const QContactDetail& other) const
 uint qHash(const QContactDetail &key)
 {
     const QContactDetailPrivate* dptr= QContactDetailPrivate::detailPrivate(key);
-    uint hash = qHash(dptr->m_definitionName)
+    uint hash = qHash(QString().setNum(dptr->m_type))
                 + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
-    QHash<QString, QVariant>::const_iterator it = dptr->m_values.constBegin();
+    QMap<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
     while(it != dptr->m_values.constEnd()) {
-        hash += qHash(it.key())
+        hash += QT_PREPEND_NAMESPACE(qHash)(it.key())
                 + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
         ++it;
     }
@@ -305,9 +336,9 @@ uint qHash(const QContactDetail &key)
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, const QContactDetail& detail)
 {
-    dbg.nospace() << "QContactDetail(name=" << detail.definitionName() << ", key=" << detail.key();
-    QVariantMap fields = detail.values();
-    QVariantMap::const_iterator it;
+    dbg.nospace() << "QContactDetail(detailType=" << detail.type() << ", key=" << detail.key();
+    QMap<int, QVariant> fields = detail.values();
+    QMap<int, QVariant>::const_iterator it;
     for (it = fields.constBegin(); it != fields.constEnd(); ++it) {
         dbg.nospace() << ", " << it.key() << '=' << it.value();
     }
@@ -324,7 +355,7 @@ QDataStream& operator<<(QDataStream& out, const QContactDetail& detail)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QContactDetail
     return out << formatVersion
-               << detail.definitionName()
+               << static_cast<quint32>(detail.type())
                << static_cast<quint32>(detail.accessConstraints())
                << detail.values();
 }
@@ -338,16 +369,16 @@ QDataStream& operator>>(QDataStream& in, QContactDetail& detail)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QString definitionName;
+        quint32 typeInt;
         quint32 accessConstraintsInt;
-        QVariantMap values;
-        in >> definitionName >> accessConstraintsInt >> values;
+        QMap<int, QVariant> values;
+        in >> typeInt >> accessConstraintsInt >> values;
 
-        detail = QContactDetail(definitionName);
+        detail = QContactDetail(QContactDetail::DetailType(typeInt));
         QContactDetail::AccessConstraints accessConstraints(accessConstraintsInt);
         detail.d->m_access = accessConstraints;
 
-        QMapIterator<QString, QVariant> it(values);
+        QMapIterator<int, QVariant> it(values);
         while (it.hasNext()) {
             it.next();
             detail.setValue(it.key(), it.value());
@@ -368,9 +399,7 @@ QDataStream& operator>>(QDataStream& in, QContactDetail& detail)
  */
 bool QContactDetail::isEmpty() const
 {
-    if (!d.constData()->m_values.isEmpty())
-        return false;
-    return true;
+    return d.constData()->m_values.isEmpty();
 }
 
 /*!
@@ -389,9 +418,9 @@ int QContactDetail::key() const
 }
 
 /*! Causes the implicitly-shared detail to be detached from any other copies, and generates a new key for it.
-    This ensures that calling QContact::saveDetail() will result in a new detail being saved, rather than
-    another detail being updated.
-*/
+ *  This ensures that calling QContact::saveDetail() will result in a new detail being saved, rather than
+ *  another detail being updated.
+ */
 void QContactDetail::resetKey()
 {
     d->m_id = QContactDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
@@ -399,65 +428,64 @@ void QContactDetail::resetKey()
 
 
 /*!
-    \fn T QContactDetail::value(const char* key) const
-    \internal
-    \overload
-*/
-
-/*! Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
-*/
-QVariant QContactDetail::value(const QString& key) const
+ *  Returns the value stored in this detail for the given \a field. An invalid QVariant is returned if
+ *  the value of \a field is not set.
+ */
+QVariant QContactDetail::value(int field) const
 {
-    return d.constData()->m_values.value(key);
+    return d.constData()->m_values.value(field);
 }
 
 /*!
-  Returns true if this detail has a field with the given \a key, or false otherwise.
+ *  Returns true if this detail has a field with the given \a field, or false otherwise.
  */
-bool QContactDetail::hasValue(const QString& key) const
+bool QContactDetail::hasValue(int field) const
 {
-    return d.constData()->m_values.contains(key);
+    return d.constData()->m_values.contains(field);
 }
 
-/*! Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
-    removes the field with the given \a key from the detail.  Returns true if the given \a value was set
-    for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid)
+
+/*!
+    Inserts \a value into the detail for the given \a field if \a value is valid.  If \a value is invalid,
+    removes the field with the given \a field from the detail.  Returns true if the given \a value was set
+    for the \a field (if the \a value was valid), or if the given \a field was removed from detail (if the
+    \a value was invalid), and returns false if the field could not be removed (and the \a value was invalid)
 */
-bool QContactDetail::setValue(const QString& key, const QVariant& value)
+bool QContactDetail::setValue(int field, const QVariant& value)
 {
     if (!value.isValid())
-        return removeValue(key);
+        return removeValue(field);
 
-    d->m_values.insert(key, value);
+    d->m_values.insert(field, value);
     return true;
 }
 
 /*!
-    Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
-    for the given \a key and the operation succeeded, and false otherwise.
+    Removes the value stored in this detail for the given \a field.  Returns true if a value was stored
+    for the given \a field and the operation succeeded, and false otherwise.
 */
-bool QContactDetail::removeValue(const QString& key)
+bool QContactDetail::removeValue(int field)
 {
-    if(d->m_values.remove(key))
+    if (d->m_values.remove(field))
         return true;
     return false;
 }
 
 /*!
-  Returns the values stored in this detail as a map from value key to value
+  Returns the values stored in this detail as a field-to-value map.
  */
-QVariantMap QContactDetail::values() const
+QMap<int, QVariant> QContactDetail::values() const
 {
-    QVariantMap ret;
-    QHash<QString, QVariant>::const_iterator it = d.constData()->m_values.constBegin();
-    while(it != d.constData()->m_values.constEnd()) {
-        ret.insert(it.key(), it.value());
-        ++it;
-    }
-
-    return ret;
+    return d.constData()->m_values;
 }
+
+
+/*!
+    \fn T QContactDetail::value(int field) const
+    \overload
+    Returns the value of the template type associated with the given \a field
+ */
+
 
 /*!
   \enum QContactDetail::AccessConstraint
@@ -485,7 +513,18 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
 }
 
 /*!
-  \fn void QContactDetail::setContexts(const QStringList& contexts)
+  \enum QContactDetail::DetailContext
+
+  This enum defines the contexts for a detail.
+
+  \value ContextHome The detail data relates to home / private detail about the contact.
+  \value ContextWork The detail data relates to business / work detail about the contact.
+  \value ContextOther Generic context, neither ContextHome nor ContextWork
+  \sa setContexts(), contexts()
+ */
+
+/*!
+  \fn void QContactDetail::setContexts(const QList<int>& contexts)
 
   This is a convenience function that sets the \c Context field of this detail to the given \a contexts.
 
@@ -498,14 +537,14 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
  */
 
 /*!
-  \fn void QContactDetail::setContexts(const QString& context)
+  \fn void QContactDetail::setContexts(int context)
 
   This is a convenience function that sets the \c Context field of this detail to the given \a context.
   It is useful if the detail is only valid in a single context.
 
   It is equivalent to the following code:
   \code
-  setValue(FieldContext, QStringList(context));
+  setValue(FieldContext, QList<int>() << context);
   \endcode
 
   \sa setValue()
@@ -524,6 +563,18 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
   \sa value()
  */
 
+/*!
+  \enum QContactDetail::DetailField
+
+  This enum defines the common fields supported by any detail.
+
+  \value FieldContext The field containing the contexts of a detail.
+  \value FieldDetailUri The field containing the detail URI of a detail.
+  \value FieldLinkedDetailUris The field containing the URIs of other details linked to a detail.
+  \sa setContexts(), contexts()
+  \sa setDetailUri(), detailUri()
+  \sa setLinkedDetailUris(), linkedDetailUris()
+ */
 
 /*!
   \fn void QContactDetail::setDetailUri(const QString& detailUri)

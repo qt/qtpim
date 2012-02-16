@@ -45,6 +45,7 @@
 #include <qcontactsglobal.h>
 #include <qcontactabstractrequest.h>
 #include <qcontact.h>
+#include <qcontactdetail.h>
 
 #include <QList>
 
@@ -63,8 +64,8 @@ public:
     void setContact(const QContact& contact);
     void setContacts(const QList<QContact>& contacts);
 
-    void setDefinitionMask(const QStringList& definitionMask);
-    QStringList definitionMask() const;
+    void setTypeMask(const QList<QContactDetail::DetailType> &typeMask);
+    QList<QContactDetail::DetailType> typeMask() const;
 
     /* Results */
     QList<QContact> contacts() const;

@@ -54,6 +54,7 @@
 //
 
 #include "qcontactfetchhint.h"
+#include "qcontactdetail.h"
 
 #include <QSharedData>
 #include <QStringList>
@@ -72,7 +73,7 @@ public:
 
     QContactFetchHintPrivate(const QContactFetchHintPrivate& other)
         : QSharedData(other),
-        m_definitionsHint(other.m_definitionsHint),
+        m_typesHint(other.m_typesHint),
         m_relationshipsHint(other.m_relationshipsHint),
         m_optimizationHints(other.m_optimizationHints),
         m_maxCount(other.m_maxCount)
@@ -83,7 +84,7 @@ public:
     {
     }
 
-    QStringList m_definitionsHint;
+    QList<QContactDetail::DetailType> m_typesHint;
     QStringList m_relationshipsHint;
     QSize m_preferredImageSize;
     QContactFetchHint::OptimizationHints m_optimizationHints;

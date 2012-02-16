@@ -71,11 +71,14 @@ public:
     void jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const;
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
 
-    QHash<QString, QString> detailsToJsonMapping;
-    QHash<QString, QString> contactNameFieldsMapping;
-    QHash<QString, QString> organizationFieldsMapping;
-    QHash<QString, QString> addressFieldsMapping;
-    QHash<QString, QString> phoneNumbersSubtypesMapping;
+    QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
+    QHash<int, QString> contactNameFieldsMapping;
+    QHash<QContactOrganization::OrganizationField, QString> organizationFieldsMapping;
+    QHash<QContactAddress::AddressField, QString> addressFieldsMapping;
+    QHash<int, QString> phoneNumbersSubtypesMapping;
+    QHash<int, QString> genderValuesMapping;
+    QHash<QContactDetail::DetailContext, QString> contextsToJsonMapping;
+
 private:
     void initializeMappings();
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "") const;

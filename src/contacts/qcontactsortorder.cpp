@@ -41,6 +41,7 @@
 
 #include "qcontactsortorder.h"
 #include "qcontactsortorder_p.h"
+#include "qcontactdetail.h"
 
 #ifndef QT_NO_DEBUG_STREAM
 #include <QDebug>
@@ -115,7 +116,7 @@ QContactSortOrder& QContactSortOrder::operator=(const QContactSortOrder& other)
 bool QContactSortOrder::isValid() const
 {
     /* We clear both when one is empty, so we only need to check one */
-    if (d.constData()->m_definitionName.isEmpty())
+    if (d.constData()->m_type == QContactDetail::TypeUndefined)
         return false;
     return true;
 }
@@ -129,8 +130,8 @@ bool QContactSortOrder::operator ==(const QContactSortOrder& other) const
     if (d.constData()->m_blankPolicy == other.d.constData()->m_blankPolicy &&
         d.constData()->m_direction == other.d.constData()->m_direction &&
         d.constData()->m_sensitivity == other.d.constData()->m_sensitivity &&
-        d.constData()->m_definitionName == other.d.constData()->m_definitionName &&
-        d.constData()->m_fieldName == other.d.constData()->m_fieldName)
+        d.constData()->m_type == other.d.constData()->m_type &&
+        d.constData()->m_field == other.d.constData()->m_field)
         return true;
     return false;
 }
@@ -144,8 +145,8 @@ QDataStream& operator<<(QDataStream& out, const QContactSortOrder& sortOrder)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QContactSortOrder
     return out << formatVersion
-               << sortOrder.detailDefinitionName()
-               << sortOrder.detailFieldName()
+               << static_cast<quint32>(sortOrder.detailType())
+               << sortOrder.detailField()
                << static_cast<quint32>(sortOrder.blankPolicy())
                << static_cast<quint32>(sortOrder.direction())
                << static_cast<quint32>(sortOrder.caseSensitivity());
@@ -160,13 +161,13 @@ QDataStream& operator>>(QDataStream& in, QContactSortOrder& sortOrder)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QString definitionName;
-        QString fieldName;
+        quint32 type;
+        int field;
         quint32 blankPolicy;
         quint32 direction;
         quint32 caseSensitivity;
-        in >> definitionName >> fieldName >> blankPolicy >> direction >> caseSensitivity;
-        sortOrder.setDetailDefinitionName(definitionName, fieldName);
+        in >> type >> field >> blankPolicy >> direction >> caseSensitivity;
+        sortOrder.setDetailType(QContactDetail::DetailType(type), field);
         sortOrder.setBlankPolicy(QContactSortOrder::BlankPolicy(blankPolicy));
         sortOrder.setDirection(Qt::SortOrder(direction));
         sortOrder.setCaseSensitivity(Qt::CaseSensitivity(caseSensitivity));
@@ -184,8 +185,8 @@ QDataStream& operator>>(QDataStream& in, QContactSortOrder& sortOrder)
 QDebug operator<<(QDebug dbg, const QContactSortOrder& sortOrder)
 {
     dbg.nospace() << "QContactSortOrder("
-                  << "detailDefinitionName=" << sortOrder.detailDefinitionName() << ","
-                  << "detailFieldName=" << sortOrder.detailFieldName() << ","
+                  << "detailType=" << static_cast<quint32>(sortOrder.detailType()) << ","
+                  << "detailField=" << sortOrder.detailField() << ","
                   << "blankPolicy=" << static_cast<quint32>(sortOrder.blankPolicy()) << ","
                   << "direction=" << static_cast<quint32>(sortOrder.direction()) << ","
                   << "caseSensitivity=" << static_cast<quint32>(sortOrder.caseSensitivity())
@@ -195,18 +196,18 @@ QDebug operator<<(QDebug dbg, const QContactSortOrder& sortOrder)
 #endif
 
 /*!
- * Sets the definition name of the details which will be inspected to perform sorting to \a definitionName,
- * and the name of those details' fields which contains the value which contacts will be sorted by to \a fieldName
- * \sa detailDefinitionName(), detailFieldName()
+ * Sets the type of the details which will be inspected to perform sorting to \a type
+ * and the name of those details' fields which contains the value which contacts will be sorted by to \a field
+ * \sa detailType(), detailField()
  */
-void QContactSortOrder::setDetailDefinitionName(const QString& definitionName, const QString& fieldName)
+void QContactSortOrder::setDetailType(QContactDetail::DetailType type, int field)
 {
-    if (definitionName.isEmpty() || fieldName.isEmpty()) {
-        d->m_definitionName.clear();
-        d->m_fieldName.clear();
+    if (type == QContactDetail::TypeUndefined || field == -1) {
+        d->m_type = QContactDetail::TypeUndefined;
+        d->m_field = -1;
     } else {
-        d->m_definitionName = definitionName;
-        d->m_fieldName = fieldName;
+        d->m_type = type;
+        d->m_field = field;
     }
 }
 
@@ -229,24 +230,25 @@ void QContactSortOrder::setDirection(Qt::SortOrder direction)
 }
 
 /*!
- * Returns the definition name of the details which will be inspected to perform sorting.
+ * Returns the type of the details which will be inspected to perform sorting.
  * Note that if a contact has multiple details of the definition, the result of the sorting
  * is undefined.
- * \sa setDetailDefinitionName()
+ * \sa setDetailType()
  */
-QString QContactSortOrder::detailDefinitionName() const
+QContactDetail::DetailType QContactSortOrder::detailType() const
 {
-    return d.constData()->m_definitionName;
+    return d.constData()->m_type;
 }
 
 /*!
- * Returns the name of the field in the definition which will be inspected to perform sorting
- * \sa setDetailDefinitionName()
+ * Returns the detail field which the sorting order will be based on.
+ * \sa setDetailType()
  */
-QString QContactSortOrder::detailFieldName() const
+int QContactSortOrder::detailField() const
 {
-    return d.constData()->m_fieldName;
+    return d.constData()->m_field;
 }
+
 
 /*!
  * Returns the blank policy of the sort order

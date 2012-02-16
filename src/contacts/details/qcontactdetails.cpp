@@ -46,6 +46,7 @@
 #include <qcontactmanager.h>
 #include <qcontacts.h>
 #include <qcontactdetails.h>
+#include <qcontactdetail.h>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -69,15 +70,15 @@ QTCONTACTS_BEGIN_NAMESPACE
        The field key constant for the YYYY value.
        \sa yyyy(), setYyyy()
 
-   XXXX::DefinitionName:
-        The string constant for the definition name of QContactXXXX details.
+   XXXX::Type:
+        The enum constant for the type identifier of QContactXXXX details.
 
    XXXX::FieldSubType
         The field key constant for the field that stores the sub type of a XXXX.
         \sa subType(), setSubType()
 
    XXXX::SubTypeYYYY
-        The predefined string constant for a sub type value,
+        The predefined enum constant for a sub type value,
         indicating blah blah blah.
         \sa subTypes(), setSubTypes()
  */
@@ -96,18 +97,17 @@ QTCONTACTS_BEGIN_NAMESPACE
  */
 
 /*!
-    \variable QContactSyncTarget::DefinitionName
-    The string constant for the definition name of QContactSyncTarget details.
+    \variable QContactSyncTarget::Type
+    The enum constant for the type identifier of QContactSyncTarget details.
 */
-const QString QContactSyncTarget::DefinitionName(QStringLiteral("SyncTarget"));
+const QContactDetail::DetailType QContactSyncTarget::Type(QContactDetail::TypeSyncTarget);
 
 /*!
-    \variable QContactSyncTarget::FieldSyncTarget
-
-   The field key constant for the sync target value.
+    \enum QContactSyncTarget::SyncTargetField
+   This enumeration defines the fields supported by QContactSyncTarget.
+   \value FieldSyncTarget The value stored in this field is the contact to which syncronize.
    \sa syncTarget(), setSyncTarget()
  */
-const QString QContactSyncTarget::FieldSyncTarget(QStringLiteral("SyncTarget"));
 
 /*!
    \fn QContactSyncTarget::syncTarget() const
@@ -135,18 +135,18 @@ const QString QContactSyncTarget::FieldSyncTarget(QStringLiteral("SyncTarget"));
  */
 
 /*!
-   \variable QContactEmailAddress::DefinitionName
-   The string constant for the definition name of QContactEmailAddress details.
+   \variable QContactEmailAddress::Type
+   The enum constant for the type identifier of QContactEmailAddress details.
  */
-const QString QContactEmailAddress::DefinitionName(QStringLiteral("EmailAddress"));
+const QContactDetail::DetailType QContactEmailAddress::Type(QContactDetail::TypeEmailAddress);
 
 /*!
-   \variable QContactEmailAddress::FieldEmailAddress
+   \enum QContactEmailAddress::EmailAddressField
 
-   The field key constant for the email address value.
+   This enumeration defines the fields supported by QContactEmailAddress.
+   \value FieldEmailAddress The value stored in this field is the email address value.
    \sa emailAddress(), setEmailAddress()
  */
-const QString QContactEmailAddress::FieldEmailAddress(QStringLiteral("EmailAddress"));
 
 /*!
    \fn QContactEmailAddress::emailAddress() const
@@ -167,26 +167,20 @@ const QString QContactEmailAddress::FieldEmailAddress(QStringLiteral("EmailAddre
  */
 
 /*!
-   \variable QContactFamily::DefinitionName
-   The string constant for the definition name of QContactFamily details.
+   \variable QContactFamily::Type
+   The enum constant for the type identifier of QContactFamily details.
  */
-const QString QContactFamily::DefinitionName(QStringLiteral("Family"));
+const QContactDetail::DetailType QContactFamily::Type(QContactDetail::TypeFamily);
 
 /*!
-   \variable QContactFamily::FieldSpouse
+   \enum QContactFamily::FamilyField
 
-   The field key constant for the value containing the name of a spouse.
+   This enumeration defines the fields supported by QContactFamily.
+   \value FieldSpouse The value of this field contains the name of a spouse.
+   \value FieldChildren The value of this field contains the names of children.
    \sa spouse(), setSpouse()
- */
-const QString QContactFamily::FieldSpouse(QStringLiteral("Spouse"));
-
-/*!
-   \variable QContactFamily::FieldChildren
-
-   The field key constant for the value containing the names of children.
    \sa children(), setChildren()
  */
-const QString QContactFamily::FieldChildren(QStringLiteral("Children"));
 
 /*!
    \fn QContactFamily::spouse() const
@@ -217,26 +211,21 @@ const QString QContactFamily::FieldChildren(QStringLiteral("Children"));
  */
 
 /*!
-   \variable QContactFavorite::DefinitionName
-   The string constant for the definition name of QContactFavorite details.
+   \variable QContactFavorite::Type
+   The enum constant for the type identifier of QContactFavorite details.
  */
-const QString QContactFavorite::DefinitionName(QStringLiteral("Favorite"));
+const QContactDetail::DetailType QContactFavorite::Type(QContactDetail::TypeFavorite);
 
 /*!
-   \variable QContactFavorite::FieldFavorite
+   \enum QContactFavorite::FavoriteField
 
-   The field key constant for the value that indicates whether a contact is a favorite.
+   This enumeration defines the fields supported by QContactFavorite.
+   \value FieldFavorite The value of this field indicates whether a contact is a favorite.
+   \value FieldIndex The value of this field contains the index of the favorite contact (which determines the order they appear).
+   \sa isFavorite(), setFavorite()
    \sa index(), setIndex()
  */
-const QString QContactFavorite::FieldFavorite(QStringLiteral("Favorite"));
 
-/*!
-   \variable QContactFavorite::FieldIndex
-
-   The field key constant for the value containing the index of the favorite contact (which determines the order they appear)
-   \sa index(), setIndex()
- */
-const QString QContactFavorite::FieldIndex(QStringLiteral("Index"));
 
 /*!
    \fn bool QContactFavorite::isFavorite() const
@@ -265,8 +254,7 @@ const QString QContactFavorite::FieldIndex(QStringLiteral("Index"));
 QContactFilter QContactFavorite::match()
 {
     QContactDetailFilter f;
-    f.setDetailDefinitionName(QContactFavorite::DefinitionName,
-                              QContactFavorite::FieldFavorite);
+    f.setDetailType(QContactFavorite::Type, QContactFavorite::FieldFavorite);
     f.setValue(true);
     f.setMatchFlags(QContactFilter::MatchExactly);
 
@@ -282,95 +270,40 @@ QContactFilter QContactFavorite::match()
  */
 
 /*!
-   \variable QContactAnniversary::DefinitionName
-   The string constant for the definition name of QContactAnniversary details.
+   \variable QContactAnniversary::Type
+   The enum constant for the type identifier of QContactAnniversary details.
  */
-const QString QContactAnniversary::DefinitionName(QStringLiteral("Anniversary"));
+const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeAnniversary);
 
 /*!
-   \variable QContactAnniversary::FieldOriginalDate
+   \enum QContactAnniversary::AnniversaryField
 
-   The field key constant for the original anniversary date value.
+   This enumeration defines the fields supported by QContactAnniversary.
 
-   This field is either a date, or a date and time.  Some managers
+   \value FieldOriginalDate The value stored in this field is either a date, or a date and time.  Some managers
    may support either type, while others may convert the value here
    to a specific type (either discarding the time if only a date is
    supported, or by using midnight if a time is not supplied).
+   \value FieldEvent The value stored in this field is the name of the event value.
+   \value FieldCalendarId The value stored in this field is the id of the calendar event.
+   \value FieldSubType The value stored in this field is the sub type of a QContactAnniversary.
    \sa originalDate(), setOriginalDate(), originalDateTime(), setOriginalDateTime()
- */
-const QString QContactAnniversary::FieldOriginalDate(QStringLiteral("OriginalDate"));
-
-/*!
-   \variable QContactAnniversary::FieldEvent
-
-   The field key constant for the name of the event value.
    \sa event(), setEvent()
- */
-const QString QContactAnniversary::FieldEvent(QStringLiteral("Event"));
-
-/*!
-   \variable QContactAnniversary::FieldCalendarId
-
-   The field key constant for the value containing the id of the calendar event.
    \sa calendarId(), setCalendarId()
  */
-const QString QContactAnniversary::FieldCalendarId(QStringLiteral("CalendarId"));
 
 /*!
-   \variable QContactAnniversary::FieldSubType
+   \enum QContactAnniversary::SubType
 
-   The field key constant for the field that stores the sub type of a QContactAnniversary.
+   This enumeration defines the predefined enum constants for a sub type value of a QContactAnniversary.
+
+   \value SubTypeWedding The value stored is a wedding anniversary.
+   \value SubTypeEngagement The value stored is the anniversary of an engagement.
+   \value SubTypeHouse The value stored is the anniversary of a new residence.
+   \value SubTypeEmployment The value stored is the anniversary of a start of employment.
+   \value SubTypeMemorial The value stored is the anniversary of an event of sentimental significance.
    \sa subType(), setSubType()
  */
-const QString QContactAnniversary::FieldSubType(QStringLiteral("SubType"));
-
-
-/*!
-   \variable QContactAnniversary::SubTypeWedding
-
-    The predefined string constant for a sub type value,
-    indicating this anniversary is a wedding anniversary.
-    \sa subType(), setSubType()
- */
-const QString QContactAnniversary::SubTypeWedding(QStringLiteral("Wedding"));
-
-/*!
-   \variable QContactAnniversary::SubTypeEngagement
-
-    The predefined string constant for a sub type value,
-    indicating this anniversary is the anniversary of an engagement.
-    \sa subType(), setSubType()
- */
-const QString QContactAnniversary::SubTypeEngagement(QStringLiteral("Engagement"));
-
-/*!
-   \variable QContactAnniversary::SubTypeHouse
-   \internal
-
-    The predefined string constant for a sub type value,
-    indicating this anniversary is the anniversary of a new residence.
-    \sa subType(), setSubType()
- */
-const QString QContactAnniversary::SubTypeHouse(QStringLiteral("House"));
-
-/*!
-   \variable QContactAnniversary::SubTypeEmployment
-
-    The predefined string constant for a sub type value,
-    indicating this anniversary is the anniversary of a start of
-    employment.
-    \sa subType(), setSubType()
- */
-const QString QContactAnniversary::SubTypeEmployment(QStringLiteral("Employment"));
-
-/*!
-   \variable QContactAnniversary::SubTypeMemorial
-
-    The predefined string constant for a sub type value,
-    indicating this anniversary is an anniversary of an event of sentimental significance.
-    \sa subType(), setSubType()
- */
-const QString QContactAnniversary::SubTypeMemorial(QStringLiteral("Memorial"));
 
 /*!
    \fn QContactAnniversary::originalDate() const
@@ -416,7 +349,7 @@ const QString QContactAnniversary::SubTypeMemorial(QStringLiteral("Memorial"));
  */
 
 /*!
-   \fn QContactAnniversary::setSubType(const QString& subType)
+   \fn QContactAnniversary::setSubType(const QContactAnniversary::SubType &subType)
    Sets the subtype which this detail implements to be the given \a subType.
  */
 
@@ -452,26 +385,20 @@ const QString QContactAnniversary::SubTypeMemorial(QStringLiteral("Memorial"));
  */
 
 /*!
-   \variable QContactAvatar::DefinitionName
-   The string constant for the definition name of QContactAvatar details.
+   \variable QContactAvatar::Type
+   The enum constant for the type identifier of QContactAvatar details.
  */
-const QString QContactAvatar::DefinitionName(QStringLiteral("Avatar"));
+const QContactDetail::DetailType QContactAvatar::Type(QContactDetail::TypeAvatar);
 
 /*!
-   \variable QContactAvatar::FieldImageUrl
+   \enum QContactAvatar::AvatarField
 
-   The field key constant for the value containing the URL of the avatar image.
+   This enumeration defines the fields supported by QContactAvatar.
+   \value FieldImageUrl The value stored in this field contains the URL of the avatar image.
+   \value FieldVideoUrl The value stored in this field contains the URL of the video avatar.
    \sa imageUrl(), setImageUrl()
- */
-const QString QContactAvatar::FieldImageUrl(QStringLiteral("ImageUrl"));
-
-/*!
-   \variable QContactAvatar::FieldVideoUrl
-
-   The field key constant for the value containing the URL of a video avatar.
    \sa videoUrl(), setVideoUrl()
  */
-const QString QContactAvatar::FieldVideoUrl(QStringLiteral("VideoUrl"));
 
 /*!
   \fn QContactAvatar::imageUrl() const
@@ -507,111 +434,46 @@ const QString QContactAvatar::FieldVideoUrl(QStringLiteral("VideoUrl"));
  */
 
 /*!
-   \variable QContactAddress::DefinitionName
-   The string constant for the definition name of QContactAddress details.
+   \variable QContactAddress::Type
+   The enum constant for the type identifier of QContactAddress details.
  */
-const QString QContactAddress::DefinitionName(QStringLiteral("Address"));
+const QContactDetail::DetailType QContactAddress::Type(QContactDetail::TypeAddress);
 
 /*!
-   \variable QContactAddress::FieldStreet
+   \enum QContactAddress::AddressField
 
-   The field key constant for the value containing the street segment.
-   The street segment contains the street number and street name of the address.
+   This enumeration defines the fields supported by QContactAddress.
+
+   \value FieldStreet The value stored in this field contains the street number and street name of the address.
+   \value FieldLocality The value stored in this field contains the name of the city, town or suburb of the address.
+   \value FieldRegion The value stored in this field contains the region segment. The region segment contains the
+   name or identifier of the state, province or region of the address.
+   \value FieldPostcode The value stored in this field contains the postcode segment. The postcode segment contains
+   the postal code for the address.
+   \value FieldCountry The value stored in this field contains the country segment. The country segment contains
+   the name of the country of the address.
+   \value FieldPostOfficeBox The value stored in this field contains the post office box segment. The post office box
+   segment contains the post office box identifier of the mailing address.
+   \value FieldSubTypes The value stored in this field contains the sub types of a QContactAddress.
    \sa street(), setStreet()
- */
-const QString QContactAddress::FieldStreet(QStringLiteral("Street"));
-
-/*!
-   \variable QContactAddress::FieldLocality
-
-   The field key constant for the value containing the locality segment.
-   The locality segment contains the name of the city, town or suburb of the address.
    \sa locality(), setLocality()
- */
-const QString QContactAddress::FieldLocality(QStringLiteral("Locality"));
-
-
-/*!
-   \variable QContactAddress::FieldRegion
-
-   The field key constant for the value containing the region segment.
-   The region segment contains the name or identifier of the state,
-   province or region of the address.
    \sa region(), setRegion()
- */
-const QString QContactAddress::FieldRegion(QStringLiteral("Region"));
-
-/*!
-   \variable QContactAddress::FieldPostcode
-
-   The field key constant for the value containing the postcode segment.
-   The postcode segment contains the postal code for the address.
    \sa postcode(), setPostcode()
- */
-const QString QContactAddress::FieldPostcode(QStringLiteral("Postcode"));
-
-/*!
-   \variable QContactAddress::FieldCountry
-
-   The field key constant for the value containing the country segment.
-   The country segment contains the name of the country of the address.
    \sa country(), setCountry()
- */
-const QString QContactAddress::FieldCountry(QStringLiteral("Country"));
-
-/*!
-   \variable QContactAddress::FieldPostOfficeBox
-
-   The field key constant for the value containing the post office box segment.
-   The post office box segment contains the post office box identifier of the
-   mailing address.
    \sa postOfficeBox(), setPostOfficeBox()
  */
-const QString QContactAddress::FieldPostOfficeBox(QStringLiteral("PostOfficeBox"));
 
 /*!
-   \variable QContactAddress::FieldSubTypes
+   \enum QContactAddress::SubType
 
-   The field key constant for the field that stores the sub types of a QContactAddress.
+   This enumeration defines the predefined enum constants for a sub type value of a QContactAddress.
+
+   \value SubTypeParcel The value stored contains an address for parcel delivery.
+   \value SubTypePostal The value stored contains an address for postal delivery.
+   \value SubTypeDomestic The value stored contains an address for domestic mail delivery.
+   \value SubTypeInternational The value stored contains an address for international mail delivery.
    \sa subTypes(), setSubTypes()
  */
-const QString QContactAddress::FieldSubTypes(QStringLiteral("SubTypes"));
-
-/*!
-   \variable QContactAddress::SubTypeParcel
-
-    The predefined string constant for a sub type value,
-    indicating this address is an address for parcel delivery.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactAddress::SubTypeParcel(QStringLiteral("Parcel"));
-
-/*!
-   \variable QContactAddress::SubTypePostal
-
-    The predefined string constant for a sub type value,
-    indicating this address is an address for postal delivery.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactAddress::SubTypePostal(QStringLiteral("Postal"));
-
-/*!
-   \variable QContactAddress::SubTypeDomestic
-
-    The predefined string constant for a sub type value,
-    indicating this address is an address for domestic mail delivery.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactAddress::SubTypeDomestic(QStringLiteral("Domestic"));
-
-/*!
-   \variable QContactAddress::SubTypeInternational
-
-    The predefined string constant for a sub type value,
-    indicating this address is an address for international mail delivery.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactAddress::SubTypeInternational(QStringLiteral("International"));
 
 /*!
    \fn QContactAddress::postOfficeBox() const
@@ -674,13 +536,8 @@ const QString QContactAddress::SubTypeInternational(QStringLiteral("Internationa
  */
 
 /*!
-   \fn QContactAddress::setSubTypes(const QStringList& subTypes)
+   \fn QContactAddress::setSubTypes(const QList<int> &subTypes)
    Sets the subtypes which this detail implements to be those contained in the list of given \a subTypes.
- */
-
-/*!
-   \fn QContactAddress::setSubTypes(const QString& subType)
-   Sets the subtypes which this detail implements to be just the given \a subType.
  */
 
 /*!
@@ -695,38 +552,32 @@ const QString QContactAddress::SubTypeInternational(QStringLiteral("Internationa
 QContactFilter QContactAddress::match(const QString &subString)
 {
     QContactDetailFilter f1;
-    f1.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldStreet);
+    f1.setDetailType(QContactAddress::Type, QContactAddress::FieldStreet);
     f1.setValue(subString);
     f1.setMatchFlags(QContactFilter::MatchContains);
 
     QContactDetailFilter f2;
-    f2.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldLocality);
+    f2.setDetailType(QContactAddress::Type, QContactAddress::FieldLocality);
     f2.setValue(subString);
     f2.setMatchFlags(QContactFilter::MatchContains);
 
     QContactDetailFilter f3;
-    f3.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldRegion);
+    f3.setDetailType(QContactAddress::Type, QContactAddress::FieldRegion);
     f3.setValue(subString);
     f3.setMatchFlags(QContactFilter::MatchContains);
 
     QContactDetailFilter f4;
-    f4.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldPostcode);
+    f4.setDetailType(QContactAddress::Type, QContactAddress::FieldPostcode);
     f4.setValue(subString);
     f4.setMatchFlags(QContactFilter::MatchContains);
 
     QContactDetailFilter f5;
-    f5.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldCountry);
+    f5.setDetailType(QContactAddress::Type, QContactAddress::FieldCountry);
     f5.setValue(subString);
     f5.setMatchFlags(QContactFilter::MatchContains);
 
     QContactDetailFilter f6;
-    f6.setDetailDefinitionName(QContactAddress::DefinitionName,
-                               QContactAddress::FieldPostOfficeBox);
+    f6.setDetailType(QContactAddress::Type, QContactAddress::FieldPostOfficeBox);
     f6.setValue(subString);
     f6.setMatchFlags(QContactFilter::MatchContains);
 
@@ -743,53 +594,31 @@ QContactFilter QContactAddress::match(const QString &subString)
  */
 
 /*!
-   \variable QContactUrl::DefinitionName
-   The string constant for the definition name of QContactUrl details.
+   \variable QContactUrl::Type
+   The enum constant for the type identifier of QContactUrl details.
  */
-const QString QContactUrl::DefinitionName(QStringLiteral("Url"));
+const QContactDetail::DetailType QContactUrl::Type(QContactDetail::TypeUrl);
 
 /*!
-   \variable QContactUrl::FieldUrl
+   \enum QContactUrl::UrlField
 
-   The field key constant for the value containing the URL.
+   This enumeration defines the fields supported by QContactUrl.
+
+   \value FieldUrl The value stored in this field contains the URL.
+   \value FieldSubType The value stored in this field contains the sub type of a QContactUrl.
    \sa url(), setUrl()
  */
-const QString QContactUrl::FieldUrl(QStringLiteral("Url"));
 
 /*!
-   \variable QContactUrl::FieldSubType
+   \enum QContactUrl::SubType
 
-   The field key constant for the field that stores the sub type of a QContactUrl.
+   This enumeration defines the predefined enum constants for a sub type value of a QContactUrl.
+
+   \value SubTypeHomePage The value stored is a contact's home page.
+   \value SubTypeFavourite The value stored is a contact's favourite URLs (or bookmarks).
+   \value SubTypeBlog The value stored is one of the contact's blogs.
    \sa subType(), setSubType()
  */
-const QString QContactUrl::FieldSubType(QStringLiteral("SubType"));
-
-/*!
-   \variable QContactUrl::SubTypeHomePage
-
-    The predefined string constant for a sub type value,
-    indicating this url is a contact's home page.
-    \sa subType(), setSubType()
- */
-const QString QContactUrl::SubTypeHomePage(QStringLiteral("HomePage"));
-
-/*!
-   \variable QContactUrl::SubTypeFavourite
-
-    The predefined string constant for a sub type value,
-    indicating this url is one of the contact's favourite URLs (or bookmarks).
-    \sa subType(), setSubType()
- */
-const QString QContactUrl::SubTypeFavourite(QStringLiteral("Favourite"));
-
-/*!
-   \variable QContactUrl::SubTypeBlog
-
-    The predefined string constant for a sub type value,
-    indicating this url refers to one of the contact's blogs.
-    \sa subType(), setSubType()
- */
-const QString QContactUrl::SubTypeBlog(QStringLiteral("Blog"));
 
 /*!
    \fn QContactUrl::url() const
@@ -808,7 +637,7 @@ const QString QContactUrl::SubTypeBlog(QStringLiteral("Blog"));
  */
 
 /*!
-   \fn QContactUrl::setSubType(const QString& subType)
+   \fn QContactUrl::setSubType(const QContactUrl::SubType& subType)
    Sets the subtype which this detail implements to be the given \a subType.
  */
 
@@ -828,135 +657,42 @@ const QString QContactUrl::SubTypeBlog(QStringLiteral("Blog"));
 
 
 /*!
-    \variable QContactPhoneNumber::DefinitionName
-    The string constant for the definition name of QContactPhoneNumber details.
+    \variable QContactPhoneNumber::Type
+    The enum constant for the type identifier of QContactPhoneNumber details.
 */
-const QString QContactPhoneNumber::DefinitionName(QStringLiteral("PhoneNumber"));
+const QContactDetail::DetailType QContactPhoneNumber::Type(QContactDetail::TypePhoneNumber);
 
 /*!
-   \variable QContactPhoneNumber::FieldNumber
+   \enum QContactPhoneNumber::PhoneNumberField
 
+   This enumeration defines the fields supported by QContactPhoneNumber.
+
+   \value FieldNumber The value stored in this field contains the phone number.
+   \value FieldSubTypes The value stored in this field contains the sub types of a QContactPhoneNumber.
+   \variable QContactPhoneNumber::FieldNumber
    The field key constant for the value containing the phone number.
    \sa number(), setNumber()
  */
-const QString QContactPhoneNumber::FieldNumber(QStringLiteral("PhoneNumber"));
 
 /*!
-   \variable QContactPhoneNumber::FieldSubTypes
+   \enum QContactPhoneNumber::SubType
 
-   The field key constant for the field that stores the sub types of a QContactPhoneNumber.
+   This enumeration defines the predefined enum constants for a sub type value of a QContactPhoneNumber.
+
+   \value SubTypeLandline The value stored is a landline number.
+   \value SubTypeMobile The value stored is a mobile (cellular) number.
+   \value SubTypeFax The value stored is a fax number.
+   \value SubTypePager The value stored is a pager number.
+   \value SubTypeCar The value stored is a car phone.
+   \value SubTypeBulletinBoardSystem The value stored is a bulletin board system.
+   \value SubTypeVoice The value stored is indicating this phone number supports voice transmission.
+   \value SubTypeModem The value stored is indicating this phone number supports data transmission.
+   \value SubTypeVideo The value stored is indicating this phone number supports video transmission.
+   \value SubTypeMessagingCapable The value stored is indicating this phone number supports messaging services.
+   \value SubTypeAssistant The value stored is indicating this phone number is the number of an assistant.
+   \value SubTypeDtmfMenu The value stored is indicating this phone number supports DTMF-controlled voice menu navigation.
    \sa subTypes(), setSubTypes()
  */
-const QString QContactPhoneNumber::FieldSubTypes(QStringLiteral("SubTypes"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeLandline
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a landline number.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeLandline(QStringLiteral("Landline"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeMobile
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a mobile (cellular) number.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeMobile(QStringLiteral("Mobile"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeFax
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a fax number.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeFax(QStringLiteral("Fax"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypePager
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a pager number.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypePager(QStringLiteral("Pager"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeCar
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a car phone.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeCar(QStringLiteral("Car"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeBulletinBoardSystem
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is a bulletin board system.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeBulletinBoardSystem(QStringLiteral("BulletinBoardSystem"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeVoice
-
-    The predefined string constant for a sub type value,
-    indicating this phone number supports voice transmission.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeVoice(QStringLiteral("Voice"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeModem
-
-    The predefined string constant for a sub type value,
-    indicating this phone number supports data transmission.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeModem(QStringLiteral("Modem"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeVideo
-
-    The predefined string constant for a sub type value,
-    indicating this phone number supports video transmission.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeVideo(QStringLiteral("Video"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeMessagingCapable
-
-    The predefined string constant for a sub type value,
-    indicating this phone number supports messaging services.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeMessagingCapable(QStringLiteral("MessagingCapable"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeAssistant
-
-    The predefined string constant for a sub type value,
-    indicating this phone number is the number of an assistant.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeAssistant(QStringLiteral("Assistant"));
-
-/*!
-   \variable QContactPhoneNumber::SubTypeDtmfMenu
-
-    The predefined string constant for a sub type value,
-    indicating this phone number supports DTMF-controlled voice menu navigation.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactPhoneNumber::SubTypeDtmfMenu(QStringLiteral("DtmfMenu"));
-
 
 /*!
    \fn QContactPhoneNumber::number() const
@@ -969,13 +705,8 @@ const QString QContactPhoneNumber::SubTypeDtmfMenu(QStringLiteral("DtmfMenu"));
  */
 
 /*!
-   \fn QContactPhoneNumber::setSubTypes(const QStringList& subTypes)
+   \fn QContactPhoneNumber::setSubTypes(const QList<int>& subTypes)
    Sets the subtypes which this detail implements to be those contained in the list of given \a subTypes
- */
-
-/*!
-   \fn QContactPhoneNumber::setSubTypes(const QString& subType)
-   Sets the subtypes which this detail implements to be just the given \a subType.
  */
 
 /*!
@@ -992,32 +723,23 @@ const QString QContactPhoneNumber::SubTypeDtmfMenu(QStringLiteral("DtmfMenu"));
  */
 
 /*!
-   \variable QContactBirthday::DefinitionName
-   The string constant for the definition name of QContactBirthday details.
+   \variable QContactBirthday::Type
+   The enum constant for the type identifier of QContactBirthday details.
  */
-const QString QContactBirthday::DefinitionName(QStringLiteral("Birthday"));
+const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirthday);
 
 /*!
-   \variable QContactBirthday::FieldBirthday
-
-   The field key constant for the value containing the birthday date.
-
+   \enum QContactBirthday::BirthdayField
+   This enumeration defines the fields supported by QContactBirthday.
+   \value FieldBirthday The value stored in this field contains the birthday date.
    This field is either a date, or a date and time.  Some managers
    may support either type, while others may convert the value here
    to a specific type (either discarding the time if only a date is
    supported, or by using midnight if a time is not supplied).
-
+   \value FieldCalendarId The value stored in this field contains the id of the calendar event.
    \sa date(), setDate(), dateTime(), setDateTime()
- */
-const QString QContactBirthday::FieldBirthday(QStringLiteral("Birthday"));
-
-/*!
-   \variable QContactBirthday::FieldCalendarId
-
-   The field key constant for the value containing the id of the calendar event.
    \sa calendarId(), setCalendarId()
  */
-const QString QContactBirthday::FieldCalendarId(QStringLiteral("CalendarId"));
 
 /*!
    \fn QContactBirthday::date() const
@@ -1062,36 +784,20 @@ const QString QContactBirthday::FieldCalendarId(QStringLiteral("CalendarId"));
  */
 
 /*!
-   \variable QContactGender::DefinitionName
-   The string constant for the definition name of QContactGender details.
+   \variable QContactGender::Type
+   The enum constant for the type identifier of QContactGender details.
  */
-const QString QContactGender::DefinitionName(QStringLiteral("Gender"));
+const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender);
 
 /*!
-   \variable QContactGender::FieldGender
-
-   The field key constant for the value containing the gender.
+   \enum QContactGender::GenderField
+   This enumeration defines the fields supported by QContactGender.
+   \value FieldGender The value stored in this field contains the gender.
+   \value GenderMale The value that identifies this contact as being male.
+   \value GenderFemale The value that identifies this contact as being female.
+   \value GenderUnspecified The value that identifies this contact as being of unspecified gender.
    \sa gender(), setGender()
  */
-const QString QContactGender::FieldGender(QStringLiteral("Gender"));
-
-/*!
-   \variable QContactGender::GenderMale
-   The value that identifies this contact as being male.
- */
-const QString QContactGender::GenderMale(QStringLiteral("Male"));
-
-/*!
-   \variable QContactGender::GenderFemale
-   The value that identifies this contact as being female.
- */
-const QString QContactGender::GenderFemale(QStringLiteral("Female"));
-
-/*!
-   \variable QContactGender::GenderUnspecified
-   The value that identifies this contact as being of unspecified gender.
- */
-const QString QContactGender::GenderUnspecified(QStringLiteral("Unspecified"));
 
 /*!
    \fn QContactGender::gender() const
@@ -1102,11 +808,11 @@ const QString QContactGender::GenderUnspecified(QStringLiteral("Unspecified"));
  */
 
 /*!
-   \fn QContactGender::setGender(const QString& gender)
+   \fn QContactGender::setGender(const GenderField gender)
 
    Sets the gender of the contact (as stored in this detail) to \a
-   gender, if \a gender is either "Male" or "Female", otherwise sets
-   it to "Unspecified".
+   gender, if \a gender is either GenderMale or GenderFemale, otherwise sets
+   it to GenderUnspecified.
  */
 
 /* ==================== QContactGeolocation ======================= */
@@ -1119,83 +825,33 @@ const QString QContactGender::GenderUnspecified(QStringLiteral("Unspecified"));
 */
 
 /*!
-   \variable QContactGeoLocation::DefinitionName
-   The string constant for the definition name of QContactGeoLocation details.
+   \variable QContactGeoLocation::Type
+   The enum constant for the type identifier of QContactGeoLocation details.
  */
-const QString QContactGeoLocation::DefinitionName(QStringLiteral("GeoLocation"));
+const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeGeoLocation);
 
 /*!
-   \variable QContactGeoLocation::FieldLabel
-
-   The field key constant for the value containing the location label.
+   \enum QContactGeoLocation::GeoLocationField
+   This enumeration defines the fields supported by QContactGeoLocation.
+   \value FieldLabel The value stored in this field contains the location label.
+   \value FieldLatitude The value stored in this field contains the latitude.
+   \value FieldLongitude The value stored in this field contains the longitude.
+   \value FieldAccuracy The value stored in this field contains the location (latitude/longitude) accuracy.
+   \value FieldAltitude The value stored in this field contains the altitude.
+   \value FieldAltitudeAccuracy The value stored in this field contains the accuracy of the altitude.
+   \value FieldHeading The value stored in this field contains the heading.
+   \value FieldSpeed The value stored in this field contains the speed.
+   \value FieldTimestamp The value stored in this field contains the timestamp of the location information.
    \sa label(), setLabel()
- */
-const QString QContactGeoLocation::FieldLabel(QStringLiteral("Label"));
-
-/*!
-   \variable QContactGeoLocation::FieldLatitude
-
-   The field key constant for the value containing the latitude.
    \sa latitude(), setLatitude()
- */
-const QString QContactGeoLocation::FieldLatitude(QStringLiteral("Latitude"));
-
-/*!
-   \variable QContactGeoLocation::FieldLongitude
-
-   The field key constant for the value containing the longitude.
    \sa longitude(), setLongitude()
- */
-const QString QContactGeoLocation::FieldLongitude(QStringLiteral("Longitude"));
-
-/*!
-   \variable QContactGeoLocation::FieldAccuracy
-
-   The field key constant for the value containing the location (latitude/longitude) accuracy.
    \sa accuracy(), setAccuracy()
- */
-const QString QContactGeoLocation::FieldAccuracy(QStringLiteral("Accuracy"));
-
-/*!
-   \variable QContactGeoLocation::FieldAltitude
-
-   The field key constant for the value containing the altitude.
    \sa altitude(), setAltitude()
- */
-const QString QContactGeoLocation::FieldAltitude(QStringLiteral("Altitude"));
-
-
-/*!
-   \variable QContactGeoLocation::FieldAltitudeAccuracy
-
-   The field key constant for the value containing the accuracy of the altitude.
    \sa altitudeAccuracy(), setAltitudeAccuracy()
- */
-const QString QContactGeoLocation::FieldAltitudeAccuracy(QStringLiteral("AltitudeAccuracy"));
-
-/*!
-   \variable QContactGeoLocation::FieldHeading
-
-   The field key constant for the value containing the heading.
    \sa heading(), setHeading()
- */
-const QString QContactGeoLocation::FieldHeading(QStringLiteral("Heading"));
-
-/*!
-   \variable QContactGeoLocation::FieldSpeed
-
-   The field key constant for the value containing the speed.
    \sa speed(), setSpeed()
- */
-const QString QContactGeoLocation::FieldSpeed(QStringLiteral("Speed"));
-
-/*!
-   \variable QContactGeoLocation::FieldTimestamp
-
-   The field key constant for the value containing the timestamp of the location information.
    \sa timestamp(), setTimestamp()
  */
-const QString QContactGeoLocation::FieldTimestamp(QStringLiteral("Timestamp"));
 
 /*!
    \fn QContactGeoLocation::setLabel(const QString& label)
@@ -1330,18 +986,17 @@ const QString QContactGeoLocation::FieldTimestamp(QStringLiteral("Timestamp"));
  */
 
 /*!
-   \variable QContactGuid::DefinitionName
-   The string constant for the definition name of QContactGuid details.
+   \variable QContactGuid::Type
+   The enum constant for the type identifier of QContactGuid details.
  */
-const QString QContactGuid::DefinitionName(QStringLiteral("Guid"));
+const QContactDetail::DetailType QContactGuid::Type(QContactDetail::TypeGuid);
 
 /*!
-   \variable QContactGuid::FieldGuid
-
-   The field key constant for the value containing the GUID.
+   \enum QContactGuid::GuidField
+   This enumeration defines the fields supported by QContactGuid.
+   \value FieldGuid The value stored in this field contains the GUID.
    \sa guid(), setGuid()
  */
-const QString QContactGuid::FieldGuid(QStringLiteral("Guid"));
 
 /*!
    \fn QContactGuid::guid() const
@@ -1367,19 +1022,17 @@ const QString QContactGuid::FieldGuid(QStringLiteral("Guid"));
  */
 
 /*!
-   \variable QContactHobby::DefinitionName
-   The string constant for the definition name of QContactHobby details.
+   \variable QContactHobby::Type
+   The enum constant for the type identifier of QContactHobby details.
  */
-const QString QContactHobby::DefinitionName(QStringLiteral("Hobby"));
+const QContactDetail::DetailType QContactHobby::Type(QContactDetail::TypeHobby);
 
 /*!
-   \variable QContactHobby::FieldHobby
-
-    The field key constant for the value containing the name
-    of the hobby.
+   \enum QContactHobby::HobbyField
+   This enumeration defines the fields supported by QContactHobby.
+   \value FieldHobby The value stored in this field contains the name of the hobby.
    \sa hobby(), setHobby()
  */
-const QString QContactHobby::FieldHobby(QStringLiteral("Hobby"));
 
 /*!
    \fn QContactHobby::setHobby(const QString& hobby)
@@ -1401,58 +1054,27 @@ const QString QContactHobby::FieldHobby(QStringLiteral("Hobby"));
  */
 
 /*!
-   \variable QContactName::DefinitionName
-   The string constant for the definition name of QContactName details.
+   \variable QContactName::Type
+   The enum constant for the type identifier of QContactName details.
  */
-const QString QContactName::DefinitionName(QStringLiteral("Name"));
+const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
 
 /*!
-   \variable QContactName::FieldPrefix
-
-   The field key constant for the value containing the prefix part of the name.
+   \enum QContactName::NameField
+   This enumeration defines the fields supported by QContactName.
+   \value FieldPrefix The value stored in this field contains the prefix part of the name.
+   \value FieldFirstName The value stored in this field contains the first part of the name.
+   \value FieldMiddleName The value stored in this field contains the middle part of the name.
+   \value FieldLastName The value stored in this field contains the last part of the name.
+   \value FieldSuffix The value stored in this field contains the suffix part of the name.
+   \value FieldCustomLabel The value stored in this field contains a custom formatted label.
    \sa prefix(), setPrefix()
- */
-const QString QContactName::FieldPrefix(QStringLiteral("Prefix"));
-
-/*!
-   \variable QContactName::FieldFirstName
-
-   The field key constant for the value containing the first name part of the name.
    \sa firstName(), setFirstName()
- */
-const QString QContactName::FieldFirstName(QStringLiteral("FirstName"));
-
-/*!
-   \variable QContactName::FieldMiddleName
-
-   The field key constant for the value containing the middle name part of the name.
    \sa middleName(), setMiddleName()
- */
-const QString QContactName::FieldMiddleName(QStringLiteral("MiddleName"));
-
-/*!
-   \variable QContactName::FieldLastName
-
-   The field key constant for the value containing the last name part of the name.
    \sa lastName(), setLastName()
- */
-const QString QContactName::FieldLastName(QStringLiteral("LastName"));
-
-/*!
-   \variable QContactName::FieldSuffix
-
-   The field key constant for the value containing the suffix part of the name.
    \sa suffix(), setSuffix()
- */
-const QString QContactName::FieldSuffix(QStringLiteral("Suffix"));
-
-/*!
-   \variable QContactName::FieldCustomLabel
-
-   The field key constant for the value containing a custom formatted label.
    \sa customLabel(), setCustomLabel()
  */
-const QString QContactName::FieldCustomLabel(QStringLiteral("CustomLabel"));
 
 /*!
    \fn QContactName::prefix() const
@@ -1527,18 +1149,17 @@ const QString QContactName::FieldCustomLabel(QStringLiteral("CustomLabel"));
  */
 
 /*!
-\variable QContactNickname::DefinitionName
-The string constant for the definition name of QContactNickname details.
+   \variable QContactNickname::Type
+   The enum constant for the type identifier of QContactNickname details.
 */
-const QString QContactNickname::DefinitionName(QStringLiteral("Nickname"));
+const QContactDetail::DetailType QContactNickname::Type(QContactType::TypeNickname);
 
 /*!
-   \variable QContactNickname::FieldNickname
-
-   The field key constant for the value containing the nickname.
+   \enum QContactNickname::NicknameField
+   This enumeration defines the fields supported by QContactNickname.
+   \value FieldNickname The value stored in this field contains the nickname.
    \sa nickname(), setNickname()
  */
-const QString QContactNickname::FieldNickname(QStringLiteral("Nickname"));
 
 /*!
    \fn QContactNickname::setNickname(const QString& nickname)
@@ -1560,19 +1181,17 @@ const QString QContactNickname::FieldNickname(QStringLiteral("Nickname"));
  */
 
 /*!
-   \variable QContactNote::DefinitionName
-   The string constant for the definition name of QContactNote details.
+   \variable QContactNote::Type
+   The enum constant for the type identifier of QContactNote details.
 */
-const QString QContactNote::DefinitionName(QStringLiteral("Note"));
+const QContactDetail::DetailType QContactNote::Type(QContactDetail::TypeNote);
 
 /*!
-   \variable QContactNote::FieldNote
-
-   The field key constant for the value containing the note.
+   \enum QContactNote::NoteField
+   This enumeration defines the fields supported by QContactNote.
+   \value FieldNote The value stored in this field contains the note.
    \sa note(), setNote()
  */
-const QString QContactNote::FieldNote(QStringLiteral("Note"));
-
 
 /*!
    \fn QContactNote::setNote(const QString& note)
@@ -1604,18 +1223,17 @@ const QString QContactNote::FieldNote(QStringLiteral("Note"));
  */
 
 /*!
-   \variable QContactTag::DefinitionName
-   The string constant for the definition name of QContactTag details.
+   \variable QContactTag::Type
+   The enum constant for the type identifier of QContactTag details.
  */
-const QString QContactTag::DefinitionName(QStringLiteral("Tag"));
+const QContactDetail::DetailType QContactTag::Type(QContactDetail::TypeTag);
 
 /*!
-   \variable QContactTag::FieldTag
-
-    The field key constant for the value containing the tag.
+   \enum QContactTag::TagField
+    This enumeration defines the fields supported by QContactTag.
+    \value FieldTag The value stored in this field contains the tag.
    \sa tag(), setTag()
  */
-const QString QContactTag::FieldTag(QStringLiteral("Tag"));
 
 /*!
    \fn QContactTag::setTag(const QString& tag)
@@ -1634,8 +1252,7 @@ const QString QContactTag::FieldTag(QStringLiteral("Tag"));
 QContactFilter QContactTag::match(const QString &subString)
 {
     QContactDetailFilter f;
-    f.setDetailDefinitionName(QContactTag::DefinitionName,
-                              QContactTag::FieldTag);
+    f.setDetailType(QContactTag::Type, QContactTag::FieldTag);
     f.setValue(subString);
     f.setMatchFlags(QContactFilter::MatchContains);
 
@@ -1673,18 +1290,17 @@ QContactFilter QContactTag::match(const QString &subString)
  */
 
 /*!
-   \variable QContactThumbnail::DefinitionName
-   The string constant for the definition name of QContactThumbnail details.
+   \variable QContactThumbnail::Type
+   The enum constant for the type identifier of QContactThumbnail details.
  */
-const QString QContactThumbnail::DefinitionName(QStringLiteral("Thumbnail"));
+const QContactDetail::DetailType QContactThumbnail::Type(QContactDetail::TypeThumbnail);
 
 /*!
-   \variable QContactThumbnail::FieldThumbnail
-
-   The field key constant for the value containing the thumbnail image.
+   \enum QContactThumbnail::ThumbnailField
+   This enumeration defines the fields supported by QContactThumbnail.
+   \value FieldThumbnail The value stored in this field contains the thumbnail image.
    \sa thumbnail(), setThumbnail()
  */
-const QString QContactThumbnail::FieldThumbnail(QStringLiteral("Thumbnail"));
 
 /*!
   \fn QContactThumbnail::thumbnail() const
@@ -1706,26 +1322,19 @@ const QString QContactThumbnail::FieldThumbnail(QStringLiteral("Thumbnail"));
  */
 
 /*!
-\variable QContactTimestamp::DefinitionName
-The string constant for the definition name of QContactTimestamp details.
+   \variable QContactTimestamp::Type
+   The enum constant for the type identifier of QContactTimestamp details.
 */
-const QString QContactTimestamp::DefinitionName(QStringLiteral("Timestamp"));
+const QContactDetail::DetailType QContactTimestamp::Type(QContactDetail::TypeTimestamp);
 
 /*!
-   \variable QContactTimestamp::FieldModificationTimestamp
-
-   The field key constant for the value of the last modified timestamp.
+   \enum QContactTimestamp::TimestampField
+   This enumeration defines the fields supported by QContactTimestamp.
+   \value FieldModificationTimestamp The value stored in this field contains the last modified timestamp.
+   \value FieldCreationTimestamp The value stored in this field contains the value of the timestamp a contact was created.
    \sa lastModified(), setLastModified()
- */
-const QString QContactTimestamp::FieldModificationTimestamp(QStringLiteral("ModificationTimestamp"));
-
-/*!
-   \variable QContactTimestamp::FieldCreationTimestamp
-
-   The field key constant for the value of the timestamp a contact was created.
    \sa created(), setCreated()
  */
-const QString QContactTimestamp::FieldCreationTimestamp(QStringLiteral("CreationTimestamp"));
 
 /*!
    \fn QContactTimestamp::created() const
@@ -1756,34 +1365,23 @@ const QString QContactTimestamp::FieldCreationTimestamp(QStringLiteral("Creation
  */
 
 /*!
-\variable QContactType::DefinitionName
-The string constant for the definition name of QContactType details.
+   \variable QContactType::Type
+   The enum constant for the type identifier of QContactType details.
 */
-const QString QContactType::DefinitionName(QStringLiteral("Type"));
+const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
 
 /*!
-   \variable QContactType::FieldType
-
-   The field key constant for the type value which is stored in details of
+   \enum QContactType::TypeField
+   This enumeration defines the fields supported by QContactType.
+   \value FieldType The value stored in this field contains the type value which is stored in details of
    the QContactType definition.
- */
-const QString QContactType::FieldType(QStringLiteral("Type"));
-
-
-/*!
-   \variable QContactType::TypeContact
-
-    The predefined string constant for a type value,
-    indicating this contact is an ordinary contact.
-    \sa setType(), type()
- */
-const QString QContactType::TypeContact(QStringLiteral("Contact"));
+   \sa type(), setType()
+*/
 
 /*!
-   \variable QContactType::TypeGroup
-
-    The predefined string constant for a type value,
-    indicating this contact is a group contact.
+   \enum QContactType::TypeValues
+   \value TypeContact The value indicates that this contact is an ordinary contact.
+   \value TypeGroup The value indicates that this contact is a group contact.
 
     Contacts of this type are able to be the first contact in
     relationships of the \c QContactRelationship::HasMember type.
@@ -1792,9 +1390,8 @@ const QString QContactType::TypeContact(QStringLiteral("Contact"));
     retrieve the relationships which involve the group from the manager
     in which the group is saved.
 
-    \sa setType(), type()
+   \sa type(), setType()
  */
-const QString QContactType::TypeGroup(QStringLiteral("Group"));
 
 /*!
    \fn QContactType::type() const
@@ -1802,7 +1399,7 @@ const QString QContactType::TypeGroup(QStringLiteral("Group"));
  */
 
 /*!
-   \fn QContactType::setType(const QString& type)
+   \fn QContactType::setType(const TypeValues type)
    Sets the type of the contact to be the give \a type.
  */
 
@@ -1817,20 +1414,18 @@ const QString QContactType::TypeGroup(QStringLiteral("Group"));
  */
 
 /*!
-   \variable QContactDisplayLabel::DefinitionName
-
-   The string constant for the definition name of QContactDisplayLabel details.
+   \variable QContactDisplayLabel::Type
+   The enum constant for the type identifier of QContactDisplayLabel details.
  */
-const QString QContactDisplayLabel::DefinitionName(QStringLiteral("DisplayLabel"));
+const QContactDetail::DetailType QContactDisplayLabel::Type(QContactDetail::TypeDisplayLabel);
 
 
 /*!
-   \variable QContactDisplayLabel::FieldLabel
-
-   The field key constant for the value of the display label.
+   \enum QContactDisplayLabel::DisplayLabelField
+   This enumeration defines the fields supported by QContactDisplayLabel.
+   \value FieldLabel The value stored in this field contains the value of the display label.
    \sa label()
  */
-const QString QContactDisplayLabel::FieldLabel(QStringLiteral("Label"));
 
 /*!
    \fn QContactDisplayLabel::label() const
@@ -1861,159 +1456,56 @@ const QString QContactDisplayLabel::FieldLabel(QStringLiteral("Label"));
  */
 
 /*!
-   \variable QContactOnlineAccount::DefinitionName
-   The string constant for the definition name of QContactOnlineAccount details.
+   \variable QContactOnlineAccount::Type
+   The enum constant for the type identifier of QContactOnlineAccount details.
  */
-const QString QContactOnlineAccount::DefinitionName(QStringLiteral("OnlineAccount"));
+const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::TypeOnlineAccount);
 
 /*!
-   \variable QContactOnlineAccount::FieldCapabilities
+   \enum QContactOnlineAccount::OnlineAccountField
 
+   This enumeration defines the fields supported by QContactOnlineAccount.
+
+   \value FieldCapabilities The value stored in this field contains the value of the account capabilities.
+   \value FieldAccountUri The value stored in this field contains the value of the account uri.
+   \value FieldServiceProvider The value stored in this field contains the value of the provider name.
+   \value FieldProtocol The value stored in this field contains the value of the protocol.
+   \value FieldSubTypes The value stored in this field contains the value of the sub types of a QContactOnlineAccount.
+   \variable QContactOnlineAccount::FieldCapabilities
    The field key constant for the account capabilities value.
    \sa capabilities(), setCapabilities()
- */
-const QString QContactOnlineAccount::FieldCapabilities(QStringLiteral("Capabilities"));
-
-/*!
-   \variable QContactOnlineAccount::FieldAccountUri
-
-   The field key constant for the account uri value.
    \sa accountUri(), setAccountUri()
- */
-const QString QContactOnlineAccount::FieldAccountUri(QStringLiteral("AccountUri"));
-
-/*!
-   \variable QContactOnlineAccount::FieldServiceProvider
-
-   The field key constant for the account service provider name.
    \sa serviceProvider(), setServiceProvider()
  */
-const QString QContactOnlineAccount::FieldServiceProvider(QStringLiteral("ServiceProvider"));
 
 /*!
-   \variable QContactOnlineAccount::FieldProtocol
+   \enum QContactOnlineAccount::SubType
 
-   The field key constant for the account service provider name.
-   \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::FieldProtocol(QStringLiteral("Protocol"));
+   This enumeration defines the predefined enum constants for a sub type value of a QContactOnlineAccount.
 
-/*!
-   \variable QContactOnlineAccount::FieldSubTypes
-
-   The field key constant for the field that stores the sub types of a QContactOnlineAccount.
+   \value SubTypeSip The value stored indicates if this online account supports SIP.
+   \value SubTypeSipVoip The value stored indicates if this online account supports SIP based VOIP.
+   \value SubTypeImpp The value stored indicates if this online account supports IMPP.
+   \value SubTypeVideoShare The value stored indicates if this online account supports VideoShare.
    \sa subTypes(), setSubTypes()
  */
-const QString QContactOnlineAccount::FieldSubTypes(QStringLiteral("SubTypes"));
 
 /*!
-   \variable QContactOnlineAccount::SubTypeSip
+   \enum QContactOnlineAccount::Protocol
 
-    The predefined string constant for a sub type value,
-    indicating this online account supports SIP.
-    \sa subTypes(), setSubTypes()
+   This enumeration defines the predefined enum constants for a protocol value of a QContactOnlineAccount.
+
+   \value ProtocolAim The value stored indicates this online account is for the AIM protocol.
+   \value ProtocolIcq The value stored indicates this online account is for the ICQ protocol.
+   \value ProtocolIrc The value stored indicates this online account is for the IRC protocol.
+   \value ProtocolJabber The value stored indicates this online account is for the jabber protocol.
+   \value ProtocolMsn The value stored indicates this online account is for the MSN protocol.
+   \value ProtocolQq The value stored indicates this online account is for the QQ protocol.
+   \value ProtocolSkype The value stored indicates this online account is for the Skype protocol.
+   \value ProtocolYahoo The value stored indicates this online account is for the Yahoo protocol.
+   \value ProtocolUnknown The value stored indicates this online account is for one unsupported protocol.
+   \sa protocol(), setProtocol()
  */
-const QString QContactOnlineAccount::SubTypeSip(QStringLiteral("Sip"));
-
-/*!
-   \variable QContactOnlineAccount::SubTypeSipVoip
-
-    The predefined string constant for a sub type value,
-    indicating this online account supports SIP based VOIP.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactOnlineAccount::SubTypeSipVoip(QStringLiteral("SipVoip"));
-
-/*!
-   \variable QContactOnlineAccount::SubTypeImpp
-
-    The predefined string constant for a sub type value,
-    indicating this online account supports IMPP.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactOnlineAccount::SubTypeImpp(QStringLiteral("Impp"));
-
-/*!
-   \variable QContactOnlineAccount::SubTypeVideoShare
-
-    The predefined string constant for a sub type value,
-    indicating this online account supports VideoShare.
-    \sa subTypes(), setSubTypes()
- */
-const QString QContactOnlineAccount::SubTypeVideoShare(QStringLiteral("VideoShare"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolAim
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the AIM protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolAim(QStringLiteral("aim"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolIcq
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the ICQ protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolIcq(QStringLiteral("icq"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolIrc
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the IRC protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolIrc(QStringLiteral("irc"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolJabber
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the Jabber protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolJabber(QStringLiteral("jabber"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolMsn
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the MSN protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolMsn(QStringLiteral("msn"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolQq
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the Tecent QQ protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolQq(QStringLiteral("qq"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolSkype
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the Skype protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolSkype(QStringLiteral("skype"));
-
-/*!
-   \variable QContactOnlineAccount::ProtocolYahoo
-
-    The predefined string constant for a protocol value,
-    indicating this online account is for the Yahoo chat protocol.
-    \sa protocol(), setProtocol()
- */
-const QString QContactOnlineAccount::ProtocolYahoo(QStringLiteral("yahoo"));
-
 
 /*!
    \fn QContactOnlineAccount::setAccountUri(const QString& accountUri)
@@ -2047,20 +1539,15 @@ const QString QContactOnlineAccount::ProtocolYahoo(QStringLiteral("yahoo"));
  */
 
 /*!
-    \fn QContactOnlineAccount::setProtocol(const QString &protocol)
+    \fn QContactOnlineAccount::setProtocol(Protocol protocol)
     Set the protocol to \a protocol.
  */
 
 /*!
-   \fn QContactOnlineAccount::setSubTypes(const QStringList& subTypes)
+   \fn QContactOnlineAccount::setSubTypes(const QList<int>& subTypes)
 
    Sets the subtypes which this detail implements to be those
    contained in the list of given \a subTypes.
- */
-
-/*!
-   \fn QContactOnlineAccount::setSubTypes(const QString& subType)
-   Sets the subtypes which this detail implements to be just the given \a subType.
  */
 
 /*!
@@ -2094,83 +1581,34 @@ const QString QContactOnlineAccount::ProtocolYahoo(QStringLiteral("yahoo"));
  */
 
 /*!
-   \variable QContactOrganization::DefinitionName
-   The string constant for the definition name of QContactOrganization details.
+   \variable QContactOrganization::Type
+   The enum constant for the type identifier of QContactOrganization details.
  */
-const QString QContactOrganization::DefinitionName(QStringLiteral("Organization"));
+const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::TypeOrganization);
 
 /*!
-   \variable QContactOrganization::FieldName
-
-   The field key constant for the value of the organization name.
-   \sa name(), setName()
- */
-const QString QContactOrganization::FieldName(QStringLiteral("Name"));
-
-/*!
-   \variable QContactOrganization::FieldLogoUrl
-
-   The field key constant for the URL of the organization logo image.
-   \sa logoUrl(), setLogoUrl()
- */
-const QString QContactOrganization::FieldLogoUrl(QStringLiteral("LogoUrl"));
-
-/*!
-   \variable QContactOrganization::FieldDepartment
-
-   The field key constant for the value of the department name.
+   \enum QContactOrganization::OrganizationField
+   This enumeration defines the fields supported by QContactOrganization.
+   \value FieldName The value stored in this field contains the organization name.
+   \value FieldLogoUrl The value stored in this field contains the organization logo image.
+   \value FieldDepartment The value stored in this field contains the department name.
+   \value FieldLocation The value stored in this field contains the location of the organization.
+   \value FieldRole The value stored in this field contains the contact's role in the organization.
+   \value FieldTitle The value stored in this field contains the contact's title in the organization.
+   \value FieldAssistantName The value stored in this field contains the contact's assistant.
+   \value FieldStartDate The value stored in this field contains the contact's start date in organization.
+   \value FieldEndDate The value stored in this field contains the contact's end date in organization.
    \sa department(), setDepartment()
- */
-const QString QContactOrganization::FieldDepartment(QStringLiteral("Department"));
-
-/*!
-   \variable QContactOrganization::FieldLocation
-
-   The field key constant for the value of the location of the organization.
+   \sa name(), setName()
+   \sa logoUrl(), setLogoUrl()
+   \sa department(), setDepartment()
    \sa location(), setLocation()
- */
-const QString QContactOrganization::FieldLocation(QStringLiteral("Location"));
-
-/*!
-   \variable QContactOrganization::FieldRole
-
-   The field key constant for the value of the contact's role in the organization.
    \sa role(), setRole()
- */
-const QString QContactOrganization::FieldRole(QStringLiteral("Role"));
-
-/*!
-   \variable QContactOrganization::FieldTitle
-
-   The field key constant for the value of the contact's title in the organization.
    \sa title(), setTitle()
- */
-const QString QContactOrganization::FieldTitle(QStringLiteral("Title"));
-
-/*!
-   \variable QContactOrganization::FieldAssistantName
-
-   The field key constant for the value of the name of the contact's assistant.
    \sa assistantName(), setAssistantName()
- */
-const QString QContactOrganization::FieldAssistantName(QStringLiteral("AssistantName"));
-
-/*!
-   \variable QContactOrganization::FieldStartDate
-
-   The field key constant for the value of the contact's startdate in organization.
    \sa startDate(), setStartDate()
- */
-
-const QString QContactOrganization::FieldStartDate(QStringLiteral("StartDate"));
-
-/*!
-   \variable QContactOrganization::FieldEndDate
-   The field key constant for the value of the contact's end date in organization.
    \sa endDate(), setEndDate()
  */
-
-const QString QContactOrganization::FieldEndDate(QStringLiteral("EndDate"));
 
 /*!
    \fn QContactOrganization::setName(const QString& name)
@@ -2257,7 +1695,7 @@ const QString QContactOrganization::FieldEndDate(QStringLiteral("EndDate"));
 
 /*!
    \fn QContactOrganization::setStartDate(const QDateTime& dateTime)
-   Sets the start date and time of the organization  which is stored in this detail to \a startDate.
+   Sets the start date and time of the organization  which is stored in this detail to \a dateTime.
  */
 /*!
    \fn QContactOrganization::startDate() const
@@ -2265,7 +1703,7 @@ const QString QContactOrganization::FieldEndDate(QStringLiteral("EndDate"));
  */
 /*!
    \fn QContactOrganization::setEndDate(const QDateTime& dateTime)
-   Sets the end date and time of the organization  which is stored in this detail to \a endDate.
+   Sets the end date and time of the organization  which is stored in this detail to \a dateTime.
  */
 /*!
    \fn QContactOrganization::endDate() const
@@ -2282,35 +1720,20 @@ const QString QContactOrganization::FieldEndDate(QStringLiteral("EndDate"));
  */
 
 /*!
-\variable QContactRingtone::DefinitionName
-The string constant for the definition name of QContactRingtone details.
+   \variable QContactRingtone::Type
+   The enum constant for the type identifier of QContactRingtone details.
 */
-const QString QContactRingtone::DefinitionName(QStringLiteral("Ringtone"));
+const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRingtone);
 
 /*!
-   \variable QContactRingtone::FieldAudioRingtoneUrl
-
-   The field key constant for the value of the URL for an audio ringtone.
+   \enum QContactRingtone::RingtoneField
+   This enumeration defines the fields supported by QContactRingtone.
+   \value FieldAudioRingtoneUrl The value stored in this field contains the URL for an audio ringtone.
+   \value FieldVideoRingtoneUrl The value stored in this field contains the URL for a video ringtone.
+   \value FieldVibrationRingtoneUrl The value stored in this field contains the URL for a vibration ringtone.
    \sa setAudioRingtoneUrl(), audioRingtoneUrl()
- */
-const QString QContactRingtone::FieldAudioRingtoneUrl(QStringLiteral("AudioRingtoneUrl"));
-
-/*!
-   \variable QContactRingtone::FieldVideoRingtoneUrl
-
-   The field key constant for the value of the URL for a video ringtone.
    \sa setVideoRingtoneUrl(), videoRingtoneUrl()
  */
-const QString QContactRingtone::FieldVideoRingtoneUrl(QStringLiteral("VideoRingtoneUrl"));
-
-/*!
-   \variable QContactRingtone::FieldVibrationRingtoneUrl
-   \internal
-
-   The field key constant for the value of the URL for a vibration ringtone.
-   \sa setVibrationRingtoneUrl(), vibrationRingtoneUrl()
- */
-const QString QContactRingtone::FieldVibrationRingtoneUrl(QStringLiteral("VibrationRingtoneUrl"));
 
 /*!
   \fn QContactRingtone::audioRingtoneUrl() const
@@ -2376,52 +1799,27 @@ const QString QContactRingtone::FieldVibrationRingtoneUrl(QStringLiteral("Vibrat
  */
 
 /*!
-   \variable QContactPresence::DefinitionName
-   The string constant for the definition name of QContactPresence details.
+   \variable QContactPresence::Type
+   The enum constant for the type identifier of QContactPresence details.
  */
-const QString QContactPresence::DefinitionName(QStringLiteral("Presence"));
+const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePresence);
 
 /*!
-   \variable QContactPresence::FieldTimestamp
-   The field key constant for the timestamp value.
+   \enum QContactPresence::PresenceField
+   This enumeration defines the fields supported by QContactPresence.
+   \value FieldTimestamp The value stored in this field contains the timestamp value.
+   \value FieldNickname The value stored in this field contains the nickname value.
+   \value FieldPresenceState The value stored in this field contains the presence state enumeration value.
+   \value FieldPresenceStateText The value stored in this field contains the presence state description value.
+   \value FieldPresenceStateImageUrl The value stored in this field contains the presence state image URL.
+   \value FieldCustomMessage The value stored in this field contains the user-entered custom presence message.
    \sa setTimestamp(), timestamp()
- */
-const QString QContactPresence::FieldTimestamp(QStringLiteral("Timestamp"));
-
-/*!
-   \variable QContactPresence::FieldNickname
-   The field key constant for the nickname value.
    \sa setNickname(), nickname()
- */
-const QString QContactPresence::FieldNickname(QStringLiteral("Nickname"));
-
-/*!
-   \variable QContactPresence::FieldPresenceState
-   The field key constant for the presence state enumeration value.
    \sa setPresenceState(), presenceState()
- */
-const QString QContactPresence::FieldPresenceState(QStringLiteral("PresenceState"));
-
-/*!
-   \variable QContactPresence::FieldPresenceStateText
-   The field key constant for the presence state description value.
    \sa setPresenceStateText(), presenceStateText()
- */
-const QString QContactPresence::FieldPresenceStateText(QStringLiteral("PresenceStateText"));
-
-/*!
-   \variable QContactPresence::FieldPresenceStateImageUrl
-   The field key constant for the presence state image URL.
    \sa setPresenceStateImageUrl(), presenceStateImageUrl()
- */
-const QString QContactPresence::FieldPresenceStateImageUrl(QStringLiteral("PresenceStateImageUrl"));
-
-/*!
-   \variable QContactPresence::FieldCustomMessage
-   The field key constant for the user-entered custom presence message.
    \sa setCustomMessage(), customMessage()
  */
-const QString QContactPresence::FieldCustomMessage(QStringLiteral("CustomMessage"));
 
 /*!
    \fn QContactPresence::setTimestamp(const QDateTime& updateTimestamp)
@@ -2535,53 +1933,27 @@ const QString QContactPresence::FieldCustomMessage(QStringLiteral("CustomMessage
  */
 
 /*!
-   \variable QContactGlobalPresence::DefinitionName
-   The string constant for the definition name of QContactGlobalPresence details.
+   \variable QContactGlobalPresence::Type
+   The enum constant for the type identifier of QContactGlobalPresence details.
  */
-const QString QContactGlobalPresence::DefinitionName(QStringLiteral("GlobalPresence"));
+const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::TypeGlobalPresence);
 
 /*!
-   \variable QContactGlobalPresence::FieldTimestamp
-   The field key constant for the timestamp value.
+   \enum QContactGlobalPresence::GlobalPresenceField
+   This enumeration defines the fields supported by QContactGlobalPresence.
+   \value FieldTimestamp The value stored in this field contains the timestamp value.
+   \value FieldNickname The value stored in this field contains the nickname value.
+   \value FieldPresenceState The value stored in this field contains the presence state enumeration value.
+   \value FieldPresenceStateText The value stored in this field contains the presence state description value.
+   \value FieldPresenceStateImageUrl The value stored in this field contains the presence state image URL.
+   \value FieldCustomMessage The value stored in this field contains the user-entered custom presence message.
    \sa setTimestamp(), timestamp()
- */
-const QString QContactGlobalPresence::FieldTimestamp(QStringLiteral("Timestamp"));
-
-/*!
-   \variable QContactGlobalPresence::FieldNickname
-   The field key constant for the nickname value.
    \sa setNickname(), nickname()
- */
-const QString QContactGlobalPresence::FieldNickname(QStringLiteral("Nickname"));
-
-/*!
-   \variable QContactGlobalPresence::FieldPresenceState
-   The field key constant for the presence state enumeration value.
    \sa setPresenceState(), presenceState()
- */
-const QString QContactGlobalPresence::FieldPresenceState(QStringLiteral("PresenceState"));
-
-/*!
-   \variable QContactGlobalPresence::FieldPresenceStateText
-   The field key constant for the presence state description value.
    \sa setPresenceStateText(), presenceStateText()
- */
-const QString QContactGlobalPresence::FieldPresenceStateText(QStringLiteral("PresenceStateText"));
-
-/*!
-   \variable QContactGlobalPresence::FieldPresenceStateImageUrl
-   The field key constant for the presence state image URL.
    \sa setPresenceStateImageUrl(), presenceStateImageUrl()
- */
-const QString QContactGlobalPresence::FieldPresenceStateImageUrl(QStringLiteral("PresenceStateImageUrl"));
-
-/*!
-   \variable QContactGlobalPresence::FieldCustomMessage
-
-   The field key constant for the user-entered custom presence message.
    \sa setCustomMessage(), customMessage()
  */
-const QString QContactGlobalPresence::FieldCustomMessage(QStringLiteral("CustomMessage"));
 
 /*!
    \fn QContactGlobalPresence::setTimestamp(const QDateTime& updateTimestamp)
@@ -2675,8 +2047,7 @@ const QString QContactGlobalPresence::FieldCustomMessage(QStringLiteral("CustomM
 QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState state)
 {
     QContactDetailFilter f;
-    f.setDetailDefinitionName(QContactGlobalPresence::DefinitionName,
-                              QContactGlobalPresence::FieldPresenceState);
+    f.setDetailType(QContactGlobalPresence::Type, QContactGlobalPresence::FieldPresenceState);
     f.setValue(state);
     f.setMatchFlags(QContactFilter::MatchExactly);
 
@@ -2692,18 +2063,17 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
  */
 
 /*!
-   \variable QContactPersonId::DefinitionName
-   The string constant for the definition name of QContactPersonId details.
+   \variable QContactPersonId::Type
+   The enum constant for the type identifier of QContactPersonId details.
  */
-const QString QContactPersonId::DefinitionName(QStringLiteral("Personid"));
+const QContactDetail::DetailType QContactPersonId::Type(QContactDetail::TypePersonId);
 
 /*!
-   \variable QContactPersonId::FieldPersonId
-
-   The field key constant for the value containing the personid.
+   \enum QContactPersonId::PersonIdField
+   This enumeration defines the fields supported by QContactPersonId.
+   \value FieldPersonId The value stored in this field contains the value containing the personid.
    \sa personId(), setPersonId()
  */
-const QString QContactPersonId::FieldPersonId(QStringLiteral("Personid"));
 
 /*!
    \fn QContactPersonId::personId() const
@@ -2714,7 +2084,7 @@ const QString QContactPersonId::FieldPersonId(QStringLiteral("Personid"));
 /*!
    \fn QContactPersonId::setPersonId(const QString& personid)
 
-   Sets the personid of the contact (as stored in this detail) to personid.
+   Sets the personid of the contact (as stored in this detail) to \a personid.
  */
 
 
@@ -2730,25 +2100,18 @@ const QString QContactPersonId::FieldPersonId(QStringLiteral("Personid"));
  */
 
 /*!
-    \variable QContactExtendedDetail::DefinitionName
+    \variable QContactExtendedDetail::Type
 
-    The constant string which identifies the definition of details which are extended details.
+    The constant enum which identifies the type of details which are extended details.
  */
-const QString QContactExtendedDetail::DefinitionName(QStringLiteral("ExtendedDetail"));
+const QContactDetail::DetailType QContactExtendedDetail::Type(QContactDetail::TypeExtendedDetail);
 
 /*!
-    \variable QContactExtendedDetail::FieldName
-
-    Contains the name of the extended detail.
+    \enum QContactExtendedDetail::ExtendedDetailField
+    This enumeration defines the fields supported by QContactExtendedDetail.
+    \value FieldName The value stored in this field contains the name of the extended detail.
+    \value FieldData The value stored in this field contains the data of this extended detail.
  */
-const QString QContactExtendedDetail::FieldName(QStringLiteral("Name"));
-
-/*!
-    \variable QContactExtendedDetail::FieldData
-
-    Contains the data this extended detail.
- */
-const QString QContactExtendedDetail::FieldData(QStringLiteral("Data"));
 
 /*!
     \fn void QContactExtendedDetail::setName(const QString &name)
@@ -2763,7 +2126,7 @@ const QString QContactExtendedDetail::FieldData(QStringLiteral("Data"));
  */
 
 /*!
-    \fn void QContactExtendedDetail::setDetailData(const QVariant &data)
+    \fn void QContactExtendedDetail::setData(const QVariant &data)
 
     Sets the \a data of the extended detail.
  */
@@ -2783,26 +2146,19 @@ const QString QContactExtendedDetail::FieldData(QStringLiteral("Data"));
  */
 
 /*!
-    \variable QContactVersion::DefinitionName
+    \variable QContactVersion::Type
 
     The constant string which identifies the definition of details which are extended details.
  */
-const QString QContactVersion::DefinitionName(QStringLiteral("Version"));
+const QContactDetail::DetailType QContactVersion::Type(QContactDetail::TypeVersion);
 
 /*!
-    \variable QContactVersion::FieldSequenceNumber
-
-    Contains the integer sequence number of a QContact object.
- */
-const QString QContactVersion::FieldSequenceNumber(QStringLiteral("SequenceNumber"));
-
-/*!
-    \variable QContactVersion::FieldExtendedVersion
-
-    Contains the extended version of a QContact object. It can be used to represent the version stored
+    \enum QContactVersion::VersionField
+    This enumeration defines the fields supported by QContactVersion.
+    \value FieldSequenceNumber Contains the integer sequence number of a QContact object.
+    \value FieldExtendedVersion Contains the extended version of a QContact object. It can be used to represent the version stored
     in the back-end in cases when the back-end specific version cannot be represented only by a sequence number.
  */
-const QString QContactVersion::FieldExtendedVersion(QStringLiteral("ExtendedVersion"));
 
 /*!
     \fn void QContactVersion::setSequenceNumber(int sequenceNumber)
@@ -2837,8 +2193,7 @@ const QString QContactVersion::FieldExtendedVersion(QStringLiteral("ExtendedVers
 QContactFilter QContactDisplayLabel::match(const QString &label)
 {
     QContactDetailFilter f;
-    f.setDetailDefinitionName(QContactDisplayLabel::DefinitionName,
-                              QContactDisplayLabel::FieldLabel);
+    f.setDetailType(QContactDisplayLabel::Type, QContactDisplayLabel::FieldLabel);
     f.setValue(label);
     f.setMatchFlags(QContactFilter::MatchContains);
 
@@ -2856,12 +2211,12 @@ QContactFilter QContactName::match(const QString &firstName, const QString &last
         if (lastName.isEmpty()) {
             // Matches contacts that have a name
             QContactDetailFilter f;
-            f.setDetailDefinitionName(QContactName::DefinitionName);
+            f.setDetailType(QContactName::Type);
             return f;
         } else {
             // Contact with matching lastname
             QContactDetailFilter f;
-            f.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
+            f.setDetailType(QContactName::Type, QContactName::FieldLastName);
             f.setValue(lastName);
             f.setMatchFlags(QContactFilter::MatchContains);
             return f;
@@ -2870,7 +2225,7 @@ QContactFilter QContactName::match(const QString &firstName, const QString &last
         if (lastName.isEmpty()) {
             // Contact with matching firstName
             QContactDetailFilter f;
-            f.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+            f.setDetailType(QContactName::Type, QContactName::FieldFirstName);
             f.setValue(firstName);
             f.setMatchFlags(QContactFilter::MatchContains);
             return f;
@@ -2880,11 +2235,11 @@ QContactFilter QContactName::match(const QString &firstName, const QString &last
 
             // Best we can currently do is "and" and assume there's only one name per contact
             QContactDetailFilter f;
-            f.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+            f.setDetailType(QContactName::Type, QContactName::FieldFirstName);
             f.setValue(firstName);
             f.setMatchFlags(QContactFilter::MatchContains);
             QContactDetailFilter l;
-            l.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
+            l.setDetailType(QContactName::Type, QContactName::FieldLastName);
             l.setValue(lastName);
             l.setMatchFlags(QContactFilter::MatchContains);
 
@@ -2900,16 +2255,16 @@ QContactFilter QContactName::match(const QString &firstName, const QString &last
 QContactFilter QContactName::match(const QString &name)
 {
     QContactUnionFilter nameFilter;
-    QStringList nameFields;
+    QList<int> nameFields;
     nameFields << QContactName::FieldCustomLabel
             << QContactName::FieldFirstName
             << QContactName::FieldLastName
             << QContactName::FieldMiddleName
             << QContactName::FieldPrefix
             << QContactName::FieldSuffix;
-    foreach (const QString& fieldName, nameFields) {
+    foreach (int fieldName, nameFields) {
         QContactDetailFilter subFilter;
-        subFilter.setDetailDefinitionName(QContactName::DefinitionName, fieldName);
+        subFilter.setDetailType(QContactName::Type, fieldName);
         subFilter.setValue(name);
         subFilter.setMatchFlags(QContactFilter::MatchContains);
         nameFilter.append(subFilter);
@@ -2924,7 +2279,7 @@ QContactFilter QContactName::match(const QString &name)
 QContactFilter QContactEmailAddress::match(const QString &emailAddress)
 {
     QContactDetailFilter l;
-    l.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    l.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     l.setValue(emailAddress);
     l.setMatchFlags(QContactFilter::MatchContains);
     return l;
@@ -2937,7 +2292,7 @@ QContactFilter QContactEmailAddress::match(const QString &emailAddress)
 QContactFilter QContactPhoneNumber::match(const QString &number)
 {
     QContactDetailFilter l;
-    l.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    l.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     l.setValue(number);
     l.setMatchFlags(QContactFilter::MatchPhoneNumber);
     return l;

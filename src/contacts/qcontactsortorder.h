@@ -43,10 +43,12 @@
 #define QCONTACTSORTORDER_H
 
 #include <qcontactsglobal.h>
+#include <qcontactdetail.h>
 
 #include <QString>
 #include <QSharedData>
 #include <QList>
+#include "qcontact.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -66,14 +68,14 @@ public:
     };
 
     /* Mutators */
-    void setDetailDefinitionName(const QString& definitionName, const QString& fieldName);
+    void setDetailType(QContactDetail::DetailType type, int field);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);
 
     /* Accessors */
-    QString detailDefinitionName() const;
-    QString detailFieldName() const;
+    QContactDetail::DetailType detailType() const;
+    int detailField() const;
     BlankPolicy blankPolicy() const;
     Qt::SortOrder direction() const;
     Qt::CaseSensitivity caseSensitivity() const;

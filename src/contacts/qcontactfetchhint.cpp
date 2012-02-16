@@ -65,8 +65,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   The fetch hint contains:
   \list
-   \o a list of detail definition names which the client is interested
-  in (empty if interested in all detail definitions)
+   \o a list of detail types which the client is interested
+  in (empty if interested in all detail types)
    \o a list of relationship types which the client is interested in
   (empty if interested in all relationships)
    \o some optimization flags which allow the client to tell the backend if they are
@@ -126,29 +126,29 @@ QContactFetchHint& QContactFetchHint::operator=(const QContactFetchHint& other)
 }
 
 /*!
-  Returns the list of definition names that identify detail definitions of which details
+  Returns the list of detail types that identify which detail type
   the manager should (at a minimum) retrieve when fetching contacts.
   This hint may be ignored by the backend, in which case it will return the full set of details for
   each contact retrieved.
 
-  \sa setDetailDefinitionsHint()
+  \sa setDetailTypesHint()
  */
-QStringList QContactFetchHint::detailDefinitionsHint() const
+QList<QContactDetail::DetailType> QContactFetchHint::detailTypesHint() const
 {
-    return d.constData()->m_definitionsHint;
+    return d.constData()->m_typesHint;
 }
 
 /*!
-  Sets the list of definition names that identify detail definitions of which details
-  the manager should (at a minimum) retrieve when fetching contacts to \a definitionNames.
+  Sets the list of detail types that identify which detail type
+  the manager should (at a minimum) retrieve when fetching contacts to \a types.
   This hint may be ignored by the backend, in which case it will return the full set of details for
   each contact retrieved.
 
-  \sa detailDefinitionsHint()
+  \sa detailTypesHint()
  */
-void QContactFetchHint::setDetailDefinitionsHint(const QStringList& definitionNames)
+void QContactFetchHint::setDetailTypesHint(const QList<QContactDetail::DetailType> &types)
 {
-    d->m_definitionsHint = definitionNames;
+    d->m_typesHint = types;
 }
 
 /*!
@@ -280,8 +280,12 @@ void QContactFetchHint::setMaxCountHint(int count)
 QDataStream& operator<<(QDataStream& out, const QContactFetchHint& hint)
 {
     quint8 formatVersion = 2; // Version of QDataStream format for QContactFetchHint
+    QList<quint32> detailTypeHintHelper;
+    foreach (QContactDetail::DetailType hintType, hint.detailTypesHint())
+        detailTypeHintHelper.append(static_cast<quint32>(hintType));
+
     return out << formatVersion
-               << hint.detailDefinitionsHint()
+               << detailTypeHintHelper
                << hint.relationshipTypesHint()
                << static_cast<quint32>(hint.optimizationHints())
                << hint.preferredImageSize()
@@ -294,12 +298,16 @@ QDataStream& operator>>(QDataStream& in, QContactFetchHint& hint)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1 || formatVersion == 2) {
-        QStringList detailDefinitionHints;
+        QList<quint32> detailTypeHintsHelper;
+        QList<QContactDetail::DetailType> detailTypeHints;
         QStringList relationshipTypeHints;
         quint32 optimizations;
         QSize dimensions;
-        in >> detailDefinitionHints >> relationshipTypeHints >> optimizations >> dimensions;
-        hint.setDetailDefinitionsHint(detailDefinitionHints);
+        in >> detailTypeHintsHelper >> relationshipTypeHints >> optimizations >> dimensions;
+        foreach (quint32 hintType, detailTypeHintsHelper)
+            detailTypeHints.append(QContactDetail::DetailType(hintType));
+
+        hint.setDetailTypesHint(detailTypeHints);
         hint.setRelationshipTypesHint(relationshipTypeHints);
         hint.setOptimizationHints(QContactFetchHint::OptimizationHints(optimizations));
         hint.setPreferredImageSize(dimensions);
@@ -325,7 +333,7 @@ QDataStream& operator>>(QDataStream& in, QContactFetchHint& hint)
 QDebug operator<<(QDebug dbg, const QContactFetchHint& hint)
 {
     dbg.nospace() << "QContactFetchHint("
-                  << "detailDefinitionsHint=" << hint.detailDefinitionsHint() << ","
+                  << "detailTypeHint=" << hint.detailTypesHint() << ","
                   << "relationshipTypesHint=" << hint.relationshipTypesHint() << ","
                   << "optimizationHints=" << static_cast<quint32>(hint.optimizationHints()) << ","
                   << "preferredImageSize=" << hint.preferredImageSize()

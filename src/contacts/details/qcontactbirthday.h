@@ -54,9 +54,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactBirthday : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactBirthday, "Birthday")
-    const static QString FieldBirthday;
-    const static QString FieldCalendarId;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactBirthday)
+#else
+    static const DetailType Type;
+#endif
+
+    enum BirthdayField {
+        FieldBirthday = 0,
+        FieldCalendarId
+    };
 
     void setDate(const QDate& date) {setValue(FieldBirthday, date);}
     QDate date() const {return value<QDate>(FieldBirthday);}

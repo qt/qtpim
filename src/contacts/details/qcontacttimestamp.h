@@ -54,9 +54,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactTimestamp : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTimestamp, "Timestamp")
-    const static QString FieldModificationTimestamp;
-    const static QString FieldCreationTimestamp;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactTimestamp)
+#else
+    static const DetailType Type;
+#endif
+
+    enum TimestampField {
+        FieldModificationTimestamp = 0,
+        FieldCreationTimestamp
+    };
 
     void setLastModified(const QDateTime& timestamp) {setValue(FieldModificationTimestamp, timestamp);}
     QDateTime lastModified() const {return value<QDateTime>(FieldModificationTimestamp);}

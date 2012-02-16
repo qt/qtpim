@@ -52,9 +52,16 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactVersion : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactVersion, "Version")
-    const static QString FieldSequenceNumber;
-    const static QString FieldExtendedVersion;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactVersion)
+#else
+    static const DetailType Type;
+#endif
+
+    enum VersionField {
+        FieldSequenceNumber = 0,
+        FieldExtendedVersion
+    };
 
     void setSequenceNumber(int sequenceNumber) {setValue(FieldSequenceNumber, sequenceNumber);};
     int sequenceNumber() const {return value(FieldSequenceNumber).toInt();};

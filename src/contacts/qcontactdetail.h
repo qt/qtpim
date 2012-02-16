@@ -68,8 +68,42 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactDetail& detai
 class Q_CONTACTS_EXPORT QContactDetail
 {
 public:
+    enum DetailType {
+        TypeUndefined = 0,
+        TypeAddress,
+        TypeAnniversary,
+        TypeAvatar,
+        TypeBirthday,
+        TypeDisplayLabel,
+        TypeEmailAddress,
+        TypeExtendedDetail,
+        TypeFamily,
+        TypeFavorite,
+        TypeGender,
+        TypeGeoLocation,
+        TypeGlobalPresence,
+        TypeGuid,
+        TypeHobby,
+        TypeName,
+        TypeNickname,
+        TypeNote,
+        TypeOnlineAccount,
+        TypeOrganization,
+        TypePersonId,
+        TypePhoneNumber,
+        TypePresence,
+        TypeRingtone,
+        TypeSyncTarget,
+        TypeTag,
+        TypeThumbnail,
+        TypeTimestamp,
+        TypeType,
+        TypeUrl,
+        TypeVersion
+    };
+
     QContactDetail();
-    explicit QContactDetail(const QString& definitionName);
+    explicit QContactDetail(DetailType type);
     ~QContactDetail();
 
     QContactDetail(const QContactDetail& other);
@@ -84,47 +118,53 @@ public:
 
     AccessConstraints accessConstraints() const;
 
-    // Predefined attributes
-    const static QString FieldContext;
-    const static QString ContextHome;
-    const static QString ContextWork;
-    const static QString ContextOther;
-    const static QString FieldDetailUri;
-    const static QString FieldLinkedDetailUris;
+    enum DetailContext {
+        ContextHome = 0,
+        ContextWork,
+        ContextOther
+    };
+
+    enum DetailField {
+        FieldContext = 5000, //to avoid clashing with other detail field values from leaf classes
+        FieldDetailUri,
+        FieldLinkedDetailUris
+    };
 
     bool operator==(const QContactDetail& other) const;
     bool operator!=(const QContactDetail& other) const {return !(other == *this);}
 
-    QString definitionName() const;
+    DetailType type() const;
     bool isEmpty() const;
 
     int key() const;
     void resetKey();
 
-    bool setValue(const QString& key, const QVariant& value);
-    bool removeValue(const QString& key);
-    bool hasValue(const QString& key) const;
+    bool setValue(int field, const QVariant& value);
+    bool removeValue(int field);
+    bool hasValue(int field) const;
 
-    QVariantMap values() const;
-    QVariant value(const QString& key) const;
-    template <typename T> T value(const QString& key) const
+    QMap<int, QVariant> values() const;
+    QVariant value(int field) const;
+    template <typename T> T value(int field) const
     {
-        return value(key).value<T>();
+        return value(field).value<T>();
     }
 
-    void setContexts(const QStringList& contexts)
+    void setContexts(int context)
     {
-        setValue(FieldContext, contexts);
+        QList<int> contexts;
+        contexts << context;
+        setValue(FieldContext, QVariant::fromValue(contexts));
     }
 
-    void setContexts(const QString& context)
+    void setContexts(const QList<int>& contexts)
     {
-        setValue(FieldContext, QStringList(context));
+        setValue(FieldContext, QVariant::fromValue(contexts));
     }
 
-    QStringList contexts() const
+    QList<int> contexts() const
     {
-        return value<QStringList>(FieldContext);
+        return value< QList<int> >(FieldContext);
     }
 
     void setDetailUri(const QString& detailUri)
@@ -153,8 +193,8 @@ public:
     }
 
 protected:
-    QContactDetail(const QContactDetail &other, const QString& expectedDefinitionId);
-    QContactDetail& assign(const QContactDetail &other, const QString& expectedDefinitionId);
+    QContactDetail(const QContactDetail &other, DetailType expectedType);
+    QContactDetail& assign(const QContactDetail &other, DetailType expectedType);
 
 private:
     friend class QContact;
@@ -172,11 +212,11 @@ Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactDetail& detail);
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetail::AccessConstraints)
 
-#define Q_DECLARE_CUSTOM_CONTACT_DETAIL(className, definitionNameString) \
-    className() : QContactDetail(DefinitionName) {} \
-    className(const QContactDetail &field) : QContactDetail(field, DefinitionName) {} \
-    className& operator=(const QContactDetail &other) {assign(other, DefinitionName); return *this;} \
-    const static QString DefinitionName;
+#define Q_DECLARE_CUSTOM_CONTACT_DETAIL(className) \
+    className() : QContactDetail(Type) {} \
+    className(const QContactDetail &field) : QContactDetail(field, Type) {} \
+    className& operator=(const QContactDetail &other) {assign(other, Type); return *this;} \
+    static const DetailType Type;
 
 QTCONTACTS_END_NAMESPACE
 

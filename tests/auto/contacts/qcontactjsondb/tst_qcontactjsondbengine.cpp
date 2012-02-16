@@ -289,7 +289,9 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     QContactPhoneNumber phoneNumberDetail;
     testContact.removeDetail(&phoneNumberDetail);
 
-    phoneNumberDetail.setSubTypes(QContactPhoneNumber::SubTypeMobile);
+    QList<int> currSubtype;
+    currSubtype << QContactPhoneNumber::SubTypeMobile;
+    phoneNumberDetail.setSubTypes(currSubtype);
     phoneNumberDetail.setNumber("+358507654322");
     testContact.saveDetail(&phoneNumberDetail);
     cm.synthesizeContactDisplayLabel(&testContact);
@@ -506,8 +508,8 @@ void tst_QContactJsondbEngine::testSaveContact() {
 
     QCOMPARE(cm.contactIds().size(), originalCount + 1);
     QCOMPARE(testContact.id(), expected.id());
-    QCOMPARE(testContact.detail(QContactName::DefinitionName), expected.detail(QContactName::DefinitionName));
-    QCOMPARE(testContact.detail(QContactPersonId::DefinitionName), expected.detail(QContactPersonId::DefinitionName));
+    QCOMPARE(testContact.detail(QContactName::Type), expected.detail(QContactName::Type));
+    QCOMPARE(testContact.detail(QContactPersonId::Type), expected.detail(QContactPersonId::Type));
 }
 
 void tst_QContactJsondbEngine::testSaveContacts() {
@@ -562,7 +564,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     // retrieve contacts filtering by first name
     QString firstName = "li";
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchContains);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
@@ -586,7 +588,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by Last name
     QString lastName = "o";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldLastName);
     dfil.setValue(lastName);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -608,7 +610,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by phone number
     QString phoneNr = "6543";
-    dfil.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    dfil.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     dfil.setValue(phoneNr);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -628,7 +630,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by email
     QString email = "on";
-    dfil.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    dfil.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     dfil.setValue(email);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -654,7 +656,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by first name
     firstName = "Julie";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchExactly);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchExactly);
@@ -674,7 +676,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by Last name
     lastName = "Thomson";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldLastName);
     dfil.setValue(lastName);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchExactly);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -693,7 +695,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by phone number
     phoneNr = "+358507654321";
-    dfil.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    dfil.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     dfil.setValue(phoneNr);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchExactly);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -712,7 +714,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by email
     email = "Angelina.Row@ovi.com";
-    dfil.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    dfil.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     dfil.setValue(email);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchExactly);
     contacts = myContactManager.contacts(dfil, sortOrders);
@@ -787,7 +789,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by first name
     firstName = "Jul";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchStartsWith);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchStartsWith);
@@ -809,7 +811,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
 
     // retrieve contacts filtering by first name
     firstName = "ie";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchEndsWith);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchEndsWith);
@@ -852,7 +854,7 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
 
     // sort order
     QContactSortOrder sortOrder;
-    sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    sortOrder.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     QList<QContactSortOrder> sortOrders;
     sortOrders.append(sortOrder);
 
@@ -876,7 +878,7 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     }
 
     // now sort last names alphabetically
-    sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldLastName);
+    sortOrder.setDetailType(QContactName::Type, QContactName::FieldLastName);
     sortOrders.clear();
     sortOrders.append(sortOrder);
     contacts = myContactManager.contacts(filter, sortOrders);
@@ -899,7 +901,7 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     }
 
     // now sort emails alphabetically
-    sortOrder.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    sortOrder.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     sortOrders.clear();
     sortOrders.append(sortOrder);
     contacts = myContactManager.contacts(filter, sortOrders);
@@ -923,12 +925,12 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     }
 
     // retrieve contacts filtering them by first name, then sort the results alphabetically
-    sortOrder.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    sortOrder.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     sortOrders.clear();
     sortOrders.append(sortOrder);
     QString firstName = "li";
     QContactDetailFilter dfil;
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchContains);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
@@ -947,11 +949,11 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     }
 
     // now sort the filtered results by email address
-    sortOrder.setDetailDefinitionName(QContactEmailAddress::DefinitionName, QContactEmailAddress::FieldEmailAddress);
+    sortOrder.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     sortOrders.clear();
     sortOrders.append(sortOrder);
     firstName = "";
-    dfil.setDetailDefinitionName(QContactName::DefinitionName, QContactName::FieldFirstName);
+    dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
     dfil.setMatchFlags(QContactFilter::MatchContains);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);

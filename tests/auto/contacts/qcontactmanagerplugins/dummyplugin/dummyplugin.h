@@ -178,9 +178,9 @@ public:
         return false;
     }
 
-    virtual QStringList supportedContactTypes() const
+    virtual QList<QContactType::TypeValues> supportedContactTypes() const
     {
-        return QStringList();
+        return QList<QContactType::TypeValues>();
     }
 
 };

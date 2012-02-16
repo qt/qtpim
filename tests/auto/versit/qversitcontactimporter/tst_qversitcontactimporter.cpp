@@ -187,7 +187,7 @@ void tst_QVersitContactImporter::testName()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QContactName name = (QContactName)contact.detail(QContactName::DefinitionName);
+    QContactName name = (QContactName)contact.detail(QContactName::Type);
     QCOMPARE(name.lastName(),value[0]);
     QCOMPARE(name.firstName(),value[1]);
     QCOMPARE(name.middleName(),value[2]);
@@ -208,7 +208,7 @@ void tst_QVersitContactImporter::testName()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    QList<QContactDetail> names = contact.details(QContactName::DefinitionName);
+    QList<QContactDetail> names = contact.details(QContactName::Type);
     QCOMPARE(names.count(),1);
     // anotherValue should be discarded, so check for value
     name = (QContactName)names[0];
@@ -297,10 +297,10 @@ void tst_QVersitContactImporter::testAddress()
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
     address = contact.detail<QContactAddress>();
-    QStringList contexts = address.contexts();
+    QList<int> contexts = address.contexts();
     QVERIFY(contexts.contains(QContactDetail::ContextHome));
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
-    QStringList subTypes = address.subTypes();
+    QList<int> subTypes = address.subTypes();
     QVERIFY(subTypes.contains(QContactAddress::SubTypeDomestic));
     QVERIFY(subTypes.contains(QContactAddress::SubTypeInternational));
     QVERIFY(subTypes.contains(QContactAddress::SubTypePostal));
@@ -372,7 +372,7 @@ void tst_QVersitContactImporter::testOrganizationTitle()
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
     QList<QContactDetail> organizationDetails =
-        contact.details(QContactOrganization::DefinitionName);
+        contact.details(QContactOrganization::Type);
     QCOMPARE(organizationDetails.count(), 1);
     QContactOrganization organization = static_cast<QContactOrganization>(organizationDetails[0]);
     QCOMPARE(organization.title(),titleValue);
@@ -384,7 +384,7 @@ void tst_QVersitContactImporter::testOrganizationTitle()
     document.addProperty(property);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    organizationDetails = contact.details(QContactOrganization::DefinitionName);
+    organizationDetails = contact.details(QContactOrganization::Type);
     QCOMPARE(organizationDetails.count(), 2);
     QContactOrganization firstOrganization =
         static_cast<QContactOrganization>(organizationDetails[0]);
@@ -400,7 +400,7 @@ void tst_QVersitContactImporter::testOrganizationTitle()
     document.addProperty(property);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    organizationDetails = contact.details(QContactOrganization::DefinitionName);
+    organizationDetails = contact.details(QContactOrganization::Type);
     QCOMPARE(organizationDetails.count(), 2);
     firstOrganization = static_cast<QContactOrganization>(organizationDetails[0]);
     QCOMPARE(firstOrganization.title(),titleValue);
@@ -499,7 +499,7 @@ void tst_QVersitContactImporter::testTel()
     const QContactPhoneNumber& phone = contact.detail<QContactPhoneNumber>();
     QCOMPARE(phone.number(),QString(value));
 
-    const QStringList subTypes = phone.subTypes();
+    const QList<int> subTypes = phone.subTypes();
     QCOMPARE(subTypes.count(),8);
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeVoice));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeMobile));
@@ -510,7 +510,7 @@ void tst_QVersitContactImporter::testTel()
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeBulletinBoardSystem));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypePager));
 
-    const QStringList contexts = phone.contexts();
+    const QList<int> contexts = phone.contexts();
     QCOMPARE(contexts.count(),2);
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
     QVERIFY(contexts.contains(QContactDetail::ContextHome));
@@ -528,7 +528,7 @@ void tst_QVersitContactImporter::testEmail()
     QContact contact = mImporter->contacts().first();
     QContactEmailAddress email = contact.detail<QContactEmailAddress>();
     QCOMPARE(email.emailAddress(),value);
-    const QStringList contexts = email.contexts();
+    const QList<int> contexts = email.contexts();
     QCOMPARE(contexts.count(),1);
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
 
@@ -547,7 +547,7 @@ void tst_QVersitContactImporter::testUrl()
     QContact contact = mImporter->contacts().first();
     QContactUrl url = contact.detail<QContactUrl>();
     QCOMPARE(url.url(),value);
-    const QStringList contexts = url.contexts();
+    const QList<int> contexts = url.contexts();
     QCOMPARE(contexts.count(),1);
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
 }
@@ -757,7 +757,7 @@ void tst_QVersitContactImporter::testGender()
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
     QContactGender  gender = contact.detail<QContactGender >();
-    QCOMPARE(gender.gender(),val);
+    QCOMPARE(gender.gender(),QContactGender::GenderMale);
 }
 
 void tst_QVersitContactImporter::testNickname()
@@ -771,7 +771,7 @@ void tst_QVersitContactImporter::testNickname()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QContactNickname nickName = (QContactNickname)contact.detail(QContactNickname::DefinitionName);
+    QContactNickname nickName = (QContactNickname)contact.detail(QContactNickname::Type);
     QCOMPARE(nickName.nickname(), QLatin1String("Homie"));
 
     // comma separated values should generate multiple nickname fields
@@ -926,7 +926,7 @@ void tst_QVersitContactImporter::testAvatarInvalid()
     document.addProperty(property);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QCOMPARE(contact.details(QContactAvatar::DefinitionName).size(), 0);
+    QCOMPARE(contact.details(QContactAvatar::Type).size(), 0);
 
     document.clear();
     document.setType(QVersitDocument::VCard30Type);
@@ -936,7 +936,7 @@ void tst_QVersitContactImporter::testAvatarInvalid()
     document.addProperty(property);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    QCOMPARE(contact.details(QContactAvatar::DefinitionName).size(), 0);
+    QCOMPARE(contact.details(QContactAvatar::Type).size(), 0);
 }
 
 void tst_QVersitContactImporter::testGeo()
@@ -953,7 +953,7 @@ void tst_QVersitContactImporter::testGeo()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QContactGeoLocation geo = (QContactGeoLocation)contact.detail(QContactGeoLocation::DefinitionName);
+    QContactGeoLocation geo = (QContactGeoLocation)contact.detail(QContactGeoLocation::Type);
     QString str;
     str.setNum(geo.latitude(),'.',2);
     QCOMPARE(str,val[0]);
@@ -972,7 +972,7 @@ void tst_QVersitContactImporter::testGeo()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    geo = (QContactGeoLocation)contact.detail(QContactGeoLocation::DefinitionName);
+    geo = (QContactGeoLocation)contact.detail(QContactGeoLocation::Type);
     str.setNum(geo.latitude(),'.',2);
     QCOMPARE(str,val[0]);
     str.setNum(geo.longitude(),'.',2);
@@ -990,7 +990,7 @@ void tst_QVersitContactImporter::testNote()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QContactNote note = (QContactNote)contact.detail(QContactNote::DefinitionName);
+    QContactNote note = (QContactNote)contact.detail(QContactNote::Type);
     QCOMPARE(note.note(),val);
 
     // Multiline value and quoted printable encoding
@@ -1006,7 +1006,7 @@ void tst_QVersitContactImporter::testNote()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    note = (QContactNote)contact.detail(QContactNote::DefinitionName);
+    note = (QContactNote)contact.detail(QContactNote::Type);
     QCOMPARE(note.note(),val);
 }
 
@@ -1021,7 +1021,7 @@ void tst_QVersitContactImporter::testCustomLabel()
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
     QContactName name =
-            (QContactName)contact.detail(QContactName::DefinitionName);
+            (QContactName)contact.detail(QContactName::Type);
     QCOMPARE(name.customLabel(),val);
 }
 
@@ -1095,7 +1095,7 @@ void tst_QVersitContactImporter::testOnlineAccount()
     QContact contact = mImporter->contacts().first();
     QContactOnlineAccount onlineAccount = contact.detail<QContactOnlineAccount>();
     QCOMPARE(onlineAccount.accountUri(),accountUri);
-    QStringList subTypes = onlineAccount.subTypes();
+    QList<int> subTypes = onlineAccount.subTypes();
     QCOMPARE(subTypes.count(),1);
     QVERIFY(subTypes.first() == QContactOnlineAccount::SubTypeSip);
 
@@ -1217,9 +1217,9 @@ void tst_QVersitContactImporter::testOnlineAccount()
     QVERIFY(onlineAccounts[5].accountUri() == "f");
     QVERIFY(onlineAccounts[6].protocol() == QContactOnlineAccount::ProtocolSkype);
     QVERIFY(onlineAccounts[6].accountUri() == "g");
-    QVERIFY(onlineAccounts[7].protocol().isEmpty());
+    QVERIFY(onlineAccounts[7].protocol() == QContactOnlineAccount::ProtocolUnknown);
     QVERIFY(onlineAccounts[7].accountUri() == "h");
-    QVERIFY(onlineAccounts[8].protocol().isEmpty());
+    QVERIFY(onlineAccounts[8].protocol() == QContactOnlineAccount::ProtocolUnknown);
     QVERIFY(onlineAccounts[8].accountUri() == "i");
 }
 
@@ -1235,7 +1235,7 @@ void tst_QVersitContactImporter::testFamily()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     QContact contact = mImporter->contacts().first();
-    QContactFamily family = (QContactFamily)contact.detail(QContactFamily::DefinitionName);
+    QContactFamily family = (QContactFamily)contact.detail(QContactFamily::Type);
     QStringList children = family.children();
     QCOMPARE(children.count(),1); // ensure no other kids in list
     QCOMPARE(family.spouse(),QString()); // make sure no wife
@@ -1251,7 +1251,7 @@ void tst_QVersitContactImporter::testFamily()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    family = (QContactFamily)contact.detail(QContactFamily::DefinitionName);
+    family = (QContactFamily)contact.detail(QContactFamily::Type);
     children = family.children();
     QCOMPARE(children.count(),0); // list should be empty as you know
     QCOMPARE(family.spouse(),val); // make sure thats your wife:(
@@ -1277,7 +1277,7 @@ void tst_QVersitContactImporter::testFamily()
     document.addProperty(nameProperty);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
     contact = mImporter->contacts().first();
-    family = (QContactFamily)contact.detail(QContactFamily::DefinitionName);
+    family = (QContactFamily)contact.detail(QContactFamily::Type);
     children = family.children();
     QCOMPARE(children.count(),3); // too late , count them now.
     // painfull but ensure they are your kids
@@ -1404,7 +1404,7 @@ void tst_QVersitContactImporter::testPropertyHandler()
     QCOMPARE(mPropertyHandler->mUnknownProperties.size(), 0);
     QCOMPARE(mPropertyHandler->mPreProcessedProperties.size(), 1);
     QCOMPARE(mPropertyHandler->mPostProcessedProperties.size(), 0);
-    QContactDetail nameDetail = contact.detail(QContactName::DefinitionName);
+    QContactDetail nameDetail = contact.detail(QContactName::Type);
     QVERIFY(nameDetail.isEmpty());
 
     // One unknown property

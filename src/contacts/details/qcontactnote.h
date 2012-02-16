@@ -54,8 +54,15 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactNote : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactNote, "Note")
-    const static QString FieldNote;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactNote)
+#else
+    static const DetailType Type;
+#endif
+
+    enum NoteField {
+        FieldNote = 0
+    };
 
     void setNote(const QString& note) {setValue(FieldNote, note);}
     QString note() const {return value(FieldNote).toString();}

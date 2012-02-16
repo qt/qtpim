@@ -55,7 +55,7 @@ class  QDeclarativeContactBirthday : public QDeclarativeContactDetail
     Q_ENUMS(FieldType)
 public:
     enum FieldType {
-        Birthday = 0
+        Birthday = QContactBirthday::FieldBirthday
     };
     QDeclarativeContactBirthday(QObject* parent = 0)
         :QDeclarativeContactDetail(parent)
@@ -64,21 +64,11 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(detailChanged()));
     }
 
-    ContactDetailType detailType() const
+    DetailType detailType() const
     {
         return QDeclarativeContactDetail::Birthday;
     }
-    static QString fieldNameFromFieldType(int fieldType)
-    {
-        switch (fieldType) {
-        case Birthday:
-            return QContactBirthday::FieldBirthday;
-        default:
-            break;
-        }
-        qmlInfo(0) << tr("Unknown field type.");
-        return QString();
-    }
+
     void setBirthday(const QDateTime& v)
     {
         if (!readOnly() && v != birthday()) {

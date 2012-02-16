@@ -55,13 +55,20 @@ QTCONTACTS_BEGIN_NAMESPACE
 class Q_CONTACTS_EXPORT QContactName : public QContactDetail
 {
 public:
-    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactName, "Name")
-    const static QString FieldPrefix;
-    const static QString FieldFirstName;
-    const static QString FieldMiddleName;
-    const static QString FieldLastName;
-    const static QString FieldSuffix;
-    const static QString FieldCustomLabel;
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(QContactName)
+#else
+    static const DetailType Type;
+#endif
+
+    enum NameField {
+        FieldPrefix = 0,
+        FieldFirstName,
+        FieldMiddleName,
+        FieldLastName,
+        FieldSuffix,
+        FieldCustomLabel
+    };
 
     QString prefix() const {return value(FieldPrefix).toString();}
     QString firstName() const {return value(FieldFirstName).toString();}

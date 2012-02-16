@@ -115,12 +115,12 @@ public:
     virtual bool waitForRequestFinished(QContactAbstractRequest *req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QString &contactType) const;
-    virtual bool isRelationshipTypeSupported(const QString &relationshipType, const QString &contactType) const;
+    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const;
+    virtual bool isRelationshipTypeSupported(const QString &relationshipType, const QContactType::TypeValues contactType) const;
     virtual bool isFilterSupported(const QContactFilter &filter) const;
     virtual QList<QVariant::Type> supportedDataTypes() const;
-    virtual QStringList supportedContactTypes() const;
-    virtual QStringList supportedContactDetailTypes() const;
+    virtual QList<QContactType::TypeValues> supportedContactTypes() const;
+    virtual QList<QContactDetail::DetailType> supportedContactDetailTypes() const;
 
 Q_SIGNALS:
     void dataChanged();
@@ -183,7 +183,7 @@ public:
 
     // This is the V1 function - c++ overloading rules require this here, or to use "using"
     bool saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error* error);
-    virtual bool saveContacts(QList<QContact> *contacts,  const QStringList &definitionMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
+    virtual bool saveContacts(QList<QContact> *contacts,  const QList<QContactDetail::DetailType> &typeMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
     // Again, this is the v1 function
     QList<QContact> contacts(const QContactFilter &filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint &fetchHint, QContactManager::Error* error) const;

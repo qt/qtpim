@@ -53,11 +53,21 @@ ContactsSavingTestCase {
         onExportCompleted: {
             exportErrorCode = error;
             exportFileName = url;
+            exportResults.append({"error": error, "url": exportFileName});
         }
         onImportCompleted: {
             importErrorCode = error;
             importFileName = url;
+            importResults.append({"error": error, "url": importFileName});
         }
+    }
+
+    ListModel {
+        id: exportResults
+    }
+
+    ListModel {
+        id: importResults
     }
 
     Contact {
@@ -79,7 +89,6 @@ ContactsSavingTestCase {
     property int importErrorCode
     property string importFileName
 
-    // Base for vcard file names.
     property string vcardFileNameBase: 'tst_contacts_export_import_signaling_e2e_'
 
     function test_successfulExportEmitsSignalProperly() {
@@ -110,20 +119,30 @@ ContactsSavingTestCase {
         model.exportContacts(vcardFilePath, ["Sync"]);
 
         // Make immediate re-export which overlaps with the previous one and causes error.
-        // We should get immediate singal with error showing the not ready yet.
         model.exportContacts(vcardFilePath2, ["Sync"]);
-        waitForTargetSignal(signalSpy);
-        compare(exportErrorCode, ContactModel.ExportNotReadyError, 'signal notready state error');
-        compare(exportFileName, vcardFilePath2, 'signal notready state filename');
 
-        // Check if the first export enters finished state properly.
+        // Wait for both exports completed.
         waitForTargetSignal(signalSpy);
-        compare(exportErrorCode, ContactModel.ExportNoError, 'signal finished state error');
-        compare(exportFileName, vcardFilePath, 'signal finished state filename');
+        waitForTargetSignal(signalSpy);
+
+        // It is possible that threads get scheduled so that both exports succeed.
+        if ((exportResults.get(0).error === ContactModel.ExportNoError) && (exportResults.get(1).error === ContactModel.ExportNoError)) {
+            console.log("Overlapping exports did not overlap. This may be ok but error on overlapping did not get tested!")
+        } else {
+            // We got overlapping but it is a bit complex to verify since we do not know for sure in which order signals did arrive.
+             for (var i = 0; i < exportResults.count; i++) {
+                if (exportResults.get(i).error === ContactModel.ExportNoError) {
+                    compare(exportResults.get(i).url, vcardFilePath, 'signal finished state filename');
+                } else {
+                    compare(exportResults.get(i).error, ContactModel.ExportNotReadyError, 'signal not ready state error');
+                    compare(exportResults.get(i).url, vcardFilePath2, 'signal not ready state filename');
+                }
+            }
+        }
     }
 
 
-    function test_successfulImportEmitsSingalProperly() {
+    function test_successfulImportEmitsSignalProperly() {
 
         // Save and fetch test contact.
         model.saveContact(testContact);
@@ -169,18 +188,26 @@ ContactsSavingTestCase {
         model.importContacts(vcardFilePath, ["Sync"]);
 
         // Make immediate second import request which should fail as reader is busy.
-        // Check that import enters finished state properly.
         model.importContacts(vcardFilePath2, ["Sync"]);
-        waitForTargetSignal(signalSpy2);
-        compare(importErrorCode, ContactModel.ImportNotReadyError, 'signal finished state error');
-        compare(importFileName, vcardFilePath2, 'signal finished state filename');
 
-        waitForContactsChanged();
-
-        // Check that the first import enters finished state properly.
+        // Wait for both imports to finish.
         waitForTargetSignal(signalSpy2);
-        compare(importFileName, vcardFilePath, 'signal finished state filename');
-        compare(importErrorCode, ContactModel.ImportNoError, 'signal finished state error');
+        waitForTargetSignal(signalSpy2);
+
+        // It is possible that threads get scheduled so that both imports succeed.
+        if ((importResults.get(0).error === ContactModel.ImportNoError) && (importResults.get(1).error === ContactModel.ImportNoError)) {
+            console.log("Overlapping imports did not overlap. This may be ok but error on overlapping did not get tested!")
+        } else {
+            // We got overlapping but it is a bit complex to verify since we do not know for sure in which order signals did arrive.
+            for (var i = 0; i < importResults.count; i++) {
+                if (importResults.get(i).error === ContactModel.ImportNoError) {
+                    compare(importResults.get(i).url, vcardFilePath, 'signal finished state filename');
+                } else {
+                    compare(importResults.get(i).error, ContactModel.ImportNotReadyError, 'signal not ready state error');
+                    compare(importResults.get(i).url, vcardFilePath2, 'signal not ready state filename');
+                }
+            }
+        }
     }
 
     // Init & teardown
@@ -204,10 +231,14 @@ ContactsSavingTestCase {
         exportFileName =  ""
         importErrorCode = ContactModel.ImportNoError
         importFileName =  ""
+
     }
 
     function cleanup() {
         emptyContacts(model);
+
+        exportResults.clear();
+        importResults.clear();
     }
 
     function cleanupTestCase() {

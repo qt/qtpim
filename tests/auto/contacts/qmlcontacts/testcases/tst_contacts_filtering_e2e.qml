@@ -95,21 +95,25 @@ ContactsSavingTestCase {
 
     // Clean database
     function cleanupTestCase() {
-        if (model.filter) {
-            model.filter = null;
-            waitForContactsChanged();
-        }
+        clearFilter();
         emptyContacts(model);
         finishTestForModel(model);
     }
 
     // Clear filter
     function cleanup() {
-        model.filter = null;
-        waitForContactsChanged();
+        clearFilter();
         compare (model.contacts.length, 3);
     }
 
+    function clearFilter() {
+        if (model.filter) {
+            model.filter = null;
+            waitForContactsChanged();
+        }
+    }
+
+    // Tests
     function test_dynamicIdFilterConstruction() {
         var newFilter = Qt.createQmlObject(
                 "import QtContacts 5.0;" +
@@ -270,39 +274,6 @@ ContactsSavingTestCase {
         verify(contact.contactId, "contact id is defined");
         verify(contact === model.contacts[0] || contact === model.contacts[1],
                "still contains the contact")
-    }
-
-    function test_filterAndFetchSomeMatchingIds() {
-        var contact = model.contacts[0];
-        var id = contact.contactId;
-
-        filter.ids = [id];
-        model.filter = filter;
-        waitForContactsChanged();
-        var trid = model.fetchContacts([id]);
-        contactsFetchedSpy.wait();
-        verify(trid >= 0, "valid fetch transaction id")
-
-        compare(model.contacts.length, 1, "contacts length");
-        compare(model.contacts[0].contactId, id, "contact is still present");
-    }
-
-    function test_filterAndFetchNonMatchingIdsDoesNotChangeModel() {
-        var contact = model.contacts[0];
-        var id = contact.contactId;
-        var idOfAnotherContact = model.contacts[1].contactId;
-        verify(id != idOfAnotherContact, "guard: contacts are different");
-
-        filter.ids = [id];
-        model.filter = filter;
-        waitForContactsChanged();
-
-        var trid = model.fetchContacts([idOfAnotherContact]);
-        contactsFetchedSpy.wait();
-        verify(trid >= 0, "valid fetch transaction id")
-
-        compare(model.contacts.length, 1, "contacts length");
-        compare(model.contacts[0].contactId, id, "contact is still present");
     }
 
     IdFilter {

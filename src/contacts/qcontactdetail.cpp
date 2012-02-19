@@ -459,47 +459,6 @@ QVariantMap QContactDetail::values() const
     return ret;
 }
 
-
-/*!
-    \fn bool QContactDetail::setValue(const QLatin1Constant& key, const QVariant& value)
-
-    Inserts \a value into the detail for the given \a key if \a value is valid.  If \a value is invalid,
-    removes the field with the given \a key from the detail.  Returns true if the given \a value was set
-    for the \a key (if the \a value was valid), or if the given \a key was removed from detail (if the
-    \a value was invalid), and returns false if the key was unable to be removed (and the \a value was invalid)
-*/
-/*!
-    \fn bool QContactDetail::removeValue(const QLatin1Constant& key)
-
-    Removes the value stored in this detail for the given \a key.  Returns true if a value was stored
-    for the given \a key and the operation succeeded, and false otherwise.
-*/
-
-/*!
-    \fn bool QContactDetail::hasValue(const QLatin1Constant& key) const
-    Returns true if this detail has a field with the given \a key, or false otherwise.
- */
-
-/*!
-    \fn QVariant QContactDetail::variantValue(const QLatin1Constant& key) const
-    Returns the value stored in this detail for the given \a key as a QVariant, or an invalid QVariant if no value for the given \a key exists
- */
-
-/*!
-    \fn T QContactDetail::value(const QLatin1Constant& key) const
-    \overload
-    Returns the value of the template type associated with the given \a key
- */
-/*!
-    \fn QString QContactDetail::value(const QLatin1Constant& key) const
-    Returns the value stored in this detail for the given \a key as a QString, or an empty QString if
-    no value for the given \a key exists
-*/
-/*!
-    \fn T QContactDetail::value(const QString& key) const
-    Returns the value of the template type associated with the given \a key
- */
-
 /*!
   \enum QContactDetail::AccessConstraint
 

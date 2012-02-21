@@ -257,16 +257,16 @@ void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchReques
 }
 
 void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequest* req) {
-    QContactManager::Error error = QContactManager::NoError;
     QContactManager::Error lastError = QContactManager::NoError;
     QMap<int, QContactManager::Error> errorMap;
 
     QList<QContactId> contactIds = req->contactIds();
-    QContactManagerEngine::updateContactRemoveRequest(req, error, errorMap, QContactAbstractRequest::ActiveState);
+    QContactManagerEngine::updateContactRemoveRequest(req, lastError, errorMap, QContactAbstractRequest::ActiveState);
     m_requestMgr->addRequest(req);
 
     bool transactionsMade = false;
     for (int i = 0; i < contactIds.size(); i++) {
+        QContactManager::Error error = QContactManager::NoError;
         QContactId contactId = contactIds.at(i);
         int trId;
         if ( (!(contactId.isNull())) && (contactId.managerUri() == QContactJsonDbStr::managerUri()) ) {
@@ -286,12 +286,12 @@ void QContactJsonDbRequestHandler::handleContactRemoveRequest(QContactRemoveRequ
     }
 
     if (transactionsMade) {
-        QContactManagerEngine::updateContactRemoveRequest(req, error, errorMap, QContactAbstractRequest::ActiveState);
+        QContactManagerEngine::updateContactRemoveRequest(req, lastError, errorMap, QContactAbstractRequest::ActiveState);
     } else {
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
         QContactManagerEngine::updateContactRemoveRequest(req,
-                                                          error,errorMap,QContactAbstractRequest::FinishedState);
+                                                          lastError,errorMap,QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
     }

@@ -290,12 +290,12 @@ QString QContactId::toString() const
 {
     // rely on engine id to supply the full manager uri
     if (d) {
-        QString result("%1:%2");
+        QString result(QStringLiteral("%1:%2"));
         QString managerUri = d->managerUri();
         QString escapedEngineId = QContactId::escapeUriParam(d->toString());
         return result.arg(managerUri, escapedEngineId);
     }
-    return QString("qtcontacts:::");
+    return QString(QStringLiteral("qtcontacts:::"));
 }
 
 #ifndef QT_NO_DEBUG_STREAM

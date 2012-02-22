@@ -65,6 +65,8 @@ QOrganizerJsonDbDataStorage::~QOrganizerJsonDbDataStorage()
 
 void QOrganizerJsonDbDataStorage::saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
+    if (items->isEmpty())
+        return;
     initRequestData(SaveItems, errorMap, error);
     m_resultItems = items;
     processRequest();
@@ -72,7 +74,8 @@ void QOrganizerJsonDbDataStorage::saveItems(QMap<int, QOrganizerItem>* items, QM
 }
 
 QList<QOrganizerItem> QOrganizerJsonDbDataStorage::items(const QDateTime &startDate, const QDateTime &endDate, const QOrganizerItemFilter &filter,
-                                                         const QList<QOrganizerItemSortOrder> &sortOrders, const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, FetchType type)
+                                                         const QList<QOrganizerItemSortOrder> &sortOrders, const QOrganizerItemFetchHint &fetchHint,
+                                                         QOrganizerManager::Error *error, FetchType type, const QOrganizerItemId &parentId)
 {
     Q_UNUSED(sortOrders);
     Q_UNUSED(fetchHint);
@@ -80,6 +83,8 @@ QList<QOrganizerItem> QOrganizerJsonDbDataStorage::items(const QDateTime &startD
     m_start = startDate;
     m_end = endDate;
     m_filter = filter;
+    if (type == FetchItemOccurrences)
+        m_parentItemId = parentId;
     m_fetchType = type;
     processRequest();
     QList<QOrganizerItem> fetchedItems = m_items;
@@ -89,6 +94,8 @@ QList<QOrganizerItem> QOrganizerJsonDbDataStorage::items(const QDateTime &startD
 
 QList<QOrganizerItem> QOrganizerJsonDbDataStorage::itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error *error)
 {
+    if (itemIds.isEmpty())
+        return QList<QOrganizerItem>();
     initRequestData(ItemsById, errorMap, error);
     m_itemIds = itemIds;
     processRequest();
@@ -99,6 +106,8 @@ QList<QOrganizerItem> QOrganizerJsonDbDataStorage::itemsById(const QList<QOrgani
 
 void QOrganizerJsonDbDataStorage::removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
+    if (itemIds.isEmpty())
+        return;
     initRequestData(RemoveItems, errorMap, error);
     m_itemIds = itemIds;
     processRequest();
@@ -107,6 +116,8 @@ void QOrganizerJsonDbDataStorage::removeItems(const QList<QOrganizerItemId>& ite
 
 QList<QOrganizerItemId> QOrganizerJsonDbDataStorage::removeItemsByCollectionId(const QList<QOrganizerCollectionId>& collectionIds)
 {
+    if (collectionIds.isEmpty())
+        return QList<QOrganizerItemId>();
     initRequestData(RemoveItemsByCollectionId, 0, 0);
     m_removeItemCollectionIds = collectionIds;
     processRequest();
@@ -115,8 +126,22 @@ QList<QOrganizerItemId> QOrganizerJsonDbDataStorage::removeItemsByCollectionId(c
     return deletedItemIds;
 }
 
+QList<QOrganizerItemId> QOrganizerJsonDbDataStorage::removeItemsByParentId(const QList<QOrganizerItemId>& parentIds)
+{
+    if (parentIds.isEmpty())
+        return QList<QOrganizerItemId>();
+    initRequestData(RemoveItemsByParentId, 0, 0);
+    m_removeItemParentIds = parentIds;
+    processRequest();
+    QList<QOrganizerItemId> deletedItemIds = m_itemIds;
+    clearRequestData();
+    return deletedItemIds;
+}
+
 void QOrganizerJsonDbDataStorage::saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
+    if (collections->isEmpty())
+        return;
     initRequestData(SaveCollections, errorMap, error);
     m_resultCollections = collections;
     m_isDefaultCollection = false;
@@ -135,6 +160,8 @@ QList<QOrganizerCollection> QOrganizerJsonDbDataStorage::collections(QOrganizerM
 
 void QOrganizerJsonDbDataStorage::removeCollections(const QMap<int, QOrganizerCollectionId>& collectionIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
+    if (collectionIds.isEmpty())
+        return;
     initRequestData(RemoveCollections, errorMap, error);
     m_removeCollectionIds = collectionIds;
     processRequest();
@@ -250,7 +277,6 @@ void QOrganizerJsonDbDataStorage::onError(int trId, int errorCode, const QString
 void QOrganizerJsonDbDataStorage::onNotified(const QString &notifyUuid, const QtAddOn::JsonDb::JsonDbNotification &notification)
 {
     // No mutex is needed since this slot doesn't touch any member variables.
-
     Q_UNUSED(notifyUuid)
 
     QVariantMap jsonDbObject = notification.object();
@@ -258,7 +284,8 @@ void QOrganizerJsonDbDataStorage::onNotified(const QString &notifyUuid, const Qt
         return;
 
     QString jsonType(m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject));
-    if (jsonType == QOrganizerJsonDbStr::jsonDbEventType() || jsonType == QOrganizerJsonDbStr::jsonDbTodoType()) {
+    if (jsonType == QOrganizerJsonDbStr::jsonDbEventType() || jsonType == QOrganizerJsonDbStr::jsonDbTodoType()
+            || jsonType == QOrganizerJsonDbStr::jsonDbEventOccurrenceType() || jsonType == QOrganizerJsonDbStr::jsonDbTodoOccurrenceType()) {
         switch (notification.action()) {
         case JsonDbClient::NotifyCreate:
             emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
@@ -302,6 +329,9 @@ void QOrganizerJsonDbDataStorage::handleRequest()
         break;
     case RemoveItemsByCollectionId:
         handleRemoveItemsByCollectionIdRequest();
+        break;
+    case RemoveItemsByParentId:
+        handleRemoveItemsByParentIdRequest();
         break;
     case SaveCollections:
         handleSaveCollectionsRequest();
@@ -357,6 +387,9 @@ void QOrganizerJsonDbDataStorage::handleResponse(int trId, QOrganizerManager::Er
         break;
     case RemoveItemsByCollectionId:
         handleRemoveItemsByCollectionIdResponse(object);
+        break;
+    case RemoveItemsByParentId:
+        handleRemoveItemsByParentIdResponse(object);
         break;
     case SaveCollections:
         handleSaveCollectionsResponse(index, error, object);
@@ -453,35 +486,57 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
     QString newJsonDbQuery(QOrganizerJsonDbStr::jsonDbQueryAllItems());
     switch (m_fetchType) {
     case FetchItems:
-        break;
+        // break;
     case FetchItemIds:
+    {
         // TODO: We should use jsondb query to correctly fetch items within certain
         // time period. Then it would be enough to get just a list of uuids from db
         // For now we fetch the whole item, even though more optimal would be to fetch
         // only uuid, startdate and enddate fields
 
-        //jsondb query [?type="com.nokia.mt.organizer.Item"][=_uuid]
-        //newJsonDbQuery += "[=_uuid]";
-        break;
-    default:
+        // for now, this is common for FetchItems and FetchItemIds
+        newJsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryAllItems();
+        //Apply Filter and get jsondb query expression
+        QString filterString;
+        if (m_converter.compoundFilterToJsondbQuery(m_filter, &filterString)) {
+            newJsonDbQuery += filterString;
+            int trId = m_jsonDb->query(newJsonDbQuery);
+            // we don't care about item index when fetching items --> 0 index
+            m_transactionIds.insert(trId, 0);
+
+            // can't query normal object and view object at the same time
+            // TODO only query view objects for when needed
+            trId = m_jsonDb->query(QOrganizerJsonDbStr::jsonDbQueryEventViews() + filterString);
+            m_transactionIds.insert(trId, 0);
+
+        } else {
+            *m_error = QOrganizerManager::BadArgumentError;
+            m_syncWaitCondition.wakeAll();
+        }
         break;
     }
-
-    //Apply Filter and get jsondb query expression
-    QString filterString;
-    if (m_converter.compoundFilterToJsondbQuery(m_filter, &filterString)) {
-        newJsonDbQuery += filterString;
+    case FetchParents:
+    {
+        // This is used for fetching all parent items
+        newJsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryParentItems();
         int trId = m_jsonDb->query(newJsonDbQuery);
         // we don't care about item index when fetching items --> 0 index
         m_transactionIds.insert(trId, 0);
+        // TODO: handle view objects
 
-        // can't query normal object and view object at the same time
-        // TODO only query view objects for when needed
-        trId = m_jsonDb->query(QOrganizerJsonDbStr::jsonDbQueryEventViews() + filterString);
+        break;
+    }
+    case FetchItemOccurrences:
+    {
+        newJsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryOccurrenceItemsByParent().arg(m_parentItemId.toString().remove(QOrganizerJsonDbStr::managerName()));
+        int trId = m_jsonDb->query(newJsonDbQuery);
+        // we don't care about item index when fetching items --> 0 index
         m_transactionIds.insert(trId, 0);
-    } else {
-        *m_error = QOrganizerManager::BadArgumentError;
-        m_syncWaitCondition.wakeAll();
+        // TODO: handle view objects
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -493,11 +548,12 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
         QVariantList jsonDbObjectList;
         if (!object.isNull())
             jsonDbObjectList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
-
         for (int i = 0; i < jsonDbObjectList.size(); i++) {
             QOrganizerItem item;
             if (m_converter.jsonDbObjectToItem(jsonDbObjectList.at(i).toMap(), &item)) {
-                if (QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end))
+                // FIXME: Comparing item dates should be done in database.
+                if (QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end)
+                        || (m_fetchType == FetchParents && !item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()))
                     m_items.append(item);
             }
         }
@@ -602,11 +658,46 @@ void QOrganizerJsonDbDataStorage::handleRemoveItemsByCollectionIdResponse(const 
     int deletedCount = object.toMap().value(QOrganizerJsonDbStr::jsonDbCount()).toInt();
     //Check if some items are delete from request
     if (deletedCount > 0) {
-        QList<QVariant> jsoItemList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
+        QList<QVariant> jsonItemList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
         //Make the item change set
-        for (int i = 0; i < jsoItemList.size(); i++) {
+        for (int i = 0; i < jsonItemList.size(); i++) {
             //Get delete item id
-            QString uuid = QOrganizerJsonDbStr::managerName() + jsoItemList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
+            QString uuid = QOrganizerJsonDbStr::managerName() + jsonItemList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
+            QOrganizerItemId itemId = QOrganizerItemId::fromString(uuid);
+            m_itemIds.append(itemId);
+        }
+    }
+    m_syncWaitCondition.wakeAll();
+}
+
+void QOrganizerJsonDbDataStorage::handleRemoveItemsByParentIdRequest()
+{
+//    QString jsondbQuery = ALL_OCCURRENCE_ITEM_QUERY_STRING;
+    QString jsondbQuery = QOrganizerJsonDbStr::jsonDbQueryOccurrenceItems();
+    //Set the filter for the jsondb query string
+    QString filterString = "[?" + QOrganizerJsonDbStr::itemOccurrenceParent() + " in [\"";
+    for (int i = 0; i < m_removeItemParentIds.size(); i++) {
+        filterString.append(m_removeItemParentIds[i].toString().remove(QOrganizerJsonDbStr::managerName()));
+        if (i == m_removeItemParentIds.size() - 1)
+            filterString.append("\"]]");
+        else
+            filterString.append("\", \"");
+    }
+    jsondbQuery += filterString;
+    int trId = m_jsonDb->remove(jsondbQuery);
+    m_transactionIds.insert(trId, 0);
+}
+
+void QOrganizerJsonDbDataStorage::handleRemoveItemsByParentIdResponse(const QVariant &object)
+{
+    int deletedCount = object.toMap().value(QOrganizerJsonDbStr::jsonDbCount()).toInt();
+    //Check if some items are delete from request
+    if (deletedCount > 0) {
+        QList<QVariant> jsonItemList = object.toMap().value(QOrganizerJsonDbStr::jsonDbData()).toList();
+        //Make the item change set
+        for (int i = 0; i < jsonItemList.size(); i++) {
+            //Get delete item id
+            QString uuid = QOrganizerJsonDbStr::managerName() + jsonItemList.at(i).toMap().value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
             QOrganizerItemId itemId = QOrganizerItemId::fromString(uuid);
             m_itemIds.append(itemId);
         }
@@ -880,10 +971,13 @@ void QOrganizerJsonDbDataStorage::initRequestData(RequestType requestType, QMap<
     m_resultItems = 0;
     m_resultCollections = 0;
     m_items.clear();
+    QOrganizerItemId tmpId;
+    m_parentItemId = tmpId;
     m_fetchType = NoFetch;
     m_itemIds.clear();
     m_collections.clear();
     m_removeItemCollectionIds.clear();
+    m_removeItemParentIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
     m_alarmId.clear();
@@ -898,10 +992,13 @@ void QOrganizerJsonDbDataStorage::clearRequestData()
     m_resultItems = 0;
     m_resultCollections = 0;
     m_items.clear();
+    QOrganizerItemId tmpId;
+    m_parentItemId = tmpId;
     m_fetchType = NoFetch;
     m_itemIds.clear();
     m_collections.clear();
     m_removeItemCollectionIds.clear();
+    m_removeItemParentIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
     m_alarmId.clear();

@@ -146,6 +146,9 @@ public:
     bool removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
                      QOrganizerManager::Error *error);
 
+    bool removeItems(const QList<QOrganizerItem> *items, QMap<int, QOrganizerManager::Error>* errorMap,
+                     QOrganizerManager::Error* error);
+
     // collections
     QOrganizerCollection defaultCollection(QOrganizerManager::Error* error);
     QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);

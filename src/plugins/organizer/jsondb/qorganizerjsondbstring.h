@@ -69,14 +69,17 @@ public:
     inline const static QString jsonDbValue() { return QStringLiteral("value"); }
 
     // JsonDb query strings
-    inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\"]]"); }
+    inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
     inline const static QString jsonDbQueryEventViews() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.EventView\"]"); }
     inline const static QString jsonDbQueryAllCollections() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.Collection\"]"); }
+    inline const static QString jsonDbQueryParentItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\"]][?recurrenceDates exists | recurrenceRules exists | exceptionDates exists | exceptionRules exists]"); }
+    inline const static QString jsonDbQueryOccurrenceItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
+    inline const static QString jsonDbQueryOccurrenceItemsByParent() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]][?parentUuid = \"%1\"]"); }
 
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
 
-    inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.Collection\"]]"); }
+    inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
 
     // collections
     inline const static QString jsonDbCollectionType() { return QStringLiteral("com.nokia.mt.organizer.Collection"); }
@@ -123,8 +126,13 @@ public:
     inline const static QString itemRecurrenceRuleLimitCount() { return QStringLiteral("limitCount"); }
     inline const static QString itemRecurrenceRuleLimitDate() { return QStringLiteral("limitDate"); }
 
+    // occurrence item parents
+    inline const static QString itemOccurrenceParent() { return QStringLiteral("parentUuid"); }
+    inline const static QString itemOccurrenceOriginalDate() { return QStringLiteral("originalDate"); }
+
     // events
     inline const static QString jsonDbEventType() { return QStringLiteral("com.nokia.mt.organizer.Event"); }
+    inline const static QString jsonDbEventOccurrenceType() { return QStringLiteral("com.nokia.mt.organizer.EventOccurrence"); }
 
     inline const static QString eventStartDateTime() { return QStringLiteral("startDateTime"); }
     inline const static QString eventEndDateTime() { return QStringLiteral("endDateTime"); }
@@ -162,7 +170,7 @@ public:
 
     // TODOs
     inline const static QString jsonDbTodoType() { return QStringLiteral("com.nokia.mt.organizer.Todo"); }
-
+    inline const static QString jsonDbTodoOccurrenceType() { return QStringLiteral("com.nokia.mt.organizer.TodoOccurrence"); }
     inline const static QString todoStartDateTime() { return QStringLiteral("startDateTime"); }
     inline const static QString todoDueDateTime() { return QStringLiteral("dueDateTime"); }
     inline const static QString todoIsAllDay() { return QStringLiteral("isAllDay"); }
@@ -172,7 +180,6 @@ public:
 
     // alarms
     inline const static QString alarm() { return QStringLiteral("com.nokia.mt.alarm.Alarm"); }
-
     inline const static QString alarmDisplayName() { return QStringLiteral("displayName"); }
     inline const static QString alarmDescription() { return QStringLiteral("description"); }
     inline const static QString alarmEventUuid() { return QStringLiteral("eventUuid"); }

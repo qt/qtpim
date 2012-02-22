@@ -85,6 +85,8 @@ bool QOrganizerJsonDbEngine::initEngine (QOrganizerManager::Error* error)
             qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
             qRegisterMetaType<QList<QOrganizerCollectionId> >("QList<QOrganizerCollectionId>");
             qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+            qRegisterMetaType<QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >");
+            qRegisterMetaType<QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerCollectionId,QOrganizerManager::Operation> >");
             qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
             qRegisterMetaType<QOrganizerCollectionId>("QOrganizerCollectionId");
             d->m_requestHandlerThread->moveToThread (d->m_requestHandlerThread);
@@ -129,22 +131,20 @@ QList<QOrganizerItem> QOrganizerJsonDbEngine::itemOccurrences(const QOrganizerIt
                                                               const QOrganizerItemFetchHint &fetchHint,
                                                               QOrganizerManager::Error *error)
 {
-    QOrganizerItemOccurrenceFetchRequest request;
-    request.setParentItem(parentItem);
-    request.setStartDate(startDateTime);
-    request.setEndDate(endDateTime);
-    request.setMaxOccurrences(maxCount);
-    request.setFetchHint(fetchHint);
-    if (startRequest(&request)) {
-        if (waitForRequestFinished(&request, 0))
-            *error = request.error();
-        else
-            *error = QOrganizerManager::TimeoutError;
-        return request.itemOccurrences();
-    } else {
-        *error = QOrganizerManager::NotSupportedError;
-        return QList<QOrganizerItem>();
+    QOrganizerItemOccurrenceFetchRequest occurrenceFetchReq;
+    occurrenceFetchReq.setParentItem(parentItem);
+    occurrenceFetchReq.setStartDate(startDateTime);
+    occurrenceFetchReq.setEndDate(endDateTime);
+    occurrenceFetchReq.setMaxOccurrences(maxCount);
+    occurrenceFetchReq.setFetchHint(fetchHint);
+    *error = QOrganizerManager::NoError;
+
+    startRequest(&occurrenceFetchReq);
+    if (waitForRequestFinished(&occurrenceFetchReq, 0)) {
+        *error = occurrenceFetchReq.error();
+        return occurrenceFetchReq.itemOccurrences();
     }
+    return QList<QOrganizerItem>();
 }
 
 QList<QOrganizerItemId> QOrganizerJsonDbEngine::itemIds(const QOrganizerItemFilter &filter,
@@ -262,8 +262,21 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QList
 bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
                                          QOrganizerManager::Error *error)
 {
+    QOrganizerItemRemoveByIdRequest removeByIdReq;
+    removeByIdReq.setItemIds(itemIds);
+    startRequest(&removeByIdReq);
+
+    if (waitForRequestFinished(&removeByIdReq, 0)) {
+        *errorMap = removeByIdReq.errorMap();
+        *error = removeByIdReq.error();
+    }
+    return *error == QOrganizerManager::NoError;
+}
+
+bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItem> *items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+{
     QOrganizerItemRemoveRequest removeReq;
-    removeReq.setItemIds(itemIds);
+    removeReq.setItems(*items);
     if (startRequest(&removeReq)) {
         if (waitForRequestFinished(&removeReq, 0)) {
             *errorMap = removeReq.errorMap();
@@ -271,11 +284,10 @@ bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItemId> &itemIds,
         } else {
             *error = QOrganizerManager::TimeoutError;
         }
-        return (*error == QOrganizerManager::NoError);
     } else {
         *error = QOrganizerManager::NotSupportedError;
-        return false;
     }
+    return (*error == QOrganizerManager::NoError);
 }
 
 QOrganizerCollection QOrganizerJsonDbEngine::defaultCollection(QOrganizerManager::Error* error)
@@ -376,6 +388,16 @@ bool QOrganizerJsonDbEngine::startRequest(QOrganizerAbstractRequest* req)
                                                               itemList, error, errorMap, QOrganizerAbstractRequest::ActiveState);
         break;
     }
+    case QOrganizerAbstractRequest::ItemFetchForExportRequest: {
+        QOrganizerManagerEngine::updateItemFetchForExportRequest(static_cast<QOrganizerItemFetchForExportRequest*>(req),
+                                                                 itemList, error, QOrganizerAbstractRequest::ActiveState);
+        break;
+    }
+    case QOrganizerAbstractRequest::ItemOccurrenceFetchRequest: {
+        QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(static_cast<QOrganizerItemOccurrenceFetchRequest*>(req),
+                                                                  itemList, error, QOrganizerAbstractRequest::ActiveState);
+        break;
+    }
     case QOrganizerAbstractRequest::ItemSaveRequest: {
         QOrganizerItemSaveRequest* saveReq = static_cast<QOrganizerItemSaveRequest*>(req);
         itemList = saveReq->items();
@@ -385,6 +407,11 @@ bool QOrganizerJsonDbEngine::startRequest(QOrganizerAbstractRequest* req)
     case QOrganizerAbstractRequest::ItemRemoveRequest: {
         QOrganizerManagerEngine::updateItemRemoveRequest(static_cast<QOrganizerItemRemoveRequest*>(req),
                                                          error, errorMap, QOrganizerAbstractRequest::ActiveState);
+        break;
+    }
+    case QOrganizerAbstractRequest::ItemRemoveByIdRequest: {
+        QOrganizerManagerEngine::updateItemRemoveByIdRequest(static_cast<QOrganizerItemRemoveByIdRequest*>(req),
+                                                             error, errorMap, QOrganizerAbstractRequest::ActiveState);
         break;
     }
     case QOrganizerAbstractRequest::CollectionFetchRequest: {

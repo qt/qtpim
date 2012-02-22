@@ -97,11 +97,28 @@ private:
     void handleItemFetchRequest(QOrganizerItemFetchRequest* fetchReq);
     void handleItemIdFetchRequest(QOrganizerItemIdFetchRequest* idFetchReq);
     void handleItemFetchByIdRequest(QOrganizerItemFetchByIdRequest* fetchByIdReq);
+    void handleItemFetchForExportRequest(QOrganizerItemFetchForExportRequest *fetchForExportReq);
+    void handleItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest* occurrenceFetchReq);
     void handleItemRemoveRequest(QOrganizerItemRemoveRequest* removeReq);
+    void handleItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest *removeByIdReq);
     void handleCollectionSaveRequest(QOrganizerCollectionSaveRequest* collectionSaveReq);
     void handleCollectionFetchRequest(QOrganizerCollectionFetchRequest* collectionFetchReq);
     void handleCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* collectionRemoveReq);
     void initDefaultCollection();
+
+    QOrganizerItem fetchParentItem(const QOrganizerItem &occurrence);
+    bool typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType);
+    bool fixParentReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
+    bool fixGuidReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
+    bool fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
+
+    QList<QOrganizerItem> internalItems(const QDateTime &startDate, const QDateTime &endDate, const QOrganizerItemFilter &filter, const QList<QOrganizerItemSortOrder> &sortOrders,
+                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, bool forExport) const;
+    QList<QOrganizerItem> internalItemOccurrences(const QOrganizerItem &parentItem, const QDateTime &periodStart, const QDateTime &periodEnd, const QOrganizerItemFetchHint &fetchHint,
+                                                  int maxCount, bool includeExceptions, bool sortItems, QList<QDate> *exceptionDates, QOrganizerManager::Error *error) const;
+
+    void removeItems(const QList<QOrganizerItemId> &itemIds, QOrganizerManager::Error *error, QMap<int, QOrganizerManager::Error> *errorMap);
+    void removeAlarmObjects(const QList<QOrganizerItemId> &itemIds, const QMap<int, QOrganizerManager::Error> &errorMap);
 
     // Member variables
     QOrganizerJsonDbEngine* m_engine;
@@ -120,6 +137,13 @@ private:
     void startTimer();  // Only used by onItemChanged() and onCollectionChanged()
     // Prevent infinite alarm remove loop
     static const int ALARM_REMOVE_MAXLOOP;
+
+    // constants for generating occurrences
+
+    // number of days to use as time period for generating occurrences if no period is defined
+    static const int DefaultTimePeriod;
+    static const int MaxOccurrenceCount;
+
 };
 
 QTORGANIZER_END_NAMESPACE

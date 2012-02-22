@@ -102,10 +102,8 @@ private slots:
 
     /* Special test with special data */
     void uriParsing();
-#if defined(QT_NO_JSONDB)
     void recurrenceWithGenerator();
     void todoRecurrenceWithGenerator();
-#endif
     void dateRange();
 
     /* Tests that are run on all managers */
@@ -114,10 +112,9 @@ private slots:
     void add();
     void saveRecurrence();
     void persistence();
-#if defined(QT_NO_JSONDB)
     void addExceptions();
+    void modifyRecurrence();
     void addExceptionsWithGuid();
-#endif
     void update();
     void remove();
     void batch();
@@ -127,16 +124,12 @@ private slots:
     void itemType();
     void collections();
     void dataSerialization();
-#if defined(QT_NO_JSONDB)
     void itemFetch();
     void todoItemFetch();
     void itemFetchV2();
-#endif
     void itemFilterFetch();
     void spanOverDays();
-#if defined(QT_NO_JSONDB)
     void recurrence();
-#endif
     void idComparison();
     void emptyItemManipulation();
     void partialSave();
@@ -153,16 +146,12 @@ private slots:
     void testIntersectionFilter();
     void testNestCompoundFilter();
     void testUnionFilter();
-#if defined(QT_NO_JSONDB)
     void testItemOccurrences();
-#endif
 
     /* Special test with special data */
     void uriParsing_data();
-#if defined(QT_NO_JSONDB)
     void recurrenceWithGenerator_data();
     void todoRecurrenceWithGenerator_data();
-#endif
     void dateRange_data();
     /* Tests that are run on all managers */
     void metadata_data() {addManagers();}
@@ -170,10 +159,9 @@ private slots:
     void add_data() {addManagers();}
     void saveRecurrence_data() {addManagers();}
     void persistence_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void addExceptions_data() {addManagers();}
     void addExceptionsWithGuid_data() {addManagers();}
-#endif
+    void modifyRecurrence_data() {addManagers();}
     void update_data() {addManagers();}
     void remove_data() {addManagers();}
     void batch_data() {addManagers();}
@@ -182,16 +170,12 @@ private slots:
     void itemType_data() {addManagers();}
     void collections_data() {addManagers();}
     void dataSerialization_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void itemFetch_data() {addManagers();}
     void todoItemFetch_data() {addManagers();}
     void itemFetchV2_data() {addManagers();}
-#endif
     void itemFilterFetch_data() {addManagers();}
     void spanOverDays_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void recurrence_data() {addManagers();}
-#endif
     void idComparison_data() {addManagers();}
     void testReminder_data() {addManagers();}
     void testIntersectionFilter_data() {addManagers();}
@@ -199,9 +183,7 @@ private slots:
     void testUnionFilter_data() {addManagers();}
     void emptyItemManipulation_data() {addManagers();}
     void partialSave_data() {addManagers();}
-#if defined(QT_NO_JSONDB)
     void testItemOccurrences_data(){addManagers();}
-#endif
 
     void testTags_data() { addManagers(); }
     void testTags();
@@ -984,7 +966,6 @@ void tst_QOrganizerManager::persistence()
     cm->removeItems(cm->itemIds());
     QTest::qWait(500);
     QCOMPARE(cm->items().size(), 0);
-    qDebug() << cm2->items();
     QCOMPARE(cm2->items().size(), 0);
 
 //#if 0
@@ -1009,7 +990,6 @@ void tst_QOrganizerManager::persistence()
 //#endif
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::addExceptions()
 {
     QFETCH(QString, uri);
@@ -1097,7 +1077,84 @@ void tst_QOrganizerManager::addExceptions()
     QCOMPARE(thirdEvent.startDateTime(), QDateTime(QDate(2010, 1, 15), QTime(13, 0, 0)));
     QCOMPARE(thirdEvent.endDateTime(), QDateTime(QDate(2010, 1, 15), QTime(14, 0, 0)));
     QVERIFY(!thirdEvent.id().isNull());
+
+    // remove persisted exception, it should not modify parent item's exception dates
+    cm->removeItem(secondEvent.id());
+    event = cm->item(event.id()); // reload the event to pick up any changed exception dates.
+    items = cm->itemOccurrences(event, QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
+                                     QDateTime(QDate(2010, 2, 1), QTime(0, 0, 0)));
+    QCOMPARE(items.size(), 2); // shouldn't change the count.
+
+    // remove the parent item, persisted exceptions should be removed also
+
+    cm->removeItem(event.id());
+    QVERIFY(cm->item(thirdEvent.id()).isEmpty());
+
 }
+
+void tst_QOrganizerManager::modifyRecurrence()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
+
+    QOrganizerEvent event;
+    event.setDisplayLabel(QLatin1String("recurring meeting"));
+    event.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(11, 0, 0)));
+    event.setEndDateTime(QDateTime(QDate(2010, 1, 1), QTime(12, 0, 0)));
+    QOrganizerRecurrenceRule rrule;
+    rrule.setFrequency(QOrganizerRecurrenceRule::Yearly);
+    rrule.setLimit(QDate(2014, 1, 1));
+    event.setRecurrenceRule(rrule);
+    QVERIFY(cm->saveItem(&event));
+    QVERIFY(!event.id().isNull());
+    event = cm->item(event.id());
+    // the guid must be set so when it is exported to iCalendar, the relationship can be represented
+    QVERIFY(!event.guid().isEmpty());
+    QList<QOrganizerItem> items = cm->itemOccurrences(event);
+    QCOMPARE(items.size(), 5);
+    QOrganizerItem secondItem = items.at(1);
+    QCOMPARE(secondItem.type(), QOrganizerItemType::TypeEventOccurrence);
+    QOrganizerEventOccurrence secondEvent = static_cast<QOrganizerEventOccurrence>(secondItem); // not sure this is the best way...
+    QCOMPARE(secondEvent.startDateTime(), QDateTime(QDate(2011, 1, 1), QTime(11, 0, 0)));
+    QCOMPARE(secondEvent.id(), QOrganizerItemId());
+    QCOMPARE(secondEvent.parentId(), event.id());
+
+    // save a change to an occurrence's detail (ie. create an exception)
+    secondEvent.setDisplayLabel(QLatin1String("exceptional display label"));
+    QVERIFY(cm->saveItem(&secondEvent));
+    event = cm->item(event.id()); // reload the event to pick up any changed exception dates.
+    items = cm->itemOccurrences(event);
+    QCOMPARE(items.size(), 5); // shouldn't change the count.
+
+    // save a change to an occurrence's time
+    QOrganizerEventOccurrence thirdEvent = static_cast<QOrganizerEventOccurrence>(items.at(2));
+    QCOMPARE(thirdEvent.id(), QOrganizerItemId());
+    QCOMPARE(thirdEvent.parentId(), event.id());
+    thirdEvent.setStartDateTime(QDateTime(QDate(2012, 1, 2), QTime(15, 0, 0)));
+    thirdEvent.setEndDateTime(QDateTime(QDate(2012, 1, 2), QTime(16, 0, 0)));
+    QVERIFY(cm->saveItem(&thirdEvent));
+    event = cm->item(event.id()); // reload the event to pick up any changed exception dates.
+    items = cm->itemOccurrences(event);
+    QCOMPARE(items.size(), 5); // shouldn't change the count.
+
+    QCOMPARE(items[0].id(), QOrganizerItemId());
+    QCOMPARE(items[1].id(), secondEvent.id());
+    QCOMPARE(items[2].id(), thirdEvent.id());
+    QCOMPARE(items[3].id(), QOrganizerItemId());
+    QCOMPARE(items[4].id(), QOrganizerItemId());
+
+    // modify recurrence rule
+    rrule.setLimit(QDate(2011, 1, 1));
+    event.setRecurrenceRule(rrule);
+    QVERIFY(cm->saveItem(&event));
+    items = cm->itemOccurrences(event);
+    QCOMPARE(items.size(), 2); // only one generated and one exception should be left
+
+    // use different function to fetch events
+    items = cm->items();
+    QCOMPARE(items.size(), 2); // only one generated and one exception should be left
+}
+
 
 /*test ItemOccurrences function maxCount parameters*/
 void tst_QOrganizerManager::testItemOccurrences()
@@ -1326,7 +1383,6 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     savedException = cm->item(exception3.id());
     QCOMPARE(savedException.parentId(), christmas.id());
 }
-#endif
 
 void tst_QOrganizerManager::update()
 {
@@ -1365,7 +1421,6 @@ void tst_QOrganizerManager::update()
     QCOMPARE(updatedDescr, descr);
 
     /* Create a recurring event, update an occurrence and save (should persist as an exceptional occurrence) */
-#if defined(QT_NO_JSONDB)
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     QOrganizerEvent recEvent;
     recEvent.setDescription("a recurring event");
@@ -1427,13 +1482,16 @@ void tst_QOrganizerManager::update()
             QVERIFY(!curr.id().isNull()); // we have two exceptions this time
         }
     }
-#endif
 }
 
 void tst_QOrganizerManager::remove()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
+    // for fetch results
+    QList<QOrganizerItem> items;
+    // for removeItems request
+    QList<QOrganizerItem> itemList;
 
     // Use note & todo item depending on backend support
     QOrganizerItemType::ItemType type;
@@ -1464,13 +1522,33 @@ void tst_QOrganizerManager::remove()
     QVERIFY(!cm->removeItem(item.id()));
     QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
 
-    //delet item id is empty
+    //delete item id is empty
     QOrganizerItemId id;
-    QVERIFY(!cm->removeItem( id ));
+    QVERIFY(!cm->removeItem(id));
     QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
 
+    // delete an event by item (not id)
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    QCOMPARE(cm->items().size(), 0);
+    QOrganizerEvent event1;
+    event1.setDisplayLabel("first event");
+    QOrganizerEvent event2;
+    event1.setDisplayLabel("second event");
+    QOrganizerEvent event3;
+    event1.setDisplayLabel("third event");
+    itemList << event1 << event2 << event3;
+    QVERIFY(cm->saveItems(&itemList));
+    QVERIFY(cm->error() == QOrganizerManager::NoError);
+    items = cm->items();
+    QCOMPARE(cm->items().size(), 3);
+    QVERIFY(cm->removeItem(&(items[2])));
+    items = cm->items();
+    QCOMPARE(cm->items().size(), 2);
+    QVERIFY(cm->removeItems(&items));
+    items = cm->items();
+    QCOMPARE(cm->items().size(), 0);
+
     /* Create a recurring event, save an exception, remove the recurring event should remove all children occurrences incl. persisted exceptions. */
-#if defined(QT_NO_JSONDB)
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     QOrganizerEvent recEvent;
     recEvent.setDescription("a recurring event");
@@ -1481,7 +1559,7 @@ void tst_QOrganizerManager::remove()
     rrule.setLimit(3);
     recEvent.setRecurrenceRule(rrule);
     QVERIFY(cm->saveItem(&recEvent));
-    QList<QOrganizerItem> items = cm->items();
+    items = cm->items();
     QCOMPARE(items.size(), 3);
     QOrganizerEventOccurrence exception = items.at(1);
     exception.setStartDateTime(QDateTime(QDate(2010, 10, 21), QTime(7, 0, 0)));
@@ -1513,13 +1591,22 @@ void tst_QOrganizerManager::remove()
     QCOMPARE(cm->itemsForExport().size(), 2);
     QVERIFY(cm->removeItem(exception.id()));
     QCOMPARE(cm->itemsForExport().size(), 1); // only parent remains as persistent
-    QCOMPARE(cm->items().size(), 2);          // the exception date remains in parent, so only 2 occurrences are generated.
-#endif
+    items = cm->items();
+    QCOMPARE(items.size(), 2);          // the exception date remains in parent, so only 2 occurrences are generated.
 
     // Create a recurring event, remove a generated occurrence should add an exdate in the parent
-    // XXX TODO.  Need to add this API in Mobility 1.2.0.
-    // At the moment, we can only remove items by id, and generated occurrences do not have ids.
-    // Thus, to remove a normal occurrence, you must modify the parent item (adding an exdate manually) and resave it.
+    QOrganizerItem itemOccurrence = items[0];
+    cm->removeItem(&itemOccurrence);
+    items = cm->items();
+    QCOMPARE(items.size(), 1);
+
+    // Remove both parent item and generated occurrence in the same request
+    // --> request should fail because
+    itemList.clear();
+    itemList << recEvent << items[0];
+    QVERIFY(cm->removeItems(&itemList));
+    items = cm->items();
+    QCOMPARE(cm->items().size(), 0);
 }
 
 void tst_QOrganizerManager::batch()
@@ -1837,6 +1924,7 @@ void tst_QOrganizerManager::invalidManager()
     QOrganizerItemFetchForExportRequest ifer;
     QOrganizerItemSaveRequest isr;
     QOrganizerItemRemoveRequest irr;
+    QOrganizerItemRemoveByIdRequest irbir;
     QOrganizerCollectionFetchRequest cfr;
     QOrganizerCollectionSaveRequest csr;
     QOrganizerCollectionRemoveRequest crr;
@@ -1861,13 +1949,22 @@ void tst_QOrganizerManager::invalidManager()
     //QVERIFY(isr.error() == QOrganizerManager::NotSupportedError); // XXX TODO: if start fails, should be not supported error...
 
     irr.setManager(&manager);
-    irr.setItemId(foo.id());
+    irr.setItem(foo);
 
-    qDebug() << foo.id();
     QVERIFY(!irr.start());
     QVERIFY(!irr.cancel());
     irr.waitForFinished();
     //QVERIFY(irr.error() == QOrganizerManager::NotSupportedError); // XXX TODO: if start fails, should be not supported error...
+
+    irbir.setManager(&manager);
+    irbir.setItemId(foo.id());
+
+    qDebug() << foo.id();
+    QVERIFY(!irbir.start());
+    QVERIFY(!irbir.cancel());
+    irbir.waitForFinished();
+    //QVERIFY(irr.error() == QOrganizerManager::NotSupportedError); // XXX TODO: if start fails, should be not supported error...
+
 
     cfr.setManager(&manager);
     QVERIFY(!cfr.start());
@@ -1955,7 +2052,6 @@ void tst_QOrganizerManager::memoryManager()
     QCOMPARE(m5.itemIds().count(), 0);
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::recurrenceWithGenerator_data()
 {
     QTest::addColumn<QString>("uri");
@@ -2262,7 +2358,6 @@ void tst_QOrganizerManager::recurrenceWithGenerator()
             //QCOMPARE(occurrenceDate, occurrenceDates.at(i));
             actualDates << occurrenceDate;
         }
-
         if (actualDates != occurrenceDates) {
             qDebug() << "Actual: " << actualDates;
             qDebug() << "Expected: " << occurrenceDates;
@@ -2329,7 +2424,6 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
         qWarning() << "The todo not supported by the backend";
     }
 }
-#endif
 
 void tst_QOrganizerManager::observerDeletion()
 {
@@ -2998,7 +3092,6 @@ void tst_QOrganizerManager::itemFilterFetch()
     QCOMPARE(cm->items(dfil).count(), 1);
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::itemFetch()
 {
     QFETCH(QString, uri);
@@ -3150,6 +3243,25 @@ void tst_QOrganizerManager::itemFetch()
     }
     QCOMPARE(eventCount, 1);
     QCOMPARE(eventOccurrenceCount, 3);
+
+    // fourth, all occurrences persisted, time period excludes parent item, but it's still fetched
+    items = cm->itemsForExport(QDateTime(QDate(2010, 9, 2)),
+                               QDateTime(QDate(2010, 9, 4)));
+    QCOMPARE(items.size(), 3); // parent + 2 persisted exceptions
+    eventCount = 0;
+    eventOccurrenceCount = 0;
+    foreach (const QOrganizerItem& item, items) {
+        if (item.type() == QOrganizerItemType::TypeEvent) {
+            eventCount += 1;
+        } else if (item.type() == QOrganizerItemType::TypeEventOccurrence) {
+            eventOccurrenceCount += 1;
+        }
+        QVERIFY(!item.id().isNull()); // should NEVER be null, since that would be a generated occurrence.
+    }
+    QCOMPARE(eventCount, 1);
+    QCOMPARE(eventOccurrenceCount, 2);
+
+
 }
 
 // This is mostly a copy of itemFetch(), but for todos
@@ -3158,7 +3270,6 @@ void tst_QOrganizerManager::todoItemFetch()
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
     QList<QOrganizerItem> items;
-
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
 
     QOrganizerTodo todoStartDueDate;
@@ -3391,7 +3502,6 @@ void tst_QOrganizerManager::itemFetchV2()
     QCOMPARE(items[1].displayLabel(), QLatin1String("event2"));
     QCOMPARE(items[2].displayLabel(), QLatin1String("event1"));
 }
-#endif
 
 void tst_QOrganizerManager::spanOverDays()
 {
@@ -3440,7 +3550,6 @@ void tst_QOrganizerManager::spanOverDays()
     QCOMPARE(items.count(), 1);
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerManager::recurrence()
 {
     QFETCH(QString, uri);
@@ -3536,7 +3645,6 @@ void tst_QOrganizerManager::recurrence()
                                                 QDateTime(QDate(2013, 8, 12), QTime(23,59,59)));
         QVERIFY(items.count() > 1);
     }
-
     // second, test date limit.  The results should be the same as the count limit, if the limit date is the 11th.
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     QOrganizerRecurrenceRule rrule2;
@@ -3603,7 +3711,6 @@ void tst_QOrganizerManager::recurrence()
         }
     }
 }
-#endif
 
 void tst_QOrganizerManager::idComparison()
 {
@@ -4167,7 +4274,6 @@ void tst_QOrganizerManager::collections()
         QVERIFY(fetchedItems.contains(i5));
 
         // exceptions must be saved in the same collection as their parent.
-#if defined(QT_NO_JSONDB)
         QOrganizerEvent recurringEvent;
         recurringEvent.setDescription("A recurring test event parent.");
         //            recurringEvent.setLocation("Some Location");
@@ -4189,7 +4295,6 @@ void tst_QOrganizerManager::collections()
         QVERIFY(!oim->saveItem(&someException)); // shouldn't work.
         someException.setCollectionId(c2.id()); // same as parent.
         QVERIFY(oim->saveItem(&someException)); // should work.
-#endif
 
         // remove a collection, removes its items.
         QVERIFY(oim->removeCollection(c2.id()));
@@ -4198,10 +4303,8 @@ void tst_QOrganizerManager::collections()
         QVERIFY(!fetchedItems.contains(i2)); // these three should have been removed
         QVERIFY(!fetchedItems.contains(i3));
         QVERIFY(!fetchedItems.contains(i4));
-#if defined(QT_NO_JSONDB)
         QVERIFY(!fetchedItems.contains(recurringEvent)); // the parent
         QVERIFY(!fetchedItems.contains(someException));  // and exceptions too.
-#endif
         QVERIFY(fetchedItems.contains(i5)); // i5 should not have been removed.
 
         // attempt to save an item in a non-existent collection should fail.
@@ -4388,6 +4491,10 @@ void tst_QOrganizerManager::testIntersectionFilter()
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
 
+    // initialize db
+    mgr->removeItems(mgr->itemIds());
+    QCOMPARE(mgr->items().count(), 0);
+
     //prepare filter data
     QOrganizerCollection c1;
     QOrganizerCollection c2;
@@ -4422,7 +4529,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     itemList = mgr->items(isf);
     QCOMPARE(itemList.size(), 1);
 
-    //Test intersection filter with 2 collection filter and one of them is biger than another
+    //Test intersection filter with 2 collection filter and one of them is bigger than another
     isf.remove(cf2);
     QSet<QOrganizerCollectionId> collectionList;
     collectionList << c1.id() << c2.id();
@@ -4458,6 +4565,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
         QCOMPARE(itemList.at(0), event3);
     }
     //a bad id inside the list
+    // NOTE: empty id in id filter will match all generated occurrences
     QOrganizerItem badEvent;
     ids.prepend(badEvent.id());
     idFilter.setIds(ids);

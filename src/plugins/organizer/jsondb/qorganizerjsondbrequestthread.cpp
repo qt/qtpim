@@ -57,6 +57,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);
 const int QOrganizerJsonDbRequestThread::ALARM_REMOVE_MAXLOOP(10);
+const int QOrganizerJsonDbRequestThread::DefaultTimePeriod(1461);
+const int QOrganizerJsonDbRequestThread::MaxOccurrenceCount(50);
 
 QOrganizerJsonDbRequestThread::QOrganizerJsonDbRequestThread()
     : m_engine(0)
@@ -185,8 +187,20 @@ void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req
         handleItemFetchByIdRequest(static_cast<QOrganizerItemFetchByIdRequest*>(req));
         break;
 
+    case QOrganizerAbstractRequest::ItemFetchForExportRequest:
+        handleItemFetchForExportRequest(static_cast<QOrganizerItemFetchForExportRequest*>(req));
+        break;
+
+    case QOrganizerAbstractRequest::ItemOccurrenceFetchRequest:
+        handleItemOccurrenceFetchRequest(static_cast<QOrganizerItemOccurrenceFetchRequest*>(req));
+        break;
+
     case QOrganizerAbstractRequest::ItemRemoveRequest:
         handleItemRemoveRequest(static_cast <QOrganizerItemRemoveRequest *> (req));
+        break;
+
+    case QOrganizerAbstractRequest::ItemRemoveByIdRequest:
+        handleItemRemoveByIdRequest(static_cast <QOrganizerItemRemoveByIdRequest *> (req));
         break;
 
     case QOrganizerAbstractRequest::CollectionSaveRequest:
@@ -271,11 +285,17 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerItem> items = saveReq->items();
+    QMap<int, QOrganizerItem> parentItemMap;
+    QMap<int, QOrganizerManager::Error> parentErrorMap;
+    QOrganizerManager::Error parentError = QOrganizerManager::NoError;
+
     m_requestMgr->setActive(saveReq);
 
     for (int i = 0; i < items.size(); i++) {
         QOrganizerItem item = items.at(i);
+        QOrganizerItem parentItem;
         bool itemIsNew = item.id().isNull();
+        bool itemIsOccurrence = (item.type() == QOrganizerItemType::TypeEventOccurrence || item.type() == QOrganizerItemType::TypeTodoOccurrence);
         bool errorFound = false;
 
         QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
@@ -285,27 +305,75 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             errorFound = true;
         }
 
-// TODO: to be replaced by new validity check
-//        // ensure that the organizeritem's details conform to their definitions
-//        if (!errorFound && !m_engine->validateItem(item, &latestError))
-//            errorFound = true;
+        // TODO: to be replaced by new validity check, collection id and guid should not be mandatory fields
+        //       this checks e.g. that occurrences have parent ids and original dates?
+        //        // ensure that the organizeritem's details conform to their definitions
+        //        if (!errorFound && !m_engine->validateItem(item, &latestError))
+        //            errorFound = true;
 
-        //Check the collection id validation
-        QOrganizerCollectionId collectionId = item.collectionId();
-        if (!collectionId.isNull()) {
-            //If we could find the collection id in collection id list
-            if (!m_storage->collectionIds().contains(collectionId)) {
-                //Collection id is invalid
-                latestError = QOrganizerManager::BadArgumentError;
-                errorFound = true;
+        if (!errorFound) {
+            if (itemIsOccurrence) {
+                parentItem = fetchParentItem(item);
+                if (parentItem.isEmpty()) {
+                    latestError = QOrganizerManager::InvalidOccurrenceError;
+                    errorFound = true;
+                }
             }
-        } else {
-            item.setCollectionId(m_storage->defaultCollection().id());
         }
 
-        // generate GUID if needed
-        if (item.guid().isEmpty())
-            item.setGuid(QUuid::createUuid().toString());
+        if (!errorFound) {
+            if (itemIsOccurrence && !fixParentReferences(&item, parentItem)) {
+                latestError = QOrganizerManager::InvalidOccurrenceError;
+                errorFound = true;
+            }
+        }
+
+        if (!errorFound) {
+            if (itemIsOccurrence && !typesAreRelated(item.type(), parentItem.type())) {
+                latestError = QOrganizerManager::InvalidOccurrenceError;
+                errorFound = true;
+            }
+        }
+
+        if (!errorFound) {
+            if (!fixGuidReferences(&item, parentItem)) {
+                latestError = QOrganizerManager::InvalidOccurrenceError;
+                errorFound = true;
+            }
+        }
+
+        if (!errorFound) {
+            if (!fixCollectionReferences(&item, parentItem)) {
+                latestError = QOrganizerManager::InvalidCollectionError;
+                errorFound = true;
+            }
+        }
+
+        if (!errorFound && itemIsOccurrence) {
+            // add exception date to parent item
+            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+            QDate originalDate = parentDetail.originalDate();
+            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+            QSet<QDate> exceptionDates = recurrenceDetail.exceptionDates();
+            if (!exceptionDates.contains(originalDate))
+                exceptionDates.insert(originalDate);
+
+            if (parentItem.type() == QOrganizerItemType::TypeEvent) {
+                QOrganizerEvent *parentEvent = static_cast<QOrganizerEvent*>(&parentItem);
+                parentEvent->setExceptionDates(exceptionDates);
+            } else if (parentItem.type() == QOrganizerItemType::TypeTodo) {
+                QOrganizerTodo *parentTodo = static_cast<QOrganizerTodo*>(&parentItem);
+                parentTodo->setExceptionDates(exceptionDates);
+            }
+            parentItemMap.insert(i, parentItem);
+            QOrganizerItemRecurrence rec = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+        }
+        // else if (!errorFound && !itemIsOccurrence) {
+        // What to do when updating a parent item, i.e. one with recurrence? should we e.g. check if any exception dates have been removed and
+        // remove those exceptions from db?
+        // NOTE: currently there is work-around for this: some cross-checking is done when fetching items
+        // }
+
 
         // check for view object
         if (item.extendedDetailData(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
@@ -328,6 +396,8 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             itemIsNewStatusMap.insert(i, itemIsNew);
         }
     }
+
+    // save items
     if (!itemMap.isEmpty()) {
         m_storage->saveItems(&itemMap, &errorMap, &latestError);
         QOrganizerManager::Error alarmError;
@@ -365,9 +435,16 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
                     latestError = alarmError;
                     errorMap.insert(i.key(), alarmError);
                 }
+            } else {
+                // the item was not saved, let's not save the parent item either
+                parentItemMap.remove(i.key());
             }
         }
     }
+    // save parent items with modified exception dates
+    if (!parentItemMap.isEmpty())
+        m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError);
+
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
     m_requestMgr->removeRequest(saveReq);
     QOrganizerManagerEngine::updateItemSaveRequest(saveReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
@@ -379,11 +456,11 @@ void QOrganizerJsonDbRequestThread::handleItemFetchRequest(QOrganizerItemFetchRe
 {
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     m_requestMgr->setActive(fetchReq);
-    QList<QOrganizerItem> items = m_storage->items(fetchReq->startDate(), fetchReq->endDate(), fetchReq->filter(), fetchReq->sorting(),
-                                                   fetchReq->fetchHint(), &latestError);
+    QList<QOrganizerItem> items = internalItems(fetchReq->startDate(), fetchReq->endDate(), fetchReq->filter(), fetchReq->sorting(),
+                                                fetchReq->fetchHint(), &latestError, false);
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchReq);
     m_requestMgr->removeRequest(fetchReq);
-    QOrganizerManagerEngine::updateItemFetchRequest(fetchReq, items, latestError, QOrganizerAbstractRequest::FinishedState);
+    QOrganizerManagerEngine::updateItemFetchRequest(fetchReq, items.mid(0, fetchReq->maxCount()), latestError, QOrganizerAbstractRequest::FinishedState);
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -392,8 +469,8 @@ void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFet
 {
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     m_requestMgr->setActive(idFetchReq);
-    QList<QOrganizerItem> items = m_storage->items(idFetchReq->startDate(), idFetchReq->endDate(), idFetchReq->filter(), idFetchReq->sorting(),
-                                                   QOrganizerItemFetchHint(), &latestError, QOrganizerJsonDbDataStorage::FetchItemIds);
+    QList<QOrganizerItem> items = internalItems(idFetchReq->startDate(), idFetchReq->endDate(), idFetchReq->filter(), idFetchReq->sorting(),
+                                                QOrganizerItemFetchHint(), &latestError, true);
     QList<QOrganizerItemId> ids;
     for (int i = 0; i < items.length(); i++) {
         ids.append(items[i].id());
@@ -419,43 +496,153 @@ void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFet
         waitCondition->wakeAll();
 }
 
+void QOrganizerJsonDbRequestThread::handleItemFetchForExportRequest(QOrganizerItemFetchForExportRequest *fetchForExportReq)
+{
+    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
+    m_requestMgr->setActive(fetchForExportReq);
+    QList<QOrganizerItem> items = internalItems(fetchForExportReq->startDate(), fetchForExportReq->endDate(), fetchForExportReq->filter(), fetchForExportReq->sorting(),
+                                                fetchForExportReq->fetchHint(), &latestError, true);
+    QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchForExportReq);
+    m_requestMgr->removeRequest(fetchForExportReq);
+    QOrganizerManagerEngine::updateItemFetchForExportRequest(fetchForExportReq, items, latestError, QOrganizerAbstractRequest::FinishedState);
+    if (waitCondition)
+        waitCondition->wakeAll();
+}
+
+
+void QOrganizerJsonDbRequestThread::handleItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest *occurrenceFetchReq)
+{
+    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
+    m_requestMgr->setActive(occurrenceFetchReq);
+
+    QList<QOrganizerItem> items = internalItemOccurrences(occurrenceFetchReq->parentItem(), occurrenceFetchReq->startDate(), occurrenceFetchReq->endDate(), occurrenceFetchReq->fetchHint(), occurrenceFetchReq->maxOccurrences(), true, true, 0, &latestError);
+    QWaitCondition* waitCondition = m_requestMgr->waitCondition(occurrenceFetchReq);
+    m_requestMgr->removeRequest(occurrenceFetchReq);
+    QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(occurrenceFetchReq, items, latestError, QOrganizerAbstractRequest::FinishedState);
+    if (waitCondition)
+        waitCondition->wakeAll();
+}
+
 void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemoveRequest *removeReq)
 {
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
-    QList<QOrganizerItemId> itemIds = removeReq->itemIds();
-    m_requestMgr->setActive(removeReq);
-    if (!itemIds.isEmpty())
-        m_storage->removeItems(itemIds, &errorMap, &latestError);
+    QMultiMap<QOrganizerItemId, QDate> exceptionDates;
+    // map from original remove req items list index to parent id
+    QMap<int, QOrganizerItemId> parentIds;
+    // map from original remove req items list index to item id
+    QMap<int, QOrganizerItemId> itemIds;
+    // map from parent item list index to parent item
+    QMap<int, QOrganizerItem> modifiedParents;
 
-    QOrganizerManager::Error alarmError;
-    QString alarmId;
-    int index = 0;
-    foreach (const QOrganizerItemId &id, itemIds) {
-        if (!errorMap.contains(index)) {
-            alarmError = QOrganizerManager::NoError;
-            alarmId = m_storage->alarmId(&id, &alarmError);
-            if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty())
-                m_storage->removeAlarm(&alarmId, &alarmError);
-            else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
-                int count = 0;
-                do {//Try to delete all the alarm objects
-                    m_storage->removeAlarm(&alarmId, &alarmError);
-                    alarmId = m_storage->alarmId(&id, &alarmError);
-                    ++count;//Prevent infinite loop
-                } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
+    QList<QOrganizerItem> items = removeReq->items();
+    m_requestMgr->setActive(removeReq);
+    QOrganizerItem item;
+    int i;
+    for (i = 0; i < items.size(); i++) {
+        item = items[i];
+        if ((item.type() == QOrganizerItemType::TypeEventOccurrence
+             || item.type() == QOrganizerItemType::TypeTodoOccurrence)
+                && item.id().isNull()) {
+            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+            if (!parentDetail.parentId().isNull() && parentDetail.originalDate().isValid()) {
+                exceptionDates.insert(parentDetail.parentId(), parentDetail.originalDate());
+                parentIds.insert(i, parentDetail.parentId());
+            } else {
+                latestError = QOrganizerManager::InvalidOccurrenceError;
+                errorMap.insert(i, latestError);
             }
-            if (QOrganizerManager::NoError != alarmError) {
-                latestError = alarmError;
-                errorMap.insert(index, alarmError);
+        } else {
+            itemIds.insert(i, item.id());
+        }
+    }
+
+    // handle normal events
+    QMap<int, QOrganizerManager::Error> removeErrorMap;
+    QOrganizerManager::Error removeError = QOrganizerManager::NoError;
+    QList<QOrganizerItemId> itemIdsList = itemIds.values();
+    removeItems(itemIdsList, &removeError, &removeErrorMap);
+    if (!removeErrorMap.isEmpty()) {
+        int itemIdsValuesIndex = 0;
+        QMap<int, QOrganizerItemId>::const_iterator iterator = itemIds.constBegin();
+        while (iterator != itemIds.constEnd()) {
+            if (removeErrorMap.contains(itemIdsValuesIndex)) {
+                latestError = removeErrorMap.value(itemIdsValuesIndex);
+                errorMap.insert(iterator.key(), latestError);
+            }
+            itemIdsValuesIndex++;
+        }
+    }
+
+    // check if any of the removed "normal" items was the parent of an occurrence to be removed
+    if (!exceptionDates.isEmpty()) {
+        foreach (const QOrganizerItemId &id, itemIdsList) {
+            if (exceptionDates.contains(id))
+                exceptionDates.remove(id);
+        }
+    }
+
+    // handle generated item occurrences: add new exception date to item's parent item recurrence detail
+    QMap<int, QOrganizerManager::Error> fetchErrorMap;
+    QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
+
+    QList<QOrganizerItem> parentItems = m_storage->itemsById(exceptionDates.keys(), &fetchErrorMap, &fetchError);
+    for (i = 0; i < parentItems.size(); i++) {
+        if (!fetchErrorMap.contains(i)) {
+            QOrganizerItem parentItem = parentItems[i];
+            QList<QDate> addDateList = exceptionDates.values(parentItem.id());
+            if (addDateList.isEmpty())
+                continue;
+            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+            QSet<QDate> exceptionDateSet = recurrenceDetail.exceptionDates();
+            for (int j = 0; j < addDateList.size(); j++)
+                exceptionDateSet.insert(addDateList[j]);
+
+            recurrenceDetail.setExceptionDates(exceptionDateSet);
+            parentItem.saveDetail(&recurrenceDetail);
+
+            modifiedParents.insert(i, parentItem);
+        }
+    }
+
+    QMap<int, QOrganizerManager::Error> saveErrorMap;
+    QOrganizerManager::Error saveError = QOrganizerManager::NoError;
+    if (!modifiedParents.isEmpty())
+        m_storage->saveItems(&modifiedParents, &saveErrorMap, &saveError);
+
+    if (!fetchErrorMap.isEmpty() || !saveErrorMap.isEmpty()) {
+        for (i = 0; i < parentItems.size(); i++) {
+            if (fetchErrorMap.contains(i) || saveErrorMap.contains(i)) {
+                QOrganizerItemId parentId = parentItems[i].id();
+                // find the indexes in the original items list where this parent item was the parent of occurrence
+                QList<int> originalIndexes = parentIds.keys(parentId);
+                for (int j = 0; j < originalIndexes.size(); j++) {
+                    latestError = QOrganizerManager::InvalidOccurrenceError;
+                    errorMap.insert(j, latestError);
+                }
             }
         }
-        ++index;
     }
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeReq);
     m_requestMgr->removeRequest(removeReq);
     QOrganizerManagerEngine::updateItemRemoveRequest(removeReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+    if (waitCondition)
+        waitCondition->wakeAll();
+}
+
+void QOrganizerJsonDbRequestThread::handleItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest *removeByIdReq)
+{
+    QMap<int, QOrganizerManager::Error> errorMap;
+    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
+    QList<QOrganizerItemId> itemIds = removeByIdReq->itemIds();
+
+    m_requestMgr->setActive(removeByIdReq);
+    removeItems(itemIds, &latestError, &errorMap);
+
+    QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeByIdReq);
+    m_requestMgr->removeRequest(removeByIdReq);
+    QOrganizerManagerEngine::updateItemRemoveByIdRequest(removeByIdReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
     if (waitCondition)
         waitCondition->wakeAll();
 }
@@ -591,6 +778,386 @@ void QOrganizerJsonDbRequestThread::initDefaultCollection()
         m_storage->createDefaultCollection(&defaultCollection, &error);
     }
 }
+
+
+// Save helpers
+
+QOrganizerItem QOrganizerJsonDbRequestThread::fetchParentItem(const QOrganizerItem &occurrence)
+{
+    QList<QOrganizerItem> tmpParentItems;
+    QList<QOrganizerItemId> parentItemIdList;
+    QMap<int, QOrganizerManager::Error> parentErrorMap;
+    QOrganizerManager::Error parentError = QOrganizerManager::NoError;
+    QOrganizerItemParent parentDetail = occurrence.detail(QOrganizerItemParent::DefinitionName);
+    if (!parentDetail.isEmpty() && parentDetail.hasValue(QOrganizerItemParent::FieldParentId)) {
+        parentItemIdList.append(parentDetail.parentId());
+        tmpParentItems = m_storage->itemsById(parentItemIdList, &parentErrorMap, &parentError);
+        if (parentError == QOrganizerManager::NoError && tmpParentItems.length() > 0)
+            return tmpParentItems[0];
+    }
+    // if parent was not found based on id, try with guid
+    if (!occurrence.guid().isEmpty()) {
+        QOrganizerItemDetailFilter guidFilter;
+        guidFilter.setDetail(QOrganizerItemGuid::DefinitionName, QOrganizerItemGuid::FieldGuid);
+        guidFilter.setValue(occurrence.guid());
+
+        parentError = QOrganizerManager::NoError;
+        tmpParentItems = m_storage->items(QDateTime(), QDateTime(), guidFilter, QList<QOrganizerItemSortOrder>(), QOrganizerItemFetchHint(), &parentError);
+        if (parentError == QOrganizerManager::NoError && tmpParentItems.length() > 0)
+            return tmpParentItems[0];
+    }
+    return QOrganizerItem();
+}
+
+/*!
+   Returns true if and only if \a occurrenceType is the "Occurrence" version of \a parentType.
+ */
+bool QOrganizerJsonDbRequestThread::typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType)
+{
+    return ((parentType == QOrganizerItemType::TypeEvent
+                && occurrenceType == QOrganizerItemType::TypeEventOccurrence)
+            || (parentType == QOrganizerItemType::TypeTodo
+                && occurrenceType == QOrganizerItemType::TypeTodoOccurrence));
+}
+
+bool QOrganizerJsonDbRequestThread::fixParentReferences(QOrganizerItem *item, const QOrganizerItem &parentItem)
+{
+//    bool itemIsOccurrence = !parentItem.isEmpty();
+
+    QOrganizerItemParent parentDetail = item->detail(QOrganizerItemParent::DefinitionName);
+    if (!parentDetail.hasValue(QOrganizerItemParent::FieldOriginalDate))
+        return false;
+
+    if (!parentDetail.hasValue(QOrganizerItemParent::FieldParentId)) {
+        parentDetail.setParentId(parentItem.id());
+        item->saveDetail(&parentDetail);
+    }
+    return true;
+}
+
+bool QOrganizerJsonDbRequestThread::fixGuidReferences(QOrganizerItem *item, const QOrganizerItem &parentItem)
+{
+    bool itemIsOccurrence = !parentItem.isEmpty();
+
+    if (!itemIsOccurrence && item->guid().isEmpty()) {
+        item->setGuid(QUuid::createUuid().toString());
+        return true;
+    }
+    if (itemIsOccurrence) {
+        // item is an occurrence
+        if (parentItem.guid().isEmpty()) {
+            return false;
+        }
+        else if (item->guid().isEmpty()) {
+            item->setGuid(parentItem.guid());
+            return true;
+        } else if (item->guid() != parentItem.guid()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool QOrganizerJsonDbRequestThread::fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem)
+{
+    bool itemIsOccurrence = !parentItem.isEmpty();
+    QOrganizerCollectionId collectionId = item->collectionId();
+    QOrganizerCollectionId parentCollectionId = parentItem.collectionId();
+    if (itemIsOccurrence && (parentCollectionId.isNull() || !m_storage->collectionIds().contains(parentCollectionId)))
+        return false;
+
+    if (!collectionId.isNull()) {
+        //If we could find the collection id in collection id list
+        if (!m_storage->collectionIds().contains(collectionId))
+            return false;
+
+        if (itemIsOccurrence) {
+            // Does this occurrence have different collection id than it's parent
+            if (collectionId != parentCollectionId)
+                return false;
+        }
+    } else {
+        if (itemIsOccurrence)
+            item->setCollectionId(parentCollectionId);
+        else
+            item->setCollectionId(m_storage->defaultCollection().id());
+    }
+    return true;
+}
+
+// Fetch helpers
+
+QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItems(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, bool forExport) const
+{
+    QList<QOrganizerItem> timeUndefined;
+    QSet<QOrganizerItemId> parentsAdded;
+    QSet<QOrganizerItemId> parentsToBeAdded;
+    QMultiMap<QDateTime, QOrganizerItem> defaultSorted;
+    QList<QOrganizerItem> sorted;
+    QMap<QOrganizerItemId, QList<QDate> > exceptionDateMap;
+    bool isDefaultFilter = (filter.type() == QOrganizerItemFilter::DefaultFilter);
+
+    // fetch all parents stored to db
+    QList<QOrganizerItem> parentItems = m_storage->items(QDateTime(), QDateTime(), QOrganizerItemFilter(), QList<QOrganizerItemSortOrder>(), fetchHint,
+                                                         error, QOrganizerJsonDbDataStorage::FetchParents);
+    // fetch all items (normal items and exception occurrences) stored in the given time period
+    // apply filters
+    QList<QOrganizerItem> items = m_storage->items(startDate, endDate, filter, sortOrders, fetchHint, error, QOrganizerJsonDbDataStorage::FetchItems);
+
+    // generate occurrences for all parent items
+    foreach (QOrganizerItem parent, parentItems) {
+        if (!parent.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+            QOrganizerManager::Error recError = QOrganizerManager::NoError;
+            QList<QDate> exceptionDates;
+            QList<QOrganizerItem> recItems = internalItemOccurrences(parent, startDate, endDate, fetchHint, forExport ? 1 : QOrganizerJsonDbRequestThread::MaxOccurrenceCount,
+                                                                     false, false, &exceptionDates, &recError);
+            if (!exceptionDates.isEmpty())
+                exceptionDateMap.insert(parent.id(), exceptionDates);
+            QOrganizerItem toAdd;
+            foreach (const QOrganizerItem &occurrence, recItems) {
+                if (!isDefaultFilter) {
+                    if (!QOrganizerManagerEngine::testFilter(filter, occurrence))
+                        continue;
+                }
+                // if forExport is true, this loop is executed max. once
+                if (forExport) {
+                    parentsAdded.insert(parent.id());
+                    toAdd = parent;
+                } else {
+                    toAdd = occurrence;
+                }
+
+                if (sortOrders.isEmpty()) {
+                    if (!QOrganizerManagerEngine::addDefaultSorted(&defaultSorted, toAdd))
+                        timeUndefined.append(toAdd);
+                } else {
+                    QOrganizerManagerEngine::addSorted(&sorted, toAdd, sortOrders);
+                }
+            }
+        }
+    }
+
+    // add all normal items and exception occurrences to return list
+    foreach (const QOrganizerItem &item, items) {
+        // this is either Event or Todo
+        // or exception EventOccurrence or TodoOccurrence which has been stored to database
+
+        if (!item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+            // parent items have already been handled
+            continue;
+        }
+        QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+        if (!parentDetail.isEmpty() && !exceptionDateMap.value(parentDetail.parentId()).contains(parentDetail.originalDate()))
+            continue;
+
+        if (forExport && !parentDetail.isEmpty()) {
+            QOrganizerItemId parentId = parentDetail.parentId();
+            if (!parentId.isNull())
+                parentsToBeAdded.insert(parentId);
+        }
+        if (sortOrders.isEmpty()) {
+            if (!QOrganizerManagerEngine::addDefaultSorted(&defaultSorted, item))
+                timeUndefined.append(item);
+        } else {
+            QOrganizerManagerEngine::addSorted(&sorted, item, sortOrders);
+        }
+    }
+
+    if (forExport && !parentsToBeAdded.isEmpty()) {
+        foreach (QOrganizerItem item, parentItems) {
+            if (parentsToBeAdded.contains(item.id()) && !parentsAdded.contains(item.id())) {
+                if (sortOrders.isEmpty())
+                    QOrganizerManagerEngine::addDefaultSorted(&defaultSorted, item);
+                else
+                    QOrganizerManagerEngine::addSorted(&sorted, item, sortOrders);
+            }
+        }
+    }
+
+    if (sortOrders.isEmpty()) {
+        sorted = defaultSorted.values();
+        sorted.append(timeUndefined);
+    }
+    return sorted;
+}
+
+QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(const QOrganizerItem &parentItem, const QDateTime &periodStart, const QDateTime &periodEnd, const QOrganizerItemFetchHint &fetchHint,
+                                                                             int maxCount, bool includeExceptions, bool sortItems, QList<QDate> *exceptionDates, QOrganizerManager::Error *error) const
+{
+    // given the generating item, grab it's QOrganizerItemRecurrence detail (if it exists), and calculate all of the dates within the given period.
+    QDateTime realPeriodStart(periodStart);
+    QDateTime realPeriodEnd(periodEnd);
+    QDateTime initialDateTime;
+    if (parentItem.type() == QOrganizerItemType::TypeEvent) {
+        QOrganizerEvent evt = parentItem;
+        initialDateTime = evt.startDateTime();
+    } else if (parentItem.type() == QOrganizerItemType::TypeTodo) {
+        QOrganizerTodo todo = parentItem;
+        initialDateTime = todo.startDateTime();
+    } else {
+        // erm... not a recurring item in our schema...
+        return QList<QOrganizerItem>();
+    }
+
+    if (realPeriodStart.isValid() && initialDateTime.isValid()) {
+        if (initialDateTime > realPeriodStart)
+            realPeriodStart = initialDateTime;
+    } else if (initialDateTime.isValid()) {
+        realPeriodStart = initialDateTime;
+    }
+
+    if (!periodEnd.isValid()) {
+        // If no endDateTime is given, we'll only generate items that occur within the next 4 years of realPeriodStart.
+        if (realPeriodStart.isValid())
+            realPeriodEnd = realPeriodStart.addDays(QOrganizerJsonDbRequestThread::DefaultTimePeriod);
+        else
+            realPeriodEnd = QDateTime::currentDateTimeUtc().addDays(QOrganizerJsonDbRequestThread::DefaultTimePeriod);
+    }
+
+    if (realPeriodStart > realPeriodEnd) {
+        *error = QOrganizerManager::BadArgumentError;
+        return QList<QOrganizerItem>();
+    }
+
+    QList<QOrganizerItem> retn;
+    QList<QOrganizerItem> xoccurrences;
+    QOrganizerItemRecurrence recur = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+    if (includeExceptions) {
+        // first, retrieve all persisted instances (exceptions) which occur between the specified datetimes.
+        QOrganizerItemFilter filter;
+        QOrganizerItemSortOrder sortOrder;
+        xoccurrences = m_storage->items(realPeriodStart, realPeriodEnd, filter, sortOrder, fetchHint, error, QOrganizerJsonDbDataStorage::FetchItemOccurrences, parentItem.id());
+    }
+
+    // then, generate the required (unchanged) instances from the parentItem.
+    // before doing that, we have to find out all of the exception dates.
+    QList<QDate> xdates;
+    foreach (const QDate &xdate, recur.exceptionDates()) {
+        xdates += xdate;
+    }
+    QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
+    foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
+        if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
+                && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
+            // we cannot skip it, since it applies in the given time period.
+            QList<QDateTime> xdatetimes = QOrganizerManagerEngine::generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
+            foreach (const QDateTime& xdatetime, xdatetimes) {
+                xdates += xdatetime.date();
+            }
+        }
+    }
+    // now generate a list of rdates (from the recurrenceDates and recurrenceRules)
+    QList<QDateTime> rdates;
+    foreach (const QDate& rdate, recur.recurrenceDates()) {
+        rdates += QDateTime(rdate, initialDateTime.time());
+    }
+    bool hasValidRule = false;
+    QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
+    foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
+        if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid) {
+            hasValidRule = true;
+            if ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date())) {
+                // we cannot skip it, since it applies in the given time period.
+                rdates += QOrganizerManagerEngine::generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
+            }
+        }
+    }
+    // now order the contents of retn by date
+    qSort(rdates);
+    if (!hasValidRule && initialDateTime.isValid() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
+        rdates.prepend(initialDateTime);
+    }
+    // now for each rdate which isn't also an xdate
+    foreach (const QDateTime& rdate, rdates) {
+        if ((rdate >= realPeriodStart && rdate <= realPeriodEnd)
+                || (!realPeriodStart.isValid() && !realPeriodEnd.isValid() && rdate.isValid())) {
+            if (!xdates.contains(rdate.date())) {
+                // generate the required instance and add it to the return list.
+                retn.append(QOrganizerManagerEngine::generateOccurrence(parentItem, rdate));
+            } else if (includeExceptions) {
+                for (int i = 0; i < xoccurrences.size(); i++) {
+                    QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemParent::DefinitionName);
+                    if (parentDetail.originalDate() == rdate.date())
+                        retn.append(xoccurrences[i]);
+                }
+            } else if (exceptionDates) {
+                exceptionDates->append(rdate.date());
+            }
+
+        }
+    }
+    if (sortItems) {
+        // should we always sort if a maxCount is given?
+        QMultiMap<QDateTime, QOrganizerItem> defaultSorted;
+        foreach (QOrganizerItem item, retn)
+            QOrganizerManagerEngine::addDefaultSorted(&defaultSorted, item);
+
+        retn = defaultSorted.values();
+    }
+    // and return the first maxCount entries.
+    return retn.mid(0, maxCount);
+}
+
+
+void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &itemIds, QOrganizerManager::Error *error, QMap<int, QOrganizerManager::Error> *errorMap)
+{
+    QMap<int, QOrganizerManager::Error> fetchErrorMap;
+    QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
+    QList<QOrganizerItemId> removedParentIds;
+
+    if (!itemIds.isEmpty()) {
+        // fetch items to find out if there are any persisted occurrences or parent items
+        // among them
+        QList<QOrganizerItem> items = m_storage->itemsById(itemIds, &fetchErrorMap, &fetchError);
+        foreach (QOrganizerItem item, items) {
+            if ((item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeTodo)
+                    && !item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+                removedParentIds.append(item.id());
+            }
+        }
+        m_storage->removeItems(itemIds, errorMap, error);
+        removeAlarmObjects(itemIds, *errorMap);
+
+        // remove all persisted occurrences of removed parent items
+        if (!removedParentIds.isEmpty()) {
+            QList<QOrganizerItemId> removedOccurrences = m_storage->removeItemsByParentId(removedParentIds);
+            if (!removedOccurrences.isEmpty())
+                removeAlarmObjects(removedOccurrences, QMap<int, QOrganizerManager::Error>());
+        }
+    }
+}
+
+void QOrganizerJsonDbRequestThread::removeAlarmObjects(const QList<QOrganizerItemId> &itemIds, const QMap<int, QOrganizerManager::Error> &errorMap)
+{
+    QOrganizerManager::Error alarmError;
+    QString alarmId;
+    int index = 0;
+
+    foreach (const QOrganizerItemId &id, itemIds) {
+        if (!errorMap.contains(index)) {
+            alarmError = QOrganizerManager::NoError;
+            alarmId = m_storage->alarmId(&id, &alarmError);
+            if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty()) {
+                m_storage->removeAlarm(&alarmId, &alarmError);
+            } else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
+                int count = 0;
+                do {
+                    //Try to delete all the alarm objects
+                    m_storage->removeAlarm(&alarmId, &alarmError);
+                    alarmId = m_storage->alarmId(&id, &alarmError);
+                    ++count;
+                } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
+            }
+            // not inserting an error if event is successfully removed but alarm object cannot be removed
+//            if (QOrganizerManager::NoError != alarmError) {
+//                latestError = alarmError;
+//                errorMap.insert(index, alarmError);
+//            }
+        }
+        ++index;
+    }
+}
+
 
 #include "moc_qorganizerjsondbrequestthread.cpp"
 

@@ -189,14 +189,14 @@ private slots:
     void itemFetchById_data() { addManagers(); }
     void itemIdFetch();
     void itemIdFetch_data() { addManagers(); }
-#if defined(QT_NO_JSONDB)
     void itemOccurrenceFetch();
     void itemOccurrenceFetch_data() { addManagers(); }
     void itemFetchForExport();
     void itemFetchForExport_data() { addManagers(); }
-#endif
     void itemRemove();
     void itemRemove_data() { addManagers(); }
+    void itemRemoveById();
+    void itemRemoveById_data() { addManagers(); }
     void itemSave();
     void itemSave_data() { addManagers(); }
     void itemListSave();
@@ -981,7 +981,6 @@ void tst_QOrganizerItemAsync::itemIdFetch()
 #endif
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerItemAsync::itemOccurrenceFetch()
 {
     QFETCH(QString, uri);
@@ -1007,7 +1006,6 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
     if (!foundParent) {
         QSKIP("Manager has no valid recurring events; skipping.");
     }
-
     // initial state - not started, no manager.
     QVERIFY(!ifr.isActive());
     QVERIFY(!ifr.isFinished());
@@ -1065,145 +1063,144 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
         QVERIFY(containsIgnoringDetailKeys(itemOccs, items.at(i)));
     }
 
-    // restrictions
-    ifr.setParentItem(parent);
-    QOrganizerItemFetchHint fetchHint;
-    fetchHint.setDetailTypesHint(QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription);
-    ifr.setFetchHint(fetchHint);
-    QCOMPARE(ifr.fetchHint().detailTypesHint(), QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription);
-    QVERIFY(!ifr.cancel()); // not started
-    QVERIFY(ifr.start());
-    QVERIFY((ifr.isActive() && ifr.state() == QOrganizerAbstractRequest::ActiveState) || ifr.isFinished());
-    //QVERIFY(ifr.isFinished() || !ifr.start());  // already started. // thread scheduling means this is untestable
-    QVERIFY(ifr.waitForFinished());
-    QVERIFY(ifr.isFinished());
+//    // restrictions
+//    ifr.setParentItem(parent);
+//    QOrganizerItemFetchHint fetchHint;
+//    fetchHint.setDetailTypesHint(QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription);
+//    ifr.setFetchHint(fetchHint);
+//    QCOMPARE(ifr.fetchHint().detailTypesHint(), QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription);
+//    QVERIFY(!ifr.cancel()); // not started
+//    QVERIFY(ifr.start());
+//    QVERIFY((ifr.isActive() && ifr.state() == QOrganizerAbstractRequest::ActiveState) || ifr.isFinished());
+//    //QVERIFY(ifr.isFinished() || !ifr.start());  // already started. // thread scheduling means this is untestable
+//    QVERIFY(ifr.waitForFinished());
+//    QVERIFY(ifr.isFinished());
 
-    QVERIFY(spy.count() >= 1); // active + finished progress signals
-    spy.clear();
+//    QVERIFY(spy.count() >= 1); // active + finished progress signals
+//    spy.clear();
 
-    itemOccs = oim->itemOccurrences(parent, QDateTime(), QDateTime(), -1);
-    items = ifr.itemOccurrences();
-    QCOMPARE(itemOccs.size(), items.size());
-    for (int i = 0; i < itemOccs.size(); i++) {
-        // create a item from the restricted data only (id + display label)
-        QOrganizerItem currFull = itemOccs.at(i);
-        QOrganizerItem currRestricted; // in prepare model, the items are all events.
-        if (currFull.type() == QOrganizerItemType::TypeEvent) {
-            currRestricted = QOrganizerEvent(); // therefore, the returned items will either be events
-        } else if (currFull.type() == QOrganizerItemType::TypeEventOccurrence) {
-            currRestricted = QOrganizerEventOccurrence(); // or event occurrences.
-        }
-        currRestricted.setId(currFull.id());
-        QList<QOrganizerItemDescription> descriptions = currFull.details<QOrganizerItemDescription>();
-        foreach (const QOrganizerItemDescription& description, descriptions) {
-            QOrganizerItemDescription descr = description;
-            if (!descr.isEmpty()) {
-                currRestricted.saveDetail(&descr);
-            }
-        }
+//    itemOccs = oim->itemOccurrences(parent, QDateTime(), QDateTime(), -1);
+//    items = ifr.itemOccurrences();
+//    QCOMPARE(itemOccs.size(), items.size());
+//    for (int i = 0; i < itemOccs.size(); i++) {
+//        // create a item from the restricted data only (id + display label)
+//        QOrganizerItem currFull = itemOccs.at(i);
+//        QOrganizerItem currRestricted; // in prepare model, the items are all events.
+//        if (currFull.type() == QOrganizerItemType::TypeEvent) {
+//            currRestricted = QOrganizerEvent(); // therefore, the returned items will either be events
+//        } else if (currFull.type() == QOrganizerItemType::TypeEventOccurrence) {
+//            currRestricted = QOrganizerEventOccurrence(); // or event occurrences.
+//        }
+//        currRestricted.setId(currFull.id());
+//        QList<QOrganizerItemDescription> descriptions = currFull.details<QOrganizerItemDescription>();
+//        foreach (const QOrganizerItemDescription& description, descriptions) {
+//            QOrganizerItemDescription descr = description;
+//            if (!descr.isEmpty()) {
+//                currRestricted.saveDetail(&descr);
+//            }
+//        }
 
-        // now find the item in the retrieved list which our restricted item mimics
-        QOrganizerItem retrievedRestricted;
-        bool found = false;
-        foreach (const QOrganizerItem& retrieved, items) {
-            if (retrieved.id() == currRestricted.id()) {
-                retrievedRestricted = retrieved;
-                found = true;
-            }
-        }
+//        // now find the item in the retrieved list which our restricted item mimics
+//        QOrganizerItem retrievedRestricted;
+//        bool found = false;
+//        foreach (const QOrganizerItem& retrieved, items) {
+//            if (retrieved.id() == currRestricted.id()) {
+//                retrievedRestricted = retrieved;
+//                found = true;
+//            }
+//        }
 
-        QVERIFY(found); // must exist or fail.
+//        QVERIFY(found); // must exist or fail.
 
-        // ensure that the item is the same (except synth fields)
-        QList<QOrganizerItemDetail> retrievedDetails = retrievedRestricted.details();
-        QList<QOrganizerItemDetail> expectedDetails = currRestricted.details();
-        foreach (const QOrganizerItemDetail& det, expectedDetails) {
-            // ignore backend synthesised details
-            // again, this requires a "default item details" function to work properly.
-            if (det.type() == QOrganizerItemTimestamp::DefinitionName) {
-                continue;
-            }
+//        // ensure that the item is the same (except synth fields)
+//        QList<QOrganizerItemDetail> retrievedDetails = retrievedRestricted.details();
+//        QList<QOrganizerItemDetail> expectedDetails = currRestricted.details();
+//        foreach (const QOrganizerItemDetail& det, expectedDetails) {
+//            // ignore backend synthesised details
+//            // again, this requires a "default item details" function to work properly.
+//            if (det.type() == QOrganizerItemTimestamp::DefinitionName) {
+//                continue;
+//            }
+//            // everything else in the expected item should be in the retrieved one.
+//            QVERIFY(detailListContainsDetailIgnoringDetailKeys(retrievedDetails, det));
+//        }
+//    }
 
-            // everything else in the expected item should be in the retrieved one.
-            QVERIFY(detailListContainsDetailIgnoringDetailKeys(retrievedDetails, det));
-        }
-    }
+//    // cancelling
+//    ifr.setParentItem(parent);
+//    ifr.setFetchHint(QOrganizerItemFetchHint());
 
-    // cancelling
-    ifr.setParentItem(parent);
-    ifr.setFetchHint(QOrganizerItemFetchHint());
+//    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
+//    while (true) {
+//        QVERIFY(!ifr.cancel()); // not started
+//        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
+//        QVERIFY(ifr.start());
+//        if (!ifr.cancel()) {
+//            // due to thread scheduling, async cancel might be attempted
+//            // after the request has already finished.. so loop and try again.
+//            spy.clear();
+//            ifr.waitForFinished();
+//            ifr.setParentItem(parent);
+//            ifr.setFetchHint(QOrganizerItemFetchHint());
+//            bailoutCount -= 1;
+//            if (!bailoutCount) {
+////                qWarning("Unable to test cancelling due to thread scheduling!");
+//                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+//                break;
+//            }
+//            continue;
+//        }
 
-    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
-    while (true) {
-        QVERIFY(!ifr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
-        QVERIFY(ifr.start());
-        if (!ifr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            spy.clear();
-            ifr.waitForFinished();
-            ifr.setParentItem(parent);
-            ifr.setFetchHint(QOrganizerItemFetchHint());
-            bailoutCount -= 1;
-            if (!bailoutCount) {
-//                qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            continue;
-        }
+//        // if we get here, then we are cancelling the request.
+//        QVERIFY(ifr.waitForFinished());
+//        QVERIFY(ifr.isCanceled());
 
-        // if we get here, then we are cancelling the request.
-        QVERIFY(ifr.waitForFinished());
-        QVERIFY(ifr.isCanceled());
+//        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+//        spy.clear();
+//        break;
+//    }
 
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-        break;
-    }
+//    // restart, and wait for progress after cancel.
+//    while (true) {
+//        QVERIFY(!ifr.cancel()); // not started
+//        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
+//        QVERIFY(ifr.start());
+//        if (!ifr.cancel()) {
+//            // due to thread scheduling, async cancel might be attempted
+//            // after the request has already finished.. so loop and try again.
+//            ifr.waitForFinished();
+//            ifr.setParentItem(parent);
+//            ifr.setFetchHint(QOrganizerItemFetchHint());
+//            bailoutCount -= 1;
+//            spy.clear();
+//            if (!bailoutCount) {
+//                //qWarning("Unable to test cancelling due to thread scheduling!");
+//                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+//                break;
+//            }
+//            continue;
+//        }
+//        ifr.waitForFinished();
+//        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+//        spy.clear();
+//        QVERIFY(!ifr.isActive());
+//        QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
+//        break;
+//    }
 
-    // restart, and wait for progress after cancel.
-    while (true) {
-        QVERIFY(!ifr.cancel()); // not started
-        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
-        QVERIFY(ifr.start());
-        if (!ifr.cancel()) {
-            // due to thread scheduling, async cancel might be attempted
-            // after the request has already finished.. so loop and try again.
-            ifr.waitForFinished();
-            ifr.setParentItem(parent);
-            ifr.setFetchHint(QOrganizerItemFetchHint());
-            bailoutCount -= 1;
-            spy.clear();
-            if (!bailoutCount) {
-                //qWarning("Unable to test cancelling due to thread scheduling!");
-                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
-                break;
-            }
-            continue;
-        }
-        ifr.waitForFinished();
-        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
-        spy.clear();
-        QVERIFY(!ifr.isActive());
-        QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
-        break;
-    }
-
-    // Now test deletion in the first slot called
-    QOrganizerItemFetchRequest *ifr2 = new QOrganizerItemFetchRequest();
-    QPointer<QObject> obj(ifr2);
-    ifr2->setManager(oim.data());
-    connect(ifr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
-    QVERIFY(ifr2->start());
-    int i = 100;
-    // at this point we can't even call wait for finished..
-    while(obj && i > 0) {
-        QTest::qWait(50); // force it to process events at least once.
-        i--;
-    }
-    QVERIFY(obj == NULL);
+//    // Now test deletion in the first slot called
+//    QOrganizerItemFetchRequest *ifr2 = new QOrganizerItemFetchRequest();
+//    QPointer<QObject> obj(ifr2);
+//    ifr2->setManager(oim.data());
+//    connect(ifr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
+//    QVERIFY(ifr2->start());
+//    int i = 100;
+//    // at this point we can't even call wait for finished..
+//    while (obj && i > 0) {
+//        QTest::qWait(50); // force it to process events at least once.
+//        i--;
+//    }
+//    QVERIFY(obj == NULL);
 }
 
 void tst_QOrganizerItemAsync::itemFetchForExport()
@@ -1252,6 +1249,7 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(items.contains(curr));
     }
 
+#if defined(QT_NO_JSONDB)
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
     dfil.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
@@ -1274,6 +1272,7 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QOrganizerItem curr = itemsfe.at(i);
         QVERIFY(items.contains(curr));
     }
+#endif
 
     // sort order
     QOrganizerItemSortOrder sortOrder;
@@ -1303,6 +1302,7 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(items.contains(curr));
     }
 
+#if defined(QT_NO_JSONDB)
     // restrictions
     sorting.clear();
     ifr.setFilter(fil);
@@ -1446,18 +1446,196 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         i--;
     }
     QVERIFY(obj == NULL);
-}
 #endif
+}
 
 void tst_QOrganizerItemAsync::itemRemove()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> oim(prepareModel(uri));
+    qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
+
+    QOrganizerItemRemoveRequest irr;
+    QVERIFY(irr.type() == QOrganizerAbstractRequest::ItemRemoveRequest);
+
+    // initial state - not started, no manager.
+    QVERIFY(!irr.isActive());
+    QVERIFY(!irr.isFinished());
+    QVERIFY(!irr.start());
+    QVERIFY(!irr.cancel());
+    QVERIFY(!irr.waitForFinished());
+
+    // fill manager with test data
+    QOrganizerTodo testTodo1;
+    QOrganizerItemDisplayLabel label;
+    label.setLabel("Test todo 1");
+    testTodo1.saveDetail(&label);
+    QVERIFY(oim->saveItem(&testTodo1));
+
+    testTodo1.setId(QOrganizerItemId());
+    label.setLabel("Test todo 2");
+    testTodo1.saveDetail(&label);
+    QOrganizerItemComment comment;
+    comment.setComment("todo comment");
+    testTodo1.saveDetail(&comment);
+    QVERIFY(oim->saveItem(&testTodo1));
+
+    QList<QOrganizerItem> allItems(oim->items());
+    QVERIFY(!allItems.isEmpty());
+    QOrganizerItem removableItem(allItems.first());
+
+    // specific item set
+    irr.setItem(removableItem);
+    QVERIFY(irr.items() == QList<QOrganizerItem>() << removableItem);
+
+    // remove empty list
+    QList<QOrganizerItem> itemList;
+    QOrganizerItemRemoveRequest irr1;
+    irr1.setManager(oim.data());
+    irr1.setItems(itemList);
+    irr1.start();
+    irr1.waitForFinished();
+    QVERIFY(irr1.isFinished());
+    QVERIFY(irr1.error() == QOrganizerManager::NoError);
+
+    // specific item removal via detail filter
+    int originalCount = oim->itemIds().size();
+    QOrganizerItemDetailFilter dfil;
+    dfil.setDetailDefinitionName(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    irr.setItems(oim->items(dfil));
+    irr.setManager(oim.data());
+    QCOMPARE(irr.manager(), oim.data());
+    QVERIFY(!irr.isActive());
+    QVERIFY(!irr.isFinished());
+    QVERIFY(!irr.cancel());
+    QVERIFY(!irr.waitForFinished());
+    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
+    QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
+    QVERIFY(!irr.cancel()); // not started
+
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
+    QVERIFY(!oim->items(dfil).isEmpty());
+
+    QVERIFY(irr.start());
+
+    QVERIFY((irr.isActive() &&irr.state() == QOrganizerAbstractRequest::ActiveState) || irr.isFinished());
+    //QVERIFY(irr.isFinished() || !irr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(irr.waitForFinished());
+    QVERIFY(irr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
+    QCOMPARE(oim->itemIds().size(), originalCount - 1);
+    QVERIFY(oim->itemIds(dfil).isEmpty());
+
+    // remove all items
+
+    irr.setManager(oim.data());
+
+    irr.setItems(oim->items());
+
+    QVERIFY(!irr.isActive());
+    QVERIFY(irr.isFinished());
+    QVERIFY(irr.waitForFinished());
+    QVERIFY(!irr.cancel()); // not started
+    QVERIFY(irr.start());
+    // This removes test events and also initial events which include one recurring event
+    // without start and end dates (with recurrence date list)
+    QVERIFY((irr.isActive() && irr.state() == QOrganizerAbstractRequest::ActiveState) || irr.isFinished());
+    //QVERIFY(irr.isFinished() || !irr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(irr.waitForFinished());
+    QVERIFY(irr.isFinished());
+
+    QCOMPARE(oim->items().size(), 0); // no items should be left.
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+//    // cancelling
+//    QOrganizerTodo temp;
+//    QOrganizerItemDescription description;
+//    description.setDescription("Should not be removed");
+//    temp.saveDetail(&description);
+//    oim->saveItem(&temp);
+//    QCOMPARE(oim->itemIds().size(), 1);
+//    irr.setItemIds(oim->itemIds());
+
+//    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
+//    while (true) {
+//        QVERIFY(!irr.cancel()); // not started
+//        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
+//        QVERIFY(spy.count() == 0);
+//        QVERIFY(irr.start());
+//        if (!irr.cancel()) {
+//            // due to thread scheduling, async cancel might be attempted
+//            // after the request has already finished.. so loop and try again.
+//            irr.waitForFinished();
+//            temp.setId(QOrganizerItemId());
+//            if (!oim->saveItem(&temp)) {
+//                QSKIP("Unable to save temporary item for remove request cancellation test!");
+//            }
+//            irr.setItemIds(oim->itemIds());
+//            bailoutCount -= 1;
+//            if (!bailoutCount) {
+////                QSKIP("Unable to test cancelling due to thread scheduling!");
+//                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+//                break;
+//            }
+//            spy.clear();
+//            continue;
+//        }
+
+//        // if we get here, then we are cancelling the request.
+//        QVERIFY(irr.waitForFinished());
+//        QVERIFY(irr.isCanceled());
+//        QCOMPARE(oim->itemIds().size(), 1);
+//        QCOMPARE(oim->itemIds(), irr.itemIds());
+//        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+//        spy.clear();
+//        break;
+//    }
+
+//    // restart, and wait for progress after cancel.
+//    while (true) {
+//        QVERIFY(!irr.cancel()); // not started
+//        FILL_QUEUE_WITH_FETCH_REQUESTS(oim.data());
+//        QVERIFY(irr.start());
+//        if (!irr.cancel()) {
+//            // due to thread scheduling, async cancel might be attempted
+//            // after the request has already finished.. so loop and try again.
+//            irr.waitForFinished();
+//            temp.setId(QOrganizerItemId());
+//            oim->saveItem(&temp);
+//            irr.setItemIds(oim->itemIds());
+//            bailoutCount -= 1;
+//            if (!bailoutCount) {
+////                qWarning("Unable to test cancelling due to thread scheduling!");
+//                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+//                break;
+//            }
+//            spy.clear();
+//            continue;
+//        }
+//        irr.waitForFinished();
+//        QVERIFY(irr.isCanceled());
+//        QCOMPARE(oim->itemIds().size(), 1);
+//        QCOMPARE(oim->itemIds(), irr.itemIds());
+//        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+//        spy.clear();
+//        break;
+//    }
+}
+
+void tst_QOrganizerItemAsync::itemRemoveById()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> oim(prepareModel(uri));
 
     qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
 
-    QOrganizerItemRemoveRequest irr;
-    QVERIFY(irr.type() == QOrganizerAbstractRequest::ItemRemoveRequest);
+    QOrganizerItemRemoveByIdRequest irr;
+    QVERIFY(irr.type() == QOrganizerAbstractRequest::ItemRemoveByIdRequest);
 
     // initial state - not started, no manager.
     QVERIFY(!irr.isActive());
@@ -1491,7 +1669,7 @@ void tst_QOrganizerItemAsync::itemRemove()
 
     // remove empty list
     QList<QOrganizerItemId> itemIdList;
-    QOrganizerItemRemoveRequest irr1;
+    QOrganizerItemRemoveByIdRequest irr1;
     irr1.setManager(oim.data());
     irr1.setItemIds(itemIdList);
     irr1.start();
@@ -1510,7 +1688,7 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(!irr.isFinished());
     QVERIFY(!irr.cancel());
     QVERIFY(!irr.waitForFinished());
-    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
+    qRegisterMetaType<QOrganizerItemRemoveByIdRequest*>("QOrganizerItemRemoveByIdRequest*");
     QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
     QVERIFY(!irr.cancel()); // not started
 
@@ -1532,10 +1710,10 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(oim->itemIds(dfil).isEmpty());
 
     // remove all items
-//    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName); // delete everything.
-#if !defined(QT_NO_JSONDB)
-    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
-#endif
+////    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName); // delete everything.
+//#if !defined(QT_NO_JSONDB)
+//    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
+//#endif
     irr.setManager(oim.data());
 
     irr.setItemIds(oim->itemIds());

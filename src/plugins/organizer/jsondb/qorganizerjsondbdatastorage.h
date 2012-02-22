@@ -80,7 +80,7 @@ public:
         FetchItems,
         FetchItemIds,
         FetchItemOccurrences,
-        FetchAllParents
+        FetchParents
     };
 
     QOrganizerJsonDbDataStorage();
@@ -88,10 +88,11 @@ public:
 
     void saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders,
-                                const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, FetchType type = FetchItems);
+                                const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, FetchType type = FetchItems, const QOrganizerItemId &parentId = QOrganizerItemId());
     QList<QOrganizerItem> itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerItemId> removeItemsByCollectionId(const QList<QOrganizerCollectionId>& collectionIds);
+    QList<QOrganizerItemId> removeItemsByParentId(const QList<QOrganizerItemId>& parentIds);
 
     void saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
@@ -134,6 +135,7 @@ private:
         ItemsById,
         RemoveItems,
         RemoveItemsByCollectionId,
+        RemoveItemsByParentId,
         SaveCollections,
         Collections,
         RemoveCollections,
@@ -153,6 +155,8 @@ private:
     void handleRemoveItemsResponse(int index, QOrganizerManager::Error error);
     void handleRemoveItemsByCollectionIdRequest();
     void handleRemoveItemsByCollectionIdResponse(const QVariant& object);
+    void handleRemoveItemsByParentIdRequest();
+    void handleRemoveItemsByParentIdResponse(const QVariant& object);
     void handleSaveCollectionsRequest();
     void handleSaveCollectionsResponse(int index, QOrganizerManager::Error error, const QVariant& object);
     void handleCollectionsRequest();
@@ -204,12 +208,16 @@ private:
 //    QList<QOrganizerItemSortOrder> m_sortOrders;
 //    QOrganizerItemFetchHint m_fetchHint;
     FetchType m_fetchType;
+    QOrganizerItemId m_parentItemId;
 
     // RemoveItems (itemsById)
     QList<QOrganizerItemId> m_itemIds;
 
     // RemoveItemsByCollectionId
     QList<QOrganizerCollectionId> m_removeItemCollectionIds;
+
+    // RemoveItemsByParentId
+    QList<QOrganizerItemId> m_removeItemParentIds;
 
     // SaveCollection
     QMap<int, QOrganizerCollection>* m_resultCollections; // map from collection index to collection

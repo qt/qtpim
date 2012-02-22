@@ -6,4 +6,4 @@ QT += contacts
 
 SOURCES  += tst_qcontactasync.cpp
 HEADERS += ../../qcontactmanagerdataholder.h
-
+HEADERS += ../../../jsondbprocess.h

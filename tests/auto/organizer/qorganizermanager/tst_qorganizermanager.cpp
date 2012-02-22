@@ -47,6 +47,7 @@
 #include "qorganizer.h"
 #include "qorganizeritemchangeset.h"
 #include "../qorganizermanagerdataholder.h"
+#include "../../jsondbprocess.h"
 
 #include "qorganizernote.h"
 #include "qorganizerevent.h"
@@ -88,6 +89,8 @@ private:
     void addManagers(); // add standard managers to the data
 
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
 
 public slots:
     void initTestCase();
@@ -303,6 +306,10 @@ tst_QOrganizerManager::~tst_QOrganizerManager()
 
 void tst_QOrganizerManager::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 
     /* Make sure these other test plugins are NOT loaded by default */
@@ -315,6 +322,9 @@ void tst_QOrganizerManager::initTestCase()
 void tst_QOrganizerManager::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 void tst_QOrganizerManager::dumpOrganizerItemDifferences(const QOrganizerItem& ca, const QOrganizerItem& cb)

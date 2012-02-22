@@ -48,6 +48,7 @@
 #include <QtContacts>
 #include "../qcontactmanagerdataholder.h"
 #include "../qcontactchangeset.h"
+#include "../../jsondbprocess.h"
 
 #if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)
   // for the symbianManager() test.
@@ -127,6 +128,8 @@ private:
     void addManagers(); // add standard managers to the data
     QContact createContact(QString firstName, QString lastName, QString phoneNumber);
     void saveContactName(QContact *contact,QContactName *contactName, const QString &name) const;
+
+    JsonDbProcess jsondbProcess;
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
@@ -343,6 +346,10 @@ tst_QContactManager::~tst_QContactManager()
 
 void tst_QContactManager::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QContactManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QContactManagerDataHolder());
 
     /* Make sure these other test plugins are NOT loaded by default */
@@ -355,6 +362,9 @@ void tst_QContactManager::initTestCase()
 void tst_QContactManager::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QContactManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 void tst_QContactManager::dumpContactDifferences(const QContact& ca, const QContact& cb)

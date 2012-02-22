@@ -43,6 +43,7 @@
 #include <QDateTime>
 #include "qorganizer.h"
 #include "../qorganizermanagerdataholder.h"
+#include "../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -64,6 +65,8 @@ private:
     }
 
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
 
 private slots:
     void initTestCase();
@@ -94,12 +97,19 @@ void tst_QOrganizerManagerDetails::addManagers()
 
 void tst_QOrganizerManagerDetails::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 }
 
 void tst_QOrganizerManagerDetails::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 bool tst_QOrganizerManagerDetails::saveAndLoadItem(QOrganizerManager *manager, QOrganizerItem &original, QOrganizerItem &loaded)

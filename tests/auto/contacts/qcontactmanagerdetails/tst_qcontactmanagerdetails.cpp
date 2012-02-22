@@ -44,6 +44,7 @@
 #include <QtContacts>
 
 #include "../qcontactmanagerdataholder.h"
+#include "../../jsondbprocess.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -74,6 +75,8 @@ private:
     void saveAndVerifyContact( QContactManager *cm, QContact &original );
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
 
 private slots:
     void initTestCase();
@@ -140,12 +143,19 @@ void tst_QContactManagerDetails::addManagers()
 
 void tst_QContactManagerDetails::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QContactManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
 
 void tst_QContactManagerDetails::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QContactManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QContact &original, QContact &loaded )

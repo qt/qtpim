@@ -65,6 +65,7 @@
 #include <QContactName>
 #include <QContactIdFilter>
 
+#include "../../../jsondbprocess.h"
 #include "../../qcontactidmock.h"
 #include "../../qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
@@ -246,6 +247,9 @@ private:
     Qt::HANDLE m_mainThreadId;
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
+
 };
 
 tst_QContactAsync::tst_QContactAsync()
@@ -263,12 +267,19 @@ tst_QContactAsync::~tst_QContactAsync()
 
 void tst_QContactAsync::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QContactManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
 
 void tst_QContactAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QContactManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 bool tst_QContactAsync::compareContactLists(QList<QContact> lista, QList<QContact> listb)

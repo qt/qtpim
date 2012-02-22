@@ -46,6 +46,7 @@
 
 #include <qorganizer.h>
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
+#include "../../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -237,6 +238,9 @@ private:
     Qt::HANDLE m_mainThreadId;
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
+
 };
 
 tst_QOrganizerItemAsync::tst_QOrganizerItemAsync()
@@ -254,12 +258,19 @@ tst_QOrganizerItemAsync::~tst_QOrganizerItemAsync()
 
 void tst_QOrganizerItemAsync::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 }
 
 void tst_QOrganizerItemAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 bool tst_QOrganizerItemAsync::compareItemLists(QList<QOrganizerItem> lista, QList<QOrganizerItem> listb)

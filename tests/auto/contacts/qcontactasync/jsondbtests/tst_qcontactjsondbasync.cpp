@@ -63,7 +63,8 @@
 #include <QContactTimestamp>
 #include <QContactTag>
 #include <QContactOrganization>
-#include "qcontactidmock.h"
+#include "../../qcontactidmock.h"
+#include "../../../jsondbprocess.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
@@ -230,10 +231,14 @@ private:
     Qt::HANDLE m_mainThreadId;
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
+
+    JsonDbProcess jsondbProcess;
+
 };
 
 tst_QContactJsonDbAsync::tst_QContactJsonDbAsync()
 {
+
     // ensure we can load all of the plugins we need to.
     QString path = QCoreApplication::applicationDirPath() + "/dummyplugin/plugins";
     QCoreApplication::addLibraryPath(path);
@@ -247,6 +252,8 @@ tst_QContactJsonDbAsync::~tst_QContactJsonDbAsync()
 
 void tst_QContactJsonDbAsync::initTestCase()
 {
+    QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     //TODO FIXME
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
@@ -254,6 +261,8 @@ void tst_QContactJsonDbAsync::initTestCase()
 void tst_QContactJsonDbAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
+
+    jsondbProcess.terminate();
 }
 
 void tst_QContactJsonDbAsync::addManagers(QStringList stringlist)

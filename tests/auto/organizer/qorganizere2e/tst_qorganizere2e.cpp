@@ -39,11 +39,12 @@
 **
 ****************************************************************************/
 
-#include <QtTest/qtest.h>
+#include <QtTest/QtTest>
 
 #include <qorganizeritemdetails.h>
 #include <qorganizeritems.h>
 #include <qorganizermanager.h>
+#include "../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -72,10 +73,16 @@ private:
 
     // <manager, items> pair for existing items
     QMap<QString, QList<QOrganizerItem> > existingItems;
+
+    JsonDbProcess jsondbProcess;
 };
 
 void tst_QOrganizerE2E::initTestCase()
 {
+    // Start JsonDb daemon if needed
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+
     // back-up all existing items
     QStringList availableManagers(QOrganizerManager::availableManagers());
     foreach (const QString &manager, availableManagers) {
@@ -105,6 +112,9 @@ void tst_QOrganizerE2E::cleanupTestCase()
         organizerManager.saveItems(&(i.value()));
         ++i;
     }
+
+    if (QOrganizerManager::availableManagers().contains("jsondb"))
+        jsondbProcess.terminate();
 }
 
 void tst_QOrganizerE2E::testMegaItem()

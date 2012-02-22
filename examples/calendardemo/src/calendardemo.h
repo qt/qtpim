@@ -44,7 +44,7 @@
 #include <QMainWindow>
 #include <QDate>
 #include <qorganizeritemsaverequest.h>
-#include <qorganizeritemremoverequest.h>
+#include <qorganizeritemremovebyidrequest.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;
@@ -124,7 +124,7 @@ private:
     QAction *m_switchViewAction;
 
     QOrganizerItemSaveRequest m_saveReq;
-    QOrganizerItemRemoveRequest m_remReq;
+    QOrganizerItemRemoveByIdRequest m_remReq;
     QProgressDialog *m_progressDlg;
 };
 

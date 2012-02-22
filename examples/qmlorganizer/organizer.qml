@@ -97,6 +97,15 @@ Rectangle {
                 if (managerName == "memory")
                     organizer.importItems(Qt.resolvedUrl("contents/test.ics"));
             }
+            onItemsFetched: {
+                // this is for occurrenceDialog
+                console.log("QML --- ITEMS FETCHED" + fetchedItems[0].displayLabel + fetchedItems[0].itemStartTime);
+                if (fetchedItems.length == 1) {
+                    detailsView.isNewItem = false;
+                    detailsView.item = fetchedItems[0];
+                    calendar.state = "DetailsView";
+                }
+            }
         }
 
         InfoBar {
@@ -163,6 +172,7 @@ Rectangle {
                 PropertyChanges { target: statusBar; opacity: 0; }
             },
             State {name: "AddNewItemSelectView"; PropertyChanges { target: addNewItemview; opacity: 0.8; }},
+            State {name: "OccurrenceDialogView"; PropertyChanges { target: occurrenceDialog; opacity: 0.8; }},
             State {name: "CollectionManagerView"; PropertyChanges { target: collectionManagerView; opacity: 1; }},
             State {
                 name: "CollectionEditorView";
@@ -276,6 +286,29 @@ Rectangle {
                         }
                     }
 
+                }
+            }
+            SelectionView {
+                id: occurrenceDialog;
+                //title: "This is a recurring item. Open this instance or whole series?"
+                title: "Recurring item"
+
+                model: VisualItemModel {
+                    Button {
+                        text: "Open this instance"
+                        width: addNewItemview.width / 2
+                        onClicked: {
+                            calendar.state = "DetailsView";
+                        }
+                    }
+                    Button {
+                        text: "Open whole series"
+                        width: addNewItemview.width / 2
+                        onClicked: {
+                            var parentDetail = detailsView.item.detail(Detail.Parent);
+                            organizer.fetchItems([parentDetail.parentId]);
+                        }
+                    }
                 }
             }
             CollectionManagerView {

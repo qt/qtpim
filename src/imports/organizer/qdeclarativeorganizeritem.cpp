@@ -397,6 +397,16 @@ QOrganizerItem QDeclarativeOrganizerItem::item() const
     return item;
 }
 
+/*!
+    \internal
+ */
+bool QDeclarativeOrganizerItem::generatedOccurrence() const
+{
+    QDeclarativeOrganizerItemType::ItemType type = itemType();
+    return (m_id.isNull() && (type == QDeclarativeOrganizerItemType::EventOccurrence || type == QDeclarativeOrganizerItemType::TodoOccurrence));
+}
+
+
 // call-back functions for list property
 /*!
     \internal

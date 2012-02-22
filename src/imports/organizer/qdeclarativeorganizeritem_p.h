@@ -119,6 +119,8 @@ public:
     void setItem(const QOrganizerItem &item);
     QOrganizerItem item() const;
 
+    bool generatedOccurrence() const;
+
     // to be removed
     bool isFloatingTime();
 

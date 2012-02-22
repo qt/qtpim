@@ -56,10 +56,10 @@ Rectangle
         if (detailsView.opacity == 1) {
             // Initialize empty item
             if (isNewItem) {
-                if (item.itemType == Type.Event) {
+                if (item.itemType == Type.Event || item.itemType == Type.EventOccurrence) {
                     item.startDateTime = new Date (calendar.year, calendar.month, calendar.day, 12);
                     item.endDateTime = new Date (calendar.year, calendar.month, calendar.day, 13);
-                } else if (item.itemType == Type.Todo) {
+                } else if (item.itemType == Type.Todo || item.itemType == Type.TodoOccurrence) {
                     item.startDateTime = new Date (calendar.year, calendar.month, calendar.day, 12);
                     item.dueDateTime = new Date (calendar.year, calendar.month, calendar.day, 13);
                 }
@@ -70,7 +70,7 @@ Rectangle
             emptyRecurrenceRule.limit = null;
 
             // Initialize UI
-            if (item.itemType == Type.Event) {
+            if (item.itemType == Type.Event || item.itemType == Type.EventOccurrence) {
                 customLabelRow.setValue(item.displayLabel);
                 customStartDateRow.dateTimeRoller.setDateTime(item.startDateTime);
                 customEndDateRow.dateTimeRoller.setDateTime(item.endDateTime);
@@ -81,7 +81,7 @@ Rectangle
                 customRsvpParticipationStatusRow.value = item.details(Detail.EventRsvp).length ?
                     item.detail(Detail.EventRsvp).participationStatus :
                     EventAttendee.StatusUnknown;
-            } else if (item.itemType == Type.Todo) {
+            } else if (item.itemType == Type.Todo || item.itemType == Type.TodoOccurrence) {
                 todoCustomLabelRow.setValue(item.displayLabel);
                 todoCustomDueDateRow.dateTimeRoller.setDateTime(detailsView.item.dueDateTime);
                 todoCustomDescriptionRow.setValue(item.description);
@@ -159,7 +159,7 @@ Rectangle
             //anchors { top: parent.top; left: saveButton.right }
             width: parent.width / 2
             onClicked: {
-                calendar.organizer.removeItem(item.itemId);
+                calendar.organizer.removeItem(item);
                 calendar.state = "DayView";
             }
         }

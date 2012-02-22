@@ -123,11 +123,14 @@ public:
     QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections();
 
     Q_INVOKABLE void removeItem(const QString& id);
+    Q_INVOKABLE void removeItem(QDeclarativeOrganizerItem *item);
     Q_INVOKABLE void removeItems(const QStringList& ids);
+    Q_INVOKABLE void removeItems(const QList<QDeclarativeOrganizerItem> &items);
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
     Q_INVOKABLE int fetchItems(const QStringList &itemIds);
     Q_INVOKABLE void removeCollection(const QString& collectionId);
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
+    // FIXME : Naming indicates fetch from database
     Q_INVOKABLE void fetchCollections();
 
     Q_INVOKABLE QList<bool> containsItems(const QDateTime &start, const QDateTime &end, int interval);
@@ -165,39 +168,31 @@ public slots:
     void importItems(const QUrl& url, const QStringList& profiles=QStringList());
 
 private slots:
+    void doUpdate();
     void fetchAgain();
     void requestUpdated();
-    void doUpdate();
 
     // handle request from saveItem(), removeItem(), saveCollection(), and removeCollection()
     void onRequestStateChanged(QOrganizerAbstractRequest::State newState);
 
+    // handle fetch request from fetchItems()
+    void onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State state);
+
     // handle signals from organizer manager
-    void onItemsAdded(const QList<QOrganizerItemId> &itemIds);
-    void onItemsChanged(const QList<QOrganizerItemId> &itemIds);
-    void onItemsRemoved(const QList<QOrganizerItemId> &itemIds);
+    void onItemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
+
+    // handle fetch request from onItemsModified()
+    void onItemsModifiedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
+
+    void collectionsFetched();
 
     void startImport(QVersitReader::State state);
     void itemsExported(QVersitWriter::State state);
 
-    void collectionsFetched();
-
-    // handle fetch request from onItemsAdded()
-    void onItemsAddedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
-
-    // handle fetch request from onItemsChanged()
-    void onItemsChangedFetchRequestStateChanged(QOrganizerAbstractRequest::State state);
-
-    // handle fetch request from fetchItems()
-    void onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State state);
 
 private:
-    void clearItems();
-    int itemIndex(const QDeclarativeOrganizerItem* item);
-    void addSorted(QDeclarativeOrganizerItem* item);
     void removeItemsFromModel(const QList<QString>& ids);
     bool itemHasRecurrence(const QOrganizerItem& oi) const;
-    void fetchOccurrences(const QOrganizerItem& item);
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
     void checkError(const QOrganizerAbstractRequest *request);
 

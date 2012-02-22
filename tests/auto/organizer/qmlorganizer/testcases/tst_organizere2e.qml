@@ -62,7 +62,7 @@ TestCase {
 
     function test_megaitems_data() {
         return [{
-            managers: ["jsondb"],
+                managers: ["memory", "jsondb"],
             definitions: {
 
                 "Event": {
@@ -83,9 +83,6 @@ TestCase {
                     "ExtendedDetail": {
                         "name": "'dummy'",
                         "data": "'dummy'"
-                    },
-                    "Recurrence": {
-                        "recurrenceDates": "['2012-01-02', '2012-01-03']"
                     },
                     "EventTime": {
                         "startDateTime": "'2012-01-01'",
@@ -139,9 +136,6 @@ TestCase {
                         "name": "'dummy'",
                         "data": "'dummy'"
                     },
-                    "Recurrence": {
-                        "recurrenceDates": "['2012-01-02', '2012-01-03']"
-                    },
                     "TodoTime": {
                         "startDateTime": "'2012-01-01'",
                         "dueDateTime": "'2012-01-02'"
@@ -158,32 +152,23 @@ TestCase {
     }
 
     function test_megaitems(data) {
-
         var qmlItems = createQMLItemsFromHash(data.definitions)
-
         for (var i in data.managers) {
-
             console.log("Testing "+data.managers[i]+" backend")
 
             model.manager = data.managers[i]
             wait(500) // Todo: replace with spy.wait()
-
             cleanDatabase()
-
             for (var j in qmlItems) {
                 model.saveItem(qmlItems[j])
                 spy.wait()
             }
-
             compare(model.itemCount, qmlItems.length, "Items were not successfully saved.")
-
             compareViewToModel(qmlItems, model)
-
             cleanDatabase()
-
-            model.destroy()
-            spy.destroy()
         }
+        model.destroy()
+        spy.destroy()
     }
 
 

@@ -140,7 +140,10 @@ Flickable
                                  onLinkActivated: {
                                      detailsView.isNewItem = false;
                                      detailsView.item = modelData;
-                                     calendar.state = "DetailsView";
+                                     if (detailsView.item.itemType == Type.EventOccurrence || detailsView.item.itemType == Type.TodoOccurrence)
+                                         calendar.state = "OccurrenceDialogView";
+                                     else
+                                         calendar.state = "DetailsView";
                                  }
                              }
                              Rectangle {

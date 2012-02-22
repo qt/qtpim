@@ -133,7 +133,7 @@ Rectangle {
 
             onClicked: {
                 organizerApplication.state = "EventListView"
-                organizer.removeItem(eventItem.itemId)
+                organizer.removeItem(eventItem)
             }
         }
 

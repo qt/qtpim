@@ -127,6 +127,8 @@ QList<int> QDeclarativeOrganizerItemDetail::fieldNames() const
  */
 QVariant QDeclarativeOrganizerItemDetail::value(int field) const
 {
+    // FIXME: this gives wrong value if declarative detail field is different type than native detail field
+    // e.g. parent::parentId
     return m_detail.value(field);
 }
 

@@ -14,5 +14,10 @@ OTHER_FILES += testcases/addEvent.qml \
     testcases/tst_organizeremailreminder.qml \
     testcases/tst_organizercollectionfilter.qml \
     testcases/tst_organizerunionfilter.qml \
-    testcases/tst_organizeritemdetail.qml
+    testcases/tst_organizerintersectionfilter.qml \
+    testcases/tst_organizercollectionfilter.qml \
+    testcases/tst_organizeritemdetail.qml \
+    testcases/tst_organizere2e.qml \
+    testcases/tst_organizerrecurrence.qml \
+    testcases/tst_organizermodelupdate.qml
 include (../qmlauto.pri)

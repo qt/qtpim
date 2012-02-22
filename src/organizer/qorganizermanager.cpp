@@ -307,9 +307,11 @@ void QOrganizerManager::createEngine(const QString &managerName, const QMap<QStr
     connect(d->m_engine, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SIGNAL(itemsAdded(QList<QOrganizerItemId>)));
     connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SIGNAL(itemsChanged(QList<QOrganizerItemId>)));
     connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)));
+    connect(d->m_engine, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> >)), this, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> >)));
     connect(d->m_engine, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)));
+    connect(d->m_engine, SIGNAL(collectionsModified(QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> >)), this, SIGNAL(collectionsModified(QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> >)));
     connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(_q_itemsUpdated(QList<QOrganizerItemId>)));
     connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(_q_itemsDeleted(QList<QOrganizerItemId>)));
 }
@@ -620,6 +622,20 @@ bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
 }
 
 /*!
+    Remove the organizer \a item from the database. If \a item is a generated occurrence,
+    the start date of the occurrence is added to its parent item's exception date list.
+    Returns true if the organizer item was removed successfully, otherwise returns false.
+
+    \sa removeItems
+ */
+bool QOrganizerManager::removeItem(const QOrganizerItem *item)
+{
+    QList<QOrganizerItem> list;
+    list.append(*item);
+    return removeItems(&list);
+}
+
+/*!
     Saves the given list of \a items to the backend, and returns true on success or false otherwise.
 
     A new organizer item will be created in the backend store if the item ID of it is null. Otherwise,
@@ -669,6 +685,37 @@ bool QOrganizerManager::removeItems(const QList<QOrganizerItemId> &itemIds)
         return false;
     }
     return d->m_engine->removeItems(itemIds, &h.errorMap, &h.error);
+}
+
+/*!
+   Removes every organizer item which is contained in the list of organizer items
+   \a items. If the list contains generated occurrences the start date of the occurrence
+   is added to its parent item's exception date list. Returns true if all organizer items
+   were removed successfully, otherwise false.
+
+   Calling \l errorMap() will return the per-input errors for the latest batch function.
+   The \l QOrganizerManager::error() function will only return \c QOrganizerManager::NoError
+   if all organizer items were removed successfully.
+
+   If the given list of organizer \a items is empty, the function will return false
+   and calling error() will return \c QOrganizerManager::BadArgumentError.  If the list is non-empty
+   and contains items which are not a valid organizer item in the manager, the function will
+   remove any valid organizer items in the \a items list, insert \c QOrganizerManager::DoesNotExist
+   entries into the error map for the indices of invalid id in the \a items list, return false,
+   and set the overall operation error to \c QOrganizerManager::DoesNotExistError.
+
+   \sa QOrganizerManager::removeItem()
+ */
+
+bool QOrganizerManager::removeItems(const QList<QOrganizerItem> *items)
+{
+    QOrganizerManagerSyncOpErrorHolder h(this);
+    if (items->isEmpty()) {
+        h.error = QOrganizerManager::BadArgumentError;
+        return false;
+    }
+
+    return d->m_engine->removeItems(items, &h.errorMap, &h.error);
 }
 
 /*!

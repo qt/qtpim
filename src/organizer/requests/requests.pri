@@ -11,7 +11,8 @@ PUBLIC_HEADERS += requests/qorganizeritemrequests.h \
     requests/qorganizeritemoccurrencefetchrequest.h \
     requests/qorganizeritemidfetchrequest.h \
     requests/qorganizeritemremoverequest.h \
-    requests/qorganizeritemsaverequest.h
+    requests/qorganizeritemsaverequest.h \
+    requests/qorganizeritemremovebyidrequest.h
 
 PRIVATE_HEADERS += requests/qorganizeritemrequests_p.h
 
@@ -25,4 +26,5 @@ SOURCES += \
     requests/qorganizeritemoccurrencefetchrequest.cpp \
     requests/qorganizeritemidfetchrequest.cpp \
     requests/qorganizeritemremoverequest.cpp \
-    requests/qorganizeritemsaverequest.cpp
+    requests/qorganizeritemsaverequest.cpp \
+    requests/qorganizeritemremovebyidrequest.cpp

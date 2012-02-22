@@ -48,8 +48,8 @@
 #include <qorganizeritemfetchforexportrequest.h>
 #include <qorganizeritemidfetchrequest.h>
 #include <qorganizeritemremoverequest.h>
+#include <qorganizeritemremovebyidrequest.h>
 #include <qorganizeritemsaverequest.h>
-
 #include <qorganizercollectionfetchrequest.h>
 #include <qorganizercollectionremoverequest.h>
 #include <qorganizercollectionsaverequest.h>

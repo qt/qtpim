@@ -324,6 +324,41 @@ public:
     QDebug& debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemRemoveRequest(";
+        dbg.nospace() << "items=";
+        dbg.nospace() << m_organizeritems;
+        dbg.nospace() << ",";
+        dbg.nospace() << "errorMap=";
+        dbg.nospace() << m_errors;
+        dbg.nospace() << "\n)";
+        return dbg.maybeSpace();
+    }
+#endif
+
+    QList<QOrganizerItem> m_organizeritems;
+    QMap<int, QOrganizerManager::Error> m_errors;
+};
+
+class QOrganizerItemRemoveByIdRequestPrivate : public QOrganizerAbstractRequestPrivate
+{
+public:
+    QOrganizerItemRemoveByIdRequestPrivate()
+        : QOrganizerAbstractRequestPrivate()
+    {
+    }
+
+    ~QOrganizerItemRemoveByIdRequestPrivate()
+    {
+    }
+
+    QOrganizerAbstractRequest::RequestType type() const
+    {
+        return QOrganizerAbstractRequest::ItemRemoveByIdRequest;
+    }
+
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug& debugStreamOut(QDebug& dbg) const
+    {
+        dbg.nospace() << "QOrganizerItemRemoveByIdRequest(";
         dbg.nospace() << "itemIds=";
         dbg.nospace() << m_organizeritemIds;
         dbg.nospace() << ",";

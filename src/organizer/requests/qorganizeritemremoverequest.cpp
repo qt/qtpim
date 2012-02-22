@@ -72,38 +72,37 @@ QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
 }
 
 /*!
-    Sets the ID of the organizer item which will be removed to \a itemId.
-    Equivalent to calling:
-    \code
-    setOrganizerItemIds(QList<QOrganizerItemId>() << itemId);
-    \endcode
+  Sets the organizer item which will be removed to \a item.
+  Equivalent to calling:
+  \code
+      setOrganizerItems(QList<QOrganizerItem>() << item);
+  \endcode
  */
-void QOrganizerItemRemoveRequest::setItemId(const QOrganizerItemId &itemId)
+void QOrganizerItemRemoveRequest::setItem(const QOrganizerItem &item)
 {
     Q_D(QOrganizerItemRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_organizeritemIds.clear();
-    d->m_organizeritemIds.append(itemId);
+    d->m_organizeritems.clear();
+    d->m_organizeritems.append(item);
 }
 
-/*!
-    Sets the list of ids of organizer items which will be removed to \a itemIds.
+/*! Sets the organizer items which will be removed to \a items
 */
-void QOrganizerItemRemoveRequest::setItemIds(const QList<QOrganizerItemId> &itemIds)
+void QOrganizerItemRemoveRequest::setItems(const QList<QOrganizerItem> &items)
 {
     Q_D(QOrganizerItemRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_organizeritemIds = itemIds;
+    d->m_organizeritems = items;
 }
 
 /*!
     Returns the list of IDs of organizer items which will be removed.
 */
-QList<QOrganizerItemId> QOrganizerItemRemoveRequest::itemIds() const
+QList<QOrganizerItem> QOrganizerItemRemoveRequest::items() const
 {
     Q_D(const QOrganizerItemRemoveRequest);
     QMutexLocker ml(&d->m_mutex);
-    return d->m_organizeritemIds;
+    return d->m_organizeritems;
 }
 
 /*!

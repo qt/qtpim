@@ -40,58 +40,41 @@
 ****************************************************************************/
 
 
-#ifndef QORGANIZERITEMCHANGESET_H
-#define QORGANIZERITEMCHANGESET_H
+#ifndef QORGANIZERITEMREMOVEBYIDREQUEST_H
+#define QORGANIZERITEMREMOVEBYIDREQUEST_H
 
-#include <qorganizerglobal.h>
-#include <qorganizeritemid.h>
-#include <qorganizermanager.h>
+#include "qorganizerglobal.h"
+#include "qorganizerabstractrequest.h"
+#include "qorganizeritemfilter.h"
 
-#include <QtCore/qset.h>
-#include <QtCore/qshareddata.h>
+#include <QList>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerManagerEngine;
-class QOrganizerItemChangeSetData;
-class Q_ORGANIZER_EXPORT QOrganizerItemChangeSet
+class QOrganizerItemRemoveByIdRequestPrivate;
+class Q_ORGANIZER_EXPORT QOrganizerItemRemoveByIdRequest : public QOrganizerAbstractRequest
 {
+    Q_OBJECT
+
 public:
-    QOrganizerItemChangeSet();
-    QOrganizerItemChangeSet(const QOrganizerItemChangeSet& other);
-    ~QOrganizerItemChangeSet();
+    QOrganizerItemRemoveByIdRequest(QObject* parent = 0);
+    ~QOrganizerItemRemoveByIdRequest();
 
-    QOrganizerItemChangeSet& operator=(const QOrganizerItemChangeSet& other);
+    /* Selection */
+    void setItemId(const QOrganizerItemId& organizeritemId);
+    void setItemIds(const QList<QOrganizerItemId>& organizeritemIds);
+    QList<QOrganizerItemId> itemIds() const;
 
-    void setDataChanged(bool dataChanged);
-    bool dataChanged() const;
-
-    QSet<QOrganizerItemId> addedItems() const;
-    void insertAddedItem(const QOrganizerItemId& addedItemId);
-    void insertAddedItems(const QList<QOrganizerItemId>& addedItemIds);
-    void clearAddedItems();
-
-    QSet<QOrganizerItemId> changedItems() const;
-    void insertChangedItem(const QOrganizerItemId& addedItemId);
-    void insertChangedItems(const QList<QOrganizerItemId>& addedItemIds);
-    void clearChangedItems();
-
-    QSet<QOrganizerItemId> removedItems() const;
-    void insertRemovedItem(const QOrganizerItemId& addedItemId);
-    void insertRemovedItems(const QList<QOrganizerItemId>& addedItemIds);
-    void clearRemovedItems();
-
-    QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > modifiedItems() const;
-    void clearModifiedItems();
-
-    void clearAll();
-
-    void emitSignals(QOrganizerManagerEngine *engine) const;
+    /* Results */
+    QMap<int, QOrganizerManager::Error> errorMap() const;
 
 private:
-    QSharedDataPointer<QOrganizerItemChangeSetData> d;
+    Q_DISABLE_COPY(QOrganizerItemRemoveByIdRequest)
+    friend class QOrganizerManagerEngine;
+    Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemRemoveByIdRequest)
 };
 
 QTORGANIZER_END_NAMESPACE
 
 #endif
+

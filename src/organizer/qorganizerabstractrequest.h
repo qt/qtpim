@@ -78,6 +78,7 @@ public:
         ItemIdFetchRequest,
         ItemFetchByIdRequest,
         ItemRemoveRequest,
+        ItemRemoveByIdRequest,
         ItemSaveRequest,
         CollectionFetchRequest,
         CollectionRemoveRequest,

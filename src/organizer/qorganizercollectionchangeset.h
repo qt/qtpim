@@ -45,6 +45,7 @@
 
 #include <qorganizerglobal.h>
 #include <qorganizercollectionid.h>
+#include <qorganizermanager.h>
 
 #include <QtCore/qset.h>
 
@@ -78,6 +79,9 @@ public:
     void insertRemovedCollection(const QOrganizerCollectionId& addedCollectionId);
     void insertRemovedCollections(const QList<QOrganizerCollectionId>& addedCollectionIds);
     void clearRemovedCollections();
+
+    QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > modifiedCollections() const;
+    void clearModifiedCollections();
 
     void clearAll();
 

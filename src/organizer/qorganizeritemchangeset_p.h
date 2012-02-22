@@ -76,7 +76,8 @@ public:
         m_dataChanged(other.m_dataChanged),
         m_addedItems(other.m_addedItems),
         m_changedItems(other.m_changedItems),
-        m_removedItems(other.m_removedItems)
+        m_removedItems(other.m_removedItems),
+        m_modifiedItems(other.m_modifiedItems)
     {
     }
 
@@ -88,6 +89,7 @@ public:
     QSet<QOrganizerItemId> m_addedItems;
     QSet<QOrganizerItemId> m_changedItems;
     QSet<QOrganizerItemId> m_removedItems;
+    QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > m_modifiedItems;
 };
 
 QTORGANIZER_END_NAMESPACE

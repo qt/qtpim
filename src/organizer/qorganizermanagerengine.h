@@ -44,6 +44,7 @@
 
 #include <qorganizermanager.h>
 #include <qorganizerabstractrequest.h>
+#include <qorganizerrecurrencerule.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -55,6 +56,7 @@ class QOrganizerItemFetchByIdRequest;
 class QOrganizerItemFetchRequest;
 class QOrganizerItemOccurrenceFetchRequest;
 class QOrganizerItemRemoveRequest;
+class QOrganizerItemRemoveByIdRequest;
 class QOrganizerItemSaveRequest;
 class QOrganizerItemFetchForExportRequest;
 
@@ -98,6 +100,8 @@ public:
     virtual bool removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
                              QOrganizerManager::Error *error);
 
+    virtual bool removeItems(const QList<QOrganizerItem> *items, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
+
     // collections
     virtual QOrganizerCollection defaultCollection(QOrganizerManager::Error *error);
     virtual QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
@@ -132,6 +136,9 @@ public:
     static void updateItemRemoveRequest(QOrganizerItemRemoveRequest *request, QOrganizerManager::Error error,
                                         const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
 
+    static void updateItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest *request, QOrganizerManager::Error error,
+                                            const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
+
     static void updateItemSaveRequest(QOrganizerItemSaveRequest *request, const QList<QOrganizerItem> &result, QOrganizerManager::Error error,
                                       const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState);
 
@@ -155,6 +162,7 @@ public:
     static const QOrganizerCollectionEngineId *engineCollectionId(const QOrganizerCollectionId &collectionId);
 
     static int addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders);
+    static bool addDefaultSorted(QMultiMap<QDateTime, QOrganizerItem> *defaultSorted, const QOrganizerItem &toAdd);
     static int compareItem(const QOrganizerItem &a, const QOrganizerItem &b, const QList<QOrganizerItemSortOrder> &sortOrders);
     static int compareVariant(const QVariant &a, const QVariant &b, Qt::CaseSensitivity sensitivity);
     static bool isItemBetweenDates(const QOrganizerItem &item, const QDateTime &startPeriod, const QDateTime &endPeriod);
@@ -162,14 +170,27 @@ public:
     static bool testFilter(const QOrganizerItemFilter &filter, const QOrganizerItem &item);
     static QOrganizerItemFilter canonicalizedFilter(const QOrganizerItemFilter &filter);
 
+    // recurrence help
+    static QOrganizerItem generateOccurrence(const QOrganizerItem &parentItem, const QDateTime &rdate);
+    static QList<QDateTime> generateDateTimes(const QDateTime &initialDateTime, QOrganizerRecurrenceRule rrule, const QDateTime &periodStart, const QDateTime &periodEnd, int maxCount);
+    static void inferMissingCriteria(QOrganizerRecurrenceRule *rrule, const QDate &initialDate);
+    static bool inMultipleOfInterval(const QDate &date, const QDate &initialDate, QOrganizerRecurrenceRule::Frequency frequency, int interval, Qt::DayOfWeek firstDayOfWeek);
+    static QDate firstDateInPeriod(const QDate &date, QOrganizerRecurrenceRule::Frequency frequency, Qt::DayOfWeek firstDayOfWeek);
+    static QDate firstDateInNextPeriod(const QDate &date, QOrganizerRecurrenceRule::Frequency frequency, Qt::DayOfWeek firstDayOfWeek);
+    static QList<QDate> matchingDates(const QDate &periodStart, const QDate &periodEnd, const QOrganizerRecurrenceRule &rrule);
+    static QList<QDate> filterByPosition(const QList<QDate> &dates, const QSet<int> positions);
+    static bool itemHasReccurence(const QOrganizerItem &oi);
+
 Q_SIGNALS:
     void dataChanged();
     void itemsAdded(const QList<QOrganizerItemId> &itemIds);
     void itemsChanged(const QList<QOrganizerItemId> &itemIds);
     void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
+    void itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
     void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);
     void collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds);
     void collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsModified(const QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > &collectionIds);
 
 private:
     Q_DISABLE_COPY(QOrganizerManagerEngine)

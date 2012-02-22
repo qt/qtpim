@@ -72,6 +72,9 @@ QDateTime TimeZone::convert(const QDateTime& dateTime) const
                 offset = phase.utcOffset();
             }
         }
+        else {
+            offset = phase.utcOffset();
+        }
     }
     QDateTime retn(dateTime);
     retn.setTimeSpec(Qt::UTC);

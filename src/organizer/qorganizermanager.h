@@ -102,6 +102,13 @@ public:
         TimeoutError
     };
 
+    enum Operation {
+        Add,
+        Change,
+        Remove
+    };
+
+    /* Error reporting */
     QOrganizerManager::Error error() const;
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
@@ -135,7 +142,11 @@ public:
 
     bool removeItem(const QOrganizerItemId &itemId);
 
+    bool removeItem(const QOrganizerItem *item);
+
     bool removeItems(const QList<QOrganizerItemId>& itemIds);
+
+    bool removeItems(const QList<QOrganizerItem> *items);
 
     // collections
     QOrganizerCollection defaultCollection();
@@ -163,9 +174,11 @@ Q_SIGNALS:
     void itemsAdded(const QList<QOrganizerItemId> &itemIds);
     void itemsChanged(const QList<QOrganizerItemId> &itemIds);
     void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
+    void itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
     void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);
     void collectionsChanged(const QList<QOrganizerCollectionId> &collectionIds);
     void collectionsRemoved(const QList<QOrganizerCollectionId> &collectionIds);
+    void collectionsModified(const QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > &collectionIds);
 
 private:
     friend class QOrganizerManagerData;

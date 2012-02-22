@@ -129,6 +129,7 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::addedItems() const
 void QOrganizerItemChangeSet::insertAddedItem(const QOrganizerItemId& addedOrganizerItemId)
 {
     d->m_addedItems.insert(addedOrganizerItemId);
+    d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(addedOrganizerItemId, QOrganizerManager::Add));
 }
 
 /*!
@@ -137,8 +138,10 @@ void QOrganizerItemChangeSet::insertAddedItem(const QOrganizerItemId& addedOrgan
  */
 void QOrganizerItemChangeSet::insertAddedItems(const QList<QOrganizerItemId>& addedOrganizerItemIds)
 {
-    foreach (const QOrganizerItemId& id, addedOrganizerItemIds)
+    foreach (const QOrganizerItemId& id, addedOrganizerItemIds) {
         d->m_addedItems.insert(id);
+        d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(id, QOrganizerManager::Add));
+    }
 }
 
 /*!
@@ -165,6 +168,7 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::changedItems() const
 void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId& changedOrganizerItemId)
 {
     d->m_changedItems.insert(changedOrganizerItemId);
+    d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(changedOrganizerItemId, QOrganizerManager::Change));
 }
 
 /*!
@@ -173,8 +177,10 @@ void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId& changedO
  */
 void QOrganizerItemChangeSet::insertChangedItems(const QList<QOrganizerItemId>& changedOrganizerItemIds)
 {
-    foreach (const QOrganizerItemId& id, changedOrganizerItemIds)
+    foreach (const QOrganizerItemId& id, changedOrganizerItemIds) {
         d->m_changedItems.insert(id);
+        d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(id, QOrganizerManager::Change));
+    }
 }
 
 /*!
@@ -201,6 +207,7 @@ QSet<QOrganizerItemId> QOrganizerItemChangeSet::removedItems() const
 void QOrganizerItemChangeSet::insertRemovedItem(const QOrganizerItemId& removedOrganizerItemId)
 {
     d->m_removedItems.insert(removedOrganizerItemId);
+    d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(removedOrganizerItemId, QOrganizerManager::Remove));
 }
 
 /*!
@@ -209,8 +216,10 @@ void QOrganizerItemChangeSet::insertRemovedItem(const QOrganizerItemId& removedO
  */
 void QOrganizerItemChangeSet::insertRemovedItems(const QList<QOrganizerItemId>& removedOrganizerItemIds)
 {
-    foreach (const QOrganizerItemId& id, removedOrganizerItemIds)
+    foreach (const QOrganizerItemId& id, removedOrganizerItemIds) {
         d->m_removedItems.insert(id);
+        d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(id, QOrganizerManager::Remove));
+    }
 }
 
 /*!
@@ -221,6 +230,23 @@ void QOrganizerItemChangeSet::clearRemovedItems()
     d->m_removedItems.clear();
 }
 
+/*!
+   Returns the list of ids of organizer items which have been added, changed or removed from
+   the database. The list includes information about which database operation was done. The ids and
+   operations are ordered so that the first operation is first in the list.
+ */
+QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > QOrganizerItemChangeSet::modifiedItems() const
+{
+    return d->m_modifiedItems;
+}
+
+/*!
+  Clears the list of ids of organizer items which have been added, changed or removed from the database
+ */
+void QOrganizerItemChangeSet::clearModifiedItems()
+{
+    d->m_modifiedItems.clear();
+}
 
 /*!
    Clears all flags and sets of ids in this change set
@@ -231,6 +257,7 @@ void QOrganizerItemChangeSet::clearAll()
     d->m_addedItems.clear();
     d->m_changedItems.clear();
     d->m_removedItems.clear();
+    d->m_modifiedItems.clear();
 }
 
 /*!
@@ -250,6 +277,8 @@ void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
             emit engine->itemsChanged(d->m_changedItems.toList());
         if (!d->m_removedItems.isEmpty())
             emit engine->itemsRemoved(d->m_removedItems.toList());
+        if (!d->m_modifiedItems.isEmpty())
+            emit engine->itemsModified(d->m_modifiedItems);
     }
 }
 

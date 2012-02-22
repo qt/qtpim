@@ -131,6 +131,7 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::addedCollections() c
 void QOrganizerCollectionChangeSet::insertAddedCollection(const QOrganizerCollectionId& addedOrganizerCollectionId)
 {
     d->m_addedCollections.insert(addedOrganizerCollectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(addedOrganizerCollectionId, QOrganizerManager::Add));
 }
 
 /*!
@@ -139,8 +140,10 @@ void QOrganizerCollectionChangeSet::insertAddedCollection(const QOrganizerCollec
  */
 void QOrganizerCollectionChangeSet::insertAddedCollections(const QList<QOrganizerCollectionId>& addedOrganizerCollectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, addedOrganizerCollectionIds)
+    foreach (const QOrganizerCollectionId& id, addedOrganizerCollectionIds) {
         d->m_addedCollections.insert(id);
+        d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Add));
+    }
 }
 
 /*!
@@ -167,6 +170,7 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::changedCollections()
 void QOrganizerCollectionChangeSet::insertChangedCollection(const QOrganizerCollectionId& changedOrganizerCollectionId)
 {
     d->m_changedCollections.insert(changedOrganizerCollectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(changedOrganizerCollectionId, QOrganizerManager::Change));
 }
 
 /*!
@@ -175,8 +179,10 @@ void QOrganizerCollectionChangeSet::insertChangedCollection(const QOrganizerColl
  */
 void QOrganizerCollectionChangeSet::insertChangedCollections(const QList<QOrganizerCollectionId>& changedOrganizerCollectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, changedOrganizerCollectionIds)
+    foreach (const QOrganizerCollectionId& id, changedOrganizerCollectionIds) {
         d->m_changedCollections.insert(id);
+        d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Change));
+    }
 }
 
 /*!
@@ -203,6 +209,7 @@ QSet<QOrganizerCollectionId> QOrganizerCollectionChangeSet::removedCollections()
 void QOrganizerCollectionChangeSet::insertRemovedCollection(const QOrganizerCollectionId& removedOrganizerCollectionId)
 {
     d->m_removedCollections.insert(removedOrganizerCollectionId);
+    d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(removedOrganizerCollectionId, QOrganizerManager::Remove));
 }
 
 /*!
@@ -211,8 +218,10 @@ void QOrganizerCollectionChangeSet::insertRemovedCollection(const QOrganizerColl
  */
 void QOrganizerCollectionChangeSet::insertRemovedCollections(const QList<QOrganizerCollectionId>& removedOrganizerCollectionIds)
 {
-    foreach (const QOrganizerCollectionId& id, removedOrganizerCollectionIds)
+    foreach (const QOrganizerCollectionId& id, removedOrganizerCollectionIds) {
         d->m_removedCollections.insert(id);
+        d->m_modifiedCollections.append(QPair<QOrganizerCollectionId, QOrganizerManager::Operation>(id, QOrganizerManager::Remove));
+    }
 }
 
 /*!
@@ -223,6 +232,23 @@ void QOrganizerCollectionChangeSet::clearRemovedCollections()
     d->m_removedCollections.clear();
 }
 
+/*!
+   Returns the list of ids of organizer collections which have been added, changed or removed from
+   the database. The list includes information about which database operation was done. The ids and
+   operations are ordered so that the first operation is first in the list.
+ */
+QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > QOrganizerCollectionChangeSet::modifiedCollections() const
+{
+    return d->m_modifiedCollections;
+}
+
+/*!
+  Clears the list of ids of organizer collections which have been added, changed or removed from the database
+ */
+void QOrganizerCollectionChangeSet::clearModifiedCollections()
+{
+    d->m_modifiedCollections.clear();
+}
 
 /*!
    Clears all flags and sets of ids in this change set
@@ -233,6 +259,7 @@ void QOrganizerCollectionChangeSet::clearAll()
     d->m_addedCollections.clear();
     d->m_changedCollections.clear();
     d->m_removedCollections.clear();
+    d->m_modifiedCollections.clear();
 }
 
 /*!
@@ -252,6 +279,9 @@ void QOrganizerCollectionChangeSet::emitSignals(QOrganizerManagerEngine *engine)
             emit engine->collectionsChanged(d->m_changedCollections.toList());
         if (!d->m_removedCollections.isEmpty())
             emit engine->collectionsRemoved(d->m_removedCollections.toList());
+        if (!d->m_modifiedCollections.isEmpty())
+            emit engine->collectionsModified(d->m_modifiedCollections);
+
     }
 }
 

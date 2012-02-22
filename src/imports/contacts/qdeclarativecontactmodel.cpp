@@ -110,7 +110,6 @@ public:
     QList<QDeclarativeContactSortOrder*> m_sortOrders;
     QDeclarativeContactFilter* m_filter;
 
-    QList<QContactId> m_updatedContactIds;
     QVersitReader m_reader;
     QVersitWriter m_writer;
     QStringList m_importProfiles;
@@ -800,10 +799,6 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &contactIdList)
 {
     if (d->m_autoUpdate && !contactIdList.isEmpty()) {
-        foreach (const QContactId &contactId, contactIdList)
-            if (d->m_contactMap.contains(contactId))
-                m_updatedIds.append(contactId);
-
         QContactFetchRequest *fetchRequest = new QContactFetchRequest(this);
         connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
                 this, SLOT(onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State)));
@@ -813,8 +808,8 @@ void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &contac
         idFilter.setIds(contactIdList);
         if (d->m_filter) {
             QContactIntersectionFilter filter;
+            filter.append(idFilter); // result handling assumes that id filter is the first filter
             filter.append(d->m_filter->filter());
-            filter.append(idFilter);
             fetchRequest->setFilter(filter);
         } else
             fetchRequest->setFilter(idFilter);
@@ -935,6 +930,14 @@ void QDeclarativeContactModel::onContactsAddedFetchRequestStateChanged(QContactA
 }
 
 
+static bool contactListDoesNotContainContactWithId(const QList<QContact> &contactList, const QContactId &contactId) {
+    foreach (const QContact &contact, contactList) {
+        if (contact.id() == contactId)
+            return false;
+    }
+    return true;
+}
+
 /*!
     \internal
 
@@ -951,11 +954,22 @@ void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContac
 
     checkError(request);
     bool contactsUpdated = false;
-    //handle updated contacts which needs removal from model
-    if (request->error() == QContactManager::DoesNotExistError) {
+    if (request->error() == QContactManager::NoError || request->error() == QContactManager::DoesNotExistError) {
         QList<QContact> fetchedContacts(request->contacts());
-        if (fetchedContacts.isEmpty() && !m_updatedIds.isEmpty()) {
-            foreach (QContactId id, m_updatedIds) {
+        QList<QContactId> requestedContactIds;
+        //read requested contacts ids from the filter
+        if (request->filter().type() == QContactFilter::IdFilter) {
+            QContactIdFilter idFilter(request->filter());
+            requestedContactIds = idFilter.ids();
+        } else {
+            QContactIntersectionFilter intersectionFilter(request->filter());
+            QContactIdFilter idFilter(intersectionFilter.filters().at(0)); // assuming that id filter is the first filter
+            requestedContactIds = idFilter.ids();
+        }
+        //handle updated contacts which needs removal from model
+        //all contacts requested but not received are removed
+        foreach (QContactId id, requestedContactIds) {
+            if (contactListDoesNotContainContactWithId(fetchedContacts, id)) {
                 for (int i=0;i<d->m_contacts.size();++i) {
                     if (d->m_contacts.at(i)->contactId() == id.toString()) {
                         beginRemoveRows(QModelIndex(), i, i);
@@ -967,8 +981,6 @@ void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContac
                 }
             }
         }
-    } else if (request->error() == QContactManager::NoError) {
-        QList<QContact> fetchedContacts(request->contacts());
         foreach (const QContact &fetchedContact, fetchedContacts) {
             QString contactIdString(fetchedContact.id().toString());
             bool fetchedContactFound = false;

@@ -746,8 +746,7 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
     //TODO  isSupportedDetailFilter implementation to be done, as of now we assume that support
     //filters for all detail types
     bool isValidFilter  = true;
-    QContactDetailFilter detailFilter;
-    detailFilter = (QContactDetailFilter) filter;
+    QContactDetailFilter detailFilter(filter);
     if (detailFilter.detailDefinitionName().isEmpty()) {
         //If definitionName is empty, the detail filter will match no contacts
         jsonDbQueryStr = "";
@@ -807,7 +806,7 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
 
 bool QContactJsonDbConverter::idFilterToJsondbQuery(const QContactFilter &filter, QString &newJsonDbQuery) const
 {
-    QContactIdFilter idFilter = (QContactIdFilter) filter;
+    QContactIdFilter idFilter(filter);
     QList<QContactId> ids = idFilter.ids();
     if (!ids.isEmpty()) {
         newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() +

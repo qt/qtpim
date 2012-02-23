@@ -216,7 +216,6 @@ ContactsSavingTestCase {
             }
             compare(match, true);
         }
-        console.log("PASS");
     }
 
     function test_settingMatchFlagDoesChangeTheContacts() {

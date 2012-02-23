@@ -67,14 +67,11 @@ QContactJsonDbRequestHandler::QContactJsonDbRequestHandler()
 
 QContactJsonDbRequestHandler::~QContactJsonDbRequestHandler()
 {
-    if (m_reqStateMutex)
-        delete m_reqStateMutex;
-    if (m_requestMgr)
-        delete m_requestMgr;
-    if (m_jsonDb)
-        delete m_jsonDb;
-    if (m_converter)
-        delete m_converter;
+    delete m_timer;
+    delete m_reqStateMutex;
+    delete m_converter;
+    delete m_requestMgr;
+    delete m_jsonDb;
 }
 
 void QContactJsonDbRequestHandler::init()

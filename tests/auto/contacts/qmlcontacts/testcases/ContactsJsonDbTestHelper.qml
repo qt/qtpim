@@ -111,7 +111,7 @@ Item {
 
     SignalingJsonDb {
         id: jsonDb
-        name: "com.nokia.qtjsondb.System"
+        name: "database.System"
     }
 
     property SignalSpy jsonDbSpy

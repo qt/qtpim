@@ -47,7 +47,7 @@ import QtJsonDb 1.0
 Partition {
     id: jsonDb
 
-    name: "com.nokia.qtjsondb.System"
+    name: "database.System"
 
     function createAndSignal(object) {
         logDebug("createAndSignal()");

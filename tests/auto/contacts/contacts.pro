@@ -15,8 +15,8 @@ SUBDIRS += \
     qcontactrelationship \
 #    qdeclarativecontact
 
-#contains(QT_CONFIG, jsondb) {
-#    SUBDIRS += qcontactjsondb \
+contains(QT_CONFIG, jsondb) {
+    SUBDIRS += qcontactjsondb
 #               qcontactjsondbconverter
-#}
+}
 

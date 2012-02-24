@@ -22,6 +22,7 @@ SOURCES += tst_qcontactjsondbengine.cpp \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../../../src/plugins/contacts/jsondb
+INCLUDEPATH += ../..
 
 HEADERS += qcontactjsondbbackup.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbenginefactory.h \
@@ -33,4 +34,5 @@ HEADERS += qcontactjsondbbackup.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbstring.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbid.h \
            synchronizedjsondbclient.h \
-           synchronizedworker.h
+           synchronizedworker.h \
+           ../../jsondbprocess.h

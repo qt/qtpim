@@ -47,6 +47,7 @@
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbconverter.h"
 #include "synchronizedjsondbclient.h"
+#include "jsondbprocess.h"
 
 Q_USE_JSONDB_NAMESPACE
 
@@ -60,8 +61,11 @@ public:
     tst_QContactJsondbEngine();
     ~tst_QContactJsondbEngine();
 public slots:
+    void initTestCase();
     void init();
     void cleanup();
+    void cleanupTestCase();
+
 private Q_SLOTS:
     void testSelfContactId();
     void testContactIds();
@@ -85,7 +89,13 @@ private:
     QContactJsonDbEngine* m_engine;
     QContactJsonDbBackup* m_myBackup;
     SynchronizedJsonDbClient* m_dbClient;
+    JsonDbProcess m_jsondbProcess;
 };
+
+void tst_QContactJsondbEngine::initTestCase()
+{
+    QVERIFY2(m_jsondbProcess.start(), "Failed to start JsonDb process");
+}
 
 void tst_QContactJsondbEngine::init() {
     // clears the database and loads desired test data
@@ -96,6 +106,11 @@ void tst_QContactJsondbEngine::init() {
 
 void tst_QContactJsondbEngine::cleanup(){
     delete(m_myBackup);
+}
+
+void tst_QContactJsondbEngine::cleanupTestCase()
+{
+    m_jsondbProcess.terminate();
 }
 
 tst_QContactJsondbEngine::tst_QContactJsondbEngine()

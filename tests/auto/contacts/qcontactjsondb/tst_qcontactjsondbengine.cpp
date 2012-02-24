@@ -303,7 +303,8 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     }
 
     // Fetch directly from jsondb the test contact data.
-    QString finalQuery = jsonDbConverter.queryFromRequest(&fetchRequest);
+    QString finalQuery;
+    QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
     QVariantMap finalJsonDbItem = m_dbClient->query(finalQuery);
 
     QVERIFY(!finalJsonDbItem.isEmpty());
@@ -444,7 +445,8 @@ void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
 
     //Fetch saved test contact data directly from jsondb.
     QContactJsonDbConverter jsonDbConverter;
-    QString finalQuery = jsonDbConverter.queryFromRequest(&fetchRequest);
+    QString finalQuery;
+    QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
     QVariantMap jsonDbItem = m_dbClient->query(finalQuery);
 
     QVERIFY(!jsonDbItem.isEmpty());

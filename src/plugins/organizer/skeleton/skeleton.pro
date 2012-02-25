@@ -12,3 +12,4 @@ DESTDIR = $$QT.organizer.plugins/organizer
 
 HEADERS += qorganizerskeleton_p.h
 SOURCES += qorganizerskeleton.cpp
+OTHER_FILES += skeleton.json

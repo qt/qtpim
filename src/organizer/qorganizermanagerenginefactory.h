@@ -47,9 +47,26 @@
 #include <QtCore/qplugin.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
-
-class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory : public QFactoryInterface
+struct Q_NETWORK_EXPORT QOrganizerManagerEngineFactoryInterface : public QFactoryInterface
 {
+    virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
+    virtual QString managerName() const = 0;
+    virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
+    virtual QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
+};
+QTORGANIZER_END_NAMESPACE
+
+QT_BEGIN_NAMESPACE
+#define QT_ORGANIZER_MANAGER_ENGINE_INTERFACE "org.qt-project.Qt.QOrganizerManagerEngineFactoryInterface"
+Q_DECLARE_INTERFACE(QtOrganizer::QOrganizerManagerEngineFactoryInterface, QT_ORGANIZER_MANAGER_ENGINE_INTERFACE)
+QT_END_NAMESPACE
+
+QTORGANIZER_BEGIN_NAMESPACE
+class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory : public QObject, public QOrganizerManagerEngineFactoryInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactoryInterface:QFactoryInterface)
+
 public:
     virtual ~QOrganizerManagerEngineFactory();
     virtual QList<int> supportedImplementationVersions() const;
@@ -61,10 +78,5 @@ public:
     QStringList keys() const;
 };
 QTORGANIZER_END_NAMESPACE
-
-QT_BEGIN_NAMESPACE
-#define QT_ORGANIZER_BACKEND_INTERFACE "org.qt-project.Qt.QOrganizerManagerEngineFactory"
-Q_DECLARE_INTERFACE(QtOrganizer::QOrganizerManagerEngineFactory, QT_ORGANIZER_BACKEND_INTERFACE)
-QT_END_NAMESPACE
 
 #endif // QORGANIZERMANAGERENGINEFACTORY_H

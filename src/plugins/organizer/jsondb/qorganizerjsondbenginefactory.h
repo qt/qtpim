@@ -57,10 +57,10 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerJsonDbEngineFactory : public QObject, public QOrganizerManagerEngineFactory
+class QOrganizerJsonDbEngineFactory : public QOrganizerManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory:QFactoryInterface)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QOrganizerManagerEngineFactoryInterface" FILE "jsondb.json")
 
 public:
     QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error);

@@ -121,4 +121,6 @@ QStringList QOrganizerManagerEngineFactory::keys() const
     return QStringList() << managerName();
 }
 
+#include "moc_qorganizermanagerenginefactory.cpp"
+
 QTORGANIZER_END_NAMESPACE

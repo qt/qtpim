@@ -15,3 +15,5 @@ HEADERS += \
 
 SOURCES += \
     qorganizeritemmemorybackend.cpp
+
+OTHER_FILES += memory.json

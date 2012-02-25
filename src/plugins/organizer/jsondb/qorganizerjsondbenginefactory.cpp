@@ -82,5 +82,3 @@ QString QOrganizerJsonDbEngineFactory::managerName() const
 #include "moc_qorganizerjsondbenginefactory.cpp"
 
 QTORGANIZER_END_NAMESPACE
-
-Q_EXPORT_PLUGIN2(qtorganizer_jsondb, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerJsonDbEngineFactory))

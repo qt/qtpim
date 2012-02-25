@@ -103,7 +103,6 @@ QString QOrganizerItemSkeletonFactory::managerName() const
     /* TODO - put your engine name here */
     return QLatin1String("skeleton");
 }
-Q_EXPORT_PLUGIN2(qtorganizer_skeleton, QOrganizerItemSkeletonFactory);
 
 QOrganizerItemSkeletonEngineId::QOrganizerItemSkeletonEngineId()
     : QOrganizerItemEngineId(), m_itemId(0)

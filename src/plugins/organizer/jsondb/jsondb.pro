@@ -34,3 +34,5 @@ SOURCES += \
     qorganizerjsondbstring.cpp \
     qorganizerjsondbconverter.cpp \
     qorganizerjsondbdatastorage.cpp
+
+OTHER_FILES += jsondb.json

@@ -74,10 +74,10 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerItemSkeletonFactory : public QObject, public QOrganizerManagerEngineFactory
+class QOrganizerItemSkeletonFactory : public QOrganizerManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory:QFactoryInterface)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QOrganizerManagerEngineFactoryInterface" FILE "skeleton.json")
 
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);

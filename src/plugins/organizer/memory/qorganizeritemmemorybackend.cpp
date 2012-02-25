@@ -76,7 +76,6 @@ QString QOrganizerItemMemoryFactory::managerName() const
 {
     return QString::fromAscii("memory");
 }
-Q_EXPORT_PLUGIN2(qtorganizer_memory, QOrganizerItemMemoryFactory)
 
 /*!
   \class QOrganizerItemMemoryEngine
@@ -1724,4 +1723,3 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 #include "moc_qorganizeritemmemorybackend_p.cpp"
 
 QTORGANIZER_END_NAMESPACE
-

@@ -60,18 +60,13 @@
 #include <qorganizeritemchangeset.h>
 #include <qorganizerrecurrencerule.h>
 
-#ifdef QT_SIMULATOR
-#define Q_ORGANIZER_MEMORYENGINE_EXPORT Q_ORGANIZER_EXPORT
-#else
-#define Q_ORGANIZER_MEMORYENGINE_EXPORT
-#endif
-
 QTORGANIZER_BEGIN_NAMESPACE
 
-class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryFactory : public QObject, public QOrganizerManagerEngineFactory
+class QOrganizerItemMemoryFactory : public QOrganizerManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtOrganizer::QOrganizerManagerEngineFactory:QFactoryInterface)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QOrganizerManagerEngineFactoryInterface" FILE "memory.json")
+
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
     QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
@@ -79,7 +74,7 @@ public:
     QString managerName() const;
 };
 
-class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryEngineId : public QOrganizerItemEngineId
+class QOrganizerItemMemoryEngineId : public QOrganizerItemEngineId
 {
 public:
     QOrganizerItemMemoryEngineId();
@@ -108,7 +103,7 @@ private:
     friend class QOrganizerItemMemoryEngine;
 };
 
-class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerCollectionMemoryEngineId : public QOrganizerCollectionEngineId
+class QOrganizerCollectionMemoryEngineId : public QOrganizerCollectionEngineId
 {
 public:
     QOrganizerCollectionMemoryEngineId();
@@ -138,7 +133,7 @@ private:
 
 class QOrganizerAbstractRequest;
 class QOrganizerManagerEngine;
-class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryEngineData : public QSharedData
+class QOrganizerItemMemoryEngineData : public QSharedData
 {
 public:
     QOrganizerItemMemoryEngineData();
@@ -170,7 +165,7 @@ public:
     QList<QOrganizerManagerEngine*> m_sharedEngines;   // The list of engines that share this data
 };
 
-class Q_ORGANIZER_MEMORYENGINE_EXPORT QOrganizerItemMemoryEngine : public QOrganizerManagerEngine
+class QOrganizerItemMemoryEngine : public QOrganizerManagerEngine
 {
     Q_OBJECT
 

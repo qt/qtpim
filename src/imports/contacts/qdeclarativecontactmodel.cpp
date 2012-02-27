@@ -584,7 +584,7 @@ void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstra
             QDeclarativeContact *declarativeContact(0);
             declarativeContact = new QDeclarativeContact(this);
             declarativeContact->setContact(contact);
-            list.append(QVariant::fromValue((QObject *)declarativeContact));
+            list.append(QVariant::fromValue(declarativeContact));
         }
     }
     emit contactsFetched(requestId, list);

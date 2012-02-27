@@ -337,8 +337,8 @@ ContactsSavingTestCase {
         var detail = contact.detail(ContactDetail.Version)
         verify(detail.sequenceNumber != undefined)
         if (model.manager == "jsondb") {
-            compare(detail.sequenceNumber, 0, "sequenceNumber is always 0 for jsondb")
-            compare(detail.extendedVersion.length, 32, "jsondb extended version field is 32 characters long")
+            compare(detail.sequenceNumber, 1, "sequenceNumber is always 1 for jsondb")
+            compare(detail.extendedVersion.length, 10, "jsondb extended version field is 10 characters long")
         }
     }
 

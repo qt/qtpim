@@ -74,7 +74,7 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-const int QContactJsonDbConverter::jsonDbVersionLength(32);
+const int QContactJsonDbConverter::jsonDbVersionLength(10);
 
 QContactJsonDbConverter::QContactJsonDbConverter()
 {
@@ -105,7 +105,6 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
     QContactPersonId* personid = new QContactPersonId();
 
     while (i != object.constEnd()) {
-
         if (i.key() == detailsToJsonMapping.value(QContactPersonId::Type)) {
             //personid
             stringValue = object[detailsToJsonMapping.value(QContactPersonId::Type)].toString();
@@ -1051,15 +1050,23 @@ QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QV
 
 void QContactJsonDbConverter::jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const
 {
-    if (jsonDbVersion.length() == jsonDbVersionLength)
-        contactVersion->setExtendedVersion(jsonDbVersion.toLatin1());
+    QStringList jsonDbVersions = jsonDbVersion.split(QLatin1Char('-'));
+    if (jsonDbVersions.size() != 2)
+        return;
+    int sequenceNumber = jsonDbVersions.at(0).toInt();
+    if (sequenceNumber > 0 && jsonDbVersions.at(1).length() == jsonDbVersionLength) {
+        contactVersion->setSequenceNumber(sequenceNumber);
+        contactVersion->setExtendedVersion(jsonDbVersions.at(1).toLatin1());
+    }
 }
 
 void QContactJsonDbConverter::contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const
 {
+    int sequenceNumber = contactVersion.sequenceNumber();
     QByteArray extendedVersion = contactVersion.extendedVersion();
-    if (extendedVersion.length() == jsonDbVersionLength)
-        *jsonDbVersion = QString::fromLatin1(extendedVersion.constData());
+    if (sequenceNumber > 0 && extendedVersion.length() == jsonDbVersionLength) {
+        *jsonDbVersion = QString::number(sequenceNumber) + QLatin1String("-") + QString::fromLatin1(extendedVersion.constData());
+    }
 }
 
 QTCONTACTS_END_NAMESPACE

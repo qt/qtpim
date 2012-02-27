@@ -73,10 +73,6 @@ public:
             return false;
         }
 
-#ifndef Q_OS_WIN
-        qputenv("JSONDB_SOCKET", qPrintable(jsondbWorkingDirectory.path() + "/socket"));
-#endif
-
         QString jsondbPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/jsondb";
         if (!QFileInfo(jsondbPath).exists()) {
             qWarning() << Q_FUNC_INFO << "Cannot find JsonDb binaries.";

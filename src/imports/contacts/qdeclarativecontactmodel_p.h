@@ -146,7 +146,7 @@ public:
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
     Q_INVOKABLE int fetchContacts(const QStringList& contactIds);
     Q_INVOKABLE void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
-    Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList());
+    Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList(), const QVariantList &declarativeContacts = QVariantList());
 
 signals:
     void managerChanged();

@@ -837,6 +837,7 @@ Module {
         }
         Method {
             name: "fetchContacts"
+            type: "int"
             Parameter { name: "contactIds"; type: "QStringList" }
         }
         Method {
@@ -847,6 +848,12 @@ Module {
         Method {
             name: "importContacts"
             Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "exportContacts"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+            Parameter { name: "declarativeContacts"; type: "QVariantList" }
         }
         Method {
             name: "exportContacts"

@@ -95,6 +95,29 @@ ContactsSavingTestCase {
         compare(importedContact.name.lastName,"Last", "imported contact last name");
     }
 
+    function test_exportListOfDeclarativeContacts() {
+        var signalSpy = initTestForTargetListeningToSignal(model, "exportCompleted");
+
+        // Export contacts to vcard file.
+        var vcardFilePath = Qt.resolvedUrl(vcardFileNameBase + "contactsList.vcard");
+        var temp = new Array(1);
+        temp[0] = testContact;
+        model.exportContacts(vcardFilePath, ["Sync"], temp);
+        waitForTargetSignal(signalSpy);
+
+        // Empty all contacts and import just created vcard file.
+        emptyContacts(model);
+        listenToContactsChanged();
+        model.importContacts(vcardFilePath, ["Sync"]);
+        waitForContactsChanged();
+        compare (model.error, "NoError", "importError");
+
+        // Check that imported contact has correct data.
+        compare (model.contacts.length, 1, "import count");
+        var importedContact = model.contacts[0];
+        compare(importedContact.name.firstName,"First", "imported contact first name");
+        compare(importedContact.name.lastName,"Last", "imported contact last name");
+    }
     // Init & teardown
 
     function initTestCase() {

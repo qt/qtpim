@@ -327,9 +327,11 @@ void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList
 }
 
 /*!
-  \qmlmethod void ContactModel::exportContacts(url url, list<string> profiles)
+  \qmlmethod void ContactModel::exportContacts(url url, list<string> profiles, list<variant> declarativeContacts)
 
-  Export contacts into a vcard file to the given \a url by optional \a profiles.
+  Export all contacts of this model into a vcard file to the given \a url by optional \a profiles.
+  The optional \a declarativeContacts list can be used to export an arbitrary list of QDeclarativeContact objects
+  not necessarily belonging to the data set of this model.
   At the moment only the local file url is supported in export method.
   Also, only one export operation can be active at a time.
   Supported profiles are:
@@ -344,7 +346,7 @@ void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList
   \sa QVersitContactHandlerFactory::ProfileSync
   \sa QVersitContactHandlerFactory::ProfileBackup
   */
-void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList& profiles)
+void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList& profiles, const QVariantList &declarativeContacts)
 {
     // Writer is capable of handling only one request at the time.
     ExportError exportError = ExportNotReadyError;
@@ -354,8 +356,19 @@ void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList
         QVersitContactExporter exporter(profile);
 
         QList<QContact> contacts;
-        foreach (QDeclarativeContact* dc, d->m_contacts) {
-            contacts.append(dc->contact());
+        if (declarativeContacts.isEmpty()) {
+            foreach (QDeclarativeContact* dc, d->m_contacts) {
+                contacts.append(dc->contact());
+            }
+
+        } else {
+            foreach (const QVariant &contactVariant, declarativeContacts) {
+                QObject *rawObject = contactVariant.value<QObject*>();
+                QDeclarativeContact *dc = qobject_cast<QDeclarativeContact*>(rawObject);
+                if (dc) {
+                    contacts.append(dc->contact());
+                }
+            }
         }
 
         exporter.exportContacts(contacts, QVersitDocument::VCard30Type);

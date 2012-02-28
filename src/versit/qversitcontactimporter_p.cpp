@@ -785,9 +785,9 @@ bool QVersitContactImporterPrivate::createGender(
         if (val.isEmpty()) {
             return false;
         } else {
-            if (val == "Male") {
+            if (val == QStringLiteral("Male")) {
                 gender.setGender(QContactGender::GenderMale);
-            } else if (val == "Female") {
+            } else if (val == QStringLiteral("Female")) {
                 gender.setGender(QContactGender::GenderFemale);
             } else {
                 gender.setGender(QContactGender::GenderUnspecified);

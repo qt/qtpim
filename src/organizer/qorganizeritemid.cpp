@@ -168,7 +168,7 @@ bool QOrganizerItemId::operator<(const QOrganizerItemId &other) const
 /*!
     Returns the hash value for \a key..
  */
-uint qHash(const QOrganizerItemId &key)
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key)
 {
     if (key.d)
         return key.d->hash();
@@ -176,7 +176,7 @@ uint qHash(const QOrganizerItemId &key)
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 {
     dbg.nospace() << "QOrganizerItemId(";
     if (id.isNull())
@@ -191,7 +191,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 /*!
     Streams \a itemId to the data stream \a out.
  */
-QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId)
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId)
 {
     out << (itemId.toString());
     return out;
@@ -200,7 +200,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId)
 /*!
     Streams \a collectionId in from the data stream \a in.
  */
-QDataStream &operator>>(QDataStream &in, QOrganizerItemId &itemId)
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &itemId)
 {
     QString idString;
     in >> idString;

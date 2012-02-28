@@ -512,7 +512,7 @@ void QContactManagerEngine::setContactDisplayLabel(QContact* contact, const QStr
 /*!
   Returns true if the given \a feature is supported by this engine for contacts of the given \a contactType
  */
-bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const
+bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
 {
     Q_UNUSED(feature);
     Q_UNUSED(contactType);
@@ -700,7 +700,7 @@ QList<QVariant::Type> QContactManagerEngine::supportedDataTypes() const
   in the relationship).  In this case, it will still return true.  It will only return false
   if the relationship is entirely unsupported for the given type of contact.
  */
-bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relationshipType, const QContactType::TypeValues  contactType) const
+bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues contactType) const
 {
     Q_UNUSED(relationshipType);
     Q_UNUSED(contactType);

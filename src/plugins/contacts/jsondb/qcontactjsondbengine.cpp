@@ -438,7 +438,7 @@ bool QContactJsonDbEngine::removeContact(const QContactId& contactId, QContactMa
     else return true;
 }
 
-bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const {
+bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const {
   if (!supportedContactTypes().contains(contactType)) {
         return false;
   };

@@ -125,7 +125,7 @@ protected:
     QOrganizerItemDetail &assign(const QOrganizerItemDetail &other, DetailType expectedDetailType);
 
 private:
-    friend uint qHash(const QOrganizerItemDetail &key);
+    friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
     friend class QOrganizerItem;
     friend class QOrganizerItemDetailPrivate;
 

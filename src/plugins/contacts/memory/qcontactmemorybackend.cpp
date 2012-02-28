@@ -801,7 +801,7 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 /*!
  * \reimp
  */
-bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const
+bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
 {
     if (!supportedContactTypes().contains(contactType))
         return false;
@@ -825,7 +825,7 @@ bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, c
 /*!
  * \reimp
  */
-bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationshipType, const QContactType::TypeValues contactType) const
+bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues contactType) const
 {
     // the memory backend supports arbitrary relationship types
     // but some relationship types don't make sense for groups.

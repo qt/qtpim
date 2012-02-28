@@ -115,8 +115,8 @@ public:
     virtual bool waitForRequestFinished(QContactAbstractRequest *req, int msecs);
 
     /* Capabilities reporting */
-    virtual bool hasFeature(QContactManager::ManagerFeature feature, const QContactType::TypeValues contactType) const;
-    virtual bool isRelationshipTypeSupported(const QString &relationshipType, const QContactType::TypeValues contactType) const;
+    virtual bool hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const;
+    virtual bool isRelationshipTypeSupported(const QString &relationshipType, QContactType::TypeValues contactType) const;
     virtual bool isFilterSupported(const QContactFilter &filter) const;
     virtual QList<QVariant::Type> supportedDataTypes() const;
     virtual QList<QContactType::TypeValues> supportedContactTypes() const;

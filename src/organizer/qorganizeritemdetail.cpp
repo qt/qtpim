@@ -271,7 +271,7 @@ bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 /*!
     Returns the hash value for \a key.
  */
-uint qHash(const QOrganizerItemDetail &key)
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key)
 {
     uint hash = QT_PREPEND_NAMESPACE(qHash)(key.d->m_detailType);
     QMap<int, QVariant>::const_iterator it = key.d->m_values.constBegin();
@@ -283,7 +283,7 @@ uint qHash(const QOrganizerItemDetail &key)
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 {
     dbg.nospace() << "QOrganizerItemDetail(name=" << detail.type() << ", key=" << detail.key();
     QMap<int, QVariant> fields = detail.values();
@@ -299,7 +299,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 /*!
     Writes \a detail to the stream \a out.
  */
-QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetail
     return out << formatVersion
@@ -310,7 +310,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
 /*!
     Reads aan organizer item detail from stream \a in into \a detail.
  */
-QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
 {
     quint8 formatVersion;
     in >> formatVersion;

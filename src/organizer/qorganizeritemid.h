@@ -97,9 +97,9 @@ private:
     QSharedDataPointer<QOrganizerItemEngineId> d;
 
 #ifndef QT_NO_DEBUG_STREAM
-    friend QDebug operator<<(QDebug dbg, const QOrganizerItemId &itemId);
+    friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &itemId);
 #endif
-    friend uint qHash(const QOrganizerItemId &key);
+    friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key);
     friend class QOrganizerManagerEngine;
 };
 

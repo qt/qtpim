@@ -129,7 +129,6 @@ private:
     static const QOrganizerJsonDbEnumConversionData *organizerItemTypeMap();
     static const QOrganizerJsonDbEnumConversionData *organizerTodoStatusMap();
 
-    static const int jsonDbVersionLength;
 };
 
 QTORGANIZER_END_NAMESPACE

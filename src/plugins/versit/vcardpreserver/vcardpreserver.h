@@ -48,16 +48,17 @@
 
 QTVERSIT_BEGIN_NAMESPACE
 
-class VCardPreserverFactory : public QObject, public QVersitContactHandlerFactory
+class VCardPreserverFactory : public QVersitContactHandlerFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QVersitContactHandlerFactoryInterface" FILE "vcardpreserver.json")
 
 public:
     QSet<QString> profiles() const;
     QString name() const;
     int index() const;
     QVersitContactHandler* createHandler() const;
+    virtual QStringList keys() const;
 };
 
 QTVERSIT_END_NAMESPACE

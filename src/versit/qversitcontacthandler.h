@@ -42,6 +42,7 @@
 #ifndef QVERSITCONTACTHANDLER_H
 #define QVERSITCONTACTHANDLER_H
 
+#include <QFactoryInterface>
 #include <qversitcontactimporter.h>
 #include <qversitcontactexporter.h>
 
@@ -50,14 +51,33 @@ QTVERSIT_BEGIN_NAMESPACE
 // qdoc seems to not find QVersitContactHandler if it is declared first.. ugh
 class QVersitContactHandler;
 
-class Q_VERSIT_EXPORT QVersitContactHandlerFactory
+struct Q_VERSIT_EXPORT QVersitContactHandlerFactoryInterface : public QFactoryInterface
 {
+    virtual QSet<QString> profiles() const =0;
+    virtual QString name() const = 0;
+    virtual int index() const = 0;
+    virtual QVersitContactHandler* createHandler() const = 0;
+};
+QTVERSIT_END_NAMESPACE
+
+QT_BEGIN_NAMESPACE
+#define QT_VERSIT_CONTACT_HANDLER_INTERFACE "org.qt-project.Qt.QVersitContactHandlerFactoryInterface"
+Q_DECLARE_INTERFACE(QtVersit::QVersitContactHandlerFactoryInterface, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
+QT_END_NAMESPACE
+
+QTVERSIT_BEGIN_NAMESPACE
+
+class Q_VERSIT_EXPORT QVersitContactHandlerFactory : public QObject, public QVersitContactHandlerFactoryInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(QtVersit::QVersitContactHandlerFactoryInterface:QFactoryInterface)
 public:
     virtual ~QVersitContactHandlerFactory() {}
     virtual QSet<QString> profiles() const { return QSet<QString>(); }
     virtual QString name() const = 0;
     virtual int index() const { return 0; }
     virtual QVersitContactHandler* createHandler() const = 0;
+    virtual QStringList keys() const;
 
 #ifdef Q_QDOC
     static const QLatin1Constant ProfileSync;
@@ -77,11 +97,6 @@ class Q_VERSIT_EXPORT QVersitContactHandler : public QVersitContactImporterPrope
 public:
     virtual ~QVersitContactHandler() {}
 };
-
 QTVERSIT_END_NAMESPACE
 
-#define QT_VERSIT_CONTACT_HANDLER_INTERFACE "org.qt-project.Qt.QVersitContactHandlerFactory"
-QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(QtVersit::QVersitContactHandlerFactory, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
-QT_END_NAMESPACE
 #endif

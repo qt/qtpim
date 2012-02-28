@@ -57,7 +57,6 @@
 #include <QContact>
 #include <QContactManager>
 #include <QContactManagerEngine>
-#include <QContactManagerEngineFactory>
 #include <QContactAbstractRequest>
 #include <QContactChangeSet>
 #include <qcontactengineid.h>
@@ -70,10 +69,10 @@ class QContactAbstractRequest;
 class QContactManagerEngine;
 class QContactMemoryEngine;
 
-class QContactMemoryEngineFactory : public QObject, public QContactManagerEngineFactory
+class QContactMemoryEngineFactory : public QContactManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "memory.json")
 public:
     QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error*);
     QString managerName() const;

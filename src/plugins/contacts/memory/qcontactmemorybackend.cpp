@@ -75,7 +75,6 @@ QString QContactMemoryEngineFactory::managerName() const
 {
     return QString::fromAscii("memory");
 }
-Q_EXPORT_PLUGIN2(qtcontacts_memory, QContactMemoryEngineFactory)
 
 /*!
   \class QContactMemoryEngine

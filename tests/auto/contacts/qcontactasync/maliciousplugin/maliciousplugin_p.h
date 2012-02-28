@@ -183,10 +183,10 @@ private:
     MaliciousThreadObject* threadObject;
 };
 
-class MaliciousEngineFactory : public QObject, public QContactManagerEngineFactory
+class MaliciousEngineFactory : public QContactManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "malicious.json")
 
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);

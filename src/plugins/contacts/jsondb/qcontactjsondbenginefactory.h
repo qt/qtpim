@@ -59,10 +59,10 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QObject, public QContactManagerEngineFactory
+class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QContactManagerEngineFactory
 {
   Q_OBJECT
-  Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
+  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "jsondb.json")
   public:
     QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error*);
     QString managerName() const;

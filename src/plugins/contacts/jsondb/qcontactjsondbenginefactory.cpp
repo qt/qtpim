@@ -70,5 +70,3 @@ QString QContactJsonDbEngineFactory::managerName() const
 #include "moc_qcontactjsondbenginefactory.cpp"
 
 QTCONTACTS_END_NAMESPACE
-
-Q_EXPORT_PLUGIN2(qtcontacts_jsondb, QTCONTACTS_PREPEND_NAMESPACE(QContactJsonDbEngineFactory));

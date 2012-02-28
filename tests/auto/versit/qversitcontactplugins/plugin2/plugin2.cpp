@@ -111,5 +111,3 @@ QSet<QString> Plugin2::profiles() const
 {
     return QSet<QString>() << "Test";
 }
-
-Q_EXPORT_PLUGIN2(versit_plugin2, Plugin2)

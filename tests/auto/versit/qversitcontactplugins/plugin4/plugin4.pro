@@ -10,3 +10,5 @@ HEADERS += plugin4.h
 # Enable installation of plugin in "make install"
 target.path += $$[QT_INSTALL_PLUGINS]/versit
 INSTALLS += target
+
+OTHER_FILES += plugin4.json

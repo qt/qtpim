@@ -42,3 +42,5 @@ SOURCES += plugin.cpp \
     qdeclarativecontactrelationshipmodel.cpp \
 
 RESOURCES += contacts.qrc
+
+OTHER_FILES += contacts.json

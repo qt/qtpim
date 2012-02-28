@@ -129,7 +129,10 @@ QVersitContactHandler* BackupVCardHandlerFactory::createHandler() const
     return new BackupVCardHandler();
 }
 
-Q_EXPORT_PLUGIN2(qtversit_backuphandler, BackupVCardHandlerFactory);
+QStringList BackupVCardHandlerFactory::keys() const
+{
+    return QStringList() << name();
+}
 
 
 BackupVCardHandler::BackupVCardHandler()

@@ -45,6 +45,11 @@ QTVERSIT_BEGIN_NAMESPACE
 
 Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileSync, "Sync");
 Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
+
+QStringList QVersitContactHandlerFactory::keys() const
+{
+    return QStringList() << name();
+}
 //Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfilePreserve, "Preserve");
 
 /*!
@@ -142,4 +147,5 @@ Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
   handler provided by this factory.
  */
 
+#include "moc_qversitcontacthandler.cpp"
 QTVERSIT_END_NAMESPACE

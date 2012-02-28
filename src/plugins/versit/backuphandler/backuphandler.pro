@@ -12,3 +12,5 @@ DESTDIR = $$QT.versit.plugins/versit
 
 HEADERS += backupvcardhandler.h
 SOURCES += backupvcardhandler.cpp
+
+OTHER_FILES += backuphandler.json

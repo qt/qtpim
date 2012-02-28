@@ -33,3 +33,5 @@ SOURCES += qcontactjsondbenginefactory.cpp \
     qcontactjsondbconverter.cpp \
     qcontactjsondbid.cpp \
     qcontactjsondbstring.cpp
+
+OTHER_FILES += jsondb.json

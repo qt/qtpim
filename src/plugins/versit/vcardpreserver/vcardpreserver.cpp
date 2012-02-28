@@ -109,7 +109,10 @@ QVersitContactHandler* VCardPreserverFactory::createHandler() const
     return new VCardPreserver();
 }
 
-Q_EXPORT_PLUGIN2(qtversit_vcardpreserver, VCardPreserverFactory);
+QStringList VCardPreserverFactory::keys() const
+{
+    return QStringList() << name();
+}
 
 VCardPreserver::VCardPreserver()
 {

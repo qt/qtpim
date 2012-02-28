@@ -71,6 +71,11 @@ QContactManagerEngineFactory::~QContactManagerEngineFactory()
 {
 }
 
+QStringList QContactManagerEngineFactory::keys() const
+{
+    return QStringList() << managerName();
+}
+
 /*!
   \fn QContactManagerEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 
@@ -104,5 +109,7 @@ QList<int> QContactManagerEngineFactory::supportedImplementationVersions() const
 {
     return QList<int>();
 }
+
+#include "moc_qcontactmanagerenginefactory.cpp"
 
 QTCONTACTS_END_NAMESPACE

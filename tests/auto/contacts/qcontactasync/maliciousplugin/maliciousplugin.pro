@@ -16,3 +16,6 @@ SOURCES += maliciousplugin.cpp
 TARGET = maliciousplugin
 target.path += $$[QT_INSTALL_PLUGINS]/contacts
 INSTALLS += target
+
+OTHER_FILES += \
+    malicious.json

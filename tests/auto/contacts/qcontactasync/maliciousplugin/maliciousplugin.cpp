@@ -207,6 +207,4 @@ QContactEngineId* MaliciousEngineFactory::createContactEngineId(const QMap<QStri
     return 0;
 }
 
-Q_EXPORT_PLUGIN2(MALICIOUSPLUGINTARGET, MaliciousEngineFactory);
-
 #include "maliciousplugin.moc"

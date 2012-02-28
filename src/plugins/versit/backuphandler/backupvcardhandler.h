@@ -49,16 +49,17 @@
 
 QTVERSIT_BEGIN_NAMESPACE
 
-class BackupVCardHandlerFactory : public QObject, public QVersitContactHandlerFactory
+class BackupVCardHandlerFactory : public QVersitContactHandlerFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QVersitContactHandlerFactoryInterface" FILE "backuphandler.json")
 
 public:
     QSet<QString> profiles() const;
     QString name() const;
     int index() const;
     QVersitContactHandler* createHandler() const;
+    virtual QStringList keys() const;
 };
 
 #include "moc_backupvcardhandler.cpp"

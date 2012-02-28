@@ -59,7 +59,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QContactQmlPlugin : public QDeclarativeExtensionPlugin
 {
     Q_OBJECT
-
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDeclarativeExtensionInterface" FILE "contacts.json")
 public:
     void registerTypes(const char *uri)
     {
@@ -132,5 +132,3 @@ public:
 #include "plugin.moc"
 
 QTCONTACTS_END_NAMESPACE
-
-Q_EXPORT_PLUGIN2(qcontactqmlplugin, QTCONTACTS_PREPEND_NAMESPACE(QContactQmlPlugin))

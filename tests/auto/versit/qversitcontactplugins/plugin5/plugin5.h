@@ -48,10 +48,10 @@
 
 QTVERSIT_USE_NAMESPACE
 
-class Plugin5 : public QObject, public QVersitContactHandlerFactory
+class Plugin5 : public QVersitContactHandlerFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QVersitContactHandlerFactoryInterface" FILE "plugin5.json")
 
 public:
     QString name() const;

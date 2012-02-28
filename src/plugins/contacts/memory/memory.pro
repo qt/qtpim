@@ -15,3 +15,5 @@ HEADERS += \
 
 SOURCES += \
     qcontactmemorybackend.cpp
+
+OTHER_FILES += memory.json

@@ -44,6 +44,7 @@
 #define QCONTACTMANAGERENGINEFACTORY_H
 
 #include <QtPlugin>
+#include <QFactoryInterface>
 #include <QMap>
 #include <QString>
 
@@ -52,8 +53,25 @@
 QTCONTACTS_BEGIN_NAMESPACE
 /* Backend plugin API interface, creates engines for us */
 class QContactManagerEngine;
-class Q_CONTACTS_EXPORT QContactManagerEngineFactory
+
+struct Q_CONTACTS_EXPORT QContactManagerEngineFactoryInterface : public QFactoryInterface
 {
+    virtual QContactManagerEngine *engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) = 0;
+    virtual QString managerName() const = 0;
+    virtual QContactEngineId *createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
+};
+QTCONTACTS_END_NAMESPACE
+
+QT_BEGIN_NAMESPACE
+#define QT_CONTACT_MANAGER_ENGINE_INTERFACE "org.qt-project.Qt.QContactManagerEngineFactoryInterface"
+Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineFactoryInterface, QT_CONTACT_MANAGER_ENGINE_INTERFACE)
+QT_END_NAMESPACE
+
+QTCONTACTS_BEGIN_NAMESPACE
+class Q_CONTACTS_EXPORT QContactManagerEngineFactory : public QObject, public QContactManagerEngineFactoryInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(QtContacts::QContactManagerEngineFactoryInterface:QFactoryInterface)
 public:
     // engine factory functions
     virtual QList<int> supportedImplementationVersions() const;
@@ -61,12 +79,8 @@ public:
     virtual QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) = 0;
     virtual QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
     virtual QString managerName() const = 0;
+    virtual QStringList keys() const;
 };
 QTCONTACTS_END_NAMESPACE
-
-QT_BEGIN_NAMESPACE
-#define QT_CONTACTS_BACKEND_INTERFACE "org.qt-project.Qt.QContactManagerEngineFactory"
-Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineFactory, QT_CONTACTS_BACKEND_INTERFACE)
-QT_END_NAMESPACE
 
 #endif

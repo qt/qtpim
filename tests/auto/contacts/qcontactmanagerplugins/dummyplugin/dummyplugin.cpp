@@ -69,7 +69,6 @@ QString DummyEngineFactory::managerName() const
     return QString();
 #endif
 }
-Q_EXPORT_PLUGIN2(DUMMYPLUGINTARGET, DummyEngineFactory);
 
 DummyEngine::DummyEngine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {

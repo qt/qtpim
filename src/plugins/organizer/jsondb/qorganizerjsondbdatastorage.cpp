@@ -952,7 +952,7 @@ void QOrganizerJsonDbDataStorage::processRequest()
 {
     emit requestInitialized();
     QMutexLocker locker(m_waitMutex);
-    int msecs = 2000; // TODO: handle timeout nicely
+    int msecs = 10000; // TODO: handle timeout nicely
     bool requestFinished = m_syncWaitCondition.wait(m_waitMutex, msecs);
     if (!requestFinished) {
         qWarning() << "Timeout, not response received!!!";

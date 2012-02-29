@@ -206,17 +206,10 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsondbErrorToOrganizerError(
         error = QOrganizerManager::PermissionsError;
         break;
 
-    case JsonDbError::InvalidRequest:
-        // update request with invalid uuid
-        error = QOrganizerManager::DoesNotExistError;
-        break;
-
-    case JsonDbError::MissingObject:
-        // update request with invalid uuid
-        error = QOrganizerManager::DoesNotExistError;
-        break;
-
+    case JsonDbError::InvalidRequest:// update request with invalid uuid
+    case JsonDbError::MissingObject:// update request with invalid uuid
     case JsonDbError::MissingType://Remove no-exist item get this error from jsondb
+    case JsonDbError::MissingUUID:
         error = QOrganizerManager::DoesNotExistError;
         break;
 

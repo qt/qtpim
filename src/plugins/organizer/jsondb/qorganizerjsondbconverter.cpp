@@ -1871,19 +1871,25 @@ QString QOrganizerJsonDbConverter::createMatchFlagQuery(const QString &value, QO
 {
     // with current enumeration, 3 means both MatchContains and MatchEndsWith (QTBUG-20035)
     const uint realMatchType = flags & 0x0F;
-    QString queryWithWildCards((QOrganizerItemFilter::MatchExactly == flags || QOrganizerItemFilter::MatchFixedString & flags)
-        ? QStringLiteral("=\"") : QStringLiteral("=~\"/"));
-    queryWithWildCards += (QOrganizerItemFilter::MatchContains == realMatchType || QOrganizerItemFilter::MatchEndsWith == realMatchType)
-        ? QStringLiteral("*") : QStringLiteral("");
+    QString queryWithWildCards;
+    if (QOrganizerItemFilter::MatchExactly == flags)
+        queryWithWildCards = QStringLiteral("=\"");
+    else
+        queryWithWildCards = QStringLiteral("=~\"/");
+
+    if (QOrganizerItemFilter::MatchContains == realMatchType || QOrganizerItemFilter::MatchEndsWith == realMatchType)
+        queryWithWildCards += QStringLiteral("*");
+
     queryWithWildCards += value;
-    queryWithWildCards += (QOrganizerItemFilter::MatchContains == realMatchType || QOrganizerItemFilter::MatchStartsWith == realMatchType)
-        ? QStringLiteral("*") : QStringLiteral("");
+
+    if (QOrganizerItemFilter::MatchContains == realMatchType || QOrganizerItemFilter::MatchStartsWith == realMatchType)
+        queryWithWildCards += QStringLiteral("*");
 
     if (QOrganizerItemFilter::MatchExactly != flags && !(QOrganizerItemFilter::MatchFixedString & flags)) {
         queryWithWildCards += QStringLiteral("/w");
-        queryWithWildCards += QOrganizerItemFilter::MatchCaseSensitive & flags ? QStringLiteral("") : QStringLiteral("i");
+        if (!(QOrganizerItemFilter::MatchCaseSensitive & flags))
+            queryWithWildCards += QStringLiteral("i");
     }
-
     return queryWithWildCards;
 }
 

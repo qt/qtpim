@@ -66,10 +66,10 @@ QDeclarativeOrganizerItemFetchHint::QDeclarativeOrganizerItemFetchHint(QObject *
     This property holds the optimization hint flags specified by the client.
 
     \list
-    \o AllRequired          Tells the backend that all information is required.
-    \o NoActionPreferences  Tells the backend that the client does not require retrieved
+    \li AllRequired          Tells the backend that all information is required.
+    \li NoActionPreferences  Tells the backend that the client does not require retrieved
                             organizer items to include a cache of action preferences.
-    \o NoBinaryBlobs        Tells the backend that the client does not require retrieved
+    \li NoBinaryBlobs        Tells the backend that the client does not require retrieved
                             organizer items to include binary blobs such as thumbnail images.
     \endlist
  */

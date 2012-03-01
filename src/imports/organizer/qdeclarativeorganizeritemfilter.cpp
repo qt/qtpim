@@ -67,18 +67,18 @@ QDeclarativeOrganizerItemFilter::QDeclarativeOrganizerItemFilter(QObject *parent
 
     This property holds the type value of this filter. It can be one of:
     \list
-    \o Filter.DefaultFilter       A filter which matches everything (default).
-    \o Filter.InvalidFilter       An invalid filter which matches nothing.
-    \o Filter.IntersectionFilter  A filter which matches all organizer items that are matched by all
+    \li Filter.DefaultFilter       A filter which matches everything (default).
+    \li Filter.InvalidFilter       An invalid filter which matches nothing.
+    \li Filter.IntersectionFilter  A filter which matches all organizer items that are matched by all
                                   filters it includes.
-    \o Filter.UnionFilter         A filter which matches any organizer item that is matched by any
+    \li Filter.UnionFilter         A filter which matches any organizer item that is matched by any
                                   of the filters it includes.
-    \o Filter.CollectionFilter    A filter which matches any organizer item that is matched by collection.
-    \o Filter.DetailFilter        A filter which matches organizer items containing one or more details
+    \li Filter.CollectionFilter    A filter which matches any organizer item that is matched by collection.
+    \li Filter.DetailFilter        A filter which matches organizer items containing one or more details
                                   of a particular type with a particular value.
-    \o Filter.DetailRangeFilter   A filter which matches organizer items containing one or more details
+    \li Filter.DetailRangeFilter   A filter which matches organizer items containing one or more details
                                   of a particular type whose values are within a particular range.
-    \o Filter.IdFilter            A filter which matches any organizer item whose ID is contained in
+    \li Filter.IdFilter            A filter which matches any organizer item whose ID is contained in
                                   a particular list of organizer item IDs.
     \endlist
  */
@@ -463,12 +463,12 @@ void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
 
   This property holds the semantics of the value matching criterion. The valid match flags include:
   \list
-  \o MatchExactly - Performs QVariant-based matching (default).
-  \o MatchContains - The search term is contained in the item.
-  \o MatchStartsWith - The search term matches the start of the item.
-  \o MatchEndsWith - The search term matches the end of the item.
-  \o MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
-  \o MatchCaseSensitive - The search is case sensitive.
+  \li MatchExactly - Performs QVariant-based matching (default).
+  \li MatchContains - The search term is contained in the item.
+  \li MatchStartsWith - The search term matches the start of the item.
+  \li MatchEndsWith - The search term matches the end of the item.
+  \li MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
+  \li MatchCaseSensitive - The search is case sensitive.
   \endlist
  */
 QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailFilter::matchFlags() const
@@ -652,10 +652,10 @@ QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailRange
 
   This property holds a set of flags which defines the boundary condition semantics of the value range criterion. The valid range flags include:
     \list
-    \o DetailRangeFilter.IncludeLower
-    \o DetailRangeFilter.IncludeUpper
-    \o DetailRangeFilter.ExcludeLower
-    \o DetailRangeFilter.ExcludeUpper
+    \li DetailRangeFilter.IncludeLower
+    \li DetailRangeFilter.IncludeUpper
+    \li DetailRangeFilter.ExcludeLower
+    \li DetailRangeFilter.ExcludeUpper
     \endlist
   */
 void QDeclarativeOrganizerItemDetailRangeFilter::setRangeFlags(RangeFlags flags)

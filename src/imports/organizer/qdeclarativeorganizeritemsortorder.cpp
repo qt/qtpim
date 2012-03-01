@@ -120,8 +120,8 @@ int QDeclarativeOrganizerItemSortOrder::field() const
 
     This property enumerates the ways in which the sort order interprets blanks when sorting organizer.
     \list
-    \o SortOrder.BlanksFirst  Considers blank values to evaluate to less than all other values in comparisons.
-    \o SortOrder.BlanksLast   Considers blank values to evaluate to greater than all other values in comparisons.
+    \li SortOrder.BlanksFirst  Considers blank values to evaluate to less than all other values in comparisons.
+    \li SortOrder.BlanksLast   Considers blank values to evaluate to greater than all other values in comparisons.
     \endlist
  */
 void QDeclarativeOrganizerItemSortOrder::setBlankPolicy(BlankPolicy policy)
@@ -142,8 +142,8 @@ QDeclarativeOrganizerItemSortOrder::BlankPolicy QDeclarativeOrganizerItemSortOrd
 
     This property holds the direction of the sort order, the value can be one of:
     \list
-    \o Qt.AscendingOrder   The items will be sorted by the ascending order (default).
-    \o Qt.DescendingOrder  The items will be sorted by the descending order.
+    \li Qt.AscendingOrder   The items will be sorted by the ascending order (default).
+    \li Qt.DescendingOrder  The items will be sorted by the descending order.
     \endlist
  */
 void QDeclarativeOrganizerItemSortOrder::setDirection(Qt::SortOrder newDirection)
@@ -164,8 +164,8 @@ Qt::SortOrder QDeclarativeOrganizerItemSortOrder::direction() const
 
     This property holds the case sensitivity of the sort order, the value can be one of:
     \list
-    \o Qt.CaseInsensitive  Sets the case sensitivity of the sort order to insensitivity.
-    \o Qt.CaseSensitive    Sets the case sensitivity of the sort order to sensitivity (default).
+    \li Qt.CaseInsensitive  Sets the case sensitivity of the sort order to insensitivity.
+    \li Qt.CaseSensitive    Sets the case sensitivity of the sort order to sensitivity (default).
     \endlist
  */
 void QDeclarativeOrganizerItemSortOrder::setCaseSensitivity(Qt::CaseSensitivity newSensitivity)

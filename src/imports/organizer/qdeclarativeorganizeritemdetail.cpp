@@ -75,31 +75,31 @@ QDeclarativeOrganizerItemDetail::~QDeclarativeOrganizerItemDetail()
     This property holds the type of the detail and is read only. It can be one of:
 
     \list
-    \o Detail.Undefined
-    \o Detail.Classification
-    \o Detail.Comment
-    \o Detail.Description
-    \o Detail.DisplayLabel
-    \o Detail.ItemType
-    \o Detail.Guid
-    \o Detail.Location
-    \o Detail.Parent
-    \o Detail.Priority
-    \o Detail.Recurrence
-    \o Detail.Tag
-    \o Detail.Timestamp
-    \o Detail.Version
-    \o Detail.Reminder
-    \o Detail.AudibleReminder
-    \o Detail.EmailReminder
-    \o Detail.VisualReminder
-    \o Detail.ExtendedDetail
-    \o Detail.EventAttendee
-    \o Detail.EventRsvp
-    \o Detail.EventTime
-    \o Detail.JournalTime
-    \o Detail.TodoTime
-    \o Detail.TodoProgress
+    \li Detail.Undefined
+    \li Detail.Classification
+    \li Detail.Comment
+    \li Detail.Description
+    \li Detail.DisplayLabel
+    \li Detail.ItemType
+    \li Detail.Guid
+    \li Detail.Location
+    \li Detail.Parent
+    \li Detail.Priority
+    \li Detail.Recurrence
+    \li Detail.Tag
+    \li Detail.Timestamp
+    \li Detail.Version
+    \li Detail.Reminder
+    \li Detail.AudibleReminder
+    \li Detail.EmailReminder
+    \li Detail.VisualReminder
+    \li Detail.ExtendedDetail
+    \li Detail.EventAttendee
+    \li Detail.EventRsvp
+    \li Detail.EventTime
+    \li Detail.JournalTime
+    \li Detail.TodoTime
+    \li Detail.TodoProgress
     \endlist
  */
 QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetail::type() const
@@ -189,9 +189,9 @@ void QDeclarativeOrganizerItemDetail::setDetail(const QOrganizerItemDetail &deta
 
     The following fields are supported:
     \list
-    \o EventTime.FieldStartDateTime
-    \o EventTime.FieldEndDateTime
-    \o EventTime.FieldAllDay
+    \li EventTime.FieldStartDateTime
+    \li EventTime.FieldEndDateTime
+    \li EventTime.FieldAllDay
     \endlist
  */
 QDeclarativeOrganizerEventTime::QDeclarativeOrganizerEventTime(QObject *parent)
@@ -270,7 +270,7 @@ QDateTime QDeclarativeOrganizerEventTime::endDateTime() const
 
     The following fields are supported:
     \list
-    \o Comment.FieldComment
+    \li Comment.FieldComment
     \endlist
  */
 QDeclarativeOrganizerItemComment::QDeclarativeOrganizerItemComment(QObject *parent)
@@ -312,7 +312,7 @@ QString QDeclarativeOrganizerItemComment::comment() const
 
     The following fields are supported:
     \list
-    \o Description.FieldDescription
+    \li Description.FieldDescription
     \endlist
  */
 QDeclarativeOrganizerItemDescription::QDeclarativeOrganizerItemDescription(QObject *parent)
@@ -354,7 +354,7 @@ QString QDeclarativeOrganizerItemDescription::description() const
 
     The following fields are supported:
     \list
-    \o DisplayLabel.FieldLabel
+    \li DisplayLabel.FieldLabel
     \endlist
  */
 QDeclarativeOrganizerItemDisplayLabel::QDeclarativeOrganizerItemDisplayLabel(QObject *parent)
@@ -396,7 +396,7 @@ QString QDeclarativeOrganizerItemDisplayLabel::label() const
 
     The following fields are supported:
     \list
-    \o Guid.FieldGuid
+    \li Guid.FieldGuid
     \endlist
  */
 QDeclarativeOrganizerItemGuid::QDeclarativeOrganizerItemGuid(QObject *parent)
@@ -438,9 +438,9 @@ QString QDeclarativeOrganizerItemGuid::guid() const
 
     The following fields are supported:
     \list
-    \o Location.FieldLabel
-    \o Location.FieldLatitude
-    \o Location.FieldLongitude
+    \li Location.FieldLabel
+    \li Location.FieldLatitude
+    \li Location.FieldLongitude
     \endlist
  */
 QDeclarativeOrganizerItemLocation::QDeclarativeOrganizerItemLocation(QObject *parent)
@@ -518,8 +518,8 @@ QString QDeclarativeOrganizerItemLocation::label() const
 
     The following fields are supported:
     \list
-    \o Parent.FieldParentId
-    \o Parent.FieldOriginalDate
+    \li Parent.FieldParentId
+    \li Parent.FieldOriginalDate
     \endlist
  */
 QDeclarativeOrganizerItemParent::QDeclarativeOrganizerItemParent(QObject *parent)
@@ -580,7 +580,7 @@ QString QDeclarativeOrganizerItemParent::parentId() const
 
     The following fields are supported:
     \list
-    \o Priority.FieldPriority
+    \li Priority.FieldPriority
     \endlist
  */
 QDeclarativeOrganizerItemPriority::QDeclarativeOrganizerItemPriority(QObject *parent)
@@ -601,16 +601,16 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemPriority::t
 
     This property holds the priority associated with an organizer item. The value can be one of:
     \list
-    \o Priority.Unknown
-    \o Priority.Highest
-    \o Priority.ExtremelyHigh
-    \o Priority.VeryHigh
-    \o Priority.High
-    \o Priority.Medium
-    \o Priority.Low
-    \o Priority.VeryLow
-    \o Priority.ExtremelyLow
-    \o Priority.Lowest
+    \li Priority.Unknown
+    \li Priority.Highest
+    \li Priority.ExtremelyHigh
+    \li Priority.VeryHigh
+    \li Priority.High
+    \li Priority.Medium
+    \li Priority.Low
+    \li Priority.VeryLow
+    \li Priority.ExtremelyLow
+    \li Priority.Lowest
     \endlist
  */
 void QDeclarativeOrganizerItemPriority::setPriority(QDeclarativeOrganizerItemPriority::Priority newPriority)
@@ -636,10 +636,10 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerItemPriority::p
 
     The following fields are supported:
     \list
-    \o Recurrence.FieldRecurrenceRules
-    \o Recurrence.FieldExceptionRules
-    \o Recurrence.FieldRecurrenceDates
-    \o Recurrence.FieldExceptionDates
+    \li Recurrence.FieldRecurrenceRules
+    \li Recurrence.FieldExceptionRules
+    \li Recurrence.FieldRecurrenceDates
+    \li Recurrence.FieldExceptionDates
     \endlist
  */
 QDeclarativeOrganizerItemRecurrence::QDeclarativeOrganizerItemRecurrence(QObject *parent)
@@ -825,7 +825,7 @@ void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<Q
 
     The following fields are supported:
     \list
-    \o Tag.FieldTag
+    \li Tag.FieldTag
     \endlist
  */
 QDeclarativeOrganizerItemTag::QDeclarativeOrganizerItemTag(QObject *parent)
@@ -867,8 +867,8 @@ QString QDeclarativeOrganizerItemTag::tag() const
 
     The following fields are supported:
     \list
-    \o Timestamp.FieldCreated
-    \o Timestamp.FieldLastModified
+    \li Timestamp.FieldCreated
+    \li Timestamp.FieldLastModified
     \endlist
  */
 QDeclarativeOrganizerItemTimestamp::QDeclarativeOrganizerItemTimestamp(QObject *parent)
@@ -928,7 +928,7 @@ QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
 
     The following fields are supported:
     \list
-    \o ItemType.FieldType
+    \li ItemType.FieldType
     \endlist
  */
 QDeclarativeOrganizerItemType::QDeclarativeOrganizerItemType(QObject *parent)
@@ -948,13 +948,13 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemType::type(
 
     This property holds the type of the item. The value can be one of:
     \list
-    \o ItemType.Event
-    \o ItemType.EventOccurrence
-    \o ItemType.Todo
-    \o ItemType.TodoOccurrence
-    \o ItemType.Note
-    \o ItemType.Journal
-    \o ItemType.Customized
+    \li ItemType.Event
+    \li ItemType.EventOccurrence
+    \li ItemType.Todo
+    \li ItemType.TodoOccurrence
+    \li ItemType.Note
+    \li ItemType.Journal
+    \li ItemType.Customized
     \endlist
  */
 void QDeclarativeOrganizerItemType::setItemType(ItemType newType)
@@ -979,7 +979,7 @@ QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItemType::itemType(
 
     The following fields are supported:
     \list
-    \o JournalTime.FieldEntryDateTime
+    \li JournalTime.FieldEntryDateTime
     \endlist
  */
 QDeclarativeOrganizerJournalTime::QDeclarativeOrganizerJournalTime(QObject *parent)
@@ -1020,9 +1020,9 @@ QDateTime QDeclarativeOrganizerJournalTime::entryDateTime() const
 
     The following fields are supported:
     \list
-    \o TodoProgress.FieldStatus
-    \o TodoProgress.FieldPercentage
-    \o TodoProgress.FieldFinishedDateTime
+    \li TodoProgress.FieldStatus
+    \li TodoProgress.FieldPercentage
+    \li TodoProgress.FieldFinishedDateTime
     \endlist
  */
 QDeclarativeOrganizerTodoProgress::QDeclarativeOrganizerTodoProgress(QObject *parent)
@@ -1084,9 +1084,9 @@ QDateTime QDeclarativeOrganizerTodoProgress::finishedDateTime() const
     This property holds the value which describes the current completion status of the
     todo item. The value can be one of:
     \list
-    \o TodoProgress.NotStarted
-    \o TodoProgress.InProgress
-    \o TodoProgress.Complete
+    \li TodoProgress.NotStarted
+    \li TodoProgress.InProgress
+    \li TodoProgress.Complete
     \endlist
  */
 void QDeclarativeOrganizerTodoProgress::setStatus(QDeclarativeOrganizerTodoProgress::StatusType newStatus)
@@ -1111,9 +1111,9 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoProgress:
 
     The following fields are supported:
     \list
-    \o TodoTime.FieldStartDateTime
-    \o TodoTime.FieldDueDateTime
-    \o TodoTime.FieldAllDay
+    \li TodoTime.FieldStartDateTime
+    \li TodoTime.FieldDueDateTime
+    \li TodoTime.FieldAllDay
     \endlist
  */
 QDeclarativeOrganizerTodoTime::QDeclarativeOrganizerTodoTime(QObject *parent)
@@ -1191,9 +1191,9 @@ QDateTime QDeclarativeOrganizerTodoTime::dueDateTime() const
 
     The following fields are supported:
     \list
-    \o Reminder.FieldRepetitionCount
-    \o Reminder.FieldRepetitionDelay
-    \o Reminder.FieldSecondsBeforeStart
+    \li Reminder.FieldRepetitionCount
+    \li Reminder.FieldRepetitionDelay
+    \li Reminder.FieldSecondsBeforeStart
     \endlist
  */
 QDeclarativeOrganizerItemReminder::QDeclarativeOrganizerItemReminder(QObject *parent)
@@ -1213,10 +1213,10 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemReminder::t
 
     This property holds the reminder type of this reminder for an organizer item. The value can be one of:
     \list
-    \o Reminder.NoReminder
-    \o Reminder.VisualReminder
-    \o Reminder.AudibleReminder
-    \o Reminder.EmailReminder
+    \li Reminder.NoReminder
+    \li Reminder.VisualReminder
+    \li Reminder.AudibleReminder
+    \li Reminder.EmailReminder
     \endlist
  */
 QDeclarativeOrganizerItemReminder::ReminderType QDeclarativeOrganizerItemReminder::reminderType() const
@@ -1296,10 +1296,10 @@ int QDeclarativeOrganizerItemReminder::secondsBeforeStart() const
 
     The following fields are supported:
     \list
-    \o AudibleReminder.FieldRepetitionCount
-    \o AudibleReminder.FieldRepetitionDelay
-    \o AudibleReminder.FieldSecondsBeforeStart
-    \o AudibleReminder.FieldDataUrl
+    \li AudibleReminder.FieldRepetitionCount
+    \li AudibleReminder.FieldRepetitionDelay
+    \li AudibleReminder.FieldSecondsBeforeStart
+    \li AudibleReminder.FieldDataUrl
     \endlist
  */
 QDeclarativeOrganizerItemAudibleReminder::QDeclarativeOrganizerItemAudibleReminder(QObject *parent)
@@ -1342,13 +1342,13 @@ QUrl QDeclarativeOrganizerItemAudibleReminder::dataUrl() const
 
     The following fields are supported:
     \list
-    \o EmailReminder.FieldRepetitionCount
-    \o EmailReminder.FieldRepetitionDelay
-    \o EmailReminder.FieldSecondsBeforeStart
-    \o EmailReminder.FieldSubject
-    \o EmailReminder.FieldBody
-    \o EmailReminder.FieldRecipients
-    \o EmailReminder.FieldAttachments
+    \li EmailReminder.FieldRepetitionCount
+    \li EmailReminder.FieldRepetitionDelay
+    \li EmailReminder.FieldSecondsBeforeStart
+    \li EmailReminder.FieldSubject
+    \li EmailReminder.FieldBody
+    \li EmailReminder.FieldRecipients
+    \li EmailReminder.FieldAttachments
     \endlist
  */
 QDeclarativeOrganizerItemEmailReminder::QDeclarativeOrganizerItemEmailReminder(QObject *parent)
@@ -1446,11 +1446,11 @@ QVariantList QDeclarativeOrganizerItemEmailReminder::attachments()
 
     The following fields are supported:
     \list
-    \o VisualReminder.FieldRepetitionCount
-    \o VisualReminder.FieldRepetitionDelay
-    \o VisualReminder.FieldSecondsBeforeStart
-    \o VisualReminder.FieldDataUrl
-    \o VisualReminder.FieldMessage
+    \li VisualReminder.FieldRepetitionCount
+    \li VisualReminder.FieldRepetitionDelay
+    \li VisualReminder.FieldSecondsBeforeStart
+    \li VisualReminder.FieldDataUrl
+    \li VisualReminder.FieldMessage
     \endlist
  */
 QDeclarativeOrganizerItemVisualReminder::QDeclarativeOrganizerItemVisualReminder(QObject *parent)
@@ -1510,8 +1510,8 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
 
     The following fields are supported:
     \list
-    \o ExtendedDetail.FieldName
-    \o ExtendedDetail.FieldData
+    \li ExtendedDetail.FieldName
+    \li ExtendedDetail.FieldData
     \endlist
  */
 QDeclarativeOrganizerItemExtendedDetail::QDeclarativeOrganizerItemExtendedDetail(QObject *parent)
@@ -1570,11 +1570,11 @@ QVariant QDeclarativeOrganizerItemExtendedDetail::data() const
 
     The following fields are supported:
     \list
-    \o EventAttendee.FieldName
-    \o EventAttendee.FieldEmailAddress
-    \o EventAttendee.FieldAddendeeId
-    \o EventAttendee.FieldParticipationStatus
-    \o EventAttendee.FieldParticipationRole
+    \li EventAttendee.FieldName
+    \li EventAttendee.FieldEmailAddress
+    \li EventAttendee.FieldAddendeeId
+    \li EventAttendee.FieldParticipationStatus
+    \li EventAttendee.FieldParticipationRole
     \endlist
  */
 QDeclarativeOrganizerEventAttendee::QDeclarativeOrganizerEventAttendee(QObject *parent)
@@ -1630,13 +1630,13 @@ QString QDeclarativeOrganizerEventAttendee::emailAddress() const
 
     This property holds the participation status of the attendee of the event. The value can be one of:
     \list
-    \o EventAttendee.StatusUnknown
-    \o EventAttendee.StatusAccepted
-    \o EventAttendee.StatusDeclined
-    \o EventAttendee.StatusTentative
-    \o EventAttendee.StatusDelegated
-    \o EventAttendee.StatusInProcess
-    \o EventAttendee.StatusCompleted
+    \li EventAttendee.StatusUnknown
+    \li EventAttendee.StatusAccepted
+    \li EventAttendee.StatusDeclined
+    \li EventAttendee.StatusTentative
+    \li EventAttendee.StatusDelegated
+    \li EventAttendee.StatusInProcess
+    \li EventAttendee.StatusCompleted
     \endlist
  */
 void QDeclarativeOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
@@ -1657,13 +1657,13 @@ QDeclarativeOrganizerEventAttendee::ParticipationStatus QDeclarativeOrganizerEve
 
     This property holds the participation role of the attendee of the event.The value can be one of:
     \list
-    \o EventAttendee.RoleUnknown
-    \o EventAttendee.RoleOrganizer
-    \o EventAttendee.RoleChairperson
-    \o EventAttendee.RoleHost
-    \o EventAttendee.RoleRequiredParticipant
-    \o EventAttendee.RoleOptionalParticipant
-    \o EventAttendee.RoleNonParticipant
+    \li EventAttendee.RoleUnknown
+    \li EventAttendee.RoleOrganizer
+    \li EventAttendee.RoleChairperson
+    \li EventAttendee.RoleHost
+    \li EventAttendee.RoleRequiredParticipant
+    \li EventAttendee.RoleOptionalParticipant
+    \li EventAttendee.RoleNonParticipant
     \endlist
  */
 void QDeclarativeOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
@@ -1769,8 +1769,8 @@ QDeclarativeOrganizerEventAttendee::ParticipationRole QDeclarativeOrganizerEvent
 
     This property holds the response requirement of the event. The value can be one of:
     \list
-    \o EventRsvp.ResponseNotRequired
-    \o EventRsvp.ResponseRequired
+    \li EventRsvp.ResponseNotRequired
+    \li EventRsvp.ResponseRequired
     \endlist
  */
 void QDeclarativeOrganizerEventRsvp::setResponseRequirement(ResponseRequirement requirement)

@@ -54,7 +54,7 @@
 
    \sa QContactDetail
 
-    The ContactDetail element is part of the \bold{QtContacts} module.
+    The ContactDetail element is part of the \b{QtContacts} module.
  */
 
 QTCONTACTS_BEGIN_NAMESPACE
@@ -156,35 +156,35 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
     This property holds the type of the detail.
 
     \list
-    \o ContactDetail.Address
-    \o ContactDetail.Anniversary
-    \o ContactDetail.Avatar
-    \o ContactDetail.Birthday
-    \o ContactDetail.DisplayLabel
-    \o ContactDetail.Email
-    \o ContactDetail.ExtendedDetail
-    \o ContactDetail.Family
-    \o ContactDetail.Favorite
-    \o ContactDetail.Gender
-    \o ContactDetail.Geolocation
-    \o ContactDetail.GlobalPresence
-    \o ContactDetail.Guid
-    \o ContactDetail.Hobby
-    \o ContactDetail.Name
-    \o ContactDetail.NickName
-    \o ContactDetail.Note
-    \o ContactDetail.OnlineAccount
-    \o ContactDetail.Organization
-    \o ContactDetail.PersonId
-    \o ContactDetail.PhoneNumber
-    \o ContactDetail.Presence
-    \o ContactDetail.Ringtone
-    \o ContactDetail.SyncTarget
-    \o ContactDetail.Tag
-    \o ContactDetail.Timestamp
-    \o ContactDetail.Url
-    \o ContactDetail.Version
-    \o ContactDetail.Unknown
+    \li ContactDetail.Address
+    \li ContactDetail.Anniversary
+    \li ContactDetail.Avatar
+    \li ContactDetail.Birthday
+    \li ContactDetail.DisplayLabel
+    \li ContactDetail.Email
+    \li ContactDetail.ExtendedDetail
+    \li ContactDetail.Family
+    \li ContactDetail.Favorite
+    \li ContactDetail.Gender
+    \li ContactDetail.Geolocation
+    \li ContactDetail.GlobalPresence
+    \li ContactDetail.Guid
+    \li ContactDetail.Hobby
+    \li ContactDetail.Name
+    \li ContactDetail.NickName
+    \li ContactDetail.Note
+    \li ContactDetail.OnlineAccount
+    \li ContactDetail.Organization
+    \li ContactDetail.PersonId
+    \li ContactDetail.PhoneNumber
+    \li ContactDetail.Presence
+    \li ContactDetail.Ringtone
+    \li ContactDetail.SyncTarget
+    \li ContactDetail.Tag
+    \li ContactDetail.Timestamp
+    \li ContactDetail.Url
+    \li ContactDetail.Version
+    \li ContactDetail.Unknown
     \endlist
 
     This property is read only.
@@ -317,17 +317,17 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Address element contains the following field types:
    \list
-   \o Address.Street
-   \o Address.Locality
-   \o Address.Region
-   \o Address.PostCode
-   \o Address.Country
-   \o Address.SubTypes
-   \o Address.PostOfficeBox
+   \li Address.Street
+   \li Address.Locality
+   \li Address.Region
+   \li Address.PostCode
+   \li Address.Country
+   \li Address.SubTypes
+   \li Address.PostOfficeBox
    \endlist
 
    Versit \reg is a trademark of the Internet Mail Consortium.
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
  */
 /*!
   \qmlproperty string Address::street
@@ -360,10 +360,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property stores the sub types of the address.
 
   \list
-  \o Address.Parcel - An address for parcel delivery.
-  \o Address.Postal - An address for postal delivery.
-  \o Address.Domestic - An address for domestic mail delivery.
-  \o Address.International - An address for international mail delivery.
+  \li Address.Parcel - An address for parcel delivery.
+  \li Address.Postal - An address for postal delivery.
+  \li Address.Domestic - An address for domestic mail delivery.
+  \li Address.International - An address for international mail delivery.
   \endlist
   */
 /*!
@@ -371,7 +371,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
   This property holds the post office box identifier of the mailing address.
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
   */
 
 /* ==================== QDeclarativeContactAnniversary ======================= */
@@ -385,13 +385,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Anniversary element contains the following field types:
    \list
-   \o Anniversary.CalendarId
-   \o Anniversary.OriginalDate
-   \o Anniversary.Event
-   \o Anniversary.SubType
+   \li Anniversary.CalendarId
+   \li Anniversary.OriginalDate
+   \li Anniversary.Event
+   \li Anniversary.SubType
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -416,12 +416,12 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the sub type of an Anniversary.
 
   \list
-  \o Unknown - Unknown sub type (default).
-  \o Wedding - A wedding anniversary.
-  \o Engagement - An engagement anniversary.
-  \o House - A new residence anniversary.
-  \o Employment - A start of employment anniversary.
-  \o Memorial - An event of sentimental significance.
+  \li Unknown - Unknown sub type (default).
+  \li Wedding - A wedding anniversary.
+  \li Engagement - An engagement anniversary.
+  \li House - A new residence anniversary.
+  \li Employment - A start of employment anniversary.
+  \li Memorial - An event of sentimental significance.
   \endlist
   */
 
@@ -434,11 +434,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Avatar element contains the following field types:
    \list
-   \o Avatar.ImageUrl
-   \o Avatar.VideoUrl
+   \li Avatar.ImageUrl
+   \li Avatar.VideoUrl
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -462,10 +462,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Birthday element contains the following field types:
    \list
-   \o Birthday.Birthday
+   \li Birthday.Birthday
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -483,10 +483,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    DisplayLabel element contains the following field types:
    \list
-   \o DisplayLabel.Label
+   \li DisplayLabel.Label
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -505,10 +505,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    EmailAddress element contains the following field types:
    \list
-   \o EmailAddress.EmailAddress
+   \li EmailAddress.EmailAddress
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -528,11 +528,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Family element contains the following field types:
    \list
-   \o Family.Spouse
-   \o Family.Children
+   \li Family.Spouse
+   \li Family.Children
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -557,11 +557,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Favorite element contains the following field types:
    \list
-   \o Favorite.Favorite
-   \o Favorite.Index
+   \li Favorite.Favorite
+   \li Favorite.Index
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -586,10 +586,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Gender element contains the following field types:
    \list
-   \o Gender.Gender
+   \li Gender.Gender
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -598,8 +598,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the value of the gender.
 
   \list
-  \o Gender.Male
-  \o Gender.Female
+  \li Gender.Male
+  \li Gender.Female
   \endlist
   */
 
@@ -613,18 +613,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    GeoLocation element contains the following field types:
    \list
-   \o GeoLocation.Label
-   \o GeoLocation.Latitude
-   \o GeoLocation.Longitude
-   \o GeoLocation.Accuracy
-   \o GeoLocation.Altitude
-   \o GeoLocation.AltitudeAccuracy
-   \o GeoLocation.Heading
-   \o GeoLocation.Speed
-   \o GeoLocation.Timestamp
+   \li GeoLocation.Label
+   \li GeoLocation.Latitude
+   \li GeoLocation.Longitude
+   \li GeoLocation.Accuracy
+   \li GeoLocation.Altitude
+   \li GeoLocation.AltitudeAccuracy
+   \li GeoLocation.Heading
+   \li GeoLocation.Speed
+   \li GeoLocation.Timestamp
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -684,15 +684,15 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    GlobalPresence element contains the following field types:
    \list
-   \o GlobalPresence.Timestamp
-   \o GlobalPresence.Nickname
-   \o GlobalPresence.State
-   \o GlobalPresence.StateText
-   \o GlobalPresence.ImageUrl
-   \o GlobalPresence.CustomMessage
+   \li GlobalPresence.Timestamp
+   \li GlobalPresence.Nickname
+   \li GlobalPresence.State
+   \li GlobalPresence.StateText
+   \li GlobalPresence.ImageUrl
+   \li GlobalPresence.CustomMessage
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -711,13 +711,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the presence state enumeration value.
 
   \list
-  \o Presence.Unknown -  Signifies that the presence state of the contact is not currently known (default).
-  \o Presence.Available - Signifies that the contact is available.
-  \o Presence.Hidden - Signifies that the contact is hidden.
-  \o Presence.Busy - Signifies that the contact is busy.
-  \o Presence.Away - Signifies that the contact is away.
-  \o Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
-  \o Presence.Offline - Signifies that the contact is offline.
+  \li Presence.Unknown -  Signifies that the presence state of the contact is not currently known (default).
+  \li Presence.Available - Signifies that the contact is available.
+  \li Presence.Hidden - Signifies that the contact is hidden.
+  \li Presence.Busy - Signifies that the contact is busy.
+  \li Presence.Away - Signifies that the contact is away.
+  \li Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
+  \li Presence.Offline - Signifies that the contact is offline.
   \endlist
   */
 /*!
@@ -747,10 +747,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Guid element contains the following field types:
    \list
-   \o Guid.Guid
+   \li Guid.Guid
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -768,10 +768,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Hobby element contains the following field types:
    \list
-   \o Hobby.Hobby
+   \li Hobby.Hobby
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -790,15 +790,15 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Name element contains the following field types:
    \list
-   \o Name.Prefix
-   \o Name.FirstName
-   \o Name.MiddleName
-   \o Name.LastName
-   \o Name.Suffix
-   \o Name.CustomLabel
+   \li Name.Prefix
+   \li Name.FirstName
+   \li Name.MiddleName
+   \li Name.LastName
+   \li Name.Suffix
+   \li Name.CustomLabel
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -843,10 +843,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Nickname element contains the following field types:
    \list
-   \o Nickname.Nickname
+   \li Nickname.Nickname
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -865,10 +865,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Note element contains the following field types:
    \list
-   \o Note.Note
+   \li Note.Note
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -887,13 +887,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    OnlineAccount element contains the following field types:
    \list
-   \o OnlineAccount.AccountUri - the account uri value.
-   \o OnlineAccount.ServiceProvider - the account service provider name.
-   \o OnlineAccount.Capabilities - the account capabilities value.
-   \o OnlineAccount.SubTypes - the sub types of an online account.
+   \li OnlineAccount.AccountUri - the account uri value.
+   \li OnlineAccount.ServiceProvider - the account service provider name.
+   \li OnlineAccount.Capabilities - the account capabilities value.
+   \li OnlineAccount.SubTypes - the sub types of an online account.
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -917,11 +917,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the value of the sub types of an online account.
 
   \list
-  \o OnlineAccount.Unknown (default)
-  \o OnlineAccount.Sip - indicating this online account supports SIP.
-  \o OnlineAccount.SipVoip - indicating this online account supports SIP based VOIP.
-  \o OnlineAccount.Impp - indicating this online account supports IMPP.
-  \o OnlineAccount.VideoShare - indicating this online account supports VideoShare.
+  \li OnlineAccount.Unknown (default)
+  \li OnlineAccount.Sip - indicating this online account supports SIP.
+  \li OnlineAccount.SipVoip - indicating this online account supports SIP based VOIP.
+  \li OnlineAccount.Impp - indicating this online account supports IMPP.
+  \li OnlineAccount.VideoShare - indicating this online account supports VideoShare.
   \endlist
   */
 
@@ -935,18 +935,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Organization element contains the following field types:
    \list
-   \o Organization.Name
-   \o Organization.LogoUrl
-   \o Organization.Department
-   \o Organization.Location
-   \o Organization.Role
-   \o Organization.Title
-   \o Organization.AssistantName
-   \o Organization.StartDate
-   \o Organization.EndDate
+   \li Organization.Name
+   \li Organization.LogoUrl
+   \li Organization.Department
+   \li Organization.Location
+   \li Organization.Role
+   \li Organization.Title
+   \li Organization.AssistantName
+   \li Organization.StartDate
+   \li Organization.EndDate
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -1005,11 +1005,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    PhoneNumber element contains the following field types:
    \list
-   \o PhoneNumber.Number
-   \o PhoneNumber.SubTypes
+   \li PhoneNumber.Number
+   \li PhoneNumber.SubTypes
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -1024,19 +1024,19 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the sub types of a PhoneNumber.
 
   \list
-  \o PhoneNumber.Unknown - indicating this phone number type is unknown(default).
-  \o PhoneNumber.Landline - indicating this phone number is a landline number.
-  \o PhoneNumber.Mobile - ndicating this phone number is a mobile (cellular) number.
-  \o PhoneNumber.Fax - indicating this phone number is a fax number.
-  \o PhoneNumber.Pager - indicating this phone number is a pager number.
-  \o PhoneNumber.Voice - indicating this phone number supports voice transmission.
-  \o PhoneNumber.Modem - indicating this phone number supports data transmission.
-  \o PhoneNumber.Video - indicating this phone number supports video transmission.
-  \o PhoneNumber.Car - indicating this phone number is a car phone.
-  \o PhoneNumber.BulletinBoardSystem - indicating this phone number is a bulletin board system.
-  \o PhoneNumber.MessagingCapable - indicating this phone number supports messaging services.
-  \o PhoneNumber.Assistant - indicating this phone number is the number of an assistant.
-  \o PhoneNumber.DtmfMenu - indicating this phone number supports DTMF-controlled voice menu navigation.
+  \li PhoneNumber.Unknown - indicating this phone number type is unknown(default).
+  \li PhoneNumber.Landline - indicating this phone number is a landline number.
+  \li PhoneNumber.Mobile - ndicating this phone number is a mobile (cellular) number.
+  \li PhoneNumber.Fax - indicating this phone number is a fax number.
+  \li PhoneNumber.Pager - indicating this phone number is a pager number.
+  \li PhoneNumber.Voice - indicating this phone number supports voice transmission.
+  \li PhoneNumber.Modem - indicating this phone number supports data transmission.
+  \li PhoneNumber.Video - indicating this phone number supports video transmission.
+  \li PhoneNumber.Car - indicating this phone number is a car phone.
+  \li PhoneNumber.BulletinBoardSystem - indicating this phone number is a bulletin board system.
+  \li PhoneNumber.MessagingCapable - indicating this phone number supports messaging services.
+  \li PhoneNumber.Assistant - indicating this phone number is the number of an assistant.
+  \li PhoneNumber.DtmfMenu - indicating this phone number supports DTMF-controlled voice menu navigation.
   \endlist
   */
 
@@ -1049,15 +1049,15 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Presence element contains the following field types:
    \list
-   \o Presence.Timestamp
-   \o Presence.Nickname
-   \o Presence.State
-   \o Presence.StateText
-   \o Presence.ImageUrl
-   \o Presence.CustomMessage
+   \li Presence.Timestamp
+   \li Presence.Nickname
+   \li Presence.State
+   \li Presence.StateText
+   \li Presence.ImageUrl
+   \li Presence.CustomMessage
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -1076,13 +1076,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the presence state enumeration value.
 
   \list
-  \o Presence.Unknown -  Signifies that the presence state of the contact is not currently known (default).
-  \o Presence.Available - Signifies that the contact is available.
-  \o Presence.Hidden - Signifies that the contact is hidden.
-  \o Presence.Busy - Signifies that the contact is busy.
-  \o Presence.Away - Signifies that the contact is away.
-  \o Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
-  \o Presence.Offline - Signifies that the contact is offline.
+  \li Presence.Unknown -  Signifies that the presence state of the contact is not currently known (default).
+  \li Presence.Available - Signifies that the contact is available.
+  \li Presence.Hidden - Signifies that the contact is hidden.
+  \li Presence.Busy - Signifies that the contact is busy.
+  \li Presence.Away - Signifies that the contact is away.
+  \li Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
+  \li Presence.Offline - Signifies that the contact is offline.
   \endlist
   */
 /*!
@@ -1114,11 +1114,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Ringtone element contains the following field types:
    \list
-   \o Ringtone.AudioRingtoneUrl
-   \o Ringtone.VideoRingtoneUrl
+   \li Ringtone.AudioRingtoneUrl
+   \li Ringtone.VideoRingtoneUrl
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -1148,11 +1148,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    SyncTarget element contains the following field types:
    \list
-   \o SyncTarget.SyncTarget
+   \li SyncTarget.SyncTarget
    \endlist
 
   \sa QContactSyncTarget
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 /*!
   \qmlproperty string SyncTarget::syncTarget
@@ -1169,10 +1169,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Tag element contains the following field types:
    \list
-   \o Tag.Tag
+   \li Tag.Tag
    \endlist
   \sa QContactTag
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 /*!
   \qmlproperty string Tag::tag
@@ -1189,11 +1189,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Timestamp element contains the following field types:
    \list
-   \o Timestamp.LastModified
-   \o Timestamp.Created
+   \li Timestamp.LastModified
+   \li Timestamp.Created
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 /*!
   \qmlproperty date Timestamp::lastModified
@@ -1215,11 +1215,11 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Url element contains the following field types:
    \list
-   \o Url.Url
-   \o Url.SubType
+   \li Url.Url
+   \li Url.SubType
    \endlist
 
-  This element is part of the \bold{QtContacts} module.
+  This element is part of the \b{QtContacts} module.
  */
 /*!
   \qmlproperty string Url::url
@@ -1232,9 +1232,9 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   This property holds the sub type of a QContactUrl.
 
   \list
-  \o Url.Unknown - indicating this url type is unknown (default).
-  \o Url.HomePage - indicating this url is a contact's home page.
-  \o Url.Favourite - indicating this url is one of the contact's favourite URLs (or bookmarks).
+  \li Url.Unknown - indicating this url type is unknown (default).
+  \li Url.HomePage - indicating this url is a contact's home page.
+  \li Url.Favourite - indicating this url is one of the contact's favourite URLs (or bookmarks).
   \endlist
   */
 
@@ -1247,10 +1247,10 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
     PersonId element contains the following field types:
     \list
-    \o PersonId.PersonId
+    \li PersonId.PersonId
     \endlist
 
-    This element is part of the \bold{QtContacts} module.
+    This element is part of the \b{QtContacts} module.
  */
 
 /*!
@@ -1265,7 +1265,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
     \brief The ExtendedDetail element contains a extended detail of a contact.
     \ingroup qml-contacts
 
-    This element is part of the \bold{QtContacts 5.0} module.
+    This element is part of the \b{QtContacts 5.0} module.
  */
 
 /*!

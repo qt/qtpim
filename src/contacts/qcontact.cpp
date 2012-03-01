@@ -92,8 +92,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   A QContact has a number of mandatory details:
   \list
-   \o A QContactType, with the type of the contact (individual contact, group etc)
-   \o A QContactDisplayLabel, representing the text to display
+   \li A QContactType, with the type of the contact (individual contact, group etc)
+   \li A QContactDisplayLabel, representing the text to display
   \endlist
 
   If you have edited the contents of a QContact (via saving or removing details),

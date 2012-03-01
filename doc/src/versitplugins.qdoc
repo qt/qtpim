@@ -63,17 +63,17 @@ of the library on the system.
 
 Writing a plugin involves these steps:
 \list
-\o Implement a handler class that inherits from QVersitContactHandler.
-\o Implement a plugin class that inherits from QObject and QVersitContactHandlerFactory
+\li Implement a handler class that inherits from QVersitContactHandler.
+\li Implement a plugin class that inherits from QObject and QVersitContactHandlerFactory
    and implements the createHandler() function to create the handler class.
-\o Include the following two lines at the top of the factory declaration:
+\li Include the following two lines at the top of the factory declaration:
 \code
 Q_OBJECT
 Q_INTERFACES(QtMobility::QVersitContactHandlerFactory)
 \endcode
-\o Export the plugin using the Q_EXPORT_PLUGIN2 macro.
-\o Build the plugin using a suitable \tt{.pro} file.
-\o Deploy the plugin in the \tt{plugins/versit} directory.
+\li Export the plugin using the Q_EXPORT_PLUGIN2 macro.
+\li Build the plugin using a suitable \tt{.pro} file.
+\li Deploy the plugin in the \tt{plugins/versit} directory.
 \endlist
 
 Please see the relevant documentation in Qt for more details on writing a
@@ -97,21 +97,21 @@ When applied to the exporter, this handler encodes all writable details that the
 exporter doesn't recognise.  The format it uses to encode the detail is as
 follows:
 \list
-\o All generated properties will have the name X-NOKIA-QCONTACTFIELD
-\o All generated properties will have a single Versit group, and all properties
+\li All generated properties will have the name X-NOKIA-QCONTACTFIELD
+\li All generated properties will have a single Versit group, and all properties
  generated from a single detail will have the same group.
-\o All generated properties will have at least the parameters DETAIL, which
+\li All generated properties will have at least the parameters DETAIL, which
  holds the definition name of the QContactDetail from which it was generated, and
  FIELD, which holds the name of the field within the detail from which it was
  generated.
-\o If the field is of type QString or QByteArray, the property's value is set
+\li If the field is of type QString or QByteArray, the property's value is set
  directly to the value of the field.  (For a QByteArray value, the QVersitWriter
  will base-64 encode it.)
-\o If the field is of type bool, int, uint, QDate, QTime, QDateTime or QUrl a
+\li If the field is of type bool, int, uint, QDate, QTime, QDateTime or QUrl a
  the property's value is set to a string representation of the field.  A
  parameter DATATYPE is added to the property with value BOOL, INT, UINT, DATE,
  TIME or DATETIME depending on the type.
-\o If the field is of some other type, the field value is encoded to a
+\li If the field is of some other type, the field value is encoded to a
  QByteArray via QDataStream (and the resulting byte array is base-64 encoded by
  the QVersitWriter).  In this case, the parameter DATATYPE=VARIANT is added to
  the Versit property.

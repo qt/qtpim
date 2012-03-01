@@ -60,9 +60,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 
     The fetch hint contains:
     \list
-    \o a list of detail definition names which the client is interested
+    \li a list of detail definition names which the client is interested
        in (empty if interested in all detail definitions)
-    \o some optimization flags which allow the client to tell the backend if they are
+    \li some optimization flags which allow the client to tell the backend if they are
        not interested in binary blobs (images etc).
     \endlist
 

@@ -42,7 +42,7 @@ regarding the Qt Organizer API.
 
 While QOrganizerItem and its subclasses provide methods for data access and
 manipulation which should be sufficient for most purposes, it is actually a
-generic container that can hold arbitrary data in the form of \i details. In fact,
+generic container that can hold arbitrary data in the form of \e details. In fact,
 functions for manipulating items, such as QOrganizerItem::displayLabel() or
 QOrganizerEvent::setRecurrenceRule() are merely convenience functions that
 perform operations on the underlying details of an item. A QOrganizerItem
@@ -109,7 +109,7 @@ were implemented will determine whether operations are thread-safe or not.
 
 Since the data may physically be stored in a remote datastore, any operations
 may be dominated by the return-trip-time of communications with the remote
-datastore. As such, \bold{it is recommended that clients use the asynchronous
+datastore. As such, \b{it is recommended that clients use the asynchronous
 client API to access organizer information from any QOrganizerManager.}
 
 \section2 Provided Engines
@@ -196,9 +196,9 @@ QOrganizerManager class provides API to query the capabilities of a given
 manager with the following synchronous functions:
 
 \list
-\o \l{QOrganizerManager::supportedFilters()}{supportedFilters()}
-\o \l{QOrganizerManager::supportedItemDetails()}{supportedItemDetails()}
-\o \l{QOrganizerManager::supportedItemTypes()}{supportedItemTypes()}
+\li \l{QOrganizerManager::supportedFilters()}{supportedFilters()}
+\li \l{QOrganizerManager::supportedItemDetails()}{supportedItemDetails()}
+\li \l{QOrganizerManager::supportedItemTypes()}{supportedItemTypes()}
 \endlist
 
 A given manager is identified by its URI. The URI consists of the manager's
@@ -213,12 +213,12 @@ The synchronous API offered to allow run-time querying of a manager's metadata
 includes:
 
 \list
-\o \l{QOrganizerManager::managerName()}{managerName}
-\o \l{QOrganizerManager::managerParameters()}{managerParameters}
-\o \l{QOrganizerManager::managerUri()}{managerUri}
-\o \l{QOrganizerManager::managerVersion()}{managerVersion}
-\o \l{QOrganizerManager::parseUri()}{parseUri}
-\o \l{QOrganizerManager::buildUri()}{buildUri}
+\li \l{QOrganizerManager::managerName()}{managerName}
+\li \l{QOrganizerManager::managerParameters()}{managerParameters}
+\li \l{QOrganizerManager::managerUri()}{managerUri}
+\li \l{QOrganizerManager::managerVersion()}{managerVersion}
+\li \l{QOrganizerManager::parseUri()}{parseUri}
+\li \l{QOrganizerManager::buildUri()}{buildUri}
 \endlist
 
 The functionality that the above functions provide is only available through

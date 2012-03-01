@@ -105,13 +105,13 @@
 
     The following sample applications show examples of API usage:
     \list
-        \o \l{qmlorganizerlistview}{Qt Quick Organizer List view}
+        \li \l{qmlorganizerlistview}{Qt Quick Organizer List view}
     \endlist
 
     \section2 Tutorials
 
     The following tutorials are useful to work through the use of the Qt Quick Organizer API::
     \list
-        \o \l{Organizer Qt Quick ListView Tutorial}{Qt Quick Organizer List view Tutorial}
+        \li \l{Organizer Qt Quick ListView Tutorial}{Qt Quick Organizer List view Tutorial}
     \endlist
 */

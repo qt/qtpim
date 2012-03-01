@@ -36,6 +36,6 @@
 
      \section2 Organizer
      \list
-     \o \l{Organizer Qt Quick ListView Tutorial}{Qt Quick Organizer List View}
+     \li \l{Organizer Qt Quick ListView Tutorial}{Qt Quick Organizer List View}
      \endlist
 */

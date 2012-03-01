@@ -77,10 +77,10 @@ have an undefined outcome depending on the implementation of the action.
 If you are a third-party developer who wants to provide an action for other clients to use,
 you must do four things:
 \list
-\o Implement a QServicePluginInterface-derived class
-\o Implement a QContactActionFactory-derived class
-\o Implement (one or more) QContactAction-derived classes
-\o Write an xml file which describes your service plugin
+\li Implement a QServicePluginInterface-derived class
+\li Implement a QContactActionFactory-derived class
+\li Implement (one or more) QContactAction-derived classes
+\li Write an xml file which describes your service plugin
 \endlist
 
 For more information on the QServicePluginInterface and the format of the service description

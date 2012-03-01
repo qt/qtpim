@@ -89,16 +89,16 @@ occurred.
 All engines must implement the following functions:
 
 \list
-  \o QOrganizerManagerEngine::managerName()
-  \o QOrganizerManagerEngine::managerVersion()
-  \o QOrganizerManagerEngine::supportedFilters()
-  \o QOrganizerManagerEngine::supportedItemDetails()
-  \o QOrganizerManagerEngine::supportedItemTypes()
-  \o QOrganizerManagerEngine::itemIds()
-  \o QOrganizerManagerEngine::items()
-  \o QOrganizerManagerEngine::itemsForExport()
-  \o QOrganizerManagerEngine::defaultCollection()
-  \o QOrganizerManagerEngine::collections()
+  \li QOrganizerManagerEngine::managerName()
+  \li QOrganizerManagerEngine::managerVersion()
+  \li QOrganizerManagerEngine::supportedFilters()
+  \li QOrganizerManagerEngine::supportedItemDetails()
+  \li QOrganizerManagerEngine::supportedItemTypes()
+  \li QOrganizerManagerEngine::itemIds()
+  \li QOrganizerManagerEngine::items()
+  \li QOrganizerManagerEngine::itemsForExport()
+  \li QOrganizerManagerEngine::defaultCollection()
+  \li QOrganizerManagerEngine::collections()
 \endlist
 
 Every engine implementation must also come with an implementation of QOrganizerManagerEngineFactory
@@ -108,8 +108,8 @@ Note that you do not need to implement filtering and sorting natively in an engi
 implementation offers the following static functions to perform filtering and sorting respectively,
 in memory:
 \list
-  \o QOrganizerManagerEngine::testFilter()
-  \o QOrganizerManagerEngine::sortItems()
+  \li QOrganizerManagerEngine::testFilter()
+  \li QOrganizerManagerEngine::sortItems()
 \endlist
 
 However, engine implementors should be aware that the default implementation is naive and will
@@ -121,10 +121,10 @@ it does so it must return all information available for the item.
 
 All engines must also implement the following functions to implement asynchronous requests:
 \list
-  \o QOrganizerManagerEngine::requestDestroyed()
-  \o QOrganizerManagerEngine::startRequest()
-  \o QOrganizerManagerEngine::cancelRequest()
-  \o QOrganizerManagerEngine::waitForRequestFinished()
+  \li QOrganizerManagerEngine::requestDestroyed()
+  \li QOrganizerManagerEngine::startRequest()
+  \li QOrganizerManagerEngine::cancelRequest()
+  \li QOrganizerManagerEngine::waitForRequestFinished()
 \endlist
 If the engine does not support asynchronous requests, it should always return false in the
 last three of those functions, and do nothing in the first.  If the engine does support
@@ -147,34 +147,34 @@ engine (for example, a parameter might define which file to read schedule or cal
 it might be an access token to prove that the client has the access rights to read organizer information
 from the engine, etc), it must report which parameters it was constructed with via the
 \list
-  \o QOrganizerManagerEngine::managerParameters()
+  \li QOrganizerManagerEngine::managerParameters()
 \endlist
 function.
 
 If the engine supports native filtering of any kind, it must report to clients which filters
 are supported natively by implementing:
 \list
-  \o QOrganizerManagerEngine::supportedFilters()
+  \li QOrganizerManagerEngine::supportedFilters()
 \endlist
 
 If the engine supports saving or removing organizer item information, as well as retrieval, it must
 implement:
 \list
-  \o QOrganizerManagerEngine::saveItems()
-  \o QOrganizerManagerEngine::removeItems()
+  \li QOrganizerManagerEngine::saveItems()
+  \li QOrganizerManagerEngine::removeItems()
 \endlist
 It may also choose to implement the "single item" functions:
 \list
-  \o QOrganizerManagerEngine::saveItem()
-  \o QOrganizerManagerEngine::removeItem()
+  \li QOrganizerManagerEngine::saveItem()
+  \li QOrganizerManagerEngine::removeItem()
 \endlist
 If it does not, the default implementation of those functions will use the batch (plural) versions
 of those functions to implement the required behavior.
 
 If the engine supports addition, modification and removal of collections, it must implement:
 \list
-  \o QOrganizerManagerEngine::saveCollection()
-  \o QOrganizerManagerEngine::removeCollection()
+  \li QOrganizerManagerEngine::saveCollection()
+  \li QOrganizerManagerEngine::removeCollection()
 \endlist
 
 
@@ -185,18 +185,18 @@ that it supports.
 
 If the engine supports reading or saving items, it must emit the:
 \list
-  \o QOrganizerManagerEngine::itemsAdded()
-  \o QOrganizerManagerEngine::itemsChanged()
-  \o QOrganizerManagerEngine::itemsRemoved()
+  \li QOrganizerManagerEngine::itemsAdded()
+  \li QOrganizerManagerEngine::itemsChanged()
+  \li QOrganizerManagerEngine::itemsRemoved()
 \endlist
 signals as appropriate.  Alternatively, it can emit the QOrganizerManager::dataChanged()
 signal instead.
 
 Similarly, if the engine supports reading or saving collections, it must emit the:
 \list
-  \o QOrganizerManagerEngine::collectionsAdded()
-  \o QOrganizerManagerEngine::collectionsChanged()
-  \o QOrganizerManagerEngine::collectionsRemoved()
+  \li QOrganizerManagerEngine::collectionsAdded()
+  \li QOrganizerManagerEngine::collectionsChanged()
+  \li QOrganizerManagerEngine::collectionsRemoved()
 \endlist
 signals as appropriate.  Alternatively, it can emit the QOrganizerManager::dataChanged()
 signal instead.
@@ -209,18 +209,18 @@ signals are for collection meta-data, not the contents of the collection.
 
 There are several other considerations that engine writers must be aware of:
 \list
-  \o Most batch functions take an error map as a parameter.  This parameter cannot
+  \li Most batch functions take an error map as a parameter.  This parameter cannot
 be null as it exists in the private implementation of QOrganizerManager,
 so engines need not check the pointer before attempting to dereference it.
-  \o Every function takes a mandatory \c QOrganizerManager::Error pointer argument.  This argument
+  \li Every function takes a mandatory \c QOrganizerManager::Error pointer argument.  This argument
 is also never null, since it exists in the private implementation of QOrganizerManager.  Testing this
 argument for null is, therefore, superfluous.
-  \o The single-item functions for item retrieval, removal and save
+  \li The single-item functions for item retrieval, removal and save
 already have a default implementation which merely wraps the batch retrieval, removal or save
 function appropriately.  This default implementation may not be as performant as a hand-rolled
 function.  Engine implementations MUST implement the batch functions for each area of
 functionality supported by the engine.
-  \o Most clients will prefer to use the asynchronous API to access information from the
+  \li Most clients will prefer to use the asynchronous API to access information from the
 engine.  It is therefore suggested that asynchronous requests be serviced, even if it is
 implemented in a similar manner to the (provided) memory engine's naive implementation.
 \endlist

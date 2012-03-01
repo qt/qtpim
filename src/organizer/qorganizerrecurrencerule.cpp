@@ -72,40 +72,40 @@ QTORGANIZER_BEGIN_NAMESPACE
   The general rules for interaction between the fields when generating the occurence dates is as
   follows:
   \list
-    \o When a criterion takes a list, the items in the list are unioned together.
+    \li When a criterion takes a list, the items in the list are unioned together.
     \list
-      \o eg. with [dayOfWeek == Tuesday,Thursday], the event occurs if it is Tuesday or Thursday
+      \li eg. with [dayOfWeek == Tuesday,Thursday], the event occurs if it is Tuesday or Thursday
     \endlist
 
-    \o Frequency and specific criteria interact in a more complicated fashion.  For each criterion on a
+    \li Frequency and specific criteria interact in a more complicated fashion.  For each criterion on a
   larger timespan than the frequency, the dates matching the criterion are intersected with the
   dates resulting from the frequency.
     \list
-      \o eg. [frequency = Daily, month = January] means every day in January
+      \li eg. [frequency = Daily, month = January] means every day in January
   For each criterion on a shorter timespan than the frequency, the criterion is unioned.
-      \o eg. [frequency = Weekly, dayOfWeek = Wednesday,Friday] means every Wednesday and Friday of
+      \li eg. [frequency = Weekly, dayOfWeek = Wednesday,Friday] means every Wednesday and Friday of
   every week.
     \endlist
   This makes the frequency field superfluous in many cases when other criteria are present.
   eg. all of the below mean the same thing:
     \list
-      \o [frequency = Daily, dayOfWeek = Monday,Tuesday]
-      \o [frequency = Weekly, dayOfWeek = Monday,Tuesday]
-      \o [frequency = Monthly, dayOfWeek = Monday,Tuesday]
-      \o [frequency = Yearly, dayOfWeek = Monday,Tuesday]
+      \li [frequency = Daily, dayOfWeek = Monday,Tuesday]
+      \li [frequency = Weekly, dayOfWeek = Monday,Tuesday]
+      \li [frequency = Monthly, dayOfWeek = Monday,Tuesday]
+      \li [frequency = Yearly, dayOfWeek = Monday,Tuesday]
     \endlist
   However, the frequency field may start affecting the result differently when other fields are
   added like interval and positions.
 
-  \o For the purpose of calculating occurrence dates, information not contained in the rule is in some
+  \li For the purpose of calculating occurrence dates, information not contained in the rule is in some
   cases derived from the startDateTime field of the event that the detail is associated with.
   There are three cases where such derivation is necessary.
     \list
-      \o Case 1: frequency == Weekly.  If dayOfWeek is not specified, derive it from the week day that
+      \li Case 1: frequency == Weekly.  If dayOfWeek is not specified, derive it from the week day that
   the startDateTime occurs on.
-      \o Case 2: frequency == Monthly.  If neither dayOfWeek or dayOfMonth is specified, dayOfMonth should
+      \li Case 2: frequency == Monthly.  If neither dayOfWeek or dayOfMonth is specified, dayOfMonth should
   be derived from the startDateTime
-      \o Case 3: frequency == Yearly.  If none of monthOfYear, weekOfYear, dayOfYear, dayOfMonth or dayOfWeek
+      \li Case 3: frequency == Yearly.  If none of monthOfYear, weekOfYear, dayOfYear, dayOfMonth or dayOfWeek
   are specified, derive monthOfYear and dayOfMonth.  If monthOfYear is specified but not weekOfYear, dayOfYear,
   dayOfMonth or dayOfWeek, then derive dayOfMonth.  If weekOfYear is specified but not dayOfYear,
   dayOfWeek or dayOfMonth, derive dayOfWeek from the startDateTime.

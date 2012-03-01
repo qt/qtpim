@@ -58,14 +58,14 @@ w/****************************************************************************
     Typically with these API's you should be able to:
 
         \list
-        \o Access a list of personal contacts from the contact database
+        \li Access a list of personal contacts from the contact database
         supported by the selected backend.
-        \o Access a list of calendar events from the calendar database
+        \li Access a list of calendar events from the calendar database
         supported by the selected backend.
-        \o Be able to import contacts in vCard format into the selected
+        \li Be able to import contacts in vCard format into the selected
         contacts database, and be able to export them to vCard format
         to share elsewhere.
-        \o Be able to import iCalendar events into your selected calendar
+        \li Be able to import iCalendar events into your selected calendar
         database, and also be able to share your events by exporting iCalendar
         content.
         \endlist
@@ -77,9 +77,9 @@ w/****************************************************************************
     \section1 Getting Started
     To get started with Qt PIM see the
     \list
-        \o \l {Quickstart guide}{Quickstart Guide}
-        \o \l {Qt Personal Information Management Examples}{Examples}
-        \o \l {Qt Personal Information Management Tutorials}{Tutorials}
+        \li \l {Quickstart guide}{Quickstart Guide}
+        \li \l {Qt Personal Information Management Examples}{Examples}
+        \li \l {Qt Personal Information Management Tutorials}{Tutorials}
 
     \endlist
 
@@ -101,8 +101,8 @@ w/****************************************************************************
     In cases where UI is not needed the following also exist as c++ interfaces.
 
     \list
-        \o \l {Contacts QML API}{Contacts QML API}
-        \o \l {Organizer QML API}{Organizer QML API}
+        \li \l {Contacts QML API}{Contacts QML API}
+        \li \l {Organizer QML API}{Organizer QML API}
     \endlist
 
     \section2 Contacts

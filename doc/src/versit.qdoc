@@ -109,14 +109,14 @@ To complete the exporting process, QVersitWriter can be used to write to an I/O 
 The main classes for a client interested in importing or exporting vCard and
 iCalendar documents are:
 \list
-    \o \l{QVersitProperty}
-    \o \l{QVersitDocument}
-    \o \l{QVersitReader}
-    \o \l{QVersitWriter}
-    \o \l{QVersitContactImporter}
-    \o \l{QVersitContactExporter}
-    \o \l{QVersitOrganizerImporter}
-    \o \l{QVersitOrganizerExporter}
+    \li \l{QVersitProperty}
+    \li \l{QVersitDocument}
+    \li \l{QVersitReader}
+    \li \l{QVersitWriter}
+    \li \l{QVersitContactImporter}
+    \li \l{QVersitContactExporter}
+    \li \l{QVersitOrganizerImporter}
+    \li \l{QVersitOrganizerExporter}
 \endlist
 
 It is also possible to extend the behaviour of the importer and exporter classes

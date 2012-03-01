@@ -100,9 +100,9 @@ void QOrganizerItemDetailRangeFilter::setRange(const QVariant &min, const QVaria
 
     Not all flags are supported by a range filter. The supported flags include:
     \list
-    \o QOrganizerItemFilter::MatchExactly
-    \o QOrganizerItemFilter::MatchFixedString
-    \o QOrganizerItemFilter::MatchCaseSensitive
+    \li QOrganizerItemFilter::MatchExactly
+    \li QOrganizerItemFilter::MatchFixedString
+    \li QOrganizerItemFilter::MatchCaseSensitive
     \endlist
 
     Unsupported flags will be ignored.

@@ -41,10 +41,10 @@
     API, including
 
     \list
-    \o Using the Organizer Model and the Qt Quick ListView to display Events
-    \o Delete Events stored in your supported calendar backend
-    \o Add your own new  Events stored in your supported calendar backend
-    \o Edit existing title, start and end dates for your events retrieved.
+    \li Using the Organizer Model and the Qt Quick ListView to display Events
+    \li Delete Events stored in your supported calendar backend
+    \li Add your own new  Events stored in your supported calendar backend
+    \li Edit existing title, start and end dates for your events retrieved.
     \endlist
 
     We will be developing the simple Qt Quick Events ListView application shown below:
@@ -54,11 +54,11 @@
     Tutorial contents:
 
     \list 1
-    \o \l{Part 1 - The Organizer Model and using listViews}
-    \o \l{Part 2 - Adding New Events}
-    \o \l{Part 3 - Deleting Events}
-    \o \l{Part 4 - Editing selected Events}
-    \o \l{Part 5 - Future steps}
+    \li \l{Part 1 - The Organizer Model and using listViews}
+    \li \l{Part 2 - Adding New Events}
+    \li \l{Part 3 - Deleting Events}
+    \li \l{Part 4 - Editing selected Events}
+    \li \l{Part 5 - Future steps}
     \endlist
 */
 

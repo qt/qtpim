@@ -525,20 +525,20 @@ bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, 
 
   Some of the following transformations may be applied:
   \list
-   \o Any QContactActionFilters are transformed into the corresponding
+   \li Any QContactActionFilters are transformed into the corresponding
      QContactFilters returned by matching actions
-   \o Any QContactInvalidFilters contained in a union filter will be removed
-   \o Any default QContactFilters contained in an intersection filter will be removed
-   \o Any QContactIntersectionFilters with a QContactInvalidFilter contained will be
+   \li Any QContactInvalidFilters contained in a union filter will be removed
+   \li Any default QContactFilters contained in an intersection filter will be removed
+   \li Any QContactIntersectionFilters with a QContactInvalidFilter contained will be
      replaced with a QContactInvalidFilter
-   \o Any QContactUnionFilters with a default QContactFilter contained will be replaced
+   \li Any QContactUnionFilters with a default QContactFilter contained will be replaced
      with a default QContactFilter
-   \o An empty QContactIntersectionFilter will be replaced with a QContactDefaultFilter
-   \o An empty QContactUnionFilter will be replaced with a QContactInvalidFilter
-   \o An empty QContactIdFilter will be replaced with a QContactInvalidFilter
-   \o An intersection or union filter with a single entry will be replaced by that entry
-   \o A QContactDetailFilter or QContactDetailRangeFilter with no detail type will be replaced with a QContactInvalidFilter
-   \o A QContactDetailRangeFilter with no range specified will be converted to a QContactDetailFilter
+   \li An empty QContactIntersectionFilter will be replaced with a QContactDefaultFilter
+   \li An empty QContactUnionFilter will be replaced with a QContactInvalidFilter
+   \li An empty QContactIdFilter will be replaced with a QContactInvalidFilter
+   \li An intersection or union filter with a single entry will be replaced by that entry
+   \li A QContactDetailFilter or QContactDetailRangeFilter with no detail type will be replaced with a QContactInvalidFilter
+   \li A QContactDetailRangeFilter with no range specified will be converted to a QContactDetailFilter
   \endlist
 */
 QContactFilter QContactManagerEngine::canonicalizedFilter(const QContactFilter &filter)

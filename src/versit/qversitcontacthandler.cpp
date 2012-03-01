@@ -130,9 +130,9 @@ QStringList QVersitContactHandlerFactory::keys() const
   This function should return an index that helps with determining the order in which to run the
   plugins.  Plugins are run in the following order:
   \list
-  \o Positively-indexed, ascending
-  \o Zero-indexed
-  \o Negatively-indexed, ascending
+  \li Positively-indexed, ascending
+  \li Zero-indexed
+  \li Negatively-indexed, ascending
   \endlist
   For example, plugins with an index of 1 are run first and plugins of index -1 are run last.
   If more than one plugin share an index, the order of execution between them is undefined.

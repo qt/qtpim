@@ -100,7 +100,7 @@ are not derived from QObject, and hence can be used in lists, do not have
 parents, do not emit signals, and so on.  They represent data which may be
 manipulated and retrieved from a \l{Manager}{manager}.
 
-\section3 \bold{Contact}
+\section3 \b{Contact}
 
 A \l{QContact}{contact} is the digital representation of a person, group or
 entity, which is stored in a platform-specific manner. Information pertaining
@@ -123,7 +123,7 @@ in that manager.  Note that a contact stored in one manager may have the same
 local id as a different contact stored in another manager; please see the
 QContactId documentation for more information.
 
-\section3 \bold{Detail}
+\section3 \b{Detail}
 
 A \l{QContactDetail}{detail} is a single, cohesive unit of information that is
 stored in a contact.  As explained previously, it is valid for a particular
@@ -135,7 +135,7 @@ as well as access constraints which may apply to the the detail
 There are a number of common details defined in the API which are intended
 for use by clients, as listed \l{"Contact Details" Leaf Classes}{here}.
 
-\section3 \bold{Relationships}
+\section3 \b{Relationships}
 
 Contacts may participate in \l{QContactRelationship}{relationships} with other
 contacts.  The details of any such relationship is stored by the manager which
@@ -157,7 +157,7 @@ etc) which are reported by the manager on request.  The manager therefore
 provides access to contacts and relationships stored in
 different datastores, in a platform and datastore independent manner.
 
-\section3 \bold{Meta Data API}
+\section3 \b{Meta Data API}
 
 The API offered by the QContactManager exposes functionality which is
 implemented by plugins.  These plugins may be platform specific, and may be
@@ -174,11 +174,11 @@ capabilities of a given plugin (contact manager) are.  The QContactManager
 class provides API to query the capabilities of a given manager with the
 following synchronous functions:
 \list
-  \o hasFeature(QContactManager::ManagerFeature feature, const QString& contactType = QContactType::TypeContact) const
-  \o isFilterSupported(const QContactFilter& filter) const
-  \o isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType = QContactType::TypeContact) const
-  \o supportedDataTypes() const
-  \o supportedContactTypes() const
+  \li hasFeature(QContactManager::ManagerFeature feature, const QString& contactType = QContactType::TypeContact) const
+  \li isFilterSupported(const QContactFilter& filter) const
+  \li isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType = QContactType::TypeContact) const
+  \li supportedDataTypes() const
+  \li supportedContactTypes() const
 \endlist
 
 A given manager is identified by its URI.  The URI consists of the manager's
@@ -193,19 +193,19 @@ file).
 The synchronous API offered to allow run-time querying of a manager's metadata
 includes:
 \list
-  \o managerName() const
-  \o managerParameters() const
-  \o managerUri() const
-  \o managerVersion() const;
-  \o (static) parseUri(const QString& uri, QString* managerName, QMap<QString, QString>* params)
-  \o (static) buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion = -1)
+  \li managerName() const
+  \li managerParameters() const
+  \li managerUri() const
+  \li managerVersion() const;
+  \li (static) parseUri(const QString& uri, QString* managerName, QMap<QString, QString>* params)
+  \li (static) buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion = -1)
 \endlist
 
 The functionality that the above functions provide is only available through
 synchronous API.
 
 
-\section3 \bold{Asynchronous API}
+\section3 \b{Asynchronous API}
 
 The asynchronous API provides a way to access or modify the
 contact information managed by a particular backend via non-blocking,
@@ -224,7 +224,7 @@ capability or meta data information reporting.
 
 For more detailed documentation on the asynchronous API, see the \l{Contacts Asynchronous API}.
 
-\section3 \bold{Synchronous API}
+\section3 \b{Synchronous API}
 
 The synchronous API provides the simplest way to access or modify the
 contact information managed by a particular backend.  It has the
@@ -360,7 +360,7 @@ serialization of a QContact into a vCard document, and vice versa.
 
 The following sample applications show examples of API usage:
 \list
-    \o TODO: Need example listed here.
+    \li TODO: Need example listed here.
 \endlist
 See also: \l{Contacts API Usage}
 

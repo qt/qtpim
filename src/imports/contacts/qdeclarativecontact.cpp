@@ -56,7 +56,7 @@
     \ingroup qml-contacts-main
     \inqmlmodule QtContacts
 
-    The Contact element is part of the \bold{QtContacts} module.
+    The Contact element is part of the \b{QtContacts} module.
 
     A Contact object has a collection of details (like a name, phone numbers and
     email addresses).  Each detail (which can have multiple fields) is stored
@@ -170,8 +170,8 @@ void QDeclarativeContact::setModified()
     This property holds type of the Contact, the value can be one of:
 
     \list
-    \o Contact.Contact
-    \o Contact.Group
+    \li Contact.Contact
+    \li Contact.Group
     \endlist
 */
 QDeclarativeContactType::ContactType QDeclarativeContact::type() const

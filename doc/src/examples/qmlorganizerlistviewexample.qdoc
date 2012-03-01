@@ -41,12 +41,12 @@
 
     It provides an example of how to use the Qt Organizer and Versit libraries to:
     \list
-    \o select a backend for volatile memory or persistent storage
-    \o list the stored Calendar Events
-    \o add Events
-    \o edit Events
-    \o Remove Events
-    \o import Event lists as ICal\reg *
+    \li select a backend for volatile memory or persistent storage
+    \li list the stored Calendar Events
+    \li add Events
+    \li edit Events
+    \li Remove Events
+    \li import Event lists as ICal\reg *
     \endlist
 
     [*]\e {iCal iCalendar is a standard \l{http://tools.ietf.org/html/rfc5545}{(RFC 5545)} for calendar data exchange}
@@ -101,10 +101,10 @@
 
     In particular:
     \list
-        \o The example only exercises the QML OrganizerModel  API to save, edit and delete Events.
-        \o Everything is done with minimal external components or states to keep things simple and focused
+        \li The example only exercises the QML OrganizerModel  API to save, edit and delete Events.
+        \li Everything is done with minimal external components or states to keep things simple and focused
            on how the API works.
-        \o Editing a Date/Time is in string format. In a real application would be a more advanced
+        \li Editing a Date/Time is in string format. In a real application would be a more advanced
            component on its own which would allow easy and simple user input with good error checking and
            error messages for the user.
     \endlist

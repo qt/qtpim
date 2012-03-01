@@ -36,16 +36,16 @@
     \section2 Contacts
 
     \list
-    \o \l{qmlcontactslistview}{Qt Quick Contacts List view}
+    \li \l{qmlcontactslistview}{Qt Quick Contacts List view}
     \endlist
 
     \section2 Organizer
 
     \list
-    \o \l{qmlorganizerlistview}{Qt Quick Organizer List view}
-    \o \l{calendardemo}{Calendar Demo}
-    \omit \o \l{qmlorganizer}{QML Organizer} \endomit
-    \o \l{todo}{ToDo Example}
+    \li \l{qmlorganizerlistview}{Qt Quick Organizer List view}
+    \li \l{calendardemo}{Calendar Demo}
+    \omit \li \l{qmlorganizer}{QML Organizer} \endomit
+    \li \l{todo}{ToDo Example}
     \endlist
 
 */

@@ -54,7 +54,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-main
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
     The contents of the model can be specified with \l participantId, \l role and \l relationshipType properties.
     Whether the model is automatically updated when the store or filter changes, can be controlled

@@ -871,16 +871,16 @@ QDateTime QDeclarativeOrganizerEvent::endDateTime() const
 
     This property holds the priority of the event. The value can be one of:
     \list
-    \o Priority.Unknown
-    \o Priority.Highest
-    \o Priority.ExtremelyHigh
-    \o Priority.VeryHigh
-    \o Priority.High
-    \o Priority.Medium
-    \o Priority.Low
-    \o Priority.VeryLow
-    \o Priority.ExtremelyLow
-    \o Priority.Lowest
+    \li Priority.Unknown
+    \li Priority.Highest
+    \li Priority.ExtremelyHigh
+    \li Priority.VeryHigh
+    \li Priority.High
+    \li Priority.Medium
+    \li Priority.Low
+    \li Priority.VeryLow
+    \li Priority.ExtremelyLow
+    \li Priority.Lowest
     \endlist
  */
 void QDeclarativeOrganizerEvent::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
@@ -1096,16 +1096,16 @@ QDateTime QDeclarativeOrganizerEventOccurrence::endDateTime() const
 
     This property holds the priority of the event occurrence. The value can be one of:
     \list
-    \o Priority.Unknown
-    \o Priority.Highest
-    \o Priority.ExtremelyHigh
-    \o Priority.VeryHigh
-    \o Priority.High
-    \o Priority.Medium
-    \o Priority.Low
-    \o Priority.VeryLow
-    \o Priority.ExtremelyLow
-    \o Priority.Lowest
+    \li Priority.Unknown
+    \li Priority.Highest
+    \li Priority.ExtremelyHigh
+    \li Priority.VeryHigh
+    \li Priority.High
+    \li Priority.Medium
+    \li Priority.Low
+    \li Priority.VeryLow
+    \li Priority.ExtremelyLow
+    \li Priority.Lowest
     \endlist
  */
 void QDeclarativeOrganizerEventOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
@@ -1486,16 +1486,16 @@ QDateTime QDeclarativeOrganizerTodo::finishedDateTime() const
 
     This property holds the priority of the todo item. The value can be one of:
     \list
-    \o Priority.Unknown
-    \o Priority.Highest
-    \o Priority.ExtremelyHigh
-    \o Priority.VeryHigh
-    \o Priority.High
-    \o Priority.Medium
-    \o Priority.Low
-    \o Priority.VeryLow
-    \o Priority.ExtremelyLow
-    \o Priority.Lowest
+    \li Priority.Unknown
+    \li Priority.Highest
+    \li Priority.ExtremelyHigh
+    \li Priority.VeryHigh
+    \li Priority.High
+    \li Priority.Medium
+    \li Priority.Low
+    \li Priority.VeryLow
+    \li Priority.ExtremelyLow
+    \li Priority.Lowest
     \endlist
  */
 void QDeclarativeOrganizerTodo::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
@@ -1533,9 +1533,9 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodo::priority(
 
     This property holds the progress status of the task described by the todo. The value can be one of:
     \list
-    \o TodoProgress.NotStarted
-    \o TodoProgress.InProgress
-    \o TodoProgress.Complete
+    \li TodoProgress.NotStarted
+    \li TodoProgress.InProgress
+    \li TodoProgress.Complete
     \endlist
  */
 void QDeclarativeOrganizerTodo::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)
@@ -1780,16 +1780,16 @@ QDateTime QDeclarativeOrganizerTodoOccurrence::finishedDateTime() const
 
     This property holds the priority of the todo occurrence. The value can be one of:
     \list
-    \o Priority.Unknown
-    \o Priority.Highest
-    \o Priority.ExtremelyHigh
-    \o Priority.VeryHigh
-    \o Priority.High
-    \o Priority.Medium
-    \o Priority.Low
-    \o Priority.VeryLow
-    \o Priority.ExtremelyLow
-    \o Priority.Lowest
+    \li Priority.Unknown
+    \li Priority.Highest
+    \li Priority.ExtremelyHigh
+    \li Priority.VeryHigh
+    \li Priority.High
+    \li Priority.Medium
+    \li Priority.Low
+    \li Priority.VeryLow
+    \li Priority.ExtremelyLow
+    \li Priority.Lowest
     \endlist
  */
 void QDeclarativeOrganizerTodoOccurrence::setPriority(QDeclarativeOrganizerItemPriority::Priority priority)
@@ -1827,9 +1827,9 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerTodoOccurrence:
 
     This property holds the progress status of the task described by the todo occurrence. The value can be one of:
     \list
-    \o TodoProgress.NotStarted
-    \o TodoProgress.InProgress
-    \o TodoProgress.Complete
+    \li TodoProgress.NotStarted
+    \li TodoProgress.InProgress
+    \li TodoProgress.Complete
     \endlist
  */
 void QDeclarativeOrganizerTodoOccurrence::setStatus(QDeclarativeOrganizerTodoProgress::StatusType status)

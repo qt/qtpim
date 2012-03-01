@@ -40,12 +40,12 @@
 
     It provides an example of how to use the Qt Contacts library to:
     \list
-    \o import new contact information from vCard files
-    \o select a backend for volatile memory or persistent storage
-    \o list the stored Contacts information
-    \o add Contacts
-    \o edit Contacts
-    \o remove Contacts
+    \li import new contact information from vCard files
+    \li select a backend for volatile memory or persistent storage
+    \li list the stored Contacts information
+    \li add Contacts
+    \li edit Contacts
+    \li remove Contacts
     \endlist
 
     \section2 Use Case

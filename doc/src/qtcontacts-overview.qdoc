@@ -47,12 +47,12 @@ w/****************************************************************************
     With the Contacts API typical use cases are:
 
         \list
-        \o Access a list of personal contacts from the contact database
+        \li Access a list of personal contacts from the contact database
         supported by the selected backend.
-        \o Sort or filter contacts and access them as a list.
-        \o Be able to import contacts in vCard format into the selected
+        \li Sort or filter contacts and access them as a list.
+        \li Be able to import contacts in vCard format into the selected
         contacts database
-        \o Be able to export contacts to a vCard format to share elsewhere.
+        \li Be able to export contacts to a vCard format to share elsewhere.
         \endlist
 
     The following documentation leads you through what
@@ -61,9 +61,9 @@ w/****************************************************************************
     \section1 Getting Started
     To get started with Qt Contacts API  see the
     \list
-        \o \l {Quickstart guide}{Quickstart Guide}
-        \o \l {Qt Personal Information Management Examples}{Examples}
-        \o \l {Qt Personal Information Management Tutorials}{Tutorials}
+        \li \l {Quickstart guide}{Quickstart Guide}
+        \li \l {Qt Personal Information Management Examples}{Examples}
+        \li \l {Qt Personal Information Management Tutorials}{Tutorials}
 
     \endlist
 
@@ -76,7 +76,7 @@ w/****************************************************************************
     of QML and these API's.
 
     \list
-        \o \l {Contacts QML API}{Contacts QML API}
+        \li \l {Contacts QML API}{Contacts QML API}
     \endlist
 
     \section2 C++ Contacts API
@@ -86,7 +86,7 @@ w/****************************************************************************
     to allow full power and flexibility where UI manipulation is not needed.
 
     \list
-        \o \l {C++ Contacts} {Contacts C++ API}.
+        \li \l {C++ Contacts} {Contacts C++ API}.
     \endlist
 
     \section2 Versit (vCard)
@@ -97,7 +97,7 @@ w/****************************************************************************
     you to import and export contacts in this standardized format.
 
     \list
-        \o \l {C++ Versit}{Versit API}.
+        \li \l {C++ Versit}{Versit API}.
     \endlist
 
 */

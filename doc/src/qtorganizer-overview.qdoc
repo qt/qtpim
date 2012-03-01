@@ -47,11 +47,11 @@ w/****************************************************************************
     With the Organizer API typical use cases are:
 
         \list
-        \o Access a list of calendar events from the calendar database
+        \li Access a list of calendar events from the calendar database
         supported by the selected backend.
-        \o Be able to import iCalendar events into your selected calendar
+        \li Be able to import iCalendar events into your selected calendar
         database
-        \o Be able to share your events by exporting iCalendar content.
+        \li Be able to share your events by exporting iCalendar content.
         \endlist
 
     The following documentation leads you through what
@@ -60,9 +60,9 @@ w/****************************************************************************
     \section1 Getting Started
     To get started with Qt Organizer API  see the
     \list
-        \o \l {Quickstart guide}{Quickstart Guide}
-        \o \l {Qt Personal Information Management Examples}{Examples}
-        \o \l {Qt Personal Information Management Tutorials}{Tutorials}
+        \li \l {Quickstart guide}{Quickstart Guide}
+        \li \l {Qt Personal Information Management Examples}{Examples}
+        \li \l {Qt Personal Information Management Tutorials}{Tutorials}
 
     \endlist
 
@@ -75,7 +75,7 @@ w/****************************************************************************
     the power of QML and these API's.
 
     \list
-        \o \l {Organizer QML API}{Organizer QML API}
+        \li \l {Organizer QML API}{Organizer QML API}
     \endlist
 
     \section2 C++ Organizer API
@@ -86,7 +86,7 @@ w/****************************************************************************
     locally or remotely.
 
     \list
-        \o \l {C++ Organizer} {Organizer C++ API}.
+        \li \l {C++ Organizer} {Organizer C++ API}.
     \endlist
 
     \section2 Versit (Organizer)
@@ -95,7 +95,7 @@ w/****************************************************************************
     with iCalendar documents using the same framework as for vCards.
 
     \list
-        \o \l {C++ Versit}{Versit API}.
+        \li \l {C++ Versit}{Versit API}.
     \endlist
 
 */

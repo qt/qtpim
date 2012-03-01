@@ -64,11 +64,11 @@ QDeclarativeOrganizerRecurrenceRule::QDeclarativeOrganizerRecurrenceRule(QObject
 
     This property holds the frequency with which the item recurs, the value can be one of:
     \list
-    \o RecurrenceRule.Invalid - (default).
-    \o RecurrenceRule.Daily
-    \o RecurrenceRule.Weekly
-    \o RecurrenceRule.Monthly
-    \o RecurrenceRule.Yearly
+    \li RecurrenceRule.Invalid - (default).
+    \li RecurrenceRule.Daily
+    \li RecurrenceRule.Weekly
+    \li RecurrenceRule.Monthly
+    \li RecurrenceRule.Yearly
     \endlist
  */
 void QDeclarativeOrganizerRecurrenceRule::setFrequency(Frequency freq)
@@ -221,18 +221,18 @@ QVariantList QDeclarativeOrganizerRecurrenceRule::daysOfYear() const
 
     This property holds a list of the months that the item should recur on, the list element value can be one of:
     \list
-    \o RecurrenceRule.January
-    \o RecurrenceRule.February
-    \o RecurrenceRule.March
-    \o RecurrenceRule.April
-    \o RecurrenceRule.May
-    \o RecurrenceRule.June
-    \o RecurrenceRule.July
-    \o RecurrenceRule.August
-    \o RecurrenceRule.September
-    \o RecurrenceRule.October
-    \o RecurrenceRule.November
-    \o RecurrenceRule.December
+    \li RecurrenceRule.January
+    \li RecurrenceRule.February
+    \li RecurrenceRule.March
+    \li RecurrenceRule.April
+    \li RecurrenceRule.May
+    \li RecurrenceRule.June
+    \li RecurrenceRule.July
+    \li RecurrenceRule.August
+    \li RecurrenceRule.September
+    \li RecurrenceRule.October
+    \li RecurrenceRule.November
+    \li RecurrenceRule.December
     \endlist
  */
 void QDeclarativeOrganizerRecurrenceRule::setMonthsOfYear(const QVariantList &months)
@@ -307,13 +307,13 @@ QVariantList QDeclarativeOrganizerRecurrenceRule::positions() const
 
     This property holds the day that the week starts on.  If not set, this is Monday. The value can be one of:
     \list
-    \o Qt.Monday
-    \o Qt.Tuesday
-    \o Qt.Wednesday
-    \o Qt.Thursday
-    \o Qt.Friday
-    \o Qt.Saturday
-    \o Qt.Sunday
+    \li Qt.Monday
+    \li Qt.Tuesday
+    \li Qt.Wednesday
+    \li Qt.Thursday
+    \li Qt.Friday
+    \li Qt.Saturday
+    \li Qt.Sunday
     \endlist
  */
 void QDeclarativeOrganizerRecurrenceRule::setFirstDayOfWeek(Qt::DayOfWeek day)

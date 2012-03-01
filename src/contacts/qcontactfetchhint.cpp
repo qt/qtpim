@@ -65,13 +65,13 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   The fetch hint contains:
   \list
-   \o a list of detail types which the client is interested
+   \li a list of detail types which the client is interested
   in (empty if interested in all detail types)
-   \o a list of relationship types which the client is interested in
+   \li a list of relationship types which the client is interested in
   (empty if interested in all relationships)
-   \o some optimization flags which allow the client to tell the backend if they are
+   \li some optimization flags which allow the client to tell the backend if they are
   not interested in any relationships, any action preferences, or any binary blobs (images etc).
-   \o a preferred size for any images, if the backend supports multiple sizes or scaling
+   \li a preferred size for any images, if the backend supports multiple sizes or scaling
   \endlist
 
   Important note: a client should not make changes to a contact which has been retrieved

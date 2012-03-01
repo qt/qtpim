@@ -47,8 +47,8 @@ slow local datastores.
 The asynchronous API offered by the Contacts module is available through classes
 derived from the QContactAbstractRequest class.  It consists of two major sections:
 \list
-  \o Contact Manipulation
-  \o Relationship Manipulation
+  \li Contact Manipulation
+  \li Relationship Manipulation
 \endlist
 
 The functionality offered by the synchronous API in these two categories is also
@@ -70,10 +70,10 @@ For in-depth information about contact manipulation, please refer to the \l{Cont
 
 There are four different types of operation which are supported by the asynchronous API:
 \list
-  \o Fetch contact ids
-  \o Fetch contacts
-  \o Save contacts (create or update)
-  \o Remove contacts
+  \li Fetch contact ids
+  \li Fetch contacts
+  \li Save contacts (create or update)
+  \li Remove contacts
 \endlist
 
 These operations are supported via the QContactIdFetchRequest, QContactFetchRequest,
@@ -82,24 +82,24 @@ QContactSaveRequest and QContactRemoveRequest classes, respectively.
 The synchronous API offered by the QContactManager class to allow manipulation of contacts consists
 of the following functions:
 \list
-  \o contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
-  \o contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
-  \o contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
-  \o contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
-  \o saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
-  \o removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
+  \li contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
+  \li contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
+  \li contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \li contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \li saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
+  \li removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
 \endlist
 
-\section3 \bold{Relationship Manipulation}
+\section3 \b{Relationship Manipulation}
 
 Contacts may be related in various ways.  The contacts API allows clients to define relationships between contacts.
 For in-depth information about relationship manipulation, please refer to the \l{Contacts Synchronous API}.
 
 There are three different types of operation which are supported by the asynchronous API:
 \list
-  \o Fetch relationships
-  \o Save relationships (create or update, if supported by the backend)
-  \o Remove relationships (if supported by the backend)
+  \li Fetch relationships
+  \li Save relationships (create or update, if supported by the backend)
+  \li Remove relationships (if supported by the backend)
 \endlist
 
 These operations are supported via the QContactRelationshipFetchRequest,
@@ -108,12 +108,12 @@ QContactRelationshipSaveRequest and QContactRelationshipRemoveRequest classes re
 The synchronous API offered by the QContactManager class to allow manipulation of relationships
 consists of the following functions:
 \list
-  \o relationships(const QContactId& participantId, QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
-  \o relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
-  \o saveRelationship(QContactRelationship* relationship);
-  \o saveRelationships(QList<QContactRelationship>* relationships);
-  \o removeRelationship(const QContactRelationship& relationship);
-  \o removeRelationships(const QList<QContactRelationship>& relationships);
+  \li relationships(const QContactId& participantId, QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
+  \li relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
+  \li saveRelationship(QContactRelationship* relationship);
+  \li saveRelationships(QList<QContactRelationship>* relationships);
+  \li removeRelationship(const QContactRelationship& relationship);
+  \li removeRelationships(const QList<QContactRelationship>& relationships);
 \endlist
 
 \section1 Examples Of Usage

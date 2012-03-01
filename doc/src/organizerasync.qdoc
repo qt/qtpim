@@ -48,8 +48,8 @@ The asynchronous API offered by the Organizer module is available through classe
 derived from the QOrganizerAbstractRequest class.  It consists of three major
 categories:
 \list
-  \o Organizer Item Manipulation
-  \o Item Collection Manipulation
+  \li Organizer Item Manipulation
+  \li Item Collection Manipulation
 \endlist
 
 \section2 Organizer Item Manipulation
@@ -60,22 +60,22 @@ manipulation, please refer to the main \l{C++ Organizer} API page.
 
 There are six different types of operation which are supported by the asynchronous API:
 \list
-  \o Fetch item ids
-  \o Fetch persistent items (for export)
-  \o Fetch items (including generated occurrences) in a time period
-  \o Fetch the occurrences of a specific item
-  \o Save items (create or update)
-  \o Remove items
+  \li Fetch item ids
+  \li Fetch persistent items (for export)
+  \li Fetch items (including generated occurrences) in a time period
+  \li Fetch the occurrences of a specific item
+  \li Save items (create or update)
+  \li Remove items
 \endlist
 
 These operations are supported via the classes:
 \list
-\o QOrganizerItemIdFetchRequest
-\o QOrganizerItemFetchForExportRequest
-\o QOrganizerItemFetchRequest
-\o QOrganizerItemOccurrenceFetchRequest
-\o QOrganizerItemSaveRequest
-\o QOrganizerItemRemoveRequest
+\li QOrganizerItemIdFetchRequest
+\li QOrganizerItemFetchForExportRequest
+\li QOrganizerItemFetchRequest
+\li QOrganizerItemOccurrenceFetchRequest
+\li QOrganizerItemSaveRequest
+\li QOrganizerItemRemoveRequest
 \endlist
 
 \section2 Item Collection Manipulation
@@ -88,16 +88,16 @@ main \l{C++ Organizer} API page.
 
 There are three different types of operation which are supported by the asynchronous API:
 \list
-  \o Fetch collections (that is, the object which defines the properties of a collection)
-  \o Save collections (create or update)
-  \o Remove collections
+  \li Fetch collections (that is, the object which defines the properties of a collection)
+  \li Save collections (create or update)
+  \li Remove collections
 \endlist
 
 These operations are supported via the classes:
 \list
-\o QOrganizerCollectionFetchRequest
-\o QOrganizerCollectionSaveRequest
-\o QOrganizerCollectionRemoveRequest
+\li QOrganizerCollectionFetchRequest
+\li QOrganizerCollectionSaveRequest
+\li QOrganizerCollectionRemoveRequest
 \endlist
 
 

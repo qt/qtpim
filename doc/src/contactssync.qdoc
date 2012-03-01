@@ -56,9 +56,9 @@ applications that the asynchronous API be used where possible.
 The synchronous API offered by the Contacts module is available through the QContactManager
 class.  It consists of three major sections:
 \list
-  \o Error Reporting
-  \o Contact Manipulation
-  \o Relationship Manipulation
+  \li Error Reporting
+  \li Contact Manipulation
+  \li Relationship Manipulation
 \endlist
 
 
@@ -90,17 +90,17 @@ to a contact as an argument may modify the contact during the operation; updatin
 
 The QContactManager class provides API for accessing the IDs of contacts which are stored in the manager:
 \list
-  \o contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
-  \o contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
+  \li contactIds(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
+  \li contactIds(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>()) const
 \endlist
 
 The contact id retrieval functionality is also provided via asynchronous API through the QContactIdFetchRequest class.
 
 The synchronous, singular contact manipulation functions offered by the QContactManager class are:
 \list
-  \o contact(const QContactId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const
-  \o saveContact(QContact* contact)
-  \o removeContact(const QContactId& contactId)
+  \li contact(const QContactId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \li saveContact(QContact* contact)
+  \li removeContact(const QContactId& contactId)
 \endlist
 
 The (optional) fetch argument to the contact accessor function allows clients to tell the plugin
@@ -117,10 +117,10 @@ directly after the original synchronous call.
 
 The synchronous, batch contact manipulation functions offered by the QContactManager class are:
 \list
-  \o contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
-  \o contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
-  \o saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
-  \o removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
+  \li contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \li contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const
+  \li saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap)
+  \li removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
 \endlist
 
 The batch save and remove functions both take an (optional) pointer to a map of errors.  If the pointer is non-null,
@@ -136,8 +136,8 @@ this functionality should report that it supports the QContactManager::SelfConta
 
 The API which provides the self-contact functionality consists of:
 \list
-  \o setSelfContactId(const QContactId& contactId)
-  \o selfContactId() const
+  \li setSelfContactId(const QContactId& contactId)
+  \li selfContactId() const
 \endlist
 
 In order to unset the self contact, a client may either delete the contact which is currently set as the self contact,
@@ -157,12 +157,12 @@ that it supports the QContactManager::ArbitraryRelationshipTypes feature.
 
 The API which provides the relationship manipulation functionality consists of:
 \list
-  \o relationships(const QContactId& participantId, QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
-  \o relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
-  \o saveRelationship(QContactRelationship* relationship);
-  \o saveRelationships(QList<QContactRelationship>* relationships);
-  \o removeRelationship(const QContactRelationship& relationship);
-  \o removeRelationships(const QList<QContactRelationship>& relationships);
+  \li relationships(const QContactId& participantId, QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
+  \li relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationshipFilter::Role role = QContactRelationshipFilter::Either) const;
+  \li saveRelationship(QContactRelationship* relationship);
+  \li saveRelationships(QList<QContactRelationship>* relationships);
+  \li removeRelationship(const QContactRelationship& relationship);
+  \li removeRelationships(const QList<QContactRelationship>& relationships);
 \endlist
 
 The relationship manipulation functionality is also provided via asynchronous API through the QContactRelationshipFetchRequest,
@@ -203,7 +203,7 @@ implements the default definition for phone number details).
     \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
 
 
-\section3 \bold{Modifying an existing contact and saving the modifications}
+\section3 \b{Modifying an existing contact and saving the modifications}
 
 The client retrieves a contact, modifies one of its details, adds a new
 detail, and then saves the contact back to the manager.

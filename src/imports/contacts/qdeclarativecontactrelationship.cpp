@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
    \ingroup qml-contacts-main
    \inqmlmodule QtContacts
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactRelationship
    \sa RelationshipModel
@@ -95,12 +95,12 @@ QDeclarativeContact*  QDeclarativeContactRelationship::second() const
   This property holds the type of relationship which the source contact has with the destination contacts.
   The value for this property can be one of:
   \list
-  \o HasMember
-  \o Aggregates
-  \o IsSameAs
-  \o HasAssistant
-  \o HasManager
-  \o HasSpouse
+  \li HasMember
+  \li Aggregates
+  \li IsSameAs
+  \li HasAssistant
+  \li HasManager
+  \li HasSpouse
   \endlist
   or any other customized relationship type string.
   */

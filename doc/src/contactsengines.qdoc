@@ -75,7 +75,7 @@ supported by an engine by calling QContactManager::supportedContactTypes().
 The Qt PIM AddOn includes the Contacts module which includes several backends already, some of which
 are designed to interface with the default addressbook on their particular platform.
 
-\section3 \bold{In-Memory Example Engine}
+\section3 \b{In-Memory Example Engine}
 
 The in-memory engine identifies itself as the "memory" engine.  It is available on all platforms
 which are supported by the Qt PIM AddOn.
@@ -100,18 +100,18 @@ The default implementation for most functions will set the error to
 \c QContactManager::NotSupportedError and return the value which indicates that an error has
 occurred.
 
-\section3 \bold{Mandatory Functions}
+\section3 \b{Mandatory Functions}
 
 All engines must implement the following functions:
 
 \list
-  \o QContactManagerEngine::managerName()
-  \o QContactManagerEngine::managerVersion()
-  \o QContactManagerEngine::supportedContactTypes()
-  \o QContactManagerEngine::supportedDataTypes()
-  \o QContactManagerEngine::hasFeature()
-  \o QContactManagerEngine::contactIds()
-  \o QContactManagerEngine::contacts()
+  \li QContactManagerEngine::managerName()
+  \li QContactManagerEngine::managerVersion()
+  \li QContactManagerEngine::supportedContactTypes()
+  \li QContactManagerEngine::supportedDataTypes()
+  \li QContactManagerEngine::hasFeature()
+  \li QContactManagerEngine::contactIds()
+  \li QContactManagerEngine::contacts()
 \endlist
 
 Every engine implementation must also come with an implementation of QContactManagerEngineFactory
@@ -121,8 +121,8 @@ Note that you do not need to implement filtering and sorting natively in an engi
 implementation offers the following static functions to perform filtering and sorting respectively,
 in memory:
 \list
-  \o QContactManagerEngine::testFilter()
-  \o QContactManagerEngine::sortContacts()
+  \li QContactManagerEngine::testFilter()
+  \li QContactManagerEngine::sortContacts()
 \endlist
 
 However, engine implementors should be aware that the default implementation is naive and will
@@ -134,10 +134,10 @@ it does so it must return all information available for the contact.
 
 All engines must also implement the following functions to implement asynchronous requests:
 \list
-  \o QContactManagerEngine::requestDestroyed()
-  \o QContactManagerEngine::startRequest()
-  \o QContactManagerEngine::cancelRequest()
-  \o QContactManagerEngine::waitForRequestFinished()
+  \li QContactManagerEngine::requestDestroyed()
+  \li QContactManagerEngine::startRequest()
+  \li QContactManagerEngine::cancelRequest()
+  \li QContactManagerEngine::waitForRequestFinished()
 \endlist
 If the engine does not support asynchronous requests, it should always return false in the
 last three of those functions, and do nothing in the first.  If the engine does support
@@ -150,7 +150,7 @@ It is recommended that all engine implementations support asynchronous requests,
 use a "dummy" implementation which services the request synchronously during startRequest, and then
 emit the appropriate signals from the request via a zero-millisecond timeout timer.
 
-\section3 \bold{Optional Functionality}
+\section3 \b{Optional Functionality}
 
 The rest of the virtual functions are optional, and should be implemented only if the engine
 supports the operations.
@@ -160,26 +160,26 @@ engine (for example, a parameter might define which file to read contact informa
 it might be an access token to prove that the client has the access rights to read contact information
 from the engine, etc), it must report which parameters it was constructed with via the
 \list
-  \o QContactManagerEngine::managerParameters()
+  \li QContactManagerEngine::managerParameters()
 \endlist
 function.
 
 If the engine supports native filtering of any kind, it must report to clients which filters
 are supported natively by implementing:
 \list
-  \o QContactManagerEngine::isFilterSupported()
+  \li QContactManagerEngine::isFilterSupported()
 \endlist
 
 If the engine supports saving or removing contact information, as well as retrieval, it must
 implement:
 \list
-  \o QContactManagerEngine::saveContacts()
-  \o QContactManagerEngine::removeContacts()
+  \li QContactManagerEngine::saveContacts()
+  \li QContactManagerEngine::removeContacts()
 \endlist
 It may also choose to implement the "single contact" functions:
 \list
-  \o QContactManagerEngine::saveContact()
-  \o QContactManagerEngine::removeContact()
+  \li QContactManagerEngine::saveContact()
+  \li QContactManagerEngine::removeContact()
 \endlist
 If it does not, the default implementation of those functions will use the batch (plural) versions
 of those functions to implement the required behavior.
@@ -188,10 +188,10 @@ If the engine supports any relationships, it must report that it supports the
 \c QContactManager::Relationships feature via QContactManagerEngine::hasFeature(), and must also
 implement:
 \list
-  \o QContactManagerEngine::isRelationshipTypeSupported()
-  \o QContactManagerEngine::relationships()
-  \o QContactManagerEngine::saveRelationships()
-  \o QContactManagerEngine::removeRelationships()
+  \li QContactManagerEngine::isRelationshipTypeSupported()
+  \li QContactManagerEngine::relationships()
+  \li QContactManagerEngine::saveRelationships()
+  \li QContactManagerEngine::removeRelationships()
 \endlist
 
 Specifically, if the engine supports group contacts, it must support the
@@ -204,12 +204,12 @@ about the owner of the device or online service account from which the engine pr
 information), it must report that it supports the \c QContactManager::SelfContact feature
 via QContactManagerEngine::hasFeature(), and must also implement:
 \list
-  \o QContactManagerEngine::setSelfContactId()
-  \o QContactManagerEngine::selfContactId()
+  \li QContactManagerEngine::setSelfContactId()
+  \li QContactManagerEngine::selfContactId()
 \endlist
 
 
-\section3 \bold{Optional Implementation}
+\section3 \b{Optional Implementation}
 
 Apart from areas of functionality which may be optionally implemented by the engine or not,
 the default implementation provides several functions which operate in a naive, in-memory
@@ -220,9 +220,9 @@ function.
 As previously mentioned it may implement its own sorting or filtering, in functions such as
 QContactManagerEngine::contacts().  An engine may also implement:
 \list
-  \o QContactManagerEngine::validateContact()
-  \o QContactManagerEngine::compatibleContact()
-  \o QContactManagerEngine::synthesizedDisplayLabel()
+  \li QContactManagerEngine::validateContact()
+  \li QContactManagerEngine::compatibleContact()
+  \li QContactManagerEngine::synthesizedDisplayLabel()
 \endlist
 
 
@@ -233,24 +233,24 @@ that it supports.
 
 If the engine supports reading or saving contacts, it must emit the:
 \list
-  \o QContactManagerEngine::contactsAdded()
-  \o QContactManagerEngine::contactsChanged()
-  \o QContactManagerEngine::contactsRemoved()
+  \li QContactManagerEngine::contactsAdded()
+  \li QContactManagerEngine::contactsChanged()
+  \li QContactManagerEngine::contactsRemoved()
 \endlist
 signals as appropriate.  Alternatively, it can emit the QContactManager::dataChanged()
 signal instead.
 
 If the engine supports reading or saving relationships, it must emit the:
 \list
-  \o QContactManagerEngine::relationshipsAdded()
-  \o QContactManagerEngine::relationshipsRemoved()
+  \li QContactManagerEngine::relationshipsAdded()
+  \li QContactManagerEngine::relationshipsRemoved()
 \endlist
  signals as appropriate.  Alternatively, it can emit the QContactManager::dataChanged()
  signal instead.
 
 If the engine supports the \c QContactManager::SelfContact feature, it must emit the:
 \list
-  \o QContactManagerEngine::selfContactIdChanged()
+  \li QContactManagerEngine::selfContactIdChanged()
 \endlist
  signal as appropriate.  Alternatively, it can emit the QContactManager::dataChanged()
  signal instead.
@@ -260,18 +260,18 @@ If the engine supports the \c QContactManager::SelfContact feature, it must emit
 
 There are several other considerations that engine writers must be aware of:
 \list
-  \o Most batch functions take an OPTIONAL error map as a parameter.  This parameter
+  \li Most batch functions take an OPTIONAL error map as a parameter.  This parameter
 may be null, in which case the client is not interested in fine-grained error reporting.
 Engines must check the pointer before attempting to dereference it.
-  \o Every function takes a mandatory \c QContactManager::Error pointer argument.  This argument
+  \li Every function takes a mandatory \c QContactManager::Error pointer argument.  This argument
 is NEVER null, since it exists in the private implementation of QContactManager.  Testing this
 argument for null is, therefore, superfluous.
-  \o The single-item functions for contact and relationship retrieval, removal and save
+  \li The single-item functions for contact and relationship retrieval, removal and save
 already have a default implementation which merely wraps the batch retrieval, removal or save
 function appropriately.  This default implementation may not be as performant as a hand-rolled
 function.  Engine implementations MUST implement the batch functions for each area of
 functionality supported by the engine.
-  \o Most clients will prefer to use the asynchronous API to access contact information from the
+  \li Most clients will prefer to use the asynchronous API to access contact information from the
 engine.  It is therefore suggested that asynchronous requests be serviced, even if it is
 implemented in a similar manner to the (provided) memory engine's naive implementation.
 \endlist

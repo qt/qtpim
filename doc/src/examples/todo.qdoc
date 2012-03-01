@@ -40,13 +40,13 @@
     todo item typically includes the following information:
 
     \list
-        \o A timestamp for when the item was created.
-        \o A timestamp for when the activity should be completed.
-        \o A timestamp for when the activity was completed.
-        \o A priority for how important the activity is.
-        \o Information on whether the todo is recurring (i.e.,
+        \li A timestamp for when the item was created.
+        \li A timestamp for when the activity should be completed.
+        \li A timestamp for when the activity was completed.
+        \li A priority for how important the activity is.
+        \li Information on whether the todo is recurring (i.e.,
            if it should be repeated at regular intervals).
-        \o A description of the activity.
+        \li A description of the activity.
     \endlist
 
     A todo item is represented in Qt with the QOrganizerTodo class.
@@ -69,10 +69,10 @@
     The example consists of two classes:
 
     \list
-        \o \c Window: Lets the user select a date and create todo
+        \li \c Window: Lets the user select a date and create todo
             items for the date selected. It also displays a list
             with todo items for the date selected.
-        \o \c TodoEditor: Lets the user edit a todo item using
+        \li \c TodoEditor: Lets the user edit a todo item using
             standard Qt widgets.
     \endlist
 

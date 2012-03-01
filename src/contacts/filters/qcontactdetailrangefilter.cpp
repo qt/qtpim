@@ -106,9 +106,9 @@ void QContactDetailRangeFilter::setRange(const QVariant& min, const QVariant& ma
  * Not all flags are supported by a range filter.  The supported flags include:
  *
  * \list
- * \o QContactFilter::MatchExactly
- * \o QContactFilter::MatchFixedString
- * \o QContactFilter::MatchCaseSensitive
+ * \li QContactFilter::MatchExactly
+ * \li QContactFilter::MatchFixedString
+ * \li QContactFilter::MatchCaseSensitive
  * \endlist
  *
  * Unsupported flags will be ignored.

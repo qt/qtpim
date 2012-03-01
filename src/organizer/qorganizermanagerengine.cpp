@@ -551,18 +551,18 @@ bool QOrganizerManagerEngine::removeCollection(const QOrganizerCollectionId& col
 
   Some of the following transformations may be applied:
   \list
-   \o Any QOrganizerItemInvalidFilters contained in a union filter will be removed
-   \o Any default QOrganizerItemFilters contained in an intersection filter will be removed
-   \o Any QOrganizerItemIntersectionFilters with a QOrganizerItemInvalidFilter contained will be
+   \li Any QOrganizerItemInvalidFilters contained in a union filter will be removed
+   \li Any default QOrganizerItemFilters contained in an intersection filter will be removed
+   \li Any QOrganizerItemIntersectionFilters with a QOrganizerItemInvalidFilter contained will be
      replaced with a QOrganizerItemInvalidFilter
-   \o Any QOrganizerItemUnionFilters with a default QOrganizerItemFilter contained will be replaced
+   \li Any QOrganizerItemUnionFilters with a default QOrganizerItemFilter contained will be replaced
      with a default QOrganizerItemFilter
-   \o An empty QOrganizerItemIntersectionFilter will be replaced with a QOrganizerItemDefaultFilter
-   \o An empty QOrganizerItemUnionFilter will be replaced with a QOrganizerItemInvalidFilter
-   \o An empty QOrganizerItemIdFilter will be replaced with a QOrganizerItemInvalidFilter
-   \o An intersection or union filter with a single entry will be replaced by that entry
-   \o A QOrganizerItemDetailFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
-   \o A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFilter
+   \li An empty QOrganizerItemIntersectionFilter will be replaced with a QOrganizerItemDefaultFilter
+   \li An empty QOrganizerItemUnionFilter will be replaced with a QOrganizerItemInvalidFilter
+   \li An empty QOrganizerItemIdFilter will be replaced with a QOrganizerItemInvalidFilter
+   \li An intersection or union filter with a single entry will be replaced by that entry
+   \li A QOrganizerItemDetailFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
+   \li A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFilter
   \endlist
 */
 QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganizerItemFilter &filter)
@@ -1596,9 +1596,9 @@ const QOrganizerCollectionEngineId* QOrganizerManagerEngine::engineCollectionId(
 
     When this function is called, it means for the backend:
     \list
-    \o The client doesn't care about the request any more. The engine can still complete it, but
+    \li The client doesn't care about the request any more. The engine can still complete it, but
        completion is not required.
-    \o It can't reliably access any properties of the request pointer any more. The pointer will
+    \li It can't reliably access any properties of the request pointer any more. The pointer will
        be invalid once this function returns.
     \endlist
 

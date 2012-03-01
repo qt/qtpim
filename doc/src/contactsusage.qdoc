@@ -39,9 +39,9 @@ This section provides some examples of common usage of the Qt Contacts API.
 The most common use of the API is to retrieve a contact and then display
 certain details of that contact.  To do so, several steps must be taken:
 \list
-   \o A contact manager must be instantiated
-   \o The contact must be retrieved from the manager
-   \o The required details of the contact must be selected from the contact
+   \li A contact manager must be instantiated
+   \li The contact must be retrieved from the manager
+   \li The required details of the contact must be selected from the contact
 \endlist
 
 The first step is usually as simple as:
@@ -106,8 +106,8 @@ returned in both cases will be exactly the same.
 The next most common use of the API is to save a contact.  Such an operation
 consists of two steps:
 \list
-   \o Saving a detail in a contact
-   \o Saving the contact in a manager
+   \li Saving a detail in a contact
+   \li Saving the contact in a manager
 \endlist
 
 Removing a contact is done similarly to saving a contact.  An example of these

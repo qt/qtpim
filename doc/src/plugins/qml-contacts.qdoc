@@ -208,14 +208,14 @@
 
     The following sample applications show examples of API usage:
     \list
-        \o \l{qmlcontactslistview}{Qt Quick Contacts List view}
+        \li \l{qmlcontactslistview}{Qt Quick Contacts List view}
     \endlist
 
     \section2 Tutorials
 
     The following tutorials are useful to work through the use of the Qt Quick Contacts API::
     \list
-        \o TODO: This needs a wml contacts tutorial
+        \li TODO: This needs a wml contacts tutorial
     \endlist
 */
 

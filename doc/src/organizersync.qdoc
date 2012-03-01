@@ -56,8 +56,8 @@ applications that the asynchronous API be used where possible.
 The synchronous API offered by the Organizer Items module is available through the QOrganizerManager
 class.  It consists of two major categories:
 \list
-  \o Organizer Item Manipulation
-  \o Item Collection Manipulation
+  \li Organizer Item Manipulation
+  \li Item Collection Manipulation
 \endlist
 
 
@@ -70,23 +70,23 @@ manipulation, please refer to the main \l{C++ Organizer} API page.
 
 The QOrganizerManager class provides API for accessing the IDs of items which are stored in the manager:
 \list
-  \o QOrganizerManager::itemIds()
+  \li QOrganizerManager::itemIds()
 \endlist
 
 The synchronous, singular item manipulation functions offered by the QOrganizerManager class are:
 \list
-  \o QOrganizerManager::item()
-  \o QOrganizerManager::saveItem()
-  \o QOrganizerManager::removeItem()
+  \li QOrganizerManager::item()
+  \li QOrganizerManager::saveItem()
+  \li QOrganizerManager::removeItem()
 \endlist
 
 The synchronous, batch item manipulation functions offered by the QOrganizerManager class are:
 \list
-  \o QOrganizerManager::items() which returns persistent and generated items within a given time period
-  \o QOrganizerManager::itemsForExport() which returns only persistent items
-  \o QOrganizerManager::itemOccurrences() which returns the occurrences of a specific recurring item
-  \o QOrganizerManager::saveItems() which may be used to update a recurring item, or save an exceptional occurrence
-  \o QOrganizerManager::removeItems() which may be used to remove a recurring item or exceptional occurrence
+  \li QOrganizerManager::items() which returns persistent and generated items within a given time period
+  \li QOrganizerManager::itemsForExport() which returns only persistent items
+  \li QOrganizerManager::itemOccurrences() which returns the occurrences of a specific recurring item
+  \li QOrganizerManager::saveItems() which may be used to update a recurring item, or save an exceptional occurrence
+  \li QOrganizerManager::removeItems() which may be used to remove a recurring item or exceptional occurrence
 \endlist
 
 
@@ -99,10 +99,10 @@ main \l{C++ Organizer} API page.
 
 The synchronous API offers the following functions to manipulate collections:
 \list
-  \o QOrganizerManager::defaultCollection() returns the default collection of the manager
-  \o QOrganizerManager::collections() returns all collections in the manager
-  \o QOrganizerManager::saveCollection() updates an existing collection or adds a new collection
-  \o QOrganizerManager::removeCollection() removes an existing collection (and deletes any items it contains)
+  \li QOrganizerManager::defaultCollection() returns the default collection of the manager
+  \li QOrganizerManager::collections() returns all collections in the manager
+  \li QOrganizerManager::saveCollection() updates an existing collection or adds a new collection
+  \li QOrganizerManager::removeCollection() removes an existing collection (and deletes any items it contains)
 \endlist
 
 It also offers a convenience function which returns a collection with a given collection id.

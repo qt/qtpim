@@ -54,7 +54,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-main
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactFetchHint
  */
@@ -158,10 +158,10 @@ void QDeclarativeContactFetchHint::setPreferredImageHeight(int h)
   the full set of information accessible in a contact, including
   relationships, action preferences, and binary blobs. The value of the flags can be:
   \list
-  \o FetchHint.AllRequired - (default).
-  \o FetchHint.NoRelationships
-  \o FetchHint.NoActionPreferences
-  \o FetchHint.NoBinaryBlobs
+  \li FetchHint.AllRequired - (default).
+  \li FetchHint.NoRelationships
+  \li FetchHint.NoActionPreferences
+  \li FetchHint.NoBinaryBlobs
   \endlist
 
   */

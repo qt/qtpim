@@ -53,9 +53,9 @@
     In terms of license conditions, there are two main forms of Qt:
 
     \list
-    \o The \l{Qt Commercial Edition} are the commercial
+    \li The \l{Qt Commercial Edition} are the commercial
        versions of \l{About Qt}{Qt}.
-    \o The \l{Open Source Versions of Qt} are freely available for download.
+    \li The \l{Open Source Versions of Qt} are freely available for download.
     \endlist
 
     On the Qt web site, you can find a

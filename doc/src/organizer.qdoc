@@ -140,11 +140,11 @@ A \l QOrganizerItem represents an event, todo, journal or note.
 Each item stored in a manager is identified by a \l QOrganizerItemId.  The id
 is the means by which the manager can:
 \list
-\o Determine whether a \l{QOrganizerManager::saveItem()}{save} operation should
+\li Determine whether a \l{QOrganizerManager::saveItem()}{save} operation should
 make a new item or update an existing one.  (If an item has a null id, it
 should be saved as a new item)
-\o Match an item to an existing one for updating.
-\o Link between items (for example, in QOrganizerItemParent).
+\li Match an item to an existing one for updating.
+\li Link between items (for example, in QOrganizerItemParent).
 \endlist
 
 The QOrganizerItem class provides a generic interface for accessing events,
@@ -165,7 +165,7 @@ A recurring item is an item that occurs more than once; for example, a meeting
 that occurs every week for the next 10 weeks.  A recurring item is created by
 creating a QOrganizerEvent or QOrganizerTodo and setting a
 QOrganizerRecurrenceRule on it to specify the rules for when it should
-recur.  When QOrganizerManager::items() is called, recurring items are \i not
+recur.  When QOrganizerManager::items() is called, recurring items are \e not
 returned.  Rather, they expanded into multiple QOrganizerEventOccurrence and
 QOrganizerTodoOccurrence items.  Each generated occurrence item has a null id.
 
@@ -342,7 +342,7 @@ serialization of a QOrganizerItem into an iCalendar document, and vice versa.
 
 The following sample applications show examples of API usage:
 \list
-    \o \l{calendardemo}{Example Calendar Application}
+    \li \l{calendardemo}{Example Calendar Application}
 \endlist
 
 \section1 QML Elements

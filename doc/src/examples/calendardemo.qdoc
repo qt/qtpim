@@ -44,9 +44,9 @@
     levels of organization:
 
     \list
-    \o Allow the user to explicitly organize their life by manually entering and scheduling events
-    \o Allow the user to explicitly organize their life by manually scheduling events which can be populated automatically from other sources (online calendars, "communal" calendars, published agendas, gig-guides, etc)
-    \o Automatically suggest schedules based on the current context of the user (including their interests and previous or current scheduling requirements), and the available events which are populated from online calendars, "communal" calendars, published agendas, gig-guides, etc.
+    \li Allow the user to explicitly organize their life by manually entering and scheduling events
+    \li Allow the user to explicitly organize their life by manually scheduling events which can be populated automatically from other sources (online calendars, "communal" calendars, published agendas, gig-guides, etc)
+    \li Automatically suggest schedules based on the current context of the user (including their interests and previous or current scheduling requirements), and the available events which are populated from online calendars, "communal" calendars, published agendas, gig-guides, etc.
     \endlist
 
     This application is an example of the first type of application: it allows

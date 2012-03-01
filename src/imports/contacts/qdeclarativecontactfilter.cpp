@@ -51,7 +51,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-main
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactFilter
  */
@@ -63,16 +63,16 @@ QTCONTACTS_BEGIN_NAMESPACE
   This property holds the type value of this filter. It can be one of:
 
   \list
-  \o Filter.DefaultFilter - A filter which matches everything (default).
-  \o Filter.InvalidFilter - An invalid filter which matches nothing.
-  \o Filter.DetailFilter - A filter which matches contacts containing one or more details of a particular definition with a particular value.
-  \o Filter.DetailRangeFilter - A filter which matches contacts containing one or more details of a particular definition whose values are within a particular range.
-  \o Filter.ChangeLogFilter - A filter which matches contacts whose timestamps have been updated since some particular date and time.
-  \o Filter.ActionFilter - A filter which matches contacts for which a particular action is available, or which contain a detail with a particular value for which a particular action is available.
-  \o Filter.RelationshipFilter - A filter which matches contacts which participate in a particular type of relationship, or relationship with a specified contact.
-  \o Filter.IntersectionFilter - A filter which matches all contacts that are matched by all filters it includes.
-  \o Filter.UnionFilter - A filter which matches any contact that is matched by any of the filters it includes.
-  \o Filter.IdFilter - A filter which matches any contact whose local id is contained in a particular list of contact local ids.
+  \li Filter.DefaultFilter - A filter which matches everything (default).
+  \li Filter.InvalidFilter - An invalid filter which matches nothing.
+  \li Filter.DetailFilter - A filter which matches contacts containing one or more details of a particular definition with a particular value.
+  \li Filter.DetailRangeFilter - A filter which matches contacts containing one or more details of a particular definition whose values are within a particular range.
+  \li Filter.ChangeLogFilter - A filter which matches contacts whose timestamps have been updated since some particular date and time.
+  \li Filter.ActionFilter - A filter which matches contacts for which a particular action is available, or which contain a detail with a particular value for which a particular action is available.
+  \li Filter.RelationshipFilter - A filter which matches contacts which participate in a particular type of relationship, or relationship with a specified contact.
+  \li Filter.IntersectionFilter - A filter which matches all contacts that are matched by all filters it includes.
+  \li Filter.UnionFilter - A filter which matches any contact that is matched by any of the filters it includes.
+  \li Filter.IdFilter - A filter which matches any contact whose local id is contained in a particular list of contact local ids.
   \endlist
   */
 
@@ -83,7 +83,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactActionFilter
  */
@@ -101,7 +101,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactChangeLogFilter
  */
@@ -111,9 +111,9 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   This property holds the date and time lower-bound criterion of the filter.The value can be one of:
   \list
-  \o ChangeLogFilter.EventAdded
-  \o ChangeLogFilter.EventChanged
-  \o ChangeLogFilter.EventRemoved
+  \li ChangeLogFilter.EventAdded
+  \li ChangeLogFilter.EventChanged
+  \li ChangeLogFilter.EventRemoved
   \endlist
   */
 
@@ -130,7 +130,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactDetailFilter
  */
@@ -188,12 +188,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   This property holds the semantics of the value matching criterion. The valid match flags include:
   \list
-  \o MatchExactly - Performs QVariant-based matching (default).
-  \o MatchContains - The search term is contained in the item.
-  \o MatchStartsWith - The search term matches the start of the item.
-  \o MatchEndsWith - The search term matches the end of the item.
-  \o MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
-  \o MatchCaseSensitive - The search is case sensitive.
+  \li MatchExactly - Performs QVariant-based matching (default).
+  \li MatchContains - The search term is contained in the item.
+  \li MatchStartsWith - The search term matches the start of the item.
+  \li MatchEndsWith - The search term matches the end of the item.
+  \li MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
+  \li MatchCaseSensitive - The search is case sensitive.
   \endlist
   */
 
@@ -205,7 +205,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactDetailRangeFilter
  */
@@ -251,10 +251,10 @@ QTCONTACTS_BEGIN_NAMESPACE
 
   This property holds a set of flags which defines the boundary condition semantics of the value range criterion.The valid range flags include:
     \list
-    \o DetailRangeFilter.IncludeLower
-    \o DetailRangeFilter.IncludeUpper
-    \o DetailRangeFilter.ExcludeLower
-    \o DetailRangeFilter.ExcludeUpper
+    \li DetailRangeFilter.IncludeLower
+    \li DetailRangeFilter.IncludeUpper
+    \li DetailRangeFilter.ExcludeLower
+    \li DetailRangeFilter.ExcludeUpper
     \endlist
   */
 /*!
@@ -264,7 +264,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactIntersectionFilter
  */
@@ -283,7 +283,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactUnionFilter
  */
@@ -301,7 +301,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactIdFilter
  */
@@ -321,7 +321,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \inqmlmodule QtContacts
 
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa Relationship
    \sa RelationshipModel
@@ -349,9 +349,9 @@ QTCONTACTS_BEGIN_NAMESPACE
   This property holds the role in the relationship with the tested contact that the related contact must play in order for the tested contact to match this filter.
   The role can be one of:
   \list
-  \o Relationship.First - The contact is the first contact in the relationship.
-  \o Relationship.Second - The contact is the second contact in the relationship.
-  \o Relationship.Either - The contact is either the first or second contact in the relationship (default).
+  \li Relationship.First - The contact is the first contact in the relationship.
+  \li Relationship.Second - The contact is the second contact in the relationship.
+  \li Relationship.Either - The contact is either the first or second contact in the relationship (default).
   \endlist
   */
 
@@ -362,7 +362,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactInvalidFilter
  */

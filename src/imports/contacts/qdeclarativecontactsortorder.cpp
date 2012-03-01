@@ -50,7 +50,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \ingroup qml-contacts-main
    \inqmlmodule QtContacts
 
-   This element is part of the \bold{QtContacts} module.
+   This element is part of the \b{QtContacts} module.
 
    \sa QContactSortOrder
    \sa ContactModel
@@ -103,8 +103,8 @@ int QDeclarativeContactSortOrder::field() const
   \qmlproperty enumeration SortOrder::blankPolicy
   This property enumerates the ways in which the sort order interprets blanks when sorting contacts.
   \list
-  \o SortOrder.BlanksFirst - Considers blank values to evaluate to less than all other values in comparisons.
-  \o SortOrder.BlanksLast - Considers blank values to evaluate to greater than all other values in comparisons.
+  \li SortOrder.BlanksFirst - Considers blank values to evaluate to less than all other values in comparisons.
+  \li SortOrder.BlanksLast - Considers blank values to evaluate to greater than all other values in comparisons.
   \endlist
  */
 QDeclarativeContactSortOrder::BlankPolicy QDeclarativeContactSortOrder::blankPolicy() const
@@ -124,8 +124,8 @@ void QDeclarativeContactSortOrder::setBlankPolicy(QDeclarativeContactSortOrder::
 
   This property holds the direction of the sort order, the value can be one of:
   \list
-  \o Qt.AscendingOrder - (default)
-  \o Qt.DescendingOrder
+  \li Qt.AscendingOrder - (default)
+  \li Qt.DescendingOrder
   \endlist
   */
 Qt::SortOrder QDeclarativeContactSortOrder::direction() const
@@ -144,8 +144,8 @@ void QDeclarativeContactSortOrder::setDirection(Qt::SortOrder direction)
 
   This property holds the case sensitivity of the sort order, the value can be one of:
   \list
-  \o Qt.CaseInsensitive
-  \o Qt.CaseSensitive - (default)
+  \li Qt.CaseInsensitive
+  \li Qt.CaseSensitive - (default)
   \endlist
   */
 Qt::CaseSensitivity QDeclarativeContactSortOrder::caseSensitivity() const

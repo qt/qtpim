@@ -105,7 +105,7 @@ ContactsSavingTestCase {
         if (model.manager == "jsondb") {
             // In jsondb date is a bit tricky as UTC format with trailing Zulu is used.
             // Also backend does not convert it back but returns a string in the zulu format.
-            compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00Z", "extendDetail.data");
+            compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00", "extendDetail.data");
        } else {
             compare(fetchedExtendedDetail.data, myDate, "extendDetail.data");
        }

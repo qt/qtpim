@@ -46,18 +46,24 @@
 #include <QVariant>
 #include <QMap>
 
+#include <QtJsonDb/qjsondbconnection.h>
+
+QT_USE_NAMESPACE_JSONDB
+
 class SynchronizedWorker : public QEventLoop
 {
     Q_OBJECT
+
 public:
     explicit SynchronizedWorker(QObject *parent = 0);
-    QVariant getDbObject(int id);
+
 public slots:
-    void onDbResponse(int id, const QVariant &object);
+    void onJsonDbRequestFinished();
+    void onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode connectionError, const QString &message);
+
 signals:
 
 private:
-    QMap<int, QVariant> m_dbObjects;
 };
 
 #endif // SYNCHRONIZEDWORKER_H

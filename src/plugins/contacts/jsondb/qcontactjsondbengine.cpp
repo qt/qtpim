@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QVariantMap>
 #include <QEventLoop>
-#include <jsondb-client.h>
-Q_USE_JSONDB_NAMESPACE
 
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbconverter.h"
@@ -511,7 +509,6 @@ bool QContactJsonDbEngine::waitForRequestFinished(QContactAbstractRequest* req, 
 bool QContactJsonDbEngine::doSyncRequest(QContactAbstractRequest* req, int msecs) const  {
     Q_UNUSED(msecs); // TODO
     //if (req->ContactFetchRequest)
-    QVariantList Idlist;
     const_cast<QContactJsonDbEngine*>(this)->startRequest(req);
     const_cast<QContactJsonDbEngine*>(this)->waitForRequestFinished(req, 0);
     //if (req->FinishedState)

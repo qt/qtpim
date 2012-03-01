@@ -42,6 +42,8 @@
 #ifndef QCONTACTJSONDBBACKUP_H
 #define QCONTACTJSONDBBACKUP_H
 
+#include <QList>
+
 #include "synchronizedjsondbclient.h"
 
 class QContactJsonDbBackup
@@ -50,13 +52,14 @@ public:
     QContactJsonDbBackup();
     ~QContactJsonDbBackup();
     bool loadTestData();
+    bool cleanJsonDb();
 private:
     bool backupJsonDb();
     bool clearJsonDb();
     bool revertJsonDb();
-    bool doRequest(const QVariantList& objects, bool isInsert);
+    bool doRequest(const QList<QJsonObject>  &objects, bool isInsert);
 int  wasteSomeTime();
-    QVariantList m_backupData;
+    QList<QJsonObject> m_backupData;
     SynchronizedJsonDbClient* m_dbClient;
 };
 

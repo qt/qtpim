@@ -61,7 +61,6 @@ QContactJsonDbRequestManager::~QContactJsonDbRequestManager()
 void QContactJsonDbRequestManager::addRequest(QContactAbstractRequest* req, QList<QContact> items)
 {
     QMutexLocker locker(m_operationMutex);
-
     if (!m_activeRequests.contains(req)) {
         QContactRequestData* newData = new QContactRequestData();
         newData->m_contactList = items;
@@ -84,43 +83,57 @@ void QContactJsonDbRequestManager::removeRequest(QContactAbstractRequest* req)
     }
 }
 
-void QContactJsonDbRequestManager::addTransaction(int trId, TransactionType transactionType, QContactAbstractRequest *req, int contactIndex)
+void QContactJsonDbRequestManager::addPrefetchRequest(QContactFetchRequest *prefetchReq, QContactSaveRequest *saveReq)
 {
     QMutexLocker locker(m_operationMutex);
-
-    m_transactionTypeMap.insert(trId, transactionType);
-    if (m_activeRequests.contains(req)) {
-        m_activeRequests.value(req)->m_transactionMap.insert(trId, contactIndex);
+    if (!m_prefetchRequestsMap.contains(prefetchReq)) {
+        m_prefetchRequestsMap.insert(prefetchReq, saveReq);
     }
 }
 
-QContactAbstractRequest* QContactJsonDbRequestManager::removeTransaction(int trId, TransactionType &transactionType, int &contactIndex)
+QContactSaveRequest* QContactJsonDbRequestManager::removePrefetchRequest(QContactFetchRequest *prefetchReq)
 {
     QMutexLocker locker(m_operationMutex);
+    if (m_prefetchRequestsMap.contains(prefetchReq)) {
+        return m_prefetchRequestsMap.take(prefetchReq);
+    }
+    return 0;
+}
 
-    if (m_transactionTypeMap.contains(trId)) {
-        transactionType = m_transactionTypeMap.value(trId);
-        m_transactionTypeMap.remove(trId);
-        // Notifications transaction never has QContactAbsractRequest assosiated.
-        if (transactionType == NotificationsTransaction)
+void QContactJsonDbRequestManager::addRequest(QJsonDbRequest *jsonDbRequest, RequestType requestType, QContactAbstractRequest *req, int contactIndex)
+{
+    QMutexLocker locker(m_operationMutex);
+    m_jsonDbRequestTypeMap.insert(jsonDbRequest, requestType);
+    if (m_activeRequests.contains(req)) {
+        m_activeRequests.value(req)->m_jsonDbRequestMap.insert(jsonDbRequest, contactIndex);
+    }
+}
+
+QContactAbstractRequest* QContactJsonDbRequestManager::removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex)
+{
+    QMutexLocker locker(m_operationMutex);
+    if (m_jsonDbRequestTypeMap.contains(jsonDbRequest)) {
+        requestType = m_jsonDbRequestTypeMap.value(jsonDbRequest);
+        m_jsonDbRequestTypeMap.remove(jsonDbRequest);
+        if (requestType == OrphanRequest || requestType == InvalidRequest)
             return 0;
     } else {
-        qWarning() << Q_FUNC_INFO << "Could not find transaction:" << trId;
-        transactionType = InvalidTransaction;
+        qWarning() << Q_FUNC_INFO << "Could not find jsondbRequest:" << jsonDbRequest;
+        requestType = InvalidRequest;
         return 0;
     }
     QList<QContactAbstractRequest*> reqList = m_activeRequests.keys();
     for (int i = 0; i < reqList.size(); i++) {
         QContactAbstractRequest* req = reqList.at(i);
-        QMap<int, int>* transactionMap = &(m_activeRequests.value(req)->m_transactionMap);
-        if (transactionMap->contains(trId)) {
-            contactIndex = transactionMap->value(trId);
-            transactionMap->remove(trId);
+        QMap<QJsonDbRequest*, int>* requestMap = &(m_activeRequests.value(req)->m_jsonDbRequestMap);
+        if (requestMap->contains(jsonDbRequest)) {
+            contactIndex = requestMap->value(jsonDbRequest);
+            requestMap->remove(jsonDbRequest);
             return reqList.at(i);
         }
     }
-    // Request for this transaction already deleted so mark transaction as orphan.
-    transactionType = OrphanTransaction;
+    // request already deleted so mark this as orphan.
+    requestType = OrphanRequest;
     return 0;
 }
 
@@ -191,9 +204,16 @@ bool QContactJsonDbRequestManager::isRequestCompleted(QContactAbstractRequest* r
     QMutexLocker locker(m_operationMutex);
 
     if (m_activeRequests.contains(req)) {
-        return m_activeRequests.value(req)->m_transactionMap.isEmpty();
+        return m_activeRequests.value(req)->m_jsonDbRequestMap.isEmpty();
     }
     return true;
+}
+
+bool QContactJsonDbRequestManager::pendingPrefetchRequests(QContactSaveRequest *saveReq)
+{
+    QMutexLocker locker(m_operationMutex);
+    return ((m_activeRequests.contains(saveReq)) &&
+            (!m_prefetchRequestsMap.keys(saveReq).isEmpty()));
 }
 
 bool QContactJsonDbRequestManager::contains(QContactAbstractRequest *req) const

@@ -227,8 +227,6 @@ ContactsSavingTestCase {
         var detail = contact.detail(ContactDetail.Organization)
         compare(detail.name, "Name")
         compare(detail.logoUrl, "http://qt.nokia.com")
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO: department is not working as expected at the moment");
         compare(detail.department[0], "Department")
         if (model.manager == 'jsondb')
             expectFail("", "TODO: location is not working as expected at the moment");

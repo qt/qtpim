@@ -39,6 +39,8 @@
 **
 ****************************************************************************/
 
+#include <QDebug>
+
 #include "synchronizedworker.h"
 
 SynchronizedWorker::SynchronizedWorker(QObject *parent) :
@@ -46,17 +48,13 @@ SynchronizedWorker::SynchronizedWorker(QObject *parent) :
 {
 }
 
-QVariant SynchronizedWorker::getDbObject(int id)
+void SynchronizedWorker::onJsonDbRequestFinished()
 {
-    if (!m_dbObjects.contains(id)) {
-        return QVariant();
-    } else {
-        return m_dbObjects.take(id);
-    }
-}
-
-void SynchronizedWorker::onDbResponse(int id, const QVariant &object)
-{
-    m_dbObjects.insert(id, object);
     QEventLoop::quit();
 }
+
+void SynchronizedWorker::onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode connectionError, const QString &message)
+{
+    qWarning() << Q_FUNC_INFO << "Jsondb connection error:" << connectionError << "message:" << message;
+}
+

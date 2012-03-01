@@ -41,7 +41,7 @@
 
 #include <QtCore/QString>
 #include <QtTest/QtTest>
-#include <QVariantMap>
+#include <QJsonObject>
 #include <QContact>
 #include <qcontactname.h>
 #include <QContactGender>
@@ -72,21 +72,19 @@ public:
     tst_QcontactJsondbConverter();
 private Q_SLOTS:
     void toQContactTest();
-    void toQContactsTest();
     void toJsonContactTest();
+    void toQContactsTest();
     void updateContextsTest();
     void queryFromRequestTest();
     void convertCompoundFilterTest();
     void convertSortOrderTest();
     void convertIdTest();
 private:
-    void testJsonDetailItems(const QVariantMap& values, const QString& extractField,
+    void testJsonDetailItems(const QJsonObject& values, const QString& extractField,
                              const QMap<QString, QString>& fields, bool testSize = true);
-    void initializeJsonContact(QVariantMap& jsonContact, unsigned int numbering = 0);
+    void initializeJsonContact(QJsonObject& jsonContact, unsigned int numbering = 0);
+    QString convertToISODate(QString date);
 };
-
-
-
 
 
 tst_QcontactJsondbConverter::tst_QcontactJsondbConverter()
@@ -102,9 +100,9 @@ void tst_QcontactJsondbConverter::toQContactTest()
 {
     QContactJsonDbConverter converter;
     QContactJsonDbEngine engine;
-    QVariantMap jsonContact;
+    QJsonObject jsonContact;
     QContact contact;
-    QVariantMap jsonData;
+    QJsonObject jsonData;
     QContactDetail detail;
 
     // test name (set in initialization)
@@ -118,13 +116,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(name->lastName(), QString("Doe"));
     QCOMPARE(name->middleName(), QString("Tom"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
 
 
     // gender
     initializeJsonContact(jsonContact);
-    jsonData.insert("gender", "male");
+    jsonData.insert("gender", QString("male"));
     jsonContact.insert("gender", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactGender::Type);
@@ -133,21 +130,24 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(gender != NULL);
     QCOMPARE(gender->gender(), QContactGender::GenderMale);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
-    
     // organization
+    QDateTime startDate = QDateTime::fromString("1970-01-01", Qt::ISODate).toUTC();
+    QDateTime endDate = QDateTime::fromString("2038-01-19", Qt::ISODate).toUTC();
     initializeJsonContact(jsonContact);
-    jsonData.insert("name", "ACME");
-    jsonData.insert("department", "Spy");
-    jsonData.insert("title", "Vice President");
-    jsonData.insert("role", "Superhero");
-    jsonData.insert("assistantName", "Daisy Duck");
-    jsonData.insert("logoUrl", "http://www.acme.com/logo.jpg");
-    jsonData.insert("startDate","1970-01-01T00:00:00Z");
-    jsonData.insert("endDate","2038-01-19T03:14:08Z");
-    jsonContact.insert("organization", QVariantList() << jsonData);
+    jsonData.insert("name", QString("ACME"));
+    jsonData.insert("department", QString("Spy"));
+    jsonData.insert("title", QString("Vice President"));
+    jsonData.insert("role", QString("Superhero"));
+    jsonData.insert("assistantName", QString("Daisy Duck"));
+    jsonData.insert("logoUrl", QString("http://www.acme.com/logo.jpg"));
+    jsonData.insert("startDate",convertToISODate("1970-01-01"));
+    jsonData.insert("endDate",convertToISODate("2038-01-19"));
+    QJsonArray organizationData;
+    organizationData.append(jsonData);
+    jsonContact.insert("organization", organizationData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactOrganization::Type);
     QVERIFY(!detail.isEmpty());
@@ -159,32 +159,31 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(org->role(), QString("Superhero"));
     QCOMPARE(org->assistantName(), QString("Daisy Duck"));
     QCOMPARE(org->logoUrl(), QUrl("http://www.acme.com/logo.jpg"));
-    QCOMPARE(org->startDate(),QDateTime::fromString("Thu Jan 1 00:00:00 1970"));
-    QCOMPARE(org->endDate(),QDateTime::fromString("Tue Jan 19 03:14:08 2038"));
+    QCOMPARE(org->startDate(),startDate);
+    QCOMPARE(org->endDate(),endDate);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-    
+    jsonData = QJsonObject();
+
+
+
     // birthday
     initializeJsonContact(jsonContact);
-    jsonData.insert("birthday", "1979-11-22T00:00:00Z");
+    QDateTime birthDayDate = QDateTime::fromString("1979-11-22", Qt::ISODate).toUTC();
+    jsonData.insert("birthday", convertToISODate("1979-11-22"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactBirthday::Type);
     QVERIFY(!detail.isEmpty());
     QContactBirthday* bd = static_cast<QContactBirthday*>(&detail);
     QVERIFY(bd != NULL);
-    QString dateStr("%1-%2-%3");
-    dateStr = dateStr.arg(bd->date().year()).arg(bd->date().month()).arg(bd->date().day());
-    QCOMPARE(dateStr, QString("1979-11-22"));
+    QCOMPARE(bd->dateTime(), birthDayDate);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
 
     // avatar
     initializeJsonContact(jsonContact);
-    jsonData.insert("photoUrl", "http://www.acme.com/logo.jpg");
+    jsonData.insert("photoUrl", QString("http://www.acme.com/logo.jpg"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactAvatar::Type);
@@ -193,13 +192,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(avatar != NULL);
     QCOMPARE(avatar->imageUrl(), QUrl("http://www.acme.com/logo.jpg"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
 
 
     // ringtone
     initializeJsonContact(jsonContact);
-    jsonData.insert("ringtoneUrl", "http://www.acme.com/ring.mp3");
+    jsonData.insert("ringtoneUrl", QString("http://www.acme.com/ring.mp3"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactRingtone::Type);
@@ -208,13 +206,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(ring != NULL);
     QCOMPARE(ring->audioRingtoneUrl(), QUrl("http://www.acme.com/ring.mp3"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
+    jsonData = QJsonObject();
 
     // nickname
     initializeJsonContact(jsonContact);
-    jsonData.insert("nickname", "Chupacabra");
+    jsonData.insert("nickname", QString("Chupacabra"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactNickname::Type);
@@ -223,13 +220,13 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(nick != NULL);
     QCOMPARE(nick->nickname(), QString("Chupacabra"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
 
     // note
     initializeJsonContact(jsonContact);
-    jsonData.insert("note", "test note");
+    jsonData.insert("note", QString("test note"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactNote::Type);
@@ -238,15 +235,16 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(note != NULL);
     QCOMPARE(note->note(), QString("test note"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
+    jsonData = QJsonObject();
 
     // email
     initializeJsonContact(jsonContact);
-    jsonData.insert("value", "john@doe.com");
-    jsonData.insert("context", "home");
-    jsonContact.insert("emails", QVariantList() << jsonData);
+    jsonData.insert("value", QString("john@doe.com"));
+    jsonData.insert("context", QString("home"));
+    QJsonArray emails;
+    emails.append(jsonData);
+    jsonContact.insert("emails", emails);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactEmailAddress::Type);
     QVERIFY(!detail.isEmpty());
@@ -256,15 +254,16 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(email->contexts().size() == 1);
     QVERIFY(email->contexts()[0] == QContactEmailAddress::ContextHome);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
+    jsonData = QJsonObject();
 
     // phone number
     initializeJsonContact(jsonContact);
-    jsonData.insert("value", "0507654321");
-    jsonData.insert("subType", "cell");
-    jsonContact.insert("phones", QVariantList() << jsonData);
+    jsonData.insert("value", QString("0507654321"));
+    jsonData.insert("subType", QString("cell"));
+    QJsonArray phones;
+    phones.append(jsonData);
+    jsonContact.insert("phones", phones);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(!detail.isEmpty());
@@ -274,19 +273,20 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(phone->subTypes().size() == 1);
     QVERIFY(phone->subTypes()[0] == QContactPhoneNumber::SubTypeMobile);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
+    jsonData = QJsonObject();
 
     // address
     initializeJsonContact(jsonContact);
-    jsonData.insert("country", "Finland");
-    jsonData.insert("postOfficeBox", "347");
-    jsonData.insert("postcode", "33101");
-    jsonData.insert("locality", "Tampere");
-    jsonData.insert("region", "Pirkanmaa");
-    jsonData.insert("street", "PL 347");
-    jsonContact.insert("addresses", QVariantList() << jsonData);
+    jsonData.insert("country", QString("Finland"));
+    jsonData.insert("postOfficeBox", QString("347"));
+    jsonData.insert("postcode", QString("33101"));
+    jsonData.insert("locality", QString("Tampere"));
+    jsonData.insert("region", QString("Pirkanmaa"));
+    jsonData.insert("street", QString("PL 347"));
+    QJsonArray addresses;
+    addresses.append(jsonData);
+    jsonContact.insert("addresses", addresses);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactAddress::Type);
     QVERIFY(!detail.isEmpty());
@@ -299,14 +299,16 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(addr->region(), QString("Pirkanmaa"));
     QCOMPARE(addr->street(), QString("PL 347"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
 
     // url
     initializeJsonContact(jsonContact);
-    jsonData.insert("value", "http://www.acme.com");
-    jsonContact.insert("urls", QVariantList() << jsonData);
+    jsonData.insert("value", QString("http://www.acme.com"));
+    QJsonArray urls;
+    urls.append(jsonData);
+    jsonContact.insert("urls", urls);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactUrl::Type);
     QVERIFY(!detail.isEmpty());
@@ -314,15 +316,16 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(url != NULL);
     QCOMPARE(url->url(), QString("http://www.acme.com"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
-
+    jsonData = QJsonObject();
 
     // version
     initializeJsonContact(jsonContact);
-    const char *versionString = "12345678901234567890123456789012";
-    QString jsonVersion(versionString);
-    QByteArray expectedExtendedVersion(versionString);
+    QString sequenceNumberString (QStringLiteral("1"));
+    QString versionString (QStringLiteral("1234567890"));
+    QString jsonVersion(sequenceNumberString + "-" + versionString);
+    QByteArray expectedExtendedVersion(versionString.toLatin1());
+
     jsonContact.insert("_version", jsonVersion);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactVersion::Type);
@@ -330,111 +333,117 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QContactVersion* version = static_cast<QContactVersion*>(&detail);
     QVERIFY(version != NULL);
     QCOMPARE(version->extendedVersion(), expectedExtendedVersion);
-    QCOMPARE(version->sequenceNumber(), 0);
+    QCOMPARE(version->sequenceNumber(), sequenceNumberString.toInt());
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
     // extended detail with simple string data
     initializeJsonContact(jsonContact);
-    jsonContact.insert("simpleStringDetail", "Simple string as detail data.");
+    jsonContact.insert("simpleStringDetail", QString("Simple string as detail data."));
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     QList<QContactExtendedDetail> extendedDetails = contact.details<QContactExtendedDetail>();
     QCOMPARE(extendedDetails[0].name(), QString("simpleStringDetail"));
     QCOMPARE(extendedDetails[0].data().toString(), QString("Simple string as detail data."));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
-    // extended detail with QVariantMap as data
+    // extended detail with QJsonObject as data
     initializeJsonContact(jsonContact);
-    jsonData.insert("MapItem1", "Content for list item 1.");
-    jsonData.insert("MapItem2", 2);
-    jsonData.insert("MapItem3", "Content for list item 3.");
-    jsonData.insert("MapItem4", "Content for list item 4.");
-    jsonContact.insert("variantMapDetail", jsonData);
+    jsonData.insert("Item1", QString("Content for list item 1."));
+    jsonData.insert("Item2", int(2));
+    jsonData.insert("Item3", QString("Content for list item 3."));
+    jsonData.insert("Item4", QString("Content for list item 4."));
+    jsonContact.insert("jsonObjectDetail", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactExtendedDetail::Type);
     QContactExtendedDetail* extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
-    QCOMPARE(extendedDetail->name(), QString("variantMapDetail"));
-    QVariantMap extendedDetailItems = extendedDetail->data().toMap();
-    QCOMPARE(extendedDetailItems.value("MapItem1").toString(), QString("Content for list item 1."));
-    QCOMPARE(extendedDetailItems.value("MapItem2").toInt(), 2);
-    QCOMPARE(extendedDetailItems.value("MapItem3").toString(), QString("Content for list item 3."));
-    QCOMPARE(extendedDetailItems.value("MapItem4").toString(), QString("Content for list item 4."));
+    QCOMPARE(extendedDetail->name(), QString("jsonObjectDetail"));
+    QJsonObject extendedDetailItems = QJsonObject::fromVariantMap(extendedDetail->data().toMap());
+    QCOMPARE(extendedDetailItems.value("Item1").toString(), QString("Content for list item 1."));
+    QCOMPARE(extendedDetailItems.value("Item2").toVariant().toInt(), 2);
+    QCOMPARE(extendedDetailItems.value("Item3").toString(), QString("Content for list item 3."));
+    QCOMPARE(extendedDetailItems.value("Item4").toString(), QString("Content for list item 4."));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
-    // extended detail with QVariantList as data
+    // extended detail with QJsonArray as data
     initializeJsonContact(jsonContact);
-    jsonContact.insert("variantListDetail", QVariantList() << QString("QStringInVariantListFirst") << QString("QStringInVariantListSecond"));
+    QStringList extendedDetailsStringList;
+    extendedDetailsStringList<<"QStringInListFirst"<<"QStringInListSecond";
+    QJsonArray array = QJsonArray::fromStringList(extendedDetailsStringList);
+    jsonContact.insert("jsonArrayDetail", array);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactExtendedDetail::Type);
     extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
-    QCOMPARE(extendedDetail->name(), QString("variantListDetail"));
-    QVariantList extendedDetailListItems = extendedDetail->data().toList();
+    QCOMPARE(extendedDetail->name(), QString("jsonArrayDetail"));
+    QJsonArray extendedDetailListItems = QJsonArray::fromVariantList(extendedDetail->data().toList());
     QCOMPARE(extendedDetailListItems.count(),2);
-    QCOMPARE(extendedDetailListItems.at(0).toString(), QString("QStringInVariantListFirst"));
-    QCOMPARE(extendedDetailListItems.at(1).toString(), QString("QStringInVariantListSecond"));
+    QCOMPARE(extendedDetailListItems.at(0).toString(), QString("QStringInListFirst"));
+    QCOMPARE(extendedDetailListItems.at(1).toString(), QString("QStringInListSecond"));
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 
     // extended detail with complex structure as data
     initializeJsonContact(jsonContact);
     QVariantMap variantMap;
-    variantMap.insert("MapItemInt", 1);
-    variantMap.insert("MapItemQString", "QStringData");
-    variantMap.insert("MapItemQVariant", QVariant( QString("QStringInQVariant")));
-    variantMap.insert("MapItemQVariantList", QVariantList() << QString("QStringInVariantList") << 5 );
-    jsonData.insert("QStringItem", "Content for QStringItem.");
-    jsonData.insert("MapInMap", variantMap);
-    jsonContact.insert("complexVariantMapDetail", jsonData);
+    QJsonArray array2;
+    QString expectedStringFromVariantList(QStringLiteral("QStringInVariantList"));
+    int expectedIntFromVariantList = 5;
+    array2.append(expectedStringFromVariantList);
+    array2.append(expectedIntFromVariantList);
+    variantMap.insert("ItemInt", 1);
+    variantMap.insert("ItemQString", QString("QStringData"));
+    variantMap.insert("ItemQVariant", QJsonValue( QString("QStringInQVariant")).toVariant());
+    variantMap.insert("ItemQVariantList", array2.toVariantList() );
+    jsonData.insert("QStringItem", QString("Content for QStringItem."));
+    jsonData.insert("arrayInMap", QJsonObject::fromVariantMap(variantMap));
+    jsonContact.insert("complexObjectDetail", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, engine));
     detail = contact.detail(QContactExtendedDetail::Type);
     extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
-    QCOMPARE(extendedDetail->name(), QString("complexVariantMapDetail"));
-    extendedDetailItems = extendedDetail->data().toMap();
+    QCOMPARE(extendedDetail->name(), QString("complexObjectDetail"));
+    extendedDetailItems = QJsonObject::fromVariantMap(extendedDetail->data().toMap());
     QCOMPARE(extendedDetailItems.value("QStringItem").toString(), QString("Content for QStringItem."));
-    QVariantMap returnMap = extendedDetailItems.value("MapInMap").toMap();
-    QCOMPARE(returnMap.value("MapItemInt").toInt(), 1);
-    QCOMPARE(returnMap.value("MapItemQString").toString(), QString("QStringData"));
-    QCOMPARE(returnMap.value("MapItemQVariant").toString(), QString("QStringInQVariant"));
-    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(0).toString(), QString("QStringInVariantList"));
-    QCOMPARE(returnMap.value("MapItemQVariantList").toList().at(1).toInt(), 5);
+    QJsonObject returnedObject = extendedDetailItems.value("arrayInMap").toObject();
+    QCOMPARE(returnedObject.value("ItemInt").toVariant().toInt(), 1);
+    QCOMPARE(returnedObject.value("ItemQString").toString(), QString("QStringData"));
+    QCOMPARE(returnedObject.value("ItemQVariant").toString(), QString("QStringInQVariant"));
+    QCOMPARE(returnedObject.value("ItemQVariantList").toVariant().toList().size(), array2.size());
+    QCOMPARE(returnedObject.value("ItemQVariantList").toVariant().toList().at(0).toString(), expectedStringFromVariantList);
+    QCOMPARE(returnedObject.value("ItemQVariantList").toVariant().toList().at(1).toInt(), expectedIntFromVariantList);
     // cleanup
-    jsonData.clear();
     contact.clearDetails();
+    jsonData = QJsonObject();
 }
-
-
-
 
 
 void tst_QcontactJsondbConverter::toQContactsTest()
 {
-    QVariantList contacts;
-    QVariantMap contact;
-    QVariantMap phoneMap;
-    QVariantMap emailMap;
+    QList<QJsonObject> contacts;
     // create bunch of contacts and convert those
     for(int i = 1; i < 10; ++i) {
+        QJsonObject contact;
+        QJsonObject phoneObject;
+        QJsonObject emailObject;
         // add name field
         initializeJsonContact(contact, i);
         // add phone number
-        phoneMap.insert("value", "050765432" + QString().setNum(i));
-        phoneMap.insert("subType", "home");
-        contact.insert("phones", QVariantList() << phoneMap);
+        phoneObject.insert("value", QString("050765432") + QString().setNum(i));
+        phoneObject.insert("subType", QString("home"));
+        QJsonArray phones;
+        phones.append(phoneObject);
+        contact.insert("phones", phones);
         // add email address
-        emailMap.insert("value", QString().setNum(i) + "john@doe.com");
-        emailMap.insert("subType", "home");
-        contact.insert("emails", QVariantList() << emailMap);
-        contacts << contact;
-        // cleanup for next round
-        contact.clear();
-        phoneMap.clear();
-        emailMap.clear();
+        emailObject.insert("value", QString().setNum(i) + "john@doe.com");
+        emailObject.insert("subType", QString("home"));
+        QJsonArray emails;
+        emails.append(emailObject);
+        contact.insert("emails", emails);
+        contacts.append(contact);
     }
     QContactJsonDbConverter converter;
     QContactJsonDbEngine engine;
@@ -470,17 +479,12 @@ void tst_QcontactJsondbConverter::toQContactsTest()
     }
 }
 
-
-
-
-
 void tst_QcontactJsondbConverter::toJsonContactTest()
 {
     QContactJsonDbConverter converter;
-    QVariantMap jsonContact;
+    QJsonObject jsonContact;
     QContact contact;
     QMap<QString, QString> testFields;
-
 
     // Test name conversion
     QContactName name;
@@ -496,7 +500,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, QContactJsonDbStr::nameDefinitionName(), testFields);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
     // Test Gender
@@ -510,7 +514,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "gender", testFields);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
     // Test organization
@@ -528,20 +532,23 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     organization.setContexts(OrganizationContextList);
     contact.saveDetail(&organization);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
+    QString expectedStartDate,expectedEndDate;
+    expectedStartDate = organization.startDate().toUTC().toString(Qt::ISODate);
+    expectedEndDate = organization.endDate().toUTC().toString(Qt::ISODate);
     testFields.insert("name", "ACME");
     testFields.insert("department", "Spy");
     testFields.insert("title", "Vice President");
     testFields.insert("role", "Superhero");
     testFields.insert("assistantName", "Daisy Duck");
     testFields.insert("logoUrl", "http://www.acme.com/logo.jpg");
-    testFields.insert("startDate", "1998-01-01T00:01:02Z");
-    testFields.insert("endDate", "1998-01-01T00:01:02Z");
+    testFields.insert("startDate", expectedStartDate);
+    testFields.insert("endDate", expectedEndDate);
     testFields.insert("context", "work");
     // test fields
     testJsonDetailItems(jsonContact, "organization", testFields);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
 
@@ -550,8 +557,10 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     QContactBirthday birthday;
     birthday.setDate(QDate(1979, 11, 22));
     contact.saveDetail(&birthday);
+    QString expectedBirthDayDate;
+    expectedBirthDayDate = birthday.dateTime().toUTC().toString(Qt::ISODate);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    testFields.insert("birthday", "1979-11-22T00:00:00Z");
+    testFields.insert("birthday", expectedBirthDayDate);
     // avatar
     QContactAvatar avatar;
     avatar.setImageUrl(QUrl("http://www.acme.com/logo.jpg"));
@@ -578,7 +587,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "details", testFields);
     //cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
     // email
@@ -592,9 +601,8 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "emails", testFields);
     //cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
-
 
     // phone number
     QContactPhoneNumber number;
@@ -609,7 +617,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "phones", testFields);
     //cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
 
@@ -634,7 +642,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "addresses", testFields);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
 
 
@@ -648,22 +656,24 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testJsonDetailItems(jsonContact, "urls", testFields);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     testFields.clear();
-
 
     // Test version conversion
     QContactVersion version;
-    const char *jsonVersion = "12345678901234567890123456789012";
-    QByteArray originalVersion(jsonVersion);
-    version.setExtendedVersion(originalVersion);
+    QString sequenceNumberString (QStringLiteral("1"));
+    QString versionString (QStringLiteral("1234567890"));
+    QString expectedJsonVersion(sequenceNumberString + "-" + versionString);
+    QByteArray expectedExtendedVersion(versionString.toLatin1());
+    version.setSequenceNumber(1);
+    version.setExtendedVersion(expectedExtendedVersion);
     contact.saveDetail(&version);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
     // test fields
-    QCOMPARE(jsonContact[QContactJsonDbStr::version()].value<QString>(), QString(jsonVersion));
+    QCOMPARE((jsonContact.value(QContactJsonDbStr::version())).toString(),
+             expectedJsonVersion);
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
 
     // extended detail with a simple string as data.
     QContactExtendedDetail extendedDetail;
@@ -672,28 +682,27 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     contact.saveDetail(&extendedDetail);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
     // test size, type and actual field
-    QCOMPARE(jsonContact.size(), 2);
-    QCOMPARE(jsonContact[QContactJsonDbStr::type()].value<QString>(), QContactJsonDbStr::contactsJsonDbType());
-    QCOMPARE(jsonContact["extendedDetail1"].value<QString>(), QString("Simple data for an extened detail."));
+    QCOMPARE((jsonContact.value(QContactJsonDbStr::type())).toString(), QContactJsonDbStr::contactsJsonDbType());
+    QCOMPARE((jsonContact.value("extendedDetail1")).toString(), QString("Simple data for an extened detail."));
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
 
-    // extended detail with QVariantList as data
+    // extended detail with QJsonArray as data
     QContactExtendedDetail listExtendedDetail;
     listExtendedDetail.setName("listExtendedDetail");
-    QVariantList extendedDetailListItems = QVariantList() << QString("QStringInVariantListFirst") << QString("QStringInVariantListSecond");
-    listExtendedDetail.setData(extendedDetailListItems);
+    QStringList stringList;
+    stringList << "QStringInListFirst" <<"QStringInListSecond";
+    QJsonArray extendedDetailListItems = QJsonArray::fromStringList(stringList);
+    listExtendedDetail.setData(extendedDetailListItems.toVariantList());
     contact.saveDetail(&listExtendedDetail);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    QCOMPARE(jsonContact[QContactJsonDbStr::type()].value<QString>(), QContactJsonDbStr::contactsJsonDbType());
-    QVariantList convertedVariantList = jsonContact["listExtendedDetail"].value<QVariantList>();
+    QCOMPARE(jsonContact.value(QContactJsonDbStr::type()).toString(), QContactJsonDbStr::contactsJsonDbType());
+    QJsonArray convertedVariantList = jsonContact.value("listExtendedDetail").toArray();
     QCOMPARE(convertedVariantList.count(),2);
-    QCOMPARE(convertedVariantList.at(0).toString(), QString("QStringInVariantListFirst"));
-    QCOMPARE(convertedVariantList.at(1).toString(), QString("QStringInVariantListSecond"));
+    QCOMPARE(convertedVariantList.at(0).toString(), QString("QStringInListFirst"));
+    QCOMPARE(convertedVariantList.at(1).toString(), QString("QStringInListSecond"));
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
 
     // extended detail with a complex variantmap data
     QContactExtendedDetail complexExtendedDetail;
@@ -707,27 +716,23 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
                       << QString("AnotherQStringItemInVariantList"));
     complexExtendedDetail.setData(variantMap);
     contact.saveDetail(&complexExtendedDetail);
+    initializeJsonContact(jsonContact);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
     // test size, type and actual extended detail fields
-    QCOMPARE(jsonContact.size(), 2);
-    QCOMPARE(jsonContact[QContactJsonDbStr::type()].value<QString>(), QContactJsonDbStr::contactsJsonDbType());
-    QVariantMap convertedVariantMap = jsonContact["complexExtendedDetail"].value<QVariant>().toMap();
-    QCOMPARE( convertedVariantMap["mapItemInt"].toInt(), 1);
-    QCOMPARE( convertedVariantMap["mapItemQString"].toString(),QString("QStringItem"));
-    QCOMPARE( convertedVariantMap["mapItemVariant"].toString(),QString("QStringItemInVariant"));
-    QVariantList variantList = convertedVariantMap["mapItemVariantList"].toList();
-    QCOMPARE( variantList[0].toString(), QString("QStringItemInVariantList"));
-    QCOMPARE( variantList[1].toInt(), 5);
-    QCOMPARE( variantList[2].toString(), QString("AnotherQStringItemInVariantList"));
+    QCOMPARE(jsonContact.size(), 3);
+    QCOMPARE(jsonContact.value(QContactJsonDbStr::type()).toString(), QContactJsonDbStr::contactsJsonDbType());
+    QJsonObject convertedObject = jsonContact.value("complexExtendedDetail").toObject();
+    QCOMPARE( convertedObject.value("mapItemInt").toVariant().toInt(), 1);
+    QCOMPARE( convertedObject["mapItemQString"].toString(),QString("QStringItem"));
+    QCOMPARE( convertedObject["mapItemVariant"].toString(),QString("QStringItemInVariant"));
+    QJsonArray jsonArray = convertedObject.value("mapItemVariantList").toArray();
+    QCOMPARE( jsonArray.at(0).toString(), QString("QStringItemInVariantList"));
+    QCOMPARE( jsonArray.at(1).toVariant().toInt(), 5);
+    QCOMPARE( jsonArray.at(2).toString(), QString("AnotherQStringItemInVariantList"));
     // cleanup
     contact.clearDetails();
-    jsonContact.clear();
-
+    jsonContact = QJsonObject();
 }
-
-
-
-
 
 void tst_QcontactJsondbConverter::updateContextsTest()
 {
@@ -741,11 +746,11 @@ void tst_QcontactJsondbConverter::updateContextsTest()
               << QContactDetail::ContextOther;
     QString context;
     QContactDetail qdetail;
-    QVariantMap detail;
+    QJsonObject detail;
     int i = 0;
     // test every context
     foreach(context, contexts) {
-        detail.insert("value", "0507654321");
+        detail.insert("value", QString("0507654321"));
         detail.insert("context", context);
         QVERIFY(converter.updateContexts(detail, &qdetail));
         QVERIFY(qdetail.contexts().size() == 1);
@@ -883,10 +888,6 @@ void tst_QcontactJsondbConverter::convertSortOrderTest()
     // Functionality still missing
 }
 
-
-
-
-
 void tst_QcontactJsondbConverter::convertIdTest()
 {
     QContactJsonDbConverter converter;
@@ -898,24 +899,20 @@ void tst_QcontactJsondbConverter::convertIdTest()
     QCOMPARE(jsonId, fakeId);
 }
 
-
-
-
-
-void tst_QcontactJsondbConverter::testJsonDetailItems(const QVariantMap& values, const QString& extractField,
+void tst_QcontactJsondbConverter::testJsonDetailItems(const QJsonObject& values, const QString& extractField,
                                                       const QMap<QString, QString>& fields, bool testSize)
 {
     // result should be type field and value field
     QCOMPARE(values.size(), 2);
-    QCOMPARE(values[QContactJsonDbStr::type()].value<QString>(), QContactJsonDbStr::contactsJsonDbType());
+    QCOMPARE(values.value(QContactJsonDbStr::type()).toString(), QContactJsonDbStr::contactsJsonDbType());
     // extract data values
-    QVariantMap jsonTmp;
+    QJsonObject jsonTmp;
 
-    if(values[extractField].type() == QMetaType::QVariantList) {
-       QVariantList list = values[extractField].value<QVariantList>();
-       jsonTmp = list[0].value<QVariantMap>();
+    if (values.value(extractField).isArray()) {
+        QJsonArray array = values.value(extractField).toArray();
+        jsonTmp = array[0].toObject();
     } else {
-       jsonTmp = values[extractField].value<QVariantMap>();
+        jsonTmp = values.value(extractField).toObject();
     }
     // extract data should have as many fields as compared data
     if(testSize)
@@ -923,28 +920,31 @@ void tst_QcontactJsondbConverter::testJsonDetailItems(const QVariantMap& values,
     QMapIterator<QString, QString> i(fields);
     while(i.hasNext()) {
         i.next();
-        QCOMPARE(jsonTmp[i.key()].value<QString>(), i.value());
+        QCOMPARE(jsonTmp.value(i.key()).toString(), i.value());
     }
 }
 
-
-
-
-
-void tst_QcontactJsondbConverter::initializeJsonContact(QVariantMap& jsonContact, unsigned int numbering)
+void tst_QcontactJsondbConverter::initializeJsonContact(QJsonObject& jsonContact, unsigned int numbering)
 {
-    jsonContact.clear();
+    jsonContact = QJsonObject();
     jsonContact.insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
-    jsonContact.insert(QContactJsonDbStr::uuid(), "123");
-    QVariantMap jsonData;
+    jsonContact.insert(QContactJsonDbStr::uuid(), QString("123"));
+    QJsonObject jsonData;
     QString number("");
     if(numbering > 0) {
         number = QString().setNum(numbering);
     }
-    jsonData.insert("firstName", "John" + number);
-    jsonData.insert("lastName", "Doe" + number);
-    jsonData.insert("middleName", "Tom" + number);
+    jsonData.insert("firstName", QString("John" + number));
+    jsonData.insert("lastName", QString("Doe" + number));
+    jsonData.insert("middleName", QString("Tom" + number));
     jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
+}
+
+QString tst_QcontactJsondbConverter::convertToISODate(QString date)
+{
+    QDateTime dateTime;
+    dateTime = QDateTime::fromString(date, Qt::ISODate).toUTC();
+    return dateTime.toUTC().toString(Qt::ISODate);
 }
 
 

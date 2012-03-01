@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QStringList>
+#include <QList>
 #include "qcontactjsondbbackup.h"
 #include "qcontactjsondbconverter.h"
 
@@ -50,11 +50,6 @@ QContactJsonDbBackup::QContactJsonDbBackup()
     m_dbClient = new SynchronizedJsonDbClient();
     backupJsonDb();
     clearJsonDb();
-    // TODO(?): loadTestData() and the revertJsonDb have issues.
-    // It looks like the Uuid field creates problems when trying to add/restore
-    // contacts: Illegal result 2 "New object should not have _uuid"
-    // Using a new version for the time being...
-    loadTestData();
 }
 
 
@@ -63,10 +58,8 @@ QContactJsonDbBackup::QContactJsonDbBackup()
 
 QContactJsonDbBackup::~QContactJsonDbBackup()
 {
-    if (m_dbClient) {
-        delete m_dbClient;
-        m_dbClient = NULL;
-    }
+    revertJsonDb();
+    delete m_dbClient;
 }
 
 
@@ -158,8 +151,8 @@ bool QContactJsonDbBackup::loadTestData() {
 
 bool QContactJsonDbBackup::backupJsonDb() {
     QString query = "[?_type=\"com.nokia.mt.contacts.Contact\"]";
-    QVariantMap map = m_dbClient->query(query);
-    m_backupData = map["data"].value<QVariantList>();
+    QList<QJsonObject> map = m_dbClient->query(query);
+    m_backupData = map;
     return true;
 }
 
@@ -176,18 +169,23 @@ bool QContactJsonDbBackup::clearJsonDb() {
 
 bool QContactJsonDbBackup::revertJsonDb() {
     return doRequest(m_backupData, true);
-    m_backupData.clear();
 }
 
 
+bool QContactJsonDbBackup::cleanJsonDb()
+{
+    QString query = "[?_type=\"com.nokia.mt.contacts.Contact\"]";
+    QList<QJsonObject> map = m_dbClient->query(query);
+    return doRequest(map, false);
+}
 
 
-bool QContactJsonDbBackup::doRequest(const QVariantList& objects, bool isInsert) {
-    QVariantMap item;
+bool QContactJsonDbBackup::doRequest(const QList<QJsonObject>  &objects, bool isInsert) {
     QString query;
-    QVariantMap map;
+    QList<QJsonObject> map;
     for(int i = 0; i < objects.size(); ++i) {
-        item = objects[i].value<QVariantMap>();
+        QJsonObject item;
+        item = objects[i];
         if(isInsert) {
             map = m_dbClient->create(item);
         } else {

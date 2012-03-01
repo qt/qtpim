@@ -956,6 +956,21 @@ void tst_QContactJsonDbAsync::contactSaveRemovedContacts()
     QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
     QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
     QCOMPARE(csr.error(), QContactManager::DoesNotExistError);
+
+    //test case for existing and non existing contacts after remove in contact
+    //save request
+    nameDetail.setFirstName("Test4");
+    QContact testContact4;
+    testContact4.saveDetail(&nameDetail);
+    testContacts = csr.contacts();
+    testContacts << testContact4;
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
 }
 
 void tst_QContactJsonDbAsync::contactSaveRemovedContactsWithCleanIds()

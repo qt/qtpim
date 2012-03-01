@@ -44,23 +44,26 @@
 
 #include <QVariantMap>
 #include <QString>
-#include <jsondb-client.h>
+#include <QtJsonDb/qjsondbconnection.h>
+#include <QtJsonDb/qjsondbrequest.h>
+
 #include "synchronizedworker.h"
 
-Q_USE_JSONDB_NAMESPACE
+QT_USE_NAMESPACE_JSONDB
 
 class SynchronizedJsonDbClient
 {
 public:
     SynchronizedJsonDbClient();
     ~SynchronizedJsonDbClient();
-    QVariantMap query(const QString &query);
-    QVariantMap create(const QVariantMap &query);
-    QVariantMap update(const QVariantMap &query);
-    QVariantMap remove(const QVariantMap &query);
+    QList<QJsonObject> query(const QString &query);
+    QList<QJsonObject> create(const QJsonObject &object);
+    QList<QJsonObject> update(const QJsonObject &object);
+    QList<QJsonObject> remove(const QJsonObject &object);
 private:
-    QVariantMap getResults(int trId);
-    JsonDbClient* m_dbClient;
+    QList<QJsonObject> getResults(QJsonDbRequest *request);
+
+    QJsonDbConnection *m_jsonDbConnection;
     SynchronizedWorker* m_worker;
 };
 

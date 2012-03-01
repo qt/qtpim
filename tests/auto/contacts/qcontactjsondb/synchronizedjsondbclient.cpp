@@ -42,46 +42,59 @@
 #include <QEventLoop>
 #include <QVariant>
 #include <QDebug>
+#include <QtJsonDb/qjsondbreadrequest.h>
+#include <QtJsonDb/qjsondbwriterequest.h>
 #include "synchronizedjsondbclient.h"
+
 
 SynchronizedJsonDbClient::SynchronizedJsonDbClient()
 {
-    m_dbClient = new JsonDbClient();
+    m_jsonDbConnection = new QJsonDbConnection();
     m_worker = new SynchronizedWorker();
+    QObject::connect(m_jsonDbConnection, SIGNAL(error(QtJsonDb::QJsonDbConnection::ErrorCode,QString)),
+            m_worker, SLOT(onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode,QString)));
+    m_jsonDbConnection->connectToServer();
 }
 
 SynchronizedJsonDbClient::~SynchronizedJsonDbClient()
 {
-    if (m_worker) {
-        delete m_worker;
-        m_worker = NULL;
+    delete m_worker;
+    delete m_jsonDbConnection;
+}
+
+QList<QJsonObject> SynchronizedJsonDbClient::query(const QString &query)
+{
+    QJsonDbRequest *request;
+    request = new QJsonDbReadRequest(query, m_worker);
+    return getResults(request);
+}
+
+QList<QJsonObject> SynchronizedJsonDbClient::create(const QJsonObject &object)
+{
+    QJsonDbRequest *request;
+    request = new QJsonDbCreateRequest(object, m_worker);
+    return getResults(request);
+}
+
+QList<QJsonObject> SynchronizedJsonDbClient::update(const QJsonObject &object)
+{
+    QJsonDbRequest *request = new QJsonDbUpdateRequest(object, m_worker);
+    return getResults(request);
+}
+
+QList<QJsonObject> SynchronizedJsonDbClient::remove(const QJsonObject &object)
+{
+    QJsonDbRequest *request = new QJsonDbRemoveRequest(object,m_worker);
+    return getResults(request);
+}
+
+QList<QJsonObject> SynchronizedJsonDbClient::getResults(QJsonDbRequest *request)
+{
+    QObject::connect(request, SIGNAL(finished()), m_worker, SLOT(onJsonDbRequestFinished()));
+    if (m_jsonDbConnection->send(request)) {
+        m_worker->exec(); // Wait for db client to finish
+        QList<QJsonObject> results = request->takeResults();
+        return results;
     }
 }
 
-QVariantMap SynchronizedJsonDbClient::query(const QString &query)
-{
-    return getResults(m_dbClient->query(query));
-}
-
-QVariantMap SynchronizedJsonDbClient::create(const QVariantMap &query)
-{
-    return getResults(m_dbClient->create(query));
-}
-
-QVariantMap SynchronizedJsonDbClient::update(const QVariantMap &query)
-{
-    return getResults(m_dbClient->update(query));
-}
-
-QVariantMap SynchronizedJsonDbClient::remove(const QVariantMap &query)
-{
-    return getResults(m_dbClient->remove(query));
-}
-
-QVariantMap SynchronizedJsonDbClient::getResults(int trId)
-{
-    QObject::connect(m_dbClient, SIGNAL(response(int, QVariant)),
-                     m_worker, SLOT(onDbResponse(int, QVariant)));
-    m_worker->exec(); // Wait for db client to finish
-    return m_worker->getDbObject(trId).toMap();
-}

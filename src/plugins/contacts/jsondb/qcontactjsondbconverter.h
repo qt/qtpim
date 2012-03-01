@@ -42,7 +42,6 @@
 #ifndef QCONTACTJSONDBCONVERTER_H
 #define QCONTACTJSONDBCONVERTER_H
 
-#include <QVariantMap>
 #include <QHash>
 #include "qcontact.h"
 #include "qcontactjsondbengine.h"
@@ -56,17 +55,17 @@ class QContactJsonDbConverter
 public:
     QContactJsonDbConverter();
     ~QContactJsonDbConverter();
-    bool toQContact(const QVariantMap& object, QContact* contact, const QContactJsonDbEngine& engine);
-    bool toQContacts(const QVariantList& jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error);
-    bool toJsonContact(QVariantMap* object, const QContact& contact);
-    bool updateContexts(const QVariantMap& object, QContactDetail* detail);
-    bool updateContexts(const QContactDetail& detail, QVariantMap* object);
+    QContactManager::Error jsonDbRequestErrorToContactError(QJsonDbRequest::ErrorCode error) const;
+    bool toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine);
+    bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error);
+    bool toJsonContact(QJsonObject* object, const QContact& contact);
+    bool updateContexts(const QJsonObject& object, QContactDetail* detail);
+    bool updateContexts(const QContactDetail& detail, QJsonObject* object);
     bool queryFromRequest(QContactAbstractRequest* request,QString &jsonDbQueryStr);
     bool singleFilterToJsondbQuery(const QContactFilter& filter,QString &jsonDbQueryStr) const;
     bool compoundFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     QString convertSortOrder(const QList<QContactSortOrder>& sortOrders) const;
-    QString jsonDbNotificationObjectToContactType(const QVariantMap &object) const;
-    QContactId jsonDbNotificationObjectToContactId(const QVariantMap &object) const;
+    QContactId jsonDbNotificationObjectToContactId(const QJsonObject &object) const;
     QString convertId(const QContactId &id) const;
     void jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const;
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
@@ -84,9 +83,6 @@ private:
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "") const;
     QString toJsonDate(const QDateTime& date) const;
     QDateTime toContactDate(const QString& dateString) const;
-    void extendedDetailToJsonDbProperty(const QContactExtendedDetail &extendedDetail, QVariant& property) const;
-    void dataToList(const QVariant &data, QVariantList &list) const;
-    void dataToMap(const QVariant &data, QVariantMap &map) const;
     bool idFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
 

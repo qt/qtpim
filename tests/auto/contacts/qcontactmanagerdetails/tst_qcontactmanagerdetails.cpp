@@ -244,9 +244,9 @@ void tst_QContactManagerDetails::testAddress()
     saveAndLoadContact( cm.data(), c1, c2 );
 
     QList<QContactAddress> addresses = c2.details<QContactAddress>();
-    QVERIFY( addresses.count() == 2 );
-    QVERIFY( a1 == addresses[0] );
-    QVERIFY( a2 == addresses[1] );
+    QCOMPARE(addresses.count(), 2);
+    QCOMPARE(addresses[0], a1);
+    QCOMPARE(addresses[1], a2);
 
     QContact c3;
 
@@ -308,7 +308,7 @@ void tst_QContactManagerDetails::testBirthday()
     QContact c;
 
     QContactBirthday b;
-    b.setDate( QDate(2001,1,1) );
+    b.setDateTime( QDateTime(QDate(2001,1,1)) );
     c.saveDetail( &b );
 
     saveAndVerifyContact( cm.data(), c );

@@ -2,11 +2,6 @@ load(qt_module)
 
 QT += contacts contacts-private jsondb
 
-contains(QT_CONFIG, jsondbcompat): {
-    QT -= jsondb
-    QT += jsondbcompat
-}
-
 TARGET = qtcontacts_jsondb
 target.path += $$[QT_INSTALL_PLUGINS]/contacts
 INSTALLS += target

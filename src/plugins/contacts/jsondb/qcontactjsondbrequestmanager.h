@@ -56,9 +56,14 @@
 #include <QMap>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QtJsonDb/qjsondbconnection.h>
+#include <QtJsonDb/qjsondbwatcher.h>
+#include <QtJsonDb/qjsondbrequest.h>
 
 #include "qcontact.h"
-#include "qcontactabstractrequest.h"
+#include "qcontactrequests.h"
+
+QT_USE_NAMESPACE_JSONDB
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -67,7 +72,7 @@ class QContactRequestData
     public:
     QContactRequestData() {}
     QList<QContact> m_contactList;
-    QMap<int, int> m_transactionMap;
+    QMap<QJsonDbRequest*, int> m_jsonDbRequestMap;
     QWaitCondition* m_waitCondition;
 };
 
@@ -77,15 +82,15 @@ class QContactJsonDbRequestManager : public QObject
 
 public:
 
-    enum TransactionType {
-        InvalidTransaction = 0,
-        OrphanTransaction,
-        NotificationsTransaction,
-        PrefetchForSaveTransaction,
-        SaveTransaction,
-        FetchTransaction,
-        ContactIdFetchTransaction,
-        RemoveTransaction
+    enum RequestType {
+        InvalidRequest = 0,
+        OrphanRequest,
+        PrefetchForSaveRequest,
+        SaveRequest,
+        UpdateRequest,
+        FetchRequest,
+        ContactIdFetchRequest,
+        RemoveRequest
     };
 
     QContactJsonDbRequestManager();
@@ -94,8 +99,11 @@ public:
     void addRequest(QContactAbstractRequest* req, QList<QContact> contacts = QList<QContact>());
     void removeRequest(QContactAbstractRequest* req);
 
-    void addTransaction(int trId, TransactionType transactionType, QContactAbstractRequest *req = 0, int contactIndex = -1);
-    QContactAbstractRequest* removeTransaction(int trId, TransactionType &transactionType, int &contactIndex);
+    void addPrefetchRequest(QContactFetchRequest *prefetchReq, QContactSaveRequest *saveReq);
+    QContactSaveRequest* removePrefetchRequest(QContactFetchRequest *prefetchReq);
+
+    void addRequest(QJsonDbRequest *jsonDbRequest, RequestType requestType, QContactAbstractRequest *req = 0, int contactIndex = -1);
+    QContactAbstractRequest* removeRequest(QJsonDbRequest *jsonDbRequest, RequestType &requestType, int &contactIndex);
 
     bool setWaitCondition(QContactAbstractRequest* req, QWaitCondition* waitCondition);
     QWaitCondition* waitCondition(QContactAbstractRequest* req);
@@ -105,6 +113,7 @@ public:
     QList<QContact> contacts(QContactAbstractRequest* req);
 
     bool isRequestCompleted(QContactAbstractRequest* req);
+    bool pendingPrefetchRequests(QContactSaveRequest *saveReq);
     bool contains(QContactAbstractRequest* req) const;
 
 signals:
@@ -114,7 +123,8 @@ public slots:
 private:
     QMap<QContactAbstractRequest*, QContactRequestData* > m_activeRequests;
     QMap<QContactAbstractRequest*, QWaitCondition* > m_inactiveRequests;
-    QMap<int, QContactJsonDbRequestManager::TransactionType> m_transactionTypeMap;
+    QMap<QContactFetchRequest*, QContactSaveRequest*> m_prefetchRequestsMap;
+    QMap<QJsonDbRequest*, QContactJsonDbRequestManager::RequestType> m_jsonDbRequestTypeMap;
     QMutex* m_operationMutex;
 };
 

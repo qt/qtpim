@@ -45,6 +45,9 @@
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QtJsonDb/qjsondbconnection.h>
+#include <QtJsonDb/qjsondbwatcher.h>
+#include <QtJsonDb/qjsondbrequest.h>
 #include <qcontactabstractrequest.h>
 #include <qcontactsaverequest.h>
 #include <qcontactfetchrequest.h>
@@ -53,21 +56,17 @@
 #include <qcontact.h>
 #include <qcontactchangeset.h>
 
-#include <jsondb-global.h>
+#include "qcontactjsondbrequestmanager.h"
 
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
 
-Q_ADDON_JSONDB_BEGIN_NAMESPACE
-class JsonDbClient;
-class JsonDbConnection;
-Q_ADDON_JSONDB_END_NAMESPACE
-Q_USE_JSONDB_NAMESPACE
+
+QT_USE_NAMESPACE_JSONDB
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactJsonDbRequestManager;
 class QContactJsonDbEngine;
 class QContactJsonDbConverter;
 class QContactJsonDbRequestHandler : public QObject
@@ -82,11 +81,16 @@ public:
 public slots:
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs);
     void handleRequest(QContactAbstractRequest* req);
-    void onNotified(const QString& notifyUuid, const QVariant& object, const QString& action);
-    void onResponse(int id, const QVariant& object);
-    void onError(int id, int code, const QString& message);
+    void handleResponse(QJsonDbRequest *request);
     void init();
     void removeDestroyed(QObject *);
+
+    void onJsonDbWatcherNotificationsAvailable();
+    void onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode error, const QString &message);
+    void onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error, QString message);
+    void onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode error,
+                              QString message);
+    void onJsonDbRequestFinished();
 
 private slots:
     void onTimeout();
@@ -96,21 +100,26 @@ private:
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
     void handleContactIdFetchRequest(QContactIdFetchRequest* req);
-    void sendJsonDbNotificationsRequest();
 
-    void handleContactSaveResponse(QContactSaveRequest *req, const QVariant &object, int index);
-    void handleContactSavePrefetchResponse(QContactSaveRequest *req, const QVariant &object, int index);
-    void handleContactFetchResponse(QContactFetchRequest *req, const QVariant &object);
-    void handleContactRemoveResponse(QContactRemoveRequest *req);
-    void handleContactIdFetchResponse(QContactIdFetchRequest *req, const QVariant &object);
-    void handleJsonDbNotificationsRequestError(QContactManager::Error error);
+    void handleContactSaveResponse(QContactSaveRequest* saveReq, QJsonDbRequest *request, int contactIndex);
+    void handleContactSavePrefetchResponse(QContactFetchRequest *prefetchReq, QJsonDbRequest *request, int contactIndex);
+    void handleContactFetchResponse(QContactFetchRequest* fetchReq, QJsonDbRequest *request);
+    void handleContactRemoveResponse(QContactRemoveRequest* removeReq);
+    void handleContactIdFetchResponse(QContactIdFetchRequest* idReq, QJsonDbRequest *request);
+
+    bool makeJsonDbRequest(QContactAbstractRequest *contactRequest,
+                           QContactJsonDbRequestManager::RequestType jsonDbRequestType,
+                           int index,
+                           const QString &query = QString(),
+                           const QList<QJsonObject> &objects = QList<QJsonObject>());
 
     void startTimer();
     QString convertContactIdToUuid(QContactId &id);
     QContactId convertUuidtoContactId(QString &id);
 
     QContactJsonDbEngine* m_engine;
-    JsonDbClient* m_jsonDb;
+    QJsonDbConnection *m_jsonDbConnection;
+    QJsonDbWatcher *m_jsonDbWatcher;
     QContactJsonDbRequestManager* m_requestMgr;
     QContactJsonDbConverter* m_converter;
     // Mutex to make request state changes atomic.
@@ -122,7 +131,6 @@ private:
     QContactChangeSet m_ccs;
     static const int TIMEOUT_INTERVAL;
     QTimer *m_timer;
-    bool m_jsonDbNotificationsRequested;
 };
 
 QTCONTACTS_END_NAMESPACE

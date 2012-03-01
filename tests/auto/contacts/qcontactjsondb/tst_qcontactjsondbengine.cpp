@@ -49,8 +49,6 @@
 #include "synchronizedjsondbclient.h"
 #include "jsondbprocess-oldapi.h"
 
-Q_USE_JSONDB_NAMESPACE
-
 QTCONTACTS_USE_NAMESPACE
 
 class tst_QContactJsondbEngine : public QObject
@@ -97,15 +95,19 @@ void tst_QContactJsondbEngine::initTestCase()
     QVERIFY2(m_jsondbProcess.start(), "Failed to start JsonDb process");
 }
 
-void tst_QContactJsondbEngine::init() {
+void tst_QContactJsondbEngine::init()
+{
     // clears the database and loads desired test data
-
-    m_myBackup = new(QContactJsonDbBackup);
-    //myBackup.loadTestData();
+    m_myBackup = new QContactJsonDbBackup;
+    m_myBackup->loadTestData(); // TODO: Proper fetching for test data.
 }
 
-void tst_QContactJsondbEngine::cleanup(){
-    delete(m_myBackup);
+void tst_QContactJsondbEngine::cleanup()
+{
+    if (m_myBackup) {
+        m_myBackup->cleanJsonDb();
+        delete m_myBackup;
+    }
 }
 
 void tst_QContactJsondbEngine::cleanupTestCase()
@@ -163,7 +165,7 @@ void tst_QContactJsondbEngine::testContacts() {
     QContactFilter filter;
     QList<QContactSortOrder> sortOrders;
     QList<QContact> contacts = cm.contacts(filter, sortOrders);
-    QVERIFY(contacts.size() == 5);
+    QCOMPARE(contacts.size(), 5);
 
     QFETCH(QString, expectedContact1FirstName);
     QFETCH(QString, expectedContact1LastName);
@@ -271,7 +273,7 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     fetchRequest.setFilter(idFilter);
 
     // Convert QContact to JsonDb contact and insert extra fields to json contact.
-    QVariantMap jsonContact;
+    QJsonObject jsonContact;
     QContactJsonDbConverter jsonDbConverter;
     int extraFieldInContact = 3;
     int extraFieldInContactDetails = 5;
@@ -279,16 +281,16 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     if (jsonDbConverter.toJsonContact(&jsonContact, testContact)) {
         jsonContact.insert("extra3", extraFieldInContact);
 
-        QVariantMap embeddedDetailsMap;
-        embeddedDetailsMap["extra5"] = extraFieldInContactDetails;
-        jsonContact.insert("details", embeddedDetailsMap);
+        QJsonObject embeddedDetails;
+        embeddedDetails["extra5"] = extraFieldInContactDetails;
+        jsonContact.insert("details", embeddedDetails);
 
-        QVariantMap embeddedEmailMap;
-        embeddedEmailMap["extra8"] = extraFieldInContactEmails;
-        jsonContact.insert("emails", embeddedEmailMap);
+        QJsonObject embeddedEmail;
+        embeddedEmail["extra8"] = extraFieldInContactEmails;
+        jsonContact.insert("emails", embeddedEmail);
     }
     // Save test contact with extra fields directly to the jsondb.
-    QVariantMap jsonResponse = m_dbClient->update(jsonContact);
+    QVariantMap jsonResponse = m_dbClient->update(jsonContact).first().toVariantMap();
 
     // Update the test contact through the QContacts API with some details.
     QContactName nameDetail = testContact.detail<QContactName>();
@@ -322,12 +324,9 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     // Fetch directly from jsondb the test contact data.
     QString finalQuery;
     QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
-    QVariantMap finalJsonDbItem = m_dbClient->query(finalQuery);
+    QVariantMap finalJsonContact = m_dbClient->query(finalQuery).first().toVariantMap();
+    QVERIFY(!finalJsonContact.isEmpty());
 
-    QVERIFY(!finalJsonDbItem.isEmpty());
-    QVariantList jsonDbObjectList = finalJsonDbItem.value("data").toList();
-    QVERIFY(!jsonDbObjectList.isEmpty());
-    QVariantMap finalJsonContact = jsonDbObjectList.at(0).toMap();
     QVariantMap embeddedDetailsMap = finalJsonContact["details"].value<QVariantMap>();
     QVariantMap embeddedEmailMap = finalJsonContact["emails"].value<QVariantMap>();
 
@@ -354,12 +353,12 @@ void tst_QContactJsondbEngine::testExtendedDetailsFromJsonDb() {
     idFilter.add(testContact.id());
 
     // Convert QContact to JsonDb contact and insert unknown properties to json contact.
-    QVariantMap jsonContact;
+    QJsonObject jsonContact;
     QContactJsonDbConverter jsonDbConverter;
     int extraFieldInContactDetails = 5;
 
     QVERIFY(jsonDbConverter.toJsonContact(&jsonContact, testContact));
-    jsonContact.insert("simpleStringDetail", "Simple string as detail data.");
+    jsonContact.insert("simpleStringDetail", QJsonValue::fromVariant("Simple string as detail data."));
 
     QVariantMap variantMap;
     variantMap.insert("MapItemInt", 1);
@@ -367,18 +366,18 @@ void tst_QContactJsondbEngine::testExtendedDetailsFromJsonDb() {
     variantMap.insert("MapItemQVariant", QVariant( QString("QStringInQVariant")));
     variantMap.insert("MapItemQVariantList", QVariantList() << QString("QStringInVariantList") << 5 );
 
-    QVariantMap jsonData;
-    jsonData.insert("QStringItem", "Content for QStringItem.");
-    jsonData.insert("MapInMap", variantMap);
+    QJsonObject jsonData;
+    jsonData.insert("QStringItem", QJsonValue::fromVariant("Content for QStringItem."));
+    jsonData.insert("MapInMap", QJsonObject::fromVariantMap(variantMap));
     jsonContact.insert("complexVariantMapDetail", jsonData);
     jsonContact.insert("anotherSimilarComplexVariantMapDetail", jsonData);
 
-    QVariantMap embeddedDetailsMap;
-    embeddedDetailsMap["extra5"] = extraFieldInContactDetails;
-    jsonContact.insert("details", embeddedDetailsMap);
+    QJsonObject embeddedDetails;
+    embeddedDetails["extra5"] = extraFieldInContactDetails;
+    jsonContact.insert("details", embeddedDetails);
 
     // Save test contact with unknown properties directly to the jsondb.
-    QVariantMap jsonResponse = m_dbClient->update(jsonContact);
+    QVariantMap jsonResponse = m_dbClient->update(jsonContact).first().toVariantMap();
 
     // Check that the unknown properties come up as extended details.
     QList<QContact> contactsNow = cm.contacts(idFilter, sortOrders);
@@ -464,13 +463,7 @@ void tst_QContactJsondbEngine::testExtendedDetailsToJsonDb() {
     QContactJsonDbConverter jsonDbConverter;
     QString finalQuery;
     QVERIFY(jsonDbConverter.queryFromRequest(&fetchRequest, finalQuery));
-    QVariantMap jsonDbItem = m_dbClient->query(finalQuery);
-
-    QVERIFY(!jsonDbItem.isEmpty());
-    QVariantList jsonDbObjectList = jsonDbItem.value("data").toList();
-    QVERIFY(!jsonDbObjectList.isEmpty());
-    QVariantMap jsonContact = jsonDbObjectList.at(0).toMap();
-
+    QVariantMap jsonContact = m_dbClient->query(finalQuery).first().toVariantMap();
 
     // Check simple extended detail got correctly to jsondb.
     QCOMPARE(jsonContact["extendedDetailQString"].value<QVariant>().toString(),QString("Simple QString as extended detail."));
@@ -584,7 +577,7 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     dfil.setMatchFlags(QContactFilter::MatchContains);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     QList<QContact> contacts = myContactManager.contacts(dfil, sortOrders);
-    QVERIFY(contacts.size() == 3);
+    QCOMPARE(contacts.size(), 3);
 
     QFETCH(QString, expectedContact3FirstName);
     QFETCH(QString, expectedContact4FirstName);
@@ -876,7 +869,7 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     // retrieve all the contacts and sort first names alphabetically
     QContactFilter filter;
     QList<QContact> contacts = myContactManager.contacts(filter, sortOrders);
-    QVERIFY(contacts.size() == 5);
+    QCOMPARE(contacts.size(), 5);
 
     QFETCH(QString, expectedContact1FirstName);
     QFETCH(QString, expectedContact2FirstName);
@@ -885,7 +878,7 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     QFETCH(QString, expectedContact5FirstName);
     QList<QString> expectedContacts;
     expectedContacts << expectedContact4FirstName << expectedContact1FirstName << expectedContact3FirstName << expectedContact5FirstName << expectedContact2FirstName;
-    QVERIFY(expectedContacts.size() == 5);
+    QCOMPARE(expectedContacts.size(), 5);
     if (qt_debug_jsondb_contacts())
         qDebug() << " (TEST) expected ordered contacts: " << expectedContacts;
     for (int i = 0; i < contacts.size(); i++) {
@@ -1004,7 +997,6 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
 
     // Test error generation when passing empty Id list
     QList<QContactId> emptyList;
-    qDebug() << "(no contacts) TO REMOVE: " << emptyList;
     bool returnValue = cm.removeContacts(emptyList);
     QVERIFY(returnValue == false);
     QVERIFY(cm.error() == 10); // Check if the generated error is in fact "BadArgumentError"
@@ -1012,12 +1004,11 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     // Test error generation when passing invalid Ids: empty string
     QList<QContactId> voidList;
     voidList << QContactId();
-    qDebug() << "(fake contact Id: empty string) TO REMOVE: " << voidList;
     returnValue = cm.removeContacts(voidList);
-    qDebug() << "NOTE: the error message by doSyncRequest in function removeContacts is related to a feature in JsonDb";
     QVERIFY(returnValue == false);
     QVERIFY(cm.error() == 1); // Check if the generated error is in fact "DoesNotExistError"
 
+    // TODO: This is the same as above, clean or use real invalid id.
     // Test error generation when passing invalid Ids: non existing string
     QList<QContactId> invalidList;
     invalidList << QContactId();
@@ -1025,7 +1016,6 @@ void tst_QContactJsondbEngine::testRemoveContacts() {
     returnValue = cm.removeContacts(invalidList);
     QVERIFY(returnValue == false);
 
-    QSKIP("TODO: Gives now unspecified error which is waiting fix in the backend");
     QVERIFY(cm.error() == 1); // Check whether the generated error code is in fact "DoesNotExistError"
 
     // Remove only two contacts

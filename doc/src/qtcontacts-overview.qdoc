@@ -61,10 +61,8 @@ w/****************************************************************************
     \section1 Getting Started
     To get started with Qt Contacts API  see the
     \list
-        \li \l {Quickstart guide}{Quickstart Guide}
         \li \l {Qt Personal Information Management Examples}{Examples}
         \li \l {Qt Personal Information Management Tutorials}{Tutorials}
-
     \endlist
 
     \section2 QML API
@@ -79,6 +77,12 @@ w/****************************************************************************
         \li \l {Contacts QML API}{Contacts QML API}
     \endlist
 
+    To be able to use this component the QML \e {import} statement needs to
+    reference the module before it can used. Simply add the following to the QML
+    file:
+
+     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Contacts import
+
     \section2 C++ Contacts API
 
     Contacts API includes the ability to create, edit, list, delete and lookup contact
@@ -88,6 +92,16 @@ w/****************************************************************************
     \list
         \li \l {C++ Contacts} {Contacts C++ API}.
     \endlist
+
+    To include the definitions of the module's classes, use the
+    following directive:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtcontacts.cpp include
+
+    To link against the module, add this line to your \l qmake \c
+    .pro file:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtcontacts.pro contacts project modification
 
     \section2 Versit (vCard)
 

@@ -60,10 +60,8 @@ w/****************************************************************************
     \section1 Getting Started
     To get started with Qt Organizer API  see the
     \list
-        \li \l {Quickstart guide}{Quickstart Guide}
         \li \l {Qt Personal Information Management Examples}{Examples}
         \li \l {Qt Personal Information Management Tutorials}{Tutorials}
-
     \endlist
 
     \section2 QML API
@@ -78,6 +76,12 @@ w/****************************************************************************
         \li \l {Organizer QML API}{Organizer QML API}
     \endlist
 
+    To be able to use this component the QML \e {import} statement needs to
+    reference the module before it can used. Simply add the following to the QML
+    file:
+
+     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Organizer import
+
     \section2 C++ Organizer API
 
     An API for management of calendar, scheduling and personal data
@@ -88,6 +92,16 @@ w/****************************************************************************
     \list
         \li \l {C++ Organizer} {Organizer C++ API}.
     \endlist
+
+    To include the definitions of the module's classes, use the
+    following directive:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtorganizer.cpp include
+
+    To link against the module, add this line to your \l qmake \c
+    .pro file:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtorganizer.pro organizer project modification
 
     \section2 Versit (Organizer)
 

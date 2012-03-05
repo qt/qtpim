@@ -80,7 +80,6 @@ Item {
 
     SignalingJsonDb {
         id: jsonDb
-        name: "database.System"
     }
 
     property SignalSpy jsonDbSpy

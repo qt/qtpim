@@ -3,8 +3,6 @@ CONFIG += plugin testplugin
 TARGET = $$qtLibraryTarget(contacts_testdummycopy)
 PLUGIN_TYPE=contacts
 
-!include(../qcontactmanagerplugins.pri):error(missing qcontactmanagerplugins.pri)
-
 DESTDIR = $$QT.contacts.plugins/contacts
 QT += contacts
 

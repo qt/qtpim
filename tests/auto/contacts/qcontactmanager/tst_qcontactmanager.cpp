@@ -310,10 +310,10 @@ public:
 QMap<QString, int> QContactLazyEngine::connectionCounts;
 
 /* Static lazy engine factory */
-class LazyEngineFactory : public QObject, public QContactManagerEngineFactory
+class LazyEngineFactory : public QContactManagerEngineFactory
 {
     Q_OBJECT
-    Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "lazy.json")
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
         QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
@@ -332,9 +332,6 @@ QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& p
 QContactEngineId* LazyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
 {
 }
-
-Q_EXPORT_PLUGIN2(contacts_testlazy, LazyEngineFactory)
-Q_IMPORT_PLUGIN(contacts_testlazy)
 
 tst_QContactManager::tst_QContactManager()
 {

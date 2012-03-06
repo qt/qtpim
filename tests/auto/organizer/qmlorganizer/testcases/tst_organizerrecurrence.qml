@@ -76,400 +76,636 @@ TestCase {
         target: model
     }
 
+    function test_recurrenceDates_data() {
+        return [
+                    {
+                        tag: "Event with two recurrence dates",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-    function test_recurrencedates_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                    },
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
-                "exceptionDates": [],
-                "recurrenceRules": [],
-                "exceptionRules": []
-            },
-                results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
-        }]
+                    {
+                        tag: "Event with recurrence date before event start date",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2011-01-01')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T14:00:00')]
+                    },
+
+                    {
+                        tag: "Event outside model range with occurrences inside model range",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2008-01-01T14:00:00'),
+                            "end" : new Date('2008-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                    },
+
+                    {
+                        tag: "Event inside model range with occurrences outside model range",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2020-01-02'), new Date('2020-01-03')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T14:00:00')]
+                    },
+
+                    {
+                        tag: "Overlapping recurrence dates",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2012-01-02'), new Date('2020-01-02')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00')]
+                    }
+                ]
     }
 
-    function test_recurrencedates(data) {
+    function test_recurrenceDates(data) {
         runTest(data)
     }
 
 
-    function test_recurrencerules_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+    function test_recurrenceRules_data() {
+        return [
+                    {
+                        tag: "Daily recurrence, limit to 3",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": 3,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 3,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
 
-                results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
-        }]
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, limit to 3, interval of 2 days",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 3,
+                            "interval": 2,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-03T14:00:00'), new Date('2012-01-05T14:00:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, limit to date",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": new Date('2012-01-05'),
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00'),
+                            new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, limit to 6, Mondays, Wednesdays and Saturdays only",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 6,
+                            "interval": 1,
+                            "daysOfWeek": [Qt.Monday, Qt.Wednesday, Qt.Saturday],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-02T14:00:00'),  new Date('2012-01-07T14:00:00'),
+                            new Date('2012-01-11T14:00:00'), new Date('2012-01-14T14:00:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, limit to 4, days of month: 1, 2, 10, 11",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 4,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [1, 2, 10, 11],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-10T14:00:00'), new Date('2012-01-11T14:00:00')]
+                    },
+
+                    // Weekly recurrences
+
+                    {
+                        tag: "Weekly recurrence, limit by date, biweekly",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Weekly,
+                            "limit": new Date('2012-02-05'),
+                            "interval": 2,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-15T14:00:00'), new Date('2012-01-29T14:00:00')]
+                    },
+
+                    // Monthly recurrences
+
+                    {
+                        tag: "Monthly recurrence, limit of 6, February, May, December only",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Monthly,
+                            "limit": 6,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [RecurrenceRule.February, RecurrenceRule.May, RecurrenceRule.December],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-02-01T14:00:00'), new Date('2012-05-01T14:00:00'), new Date('2012-12-01T14:00:00'),
+                            new Date('2013-02-01T14:00:00'), new Date('2013-05-01T14:00:00'), new Date('2013-12-01T14:00:00')]
+                    },
+
+                    {
+                        tag: "Monthly recurrence, limit of 6, positions 1, 2, -1",
+                        managers: ["jsondb"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Monthly,
+                            "limit": 6,
+                            "interval": 1,
+                            "daysOfWeek": [Qt.Monday, Qt.Tuesday, Qt.Wednesday, Qt.Thursday, Qt.Friday, Qt.Saturday, Qt.Sunday],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [1, 2, -1],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-31T14:00:00'),
+                            new Date('2012-02-01T14:00:00'), new Date('2012-02-02T14:00:00'), new Date('2012-02-29T14:00:00')]
+                    },
+
+                    {
+                        tag: "Monthly recurrence, limit of 6, position 31",
+                        managers: ["jsondb"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Monthly,
+                            "limit": 6,
+                            "interval": 1,
+                            "daysOfWeek": [Qt.Monday, Qt.Tuesday, Qt.Wednesday, Qt.Thursday, Qt.Friday, Qt.Saturday, Qt.Sunday],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [31],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-31T14:00:00'), new Date('2012-03-31T14:00:00'), new Date('2012-05-31T14:00:00'),
+                            new Date('2012-07-31T14:00:00'), new Date('2012-08-31T14:00:00'), new Date('2012-10-31T14:00:00')]
+                    },
+
+                    // Yearly recurrences
+
+                    {
+                        tag: "Yearly recurrence, limit to 4, two exception dates ",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Yearly,
+                            "limit": 4,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-01T14:00:00'),  new Date('2013-01-01T14:00:00'), new Date('2014-01-01T14:00:00')]
+                    },
+
+                    {
+                        tag: "Yearly recurrence, limit to 6, May, July, August, December only",
+                        managers: ["jsondb"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Yearly,
+                            "limit": 6,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [RecurrenceRule.May, RecurrenceRule.July, RecurrenceRule.August, RecurrenceRule.December],
+                            "positions": [2, -2],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-07-01T14:00:00'), new Date('2012-08-01T14:00:00'), new Date('2013-07-01T14:00:00'),
+                            new Date('2013-08-01T14:00:00'), new Date('2014-07-01T14:00:00'), new Date('2014-08-01T14:00:00')]
+                    }
+                ]
     }
 
-    function test_recurrencerules(data) {
+    function test_recurrenceRules(data) {
         runTest(data)
     }
 
+    function test_exceptionDates_data() {
+        return [
+                    {
+                        tag: "Exception dates, two matching exception dates",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-    function test_recurrencerules2_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+                            "start" : new Date('2012-01-01T23:00:00'),
+                            "end" : new Date('2012-01-02T01:00:00'),
+                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03'), new Date('2012-01-04')],
+                            "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-04')],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T23:00:00'), new Date('2012-01-03T23:00:00')]
+                    },
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": new Date('2012-01-05'),
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
+                    {
+                        tag: "Exception dates, two non-matching exception dates",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-                results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00'),
-                new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00')]
-        }]
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "recurrenceRules": [],
+                            "exceptionRules": []
+                        },
+                        results: [new Date('2012-01-01T14:00:00')]
+                    }
+                ]
     }
 
-    function test_recurrencerules2(data) {
+    function test_exceptionDates(data) {
         runTest(data)
     }
 
-    function test_recurrencerules3_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+    function test_exceptionRules_data() {
+        return [
+                    {
+                        tag: "Daily recurrence with matching daily exceptions",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Weekly,
-                "limit": new Date('2012-02-05'),
-                "interval": 2,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2012-05-18')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": [testXRule]
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 3,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+                        xrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 3,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
 
-                results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-15T14:00:00'), new Date('2012-01-29T14:00:00')]
-        }]
+                        results: [new Date('2012-05-18T14:00:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, weekly exceptions on Monday and Sunday",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
+
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": [testXRule]
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": 10,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+                        xrule: {
+                            "frequency": RecurrenceRule.Weekly,
+                            "limit": 10,
+                            "interval": 1,
+                            "daysOfWeek": [Qt.Monday, Qt.Sunday],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [new Date('2012-01-03T14:00:00'), new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00'),
+                            new Date('2012-01-06T14:00:00'), new Date('2012-01-07T14:00:00'), new Date('2012-01-10T14:00:00')]
+
+                    }]
     }
 
-    function test_recurrencerules3(data) {
+    function test_exceptionRules(data) {
         runTest(data)
     }
 
+    /* Todo, how this should behave? Currently there will be no occurrences, despite the recurrenceDate
+    function test_invalidRecurrence_data() {
+        return [
+                    {
+                        tag: "Invalid recurrence, no matching dates for rule",
+                        managers: ["jsondb", "memory"],
+                        definitions: {
 
-    function test_recurrencerules4_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Monthly,
-                "limit": 6,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [RecurrenceRule.February, RecurrenceRule.May, RecurrenceRule.December],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
-
-                results: [new Date('2012-02-01T14:00:00'), new Date('2012-05-01T14:00:00'), new Date('2012-12-01T14:00:00'),
-                          new Date('2013-02-01T14:00:00'), new Date('2013-05-01T14:00:00'), new Date('2013-12-01T14:00:00')]
-        }]
+                            "start" : new Date('2012-01-01T14:00:00'),
+                            "end" : new Date('2012-01-01T15:00:00'),
+                            "recurrenceDates": [new Date('2012-01-01T14:00:00')],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Monthly,
+                            "limit": 5,
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [31],
+                            "daysOfYear": [],
+                            "monthsOfYear": [RecurrenceRule.February, RecurrenceRule.June, RecurrenceRule.April, RecurrenceRule.September, RecurrenceRule.November],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+                        results: [new Date('2012-01-01T14:00:00')]
+                    }]
     }
 
-    function test_recurrencerules4(data) {
-        runTest(data)
+    function test_invalidRecurrence(data) {
+        runTest(data);
+    }*/
+
+    function test_recurrenceRulesMaxLimit() {
+        var managers = ["jsondb", "memory"];
+        for (var i in managers) {
+            console.log("Testing "+managers[i]+" backend");
+            model.manager = managers[i];
+            wait(500) // Todo: replace with spy.wait()
+            cleanDatabase();
+
+            testRule.frequency = RecurrenceRule.Daily;
+            testRule.interval = 1;
+            testRule.limit = null;
+            testRule.daysOfWeek = [];
+            testRule.daysOfMonth = [];
+            testRule.daysOfYear = [];
+            testRule.monthsOfYear = [];
+            testRule.positions = [];
+
+            testEvent.recurrence.recurrenceRules = [testRule];
+            model.saveItem(testEvent)
+            spy.wait();
+            compare(model.itemCount, 50); // Default max limit is 50
+
+            cleanDatabase();
+        }
     }
 
-    function test_recurrencerules5_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+    function test_recurrenceRulesUnion() {
+        var managers = ["jsondb", "memory"];
+        for (var i in managers) {
+            console.log("Testing "+managers[i]+" backend");
+            model.manager = managers[i];
+            wait(500) // Todo: replace with spy.wait()
+            cleanDatabase();
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": 6,
-                "interval": 1,
-                "daysOfWeek": [Qt.Monday, Qt.Wednesday, Qt.Saturday],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
+            testRule.frequency = RecurrenceRule.Daily;
+            testRule.interval = 3;
+            testRule.limit = 3;
+            testRule.daysOfWeek = [];
+            testRule.daysOfMonth = [];
+            testRule.daysOfYear = [];
+            testRule.monthsOfYear = [];
+            testRule.positions = [];
 
-                results: [new Date('2012-01-02T14:00:00'),  new Date('2012-01-07T14:00:00'),
-                          new Date('2012-01-11T14:00:00'), new Date('2012-01-14T14:00:00')]
-        }]
-    }
+            // Not used for exception this time...
+            testXRule.frequency = RecurrenceRule.Daily;
+            testXRule.interval = 2;
+            testXRule.limit = 4;
+            testXRule.daysOfWeek = [];
+            testXRule.daysOfMonth = [];
+            testXRule.daysOfYear = [];
+            testXRule.monthsOfYear = [];
+            testXRule.positions = [];
 
-    function test_recurrencerules5(data) {
-        runTest(data)
-    }
+            testEvent.recurrence.recurrenceDates = [];
+            testEvent.recurrence.exceptionDates = [];
+            testEvent.recurrence.recurrenceRules = [testRule, testXRule];
+            testEvent.recurrence.exceptionRules = [];
+            testEvent.startDateTime = new Date('2012-01-01T14:00:00');
+            testEvent.endDateTime = new Date('2012-01-01T16:00:00');
+            model.saveItem(testEvent)
+            spy.wait();
 
-    function test_recurrencerules6_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-            definitions: {
+            expectFail("", "Currently there can be duplicate occurrences if there is > 1 recurrence rule.");
+            compareResultDatesToModel([new Date('2012-01-01T14:00:00'),
+                                       new Date('2012-01-03T14:00:00'),
+                                       new Date('2012-01-04T14:00:00'),
+                                       new Date('2012-01-05T14:00:00'),
+                                       new Date('2012-01-07T14:00:00'),
+                                      ],model);
 
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Yearly,
-                "limit": 4,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-             },
-
-                results: [new Date('2012-01-01T14:00:00'),  new Date('2013-01-01T14:00:00'), new Date('2014-01-01T14:00:00')]
-        }]
-    }
-
-    function test_recurrencerules6(data) {
-        runTest(data)
-    }
-
-    function test_recurrencerules7_data() {
-        return [{
-                managers: ["jsondb"],
-            definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Monthly,
-                "limit": 6,
-                "interval": 1,
-                "daysOfWeek": [Qt.Monday, Qt.Tuesday, Qt.Wednesday, Qt.Thursday, Qt.Friday, Qt.Saturday, Qt.Sunday],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [1,2, -1],
-                "firstDayOfWeek": Qt.Monday
-             },
-
-                results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-31T14:00:00'),
-                          new Date('2012-02-01T14:00:00'), new Date('2012-02-02T14:00:00'), new Date('2012-02-29T14:00:00')]
-        }]
-    }
-
-    function test_recurrencerules7(data) {
-        runTest(data)
-    }
-
-
-    function test_recurrencerules8_data() {
-        return [{
-                managers: ["jsondb"],
-            definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": []
-            },
-                rrule: {
-                "frequency": RecurrenceRule.Yearly,
-                "limit": 6,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [RecurrenceRule.May, RecurrenceRule.July, RecurrenceRule.August, RecurrenceRule.December],
-                "positions": [2, -2],
-                "firstDayOfWeek": Qt.Monday
-             },
-
-                results: [new Date('2012-07-01T14:00:00'), new Date('2012-08-01T14:00:00'), new Date('2013-07-01T14:00:00'),
-                          new Date('2013-08-01T14:00:00'), new Date('2014-07-01T14:00:00'), new Date('2014-08-01T14:00:00')]
-        }]
-    }
-
-    function test_recurrencerules8(data) {
-        runTest(data)
-    }
-
-
-    function test_exceptiondates_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-                definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-03')],
-                "recurrenceRules": [],
-                "exceptionRules": []
-    },
-                results: [new Date('2012-01-01T14:00:00')]
-    }]
-    }
-
-    function test_exceptiondates(data) {
-        runTest(data)
-    }
-
-
-    function test_exceptionrules_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-                definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [new Date('2012-05-18')],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": [testXRule]
-    },
-                rrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": 3,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-    },
-                xrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": 3,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-    },
-
-                results: [new Date('2012-05-18T14:00:00')]
-    }]
-    }
-
-    function test_exceptionrules(data) {
-        runTest(data)
-    }
-
-    function test_exceptionrules2_data() {
-        return [{
-                managers: ["jsondb", "memory"],
-                definitions: {
-
-                "start" : new Date('2012-01-01T14:00:00'),
-                "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": [],
-                "exceptionDates": [],
-                "recurrenceRules": [testRule],
-                "exceptionRules": [testXRule]
-    },
-                rrule: {
-                "frequency": RecurrenceRule.Daily,
-                "limit": 10,
-                "interval": 1,
-                "daysOfWeek": [],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-    },
-                xrule: {
-                "frequency": RecurrenceRule.Weekly,
-                "limit": 10,
-                "interval": 1,
-                "daysOfWeek": [Qt.Monday, Qt.Sunday],
-                "daysOfMonth": [],
-                "daysOfYear": [],
-                "monthsOfYear": [],
-                "positions": [],
-                "firstDayOfWeek": Qt.Monday
-    },
-
-                results: [new Date('2012-01-03T14:00:00'), new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00'),
-                          new Date('2012-01-06T14:00:00'), new Date('2012-01-07T14:00:00'), new Date('2012-01-10T14:00:00')]
-
-    }]
-    }
-
-    function test_exceptionrules2(data) {
-        runTest(data)
+            cleanDatabase();
+        }
     }
 
 

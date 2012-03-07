@@ -10,7 +10,6 @@ OTHER_FILES += \
     testcases/tst_contact_addresses.qml \
     testcases/tst_contact_detail_access.qml \
     testcases/tst_contact_emails.qml \
-    testcases/tst_contact_extended_detail_e2e.qml \
     testcases/tst_contact_extendeddetails.qml \
     testcases/tst_contact_modification.qml \
     testcases/tst_contact_organizations.qml \
@@ -26,6 +25,7 @@ OTHER_FILES += \
     testcases/tst_contacts_e2e.qml \
     testcases/tst_contacts_export_import_e2e.qml \
     testcases/tst_contacts_export_import_signaling_e2e.qml \
+    testcases/tst_contacts_extended_detail_e2e.qml \
     testcases/tst_contacts_fetch_contacts_e2e.qml \
     testcases/tst_contacts_filtering_by_detail_e2e.qml \
     testcases/tst_contacts_filtering_e2e.qml \

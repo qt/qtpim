@@ -509,7 +509,7 @@ QContact QContactManager::contact(const QContactId &contactId, const QContactFet
   correspondence between the returned contacts and the supplied \a contactIds.
 
   If there is an invalid id in \a contactIds, then an empty QContact will take its place in the
-  returned list.  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  returned list.  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
 
   The \a fetchHint parameter describes the optimization hints that a manager may take.
@@ -590,7 +590,7 @@ bool QContactManager::removeContact(const QContactId &contactId)
   Adds the list of contacts given by \a contacts list to the database.
   Returns true if the contacts were saved successfully, otherwise false.
 
-  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
   The \l QContactManager::error() function will only return \c QContactManager::NoError
   if all contacts were saved successfully.
@@ -620,7 +620,7 @@ bool QContactManager::saveContacts(QList<QContact> *contacts, QMap<int, QContact
   the contacts should be updated.  Details with types not included in
   the typeMask will not be updated or added.
 
-  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
   The \l QContactManager::error() function will only return \c QContactManager::NoError
   if all contacts were saved successfully.
@@ -650,7 +650,7 @@ bool QContactManager::saveContacts(QList<QContact> *contacts, const QList<QConta
   Any contact that was removed successfully will have the relationships
   in which it was involved removed also.
 
-  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
   The \l QContactManager::error() function will
   only return \c QContactManager::NoError if all contacts were removed
@@ -810,7 +810,7 @@ bool QContactManager::saveRelationship(QContactRelationship *relationship)
 
 /*!
   Saves the given \a relationships in the database and returns true if the operation was successful.
-  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
  */
 bool QContactManager::saveRelationships(QList<QContactRelationship> *relationships, QMap<int, QContactManager::Error> *errorMap)
@@ -840,7 +840,7 @@ bool QContactManager::removeRelationship(const QContactRelationship &relationshi
 
 /*!
   Removes the given \a relationships from the database and returns true if the operation was successful.
-  The deprecated \a errorMap parameter can be supplied to store per-input errors in.
+  The \a errorMap parameter can be supplied to store per-input errors in.
   In all cases, calling \l errorMap() will return the per-input errors for the latest batch function.
  */
 bool QContactManager::removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap)

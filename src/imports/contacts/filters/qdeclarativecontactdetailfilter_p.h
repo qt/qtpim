@@ -45,18 +45,18 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactdetailfilter.h"
 #include "qdeclarativecontactdetail_p.h"
-#include <QDeclarativeParserStatus>
+#include <QQmlParserStatus>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QDeclarativeContactDetailFilter : public QDeclarativeContactFilter, public QDeclarativeParserStatus
+class QDeclarativeContactDetailFilter : public QDeclarativeContactFilter, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged())
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged())
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged())
     Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged())
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 public:
 
     QDeclarativeContactDetailFilter(QObject* parent = 0)
@@ -65,7 +65,7 @@ public:
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
     }
-    //from QDeclarativeParserStatus
+    //from QQmlParserStatus
     void classBegin() {}
     void componentComplete()
     {

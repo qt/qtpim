@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -41,8 +41,8 @@
 #ifndef QDECLARATIVECONTACTDETAIL_P_H
 #define QDECLARATIVECONTACTDETAIL_P_H
 
-#include <qdeclarative.h>
-#include <QtDeclarative/qdeclarativeinfo.h>
+#include <qqml.h>
+#include <QtQml/qqmlinfo.h>
 #include "qcontact.h"
 #include "qcontactdetail.h"
 

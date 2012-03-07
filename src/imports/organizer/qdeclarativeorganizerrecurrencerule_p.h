@@ -43,7 +43,7 @@
 #define QDECLARATIVEORGANIZERITEMRECURRENCERULE_H
 
 #include <qorganizerrecurrencerule.h>
-#include <QtDeclarative/qdeclarative.h>
+#include <QtQml/qqml.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

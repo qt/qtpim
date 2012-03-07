@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include <QtDeclarative>
-#include <QDeclarativeExtensionPlugin>
+#include <QtQml>
+#include <QQmlExtensionPlugin>
 
 #include "qdeclarativeorganizermodel_p.h"
 #include "qdeclarativeorganizeritem_p.h"
@@ -53,7 +53,7 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerQmlPlugin : public QDeclarativeExtensionPlugin
+class QOrganizerQmlPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
 public:

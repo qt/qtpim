@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizeritemdetail_p.h"
-#include <QtDeclarative/qdeclarativeinfo.h>
+#include <QtQml/qqmlinfo.h>
 #include <qorganizeritemdetails.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -663,7 +663,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemRecurrence:
 
     \sa RecurrenceRule
  */
-QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::recurrenceRules()
+QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::recurrenceRules()
 {
     QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.value(QOrganizerItemRecurrence::FieldRecurrenceRules).value< QSet<QOrganizerRecurrenceRule> >();
     if (m_recurrenceRules.isEmpty() && !ruleSet.isEmpty()) {
@@ -674,7 +674,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrgani
             m_recurrenceRules.append(drule);
         }
     }
-    return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_recurrenceRules, rrule_append, rule_count, rule_at, rrule_clear);
+    return QQmlListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_recurrenceRules, rrule_append, rule_count, rule_at, rrule_clear);
 }
 
 /*!
@@ -684,7 +684,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrgani
 
     \sa RecurrenceRule
  */
-QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::exceptionRules()
+QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrganizerItemRecurrence::exceptionRules()
 {
     QSet<QOrganizerRecurrenceRule> ruleSet = m_detail.value(QOrganizerItemRecurrence::FieldExceptionRules).value< QSet<QOrganizerRecurrenceRule> >();
     if (m_exceptionRules.isEmpty() && !ruleSet.isEmpty()) {
@@ -695,7 +695,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> QDeclarativeOrgani
             m_exceptionRules.append(drule);
         }
     }
-    return QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_exceptionRules, xrule_append, rule_count, rule_at, xrule_clear);
+    return QQmlListProperty<QDeclarativeOrganizerRecurrenceRule>(this, &m_exceptionRules, xrule_append, rule_count, rule_at, xrule_clear);
 }
 
 /*!
@@ -776,7 +776,7 @@ void QDeclarativeOrganizerItemRecurrence::_saveExceptionRules()
     emit valueChanged();
 }
 
-void QDeclarativeOrganizerItemRecurrence::rrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
+void QDeclarativeOrganizerItemRecurrence::rrule_append(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
                                                       QDeclarativeOrganizerRecurrenceRule *item)
 {
     QDeclarativeOrganizerItemRecurrence* recurrence = qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object);
@@ -785,7 +785,7 @@ void QDeclarativeOrganizerItemRecurrence::rrule_append(QDeclarativeListProperty<
     emit recurrence->recurrenceRulesChanged();
 }
 
-void QDeclarativeOrganizerItemRecurrence::xrule_append(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
+void QDeclarativeOrganizerItemRecurrence::xrule_append(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p,
                                                       QDeclarativeOrganizerRecurrenceRule *item)
 {
     QDeclarativeOrganizerItemRecurrence* recurrence = qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object);
@@ -794,23 +794,23 @@ void QDeclarativeOrganizerItemRecurrence::xrule_append(QDeclarativeListProperty<
     emit recurrence->exceptionRulesChanged();
 }
 
-int  QDeclarativeOrganizerItemRecurrence::rule_count(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+int  QDeclarativeOrganizerItemRecurrence::rule_count(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
 {
     return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->count();
 }
 
-QDeclarativeOrganizerRecurrenceRule* QDeclarativeOrganizerItemRecurrence::rule_at(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx)
+QDeclarativeOrganizerRecurrenceRule* QDeclarativeOrganizerItemRecurrence::rule_at(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx)
 {
     return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->at(idx);
 }
 
-void QDeclarativeOrganizerItemRecurrence::rrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+void QDeclarativeOrganizerItemRecurrence::rrule_clear(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
 {
     static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->clear();
     emit qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object)->recurrenceRulesChanged();
 }
 
-void QDeclarativeOrganizerItemRecurrence::xrule_clear(QDeclarativeListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+void QDeclarativeOrganizerItemRecurrence::xrule_clear(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
 {
     static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->clear();
     emit qobject_cast<QDeclarativeOrganizerItemRecurrence*>(p->object)->exceptionRulesChanged();

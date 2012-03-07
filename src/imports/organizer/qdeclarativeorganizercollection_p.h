@@ -44,7 +44,7 @@
 
 #include <qorganizercollection.h>
 #include <QtCore/qurl.h>
-#include <QtDeclarative/qdeclarative.h>
+#include <QtQml/qqml.h>
 #include <QtGui/qcolor.h>
 
 QTORGANIZER_BEGIN_NAMESPACE

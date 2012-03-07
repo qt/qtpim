@@ -42,7 +42,7 @@
 #include "qdeclarativeorganizeritem_p.h"
 #include "qdeclarativeorganizermodel_p.h"
 
-#include <QtDeclarative/qdeclarativeengine.h>
+#include <QtQml/qqmlengine.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -110,9 +110,9 @@ QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItem::itemType() co
 
     This property holds the details of the OrganizerItem object.
  */
-QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> QDeclarativeOrganizerItem::itemDetails()
+QQmlListProperty<QDeclarativeOrganizerItemDetail> QDeclarativeOrganizerItem::itemDetails()
 {
-    return QDeclarativeListProperty<QDeclarativeOrganizerItemDetail>(this, 0,
+    return QQmlListProperty<QDeclarativeOrganizerItemDetail>(this, 0,
                                                                      &QDeclarativeOrganizerItem::_q_detail_append,
                                                                      &QDeclarativeOrganizerItem::_q_detail_count,
                                                                      &QDeclarativeOrganizerItem::_q_detail_at,
@@ -279,7 +279,7 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::detail(int type)
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (type == detail->type()) {
             QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
-            QDeclarativeEngine::setObjectOwnership(itemDetail, QDeclarativeEngine::JavaScriptOwnership);
+            QQmlEngine::setObjectOwnership(itemDetail, QQmlEngine::JavaScriptOwnership);
             itemDetail->setDetail(detail->detail());
             return itemDetail;
         }
@@ -298,7 +298,7 @@ QVariantList QDeclarativeOrganizerItem::details(int type)
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (type == detail->type()) {
             QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
-            QDeclarativeEngine::setObjectOwnership(itemDetail, QDeclarativeEngine::JavaScriptOwnership);
+            QQmlEngine::setObjectOwnership(itemDetail, QQmlEngine::JavaScriptOwnership);
             itemDetail->setDetail(detail->detail());
             list.append(QVariant::fromValue((QObject*)itemDetail));
         }
@@ -411,7 +411,7 @@ bool QDeclarativeOrganizerItem::generatedOccurrence() const
 /*!
     \internal
  */
-void QDeclarativeOrganizerItem::_q_detail_append(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value)
+void QDeclarativeOrganizerItem::_q_detail_append(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value)
 {
     QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
     if (object)
@@ -421,7 +421,7 @@ void QDeclarativeOrganizerItem::_q_detail_append(QDeclarativeListProperty<QDecla
 /*!
     \internal
  */
-QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::_q_detail_at(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, int index)
+QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::_q_detail_at(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, int index)
 {
     QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
     if (object)
@@ -433,7 +433,7 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::_q_detail_at(QDeclar
 /*!
     \internal
  */
-void QDeclarativeOrganizerItem::_q_detail_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property)
+void QDeclarativeOrganizerItem::_q_detail_clear(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property)
 {
     QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
     if (object) {
@@ -446,7 +446,7 @@ void QDeclarativeOrganizerItem::_q_detail_clear(QDeclarativeListProperty<QDeclar
 /*!
     \internal
  */
-int QDeclarativeOrganizerItem::_q_detail_count(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property)
+int QDeclarativeOrganizerItem::_q_detail_count(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property)
 {
     QDeclarativeOrganizerItem *object = qobject_cast<QDeclarativeOrganizerItem *>(property->object);
     if (object)
@@ -679,9 +679,9 @@ void QDeclarativeOrganizerEvent::clearDetails()
 
     This property holds the attendees list of the event.
  */
-QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> QDeclarativeOrganizerEvent::attendees()
+QQmlListProperty<QDeclarativeOrganizerEventAttendee> QDeclarativeOrganizerEvent::attendees()
 {
-    return QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee>(this, 0,
+    return QQmlListProperty<QDeclarativeOrganizerEventAttendee>(this, 0,
                                                                      &QDeclarativeOrganizerEvent::_q_attendee_append,
                                                                      &QDeclarativeOrganizerEvent::_q_attendee_count,
                                                                      &QDeclarativeOrganizerEvent::_q_attendee_at,
@@ -692,7 +692,7 @@ QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> QDeclarativeOrganiz
 /*!
     \internal
  */
-void QDeclarativeOrganizerEvent::_q_attendee_append(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value)
+void QDeclarativeOrganizerEvent::_q_attendee_append(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value)
 {
     QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
     if (object)
@@ -702,7 +702,7 @@ void QDeclarativeOrganizerEvent::_q_attendee_append(QDeclarativeListProperty<QDe
 /*!
     \internal
  */
-QDeclarativeOrganizerEventAttendee *QDeclarativeOrganizerEvent::_q_attendee_at(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, int index)
+QDeclarativeOrganizerEventAttendee *QDeclarativeOrganizerEvent::_q_attendee_at(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, int index)
 {
     QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
     QDeclarativeOrganizerEventAttendee *ret = 0;
@@ -723,7 +723,7 @@ QDeclarativeOrganizerEventAttendee *QDeclarativeOrganizerEvent::_q_attendee_at(Q
 /*!
     \internal
  */
-void QDeclarativeOrganizerEvent::_q_attendee_clear(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property)
+void QDeclarativeOrganizerEvent::_q_attendee_clear(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property)
 {
     QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
     if (object) {
@@ -746,7 +746,7 @@ void QDeclarativeOrganizerEvent::_q_attendee_clear(QDeclarativeListProperty<QDec
 /*!
     \internal
  */
-int QDeclarativeOrganizerEvent::_q_attendee_count(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property)
+int QDeclarativeOrganizerEvent::_q_attendee_count(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property)
 {
     QDeclarativeOrganizerEvent *object = qobject_cast<QDeclarativeOrganizerEvent *>(property->object);
     int ret = 0;

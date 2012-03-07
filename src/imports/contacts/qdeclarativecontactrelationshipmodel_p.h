@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -41,7 +41,7 @@
 #ifndef QDECLARATIVECONTACTRELATIONSHIPMODEL_P_H
 #define QDECLARATIVECONTACTRELATIONSHIPMODEL_P_H
 
-#include <qdeclarative.h>
+#include <qqml.h>
 #include <QAbstractListModel>
 
 #include "qdeclarativecontactrelationship_p.h"
@@ -57,7 +57,7 @@ class QDeclarativeContactRelationshipModel : public QAbstractListModel
     Q_PROPERTY(QDeclarativeContact* participant READ participant WRITE setParticipant NOTIFY participantChanged)
     Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY relationshipTypeChanged)
     Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole role READ role WRITE setRole NOTIFY roleChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContactRelationship> relationships READ relationships NOTIFY relationshipsChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeContactRelationship> relationships READ relationships NOTIFY relationshipsChanged)
     Q_PROPERTY(QString error READ error)
 
 public:
@@ -82,7 +82,7 @@ public:
     QDeclarativeContactRelationship::RelationshipRole role() const;
     void setRole(QDeclarativeContactRelationship::RelationshipRole role);
 
-    QDeclarativeListProperty<QDeclarativeContactRelationship> relationships();
+    QQmlListProperty<QDeclarativeContactRelationship> relationships();
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 

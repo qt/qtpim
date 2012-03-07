@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -48,7 +48,7 @@
 #include "qdeclarativecontacthobby_p.h"
 #include "qdeclarativecontactpersonid_p.h"
 #include "qdeclarativecontactdetail_p.h"
-#include <QtDeclarative/qdeclarativelist.h>
+#include <QtQml/qqmllist.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -62,15 +62,15 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY(QDeclarativeContactType::ContactType type READ type NOTIFY contactChanged)
     Q_PROPERTY (QString contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY managerChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactAddress* address READ address NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactAddress> addresses READ addresses NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactAddress> addresses READ addresses NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactAnniversary* anniversary READ anniversary NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactAvatar* avatar READ avatar NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactBirthday*  birthday READ birthday NOTIFY contactChanged)
     Q_PROPERTY (QString  displayLabel READ displayLabel NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactEmailAddress*  email READ email NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactEmailAddress> emails READ emails NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactEmailAddress> emails READ emails NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactFamily*  family READ family NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactFavorite*  favorite READ favorite NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactGender*  gender READ gender NOTIFY contactChanged)
@@ -82,9 +82,9 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactNote*  note READ note NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactOnlineAccount*  onlineAccount READ onlineAccount NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactOrganization*  organization READ organization  NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactOrganization>  organizations READ organizations  NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactOrganization>  organizations READ organizations  NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPhoneNumber*  phoneNumber READ phoneNumber NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactPhoneNumber> phoneNumbers READ phoneNumbers NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactPhoneNumber> phoneNumbers READ phoneNumbers NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPresence*  presence READ presence NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactRingtone*  ringtone READ ringtone NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactSyncTarget*  syncTarget READ syncTarget NOTIFY contactChanged)
@@ -92,11 +92,11 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QUrl thumbnail READ thumbnail WRITE setThumbnail NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
@@ -112,7 +112,7 @@ public:
 
     QString contactId() const;
     QString manager() const;
-    QDeclarativeListProperty<QDeclarativeContactDetail> contactDetails();
+    QQmlListProperty<QDeclarativeContactDetail> contactDetails();
 
     // use int instead of QDeclarativeContactDetail::ContactType as a work-around for QTBUG-20639
     Q_INVOKABLE QDeclarativeContactDetail* detail(int type);
@@ -122,13 +122,13 @@ public:
     Q_INVOKABLE bool addDetail(QDeclarativeContactDetail* detail);
 
     QDeclarativeContactAddress* address();
-    QDeclarativeListProperty<QDeclarativeContactAddress>  addresses();
+    QQmlListProperty<QDeclarativeContactAddress>  addresses();
     QDeclarativeContactAnniversary* anniversary();
     QDeclarativeContactAvatar* avatar();
     QDeclarativeContactBirthday*  birthday();
     QString  displayLabel();
     QDeclarativeContactEmailAddress*  email();
-    QDeclarativeListProperty<QDeclarativeContactEmailAddress>  emails();
+    QQmlListProperty<QDeclarativeContactEmailAddress>  emails();
     QDeclarativeContactFamily*  family();
     QDeclarativeContactFavorite*  favorite();
     QDeclarativeContactGender*  gender();
@@ -140,9 +140,9 @@ public:
     QDeclarativeContactNote*  note();
     QDeclarativeContactOnlineAccount*  onlineAccount();
     QDeclarativeContactOrganization*  organization();
-    QDeclarativeListProperty<QDeclarativeContactOrganization>  organizations();
+    QQmlListProperty<QDeclarativeContactOrganization>  organizations();
     QDeclarativeContactPhoneNumber*  phoneNumber();
-    QDeclarativeListProperty<QDeclarativeContactPhoneNumber>  phoneNumbers();
+    QQmlListProperty<QDeclarativeContactPhoneNumber>  phoneNumbers();
     QDeclarativeContactPresence*  presence();
     QDeclarativeContactRingtone*  ringtone();
     QDeclarativeContactSyncTarget*  syncTarget();
@@ -151,11 +151,11 @@ public:
     void  setThumbnail(const QUrl& url);
     QDeclarativeContactUrl*  url();
     QDeclarativeContactVersion*  version();
-    QDeclarativeListProperty<QDeclarativeContactUrl>  urls();
+    QQmlListProperty<QDeclarativeContactUrl>  urls();
     QDeclarativeContactHobby*  hobby();
     QDeclarativeContactPersonId* personid();
     QDeclarativeContactExtendedDetail*  extendedDetail();
-    QDeclarativeListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
+    QQmlListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
 
 protected:
     bool m_modified;
@@ -198,10 +198,10 @@ private:
     }
 
     // call-back functions for list property
-    static void _q_detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);
-    static QDeclarativeContactDetail *_q_detail_at(QDeclarativeListProperty<QDeclarativeContactDetail> *property, int index);
-    static void _q_detail_clear(QDeclarativeListProperty<QDeclarativeContactDetail> *property);
-    static int _q_detail_count(QDeclarativeListProperty<QDeclarativeContactDetail> *property);
+    static void _q_detail_append(QQmlListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);
+    static QDeclarativeContactDetail *_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, int index);
+    static void _q_detail_clear(QQmlListProperty<QDeclarativeContactDetail> *property);
+    static int _q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property);
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -40,8 +40,8 @@
 ****************************************************************************/
 
 
-#include <QtDeclarative>
-#include <QDeclarativeExtensionPlugin>
+#include <QtQml>
+#include <QQmlExtensionPlugin>
 
 #include "qdeclarativecontactmodel_p.h"
 #include "qdeclarativecontact_p.h"
@@ -56,10 +56,10 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QContactQmlPlugin : public QDeclarativeExtensionPlugin
+class QContactQmlPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDeclarativeExtensionInterface" FILE "contacts.json")
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface" FILE "contacts.json")
 public:
     void registerTypes(const char *uri)
     {
@@ -122,7 +122,7 @@ public:
 
     }
 
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri)
+    void initializeEngine(QQmlEngine *engine, const char *uri)
     {
         Q_UNUSED(uri);
         engine->addImageProvider("thumbnail", new ContactThumbnailImageProvider);

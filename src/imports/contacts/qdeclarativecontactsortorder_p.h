@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -41,16 +41,16 @@
 #ifndef QDECLARATIVECONTACTSORTORDER_P_H
 #define QDECLARATIVECONTACTSORTORDER_P_H
 
-#include <qdeclarative.h>
-#include <QDeclarativeExtensionPlugin>
-#include <QDeclarativeParserStatus>
+#include <qqml.h>
+#include <QQmlExtensionPlugin>
+#include <QQmlParserStatus>
 
 #include "qcontactsortorder.h"
 #include "qdeclarativecontactdetail_p.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QDeclarativeContactSortOrder :public QObject, public QDeclarativeParserStatus
+class QDeclarativeContactSortOrder :public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(int detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
@@ -59,7 +59,7 @@ class QDeclarativeContactSortOrder :public QObject, public QDeclarativeParserSta
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity caseSensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
     Q_ENUMS(BlankPolicy)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 public:
 
     enum BlankPolicy {
@@ -78,7 +78,7 @@ public:
 
     int field() const;
 
-    //from QDeclarativeParserStatus
+    //from QQmlParserStatus
     void classBegin() {}
     void componentComplete();
 

@@ -43,8 +43,8 @@
 #define QDECLARATIVEORGANIZERMODEL_H
 
 #include <QAbstractListModel>
-#include <QDeclarativeListProperty>
-#include <QDeclarativeParserStatus>
+#include <QQmlListProperty>
+#include <QQmlParserStatus>
 
 #include <qorganizeritem.h>
 #include "qdeclarativeorganizeritem_p.h"
@@ -66,7 +66,7 @@ QTVERSIT_USE_NAMESPACE
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerModelPrivate;
-class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativeParserStatus
+class QDeclarativeOrganizerModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QString manager READ manager WRITE setManager NOTIFY managerChanged)
@@ -77,14 +77,14 @@ class QDeclarativeOrganizerModel : public QAbstractListModel, public QDeclarativ
     Q_PROPERTY(QDateTime endPeriod READ endPeriod WRITE setEndPeriod NOTIFY endPeriodChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter* filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFetchHint* fetchHint READ fetchHint WRITE setFetchHint NOTIFY fetchHintChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItem> items READ items NOTIFY modelChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItem> items READ items NOTIFY modelChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
     Q_ENUMS(ExportError)
     Q_ENUMS(ImportError)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 public:
     enum {
         OrganizerItemRole = Qt::UserRole + 500
@@ -124,7 +124,7 @@ public:
     QDateTime endPeriod() const;
     void setEndPeriod(const QDateTime& end);
 
-    // From QDeclarativeParserStatus
+    // From QQmlParserStatus
     virtual void classBegin() {}
     virtual void componentComplete();
 
@@ -136,9 +136,9 @@ public:
     QDeclarativeOrganizerItemFetchHint* fetchHint() const;
 
 
-    QDeclarativeListProperty<QDeclarativeOrganizerItem> items() ;
-    QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders() ;
-    QDeclarativeListProperty<QDeclarativeOrganizerCollection> collections();
+    QQmlListProperty<QDeclarativeOrganizerItem> items() ;
+    QQmlListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders() ;
+    QQmlListProperty<QDeclarativeOrganizerCollection> collections();
 
     Q_INVOKABLE void removeItem(const QString& id);
     Q_INVOKABLE void removeItem(QDeclarativeOrganizerItem *item);
@@ -218,18 +218,18 @@ private:
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
     void checkError(const QOrganizerAbstractRequest *request);
 
-    static void item_append(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item);
-    static int  item_count(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p);
-    static QDeclarativeOrganizerItem * item_at(QDeclarativeListProperty<QDeclarativeOrganizerItem> *p, int idx);
+    static void item_append(QQmlListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item);
+    static int  item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p);
+    static QDeclarativeOrganizerItem * item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, int idx);
 
-    static void sortOrder_append(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p, QDeclarativeOrganizerItemSortOrder *sortOrder);
-    static int  sortOrder_count(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p);
-    static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx);
-    static void  sortOrder_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemSortOrder> *p);
+    static void sortOrder_append(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, QDeclarativeOrganizerItemSortOrder *sortOrder);
+    static int  sortOrder_count(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
+    static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx);
+    static void  sortOrder_clear(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
 
-    static void collection_append(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection);
-    static int collection_count(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p);
-    static QDeclarativeOrganizerCollection* collection_at(QDeclarativeListProperty<QDeclarativeOrganizerCollection> *p, int idx);
+    static void collection_append(QQmlListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection);
+    static int collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p);
+    static QDeclarativeOrganizerCollection* collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, int idx);
 
     QScopedPointer<QDeclarativeOrganizerModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QDeclarativeOrganizerModel)

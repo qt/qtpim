@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -43,8 +43,8 @@
 #define QDECLARATIVECONTACTMODEL_P_H
 
 #include <QAbstractListModel>
-#include <QDeclarativeListProperty>
-#include <QDeclarativeParserStatus>
+#include <QQmlListProperty>
+#include <QQmlParserStatus>
 
 #include <qcontact.h>
 #include "qcontactrequests.h"
@@ -65,7 +65,7 @@ QTVERSIT_USE_NAMESPACE
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QDeclarativeContactModelPrivate;
-class QDeclarativeContactModel : public QAbstractListModel, public QDeclarativeParserStatus
+class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QString manager READ manager WRITE setManager NOTIFY managerChanged)
@@ -74,11 +74,11 @@ class QDeclarativeContactModel : public QAbstractListModel, public QDeclarativeP
     Q_PROPERTY(bool autoUpdate READ autoUpdate WRITE setAutoUpdate NOTIFY autoUpdateChanged)
     Q_PROPERTY(QDeclarativeContactFilter* filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(QDeclarativeContactFetchHint* fetchHint READ fetchHint WRITE setFetchHint NOTIFY fetchHintChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContact> contacts READ contacts NOTIFY contactsChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContactSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeContact> contacts READ contacts NOTIFY contactsChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeContactSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
     Q_ENUMS(ExportError)
     Q_ENUMS(ImportError)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     explicit QDeclarativeContactModel(QObject *parent = 0);
@@ -117,7 +117,7 @@ public:
     QDeclarativeContactFetchHint* fetchHint() const;
     void setFetchHint(QDeclarativeContactFetchHint* fetchHint);
 
-    // From QDeclarativeParserStatus
+    // From QQmlParserStatus
     virtual void classBegin() {}
     virtual void componentComplete();
 
@@ -128,18 +128,18 @@ public:
     bool autoUpdate() const;
     void setAutoUpdate(bool autoUpdate);
 
-    QDeclarativeListProperty<QDeclarativeContact> contacts() ;
-    static void contacts_append(QDeclarativeListProperty<QDeclarativeContact>* prop, QDeclarativeContact* contact);
-    static int contacts_count(QDeclarativeListProperty<QDeclarativeContact>* prop);
-    static QDeclarativeContact* contacts_at(QDeclarativeListProperty<QDeclarativeContact>* prop, int index);
-    static void contacts_clear(QDeclarativeListProperty<QDeclarativeContact>* prop);
+    QQmlListProperty<QDeclarativeContact> contacts() ;
+    static void contacts_append(QQmlListProperty<QDeclarativeContact>* prop, QDeclarativeContact* contact);
+    static int contacts_count(QQmlListProperty<QDeclarativeContact>* prop);
+    static QDeclarativeContact* contacts_at(QQmlListProperty<QDeclarativeContact>* prop, int index);
+    static void contacts_clear(QQmlListProperty<QDeclarativeContact>* prop);
 
-    static void sortOrder_append(QDeclarativeListProperty<QDeclarativeContactSortOrder> *p, QDeclarativeContactSortOrder *sortOrder);
-    static int  sortOrder_count(QDeclarativeListProperty<QDeclarativeContactSortOrder> *p);
-    static QDeclarativeContactSortOrder * sortOrder_at(QDeclarativeListProperty<QDeclarativeContactSortOrder> *p, int idx);
-    static void  sortOrder_clear(QDeclarativeListProperty<QDeclarativeContactSortOrder> *p);
+    static void sortOrder_append(QQmlListProperty<QDeclarativeContactSortOrder> *p, QDeclarativeContactSortOrder *sortOrder);
+    static int  sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p);
+    static QDeclarativeContactSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, int idx);
+    static void  sortOrder_clear(QQmlListProperty<QDeclarativeContactSortOrder> *p);
 
-    QDeclarativeListProperty<QDeclarativeContactSortOrder> sortOrders() ;
+    QQmlListProperty<QDeclarativeContactSortOrder> sortOrders() ;
 
     Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);

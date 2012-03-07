@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -66,7 +66,7 @@ QT_MODULE(Declarative)
 
 #define Q_DECLARATIVE_PRIVATE_EXPORT Q_DECLARATIVE_EXPORT
 
-struct QDeclarativeGraphics_DerivedObject : public QObject
+struct QQmlGraphics_DerivedObject : public QObject
 {
     void setParent_noEvent(QObject *parent) {
         bool sce = d_ptr->sendChildEvents;
@@ -87,16 +87,16 @@ struct QDeclarativeGraphics_DerivedObject : public QObject
     should never have a false negative (say the case is incorrect when it is 
     correct).
 */
-bool QDeclarative_isFileCaseCorrect(const QString &fileName);
+bool QQml_isFileCaseCorrect(const QString &fileName);
 
 /*!
     Makes the \a object a child of \a parent.  Note that when using this method,
     neither \a parent nor the object's previous parent (if it had one) will
     receive ChildRemoved or ChildAdded events.
 */
-inline void QDeclarative_setParent_noEvent(QObject *object, QObject *parent)
+inline void QQml_setParent_noEvent(QObject *object, QObject *parent)
 {
-    static_cast<QDeclarativeGraphics_DerivedObject *>(object)->setParent_noEvent(parent);
+    static_cast<QQmlGraphics_DerivedObject *>(object)->setParent_noEvent(parent);
 }
 
 QT_END_NAMESPACE

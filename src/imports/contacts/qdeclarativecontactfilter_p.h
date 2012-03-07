@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -41,8 +41,8 @@
 #ifndef QDECLARATIVECONTACTFILTER_P_H
 #define QDECLARATIVECONTACTFILTER_P_H
 
-#include <qdeclarative.h>
-#include <QDeclarativeExtensionPlugin>
+#include <qqml.h>
+#include <QQmlExtensionPlugin>
 #include <qcontactfilter.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
@@ -104,20 +104,20 @@ signals:
 class QDeclarativeContactCompoundFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeContactFilter> filters READ filters)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeContactFilter> filters READ filters)
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
     explicit QDeclarativeContactCompoundFilter(QObject* parent = 0) : QDeclarativeContactFilter(parent){}
     virtual ~QDeclarativeContactCompoundFilter() {}
     // 'READ' accessor for the filters, basically this is also a 'WRITE' accessor
-    // as per QDeclarativeListProperty's design.
-    QDeclarativeListProperty<QDeclarativeContactFilter> filters();
+    // as per QQmlListProperty's design.
+    QQmlListProperty<QDeclarativeContactFilter> filters();
 
-    static void filters_append(QDeclarativeListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter);
-    static int filters_count(QDeclarativeListProperty<QDeclarativeContactFilter>* prop);
-    static QDeclarativeContactFilter* filters_at(QDeclarativeListProperty<QDeclarativeContactFilter>* prop, int index);
-    static void filters_clear(QDeclarativeListProperty<QDeclarativeContactFilter>* prop);
+    static void filters_append(QQmlListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter);
+    static int filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop);
+    static QDeclarativeContactFilter* filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, int index);
+    static void filters_clear(QQmlListProperty<QDeclarativeContactFilter>* prop);
 
 protected:
     QList<QDeclarativeContactFilter*> m_filters;

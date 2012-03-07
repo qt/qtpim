@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -44,11 +44,11 @@
 #include "qdeclarativecontact_p.h"
 #include "qdeclarativecontactmodel_p.h"
 
-#include <QtDeclarative/qdeclarativeengine.h>
+#include <QtQml/qqmlengine.h>
 
 #include <QImage>
 #include <QUrl>
-#include <QDeclarativeListProperty>
+#include <QQmlListProperty>
 
 /*!
     \qmlclass Contact QDeclarativeContact
@@ -80,12 +80,12 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 // call-back function templates for list properties
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static void list_property_append(QDeclarativeListProperty<T> *, T *)
+static void list_property_append(QQmlListProperty<T> *, T *)
 {
 }
 
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static int list_property_count(QDeclarativeListProperty<T> *property)
+static int list_property_count(QQmlListProperty<T> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -95,7 +95,7 @@ static int list_property_count(QDeclarativeListProperty<T> *property)
 }
 
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
+static T *list_property_at(QQmlListProperty<T> *property, int index)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -105,7 +105,7 @@ static T *list_property_at(QDeclarativeListProperty<T> *property, int index)
 }
 
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static void list_property_clear(QDeclarativeListProperty<T> *)
+static void list_property_clear(QQmlListProperty<T> *)
 {
 }
 
@@ -237,9 +237,9 @@ bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
 
     This property holds the list of all the details that the contact has.
 */
-QDeclarativeListProperty<QDeclarativeContactDetail> QDeclarativeContact::contactDetails()
+QQmlListProperty<QDeclarativeContactDetail> QDeclarativeContact::contactDetails()
 {
-    return QDeclarativeListProperty<QDeclarativeContactDetail>(this, 0,
+    return QQmlListProperty<QDeclarativeContactDetail>(this, 0,
                                                                      &QDeclarativeContact::_q_detail_append,
                                                                      &QDeclarativeContact::_q_detail_count,
                                                                      &QDeclarativeContact::_q_detail_at,
@@ -351,9 +351,9 @@ QDeclarativeContactAddress* QDeclarativeContact::address()
 
     This property holds the address details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactAddress> QDeclarativeContact::addresses()
+QQmlListProperty<QDeclarativeContactAddress> QDeclarativeContact::addresses()
 {
-    return QDeclarativeListProperty<QDeclarativeContactAddress>(
+    return QQmlListProperty<QDeclarativeContactAddress>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
@@ -422,9 +422,9 @@ QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 
     This property holds the email address details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
+QQmlListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
 {
-    return QDeclarativeListProperty<QDeclarativeContactEmailAddress>(
+    return QQmlListProperty<QDeclarativeContactEmailAddress>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
@@ -549,9 +549,9 @@ QDeclarativeContactOrganization*  QDeclarativeContact::organization()
 
     This property holds the organization details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactOrganization> QDeclarativeContact::organizations()
+QQmlListProperty<QDeclarativeContactOrganization> QDeclarativeContact::organizations()
 {
-    return QDeclarativeListProperty<QDeclarativeContactOrganization>(
+    return QQmlListProperty<QDeclarativeContactOrganization>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
@@ -576,9 +576,9 @@ QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
 
     This property holds the phone number details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactPhoneNumber> QDeclarativeContact::phoneNumbers()
+QQmlListProperty<QDeclarativeContactPhoneNumber> QDeclarativeContact::phoneNumbers()
 {
-    return QDeclarativeListProperty<QDeclarativeContactPhoneNumber>(
+    return QQmlListProperty<QDeclarativeContactPhoneNumber>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
@@ -675,9 +675,9 @@ QDeclarativeContactUrl*  QDeclarativeContact::url()
 
     This property holds the url details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
+QQmlListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
 {
-    return QDeclarativeListProperty<QDeclarativeContactUrl>(
+    return QQmlListProperty<QDeclarativeContactUrl>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
@@ -732,9 +732,9 @@ QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
 
     This property holds the extended details of the Contact object.
 */
-QDeclarativeListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
+QQmlListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
 {
-    return QDeclarativeListProperty<QDeclarativeContactExtendedDetail>(
+    return QQmlListProperty<QDeclarativeContactExtendedDetail>(
                 this,
                 0,
                 &list_property_append<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
@@ -748,7 +748,7 @@ QDeclarativeListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact:
 /*!
     \internal
  */
-void QDeclarativeContact::_q_detail_append(QDeclarativeListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value)
+void QDeclarativeContact::_q_detail_append(QQmlListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -762,7 +762,7 @@ void QDeclarativeContact::_q_detail_append(QDeclarativeListProperty<QDeclarative
 /*!
     \internal
  */
-QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QDeclarativeListProperty<QDeclarativeContactDetail> *property, int index)
+QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, int index)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -774,7 +774,7 @@ QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QDeclarativeListPro
 /*!
     \internal
  */
-void QDeclarativeContact::_q_detail_clear(QDeclarativeListProperty<QDeclarativeContactDetail> *property)
+void QDeclarativeContact::_q_detail_clear(QQmlListProperty<QDeclarativeContactDetail> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object) {
@@ -787,7 +787,7 @@ void QDeclarativeContact::_q_detail_clear(QDeclarativeListProperty<QDeclarativeC
 /*!
     \internal
  */
-int QDeclarativeContact::_q_detail_count(QDeclarativeListProperty<QDeclarativeContactDetail> *property)
+int QDeclarativeContact::_q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)

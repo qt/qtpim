@@ -43,7 +43,7 @@
 #define QDECLARATIVEORGANIZERITEMFETCHHINT_H
 
 #include <qorganizeritemfetchhint.h>
-#include <QtDeclarative/qdeclarative.h>
+#include <QtQml/qqml.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

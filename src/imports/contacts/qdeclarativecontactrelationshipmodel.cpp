@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QtDeclarative/qdeclarativeinfo.h>
+#include <QtQml/qqmlinfo.h>
 #include "qdeclarativecontactrelationshipmodel_p.h"
 #include "qcontactmanager.h"
 #include "qcontactrequests.h"
@@ -259,9 +259,9 @@ void QDeclarativeContactRelationshipModel::setAutoUpdate(bool autoUpdate)
 
   \sa Relationship
   */
-QDeclarativeListProperty<QDeclarativeContactRelationship> QDeclarativeContactRelationshipModel::relationships()
+QQmlListProperty<QDeclarativeContactRelationship> QDeclarativeContactRelationshipModel::relationships()
 {
-    return QDeclarativeListProperty<QDeclarativeContactRelationship>(this, d->m_declarativeRelationships);
+    return QQmlListProperty<QDeclarativeContactRelationship>(this, d->m_declarativeRelationships);
 }
 
 int QDeclarativeContactRelationshipModel::rowCount(const QModelIndex &parent) const

@@ -45,11 +45,11 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactdetailrangefilter.h"
 #include "qdeclarativecontactdetail_p.h"
-#include <QDeclarativeParserStatus>
+#include <QQmlParserStatus>
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QDeclarativeParserStatus
+class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged())
@@ -59,7 +59,7 @@ class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, p
     Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged())
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged())
     Q_FLAGS(RangeFlags)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 public:
     enum RangeFlag {
         IncludeLower = QContactDetailRangeFilter::IncludeLower,
@@ -76,7 +76,7 @@ public:
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
     }
 
-    //from QDeclarativeParserStatus
+    //from QQmlParserStatus
     void classBegin() {}
     void componentComplete()
     {

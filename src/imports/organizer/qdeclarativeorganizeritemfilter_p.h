@@ -104,19 +104,19 @@ public:
 class QDeclarativeOrganizerItemCompoundFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> filters READ filters NOTIFY valueChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItemFilter> filters READ filters NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
     explicit QDeclarativeOrganizerItemCompoundFilter(QObject *parent = 0);
     virtual ~QDeclarativeOrganizerItemCompoundFilter();
 
-    QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> filters();
+    QQmlListProperty<QDeclarativeOrganizerItemFilter> filters();
 
-    static void filters_append(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop, QDeclarativeOrganizerItemFilter *filter);
-    static int filters_count(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop);
-    static QDeclarativeOrganizerItemFilter *filters_at(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop, int index);
-    static void filters_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemFilter> *prop);
+    static void filters_append(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, QDeclarativeOrganizerItemFilter *filter);
+    static int filters_count(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop);
+    static QDeclarativeOrganizerItemFilter *filters_at(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, int index);
+    static void filters_clear(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop);
 
 Q_SIGNALS:
     void valueChanged();
@@ -171,19 +171,19 @@ private:
 };
 
 
-class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QDeclarativeParserStatus
+class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
 
-    // inherited from QDeclarativeParserStatus
+    // inherited from QQmlParserStatus
     void classBegin();
     void componentComplete();
 
@@ -215,7 +215,7 @@ private:
 };
 
 
-class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter, public QDeclarativeParserStatus
+class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
 {
     Q_OBJECT
     Q_ENUMS(RangeFlag)
@@ -226,7 +226,7 @@ class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerI
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     enum RangeFlag {
@@ -239,7 +239,7 @@ public:
 
     QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = 0);
 
-    // inherited from QDeclarativeParserStatus
+    // inherited from QQmlParserStatus
     void classBegin();
     void componentComplete();
 

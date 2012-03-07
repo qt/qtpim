@@ -14,7 +14,7 @@ qmlplugintypes.files += $$PWD/plugins.qmltypes
 qmlplugintypes.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
 INSTALLS += qmlplugintypes
 
-QT += declarative organizer versit versitorganizer
+QT += qml organizer versit versitorganizer
 
 # Input
 HEADERS += qdeclarativeorganizermodel_p.h \

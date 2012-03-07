@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -367,9 +367,9 @@ QTCONTACTS_BEGIN_NAMESPACE
    \sa QContactInvalidFilter
  */
 
-QDeclarativeListProperty<QDeclarativeContactFilter> QDeclarativeContactCompoundFilter::filters()
+QQmlListProperty<QDeclarativeContactFilter> QDeclarativeContactCompoundFilter::filters()
 {
-    return QDeclarativeListProperty<QDeclarativeContactFilter>(this,
+    return QQmlListProperty<QDeclarativeContactFilter>(this,
                                                           0, // opaque data parameter
                                                           filters_append,
                                                           filters_count,
@@ -377,7 +377,7 @@ QDeclarativeListProperty<QDeclarativeContactFilter> QDeclarativeContactCompoundF
                                                           filters_clear);
 }
 
-void QDeclarativeContactCompoundFilter::filters_append(QDeclarativeListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter)
+void QDeclarativeContactCompoundFilter::filters_append(QQmlListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter)
 {
     QDeclarativeContactCompoundFilter* compoundFilter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
     compoundFilter->m_filters.append(filter);
@@ -385,18 +385,18 @@ void QDeclarativeContactCompoundFilter::filters_append(QDeclarativeListProperty<
     emit compoundFilter->filterChanged();
 }
 
-int QDeclarativeContactCompoundFilter::filters_count(QDeclarativeListProperty<QDeclarativeContactFilter>* prop)
+int QDeclarativeContactCompoundFilter::filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop)
 {
     // The 'prop' is in a sense 'this' for this static function (as given in filters() function)
     return static_cast<QDeclarativeContactCompoundFilter*>(prop->object)->m_filters.count();
 }
 
-QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QDeclarativeListProperty<QDeclarativeContactFilter>* prop, int index)
+QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, int index)
 {
     return static_cast<QDeclarativeContactCompoundFilter*>(prop->object)->m_filters.at(index);
 }
 
-void QDeclarativeContactCompoundFilter::filters_clear(QDeclarativeListProperty<QDeclarativeContactFilter>* prop)
+void QDeclarativeContactCompoundFilter::filters_clear(QQmlListProperty<QDeclarativeContactFilter>* prop)
 {
     QDeclarativeContactCompoundFilter* compoundFilter = static_cast<QDeclarativeContactCompoundFilter*>(prop->object);
     if (!compoundFilter->m_filters.isEmpty()) {

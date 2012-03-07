@@ -45,7 +45,7 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactintersectionfilter.h"
 
-#include <QDeclarativeListProperty>
+#include <QQmlListProperty>
 
 QTCONTACTS_BEGIN_NAMESPACE
 

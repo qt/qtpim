@@ -44,12 +44,12 @@
 
 #include "qdeclarativeorganizeritemdetail_p.h"
 #include <qorganizeritemsortorder.h>
-#include <QtDeclarative/qdeclarative.h>
-#include <QtDeclarative/qdeclarativeparserstatus.h>
+#include <QtQml/qqml.h>
+#include <QtQml/qqmlparserstatus.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativeParserStatus
+class QDeclarativeOrganizerItemSortOrder : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
@@ -57,7 +57,7 @@ class QDeclarativeOrganizerItemSortOrder : public QObject, public QDeclarativePa
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity sensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
     Q_ENUMS(BlankPolicy)
 
 public:
@@ -83,7 +83,7 @@ public:
     void setCaseSensitivity(Qt::CaseSensitivity newSensitivity);
     Qt::CaseSensitivity caseSensitivity() const;
 
-    // from QDeclarativeParserStatus
+    // from QQmlParserStatus
     void classBegin();
     void componentComplete();
 

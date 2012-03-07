@@ -14,7 +14,7 @@ qmlplugintypes.files += $$PWD/plugins.qmltypes
 qmlplugintypes.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
 INSTALLS += qmlplugintypes
 
-QT += declarative contacts versit
+QT += qml contacts versit
 
 # Input
 include(details/details.pri)

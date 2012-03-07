@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtQml module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -40,10 +40,10 @@
 ****************************************************************************/
 
 #include <QDebug>
-#include <qdeclarativeextensionplugin.h>
+#include <qqmlextensionplugin.h>
 
-#include <qdeclarativeengine.h>
-#include <qdeclarative.h>
+#include <qqmlengine.h>
+#include <qqml.h>
 #include <qcontactmanager.h>
 #include <qcontactdetails.h>
 #include "qdeclarativecontactimageprovider_p.h"
@@ -98,7 +98,7 @@ QImage ContactThumbnailImageProvider::requestImage(const QString &id, QSize *siz
     return image;
 }
 ContactThumbnailImageProvider::ContactThumbnailImageProvider()
-    :QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
+    :QQmlImageProvider(QQmlImageProvider::Image)
 {
 
 }

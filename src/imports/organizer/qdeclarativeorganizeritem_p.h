@@ -45,7 +45,7 @@
 #include <qorganizeritems.h>
 #include "qdeclarativeorganizeritemdetail_p.h"
 
-#include <QtDeclarative/qdeclarativelist.h>
+#include <QtQml/qqmllist.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -57,7 +57,7 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(bool modified READ modified NOTIFY itemChanged)
 
     Q_PROPERTY(QDeclarativeOrganizerItemType::ItemType itemType READ itemType NOTIFY itemChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails READ itemDetails NOTIFY itemChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItemDetail> itemDetails READ itemDetails NOTIFY itemChanged)
     Q_PROPERTY(QString itemId READ itemId NOTIFY itemChanged)
     Q_PROPERTY(QString manager READ manager NOTIFY itemChanged)
     Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
@@ -82,7 +82,7 @@ public:
     bool modified() const;
 
     QDeclarativeOrganizerItemType::ItemType itemType() const;
-    QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> itemDetails();
+    QQmlListProperty<QDeclarativeOrganizerItemDetail> itemDetails();
     QString itemId() const;
     QString manager() const;
 
@@ -148,10 +148,10 @@ private:
      Q_DISABLE_COPY(QDeclarativeOrganizerItem)
 
     // call-back functions for list property
-    static void _q_detail_append(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value);
-    static QDeclarativeOrganizerItemDetail *_q_detail_at(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property, int index);
-    static void _q_detail_clear(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property);
-    static int _q_detail_count(QDeclarativeListProperty<QDeclarativeOrganizerItemDetail> *property);
+    static void _q_detail_append(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value);
+    static QDeclarativeOrganizerItemDetail *_q_detail_at(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, int index);
+    static void _q_detail_clear(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property);
+    static int _q_detail_count(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property);
 };
 
 
@@ -165,12 +165,12 @@ class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
     Q_PROPERTY(QDeclarativeOrganizerItemPriority::Priority priority READ priority WRITE setPriority NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemRecurrence *recurrence READ recurrence NOTIFY valueChanged)
     Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY valueChanged)
-    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> attendees READ attendees NOTIFY valueChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerEventAttendee> attendees READ attendees NOTIFY valueChanged)
 
 public:
     explicit QDeclarativeOrganizerEvent(QObject *parent = 0);
 
-    QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> attendees();
+    QQmlListProperty<QDeclarativeOrganizerEventAttendee> attendees();
 
     virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
     virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
@@ -198,10 +198,10 @@ Q_SIGNALS:
 
 private:
     // call-back functions for attendees list property
-    static void _q_attendee_append(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value);
-    static QDeclarativeOrganizerEventAttendee *_q_attendee_at(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property, int index);
-    static void _q_attendee_clear(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property);
-    static int _q_attendee_count(QDeclarativeListProperty<QDeclarativeOrganizerEventAttendee> *property);
+    static void _q_attendee_append(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value);
+    static QDeclarativeOrganizerEventAttendee *_q_attendee_at(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, int index);
+    static void _q_attendee_clear(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property);
+    static int _q_attendee_count(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property);
 };
 
 

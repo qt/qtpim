@@ -59,7 +59,7 @@ Item {
 
     function createContactToJsonDb(contact) {
         logDebug("createContactToJsonDb()");
-        contact["_type"] = "com.nokia.mp.contacts.Contact";
+        contact["_type"] = "com.nokia.mt.contacts.Contact";
         jsonDb.createAndSignal(contact);
         jsonDbSpy.wait();
     }
@@ -67,7 +67,7 @@ Item {
     function removeContactFromJsonDb(contact) {
         logDebug("removeContactFromJsonDb(): remove contact id " + contact.contactId);
         var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
-        var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
+        var query = '[?_type="com.nokia.mt.contacts.Contact"]' +
                 '[?_uuid="' + jsonUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
@@ -76,7 +76,7 @@ Item {
         jsonDb.removeAndSignal(object);
         jsonDbSpy.wait();
 
-        jsonDb.queryAndSignal('[?_type="com.nokia.mp.contacts.Contact"]');
+        jsonDb.queryAndSignal('[?_type="com.nokia.mt.contacts.Contact"]');
         jsonDbSpy.wait();
     }
 
@@ -85,7 +85,7 @@ Item {
         var jsonUuid = convertContactIdTojsonUuid(contact.contactId);
         logDebug("updateContactInJsonDb(): update contact id " + jsonUuid);
 
-        var query = '[?_type="com.nokia.mp.contacts.Contact"]' +
+        var query = '[?_type="com.nokia.mt.contacts.Contact"]' +
                 '[?_uuid="' + jsonUuid + '"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
@@ -98,7 +98,7 @@ Item {
 
     function emptyContacts() {
         logDebug("emptyContacts()");
-        var query = '[?_type="com.nokia.mp.contacts.Contact"]';
+        var query = '[?_type="com.nokia.mt.contacts.Contact"]';
         jsonDb.queryAndSignal(query);
         jsonDbSpy.wait();
 

@@ -122,8 +122,8 @@ public:
 
     // Queries related
     inline const static QString defaultPartition() { return QStringLiteral("database.System"); }
-    inline const static QString contactsJsonDbType() { return QStringLiteral("com.nokia.mp.contacts.Contact"); }
-    inline const static QString contactsJsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mp.contacts.Contact\"]]"); }
+    inline const static QString contactsJsonDbType() { return QStringLiteral("com.nokia.mt.contacts.Contact"); }
+    inline const static QString contactsJsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.contacts.Contact\"]]"); }
 
 };
 

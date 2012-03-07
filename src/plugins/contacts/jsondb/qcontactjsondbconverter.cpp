@@ -797,7 +797,7 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
     }
     // Default case: return all the contacts
     else {
-        // No need to add anything to the already present query:   query [?_type="com.nokia.mp.contacts.Contact"]
+        // No need to add anything to the already present query:   query [?_type="com.nokia.mt.contacts.Contact"]
         qWarning() << "Detail" <<  detailFilter.detailType()
                    << "not supported by filtering, returning all the contacts !!!";
         qWarning() << "Query string: " << jsonDbQueryStr;

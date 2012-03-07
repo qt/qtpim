@@ -157,7 +157,7 @@ bool QContactJsonDbBackup::loadTestData() {
 
 
 bool QContactJsonDbBackup::backupJsonDb() {
-    QString query = "[?_type=\"com.nokia.mp.contacts.Contact\"]";
+    QString query = "[?_type=\"com.nokia.mt.contacts.Contact\"]";
     QVariantMap map = m_dbClient->query(query);
     m_backupData = map["data"].value<QVariantList>();
     return true;

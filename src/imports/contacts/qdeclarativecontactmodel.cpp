@@ -621,7 +621,6 @@ void QDeclarativeContactModel::fetchAgain()
     fetchRequest->setManager(d->m_manager);
     fetchRequest->setSorting(sortOrders);
 
-    // ids are ignored and all contacts (matching the filter) are always fetched
     if (d->m_filter){
         fetchRequest->setFilter(d->m_filter->filter());
     } else {

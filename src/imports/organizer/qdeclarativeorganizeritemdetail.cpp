@@ -1275,7 +1275,7 @@ int QDeclarativeOrganizerItemReminder::repetitionDelay() const
  */
 void QDeclarativeOrganizerItemReminder::setSecondsBeforeStart(int seconds)
 {
-    if (seconds != secondsBeforeStart()) {
+    if (seconds != secondsBeforeStart() || !m_detail.hasValue(QOrganizerItemReminder::FieldSecondsBeforeStart)) {
         m_detail.setValue(QOrganizerItemReminder::FieldSecondsBeforeStart, seconds);
         emit reminderChanged();
     }

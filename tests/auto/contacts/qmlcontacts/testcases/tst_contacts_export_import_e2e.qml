@@ -118,6 +118,7 @@ ContactsSavingTestCase {
         compare(importedContact.name.firstName,"First", "imported contact first name");
         compare(importedContact.name.lastName,"Last", "imported contact last name");
     }
+
     // Init & teardown
 
     function initTestCase() {

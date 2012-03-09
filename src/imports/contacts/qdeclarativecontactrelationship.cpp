@@ -112,12 +112,14 @@ QVariant QDeclarativeContactRelationship::relationshipType() const
 
 void QDeclarativeContactRelationship::setFirst(QDeclarativeContact* firstContact)
 {
-    m_relationship.setFirst(firstContact->contact());
+    if (firstContact)
+        m_relationship.setFirst(firstContact->contact());
 }
 
 void QDeclarativeContactRelationship::setSecond(QDeclarativeContact* secondContact)
 {
-    m_relationship.setSecond(secondContact->contact());
+    if (secondContact)
+        m_relationship.setSecond(secondContact->contact());
 }
 
 void QDeclarativeContactRelationship::setRelationshipType(const QVariant& relationshipType)

@@ -173,4 +173,20 @@ TestCase {
         setAndVerifyRelationship(contact1, contact2, relationshipHasSpouse)
     }
 
+    Relationship {
+        id: relationshipForNullContacts
+        type: "HasSpouse"
+    }
+
+    function test_nullParticipants() {
+        //just check we do not crash in these cases
+        relationshipForNullContacts.first = null;
+        relationshipForNullContacts.second = null;
+        try {
+            //next two lines will throw an exception, so we catch it)
+            relationshipForNullContacts.second = undefined;
+            relationshipForNullContacts.second = undefined;
+        } catch(err) {
+        }
+    }
 }

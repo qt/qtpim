@@ -138,6 +138,9 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
             stringValue = map[contactNameFieldsMapping.value(QContactName::FieldSuffix)].toString();
             if (!stringValue.isEmpty())
                 name->setSuffix(stringValue);
+            stringValue = map[contactNameFieldsMapping.value(QContactName::FieldCustomLabel)].toString();
+            if (!stringValue.isEmpty())
+                name->setCustomLabel(stringValue);
             detailList << name;
         } else if (i.key() == detailsToJsonMapping.value(QContactGender::Type)) {
             //gender
@@ -436,6 +439,8 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
                 nameMap[contactNameFieldsMapping.value(QContactName::FieldFirstName)] = name->firstName();
             if(!name->middleName().isEmpty())
                 nameMap[contactNameFieldsMapping.value(QContactName::FieldMiddleName)] = name->middleName();
+            if (!name->customLabel().isEmpty())
+                nameMap[contactNameFieldsMapping.value(QContactName::FieldCustomLabel)] = name->customLabel();
             object->insert(detailsToJsonMapping.value(QContactName::Type), nameMap);
         }
         //personid

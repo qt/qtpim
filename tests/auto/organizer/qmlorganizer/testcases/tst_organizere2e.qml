@@ -238,8 +238,9 @@ TestCase {
 
                         match = false
                         for (var l = 0; l < model.items[j].itemDetails.length; l++) {
-                            if (qmlItems[i].itemDetails[k].definitionName == model.items[j].itemDetails[l].definitionName) {
+                            if (qmlItems[i].itemDetails[k].type == model.items[j].itemDetails[l].type) {
                                 match = true;
+                                // Todo, verify also detail fields
                                 break;
                             }
                         }

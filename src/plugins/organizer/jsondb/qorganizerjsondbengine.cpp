@@ -524,11 +524,11 @@ QList<QOrganizerItemType::ItemType> QOrganizerJsonDbEngine::supportedItemTypes()
     QList<QOrganizerItemType::ItemType> ret;
 
     ret << QOrganizerItemType::TypeEvent;
-//    ret << QOrganizerItemType::TypeEventOccurrence;
+    ret << QOrganizerItemType::TypeEventOccurrence;
 //    ret << QOrganizerItemType::TypeJournal;
 //    ret << QOrganizerItemType::TypeNote;
     ret << QOrganizerItemType::TypeTodo;
-//    ret << QOrganizerItemType::TypeTodoOccurrence;
+    ret << QOrganizerItemType::TypeTodoOccurrence;
 
     return  ret;
 }

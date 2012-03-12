@@ -778,34 +778,50 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
     {
         if (qt_debug_jsondb_contacts())
             qDebug() << "Filter by phone number";
-        jsonDbQueryStr.append("[?" + jsondbField + ".0.value");
-        QString paramValue = detailFilter.value().toString();
-        createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue, QContactJsonDbStr::phoneNumberUriScheme());
+        if (detailFilter.detailField() == QContactPhoneNumber::FieldNumber) {
+            jsonDbQueryStr.append("[?" + jsondbField + ".0.value");
+            QString paramValue = detailFilter.value().toString();
+            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue, QContactJsonDbStr::phoneNumberUriScheme());
+        } else {
+            //We do not support currently filtering by other fields than number
+            isValidFilter = false;
+        }
     }
     // Filter by email address
     else if (detailFilter.detailType() == QContactEmailAddress::Type)
     {
         if (qt_debug_jsondb_contacts())
             qDebug() << "Filter by email address";
-        jsonDbQueryStr.append("[?" + jsondbField + ".0.value" );
-        QString paramValue = detailFilter.value().toString();
-        createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        if (detailFilter.detailField() == QContactEmailAddress::FieldEmailAddress) {
+            jsonDbQueryStr.append("[?" + jsondbField + ".0.value" );
+            QString paramValue = detailFilter.value().toString();
+            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        } else {
+            //We do not support currently filter by other fields than email address
+            isValidFilter = false;
+        }
     }
     // Filter by Url
     else if (detailFilter.detailType() == QContactUrl::Type)
     {
         if (qt_debug_jsondb_contacts())
             qDebug() << "Filter by url";
-        jsonDbQueryStr.append("[?" + jsondbField + ".0.value" );
-        QString paramValue = detailFilter.value().toString();
-        createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        if (detailFilter.detailField() == QContactUrl::FieldUrl) {
+            jsonDbQueryStr.append("[?" + jsondbField + ".0.value" );
+            QString paramValue = detailFilter.value().toString();
+            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        } else {
+            //We do not support currently filter by other fields than Url
+            isValidFilter = false;
+        }
     }
     // Default case: return all the contacts
     else {
         // No need to add anything to the already present query:   query [?_type="com.nokia.mt.contacts.Contact"]
         qWarning() << "Detail" <<  detailFilter.detailType()
-                   << "not supported by filtering, returning all the contacts !!!";
+                   << "not supported by filtering";
         qWarning() << "Query string: " << jsonDbQueryStr;
+        isValidFilter = false;
     }
     return isValidFilter;
 }

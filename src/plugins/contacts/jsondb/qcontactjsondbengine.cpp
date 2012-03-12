@@ -451,12 +451,34 @@ bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, Q
   };
 }
 
-bool QContactJsonDbEngine::isFilterSupported(const QContactFilter& filter) const {
-  switch (filter.type()) {
+bool QContactJsonDbEngine::isFilterSupported(const QContactFilter& filter) const
+{
+    switch (filter.type()) {
+    case QContactFilter::ContactDetailFilter: {
+        QContactDetailFilter detailFilter = static_cast<QContactDetailFilter>(filter);
+        int field = detailFilter.detailField();
+        if (field < 0)
+            return false;
+        switch (detailFilter.detailType()) {
+        case QContactDetail::TypeEmailAddress:
+            if (field != QContactEmailAddress::FieldEmailAddress)
+                return false;
+        case QContactDetail::TypePhoneNumber:
+            if (field != QContactPhoneNumber::FieldNumber)
+                return false;
+        case QContactDetail::TypeUrl:
+            if (field != QContactUrl::FieldUrl)
+                return false;
+        case QContactDetail::TypeName:
+            return true;
+        default:
+            return false;
+        };
+        return false;
+    }
     case QContactFilter::InvalidFilter:
     case QContactFilter::DefaultFilter:
     case QContactFilter::IdFilter:
-    case QContactFilter::ContactDetailFilter:
     case QContactFilter::ActionFilter:
     case QContactFilter::IntersectionFilter:
     case QContactFilter::UnionFilter:

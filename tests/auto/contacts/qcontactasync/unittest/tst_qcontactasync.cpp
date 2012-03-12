@@ -908,8 +908,8 @@ void tst_QContactAsync::contactRemove()
     QVERIFY(cm->contactIds(dfil).isEmpty());
 
     // remove all contacts
-    dfil.setDetailType(QContactDisplayLabel::Type); // delete everything.
-    crr.setContactIds(cm->contactIds(dfil));
+    // delete everything.
+    crr.setContactIds(cm->contactIds());
     
     QVERIFY(!crr.cancel()); // not started
     QVERIFY(crr.start());

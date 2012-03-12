@@ -51,7 +51,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemReminder
 {
 public:
+#ifndef Q_QDOC
     Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemEmailReminder)
+#endif
 
     enum EmailReminderField {
         FieldSubject = QOrganizerItemReminder::FieldRepetitionDelay + 100,  // in case more fields added to QOrganizerItemReminder

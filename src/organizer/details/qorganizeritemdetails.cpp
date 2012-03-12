@@ -1750,7 +1750,7 @@ QString QOrganizerEventRsvp::organizerEmail() const
  */
 
 /*!
-   \variable QOrganizerItemClassification::DefinitionName
+   \fn QOrganizerItemClassification::DefinitionName(QOrganizerItemDetail::TypeClassification);
 
    The constant string which identifies the definition of Classification-detail.
 
@@ -1854,7 +1854,7 @@ QString QOrganizerItemExtendedDetail::name() const
 }
 
 /*!
-    \fn void setDetailData(const QVariant &data)
+    \fn void QOrganizerItemExtendedDetail::setData(const QVariant &data)
 
     Sets the \a data of the extended detail.
  */
@@ -1864,7 +1864,7 @@ void QOrganizerItemExtendedDetail::setData(const QVariant &data)
 }
 
 /*!
-    \fn QVariant data() const
+    \fn QVariant QOrganizerItemExtendedDetail::data() const
 
     Gets the data of this extended detail.
  */
@@ -1881,7 +1881,7 @@ QVariant QOrganizerItemExtendedDetail::data() const
  */
 
 /*!
-    \variable QOrganizerItemVersion::DefinitionName
+    \fn QOrganizerItemVersion::DefinitionName(QOrganizerItemDetail::TypeVersion);
 
     The constant string which identifies the definition of details which are versions.
 

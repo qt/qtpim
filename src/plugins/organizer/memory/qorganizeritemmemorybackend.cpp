@@ -963,8 +963,6 @@ bool QOrganizerItemMemoryEngine::typesAreRelated(QOrganizerItemType::ItemType oc
                 && occurrenceType == QOrganizerItemType::TypeTodoOccurrence));
 }
 
-/*! \reimp
-*/
 bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
     Q_ASSERT(errorMap);
@@ -995,6 +993,8 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems
     return (*error == QOrganizerManager::NoError);
 }
 
+/*! \reimp
+*/
 bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
                                            QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {

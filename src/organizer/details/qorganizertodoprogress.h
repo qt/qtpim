@@ -51,7 +51,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerTodoProgress : public QOrganizerItemDetail
 {
 public:
+#ifndef Q_QDOC
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress)
+#endif
 
     enum TodoProgressField {
         FieldFinishedDateTime = 0,

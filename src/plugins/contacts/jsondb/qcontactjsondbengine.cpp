@@ -96,7 +96,7 @@ QContactJsonDbEngine::~QContactJsonDbEngine()
 
 
 
-/*! \reimp */
+
 QContactJsonDbEngine& QContactJsonDbEngine::operator=(const QContactJsonDbEngine& other)
 {
     d = other.d;

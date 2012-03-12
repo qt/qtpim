@@ -49,7 +49,9 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
+#ifndef Q_QDOC
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder)
+#endif
 
     enum ReminderField {
         FieldSecondsBeforeStart = 0,

@@ -62,7 +62,7 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-   \variable QVersitOrganizerHandlerFactory::ProfileSync
+   \fn static const QString QVersitOrganizerHandlerFactory::ProfileSync()
 
    The constant string signifying a plugin that is relevant to import and export in a
    synchronization context.
@@ -70,7 +70,7 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-   \variable QVersitOrganizerHandlerFactory::ProfileBackup
+   \fn static const QString QVersitOrganizerHandlerFactory::ProfileBackup()
 
    The constant string signifying a plugin that is relevant to import and export in a backup/restore
    context.

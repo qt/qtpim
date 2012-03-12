@@ -247,7 +247,7 @@ QStringList QContactAction::availableActions(const QString& serviceName)
  */
 
 /*!
-   \variable QContactAction::ActionOpenInViewer()
+   \fn QContactAction::ActionOpenInViewer()
    The name of the default view contact action.
    Actions of this name will open a graphical element
    which allows the user to view the contact.

@@ -72,7 +72,7 @@ QStringList QVersitContactHandlerFactory::keys() const
  */
 
 /*!
-   \variable QVersitContactHandlerFactory::ProfileSync
+   \fn static const QString QVersitContactHandlerFactory::ProfileSync()
 
    The constant string signifying a plugin that is relevant to import and export in a
    synchronization context.
@@ -82,7 +82,7 @@ QStringList QVersitContactHandlerFactory::keys() const
  */
 
 /*!
-   \variable QVersitContactHandlerFactory::ProfileBackup
+   \fn static const QString QVersitContactHandlerFactory::ProfileBackup()
 
    The constant string signifying a plugin that will backup a QContact to vCard, so that exporting,
    then importing a contact will not lose any data.

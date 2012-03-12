@@ -110,7 +110,7 @@ QTVERSIT_BEGIN_NAMESPACE
  */
 
 /*!
-  \fn void QVersitContactExporterDetailHandlerV2::detailProcessed(const QContact& contact, const QContactDetail& detail, const QVersitDocument& document, QSet<QString>* processedFields, QList<QVersitProperty>* toBeRemoved, QList<QVersitProperty>* toBeAdded)
+  \fn void QVersitContactExporterDetailHandlerV2::detailProcessed(const QContact& contact, const QContactDetail& detail, const QVersitDocument& document, QSet<int>* processedFields, QList<QVersitProperty>* toBeRemoved, QList<QVersitProperty>* toBeAdded)
 
   Process \a detail and provide a list of updated \l{QVersitProperty}{QVersitProperties} by
   modifying the \a toBeRemoved and \a toBeAdded lists.

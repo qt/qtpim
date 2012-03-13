@@ -96,11 +96,11 @@ public:
     QVariant metaData(const QString& key, const QContact& contact, const QContactDetail& detail = QContactDetail(), const QVariantMap& parameters = QVariantMap()) const;
 
     // default meta-data keys
-    const static QString MetaDataIcon;
-    const static QString MetaDataLabel;
-    const static QString MetaDataSecondLabel;
-    const static QString MetaDataOptionalParameterKeys;
-    const static QString MetaDataMandatoryParameterKeys;
+    static const QString MetaDataIcon;
+    static const QString MetaDataLabel;
+    static const QString MetaDataSecondLabel;
+    static const QString MetaDataOptionalParameterKeys;
+    static const QString MetaDataMandatoryParameterKeys;
 
 private:
     QSharedDataPointer<QContactActionDescriptorPrivate> d;

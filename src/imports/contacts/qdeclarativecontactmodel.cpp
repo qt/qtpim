@@ -297,8 +297,8 @@ static QString urlToLocalFileName(const QUrl& url)
   \endlist
 
   \sa QVersitContactHandlerFactory
-  \sa QVersitContactHandlerFactory::ProfileSync
-  \sa QVersitContactHandlerFactory::ProfileBackup
+  \sa QVersitContactHandlerFactory::ProfileSync()
+  \sa QVersitContactHandlerFactory::ProfileBackup()
 
   */
 void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList& profiles)
@@ -343,8 +343,8 @@ void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList
   \endlist
 
   \sa QVersitContactHandlerFactory
-  \sa QVersitContactHandlerFactory::ProfileSync
-  \sa QVersitContactHandlerFactory::ProfileBackup
+  \sa QVersitContactHandlerFactory::ProfileSync()
+  \sa QVersitContactHandlerFactory::ProfileBackup()
   */
 void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList& profiles, const QVariantList &declarativeContacts)
 {

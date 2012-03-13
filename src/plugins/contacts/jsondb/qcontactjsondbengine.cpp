@@ -54,15 +54,13 @@ Q_USE_JSONDB_NAMESPACE
 
 QTCONTACTS_BEGIN_NAMESPACE
 
-/*!
-  \class QContactJsonDbEngine
+/*
+  class QContactJsonDbEngine
   \brief The QContactJsonDbEngine class provides an implementation of
   QContactManagerEngine whose functions always return an error.
 
   The JsonDb engine.
  */
-
-/*! Constructs a new invalid contacts backend. */
 
 QContactJsonDbEngine::QContactJsonDbEngine() : d(new QContactJsonDbEngineData)
 {
@@ -118,7 +116,7 @@ bool QContactJsonDbEngine::startRequest(QContactAbstractRequest* req){
 
 
 
-/*! \reimp */
+/* \reimp */
 QString QContactJsonDbEngine::managerName() const
 {
     return QContactJsonDbStr::contactJsonDbEngineName();

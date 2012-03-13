@@ -91,6 +91,13 @@ QStringList QContactManagerEngineFactory::keys() const
  */
 
 /*!
+    \fn QContactManagerEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
+
+    This function should return an engine-specific Contact ID, according to the given \a parameters and
+    the \a engineIdString.
+ */
+
+/*!
   \fn QContactManagerEngineFactory::managerName() const
 
   This function should return a unique string that identifies

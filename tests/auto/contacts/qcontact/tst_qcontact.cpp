@@ -469,16 +469,16 @@ void tst_QContact::relationships()
     QList<QContact> related = c.relatedContacts();
     QVERIFY(related.isEmpty());
 
-    related = c.relatedContacts(QContactRelationship::HasMember);
+    related = c.relatedContacts(QContactRelationship::HasMember());
     QVERIFY(related.isEmpty());
 
-    related = c.relatedContacts(QContactRelationship::HasMember, QContactRelationship::First);
+    related = c.relatedContacts(QContactRelationship::HasMember(), QContactRelationship::First);
     QVERIFY(related.isEmpty());
 
     QList<QContactRelationship> relationshipList = c.relationships();
     QVERIFY(relationshipList.isEmpty());
 
-    relationshipList = c.relationships(QContactRelationship::HasMember);
+    relationshipList = c.relationships(QContactRelationship::HasMember());
     QVERIFY(relationshipList.isEmpty());
 }
 

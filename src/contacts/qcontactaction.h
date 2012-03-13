@@ -91,25 +91,14 @@ public:
     }
 
     // common actions
-#ifdef Q_QDOC
-    static const QLatin1Constant ActionCall;
-    static const QLatin1Constant ActionEmail;
-    static const QLatin1Constant ActionSms;
-    static const QLatin1Constant ActionMms;
-    static const QLatin1Constant ActionChat;
-    static const QLatin1Constant ActionVideoCall;
-    static const QLatin1Constant ActionOpenInEditor;
-    static const QLatin1Constant ActionOpenInViewer;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(ActionCall, "call");
-    Q_DECLARE_LATIN1_CONSTANT(ActionEmail, "email");
-    Q_DECLARE_LATIN1_CONSTANT(ActionSms, "sms");
-    Q_DECLARE_LATIN1_CONSTANT(ActionMms, "mms");
-    Q_DECLARE_LATIN1_CONSTANT(ActionChat, "chat");
-    Q_DECLARE_LATIN1_CONSTANT(ActionVideoCall, "videocall");
-    Q_DECLARE_LATIN1_CONSTANT(ActionOpenInEditor, "edit");
-    Q_DECLARE_LATIN1_CONSTANT(ActionOpenInViewer, "view");
-#endif
+    inline static const QString ActionCall() {return QStringLiteral("call");};
+    inline static const QString ActionEmail() {return QStringLiteral("email");};
+    inline static const QString ActionSms() {return QStringLiteral("sms");};
+    inline static const QString ActionMms() {return QStringLiteral("mms");};
+    inline static const QString ActionChat() {return QStringLiteral("chat");};
+    inline static const QString ActionVideoCall() {return QStringLiteral("videocall");};
+    inline static const QString ActionOpenInEditor() {return QStringLiteral("edit");};
+    inline static const QString ActionOpenInViewer() {return QStringLiteral("view");};
 
 Q_SIGNALS:
     void stateChanged(QContactAction::State);

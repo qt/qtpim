@@ -127,22 +127,22 @@ void QDeclarativeContactRelationship::setRelationshipType(const QVariant& relati
     if (relationshipType.type() == QVariant::Int) {
         switch (relationshipType.toInt()) {
         case QDeclarativeContactRelationship::HasMember:
-            m_relationship.setRelationshipType(QContactRelationship::HasMember);
+            m_relationship.setRelationshipType(QContactRelationship::HasMember());
             break;
         case QDeclarativeContactRelationship::Aggregates:
-            m_relationship.setRelationshipType(QContactRelationship::Aggregates);
+            m_relationship.setRelationshipType(QContactRelationship::Aggregates());
             break;
         case QDeclarativeContactRelationship::IsSameAs:
-            m_relationship.setRelationshipType(QContactRelationship::IsSameAs);
+            m_relationship.setRelationshipType(QContactRelationship::IsSameAs());
             break;
         case QDeclarativeContactRelationship::HasAssistant:
-            m_relationship.setRelationshipType(QContactRelationship::HasAssistant);
+            m_relationship.setRelationshipType(QContactRelationship::HasAssistant());
             break;
         case QDeclarativeContactRelationship::HasManager:
-            m_relationship.setRelationshipType(QContactRelationship::HasManager);
+            m_relationship.setRelationshipType(QContactRelationship::HasManager());
             break;
         case QDeclarativeContactRelationship::HasSpouse:
-            m_relationship.setRelationshipType(QContactRelationship::HasSpouse);
+            m_relationship.setRelationshipType(QContactRelationship::HasSpouse());
             break;
         default:
             //unknown type

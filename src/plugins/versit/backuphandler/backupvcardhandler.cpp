@@ -109,7 +109,7 @@ const QString GroupPrefix(QStringLiteral("G"));
 QSet<QString> BackupVCardHandlerFactory::profiles() const
 {
     QSet<QString> retval;
-    retval.insert(QVersitContactHandlerFactory::ProfileBackup);
+    retval.insert(QVersitContactHandlerFactory::ProfileBackup());
     return retval;
 }
 

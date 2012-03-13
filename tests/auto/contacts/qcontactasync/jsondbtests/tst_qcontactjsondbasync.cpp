@@ -1579,31 +1579,31 @@ QContactManager* tst_QContactJsonDbAsync::prepareModel(const QString& managerUri
     QContactRelationship arb;
     arb.setFirst(a);
     arb.setSecond(b);
-    arb.setRelationshipType(QContactRelationship::HasManager);
+    arb.setRelationshipType(QContactRelationship::HasManager());
     cm->saveRelationship(&arb);
 
     QContactRelationship brc;
     brc.setFirst(b);
     brc.setSecond(c);
-    brc.setRelationshipType(QContactRelationship::HasAssistant);
+    brc.setRelationshipType(QContactRelationship::HasAssistant());
     cm->saveRelationship(&brc);
 
     QContactRelationship cra;
     cra.setFirst(c);
     cra.setSecond(a);
-    cra.setRelationshipType(QContactRelationship::HasSpouse);
+    cra.setRelationshipType(QContactRelationship::HasSpouse());
     cm->saveRelationship(&cra);
 
     QContactRelationship arc;
     arc.setFirst(a);
     arc.setSecond(c);
-    arc.setRelationshipType(QContactRelationship::HasAssistant);
+    arc.setRelationshipType(QContactRelationship::HasAssistant());
     cm->saveRelationship(&arc);
 
     QContactRelationship crb;
     crb.setFirst(c);
     crb.setSecond(b);
-    crb.setRelationshipType(QContactRelationship::IsSameAs);
+    crb.setRelationshipType(QContactRelationship::IsSameAs());
     cm->saveRelationship(&crb);
 
     return cm;

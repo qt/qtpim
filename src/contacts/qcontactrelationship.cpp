@@ -86,40 +86,34 @@ QTCONTACTS_BEGIN_NAMESPACE
  */
 
 /*!
- * \variable QContactRelationship::HasMember
+ * \fn QContactRelationship::HasMember()
  * The relationship type which identifies the first contact as being a group which includes the second contact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::HasMember, "HasMember");
 
 /*!
- * \variable QContactRelationship::Aggregates
+ * \fn QContactRelationship::Aggregates()
  * The relationship type which identifies the first contact as aggregating the second contact into a metacontact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::Aggregates, "Aggregates");
 
 /*!
- * \variable QContactRelationship::IsSameAs
+ * \fn QContactRelationship::IsSameAs()
  * The relationship type which identifies the first contact as being the same contact as the second contact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::IsSameAs, "IsSameAs");
 
 /*!
- * \variable QContactRelationship::HasAssistant
+ * \fn QContactRelationship::HasAssistant()
  * The relationship type which identifies the second contact as being the assistant of the first contact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::HasAssistant, "HasAssistant");
 
 /*!
- * \variable QContactRelationship::HasManager
+ * \fn QContactRelationship::HasManager()
  * The relationship type which identifies the second contact as being the manager of the first contact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::HasManager, "HasManager");
 
 /*!
- * \variable QContactRelationship::HasSpouse
+ * \fn QContactRelationship::HasSpouse()
  * The relationship type which identifies the second contact as being the spouse of the first contact
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactRelationship::HasSpouse, "HasSpouse");
 
 /*!
  * Constructs a new relationship

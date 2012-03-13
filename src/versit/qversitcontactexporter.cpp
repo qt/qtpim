@@ -185,7 +185,7 @@ QTVERSIT_BEGIN_NAMESPACE
   \section1 Exporting group relationships
   The exporter does not handle QContactRelationships at all.
 
-  Some managers use the \l{QContactRelationship::HasMember}{HasMember} QContactRelationship along
+  Some managers use the \l{QContactRelationship::HasMember()}{HasMember} QContactRelationship along
   with contacts of type \l{QContactType::TypeGroup}{TypeGroup} to indicate categorization of
   contacts.  In vCard, categorization is represented by the CATEGORIES property, which has
   semantics most similar to the QContactTag detail.  For contact manager backends that supports

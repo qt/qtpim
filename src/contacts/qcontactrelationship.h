@@ -49,7 +49,6 @@
 #include <QSharedDataPointer>
 
 #include <qcontactsglobal.h>
-#include <qlatin1constant.h>
 
 QT_BEGIN_NAMESPACE
 class QDataStream;
@@ -63,21 +62,12 @@ class QContact;
 class Q_CONTACTS_EXPORT QContactRelationship
 {
 public:
-#ifdef Q_QDOC
-    static const QLatin1Constant HasMember;
-    static const QLatin1Constant Aggregates;
-    static const QLatin1Constant IsSameAs;
-    static const QLatin1Constant HasAssistant;
-    static const QLatin1Constant HasManager;
-    static const QLatin1Constant HasSpouse;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(HasMember, "HasMember");
-    Q_DECLARE_LATIN1_CONSTANT(Aggregates, "Aggregates");
-    Q_DECLARE_LATIN1_CONSTANT(IsSameAs, "IsSameAs");
-    Q_DECLARE_LATIN1_CONSTANT(HasAssistant, "HasAssistant");
-    Q_DECLARE_LATIN1_CONSTANT(HasManager, "HasManager");
-    Q_DECLARE_LATIN1_CONSTANT(HasSpouse, "HasSpouse");
-#endif
+    inline static const QString HasMember() {return QStringLiteral("HasMember");};
+    inline static const QString Aggregates() {return QStringLiteral("Aggregates");};
+    inline static const QString IsSameAs() {return QStringLiteral("IsSameAs");};
+    inline static const QString HasAssistant() {return QStringLiteral("HasAssistant");};
+    inline static const QString HasManager() {return QStringLiteral("HasManager");};
+    inline static const QString HasSpouse() {return QStringLiteral("HasSpouse");};
 
     QContactRelationship();
     ~QContactRelationship();

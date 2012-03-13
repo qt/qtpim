@@ -38,7 +38,6 @@ PUBLIC_HEADERS += \
     qcontactsortorder.h \
     qcontactsglobal.h \
     qcontacts.h \
-    qlatin1constant.h \
     qcontactengineid.h \
 
 PRIVATE_HEADERS += \

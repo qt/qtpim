@@ -829,7 +829,7 @@ bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationsh
     // the memory backend supports arbitrary relationship types
     // but some relationship types don't make sense for groups.
     if (contactType == QContactType::TypeGroup) {
-        if (relationshipType == QContactRelationship::HasSpouse || relationshipType == QContactRelationship::HasAssistant) {
+        if (relationshipType == QContactRelationship::HasSpouse() || relationshipType == QContactRelationship::HasAssistant()) {
             return false;
         }
     }

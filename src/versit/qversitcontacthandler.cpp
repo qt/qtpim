@@ -43,14 +43,10 @@
 
 QTVERSIT_BEGIN_NAMESPACE
 
-Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileSync, "Sync");
-Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfileBackup, "Backup");
-
 QStringList QVersitContactHandlerFactory::keys() const
 {
     return QStringList() << name();
 }
-//Q_DEFINE_LATIN1_CONSTANT(QVersitContactHandlerFactory::ProfilePreserve, "Preserve");
 
 /*!
   \class QVersitContactHandler

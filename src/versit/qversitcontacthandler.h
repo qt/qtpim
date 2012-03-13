@@ -79,16 +79,8 @@ public:
     virtual QVersitContactHandler* createHandler() const = 0;
     virtual QStringList keys() const;
 
-#ifdef Q_QDOC
-    static const QLatin1Constant ProfileSync;
-    static const QLatin1Constant ProfileBackup;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(ProfileSync, "Sync");
-    Q_DECLARE_LATIN1_CONSTANT(ProfileBackup, "Backup");
-    // This is not enabled for 1.1.x because it's binary incompatible with 1.1.0
-    // TODO: enable this for 1.2
-    //Q_DECLARE_LATIN1_CONSTANT(ProfilePreserve, "Preserve");
-#endif
+    inline static const QString ProfileSync() {return QStringLiteral("Sync");};
+    inline static const QString ProfileBackup() {return QStringLiteral("Backup");};
 };
 
 class Q_VERSIT_EXPORT QVersitContactHandler : public QVersitContactImporterPropertyHandlerV2,

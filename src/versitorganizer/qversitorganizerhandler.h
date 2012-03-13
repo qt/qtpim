@@ -44,7 +44,6 @@
 
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
-#include <qlatin1constant.h>
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 
@@ -61,13 +60,8 @@ public:
     virtual int index() const { return 0; }
     virtual QVersitOrganizerHandler* createHandler() const = 0;
 
-#ifdef Q_QDOC
-    static const QLatin1Constant ProfileSync;
-    static const QLatin1Constant ProfileBackup;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(ProfileSync, "Sync");
-    Q_DECLARE_LATIN1_CONSTANT(ProfileBackup, "Backup");
-#endif
+    inline static const QString ProfileSync() {return QStringLiteral("Sync");};
+    inline static const QString ProfileBackup() {return QStringLiteral("Backup");};
 };
 
 class Q_VERSIT_ORGANIZER_EXPORT QVersitOrganizerHandler : public QVersitOrganizerImporterPropertyHandler,

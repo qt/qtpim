@@ -1,9 +1,5 @@
 TEMPLATE = subdirs
 
-# common
-SUBDIRS += \
-    qlatin1constant
-
 # contacts
 SUBDIRS += \
     qcontact \

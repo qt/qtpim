@@ -659,9 +659,9 @@ void tst_QContactFilter::relationshipFilter()
     QVERIFY(crf.relationshipType() == QString());
     QVERIFY(crf.relatedContact() == newContact);
 
-    crf.setRelationshipType(QContactRelationship::HasManager);
+    crf.setRelationshipType(QContactRelationship::HasManager());
 
-    QVERIFY(crf.relationshipType() == QContactRelationship::HasManager);
+    QVERIFY(crf.relationshipType() == QContactRelationship::HasManager());
     QVERIFY(crf.relatedContact() == newContact);
 
     /* Test op= */

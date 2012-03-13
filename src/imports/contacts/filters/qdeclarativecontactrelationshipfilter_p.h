@@ -76,22 +76,22 @@ public:
         if (v.type() != QVariant::String) {
             switch (v.toInt()) {
             case QDeclarativeContactRelationship::HasMember:
-                rt = QLatin1String(QContactRelationship::HasMember);
+                rt = QContactRelationship::HasMember();
                 break;
             case QDeclarativeContactRelationship::Aggregates:
-                rt = QLatin1String(QContactRelationship::Aggregates);
+                rt = QContactRelationship::Aggregates();
                 break;
             case QDeclarativeContactRelationship::IsSameAs:
-                rt = QLatin1String(QContactRelationship::IsSameAs);
+                rt = QContactRelationship::IsSameAs();
                 break;
             case QDeclarativeContactRelationship::HasAssistant:
-                rt = QLatin1String(QContactRelationship::HasAssistant);
+                rt = QContactRelationship::HasAssistant();
                 break;
             case QDeclarativeContactRelationship::HasManager:
-                rt = QLatin1String(QContactRelationship::HasManager);
+                rt = QContactRelationship::HasManager();
                 break;
             case QDeclarativeContactRelationship::HasSpouse:
-                rt = QLatin1String(QContactRelationship::HasSpouse);
+                rt = QContactRelationship::HasSpouse();
                 break;
            default:
                 break;

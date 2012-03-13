@@ -312,7 +312,7 @@ QContactManager::~QContactManager()
 
 
 /*!
-   \variable QContactManager::ParameterSignalSources
+   \fn QContactManager::ParameterSignalSources()
    The string constant for the parameter key which holds the value for signal sources.
    If a manager supports suppressing change signals depending on the value given for
    this construction parameter, clients can request that signals be suppressed if the
@@ -326,10 +326,9 @@ QContactManager::~QContactManager()
    is that the client wants to be notified of all changes to the data, regardless of
    the source of the change.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterSignalSources, "SignalSources");
 
 /*!
-   \variable QContactManager::ParameterSignalDefinitions
+   \fn QContactManager::ParameterSignalDefinitions()
    The string constant for the parameter key which holds the names of detail definitions.
    If a manager supports suppressing change signals depending on the value given for
    this construction parameter, clients can request that signals be suppressed if the
@@ -352,20 +351,18 @@ Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterSignalSources, "SignalSources
    the manager may still be constructed, however the parameter will not be reported
    to the client if the client calls managerParameters() subsequent to manager construction.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterSignalDefinitions, "SignalDefinitions");
 
 /*!
-   \variable QContactManager::ParameterValueOnlyOtherManagers
+   \fn QContactManager::ParameterValueOnlyOtherManagers()
    This value tells the manager to only emit signals for changes which
    are made in other manager instances.  That is, the client wishes to receive
    change signals when another client (or background service) changes
    the data as it is stored in the backend, but does not wish to be
    notified of changes (or side effects) which it has caused itself.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterValueOnlyOtherManagers, "OnlyOtherManagers");
 
 /*!
-   \variable QContactManager::ParameterValueOnlyOtherProcesses
+   \fn QContactManager::ParameterValueOnlyOtherProcesses()
    This value tells the manager to only emit signals for changes which
    are made in other processes.  That is, the client wishes to receive
    change signals when a client (or background service) in another process changes
@@ -374,7 +371,6 @@ Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterValueOnlyOtherManagers, "Only
    process, even if those changes were made in a different manager instance to this
    one.
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactManager::ParameterValueOnlyOtherProcesses, "OnlyOtherProcesses");
 
 /*!
   \enum QContactManager::Error

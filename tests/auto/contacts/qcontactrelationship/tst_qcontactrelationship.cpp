@@ -88,8 +88,8 @@ void tst_QContactRelationship::operations()
     QVERIFY(r1.first() == contact1);
     QVERIFY(r1.relationshipType() == QString());
 
-    r1.setRelationshipType(QContactRelationship::HasSpouse);
-    QVERIFY(r1.relationshipType() == QString(QLatin1String(QContactRelationship::HasSpouse)));
+    r1.setRelationshipType(QContactRelationship::HasSpouse());
+    QVERIFY(r1.relationshipType() == QContactRelationship::HasSpouse());
 }
 
 void tst_QContactRelationship::emptiness()
@@ -112,8 +112,8 @@ void tst_QContactRelationship::emptiness()
     QVERIFY(r1.first() == contact1);
     QVERIFY(r1.relationshipType() == QString());
 
-    r1.setRelationshipType(QContactRelationship::HasSpouse);
-    QVERIFY(r1.relationshipType() == QString(QLatin1String(QContactRelationship::HasSpouse)));
+    r1.setRelationshipType(QContactRelationship::HasSpouse());
+    QVERIFY(r1.relationshipType() == QContactRelationship::HasSpouse());
 
     r2 = r1;
     QVERIFY(r1 == r2);
@@ -122,7 +122,7 @@ void tst_QContactRelationship::emptiness()
 
     r3.setFirst(contact3);
     r3.setSecond(contact2);
-    r3.setRelationshipType(QContactRelationship::HasAssistant);
+    r3.setRelationshipType(QContactRelationship::HasAssistant());
 
     r2.setFirst(contact3);
     QVERIFY(r1 != r2);
@@ -139,19 +139,19 @@ void tst_QContactRelationship::hash()
     QContact contact2;
     contact2.setId(QContactIdMock::createId("b", 2));
     r1.setSecond(contact2);
-    r1.setRelationshipType(QContactRelationship::HasMember);
+    r1.setRelationshipType(QContactRelationship::HasMember());
 
     QContactRelationship r2;
     r2.setFirst(contact1);
     r2.setSecond(contact2);
-    r2.setRelationshipType(QContactRelationship::HasMember);
+    r2.setRelationshipType(QContactRelationship::HasMember());
 
     QContactRelationship r3;
     r3.setFirst(contact1);
     QContact contact3;
     contact1.setId(QContactIdMock::createId("c", 3));
     r3.setSecond(contact3);
-    r3.setRelationshipType(QContactRelationship::HasMember);
+    r3.setRelationshipType(QContactRelationship::HasMember());
 
     QVERIFY(qHash(r1) == qHash(r2));
     QVERIFY(qHash(r1) != qHash(r3));
@@ -175,7 +175,7 @@ void tst_QContactRelationship::datastream()
     QContact contact2;
     contact2.setId(QContactIdMock::createId("a", 2));
     relationshipIn.setSecond(contact2);
-    relationshipIn.setRelationshipType(QContactRelationship::HasMember);
+    relationshipIn.setRelationshipType(QContactRelationship::HasMember());
     stream1 << relationshipIn;
 
     QVERIFY(buffer.size() > 0);

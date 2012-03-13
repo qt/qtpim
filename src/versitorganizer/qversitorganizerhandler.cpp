@@ -43,9 +43,6 @@
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 
-Q_DEFINE_LATIN1_CONSTANT(QVersitOrganizerHandlerFactory::ProfileSync, "Sync");
-Q_DEFINE_LATIN1_CONSTANT(QVersitOrganizerHandlerFactory::ProfileBackup, "Backup");
-
 /*!
   \class QVersitOrganizerHandler
   \brief The QVersitOrganizerHandler class is a union of the

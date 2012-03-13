@@ -188,16 +188,15 @@ QStringList QContactAction::availableActions(const QString& serviceName)
 
 
 /*!
-   \variable QContactAction::ActionCall
+   \fn QContactAction::ActionCall()
    The name of the default call action.
    Actions of this name will allow the client to call
    the specified action target (contact or detail of a contact).
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionCall, "Call");
 
 /*!
-   \variable QContactAction::ActionEmail
+   \fn QContactAction::ActionEmail()
    The name of the default send email action.
    Actions of this name will either open a graphical element
    which allows the client to send the specified action
@@ -206,61 +205,54 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionCall, "Call");
    are specified.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionEmail, "email");
 
 /*!
-   \variable QContactAction::ActionSms
+   \fn QContactAction::ActionSms()
    The name of the default send sms action.
    Actions of this name will allow the client to send
    the specified action target an sms.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionSms, "sms");
 
 /*!
-   \variable QContactAction::ActionMms
+   \fn QContactAction::ActionMms()
    The name of the default send mms action.
    Actions of this name will allow the client to send
    the specified action target an mms.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionMms, "mms");
 
 /*!
-   \variable QContactAction::ActionChat
+   \fn QContactAction::ActionChat()
    The name of the default IM chat action.
    Actions of this name will allow the client to begin
    an IM chat session with the specified action target.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionChat, "chat");
 
 /*!
-   \variable QContactAction::ActionVideoCall
+   \fn QContactAction::ActionVideoCall()
    The name of the default video call action.
    Actions of this name will allow clients to initiate
    a video call with the specified action target.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionVideoCall, "videocall");
 
 /*!
-   \variable QContactAction::ActionOpenInEditor
+   \fn QContactAction::ActionOpenInEditor()
    The name of the default "edit contact" action.
    Actions of this name will open a graphical element
    which allows the user to edit the contact.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionOpenInEditor, "edit");
 
 /*!
-   \variable QContactAction::ActionOpenInViewer
+   \variable QContactAction::ActionOpenInViewer()
    The name of the default view contact action.
    Actions of this name will open a graphical element
    which allows the user to view the contact.
    \sa actionDescriptors()
  */
-Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionOpenInViewer, "view");
 
 /*!
   Returns a list of QContactActionDescriptor instances which identified implementations of the given \a actionName.
@@ -268,12 +260,12 @@ Q_DEFINE_LATIN1_CONSTANT(QContactAction::ActionOpenInViewer, "view");
 
   Example:
   \code
-      QList<QContactActionDescriptor> availableCallActions = QContactAction::actionDescriptors(QContactAction::ActionCall);
+      QList<QContactActionDescriptor> availableCallActions = QContactAction::actionDescriptors(QContactAction::ActionCall());
   \endcode
 
   Example 2:
   \code
-      QList<QContactActionDescriptor> customActions = QContactAction::actionDescriptors("customActionName");
+      QList<QContactActionDescriptor> customActions = QContactAction::actionDescriptors(QStringLiteral("customActionName"));
   \endcode
 
   The actions which are available depend on which action plugins have been installed.  For more information

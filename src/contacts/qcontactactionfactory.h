@@ -75,11 +75,7 @@ public:
 
     virtual bool supportsContact(const QContact& contact, const QContactActionDescriptor& which) const; // virtual but not pure virtual; default impl. calls supportedTargets.isEmpty().
 
-#ifdef Q_QDOC
-    static const QLatin1Constant InterfaceName;
-#else
-    Q_DECLARE_LATIN1_CONSTANT(InterfaceName, "org.qt-project.Qt.QContactActionFactory")
-#endif
+    inline static const QString InterfaceName() {return QStringLiteral("org.qt-project.Qt.QContactActionFactory");};
 
 protected:
     QContactActionDescriptor createDescriptor(const QString& actionName, const QString& serviceName, const QString& actionIdentifier, int implementationVersion) const;

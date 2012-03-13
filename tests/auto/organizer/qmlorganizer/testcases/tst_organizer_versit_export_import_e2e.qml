@@ -53,10 +53,6 @@ TestCase {
     property int importErrorCode
     property string importFileName
 
-
-    //    QOrganizerTestUtility {
-    //        id: utility
-    //    }
     OrganizerModel {
         id: organizerModel
         startPeriod: '2009-01-01'
@@ -72,11 +68,33 @@ TestCase {
         }
     }
 
+    SignalSpy {
+        id: modelChangedSpy
+        target: organizerModel
+        signalName: "modelChanged"
+    }
+
     Event {
         id: testEvent
         startDateTime: new Date("1991-08-25T20:57:08Z")
         endDateTime: new Date("1995-05-20 11:22:33 GMT+0200")
         displayLabel: "Versit event test"
+    }
+
+    MegaEvent {
+        id: megaEvent
+    }
+
+    function initTestCase() {
+        modelChangedSpy.wait()
+    }
+
+    function init() {
+        empty_calendar()
+    }
+
+    function cleanup() {
+        empty_calendar()
     }
 
     // UTILITIES
@@ -121,12 +139,6 @@ TestCase {
     }
 
     function test_organizerImportExportSignaling() {
-
-        var modelChangedSpy = create_spy(organizerModel, "modelChanged")
-        modelChangedSpy.wait()
-
-        // Start from clean state every time.
-        empty_calendar()
 
         // Save test Event.
         saveTestEvent()
@@ -177,9 +189,6 @@ TestCase {
 
     function test_overlappingExportEmitsSignalWithError() {
 
-        // Start from clean state every time.
-        empty_calendar()
-
         // Export items to two ical files which we will use for testing purposes....
         var icalFilePath1 = Qt.resolvedUrl("export_3.ical")
         var icalFilePath2 = Qt.resolvedUrl("export_4.ical")
@@ -208,9 +217,6 @@ TestCase {
     }
 
     function test_overlappingImportEmitsSignalWithError() {
-
-        // Start from clean state every time.
-        empty_calendar()
 
         // Save test Event.
         saveTestEvent()
@@ -254,11 +260,57 @@ TestCase {
                 'Imported Item failed.')
     }
 
-    // Init & teardown
-    function initTestCase() {
+    // Memory model for detail exporting test
+    OrganizerModel {
+        id: memoryModel
+        manager: "memory"
+        startPeriod: '2009-01-01'
+        endPeriod: '2012-12-31'
+        autoUpdate: true
     }
 
-    function cleanupTestCase() {
-        empty_calendar()
+    SignalSpy {
+        id: memoryModelSpy
+        target: memoryModel
+        signalName: "modelChanged"
     }
+
+    function test_organizerImportExportItemDetails() {
+        memoryModelSpy.wait() // Signal from model initialization
+
+        memoryModel.saveItem(megaEvent)
+        memoryModelSpy.wait()
+
+        var exportModelChangedSpy = create_spy(memoryModel, "exportCompleted")
+        memoryModel.exportItems(Qt.resolvedUrl("tst_organizer_versit_export_import_e2e_megaevent.ical"), ["Sync"])
+        exportModelChangedSpy.wait()
+
+        memoryModel.removeItem(memoryModel.items[0])
+        memoryModelSpy.wait()
+
+        // ---Temporary fix due to bug
+        // Exported file will not import unless version 3.0 changed to version 2.0. Known bug and needs fixing.
+        memoryModel.importItems(Qt.resolvedUrl("tst_organizer_versit_export_import_e2e_megaevent_temp.ical"), ["Sync"])
+        memoryModelSpy.wait()
+
+        compare(memoryModel.itemCount, 1)
+
+        var importedEvent = memoryModel.items[0]
+
+        // Verify imported details. Todo: verify more details when more details are supported
+        compare(importedEvent.startDateTime, megaEvent.startDateTime)
+        compare(importedEvent.endDateTime, megaEvent.endDateTime)
+        compare(importedEvent.displayLabel, megaEvent.displayLabel)
+        compare(importedEvent.priority, megaEvent.priority)
+        compare(importedEvent.description, megaEvent.description)
+        compare(importedEvent.detail(Detail.Comment).comment, megaEvent.detail(Detail.Comment).comment)
+        expectFail("", "During import the timestamp information gets overwritten with current datetime")
+        compare(importedEvent.detail(Detail.Timestamp).created, megaEvent.detail(Detail.Timestamp).created)
+        expectFail("", "During import the timestamp information gets overwritten with current datetime")
+        compare(importedEvent.detail(Detail.Timestamp).lastModified, megaEvent.detail(Detail.Timestamp).lastModified)
+
+        memoryModel.removeItem(memoryModel.items[0])
+        memoryModelSpy.wait()
+    }
+
 }

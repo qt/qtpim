@@ -56,6 +56,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerQmlPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface" FILE "organizer.json")
+
 public:
     void registerTypes(const char *uri)
     {
@@ -122,5 +124,3 @@ public:
 #include "plugin.moc"
 
 QTORGANIZER_END_NAMESPACE
-
-Q_EXPORT_PLUGIN2(qorganizerqmlplugin, QTORGANIZER_PREPEND_NAMESPACE(QOrganizerQmlPlugin))

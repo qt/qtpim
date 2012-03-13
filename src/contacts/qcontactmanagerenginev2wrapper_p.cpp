@@ -415,8 +415,6 @@ void PartialSaveRequestController::handleFinishedSubRequest(QContactAbstractRequ
 /* Copy details specified in \a mask from contact \a from to contact \a to */
 void PartialSaveRequestController::partiallyCopyDetails(QContact* to, const QContact& from,
                                                         const QSet<QContactDetail::DetailType>& mask) {
-    // Perhaps this could do this directly rather than through saveDetail
-    // but that would duplicate the checks for display label etc
     foreach (QContactDetail::DetailType type, mask) {
         QList<QContactDetail> details = from.details(type);
         foreach(QContactDetail detail, details) {

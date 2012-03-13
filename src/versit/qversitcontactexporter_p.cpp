@@ -117,7 +117,6 @@ void QVersitContactExporterPrivate::exportContact(
 {
     QList<QContactDetail> allDetails = contact.details();
     foreach (const QContactDetail& detail, allDetails) {
-        // If the custom detail handler handles it, we don't have to.
         if (mDetailHandler
             && mDetailHandler->preProcessDetail(contact, detail, &document))
             continue;
@@ -138,6 +137,9 @@ void QVersitContactExporterPrivate::exportContact(
             break;
         case QContactDetail::TypeBirthday:
             encodeBirthDay(detail, &generatedProperties, &processedFields);
+            break;
+        case QContactDetail::TypeDisplayLabel:
+            encodeDisplayLabel(detail, document, &removedProperties, &generatedProperties, &processedFields);
             break;
         case QContactDetail::TypeEmailAddress:
             encodeEmail(detail, &generatedProperties, &processedFields);
@@ -277,19 +279,11 @@ void QVersitContactExporterPrivate::encodeName(
         *generatedProperties << property;
     }
 
-    if (!contactName.customLabel().isEmpty()) {
-        QVersitProperty fnProperty;
-        fnProperty.setName(QLatin1String("FN"));
-        fnProperty.setValue(contactName.customLabel());
-        *generatedProperties << fnProperty;
-    }
-
     *processedFields << QContactName::FieldLastName
                      << QContactName::FieldFirstName
                      << QContactName::FieldMiddleName
                      << QContactName::FieldPrefix
-                     << QContactName::FieldSuffix
-                     << QContactName::FieldCustomLabel;
+                     << QContactName::FieldSuffix;
 }
 
 /*!
@@ -485,6 +479,27 @@ void QVersitContactExporterPrivate::encodeBirthDay(
     property.setValue(value);
     *generatedProperties << property;
     *processedFields << QContactBirthday::FieldBirthday;
+}
+
+/*!
+ * Encodes displaylabel property information into the Versit Document
+ */
+void QVersitContactExporterPrivate::encodeDisplayLabel(
+    const QContactDetail &detail,
+    const QVersitDocument& document,
+    QList<QVersitProperty>* removedProperties,
+    QList<QVersitProperty>* generatedProperties,
+    QSet<int>* processedFields)
+{
+    QContactDisplayLabel displaylabelDetail = static_cast<QContactDisplayLabel>(detail);
+    QVersitProperty property =
+        VersitUtils::takeProperty(document, QLatin1String("FN"), removedProperties);
+    property.setName(QLatin1String("FN"));
+    QStringList value(property.variantValue().toStringList());
+    value.append(displaylabelDetail.label());
+    property.setValue(value);
+    *generatedProperties << property;
+    *processedFields << QContactDisplayLabel::FieldLabel;
 }
 
 /*!

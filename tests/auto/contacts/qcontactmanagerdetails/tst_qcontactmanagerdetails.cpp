@@ -90,6 +90,8 @@ private slots:
     void testAvatar_data() {addManagers();}
     void testBirthday();
     void testBirthday_data() {addManagers();}
+    void testDisplayLabel();
+    void testDisplayLabel_data() {addManagers();}
     void testEmailAddress();
     void testEmailAddress_data() {addManagers();}
     void testEmptyExtendedDetail();
@@ -179,8 +181,6 @@ bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QConta
 
     // Ignore some details which are not relevant and will mess
     // up direct comparison between two contacts.
-    removeDetail<QContactDisplayLabel>(original);
-    removeDetail<QContactDisplayLabel>(loaded);
     removeDetail<QContactGuid>(original);
     removeDetail<QContactGuid>(loaded);
     removeDetail<QContactTimestamp>(original);
@@ -342,6 +342,25 @@ void tst_QContactManagerDetails::testName()
     n.setSuffix( "suffix" );
     c.saveDetail( &n );
     saveAndVerifyContact( cm.data(), c );
+}
+
+void tst_QContactManagerDetails::testDisplayLabel()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    QContact originalContact;
+
+    QContactDisplayLabel dl1;
+    dl1.setLabel("displayLabel1");
+    originalContact.saveDetail(&dl1);
+
+    saveAndVerifyContact(cm.data(), originalContact);
+
+    QContact loadedContact;
+    QVERIFY(saveAndLoadContact(cm.data(), originalContact, loadedContact));
+    QCOMPARE(loadedContact.details().count(), originalContact.details().count());
+    QCOMPARE(loadedContact, originalContact);
 }
 
 void tst_QContactManagerDetails::testNickName()

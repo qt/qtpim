@@ -770,6 +770,39 @@ const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirt
    Sets the identifier of the calendar entry associated with this birthday to \a calendarId.
  */
 
+/* ==================== QContactDisplayLabel ======================= */
+
+/*!
+   \class QContactDisplayLabel
+   \brief The QContactDisplayLabel class contains a displayLabel of a contact.
+   \ingroup contacts-details
+ */
+
+/*!
+   \variable QContactDisplayLabel::Type
+   The enum constant for the type identifier of QContactDisplayLabel details.
+*/
+const QContactDetail::DetailType QContactDisplayLabel::Type(QContactType::TypeDisplayLabel);
+
+/*!
+   \enum QContactDisplayLabel::DisplayLabelField
+   This enumeration defines the fields supported by QContactDisplayLabel.
+   \value FieldLabel The value stored in this field contains the displaylabel.
+   \sa label(), setLabel()
+ */
+
+/*!
+   \fn QContactDisplayLabel::setLabel(const QString& displayLabel)
+   Sets the displayLabel of the contact which is stored in this detail to \a displayLabel.
+   displayLabel can be for example the first name of a contact.
+ */
+
+/*!
+   \fn QContactDisplayLabel::label() const
+   Returns the displayLabel of the contact which is stored in this detail.
+ */
+
+
 /* ==================== QContactGender ======================= */
 
 /*!
@@ -1062,13 +1095,11 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    \value FieldMiddleName The value stored in this field contains the middle part of the name.
    \value FieldLastName The value stored in this field contains the last part of the name.
    \value FieldSuffix The value stored in this field contains the suffix part of the name.
-   \value FieldCustomLabel The value stored in this field contains a custom formatted label.
    \sa prefix(), setPrefix()
    \sa firstName(), setFirstName()
    \sa middleName(), setMiddleName()
    \sa lastName(), setLastName()
    \sa suffix(), setSuffix()
-   \sa customLabel(), setCustomLabel()
  */
 
 /*!
@@ -1123,16 +1154,6 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
 /*!
    \fn QContactName::setSuffix(const QString& suffix)
    Sets the suffix segment of the name stored in this detail to \a suffix.
- */
-
-/*!
-   \fn QContactName::customLabel() const
-   Returns the custom label of the name stored in this detail.
- */
-
-/*!
-   \fn QContactName::setCustomLabel(const QString& customLabel)
-   Sets the custom label of the name stored in this detail to \a customLabel.
  */
 
 /* ==================== QContactNickname ======================= */
@@ -1345,34 +1366,6 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
    Sets the type of the contact to be the give \a type.
  */
 
-/* ==================== QContactDisplayLabel ======================= */
-
-// XXX TODO make this better
-/*!
-   \class QContactDisplayLabel
-   \brief The QContactDisplayLabel class is the (possibly synthesized)
-   display label of a contact.
-   \ingroup contacts-details
- */
-
-/*!
-   \variable QContactDisplayLabel::Type
-   The enum constant for the type identifier of QContactDisplayLabel details.
- */
-const QContactDetail::DetailType QContactDisplayLabel::Type(QContactDetail::TypeDisplayLabel);
-
-
-/*!
-   \enum QContactDisplayLabel::DisplayLabelField
-   This enumeration defines the fields supported by QContactDisplayLabel.
-   \value FieldLabel The value stored in this field contains the value of the display label.
-   \sa label()
- */
-
-/*!
-   \fn QContactDisplayLabel::label() const
-   Returns the display label of the contact.
- */
 
 /* ==================== QContactOnlineAccount ======================= */
 
@@ -2198,8 +2191,7 @@ QContactFilter QContactName::match(const QString &name)
 {
     QContactUnionFilter nameFilter;
     QList<int> nameFields;
-    nameFields << QContactName::FieldCustomLabel
-            << QContactName::FieldFirstName
+    nameFields << QContactName::FieldFirstName
             << QContactName::FieldLastName
             << QContactName::FieldMiddleName
             << QContactName::FieldPrefix

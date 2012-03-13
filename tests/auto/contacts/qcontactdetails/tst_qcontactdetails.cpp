@@ -335,29 +335,35 @@ void tst_QContactDetails::birthday()
 
 void tst_QContactDetails::displayLabel()
 {
-    QContactDisplayLabel d1;
     QContact c;
+    QContactDisplayLabel d1, d2;
 
-    QVERIFY(d1.label().isEmpty());
-    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel).isNull());
-    d1.setValue(QContactDisplayLabel::FieldLabel, "Test");
-    QVERIFY(d1.value(QContactDisplayLabel::FieldLabel).toString() == QString("Test"));
-    QVERIFY(d1.label() == QString("Test"));
+    // test property set
+    d1.setLabel("1234");
+    QCOMPARE(d1.label(), QString("1234"));
+    QCOMPARE(d1.value(QContactDisplayLabel::FieldLabel).toString(), QString("1234"));
 
-    QContactDisplayLabel d2;
-    d2.setValue(QContactDisplayLabel::FieldLabel, "Test 2");
-
-    // test property add [== fail]
-    QVERIFY(!c.saveDetail(&d2));
+    // test property add
+    QVERIFY(c.saveDetail(&d1));
     QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 1);
+    QCOMPARE(QContactDisplayLabel(c.details(QContactDisplayLabel::Type).value(0)).label(), d1.label());
 
-    // test property update [== fail]
-    d1 = c.detail<QContactDisplayLabel>();
-    QVERIFY(!c.saveDetail(&d1));
+    // test property update
+    d1.setValue(QContactDisplayLabel::FieldContext, "label1");
+    d1.setLabel("12345");
+    QVERIFY(c.saveDetail(&d1));
+    QCOMPARE(c.details(QContactDisplayLabel::Type).value(0).value(QContactDisplayLabel::FieldContext).toString(), QString("label1"));
+    QCOMPARE(c.details(QContactDisplayLabel::Type).value(0).value(QContactDisplayLabel::FieldLabel).toString(), QString("12345"));
 
     // test property remove
-    QVERIFY(!c.removeDetail(&d1)); // cannot remove display label
-    QCOMPARE(c.details<QContactDisplayLabel>().count(), 1);
+    QVERIFY(c.removeDetail(&d1));
+    QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 0);
+    QVERIFY(c.saveDetail(&d2));
+    QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 1);
+    QVERIFY(c.removeDetail(&d2));
+    QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 0);
+    QVERIFY(c.removeDetail(&d2) == false);
+    QCOMPARE(c.details(QContactDisplayLabel::Type).count(), 0);
 }
 
 void tst_QContactDetails::emailAddress()

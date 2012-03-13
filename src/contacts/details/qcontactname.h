@@ -66,8 +66,7 @@ public:
         FieldFirstName,
         FieldMiddleName,
         FieldLastName,
-        FieldSuffix,
-        FieldCustomLabel
+        FieldSuffix
     };
 
     QString prefix() const {return value(FieldPrefix).toString();}
@@ -75,14 +74,12 @@ public:
     QString middleName() const {return value(FieldMiddleName).toString();}
     QString lastName() const {return value(FieldLastName).toString();}
     QString suffix() const {return value(FieldSuffix).toString();}
-    QString customLabel() const{return value(FieldCustomLabel).toString();}
 
     void setPrefix(const QString& prefix) {setValue(FieldPrefix, prefix);}
     void setFirstName(const QString& firstName) {setValue(FieldFirstName, firstName);}
     void setMiddleName(const QString& middleName) {setValue(FieldMiddleName, middleName);}
     void setLastName(const QString& lastName) {setValue(FieldLastName, lastName);}
     void setSuffix(const QString& suffix) {setValue(FieldSuffix, suffix);}
-    void setCustomLabel(const QString& customLabel) {setValue(FieldCustomLabel, customLabel);}
 
     // Convenience filter
     static QContactFilter match(const QString& name);

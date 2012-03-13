@@ -179,6 +179,18 @@ ContactsSavingTestCase {
         compare(detail.nickname, "Dummy")
     }
 
+    DisplayLabel {
+        id: displaylabel
+    }
+
+    function test_displaylabel() {
+        displaylabel.label = "Dummy"
+        contact.addDetail(displaylabel)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.DisplayLabel)
+        compare(detail.label, "Dummy")
+    }
+
     Note {
         id: note
     }

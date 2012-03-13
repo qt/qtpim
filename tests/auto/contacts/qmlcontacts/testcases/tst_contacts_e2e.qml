@@ -81,26 +81,32 @@ property Contact testContact
                                               "PhoneNumber {number: '99999999'}", testContact);
             var nick = Qt.createQmlObject("import QtContacts 5.0;" +
                                              "Nickname {nickname: 'jack'}", testContact);
+            var label = Qt.createQmlObject("import QtContacts 5.0;" +
+                                             "DisplayLabel {label: 'Alice In Wonderland'}", testContact);
             var mail = Qt.createQmlObject("import QtContacts 5.0;" +
                                              "EmailAddress {emailAddress: 'joe.john@ovi.com'}", testContact);
             testContact.name.firstName = "Joe"
             testContact.name.lastName = "John"
             testContact.addDetail(phone)
             testContact.addDetail(nick)
+            testContact.addDetail(label)
             testContact.addDetail(mail)
             model.saveContact(testContact)
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testContact = model.contacts[0]
             compare(testContact.phoneNumber.number,"99999999")
             compare(testContact.nickname.nickname,"jack")
+            compare(testContact.displayLabel.label,"Alice In Wonderland")
             compare(testContact.email.emailAddress,"joe.john@ovi.com")
             testContact.removeDetail(testContact.detail(ContactDetail.NickName));
+            testContact.removeDetail(testContact.detail(ContactDetail.DisplayLabel));
             testContact.removeDetail(testContact.detail(ContactDetail.PhoneNumber));
             testContact.removeDetail(testContact.detail(ContactDetail.Email));
             model.saveContact(testContact)
             waitForContactsChanged (contactsChangedSpy.count + 1)
             testContact = model.contacts[0]
             verify(!testContact.detail(ContactDetail.NickName))
+            verify(!testContact.detail(ContactDetail.DisplayLabel))
             verify(!testContact.detail(ContactDetail.PhoneNumber))
             verify(!testContact.detail(ContactDetail.Email))
             compare(model.contacts.length, 1)

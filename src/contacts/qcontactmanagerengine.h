@@ -90,9 +90,6 @@ public:
     virtual bool saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
     virtual bool removeContacts(const QList<QContactId> &contactIds, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
-    /* Synthesize the display label of a contact */
-    virtual QString synthesizedDisplayLabel(const QContact &contact, QContactManager::Error *error) const;
-
     /* "Self" contact id (MyCard) */
     virtual bool setSelfContactId(const QContactId &contactId, QContactManager::Error *error);
     virtual QContactId selfContactId(QContactManager::Error *error) const;
@@ -141,7 +138,6 @@ public:
 
     // Other protected area update functions
     static void setDetailAccessConstraints(QContactDetail *detail, QContactDetail::AccessConstraints constraints);
-    static void setContactDisplayLabel(QContact *contact, const QString &displayLabel);
     static void setContactRelationships(QContact *contact, const QList<QContactRelationship> &relationships);
 
     /* Helper functions */

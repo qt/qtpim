@@ -96,7 +96,7 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
     {"CATEGORIES",    QContactTag::Type,
                       QContactTag::FieldTag},
     {"FN",            QContactDisplayLabel::Type,
-                      -1},
+                      QContactDisplayLabel::FieldLabel},
     {"GEO",           QContactGeoLocation::Type,
                       -1},
     {"EMAIL",         QContactEmailAddress::Type,

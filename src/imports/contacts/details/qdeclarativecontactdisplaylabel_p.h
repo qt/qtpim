@@ -52,7 +52,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QDeclarativeContactDisplayLabel : public QDeclarativeContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString label READ label NOTIFY valueChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "label")
 public:
@@ -71,9 +71,16 @@ public:
         return QDeclarativeContactDetail::DisplayLabel;
     }
 
-    QString label() const {
-        return detail().value(QContactDisplayLabel::FieldLabel).toString();
+    void setLabel(const QString &v)
+    {
+        if (!readOnly() && v != label()) {
+            detail().setValue(QContactDisplayLabel::FieldLabel, v);
+            emit valueChanged();
+        }
     }
+
+    QString label() const {return detail().value(QContactDisplayLabel::FieldLabel).toString();}
+
 signals:
     void valueChanged();
 };

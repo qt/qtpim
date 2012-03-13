@@ -56,7 +56,6 @@ class QDeclarativeContactName : public QDeclarativeContactDetail
     Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY valueChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY valueChanged)
     Q_PROPERTY(QString suffix READ suffix WRITE setSuffix NOTIFY valueChanged)
-    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY valueChanged)
 
     Q_ENUMS(FieldType)
     Q_CLASSINFO("DefaultProperty", "firstName")
@@ -67,7 +66,6 @@ public:
         MiddleName = QContactName::FieldMiddleName,
         LastName = QContactName::FieldLastName,
         Suffix = QContactName::FieldSuffix,
-        CustomLabel = QContactName::FieldCustomLabel
     };
 
     QDeclarativeContactName(QObject* parent = 0)
@@ -86,7 +84,6 @@ public:
     QString middleName() const {return detail().value(QContactName::FieldMiddleName).toString();}
     QString lastName() const {return detail().value(QContactName::FieldLastName).toString();}
     QString suffix() const {return detail().value(QContactName::FieldSuffix).toString();}
-    QString customLabel() const{return detail().value(QContactName::FieldCustomLabel).toString();}
 
     void setPrefix(const QString& v)
     {
@@ -121,13 +118,6 @@ public:
     {
         if (!readOnly() && v != suffix()) {
             detail().setValue(QContactName::FieldSuffix, v);
-            emit valueChanged();
-        }
-    }
-    void setCustomLabel(const QString& v)
-    {
-        if (!readOnly() && v != customLabel()) {
-            detail().setValue(QContactName::FieldCustomLabel, v);
             emit valueChanged();
         }
     }

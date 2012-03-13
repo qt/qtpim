@@ -551,7 +551,6 @@ QList<QContact> QContactManager::contacts(const QList<QContactId> &contactIds, c
   success.  On successful save of an contact with a null id, its
   id will be set to a new, non-null id.
 
-  The manager will automatically synthesize the display label of the contact when it is saved.
   The manager is not required to fetch updated details of the contact on save,
   and as such, clients should fetch a contact if they want the most up-to-date information
   by calling \l QContactManager::contact().
@@ -671,49 +670,6 @@ bool QContactManager::removeContacts(const QList<QContactId> &contactIds, QMap<i
     } else {
         h.error = QContactManager::BadArgumentError;
         return false;
-    }
-}
-
-/*!
-  Returns a display label for a \a contact which is synthesized from its details in a manager specific
-  manner.
-
-  If you want to update the display label stored in the contact, use the synthesizeContactDisplayLabel()
-  function instead.
-
-  \sa synthesizeContactDisplayLabel()
- */
-QString QContactManager::synthesizedContactDisplayLabel(const QContact &contact) const
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    return d->m_engine->synthesizedDisplayLabel(contact, &h.error);
-}
-
-/*!
- * Updates the display label of the supplied \a contact, according to the formatting rules
- * of this manager.
- *
- * Different managers can format the display label of a contact in different ways -
- * some managers may only consider first or last name, or might put them in different
- * orders.  Others might consider an organization, a nickname, or a freeform label.
- *
- * This function will update the QContactDisplayLabel of this contact, and the string
- * returned by QContact::displayLabel().
- *
- * If \a contact is null, nothing will happen.
- *
- * See the following example for more information:
- * \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Updating the display label of a contact
- *
- * \sa synthesizedContactDisplayLabel(), QContact::displayLabel()
- */
-void QContactManager::synthesizeContactDisplayLabel(QContact *contact) const
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    if (contact) {
-        QContactManagerEngine::setContactDisplayLabel(contact, d->m_engine->synthesizedDisplayLabel(*contact, &h.error));
-    } else {
-        h.error = QContactManager::BadArgumentError;
     }
 }
 

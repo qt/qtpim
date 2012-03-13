@@ -58,6 +58,7 @@
 #include <qcontacttimestamp.h>
 #include <qcontactanniversary.h>
 #include <qcontactbirthday.h>
+#include <qcontactdisplaylabel.h>
 #include <qcontactgender.h>
 #include <qcontactnickname.h>
 #include <qcontactavatar.h>
@@ -164,7 +165,6 @@ bool QVersitContactImporterPrivate::importContact(
     }
 
     contact->setType(QContactType::TypeContact);
-    QContactManagerEngine::setContactDisplayLabel(contact, QVersitContactImporterPrivate::synthesizedDisplayLabel(*contact));
 
     mRestoreHandler.documentProcessed();
     // run plugin handlers
@@ -209,9 +209,6 @@ void QVersitContactImporterPrivate::importProperty(
     case QContactDetail::TypeBirthday:
         success = createBirthday(property, contact, &updatedDetails);
         break;
-    case QContactDetail::TypeDisplayLabel:
-        success = createCustomLabel(property, contact, &updatedDetails);
-        break;
     case QContactDetail::TypeFamily:
         success = createFamily(property, contact, &updatedDetails);
         break;
@@ -226,6 +223,9 @@ void QVersitContactImporterPrivate::importProperty(
         break;
     case QContactDetail::TypeNickname:
         success = createNicknames(property, contact, &updatedDetails);
+        break;
+    case QContactDetail::TypeDisplayLabel:
+        success = createDisplaylabel(property, contact, &updatedDetails);
         break;
     case QContactDetail::TypeOnlineAccount:
         success = createOnlineAccount(property, contact, &updatedDetails);
@@ -529,6 +529,29 @@ bool QVersitContactImporterPrivate::createBirthday(
 }
 
 /*!
+* Creates a QContactDisplayLabel from \a property
+*/
+bool QVersitContactImporterPrivate::createDisplaylabel(
+   const QVersitProperty& property,
+   QContact* contact,
+   QList<QContactDetail>* updatedDetails)
+{
+    QString label(property.value());
+    if (!label.isEmpty()) {
+        QContactDisplayLabel displayLabel;
+        QContactDisplayLabel existingDisplayLabel = contact->detail<QContactDisplayLabel>();
+        if (!existingDisplayLabel.isEmpty()) {
+             displayLabel = existingDisplayLabel;
+        }
+        displayLabel.setLabel(property.value());
+        saveDetailWithContext(updatedDetails, displayLabel, extractContexts(property));
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*!
  * Creates QContactNicknames from \a property
  */
 bool QVersitContactImporterPrivate::createNicknames(
@@ -812,31 +835,6 @@ bool QVersitContactImporterPrivate::createNameValueDetail(
 }
 
 /*!
- * Find an existing QContactName and set the CustomLabel field on it
- */
-bool QVersitContactImporterPrivate::createCustomLabel(
-    const QVersitProperty& property,
-    QContact* contact,
-    QList<QContactDetail>* updatedDetails)
-{
-    QString label(property.value());
-    if (!label.isEmpty()) {
-        QContactName name;
-        QContactName existingName = contact->detail<QContactName>();
-        if (!existingName.isEmpty()) {
-            name = existingName;
-        }
-
-        name.setCustomLabel(property.value());
-
-        saveDetailWithContext(updatedDetails, name, extractContexts(property));
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/*!
  * Extracts the list of contexts from \a types
  */
 QList<int> QVersitContactImporterPrivate::extractContexts(
@@ -965,69 +963,6 @@ void QVersitContactImporterPrivate::saveDetailWithContext(
     if (!contexts.isEmpty())
         detail.setContexts(contexts);
     updatedDetails->append(detail);
-}
-
-/*! Synthesize the display label from the name of the contact, or, failing that, the nickname of
-the contact, or failing that, the organisation of the contact.
-Returns the synthesized display label.
- */
-QString QVersitContactImporterPrivate::synthesizedDisplayLabel(const QContact& contact)
-{
-    /* XXX This is copied and modified from QContactManagerEngine.  This should be made a public
-       static function in QCME and called here */
-    QList<QContactName> allNames = contact.details<QContactName>();
-
-    const QString space(QStringLiteral(" "));
-
-    // synthesize the display label from the name.
-    foreach (const QContactName& name, allNames) {
-        if (!name.customLabel().isEmpty()) {
-            // default behaviour is to allow the user to define a custom display label.
-            return name.customLabel();
-        }
-
-        QString result;
-        if (!name.value(QContactName::FieldPrefix).toString().trimmed().isEmpty()) {
-            result += name.value(QContactName::FieldPrefix).toString();
-        }
-        if (!name.value(QContactName::FieldFirstName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldFirstName).toString();
-        }
-        if (!name.value(QContactName::FieldMiddleName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldMiddleName).toString();
-        }
-        if (!name.value(QContactName::FieldLastName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldLastName).toString();
-        }
-        if (!name.value(QContactName::FieldSuffix).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldSuffix).toString();
-        }
-        if (!result.isEmpty())
-            return result;
-    }
-
-    QList<QContactNickname> allNicknames = contact.details<QContactNickname>();
-    foreach (const QContactNickname& nickname, allNicknames) {
-        if (!nickname.nickname().isEmpty())
-            return nickname.nickname();
-    }
-
-    /* Well, we had no non empty names. if we have orgs, fall back to those */
-    QList<QContactOrganization> allOrgs = contact.details<QContactOrganization>();
-    foreach (const QContactOrganization& org, allOrgs) {
-        if (!org.name().isEmpty())
-            return org.name();
-    }
-
-    return QString();
 }
 
 QTVERSIT_END_NAMESPACE

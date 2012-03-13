@@ -590,17 +590,6 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
             bool isNewContact = (contact.id().isNull() || contact.id().managerUri().isEmpty());
             if (isNewContact) {
                 contact.setId(convertUuidtoContactId(jsonUuid));
-                QString displayLabel = m_engine->synthesizedDisplayLabel(contact, &error);
-                if (error == QContactManager::NoError) {
-                    QContactManagerEngine::setContactDisplayLabel(&contact, displayLabel);
-                } else {
-                    errorMap.insert(index, error);
-                    lastError = error;
-                    if (qt_debug_jsondb_contacts())
-                        qDebug() << Q_FUNC_INFO << "ERROR in synthesizing display label: "
-                                 << error << "for contact " << contact;
-                    QContactManagerEngine::setContactDisplayLabel(&contact, QString(""));
-                };
             }
             m_requestMgr->addContact(req, contact, index);
         }

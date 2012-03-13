@@ -68,7 +68,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactAnniversary* anniversary READ anniversary NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactAvatar* avatar READ avatar NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactBirthday*  birthday READ birthday NOTIFY contactChanged)
-    Q_PROPERTY (QString  displayLabel READ displayLabel NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactDisplayLabel*  displayLabel READ displayLabel NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactEmailAddress*  email READ email NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactEmailAddress> emails READ emails NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactFamily*  family READ family NOTIFY contactChanged)
@@ -125,7 +125,7 @@ public:
     QDeclarativeContactAnniversary* anniversary();
     QDeclarativeContactAvatar* avatar();
     QDeclarativeContactBirthday*  birthday();
-    QString  displayLabel();
+    QDeclarativeContactDisplayLabel* displayLabel();
     QDeclarativeContactEmailAddress*  email();
     QQmlListProperty<QDeclarativeContactEmailAddress>  emails();
     QDeclarativeContactFamily*  family();

@@ -70,13 +70,6 @@ public:
 
     /*! \reimp */
     int managerVersion() const {return 0;}
-
-    /*! \reimp */
-    virtual QString synthesizedDisplayLabel(const QContact&, QContactManager::Error* error) const
-    {
-        *error =  QContactManager::NotSupportedError;
-        return QString();
-    }
 };
 
 QTCONTACTS_END_NAMESPACE

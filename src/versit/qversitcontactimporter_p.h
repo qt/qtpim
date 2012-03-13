@@ -85,8 +85,6 @@ public:
     bool importContact(const QVersitDocument& versitDocument, int contactIndex,
                        QContact* contact, QVersitContactImporter::Error* error);
 
-    static QString synthesizedDisplayLabel(const QContact& contact);
-
 private:
     void importProperty(const QVersitDocument& document, const QVersitProperty& property, int contactIndex, QContact* contact);
     bool createName(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
@@ -98,6 +96,7 @@ private:
     bool createTimeStamp(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createAnniversary(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createBirthday(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    bool createDisplaylabel(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNicknames(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createTags(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createOnlineAccount(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
@@ -106,7 +105,6 @@ private:
     bool createGeoLocation(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createFamily(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNameValueDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
-    bool createCustomLabel(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createGender(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     QList<int> extractContexts(const QVersitProperty& property) const;
     QStringList extractSubTypes(const QVersitProperty& property) const;

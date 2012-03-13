@@ -837,7 +837,7 @@ QVariant QDeclarativeContactModel::data(const QModelIndex &index, int role) cons
 
     switch(role) {
         case Qt::DisplayRole:
-            return c.displayLabel();
+             return c.detail(QContactDetail::TypeDisplayLabel).value(QContactDisplayLabel::FieldLabel);
         case Qt::DecorationRole:
             return QPixmap();
         case ContactRole:

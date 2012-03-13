@@ -199,11 +199,10 @@ QTVERSIT_BEGIN_NAMESPACE
   \section1 Other implementation notes
 
   Some Symbian and Android devices do not properly handle the \c FN vCard property.  If a
-  CustomLabel is set on a contact and this class is used to generate a vCard, the receiving device
+  DisplayLabel is set on a contact and this class is used to generate a vCard, the receiving device
   might display this label in an unexpected field (eg. Last Name).
-
   The vCard specification requires the \c FN property to be present.  However, because of this
-  interoperability issue, Qt Versit only generates an FN property if a CustomLabel is set.
+  interoperability issue, Qt Versit only generates an FN property if a Displaylabel is set.
 
   \sa QVersitDocument, QVersitProperty, QVersitResourceHandler, QVersitContactExporterDetailHandlerV2
  */

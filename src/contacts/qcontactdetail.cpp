@@ -96,7 +96,7 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
   access constraints provided with it, like \l ReadOnly or \l Irremovable.  This might mean that the
   supplied detail is calculated or otherwise not modifiable by the user - presence information is a
   good example.  Also, some details may be marked \l Irremovable.  These are typically things that
-  a contact has to have - like a QContactDisplayLabel or a QContactType.
+  a contact has to have - like a QContactType.
 
   It is possible to inherit from QContactDetail to provide convenience or
   standardized access to values.  For example, \l QContactPhoneNumber provides

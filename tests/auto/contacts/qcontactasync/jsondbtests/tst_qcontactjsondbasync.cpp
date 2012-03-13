@@ -427,7 +427,7 @@ void tst_QContactJsonDbAsync::contactFetch()
     contacts = cfr.contacts();
     QCOMPARE(contactIds.size(), contacts.size());
     for (int i = 0; i < contactIds.size(); i++) {
-        // create a contact from the restricted data only (id + display label)
+        // create a contact from the restricted data only (id)
         QContact currFull = cm->contact(contactIds.at(i));
         QContact currRestricted;
         currRestricted.setId(currFull.id());
@@ -455,10 +455,8 @@ void tst_QContactJsonDbAsync::contactFetch()
         QList<QContactDetail> retrievedDetails = retrievedRestricted.details();
         QList<QContactDetail> expectedDetails = currRestricted.details();
         foreach (const QContactDetail& det, expectedDetails) {
-            // ignore backend synthesised details
             // again, this requires a "default contact details" function to work properly.
-            if (det.type() == QContactDisplayLabel::Type
-                || det.type() == QContactTimestamp::Type) {
+            if (det.type() == QContactTimestamp::Type) {
                 continue;
             }
 

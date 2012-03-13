@@ -338,15 +338,11 @@ void tst_QVersitContactExporter::testEncodeName()
     name.setMiddleName(QLatin1String("Middle"));
     name.setPrefix(QLatin1String("Prefix"));
     name.setSuffix(QLatin1String("Suffix"));
-    name.setCustomLabel(QLatin1String("Label"));
     contact.saveDetail(&name);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard21Type));
     QVersitDocument document = mExporter->documents().first();
-    // Check that FN comes from the custom label and N is populated with the right fields from N
-    QCOMPARE(document.properties().count(), 2);
-    QVersitProperty displayProperty = findPropertyByName(document, QLatin1String("FN"));
-    QCOMPARE(displayProperty.name(), QLatin1String("FN"));
-    QCOMPARE(displayProperty.value(), QLatin1String("Label"));
+    QCOMPARE(document.properties().count(), 1);
+
     QVersitProperty nameProperty = findPropertyByName(document, QLatin1String("N"));
     QCOMPARE(nameProperty.parameters().count(), 0);
     QCOMPARE(nameProperty.name(), QLatin1String("N"));
@@ -403,10 +399,12 @@ void tst_QVersitContactExporter::testEncodeName()
 
     // Test 6: Display label but no name set
     contact.clearDetails();
-    QContactManagerEngine::setContactDisplayLabel(&contact, "Bobby Tables");
+    QContactDisplayLabel displaylabel;
+    displaylabel.setLabel(QLatin1String("Bobby Tables"));
+    contact.saveDetail(&displaylabel);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard21Type));
     document = mExporter->documents().first();
-    QCOMPARE(document.properties().count(), 1); // N
+    QCOMPARE(document.properties().count(), 2); // N
     // Unlike older versions, FN is not generated from display label
     nameProperty = findPropertyByName(document, QLatin1String("N"));
     QCOMPARE(nameProperty.name(), QLatin1String("N"));

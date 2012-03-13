@@ -93,13 +93,7 @@ QTCONTACTS_BEGIN_NAMESPACE
   A QContact has a number of mandatory details:
   \list
    \li A QContactType, with the type of the contact (individual contact, group etc)
-   \li A QContactDisplayLabel, representing the text to display
   \endlist
-
-  If you have edited the contents of a QContact (via saving or removing details),
-  you will need to ask a specific QContactManager for the new display label for the
-  contact, since system settings (like the order of first or last names) can vary
-  between managers.
 
   \sa QContactManager, QContactDetail
  */
@@ -127,7 +121,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 /*!
     Construct an empty contact.
 
-    The contact will have an empty display label, an empty id, and have type \l QContactType::TypeContact.
+    The contact will have an empty id, and have type \l QContactType::TypeContact.
     The isEmpty() function will return true.
 */
 QContact::QContact()
@@ -145,18 +139,13 @@ QContact::QContact(const QContact& other)
 /*!
  * Returns true if this QContact is empty, false if not.
  *
- * An empty QContact has an empty label and no extra details.
+ * An empty QContact has no extra details.
  * The type of the contact is irrelevant.
  */
 bool QContact::isEmpty() const
 {
-    /* Every contact has a display label field.. */
-    if (d.constData()->m_details.count() > 2)
-        return false;
-
-    /* We know we have two details (a display label and a type) */
-    const QContactDisplayLabel& label = d.constData()->m_details.at(0);
-    return label.label().isEmpty();
+    /* Every contact has a type field */
+    return (d->m_details.count() == 1);
 }
 
 /*!
@@ -168,17 +157,11 @@ void QContact::clearDetails()
 {
     d->m_details.clear();
 
-    // insert the contact's display label detail.
-    QContactDisplayLabel contactLabel;
-    contactLabel.setValue(QContactDisplayLabel::FieldLabel, QString());
-    contactLabel.d->m_access = QContactDetail::Irremovable | QContactDetail::ReadOnly;
-    d->m_details.insert(0, contactLabel);
-
-    // and the contact type detail.
+    // insert the contact type detail.
     QContactType contactType;
     contactType.setType(QContactType::TypeContact);
     contactType.d->m_access = QContactDetail::Irremovable;
-    d->m_details.insert(1, contactType);
+    d->m_details.insert(0, contactType);
 }
 
 /*! Replace the contents of this QContact with \a other
@@ -238,8 +221,8 @@ void QContact::setId(const QContactId& id)
 
 QContactType::TypeValues QContact::type() const
 {
-    // type is detail 1
-    QContactType::TypeValues type = static_cast<QContactType::TypeValues>(d.constData()->m_details.at(1).value(QContactType::FieldType).toInt());
+    // type is detail 0
+    QContactType::TypeValues type = static_cast<QContactType::TypeValues>(d.constData()->m_details.at(0).value(QContactType::FieldType).toInt());
     return type;
 }
 
@@ -249,30 +232,9 @@ QContactType::TypeValues QContact::type() const
  */
 void QContact::setType(const QContactType::TypeValues& type)
 {
-    // type is detail 1
-    d->m_details[1].setValue(QContactType::FieldType, type);
-    d->m_details[1].d->m_access = QContactDetail::Irremovable;
-}
-
-/*!
- * Returns the display label of this contact.
- *
- * A contact which has been retrieved from a manager will have a display label set when
- * the contact is retrieved.
- *
- * The display label is usually read-only, since some managers do not support arbitrary
- * labels (see also \l QContactName::setCustomLabel()).  If you modify the contact in a way
- * that would affect the display label, you can call QContactManager::synthesizeContactDisplayLabel() to get an
- * up-to-date display label.
- *
- * See the following example for more information:
- * \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Updating the display label of a contact
- *
- * \sa QContactManager::synthesizeContactDisplayLabel()
- */
-QString QContact::displayLabel() const
-{
-    return d.constData()->m_details.at(0).value(QContactDisplayLabel::FieldLabel).toString();
+    // type is detail 0
+    d->m_details[0].setValue(QContactType::FieldType, type);
+    d->m_details[0].d->m_access = QContactDetail::Irremovable;
 }
 
 /*!
@@ -409,10 +371,6 @@ QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
  * be overwritten with \a detail.  There is never more than one contact type
  * in a contact.
  *
- * If \a detail is a QContactDisplayLabel, the contact will not be updated,
- * and the function will return false.  Since the display label formatting is specific
- * to each manager, use the QContactManager::synthesizeContactDisplayLabel() function
- * instead.
  *
  * Be aware that if a contact is retrieved (or reloaded) from the backend, the
  * keys of any details it contains may have been changed by the backend, or other
@@ -423,7 +381,6 @@ QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
  * Returns true if the detail was saved successfully, otherwise returns false.
  *
  * Note that the caller retains ownership of the detail.
- * \sa QContactManager::synthesizeContactDisplayLabel()
  */
 bool QContact::saveDetail(QContactDetail* detail)
 {
@@ -433,13 +390,8 @@ bool QContact::saveDetail(QContactDetail* detail)
     /* Also handle contact type specially - only one of them. */
     if (QContactDetailPrivate::detailPrivate(*detail)->m_type == QContactType::Type) {
         detail->d->m_access |= QContactDetail::Irremovable;
-        d->m_details[1] = *detail;
+        d->m_details[0] = *detail;
         return true;
-    }
-
-    /* And display label.. */
-    if (QContactDetailPrivate::detailPrivate(*detail)->m_type == QContactDisplayLabel::Type) {
-        return false;
     }
 
     // try to find the "old version" of this field
@@ -455,7 +407,6 @@ bool QContact::saveDetail(QContactDetail* detail)
             return true;
         }
     }
-
     // this is a new detail!  add it to the contact.
     d->m_details.append(*detail);
     return true;
@@ -801,7 +752,7 @@ void QContactData::removeOnly(QContactDetail::DetailType type)
 {
     QList<QContactDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
-        // XXX this doesn't check type or display label
+        // XXX this doesn't check type
         if (dit->type() == type)
             dit = m_details.erase(dit);
         else
@@ -813,7 +764,7 @@ void QContactData::removeOnly(const QSet<QContactDetail::DetailType>& types)
 {
     QList<QContactDetail>::iterator dit = m_details.begin();
     while (dit != m_details.end()) {
-        // XXX this doesn't check type or display label
+        // XXX this doesn't check type
         if (types.contains(dit->type()))
             dit = m_details.erase(dit);
         else

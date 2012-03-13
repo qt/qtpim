@@ -527,7 +527,7 @@ void tst_QContactAsync::contactFetch()
     contacts = cfr.contacts();
     QCOMPARE(contactIds.size(), contacts.size());
     for (int i = 0; i < contactIds.size(); i++) {
-        // create a contact from the restricted data only (id + display label)
+        // create a contact from the restricted data only (id)
         QContact currFull = cm->contact(contactIds.at(i));
         QContact currRestricted;
         currRestricted.setId(currFull.id());
@@ -557,8 +557,7 @@ void tst_QContactAsync::contactFetch()
         foreach (const QContactDetail& det, expectedDetails) {
             // ignore backend synthesised details
             // again, this requires a "default contact details" function to work properly.
-            if (det.type() == QContactDisplayLabel::Type
-                || det.type() == QContactTimestamp::Type) {
+            if (det.type() == QContactTimestamp::Type) {
                 continue;
             }
 
@@ -2179,11 +2178,6 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
         return cm;
     }
     
-    if (cm->managerName() == "symbian") {
-        // Symbian backend does not support other relationships than HasMember (which is same as groups)
-        return cm;
-    }
-
     QContactRelationship arb;
     arb.setFirst(a);
     arb.setSecond(b);

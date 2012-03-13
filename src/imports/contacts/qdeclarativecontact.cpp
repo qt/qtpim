@@ -393,17 +393,14 @@ QDeclarativeContactBirthday*  QDeclarativeContact::birthday()
 }
 
 /*!
-    \qmlproperty string Contact::displayLabel
+    \qmlproperty DisplayLabel Contact::displayLabel
 
-    This property holds the display label value of the Contact object.
+    This property holds the displayLabel detail of the Contact object.
+    display label is the one which gets displayed when a contact is created as per versit doc specs this is a "FN" property
 */
-QString QDeclarativeContact::displayLabel()
+QDeclarativeContactDisplayLabel*  QDeclarativeContact::displayLabel()
 {
-    QDeclarativeContactDisplayLabel* tempDisplayLabel = getDetail<QDeclarativeContactDisplayLabel>(QDeclarativeContactDetail::DisplayLabel);
-    if (tempDisplayLabel) {
-        return tempDisplayLabel->label();
-    }
-    return QString::null;
+    return getDetail<QDeclarativeContactDisplayLabel>(QDeclarativeContactDetail::DisplayLabel);
 }
 
 /*!

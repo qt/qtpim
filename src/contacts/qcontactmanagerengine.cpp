@@ -428,87 +428,6 @@ bool QContactManagerEngine::removeRelationships(const QList<QContactRelationship
     return false;
 }
 
-/*!
-  Synthesizes the display label of the given \a contact in a platform specific manner.
-  Any error that occurs will be stored in \a error.
-  Returns the synthesized display label. The returned display label can be empty in
-  cases where the given \a contact does not contain the details used by the backend
-  to synthesize the label (default: \c QContactName, and \c QContactOrganization).
-  the returned
- */
-QString QContactManagerEngine::synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const
-{
-    // synthesize the display name from the name of the contact, or, failing that, the organisation of the contact.
-    *error = QContactManager::NoError;
-    QList<QContactDetail> allNames = contact.details(QContactName::Type);
-
-    const QLatin1String space(" ");
-    // synthesize the display label from the name.
-    for (int i=0; i < allNames.size(); i++) {
-        const QContactName& name = allNames.at(i);
-
-        if (!name.customLabel().isEmpty()) {
-            // default behaviour is to allow the user to define a custom display label.
-            return name.customLabel();
-        }
-
-        QString result;
-        if (!name.value(QContactName::FieldPrefix).toString().trimmed().isEmpty()) {
-           result += name.value(QContactName::FieldPrefix).toString();
-        }
-
-        if (!name.value(QContactName::FieldFirstName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldFirstName).toString();
-        }
-
-        if (!name.value(QContactName::FieldMiddleName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldMiddleName).toString();
-        }
-
-        if (!name.value(QContactName::FieldLastName).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldLastName).toString();
-        }
-
-        if (!name.value(QContactName::FieldSuffix).toString().trimmed().isEmpty()) {
-            if (!result.isEmpty())
-                result += space;
-            result += name.value(QContactName::FieldSuffix).toString();
-        }
-
-        if (!result.isEmpty()) {
-            return result;
-        }
-    }
-
-    /* Well, we had no non empty names. if we have orgs, fall back to those */
-    QList<QContactDetail> allOrgs = contact.details(QContactOrganization::Type);
-    for (int i=0; i < allOrgs.size(); i++) {
-        const QContactOrganization& org = allOrgs.at(i);
-        if (!org.name().isEmpty()) {
-            return org.name();
-        }
-    }
-
-    return QString();
-}
-
-/*!
-  Sets the contact display label of \a contact to the supplied \a displayLabel.
- */
-void QContactManagerEngine::setContactDisplayLabel(QContact* contact, const QString& displayLabel)
-{
-    QContactDisplayLabel dl;
-    dl.setValue(QContactDisplayLabel::FieldLabel, displayLabel);
-    setDetailAccessConstraints(&dl, QContactDetail::Irremovable | QContactDetail::ReadOnly);
-    contact->d->m_details.replace(0, dl);
-}
-
 
 /*!
   Given an input \a filter, returns the canonical version of the filter.
@@ -2005,8 +1924,6 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QLis
             // Now copy in the details from the arguments
             const QContact& c = contacts->at(i);
 
-            // Perhaps this could do this directly rather than through saveDetail
-            // but that would duplicate the checks for display label etc
             foreach (QContactDetail::DetailType type, mask) {
                 QList<QContactDetail> details = c.details(type);
                 foreach(QContactDetail detail, details) {

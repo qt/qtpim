@@ -1050,9 +1050,9 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         QContactDetailFilter expected;
-        expected.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        expected.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         QTest::newRow("Null valued range filter")
                 << static_cast<QContactFilter>(qcdrf)
                 << static_cast<QContactFilter>(expected);
@@ -1060,11 +1060,11 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QContactDetailFilter expected;
-        expected.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        expected.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         expected.setValue(QLatin1String("a"));
         expected.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Equal valued range filter")
@@ -1074,7 +1074,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"),
                QContactDetailRangeFilter::ExcludeLower | QContactDetailRangeFilter::ExcludeUpper);
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
@@ -1085,7 +1085,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("b"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Normal range filter")
@@ -1095,11 +1095,11 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdrf.setRange(QVariant(QVariant::String), QVariant(QVariant::String)); // null bounds
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QContactDetailFilter qcdf;
-        qcdf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdf.setMatchFlags(QContactFilter::MatchFixedString);
         qcdf.setValue(QVariant(QVariant::String));
         QTest::newRow("Null valued range filter")
@@ -1109,7 +1109,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
 
     {
         QContactDetailRangeFilter qcdrf;
-        qcdrf.setDetailType(QContactName::Type, QContactName::FieldCustomLabel);
+        qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
         qcdrf.setRange(QVariant(QVariant::String), QLatin1String("a")); // min is null
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("One sided range filter")
@@ -1217,7 +1217,9 @@ void tst_QContactFilter::testFilter_data()
 
     {
         QContact contact;
-        QContactManagerEngine::setContactDisplayLabel(&contact, QLatin1String("foo"));
+        QContactDisplayLabel displaylabel;
+        displaylabel.setLabel("foo");
+        contact.saveDetail(&displaylabel);
         QTest::newRow("QContactDisplayLabel::match positive")
                 << contact
                 << QContactDisplayLabel::match("foo")

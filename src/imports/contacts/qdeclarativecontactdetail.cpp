@@ -475,7 +475,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 /* ==================== QDeclarativeContactDisplayLabel ======================= */
 /*!
    \qmlclass DisplayLabel QDeclarativeContactDisplayLabel
-   \brief The DisplayLabel element contains the (possibly synthesized) display label of a contact.
+   \brief The DisplayLabel element contains a label that can be used by clients when displaying a contact, for example in a list.
    \ingroup qml-contacts-details
    \inqmlmodule QtContacts
 
@@ -491,7 +491,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \qmlproperty string DisplayLabel::label
 
   This property holds the value of the display label.
-  This property is a read only property.
   */
 
 /* ==================== QDeclarativeContactEmailAddress ======================= */

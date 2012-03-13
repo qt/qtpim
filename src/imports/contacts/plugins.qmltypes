@@ -155,7 +155,12 @@ Module {
             isReadonly: true
             isPointer: true
         }
-        Property { name: "displayLabel"; type: "string"; isReadonly: true }
+        Property {
+            name: "displayLabel"
+            type: "QDeclarativeContactDisplayLabel"
+            isReadonly: true
+            isPointer: true
+        }
         Property {
             name: "email"
             type: "QDeclarativeContactEmailAddress"
@@ -532,7 +537,7 @@ Module {
                 "Label": 0
             }
         }
-        Property { name: "label"; type: "string"; isReadonly: true }
+        Property { name: "label"; type: "string" }
         Signal { name: "valueChanged" }
     }
     Component {
@@ -875,8 +880,7 @@ Module {
                 "FirstName": 1,
                 "MiddleName": 2,
                 "LastName": 3,
-                "Suffix": 4,
-                "CustomLabel": 5
+                "Suffix": 4
             }
         }
         Property { name: "prefix"; type: "string" }
@@ -884,7 +888,6 @@ Module {
         Property { name: "middleName"; type: "string" }
         Property { name: "lastName"; type: "string" }
         Property { name: "suffix"; type: "string" }
-        Property { name: "customLabel"; type: "string" }
         Signal { name: "valueChanged" }
     }
     Component {

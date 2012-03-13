@@ -311,7 +311,6 @@ void tst_QContactJsondbEngine::testContactUpdate() {
     phoneNumberDetail.setSubTypes(currSubtype);
     phoneNumberDetail.setNumber("+358507654322");
     testContact.saveDetail(&phoneNumberDetail);
-    cm.synthesizeContactDisplayLabel(&testContact);
     cm.saveContact(&testContact);
 
     // TODO: Check the updated fields are properly there.

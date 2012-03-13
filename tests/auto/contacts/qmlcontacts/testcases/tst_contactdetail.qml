@@ -72,7 +72,7 @@ TestCase {
     }
 
     DisplayLabel {
-        id: displayLabel
+        id: displaylabel
     }
 
     EmailAddress {
@@ -277,9 +277,10 @@ TestCase {
     }
 
     function test_displayLabel() {
-        compare(displayLabel.label.toString(), "")  // Not possible to assign values
+        compare(displaylabel.label, "")
+        displaylabel.label = "exampleFullName";
+        compare(displaylabel.label, "exampleFullName")
     }
-
 
     function test_emailAddress() {
         compare(emailAddress.emailAddress, "")
@@ -452,9 +453,6 @@ TestCase {
         name.suffix = "First";
         compare(name.suffix, "First")
 
-        compare(name.customLabel, "")
-        name.customLabel = "LordOfTheRings";
-        compare(name.customLabel, "LordOfTheRings")
     }
 
 

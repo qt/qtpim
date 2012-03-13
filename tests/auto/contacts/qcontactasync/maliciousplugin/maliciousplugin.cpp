@@ -148,13 +148,6 @@ MaliciousAsyncManagerEngine::~MaliciousAsyncManagerEngine()
     delete threadObject;
 }
 
-QString MaliciousAsyncManagerEngine::synthesizedDisplayLabel(const QContact& contact, QContactManager::Error* error) const
-{
-    Q_UNUSED(contact);
-    *error = QContactManager::NotSupportedError;
-    return QString();
-}
-
 QString MaliciousAsyncManagerEngine::managerName() const
 {
     return QString(makename(MALICIOUSPLUGINNAME));

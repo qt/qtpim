@@ -448,6 +448,34 @@ TestCase {
     }
 
     Contact {
+        id: contactWithDisplayLabel1
+        DisplayLabel {
+            label: "old"
+        }
+    }
+
+    function test_contact_displaylabel_change_emits_signal()
+    {
+        listenToSignalFromObject("contactChanged", contactWithDisplayLabel1);
+        contactWithDisplayLabel1.displayLabel.label = "new";
+        verifySignalReceived();
+    }
+
+    Contact {
+        id: contactWithDisplayLabel2
+        DisplayLabel {
+            label: "old"
+        }
+    }
+
+    function test_contact_displaylabel_emits_no_signal_when_value_does_not_change()
+    {
+        listenToSignalFromObject("contactChanged", contactWithDisplayLabel2);
+        contactWithDisplayLabel2.displayLabel.label = contactWithDisplayLabel2.displayLabel.label;
+        verifyNoSignalReceived();
+    }
+
+    Contact {
         id: contactWithNote1
         Note {
             note: "old"

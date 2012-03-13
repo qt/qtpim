@@ -286,9 +286,6 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         QContactManagerEngine::setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
         theContact->saveDetail(&ts);
 
-        // synthesize the display label for the contact.
-        setContactDisplayLabel(theContact, synthesizedDisplayLabel(*theContact, error));
-
         // Looks ok, so continue
         d->m_contacts.replace(index, *theContact);
         changeSet.insertChangedContact(theContact->id());
@@ -319,9 +316,6 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
 
         // note: do NOT delete the QContactMemoryEngineId -- the QContactId ctor takes ownership of it.
 
-
-        // synthesize the display label for the contact.
-        setContactDisplayLabel(theContact, synthesizedDisplayLabel(*theContact, error));
 
         // finally, add the contact to our internal lists and return
         d->m_contacts.append(*theContact);                   // add contact to list

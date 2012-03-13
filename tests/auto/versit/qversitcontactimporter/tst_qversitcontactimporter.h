@@ -85,7 +85,6 @@ private slots: // Tests
     void testAvatarInvalid();
     void testGeo();
     void testNote();
-    void testCustomLabel();
     void testDisplayLabel();
     void testOnlineAccount();
     void testFamily();

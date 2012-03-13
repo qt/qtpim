@@ -70,6 +70,7 @@ public:
     inline const static QString emailAddressDefinitionName() { return QStringLiteral("emails"); }
     inline const static QString urlDefinitionName() { return QStringLiteral("urls"); }
     inline const static QString nicknameDefinitionName() { return QStringLiteral("nickname"); }
+    inline const static QString displayLabelDefinitionName() { return QStringLiteral("displayLabel"); }
     inline const static QString addressDefinitionName() { return QStringLiteral("addresses"); }
     inline const static QString birthdayDefinitionName() { return QStringLiteral("birthday"); }
     inline const static QString avatarDefinitionName() { return QStringLiteral("photoUrl"); }
@@ -79,7 +80,6 @@ public:
     inline const static QString personIdDefinitionName() { return QStringLiteral("personid"); }
     inline const static QString syncTargetDefinitionName() { return QStringLiteral("synctarget"); }
     inline const static QString guidDefinitionName() { return QStringLiteral("guid"); }
-    inline const static QString nameFieldCustomLabel() { return QStringLiteral("customLabel"); }
     inline const static QString nameFieldFirstName() { return QStringLiteral("firstName"); }
     inline const static QString nameFieldLastName() { return QStringLiteral("lastName"); }
     inline const static QString nameFieldMiddleName() { return QStringLiteral("middleName"); }

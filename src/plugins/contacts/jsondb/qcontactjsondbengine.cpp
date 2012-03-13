@@ -479,9 +479,7 @@ bool QContactJsonDbEngine::isFilterSupported(const QContactFilter& filter) const
     case QContactFilter::InvalidFilter:
     case QContactFilter::DefaultFilter:
     case QContactFilter::IdFilter:
-    case QContactFilter::ActionFilter:
     case QContactFilter::IntersectionFilter:
-    case QContactFilter::UnionFilter:
       return true;
     default:
       return false;

@@ -679,18 +679,6 @@ bool QContactManager::removeContacts(const QList<QContactId> &contactIds, QMap<i
 }
 
 /*!
-  Returns a pruned or modified version of the \a original contact which is valid and can be saved in the manager.
-  The returned contact might have entire details removed or arbitrarily changed.  The cache of relationships
-  in the contact are ignored entirely when considering compatibility with the backend, as they are
-  saved and validated separately.
- */
-QContact QContactManager::compatibleContact(const QContact &original)
-{
-    QContactManagerSyncOpErrorHolder h(this);
-    return d->m_engine->compatibleContact(original, &h.error);
-}
-
-/*!
   Returns a display label for a \a contact which is synthesized from its details in a manager specific
   manner.
 

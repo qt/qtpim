@@ -524,9 +524,6 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
         d->m_reader.setDevice(0);
 
         if (d->m_manager) {
-            for (int i = 0; i < contacts.size(); i++) {
-                contacts[i] = d->m_manager->compatibleContact(contacts[i]);
-            }
             if (d->m_manager->saveContacts(&contacts)) {
                 qmlInfo(this) << tr("contacts imported.");
             } else {
@@ -686,10 +683,9 @@ void QDeclarativeContactModel::requestUpdated()
 void QDeclarativeContactModel::saveContact(QDeclarativeContact* dc)
 {
     if (dc) {
-        QContact c = d->m_manager->compatibleContact(dc->contact());
         QContactSaveRequest* req = new QContactSaveRequest(this);
         req->setManager(d->m_manager);
-        req->setContact(c);
+        req->setContact(dc->contact());
         connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
         req->start();
     }

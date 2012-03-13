@@ -83,7 +83,6 @@ public:
 
     QString managerName() const;
     bool validateContact(const QContact&, QContactManager::Error* error) const;
-    QContact compatibleContact(const QContact& contact, QContactManager::Error* error) const;
 
     /* "Self" contact id (MyCard) */
     QContactId selfContactId(QContactManager::Error* errors) const;

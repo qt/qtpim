@@ -172,15 +172,6 @@ bool QContactJsonDbEngine::validateContact(const QContact& contact, QContactMana
 }
 
 
-QContact QContactJsonDbEngine::compatibleContact(const QContact& contact, QContactManager::Error* error) const
-{
-    return QContactManagerEngine::compatibleContact(contact, error);
-}
-
-
-
-
-
 QContactId QContactJsonDbEngine::selfContactId(QContactManager::Error* error) const
 {
     // TODO: THE IDENTIFICATION FIELD DOES NOT EXIST YET IN JSON SCHEMA!

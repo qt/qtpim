@@ -135,12 +135,7 @@ public:
         return QContactManagerEngine::removeRelationships(relationships, errorMap, error);
     }
 
-    /* Validation for saving */
-    QContact compatibleContact(const QContact& contact, QContactManager::Error* error) const
-    {
-        return QContactManagerEngine::compatibleContact(contact, error);
-    }
-
+    /* Contact validation */
     bool validateContact(const QContact& contact, QContactManager::Error* error) const
     {
         return QContactManagerEngine::validateContact(contact, error);

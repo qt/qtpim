@@ -77,13 +77,6 @@ public:
         *error =  QContactManager::NotSupportedError;
         return QString();
     }
-
-    /*! \reimp */
-    virtual QContact compatibleContact(const QContact&, QContactManager::Error* error) const
-    {
-        *error =  QContactManager::NotSupportedError;
-        return QContact();
-    }
 };
 
 QTCONTACTS_END_NAMESPACE

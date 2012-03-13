@@ -144,7 +144,6 @@ private slots:
     /* Special test with special data */
     void uriParsing();
     void nameSynthesis();
-    void compatibleContact();
 
     /* Backend-specific tests */
 #if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)
@@ -189,7 +188,6 @@ private slots:
     /* Special test with special data */
     void uriParsing_data();
     void nameSynthesis_data();
-    void compatibleContact_data();
     void compareVariant_data();
 
     /* Tests that are run on all managers */
@@ -253,13 +251,6 @@ public:
         return QString();
     }
 
-    /*! \reimp */
-    virtual QContact compatibleContact(const QContact&, QContactManager::Error* error) const
-    {
-        *error =  QContactManager::NotSupportedError;
-        return QContact();
-    }
-
     void connectNotify(const char *signal)
     {
         connectionCounts[signal]++;
@@ -288,13 +279,6 @@ public:
     {
         *error =  QContactManager::NotSupportedError;
         return QString();
-    }
-
-    /*! \reimp */
-    virtual QContact compatibleContact(const QContact&, QContactManager::Error* error) const
-    {
-        *error =  QContactManager::NotSupportedError;
-        return QContact();
     }
 
     void connectNotify(const char *signal)
@@ -1986,55 +1970,6 @@ void tst_QContactManager::nameSynthesis()
     // Finally!
     QCOMPARE(cm.synthesizedContactDisplayLabel(c), expected);
 }
-
-void tst_QContactManager::compatibleContact_data()
-{
-    QTest::addColumn<QContact>("input");
-    QTest::addColumn<QContact>("expected");
-    QTest::addColumn<QContactManager::Error>("error");
-
-    QContact baseContact;
-    QContact emptyContact;
-    QContactName name;
-    name.setFirstName(QStringLiteral("First"));
-    baseContact.saveDetail(&name);
-
-    {
-        QTest::newRow("already compatible") << baseContact << baseContact << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        int unknown = 12345;
-        QContactType::TypeValues unknownType = static_cast<QContactType::TypeValues>(unknown);
-        contact.setType(unknownType);
-        QTest::newRow("unknown type") << contact << emptyContact << QContactManager::InvalidContactTypeError;
-    }
-
-    {
-        QContact contact(baseContact);
-        contact.setType(QContactType::TypeContact);
-        QTest::newRow("\"Contact\" type") << contact << contact << QContactManager::NoError;
-    }
-
-    {
-        QContact contact(baseContact);
-        contact.setType(QContactType::TypeGroup);
-        QTest::newRow("\"Group\" type") << contact << contact << QContactManager::NoError;
-    }
-}
-
-void tst_QContactManager::compatibleContact()
-{
-    QContactManager cm("memory");
-
-    QFETCH(QContact, input);
-    QFETCH(QContact, expected);
-    QFETCH(QContactManager::Error, error);
-    QCOMPARE(cm.compatibleContact(input), expected);
-    QCOMPARE(cm.error(), error);
-}
-
 
 void tst_QContactManager::observerDeletion()
 {

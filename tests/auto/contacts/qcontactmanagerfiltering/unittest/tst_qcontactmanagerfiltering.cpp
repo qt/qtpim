@@ -3452,11 +3452,6 @@ QList<QContactLocalId> tst_QContactManagerFiltering::prepareModel(QContactManage
     n2.setCustomLabel("Yarrow");
     contactK.saveDetail(&n2);
 
-    // XXX add &aumlaut; or &acircum; etc to test those sort orders
-    contactH = cm->compatibleContact(contactH);
-    contactI = cm->compatibleContact(contactI);
-    contactJ = cm->compatibleContact(contactJ);
-    contactK = cm->compatibleContact(contactK);
     Q_ASSERT(cm->saveContact(&contactH));
     Q_ASSERT(cm->saveContact(&contactI));
     Q_ASSERT(cm->saveContact(&contactJ));
@@ -3698,13 +3693,6 @@ QList<QContactLocalId> tst_QContactManagerFiltering::prepareModel(QContactManage
         contactR.saveDetail(&rt);
     }
     // --------------------- save.
-    contactL = cm->compatibleContact(contactL);
-    contactM = cm->compatibleContact(contactM);
-    contactN = cm->compatibleContact(contactN);
-    contactO = cm->compatibleContact(contactO);
-    contactP = cm->compatibleContact(contactP);
-    contactQ = cm->compatibleContact(contactQ);
-    contactR = cm->compatibleContact(contactR);
     Q_ASSERT(cm->saveContact(&contactL));
     Q_ASSERT(cm->saveContact(&contactM));
     Q_ASSERT(cm->saveContact(&contactN));

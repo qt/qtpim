@@ -182,12 +182,6 @@ public:
     virtual bool removeContacts(const QList<QContactId> &contactIds, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
     /*! \reimp */
-    virtual QContact compatibleContact(const QContact &original, QContactManager::Error *error) const
-    {
-        return QContactManagerEngine::compatibleContact(original, error);
-    }
-
-    /*! \reimp */
     virtual QString synthesizedDisplayLabel(const QContact &contact, QContactManager::Error *error) const
     {
         return QContactManagerEngine::synthesizedDisplayLabel(contact, error);

@@ -959,24 +959,6 @@ bool QContactManagerEngine::removeContacts(const QList<QContactId>& contactIds, 
     return false;
 }
 
-/*!
-  Returns a pruned or modified version of the \a original contact which is valid and can be saved in the manager.
-  The returned contact might have details removed or arbitrarily changed.  The cache of relationships
-  in the contact are ignored entirely when considering compatibility with the backend, as they are
-  saved and validated separately.  Any error which occurs will be saved to \a error.
- */
-QContact QContactManagerEngine::compatibleContact(const QContact& original, QContactManager::Error* error) const
-{
-    if (!supportedContactTypes().contains(original.type())) {
-        *error = QContactManager::InvalidContactTypeError;
-        return QContact();
-    }
-
-    *error = QContactManager::NoError;
-    return original;
-}
-
-
 /* This implements the string comparison behaviour required for compareVariant, amongst others */
 static inline int compareStrings(const QString& left, const QString& right, Qt::CaseSensitivity sensitivity)
 {

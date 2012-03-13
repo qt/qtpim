@@ -141,9 +141,6 @@ public:
     bool saveContacts(QList<QContact>* contacts, const QList<QContactDetail::DetailType>& typeMask, QMap<int, QContactManager::Error>* errorMap = 0); // Partial save
     bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap = 0); // batch API - remove.
 
-    /* Return a pruned or modified contact which is valid and can be saved in the manager */
-    QContact compatibleContact(const QContact& original);
-
     /* Synthesize the display label of a contact */
     QString synthesizedContactDisplayLabel(const QContact& contact) const;
     void synthesizeContactDisplayLabel(QContact* contact) const;

@@ -257,34 +257,41 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             //phone number
             QJsonArray array = i.value().toArray();
             for (int i = 0; i < array.size(); ++i) {
-                QContactPhoneNumber* number = new QContactPhoneNumber;
                 QJsonObject temporaryJsonObject = array[i].toObject();
-                number->setNumber(temporaryJsonObject["value"].toString().remove(QContactJsonDbStr::phoneNumberUriScheme()));
-                stringValue = temporaryJsonObject["context"].toString();
-                if (stringValue == QContactJsonDbStr::contextHome() ||
-                        stringValue == QContactJsonDbStr::contextWork() ||
-                        stringValue == QContactJsonDbStr::contextOther()) {
-                    updateContexts(temporaryJsonObject, number);
+                stringValue = temporaryJsonObject.value("value").toString();
+                if (sanitizePhoneNumberString(&stringValue)) {
+                    QContactPhoneNumber* number = new QContactPhoneNumber;
+                    number->setNumber(stringValue);
+                    stringValue = temporaryJsonObject["context"].toString();
+                    if (stringValue == QContactJsonDbStr::contextHome() ||
+                            stringValue == QContactJsonDbStr::contextWork() ||
+                            stringValue == QContactJsonDbStr::contextOther()) {
+                        updateContexts(temporaryJsonObject, number);
+                    }
+                    stringValue = temporaryJsonObject["subType"].toString();
+                    if (stringValue == QContactJsonDbStr::subTypeFax()) {
+                        QList<int> myType;
+                        myType << QContactPhoneNumber::SubTypeFax;
+                        number->setSubTypes(myType);
+                    } else if (stringValue == QContactJsonDbStr::subTypeCell()) {
+                        QList<int> myType;
+                        myType << QContactPhoneNumber::SubTypeMobile;
+                        number->setSubTypes(myType);
+                    } else if (stringValue == QContactJsonDbStr::subTypeVideo()) {
+                        QList<int> myType;
+                        myType << QContactPhoneNumber::SubTypeVideo;
+                        number->setSubTypes(myType);
+                    } else if (stringValue == QContactJsonDbStr::subTypeLandline()) {
+                        QList<int> myType;
+                        myType << QContactPhoneNumber::SubTypeLandline;
+                        number->setSubTypes(myType);
+                    };
+                    detailList << number;
+                } else {
+                    qWarning() << Q_FUNC_INFO <<":Number field of json object " << object << "does not contain a valid "
+                               << " jsondb phone number.";
+                    return false;
                 }
-                stringValue = temporaryJsonObject["subType"].toString();
-                if (stringValue == QContactJsonDbStr::subTypeFax()) {
-                    QList<int> myType;
-                    myType << QContactPhoneNumber::SubTypeFax;
-                    number->setSubTypes(myType);
-                } else if (stringValue == QContactJsonDbStr::subTypeCell()) {
-                    QList<int> myType;
-                    myType << QContactPhoneNumber::SubTypeMobile;
-                    number->setSubTypes(myType);
-                } else if (stringValue == QContactJsonDbStr::subTypeVideo()) {
-                    QList<int> myType;
-                    myType << QContactPhoneNumber::SubTypeVideo;
-                    number->setSubTypes(myType);
-                } else if (stringValue == QContactJsonDbStr::subTypeLandline()) {
-                    QList<int> myType;
-                    myType << QContactPhoneNumber::SubTypeLandline;
-                    number->setSubTypes(myType);
-                };
-                detailList << number;
             }
         } else if (i.key() == detailsToJsonMapping.value(QContactAddress::Type)) {
             //address
@@ -549,12 +556,19 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         else if (detail.type() == QContactPhoneNumber::Type) {
             QJsonObject phoneObject;
             number = static_cast<QContactPhoneNumber *>(&detail);
-            phoneObject["value"] = QContactJsonDbStr::phoneNumberUriScheme() + number->number();
-            updateContexts(*number, &phoneObject);
-            QList<int> subTypes = number->subTypes();
-            if (!subTypes.empty())
-                phoneObject["subType"] = phoneNumbersSubtypesMapping.value(number->subTypes().first());
-            phoneNumbers.append(phoneObject);
+            QString phoneString (number->number());
+            if (sanitizePhoneNumberString(&phoneString)) {
+                phoneObject["value"] = phoneString;
+                updateContexts(*number, &phoneObject);
+                QList<int> subTypes = number->subTypes();
+                if (!subTypes.empty())
+                    phoneObject["subType"] = phoneNumbersSubtypesMapping.value(number->subTypes().first());
+                phoneNumbers.append(phoneObject);
+            } else {
+                qWarning() << Q_FUNC_INFO <<": Number field of detail " << detail << "does not contain a valid "
+                           << " jsondb phone number.";
+                return false;
+            }
         }
         // address
         else if (detail.type() == QContactAddress::Type) {
@@ -619,7 +633,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         }
         // Invalid or not supported detail
         else {
-            // IGNORED for the moment
+            return false;
         }
     }
     if (!phoneNumbers.isEmpty())
@@ -820,7 +834,12 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
         if (detailFilter.detailField() == QContactPhoneNumber::FieldNumber) {
             jsonDbQueryStr.append("[?" + jsondbField + ".0.value");
             QString paramValue = detailFilter.value().toString();
-            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue, QContactJsonDbStr::phoneNumberUriScheme());
+            if (paramValue.isEmpty() || sanitizePhoneNumberString(&paramValue)) {
+                createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+            } else {
+                //detail value could not be sanitized, hence the filter is not valid
+                isValidFilter = false;
+            }
         } else {
             //We do not support currently filtering by other fields than number
             isValidFilter = false;
@@ -863,6 +882,22 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
         isValidFilter = false;
     }
     return isValidFilter;
+}
+
+bool QContactJsonDbConverter::isValidPhoneNumberCharacter(const QChar *character)
+{
+    return (character->isDigit() ||
+            character->toLatin1() == 'p' ||
+            character->toLatin1() == 'w' ||
+            character->toLatin1() == 'a' ||
+            character->toLatin1() == 'b' ||
+            character->toLatin1() == 'c' ||
+            character->toLatin1() == 'd' ||
+            character->toLatin1() == '#' ||
+            character->toLatin1() == '*' ||
+            character->toLatin1() == '(' ||
+            character->toLatin1() == ')' ||
+            character->toLatin1() == '-');
 }
 
 bool QContactJsonDbConverter::idFilterToJsondbQuery(const QContactFilter &filter, QString &newJsonDbQuery) const
@@ -986,15 +1021,15 @@ bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects,
     return true;
 }
 
-void QContactJsonDbConverter::createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme) const
+void QContactJsonDbConverter::createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value) const
 {
     switch (flags) {
         // The "contains" word is not recognized by JsonDb, we are forced to use a workaround here
         case QContactFilter::MatchContains: queryString.append("=~\"/*" + value + "*/wi\"]"); break;
         case QContactFilter::MatchFixedString: break;
         case QContactFilter::MatchCaseSensitive: break;
-        case QContactFilter::MatchExactly: queryString.append("=\"" + UriScheme + value + "\"]"); break;
-        case QContactFilter::MatchStartsWith: queryString.append(" =~ \"/"+ UriScheme + value + "*/wi\"]"); break;
+        case QContactFilter::MatchExactly: queryString.append("=\"" + value + "\"]"); break;
+        case QContactFilter::MatchStartsWith: queryString.append(" =~ \"/"+ value + "*/wi\"]"); break;
         case QContactFilter::MatchEndsWith: queryString.append(" =~ \"/*" + value + "/wi\"]"); break;
         default:
           break;
@@ -1060,6 +1095,42 @@ QContactManager::Error QContactJsonDbConverter::jsonDbRequestErrorToContactError
         return QContactManager::TimeoutError;
     default:
         return QContactManager::UnspecifiedError;
+    }
+}
+
+bool QContactJsonDbConverter::sanitizePhoneNumberString(QString *phoneNumberString) const
+{
+    if (!phoneNumberString->isEmpty()) {
+        QString trimmedAndLowerCase = phoneNumberString->trimmed().toLower();
+        QString cleaned;
+        const int len = trimmedAndLowerCase.length();
+        if (!len)
+            return false;
+        cleaned.reserve(int(len));
+
+        QString::ConstIterator numberCharsIterator = trimmedAndLowerCase.constBegin();
+        //First character can also be equal to '+'
+        if (isValidPhoneNumberCharacter(numberCharsIterator) ||
+                *numberCharsIterator == '+')
+            cleaned += *numberCharsIterator;
+        //Now we sanitize the remaining part of the number string
+        //by removing all characters that are neither arabic numbers nor
+        //few more special characters (p, w, a, b, c, d, #, *, (, ))
+        numberCharsIterator++;
+        while (numberCharsIterator != trimmedAndLowerCase.constEnd()) {
+            if (isValidPhoneNumberCharacter(numberCharsIterator))
+                cleaned += numberCharsIterator->toLatin1();
+            numberCharsIterator++;
+        }
+        cleaned.squeeze();
+        *phoneNumberString = cleaned;
+        if ((phoneNumberString->length() >64) || (phoneNumberString->isEmpty())) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
     }
 }
 

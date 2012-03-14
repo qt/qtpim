@@ -115,7 +115,6 @@ public:
     inline const static QString subTypeVideo() { return QStringLiteral("video"); }
     inline const static QString subTypeLandline() { return QStringLiteral("landline"); }
     inline const static QString contactDetails() { return QStringLiteral("details"); }
-    inline const static QString phoneNumberUriScheme() { return QStringLiteral("tel:"); }
 
     // Jsondb actions
     inline const static QString actionCreate() { return QStringLiteral("create"); }

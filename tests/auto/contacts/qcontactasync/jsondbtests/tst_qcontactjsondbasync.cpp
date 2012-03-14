@@ -849,7 +849,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QVERIFY(!csr.waitForFinished());
 
     // Save a group of contacts, including few  TypeGroup contacts which are not supported by jsondb backend.
-    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6;
+    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6, testContact7;
     QContactName nameDetail;
     nameDetail.setFirstName("Test Contact1");
     testContact1.saveDetail(&nameDetail);
@@ -863,6 +863,9 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     testContact5.saveDetail(&nameDetail);
     nameDetail.setFirstName("Test Contact6");
     testContact6.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact7");
+    testContact7.saveDetail(&nameDetail);
+
 
     // Set group type to first, middle and last contact in the list.
     QContactType typeDetail;
@@ -871,8 +874,18 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     testContact3.saveDetail(&typeDetail);
     testContact6.saveDetail(&typeDetail);
 
+    // Set an invalid phone number
+    QContactPhoneNumber invalidPhone;
+    invalidPhone.setNumber("      hjkjkjhkjkhjkhj       //////");
+    testContact7.saveDetail(&invalidPhone);
+
+    // This phone number can be cleaned up, so no error should be generated
+    QContactPhoneNumber sanitizablePhone;
+    sanitizablePhone.setNumber("       +123458++++++++*#");
+    testContact5.saveDetail(&sanitizablePhone);
+
     QList<QContact> saveList;
-    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6;
+    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7;
 
     csr.setManager(cm.data());
     QCOMPARE(csr.manager(), cm.data());
@@ -884,7 +897,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
 
     QList<QContact> testContacts;
-    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6;
+    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7;
     csr.setContacts(testContacts);
 
     QCOMPARE(csr.contacts(), saveList);
@@ -898,21 +911,17 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    // foreach (QContact testc, csr.contacts()) {
-    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().managerUri();
-    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().id();
-    // }
-
     // Check errors, the group type is not supported by jsondb backend so contacts with that detail should report error.
     // Note, the returned value is actually set/remapped in to the errorMap by common code in qcontactmanagerengine
-    QVERIFY(csr.errorMap().value(0) == QContactManager::InvalidContactTypeError);
-    QVERIFY(csr.errorMap().value(1) == QContactManager::NoError);
-    QVERIFY(csr.errorMap().value(2) == QContactManager::InvalidContactTypeError);
-    QVERIFY(csr.errorMap().value(3) == QContactManager::NoError);
-    QVERIFY(csr.errorMap().value(4) == QContactManager::NoError);
-    QVERIFY(csr.errorMap().value(5) == QContactManager::InvalidContactTypeError);
+    QCOMPARE(csr.errorMap().value(0), QContactManager::InvalidContactTypeError);
+    QCOMPARE(csr.errorMap().value(1), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(2), QContactManager::InvalidContactTypeError);
+    QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(5), QContactManager::InvalidContactTypeError);
+    QCOMPARE(csr.errorMap().value(6), QContactManager::BadArgumentError);
     QVERIFY(csr.contacts()[5].id().isNull());
-    QVERIFY(csr.error() == QContactManager::InvalidContactTypeError);
+    QCOMPARE(csr.error(), QContactManager::BadArgumentError);
 }
 
 void tst_QContactJsonDbAsync::contactSaveRemovedContacts()

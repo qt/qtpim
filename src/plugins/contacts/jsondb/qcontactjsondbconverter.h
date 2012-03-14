@@ -69,6 +69,7 @@ public:
     QString convertId(const QContactId &id) const;
     void jsonDbVersionToContactVersion(const QString &jsonDbVersion, QContactVersion *contactVersion) const;
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
+    bool sanitizePhoneNumberString(QString *phoneNumberString) const;
 
     QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
     QHash<int, QString> contactNameFieldsMapping;
@@ -80,11 +81,13 @@ public:
 
 private:
     void initializeMappings();
-    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value, const QString& UriScheme = "") const;
+    void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value) const;
     QString toJsonDate(const QDateTime& date) const;
     QDateTime toContactDate(const QString& dateString) const;
     bool idFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
+
+    static bool isValidPhoneNumberCharacter (const QChar *character);
 
     static const int jsonDbVersionLength;
 };

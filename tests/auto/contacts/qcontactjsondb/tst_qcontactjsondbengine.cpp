@@ -617,12 +617,15 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     }
 
     // retrieve contacts filtering by phone number
-    QString phoneNr = "6543";
+    QString phoneNr = "         6543HHHH            HHHHHHHH";
+    //The number above will be sanitized by jsondb contacts plugin
+    //Hence, the filter will look for contacts matching the
+    //sanitized version of phoneNr, i.e., "6543"
     dfil.setDetailType(QContactPhoneNumber::Type, QContactPhoneNumber::FieldNumber);
     dfil.setValue(phoneNr);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);
     contacts = myContactManager.contacts(dfil, sortOrders);
-    QVERIFY(contacts.size() == 3);
+    QCOMPARE(contacts.size(), 3);
     QFETCH(QString, expectedContact1LastName);  // Contacts 2 and 5 were fetched already
     expectedContacts.clear();
     expectedContacts << expectedContact1LastName << expectedContact2LastName << expectedContact5LastName;

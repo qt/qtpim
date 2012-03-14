@@ -274,7 +274,72 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QVERIFY(phone->subTypes()[0] == QContactPhoneNumber::SubTypeMobile);
     // cleanup
     contact.clearDetails();
+    phones = QJsonArray();
     jsonData = QJsonObject();
+
+    //let's try with a phone number containing a few invalid characters
+    jsonData.insert("value",
+                    QString("          +123(45678)90-+++abcdefghijklmnopqrstuvwxyz#*+++++          "));
+    jsonData.insert("subType", QString("cell"));
+    phones.append(jsonData);
+    jsonContact.insert("phones", phones);
+    QVERIFY(converter.toQContact(jsonContact, &contact, engine));
+    detail = contact.detail(QContactPhoneNumber::Type);
+    QVERIFY(!detail.isEmpty());
+    phone = static_cast<QContactPhoneNumber*>(&detail);
+    QVERIFY(phone != NULL);
+    QCOMPARE(phone->number(), QString("+123(45678)90-abcdpw#*"));
+    QVERIFY(phone->subTypes().size() == 1);
+    QVERIFY(phone->subTypes()[0] == QContactPhoneNumber::SubTypeMobile);
+    // cleanup
+    jsonData = QJsonObject();
+    phones = QJsonArray();
+    contact.clearDetails();
+
+    //let's try with an invalid phone number
+    jsonData.insert("value",
+                    QString("          efghijk\"\"][[[]]]          "));
+    jsonData.insert("subType", QString("cell"));
+    phones.append(jsonData);
+    jsonContact.insert("phones", phones);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, engine));
+    detail = contact.detail(QContactPhoneNumber::Type);
+    QVERIFY(detail.isEmpty());
+    phone = static_cast<QContactPhoneNumber*>(&detail);
+    QVERIFY(phone->isEmpty());
+    contact.clearDetails();
+    //yet another invalid phone number (too long)
+    QString tooLongNumber;
+    for (int i=0; i<100; i++) {
+        tooLongNumber += QString::number(i/10);
+    }
+    jsonData = QJsonObject();
+    phones = QJsonArray();
+    jsonData.insert("value", tooLongNumber);
+    phones.append(jsonData);
+    jsonContact.insert("phones", phones);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, engine));
+    detail = contact.detail(QContactPhoneNumber::Type);
+    QVERIFY(detail.isEmpty());
+    phone = static_cast<QContactPhoneNumber*>(&detail);
+    QVERIFY(phone->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    phones = QJsonArray();
+    contact.clearDetails();
+    //last but not least invalid phone number (empty)
+    QString emptyNumber;
+    jsonData.insert("value", emptyNumber);
+    phones.append(jsonData);
+    jsonContact.insert("phones", phones);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, engine));
+    detail = contact.detail(QContactPhoneNumber::Type);
+    QVERIFY(detail.isEmpty());
+    phone = static_cast<QContactPhoneNumber*>(&detail);
+    QVERIFY(phone->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
     // address
     initializeJsonContact(jsonContact);
@@ -612,9 +677,48 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     number.setContexts(phoneNumberContextList);
     contact.saveDetail(&number);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    testFields.insert("value", "tel:0507654321");
+    testFields.insert("value", "0507654321");
     testFields.insert("context", "work");
     testJsonDetailItems(jsonContact, "phones", testFields);
+    //cleanup
+    contact.clearDetails();
+    jsonContact = QJsonObject();
+    testFields.clear();
+    //let's try with a phone number containing a few invalid characters
+    number.setNumber("          +123(45678)90-+++abcdefghijklmnopqrstuvwxyz#*+++++          ");
+    number.setContexts(phoneNumberContextList);
+    contact.saveDetail(&number);
+    QVERIFY(converter.toJsonContact(&jsonContact, contact));
+    testFields.insert("value", "+123(45678)90-abcdpw#*");
+    testFields.insert("context", "work");
+    testJsonDetailItems(jsonContact, "phones", testFields);
+    //cleanup
+    contact.clearDetails();
+    jsonContact = QJsonObject();
+    testFields.clear();
+    //let's try with an invalid phone number
+    number.setNumber("          efghijk\"\"][[[]]]          ");
+    number.setContexts(phoneNumberContextList);
+    contact.saveDetail(&number);
+    QVERIFY(!converter.toJsonContact(&jsonContact, contact));
+    contact.clearDetails();
+    //yet another invalid phone number (too long)
+    QString tooLongNumber;
+    for (int i=0; i<100; i++) {
+        tooLongNumber += QString::number(i/10);
+    }
+    number.setNumber(tooLongNumber);
+    contact.saveDetail(&number);
+    QVERIFY(!converter.toJsonContact(&jsonContact, contact));
+    //cleanup
+    contact.clearDetails();
+    jsonContact = QJsonObject();
+    testFields.clear();
+    //last but not least invalid phone number (empty)
+    QString emptyNumber;
+    number.setNumber(emptyNumber);
+    contact.saveDetail(&number);
+    QVERIFY(!converter.toJsonContact(&jsonContact, contact));
     //cleanup
     contact.clearDetails();
     jsonContact = QJsonObject();

@@ -298,6 +298,44 @@ ContactsSavingTestCase {
         compare(detail.subTypes.length, phonenumber.subTypes.length)
     }
 
+    function test_phoneNumberCanBeSanitized() {
+        phonenumber.subTypes = [
+                    PhoneNumber.Mobile
+                ]
+        phonenumber.number = "+1     +(234)-56789abcdef*#     "
+        contact.addDetail(phonenumber)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.PhoneNumber)
+        if (model.manager == "jsondb")
+            // jsondb backend will remove blank spaces and other invalid characters
+            compare(detail.number, "+1(234)-56789abcd*#")
+        else // we do not expect other backends to sanitize the input by default
+            compare(detail.number, "+1     +(234)-56789abcdef*#     ")
+        compare(detail.subTypes.length, phonenumber.subTypes.length)
+    }
+
+    function test_phoneNumberCannotBeSanitized() {
+        phonenumber.subTypes = [
+                    PhoneNumber.Mobile
+                ]
+        phonenumber.number = "     efghijk     []/>>>>>"
+        contact.addDetail(phonenumber)
+
+        var detail
+        if (model.manager == "jsondb") {
+            // jsondb backend will remove blank spaces and other invalid characters
+            // resulting this case into an invalid contact object. The model
+            // should return here a BadArgument error.
+            saveContactWithError("BadArgument")
+        } else {//we do not expect that other backends will sanitize the input by default
+            saveAndRefreshContact()
+            detail = contact.detail(ContactDetail.PhoneNumber)
+            compare(detail.number, "     efghijk     []/>>>>>")
+            compare(detail.subTypes.length, phonenumber.subTypes.length)
+        }
+    }
+
+
     Ringtone {
         id: ringtone
     }
@@ -386,5 +424,14 @@ ContactsSavingTestCase {
         waitForContactsChanged();
         compare(model.contacts.length, 1, "Unexpected amount of contacts in model after updating contact.")
         contact = model.contacts[0]
+    }
+
+    function saveContactWithError(errorMessage) {
+        var errorSpy = initTestForTargetListeningToSignal(model, "errorChanged");
+        model.saveContact(contact);
+        waitForTargetSignal(errorSpy);
+        verifyNoContactsChangedReceived();
+        compare(model.contacts.length, 0, "Model should be empty after saving an invalid contact")
+        compare(model.error, errorMessage, "At this point we should get this error \"" + errorMessage + "\" from the model.")
     }
 }

@@ -91,8 +91,12 @@ void QContactDetailFilter::setDetailType(QContactDetail::DetailType type, int fi
 
 /*!
  * Sets the value criterion of the filter to \a value.
- * Note that if the field name criterion (set via setDetailType())
- * of the filter is an empty string, this value will be ignored.
+ * If the field criterion (set via setDetailType())
+ * of the filter is not specified or equal to -1, this value will be ignored.
+ * Note that certain backends might perform backend specific sanitization of
+ * \a value for those detail types that are supported by them.
+ * If the provided value cannot be sanitized, the filter is considered
+ * invalid.
  * \sa value(), setDetailType()
  */
 void QContactDetailFilter::setValue(const QVariant& value)

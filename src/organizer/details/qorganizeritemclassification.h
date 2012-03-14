@@ -57,12 +57,14 @@ public:
         FieldClassification = TypeClassification + 1
     };
 
-    static const QString Public;
-    static const QString Private;
-    static const QString Confidential;
+    enum AccessClassification {
+        AccessPublic = 0,
+        AccessConfidential,
+        AccessPrivate
+    };
 
-    void setClassification(const QString &classification);
-    QString classification() const;
+    void setClassification(AccessClassification classification);
+    AccessClassification classification() const;
 };
 
 QTORGANIZER_END_NAMESPACE

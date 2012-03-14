@@ -1426,30 +1426,16 @@ QString QOrganizerEventRsvp::organizerEmail() const
  */
 
 /*!
-    \variable QOrganizerItemClassification::Public
-
-    The constant string for public access.
+   \enum QOrganizerItemClassification::AccessClassification
+   \value AccessPublic The item can be accessed by everybody
+   \value AccessConfidential The access to the item is restricted
+   \value AccessPrivate Only private access allowed for the item
 */
-const QString QOrganizerItemClassification::Public(QStringLiteral("PUBLIC"));
-
-/*!
-    \variable QOrganizerItemClassification::Private
-
-    The constant string for private access.
-*/
-const QString QOrganizerItemClassification::Private(QStringLiteral("PRIVATE"));
-
-/*!
-    \variable QOrganizerItemClassification::Confidential
-
-    The constant string for confidential access.
-*/
-const QString QOrganizerItemClassification::Confidential(QStringLiteral("CONFIDENTIAL"));
 
 /*!
    Sets the classification of the item \a classification.
  */
-void QOrganizerItemClassification::setClassification(const QString &classification)
+void QOrganizerItemClassification::setClassification(AccessClassification classification)
 {
     setValue(FieldClassification, classification);
 }
@@ -1457,9 +1443,9 @@ void QOrganizerItemClassification::setClassification(const QString &classificati
 /*!
    Returns classification of the item.
  */
-QString QOrganizerItemClassification::classification() const
+QOrganizerItemClassification::AccessClassification QOrganizerItemClassification::classification() const
 {
-    return value(FieldClassification).toString();
+    return static_cast<AccessClassification>(value(FieldClassification).toInt());
 }
 
 /*!

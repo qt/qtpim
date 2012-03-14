@@ -923,17 +923,15 @@ void tst_QOrganizerItemDetails::classification()
     QOrganizerItemClassification classification;
     QOrganizerItem oi;
 
-    QVERIFY(classification.classification().isEmpty());
+    QVERIFY(classification.isEmpty());
 
     // setters/getters
-    classification.setClassification(QOrganizerItemClassification::Public);
-    QVERIFY(classification.classification() == QOrganizerItemClassification::Public);
-    classification.setClassification(QOrganizerItemClassification::Private);
-    QVERIFY(classification.classification() == QOrganizerItemClassification::Private);
-    classification.setClassification(QOrganizerItemClassification::Confidential);
-    QVERIFY(classification.classification() == QOrganizerItemClassification::Confidential);
-    classification.setClassification("secret custom string");
-    QVERIFY(classification.classification() == QString("secret custom string"));
+    classification.setClassification(QOrganizerItemClassification::AccessPublic);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::AccessPublic);
+    classification.setClassification(QOrganizerItemClassification::AccessPrivate);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::AccessPrivate);
+    classification.setClassification(QOrganizerItemClassification::AccessConfidential);
+    QVERIFY(classification.classification() == QOrganizerItemClassification::AccessConfidential);
 
     // add
     QCOMPARE(0, oi.details(QOrganizerItemDetail::TypeClassification).size());
@@ -942,7 +940,7 @@ void tst_QOrganizerItemDetails::classification()
     QCOMPARE(classification, static_cast<QOrganizerItemClassification>(oi.detail(QOrganizerItemDetail::TypeClassification)));
 
     // update
-    classification.setValue(QOrganizerItemClassification::FieldClassification, "very secret custom string");
+    classification.setValue(QOrganizerItemClassification::FieldClassification, QOrganizerItemClassification::AccessPrivate);
     QVERIFY(oi.detail(QOrganizerItemDetail::TypeClassification) != classification);
     QVERIFY(oi.saveDetail(&classification));
     QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeClassification).size());
@@ -950,7 +948,7 @@ void tst_QOrganizerItemDetails::classification()
 
     // try adding another, amount of details should stay the same
     QOrganizerItemClassification classification2;
-    classification2.setClassification("2nd classification");
+    classification2.setClassification(QOrganizerItemClassification::AccessConfidential);
     QVERIFY(oi.saveDetail(&classification2));
     QCOMPARE(oi.details(QOrganizerItemDetail::TypeClassification).size(), 1);
 

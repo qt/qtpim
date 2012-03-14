@@ -908,20 +908,27 @@ Q_SIGNALS:
 class QDeclarativeOrganizerItemClassification : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
+    Q_PROPERTY(AccessClassification classification READ classification WRITE setClassification NOTIFY valueChanged)
     Q_ENUMS(Field)
-    Q_PROPERTY(QString classification READ classification WRITE setClassification NOTIFY valueChanged)
+    Q_ENUMS(AccessClassification)
 
 public:
     enum Field {
         FieldClassification = QOrganizerItemClassification::FieldClassification
     };
 
+    enum AccessClassification {
+        AccessPublic = QOrganizerItemClassification::AccessPublic,
+        AccessConfidential = QOrganizerItemClassification::AccessConfidential,
+        AccessPrivate = QOrganizerItemClassification::AccessPrivate
+    };
+
     QDeclarativeOrganizerItemClassification(QObject *parent = 0);
 
     virtual DetailType type() const;
 
-    void setClassification(const QString &newClassification);
-    QString classification() const;
+    void setClassification(AccessClassification newClassification);
+    AccessClassification classification() const;
 
 Q_SIGNALS:
     void valueChanged();

@@ -5114,7 +5114,7 @@ void tst_QOrganizerManager::testClassification()
     // Save item and verify
     QOrganizerEvent event;
     QOrganizerItemClassification classification;
-    classification.setClassification(QOrganizerItemClassification::Private);
+    classification.setClassification(QOrganizerItemClassification::AccessPrivate);
     QVERIFY(event.saveDetail(&classification));
     QVERIFY(mgr->saveItem(&event));
     QOrganizerItemId id = event.id();
@@ -5124,7 +5124,7 @@ void tst_QOrganizerManager::testClassification()
     QVERIFY(item == event);//This will compare all details and their values
 
     // Update
-    classification.setClassification(QOrganizerItemClassification::Confidential);
+    classification.setClassification(QOrganizerItemClassification::AccessConfidential);
     QVERIFY(event.saveDetail(&classification));
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);

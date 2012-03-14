@@ -2072,12 +2072,17 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemClassificat
 }
 
 /*!
-    \qmlproperty string Classification::classification
+    \qmlproperty enumeration Classification::classification
 
-    This property holds the calendar item's classification related information. Value can be
-    either one defined by iCalendar specification ("PUBLIC", "PRIVATE", "CONFIDENTIAL") or custom string.
+    This property holds the calendar item's classification related information. The value can be one of:
+    \list
+    \li Classification.AccessPublic
+    \li Classification.AccessConfidential
+    \li Classification.AccessPrivate
+    \endlist
+
  */
-void QDeclarativeOrganizerItemClassification::setClassification(const QString &newClassification)
+void QDeclarativeOrganizerItemClassification::setClassification(AccessClassification newClassification)
 {
     if (classification() != newClassification) {
         m_detail.setValue(QOrganizerItemClassification::FieldClassification, newClassification);
@@ -2085,9 +2090,9 @@ void QDeclarativeOrganizerItemClassification::setClassification(const QString &n
     }
 }
 
-QString QDeclarativeOrganizerItemClassification::classification() const
+QDeclarativeOrganizerItemClassification::AccessClassification QDeclarativeOrganizerItemClassification::classification() const
 {
-    return m_detail.value(QOrganizerItemClassification::FieldClassification).toString();
+    return static_cast<AccessClassification>(m_detail.value(QOrganizerItemClassification::FieldClassification).toInt());
 }
 
 

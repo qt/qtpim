@@ -47,7 +47,6 @@
 #include "qdeclarativecontact_p.h"
 #include "qdeclarativecontactdetail_p.h"
 #include "qdeclarativecontactfilter_p.h"
-#include "qdeclarativecontactimageprovider_p.h"
 #include "qdeclarativecontactsortorder_p.h"
 #include "qdeclarativecontactrelationshipmodel_p.h"
 #include "qdeclarativecontactrelationship_p.h"
@@ -99,7 +98,6 @@ public:
         qmlRegisterType<QDeclarativeContactRingtone>(uri, major, minor, "Ringtone");
         qmlRegisterType<QDeclarativeContactSyncTarget>(uri, major, minor, "SyncTarget");
         qmlRegisterType<QDeclarativeContactTag>(uri, major, minor, "Tag");
-        qmlRegisterType<QDeclarativeContactThumbnail>(uri, major, minor, "Thumbnail");
         qmlRegisterType<QDeclarativeContactTimestamp>(uri, major, minor, "Timestamp");
         qmlRegisterType<QDeclarativeContactType>(uri, major, minor, "Type");
         qmlRegisterType<QDeclarativeContactUrl>(uri, major, minor, "Url");
@@ -125,7 +123,6 @@ public:
     void initializeEngine(QQmlEngine *engine, const char *uri)
     {
         Q_UNUSED(uri);
-        engine->addImageProvider("thumbnail", new ContactThumbnailImageProvider);
     }
 };
 

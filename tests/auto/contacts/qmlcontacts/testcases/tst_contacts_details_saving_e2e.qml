@@ -300,16 +300,6 @@ ContactsSavingTestCase {
         compare(detail.audioRingtoneUrl, "http://qt.nokia.com")
     }
 
-    // Thumbnail is not supported at the moment
-    Thumbnail {
-        id: thumbnail
-    }
-
-    function test_thumbnail() {
-        expectFail("", "This is not supported at the moment");
-        verify(false);
-    }
-
     Url {
         id: url
     }

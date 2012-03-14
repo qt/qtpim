@@ -118,9 +118,6 @@ protected:
     void encodeRingtone(const QContactDetail &detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int> *processedFields);
-    void encodeThumbnail(const QContactDetail &detail,
-            QList<QVersitProperty>* generatedProperties,
-            QSet<int> *processedFields);
     void encodeAvatar(const QContactDetail &detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int> *processedFields);

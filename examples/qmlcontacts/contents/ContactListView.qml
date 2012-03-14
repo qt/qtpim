@@ -90,34 +90,6 @@ Item {
                 Column {
                     Row {
                         spacing: 2
-                        Item {
-                            id: mainAvatar;
-                            height: wrapper.height;
-                            width: height;
-
-                            Rectangle {
-                                border.width: 2;
-                                radius: 4;
-                                anchors.fill: parent;
-                                anchors.margins: 2;
-
-                                Image {
-                                    id: thumbnail
-                                    anchors.fill: parent;
-                                    anchors.margins: 2;
-
-                                    source: model.contact.thumbnail;
-                                    fillMode: Image.PreserveAspectFit
-                                    smooth:true
-                                }
-                                Image {
-                                    anchors.fill: parent;
-                                    anchors.margins: 2;
-                                    source: "images/default.svg";
-                                    opacity: thumbnail.status == Image.Ready ? 0 : 1;
-                                }
-                            }
-                        }
 
                         Column {
                             Item {

@@ -90,7 +90,7 @@ QTCONTACTS_BEGIN_NAMESPACE
   \value AllRequired Tells the backend that all information is required
   \value NoRelationships Tells the backend that the client does not require retrieved contacts to include a cache of relationships
   \value NoActionPreferences Tells the backend that the client does not require retrieved contacts to include a cache of action preferences
-  \value NoBinaryBlobs Tells the backend that the client does not require retrieved contacts to include binary blobs such as thumbnail images
+  \value NoBinaryBlobs Tells the backend that the client does not require retrieved contacts to include binary blobs
  */
 
 /*!

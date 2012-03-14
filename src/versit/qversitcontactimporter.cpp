@@ -158,10 +158,9 @@ QTVERSIT_BEGIN_NAMESPACE
 
   A \l QVersitResourceHandler is associated with the importer to supply the behaviour for saving
   files to persistent storage.  By default, this is set to a \l QVersitDefaultResourceHandler,
-  which does not save files to persistent storage.  Note that although photos found in vCards
-  are not saved to disk by default, the importer does add a QContactThumbnail detail to the
-  image.  If a full-sized image needs to be loaded from a URL and persisted on disk, a custom
-  QVersitResourceHandler should be supplied which implements this.
+  which does not save files to persistent storage.  Note that photos found in vCards
+  are not saved to disk by default. If a full-sized image needs to be loaded from a URL
+  and persisted on disk, a custom QVersitResourceHandler should be supplied which implements this.
 
   By associating a QVersitContactImporterPropertyHandlerV2 with the importer using
   setPropertyHandler(), the client can pass in a handler to override the processing of properties

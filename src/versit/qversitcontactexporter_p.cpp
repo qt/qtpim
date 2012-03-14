@@ -178,9 +178,6 @@ void QVersitContactExporterPrivate::exportContact(
         case QContactDetail::TypeTag:
             encodeTag(detail, document, &removedProperties, &generatedProperties, &processedFields);
             break;
-        case QContactDetail::TypeThumbnail:
-            encodeThumbnail(detail, &generatedProperties, &processedFields);
-            break;
         case QContactDetail::TypeTimestamp:
             encodeRev(detail, &generatedProperties, &processedFields);
             break;
@@ -589,32 +586,6 @@ void QVersitContactExporterPrivate::encodeRingtone(
         *generatedProperties << property;
         *processedFields << QContactRingtone::FieldAudioRingtoneUrl;
     }
-}
-
-/*!
- * Encode thumbnail content into the Versit Document
- */
-void QVersitContactExporterPrivate::encodeThumbnail(
-    const QContactDetail &detail,
-    QList<QVersitProperty>* generatedProperties,
-    QSet<int>* processedFields)
-{
-    QContactThumbnail contactThumbnail = static_cast<QContactThumbnail>(detail);
-    QVersitProperty property;
-    property.setName(QLatin1String("PHOTO"));
-    QImage image = contactThumbnail.thumbnail();
-    if (image.isNull())
-        return;
-    QByteArray imageData;
-    QBuffer buffer(&imageData);
-    buffer.open(QIODevice::WriteOnly);
-    // Always store a pixmap as a PNG.
-    if (!image.save(&buffer, "PNG"))
-        return;
-    property.setValue(imageData);
-    property.insertParameter(QLatin1String("TYPE"), QLatin1String("PNG"));
-    *generatedProperties << property;
-    *processedFields << QContactThumbnail::FieldThumbnail;
 }
 
 /*!

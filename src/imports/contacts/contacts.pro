@@ -24,7 +24,6 @@ HEADERS += qdeclarativecontactmodel_p.h \
            qdeclarativecontact_p.h \
            qdeclarativecontactdetail_p.h \
            qdeclarativecontactfilter_p.h \
-           qdeclarativecontactimageprovider_p.h \
            qdeclarativecontactsortorder_p.h \
            qdeclarativecontactfetchhint_p.h \
            qdeclarativecontactrelationship_p.h \
@@ -35,7 +34,6 @@ SOURCES += plugin.cpp \
     qdeclarativecontact.cpp \
     qdeclarativecontactdetail.cpp \
     qdeclarativecontactfilter.cpp \
-    qdeclarativecontactimageprovider.cpp \
     qdeclarativecontactsortorder.cpp \
     qdeclarativecontactfetchhint.cpp \
     qdeclarativecontactrelationship.cpp \

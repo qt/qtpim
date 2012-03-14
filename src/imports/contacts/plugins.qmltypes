@@ -246,7 +246,6 @@ Module {
             isPointer: true
         }
         Property { name: "tag"; type: "QDeclarativeContactTag"; isReadonly: true; isPointer: true }
-        Property { name: "thumbnail"; type: "QUrl" }
         Property { name: "url"; type: "QDeclarativeContactUrl"; isReadonly: true; isPointer: true }
         Property {
             name: "version"
@@ -451,11 +450,10 @@ Module {
                 "Ringtone": 23,
                 "SyncTarget": 24,
                 "Tag": 25,
-                "Thumbnail": 26,
-                "Timestamp": 27,
-                "Type": 28,
-                "Url": 29,
-                "Version": 30,
+                "Timestamp": 26,
+                "Type": 27,
+                "Url": 28,
+                "Version": 29,
                 "Unknown": 0
             }
         }
@@ -1187,18 +1185,6 @@ Module {
             }
         }
         Property { name: "tag"; type: "string" }
-        Signal { name: "valueChanged" }
-    }
-    Component {
-        name: "QDeclarativeContactThumbnail"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Thumbnail 5.0"]
-        Enum {
-            name: "FieldType"
-            values: {
-                "Thumbnail": 0
-            }
-        }
         Signal { name: "valueChanged" }
     }
     Component {

@@ -857,29 +857,6 @@ void tst_QVersitContactExporter::testEncodeAvatar()
                                            QLatin1String("JPEG")));
 }
 
-void tst_QVersitContactExporter::testEncodeThumbnail() {
-    QImage image;
-    image.loadFromData(SAMPLE_GIF);
-    if (QImageWriter::supportedImageFormats().contains("png")) {
-        QContactThumbnail thumbnail;
-        thumbnail.setThumbnail(image);
-        QContact contact(createContactWithName(QLatin1String("asdf")));
-        contact.saveDetail(&thumbnail);
-        QVERIFY(mExporter->exportContacts(QList<QContact>() << contact,
-                                          QVersitDocument::VCard30Type));
-        QVersitDocument document = mExporter->documents().first();
-        // verify the value
-        QVersitProperty property = findPropertyByName(document, QLatin1String("PHOTO"));
-        QVERIFY(!property.isEmpty());
-        QVariant variantValue = property.variantValue();
-        QVERIFY(variantValue.type() == QVariant::ByteArray);
-        QByteArray retrievedData = variantValue.value<QByteArray>();
-        QImage retrievedImage;
-        retrievedImage.loadFromData(retrievedData);
-        QCOMPARE(retrievedImage, image);
-    }
-}
-
 
 void tst_QVersitContactExporter::testEncodeEmbeddedContent()
 {

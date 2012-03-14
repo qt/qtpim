@@ -89,7 +89,6 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactRingtone*  ringtone READ ringtone NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactSyncTarget*  syncTarget READ syncTarget NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactTag*  tag READ tag NOTIFY contactChanged)
-    Q_PROPERTY (QUrl thumbnail READ thumbnail WRITE setThumbnail NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
@@ -147,8 +146,6 @@ public:
     QDeclarativeContactRingtone*  ringtone();
     QDeclarativeContactSyncTarget*  syncTarget();
     QDeclarativeContactTag*  tag();
-    QUrl  thumbnail() const;
-    void  setThumbnail(const QUrl& url);
     QDeclarativeContactUrl*  url();
     QDeclarativeContactVersion*  version();
     QQmlListProperty<QDeclarativeContactUrl>  urls();

@@ -76,7 +76,6 @@ class QContactOrganization;
 class QContactPhoneNumber;
 class QContactRingtone;
 class QContactTag;
-class QContactThumbnail;
 class QContactTimestamp;
 class QContactUrl;
 QTCONTACTS_END_NAMESPACE
@@ -112,10 +111,10 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
                       QContactNickname::FieldNickname},
     {"NOTE",          QContactNote::Type,
                       QContactNote::FieldNote},
+    {"PHOTO",         QContactAvatar::Type,
+                      -1},
     {"ORG",           QContactOrganization::Type,
                       QContactOrganization::FieldName},
-    {"PHOTO",         QContactThumbnail::Type,
-                      -1},
     {"REV",           QContactTimestamp::Type,
                       -1},
     {"ROLE",          QContactOrganization::Type,
@@ -164,7 +163,7 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
                       -1},
     {"X-KADDRESSBOOK-X-IMADDRESS", QContactOnlineAccount::Type,
                       -1},
-    {"X-MS-CARDPICTURE", QContactThumbnail::Type,
+    {"X-MS-CARDPICTURE", QContactAvatar::Type,
                       -1},
     {"X-MS-IMADDRESS", QContactOnlineAccount::Type,
                       -1},

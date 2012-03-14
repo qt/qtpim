@@ -66,7 +66,6 @@ QTCONTACTS_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontactpresence_p.cpp"
 #include "moc_qdeclarativecontactringtone_p.cpp"
 #include "moc_qdeclarativecontactsynctarget_p.cpp"
-#include "moc_qdeclarativecontactthumbnail_p.cpp"
 #include "moc_qdeclarativecontacttag_p.cpp"
 #include "moc_qdeclarativecontacttype_p.cpp"
 #include "moc_qdeclarativecontacttimestamp_p.cpp"

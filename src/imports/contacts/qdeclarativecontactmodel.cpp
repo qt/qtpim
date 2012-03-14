@@ -841,12 +841,7 @@ QVariant QDeclarativeContactModel::data(const QModelIndex &index, int role) cons
         case Qt::DisplayRole:
             return c.displayLabel();
         case Qt::DecorationRole:
-            {
-                QContactThumbnail t = c.detail<QContactThumbnail>();
-                if (!t.thumbnail().isNull())
-                    return QPixmap::fromImage(t.thumbnail());
-                return QPixmap();
-            }
+            return QPixmap();
         case ContactRole:
             return QVariant::fromValue(dc);
     }

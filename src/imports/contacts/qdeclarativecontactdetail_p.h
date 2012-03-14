@@ -91,7 +91,6 @@ public:
         Ringtone = QContactDetail::TypeRingtone,
         SyncTarget = QContactDetail::TypeSyncTarget,
         Tag = QContactDetail::TypeTag,
-        Thumbnail = QContactDetail::TypeThumbnail,
         Timestamp = QContactDetail::TypeTimestamp,
         Type = QContactDetail::TypeType,
         Url = QContactDetail::TypeUrl,

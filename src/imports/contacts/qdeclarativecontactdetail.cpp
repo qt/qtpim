@@ -285,8 +285,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactSyncTarget;
     else if (type == QDeclarativeContactDetail::Tag)
         contactDetail = new QDeclarativeContactTag;
-    else if (type == QDeclarativeContactDetail::Thumbnail)
-        contactDetail = new QDeclarativeContactThumbnail;
     else if (type == QDeclarativeContactDetail::Timestamp)
         contactDetail = new QDeclarativeContactTimestamp;
     else if (type == QDeclarativeContactDetail::Type)

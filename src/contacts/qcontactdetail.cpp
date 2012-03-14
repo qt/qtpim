@@ -193,7 +193,6 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
    \value TypeRingtone Detail type of a QContactRingtone detail.
    \value TypeSyncTarget Detail type of a QContactSyncTarget detail.
    \value TypeTag Detail type of a QContactTag detail.
-   \value TypeThumbnail Detail type of a QContactThumbnail detail.
    \value TypeTimestamp Detail type of a QContactTimestamp detail.
    \value TypeType Detail type of a QContactType detail.
    \value TypeUrl Detail type of a QContactUrl detail.

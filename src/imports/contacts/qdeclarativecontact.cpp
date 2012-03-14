@@ -628,39 +628,6 @@ QDeclarativeContactTag*  QDeclarativeContact::tag()
 }
 
 /*!
-    \qmlproperty url Contact::thumbnail
-
-    This property holds the thumbnail URL of the Contact object.
-*/
-QUrl QDeclarativeContact::thumbnail() const
-{
-    //Just let the imager provider deal with it
-    return QUrl(QString("image://thumbnail/%1.%2").arg(manager()).arg(contactId()).toLatin1());
-}
-
-//Only support local file
-void QDeclarativeContact::setThumbnail(const QUrl& url)
-{
-    bool found(false);
-    foreach (QDeclarativeContactDetail *detail, m_details) {
-        if (QDeclarativeContactDetail::Thumbnail == detail->detailType()) {
-            static_cast<QDeclarativeContactThumbnail *>(detail)->setThumbnail(url);
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        QDeclarativeContactThumbnail *newThumbnail = new QDeclarativeContactThumbnail(this);
-        newThumbnail->setThumbnail(url);
-        m_details.append(newThumbnail);
-    }
-
-    m_modified = true;
-    emit contactChanged();
-}
-
-/*!
     \qmlproperty Url Contact::url
 
     This property holds the url detail of the Contact object.

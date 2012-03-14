@@ -927,7 +927,6 @@ void QContactJsonDbConverter::initializeMappings()
     //MISSING DETAILS / FIELDS (TO BE ADDED ALSO TO PARSING LOGIC):
     // - QContactTimestamp
     // - QContactOnlineAccount
-    // - QContactThumbnail
 }
 
 bool QContactJsonDbConverter::toQContacts(const QVariantList& jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error)

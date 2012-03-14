@@ -69,7 +69,6 @@
 #include <qcontactringtone.h>
 #include <qcontactsynctarget.h>
 #include <qcontacttag.h>
-#include <qcontactthumbnail.h>
 #include <qcontacttimestamp.h>
 #include <qcontacttype.h>
 #include <qcontacturl.h>

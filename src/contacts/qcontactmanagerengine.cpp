@@ -759,7 +759,6 @@ QList<QContactDetail::DetailType> QContactManagerEngine::supportedContactDetailT
                      << QContactRingtone::Type
                      << QContactSyncTarget::Type
                      << QContactTag::Type
-                     << QContactThumbnail::Type
                      << QContactTimestamp::Type
                      << QContactType::Type
                      << QContactUrl::Type

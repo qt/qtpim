@@ -66,7 +66,6 @@
 #include <qcontactonlineaccount.h>
 #include <qcontactfamily.h>
 #include <qcontactdisplaylabel.h>
-#include <qcontactthumbnail.h>
 #include <qcontactringtone.h>
 #include <qversitcontacthandler.h>
 #include "qversitcontactpluginloader_p.h"
@@ -205,6 +204,8 @@ void QVersitContactImporterPrivate::importProperty(
     case QContactDetail::TypeAnniversary:
         success = createAnniversary(property, contact, &updatedDetails);
         break;
+    case QContactDetail::TypeAvatar:
+        success = createAvatar(property, contact, &updatedDetails);
     case QContactDetail::TypeBirthday:
         success = createBirthday(property, contact, &updatedDetails);
         break;
@@ -240,9 +241,6 @@ void QVersitContactImporterPrivate::importProperty(
         break;
     case QContactDetail::TypeTag:
         success = createTags(property, contact, &updatedDetails);
-        break;
-    case QContactDetail::TypeThumbnail:
-        success = createThumbnail(property, contact, &updatedDetails);
         break;
     case QContactDetail::TypeTimestamp:
         success = createTimeStamp(property, contact, &updatedDetails);
@@ -681,7 +679,7 @@ bool QVersitContactImporterPrivate::createRingtone(
 /*!
  * Creates a QContactAvatar from \a property
  */
-bool QVersitContactImporterPrivate::createThumbnail(
+bool QVersitContactImporterPrivate::createAvatar(
     const QVersitProperty& property,
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
@@ -696,19 +694,6 @@ bool QVersitContactImporterPrivate::createThumbnail(
         saveDetailWithContext(updatedDetails, avatar, extractContexts(property));
         success = true;
     }
-    if (!data.isEmpty()) {
-        QImage image;
-        if (image.loadFromData(data)) {
-            QContactThumbnail thumbnail = contact->detail<QContactThumbnail>();
-            // In the case of multiple thumbnails, pick the smallest one.
-            if (thumbnail.isEmpty() || image.byteCount() < thumbnail.thumbnail().byteCount()) {
-                thumbnail.setThumbnail(image);
-            }
-            saveDetailWithContext(updatedDetails, thumbnail, extractContexts(property));
-            success = true;
-        }
-    }
-
     return success;
 }
 

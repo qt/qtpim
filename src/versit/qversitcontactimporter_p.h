@@ -102,7 +102,7 @@ private:
     bool createTags(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createOnlineAccount(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createRingtone(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
-    bool createThumbnail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    bool createAvatar(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createGeoLocation(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createFamily(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNameValueDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);

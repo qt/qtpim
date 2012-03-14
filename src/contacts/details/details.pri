@@ -26,7 +26,6 @@ PUBLIC_HEADERS += \
     details/qcontactringtone.h \
     details/qcontactsynctarget.h \
     details/qcontacttag.h \
-    details/qcontactthumbnail.h \
     details/qcontacttimestamp.h \
     details/qcontacttype.h \
     details/qcontacturl.h \

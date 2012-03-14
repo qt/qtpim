@@ -85,7 +85,6 @@ private slots:
     void ringtone();
     void syncTarget();
     void tag();
-    void thumbnail();
     void timestamp();
     void type();
     void url();
@@ -1179,44 +1178,6 @@ void tst_QContactDetails::tag()
     QCOMPARE(c.details(QContactTag::Type).count(), 0);
     QVERIFY(c.removeDetail(&t2) == false);
     QCOMPARE(c.details(QContactTag::Type).count(), 0);
-}
-
-void tst_QContactDetails::thumbnail()
-{
-    QContact c;
-    QContactThumbnail t1, t2;
-    QImage i1, i2; // XXX TODO: FIXME load an image from bytearray
-
-    // test property set
-    t1.setThumbnail(i1);
-    QCOMPARE(t1.thumbnail(), i1);
-    QCOMPARE(t1.value<QImage>(QContactThumbnail::FieldThumbnail), i1);
-
-    // Make sure we have none to start with
-    QCOMPARE(c.details(QContactThumbnail::Type).count(), 0);
-
-    // test property add
-    QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), t1.thumbnail());
-
-    // test property update
-    t1.setValue(QContactThumbnail::FieldContext, "label1");
-    t1.setThumbnail(i2);
-    QVERIFY(c.saveDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::Type).value(0).value(QContactThumbnail::FieldContext).toString(), QString("label1"));
-    QCOMPARE(c.details(QContactThumbnail::Type).value(0).value<QImage>(QContactThumbnail::FieldThumbnail), i2);
-
-    // Uniqueness is not currently enforced
-    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
-    t2.setThumbnail(i1);
-    QVERIFY(c.saveDetail(&t2));
-    QCOMPARE(c.details(QContactThumbnail::Type).count(), 2); // save should overwrite!
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), i1);
-    QCOMPARE(QContactThumbnail(c.details(QContactThumbnail::Type).value(0)).thumbnail(), t2.thumbnail());
-
-    QVERIFY(c.removeDetail(&t1));
-    QCOMPARE(c.details(QContactThumbnail::Type).count(), 1);
 }
 
 void tst_QContactDetails::timestamp()

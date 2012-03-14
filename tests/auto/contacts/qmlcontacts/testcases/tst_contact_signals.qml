@@ -700,30 +700,6 @@ TestCase {
     }
 
     Contact {
-        id: contactWithThumbnail1
-        thumbnail: "http://old"
-    }
-
-    function test_contact_thumbnail_change_emits_signal()
-    {
-        listenToSignalFromObject("contactChanged", contactWithThumbnail1);
-        contactWithThumbnail1.thumbnail = "http://new";
-        verifySignalReceived();
-    }
-
-    Contact {
-        id: contactWithThumbnail2
-        thumbnail: "http://old"
-    }
-
-    function test_contact_thumbnail_emits_signal_also_when_value_does_not_change()
-    {
-        listenToSignalFromObject("contactChanged", contactWithThumbnail2);
-        contactWithThumbnail2.thumbnail = contactWithThumbnail2.thumbnail;
-        verifySignalReceived();
-    }
-
-    Contact {
         id: contactWithUrl1
         Url {
             url: "http://old"

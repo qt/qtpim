@@ -155,10 +155,6 @@ TestCase {
         id: tag
     }
 
-    Thumbnail {
-        id: thumbnail
-    }
-
     Timestamp {
         id: timestamp
     }

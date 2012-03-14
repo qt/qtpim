@@ -95,7 +95,6 @@ public:
         TypeRingtone,
         TypeSyncTarget,
         TypeTag,
-        TypeThumbnail,
         TypeTimestamp,
         TypeType,
         TypeUrl,

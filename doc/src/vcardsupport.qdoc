@@ -78,7 +78,7 @@ The following table lists the vCard properties that the \l{C++ Versit}{Versit AP
     \li QContactOrganization (Name field)
   \row
     \li PHOTO
-    \li QContactThumbnail for base-64 encoded images or QContactAvatar for URLs
+    \li QContactAvatar for URLs. No support by default for base-64 encoded images.
   \row
     \li REV
     \li QContactTimestamp

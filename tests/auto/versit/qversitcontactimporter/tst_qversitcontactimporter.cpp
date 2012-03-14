@@ -820,69 +820,6 @@ void tst_QVersitContactImporter::testNickname()
     QCOMPARE(nickNames.first().nickname(), QLatin1String("Homie"));
 }
 
-void tst_QVersitContactImporter::testAvatarThumbnail()
-{
-    QByteArray gif(SAMPLE_GIF);
-    QString name = QLatin1String("John Citizen");
-    QVersitDocument document = createDocumentWithNameAndPhoto(name, gif, QLatin1String("GIF"));
-    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
-    QContact contact = mImporter->contacts().first();
-    QContactAvatar avatar = contact.detail<QContactAvatar>();
-    QByteArray content = mResourceHandler->mObjects.value(avatar.imageUrl());
-    QCOMPARE(content, gif);
-    QContactThumbnail thumbnail = contact.detail<QContactThumbnail>();
-    QImage image(thumbnail.thumbnail());
-    QImage expectedImage;
-    expectedImage.loadFromData(gif);
-    QCOMPARE(image, expectedImage);
-
-    // Without the resource handler, the thumbnail should still be set, but no avatar should be made
-    mImporter->setResourceHandler(0);
-    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
-    contact = mImporter->contacts().first();
-    QCOMPARE(contact.details<QContactAvatar>().size(), 0);
-    thumbnail = contact.detail<QContactThumbnail>();
-    image = thumbnail.thumbnail();
-    QCOMPARE(image, expectedImage);
-
-    mImporter->setResourceHandler(mResourceHandler);
-
-    // Empty photo.  The avatar should not be added to the QContact and the thumbnail will be empty.
-    QVersitProperty property;
-    property.setName(QLatin1String("PHOTO"));
-    property.setValue(QByteArray());
-    document.clear();
-    document.setType(QVersitDocument::VCard30Type);
-    document.addProperty(property);
-    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
-    contact = mImporter->contacts().first();
-    QCOMPARE(contact.details<QContactAvatar>().size(), 0);
-    thumbnail = contact.detail<QContactThumbnail>();
-    QVERIFY(thumbnail.isEmpty());
-
-    // Test multiple PHOTOs.  The chosen Thumbnail should be the smallest image supplied.
-    // All should be made into Avatars
-    QByteArray nonPhoto(QByteArray::fromBase64("UXQgaXMgZ3JlYXQh")); // the string "Qt is great!"
-    QByteArray bigPhoto(NOKIA_GIF);
-    document.clear();
-    document.setType(QVersitDocument::VCard30Type);
-    property.setName(QLatin1String("PHOTO"));
-    property.setValue(nonPhoto); // shouldn't be the thumbnail because it's not an image
-    document.addProperty(property);
-    property.setValue(bigPhoto); // shouldn't be the thumbnail because it's not the smallest
-    document.addProperty(property);
-    property.setValue(gif); // should be the thumbnail
-    document.addProperty(property);
-    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
-    contact = mImporter->contacts().first();
-    QList<QContactThumbnail> thumbnails = contact.details<QContactThumbnail>();
-    QCOMPARE(thumbnails.size(), 1);
-    thumbnail = thumbnails.first();
-    image = thumbnail.thumbnail();
-    QCOMPARE(image, expectedImage);
-    QCOMPARE(contact.details<QContactAvatar>().size(), 3);
-}
-
 void tst_QVersitContactImporter::testAvatarUrl()
 {
     QVersitProperty property;

@@ -76,7 +76,7 @@ QContactActionManager::QContactActionManager()
 void QContactActionManager::init()
 {
     // We ask the qcontactmanager engine loading code, since it has to enumerate things anyway
-    QContactManagerData::loadFactories();
+    QContactManagerData::loadFactoriesMetadata();
     m_plugin = QContactManagerData::m_actionManagers.value(0);
 }
 

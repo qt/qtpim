@@ -600,7 +600,7 @@ void tst_QContactManager::metadata()
 {
     // ensure that the backend is publishing its metadata (name / parameters / uri) correctly
     QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(new QContactManager("memory"));
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
     QVERIFY(QContactManager::buildUri(cm->managerName(), cm->managerParameters()) == cm->managerUri());
 }
 
@@ -608,7 +608,7 @@ void tst_QContactManager::metadata()
 void tst_QContactManager::nullIdOperations()
 {
     QFETCH(QString, uri);
-    QScopedPointer<QContactManager> cm(new QContactManager("memory"));
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
     QVERIFY(!cm->removeContact(QContactId()));
     QVERIFY(cm->error() == QContactManager::DoesNotExistError);
 

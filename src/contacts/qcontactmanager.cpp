@@ -127,8 +127,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 QStringList QContactManager::availableManagers()
 {
     QStringList ret;
-    QContactManagerData::loadFactories();
-    ret.append(QContactManagerData::m_engines.keys());
+    QContactManagerData::loadFactoriesMetadata();
+    ret = QContactManagerData::m_managerNames;
 
     ret << QLatin1String("invalid");
 

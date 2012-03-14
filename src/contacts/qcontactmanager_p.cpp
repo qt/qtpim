@@ -62,6 +62,9 @@
 #include "qcontactinvalidbackend_p.h"
 #include "qcontactspluginsearch_p.h"
 
+#include <QtCore/private/qfactoryloader_p.h>
+#include <QJsonArray>
+
 QTCONTACTS_BEGIN_NAMESPACE
 
 /* Shared QContactManager stuff here, default engine stuff below */
@@ -70,7 +73,14 @@ QSet<QContactManager*> QContactManagerData::m_aliveEngines;
 QList<QContactActionManagerPlugin*> QContactManagerData::m_actionManagers;
 
 bool QContactManagerData::m_discoveredStatic;
-QStringList QContactManagerData::m_pluginPaths;
+QList<QJsonObject> QContactManagerData::m_pluginPaths;
+QList<QJsonObject> QContactManagerData::m_metaData;
+QStringList QContactManagerData::m_managerNames;
+
+
+#ifndef QT_NO_LIBRARY
+Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader, (QT_CONTACT_MANAGER_ENGINE_INTERFACE, QStringLiteral("/contacts")))
+#endif
 
 static void qContactsCleanEngines()
 {
@@ -102,6 +112,9 @@ static void qContactsCleanEngines()
     QContactManagerData::m_engines.clear();
     QContactManagerData::m_actionManagers.clear();
     QContactManagerData::m_aliveEngines.clear();
+    QContactManagerData::m_pluginPaths.clear();
+    QContactManagerData::m_metaData.clear();
+    QContactManagerData::m_managerNames.clear();
 }
 
 static int parameterValue(const QMap<QString, QString> &parameters, const char *key, int defaultValue)
@@ -162,7 +175,19 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
             break;
 
         // otherwise load dynamic factories and reloop
-        loadFactories();
+        loadFactoriesMetadata();
+        if (!m_metaData.isEmpty()) {
+            QFactoryLoader *l = loader();
+            foreach (const QJsonObject &metaDataObject, m_metaData) {
+                if (metaDataObject.value(QStringLiteral("MetaData")).toObject().value(QStringLiteral("Keys")).toArray().at(0).toString() ==
+                        builtManagerName) {
+                    QContactManagerEngineFactory *managerFactory = qobject_cast<QContactManagerEngineFactory *>(l->instance(m_metaData.indexOf(metaDataObject)));
+                    QContactActionManagerPlugin *actionFactory = qobject_cast<QContactActionManagerPlugin *>(l->instance(m_metaData.indexOf(metaDataObject)));
+                    m_engines.insertMulti(builtManagerName, managerFactory);
+                    m_actionManagers.append(actionFactory);
+                }
+            }
+        }
         factories = m_engines.values(builtManagerName);
         loadedDynamic = true;
     }
@@ -185,7 +210,7 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
 /* Caller takes ownership of the id */
 QContactEngineId* QContactManagerData::createEngineContactId(const QString &managerName, const QMap<QString, QString>& parameters, const QString &engineIdString)
 {
-    loadFactories();
+    loadFactoriesMetadata();
     QContactManagerEngineFactory *engineFactory = m_engines.value(managerName);
     return engineFactory ? engineFactory->createContactEngineId(parameters, engineIdString) : NULL;
 }
@@ -231,7 +256,7 @@ void QContactManagerData::loadStaticFactories()
 
 
 /* Plugin loader */
-void QContactManagerData::loadFactories()
+void QContactManagerData::loadFactoriesMetadata()
 {
 #if !defined QT_NO_DEBUG
     const bool showDebug = qgetenv("QT_DEBUG_PLUGINS").toInt() > 0;
@@ -240,77 +265,24 @@ void QContactManagerData::loadFactories()
     // Always do this..
     loadStaticFactories();
 
-    // But only load dynamic plugins when the paths change
-    QStringList paths = QCoreApplication::libraryPaths();
-#ifdef QTM_PLUGIN_PATH
-    paths << QLatin1String(QTM_PLUGIN_PATH);
-#endif
-
-    if (paths != m_pluginPaths) {
-        m_pluginPaths = paths;
-
-        QStringList plugins = mobilityPlugins(QLatin1String("contacts"));
-
+    QFactoryLoader *l = loader();
+    QList<QJsonObject> metaData = l->metaData();
+    m_metaData = metaData;
+    if (m_metaData != m_pluginPaths) {
+        m_pluginPaths = m_metaData;
+        QString currentManagerName;
         /* Now discover the dynamic plugins */
-        for (int i=0; i < plugins.count(); i++) {
-            QPluginLoader qpl(plugins.at(i));
+        foreach (const QJsonObject &metaDataObject, metaData) {
+            currentManagerName = metaDataObject.value(QStringLiteral("MetaData")).toObject().value(QStringLiteral("Keys")).toArray().at(0).toString();
 
 #if !defined QT_NO_DEBUG
             if (showDebug)
-                qDebug() << "Loading plugin" << plugins.at(i);
+                qDebug() << "Loading metadata of plugin " << currentManagerName;
 #endif
 
-            QContactManagerEngineFactory *f = qobject_cast<QContactManagerEngineFactory*>(qpl.instance());
-            QContactActionManagerPlugin *m = qobject_cast<QContactActionManagerPlugin*>(qpl.instance());
-
-            if (f) {
-                QString name = f->managerName();
-#if !defined QT_NO_DEBUG
-                if (showDebug)
-                    qDebug() << "Dynamic: found a contact engine plugin" << f << "with name" << name;
-#endif
-                if (name != QLatin1String("invalid") && !name.isEmpty()) {
-                    // we also need to ensure that we haven't already loaded this factory.
-                    if (m_engines.keys().contains(name)) {
-                        qWarning() << "Contacts plugin" << plugins.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";
-                    } else {
-                        qDebug() << "ADDING ENGINE to m_engines: " << name << " factory: " << plugins.at(i);
-                        m_engines.insertMulti(name, f);
-                    }
-                } else {
-                    qWarning() << "Contacts plugin" << plugins.at(i) << "with reserved name" << name << "ignored";
-                }
-            }
-
-            if (m) {
-                m_actionManagers.append(m);
-            }
-
-            /* Debugging */
-#if !defined QT_NO_DEBUG
-            if (showDebug && !f && !m) {
-                qDebug() << "Unknown plugin:" << qpl.errorString();
-                if (qpl.instance()) {
-                    qDebug() << "[qobject:" << qpl.instance() << "]";
-                }
-            }
-#endif
+            if (!currentManagerName.isEmpty())
+                m_managerNames << currentManagerName;
         }
-
-        QStringList engineNames;
-        foreach (QContactManagerEngineFactory* f, m_engines.values()) {
-            QStringList versions;
-            foreach (int v, f->supportedImplementationVersions()) {
-                versions << QString::fromAscii("%1").arg(v);
-            }
-            engineNames << QString::fromAscii("%1[%2]").arg(f->managerName()).arg(versions.join(QString::fromAscii(",")));
-        }
-#if !defined QT_NO_DEBUG
-        if (showDebug) {
-            qDebug() << "Found engines:" << engineNames;
-            qDebug() << "Found action engines:" << m_actionManagers;
-        }
-#endif
     }
 }
 

@@ -64,6 +64,8 @@
 #include "qcontactactionmanager_p.h"
 #include "qcontactobserver.h"
 
+#include <QJsonObject>
+
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactManagerEngineFactory;
@@ -101,8 +103,10 @@ public:
     static QContactManagerData* managerData(const QContactManager *manager) {return manager->d;} // laziness to avoid const_cast
     static QList<QContactActionManagerPlugin*> m_actionManagers;
     static bool m_discoveredStatic;
-    static QStringList m_pluginPaths;
-    static void loadFactories();
+    static QList<QJsonObject> m_pluginPaths;
+    static QList<QJsonObject> m_metaData;
+    static QStringList m_managerNames;
+    static void loadFactoriesMetadata();
     static void loadStaticFactories();
 
     // Observer stuff

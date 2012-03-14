@@ -44,7 +44,7 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-    \qmlclass FetchHint QDeclarativeOrganizerItemFetchHint
+    \qmlclass QtOrganizer::FetchHint QDeclarativeOrganizerItemFetchHint
     \brief The FetchHint element provides hints to the manager about which organizer item
            information needs to be retrieved in an asynchronous fetch request or a synchronous
            function call.
@@ -61,7 +61,7 @@ QDeclarativeOrganizerItemFetchHint::QDeclarativeOrganizerItemFetchHint(QObject *
 }
 
 /*!
-    \qmlproperty enumeration FetchHint::optimizationHints
+    \qmlproperty enumeration QtOrganizer::FetchHint::optimizationHints
 
     This property holds the optimization hint flags specified by the client.
 

@@ -186,17 +186,19 @@ bool QVersitOrganizerExporter::exportItems(
 }
 
 /*!
- * Returns the document exported in the most recent call to exportItems().
+ *Returns the document exported in the most recent call to exportItems().
  *
  * \sa exportItems()
  */
-QTVERSIT_PREPEND_NAMESPACE(QVersitDocument) QVersitOrganizerExporter::document() const
+QtVersit::QVersitDocument QVersitOrganizerExporter::document() const
 {
     return d->mResult;
 }
 
 /*!
- * Returns the map of errors encountered in the most recent call to exportItems(). The key is
+ * \fn QVersitOrganizerExporter::errorMap() const
+ *
+ *Returns the map of errors encountered in the most recent call to exportItems(). The key is
  * the index into the input list of organizer items and the value is the error that occurred on that
  * item. If errors occur, export does not generate EmptyContactError or NoNameError errors but
  * just succeeds in creating the empty, albeit invalid, vCard. QVersitContactExporter never fails.

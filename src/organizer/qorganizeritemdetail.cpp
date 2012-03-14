@@ -386,7 +386,7 @@ QMap<int, QVariant> QOrganizerItemDetail::values() const
 }
 
 /*!
-    \fn T QOrganizerItemDetail::value(const QString &field) const
+    \fn template <typename T> T QOrganizerItemDetail::value(int field) const
     Returns the value of the template type associated with the given \a field.
  */
 

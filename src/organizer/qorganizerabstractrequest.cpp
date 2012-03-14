@@ -94,6 +94,9 @@ QTORGANIZER_BEGIN_NAMESPACE
     \value CollectionFetchRequest      A request to fetch a collection.
     \value CollectionRemoveRequest     A request to remove a collection.
     \value CollectionSaveRequest       A request to save a collection.
+    \value ItemFetchByIdRequest        A request to fetch an organizer item by ID.
+    \value ItemRemoveByIdRequest       A request to remove an organizer item by ID.
+
  */
 
 /*!

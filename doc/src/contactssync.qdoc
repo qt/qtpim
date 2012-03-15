@@ -148,12 +148,9 @@ The self-contact manipulation functionality is only available via the synchronou
 \section2 Relationship Manipulation
 
 Contacts may be related in various ways.  The contacts API allows clients to define relationships between contacts
-if the plugin providing the functionality supports such relationships.  Any plugin which supports relationships
-should report this functionality by reporting that it supports the QContactManager::Relationships feature.
-
+if the plugin providing the functionality supports such relationships.
 Some plugins support arbitrary relationship types.  Clients can define custom relationships between contacts saved
-in such plugins.  Any plugin which supports arbitrary relationship types should report this functionality by reporting
-that it supports the QContactManager::ArbitraryRelationshipTypes feature.
+in such plugins.
 
 The API which provides the relationship manipulation functionality consists of:
 \list

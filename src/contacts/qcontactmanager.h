@@ -150,18 +150,6 @@ public:
     bool removeRelationship(const QContactRelationship& relationship);
     bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap = 0);
 
-    /* Functionality reporting */
-    enum ManagerFeature {
-        Groups = 0,               // backend supports QContactType::TypeGroup type contacts (convenience for clients)
-        ActionPreferences,        // per-contact action preferences
-        Relationships,
-        ArbitraryRelationshipTypes,
-        DetailOrdering,
-        SelfContact,
-        Anonymous,
-        ChangeLogs
-    };
-    bool hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType = QContactType::TypeContact) const;
     bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType = QContactType::TypeContact) const;
     QList<QVariant::Type> supportedDataTypes() const;
     bool isFilterSupported(const QContactFilter& filter) const;

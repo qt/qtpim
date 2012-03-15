@@ -429,19 +429,6 @@ bool QContactJsonDbEngine::removeContact(const QContactId& contactId, QContactMa
     else return true;
 }
 
-bool QContactJsonDbEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const {
-  if (!supportedContactTypes().contains(contactType)) {
-        return false;
-  };
-  switch (feature) {
-    case QContactManager::Anonymous:
-    case QContactManager::ChangeLogs:
-        return true;
-    default:
-        return false;
-  };
-}
-
 bool QContactJsonDbEngine::isFilterSupported(const QContactFilter& filter) const
 {
     switch (filter.type()) {

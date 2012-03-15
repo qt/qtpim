@@ -509,16 +509,6 @@ void QContactManagerEngine::setContactDisplayLabel(QContact* contact, const QStr
     contact->d->m_details.replace(0, dl);
 }
 
-/*!
-  Returns true if the given \a feature is supported by this engine for contacts of the given \a contactType
- */
-bool QContactManagerEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
-{
-    Q_UNUSED(feature);
-    Q_UNUSED(contactType);
-
-    return false;
-}
 
 /*!
   Given an input \a filter, returns the canonical version of the filter.

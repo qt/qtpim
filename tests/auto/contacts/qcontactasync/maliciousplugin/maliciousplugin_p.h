@@ -145,12 +145,6 @@ public:
     void requestDestroyed(QContactAbstractRequest* req);
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs) {return QContactManagerEngine::waitForRequestFinished(req, msecs);}
 
-    /* Capabilities reporting */
-    bool hasFeature(QContactManager::ManagerFeature feat, QContactType::TypeValues type) const
-    {
-        return QContactManagerEngine::hasFeature(feat, type);
-    }
-
     bool isRelationshipTypeSupported(const QString& relType, QContactType::TypeValues type) const
     {
         return QContactManagerEngine::isRelationshipTypeSupported(relType, type);

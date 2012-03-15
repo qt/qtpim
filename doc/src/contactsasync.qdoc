@@ -94,7 +94,7 @@ of the following functions:
 
 Contacts may be related in various ways.  The contacts API allows clients to define relationships between contacts.
 For in-depth information about relationship manipulation, please refer to the \l{Contacts Synchronous API}.
-
+Support for relationships is backend specific.
 There are three different types of operation which are supported by the asynchronous API:
 \list
   \li Fetch relationships

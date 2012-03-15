@@ -156,12 +156,6 @@ public:
     virtual bool cancelRequest(QContactAbstractRequest*) {return false;}
     virtual bool waitForRequestFinished(QContactAbstractRequest*, int) {return false;}
 
-    /* Capabilities reporting */
-    virtual bool hasFeature(QContactManager::ManagerFeature, const QString&) const
-    {
-        return false;
-    }
-
     virtual bool isRelationshipTypeSupported(const QString&, const QString&) const
     {
         return false;

@@ -1424,7 +1424,7 @@ void tst_QContactAsync::relationshipFetch()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
-    if (!cm->hasFeature(QContactManager::Relationships)) {
+    if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
     
@@ -1634,7 +1634,7 @@ void tst_QContactAsync::relationshipRemove()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
     
-    if (!cm->hasFeature(QContactManager::Relationships)) {
+    if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
     
@@ -1794,7 +1794,7 @@ void tst_QContactAsync::relationshipSave()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
     
-    if (!cm->hasFeature(QContactManager::Relationships)) {
+    if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
     
@@ -2175,7 +2175,7 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
     cm->saveContact(&b);
     cm->saveContact(&c);
     
-    if (!cm->hasFeature(QContactManager::Relationships)) {
+    if (cm->managerName() == "jsondb") {
         return cm;
     }
     

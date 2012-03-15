@@ -1567,45 +1567,6 @@ QContactManager* tst_QContactJsonDbAsync::prepareModel(const QString& managerUri
     cm->saveContact(&b);
     cm->saveContact(&c);
 
-    if (!cm->hasFeature(QContactManager::Relationships)) {
-        return cm;
-    }
-
-    if (cm->managerName() == "symbian") {
-        // Symbian backend does not support other relationships than HasMember (which is same as groups)
-        return cm;
-    }
-
-    QContactRelationship arb;
-    arb.setFirst(a);
-    arb.setSecond(b);
-    arb.setRelationshipType(QContactRelationship::HasManager());
-    cm->saveRelationship(&arb);
-
-    QContactRelationship brc;
-    brc.setFirst(b);
-    brc.setSecond(c);
-    brc.setRelationshipType(QContactRelationship::HasAssistant());
-    cm->saveRelationship(&brc);
-
-    QContactRelationship cra;
-    cra.setFirst(c);
-    cra.setSecond(a);
-    cra.setRelationshipType(QContactRelationship::HasSpouse());
-    cm->saveRelationship(&cra);
-
-    QContactRelationship arc;
-    arc.setFirst(a);
-    arc.setSecond(c);
-    arc.setRelationshipType(QContactRelationship::HasAssistant());
-    cm->saveRelationship(&arc);
-
-    QContactRelationship crb;
-    crb.setFirst(c);
-    crb.setSecond(b);
-    crb.setRelationshipType(QContactRelationship::IsSameAs());
-    cm->saveRelationship(&crb);
-
     return cm;
 
     // TODO: cleanup once test is complete

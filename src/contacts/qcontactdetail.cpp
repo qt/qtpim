@@ -478,14 +478,6 @@ QMap<int, QVariant> QContactDetail::values() const
     return d.constData()->m_values;
 }
 
-
-/*!
-    \fn T QContactDetail::value(int field) const
-    \overload
-    Returns the value of the template type associated with the given \a field
- */
-
-
 /*!
   \enum QContactDetail::AccessConstraint
 

@@ -105,8 +105,6 @@ public:
     int implementationVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }
     int managerVersion() const { return QContactJsonDbStr::ContactJsonDbEngineVersion; }
 
-    /* Capabilities reporting */
-    bool hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const;
     bool isFilterSupported(const QContactFilter& filter) const;
     QList<QVariant::Type> supportedDataTypes() const;
     QList<QContactType::TypeValues>  supportedContactTypes() const {return (QList<QContactType::TypeValues> () << QContactType::TypeContact);}

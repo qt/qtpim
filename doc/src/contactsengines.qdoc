@@ -109,7 +109,6 @@ All engines must implement the following functions:
   \li QContactManagerEngine::managerVersion()
   \li QContactManagerEngine::supportedContactTypes()
   \li QContactManagerEngine::supportedDataTypes()
-  \li QContactManagerEngine::hasFeature()
   \li QContactManagerEngine::contactIds()
   \li QContactManagerEngine::contacts()
 \endlist
@@ -184,9 +183,7 @@ It may also choose to implement the "single contact" functions:
 If it does not, the default implementation of those functions will use the batch (plural) versions
 of those functions to implement the required behavior.
 
-If the engine supports any relationships, it must report that it supports the
-\c QContactManager::Relationships feature via QContactManagerEngine::hasFeature(), and must also
-implement:
+Support for relationships are backend specific, see below convenience methods for more information.
 \list
   \li QContactManagerEngine::isRelationshipTypeSupported()
   \li QContactManagerEngine::relationships()
@@ -199,10 +196,9 @@ Specifically, if the engine supports group contacts, it must support the
 It must then also report that it supports the \c QContactType::TypeGroup contact type as a
 supported contact type in QContactManagerEngine::supportedContactTypes().
 
-If the engine supports saving a "self" contact (that is, a contact which contains information
+Support for saving a "self" contact (that is, a contact which contains information
 about the owner of the device or online service account from which the engine provides contact
-information), it must report that it supports the \c QContactManager::SelfContact feature
-via QContactManagerEngine::hasFeature(), and must also implement:
+information) is backend specific
 \list
   \li QContactManagerEngine::setSelfContactId()
   \li QContactManagerEngine::selfContactId()

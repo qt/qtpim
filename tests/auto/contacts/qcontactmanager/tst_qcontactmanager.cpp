@@ -1073,7 +1073,7 @@ void tst_QContactManager::update()
     //detailCount -= 1;
     //QCOMPARE(detailCount, alice.details().size()); // removing a detail should cause the detail count to decrease by one.
 
-    if (cm->hasFeature(QContactManager::Groups)) {
+    if (cm->supportedContactTypes().contains(QContactType::TypeGroup)) {
         // Try changing types - not allowed
         // from contact -> group
         alice.setType(QContactType::TypeGroup);
@@ -1452,7 +1452,6 @@ void tst_QContactManager::invalidManager()
 
     /* Capabilities */
     QVERIFY(manager.supportedDataTypes().count() == 0);
-    QVERIFY(!manager.hasFeature(QContactManager::ActionPreferences));
 }
 
 void tst_QContactManager::memoryManager()
@@ -1466,9 +1465,6 @@ void tst_QContactManager::memoryManager()
     QContactManager m4("memory", params);
     params.insert("id", QString(""));
     QContactManager m5("memory", params); // should be another anonymous
-
-    QVERIFY(m1.hasFeature(QContactManager::ActionPreferences));
-    QVERIFY(m1.hasFeature(QContactManager::Anonymous));
 
     // add a contact to each of m1, m2, m3
     QContact c;
@@ -2051,23 +2047,6 @@ void tst_QContactManager::signalEmission()
         spyCR.clear();
     }
 
-    QVERIFY(m1->hasFeature(QContactManager::Anonymous) ==
-        m2->hasFeature(QContactManager::Anonymous));
-
-    /* Now some cross manager testing */
-    if (!m1->hasFeature(QContactManager::Anonymous)) {
-        // verify that signals are emitted for modifications made to other managers (same id).
-        QContactName ncs = c.detail(QContactName::Type);
-        saveContactName(&c, &ncs, "Test");
-        c.setId(QContactId()); // reset id so save can succeed.
-        QVERIFY(m2->saveContact(&c));
-        saveContactName(&c, &ncs, "Test2");
-        QVERIFY(m2->saveContact(&c));
-        QTRY_COMPARE(spyCA.count(), 1); // check that we received the update signals.
-        QTRY_COMPARE(spyCM.count(), 1); // check that we received the update signals.
-        m2->removeContact(c.id());
-        QTRY_COMPARE(spyCR.count(), 1); // check that we received the remove signal.
-    }
 }
 
 void tst_QContactManager::errorStayingPut()
@@ -2166,7 +2145,7 @@ void tst_QContactManager::actionPreferences()
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
     // early out if the manager doesn't support action preference saving.
-    if (!cm->hasFeature(QContactManager::ActionPreferences)) {
+    if (cm->managerName() == "jsondb") {
         QSKIP("Manager does not support action preferences");
     }
 
@@ -2312,22 +2291,9 @@ void tst_QContactManager::selfContactId()
 
     // early out if the manager doesn't support self contact id saving
     QContactId selfContact = cm->selfContactId();
-    if (!cm->hasFeature(QContactManager::SelfContact)) {
-        if (cm->managerName() == "jsondb")
-        {
-            QVERIFY(cm->error() == QContactManager::NotSupportedError);
-            QSKIP("JSONDB backend does not support selfContact at the moment, skipping...");
-        }
-        else
-        {
-            // ensure that the error codes / return values are meaningful failures.
-            QEXPECT_FAIL("mgr='maemo5'", "maemo5 supports getting the self contact but not setting it.", Continue);
-            QVERIFY(cm->error() == QContactManager::DoesNotExistError);
-            QVERIFY(!cm->setSelfContactId(QContactId()));
-            QVERIFY(cm->error() == QContactManager::NotSupportedError);
-            QSKIP("Manager does not support the concept of a self-contact");
-        }
-    }
+    if (cm->managerName() == "jsondb")
+        QSKIP("JSONDB backend does not support selfContact at the moment, skipping...");
+
 
     // create a new "self" contact and retrieve its Id
     QVERIFY(cm->error() == QContactManager::NoError || cm->error() == QContactManager::DoesNotExistError);
@@ -2388,7 +2354,7 @@ void tst_QContactManager::detailOrders()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (!cm->hasFeature(QContactManager::DetailOrdering))
+    if (cm->managerName() == "jsondb" || cm->managerName() == "memory")
         QSKIP("Skipping: This manager does not support detail ordering!");
 
     QContact a;
@@ -2521,6 +2487,10 @@ void tst_QContactManager::relationships()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
+    if (cm->managerName() == "jsondb")
+        QSKIP("Jsondb doesnt support relationships");
+
+
     // save some contacts
     QContact source;
     QContact dest1, dest2, dest3, dest4;
@@ -2542,7 +2512,8 @@ void tst_QContactManager::relationships()
     cm->saveContact(&dest4);
 
     // check if manager supports relationships
-    if (!cm->hasFeature(QContactManager::Relationships)) {
+
+    if (cm->managerName() == "jsondb") {
         // ensure that the operations all fail as required.
         QContactRelationship r1, r2, r3;
         r1.setFirst(source);
@@ -2610,16 +2581,13 @@ void tst_QContactManager::relationships()
     if (cm->isRelationshipTypeSupported(QContactRelationship::IsSameAs()))
         availableRelationshipTypes << QContactRelationship::IsSameAs();
 
-    // Check arbitrary relationship support
-    if (cm->hasFeature(QContactManager::ArbitraryRelationshipTypes)) {
-        // add some arbitrary type for testing
-        if (availableRelationshipTypes.count())
-            availableRelationshipTypes.insert(0, "test-arbitrary-relationship-type");
-        else {
-            availableRelationshipTypes.append("test-arbitrary-relationship-type");
-            availableRelationshipTypes.append(QContactRelationship::HasMember());
-            availableRelationshipTypes.append(QContactRelationship::HasAssistant());
-        }
+    // add some arbitrary type for testing
+    if (availableRelationshipTypes.count())
+        availableRelationshipTypes.insert(0, "test-arbitrary-relationship-type");
+    else {
+        availableRelationshipTypes.append("test-arbitrary-relationship-type");
+        availableRelationshipTypes.append(QContactRelationship::HasMember());
+        availableRelationshipTypes.append(QContactRelationship::HasAssistant());
     }
 
     // Verify that we have relationship types. If there are none then the manager
@@ -2901,7 +2869,7 @@ void tst_QContactManager::contactType()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (!cm->hasFeature(QContactManager::Groups))
+    if (!cm->supportedContactTypes().contains(QContactType::TypeGroup))
         QSKIP("Skipping: This manager does not support group contacts!");
 
     QContact g1, g2, c;

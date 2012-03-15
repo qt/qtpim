@@ -173,7 +173,6 @@ capabilities of a given plugin (contact manager) are.  The QContactManager
 class provides API to query the capabilities of a given manager with the
 following synchronous functions:
 \list
-  \li hasFeature(QContactManager::ManagerFeature feature, const QString& contactType = QContactType::TypeContact) const
   \li isFilterSupported(const QContactFilter& filter) const
   \li isRelationshipTypeSupported(const QString& relationshipType, const QString& contactType = QContactType::TypeContact) const
   \li supportedDataTypes() const

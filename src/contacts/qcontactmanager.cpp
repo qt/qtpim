@@ -834,27 +834,6 @@ bool QContactManager::removeRelationships(const QList<QContactRelationship> &rel
 }
 
 /*!
-  \enum QContactManager::ManagerFeature
-  This enum describes the possible features that a particular manager may support
-  \value Groups The manager supports saving contacts of the \c QContactType::TypeGroup type
-  \value ActionPreferences The manager supports saving preferred details per action per contact
-  \value DetailOrdering When a contact is retrieved, the manager will return the details in the same order in which they were saved
-  \value Relationships The manager supports at least some types of relationships between contacts
-  \value ArbitraryRelationshipTypes The manager supports relationships of arbitrary types between contacts
-  \value SelfContact The manager supports the concept of saving a contact which represents the current user
-  \value ChangeLogs The manager supports reporting of timestamps of changes, and filtering and sorting by those timestamps
-  \value Anonymous The manager is isolated from other managers
- */
-
-/*!
-  Returns true if the given feature \a feature is supported by the manager, for the specified type of contact \a contactType
- */
-bool QContactManager::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
-{
-    return d->m_engine->hasFeature(feature, contactType);
-}
-
-/*!
   Returns the list of data types supported by the manager
  */
 QList<QVariant::Type> QContactManager::supportedDataTypes() const

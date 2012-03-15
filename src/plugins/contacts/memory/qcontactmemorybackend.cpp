@@ -800,30 +800,6 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 /*!
  * \reimp
  */
-bool QContactMemoryEngine::hasFeature(QContactManager::ManagerFeature feature, QContactType::TypeValues contactType) const
-{
-    if (!supportedContactTypes().contains(contactType))
-        return false;
-
-    switch (feature) {
-        case QContactManager::Groups:
-        case QContactManager::ActionPreferences:
-        case QContactManager::Relationships:
-        case QContactManager::ArbitraryRelationshipTypes:
-            return true;
-        case QContactManager::Anonymous:
-            return d->m_anonymous;
-        case QContactManager::SelfContact:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
-/*!
- * \reimp
- */
 bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues contactType) const
 {
     // the memory backend supports arbitrary relationship types

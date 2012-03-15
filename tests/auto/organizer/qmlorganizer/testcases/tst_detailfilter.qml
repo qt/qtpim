@@ -329,7 +329,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime: '2011-09-23T16:42:00'\n" //notice, string to date-object
-            + "  endDateTime: '2011-10-23T21:00:00'\n" //notice, string to date-object
+            + "  endDateTime: new Date('2011-10-23T21:00:00')\n"
             + "  description: 'for exact filter - EventTime.EndDateTime'\n"
             + "   }",
             "import QtQuick 2.0\n"
@@ -342,7 +342,7 @@ TestCase {
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
-            + "  startDateTime:'2011-10-23T15:00:00Z'\n" //notice, string to date-object with Z
+            + "  startDateTime:'2011-10-23T15:00:00'\n"
             + "  description: 'for exact filter - Description'\n"
             + "   }",
             "import QtQuick 2.0\n"
@@ -393,7 +393,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Todo {\n"
             + "  startDateTime:new Date('2010-10-22T15:47:00')\n"
-            + "  dueDateTime: new Date('2010-10-25T15:49:00Z')\n"//notice, date-object with Z
+            + "  dueDateTime: new Date('2010-10-25T15:49:00')\n"
             + "  description: 'for exact filter - TodoTime.DueDateTime'\n"
             + "   }",
            "import QtQuick 2.0\n"
@@ -418,7 +418,7 @@ TestCase {
             {tag: "exact filter - TodoTime.StartDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldStartDateTime, filterValue: new Date("2010-10-23T15:48:00")},
             {tag: "exact filter - TodoTime.DueDateTime", expectedItemsAmount: 1,
-                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00Z")},//notice, date-object with Z
+                filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00")},
             {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - TodoProgress.Status", expectedItemsAmount: 1,
@@ -558,7 +558,6 @@ TestCase {
 
             if (managerToBeTested == "jsondb" ) {
                 // in some cases the stored details are utilising the same field on the backend, which means the amount of matches to be different
-                expectFail("exact filter - EventTime.EndDateTime", "Fails, since issues with Date UTC/Local-time")
                 compare(organizerModel.items.length, data.expectedItemsAmount_Jsondb ? data.expectedItemsAmount_Jsondb : data.expectedItemsAmount);
             } else {
                 compare(organizerModel.items.length, data.expectedItemsAmount);

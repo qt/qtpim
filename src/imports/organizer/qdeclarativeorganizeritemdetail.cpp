@@ -127,8 +127,6 @@ QList<int> QDeclarativeOrganizerItemDetail::fieldNames() const
  */
 QVariant QDeclarativeOrganizerItemDetail::value(int field) const
 {
-    // FIXME: this gives wrong value if declarative detail field is different type than native detail field
-    // e.g. parent::parentId
     return m_detail.value(field);
 }
 
@@ -535,21 +533,82 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemParent::typ
 }
 
 /*!
+    \qmlmethod variant Parent::value(field)
+
+    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+ */
+QVariant QDeclarativeOrganizerItemParent::value(int field) const
+{
+    switch (field) {
+    case FieldParentId:
+    {
+        QString id = parentId();
+        return id.isNull() ? QVariant() : id;
+    }
+    case FieldOriginalDate:
+    {
+        QDateTime date = originalDate();
+        return date.isValid() ? date : QVariant();
+    }
+    default:
+    {
+        return QVariant();
+    }
+    }
+}
+
+/*!
+    \qmlmethod bool Parent::setValue(field, value)
+
+    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
+    the field with the given key from the detail. Returns true if the given value was set for the key (if
+    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
+    returns false if the key was unable to be removed (and the value was invalid).
+ */
+bool QDeclarativeOrganizerItemParent::setValue(int field, const QVariant &value)
+{
+    switch (field) {
+    case FieldParentId:
+    {
+        if (value.canConvert<QString>()) {
+            setParentId(value.toString());
+            return true;
+        }
+        break;
+    }
+    case FieldOriginalDate:
+    {
+        if (value.canConvert<QDateTime>()) {
+            setOriginalDate(value.toDateTime());
+            return true;
+        }
+        break;
+    }
+    default:
+    {
+        return false;
+    }
+    }
+    return false;
+}
+
+/*!
     \qmlproperty date Parent::originalDate
 
     This property holds the original date of this instance origin item.
  */
-void QDeclarativeOrganizerItemParent::setOriginalDate(const QDate &date)
+void QDeclarativeOrganizerItemParent::setOriginalDate(const QDateTime &date)
 {
     if (date != originalDate()) {
-        m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date);
+        m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date.date());
         emit valueChanged();
     }
 }
 
-QDate QDeclarativeOrganizerItemParent::originalDate() const
+QDateTime QDeclarativeOrganizerItemParent::originalDate() const
 {
-    return m_detail.value(QOrganizerItemParent::FieldOriginalDate).toDate();
+    QDateTime retDateTime(m_detail.value(QOrganizerItemParent::FieldOriginalDate).toDate(), QTime(0, 0, 0, 0), Qt::UTC);
+    return retDateTime;
 }
 
 /*!
@@ -657,6 +716,70 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemRecurrence:
 }
 
 /*!
+    \qmlmethod variant Recurrence::value(field)
+
+    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+ */
+QVariant QDeclarativeOrganizerItemRecurrence::value(int field) const
+{
+    switch (field) {
+    case FieldRecurrenceDates:
+    {
+        QVariantList rdates = recurrenceDates();
+        return rdates;
+    }
+    case FieldExceptionDates:
+    {
+        QVariantList edates = exceptionDates();
+        return edates;
+    }
+    default:
+    {
+        // TODO: proper handling of FieldRecurrenceRules and FieldExceptionRules --> conversion
+        // from QSet<QOrganizerRecurrenceRule> to QVariantList
+        return QVariant();
+    }
+    }
+}
+
+/*!
+    \qmlmethod bool Recurrence::setValue(field, value)
+
+    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
+    the field with the given key from the detail. Returns true if the given value was set for the key (if
+    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
+    returns false if the key was unable to be removed (and the value was invalid).
+ */
+bool QDeclarativeOrganizerItemRecurrence::setValue(int field, const QVariant &value)
+{
+    switch (field) {
+    case FieldRecurrenceDates:
+    {
+        if (value.canConvert<QVariantList>()) {
+            setRecurrenceDates(value.toList());
+            return true;
+        }
+        break;
+    }
+    case FieldExceptionDates:
+    {
+        if (value.canConvert<QVariantList>()) {
+            setExceptionDates(value.toList());
+            return true;
+        }
+        break;
+    }
+    default:
+    {
+        // TODO: proper handling of FieldRecurrenceRules and FieldExceptionRules --> conversion
+        // from QVariantList to QSet<QOrganizerRecurrenceRule>
+        return false;
+    }
+    }
+    return false;
+}
+
+/*!
     \qmlproperty list<RecurrenceRule> Recurrence::recurrenceRules
 
     This property holds the list of recurrence rules.
@@ -709,8 +832,8 @@ void QDeclarativeOrganizerItemRecurrence::setRecurrenceDates(const QVariantList 
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
         foreach (QVariant date, dates) {
-            if (date.canConvert(QVariant::Date))
-                dateSet.insert(date.toDate());
+            if (date.canConvert(QVariant::DateTime))
+                dateSet.insert(date.toDateTime().toUTC().date());
         }
         dateSetVariant.setValue(dateSet);
         m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceDates, dateSetVariant);
@@ -723,8 +846,10 @@ QVariantList QDeclarativeOrganizerItemRecurrence::recurrenceDates() const
     QVariant dateSetVariant = m_detail.value(QOrganizerItemRecurrence::FieldRecurrenceDates);
     QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
     QVariantList dates;
-    foreach (QDate date, dateSet)
-        dates.append(QVariant(date));
+    foreach (QDate date, dateSet) {
+        QDateTime dateTime(date, QTime(0, 0, 0, 0), Qt::UTC);
+        dates.append(QVariant(dateTime));
+    }
     return dates;
 }
 
@@ -739,8 +864,8 @@ void QDeclarativeOrganizerItemRecurrence::setExceptionDates(const QVariantList& 
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
         foreach (QVariant date, dates) {
-            if (date.canConvert(QVariant::Date))
-                dateSet.insert(date.toDate());
+            if (date.canConvert(QVariant::DateTime))
+                dateSet.insert(date.toDateTime().toUTC().date());
         }
         dateSetVariant.setValue(dateSet);
         m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionDates, dateSetVariant);
@@ -753,8 +878,10 @@ QVariantList QDeclarativeOrganizerItemRecurrence::exceptionDates() const
     QVariant dateSetVariant = m_detail.value(QOrganizerItemRecurrence::FieldExceptionDates);
     QSet<QDate> dateSet = dateSetVariant.value<QSet <QDate> >();
     QVariantList dates;
-    foreach (QDate date, dateSet)
-        dates.append(QVariant(date));
+    foreach (QDate date, dateSet) {
+        QDateTime dateTime(date, QTime(0, 0, 0, 0), Qt::UTC);
+        dates.append(QVariant(dateTime));
+    }
     return dates;
 }
 
@@ -1698,12 +1825,12 @@ QString QDeclarativeOrganizerEventAttendee::attendeeId() const
 }
 
 /*!
-    \qmlclass Rsvp QDeclarativeOrganizerEventRsvp
-    \brief The Rsvp element contains Rsvp-information of an event.
+    \qmlclass EventRsvp QDeclarativeOrganizerEventRsvp
+    \brief The EventRsvp element contains Rsvp-information of an event.
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-details
 
-    RSVP detail contains user specific information about calendar event like
+    EventRsvp detail contains user specific information about calendar event like
     participation status and role, information about response
     dates and information about organizer of the event. See more details
     from the properties themselves and the QOrganizerEventRsvp.
@@ -1720,6 +1847,67 @@ QDeclarativeOrganizerEventRsvp::QDeclarativeOrganizerEventRsvp(QObject *parent)
 QDeclarativeOrganizerEventRsvp::DetailType QDeclarativeOrganizerEventRsvp::type() const
 {
     return QDeclarativeOrganizerItemDetail::EventRsvp;
+}
+
+/*!
+    \qmlmethod variant EventRsvp::value(field)
+
+    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+ */
+QVariant QDeclarativeOrganizerEventRsvp::value(int field) const
+{
+    switch (field) {
+    case FieldResponseDeadline:
+    {
+        QDateTime date = responseDeadline();
+        return date.isValid() ? date : QVariant();
+    }
+    case FieldResponseDate:
+    {
+        QDateTime date = responseDate();
+        return date.isValid() ? date : QVariant();
+    }
+    default:
+    {
+        return m_detail.value(field);
+    }
+    }
+}
+
+/*!
+    \qmlmethod bool EventRsvp::setValue(field, value)
+
+    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
+    the field with the given key from the detail. Returns true if the given value was set for the key (if
+    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
+    returns false if the key was unable to be removed (and the value was invalid).
+ */
+bool QDeclarativeOrganizerEventRsvp::setValue(int field, const QVariant &value)
+{
+    switch (field) {
+    case FieldResponseDeadline:
+    {
+        if (value.canConvert<QDateTime>()) {
+            setResponseDeadline(value.toDateTime());
+            return true;
+        }
+        break;
+    }
+    case FieldResponseDate:
+    {
+        if (value.canConvert<QDateTime>()) {
+            setResponseDate(value.toDateTime());
+            return true;
+        }
+        break;
+    }
+    default:
+    {
+        if (m_detail.setValue(field, value))
+            return true;
+    }
+    }
+    return false;
 }
 
 /*!
@@ -1791,17 +1979,18 @@ QDeclarativeOrganizerEventRsvp::ResponseRequirement QDeclarativeOrganizerEventRs
 
     This property holds the last date for responding the event.
  */
-void QDeclarativeOrganizerEventRsvp::setResponseDeadline(const QDate &date)
+void QDeclarativeOrganizerEventRsvp::setResponseDeadline(const QDateTime &date)
 {
     if (responseDeadline() != date) {
-        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date);
+        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date.toUTC().date());
         emit valueChanged();
      }
 }
 
-QDate QDeclarativeOrganizerEventRsvp::responseDeadline() const
+QDateTime QDeclarativeOrganizerEventRsvp::responseDeadline() const
 {
-    return m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDeadline);
+    QDateTime retDateTime(m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDeadline), QTime(0, 0, 0, 0), Qt::UTC);
+    return retDateTime;
 }
 
 /*!
@@ -1809,17 +1998,18 @@ QDate QDeclarativeOrganizerEventRsvp::responseDeadline() const
 
     This property holds the date when user responded to the event.
  */
-void QDeclarativeOrganizerEventRsvp::setResponseDate(const QDate &date)
+void QDeclarativeOrganizerEventRsvp::setResponseDate(const QDateTime &date)
 {
     if (responseDate() != date) {
-        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date);
+        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date.toUTC().date());
         emit valueChanged();
      }
 }
 
-QDate QDeclarativeOrganizerEventRsvp::responseDate() const
+QDateTime QDeclarativeOrganizerEventRsvp::responseDate() const
 {
-    return m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDate);
+    QDateTime retDateTime(m_detail.value<QDate>(QOrganizerEventRsvp::FieldResponseDate), QTime(0, 0, 0, 0), Qt::UTC);
+    return retDateTime;
 }
 
 /*!

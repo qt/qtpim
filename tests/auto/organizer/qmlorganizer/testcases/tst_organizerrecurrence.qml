@@ -84,7 +84,7 @@ TestCase {
 
                 "start" : new Date('2012-01-01T14:00:00'),
                 "end" : new Date('2012-01-01T15:00:00'),
-                "recurrenceDates": ['2012-01-02', '2012-01-03'],
+                "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
                 "exceptionDates": [],
                 "recurrenceRules": [],
                 "exceptionRules": []
@@ -371,7 +371,7 @@ TestCase {
                 "start" : new Date('2012-01-01T14:00:00'),
                 "end" : new Date('2012-01-01T15:00:00'),
                 "recurrenceDates": [],
-                "exceptionDates": ['2012-01-02', '2012-01-03'],
+                "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-03')],
                 "recurrenceRules": [],
                 "exceptionRules": []
     },

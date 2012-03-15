@@ -1223,7 +1223,7 @@ void QDeclarativeOrganizerModel::removeItemsFromModel(const QList<QString> &item
                 }
             } else if (d->m_items.at(i)->generatedOccurrence()) {
                 QDeclarativeOrganizerItemDetail *parentDetail = d->m_items.at(i)->detail(QDeclarativeOrganizerItemDetail::Parent);
-                if (parentDetail->value(QDeclarativeOrganizerItemParent::FieldParentId).value<QOrganizerItemId>().toString() == itemId) {
+                if (parentDetail->value(QDeclarativeOrganizerItemParent::FieldParentId).toString() == itemId) {
                     beginRemoveRows(QModelIndex(), i, i);
                     d->m_items.removeAt(i);
                     endRemoveRows();
@@ -1350,8 +1350,7 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
                         emitSignal = true;
                         continue;
                     }
-                }
-                else if (notifiedItems.contains(oldItem.id())) {
+                } else if (notifiedItems.contains(oldItem.id())) {
                     // if notifiedItems contains the oldItem id, it means the item has been
                     // changed and we should reuse the declarative part and only remove
                     // rows from abstract list model
@@ -1365,7 +1364,6 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
                     continue;
                 }
             }
-
             // check should we add the new item
             if (newItem.id().isNull() && (newItem.type() == QOrganizerItemType::TypeEventOccurrence || newItem.type() == QOrganizerItemType::TypeTodoOccurrence)) {
                 // this is occurrence (generated or exception)

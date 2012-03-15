@@ -93,8 +93,8 @@ public:
     virtual DetailType type() const;
 
     // QML functions
-    Q_INVOKABLE QVariant value(int key) const;
-    Q_INVOKABLE bool setValue(int key, const QVariant& value);
+    Q_INVOKABLE virtual QVariant value(int key) const;
+    Q_INVOKABLE virtual bool setValue(int key, const QVariant& value);
     Q_INVOKABLE bool removeValue(int key);
 
     // non-QML APIs
@@ -292,7 +292,7 @@ class QDeclarativeOrganizerItemParent : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(ParentField)
 
-    Q_PROPERTY(QDate originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
@@ -304,9 +304,11 @@ public:
     QDeclarativeOrganizerItemParent(QObject *parent = 0);
 
     virtual DetailType type() const;
+    virtual QVariant value(int field) const;
+    virtual bool setValue(int key, const QVariant& value);
 
-    void setOriginalDate(const QDate &date);
-    QDate originalDate() const;
+    void setOriginalDate(const QDateTime &date);
+    QDateTime originalDate() const;
 
     void setParentId(const QString &newParentId);
     QString parentId() const;
@@ -377,9 +379,10 @@ public:
     QDeclarativeOrganizerItemRecurrence(QObject *parent = 0);
 
     virtual DetailType type() const;
+    virtual QVariant value(int field) const;
+    virtual bool setValue(int key, const QVariant& value);
 
     QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> recurrenceRules();
-
     QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> exceptionRules();
 
     void setRecurrenceDates(const QVariantList &dates);
@@ -847,8 +850,8 @@ class QDeclarativeOrganizerEventRsvp : public QDeclarativeOrganizerItemDetail
     Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus READ participationStatus WRITE setParticipationStatus NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
     Q_PROPERTY(ResponseRequirement responseRequirement READ responseRequirement WRITE setResponseRequirement NOTIFY valueChanged)
-    Q_PROPERTY(QDate responseDeadline READ responseDeadline WRITE setResponseDeadline NOTIFY valueChanged)
-    Q_PROPERTY(QDate responseDate READ responseDate WRITE setResponseDate NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime responseDeadline READ responseDeadline WRITE setResponseDeadline NOTIFY valueChanged)
+    Q_PROPERTY(QDateTime responseDate READ responseDate WRITE setResponseDate NOTIFY valueChanged)
     Q_PROPERTY(QString organizerName READ organizerName WRITE setOrganizerName NOTIFY valueChanged)
     Q_PROPERTY(QString organizerEmail READ organizerEmail WRITE setOrganizerEmail NOTIFY valueChanged)
     Q_ENUMS(EventRsvpField)
@@ -873,6 +876,8 @@ public:
     QDeclarativeOrganizerEventRsvp(QObject *parent = 0);
 
     virtual DetailType type() const;
+    virtual QVariant value(int field) const;
+    virtual bool setValue(int key, const QVariant& value);
 
     void setParticipationStatus(QDeclarativeOrganizerEventAttendee::ParticipationStatus status);
     QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus() const;
@@ -883,11 +888,11 @@ public:
     void setResponseRequirement(ResponseRequirement requirement);
     ResponseRequirement responseRequirement() const;
 
-    void setResponseDeadline(const QDate &date);
-    QDate responseDeadline() const;
+    void setResponseDeadline(const QDateTime &date);
+    QDateTime responseDeadline() const;
 
-    void setResponseDate(const QDate &date);
-    QDate responseDate() const;
+    void setResponseDate(const QDateTime &date);
+    QDateTime responseDate() const;
 
     void setOrganizerName(const QString &name);
     QString organizerName() const;

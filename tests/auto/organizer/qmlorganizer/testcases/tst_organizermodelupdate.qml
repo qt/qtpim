@@ -269,7 +269,7 @@ TestCase {
             model.startPeriod = new Date('2011-12-01');
             model.endPeriod = new Date('2012-04-30');
             // wait to make sure the model is updated if the database is not empty
-            wait(500);
+            wait(1000);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
             for (j = 0; j < data.definitions.length; j++) {
@@ -279,7 +279,7 @@ TestCase {
                     modelChangedSpy.wait()
             }
             // make sure that all items which are not part of the model get saved
-            wait(500);
+            wait(1000);
             compareResultDatesToModel(data.results, model);
 
             for (j = 0; j < data.timePeriods.length; j++) {

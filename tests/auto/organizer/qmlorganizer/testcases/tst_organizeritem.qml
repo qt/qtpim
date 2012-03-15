@@ -103,7 +103,6 @@ TestCase {
 
         var originalDate = new Date("2008-12-28")
         todoOccurrence.originalDate = originalDate
-        expectFail("", "Fails, since issues with Date UTC/Local-time")
         compare(todoOccurrence.originalDate, originalDate)
 
         var startDateTime = new Date("1991-08-25T20:57:08Z")
@@ -187,10 +186,14 @@ TestCase {
 
         compare(eventOccurrence.itemType, Type.EventOccurrence)
 
+        eventOccurrence.parentId = event.itemId;
+        itemChangedSpy.wait(waitTime);
+        compare(eventOccurrence.parentId, event.itemId)
+        compare(itemChangedSpy.count, ++count)
+
         var originalDate = new Date("2008-12-28")
         eventOccurrence.originalDate = originalDate
         itemChangedSpy.wait(waitTime);
-        expectFail("", "Fails, since issues with Date UTC/Local-time")
         compare(eventOccurrence.originalDate, originalDate)
         compare(itemChangedSpy.count, ++count)
 
@@ -216,10 +219,6 @@ TestCase {
         compare(eventOccurrence.location, "Tampere")
         compare(itemChangedSpy.count, ++count)
 
-        eventOccurrence.parentId = event.itemId
-        itemChangedSpy.wait(waitTime);
-        compare(eventOccurrence.parentId, event.itemId)
-        compare(itemChangedSpy.count, ++count)
     }
 
     function test_event() {

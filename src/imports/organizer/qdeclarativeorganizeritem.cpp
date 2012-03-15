@@ -991,7 +991,7 @@ QDeclarativeOrganizerEventOccurrence::QDeclarativeOrganizerEventOccurrence(QObje
 
     This property holds the date at which the occurrence was originally going to occur.
  */
-void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate &date)
+void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDateTime &date)
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
@@ -1012,13 +1012,13 @@ void QDeclarativeOrganizerEventOccurrence::setOriginalDate(const QDate &date)
     emit valueChanged();
 }
 
-QDate QDeclarativeOrganizerEventOccurrence::originalDate() const
+QDateTime QDeclarativeOrganizerEventOccurrence::originalDate() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
             return static_cast<QDeclarativeOrganizerItemParent *>(detail)->originalDate();
     }
-    return QDate();
+    return QDateTime();
 }
 
 /*!
@@ -1641,7 +1641,7 @@ int QDeclarativeOrganizerTodoOccurrence::percentageComplete() const
 
     This property holds the date at which the occurrence was originally going to occur.
  */
-void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
+void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDateTime &date)
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type()) {
@@ -1662,13 +1662,13 @@ void QDeclarativeOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
     emit valueChanged();
 }
 
-QDate QDeclarativeOrganizerTodoOccurrence::originalDate() const
+QDateTime QDeclarativeOrganizerTodoOccurrence::originalDate() const
 {
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
             return static_cast<QDeclarativeOrganizerItemParent *>(detail)->originalDate();
     }
-    return QDate();
+    return QDateTime();
 }
 
 /*!

@@ -439,21 +439,18 @@ void QDeclarativeOrganizerItemDetailFilter::setField(int field)
   */
 QVariant QDeclarativeOrganizerItemDetailFilter::value() const
 {
-    // UTC time is used with details internally
-    if (QVariant::DateTime == d.value().type())
-        return d.value().toDateTime().toLocalTime();
-    else
-        return d.value();
+    return d.value();
 }
 
 void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
 {
-     if (newValue != value()) {
-        // UTC time is used with details internally
-        if (QVariant::DateTime == newValue.type())
+    if (newValue != value()) {
+        if (QVariant::DateTime == newValue.type()) {
+            // handling dates and datetimes internally as UTC
             d.setValue(newValue.toDateTime().toUTC());
-        else
+        } else {
             d.setValue(newValue);
+        }
         emit valueChanged();
     }
 }

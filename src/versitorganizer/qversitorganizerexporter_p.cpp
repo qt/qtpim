@@ -129,23 +129,23 @@ void QVersitOrganizerExporterPrivate::exportDetail(
     QList<QVersitProperty> generatedProperties;
     QSet<int> processedFields;
 
-    if (detail.type() == QOrganizerEventTime::DefinitionName) {
+    if (detail.type() == QOrganizerItemDetail::TypeEventTime) {
         encodeEventTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerTodoTime::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeTodoTime) {
         encodeTodoTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerJournalTime::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeJournalTime) {
         encodeJournalTimeRange(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerItemTimestamp::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeTimestamp) {
         encodeTimestamp(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerItemRecurrence::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeRecurrence) {
         encodeRecurrence(item, detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerItemPriority::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypePriority) {
         encodePriority(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerItemParent::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeParent) {
         encodeInstanceOrigin(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerTodoProgress::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeTodoProgress) {
         encodeTodoProgress(detail, *document, &removedProperties, &generatedProperties, &processedFields);
-    } else if (detail.type() == QOrganizerItemComment::DefinitionName) {
+    } else if (detail.type() == QOrganizerItemDetail::TypeComment) {
         encodeComment(detail, &generatedProperties, &processedFields);
     } else if (mPropertyMappings.contains(detail.type())) {
         encodeSimpleProperty(detail, *document, &removedProperties, &generatedProperties, &processedFields);

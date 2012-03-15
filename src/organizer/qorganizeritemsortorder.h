@@ -85,11 +85,6 @@ public:
     // convenience cast
     operator QList<QOrganizerItemSortOrder>() const { return QList<QOrganizerItemSortOrder>() << *this; }
 
-    // to be removed
-    QOrganizerItemDetail::DetailType detailDefinitionName() const;
-    int detailFieldName() const;
-    void setDetailDefinitionName(QOrganizerItemDetail::DetailType detailType, int field = -1);
-
 private:
     QSharedDataPointer<QOrganizerItemSortOrderPrivate> d;
 };

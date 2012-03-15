@@ -975,11 +975,11 @@ bool QOrganizerManagerEngine::isItemBetweenDates(const QOrganizerItem& item, con
     QDateTime itemDateEnd;
 
     if (item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeEventOccurrence) {
-        QOrganizerEventTime etr = item.detail<QOrganizerEventTime>();
+        QOrganizerEventTime etr = item.detail(QOrganizerItemDetail::TypeEventTime);
         itemDateStart = etr.startDateTime();
         itemDateEnd = etr.endDateTime();
     } else if (item.type() == QOrganizerItemType::TypeTodo || item.type() == QOrganizerItemType::TypeTodoOccurrence) {
-        QOrganizerTodoTime ttr = item.detail<QOrganizerTodoTime>();
+        QOrganizerTodoTime ttr = item.detail(QOrganizerItemDetail::TypeTodoTime);
         itemDateStart = ttr.startDateTime();
         itemDateEnd = ttr.dueDateTime();
     } else if (item.type() == QOrganizerItemType::TypeJournal) {
@@ -1025,7 +1025,7 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
 {
     QDateTime retn;
     {
-        QOrganizerEventTime detail = item.detail<QOrganizerEventTime>();
+        QOrganizerEventTime detail = item.detail(QOrganizerItemDetail::TypeEventTime);
         if (!detail.isEmpty()) {
             retn = detail.startDateTime();
             if (!retn.isValid())
@@ -1039,7 +1039,7 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
         }
     }
     {
-        QOrganizerTodoTime detail = item.detail<QOrganizerTodoTime>();
+        QOrganizerTodoTime detail = item.detail(QOrganizerItemDetail::TypeTodoTime);
         if (!detail.isEmpty()) {
             retn = detail.startDateTime();
             if (!retn.isValid())
@@ -1054,7 +1054,7 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
     }
 
     // If it's a note, this will just return null, as expected
-    return item.detail<QOrganizerJournalTime>().entryDateTime();
+    return item.detail(QOrganizerItemDetail::TypeJournalTime).value(QOrganizerJournalTime::FieldEntryDateTime).toDateTime();
 }
 
 /*!
@@ -1166,7 +1166,7 @@ bool QOrganizerManagerEngine::addDefaultSorted(QMultiMap<QDateTime, QOrganizerIt
 {
     QDateTime sortTime;
     if (toAdd.type() == QOrganizerItemType::TypeEvent || toAdd.type() == QOrganizerItemType::TypeEventOccurrence) {
-        QOrganizerEventTime eventTime = toAdd.detail(QOrganizerEventTime::DefinitionName);
+        QOrganizerEventTime eventTime = toAdd.detail(QOrganizerItemDetail::TypeEventTime);
         // both start and end times are mandatory for an event in jsondb schema, so all this checking might redundant
         if (eventTime.startDateTime().isValid())
             sortTime = eventTime.startDateTime();
@@ -1177,7 +1177,7 @@ bool QOrganizerManagerEngine::addDefaultSorted(QMultiMap<QDateTime, QOrganizerIt
             sortTime.setTime(QTime(0, 0, 0));
 
     } else if (toAdd.type() == QOrganizerItemType::TypeTodo || toAdd.type() == QOrganizerItemType::TypeTodoOccurrence) {
-        QOrganizerTodoTime todoTime = toAdd.detail(QOrganizerTodoTime::DefinitionName);
+        QOrganizerTodoTime todoTime = toAdd.detail(QOrganizerItemDetail::TypeTodoTime);
         if (todoTime.startDateTime().isValid())
             sortTime = todoTime.startDateTime();
         else if (todoTime.dueDateTime().isValid())
@@ -1218,9 +1218,9 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
     QList<QOrganizerItemDetail> allDetails = parentItem.details();
     QList<QOrganizerItemDetail> occDetails;
     foreach (const QOrganizerItemDetail &detail, allDetails) {
-        if (detail.definitionName() != QOrganizerItemRecurrence::DefinitionName
-                && detail.definitionName() != QOrganizerEventTime::DefinitionName
-                && detail.definitionName() != QOrganizerTodoTime::DefinitionName) {
+        if (detail.type() != QOrganizerItemDetail::TypeRecurrence
+                && detail.type() != QOrganizerItemDetail::TypeEventTime
+                && detail.type() != QOrganizerItemDetail::TypeTodoTime) {
             occDetails.append(detail);
         }
     }
@@ -1234,7 +1234,7 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
     // save those details in the instance.
     foreach (const QOrganizerItemDetail &detail, occDetails) {
         // copy every detail except the type
-        if (detail.definitionName() != QOrganizerItemType::DefinitionName) {
+        if (detail.type() != QOrganizerItemDetail::TypeItemType) {
             QOrganizerItemDetail modifiable = detail;
             instanceItem.saveDetail(&modifiable);
         }
@@ -1242,7 +1242,7 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
 
     // and update the time range in the instance based on the current instance date
     if (parentItem.type() == QOrganizerItemType::TypeEvent) {
-        QOrganizerEventTime etr = parentItem.detail<QOrganizerEventTime>();
+        QOrganizerEventTime etr = parentItem.detail(QOrganizerItemDetail::TypeEventTime);
         QDateTime temp = etr.startDateTime();
         temp.setDate(rdate.date());
         etr.setStartDateTime(temp);
@@ -1254,7 +1254,7 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
 
     // for todo's?
     if (parentItem.type() == QOrganizerItemType::TypeTodo) {
-        QOrganizerTodoTime ttr = parentItem.detail<QOrganizerTodoTime>();
+        QOrganizerTodoTime ttr = parentItem.detail(QOrganizerItemDetail::TypeTodoTime);
         QDateTime temp = ttr.dueDateTime();
         temp.setDate(rdate.date());
         ttr.setDueDateTime(temp);
@@ -1559,7 +1559,7 @@ QList<QDate> QOrganizerManagerEngine::filterByPosition(const QList<QDate> &dates
 bool QOrganizerManagerEngine::itemHasReccurence(const QOrganizerItem& oi)
 {
     if (oi.type() == QOrganizerItemType::TypeEvent || oi.type() == QOrganizerItemType::TypeTodo) {
-        QOrganizerItemRecurrence recur = oi.detail(QOrganizerItemRecurrence::DefinitionName);
+        QOrganizerItemRecurrence recur = oi.detail(QOrganizerItemDetail::TypeRecurrence);
         return !recur.recurrenceDates().isEmpty() || !recur.recurrenceRules().isEmpty();
     }
 

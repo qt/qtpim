@@ -213,7 +213,7 @@ void EventEditPage::eventChanged(QOrganizerManager *manager, const QOrganizerEve
     // set calendar selection
     m_calendarComboBox->clear();
 
-    QOrganizerItemReminder reminder = event.detail<QOrganizerItemReminder>();
+    QOrganizerItemReminder reminder = event.detail(QOrganizerItemDetail::TypeReminder);
     if (!reminder.isEmpty()) {
         // Alarm combo is only able to handle certain time limits correctly; for example time
         // limit 3 minutes is rounded up to 5 minutes

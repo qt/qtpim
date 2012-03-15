@@ -98,7 +98,7 @@ void DayPage::refresh()
 
     foreach (const QOrganizerItem &item, items)
     {
-        QOrganizerEventTime eventTime = item.detail<QOrganizerEventTime>();
+        QOrganizerEventTime eventTime = item.detail(QOrganizerItemDetail::TypeEventTime);
         if (!eventTime.isEmpty()) {
             QString time = eventTime.startDateTime().time().toString("hh:mm");
             QListWidgetItem* listItem = new QListWidgetItem();
@@ -111,7 +111,7 @@ void DayPage::refresh()
             m_itemList->addItem(listItem);
         }
         
-        QOrganizerTodoTime todoTime = item.detail<QOrganizerTodoTime>();
+        QOrganizerTodoTime todoTime = item.detail(QOrganizerItemDetail::TypeTodoTime);
         if (!todoTime.isEmpty()) {
             QString time = todoTime.startDateTime().time().toString("hh:mm");
             QListWidgetItem* listItem = new QListWidgetItem();
@@ -121,7 +121,7 @@ void DayPage::refresh()
             m_itemList->addItem(listItem);
         }
 
-        QOrganizerJournalTime journalTime = item.detail<QOrganizerJournalTime>();
+        QOrganizerJournalTime journalTime = item.detail(QOrganizerItemDetail::TypeJournalTime);
         if (!journalTime.isEmpty()) {
             QString time = journalTime.entryDateTime().time().toString("hh:mm");
             QListWidgetItem* listItem = new QListWidgetItem();
@@ -189,7 +189,7 @@ void DayPage::removeItem()
         // Here we could ask if the user wishes to remove only the occurrence (meaning we would
         // add an exception date to the parent item), or the parent item. The current
         // implementation is to remove the parent (including all the occurrences).
-        m_manager->removeItem(organizerItem.detail<QOrganizerItemParent>().parentId());
+        m_manager->removeItem(organizerItem.detail(QOrganizerItemDetail::TypeParent).value<QOrganizerItemId>(QOrganizerItemParent::FieldParentId));
     } else {
         m_manager->removeItem(organizerItem.id());
     }

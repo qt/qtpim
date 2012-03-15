@@ -65,10 +65,6 @@ public:
 
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
-    // to be removed
-    void setDefinitionMask(const QList<QOrganizerItemDetail::DetailType> &definitionMask);
-    QList<QOrganizerItemDetail::DetailType> definitionMask() const;
-
 private:
     Q_DISABLE_COPY(QOrganizerItemSaveRequest)
     friend class QOrganizerManagerEngine;

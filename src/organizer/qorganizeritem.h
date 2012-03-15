@@ -82,20 +82,6 @@ public:
     QOrganizerItemDetail detail(QOrganizerItemDetail::DetailType detailType = QOrganizerItemDetail::TypeUndefined) const;
     QList<QOrganizerItemDetail> details(QOrganizerItemDetail::DetailType detailType = QOrganizerItemDetail::TypeUndefined) const;
 
-    template<typename T> QList<T> details() const
-    {
-        QList<QOrganizerItemDetail> props = details(T::DefinitionName);
-        QList<T> ret;
-        for (int i = 0; i < props.count(); i++)
-            ret.append(T(props.at(i)));
-        return ret;
-    }
-
-    template<typename T> T detail() const
-    {
-        return T(detail(T::DefinitionName));
-    }
-
     bool saveDetail(QOrganizerItemDetail *detail);
     bool removeDetail(QOrganizerItemDetail *detail);
 

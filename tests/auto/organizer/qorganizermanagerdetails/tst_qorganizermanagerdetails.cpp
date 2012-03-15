@@ -57,13 +57,6 @@ private:
     bool saveAndLoadItem(QOrganizerManager *manager, QOrganizerItem &original, QOrganizerItem &loaded);
     void saveAndVerifyItem(QOrganizerManager *manager, QOrganizerItem &original);
 
-    template <typename T>
-    void removeDetail(QOrganizerItem& item)
-    {
-        T detail = item.detail<T>();
-        item.removeDetail(&detail);
-    }
-
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
 
     JsonDbProcess jsondbProcess;

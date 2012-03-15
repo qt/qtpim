@@ -469,48 +469,48 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
 QList<QOrganizerItemDetail::DetailType> QOrganizerJsonDbEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     QList<QOrganizerItemDetail::DetailType> supportedDetails;
-    supportedDetails << QOrganizerItemType::DefinitionName
-                     << QOrganizerItemGuid::DefinitionName
-//                     << QOrganizerItemTimestamp::DefinitionName
-                     << QOrganizerItemDisplayLabel::DefinitionName
-                     << QOrganizerItemDescription::DefinitionName
-                     << QOrganizerItemComment::DefinitionName
-                     << QOrganizerItemTag::DefinitionName
-                     << QOrganizerItemExtendedDetail::DefinitionName
-                     << QOrganizerItemVersion::DefinitionName;
+    supportedDetails << QOrganizerItemDetail::TypeItemType
+                     << QOrganizerItemDetail::TypeGuid
+//                     << QOrganizerItemDetail::TypeTimestamp
+                     << QOrganizerItemDetail::TypeDisplayLabel
+                     << QOrganizerItemDetail::TypeDescription
+                     << QOrganizerItemDetail::TypeComment
+                     << QOrganizerItemDetail::TypeTag
+                     << QOrganizerItemDetail::TypeExtendedDetail
+                     << QOrganizerItemDetail::TypeVersion;
 
     if (itemType == QOrganizerItemType::TypeEvent) {
-        supportedDetails << QOrganizerItemRecurrence::DefinitionName
-                         << QOrganizerEventTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerItemLocation::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerEventAttendee::DefinitionName
-                         << QOrganizerEventRsvp::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeRecurrence
+                         << QOrganizerItemDetail::TypeEventTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeLocation
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEventAttendee
+                         << QOrganizerItemDetail::TypeEventRsvp;
     } else if (itemType == QOrganizerItemType::TypeTodo) {
-        supportedDetails << QOrganizerItemRecurrence::DefinitionName
-                         << QOrganizerTodoTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerTodoProgress::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeRecurrence
+                         << QOrganizerItemDetail::TypeTodoTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeTodoProgress
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder;
     } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {
-        supportedDetails << QOrganizerItemParent::DefinitionName
-                         << QOrganizerEventTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerItemLocation::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerEventAttendee::DefinitionName
-                         << QOrganizerEventRsvp::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeParent
+                         << QOrganizerItemDetail::TypeEventTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeLocation
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEventAttendee
+                         << QOrganizerItemDetail::TypeEventRsvp;
     } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
-        supportedDetails << QOrganizerItemParent::DefinitionName
-                         << QOrganizerTodoTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerTodoProgress::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeParent
+                         << QOrganizerItemDetail::TypeTodoTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeTodoProgress
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder;
     } else {
         // We don't support Journal and Note, yet ;)
         supportedDetails.clear();

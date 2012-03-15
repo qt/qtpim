@@ -222,14 +222,6 @@ void QOrganizerItemSortOrder::setDetail(QOrganizerItemDetail::DetailType detailT
 }
 
 /*!
-    To be removed soon, use setDetail() instead.
- */
-void QOrganizerItemSortOrder::setDetailDefinitionName(QOrganizerItemDetail::DetailType detailType, int field)
-{
-    setDetail(detailType, field);
-}
-
-/*!
     Sets the sort order's policy on blank values with respect to sorting to \a blankPolicy.
 
     \sa blankPolicy()
@@ -260,29 +252,13 @@ QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailType() const
 }
 
 /*!
-    This is to be removed soon, please use detailType() instead.
- */
-QOrganizerItemDetail::DetailType QOrganizerItemSortOrder::detailDefinitionName() const
-{
-    return detailType();
-}
-
-/*!
     Returns the detail field which will be inspected to perform sorting.
 
-    \sa setDetailDefinitionName()
+    \sa setDetail()
  */
 int QOrganizerItemSortOrder::detailField() const
 {
     return d->m_detailField;
-}
-
-/*!
-    This is to be removed soon, please use detailField() instead.
- */
-int QOrganizerItemSortOrder::detailFieldName() const
-{
-    return detailField();
 }
 
 /*!

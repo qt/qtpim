@@ -51,7 +51,7 @@ class Q_ORGANIZER_EXPORT QOrganizerEventRsvp : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventRsvp)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventRsvp, QOrganizerItemDetail::TypeEventRsvp)
 #endif
 
     enum EventRsvpField {

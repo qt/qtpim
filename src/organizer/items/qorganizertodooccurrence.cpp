@@ -65,7 +65,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 void QOrganizerTodoOccurrence::setStartDateTime(const QDateTime& startDateTime)
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setStartDateTime(startDateTime);
     saveDetail(&ttr);
 }
@@ -76,7 +76,7 @@ void QOrganizerTodoOccurrence::setStartDateTime(const QDateTime& startDateTime)
  */
 QDateTime QOrganizerTodoOccurrence::startDateTime() const
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     return ttr.startDateTime();
 }
 
@@ -86,7 +86,7 @@ QDateTime QOrganizerTodoOccurrence::startDateTime() const
  */
 void QOrganizerTodoOccurrence::setDueDateTime(const QDateTime& dueDateTime)
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setDueDateTime(dueDateTime);
     saveDetail(&ttr);
 }
@@ -97,7 +97,7 @@ void QOrganizerTodoOccurrence::setDueDateTime(const QDateTime& dueDateTime)
  */
 QDateTime QOrganizerTodoOccurrence::dueDateTime() const
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     return ttr.dueDateTime();
 }
 
@@ -107,7 +107,7 @@ QDateTime QOrganizerTodoOccurrence::dueDateTime() const
  */
 void QOrganizerTodoOccurrence::setParentId(const QOrganizerItemId& parentId)
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setParentId(parentId);
     saveDetail(&origin);
 }
@@ -117,7 +117,7 @@ void QOrganizerTodoOccurrence::setParentId(const QOrganizerItemId& parentId)
  */
 QOrganizerItemId QOrganizerTodoOccurrence::parentId() const
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     return origin.parentId();
 }
 
@@ -127,7 +127,7 @@ QOrganizerItemId QOrganizerTodoOccurrence::parentId() const
  */
 void QOrganizerTodoOccurrence::setOriginalDate(const QDate& date)
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setOriginalDate(date);
     saveDetail(&origin);
 }
@@ -137,7 +137,7 @@ void QOrganizerTodoOccurrence::setOriginalDate(const QDate& date)
  */
 QDate QOrganizerTodoOccurrence::originalDate() const
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     return origin.originalDate();
 }
 
@@ -146,7 +146,7 @@ QDate QOrganizerTodoOccurrence::originalDate() const
  */
 void QOrganizerTodoOccurrence::setPriority(QOrganizerItemPriority::Priority priority)
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     pd.setPriority(priority);
     saveDetail(&pd);
 }
@@ -156,7 +156,7 @@ void QOrganizerTodoOccurrence::setPriority(QOrganizerItemPriority::Priority prio
  */
 QOrganizerItemPriority::Priority QOrganizerTodoOccurrence::priority() const
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     return pd.priority();
 }
 
@@ -167,7 +167,7 @@ QOrganizerItemPriority::Priority QOrganizerTodoOccurrence::priority() const
 void QOrganizerTodoOccurrence::setProgressPercentage(int percentage)
 {
     // XXX TODO: make the API more consistent with that in QOrganizerTodoProgress.
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setPercentageComplete(percentage);
     saveDetail(&tp);
 }
@@ -178,7 +178,7 @@ void QOrganizerTodoOccurrence::setProgressPercentage(int percentage)
  */
 int QOrganizerTodoOccurrence::progressPercentage() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.percentageComplete();
 }
 
@@ -187,7 +187,7 @@ int QOrganizerTodoOccurrence::progressPercentage() const
  */
 void QOrganizerTodoOccurrence::setStatus(QOrganizerTodoProgress::Status status)
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setStatus(status);
     saveDetail(&tp);
 }
@@ -197,7 +197,7 @@ void QOrganizerTodoOccurrence::setStatus(QOrganizerTodoProgress::Status status)
  */
 QOrganizerTodoProgress::Status QOrganizerTodoOccurrence::status() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.status();
 }
 
@@ -206,7 +206,7 @@ QOrganizerTodoProgress::Status QOrganizerTodoOccurrence::status() const
  */
 void QOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime& finishedDateTime)
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setFinishedDateTime(finishedDateTime);
     saveDetail(&tp);
 }
@@ -216,7 +216,7 @@ void QOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime& finishedDate
  */
 QDateTime QOrganizerTodoOccurrence::finishedDateTime() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.finishedDateTime();
 }
 

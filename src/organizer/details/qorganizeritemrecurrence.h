@@ -51,7 +51,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemRecurrence : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemRecurrence)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemRecurrence, QOrganizerItemDetail::TypeRecurrence)
 #endif
 
     enum RecurrenceField {

@@ -310,8 +310,8 @@ bool tst_QOrganizerItemAsync::compareItems(QOrganizerItem ca, QOrganizerItem cb)
             }
 
             // Special handling for timestamp
-            if (ad.type() == QOrganizerItemTimestamp::DefinitionName &&
-                bd.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (ad.type() == QOrganizerItemDetail::TypeTimestamp
+                && bd.type() == QOrganizerItemDetail::TypeTimestamp) {
                 QOrganizerItemTimestamp at = static_cast<QOrganizerItemTimestamp>(ad);
                 QOrganizerItemTimestamp bt = static_cast<QOrganizerItemTimestamp>(bd);
                 if (at.created().toString() == bt.created().toString() &&
@@ -358,13 +358,11 @@ bool tst_QOrganizerItemAsync::compareIgnoringTimestamps(const QOrganizerItem& ca
                 break;
             }
 
-            if (d.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (d.type() == QOrganizerItemDetail::TypeTimestamp)
                 a.removeDetail(&d);
-            }
 
-            if (d2.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (d2.type() == QOrganizerItemDetail::TypeTimestamp)
                 b.removeDetail(&d2);
-            }
         }
     }
 
@@ -413,12 +411,11 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
             }
 
             // and we have to ignore timestamps
-            if (d.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (d.type() == QOrganizerItemDetail::TypeTimestamp)
                 a.removeDetail(&d);
-            }
-            if (d2.type() == QOrganizerItemTimestamp::DefinitionName) {
+
+            if (d2.type() == QOrganizerItemDetail::TypeTimestamp)
                 b.removeDetail(&d2);
-            }
         }
     }
 
@@ -435,7 +432,7 @@ bool tst_QOrganizerItemAsync::compareIgnoringDetailKeys(const QOrganizerItem& ca
                 foundCurrentDetail = true;
             }
 
-            if (d.type() == d2.type() && d.type() == QOrganizerItemParent::DefinitionName) {
+            if (d.type() == d2.type() && d.type() == QOrganizerItemDetail::TypeParent) {
                 // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
                 QOrganizerItemParent p1 = d;
                 QOrganizerItemParent p2 = d2;
@@ -465,7 +462,7 @@ bool tst_QOrganizerItemAsync::detailListContainsDetailIgnoringDetailKeys(const Q
             foundCurrentDetail = true;
         }
 
-        if (det.type() == d2.type() && det.type() == QOrganizerItemParent::DefinitionName) {
+        if (det.type() == d2.type() && det.type() == QOrganizerItemDetail::TypeParent) {
             // XXX TODO: fix this properly in code.  At the moment, doing d.values() == d2.values() doesn't work for ParentItem details.
             QOrganizerItemParent p1 = det;
             QOrganizerItemParent p2 = d2;
@@ -567,7 +564,7 @@ void tst_QOrganizerItemAsync::itemFetch()
 
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
-    dfil.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+    dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
     QVERIFY(!ifr.cancel()); // not started
@@ -592,7 +589,7 @@ void tst_QOrganizerItemAsync::itemFetch()
 #if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
-    sortOrder.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    sortOrder.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
     QList<QOrganizerItemSortOrder> sorting;
     sorting.append(sortOrder);
     ifr.setFilter(fil);
@@ -646,7 +643,7 @@ void tst_QOrganizerItemAsync::itemFetch()
             currRestricted = QOrganizerEventOccurrence(); // or event occurrences.
         }
         currRestricted.setId(currFull.id());
-        QList<QOrganizerItemDescription> descriptions = currFull.details<QOrganizerItemDescription>();
+        QList<QOrganizerItemDetail> descriptions = currFull.details(QOrganizerItemDetail::TypeDescription);
         foreach (const QOrganizerItemDescription& description, descriptions) {
             QOrganizerItemDescription descr = description;
             if (!descr.isEmpty()) {
@@ -672,9 +669,8 @@ void tst_QOrganizerItemAsync::itemFetch()
         foreach (const QOrganizerItemDetail& det, expectedDetails) {
             // ignore backend synthesised details
             // again, this requires a "default item details" function to work properly.
-            if (det.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (det.type() == QOrganizerItemDetail::TypeTimestamp)
                 continue;
-            }
 
             // everything else in the expected item should be in the retrieved one.
             QVERIFY(detailListContainsDetailIgnoringDetailKeys(retrievedDetails, det));
@@ -871,7 +867,7 @@ void tst_QOrganizerItemAsync::itemIdFetch()
 
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
-    dfil.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+    dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
     QVERIFY(!ifr.cancel()); // not started
@@ -894,7 +890,7 @@ void tst_QOrganizerItemAsync::itemIdFetch()
 #if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
-    sortOrder.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    sortOrder.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
     QList<QOrganizerItemSortOrder> sorting;
     sorting.append(sortOrder);
     ifr.setFilter(fil);
@@ -1075,7 +1071,6 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
 //    //QVERIFY(ifr.isFinished() || !ifr.start());  // already started. // thread scheduling means this is untestable
 //    QVERIFY(ifr.waitForFinished());
 //    QVERIFY(ifr.isFinished());
-
 //    QVERIFY(spy.count() >= 1); // active + finished progress signals
 //    spy.clear();
 
@@ -1111,14 +1106,13 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
 //        }
 
 //        QVERIFY(found); // must exist or fail.
-
 //        // ensure that the item is the same (except synth fields)
 //        QList<QOrganizerItemDetail> retrievedDetails = retrievedRestricted.details();
 //        QList<QOrganizerItemDetail> expectedDetails = currRestricted.details();
 //        foreach (const QOrganizerItemDetail& det, expectedDetails) {
 //            // ignore backend synthesised details
 //            // again, this requires a "default item details" function to work properly.
-//            if (det.type() == QOrganizerItemTimestamp::DefinitionName) {
+//            if (det.type() == QOrganizerItemDetail::TypeTimestamp) {
 //                continue;
 //            }
 //            // everything else in the expected item should be in the retrieved one.
@@ -1252,7 +1246,7 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
 #if defined(QT_NO_JSONDB)
     // asynchronous detail filtering
     QOrganizerItemDetailFilter dfil;
-    dfil.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+    dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
     QVERIFY(!ifr.cancel()); // not started
@@ -1276,7 +1270,7 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
 
     // sort order
     QOrganizerItemSortOrder sortOrder;
-    sortOrder.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    sortOrder.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
     QList<QOrganizerItemSortOrder> sorting;
     sorting.append(sortOrder);
     ifr.setFilter(fil);
@@ -1329,12 +1323,11 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QOrganizerItem currFull = itemsfe.at(i);
         QOrganizerEvent currRestricted; // in prepare model, the item types were "Event"
         currRestricted.setId(currFull.id());
-        QList<QOrganizerItemDescription> descriptions = currFull.details<QOrganizerItemDescription>();
+        QList<QOrganizerItemDetail> descriptions = currFull.details(QOrganizerItemDetail::TypeDescription);
         foreach (const QOrganizerItemDescription& description, descriptions) {
             QOrganizerItemDescription descr = description;
-            if (!descr.isEmpty()) {
+            if (!descr.isEmpty())
                 currRestricted.saveDetail(&descr);
-            }
         }
 
         // now find the item in the retrieved list which our restricted item mimics
@@ -1355,9 +1348,8 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         foreach (const QOrganizerItemDetail& det, expectedDetails) {
             // ignore backend synthesised details
             // again, this requires a "default item details" function to work properly.
-            if (det.type() == QOrganizerItemTimestamp::DefinitionName) {
+            if (det.type() == QOrganizerItemDetail::TypeTimestamp)
                 continue;
-            }
 
             // everything else in the expected item should be in the retrieved one.
             QVERIFY(retrievedDetails.contains(det));
@@ -1501,7 +1493,7 @@ void tst_QOrganizerItemAsync::itemRemove()
     // specific item removal via detail filter
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
-    dfil.setDetailDefinitionName(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     irr.setItems(oim->items(dfil));
     irr.setManager(oim.data());
     QCOMPARE(irr.manager(), oim.data());
@@ -1680,7 +1672,7 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     // specific item removal via detail filter
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
-    dfil.setDetail(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     irr.setItemIds(oim->itemIds(dfil));
     irr.setManager(oim.data());
     QCOMPARE(irr.manager(), oim.data());
@@ -1710,7 +1702,7 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     QVERIFY(oim->itemIds(dfil).isEmpty());
 
     // remove all items
-////    dfil.setDetailDefinitionName(QOrganizerItemDisplayLabel::DefinitionName); // delete everything.
+////    dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel); // delete everything.
 //#if !defined(QT_NO_JSONDB)
 //    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
 //#endif
@@ -1858,11 +1850,11 @@ void tst_QOrganizerItemAsync::itemSave()
     //some backends add extra fields, so this doesn't work:
     //QCOMPARE(result, expected);
     // XXX: really, we should use isSuperset() from tst_QOrganizerManager, but this will do for now:
-    QVERIFY(result.first().detail<QOrganizerItemDescription>() == description);
+    QVERIFY(result.first().detail(QOrganizerItemDetail::TypeDescription) == description);
     QCOMPARE(oim->itemIds().size(), originalCount + 1);
 
     // update a previously saved item
-    QOrganizerItemPriority priority = result.first().detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority priority = result.first().detail(QOrganizerItemDetail::TypePriority);
     priority.setPriority(QOrganizerItemPriority::LowestPriority);
     testTodo = result.first();
     testTodo.saveDetail(&priority);
@@ -1900,7 +1892,7 @@ void tst_QOrganizerItemAsync::itemSave()
     //here we can't compare the whole item details, testTodo would be updated by async call because we just use QThreadSignalSpy to receive signals.
     //QVERIFY(containsIgnoringTimestamps(result, testTodo));
     // XXX: really, we should use isSuperset() from tst_QOrganizerManager, but this will do for now:
-    QVERIFY(result.first().detail<QOrganizerItemPriority>().priority() == priority.priority());
+    QVERIFY(result.first().detail(QOrganizerItemDetail::TypePriority).value(QOrganizerItemPriority::FieldPriority) == priority.priority());
     QCOMPARE(oim->itemIds().size(), originalCount + 1);
 #if defined(QT_NO_JSONDB)
     // cancelling

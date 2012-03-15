@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemReminder : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemReminder, QOrganizerItemDetail::TypeReminder)
 #endif
 
     enum ReminderField {
@@ -84,11 +84,10 @@ protected:
     QOrganizerItemReminder(const QOrganizerItemDetail &detail, DetailType detailType) : QOrganizerItemDetail(detail, detailType) {}
 };
 
-#define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className) \
-    className() : QOrganizerItemReminder(DefinitionName) {} \
-    className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, DefinitionName) {} \
-    className& operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    static const DetailType DefinitionName;
+#define Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(className, reminderType) \
+    className() : QOrganizerItemReminder(reminderType) {} \
+    className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, reminderType) {} \
+    className& operator=(const QOrganizerItemDetail &other) {assign(other, reminderType); return *this;}
 
 QTORGANIZER_END_NAMESPACE
 

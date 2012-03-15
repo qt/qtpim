@@ -126,18 +126,18 @@ void tst_QOrganizerItem::details()
     // Test there are no details (apart from type) by default
     QVERIFY(oi.isEmpty() == true);
     QCOMPARE(oi.details().count(), 1);
-    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName).count(), 0);
-    QCOMPARE(oi.details<QOrganizerItemLocation>().count(), 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName).count(), 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QCOMPARE(oi.details(QOrganizerItemLocation::DefinitionName).count(), 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeLocation).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeLocation).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeLocation).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeLocation).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     // Test retrieving the default details (type)
     QList<QOrganizerItemDetail> details = oi.details();
-    QVERIFY(details.at(0).type() == QOrganizerItemType::DefinitionName);
+    QVERIFY(details.at(0).type() == QOrganizerItemDetail::TypeItemType);
 
     QOrganizerItemDetail detail = oi.detail(QOrganizerItemDetail::TypeExtendedDetail);
     QVERIFY(detail.isEmpty());
@@ -156,20 +156,20 @@ void tst_QOrganizerItem::details()
 
     QVERIFY(oi.details().count() == 2);
 
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), a);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), a);
 
     // Remove detail
     QVERIFY(oi.removeDetail(&a));
     QCOMPARE(oi.details().count(), 1);
     QVERIFY(oi.isEmpty() == true);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QCOMPARE(oi.details<QOrganizerItemLocation>().count(), 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeLocation).count(), 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     // Try removing it again
     QVERIFY(!oi.removeDetail(&a));
@@ -178,31 +178,31 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi.saveDetail(&a));
     QVERIFY(oi.isEmpty() == false);
     QCOMPARE(oi.details().count(), 2);
-    QOrganizerItemLocation a2 = oi.detail(QOrganizerItemLocation::DefinitionName);
+    QOrganizerItemLocation a2 = oi.detail(QOrganizerItemDetail::TypeLocation);
     QCOMPARE(a, a2);
 
     QVERIFY(oi.removeDetail(&a2));
     QCOMPARE(oi.details().count(), 1);
     QVERIFY(oi.isEmpty() == true);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     QCOMPARE(a, a2);
 
     // Add again again, and remove a different way (base class)
     QVERIFY(oi.saveDetail(&a));
     QCOMPARE(oi.details().count(), 2);
-    QOrganizerItemDetail a3 = oi.detail(QOrganizerItemLocation::DefinitionName);
+    QOrganizerItemDetail a3 = oi.detail(QOrganizerItemDetail::TypeLocation);
     QVERIFY(a == a3);
 
     QVERIFY(oi.removeDetail(&a3));
     QCOMPARE(oi.details().count(), 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     QVERIFY(a == a3);
 
@@ -213,11 +213,11 @@ void tst_QOrganizerItem::details()
     oi.saveDetail(&a);
     oi.saveDetail(&a2);
     QCOMPARE(oi.details().count(), 3);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 2);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 2);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), a);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 2);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 2);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), a);
     QVERIFY(oi.removeDetail(&a2));
 
     // Now try adding a detail to multiple contacts
@@ -229,18 +229,18 @@ void tst_QOrganizerItem::details()
     QVERIFY(oi2.isEmpty() == false);
 
     QCOMPARE(oi.details().count(), 2);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), a);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), a);
 
     QCOMPARE(oi2.details().count(), 2);
-    QVERIFY(oi2.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi2.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi2.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi2.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi2.detail<QOrganizerItemLocation>(), a);
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi2.detail(QOrganizerItemDetail::TypeLocation)), a);
 
     // Now try removing it from one
     QVERIFY(oi.removeDetail(&a));
@@ -248,35 +248,35 @@ void tst_QOrganizerItem::details()
     // Make sure it's gone from the first contact
     QVERIFY(oi.isEmpty() == true);
     QCOMPARE(oi.details().count(), 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     // but not the second
     QVERIFY(oi2.isEmpty() == false);
     QCOMPARE(oi2.details().count(), 2);
-    QVERIFY(oi2.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi2.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi2.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi2.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi2.detail<QOrganizerItemLocation>(), a);
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi2.detail(QOrganizerItemDetail::TypeLocation)), a);
 
     // Now remove it from the second as well
     QVERIFY(oi2.removeDetail(&a));
 
     // Make sure it's gone from both
     QCOMPARE(oi.details().count(), 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     QCOMPARE(oi2.details().count(), 1);
-    QVERIFY(oi2.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi2.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi2.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi2.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi2.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi2.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     // add a, add b, remove a, add a, remove b, remove a
     QVERIFY(oi.saveDetail(&a));
@@ -296,39 +296,39 @@ void tst_QOrganizerItem::details()
     // add it once
     QVERIFY(oi.saveDetail(&one));
     QCOMPARE(oi.details().count(), 2);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), one);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), one);
 
     // add it twice
     QVERIFY(oi.saveDetail(&two));
     QCOMPARE(oi.details().count(), 3);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 2);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 2);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), one);
-    QCOMPARE(oi.details<QOrganizerItemLocation>()[0], one);
-    QCOMPARE(oi.details<QOrganizerItemLocation>()[1], two);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 2);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 2);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), one);
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.details(QOrganizerItemDetail::TypeLocation)[0]), one);
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.details(QOrganizerItemDetail::TypeLocation)[1]), two);
 
     // Remove it once
     QVERIFY(oi.removeDetail(&one));
     QCOMPARE(oi.details().count(), 2);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 1);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 1);
-    QVERIFY(!oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(!oi.detail<QOrganizerItemLocation>().isEmpty());
-    QCOMPARE(oi.detail<QOrganizerItemLocation>(), two);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 1);
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(!oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QCOMPARE(static_cast<QOrganizerItemLocation>(oi.detail(QOrganizerItemDetail::TypeLocation)), two);
 
     // Remove it twice
     QVERIFY(oi.removeDetail(&two));
     QCOMPARE(oi.details().count(), 1);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 0);
-    QVERIFY(oi.details<QOrganizerItemLocation>().count() == 0);
-    QVERIFY(oi.detail(QOrganizerItemLocation::DefinitionName).isEmpty());
-    QVERIFY(oi.detail<QOrganizerItemLocation>().isEmpty());
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 0);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation).isEmpty());
 
     // Null pointer tests
     QVERIFY(oi.saveDetail(0) == false);
@@ -343,7 +343,7 @@ void tst_QOrganizerItem::details()
     QVERIFY(ref == one);
 
     // Retrieve the detail again and modify it
-    QOrganizerItemLocation three = oi.detail<QOrganizerItemLocation>();
+    QOrganizerItemLocation three = oi.detail(QOrganizerItemDetail::TypeLocation);
     QVERIFY(ref == three);
     QVERIFY(one == three);
     three.setLabel("542343");
@@ -357,20 +357,20 @@ void tst_QOrganizerItem::details()
     QOrganizerItemLocation four;
     four.setLabel("");
     oi.saveDetail(&four);
-    QVERIFY(oi.details(QOrganizerItemLocation::DefinitionName).count() == 2);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).count() == 2);
     QVERIFY(!four.values().isEmpty()); // an empty qstring is not invalid; make sure it exists in the detail.
 
     // ensure that clearing a contact's details works correctly
     QOrganizerItemPriority priorityDetail;
     priorityDetail.setPriority(QOrganizerItemPriority::VeryHighPriority);
     oi.saveDetail(&priorityDetail);
-    QCOMPARE(oi.detail(QOrganizerItemPriority::DefinitionName).value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::VeryHighPriority));
+    QCOMPARE(oi.detail(QOrganizerItemDetail::TypePriority).value(QOrganizerItemPriority::FieldPriority).toInt(), static_cast<int>(QOrganizerItemPriority::VeryHighPriority));
     QVERIFY(oi.details().size() > 0);
     QVERIFY(!oi.isEmpty());
     QOrganizerItemId oldId = oi.id();
     oi.clearDetails();
     QCOMPARE(oi.details().size(), 1); // always has an item type.
-    QCOMPARE(oi.detail(QOrganizerItemPriority::DefinitionName).value(QOrganizerItemPriority::FieldPriority).toString(), QString());
+    QCOMPARE(oi.detail(QOrganizerItemDetail::TypePriority).value(QOrganizerItemPriority::FieldPriority).toString(), QString());
     QVERIFY(oi.isEmpty());
     QCOMPARE(oi.id(), oldId); // id shouldn't change.
 }
@@ -481,21 +481,21 @@ void tst_QOrganizerItem::tags()
     QStringList tags;
     tags.append("tag 1");
     QCOMPARE(item.tags(), tags);
-    QList<QOrganizerItemTag> tagDetails = item.details<QOrganizerItemTag>();
+    QList<QOrganizerItemDetail> tagDetails = item.details(QOrganizerItemDetail::TypeTag);
     QCOMPARE(tagDetails.size(), 1);
-    QCOMPARE(tagDetails.first().tag(), QLatin1String("tag 1"));
+    QCOMPARE(tagDetails.first().value(QOrganizerItemTag::FieldTag).toString(), QString(QStringLiteral("tag 1")));
 
     item.clearTags();
     QVERIFY(item.tags().isEmpty());
-    QVERIFY(item.details<QOrganizerItemTag>().isEmpty());
+    QVERIFY(item.details(QOrganizerItemDetail::TypeTag).isEmpty());
 
     tags.append("tag 2"); // tags is now "tag 1", "tag 2"
     item.setTags(tags);
     QCOMPARE(item.tags(), tags);
-    tagDetails = item.details<QOrganizerItemTag>();
+    tagDetails = item.details(QOrganizerItemDetail::TypeTag);
     QCOMPARE(tagDetails.size(), 2);
-    QCOMPARE(tagDetails.at(0).tag(), QLatin1String("tag 1"));
-    QCOMPARE(tagDetails.at(1).tag(), QLatin1String("tag 2"));
+    QCOMPARE(tagDetails.at(0).value(QOrganizerItemTag::FieldTag).toString(), QString(QStringLiteral("tag 1")));
+    QCOMPARE(tagDetails.at(1).value(QOrganizerItemTag::FieldTag).toString(), QString(QStringLiteral("tag 2")));
 }
 
 void tst_QOrganizerItem::debugOutput()

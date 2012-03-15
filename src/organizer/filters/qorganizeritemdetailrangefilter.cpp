@@ -135,14 +135,6 @@ void QOrganizerItemDetailRangeFilter::setDetail(QOrganizerItemDetail::DetailType
 }
 
 /*!
-    To be removed soon, use setDetail() instead.
- */
-void QOrganizerItemDetailRangeFilter::setDetailDefinitionName(QOrganizerItemDetail::DetailType definitionName, int field)
-{
-    setDetail(definitionName, field);
-}
-
-/*!
     Returns the match flags of the criterion, which define semantics such as case sensitivity, prefix
     matching, exact matching, etc.
 
@@ -166,14 +158,6 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetailRangeFilter::detailType() c
 }
 
 /*!
-    This is to be removed soon, please use detailType() instead.
- */
-QOrganizerItemDetail::DetailType QOrganizerItemDetailRangeFilter::detailDefinitionName() const
-{
-    return detailType();
-}
-
-/*!
     Returns the detail field containing the value which will be matched against the value criterion.
 
     \sa setDetail()
@@ -182,14 +166,6 @@ int QOrganizerItemDetailRangeFilter::detailField() const
 {
     Q_D(const QOrganizerItemDetailRangeFilter);
     return d->m_detailField;
-}
-
-/*!
-    This is to be removed soon, please use detailField() instead.
- */
-int QOrganizerItemDetailRangeFilter::detailFieldName() const
-{
-    return detailField();
 }
 
 /*!

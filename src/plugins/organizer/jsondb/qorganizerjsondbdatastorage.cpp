@@ -536,7 +536,7 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
             if (m_converter.jsonDbObjectToItem(results.at(i), &item)) {
                 // FIXME: Comparing item dates should be done in database.
                 if (QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end)
-                        || (m_fetchType == FetchParents && !item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()))
+                        || (m_fetchType == FetchParents && !item.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()))
                     m_items.append(item);
             }
         }

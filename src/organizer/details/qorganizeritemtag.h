@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemTag : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemTag, QOrganizerItemDetail::TypeTag)
 #endif
 
     enum TagField {

@@ -68,7 +68,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 void QOrganizerTodo::setStartDateTime(const QDateTime& startDateTime)
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setStartDateTime(startDateTime);
     saveDetail(&ttr);
 }
@@ -79,7 +79,7 @@ void QOrganizerTodo::setStartDateTime(const QDateTime& startDateTime)
  */
 QDateTime QOrganizerTodo::startDateTime() const
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     return ttr.startDateTime();
 }
 
@@ -90,7 +90,7 @@ QDateTime QOrganizerTodo::startDateTime() const
  */
 void QOrganizerTodo::setDueDateTime(const QDateTime& dueDateTime)
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setDueDateTime(dueDateTime);
     saveDetail(&ttr);
 }
@@ -101,7 +101,7 @@ void QOrganizerTodo::setDueDateTime(const QDateTime& dueDateTime)
  */
 QDateTime QOrganizerTodo::dueDateTime() const
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     return ttr.dueDateTime();
 }
 
@@ -113,7 +113,7 @@ QDateTime QOrganizerTodo::dueDateTime() const
  */
 void QOrganizerTodo::setAllDay(bool isAllDay)
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setAllDay(isAllDay);
     saveDetail(&ttr);
 }
@@ -123,7 +123,7 @@ void QOrganizerTodo::setAllDay(bool isAllDay)
 */
 bool QOrganizerTodo::isAllDay() const
 {
-    QOrganizerTodoTime ttr = detail<QOrganizerTodoTime>();
+    QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     return ttr.isAllDay();
 }
 
@@ -132,7 +132,7 @@ bool QOrganizerTodo::isAllDay() const
  */
 void QOrganizerTodo::setRecurrenceDates(const QSet<QDate>& rdates)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceDates(rdates);
     saveDetail(&rec);
 }
@@ -143,7 +143,7 @@ void QOrganizerTodo::setRecurrenceDates(const QSet<QDate>& rdates)
  */
 QSet<QDate> QOrganizerTodo::recurrenceDates() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.recurrenceDates();
 }
 
@@ -161,7 +161,7 @@ void QOrganizerTodo::setRecurrenceRule(const QOrganizerRecurrenceRule& rrule)
  */
 void QOrganizerTodo::setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceRules(rrules);
     saveDetail(&rec);
 }
@@ -184,7 +184,7 @@ QOrganizerRecurrenceRule QOrganizerTodo::recurrenceRule() const
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerTodo::recurrenceRules() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.recurrenceRules();
 }
 
@@ -194,7 +194,7 @@ QSet<QOrganizerRecurrenceRule> QOrganizerTodo::recurrenceRules() const
  */
 void QOrganizerTodo::setExceptionDates(const QSet<QDate>& exdates)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionDates(exdates);
     saveDetail(&rec);
 }
@@ -205,7 +205,7 @@ void QOrganizerTodo::setExceptionDates(const QSet<QDate>& exdates)
  */
 QSet<QDate> QOrganizerTodo::exceptionDates() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.exceptionDates();
 }
 
@@ -226,7 +226,7 @@ void QOrganizerTodo::setExceptionRule(const QOrganizerRecurrenceRule& exrule)
  */
 void QOrganizerTodo::setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionRules(exrules);
     saveDetail(&rec);
 }
@@ -251,7 +251,7 @@ QOrganizerRecurrenceRule QOrganizerTodo::exceptionRule() const
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerTodo::exceptionRules() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.exceptionRules();
 }
 
@@ -260,7 +260,7 @@ QSet<QOrganizerRecurrenceRule> QOrganizerTodo::exceptionRules() const
  */
 void QOrganizerTodo::setPriority(QOrganizerItemPriority::Priority priority)
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     pd.setPriority(priority);
     saveDetail(&pd);
 }
@@ -270,7 +270,7 @@ void QOrganizerTodo::setPriority(QOrganizerItemPriority::Priority priority)
  */
 QOrganizerItemPriority::Priority QOrganizerTodo::priority() const
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     return pd.priority();
 }
 
@@ -281,7 +281,7 @@ QOrganizerItemPriority::Priority QOrganizerTodo::priority() const
 void QOrganizerTodo::setProgressPercentage(int percentage)
 {
     // XXX TODO: make the API more consistent with that in QOrganizerTodoProgress.
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setPercentageComplete(percentage);
     saveDetail(&tp);
 }
@@ -292,7 +292,7 @@ void QOrganizerTodo::setProgressPercentage(int percentage)
  */
 int QOrganizerTodo::progressPercentage() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.percentageComplete();
 }
 
@@ -301,7 +301,7 @@ int QOrganizerTodo::progressPercentage() const
  */
 void QOrganizerTodo::setStatus(QOrganizerTodoProgress::Status status)
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setStatus(status);
     saveDetail(&tp);
 }
@@ -311,7 +311,7 @@ void QOrganizerTodo::setStatus(QOrganizerTodoProgress::Status status)
  */
 QOrganizerTodoProgress::Status QOrganizerTodo::status() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.status();
 }
 
@@ -320,7 +320,7 @@ QOrganizerTodoProgress::Status QOrganizerTodo::status() const
  */
 void QOrganizerTodo::setFinishedDateTime(const QDateTime& finishedDateTime)
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setFinishedDateTime(finishedDateTime);
     saveDetail(&tp);
 }
@@ -330,7 +330,7 @@ void QOrganizerTodo::setFinishedDateTime(const QDateTime& finishedDateTime)
  */
 QDateTime QOrganizerTodo::finishedDateTime() const
 {
-    QOrganizerTodoProgress tp = detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     return tp.finishedDateTime();
 }
 

@@ -1287,7 +1287,7 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
             if (oldItemExists) {
                 if (oldItem.id().isNull()) {
                     // this is generated occurrence
-                    oldParentDetail = oldItem.detail(QOrganizerItemParent::DefinitionName);
+                    oldParentDetail = oldItem.detail(QOrganizerItemDetail::TypeParent);
                     if (notifiedItems.contains(oldParentDetail.parentId())) {
                         beginRemoveRows(QModelIndex(), oldInd, oldInd);
                         d->m_items.takeAt(oldInd)->deleteLater();
@@ -1314,7 +1314,7 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
             // check should we add the new item
             if (newItem.id().isNull() && (newItem.type() == QOrganizerItemType::TypeEventOccurrence || newItem.type() == QOrganizerItemType::TypeTodoOccurrence)) {
                 // this is occurrence (generated or exception)
-                newParentDetail = newItem.detail(QOrganizerItemParent::DefinitionName);
+                newParentDetail = newItem.detail(QOrganizerItemDetail::TypeParent);
                 if (notifiedItems.contains(newParentDetail.parentId())) {
                     declarativeItem = createItem(newItem);
                     addNewItem = true;

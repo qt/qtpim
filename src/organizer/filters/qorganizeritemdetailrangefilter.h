@@ -74,11 +74,6 @@ public:
     QVariant maxValue() const;
     RangeFlags rangeFlags() const;
 
-    // to be removed
-    QOrganizerItemDetail::DetailType detailDefinitionName() const;
-    int detailFieldName() const;
-    void setDetailDefinitionName(QOrganizerItemDetail::DetailType definition, int field = -1);
-
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailRangeFilter)
 };

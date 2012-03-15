@@ -88,14 +88,6 @@ void QOrganizerItemDetailFilter::setDetail(QOrganizerItemDetail::DetailType deta
 }
 
 /*!
-    To be removed soon, use setDetail() instead.
- */
-void QOrganizerItemDetailFilter::setDetailDefinitionName(QOrganizerItemDetail::DetailType definitionName, int field)
-{
-    setDetail(definitionName, field);
-}
-
-/*!
     Sets the value criterion of the filter to \a value.
 
     \sa value()
@@ -140,14 +132,6 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailType() const
 }
 
 /*!
-    This is to be removed soon, please use detailType() instead.
- */
-QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailDefinitionName() const
-{
-    return detailType();
-}
-
-/*!
     Returns the detail field containing the value which will be matched against the value criterion.
 
     \sa setDetail()
@@ -156,14 +140,6 @@ int QOrganizerItemDetailFilter::detailField() const
 {
     Q_D(const QOrganizerItemDetailFilter);
     return d->m_detailField;
-}
-
-/*!
-    This is to be removed soon, please use detailField() instead.
- */
-int QOrganizerItemDetailFilter::detailFieldName() const
-{
-    return detailField();
 }
 
 /*!

@@ -52,7 +52,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemAudibleReminder : public QOrganizerItemRe
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemAudibleReminder)
+    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemAudibleReminder, QOrganizerItemDetail::TypeAudibleReminder)
 #endif
 
     enum AudibleReminderField {

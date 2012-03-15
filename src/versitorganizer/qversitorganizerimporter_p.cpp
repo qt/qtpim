@@ -216,7 +216,7 @@ bool QVersitOrganizerImporterPrivate::createTimestampCreated(
     QDateTime datetime = parseDateTime(property);
     if (!datetime.isValid())
         return false;
-    QOrganizerItemTimestamp timestamp(item->detail<QOrganizerItemTimestamp>());
+    QOrganizerItemTimestamp timestamp(item->detail(QOrganizerItemDetail::TypeTimestamp));
     timestamp.setCreated(datetime);
     updatedDetails->append(timestamp);
     return true;
@@ -231,7 +231,7 @@ bool QVersitOrganizerImporterPrivate::createTimestampModified(
     QDateTime datetime = parseDateTime(property);
     if (!datetime.isValid())
         return false;
-    QOrganizerItemTimestamp timestamp(item->detail<QOrganizerItemTimestamp>());
+    QOrganizerItemTimestamp timestamp(item->detail(QOrganizerItemDetail::TypeTimestamp));
     timestamp.setLastModified(datetime);
     updatedDetails->append(timestamp);
     return true;
@@ -248,7 +248,7 @@ bool QVersitOrganizerImporterPrivate::createPriority(
     int p = property.value().toInt(&ok);
     if (!ok)
         return false;
-    QOrganizerItemPriority priority(item->detail<QOrganizerItemPriority>());
+    QOrganizerItemPriority priority(item->detail(QOrganizerItemDetail::TypePriority));
     priority.setPriority(QOrganizerItemPriority::Priority(p));
     updatedDetails->append(priority);
     return true;
@@ -272,7 +272,7 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceId(
     QDate date = parseDate(property.value());
     if (!date.isValid())
         return false;
-    QOrganizerItemParent origin(item->detail<QOrganizerItemParent>());
+    QOrganizerItemParent origin(item->detail(QOrganizerItemDetail::TypeParent));
     origin.setOriginalDate(date);
     updatedDetails->append(origin);
     item->setType(QOrganizerItemType::TypeEventOccurrence);
@@ -292,7 +292,7 @@ bool QVersitOrganizerImporterPrivate::createStartDateTime(
     QDateTime newStart = parseDateTime(property, &hasTime);
     if (!newStart.isValid())
         return false;
-    QOrganizerEventTime etr(item->detail<QOrganizerEventTime>());
+    QOrganizerEventTime etr(item->detail(QOrganizerItemDetail::TypeEventTime));
     if (mDurationSpecified) {
         // Need to fix up the end date to match the duration of the event
         QDateTime start = etr.startDateTime();
@@ -327,7 +327,7 @@ bool QVersitOrganizerImporterPrivate::createEndDateTime(
     QDateTime newEnd = parseDateTime(property, &hasTime);
     if (!newEnd.isValid())
         return false;
-    QOrganizerEventTime etr(item->detail<QOrganizerEventTime>());
+    QOrganizerEventTime etr(item->detail(QOrganizerItemDetail::TypeEventTime));
     if (!etr.isAllDay() && !hasTime)
         etr.setAllDay(true);
 
@@ -354,7 +354,7 @@ bool QVersitOrganizerImporterPrivate::createDuration(
     Duration duration = Duration::parseDuration(property.value());
     if (!duration.isValid())
         return false;
-    QOrganizerEventTime etr(item->detail<QOrganizerEventTime>());
+    QOrganizerEventTime etr(item->detail(QOrganizerItemDetail::TypeEventTime));
     QDateTime startTime = etr.startDateTime();
     if (!startTime.isValid()) {
         // not having a start date set is treated as a start date of epoch
@@ -380,7 +380,7 @@ bool QVersitOrganizerImporterPrivate::createTodoStartDateTime(
     QDateTime newStart = parseDateTime(property, &hasTime);
     if (!newStart.isValid())
         return false;
-    QOrganizerTodoTime ttr(item->detail<QOrganizerTodoTime>());
+    QOrganizerTodoTime ttr(item->detail(QOrganizerItemDetail::TypeTodoTime));
     ttr.setStartDateTime(newStart);
     if (!ttr.isAllDay() && !hasTime)
         ttr.setAllDay(true);
@@ -400,7 +400,7 @@ bool QVersitOrganizerImporterPrivate::createDueDateTime(
     QDateTime newEnd = parseDateTime(property, &hasTime);
     if (!newEnd.isValid())
         return false;
-    QOrganizerTodoTime ttr(item->detail<QOrganizerTodoTime>());
+    QOrganizerTodoTime ttr(item->detail(QOrganizerItemDetail::TypeTodoTime));
     ttr.setDueDateTime(newEnd);
     if (!ttr.isAllDay() && !hasTime)
         ttr.setAllDay(true);
@@ -420,7 +420,7 @@ bool QVersitOrganizerImporterPrivate::createJournalEntryDateTime(
     QDateTime dateTime = parseDateTime(property);
     if (!dateTime.isValid())
         return false;
-    QOrganizerJournalTime jtr(item->detail<QOrganizerJournalTime>());
+    QOrganizerJournalTime jtr(item->detail(QOrganizerItemDetail::TypeJournalTime));
     jtr.setEntryDateTime(dateTime);
     updatedDetails->append(jtr);
     return true;
@@ -490,7 +490,7 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceRule(
     QOrganizerRecurrenceRule rule;
     if (!parseRecurRule(property.value(), &rule))
         return false;
-    QOrganizerItemRecurrence detail(item->detail<QOrganizerItemRecurrence>());
+    QOrganizerItemRecurrence detail(item->detail(QOrganizerItemDetail::TypeRecurrence));
     if (property.name() == QLatin1String("RRULE")) {
         detail.setRecurrenceRules(detail.recurrenceRules() << rule);
     } else if (property.name() == QLatin1String("EXRULE")) {
@@ -690,7 +690,7 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceDates(
     QSet<QDate> dates;
     if (!parseDates(property.value(), &dates))
         return false;
-    QOrganizerItemRecurrence detail(item->detail<QOrganizerItemRecurrence>());
+    QOrganizerItemRecurrence detail(item->detail(QOrganizerItemDetail::TypeRecurrence));
     if (property.name() == QLatin1String("RDATE")) {
         detail.setRecurrenceDates(detail.recurrenceDates() + dates);
     } else if (property.name() == QLatin1String("EXDATE")) {
@@ -746,7 +746,7 @@ bool QVersitOrganizerImporterPrivate::createStatus(
     else
         return false;
 
-    QOrganizerTodoProgress progress(item->detail<QOrganizerTodoProgress>());
+    QOrganizerTodoProgress progress(item->detail(QOrganizerItemDetail::TypeTodoProgress));
     progress.setStatus(status);
     updatedDetails->append(progress);
     return true;
@@ -761,7 +761,7 @@ bool QVersitOrganizerImporterPrivate::createPercentageComplete(
     if (!ok)
         return false;
 
-    QOrganizerTodoProgress progress(item->detail<QOrganizerTodoProgress>());
+    QOrganizerTodoProgress progress(item->detail(QOrganizerItemDetail::TypeTodoProgress));
     progress.setPercentageComplete(percent);
     updatedDetails->append(progress);
     return true;
@@ -776,7 +776,7 @@ bool QVersitOrganizerImporterPrivate::createFinishedDateTime(
     QDateTime datetime = parseDateTime(property);
     if (!datetime.isValid())
         return false;
-    QOrganizerTodoProgress progress(item->detail<QOrganizerTodoProgress>());
+    QOrganizerTodoProgress progress(item->detail(QOrganizerItemDetail::TypeTodoProgress));
     progress.setFinishedDateTime(datetime);
     updatedDetails->append(progress);
     return true;

@@ -94,20 +94,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-    \fn QList<T> QOrganizerItem::details() const
-
-    Returns a list of details of the template parameter type.  The type must be
-    a subclass of QOrganizerItemDetail.
- */
-
-/*!
-    \fn T QOrganizerItem::detail() const
-
-    Returns the first detail of the template parameter type, as returned by the template details() function.
-    The type must be a subclass of QOrganizerItemDetail.
- */
-
-/*!
     \fn QOrganizerItem::operator!=(const QOrganizerItem &other) const
 
     Returns true if this organizer item's id or details are different to those of the \a other organizer item.
@@ -541,7 +527,7 @@ void QOrganizerItem::setType(QOrganizerItemType::ItemType type)
  */
 QString QOrganizerItem::displayLabel() const
 {
-    QOrganizerItemDisplayLabel dl = detail<QOrganizerItemDisplayLabel>();
+    QOrganizerItemDisplayLabel dl = detail(QOrganizerItemDetail::TypeDisplayLabel);
     return dl.label();
 }
 
@@ -550,7 +536,7 @@ QString QOrganizerItem::displayLabel() const
  */
 void QOrganizerItem::setDisplayLabel(const QString &label)
 {
-    QOrganizerItemDisplayLabel dl = detail<QOrganizerItemDisplayLabel>();
+    QOrganizerItemDisplayLabel dl = detail(QOrganizerItemDetail::TypeDisplayLabel);
     dl.setLabel(label);
     saveDetail(&dl);
 }
@@ -560,7 +546,7 @@ void QOrganizerItem::setDisplayLabel(const QString &label)
  */
 QString QOrganizerItem::description() const
 {
-    QOrganizerItemDescription descr = detail<QOrganizerItemDescription>();
+    QOrganizerItemDescription descr = detail(QOrganizerItemDetail::TypeDescription);
     return descr.description();
 }
 
@@ -569,7 +555,7 @@ QString QOrganizerItem::description() const
  */
 void QOrganizerItem::setDescription(const QString &description)
 {
-    QOrganizerItemDescription descr = detail<QOrganizerItemDescription>();
+    QOrganizerItemDescription descr = detail(QOrganizerItemDetail::TypeDescription);
     descr.setDescription(description);
     saveDetail(&descr);
 }
@@ -579,11 +565,13 @@ void QOrganizerItem::setDescription(const QString &description)
  */
 QStringList QOrganizerItem::comments() const
 {
-    QList<QOrganizerItemComment> comments = details<QOrganizerItemComment>();
-    QStringList list;
-    foreach (const QOrganizerItemComment &comment, comments)
-        list += comment.comment();
-    return list;
+    QStringList commentList;
+    for (int i = 0; i < d->m_details.size(); ++i) {
+        const QOrganizerItemDetail &detail = d->m_details.at(i);
+        if (detail.d->m_detailType == QOrganizerItemDetail::TypeComment)
+            commentList.append(detail.d->m_values.value(QOrganizerItemComment::FieldComment).toString());
+    }
+    return commentList;
 }
 
 /*!
@@ -619,10 +607,13 @@ void QOrganizerItem::addComment(const QString &comment)
  */
 QStringList QOrganizerItem::tags() const
 {
-    QStringList tags;
-    foreach (const QOrganizerItemTag &tagDetail, details<QOrganizerItemTag>())
-        tags.append(tagDetail.tag());
-    return tags;
+    QStringList tagList;
+    for (int i = 0; i < d->m_details.size(); ++i) {
+        const QOrganizerItemDetail &detail = d->m_details.at(i);
+        if (detail.d->m_detailType == QOrganizerItemDetail::TypeTag)
+            tagList.append(detail.d->m_values.value(QOrganizerItemTag::FieldTag).toString());
+    }
+    return tagList;
 }
 
 /*!
@@ -659,7 +650,7 @@ void QOrganizerItem::setTags(const QStringList &tags)
  */
 QString QOrganizerItem::guid() const
 {
-    QOrganizerItemGuid guid = detail<QOrganizerItemGuid>();
+    QOrganizerItemGuid guid = detail(QOrganizerItemDetail::TypeGuid);
     return guid.guid();
 }
 
@@ -668,7 +659,7 @@ QString QOrganizerItem::guid() const
  */
 void QOrganizerItem::setGuid(const QString &guid)
 {
-    QOrganizerItemGuid guidDetail = detail<QOrganizerItemGuid>();
+    QOrganizerItemGuid guidDetail = detail(QOrganizerItemDetail::TypeGuid);
     guidDetail.setGuid(guid);
     saveDetail(&guidDetail);
 }
@@ -678,14 +669,11 @@ void QOrganizerItem::setGuid(const QString &guid)
  */
 QVariant QOrganizerItem::extendedDetailData(const QString &name) const
 {
-    QList<QOrganizerItemExtendedDetail> extendedDetails = details<QOrganizerItemExtendedDetail>();
-    if (extendedDetails.size() > 0) {
-        if (name.isEmpty())
-            return extendedDetails.at(0).data();
-
-        foreach (const QOrganizerItemExtendedDetail &detail, extendedDetails) {
-            if (name == detail.name())
-                return detail.data();
+    for (int i = 0; i < d->m_details.size(); ++i) {
+        const QOrganizerItemDetail &detail = d->m_details.at(i);
+        if (detail.d->m_detailType == QOrganizerItemDetail::TypeExtendedDetail
+            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString() == name) {
+            return detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailData);
         }
     }
     return QVariant();
@@ -696,14 +684,17 @@ QVariant QOrganizerItem::extendedDetailData(const QString &name) const
  */
 void QOrganizerItem::setExtendedDetailData(const QString &name, const QVariant &data)
 {
-    QList<QOrganizerItemExtendedDetail> extendedDetails = details<QOrganizerItemExtendedDetail>();
-    foreach (QOrganizerItemExtendedDetail detail, extendedDetails) {
-        if (name == detail.name()) {
-            detail.setData(data);
-            saveDetail(&detail);
+    for (int i = 0; i < d->m_details.size(); ++i) {
+        const QOrganizerItemDetail &detail = d->m_details.at(i);
+        if (detail.d->m_detailType == QOrganizerItemDetail::TypeExtendedDetail
+            && detail.d->m_values.value(QOrganizerItemExtendedDetail::FieldExtendedDetailName).toString() == name) {
+            QOrganizerItemDetail newDetail = d->m_details.at(i);
+            newDetail.d->m_values.insert(QOrganizerItemExtendedDetail::FieldExtendedDetailData, data);
+            saveDetail(&newDetail);
             return;
         }
     }
+
     QOrganizerItemExtendedDetail newDetail;
     newDetail.setName(name);
     newDetail.setData(data);

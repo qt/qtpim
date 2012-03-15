@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemDisplayLabel : public QOrganizerItemDetai
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDisplayLabel)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemDisplayLabel, QOrganizerItemDetail::TypeDisplayLabel)
 #endif
 
     enum DisplayLabelField {

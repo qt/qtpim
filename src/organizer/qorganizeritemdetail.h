@@ -117,9 +117,6 @@ public:
         return value(field).value<T>();
     }
 
-    // to be removed
-    DetailType definitionName() const;
-
 protected:
     QOrganizerItemDetail(const QOrganizerItemDetail &other, DetailType expectedDetailType);
     QOrganizerItemDetail &assign(const QOrganizerItemDetail &other, DetailType expectedDetailType);
@@ -140,11 +137,10 @@ private:
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail);
 #endif // QT_NO_DEBUG_STREAM
 
-#define Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(className) \
-    className() : QOrganizerItemDetail(DefinitionName) {} \
-    className(const QOrganizerItemDetail &other) : QOrganizerItemDetail(other, DefinitionName) {} \
-    className &operator=(const QOrganizerItemDetail &other) {assign(other, DefinitionName); return *this;} \
-    static const DetailType DefinitionName;
+#define Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(className, detailType) \
+    className() : QOrganizerItemDetail(detailType) {} \
+    className(const QOrganizerItemDetail &other) : QOrganizerItemDetail(other, detailType) {} \
+    className &operator=(const QOrganizerItemDetail &other) {assign(other, detailType); return *this;}
 
 QTORGANIZER_END_NAMESPACE
 

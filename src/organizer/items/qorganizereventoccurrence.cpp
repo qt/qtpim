@@ -65,7 +65,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 void QOrganizerEventOccurrence::setStartDateTime(const QDateTime& startDateTime)
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     etr.setStartDateTime(startDateTime);
     saveDetail(&etr);
 }
@@ -76,7 +76,7 @@ void QOrganizerEventOccurrence::setStartDateTime(const QDateTime& startDateTime)
  */
 QDateTime QOrganizerEventOccurrence::startDateTime() const
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     return etr.startDateTime();
 }
 
@@ -87,7 +87,7 @@ QDateTime QOrganizerEventOccurrence::startDateTime() const
  */
 void QOrganizerEventOccurrence::setEndDateTime(const QDateTime& endDateTime)
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     etr.setEndDateTime(endDateTime);
     saveDetail(&etr);
 }
@@ -99,7 +99,7 @@ void QOrganizerEventOccurrence::setEndDateTime(const QDateTime& endDateTime)
  */
 QDateTime QOrganizerEventOccurrence::endDateTime() const
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     return etr.endDateTime();
 }
 
@@ -109,7 +109,7 @@ QDateTime QOrganizerEventOccurrence::endDateTime() const
  */
 void QOrganizerEventOccurrence::setParentId(const QOrganizerItemId& parentId)
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setParentId(parentId);
     saveDetail(&origin);
 }
@@ -119,7 +119,7 @@ void QOrganizerEventOccurrence::setParentId(const QOrganizerItemId& parentId)
  */
 QOrganizerItemId QOrganizerEventOccurrence::parentId() const
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     return origin.parentId();
 }
 
@@ -129,7 +129,7 @@ QOrganizerItemId QOrganizerEventOccurrence::parentId() const
  */
 void QOrganizerEventOccurrence::setOriginalDate(const QDate& date)
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setOriginalDate(date);
     saveDetail(&origin);
 }
@@ -139,7 +139,7 @@ void QOrganizerEventOccurrence::setOriginalDate(const QDate& date)
  */
 QDate QOrganizerEventOccurrence::originalDate() const
 {
-    QOrganizerItemParent origin = detail<QOrganizerItemParent>();
+    QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     return origin.originalDate();
 }
 
@@ -148,7 +148,7 @@ QDate QOrganizerEventOccurrence::originalDate() const
  */
 void QOrganizerEventOccurrence::setPriority(QOrganizerItemPriority::Priority priority)
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     pd.setPriority(priority);
     saveDetail(&pd);
 }
@@ -158,7 +158,7 @@ void QOrganizerEventOccurrence::setPriority(QOrganizerItemPriority::Priority pri
  */
 QOrganizerItemPriority::Priority QOrganizerEventOccurrence::priority() const
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     return pd.priority();
 }
 
@@ -167,7 +167,7 @@ QOrganizerItemPriority::Priority QOrganizerEventOccurrence::priority() const
  */
 QString QOrganizerEventOccurrence::location() const
 {
-    QOrganizerItemLocation ld = detail<QOrganizerItemLocation>();
+    QOrganizerItemLocation ld = detail(QOrganizerItemDetail::TypeLocation);
     return ld.label();
 }
 
@@ -176,7 +176,7 @@ QString QOrganizerEventOccurrence::location() const
  */
 void QOrganizerEventOccurrence::setLocation(const QString& location)
 {
-    QOrganizerItemLocation ld = detail<QOrganizerItemLocation>();
+    QOrganizerItemLocation ld = detail(QOrganizerItemDetail::TypeLocation);
     ld.setLabel(location);
     saveDetail(&ld);
 }

@@ -52,7 +52,7 @@ class Q_ORGANIZER_EXPORT QOrganizerJournalTime : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerJournalTime, QOrganizerItemDetail::TypeJournalTime)
 #endif
 
     enum JournalTimeField {

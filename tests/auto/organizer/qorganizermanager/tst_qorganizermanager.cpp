@@ -338,12 +338,12 @@ void tst_QOrganizerManager::dumpOrganizerItemDifferences(const QOrganizerItem& c
     aDetails = a.details();
     bDetails = b.details();
     foreach(QOrganizerItemDetail d, aDetails) {
-        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName && d.type() != QOrganizerItemType::DefinitionName)
+        if (d.type() != QOrganizerItemDetail::TypeDisplayLabel && d.type() != QOrganizerItemDetail::TypeItemType)
             qDebug() << "A item had extra detail:" << d.type() << d.values();
     }
     // and same for B
     foreach(QOrganizerItemDetail d, bDetails) {
-        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName && d.type() != QOrganizerItemType::DefinitionName)
+        if (d.type() != QOrganizerItemDetail::TypeDisplayLabel && d.type() != QOrganizerItemDetail::TypeItemType)
             qDebug() << "B item had extra detail:" << d.type() << d.values();
     }
 
@@ -419,8 +419,8 @@ bool tst_QOrganizerManager::isSuperset(const QOrganizerItem& ca, const QOrganize
     // Now check to see if b has any details remaining; if so, a is not a superset.
     // Note that the DisplayLabel and Type can never be removed.
     if (b.details().size() > 2
-            || (b.details().size() == 2 && (b.details().value(0).type() != QOrganizerItemDisplayLabel::DefinitionName
-                                            || b.details().value(1).type() != QOrganizerItemType::DefinitionName)))
+            || (b.details().size() == 2 && (b.details().value(0).type() != QOrganizerItemDetail::TypeDisplayLabel
+                                            || b.details().value(1).type() != QOrganizerItemDetail::TypeItemType)))
         return false;
     return true;
 }
@@ -1407,7 +1407,7 @@ void tst_QOrganizerManager::update()
     QVERIFY(cm->error() == QOrganizerManager::NoError);
 
     // Update name
-    QOrganizerItemDescription descr = item.detail(QOrganizerItemDescription::DefinitionName);
+    QOrganizerItemDescription descr = item.detail(QOrganizerItemDetail::TypeDescription);
     descr.setDescription("This note is now slightly noteworthy");
     item.saveDetail(&descr);
     QVERIFY(cm->saveItem(&item));
@@ -1417,7 +1417,7 @@ void tst_QOrganizerManager::update()
     QVERIFY(cm->saveItem(&item));
     QVERIFY(cm->error() == QOrganizerManager::NoError);
     QOrganizerItem updated = cm->item(item.id());
-    QOrganizerItemDescription updatedDescr = updated.detail(QOrganizerItemDescription::DefinitionName);
+    QOrganizerItemDescription updatedDescr = updated.detail(QOrganizerItemDetail::TypeDescription);
     QCOMPARE(updatedDescr, descr);
 
     /* Create a recurring event, update an occurrence and save (should persist as an exceptional occurrence) */
@@ -1667,17 +1667,17 @@ void tst_QOrganizerManager::batch()
     QVERIFY(items.at(1).id() != QOrganizerItemId());
     QVERIFY(items.at(2).id() != QOrganizerItemId());
 
-    QVERIFY(items.at(0).detail(QOrganizerItemDisplayLabel::DefinitionName) == da);
-    QVERIFY(items.at(1).detail(QOrganizerItemDisplayLabel::DefinitionName) == db);
-    QVERIFY(items.at(2).detail(QOrganizerItemDisplayLabel::DefinitionName) == dc);
+    QVERIFY(items.at(0).detail(QOrganizerItemDetail::TypeDisplayLabel) == da);
+    QVERIFY(items.at(1).detail(QOrganizerItemDetail::TypeDisplayLabel) == db);
+    QVERIFY(items.at(2).detail(QOrganizerItemDetail::TypeDisplayLabel) == dc);
 
     /* Retrieve again */
     a = cm->item(items.at(0).id());
     b = cm->item(items.at(1).id());
     c = cm->item(items.at(2).id());
-    QVERIFY(items.at(0).detail(QOrganizerItemDisplayLabel::DefinitionName) == da);
-    QVERIFY(items.at(1).detail(QOrganizerItemDisplayLabel::DefinitionName) == db);
-    QVERIFY(items.at(2).detail(QOrganizerItemDisplayLabel::DefinitionName) == dc);
+    QVERIFY(items.at(0).detail(QOrganizerItemDetail::TypeDisplayLabel) == da);
+    QVERIFY(items.at(1).detail(QOrganizerItemDetail::TypeDisplayLabel) == db);
+    QVERIFY(items.at(2).detail(QOrganizerItemDetail::TypeDisplayLabel) == dc);
 
     /* Now make an update to them all */
     QOrganizerItemDescription descr;
@@ -1698,17 +1698,17 @@ void tst_QOrganizerManager::batch()
     a = cm->item(items.at(0).id());
     b = cm->item(items.at(1).id());
     c = cm->item(items.at(2).id());
-    QVERIFY(items.at(0).detail(QOrganizerItemDisplayLabel::DefinitionName) == da);
-    QVERIFY(items.at(1).detail(QOrganizerItemDisplayLabel::DefinitionName) == db);
-    QVERIFY(items.at(2).detail(QOrganizerItemDisplayLabel::DefinitionName) == dc);
+    QVERIFY(items.at(0).detail(QOrganizerItemDetail::TypeDisplayLabel) == da);
+    QVERIFY(items.at(1).detail(QOrganizerItemDetail::TypeDisplayLabel) == db);
+    QVERIFY(items.at(2).detail(QOrganizerItemDetail::TypeDisplayLabel) == dc);
 
-    QVERIFY(a.details<QOrganizerItemDescription>().count() == 1);
-    QVERIFY(b.details<QOrganizerItemDescription>().count() == 1);
-    QVERIFY(c.details<QOrganizerItemDescription>().count() == 1);
+    QVERIFY(a.details(QOrganizerItemDetail::TypeDescription).count() == 1);
+    QVERIFY(b.details(QOrganizerItemDetail::TypeDescription).count() == 1);
+    QVERIFY(c.details(QOrganizerItemDetail::TypeDescription).count() == 1);
 
-    QVERIFY(a.details<QOrganizerItemDescription>().at(0).description() == "This note looks slightly shifty");
-    QVERIFY(b.details<QOrganizerItemDescription>().at(0).description() == "This note is definitely up to no good");
-    QVERIFY(c.details<QOrganizerItemDescription>().at(0).description() == "This note is a terrible note");
+    QVERIFY(a.details(QOrganizerItemDetail::TypeDescription).at(0).value(QOrganizerItemDescription::FieldDescription) == "This note looks slightly shifty");
+    QVERIFY(b.details(QOrganizerItemDetail::TypeDescription).at(0).value(QOrganizerItemDescription::FieldDescription) == "This note is definitely up to no good");
+    QVERIFY(c.details(QOrganizerItemDetail::TypeDescription).at(0).value(QOrganizerItemDescription::FieldDescription) == "This note is a terrible note");
 
     /* Now delete them all */
     QList<QOrganizerItemId> ids;
@@ -1875,7 +1875,7 @@ void tst_QOrganizerManager::invalidManager()
     /* filters */
     QOrganizerItemFilter f; // matches everything
     QOrganizerItemDetailFilter df;
-    df.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    df.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     QVERIFY(manager.itemIds(QOrganizerItemFilter()).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
     QVERIFY(manager.itemIds(df).count() == 0);
@@ -2007,7 +2007,7 @@ void tst_QOrganizerManager::memoryManager()
     QVERIFY(m1.saveItem(&c));
     c.setId(QOrganizerItemId());
     QOrganizerItem c2;
-    QOrganizerItemDisplayLabel c2dl = c2.detail(QOrganizerItemDisplayLabel::DefinitionName);
+    QOrganizerItemDisplayLabel c2dl = c2.detail(QOrganizerItemDetail::TypeDisplayLabel);
     c2 = c;
     c2dl.setLabel("c2dl");
     c2.saveDetail(&c2dl);
@@ -2354,7 +2354,7 @@ void tst_QOrganizerManager::recurrenceWithGenerator()
         for (int i = 0; i < items.size(); i++) {
             QOrganizerItem item = items.at(i);
             QCOMPARE(item.type(), QOrganizerItemType::TypeEventOccurrence);
-            QDate occurrenceDate = item.detail<QOrganizerEventTime>().startDateTime().date();
+            QDate occurrenceDate = item.detail(QOrganizerItemDetail::TypeEventTime).value(QOrganizerEventTime::FieldStartDateTime).toDateTime().date();
             //QCOMPARE(occurrenceDate, occurrenceDates.at(i));
             actualDates << occurrenceDate;
         }
@@ -2408,7 +2408,7 @@ void tst_QOrganizerManager::todoRecurrenceWithGenerator()
         for (int i = 0; i < items.size(); i++) {
             QOrganizerItem item = items.at(i);
             QCOMPARE(item.type(), QOrganizerItemType::TypeTodoOccurrence);
-            QDate occurrenceDate = item.detail<QOrganizerTodoTime>().startDateTime().date();
+            QDate occurrenceDate = item.detail(QOrganizerItemDetail::TypeTodoTime).value(QOrganizerTodoTime::FieldStartDateTime).toDateTime().date();
             //QCOMPARE(occurrenceDate, occurrenceDates.at(i));
             actualDates << occurrenceDate;
         }
@@ -2592,11 +2592,11 @@ void tst_QOrganizerManager::signalEmission()
     QTRY_COMPARE(spyRemoved.count(), 0);
 
     /* Batch modifies */
-    QOrganizerItemDisplayLabel modifiedName = todo.detail(QOrganizerItemDisplayLabel::DefinitionName);
+    QOrganizerItemDisplayLabel modifiedName = todo.detail(QOrganizerItemDetail::TypeDisplayLabel);
     modifiedName.setLabel("Modified number 1");
-    modifiedName = todo2.detail(QOrganizerItemDisplayLabel::DefinitionName);
+    modifiedName = todo2.detail(QOrganizerItemDetail::TypeDisplayLabel);
     modifiedName.setLabel("Modified number 2");
-    modifiedName = todo3.detail(QOrganizerItemDisplayLabel::DefinitionName);
+    modifiedName = todo3.detail(QOrganizerItemDetail::TypeDisplayLabel);
     modifiedName.setLabel("Modified number 3");
 
     batchAdd.clear();
@@ -2931,7 +2931,7 @@ void tst_QOrganizerManager::testFilterFunction()
 
     // Test for QOrganizerItemFilter::OrganizerItemDetailFilter:
     QOrganizerItemDetailFilter fdef;
-    fdef.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    fdef.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     fdef.setValue("invalid");
     // test for nonexistent label
     QVERIFY(!QOrganizerManagerEngine::testFilter(fdef, item));
@@ -2942,7 +2942,7 @@ void tst_QOrganizerManager::testFilterFunction()
 
     // Test for QOrganizerItemFilter::OrganizerItemDetailRangeFilter:
     QOrganizerItemDetailRangeFilter fdrf;
-    fdrf.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
+    fdrf.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldStartDateTime);
     fdrf.setRange(QDateTime(QDate(2010,10,9)), QDateTime(QDate(2010,10,11)));
     // test for a valid range
     QVERIFY(QOrganizerManagerEngine::testFilter(fdrf, item));
@@ -3055,17 +3055,17 @@ void tst_QOrganizerManager::itemFilterFetch()
     // Checks
     QOrganizerItemDetailFilter dfil;
     // 1
-    dfil.setDetail(QOrganizerItemPriority::DefinitionName, QOrganizerItemPriority::FieldPriority);
+    dfil.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
     dfil.setValue(QOrganizerItemPriority::VeryHighPriority);
     QCOMPARE(cm->items(dfil).count(), 0);
     dfil.setValue(QOrganizerItemPriority::VeryLowPriority);
     QCOMPARE(cm->items(dfil).count(), 1);
     // 2
-    dfil.setDetail(QOrganizerItemComment::DefinitionName, QOrganizerItemComment::FieldComment);
+    dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     dfil.setValue("my comment");
     QCOMPARE(cm->items(dfil).count(), 1);
     // 3-4
-    dfil.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     dfil.setValue("my 3rd event!");
     QCOMPARE(cm->items(dfil).count(), 1);
     dfil.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
@@ -3083,11 +3083,11 @@ void tst_QOrganizerManager::itemFilterFetch()
     QCOMPARE(cm->items(dfil).count(), 4);
     // 5
     dfil.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-    dfil.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldEndDateTime);
+    dfil.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
     dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
     QCOMPARE(cm->items(dfil).count(), 1);
     // 6
-    dfil.setDetail(QOrganizerItemExtendedDetail::DefinitionName, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
+    dfil.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldExtendedDetailName);
     dfil.setValue("DetailOfMine");
     QCOMPARE(cm->items(dfil).count(), 1);
 }
@@ -3214,7 +3214,7 @@ void tst_QOrganizerManager::itemFetch()
 
     //make a parent filter and test item count
     QOrganizerItemDetailFilter df;
-    df.setDetail(QOrganizerItemParent::DefinitionName, QOrganizerItemParent::FieldParentId);
+    df.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
     df.setValue(QVariant::fromValue(recEvent.id()));
     QCOMPARE(cm->items(df).count(), 3);
     QCOMPARE(cm->itemsForExport(QDateTime(), QDateTime(), df).count(), 2);
@@ -3927,7 +3927,7 @@ void tst_QOrganizerManager::partialSave()
 
     // 1) Change the description for b, mask it out
     items[1].setDescription("Two changed description");
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerEventTime::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeEventTime));
     QVERIFY(cm->errorMap().isEmpty());
 
     QOrganizerItem b = cm->item(originalItems[1].id());
@@ -3936,47 +3936,47 @@ void tst_QOrganizerManager::partialSave()
     // 2) save a modified detail in the mask
     items[1].setDescription("Two changed description");
 
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDescription::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
     QCOMPARE(b.description(), QString("Two changed description"));
 
     // 3) Remove a description
-    QOrganizerItemDescription desc = items[1].detail<QOrganizerItemDescription>();
+    QOrganizerItemDescription desc = items[1].detail(QOrganizerItemDetail::TypeDescription);
     QVERIFY(items[1].removeDetail(&desc));
     // Mask it out, so it shouldn't work.
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerEventTime::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeEventTime));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
-    QCOMPARE(b.details<QOrganizerItemDescription>().count(), 1);
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeDescription).count(), 1);
     // Now include it in the mask
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDescription::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription));
     QVERIFY(cm->errorMap().isEmpty());
     b = cm->item(originalItems[1].id());
-    QCOMPARE(b.details<QOrganizerItemDescription>().count(), 0);
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeDescription).count(), 0);
 
     // 4 - New item, no details in the mask
     QOrganizerItem newItem = originalItems[3];
     newItem.setId(QOrganizerItemId());
 
     items.append(newItem); // this is items[4]
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemTag::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag));
     QVERIFY(cm->errorMap().isEmpty());
     QVERIFY(!items[4].id().isNull()); // Saved
     b = cm->item(items[4].id());
-    QCOMPARE(b.details<QOrganizerItemDisplayLabel>().count(), 0); // not saved
-    QCOMPARE(b.details<QOrganizerEventTime>().count(), 0); // not saved
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 0); // not saved
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeEventTime).count(), 0); // not saved
 
     // 5 - New item, some details in the mask
     newItem = originalItems[2];
     newItem.setId(QOrganizerItemId());
     items.append(newItem); // this is items[5]
-    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDisplayLabel::DefinitionName));
+    QVERIFY(cm->saveItems(&items, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDisplayLabel));
     QVERIFY(cm->errorMap().isEmpty());
     QVERIFY(!items[5].id().isNull()); // Saved
     b = cm->item(items[5].id());
-    QCOMPARE(b.details<QOrganizerItemDisplayLabel>().count(), 1);
-    QCOMPARE(b.details<QOrganizerEventTime>().count(), 0); // not saved
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 1);
+    QCOMPARE(b.details(QOrganizerItemDetail::TypeEventTime).count(), 0); // not saved
 
     // 6 Have a non existing item in the middle followed by a save error
     cm->removeItem(items[4].id());
@@ -4063,9 +4063,9 @@ QList<QOrganizerItemDetail> tst_QOrganizerManager::removeAllDefaultDetails(const
 {
     QList<QOrganizerItemDetail> newlist;
     foreach (const QOrganizerItemDetail d, details) {
-        if (d.type() != QOrganizerItemDisplayLabel::DefinitionName
-                && d.type() != QOrganizerItemType::DefinitionName
-                && d.type() != QOrganizerItemTimestamp::DefinitionName) {
+        if (d.type() != QOrganizerItemDetail::TypeDisplayLabel
+                && d.type() != QOrganizerItemDetail::TypeItemType
+                && d.type() != QOrganizerItemDetail::TypeTimestamp) {
             newlist << d;
         }
     }
@@ -4093,21 +4093,21 @@ void tst_QOrganizerManager::detailOrders()
     QVERIFY(cm->saveItem(&a));
     a = cm->item(a.id());
 
-    QList<QOrganizerItemDetail> details = a.details(QOrganizerItemComment::DefinitionName);
+    QList<QOrganizerItemDetail> details = a.details(QOrganizerItemDetail::TypeComment);
     QVERIFY(details.count() == 3);
 
-    comment2 = a.details(QOrganizerItemComment::DefinitionName).at(1);
+    comment2 = a.details(QOrganizerItemDetail::TypeComment).at(1);
     QVERIFY(a.removeDetail(&comment2));
     QVERIFY(cm->saveItem(&a));
     a = cm->item(a.id());
-    details = a.details(QOrganizerItemComment::DefinitionName);
+    details = a.details(QOrganizerItemDetail::TypeComment);
     QVERIFY(details.count() == 2);
 
     a.saveDetail(&comment2);
     QVERIFY(cm->saveItem(&a));
     a = cm->item(a.id());
 
-    details = a.details(QOrganizerItemComment::DefinitionName);
+    details = a.details(QOrganizerItemDetail::TypeComment);
     QVERIFY(details.count() == 3);
 
     //addresses
@@ -4124,7 +4124,7 @@ void tst_QOrganizerManager::detailOrders()
         QVERIFY(cm->saveItem(&a));
         a = cm->item(a.id());
 
-        QList<QOrganizerItemDetail> details = a.details(QOrganizerItemLocation::DefinitionName);
+        QList<QOrganizerItemDetail> details = a.details(QOrganizerItemDetail::TypeLocation);
         QVERIFY(details.count() == 1); // 1 location - they're unique
 
         // Detail keys for the moment are not persistent through an item save / fetch
@@ -4133,14 +4133,14 @@ void tst_QOrganizerManager::detailOrders()
         QVERIFY(a.removeDetail(&address3)); // remove the most recent.
         QVERIFY(cm->saveItem(&a));
         a = cm->item(a.id());
-        details = a.details(QOrganizerItemLocation::DefinitionName);
+        details = a.details(QOrganizerItemDetail::TypeLocation);
         QVERIFY(details.count() == 0); // unique, remove one means none left.
 
         a.saveDetail(&address2);
         QVERIFY(cm->saveItem(&a));
         a = cm->item(a.id());
 
-        details = a.details(QOrganizerItemLocation::DefinitionName);
+        details = a.details(QOrganizerItemDetail::TypeLocation);
         QVERIFY(details.count() == 1); // add one back.
     }
 }
@@ -4340,7 +4340,7 @@ void tst_QOrganizerManager::testReminder()
     //QVERIFY(fetchedItems.contains(oi));
     foreach (QOrganizerItem item, fetchedItems) {
         if (oi.id() == item.id())
-            QVERIFY(item.detail<QOrganizerItemAudibleReminder>() == audioReminder);
+            QVERIFY(item.detail(QOrganizerItemDetail::TypeAudibleReminder) == audioReminder);
     }
 
     //Test SecondsBeforeStart properties
@@ -4352,36 +4352,36 @@ void tst_QOrganizerManager::testReminder()
     //QVERIFY(fetchedItems.contains(oi));
     foreach (QOrganizerItem item, fetchedItems) {
         if (oi.id() == item.id())
-            QVERIFY(item.detail<QOrganizerItemAudibleReminder>() == audioReminder);
+            QVERIFY(item.detail(QOrganizerItemDetail::TypeAudibleReminder) == audioReminder);
     }
 
     // update
     audioReminder.setSecondsBeforeStart(300);
     audioReminder.setDataUrl(QUrl("http://www.test.com"));
     QVERIFY(audioReminder.dataUrl() == QUrl("http://www.test.com"));
-    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() != audioReminder);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeAudibleReminder) != audioReminder);
     QVERIFY(oi.saveDetail(&audioReminder));
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 1); // should update, not add another
-    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() == audioReminder);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 1); // should update, not add another
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeAudibleReminder) == audioReminder);
     oim->saveItem (&oi);
     fetchedItems = oim->items();
     // After adding StartDateTime detail the item compare function does not work. Need fix later
     //QVERIFY(fetchedItems.contains(oi));
     foreach (QOrganizerItem item, fetchedItems) {
         if (oi.id() == item.id())
-            QVERIFY(item.detail<QOrganizerItemAudibleReminder>() == audioReminder);
+            QVERIFY(item.detail(QOrganizerItemDetail::TypeAudibleReminder) == audioReminder);
     }
 
     // remove
     QVERIFY(oi.removeDetail(&audioReminder));
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 0);
     oim->saveItem (&oi);
     fetchedItems = oim->items();
     // After adding StartDateTime detail the item compare function does not work. Need fix later
     //QVERIFY(fetchedItems.contains(oi));
     foreach (QOrganizerItem item, fetchedItems) {
         if (oi.id() == item.id())
-            QVERIFY(item.detail<QOrganizerItemAudibleReminder>() == oi.detail<QOrganizerItemAudibleReminder>());
+            QVERIFY(item.detail(QOrganizerItemDetail::TypeAudibleReminder) == oi.detail(QOrganizerItemDetail::TypeAudibleReminder));
     }
 
     if ("qtorganizer:jsondb:" == uri)// jsondb backend does not support email reminder and visual reminder
@@ -4413,7 +4413,7 @@ void tst_QOrganizerManager::testReminder()
     QVERIFY(emailReminder.body() == QString("body"));
     QVERIFY(emailReminder.attachments() == QVariantList());
     QVERIFY(emailReminder.recipients() == (QStringList() << "recipient" << "other recipient"));
-    QVERIFY(emailEvent.detail<QOrganizerItemEmailReminder>() != emailReminder);
+    QVERIFY(emailEvent.detail(QOrganizerItemDetail::TypeEmailReminder) != emailReminder);
     QVERIFY(emailEvent.saveDetail(&emailReminder));
     oim->saveItem (&emailEvent);
     fetchedItems = oim->items();
@@ -4428,7 +4428,7 @@ void tst_QOrganizerManager::testReminder()
 
     // remove
     QVERIFY(emailEvent.removeDetail(&emailReminder));
-    QVERIFY(emailEvent.details<QOrganizerItemEmailReminder>().size() == 0);
+    QVERIFY(emailEvent.details(QOrganizerItemDetail::TypeEmailReminder).size() == 0);
     oim->saveItem (&emailEvent);
     fetchedItems = oim->items();
     QVERIFY(fetchedItems.contains(emailEvent));
@@ -4457,7 +4457,7 @@ void tst_QOrganizerManager::testReminder()
     visualReminder.setDataUrl(QUrl("http://www.test.com"));
     QVERIFY(visualReminder.message() == QString("test"));
     QVERIFY(visualReminder.dataUrl() == QUrl("http://www.test.com"));
-    QVERIFY(visualEvent.detail<QOrganizerItemVisualReminder>() != visualReminder);
+    QVERIFY(visualEvent.detail(QOrganizerItemDetail::TypeVisualReminder) != visualReminder);
     QVERIFY(visualEvent.saveDetail(&visualReminder));
     oim->saveItem (&visualEvent);
     fetchedItems = oim->items();
@@ -4465,7 +4465,7 @@ void tst_QOrganizerManager::testReminder()
 
     // remove
     QVERIFY(visualEvent.removeDetail(&visualReminder));
-    QVERIFY(visualEvent.details<QOrganizerItemVisualReminder>().size() == 0);
+    QVERIFY(visualEvent.details(QOrganizerItemDetail::TypeVisualReminder).size() == 0);
     oim->saveItem (&visualEvent);
     fetchedItems = oim->items();
     QVERIFY(fetchedItems.contains(visualEvent));
@@ -4692,7 +4692,7 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     QCOMPARE(itemList.size(), 2);
     //event
     QOrganizerItemDetailFilter detailFilter;
-    detailFilter.setDetail(QOrganizerItemType::DefinitionName, QOrganizerItemType::FieldType);
+    detailFilter.setDetail(QOrganizerItemDetail::TypeItemType, QOrganizerItemType::FieldType);
     detailFilter.setValue(QOrganizerItemType::TypeEvent);
     itemList = mgr->items(detailFilter);
     QVERIFY(itemList.size() >= 2);
@@ -4715,7 +4715,7 @@ void tst_QOrganizerManager::testNestCompoundFilter()
 
     //case 2: myTodo or event + collection + id
     QOrganizerItemDetailFilter detailFilter2;
-    detailFilter2.setDetail(QOrganizerItemDisplayLabel::DefinitionName, QOrganizerItemDisplayLabel::FieldLabel);
+    detailFilter2.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     detailFilter2.setValue("myTodo");
     itemList = mgr->items(detailFilter2);
     QCOMPARE(itemList.size(), 1);
@@ -4846,7 +4846,7 @@ void tst_QOrganizerManager::testTags()
 
     // update
     item.addTag(QString::fromAscii("Tag4"));QVERIFY(mgr->saveItem(&event));
-    QList<QOrganizerItemDetail> details = item.details(QOrganizerItemTag::DefinitionName);
+    QList<QOrganizerItemDetail> details = item.details(QOrganizerItemDetail::TypeTag);
     QOrganizerItemTag tag = details.at(1);
     tag.setTag(QString::fromAscii("Tag222"));
     item.saveDetail(&tag);
@@ -4880,7 +4880,7 @@ void tst_QOrganizerManager::testExtendedDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    basicString = event.detail<QOrganizerItemExtendedDetail>();
+    basicString = event.detail(QOrganizerItemDetail::TypeExtendedDetail);
     QCOMPARE(basicString.name(), QLatin1String("basic-string"));
     QCOMPARE(basicString.data().toString(), QLatin1String("Qt Everywhere"));
 
@@ -4896,7 +4896,7 @@ void tst_QOrganizerManager::testExtendedDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    QList<QOrganizerItemExtendedDetail> extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    QList<QOrganizerItemDetail> extendedDetails = event.details(QOrganizerItemDetail::TypeExtendedDetail);
     QCOMPARE(extendedDetails.size(), 2);
     foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
         if (extendedDetail.name() == QStringLiteral("basic-list")) {
@@ -4921,7 +4921,7 @@ void tst_QOrganizerManager::testExtendedDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    extendedDetails = event.details(QOrganizerItemDetail::TypeExtendedDetail);
     QCOMPARE(extendedDetails.size(), 3);
     foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
         if (extendedDetail.name() == QStringLiteral("basic map")) {
@@ -4942,7 +4942,7 @@ void tst_QOrganizerManager::testExtendedDetail()
     QVERIFY(mgr->saveItem(&event));
 
     event = mgr->item(event.id());
-    extendedDetails = event.details<QOrganizerItemExtendedDetail>();
+    extendedDetails = event.details(QOrganizerItemDetail::TypeExtendedDetail);
     QCOMPARE(extendedDetails.size(), 4);
     foreach (const QOrganizerItemExtendedDetail &extendedDetail, extendedDetails) {
         if (extendedDetail.name() == QStringLiteral("map in list")) {
@@ -5045,7 +5045,7 @@ void tst_QOrganizerManager::testAttendee()
     QVERIFY(mgr->saveItem(&event));
     QOrganizerItemId id = event.id();
     QOrganizerItem item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 1);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeEventAttendee).count() == 1);
     QVERIFY(item == event);//This will compare all details and their values
 
     // Update
@@ -5056,7 +5056,7 @@ void tst_QOrganizerManager::testAttendee()
     QVERIFY(item != event);
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 1);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeEventAttendee).count() == 1);
     QVERIFY(item == event);//This will compare all details and their values
 
     // Add one more attendee
@@ -5068,16 +5068,16 @@ void tst_QOrganizerManager::testAttendee()
     QVERIFY(item != event);
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 2);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeEventAttendee).count() == 2);
 
     // Remove
     QVERIFY(event.removeDetail(&attendee));
-    QVERIFY(event.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(event.details(QOrganizerItemDetail::TypeEventAttendee).size() == 1);
     QVERIFY(event.removeDetail(&a1));
-    QVERIFY(event.details<QOrganizerEventAttendee>().size() == 0);
+    QVERIFY(event.details(QOrganizerItemDetail::TypeEventAttendee).size() == 0);
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerEventAttendee>().count() == 0);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeEventAttendee).count() == 0);
 }
 
 void tst_QOrganizerManager::testRsvp()
@@ -5099,7 +5099,7 @@ void tst_QOrganizerManager::testRsvp()
     QVERIFY(mgr->saveItem(&event));
     QOrganizerItemId id = event.id();
     QOrganizerItem item = mgr->item(id);
-    QCOMPARE(1, item.details<QOrganizerEventRsvp>().count());
+    QCOMPARE(1, item.details(QOrganizerItemDetail::TypeEventRsvp).count());
     QVERIFY(item == event);//This will compare all details and their values
 
     // Update
@@ -5113,22 +5113,22 @@ void tst_QOrganizerManager::testRsvp()
     QVERIFY(event.saveDetail(&rsvp));
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QCOMPARE(1, event.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(1, event.details(QOrganizerItemDetail::TypeEventRsvp).size());
     QVERIFY(item == event);//This will compare all details and their values
 
     // Remove
     QVERIFY(event.removeDetail(&rsvp));
-    QCOMPARE(0, event.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(0, event.details(QOrganizerItemDetail::TypeEventRsvp).size());
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerEventRsvp>().count() == 0);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeEventRsvp).count() == 0);
 }
 
 void tst_QOrganizerManager::testClassification()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> mgr(QOrganizerManager::fromUri(uri));
-    if (!mgr->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemClassification::DefinitionName))
+    if (!mgr->supportedItemDetails(QOrganizerItemType::TypeEvent).contains(QOrganizerItemDetail::TypeClassification))
         QSKIP("Classification -detail not supported by this backend.");
 
     // Save item and verify
@@ -5140,7 +5140,7 @@ void tst_QOrganizerManager::testClassification()
     QOrganizerItemId id = event.id();
     QOrganizerItem item = mgr->item(id);
     QEXPECT_FAIL("mgr='jsondb'", "No support on jsondb backend yet", Abort);
-    QCOMPARE(1, item.details<QOrganizerItemClassification>().count());
+    QCOMPARE(1, item.details(QOrganizerItemDetail::TypeClassification).count());
     QVERIFY(item == event);//This will compare all details and their values
 
     // Update
@@ -5148,15 +5148,15 @@ void tst_QOrganizerManager::testClassification()
     QVERIFY(event.saveDetail(&classification));
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QCOMPARE(1, event.details<QOrganizerItemClassification>().size());
+    QCOMPARE(1, event.details(QOrganizerItemDetail::TypeClassification).size());
     QVERIFY(item == event);//This will compare all details and their values
 
     // Remove
     QVERIFY(event.removeDetail(&classification));
-    QCOMPARE(0, event.details<QOrganizerItemClassification>().size());
+    QCOMPARE(0, event.details(QOrganizerItemDetail::TypeClassification).size());
     QVERIFY(mgr->saveItem(&event));
     item = mgr->item(id);
-    QVERIFY(item.details<QOrganizerItemClassification>().count() == 0);
+    QVERIFY(item.details(QOrganizerItemDetail::TypeClassification).count() == 0);
 }
 
 void tst_QOrganizerManager::testVersion()

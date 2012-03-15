@@ -122,19 +122,19 @@ void tst_QOrganizerItemDetails::description()
 
     // test property add -- description is unique.
     QVERIFY(oi.saveDetail(&d2));
-    QCOMPARE(oi.details(QOrganizerItemDescription::DefinitionName).count(), 1); // count should be 1
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDescription).count(), 1); // count should be 1
     QVERIFY(oi.saveDetail(&d1));
-    QCOMPARE(oi.details(QOrganizerItemDescription::DefinitionName).count(), 1); // count should be 1
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDescription).count(), 1); // count should be 1
 
     // test property update
     d1.setDescription("Test 3");
     QVERIFY(oi.saveDetail(&d1));
-    QCOMPARE(oi.details(QOrganizerItemDescription::DefinitionName).count(), 1); // count should be 1
-    QVERIFY(oi.detail<QOrganizerItemDescription>().description() == QString("Test 3"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDescription).count(), 1); // count should be 1
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeDescription).value(QOrganizerItemDescription::FieldDescription) == QString("Test 3"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&d1));
-    QCOMPARE(oi.details<QOrganizerItemDescription>().count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDescription).count(), 0);
 }
 
 void tst_QOrganizerItemDetails::displayLabel()
@@ -153,19 +153,19 @@ void tst_QOrganizerItemDetails::displayLabel()
 
     // test property add - should update.
     QVERIFY(oi.saveDetail(&d2));
-    QCOMPARE(oi.details(QOrganizerItemDisplayLabel::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 1);
     QVERIFY(oi.saveDetail(&d1));
-    QCOMPARE(oi.details(QOrganizerItemDisplayLabel::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 1);
 
     // test property update - should update
     d1.setLabel("Test 3");
     QVERIFY(oi.saveDetail(&d1));
-    QCOMPARE(oi.details(QOrganizerItemDisplayLabel::DefinitionName).count(), 1);
-    QVERIFY(oi.detail<QOrganizerItemDisplayLabel>().label() == QString("Test 3"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeDisplayLabel).value(QOrganizerItemDescription::FieldDescription) == QString("Test 3"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&d1)); // can remove display label.  it's unique but not required.
-    QCOMPARE(oi.details<QOrganizerItemDisplayLabel>().count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 0);
 }
 
 
@@ -181,25 +181,25 @@ void tst_QOrganizerItemDetails::guid()
 
     // test property add
     QVERIFY(oi.saveDetail(&g1));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).count(), 1);
-    QCOMPARE(QOrganizerItemGuid(oi.details(QOrganizerItemGuid::DefinitionName).value(0)).guid(), g1.guid());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).count(), 1);
+    QCOMPARE(QOrganizerItemGuid(oi.details(QOrganizerItemDetail::TypeGuid).value(0)).guid(), g1.guid());
 
     // test property update
     g1.setValue(101,"label1");
     g1.setGuid("12345");
     QVERIFY(oi.saveDetail(&g1));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).value(0).value(101).toString(), QString("label1"));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).value(0).value(QOrganizerItemGuid::FieldGuid).toString(), QString("12345"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).value(0).value(101).toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).value(0).value(QOrganizerItemGuid::FieldGuid).toString(), QString("12345"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&g1));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).count(), 0);
     QVERIFY(oi.saveDetail(&g2));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).count(), 1);
     QVERIFY(oi.removeDetail(&g2));
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).count(), 0);
     QVERIFY(oi.removeDetail(&g2) == false);
-    QCOMPARE(oi.details(QOrganizerItemGuid::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeGuid).count(), 0);
 }
 
 void tst_QOrganizerItemDetails::location()
@@ -216,19 +216,19 @@ void tst_QOrganizerItemDetails::location()
     l1.setLabel("test");
     QVERIFY(l1.label() == QString("test"));
 
-    QVERIFY(oi.details<QOrganizerItemLocation>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).size() == 0);
     QVERIFY(oi.saveDetail(&l1));
-    QVERIFY(oi.details<QOrganizerItemLocation>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemLocation>() == l1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation) == l1);
 
     l1.setLabel("test 2");
-    QVERIFY(oi.detail<QOrganizerItemLocation>() != l1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation) != l1);
     QVERIFY(oi.saveDetail(&l1)); // update.
-    QVERIFY(oi.details<QOrganizerItemLocation>().size() == 1); // should update, not add another.
-    QVERIFY(oi.detail<QOrganizerItemLocation>() == l1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).size() == 1); // should update, not add another.
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeLocation) == l1);
 
     oi.removeDetail(&l1);
-    QVERIFY(oi.details<QOrganizerItemLocation>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeLocation).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::parent()
@@ -244,16 +244,16 @@ void tst_QOrganizerItemDetails::parent()
     QVERIFY(!p.isEmpty());
 
     QVERIFY(oi.saveDetail(&p));
-    QVERIFY(oi.details<QOrganizerItemParent>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemParent>() == p);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeParent).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeParent) == p);
 
     p.setOriginalDate(QDate(2010, 10, 14));
-    QVERIFY(oi.detail<QOrganizerItemParent>() != p);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeParent) != p);
     QVERIFY(oi.saveDetail(&p)); // update
-    QVERIFY(oi.detail<QOrganizerItemParent>() == p);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeParent) == p);
 
     QVERIFY(oi.removeDetail(&p));
-    QVERIFY(oi.details<QOrganizerItemParent>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeParent).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::priority()
@@ -265,17 +265,17 @@ void tst_QOrganizerItemDetails::priority()
     p.setValue(QOrganizerItemPriority::FieldPriority, QOrganizerItemPriority::VeryHighPriority);
     QVERIFY(p.priority() == QOrganizerItemPriority::VeryHighPriority);
     QVERIFY(oi.saveDetail(&p));
-    QVERIFY(oi.details<QOrganizerItemPriority>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemPriority>() == p);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypePriority).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypePriority) == p);
 
     p.setPriority(QOrganizerItemPriority::VeryLowPriority);
-    QVERIFY(oi.detail<QOrganizerItemPriority>() != p);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypePriority) != p);
     QVERIFY(oi.saveDetail(&p));
-    QVERIFY(oi.details<QOrganizerItemPriority>().size() == 1); // update shouldn't add another detail.
-    QVERIFY(oi.detail<QOrganizerItemPriority>() == p);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypePriority).size() == 1); // update shouldn't add another detail.
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypePriority) == p);
 
     QVERIFY(oi.removeDetail(&p));
-    QVERIFY(oi.details<QOrganizerItemPriority>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypePriority).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::recurrence()
@@ -299,7 +299,7 @@ void tst_QOrganizerItemDetails::recurrence()
     rdates << QDate(2010, 10, 13);
     exdates << QDate(2010, 11, 17) << QDate(2010, 11, 20);
 
-    QVERIFY(e.details<QOrganizerItemRecurrence>().size() == 0);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeRecurrence).size() == 0);
     r.setRecurrenceRules(rrules);
     QVERIFY(r.recurrenceRules() == rrules);
     QVERIFY(r.recurrenceDates().isEmpty());
@@ -324,20 +324,20 @@ void tst_QOrganizerItemDetails::recurrence()
 
     // now save.
     QVERIFY(e.saveDetail(&r));
-    QVERIFY(e.details<QOrganizerItemRecurrence>().size() == 1);
-    QVERIFY(e.detail<QOrganizerItemRecurrence>() == r);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeRecurrence).size() == 1);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) == r);
 
     // update
     exdates << QDate(2010, 10, 17);
     r.setExceptionDates(exdates);
-    QVERIFY(e.detail<QOrganizerItemRecurrence>() != r);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) != r);
     QVERIFY(e.saveDetail(&r));
-    QVERIFY(e.detail<QOrganizerItemRecurrence>() == r);
-    QVERIFY(e.details<QOrganizerItemRecurrence>().size() == 1); // should update, not add another.
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) == r);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeRecurrence).size() == 1); // should update, not add another.
 
     // remove.
     QVERIFY(e.removeDetail(&r));
-    QVERIFY(e.details<QOrganizerItemRecurrence>().size() == 0);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeRecurrence).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::tag()
@@ -352,25 +352,25 @@ void tst_QOrganizerItemDetails::tag()
 
     // test property add
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 1);
-    QCOMPARE(QOrganizerItemTag(oi.details(QOrganizerItemTag::DefinitionName).value(0)).tag(), t1.tag());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).count(), 1);
+    QCOMPARE(QOrganizerItemTag(oi.details(QOrganizerItemDetail::TypeTag).value(0)).tag(), t1.tag());
     QVERIFY(oi.saveDetail(&t2));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 2);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).count(), 2);
 
     // test property update
     t1.setValue(101,"label1");
     t1.setTag("green");
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).value(0).value(101).toString(), QString("label1"));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).value(0).value(QOrganizerItemTag::FieldTag).toString(), QString("green"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).value(0).value(101).toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).value(0).value(QOrganizerItemTag::FieldTag).toString(), QString("green"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).count(), 1);
     QVERIFY(oi.removeDetail(&t2));
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).count(), 0);
     QVERIFY(oi.removeDetail(&t2) == false);
-    QCOMPARE(oi.details(QOrganizerItemTag::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTag).count(), 0);
 }
 
 
@@ -388,27 +388,27 @@ void tst_QOrganizerItemDetails::timestamp()
 
     // test property add
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).count(), 1);
-    QCOMPARE(QOrganizerItemTimestamp(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0)).created(), t1.created());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).count(), 1);
+    QCOMPARE(QOrganizerItemTimestamp(oi.details(QOrganizerItemDetail::TypeTimestamp).value(0)).created(), t1.created());
 
     // test property update
     t1.setValue(101,"label1");
     t1.setLastModified(modified);
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(101).toString(), QString("label1"));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldCreated).toDateTime(), created);
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).value(0).value(QOrganizerItemTimestamp::FieldLastModified).toDateTime(), modified);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).value(0).value(101).toString(), QString("label1"));
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).value(0).value(QOrganizerItemTimestamp::FieldCreated).toDateTime(), created);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).value(0).value(QOrganizerItemTimestamp::FieldLastModified).toDateTime(), modified);
 
     // test property remove
     QVERIFY(oi.removeDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).count(), 0);
     t2.setCreated(created.addSecs(15));
     QVERIFY(oi.saveDetail(&t2));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).count(), 1);
     QVERIFY(oi.removeDetail(&t2));
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).count(), 0);
     QVERIFY(oi.removeDetail(&t2) == false);
-    QCOMPARE(oi.details(QOrganizerItemTimestamp::DefinitionName).count(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeTimestamp).count(), 0);
 }
 
 void tst_QOrganizerItemDetails::todoProgress()
@@ -436,20 +436,20 @@ void tst_QOrganizerItemDetails::todoProgress()
 
     // add
     QVERIFY(t.saveDetail(&p));
-    QVERIFY(t.details<QOrganizerTodoProgress>().size() == 1);
-    QVERIFY(t.detail<QOrganizerTodoProgress>() == p);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoProgress).size() == 1);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoProgress) == p);
 
     // update
     p.setStatus(QOrganizerTodoProgress::StatusComplete);
     QVERIFY(p.status() == QOrganizerTodoProgress::StatusComplete);
-    QVERIFY(t.detail<QOrganizerTodoProgress>() != p);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoProgress) != p);
     QVERIFY(t.saveDetail(&p));
-    QVERIFY(t.details<QOrganizerTodoProgress>().size() == 1); // update, not add another
-    QVERIFY(t.detail<QOrganizerTodoProgress>() == p);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoProgress).size() == 1); // update, not add another
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoProgress) == p);
 
     // remove
     QVERIFY(t.removeDetail(&p));
-    QVERIFY(t.details<QOrganizerTodoProgress>().size() == 0);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoProgress).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::type()
@@ -477,24 +477,24 @@ void tst_QOrganizerItemDetails::type()
 
     // test property add
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).count(), 1);
-    QCOMPARE(QOrganizerItemType(oi.details(QOrganizerItemType::DefinitionName).value(0)).type(), t1.type());
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeItemType).count(), 1);
+    QCOMPARE(QOrganizerItemType(oi.details(QOrganizerItemDetail::TypeItemType).value(0)).type(), t1.type());
 
     // test property update
     t1.setType(QOrganizerItemType::TypeTodo);
     QVERIFY(oi.saveDetail(&t1));
-    QCOMPARE(static_cast<QOrganizerItemType::ItemType>(oi.details(QOrganizerItemType::DefinitionName).value(0).value(QOrganizerItemType::FieldType).toInt()), QOrganizerItemType::TypeTodo);
+    QCOMPARE(static_cast<QOrganizerItemType::ItemType>(oi.details(QOrganizerItemDetail::TypeItemType).value(0).value(QOrganizerItemType::FieldType).toInt()), QOrganizerItemType::TypeTodo);
 
     // test property remove
     QVERIFY(!oi.removeDetail(&t1)); // cannot remove type
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeItemType).count(), 1);
     t2.setType(QOrganizerItemType::TypeNote);
     QVERIFY(oi.saveDetail(&t2)); // overwrites t1
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeItemType).count(), 1);
     QVERIFY(!oi.removeDetail(&t2)); // cannot remove type - "succeeds" but count remains unchanged
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeItemType).count(), 1);
     QVERIFY(!oi.removeDetail(&t2));
-    QCOMPARE(oi.details(QOrganizerItemType::DefinitionName).count(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeItemType).count(), 1);
 }
 
 
@@ -520,24 +520,24 @@ void tst_QOrganizerItemDetails::eventTime()
     r2.setStartDateTime(QDateTime(QDate(2010, 10, 23)));
     r2.setEndDateTime(QDateTime(QDate(2010, 10, 24)));
     QVERIFY(e.saveDetail(&r));
-    QVERIFY(e.details<QOrganizerEventTime>().size() == 1);
-    QVERIFY(e.detail<QOrganizerEventTime>() == r);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 1);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeEventTime) == r);
     QVERIFY(e.saveDetail(&r2)); // note that we don't enforce uniqueness in organizeritem; that's done by the manager!
-    QVERIFY(e.details<QOrganizerEventTime>().size() == 2);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 2);
     QVERIFY(e.removeDetail(&r2));
-    QVERIFY(e.details<QOrganizerEventTime>().size() == 1);
-    QVERIFY(e.detail<QOrganizerEventTime>() == r);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 1);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeEventTime) == r);
 
     // update
     r.setAllDay(false);
-    QVERIFY(e.detail<QOrganizerEventTime>() != r);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeEventTime) != r);
     QVERIFY(e.saveDetail(&r));
-    QVERIFY(e.detail<QOrganizerEventTime>() == r);
-    QVERIFY(e.details<QOrganizerEventTime>().size() == 1);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeEventTime) == r);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 1);
 
     // remove
     QVERIFY(e.removeDetail(&r));
-    QVERIFY(e.details<QOrganizerEventTime>().size() == 0);
+    QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::journalTime()
@@ -553,24 +553,24 @@ void tst_QOrganizerItemDetails::journalTime()
     QOrganizerJournalTime r2;
     r2.setEntryDateTime(QDateTime(QDate(2010, 10, 23)));
     QVERIFY(j.saveDetail(&r));
-    QVERIFY(j.details<QOrganizerJournalTime>().size() == 1);
-    QVERIFY(j.detail<QOrganizerJournalTime>() == r);
+    QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 1);
+    QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
     QVERIFY(j.saveDetail(&r2)); // note that we don't enforce uniqueness in organizeritem; that's done by the manager!
-    QVERIFY(j.details<QOrganizerJournalTime>().size() == 2);
+    QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 2);
     QVERIFY(j.removeDetail(&r2));
-    QVERIFY(j.details<QOrganizerJournalTime>().size() == 1);
-    QVERIFY(j.detail<QOrganizerJournalTime>() == r);
+    QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 1);
+    QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
 
     // update
     r.setEntryDateTime(QDateTime(QDate(2010, 11, 05)));
-    QVERIFY(j.detail<QOrganizerJournalTime>() != r);
+    QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) != r);
     QVERIFY(j.saveDetail(&r));
-    QVERIFY(j.detail<QOrganizerJournalTime>() == r);
-    QVERIFY(j.details<QOrganizerJournalTime>().size() == 1);
+    QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
+    QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 1);
 
     // remove
     QVERIFY(j.removeDetail(&r));
-    QVERIFY(j.details<QOrganizerJournalTime>().size() == 0);
+    QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::todoTime()
@@ -595,24 +595,24 @@ void tst_QOrganizerItemDetails::todoTime()
     r2.setStartDateTime(QDateTime(QDate(2010, 10, 23)));
     r2.setDueDateTime(QDateTime(QDate(2010, 10, 24)));
     QVERIFY(t.saveDetail(&r));
-    QVERIFY(t.details<QOrganizerTodoTime>().size() == 1);
-    QVERIFY(t.detail<QOrganizerTodoTime>() == r);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 1);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoTime) == r);
     QVERIFY(t.saveDetail(&r2)); // note that we don't enforce uniqueness in organizeritem; that's done by the manager!
-    QVERIFY(t.details<QOrganizerTodoTime>().size() == 2);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 2);
     QVERIFY(t.removeDetail(&r2));
-    QVERIFY(t.details<QOrganizerTodoTime>().size() == 1);
-    QVERIFY(t.detail<QOrganizerTodoTime>() == r);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 1);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoTime) == r);
 
     // update
     r.setAllDay(false);
-    QVERIFY(t.detail<QOrganizerTodoTime>() != r);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoTime) != r);
     QVERIFY(t.saveDetail(&r));
-    QVERIFY(t.detail<QOrganizerTodoTime>() == r);
-    QVERIFY(t.details<QOrganizerTodoTime>().size() == 1);
+    QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoTime) == r);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 1);
 
     // remove
     QVERIFY(t.removeDetail(&r));
-    QVERIFY(t.details<QOrganizerTodoTime>().size() == 0);
+    QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::reminder()
@@ -641,21 +641,21 @@ void tst_QOrganizerItemDetails::reminder()
     QVERIFY(r.secondsBeforeStart() == 30);
 
     // add
-    QVERIFY(oi.details<QOrganizerItemReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeReminder).size() == 0);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemReminder>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeReminder).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeReminder) == r);
 
     // update
     r.setSecondsBeforeStart(300);
-    QVERIFY(oi.detail<QOrganizerItemReminder>() != r);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeReminder) != r);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemReminder>().size() == 1); // should update, not add another
-    QVERIFY(oi.detail<QOrganizerItemReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeReminder).size() == 1); // should update, not add another
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeReminder) == r);
 
     // remove
     QVERIFY(oi.removeDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeReminder).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::audibleReminder()
@@ -693,23 +693,23 @@ void tst_QOrganizerItemDetails::audibleReminder()
     QVERIFY(r.secondsBeforeStart() == 30);
 
     // add
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 0);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeAudibleReminder) == r);
 
     // update
     r.setSecondsBeforeStart(300);
     r.setDataUrl(QUrl("http://www.test.com"));
     QVERIFY(r.dataUrl() == QUrl("http://www.test.com"));
-    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() != r);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeAudibleReminder) != r);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 1); // should update, not add another
-    QVERIFY(oi.detail<QOrganizerItemAudibleReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 1); // should update, not add another
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeAudibleReminder) == r);
 
     // remove
     QVERIFY(oi.removeDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemAudibleReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeAudibleReminder).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::emailReminder()
@@ -733,10 +733,10 @@ void tst_QOrganizerItemDetails::emailReminder()
     QVERIFY(r.secondsBeforeStart() == 30);
 
     // add
-    QVERIFY(oi.details<QOrganizerItemEmailReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEmailReminder).size() == 0);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemEmailReminder>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemEmailReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEmailReminder).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEmailReminder) == r);
 
     // update
     r.setSecondsBeforeStart(300);
@@ -746,14 +746,14 @@ void tst_QOrganizerItemDetails::emailReminder()
     QVERIFY(r.body() == QString("body"));
     QVERIFY(r.attachments() == QVariantList());
     QVERIFY(r.recipients() == (QStringList() << "recipient" << "other recipient"));
-    QVERIFY(oi.detail<QOrganizerItemEmailReminder>() != r);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEmailReminder) != r);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemEmailReminder>().size() == 1); // should update, not add another
-    QVERIFY(oi.detail<QOrganizerItemEmailReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEmailReminder).size() == 1); // should update, not add another
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEmailReminder) == r);
 
     // remove
     QVERIFY(oi.removeDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemEmailReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEmailReminder).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::visualReminder()
@@ -777,10 +777,10 @@ void tst_QOrganizerItemDetails::visualReminder()
     QVERIFY(r.secondsBeforeStart() == 30);
 
     // add
-    QVERIFY(oi.details<QOrganizerItemVisualReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeVisualReminder).size() == 0);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemVisualReminder>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerItemVisualReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeVisualReminder).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeVisualReminder) == r);
 
     // update
     r.setSecondsBeforeStart(300);
@@ -788,14 +788,14 @@ void tst_QOrganizerItemDetails::visualReminder()
     r.setDataUrl(QUrl("http://www.test.com"));
     QVERIFY(r.message() == QString("test"));
     QVERIFY(r.dataUrl() == QUrl("http://www.test.com"));
-    QVERIFY(oi.detail<QOrganizerItemVisualReminder>() != r);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeVisualReminder) != r);
     QVERIFY(oi.saveDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemVisualReminder>().size() == 1); // should update, not add another
-    QVERIFY(oi.detail<QOrganizerItemVisualReminder>() == r);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeVisualReminder).size() == 1); // should update, not add another
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeVisualReminder) == r);
 
     // remove
     QVERIFY(oi.removeDetail(&r));
-    QVERIFY(oi.details<QOrganizerItemVisualReminder>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeVisualReminder).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::attendee()
@@ -821,18 +821,18 @@ void tst_QOrganizerItemDetails::attendee()
     a.setParticipationStatus(QOrganizerEventAttendee::StatusAccepted);
     QVERIFY(a.participationStatus() == QOrganizerEventAttendee::StatusAccepted);
     // add
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 0);
     QVERIFY(oi.saveDetail(&a));
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerEventAttendee>() == a);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEventAttendee) == a);
     // update
     a.setAttendeeId("54321");
     a.setName("newpeople");
     a.setEmailAddress("newpeople@nokia.com");
-    QVERIFY(oi.detail<QOrganizerEventAttendee>() != a);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEventAttendee) != a);
     QVERIFY(oi.saveDetail(&a));
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
-    QVERIFY(oi.detail<QOrganizerEventAttendee>() == a);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 1);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEventAttendee) == a);
 
     // add one more attendee
     QOrganizerEventAttendee a1;
@@ -840,13 +840,13 @@ void tst_QOrganizerItemDetails::attendee()
     a1.setName("people1");
     a1.setEmailAddress("people1@nokia.com");
     QVERIFY(oi.saveDetail(&a1));
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 2);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 2);
 
     // remove
     QVERIFY(oi.removeDetail(&a));
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 1);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 1);
     QVERIFY(oi.removeDetail(&a1));
-    QVERIFY(oi.details<QOrganizerEventAttendee>().size() == 0);
+    QVERIFY(oi.details(QOrganizerItemDetail::TypeEventAttendee).size() == 0);
 }
 
 void tst_QOrganizerItemDetails::rsvp()
@@ -886,10 +886,10 @@ void tst_QOrganizerItemDetails::rsvp()
     QVERIFY(rsvp.responseRequirement() == QOrganizerEventRsvp::ResponseRequired);
 
     // add
-    QCOMPARE(0, oi.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(0, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
     QVERIFY(oi.saveDetail(&rsvp));
-    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
-    QCOMPARE(rsvp, oi.detail<QOrganizerEventRsvp>());
+    QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
+    QVERIFY(rsvp == oi.detail(QOrganizerItemDetail::TypeEventRsvp));
 
     // update
     rsvp.setOrganizerName("Mickey Mouse");
@@ -900,22 +900,22 @@ void tst_QOrganizerItemDetails::rsvp()
     rsvp.setParticipationRole(QOrganizerEventAttendee::RoleChairperson);
     rsvp.setParticipationStatus(QOrganizerEventAttendee::StatusDelegated);
     rsvp.setResponseRequirement(QOrganizerEventRsvp::ResponseNotRequired);
-    QVERIFY(oi.detail<QOrganizerEventRsvp>() != rsvp);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEventRsvp) != rsvp);
     QVERIFY(oi.saveDetail(&rsvp));
-    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
-    QVERIFY(oi.detail<QOrganizerEventRsvp>() == rsvp);
+    QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeEventRsvp) == rsvp);
 
     // add another rsvp - not supported by all the backends
     QOrganizerEventRsvp rsvp2;
     rsvp2.setOrganizerName("Goofy");
     QVERIFY(oi.saveDetail(&rsvp2));
-    QCOMPARE(2, oi.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(2, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
 
     // remove
     QVERIFY(oi.removeDetail(&rsvp2));
-    QCOMPARE(1, oi.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
     QVERIFY(oi.removeDetail(&rsvp));
-    QCOMPARE(0, oi.details<QOrganizerEventRsvp>().size());
+    QCOMPARE(0, oi.details(QOrganizerItemDetail::TypeEventRsvp).size());
 }
 
 void tst_QOrganizerItemDetails::classification()
@@ -936,27 +936,27 @@ void tst_QOrganizerItemDetails::classification()
     QVERIFY(classification.classification() == QString("secret custom string"));
 
     // add
-    QCOMPARE(0, oi.details<QOrganizerItemClassification>().size());
+    QCOMPARE(0, oi.details(QOrganizerItemDetail::TypeClassification).size());
     QVERIFY(oi.saveDetail(&classification));
-    QCOMPARE(1, oi.details<QOrganizerItemClassification>().size());
-    QCOMPARE(classification, oi.detail<QOrganizerItemClassification>());
+    QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeClassification).size());
+    QCOMPARE(classification, static_cast<QOrganizerItemClassification>(oi.detail(QOrganizerItemDetail::TypeClassification)));
 
     // update
     classification.setValue(QOrganizerItemClassification::FieldClassification, "very secret custom string");
-    QVERIFY(oi.detail<QOrganizerItemClassification>() != classification);
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeClassification) != classification);
     QVERIFY(oi.saveDetail(&classification));
-    QCOMPARE(1, oi.details<QOrganizerItemClassification>().size());
-    QVERIFY(oi.detail<QOrganizerItemClassification>() == classification);
+    QCOMPARE(1, oi.details(QOrganizerItemDetail::TypeClassification).size());
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeClassification) == classification);
 
     // try adding another, amount of details should stay the same
     QOrganizerItemClassification classification2;
     classification2.setClassification("2nd classification");
     QVERIFY(oi.saveDetail(&classification2));
-    QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 1);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeClassification).size(), 1);
 
     // remove
     QVERIFY(oi.removeDetail(&classification2));
-    QCOMPARE(oi.details<QOrganizerItemClassification>().size(), 0);
+    QCOMPARE(oi.details(QOrganizerItemDetail::TypeClassification).size(), 0);
 }
 
 void tst_QOrganizerItemDetails::version()

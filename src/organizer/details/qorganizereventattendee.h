@@ -51,7 +51,7 @@ class Q_ORGANIZER_EXPORT QOrganizerEventAttendee : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerEventAttendee, QOrganizerItemDetail::TypeEventAttendee)
 #endif
 
     enum EventAttendeeField {

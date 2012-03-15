@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemLocation : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemLocation)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemLocation, QOrganizerItemDetail::TypeLocation)
 #endif
 
     enum LocationField {

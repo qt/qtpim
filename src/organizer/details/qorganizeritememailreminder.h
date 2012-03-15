@@ -52,7 +52,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemEmailReminder : public QOrganizerItemRemi
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemEmailReminder)
+    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemEmailReminder, QOrganizerItemDetail::TypeEmailReminder)
 #endif
 
     enum EmailReminderField {

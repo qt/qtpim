@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemClassification : public QOrganizerItemDet
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemClassification, QOrganizerItemDetail::TypeClassification)
 #endif
 
     enum ClassificationField {

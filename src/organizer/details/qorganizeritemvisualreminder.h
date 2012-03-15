@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemVisualReminder : public QOrganizerItemRem
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemVisualReminder)
+    Q_DECLARE_CUSTOM_ORGANIZER_REMINDER_DETAIL(QOrganizerItemVisualReminder, QOrganizerItemDetail::TypeVisualReminder)
 #endif
 
     enum VisualReminderField {

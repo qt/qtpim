@@ -49,6 +49,11 @@ QTORGANIZER_BEGIN_NAMESPACE
 class Q_ORGANIZER_EXPORT QOrganizerItemType : public QOrganizerItemDetail
 {
 public:
+#ifndef Q_QDOC
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, QOrganizerItemDetail::TypeItemType)
+#endif
+
+
     enum ItemType {
         TypeUndefined = 0,
         TypeEvent,
@@ -58,10 +63,6 @@ public:
         TypeJournal,
         TypeNote
     };
-
-#ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType)
-#endif
 
     enum ItemTypeField {
         FieldType = 0

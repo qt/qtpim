@@ -67,7 +67,7 @@ void TodoEditor::editTodo(const QOrganizerTodo &newTodo)
 //! [2]
     if (!todo.details(QOrganizerItemDetail::TypeVisualReminder).isEmpty()){
         QOrganizerItemVisualReminder reminder =
-            todo.detail<QOrganizerItemVisualReminder>();
+            todo.detail(QOrganizerItemDetail::TypeVisualReminder);
         int seconds = reminder.secondsBeforeStart();
         alarmCombo->setCurrentIndex(seconds/(15*60));
     } else

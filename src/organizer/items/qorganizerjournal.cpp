@@ -57,7 +57,7 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 void QOrganizerJournal::setDateTime(const QDateTime& dateTime)
 {
-    QOrganizerJournalTime jtr = detail<QOrganizerJournalTime>();
+    QOrganizerJournalTime jtr = detail(QOrganizerItemDetail::TypeJournalTime);
     jtr.setEntryDateTime(dateTime);
     saveDetail(&jtr);
 }
@@ -67,7 +67,7 @@ void QOrganizerJournal::setDateTime(const QDateTime& dateTime)
  */
 QDateTime QOrganizerJournal::dateTime() const
 {
-    QOrganizerJournalTime jtr = detail<QOrganizerJournalTime>();
+    QOrganizerJournalTime jtr = detail(QOrganizerItemDetail::TypeJournalTime);
     return jtr.entryDateTime();
 }
 

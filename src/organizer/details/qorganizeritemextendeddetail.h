@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemExtendedDetail : public QOrganizerItemDet
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemExtendedDetail)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemExtendedDetail, QOrganizerItemDetail::TypeExtendedDetail)
 #endif
 
     enum ExtendedDetailField {

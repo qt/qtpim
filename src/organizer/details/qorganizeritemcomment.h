@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemComment : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemComment, QOrganizerItemDetail::TypeComment)
 #endif
 
     enum CommentField {

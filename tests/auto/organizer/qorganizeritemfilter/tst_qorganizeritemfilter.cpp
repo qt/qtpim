@@ -1045,9 +1045,9 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         QOrganizerItemDetailFilter expected;
-        expected.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        expected.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         QTest::newRow("Null valued range filter")
                 << static_cast<QOrganizerItemFilter>(qcdrf)
                 << static_cast<QOrganizerItemFilter>(expected);
@@ -1055,11 +1055,11 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"));
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         QOrganizerItemDetailFilter expected;
-        expected.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        expected.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         expected.setValue(QLatin1String("a"));
         expected.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         QTest::newRow("Equal valued range filter")
@@ -1069,7 +1069,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("a"),
                QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::ExcludeUpper);
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
@@ -1080,7 +1080,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QLatin1String("a"), QLatin1String("b"));
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         QTest::newRow("Normal range filter")
@@ -1090,11 +1090,11 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QVariant(QVariant::String), QVariant(QVariant::String)); // null bounds
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         QOrganizerItemDetailFilter qcdf;
-        qcdf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         qcdf.setValue(QVariant(QVariant::String));
         QTest::newRow("Null valued range filter")
@@ -1104,7 +1104,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 
     {
         QOrganizerItemDetailRangeFilter qcdrf;
-        qcdrf.setDetail(QOrganizerItemLocation::DefinitionName, QOrganizerItemLocation::FieldLabel);
+        qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QVariant(QVariant::String), QLatin1String("a")); // min is null
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         QTest::newRow("One sided range filter")

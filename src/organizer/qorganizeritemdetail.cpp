@@ -241,14 +241,6 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetail::type() const
 }
 
 /*!
-    To be removed soon, please use type() instead.
- */
-QOrganizerItemDetail::DetailType QOrganizerItemDetail::definitionName() const
-{
-    return type();
-}
-
-/*!
     Compares this detail to \a other.  Returns true if the type and values of \a other are equal to those of this detail.
     The keys of each detail are not considered during the comparison, in order to allow details from different organizer items to
     be compared according to their values.

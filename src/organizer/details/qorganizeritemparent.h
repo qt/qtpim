@@ -53,7 +53,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemParent)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemParent, QOrganizerItemDetail::TypeParent)
 #endif
 
     enum ParentField {

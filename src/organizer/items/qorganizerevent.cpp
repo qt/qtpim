@@ -61,7 +61,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 */
 void QOrganizerEvent::setStartDateTime(const QDateTime& startDateTime)
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     etr.setStartDateTime(startDateTime);
     saveDetail(&etr);
 }
@@ -71,7 +71,7 @@ void QOrganizerEvent::setStartDateTime(const QDateTime& startDateTime)
  */
 QDateTime QOrganizerEvent::startDateTime() const
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     return etr.startDateTime();
 }
 
@@ -81,7 +81,7 @@ QDateTime QOrganizerEvent::startDateTime() const
   */
 void QOrganizerEvent::setEndDateTime(const QDateTime& endDateTime)
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     etr.setEndDateTime(endDateTime);
     saveDetail(&etr);
 }
@@ -92,7 +92,7 @@ void QOrganizerEvent::setEndDateTime(const QDateTime& endDateTime)
  */
 QDateTime QOrganizerEvent::endDateTime() const
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     return etr.endDateTime();
 }
 
@@ -104,7 +104,7 @@ QDateTime QOrganizerEvent::endDateTime() const
  */
 void QOrganizerEvent::setAllDay(bool isAllDay)
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     etr.setAllDay(isAllDay);
     saveDetail(&etr);
 }
@@ -114,7 +114,7 @@ void QOrganizerEvent::setAllDay(bool isAllDay)
 */
 bool QOrganizerEvent::isAllDay() const
 {
-    QOrganizerEventTime etr = detail<QOrganizerEventTime>();
+    QOrganizerEventTime etr = detail(QOrganizerItemDetail::TypeEventTime);
     return etr.isAllDay();
 }
 
@@ -122,7 +122,7 @@ bool QOrganizerEvent::isAllDay() const
 */
 void QOrganizerEvent::setRecurrenceDates(const QSet<QDate>& rdates)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceDates(rdates);
     saveDetail(&rec);
 }
@@ -141,7 +141,7 @@ void QOrganizerEvent::setRecurrenceDate(const QDate& rdate)
 */
 QSet<QDate> QOrganizerEvent::recurrenceDates() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.recurrenceDates();
 }
 
@@ -150,7 +150,7 @@ QSet<QDate> QOrganizerEvent::recurrenceDates() const
 */
 void QOrganizerEvent::setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceRules(rrules);
     saveDetail(&rec);
 }
@@ -168,7 +168,7 @@ void QOrganizerEvent::setRecurrenceRule(const QOrganizerRecurrenceRule& rrule)
 */
 QSet<QOrganizerRecurrenceRule> QOrganizerEvent::recurrenceRules() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.recurrenceRules();
 }
 
@@ -189,7 +189,7 @@ QOrganizerRecurrenceRule QOrganizerEvent::recurrenceRule() const
  */
 void QOrganizerEvent::setExceptionDates(const QSet<QDate>& exdates)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionDates(exdates);
     saveDetail(&rec);
 }
@@ -211,7 +211,7 @@ void QOrganizerEvent::setExceptionDate(const QDate& exdate)
 */
 QSet<QDate> QOrganizerEvent::exceptionDates() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.exceptionDates();
 }
 
@@ -221,7 +221,7 @@ QSet<QDate> QOrganizerEvent::exceptionDates() const
 */
 void QOrganizerEvent::setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules)
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionRules(exrules);
     saveDetail(&rec);
 }
@@ -251,7 +251,7 @@ QOrganizerRecurrenceRule QOrganizerEvent::exceptionRule() const
 */
 QSet<QOrganizerRecurrenceRule> QOrganizerEvent::exceptionRules() const
 {
-    QOrganizerItemRecurrence rec = detail<QOrganizerItemRecurrence>();
+    QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     return rec.exceptionRules();
 }
 
@@ -259,7 +259,7 @@ QSet<QOrganizerRecurrenceRule> QOrganizerEvent::exceptionRules() const
 */
 void QOrganizerEvent::setPriority(QOrganizerItemPriority::Priority priority)
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     pd.setPriority(priority);
     saveDetail(&pd);
 }
@@ -268,7 +268,7 @@ void QOrganizerEvent::setPriority(QOrganizerItemPriority::Priority priority)
 */
 QOrganizerItemPriority::Priority QOrganizerEvent::priority() const
 {
-    QOrganizerItemPriority pd = detail<QOrganizerItemPriority>();
+    QOrganizerItemPriority pd = detail(QOrganizerItemDetail::TypePriority);
     return pd.priority();
 }
 
@@ -276,7 +276,7 @@ QOrganizerItemPriority::Priority QOrganizerEvent::priority() const
 */
 QString QOrganizerEvent::location() const
 {
-    QOrganizerItemLocation ld = detail<QOrganizerItemLocation>();
+    QOrganizerItemLocation ld = detail(QOrganizerItemDetail::TypeLocation);
     return ld.label();
 }
 
@@ -284,7 +284,7 @@ QString QOrganizerEvent::location() const
 */
 void QOrganizerEvent::setLocation(const QString& location)
 {
-    QOrganizerItemLocation ld = detail<QOrganizerItemLocation>();
+    QOrganizerItemLocation ld = detail(QOrganizerItemDetail::TypeLocation);
     ld.setLabel(location);
     saveDetail(&ld);
 }

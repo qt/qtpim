@@ -240,7 +240,7 @@ void TodoEditPage::saveClicked()
     
     index = m_statusEdit->currentIndex();
     QOrganizerTodoProgress::Status currentStatus = (QOrganizerTodoProgress::Status) m_statusEdit->itemData(index).toInt();
-    QOrganizerTodoProgress oldStatus = m_organizerTodo.detail<QOrganizerTodoProgress>();
+    QOrganizerTodoProgress oldStatus = m_organizerTodo.detail(QOrganizerItemDetail::TypeTodoProgress);
     m_organizerTodo.removeDetail(&oldStatus);
     if (currentStatus == QOrganizerTodoProgress::StatusComplete && oldStatus.status() != QOrganizerTodoProgress::StatusComplete)
         m_organizerTodo.setFinishedDateTime(QDateTime::currentDateTime());

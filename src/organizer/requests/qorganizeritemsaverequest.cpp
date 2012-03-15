@@ -144,14 +144,6 @@ void QOrganizerItemSaveRequest::setDetailMask(const QList<QOrganizerItemDetail::
 }
 
 /*!
-    \obsolete
- */
-void QOrganizerItemSaveRequest::setDefinitionMask(const QList<QOrganizerItemDetail::DetailType> &definitionMask)
-{
-    setDetailMask(definitionMask);
-}
-
-/*!
     Returns the list of definitions that this request will operate on.
 
     If the list is empty, the request will operate on all details.
@@ -161,14 +153,6 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::detailMask() 
     Q_D(const QOrganizerItemSaveRequest);
     QMutexLocker ml(&d->m_mutex);
     return d->m_detailMask;
-}
-
-/*!
-    \obsolete
- */
-QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::definitionMask() const
-{
-    return detailMask();
 }
 
 #include "moc_qorganizeritemsaverequest.cpp"

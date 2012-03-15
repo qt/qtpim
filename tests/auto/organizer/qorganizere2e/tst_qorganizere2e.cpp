@@ -164,13 +164,13 @@ void tst_QOrganizerE2E::testMegaItem()
         // special details
         QCOMPARE(itemRead.type(), referenceItem.type());
 
-        if (organizerManager.supportedItemDetails(itemType).contains(QOrganizerItemGuid::DefinitionName))
-            QCOMPARE(itemRead.details<QOrganizerItemGuid>().size(), 1);
+        if (organizerManager.supportedItemDetails(itemType).contains(QOrganizerItemDetail::TypeGuid))
+            QCOMPARE(itemRead.details(QOrganizerItemDetail::TypeGuid).size(), 1);
 
-        if (organizerManager.supportedItemDetails(itemType).contains(QOrganizerItemTimestamp::DefinitionName))
-            QCOMPARE(itemRead.details<QOrganizerItemTimestamp>().size(), 1);
+        if (organizerManager.supportedItemDetails(itemType).contains(QOrganizerItemDetail::TypeTimestamp))
+            QCOMPARE(itemRead.details(QOrganizerItemDetail::TypeTimestamp).size(), 1);
 
-        QCOMPARE(itemRead.details<QOrganizerItemReminder>().size(), 0);
+        QCOMPARE(itemRead.details(QOrganizerItemDetail::TypeReminder).size(), 0);
 
         // all details should saved and loaded correctly
         foreach (const QOrganizerItemDetail &detail, referenceItem.details())
@@ -262,44 +262,44 @@ QOrganizerItem tst_QOrganizerE2E::createItem(QOrganizerItemType::ItemType itemTy
 
 QOrganizerItemDetail tst_QOrganizerE2E::createDetail(QOrganizerItemDetail::DetailType detailType)
 {
-    if (detailType == QOrganizerEventTime::DefinitionName) {
+    if (detailType == QOrganizerItemDetail::TypeEventTime) {
         QOrganizerEventTime eventTime;
         eventTime.setAllDay(false);
         eventTime.setStartDateTime(QDateTime::fromString(QStringLiteral("1991-08-25T20:57:08+00:00"), Qt::ISODate));
         eventTime.setEndDateTime(QDateTime::fromString(QStringLiteral("1995-05-20T11:22:33+02:00"), Qt::ISODate));
         return eventTime;
-    } else if (detailType == QOrganizerJournalTime::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeJournalTime) {
         QOrganizerJournalTime journalTime;
         journalTime.setEntryDateTime(QDateTime::fromString(QStringLiteral("1991-08-25T20:57:08+00:00"), Qt::ISODate));
         return journalTime;
-    } else if (detailType == QOrganizerTodoTime::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeTodoTime) {
         QOrganizerTodoTime todoTime;
         todoTime.setAllDay(true);
         todoTime.setStartDateTime(QDateTime::fromString(QStringLiteral("1991-08-25T20:57:08+00:00"), Qt::ISODate));
         todoTime.setDueDateTime(QDateTime::fromString(QStringLiteral("1995-05-20T11:22:33+02:00"), Qt::ISODate));
         return todoTime;
-    } else if (detailType == QOrganizerTodoProgress::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeTodoProgress) {
         QOrganizerTodoProgress todoProgress;
         todoProgress.setFinishedDateTime(QDateTime::fromString(QStringLiteral("1995-05-20T11:22:33+02:00"), Qt::ISODate));
         todoProgress.setPercentageComplete(64);
         todoProgress.setStatus(QOrganizerTodoProgress::StatusInProgress);
         return todoProgress;
-    } else if (detailType == QOrganizerItemReminder::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeReminder) {
         // do nothing, because noboday should directly use this
-    } else if (detailType == QOrganizerItemAudibleReminder::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeAudibleReminder) {
         QOrganizerItemAudibleReminder audibleReminder;
         audibleReminder.setDataUrl(QUrl::fromLocalFile(QStringLiteral("some_random_path")));
         audibleReminder.setRepetition(6, 4);
         audibleReminder.setSecondsBeforeStart(1989);
         return audibleReminder;
-    } else if (detailType == QOrganizerItemVisualReminder::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeVisualReminder) {
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setDataUrl(QUrl::fromLocalFile(QStringLiteral("yet_another_path")));
         visualReminder.setMessage(QStringLiteral("Qt!!"));
         visualReminder.setRepetition(6, 4);
         visualReminder.setSecondsBeforeStart(1989);
         return visualReminder;
-    } else if (detailType == QOrganizerItemEmailReminder::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeEmailReminder) {
         QOrganizerItemEmailReminder emailReminder;
         emailReminder.setContents(QStringLiteral("Qt Rocks!!"),
                                   QStringLiteral("Qt - Cross-platform application and UI framework"),
@@ -313,33 +313,33 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(QOrganizerItemDetail::Detai
         emailReminder.setRepetition(6, 4);
         emailReminder.setSecondsBeforeStart(1989);
         return emailReminder;
-    } else if (detailType == QOrganizerItemComment::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeComment) {
         QOrganizerItemComment comment;
         comment.setComment(QStringLiteral("Qt Everywhere!"));
         return comment;
-    } else if (detailType == QOrganizerItemDescription::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeDescription) {
         QOrganizerItemDescription description;
         description.setDescription(QStringLiteral("Qt is cute!"));
         return description;
-    } else if (detailType == QOrganizerItemDisplayLabel::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeDisplayLabel) {
         QOrganizerItemDisplayLabel displayLabel;
         displayLabel.setLabel(QStringLiteral("Qt - Cross-platform application and UI framework"));
         return displayLabel;
-    } else if (detailType == QOrganizerItemGuid::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeGuid) {
         // do nothing, because it should be set by the back-end engine
-    } else if (detailType == QOrganizerItemLocation::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeLocation) {
         QOrganizerItemLocation location;
         location.setLabel(QStringLiteral("In the middle of nowhere"));
         location.setLatitude(19.84);
         location.setLongitude(6.4);
         return location;
-    } else if (detailType == QOrganizerItemParent::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeParent) {
         // do nothing, because it's handled specially
-    } else if (detailType == QOrganizerItemPriority::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypePriority) {
         QOrganizerItemPriority priority;
         priority.setPriority(QOrganizerItemPriority::HighPriority);
         return priority;
-    } else if (detailType == QOrganizerItemRecurrence::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeRecurrence) {
         QOrganizerItemRecurrence recurrence;
 
         recurrence.setRecurrenceDates(QSet<QDate>() << QDate(2005, 6, 28) << QDate(2005, 12, 19) << QDate(2006, 10, 4)
@@ -365,21 +365,21 @@ QOrganizerItemDetail tst_QOrganizerE2E::createDetail(QOrganizerItemDetail::Detai
         recurrence.setExceptionRules(QSet<QOrganizerRecurrenceRule>() << exceptionRule);
 
         return recurrence;
-    } else if (detailType == QOrganizerItemTimestamp::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeTimestamp) {
         // do nothing, because it should be maintained by the back-end engine
-    } else if (detailType == QOrganizerItemType::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeItemType) {
         // do nothing, because it should not be changed
-    } else if (detailType == QOrganizerItemTag::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeTag) {
         QOrganizerItemTag tag;
         tag.setTag(QStringLiteral("Qt Open Governance"));
-    } else if (detailType == QOrganizerItemExtendedDetail::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeExtendedDetail) {
         QOrganizerItemExtendedDetail extendedDetail;
         extendedDetail.setName(QStringLiteral("My-Stupid-Extended-Detail"));
         extendedDetail.setData(QVariantList() << QVariant(QStringLiteral("Code once"))
                                << QVariant(QStringLiteral("Create more"))
                                << QVariant(QStringLiteral("Deploy everywhere")));
         return extendedDetail;
-    } else if (detailType == QOrganizerEventAttendee::DefinitionName) {
+    } else if (detailType == QOrganizerItemDetail::TypeEventAttendee) {
         QOrganizerEventAttendee attendee;
         attendee.setName(QStringLiteral("people"));
         attendee.setAttendeeId(QStringLiteral("123456"));

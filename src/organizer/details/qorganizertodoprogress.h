@@ -52,7 +52,7 @@ class Q_ORGANIZER_EXPORT QOrganizerTodoProgress : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerTodoProgress, QOrganizerItemDetail::TypeTodoProgress)
 #endif
 
     enum TodoProgressField {

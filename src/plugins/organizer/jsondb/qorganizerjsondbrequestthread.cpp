@@ -351,9 +351,9 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
         if (!errorFound && itemIsOccurrence) {
             // add exception date to parent item
-            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemDetail::TypeParent);
             QDate originalDate = parentDetail.originalDate();
-            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
             QSet<QDate> exceptionDates = recurrenceDetail.exceptionDates();
             if (!exceptionDates.contains(originalDate))
                 exceptionDates.insert(originalDate);
@@ -366,7 +366,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
                 parentTodo->setExceptionDates(exceptionDates);
             }
             parentItemMap.insert(i, parentItem);
-            QOrganizerItemRecurrence rec = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+            QOrganizerItemRecurrence rec = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
         }
         // else if (!errorFound && !itemIsOccurrence) {
         // What to do when updating a parent item, i.e. one with recurrence? should we e.g. check if any exception dates have been removed and
@@ -425,7 +425,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
                 }
 
                 if (QOrganizerManager::NoError == alarmError) {
-                    if (!i.value().detail(QOrganizerItemAudibleReminder::DefinitionName).isEmpty())
+                    if (!i.value().detail(QOrganizerItemDetail::TypeAudibleReminder).isEmpty())
                         m_storage->saveAlarm(&i.value(), &alarmId, &alarmError);// Save/Update alarm object for the saved item
                     else if (!alarmId.isEmpty())
                         m_storage->removeAlarm(&alarmId, &alarmError);
@@ -544,7 +544,7 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
         if ((item.type() == QOrganizerItemType::TypeEventOccurrence
              || item.type() == QOrganizerItemType::TypeTodoOccurrence)
                 && item.id().isNull()) {
-            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+            QOrganizerItemParent parentDetail = item.detail(QOrganizerItemDetail::TypeParent);
             if (!parentDetail.parentId().isNull() && parentDetail.originalDate().isValid()) {
                 exceptionDates.insert(parentDetail.parentId(), parentDetail.originalDate());
                 parentIds.insert(i, parentDetail.parentId());
@@ -593,7 +593,7 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
             QList<QDate> addDateList = exceptionDates.values(parentItem.id());
             if (addDateList.isEmpty())
                 continue;
-            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
             QSet<QDate> exceptionDateSet = recurrenceDetail.exceptionDates();
             for (int j = 0; j < addDateList.size(); j++)
                 exceptionDateSet.insert(addDateList[j]);
@@ -767,7 +767,7 @@ QOrganizerItem QOrganizerJsonDbRequestThread::fetchParentItem(const QOrganizerIt
     QList<QOrganizerItemId> parentItemIdList;
     QMap<int, QOrganizerManager::Error> parentErrorMap;
     QOrganizerManager::Error parentError = QOrganizerManager::NoError;
-    QOrganizerItemParent parentDetail = occurrence.detail(QOrganizerItemParent::DefinitionName);
+    QOrganizerItemParent parentDetail = occurrence.detail(QOrganizerItemDetail::TypeParent);
     if (!parentDetail.isEmpty() && parentDetail.hasValue(QOrganizerItemParent::FieldParentId)) {
         parentItemIdList.append(parentDetail.parentId());
         tmpParentItems = m_storage->itemsById(parentItemIdList, &parentErrorMap, &parentError);
@@ -777,7 +777,7 @@ QOrganizerItem QOrganizerJsonDbRequestThread::fetchParentItem(const QOrganizerIt
     // if parent was not found based on id, try with guid
     if (!occurrence.guid().isEmpty()) {
         QOrganizerItemDetailFilter guidFilter;
-        guidFilter.setDetail(QOrganizerItemGuid::DefinitionName, QOrganizerItemGuid::FieldGuid);
+        guidFilter.setDetail(QOrganizerItemDetail::TypeGuid, QOrganizerItemGuid::FieldGuid);
         guidFilter.setValue(occurrence.guid());
 
         parentError = QOrganizerManager::NoError;
@@ -803,7 +803,7 @@ bool QOrganizerJsonDbRequestThread::fixParentReferences(QOrganizerItem *item, co
 {
 //    bool itemIsOccurrence = !parentItem.isEmpty();
 
-    QOrganizerItemParent parentDetail = item->detail(QOrganizerItemParent::DefinitionName);
+    QOrganizerItemParent parentDetail = item->detail(QOrganizerItemDetail::TypeParent);
     if (!parentDetail.hasValue(QOrganizerItemParent::FieldOriginalDate))
         return false;
 
@@ -885,7 +885,7 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItems(const QDateTi
 
     // generate occurrences for all parent items
     foreach (QOrganizerItem parent, parentItems) {
-        if (!parent.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+        if (!parent.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()) {
             QOrganizerManager::Error recError = QOrganizerManager::NoError;
             QList<QDate> exceptionDates;
             QList<QOrganizerItem> recItems = internalItemOccurrences(parent, startDate, endDate, fetchHint, forExport ? 1 : QOrganizerJsonDbRequestThread::MaxOccurrenceCount,
@@ -921,11 +921,11 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItems(const QDateTi
         // this is either Event or Todo
         // or exception EventOccurrence or TodoOccurrence which has been stored to database
 
-        if (!item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+        if (!item.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()) {
             // parent items have already been handled
             continue;
         }
-        QOrganizerItemParent parentDetail = item.detail(QOrganizerItemParent::DefinitionName);
+        QOrganizerItemParent parentDetail = item.detail(QOrganizerItemDetail::TypeParent);
         if (!parentDetail.isEmpty() && !exceptionDateMap.value(parentDetail.parentId()).contains(parentDetail.originalDate()))
             continue;
 
@@ -1000,7 +1000,7 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
 
     QList<QOrganizerItem> retn;
     QList<QOrganizerItem> xoccurrences;
-    QOrganizerItemRecurrence recur = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+    QOrganizerItemRecurrence recur = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
     if (includeExceptions) {
         // first, retrieve all persisted instances (exceptions) which occur between the specified datetimes.
         QOrganizerItemFilter filter;
@@ -1055,7 +1055,7 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
                 retn.append(QOrganizerManagerEngine::generateOccurrence(parentItem, rdate));
             } else if (includeExceptions) {
                 for (int i = 0; i < xoccurrences.size(); i++) {
-                    QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemParent::DefinitionName);
+                    QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemDetail::TypeParent);
                     if (parentDetail.originalDate() == rdate.date())
                         retn.append(xoccurrences[i]);
                 }
@@ -1091,7 +1091,7 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
         QList<QOrganizerItem> items = m_storage->itemsById(itemIds, &tmpErrorMap, &tmpError);
         foreach (QOrganizerItem item, items) {
             if ((item.type() == QOrganizerItemType::TypeEvent || item.type() == QOrganizerItemType::TypeTodo)
-                    && !item.detail(QOrganizerItemRecurrence::DefinitionName).isEmpty()) {
+                    && !item.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()) {
                 removedParentIds.append(item.id());
             }
         }

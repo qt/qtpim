@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemPriority : public QOrganizerItemDetail
 {
 public:
 #ifndef Q_QDOC
-    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority)
+    Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemPriority, QOrganizerItemDetail::TypePriority)
 #endif
 
     enum PriorityField {

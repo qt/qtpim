@@ -116,12 +116,12 @@ void tst_QOrganizerItemDetail::classHierarchy()
     QOrganizerItemPriority p1;
     p1.setPriority(QOrganizerItemPriority::VeryHighPriority);
     QVERIFY(!p1.isEmpty());
-    QVERIFY(p1.type() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p1.type() == QOrganizerItemDetail::TypePriority);
 
     QOrganizerItemComment m1;
     m1.setComment("Bob");
     QVERIFY(!m1.isEmpty());
-    QVERIFY(m1.type() == QOrganizerItemComment::DefinitionName);
+    QVERIFY(m1.type() == QOrganizerItemDetail::TypeComment);
 
     QVERIFY(p1 != m1);
     QVERIFY(f1 == f2);
@@ -173,7 +173,7 @@ void tst_QOrganizerItemDetail::classHierarchy()
     /* Bad assignment */
     p2 = m1; // assign a comment to a priority
     QVERIFY(p2 != m1);
-    QVERIFY(p2.type() == QOrganizerItemPriority::DefinitionName); // should still be a phone number though
+    QVERIFY(p2.type() == QOrganizerItemDetail::TypePriority);
     QVERIFY(p2.isEmpty());
 
     /* copy ctor */
@@ -183,25 +183,25 @@ void tst_QOrganizerItemDetail::classHierarchy()
     /* another bad assignment */
     m2 = p2; // priority to a comment
     QVERIFY(m2 != m1);
-    QVERIFY(m2.type() == QOrganizerItemComment::DefinitionName);
+    QVERIFY(m2.type() == QOrganizerItemDetail::TypeComment);
     QVERIFY(m2.isEmpty());
 
     /* Copy ctor from valid type */
     QOrganizerItemDetail f3(p2);
     QVERIFY(f3 == p2);
-    QVERIFY(f3.type() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(f3.type() == QOrganizerItemDetail::TypePriority);
 
     /* Copy ctor from invalid type */
     QOrganizerItemPriority p3(m1);
     QVERIFY(p3 != m1);
-    QVERIFY(p3.type() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p3.type() == QOrganizerItemDetail::TypePriority);
     QVERIFY(p3.isEmpty());
 
     /* Copy ctore from invalid type, through base type */
     f3 = m1;
     QOrganizerItemPriority p4(f3);
     QVERIFY(p4 != f3);
-    QVERIFY(p4.type() == QOrganizerItemPriority::DefinitionName);
+    QVERIFY(p4.type() == QOrganizerItemDetail::TypePriority);
     QVERIFY(p4.isEmpty());
 
     /* Try a reference */
@@ -309,16 +309,16 @@ void tst_QOrganizerItemDetail::templates()
     QVERIFY(c.saveDetail(&p1));
     QVERIFY(c.saveDetail(&p2));
 
-    QList<QOrganizerItemDetail> l = c.details(QOrganizerItemPriority::DefinitionName);
+    QList<QOrganizerItemDetail> l = c.details(QOrganizerItemDetail::TypePriority);
 
     QCOMPARE(l.count(), 2);
     QCOMPARE(QOrganizerItemPriority(l.at(0)), p1);
     QCOMPARE(QOrganizerItemPriority(l.at(1)), p2);
 
-    QList<QOrganizerItemPriority> l2 = c.details<QOrganizerItemPriority>();
+    QList<QOrganizerItemDetail> l2 = c.details(QOrganizerItemDetail::TypePriority);
     QCOMPARE(l2.count(), 2);
-    QCOMPARE(l2.at(0), p1);
-    QCOMPARE(l2.at(1), p2);
+    QCOMPARE(static_cast<QOrganizerItemPriority>(l2.at(0)), p1);
+    QCOMPARE(static_cast<QOrganizerItemPriority>(l2.at(1)), p2);
 }
 
 void tst_QOrganizerItemDetail::values()

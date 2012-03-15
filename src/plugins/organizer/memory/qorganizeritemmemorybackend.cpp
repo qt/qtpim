@@ -438,12 +438,12 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
 
     QList<QOrganizerItem> retn;
     QList<QOrganizerItem> xoccurrences;
-    QOrganizerItemRecurrence recur = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+    QOrganizerItemRecurrence recur = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
 
     if (includeExceptions) {
         // first, retrieve all persisted instances (exceptions) which occur between the specified datetimes.
         foreach (const QOrganizerItem& item, d->m_idToItemHash) {
-            if (item.detail<QOrganizerItemParent>().parentId() == parentItem.id()) {
+            if (item.detail(QOrganizerItemDetail::TypeParent).value<QOrganizerItemId>(QOrganizerItemParent::FieldParentId) == parentItem.id()) {
                 QDateTime lowerBound;
                 QDateTime upperBound;
                 if (item.type() == QOrganizerItemType::TypeEventOccurrence) {
@@ -510,7 +510,7 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
                 retn.append(QOrganizerManagerEngine::generateOccurrence(parentItem, rdate));
             } else if (includeExceptions) {
                 for (int i = 0; i < xoccurrences.size(); i++) {
-                    QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemParent::DefinitionName);
+                    QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemDetail::TypeParent);
                     if (parentDetail.originalDate() == rdate.date())
                         retn.append(xoccurrences[i]);
                 }
@@ -553,16 +553,16 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QOrganizerItemFilt
         list = internalItems(startDateTime, endDateTime, filter, sortOrders, fetchHint, error, false);
     } else {
         QOrganizerItemSortOrder sortOrder;
-        sortOrder.setDetail(QOrganizerEventTime::DefinitionName, QOrganizerEventTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldStartDateTime);
         sortOrder.setDirection(Qt::AscendingOrder);
 
         QList<QOrganizerItemSortOrder> sortOrders;
         sortOrders.append(sortOrder);
 
-        sortOrder.setDetail(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerItemDetail::TypeTodoTime, QOrganizerTodoTime::FieldStartDateTime);
         sortOrders.append(sortOrder);
 
-        sortOrder.setDetail(QOrganizerTodoTime::DefinitionName, QOrganizerTodoTime::FieldStartDateTime);
+        sortOrder.setDetail(QOrganizerItemDetail::TypeTodoTime, QOrganizerTodoTime::FieldStartDateTime);
         sortOrders.append(sortOrder);
 
         list = internalItems(startDateTime, endDateTime, filter, sortOrders, fetchHint, error, false);
@@ -640,7 +640,7 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItems(const QDateTime&
                 if (forExport
                         && (c.type() == QOrganizerItemType::TypeEventOccurrence
                         ||  c.type() == QOrganizerItemType::TypeTodoOccurrence)) {
-                    QOrganizerItemId parentId(c.detail<QOrganizerItemParent>().parentId());
+                    QOrganizerItemId parentId(c.detail(QOrganizerItemDetail::TypeParent).value<QOrganizerItemId>(QOrganizerItemParent::FieldParentId));
                     if (!parentsAdded.contains(parentId)) {
                         parentsAdded.insert(parentId);
                         QOrganizerManagerEngine::addSorted(&sorted, item(parentId), sortOrders);
@@ -714,7 +714,8 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
             *error = QOrganizerManager::InvalidCollectionError;
             return false;
         }
-        QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemTimestamp::DefinitionName);
+
+        QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemDetail::TypeTimestamp);
         ts.setLastModified(QDateTime::currentDateTime());
         theOrganizerItem->saveDetail(&ts);
 
@@ -743,7 +744,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
                     QList<QOrganizerItem> occurrences = internalItemOccurrences(*theOrganizerItem, QDateTime(), QDateTime(), -1, false, false, &exceptionDates, &occurrenceError);
                     foreach (const QOrganizerItemId &occurrenceId, occurrenceIds) {
                         // remove all occurrence ids from the list which have valid exception date
-                        QOrganizerItemParent parentDetail = d->m_idToItemHash.value(occurrenceId).detail(QOrganizerItemParent::DefinitionName);
+                        QOrganizerItemParent parentDetail = d->m_idToItemHash.value(occurrenceId).detail(QOrganizerItemDetail::TypeParent);
                         if (!parentDetail.isEmpty() && exceptionDates.contains(parentDetail.originalDate()))
                             occurrenceIds.removeOne(occurrenceId);
                     }
@@ -760,7 +761,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
             return false;
         }
         /* New organizer item */
-        QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemTimestamp::DefinitionName);
+        QOrganizerItemTimestamp ts = theOrganizerItem->detail(QOrganizerItemDetail::TypeTimestamp);
         ts.setLastModified(QDateTime::currentDateTime());
         ts.setCreated(ts.lastModified());
         theOrganizerItem->saveDetail(&ts);
@@ -794,7 +795,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         if (theOrganizerItem->type() == QOrganizerItemType::TypeEventOccurrence) {
             // update the event by adding an EX-DATE which corresponds to the original date of the occurrence being saved.
             QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-            QOrganizerItemParent origin = theOrganizerItem->detail<QOrganizerItemParent>();
+            QOrganizerItemParent origin = theOrganizerItem->detail(QOrganizerItemDetail::TypeParent);
             QOrganizerItemId parentId = origin.parentId();
 
             // for occurrences, if given a null collection id, save it in the same collection as the parent.
@@ -828,7 +829,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         } else if (theOrganizerItem->type() == QOrganizerItemType::TypeTodoOccurrence) {
             // update the todo by adding an EX-DATE which corresponds to the original date of the occurrence being saved.
             QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-            QOrganizerItemParent origin = theOrganizerItem->detail<QOrganizerItemParent>();
+            QOrganizerItemParent origin = theOrganizerItem->detail(QOrganizerItemDetail::TypeParent);
             QOrganizerItemId parentId = origin.parentId();
 
             // for occurrences, if given a null collection id, save it in the same collection as the parent.
@@ -887,7 +888,7 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
     if (theItem->type() == QOrganizerItemType::TypeEventOccurrence
             || theItem->type() == QOrganizerItemType::TypeTodoOccurrence) {
         const QString guid = theItem->guid();
-        QOrganizerItemParent instanceOrigin = theItem->detail<QOrganizerItemParent>();
+        QOrganizerItemParent instanceOrigin = theItem->detail(QOrganizerItemDetail::TypeParent);
         if (!instanceOrigin.originalDate().isValid()) {
             *error = QOrganizerManager::InvalidOccurrenceError;
             return false;
@@ -928,7 +929,7 @@ bool QOrganizerItemMemoryEngine::fixOccurrenceReferences(QOrganizerItem* theItem
                     return false;
                 }
                 // found a matching item - set the parentId of the occurrence
-                QOrganizerItemParent origin = theItem->detail<QOrganizerItemParent>();
+                QOrganizerItemParent origin = theItem->detail(QOrganizerItemDetail::TypeParent);
                 origin.setParentId(parentId);
                 theItem->saveDetail(&origin);
             }
@@ -1128,7 +1129,7 @@ bool QOrganizerItemMemoryEngine::removeItem(const QOrganizerItemId& organizerite
 
     // if it is a child item, remove itself from the children hash
     QOrganizerItem thisItem = hashIterator.value();
-    QOrganizerItemParent parentDetail = thisItem.detail<QOrganizerItemParent>();
+    QOrganizerItemParent parentDetail = thisItem.detail(QOrganizerItemDetail::TypeParent);
     if (!parentDetail.parentId().isNull()) {
         d->m_parentIdToChildIdHash.remove(parentDetail.parentId(), organizeritemId);
     }
@@ -1158,7 +1159,7 @@ bool QOrganizerItemMemoryEngine::removeItem(const QOrganizerItemId& organizerite
 */
 bool QOrganizerItemMemoryEngine::removeOccurrence(const QOrganizerItem &organizeritem, QOrganizerItemChangeSet &changeSet, QOrganizerManager::Error *error)
 {
-    QOrganizerItemParent parentDetail = organizeritem.detail<QOrganizerItemParent>();
+    QOrganizerItemParent parentDetail = organizeritem.detail(QOrganizerItemDetail::TypeParent);
     if (parentDetail.parentId().isNull()) {
         *error = QOrganizerManager::InvalidOccurrenceError;
         return false;
@@ -1170,7 +1171,7 @@ bool QOrganizerItemMemoryEngine::removeOccurrence(const QOrganizerItem &organize
         return false;
     } else {
         QOrganizerItem parentItem = hashIterator.value();
-        QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemRecurrence::DefinitionName);
+        QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
         QSet<QDate> exceptionDates = recurrenceDetail.exceptionDates();
         exceptionDates.insert(parentDetail.originalDate());
         recurrenceDetail.setExceptionDates(exceptionDates);
@@ -1233,7 +1234,7 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItem> *items,
              || current.type() == QOrganizerItemType::TypeTodoOccurrence)
                 && current.id().isNull()) {
             // this is a generated occurrence, modify parent items exception dates
-            QOrganizerItemParent parentDetail = current.detail<QOrganizerItemParent>();
+            QOrganizerItemParent parentDetail = current.detail(QOrganizerItemDetail::TypeParent);
             if (removedParentIds.isEmpty() || !removedParentIds.contains(parentDetail.parentId()))
                 removeOccurrence(current, changeSet, &tempError);
         } else {
@@ -1410,54 +1411,54 @@ bool QOrganizerItemMemoryEngine::waitForRequestFinished(QOrganizerAbstractReques
 QList<QOrganizerItemDetail::DetailType> QOrganizerItemMemoryEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     QList<QOrganizerItemDetail::DetailType> supportedDetails;
-    supportedDetails << QOrganizerItemType::DefinitionName
-                     << QOrganizerItemGuid::DefinitionName
-                     << QOrganizerItemTimestamp::DefinitionName
-                     << QOrganizerItemDisplayLabel::DefinitionName
-                     << QOrganizerItemDescription::DefinitionName
-                     << QOrganizerItemComment::DefinitionName
-                     << QOrganizerItemTag::DefinitionName
-                     << QOrganizerItemClassification::DefinitionName
-                     << QOrganizerItemExtendedDetail::DefinitionName;
+    supportedDetails << QOrganizerItemDetail::TypeItemType
+                     << QOrganizerItemDetail::TypeGuid
+                     << QOrganizerItemDetail::TypeTimestamp
+                     << QOrganizerItemDetail::TypeDisplayLabel
+                     << QOrganizerItemDetail::TypeDescription
+                     << QOrganizerItemDetail::TypeComment
+                     << QOrganizerItemDetail::TypeTag
+                     << QOrganizerItemDetail::TypeClassification
+                     << QOrganizerItemDetail::TypeExtendedDetail;
 
     if (itemType == QOrganizerItemType::TypeEvent) {
-        supportedDetails << QOrganizerItemRecurrence::DefinitionName
-                         << QOrganizerEventTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerItemLocation::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeRecurrence
+                         << QOrganizerItemDetail::TypeEventTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeLocation
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEmailReminder
+                         << QOrganizerItemDetail::TypeVisualReminder;
     } else if (itemType == QOrganizerItemType::TypeTodo) {
-        supportedDetails << QOrganizerItemRecurrence::DefinitionName
-                         << QOrganizerTodoTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerTodoProgress::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeRecurrence
+                         << QOrganizerItemDetail::TypeTodoTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeTodoProgress
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEmailReminder
+                         << QOrganizerItemDetail::TypeVisualReminder;
     } else if (itemType == QOrganizerItemType::TypeEventOccurrence) {
-        supportedDetails << QOrganizerItemParent::DefinitionName
-                         << QOrganizerEventTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerItemLocation::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeParent
+                         << QOrganizerItemDetail::TypeEventTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeLocation
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEmailReminder
+                         << QOrganizerItemDetail::TypeVisualReminder;
     } else if (itemType == QOrganizerItemType::TypeTodoOccurrence) {
-        supportedDetails << QOrganizerItemParent::DefinitionName
-                         << QOrganizerTodoTime::DefinitionName
-                         << QOrganizerItemPriority::DefinitionName
-                         << QOrganizerTodoProgress::DefinitionName
-                         << QOrganizerItemReminder::DefinitionName
-                         << QOrganizerItemAudibleReminder::DefinitionName
-                         << QOrganizerItemEmailReminder::DefinitionName
-                         << QOrganizerItemVisualReminder::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeParent
+                         << QOrganizerItemDetail::TypeTodoTime
+                         << QOrganizerItemDetail::TypePriority
+                         << QOrganizerItemDetail::TypeTodoProgress
+                         << QOrganizerItemDetail::TypeReminder
+                         << QOrganizerItemDetail::TypeAudibleReminder
+                         << QOrganizerItemDetail::TypeEmailReminder
+                         << QOrganizerItemDetail::TypeVisualReminder;
     } else if (itemType == QOrganizerItemType::TypeJournal) {
-        supportedDetails << QOrganizerJournalTime::DefinitionName;
+        supportedDetails << QOrganizerItemDetail::TypeJournalTime;
     } else if (itemType == QOrganizerItemType::TypeNote) {
         // nothing ;)
     } else {
@@ -1610,7 +1611,7 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
                      || item.type() == QOrganizerItemType::TypeTodoOccurrence)
                         && item.id().isNull()) {
                     // this is a generated occurrence, modify parent items exception dates
-                    QOrganizerItemParent parentDetail = item.detail<QOrganizerItemParent>();
+                    QOrganizerItemParent parentDetail = item.detail(QOrganizerItemDetail::TypeParent);
                     if (removedParentIds.isEmpty() || !removedParentIds.contains(parentDetail.parentId()))
                         removeOccurrence(item, changeSet, &tempError);
                 } else {

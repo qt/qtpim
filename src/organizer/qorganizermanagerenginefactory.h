@@ -47,7 +47,7 @@
 #include <QtCore/qplugin.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
-struct Q_NETWORK_EXPORT QOrganizerManagerEngineFactoryInterface : public QFactoryInterface
+struct Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactoryInterface : public QFactoryInterface
 {
     virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
     virtual QString managerName() const = 0;

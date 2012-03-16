@@ -47,7 +47,7 @@ import QtJsonDb 1.0
 Partition {
     id: jsonDb
 
-    name: "database.System"
+    name: ""
 
     function createAndSignal(object) {
         logDebug("createAndSignal()");

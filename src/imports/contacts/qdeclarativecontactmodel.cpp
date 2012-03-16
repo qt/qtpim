@@ -476,7 +476,7 @@ void QDeclarativeContactModel::contacts_append(QQmlListProperty<QDeclarativeCont
 {
     Q_UNUSED(prop);
     Q_UNUSED(contact);
-    qmlInfo(0) << tr("ContactModel: appending contacts is not currently supported");
+    qWarning() << Q_FUNC_INFO << "appending contacts is not currently supported";
 }
 
 int QDeclarativeContactModel::contacts_count(QQmlListProperty<QDeclarativeContact>* prop)
@@ -524,9 +524,7 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
         d->m_reader.setDevice(0);
 
         if (d->m_manager) {
-            if (d->m_manager->saveContacts(&contacts)) {
-                qmlInfo(this) << tr("contacts imported.");
-            } else {
+            if (!d->m_manager->saveContacts(&contacts)) {
                 if (d->m_error != d->m_manager->error()) {
                     d->m_error = d->m_manager->error();
                     emit errorChanged();

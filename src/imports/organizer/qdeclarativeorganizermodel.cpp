@@ -841,7 +841,7 @@ bool QDeclarativeOrganizerModel::containsItems(const QDateTime &start, const QDa
 }
 
 /*!
-    \qmlmethod \qmlmethod list<OrganizerItem> OrganizerModel::itemsByTimePeriod(date start, date end)
+    \qmlmethod list<OrganizerItem> OrganizerModel::itemsByTimePeriod(date start, date end)
 
     Returns the list of organizer items between the given \a start and \a end period.
  */

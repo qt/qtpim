@@ -1,6 +1,6 @@
 load(qt_module)
 
-QT += contacts contacts-private network declarative jsondb
+QT += contacts contacts-private jsondb
 
 contains(QT_CONFIG, jsondbcompat): {
     QT -= jsondb

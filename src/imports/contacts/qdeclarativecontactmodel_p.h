@@ -185,10 +185,11 @@ private slots:
     void onFetchContactsRequestStateChanged(QContactAbstractRequest::State state);
 
 private:
-    QDeclarativeContactModelPrivate* d;
-    QList<QContactId> m_updatedIds;
     void checkError(const QContactAbstractRequest *request);
     int contactIndex(const QDeclarativeContact* contact);
+
+private:
+    QDeclarativeContactModelPrivate* d;
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -208,8 +208,7 @@ QString QOrganizerEventAttendee::emailAddress() const
 }
 
 /*!
-    \fn QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
-    Sets the unique identifier of the attendee.
+    Sets the unique identifier of the attendee to \a attendeeId.
  */
 void QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
 {
@@ -1618,8 +1617,8 @@ QString QOrganizerItemClassification::classification() const
     \enum QOrganizerItemExtendedDetail::ExtendedDetailField
 
     This enumeration defines the fields supported by QOrganizerItemExtendedDetail.
-    \value FieldExtendedDetailName  The value stored describes the name of this extended detail.
-    \value FieldExtendedDetailData  The value stored describes the data stored in this extended detail.
+    \value FieldName  The value stored describes the name of this extended detail.
+    \value FieldData  The value stored describes the data stored in this extended detail.
  */
 
 /*!

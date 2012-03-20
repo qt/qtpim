@@ -89,7 +89,9 @@ QTORGANIZER_BEGIN_NAMESPACE
     \value ItemFetchRequest            A request to fetch a list of organizer items.
     \value ItemFetchForExportRequest   A request to fetch a list of persisted organizer items and exceptions.
     \value ItemIdFetchRequest          A request to fetch a list of organizer item IDs.
+    \value ItemFetchByIdRequest        A request to fetch a list of organizer items by the given IDs.
     \value ItemRemoveRequest           A request to remove a list of organizer items.
+    \value ItemRemoveByIdRequest       A request to remove a list of organizer items by the given IDs.
     \value ItemSaveRequest             A request to save a list of organizer items.
     \value CollectionFetchRequest      A request to fetch a collection.
     \value CollectionRemoveRequest     A request to remove a collection.

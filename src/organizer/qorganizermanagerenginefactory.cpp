@@ -53,7 +53,7 @@ QTORGANIZER_BEGIN_NAMESPACE
     This class should only be used by backend developers. All the functions are only called internally
     by QOrganizerManager, and should not be called by others.
 
-    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines
+    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines}
     documentation.
 
     \sa QOrganizerManager, QOrganizerManagerEngine

@@ -136,8 +136,8 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailDefinitio
 }
 
 /*!
-    Sets the list of detail types that identify details which should be retrieved by the manager
-    when fetching items.
+    Sets the list of detail types to \a detailTypes that identify details which should be retrieved'
+    by the manager when fetching items.
 
     \sa detailTypesHint()
  */

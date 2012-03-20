@@ -62,7 +62,7 @@ QTORGANIZER_BEGIN_NAMESPACE
     The default implementation of this interface provides a backend doing nothing, so that backend
     developers only need to reimplement the functionalities needed.
 
-    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines
+    More information on writing a organizer engine plugin is available in the \l{Qt Organizer Manager Engines}
     documentation.
 
     \sa QOrganizerManager, QOrganizerManagerEngineFactory
@@ -117,6 +117,18 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+    \fn QOrganizerManagerEngine::itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds)
+
+    This signal should be emitted at some point once the items identified by \a itemIds have been
+    modified in the backend.
+
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
+
+    \sa dataChanged()
+ */
+
+/*!
     \fn QOrganizerManagerEngine::collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds)
 
     This signal should be emitted at some point once the collections identified by \a collectionIds
@@ -148,6 +160,18 @@ QTORGANIZER_BEGIN_NAMESPACE
 
     This signal should be emitted at some point once the collections identified by \a collectionIds
     have been removed from the backend.
+
+    This signal should not be emitted if the dataChanged() signal was previously emitted for these
+    changes.
+
+    \sa dataChanged()
+ */
+
+/*!
+    \fn QOrganizerManagerEngine::collectionsModified(const QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > &collectionIds)
+
+    This signal should be emitted at some point once the collections identified by \a collectionIds
+    have been modified in the backend.
 
     This signal should not be emitted if the dataChanged() signal was previously emitted for these
     changes.
@@ -214,12 +238,13 @@ QString QOrganizerManagerEngine::managerUri() const
     which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
     specifies an open end date time (matches anything which occurs after the \a startDateTime). If
     both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
-    all items which match the \a filter criteria.
+    all items.
 
     It's up to the backend to decide how many occurrences are returned if the given \a maxCount is
     negative.
 
-    It's up to the backend to decide if fetch hint is supported.
+    It's up to the backend to decide if fetch hint is supported. If supported, only the details
+    defined by \a fetchHint will be fetched.
   */
 QList<QOrganizerItem> QOrganizerManagerEngine::itemOccurrences(const QOrganizerItem &parentItem,
                                                                const QDateTime &startDateTime,
@@ -322,7 +347,8 @@ QList<QOrganizerItem> QOrganizerManagerEngine::items(const QOrganizerItemFilter 
     both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
     all items which match the \a filter criteria.
 
-    It's up to the backend to decide if filter and fetch hint are supported.
+    It's up to the backend to decide if filter and fetch hint are supported. If the fetch hint is
+    supported, only the details defined by \a fetchHint will be fetched.
  */
 QList<QOrganizerItem> QOrganizerManagerEngine::itemsForExport(const QDateTime &startDateTime,
                                                               const QDateTime &endDateTime,
@@ -343,13 +369,14 @@ QList<QOrganizerItem> QOrganizerManagerEngine::itemsForExport(const QDateTime &s
 
 /*!
     This function should be reimplemented to support synchronous calls to fetch organizer items by
-    their IDs.
+    their IDs \a itemIds.
 
     The items fetched by the backend should have a one-to-one correspondence to the IDs passed into
     this class.  That is, the nth item in the returned list should have an ID which is equal to the
     nth ID in the list of IDs.  Any invalid ID should correspond to an empty QOrganizerItem.
 
-    It's up to the backend to decide if fetch hint is supported.
+    It's up to the backend to decide if fetch hint is supported. If supported, only the details
+    defined by \a fetchHint will be fetched.
 
     Any operation error which occurs should be saved in \a error. And the per-input errors should be
     stored in \a errorMap.
@@ -386,8 +413,8 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerManagerEngine::supportedItemDe
 }
 
 /*!
-    This function should be reimplemented to return the list of details supported by this backend
-    for the given \a itemType. The default implementation returns an empty list.
+    This function should be reimplemented to return the list of item types supported by this backend.
+    The default implementation returns an empty list.
  */
 QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes() const
 {
@@ -1152,7 +1179,7 @@ int QOrganizerManagerEngine::addSorted(QList<QOrganizerItem> *sorted, const QOrg
 
 /*!
     Insert \a toAdd to the \a defaultSorted map. If \a toAdd does not have valid start or end date,
-    returns false and does not insert \a toAdd to \defaultSorted map.
+    returns false and does not insert \a toAdd to \a defaultSorted map.
 
     This function provides default sorting, which should be used for sorting fetch results, if no sort order
     was defined for the fetch. The default sorting algorithm is to sort based on start time of an item. If start time
@@ -1399,7 +1426,7 @@ void QOrganizerManagerEngine::inferMissingCriteria(QOrganizerRecurrenceRule *rru
 
 /*!
    Returns true if the calendar period (specified by \a frequency) of \a date is an \a
-   interval-multiple of periods ahead of the calendar period of \a initialDate. For Weekly frequencies,
+   interval multiple of periods ahead of the calendar period of \a initialDate. For Weekly frequencies,
    \a firstDayOfWeek is used to determine when the week boundary is. eg. If \a frequency is Monthly
    and \a interval is 3, then true is returned iff \a date is in the same month as \a initialDate,
    in a month 3 months ahead, 6 months ahead, etc.
@@ -1556,6 +1583,9 @@ QList<QDate> QOrganizerManagerEngine::filterByPosition(const QList<QDate> &dates
     return retn;
 }
 
+/*!
+    Returns true if the given organizer item \a oi has any recurrence.
+ */
 bool QOrganizerManagerEngine::itemHasReccurence(const QOrganizerItem& oi)
 {
     if (oi.type() == QOrganizerItemType::TypeEvent || oi.type() == QOrganizerItemType::TypeTodo) {

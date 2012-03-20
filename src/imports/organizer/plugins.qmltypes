@@ -882,6 +882,27 @@ Module {
         name: "QDeclarativeOrganizerModel"
         prototype: "QAbstractListModel"
         exports: ["OrganizerModel 5.0"]
+        Enum {
+            name: "ExportError"
+            values: {
+                "ExportNoError": 0,
+                "ExportUnspecifiedError": 1,
+                "ExportIOError": 2,
+                "ExportOutOfMemoryError": 3,
+                "ExportNotReadyError": 4
+            }
+        }
+        Enum {
+            name: "ImportError"
+            values: {
+                "ImportNoError": 0,
+                "ImportUnspecifiedError": 1,
+                "ImportIOError": 2,
+                "ImportOutOfMemoryError": 3,
+                "ImportNotReadyError": 4,
+                "ImportParseError": 5
+            }
+        }
         Property { name: "manager"; type: "string" }
         Property { name: "managerName"; type: "string"; isReadonly: true }
         Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
@@ -911,33 +932,33 @@ Module {
             Parameter { name: "requestId"; type: "int" }
             Parameter { name: "fetchedItems"; type: "QVariantList" }
         }
+        Signal {
+            name: "exportCompleted"
+            Parameter { name: "error"; type: "ExportError" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Signal {
+            name: "importCompleted"
+            Parameter { name: "error"; type: "ImportError" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
         Method { name: "update" }
         Method { name: "cancelUpdate" }
-        Method {
-            name: "exportItems"
-            Parameter { name: "url"; type: "QUrl" }
-            Parameter { name: "profiles"; type: "QStringList" }
-        }
-        Method {
-            name: "exportItems"
-            Parameter { name: "url"; type: "QUrl" }
-        }
-        Method {
-            name: "importItems"
-            Parameter { name: "url"; type: "QUrl" }
-            Parameter { name: "profiles"; type: "QStringList" }
-        }
-        Method {
-            name: "importItems"
-            Parameter { name: "url"; type: "QUrl" }
-        }
         Method {
             name: "removeItem"
             Parameter { name: "id"; type: "string" }
         }
         Method {
+            name: "removeItem"
+            Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
+        }
+        Method {
             name: "removeItems"
             Parameter { name: "ids"; type: "QStringList" }
+        }
+        Method {
+            name: "removeItems"
+            Parameter { name: "items"; type: "QList<QDeclarativeOrganizerItem>" }
         }
         Method {
             name: "saveItem"
@@ -1009,6 +1030,24 @@ Module {
             name: "collection"
             type: "QDeclarativeOrganizerCollection*"
             Parameter { name: "collectionId"; type: "string" }
+        }
+        Method {
+            name: "importItems"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "importItems"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "exportItems"
+            Parameter { name: "url"; type: "QUrl" }
+            Parameter { name: "profiles"; type: "QStringList" }
+        }
+        Method {
+            name: "exportItems"
+            Parameter { name: "url"; type: "QUrl" }
         }
     }
     Component {

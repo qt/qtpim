@@ -36,7 +36,6 @@
 \brief An API enabling clients to request contact data from local or
 remote backends.
 
-\ingroup qtpim
 \ingroup qtpim-c++
 
 The Contacts API enables a client to request contact data from local or

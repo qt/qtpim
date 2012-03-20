@@ -29,7 +29,7 @@ w/****************************************************************************
     \page qtcontacts-overview.html
     \group qtpim
 
-    \startpage qtpim.html  Qt Reference Documentation
+    \startpage qtcontacts-overview.html Qt Reference Documentation
     \title Qt Contacts
 
     \brief An overview of the Qt Contacts API.
@@ -40,8 +40,8 @@ w/****************************************************************************
 
     \section2 Introducing Qt Contacts API set
 
-    The Contacts API is part of a collection of  \l{Qt Personal Information Management
-    Reference Documentation}{Personal Information Management (PIM)} API's allowing
+    The Contacts API is part of a collection of  Personal Information Management
+    API's allowing
     access to Contact information.
 
     With the Contacts API typical use cases are:

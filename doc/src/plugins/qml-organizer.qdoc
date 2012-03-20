@@ -27,7 +27,6 @@
 
 /*!
     \group qml-organizer
-    \ingroup qtpim
     \ingroup qtpim-qml
     \title Organizer QML API
     QML Support for the Organizer API.

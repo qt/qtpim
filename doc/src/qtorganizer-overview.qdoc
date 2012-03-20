@@ -29,7 +29,7 @@ w/****************************************************************************
     \page qtorganizer-overview.html
     \group qtpim
 
-    \startpage qtpim.html  Qt Reference Documentation
+    \startpage qtorganizer-overview.html Qt Reference Documentation
     \title Qt Organizer
 
     \brief An overview of the Qt Organizer API.
@@ -40,8 +40,8 @@ w/****************************************************************************
 
     \section2 Introducing Qt Organizer API set
 
-    The Organizer API is part of a collection of  \l{Qt Personal Information Management
-    Reference Documentation}{Personal Information Management (PIM)} API's allowing
+    The Organizer API is part of a collection of  Personal Information Management
+    API's allowing
     access to Calendar information.
 
     With the Organizer API typical use cases are:

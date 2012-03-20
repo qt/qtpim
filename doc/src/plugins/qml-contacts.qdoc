@@ -27,7 +27,6 @@
 
 /*!
     \group qml-contacts
-    \ingroup qtpim
     \ingroup qtpim-qml
     \title Contacts QML API
     QML Support for the Contacts API.

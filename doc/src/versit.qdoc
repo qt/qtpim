@@ -31,14 +31,13 @@
 \title C++ Versit
 \brief An API to import and export to the vCard and iCalendar formats.
 
-\ingroup qtpim
 \ingroup qtpim-c++
 
 \tableofcontents
 
 \section1 Overview
-The Versit API is part of a collection of  \l{Qt Personal Information Management
-Reference Documentation}{Personal Information Management (PIM)} API's providing a
+The Versit API is part of a collection of
+Personal Information Management API's providing a
 library to convert \l{QContact}{QContacts} to and from
 \l{http://en.wikipedia.org/wiki/Vcard}{vCard} files, and to convert
 \l{QOrganizerItem}{QOrganizerItems} to and from

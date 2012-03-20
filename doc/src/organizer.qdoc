@@ -36,7 +36,6 @@
 \brief An API enabling clients to request calendar, schedule and personal data
 from local or remote backends.
 
-\ingroup qtpim
 \ingroup qtpim-c++
 
 The Organizer API enables a client to request calendar, schedule and personal

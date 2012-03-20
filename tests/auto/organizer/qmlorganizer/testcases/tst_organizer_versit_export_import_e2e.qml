@@ -165,27 +165,8 @@ TestCase {
         organizerModel.importItems(icalFilePath, ["Sync"])
         importModelChangedSpy.wait()
 
-        expectFail("", "Current problem that when export iCal V3.0, need to alter to V2.1 for import to work.")
         compare(importErrorCode, OrganizerModel.ImportNoError,
                 'importCompleted signal gave error during import.')
-
-        // ---Temporary fix to use v2.1 import due to bug
-        // Exported file will not import unless version 3.0 changed to version 2.0. Known bug and needs fixing.
-        icalFilePath = Qt.resolvedUrl(
-                    "tst_organizer_versit_export_import_e2e_temp.ical")
-
-
-        // Empty all items and import just created vcard file.
-        empty_calendar()
-        var importModelChangedSpy = create_spy(organizerModel,
-                                               "importCompleted")
-        organizerModel.importItems(icalFilePath, ["Sync"])
-        importModelChangedSpy.wait()
-
-        // Check if import finished state properly.
-        compare(importErrorCode, OrganizerModel.ImportNoError,
-                'importCompleted signal gave error during import.')
-        // ---end of Temporary fix to use v2.1 import due to bug
 
         compare(importFileName, icalFilePath,
                 'importCompleted signal reported incorrect filename compared to the given name.')
@@ -246,11 +227,6 @@ TestCase {
         organizerModel.exportItems(icalFilePath2, ["Sync"])
         exportModelChangedSpy.wait()
 
-        // ---Temporary fix due to bug
-        // Exported file will not import unless version 3.0 changed to version 2.0. Known bug and needs fixing.
-        icalFilePath1 = Qt.resolvedUrl("import_1_temp.ical")
-        icalFilePath2 = Qt.resolvedUrl("import_2_temp.ical")
-
         // Import Events form ical file just created.
         var importModelChangedSpy = create_spy(organizerModel,
                                                "importCompleted")
@@ -302,9 +278,7 @@ TestCase {
         memoryModel.removeItem(memoryModel.items[0])
         memoryModelSpy.wait()
 
-        // ---Temporary fix due to bug
-        // Exported file will not import unless version 3.0 changed to version 2.0. Known bug and needs fixing.
-        memoryModel.importItems(Qt.resolvedUrl("tst_organizer_versit_export_import_e2e_megaevent_temp.ical"), ["Sync"])
+        memoryModel.importItems(Qt.resolvedUrl("tst_organizer_versit_export_import_e2e_megaevent.ical"), ["Sync"])
         memoryModelSpy.wait()
 
         compare(memoryModel.itemCount, 1)

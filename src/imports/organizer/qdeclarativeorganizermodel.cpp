@@ -466,7 +466,7 @@ void QDeclarativeOrganizerModel::exportItems(const QUrl &url, const QStringList 
         foreach (QDeclarativeOrganizerItem *di, d->m_items)
             items.append(di->item());
 
-        exporter.exportItems(items, QVersitDocument::VCard30Type);
+        exporter.exportItems(items, QVersitDocument::ICalendar20Type);
         QVersitDocument document = exporter.document();
         QFile *file = new QFile(urlToLocalFileName(url));
         if (file->open(QIODevice::ReadWrite)) {

@@ -139,6 +139,7 @@ QList<QContactDetail::DetailType> QContactJsonDbEngine::supportedContactDetailTy
                      << QContactPersonId::Type
                      << QContactPhoneNumber::Type
                      << QContactRingtone::Type
+                     << QContactSyncTarget::Type
                      << QContactType::Type
                      << QContactUrl::Type
                      << QContactVersion::Type;

@@ -300,6 +300,18 @@ ContactsSavingTestCase {
         compare(detail.audioRingtoneUrl, "http://qt.nokia.com")
     }
 
+    SyncTarget {
+        id: synctarget
+    }
+
+    function test_synctarget() {
+        synctarget.syncTarget = "TestSyncTarget"
+        contact.addDetail(synctarget)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.SyncTarget)
+        compare(detail.syncTarget, "TestSyncTarget")
+    }
+
     Url {
         id: url
     }

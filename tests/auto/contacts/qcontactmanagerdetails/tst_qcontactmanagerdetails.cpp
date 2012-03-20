@@ -106,6 +106,8 @@ private slots:
     void testOnlineAccount_data() {addManagers();}
     void testPhoneNumber();
     void testPhoneNumber_data() {addManagers();}
+    void testSyncTarget();
+    void testSyncTarget_data() {addManagers();}
     void testUrl();
     void testUrl_data() {addManagers();}
     void testRingtone();
@@ -428,6 +430,18 @@ void tst_QContactManagerDetails::testPhoneNumber()
     c2.saveDetail( &n3 );
 
     saveAndVerifyContact( cm.data(), c2 );
+}
+
+void tst_QContactManagerDetails::testSyncTarget()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    QContact c;
+
+    QContactSyncTarget syncTarget;
+    syncTarget.setSyncTarget("TestSyncTarget" );
+    c.saveDetail( &syncTarget );
+    saveAndVerifyContact( cm.data(), c );
 }
 
 void tst_QContactManagerDetails::testUrl()

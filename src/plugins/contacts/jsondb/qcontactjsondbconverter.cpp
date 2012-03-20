@@ -317,6 +317,13 @@ bool QContactJsonDbConverter::toQContact(const QVariantMap& object, QContact* co
                 };
                 detailList << url;
             }
+        } else if (i.key() == detailsToJsonMapping.value(QContactSyncTarget::Type)) {
+            stringValue = object[detailsToJsonMapping.value(QContactSyncTarget::Type)].toString();
+            if (!stringValue.isEmpty()) {
+                QContactSyncTarget *syncTarget = new QContactSyncTarget;
+                syncTarget->setSyncTarget(stringValue);
+                detailList << syncTarget;
+            }
         } else if (i.key().at(0) == QChar('_')) {
             // skip as it's used internally
         } else {
@@ -384,6 +391,7 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
     QContactGender* gender;
     QContactPersonId* personid;
     QContactExtendedDetail* extendedDetail;
+    QContactSyncTarget* syncTarget;
     QVariantList phoneNumbers;
     QVariantList emails;
     QVariantList urls;
@@ -576,6 +584,12 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
                 if (!property.isNull())
                     object->insert(extDetailName, property);
             }
+        }
+        // synctarget
+        else if (detail.type() == QContactSyncTarget::Type) {
+            syncTarget = static_cast<QContactSyncTarget *>(&detail);
+            if (!syncTarget->syncTarget().isEmpty())
+                object->insert(QContactJsonDbStr::syncTargetDefinitionName(), syncTarget->syncTarget());
         }
         // display label
         else if (detail.type() == QContactDisplayLabel::Type || detail.type() == QContactType::Type) {
@@ -897,6 +911,7 @@ void QContactJsonDbConverter::initializeMappings()
     detailsToJsonMapping.insert(QContactOrganization::Type,QContactJsonDbStr::organizationDefinitionName());
     detailsToJsonMapping.insert(QContactNote::Type, QContactJsonDbStr::noteDefinitionName());
     detailsToJsonMapping.insert(QContactPersonId::Type, QContactJsonDbStr::personIdDefinitionName());
+    detailsToJsonMapping.insert(QContactSyncTarget::Type, QContactJsonDbStr::syncTargetDefinitionName());
     contactNameFieldsMapping.insert(QContactName::FieldCustomLabel, QContactJsonDbStr::nameFieldCustomLabel());
     contactNameFieldsMapping.insert(QContactName::FieldFirstName, QContactJsonDbStr::nameFieldFirstName());
     contactNameFieldsMapping.insert(QContactName::FieldLastName, QContactJsonDbStr::nameFieldLastName());

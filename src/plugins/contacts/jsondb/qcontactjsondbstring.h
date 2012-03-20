@@ -78,6 +78,7 @@ public:
     inline const static QString noteDefinitionName() { return QStringLiteral("note"); }
     inline const static QString personIdDefinitionName() { return QStringLiteral("personid"); }
     inline const static QString syncTargetDefinitionName() { return QStringLiteral("synctarget"); }
+    inline const static QString guidDefinitionName() { return QStringLiteral("guid"); }
     inline const static QString nameFieldCustomLabel() { return QStringLiteral("customLabel"); }
     inline const static QString nameFieldFirstName() { return QStringLiteral("firstName"); }
     inline const static QString nameFieldLastName() { return QStringLiteral("lastName"); }

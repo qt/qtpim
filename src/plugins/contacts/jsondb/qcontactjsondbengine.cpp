@@ -132,6 +132,7 @@ QList<QContactDetail::DetailType> QContactJsonDbEngine::supportedContactDetailTy
                      << QContactEmailAddress::Type
                      << QContactExtendedDetail::Type
                      << QContactGender::Type
+                     << QContactGuid::Type
                      << QContactName::Type
                      << QContactNickname::Type
                      << QContactNote::Type

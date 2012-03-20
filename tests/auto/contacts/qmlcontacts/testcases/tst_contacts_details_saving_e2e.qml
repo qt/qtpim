@@ -130,6 +130,18 @@ ContactsSavingTestCase {
         compare(detail.gender, Gender.Male)
     }
 
+    Guid {
+        id: guid
+    }
+
+    function test_guid() {
+        guid.guid = "TestGUID"
+        contact.addDetail(guid)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Guid)
+        compare(detail.guid, "TestGUID")
+    }
+
     Name {
         id: name
     }

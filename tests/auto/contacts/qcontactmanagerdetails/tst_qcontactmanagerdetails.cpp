@@ -96,6 +96,8 @@ private slots:
     void testEmptyExtendedDetail_data() {addManagers();}
     void testExtendedDetail();
     void testExtendedDetail_data() {addManagers();}
+    void testGuid();
+    void testGuid_data() {addManagers();}
     void testName();
     void testName_data() {addManagers();}
     void testNickName();
@@ -525,6 +527,18 @@ void tst_QContactManagerDetails::testExtendedDetail()
     QVERIFY (c3.saveDetail(&extendedDetail1));
     QVERIFY (c3.saveDetail(&extendedDetail2));
     saveAndVerifyContact(cm.data(), c3);
+}
+
+void tst_QContactManagerDetails::testGuid()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    QContact c;
+
+    QContactGuid guid;
+    guid.setGuid("TestGUID" );
+    c.saveDetail( &guid );
+    saveAndVerifyContact( cm.data(), c );
 }
 
 QTEST_MAIN(tst_QContactManagerDetails)

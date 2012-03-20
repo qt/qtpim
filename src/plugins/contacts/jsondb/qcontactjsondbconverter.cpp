@@ -476,10 +476,8 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
                 QString organizationEndDate = toJsonDate(endDate);
                 organizationMap[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
             }
-
             updateContexts(*organization, &organizationMap);
             organizations.append(organizationMap);
-            object->insert(detailsToJsonMapping.value(QContactOrganization::Type), organizations);
         }
         // birthday
         else if (detail.type() == QContactBirthday::Type) {
@@ -521,7 +519,6 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             emailMap["value"] = email->emailAddress();
             updateContexts(*email, &emailMap);
             emails.append(emailMap);
-            object->insert(detailsToJsonMapping.value(QContactEmailAddress::Type), emails);
         }
         // phone number
         else if (detail.type() == QContactPhoneNumber::Type) {
@@ -533,7 +530,6 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             if (!subTypes.empty())
                 phoneMap["subType"] = phoneNumbersSubtypesMapping.value(number->subTypes().first());
             phoneNumbers.append(phoneMap);
-            object->insert(detailsToJsonMapping.value(QContactPhoneNumber::Type), phoneNumbers);
         }
         // address
         else if (detail.type() == QContactAddress::Type) {
@@ -553,7 +549,6 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
                 addressMap[addressFieldsMapping.value(QContactAddress::FieldCountry)] = address->country();
             updateContexts(*address, &addressMap);
             addresses.append(addressMap);
-            object->insert(detailsToJsonMapping.value(QContactAddress::Type), addresses);
         }
         // url
         else if (detail.type() == QContactUrl::Type) {
@@ -562,7 +557,6 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             urlMap["value"] = url->url();
             updateContexts(*url, &urlMap);
             urls.append(urlMap);
-            object->insert(detailsToJsonMapping.value(QContactUrl::Type), urls);
         }
         // version
         else if ( (detail.type() == QContactVersion::Type) ) {
@@ -592,6 +586,16 @@ bool QContactJsonDbConverter::toJsonContact(QVariantMap* object, const QContact&
             // IGNORED for the moment
         }
     }
+    if (!phoneNumbers.isEmpty())
+        object->insert(detailsToJsonMapping.value(QContactPhoneNumber::Type), phoneNumbers);
+    if (!emails.isEmpty())
+        object->insert(detailsToJsonMapping.value(QContactEmailAddress::Type), emails);
+    if (!urls.isEmpty())
+        object->insert(detailsToJsonMapping.value(QContactUrl::Type), urls);
+    if (!organizations.isEmpty())
+        object->insert(detailsToJsonMapping.value(QContactOrganization::Type), organizations);
+    if (!addresses.isEmpty())
+        object->insert(detailsToJsonMapping.value(QContactAddress::Type), addresses);
     return true;
 }
 

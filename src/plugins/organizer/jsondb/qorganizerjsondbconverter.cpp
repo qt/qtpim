@@ -546,8 +546,8 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem &item, Q
         object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
 
     // collection ID has already been generated in QOrganizerJsonDbRequestThread::handleItemSaveRequest() if needed
-    object->insert(QOrganizerJsonDbStr::itemCollectionUuid(),
-                   QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
+    if (!item.collectionId().isNull())
+        object->insert(QOrganizerJsonDbStr::itemCollectionUuid(), QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
 
 
     // certain details that allow multiple instances

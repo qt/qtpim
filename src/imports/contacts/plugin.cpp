@@ -122,7 +122,8 @@ public:
 
     void initializeEngine(QQmlEngine *engine, const char *uri)
     {
-        Q_UNUSED(uri);
+        Q_UNUSED(engine)
+        Q_UNUSED(uri)
     }
 };
 

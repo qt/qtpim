@@ -684,6 +684,7 @@ bool QVersitContactImporterPrivate::createAvatar(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
+    Q_UNUSED(contact)
     QString location;
     QByteArray data;
     bool success = false;

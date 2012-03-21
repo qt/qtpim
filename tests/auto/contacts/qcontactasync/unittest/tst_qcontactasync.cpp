@@ -1986,6 +1986,8 @@ void tst_QContactAsync::maliciousManager()
 
     // now use a malicious manager that deliberately calls
     // things in a different thread
+    if (!QContactManager::availableManagers().contains("maliciousplugin"))
+        QSKIP("Malicious plugin is not installed, skipping test.");
     QContactManager mcm("maliciousplugin");
     QCOMPARE(mcm.managerName(), QString("maliciousplugin"));
     QList<QContact> emptyCList;

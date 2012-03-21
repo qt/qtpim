@@ -353,6 +353,39 @@ QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
 }
 
 /*!
+ * Appends the given \a detail to the list of stored details.
+ * This is a convenience method intended to be used e.g. by backend
+ * developers to populate an empty QContact object when fetching
+ * data from the backend.
+ * If \a detail is a QContactType, the existing contact type will
+ * be overwritten with \a detail. There is never more than one contact type
+ * in a contact.
+ *
+ * Note that if another detail of the same type and id has been previously saved in
+ * this contact, that detail is duplicated. For this reason, this method
+ * should not be used to update an existing contact object with a newer version
+ * of an existing detail. For this use case, the clients must use the
+ * saveDetail() method.
+ *
+ * \sa saveDetail()
+ */
+bool QContact::appendDetail(const QContactDetail &detail)
+{
+    if (detail.isEmpty())
+        return false;
+
+    /* Also handle contact type specially - only one of them. */
+    if (QContactDetailPrivate::detailPrivate(detail)->m_type == QContactType::Type) {
+        d->m_details[0] = detail;
+        d->m_details[0].d->m_access |= QContactDetail::Irremovable;
+        return true;
+    }
+    d->m_details.append(detail);
+    return true;
+}
+
+
+/*!
  * Saves the given \a detail in the list of stored details, and sets the detail's id.
  * If another detail of the same type and id has been previously saved in
  * this contact, that detail is overwritten.  Otherwise, a new id is generated
@@ -401,7 +434,7 @@ bool QContact::saveDetail(QContactDetail* detail)
         if (detail->d.constData()->m_type == curr.d.constData()->m_type &&
                 detail->d.constData()->m_id == curr.d.constData()->m_id) {
             // update the detail constraints of the supplied detail
-            detail->d->m_access = d.constData()->m_details[i].accessConstraints();
+            detail->d->m_access = curr.accessConstraints();
             // Found the old version.  Replace it with this one.
             d->m_details[i] = *detail;
             return true;

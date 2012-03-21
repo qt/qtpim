@@ -111,7 +111,7 @@ public:
     /* Access details of particular type */
     QContactDetail detail(QContactDetail::DetailType type) const;
     QList<QContactDetail> details(QContactDetail::DetailType type = QContactDetail::TypeUndefined) const;
-
+    bool appendDetail(const QContactDetail &detail);
     /* Templated (type-specific) detail retrieval */
     template<typename T> QList<T> details() const
     {

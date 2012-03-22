@@ -6,7 +6,7 @@ QPRO_PWD = $PWD
 CONFIG += module
 MODULE_PRI = ../../modules/qt_contacts.pri
 
-QT = core gui
+QT = core
 
 DEFINES += QT_BUILD_CONTACTS_LIB QT_MAKEDLL
 

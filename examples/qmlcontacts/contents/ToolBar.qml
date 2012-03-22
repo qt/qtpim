@@ -63,8 +63,6 @@ Item {
             color: "black"
             width: 35
             height: 20
-            anchors.left: parent.left//; anchors.leftMargin: 0
-            anchors.verticalCenter: parent.verticalCenter
             Text {
                 id: fpsText
                 color: "white"

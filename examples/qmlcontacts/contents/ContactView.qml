@@ -41,6 +41,7 @@
 
 import QtQuick 2.0
 import QtContacts 5.0
+import "enumhelper.js" as EnumHelper
 
 Item {
     property variant contact
@@ -226,7 +227,7 @@ Item {
                     width: detailView.width - 6;
                     height: 30
                     horizontalAlignment: Text.AlignHCenter
-                    text: modelData.definitionName;
+                    text: EnumHelper.detailTypeToString(modelData.type);
                     verticalAlignment: Text.AlignVCenter
                     color: "white";
                     font.weight: Font.Bold
@@ -235,7 +236,7 @@ Item {
                     id: fieldView
 
                     property variant detail: modelData
-                    model: modelData.fieldNames
+                    model: detail.fields.length
 
                     delegate:
                         Item {
@@ -247,7 +248,7 @@ Item {
                                 height: 20;
                                 anchors.margins: 3
                                 anchors.left: parent.left
-                                text: modelData
+                                text: fieldView.detail.fields[index]
                                 color: "white"
                             }
                             Text {
@@ -257,7 +258,7 @@ Item {
                                 anchors.rightMargin: 3
                                 height: 30
                                 color: "white"
-                                text: fieldView.detail.value(modelData).toString()
+                                text: fieldView.detail.value(parseInt(fieldName.text))
                             }
                         }
                 }

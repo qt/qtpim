@@ -79,6 +79,28 @@ ContactsSavingTestCase {
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
+    Address {
+        id: addresses1
+        street: "Street 1"
+    }
+
+    Address {
+        id: addresses2
+        street: "Street 2"
+    }
+
+    function test_multipleAddresses() {
+        contact.addDetail(addresses1)
+        contact.addDetail(addresses2)
+        saveAndRefreshContact()
+        var details = contact.details(ContactDetail.Address)
+        compare(details.length, 2, "details length");
+        if (details[0].street === addresses2.street)
+            details.reverse(); // assuming detail order was not preserved
+        compare(details[0].street, addresses1.street, "street 0")
+        compare(details[1].street, addresses2.street, "street 1")
+    }
+
     Avatar {
         id: avatar
     }
@@ -116,6 +138,29 @@ ContactsSavingTestCase {
         compare(detail.emailAddress, "test@qt.nokia.com")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
+    }
+
+    EmailAddress {
+        id: emailAddresses1
+        emailAddress: "a@a"
+    }
+
+    EmailAddress {
+        id: emailAddresses2
+        emailAddress: "b@b"
+    }
+
+    function test_multipleEmailAddresses() {
+        contact.addDetail(emailAddresses1)
+        contact.addDetail(emailAddresses2)
+        saveAndRefreshContact()
+        var details = contact.details(ContactDetail.Email)
+
+        compare(details.length, 2, "details length");
+        if (details[0].emailAddress === emailAddresses2.emailAddress)
+            details.reverse(); // assuming detail order was not preserved
+        compare(details[0].emailAddress, emailAddresses1.emailAddress, "email address 0");
+        compare(details[1].emailAddress, emailAddresses2.emailAddress, "email address 1");
     }
 
     Gender {
@@ -259,6 +304,28 @@ ContactsSavingTestCase {
         compare(detail.contexts[0], "Home", "contexts")
     }
 
+    Organization {
+        id: organizations1
+        name: "A"
+    }
+
+    Organization {
+        id: organizations2
+        name: "B"
+    }
+
+    function test_multipleOrganizations() {
+        contact.addDetail(organizations1);
+        contact.addDetail(organizations2);
+        saveAndRefreshContact();
+        var details = contact.details(ContactDetail.Organization);
+        compare(details.length, 2, "details length");
+        if (details[0].name === organizations2.name)
+            details.reverse(); // assuming detail order was not preserved
+        compare(details[0].name, organizations1.name, "name 0");
+        compare(details[1].name, organizations2.name, "name 1");
+    }
+
     Personid {
         id: personid
     }
@@ -347,6 +414,27 @@ ContactsSavingTestCase {
         }
     }
 
+    PhoneNumber {
+        id: phonenumbers1
+        number: "1"
+    }
+
+    PhoneNumber {
+        id: phonenumbers2
+        number: "2"
+    }
+
+    function test_multiplePhoneNumbers() {
+        contact.addDetail(phonenumbers1);
+        contact.addDetail(phonenumbers2);
+        saveAndRefreshContact();
+        var details = contact.details(ContactDetail.PhoneNumber);
+        compare(details.length, 2, "details length");
+        if (details[0].number === phonenumbers2.number)
+            details.reverse(); // assuming detail order was not preserved
+        compare(details[0].number, phonenumbers1.number, "number 0");
+        compare(details[1].number, phonenumbers2.number, "number 1");
+    }
 
     Ringtone {
         id: ringtone
@@ -385,6 +473,28 @@ ContactsSavingTestCase {
         compare(detail.url, "http://qt.nokia.com")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
+    }
+
+    Url {
+        id: urls1
+        url: "http://a"
+    }
+
+    Url {
+        id: urls2
+        url: "http://b"
+    }
+
+    function test_multipleUrls() {
+        contact.addDetail(urls1);
+        contact.addDetail(urls2);
+        saveAndRefreshContact();
+        var details = contact.details(ContactDetail.Url);
+        compare(details.length, 2, "details length");
+        if (details[0].url === urls2.url)
+            details.reverse(); // assuming detail order was not preserved
+        compare(details[0].url, urls1.url, "url 0");
+        compare(details[1].url, urls2.url, "url 1");
     }
 
     Version {

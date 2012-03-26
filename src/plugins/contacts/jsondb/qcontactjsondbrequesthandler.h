@@ -55,7 +55,7 @@
 #include <qcontactremoverequest.h>
 #include <qcontact.h>
 #include <qcontactchangeset.h>
-
+#include <qcontactmanager.h>
 #include "qcontactjsondbrequestmanager.h"
 
 QT_BEGIN_NAMESPACE
@@ -104,15 +104,21 @@ private:
     QContactAbstractRequest::StorageLocations storageLocationsOrDefault(
             QContactAbstractRequest::StorageLocations storageLocation);
     QContactAbstractRequest::StorageLocations extractStorageLocation(const QContactId &id);
+    QContactAbstractRequest::StorageLocations extractStorageLocations(const QList<QContactId> &contactIds);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
     void handleContactIdFetchRequest(QContactIdFetchRequest* req);
+    void handleContactFetchByIdRequest(QContactFetchByIdRequest* req);
 
     void handleContactSaveResponse(QContactSaveRequest* saveReq, QJsonDbRequest *request, int contactIndex);
     void handleContactSavePrefetchResponse(QContactFetchRequest *prefetchReq, QJsonDbRequest *request, int contactIndex);
     void handleContactFetchResponse(QContactFetchRequest* fetchReq, QJsonDbRequest *request, const QString &partitionName);
     void handleContactRemoveResponse(QContactRemoveRequest* removeReq);
     void handleContactIdFetchResponse(QContactIdFetchRequest* idReq, QJsonDbRequest *request);
+    void handleContactFetchByIdResponse(QContactFetchByIdRequest *req, QJsonDbRequest *jsonDbRequest, const QString &partitionName);
+
+    QList<QContact> orderedContacts(const QList<QContactId> &ids, const QList<QContact> &contacts,
+                                    QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *lastError);
 
     bool makeJsonDbRequest(QContactAbstractRequest *contactRequest,
                            QContactJsonDbRequestManager::RequestType jsonDbRequestType,

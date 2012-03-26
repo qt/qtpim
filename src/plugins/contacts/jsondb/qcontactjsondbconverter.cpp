@@ -912,10 +912,10 @@ bool QContactJsonDbConverter::updateContexts(const QContactDetail& detail, QJson
 
 bool QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *request,QString &newJsonDbQuery)
 {
-    bool isValidFilter = false;
+    bool isValidQuery = false;
     if (!request) {
         newJsonDbQuery =  "";
-        return isValidFilter;
+        return isValidQuery;
     }
 
     newJsonDbQuery = "[?" + QContactJsonDbStr::type() + "=\""+ QContactJsonDbStr::contactsJsonDbType() + "\"]";
@@ -924,14 +924,22 @@ bool QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *request,
         //TODO:
         break;
     }
+    case QContactAbstractRequest::ContactFetchByIdRequest: {
+        QContactFetchByIdRequest* fetchReq = static_cast<QContactFetchByIdRequest*>(request);
+        QString idString;
+        idsToJsondbQuery(fetchReq->contactIds(), idString);
+        newJsonDbQuery.append(idString);
+        isValidQuery = true;
+        break;
+    }
     case QContactAbstractRequest::ContactFetchRequest: {
         QContactFetchRequest* fetchReq = static_cast<QContactFetchRequest*>(request);
         QContactFilter filter = fetchReq->filter();
         QString filterString;
-        isValidFilter = compoundFilterToJsondbQuery(filter,filterString);
+        isValidQuery = compoundFilterToJsondbQuery(filter,filterString);
         newJsonDbQuery.append(filterString);
-        if (!isValidFilter)
-            return isValidFilter;
+        if (!isValidQuery)
+            return isValidQuery;
         QList<QContactSortOrder> sorting = fetchReq->sorting();
         newJsonDbQuery.append(convertSortOrder(sorting));
         break;
@@ -942,10 +950,10 @@ bool QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *request,
         QContactIdFetchRequest* idReq = static_cast<QContactIdFetchRequest*>(request);
         QContactFilter filter = idReq->filter();
         QString filterString;
-        isValidFilter = compoundFilterToJsondbQuery(filter,filterString);
+        isValidQuery = compoundFilterToJsondbQuery(filter,filterString);
         newJsonDbQuery.append(filterString);
-        if (!isValidFilter)
-            return isValidFilter;
+        if (!isValidQuery)
+            return isValidQuery;
         QList<QContactSortOrder> sorting = idReq->sorting();
         newJsonDbQuery.append(convertSortOrder(sorting));
         break;
@@ -955,7 +963,7 @@ bool QContactJsonDbConverter::queryFromRequest(QContactAbstractRequest *request,
     }
     if (qt_debug_jsondb_contacts())
         qDebug() << " JSONDB QUERY: " << newJsonDbQuery;
-    return isValidFilter;
+    return isValidQuery;
 }
 
 bool QContactJsonDbConverter::compoundFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const
@@ -1145,6 +1153,15 @@ bool QContactJsonDbConverter::idFilterToJsondbQuery(const QContactFilter &filter
 {
     QContactIdFilter idFilter(filter);
     QList<QContactId> ids = idFilter.ids();
+    if (!ids.isEmpty())
+        idsToJsondbQuery(ids, newJsonDbQuery);
+    else
+        newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() + " in []]");
+    return true;
+}
+
+void QContactJsonDbConverter::idsToJsondbQuery(const QList<QContactId> &ids, QString &newJsonDbQuery) const
+{
     if (!ids.isEmpty()) {
         newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() +
                               " in [");
@@ -1154,10 +1171,7 @@ bool QContactJsonDbConverter::idFilterToJsondbQuery(const QContactFilter &filter
         }
         newJsonDbQuery.chop(1);
         newJsonDbQuery.append("]]");
-    } else {
-        newJsonDbQuery.append("[?" + QContactJsonDbStr::uuid() + " in []]");
     }
-    return true;
 }
 
 QString QContactJsonDbConverter::convertSortOrder(const QList<QContactSortOrder> &sortOrders) const {

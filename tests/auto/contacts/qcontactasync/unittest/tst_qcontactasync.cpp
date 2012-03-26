@@ -208,6 +208,14 @@ private slots:
     void contactFetch_data() { addManagers(); }
     void contactFetchById();
     void contactFetchById_data() { addManagers(); }
+
+    void contactFetchByIdWithEmptyIds();
+    void contactFetchByIdWithEmptyIds_data() { addManagers(); }
+    void contactFetchByIdMixingEmptyIds();
+    void contactFetchByIdMixingEmptyIds_data() { addManagers(); }
+    void contactFetchByIdWithNonExistingButValidIds();
+    void contactFetchByIdWithNonExistingButValidIds_data() { addManagers(); }
+
     void contactIdFetch();
     void contactIdFetch_data() { addManagers(); }
     void contactRemove();
@@ -702,6 +710,150 @@ void tst_QContactAsync::contactFetchById()
     }
 }
 
+void tst_QContactAsync::contactFetchByIdWithEmptyIds()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    QContactFetchByIdRequest cfr;
+    QVERIFY(cfr.type() == QContactAbstractRequest::ContactFetchByIdRequest);
+
+    // List of qmpty ids.
+    QList<QContactId> contactIds;
+    contactIds.append(QContactId());
+    contactIds.append(QContactId());
+    contactIds.append(QContactId());
+    int expectedCount = 3;
+
+    // "all contacts" retrieval
+    cfr.setManager(cm.data());
+    cfr.setIds(contactIds);
+    QCOMPARE(cfr.manager(), cm.data());
+    QVERIFY(!cfr.isActive());
+    QVERIFY(!cfr.isFinished());
+    QVERIFY(!cfr.cancel());
+    QVERIFY(!cfr.waitForFinished());
+    qRegisterMetaType<QContactFetchByIdRequest*>("QContactFetchByIdRequest*");
+    QThreadSignalSpy spy(&cfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    QVERIFY(!cfr.cancel()); // not started
+
+    QVERIFY(cfr.start());
+    QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
+    QVERIFY(cfr.waitForFinished());
+    QVERIFY(cfr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QContact> contacts = cfr.contacts();
+    QCOMPARE(contacts.size(), expectedCount);
+    int contactIndex = 0;
+    foreach (const QContactId id, contactIds) {
+            QCOMPARE(contacts.at(contactIndex), QContact());
+            QCOMPARE(cfr.errorMap().value(contactIndex),QContactManager::DoesNotExistError);
+        contactIndex++;
+    }
+}
+
+void tst_QContactAsync::contactFetchByIdMixingEmptyIds()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    QContactFetchByIdRequest cfr;
+    QVERIFY(cfr.type() == QContactAbstractRequest::ContactFetchByIdRequest);
+
+    // List of ids contains few empty ones among good ones.
+    int expectedCount = cm->contactIds().size();
+    QList<QContactId> contactIds;
+    foreach (const QContactId id, cm->contactIds()) {
+        contactIds.append(QContactId());
+        expectedCount ++;
+        contactIds.append(id);
+    }
+    contactIds.append(QContactId());
+    expectedCount++;
+
+    // "Contacts" retrieval
+    cfr.setManager(cm.data());
+    cfr.setIds(contactIds);
+    QCOMPARE(cfr.manager(), cm.data());
+    QVERIFY(!cfr.isActive());
+    QVERIFY(!cfr.isFinished());
+    QVERIFY(!cfr.cancel());
+    QVERIFY(!cfr.waitForFinished());
+    qRegisterMetaType<QContactFetchByIdRequest*>("QContactFetchByIdRequest*");
+    QThreadSignalSpy spy(&cfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    QVERIFY(!cfr.cancel()); // not started
+
+    QVERIFY(cfr.start());
+    QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
+    QVERIFY(cfr.waitForFinished());
+    QVERIFY(cfr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QContact> contacts = cfr.contacts();
+    QCOMPARE(contacts.size(), expectedCount);
+    int contactIndex = 0;
+    foreach (const QContactId id, contactIds) {
+        if (id == QContactId()) {
+            QCOMPARE(contacts.at(contactIndex), QContact());
+            QCOMPARE(cfr.errorMap().value(contactIndex),QContactManager::DoesNotExistError);
+        } else {
+            QCOMPARE(contacts.at(contactIndex).id(), id);
+        }
+        contactIndex++;
+    }
+}
+
+void tst_QContactAsync::contactFetchByIdWithNonExistingButValidIds()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    QContactFetchByIdRequest cfr;
+    QVERIFY(cfr.type() == QContactAbstractRequest::ContactFetchByIdRequest);
+
+    // List of ids contains few empty ones among good ones.
+    int expectedCount = 0;
+    QList<QContactId> contactIds;
+    foreach (const QContactId id, cm->contactIds()) {
+        QVERIFY(cm->removeContact(id));
+        contactIds.append(id);
+        expectedCount ++;
+    }
+
+    // "Contacts" retrieval
+    cfr.setManager(cm.data());
+    cfr.setIds(contactIds);
+    QCOMPARE(cfr.manager(), cm.data());
+    QVERIFY(!cfr.isActive());
+    QVERIFY(!cfr.isFinished());
+    QVERIFY(!cfr.cancel());
+    QVERIFY(!cfr.waitForFinished());
+    qRegisterMetaType<QContactFetchByIdRequest*>("QContactFetchByIdRequest*");
+    QThreadSignalSpy spy(&cfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    QVERIFY(!cfr.cancel()); // not started
+
+    QVERIFY(cfr.start());
+    QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
+    QVERIFY(cfr.waitForFinished());
+    QVERIFY(cfr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QContact> contacts = cfr.contacts();
+    QCOMPARE(contacts.size(), expectedCount);
+    int contactIndex = 0;
+    foreach (const QContactId id, contactIds) {
+        QCOMPARE(contacts.at(contactIndex), QContact());
+        QCOMPARE(cfr.errorMap().value(contactIndex),QContactManager::DoesNotExistError);
+        contactIndex++;
+    }
+}
 
 void tst_QContactAsync::contactIdFetch()
 {

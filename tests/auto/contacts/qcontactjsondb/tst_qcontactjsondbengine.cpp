@@ -91,6 +91,7 @@ private Q_SLOTS:
     void testSaveAndFetchToDefaultAndUserDataStorages();
     void testSaveAndFetchToDefaulAndSystemStorages();
     void testMultiFetchFromUserAndSystemStorages();
+    void testFetchByIdFromUserAndSystemStorages();
     void testErrorsOnFetchFromWrongStorage();
     void testFetchWithIdsFromTwoStoragesInIdFilter();
     void testFetchErrorWithIdsFromWrongStorageInIdFilter();
@@ -114,6 +115,7 @@ private:
     QContactManager::Error updateTestContact(QContactManager &cm, QContact &contact, QContactId &contactId, QContactAbstractRequest::StorageLocation storageLocation);
 
     QList<QContact> fetchTestContacts(QContactManager &cm, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
+    QList<QContact> fetchTestContactsById(QContactManager &cm, const QList<QContactId> &ids, QContactManager::Error &error);
 
     QContactManager::Error fetchTestContactByIdFilter(QContactManager &cm, QContactId &id, QContact &contact, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
     QContactManager::Error fetchTestContactsByIdFilter(QContactManager &cm, QList<QContactId> &ids, QList<QContact> &contacts, QContactAbstractRequest::StorageLocations storageLocations = 0x0);
@@ -296,6 +298,18 @@ QContactManager::Error tst_QContactJsondbEngine::fetchTestContactByIdFilter(QCon
     if (!fetchRequest.contacts().isEmpty())
         contact = fetchRequest.contacts().first();
     return fetchRequest.error();
+}
+
+QList<QContact> tst_QContactJsondbEngine::fetchTestContactsById(QContactManager &cm, const QList<QContactId> &ids, QContactManager::Error &error)
+{
+    QContactFetchByIdRequest fetchByIdRequest;
+    fetchByIdRequest.setManager(&cm);
+    fetchByIdRequest.setIds(ids);
+    fetchByIdRequest.start();
+    fetchByIdRequest.waitForFinished();
+    error = fetchByIdRequest.error();
+    QList<QContact> contacts = fetchByIdRequest.contacts();
+    return contacts;
 }
 
 QContactManager::Error tst_QContactJsondbEngine::removeTestContact(QContactManager &cm, QContactId &contactId)
@@ -521,6 +535,42 @@ void tst_QContactJsondbEngine::testMultiFetchFromUserAndSystemStorages()
 
     QCOMPARE(contactsDefaultFound, 1);
     QEXPECT_FAIL("","Fetch from multiple partitions only partly implemented.", Continue);
+    QCOMPARE(contactsSystemFound, 1);
+}
+
+void tst_QContactJsondbEngine::testFetchByIdFromUserAndSystemStorages()
+{
+    // Save test contact to user and system storages.
+
+    QContactManager cm;
+    QString nameForUserdataStorageContact("FetchByIdFromDefault");
+    QContactId idForUserdataStorageContact =  saveTestContact(cm, nameForUserdataStorageContact);
+
+    QString nameForSystemStorageContact("FetchbyIdFromSystem");
+    QContactId idForSystemStorageContact = saveTestContact(cm, nameForSystemStorageContact, QContactAbstractRequest::SystemStorage);
+
+    QList<QContactId> ids;
+    ids << idForUserdataStorageContact << idForSystemStorageContact;
+    // Check that fetch from both storages at the same time gives the right contacts back to us.
+    QContactManager::Error error = QContactManager::NoError;
+    QList<QContact> contacts = fetchTestContactsById(cm, ids, error);
+    QCOMPARE(error, QContactManager::NoError);
+    QCOMPARE(contacts.size(), 2);
+
+    int contactsUserdataFound = 0;
+    int contactsSystemFound = 0;
+    foreach (QContact curr, contacts) {
+        if (curr.detail<QContactName>().firstName() == nameForUserdataStorageContact) {
+            contactsUserdataFound++;
+            QCOMPARE(curr.id(), idForUserdataStorageContact);
+        }
+        if (curr.detail<QContactName>().firstName() == nameForSystemStorageContact) {
+            contactsSystemFound++;
+            QCOMPARE(curr.id(), idForSystemStorageContact);
+        }
+    }
+
+    QCOMPARE(contactsUserdataFound, 1);
     QCOMPARE(contactsSystemFound, 1);
 }
 

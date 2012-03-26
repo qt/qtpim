@@ -45,8 +45,8 @@
 #include <QContactAbstractRequest>
 #include <QContactChangeSet>
 #include <QContactTimestamp>
+#include <QContactIdFilter>
 #include <qcontactrequests.h>
-
 #include "qcontactmemorybackend_p.h"
 
 #include <QtCore/qdebug.h>
@@ -665,6 +665,46 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
             // update the request with the results.
             if (!requestedContacts.isEmpty() || operationError != QContactManager::NoError)
                 updateContactFetchRequest(r, requestedContacts, operationError, QContactAbstractRequest::FinishedState);
+            else
+                updateRequestState(currentRequest, QContactAbstractRequest::FinishedState);
+        }
+        break;
+
+        case QContactAbstractRequest::ContactFetchByIdRequest:
+        {
+            QContactFetchByIdRequest *r = static_cast<QContactFetchByIdRequest*>(currentRequest);
+            QContactIdFilter idFilter;
+            idFilter.setIds(r->contactIds());
+            QList<QContactSortOrder> sorting;
+            QContactFetchHint fetchHint = r->fetchHint();
+            QContactManager::Error error = QContactManager::NoError;
+            QList<QContact> requestedContacts = contacts(idFilter, sorting, fetchHint, &error);
+            // Build an index into the results
+            QHash<QContactId, int> idMap; // value is index into unsorted
+            if (error == QContactManager::NoError) {
+                for (int i = 0; i < requestedContacts.size(); i++) {
+                    idMap.insert(requestedContacts[i].id(), i);
+                }
+            }
+            // Find the order in which the results should be presented
+            // Build up the results and errors
+            QList<QContact> results;
+            QMap<int, QContactManager::Error> errorMap;
+            int index = 0;
+            foreach (const QContactId &id, r->contactIds()) {
+                if (!idMap.contains(id)) {
+                    errorMap.insert(index, QContactManager::DoesNotExistError);
+                    error = QContactManager::DoesNotExistError;
+                    results.append(QContact());
+                } else {
+                    results.append(requestedContacts[idMap[id]]);
+                }
+                index++;
+            }
+
+            // update the request with the results.
+            if (!requestedContacts.isEmpty() || error != QContactManager::NoError)
+                QContactManagerEngineV2::updateContactFetchByIdRequest(r, results, error, errorMap, QContactAbstractRequest::FinishedState);
             else
                 updateRequestState(currentRequest, QContactAbstractRequest::FinishedState);
         }

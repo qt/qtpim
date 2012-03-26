@@ -300,7 +300,6 @@ ContactsSavingTestCase {
         model.fetchContacts([id]);
         waitForContactsFetched();
 
-        expectFail("", "contact is not fetched");
         compare(lastContactsFetched.length, 1, "contacts length");
         compare(lastContactsFetched[0].contactId, id, "contact id");
     }

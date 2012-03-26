@@ -81,7 +81,7 @@ QContactFetchByIdRequest::~QContactFetchByIdRequest()
 }
 
 /*!
-  Sets the list of \a ids of the contacts that the backend should retrieve.
+  Sets the list of ids of the contacts that the backend should retrieve to \a contactIds.
  */
 void QContactFetchByIdRequest::setIds(const QList<QContactId>& ids)
 {
@@ -138,7 +138,11 @@ QList<QContact> QContactFetchByIdRequest::contacts() const
     return d->m_contacts;
 }
 
-/*! Returns the map of input definition list indices to errors which occurred */
+/*!
+  Returns the map of input definition list indices to errors which occurred.
+  In case of global errors like QContactManager::TimeoutError affecting to
+  all items in the input definitions the error map may be empty.
+*/
 QMap<int, QContactManager::Error> QContactFetchByIdRequest::errorMap() const
 {
     Q_D(const QContactFetchByIdRequest);

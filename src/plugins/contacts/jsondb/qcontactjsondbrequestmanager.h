@@ -90,7 +90,8 @@ public:
         UpdateRequest,
         FetchRequest,
         ContactIdFetchRequest,
-        RemoveRequest
+        RemoveRequest,
+        FetchByIdRequest
     };
 
     QContactJsonDbRequestManager();

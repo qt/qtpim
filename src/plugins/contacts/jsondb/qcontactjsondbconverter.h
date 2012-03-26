@@ -99,6 +99,7 @@ private:
     QDateTime toContactDate(const QString& dateString) const;
     bool idFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
+    void idsToJsondbQuery(const QList<QContactId> &ids, QString &newJsonDbQuery) const;
 
     static bool isValidPhoneNumberCharacter (const QChar *character);
 

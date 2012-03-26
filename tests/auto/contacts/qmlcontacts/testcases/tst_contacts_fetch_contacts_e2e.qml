@@ -96,7 +96,6 @@ ContactsSavingTestCase {
         waitForContactsFetched();
 
         compare(lastContactsFetched.length, 2, "contacts length");
-        // TODO: compare as unordered lists (sets)
         compare(lastContactsFetched[0].contactId, id1, "fetched contact id 1");
         compare(lastContactsFetched[1].contactId, id2, "fetched contact id 2");
     }
@@ -124,13 +123,15 @@ ContactsSavingTestCase {
 
     function test_fetchDuplicateContactIds() {
         var id = model.contacts[0].contactId;
+        var originalLength = model.contacts.length;
 
         var trid = model.fetchContacts([id,id]);
         waitForContactsFetched();
 
-        expectFail("", "implementation returns duplicate contacts")
-        compare(lastContactsFetched.length, 1, "contacts length");
-        compare(lastContactsFetched[0].contactId, model.contacts[0].contactId, "fetched contact id");
+        compare(lastContactsFetched.length, 2, "contacts length");
+        compare(lastContactsFetched[0].contactId, model.contacts[0].contactId, "fetched contact id 0");
+        compare(lastContactsFetched[1].contactId, model.contacts[0].contactId, "fetched contact id 1");
+        compare(model.contacts.length, originalLength, "model length");
     }
 
     function test_fetchEmptyListOfContactIds() {

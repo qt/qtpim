@@ -74,14 +74,10 @@ void QContactManagerEngineV2Wrapper::requestDestroyed(QContactAbstractRequest* r
 
 bool QContactManagerEngineV2Wrapper::startRequest(QContactAbstractRequest* req)
 {
-    if ((req->type() == QContactAbstractRequest::ContactSaveRequest
-            && !static_cast<QContactSaveRequest*>(req)->typeMask().isEmpty())
-        || (req->type() == QContactAbstractRequest::ContactFetchByIdRequest)) {
+    if (req && req->type() == QContactAbstractRequest::ContactSaveRequest
+            && !static_cast<QContactSaveRequest*>(req)->typeMask().isEmpty()) {
         RequestController* controller;
-        if (req->type() == QContactAbstractRequest::ContactFetchByIdRequest)
-            controller = new FetchByIdRequestController(m_engine);
-        else
-            controller = new PartialSaveRequestController(m_engine, this);
+        controller = new PartialSaveRequestController(m_engine, this);
         controller->setRequest(req);
         connect(controller, SIGNAL(stateChanged(QContactAbstractRequest::State)),
                 this, SLOT(requestStateChanged(QContactAbstractRequest::State)),

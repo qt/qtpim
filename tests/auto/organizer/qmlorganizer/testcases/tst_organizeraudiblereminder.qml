@@ -121,6 +121,7 @@ Rectangle {
 
                 var audibleReminderDetail = Qt.createQmlObject(data.code , event);
                 utility.init(model);
+                utility.waitModelChange();
                 utility.empty_calendar();
                 //------Create and save the detail test------//
                 utility.debug("Create and save the detail test", debugFlag);
@@ -144,7 +145,7 @@ Rectangle {
                 model.saveItem(event);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);
-                compare(model.itemCount, 1)
+                compare(model.itemCount, 1);
 
                 var fetchlist = model.items;
                 var savedEvent = fetchlist[0];
@@ -189,12 +190,12 @@ Rectangle {
                     utility.outputDetail(detailRemovedEvent.detail(Detail.AudibleReminder));
                 verify(detailRemovedEventDetailList.length == 0)
                 verify(removeEventDetail != undefined)
+                utility.empty_calendar();
                 utility.organizerChangedSpy.clear();
                 utility.organizerChangedSpy.destroy();
                 model.destroy();
                 event.destroy();
                 audibleReminderDetail.destroy();
- //               utility.empty_calendar();
             }
         }
     }

@@ -84,7 +84,9 @@ TestCase {
     function waitModelChange(expect_count, waitModelSignalType) {
         var count = 0;
         if (Number(waitModelSignalType) == itemChange || waitModelSignalType === undefined ) {
-            if (__model.itemCount < expect_count) {
+            if (expect_count === undefined) {
+                organizerChangedSpy.wait(signalWaitTime);
+            } else if (__model.itemCount < expect_count) {
                 do {
                     organizerChangedSpy.wait(signalWaitTime);
                     count ++;

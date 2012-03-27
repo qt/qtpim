@@ -90,10 +90,10 @@ public:
     QOrganizerJsonDbDataStorage();
     ~QOrganizerJsonDbDataStorage();
 
-    void saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
+    void saveItems(QMap<int, QOrganizerItem>* items, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocation storageLocation);
     QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders,
-                                const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, FetchType type = FetchItems, const QOrganizerItemId &parentId = QOrganizerItemId());
-    QList<QOrganizerItem> itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
+                                const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocations storageLocations, FetchType type = FetchItems, const QOrganizerItemId &parentId = QOrganizerItemId());
+    QList<QOrganizerItem> itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocations storageLocations);
     void removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
     void saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocation storageLocation);
@@ -174,7 +174,7 @@ private:
         JsonDbUpdateRequest,
         JsonDbRemoveRequest
     };
-    bool makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query = QString(), const QList<QJsonObject> &objects = QList<QJsonObject>(), const QString &storageLocation = QString());
+    bool makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, QOrganizerAbstractRequest::StorageLocation storageLocation, const QString &query = QString(), const QList<QJsonObject> &objects = QList<QJsonObject>());
 
     void processRequest();
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
@@ -203,8 +203,9 @@ private:
     QOrganizerManager::Error* m_error;
 
     // storage location
+    QList<QOrganizerAbstractRequest::StorageLocation> m_availableStorageLocations;
     QOrganizerAbstractRequest::StorageLocation m_saveToStorageLocation;
-    int m_fetchFromStorageLocations;
+    QOrganizerAbstractRequest::StorageLocations m_fetchFromStorageLocations;
     bool m_storageLocationsMissing;
 
     // SaveItems
@@ -219,6 +220,7 @@ private:
 //    QOrganizerItemFetchHint m_fetchHint;
     FetchType m_fetchType;
     QOrganizerItemId m_parentItemId;
+    QHash<QOrganizerItemId, QOrganizerItem> m_idItemMap;
 
     // RemoveItems (itemsById)
     QList<QOrganizerItemId> m_itemIds;

@@ -60,7 +60,7 @@ QOrganizerItemEngineId *QOrganizerJsonDbEngineFactory::createItemEngineId(const 
 
     QOrganizerJsonDbItemId *retn = new QOrganizerJsonDbItemId;
     if (!idString.isEmpty())
-        retn->setItemId(idString);
+        retn->setFullEngineId(idString);
     return retn;
 }
 

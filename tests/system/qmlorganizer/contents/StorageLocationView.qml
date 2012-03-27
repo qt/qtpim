@@ -95,12 +95,30 @@ Item {
         }
 
         ListView {
-            width: calendar.width; height: calendar.height/5;
+            width: calendar.width; height: calendar.height/8;
             model: organizer.collections
             clip:true
             delegate: Text {
                 anchors { horizontalCenter: parent.horizontalCenter }
                 text: name
+                color: "white"
+            }
+        }
+
+        Text {
+            anchors { horizontalCenter: parent.horizontalCenter }
+            color: "White"
+            font { pointSize: 15; weight: Font.Bold }
+            text: "Items in selected location(s):"
+        }
+
+        ListView {
+            width: calendar.width; height: calendar.height/3;
+            model: organizer.items
+            clip:true
+            delegate: Text {
+                anchors { horizontalCenter: parent.horizontalCenter }
+                text: displayLabel
                 color: "white"
             }
         }

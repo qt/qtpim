@@ -136,6 +136,7 @@ QList<QOrganizerItemId> QOrganizerJsonDbEngine::itemIds(const QOrganizerItemFilt
     idFetchReq.setEndDate(endDateTime);
     idFetchReq.setFilter(filter);
     idFetchReq.setSorting(sortOrders);
+    idFetchReq.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
     if (startRequest(&idFetchReq)) {
         if (waitForRequestFinished(&idFetchReq, 0))
             *error = idFetchReq.error();
@@ -160,6 +161,8 @@ QList<QOrganizerItem> QOrganizerJsonDbEngine::items(const QOrganizerItemFilter &
     request.setMaxCount(maxCount);
     request.setSorting(sortOrders);
     request.setFetchHint(fetchHint);
+    request.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
+
     if (startRequest(&request)) {
         if (waitForRequestFinished(&request, 0))
             *error = request.error();
@@ -223,6 +226,7 @@ bool QOrganizerJsonDbEngine::saveItems(QList<QOrganizerItem> *items, const QList
     QOrganizerItemSaveRequest request;
     request.setItems(*items);
     request.setDetailMask(detailMask);
+    request.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);
     if (startRequest(&request)) {
         if (waitForRequestFinished(&request, 0)) {
             *error = request.error();

@@ -68,6 +68,9 @@ public:
     void setEndDate(const QDateTime &date);
     QDateTime endDate() const;
 
+    void setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations);
+    QOrganizerAbstractRequest::StorageLocations storageLocations() const;
+
     QList<QOrganizerItemId> itemIds() const;
 
 private:

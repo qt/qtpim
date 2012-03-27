@@ -46,19 +46,21 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 QOrganizerJsonDbItemId::QOrganizerJsonDbItemId()
     : QOrganizerItemEngineId()
-    , m_itemId(QString())
+    , m_jsonDbUuid(QString())
+    , m_storageLocation(QOrganizerAbstractRequest::UserDataStorage)
 {
 }
 
-QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QString &itemId)
+QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QString &fullEngineId)
     : QOrganizerItemEngineId()
-    , m_itemId(itemId)
 {
+    splitId(fullEngineId, m_jsonDbUuid, m_storageLocation);
 }
 
 QOrganizerJsonDbItemId::QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId &other)
     : QOrganizerItemEngineId(),
-      m_itemId(other.m_itemId)
+      m_jsonDbUuid(other.m_jsonDbUuid),
+      m_storageLocation(other.m_storageLocation)
 {
 }
 
@@ -68,14 +70,17 @@ QOrganizerJsonDbItemId::~QOrganizerJsonDbItemId()
 
 bool QOrganizerJsonDbItemId::isEqualTo(const QOrganizerItemEngineId *other) const
 {
-    QString otherItemId = static_cast<const QOrganizerJsonDbItemId *>(other)->m_itemId;
-    return (m_itemId == otherItemId);
+    const QOrganizerJsonDbItemId* id = static_cast<const QOrganizerJsonDbItemId *>(other);
+    return ((m_jsonDbUuid == id->m_jsonDbUuid) && (m_storageLocation == id->m_storageLocation));
 }
 
 bool QOrganizerJsonDbItemId::isLessThan(const QOrganizerItemEngineId *other) const
 {
-    QString otherItemId = static_cast<const QOrganizerJsonDbItemId *>(other)->m_itemId;
-    return (m_itemId < otherItemId);
+    const QOrganizerJsonDbItemId* id = static_cast<const QOrganizerJsonDbItemId *>(other);
+    if (m_storageLocation == id->m_storageLocation)
+        return (m_jsonDbUuid < id->m_jsonDbUuid);
+    else
+        return (m_storageLocation < id->m_storageLocation);
 }
 
 QString QOrganizerJsonDbItemId::managerUri() const
@@ -85,30 +90,63 @@ QString QOrganizerJsonDbItemId::managerUri() const
 
 QOrganizerItemEngineId *QOrganizerJsonDbItemId::clone() const
 {
-    return new QOrganizerJsonDbItemId(m_itemId);
+    QOrganizerJsonDbItemId *newId = new QOrganizerJsonDbItemId();
+    newId->setJsonDbUuid(m_jsonDbUuid);
+    newId->setStorageLocation(m_storageLocation);
+    return newId;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug &QOrganizerJsonDbItemId::debugStreamOut(QDebug &dbg) const
 {
-    dbg.nospace() << "QOrganizerJsonDbItemId(" << m_itemId << ")";
+    dbg.nospace() << "QOrganizerJsonDbItemId(" << toString() << ")";
     return dbg.maybeSpace();
 }
 #endif
 
 QString QOrganizerJsonDbItemId::toString() const
 {
-    return m_itemId;
+    return QString("%1/%2").arg(m_storageLocation).arg(m_jsonDbUuid);
 }
 
 uint QOrganizerJsonDbItemId::hash() const
 {
-    return QT_PREPEND_NAMESPACE(qHash)(m_itemId);
+    return QT_PREPEND_NAMESPACE(qHash)(this->toString());
 }
 
-void QOrganizerJsonDbItemId::setItemId(const QString &itemId)
+void QOrganizerJsonDbItemId::setFullEngineId(const QString &fullEngineId)
 {
-    m_itemId = itemId;
+    splitId(fullEngineId, m_jsonDbUuid, m_storageLocation);
+}
+
+QString QOrganizerJsonDbItemId::jsondbUuid() const
+{
+    return m_jsonDbUuid;
+}
+
+void QOrganizerJsonDbItemId::setJsonDbUuid(const QString &jsonDbUuid)
+{
+    m_jsonDbUuid = jsonDbUuid;
+}
+
+QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbItemId::storageLocation() const
+{
+    return m_storageLocation;
+}
+
+void QOrganizerJsonDbItemId::setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation)
+{
+    m_storageLocation = storageLocation;
+}
+
+void QOrganizerJsonDbItemId::splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation)
+{
+    // separate engine id part, if full id given
+    QString engineId = fullId.contains(":") ? fullId.mid(fullId.lastIndexOf(":")+1) : fullId;
+    // separate storagelocation and collection id from each other
+    const QStringList splittedEngineId = engineId.split(QStringLiteral("/"));
+    storageLocation = (QOrganizerAbstractRequest::StorageLocation)splittedEngineId.first().toInt();
+    jsondbUuid = splittedEngineId.last();
 }
 
 QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId()

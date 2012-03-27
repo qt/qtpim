@@ -531,6 +531,12 @@ void tst_QOrganizerItemAsync::itemFetch()
     QVERIFY(!ifr.start());
     QVERIFY(!ifr.cancel());
     QVERIFY(!ifr.waitForFinished());
+    QVERIFY(!ifr.storageLocations());
+
+    // verify storageLocations API
+    ifr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QCOMPARE(ifr.storageLocations(), int(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage));
+    ifr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
 
     // "all items" retrieval
     QOrganizerItemFilter fil;
@@ -836,6 +842,12 @@ void tst_QOrganizerItemAsync::itemIdFetch()
     QVERIFY(!ifr.start());
     QVERIFY(!ifr.cancel());
     QVERIFY(!ifr.waitForFinished());
+    QVERIFY(!ifr.storageLocations());
+
+    // verify storageLocations API
+    ifr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QCOMPARE(ifr.storageLocations(), int(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage));
+    ifr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
 
     // "all items" retrieval
     QOrganizerItemFilter fil;
@@ -1813,6 +1825,12 @@ void tst_QOrganizerItemAsync::itemSave()
     QVERIFY(!isr.start());
     QVERIFY(!isr.cancel());
     QVERIFY(!isr.waitForFinished());
+    QCOMPARE(isr.storageLocation(), QOrganizerAbstractRequest::StorageLocation(0));
+
+    // verify storageLocations API
+    isr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
+    QCOMPARE(isr.storageLocation(), QOrganizerAbstractRequest::SystemStorage);
+    isr.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);
 
     // save a new item
     int originalCount = oim->itemIds().size();

@@ -121,15 +121,18 @@ private:
     bool typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType);
     bool fixParentReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
     bool fixGuidReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
-    bool fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
+    bool fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem, bool itemIsNew, QOrganizerAbstractRequest::StorageLocation storageLocation);
 
     QList<QOrganizerItem> internalItems(const QDateTime &startDate, const QDateTime &endDate, const QOrganizerItemFilter &filter, const QList<QOrganizerItemSortOrder> &sortOrders,
-                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, bool forExport) const;
+                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, bool forExport, QOrganizerAbstractRequest::StorageLocations storageLocations) const;
     QList<QOrganizerItem> internalItemOccurrences(const QOrganizerItem &parentItem, const QDateTime &periodStart, const QDateTime &periodEnd, const QOrganizerItemFetchHint &fetchHint,
                                                   int maxCount, bool includeExceptions, bool sortItems, QList<QDate> *exceptionDates, QOrganizerManager::Error *error) const;
 
     void removeItems(const QList<QOrganizerItemId> &itemIds, QOrganizerManager::Error *error, QMap<int, QOrganizerManager::Error> *errorMap);
     void removeAlarmObjects(const QList<QOrganizerItemId> &itemIds, const QMap<int, QOrganizerManager::Error> &errorMap);
+
+    QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForItems(const QList<QOrganizerItemId> &itemIds) const;
+    QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForCollections(const QList<QOrganizerCollectionId> &collectionIds) const;
 
     // Member variables
     QOrganizerJsonDbEngine* m_engine;

@@ -205,6 +205,33 @@ int QOrganizerItemFetchRequest::maxCount() const
 }
 
 /*!
+    Sets storage locations where the items are fetched from. \a storageLocations is a flag,
+    so you can define multiple locations in it.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerItemFetchRequest::storageLocations()
+*/
+void QOrganizerItemFetchRequest::setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations)
+{
+    Q_D(QOrganizerItemFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    d->m_storageLocations = storageLocations;
+}
+
+/*!
+    Storage locations where the items are fetched from.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerItemFetchRequest::setStorageLocations()
+*/
+QOrganizerAbstractRequest::StorageLocations QOrganizerItemFetchRequest::storageLocations() const
+{
+    Q_D(const QOrganizerItemFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_storageLocations;
+}
+
+/*!
     Returns the list of organizer items retrieved by this request.
 */
 QList<QOrganizerItem> QOrganizerItemFetchRequest::items() const

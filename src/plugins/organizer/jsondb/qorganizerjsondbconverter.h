@@ -92,7 +92,7 @@ public:
 
     // notification handling
     QString jsonDbNotificationObjectToOrganizerType(const QJsonObject &object) const;
-    QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object) const;
+    QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
     QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
 
     bool itemToJsondbAlarmObject(const QOrganizerItem &item, QJsonObject *alarmObject) const;
@@ -100,7 +100,7 @@ public:
     void jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const;
 
     // storage location handling
-    const QStringList storageLocationsFlagToStrings(const int storageLocationsFlag);
+    const QStringList storageLocationsFlagToStrings(const QOrganizerAbstractRequest::StorageLocations storageLocationsFlag);
     QOrganizerAbstractRequest::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
 
 private:

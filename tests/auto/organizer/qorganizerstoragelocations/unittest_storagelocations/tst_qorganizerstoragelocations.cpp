@@ -58,6 +58,9 @@ private slots:
     void testStorageLocationsForCollections_data() { addManager(); }
     void testStorageLocationsForCollections();
 
+    void testStorageLocationsForItems_data() { addManager(); }
+    void testStorageLocationsForItems();
+
 private:
     void addManager();
     QList<QOrganizerCollection> collectionsFromAllStorageLocations(QOrganizerManager &organizerManager);
@@ -266,6 +269,208 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
     QVERIFY(cfr.isFinished());
     QCOMPARE(1, cfr.collections().count());
     QCOMPARE(cfr.collections().at(0).id(), organizerManager.defaultCollection().id());
+}
+
+void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
+{
+    QFETCH(QString, managerName);
+    if (managerName != "jsondb")
+        QSKIP("Test is only for jsondb backend.");
+
+    QOrganizerManager organizerManager(managerName);
+
+    QList<QOrganizerItem> savedItemsUserData;
+    QList<QOrganizerItem> savedItemsSystem;
+
+    // Save 1 Event and 1 Todo on default storagelocation
+    // - storagelocation not set, should go to UserDataStorage
+    QOrganizerItemSaveRequest isr;
+    isr.setManager(&organizerManager);
+    QOrganizerEvent testEvent;
+    testEvent.setDisplayLabel("Event on default storage");
+    isr.setItem(testEvent);
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(!isr.error());
+    savedItemsUserData<<isr.items();
+    // - storagelocation explicitly set to UserDataStorage
+    QOrganizerTodo testTodo;
+    testTodo.setDisplayLabel("Todo on UserData");
+    isr.setItem(testTodo);
+    isr.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(!isr.error());
+    savedItemsUserData<<isr.items();
+    // - fetch from default storageLocation, should find both above
+    QOrganizerItemFetchRequest ifr;
+    ifr.setManager(&organizerManager);
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QVERIFY(!ifr.error());
+    QCOMPARE(savedItemsUserData.count(), ifr.items().count());
+
+    // Save 1 item to different storageLocation
+    // - try to save to new event to different storage than the collection is, should fail
+    testEvent.setDisplayLabel("Event on SystemStorage");
+    isr.setItem(testEvent);
+    isr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QCOMPARE(isr.error(), QOrganizerManager::InvalidCollectionError);
+    // -for that we need also collection on that storageLocation
+    QOrganizerCollectionSaveRequest csr;
+    csr.setManager(&organizerManager);
+    csr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
+    QOrganizerCollection collectionOnSystem;
+    collectionOnSystem.setMetaData(QOrganizerCollection::KeyName, "Collection on System");
+    csr.setCollection(collectionOnSystem);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QVERIFY(csr.isFinished());
+    QOrganizerCollectionFetchRequest cfr;
+    cfr.setManager(&organizerManager);
+    cfr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(cfr.start());
+    QVERIFY(cfr.waitForFinished());
+    QVERIFY(cfr.isFinished());
+    QCOMPARE(1, cfr.collections().count());
+    collectionOnSystem = cfr.collections().at(0);
+    // - now we can save event there
+    testEvent.setDisplayLabel("Event on SystemStorage");
+    testEvent.setCollectionId(collectionOnSystem.id());
+    isr.setItem(testEvent);
+    isr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(!isr.error());
+    // - should not be visible with fetch from default storageLocation
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QCOMPARE(savedItemsUserData.count(), ifr.items().count());// should be the same as in last fetch
+    // - should be visible (1 and only 1) if fetching only from SystemStorage
+    ifr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QVERIFY(!ifr.error());
+    QCOMPARE(1, ifr.items().count());
+
+    // Modify item and resave
+    // - resave with collection in different location, should fail
+    testEvent = ifr.items().at(0);
+    testEvent.setDisplayLabel("Event saved again on SystemStorage, with default collection.");
+    testEvent.setCollectionId(organizerManager.defaultCollection().id());
+    isr.setItem(testEvent);
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QCOMPARE(isr.error(), QOrganizerManager::InvalidCollectionError);
+    // - resave with correct collection (collection on same storage)
+    testEvent = ifr.items().at(0);
+    testEvent.setDisplayLabel("Event saved again on SystemStorage");
+    isr.setItem(testEvent);
+    isr.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);//this should be ignored when saving already saved collection
+    QVERIFY(isr.start());
+    QVERIFY(isr.waitForFinished());
+    QVERIFY(isr.isFinished());
+    QVERIFY(!isr.error());
+    savedItemsSystem<<isr.items();
+    // - should be visible (still 1 and only 1) if fetching only from SystemStorage
+    ifr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QVERIFY(!ifr.error());
+    QCOMPARE(1, ifr.items().count());
+    QCOMPARE(savedItemsSystem, ifr.items());
+
+    // All the items should be visible when fetching from multiple storagelocations
+    // - QOrganizerItemFetchRequest - all locations
+    ifr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), ifr.items().count());// all
+
+    // Try out other fetch request types
+    // QOrganizerItemFetchByIdRequest - uses storagelocations saved on the item ids
+    // - savedItemsUserData
+    QOrganizerItemFetchByIdRequest ifbidr;
+    ifbidr.setManager(&organizerManager);
+    QList<QOrganizerItemId> ifbidr_idlist;
+    foreach (const QOrganizerItem &item, savedItemsUserData)
+        ifbidr_idlist<<item.id();
+    ifbidr.setIds(ifbidr_idlist);
+    QVERIFY(ifbidr.start());
+    QVERIFY(ifbidr.waitForFinished());
+    QVERIFY(ifbidr.isFinished());
+    QVERIFY(!ifbidr.error());
+    QCOMPARE(savedItemsUserData.count(), ifbidr.items().count());
+    // - savedItemsUserData & savedItemsSystem
+    foreach (const QOrganizerItem &item, savedItemsSystem)
+        ifbidr_idlist<<item.id();
+    ifbidr.setIds(ifbidr_idlist);
+    QVERIFY(ifbidr.start());
+    QVERIFY(ifbidr.waitForFinished());
+    QVERIFY(ifbidr.isFinished());
+    QVERIFY(!ifbidr.error());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), ifbidr.items().count());// all
+    // QOrganizerItemIdFetchRequest
+    // - default storage location
+    QOrganizerItemIdFetchRequest iidfr;
+    iidfr.setManager(&organizerManager);
+    QVERIFY(iidfr.start());
+    QVERIFY(iidfr.waitForFinished());
+    QVERIFY(iidfr.isFinished());
+    QVERIFY(!iidfr.error());
+    QCOMPARE(savedItemsUserData.count(), iidfr.itemIds().count());
+    // QOrganizerItemIdFetchRequest
+    // - all locations
+    iidfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(iidfr.start());
+    QVERIFY(iidfr.waitForFinished());
+    QVERIFY(iidfr.isFinished());
+    QVERIFY(!iidfr.error());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iidfr.itemIds().count());
+    // QOrganizerItemFetchForExportRequest
+    // - default storage location
+    QOrganizerItemFetchForExportRequest iffer;
+    iffer.setManager(&organizerManager);
+    QVERIFY(iffer.start());
+    QVERIFY(iffer.waitForFinished());
+    QVERIFY(iffer.isFinished());
+    QVERIFY(!iffer.error());
+    QCOMPARE(savedItemsUserData.count(), iffer.items().count());
+    // - all locations
+    iffer.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QVERIFY(iffer.start());
+    QVERIFY(iffer.waitForFinished());
+    QVERIFY(iffer.isFinished());
+    QVERIFY(!iffer.error());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iffer.items().count());
+
+    // Remove items from multiple storageLocations with one request
+    QList<QOrganizerItemId> itemIdListFromDifferentPartitions;
+    foreach (const QOrganizerItem &item, ifr.items())
+        itemIdListFromDifferentPartitions<<item.id();
+
+    QOrganizerItemRemoveByIdRequest irbir;
+    irbir.setManager(&organizerManager);
+    irbir.setItemIds(itemIdListFromDifferentPartitions);
+    QVERIFY(irbir.start());
+    QVERIFY(irbir.waitForFinished());
+    QVERIFY(irbir.isFinished());
+    QVERIFY(ifr.start());
+    QVERIFY(ifr.waitForFinished());
+    QVERIFY(ifr.isFinished());
+    QCOMPARE(0, ifr.items().count());
 }
 
 QTEST_MAIN(tst_QOrganizerStorageLocations)

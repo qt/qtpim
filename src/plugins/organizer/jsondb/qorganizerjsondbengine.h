@@ -57,6 +57,46 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
+/*
+ Organizer jsondb backend storage location related documentation
+ (will be moved later to proper location)
+
+ Storage locations are locations where the organizer data can be stored. Currently there
+ are two locations; UserDataStorage and SystemStorage. These can be seen on the
+ QOrganizerAbstractRequest API's QOrganizerAbstractRequest::StorageLocation.
+
+ Organizer jsondb backend engine requires storage locations (partitions in qtjsondb-module
+ terminology) to be present. If StorageLocationsNotExistingError is received from requests,
+ it means storage locations are missing or cannot be accessed due to missing security
+ access rights and Organizer jsondb backend cannot work properly.
+
+ If storage locations are missing, one can easily create those via jsondb-client utility.
+ When jsondb is running, launch also jsondb-client and write:
+ ...
+ create {"_type": "Partition", "name": "com.nokia.mt.System"}
+ create {"_type": "Partition", "name": "com.nokia.mt.User"}
+ ...
+
+ After this, the organizer should be able to use jsondb backend and does not return
+ StorageLocationsNotExistingError anymore.
+
+ If you use QOrganizerManagerEngine APIs, please note that the QOrganizerJsonDbEngineData's
+ implementation directs all the operations to UserDataStorage storage location. If you want to
+ target operations to other storage locations, you need to use the asynchronous requests
+ instead.
+
+ There are some restrictions with organizer data and storing it to storage
+ locations. Once an item or collection is saved to one storage location, you cannot
+ change it to another storage location. A collection and all the items it contains must also
+ exist in the same storage location.
+
+ By default items and collections are stored in UserDataStorage storage location and fetched
+ from there.
+
+ Storage location information is included in the engine item id syntax in following way:
+ [QOrganizerAbstractRequest::StorageLocation]/[jsondb uuid]
+*/
+
 class QOrganizerJsonDbRequestThread;
 
 class QOrganizerJsonDbEngine : public QOrganizerManagerEngine

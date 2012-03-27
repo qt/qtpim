@@ -971,6 +971,11 @@ Module {
         Method {
             name: "saveItem"
             Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
+            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
+        }
+        Method {
+            name: "saveItem"
+            Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
         }
         Method {
             name: "fetchItems"

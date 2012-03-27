@@ -1001,6 +1001,7 @@ void QDeclarativeOrganizerModel::fetchAgain()
     d->m_fetchRequest->setSorting(d->m_sortOrders);
     d->m_fetchRequest->setStartDate(d->m_startPeriod);
     d->m_fetchRequest->setEndDate(d->m_endPeriod);
+    d->m_fetchRequest->setStorageLocations(d->m_storageLocations);
 
     if (d->m_filter){
         d->m_fetchRequest->setFilter(d->m_filter->filter());
@@ -1094,10 +1095,12 @@ void QDeclarativeOrganizerModel::requestUpdated()
 
 /*!
   \qmlmethod OrganizerModel::saveItem(OrganizerItem item)
-  Saves asynchronously the given \a item into the organizer backend.
+  Saves asynchronously the given \a item into the organizer backend. The location for storing item
+  can be defined with \a storageLocation for new items. When item is updated, ie saved again,
+  \a storageLocation is ignored and item is saved to the same location as it were before.
 
   */
-void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
+void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di, QDeclarativeOrganizerModel::StorageLocation storageLocation)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (di) {
@@ -1105,6 +1108,7 @@ void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
         QOrganizerItemSaveRequest* req = new QOrganizerItemSaveRequest(this);
         req->setManager(d->m_manager);
         req->setItem(item);
+        req->setStorageLocation(QOrganizerAbstractRequest::StorageLocation(storageLocation));
 
         connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
@@ -1267,6 +1271,8 @@ void QDeclarativeOrganizerModel::onItemsModified(const QList<QPair<QOrganizerIte
         removeItemsFromModel(removedItems);
 
     if (!addedAndChangedItems.isEmpty()) {
+        // FIXME; to be optimized with fetching only the modified items
+        // from the storage locations modified items are on
         QOrganizerItemFetchRequest *fetchRequest = new QOrganizerItemFetchRequest(this);
         connect(fetchRequest, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)),
                 this, SLOT(onItemsModifiedFetchRequestStateChanged(QOrganizerAbstractRequest::State)));
@@ -1276,6 +1282,7 @@ void QDeclarativeOrganizerModel::onItemsModified(const QList<QPair<QOrganizerIte
         fetchRequest->setFilter(d->m_filter ? d->m_filter->filter() : QOrganizerItemFilter());
         fetchRequest->setSorting(d->m_sortOrders);
         fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QOrganizerItemFetchHint());
+        fetchRequest->setStorageLocations(d->m_storageLocations);
         d->m_notifiedItems.insert(fetchRequest, addedAndChangedItems);
 
         fetchRequest->start();

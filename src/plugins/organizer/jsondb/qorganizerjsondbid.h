@@ -65,7 +65,7 @@ class QOrganizerJsonDbItemId : public QOrganizerItemEngineId
 {
 public:
     QOrganizerJsonDbItemId();
-    QOrganizerJsonDbItemId(const QString &itemId);
+    QOrganizerJsonDbItemId(const QString &fullEngineId);
     ~QOrganizerJsonDbItemId();
     QOrganizerJsonDbItemId(const QOrganizerJsonDbItemId &other);
 
@@ -82,10 +82,21 @@ public:
 #endif
 
     uint hash() const;
-    void setItemId(const QString &itemId);
+
+    void setFullEngineId(const QString &fullEngineId);
+
+    QString jsondbUuid() const;
+    void setJsonDbUuid(const QString &jsonDbUuid);
+
+    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
+    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
 
 private:
-    QString m_itemId;
+    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation);
+
+private:
+    QString m_jsonDbUuid;
+    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
 };
 
 

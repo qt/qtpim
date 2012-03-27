@@ -74,6 +74,9 @@ public:
     void setMaxCount(int maxCount);
     int maxCount() const;
 
+    void setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations);
+    QOrganizerAbstractRequest::StorageLocations storageLocations() const;
+
     QList<QOrganizerItem> items() const;
 
 private:

@@ -155,6 +155,33 @@ QDateTime QOrganizerItemIdFetchRequest::endDate() const
 }
 
 /*!
+    Sets storage locations where the items are fetched from. \a storageLocations is a flag,
+    so you can define multiple locations in it.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerItemIdFetchRequest::storageLocations()
+*/
+void QOrganizerItemIdFetchRequest::setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations)
+{
+    Q_D(QOrganizerItemIdFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    d->m_storageLocations = storageLocations;
+}
+
+/*!
+    Storage locations where the items are fetched from.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerItemIdFetchRequest::setStorageLocations()
+*/
+QOrganizerAbstractRequest::StorageLocations QOrganizerItemIdFetchRequest::storageLocations() const
+{
+    Q_D(const QOrganizerItemIdFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_storageLocations;
+}
+
+/*!
     Returns the list of IDs of organizer items retrieved by this request.
 */
 QList<QOrganizerItemId> QOrganizerItemIdFetchRequest::itemIds() const

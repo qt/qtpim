@@ -188,7 +188,7 @@ public:
     inline const static QString alarmDueDateTime() { return QStringLiteral("dueDateTime"); }
     inline const static QString alarmAudioUrl() { return QStringLiteral("audioUrl"); }
     inline const static QString alarmEnabled() { return QStringLiteral("enabled"); }
-    inline const static QString alarmLauncherIdentifier() { return QStringLiteral("launcherIdentifier"); }
+    inline const static QString alarmLaunchIdentifier() { return QStringLiteral("launchIdentifier"); }
     inline const static QString alarmCalendarIdentifier() { return QStringLiteral("com.nokia.mt.calendar"); }
     inline const static QString alarmType() { return QStringLiteral("alarmType"); }
     inline const static QString alarmTypeCalendar() { return QStringLiteral("Calendar"); }

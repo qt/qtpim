@@ -1429,7 +1429,7 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
 
     alarmObject->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
     alarmObject->insert(QOrganizerJsonDbStr::alarmEnabled(), true);
-    alarmObject->insert(QOrganizerJsonDbStr::alarmLauncherIdentifier(), QOrganizerJsonDbStr::alarmCalendarIdentifier());
+    alarmObject->insert(QOrganizerJsonDbStr::alarmLaunchIdentifier(), QOrganizerJsonDbStr::alarmCalendarIdentifier());
     alarmObject->insert(QOrganizerJsonDbStr::alarmType(), QOrganizerJsonDbStr::alarmTypeCalendar());
 
     return true;

@@ -53,81 +53,9 @@ property Contact testContact
     TestCase {
         name: "ContactsTests"
 
-        // test data is handled by ContactsTestHelper.qml function addContacts(contacts_data)
-        function test_detailFilters_data() {
-            return [
-                {tag: "Contacts set 1",
-                    contacts:[
-                       {
-                            tag: "Contact 1",
-                            type: 'Contact',
-                            firstName: "First1",
-                            lastName: "Last1",
-                            phoneNumber: "1111111"
-                        },
-                        {   tag: "Contact 2",
-                            type: 'Contact',
-                            firstName: "First2",
-                            lastName: "Last2",
-                            phoneNumber: "2222222"
-                       },
-                    ]
-                }
-            ]
-        }
-
-        function test_contactDetails_data() {
-            return [
-                {tag: "Contacts organization details",
-                    organizations:[
-                       {
-                            tag: "Contacts organization details",
-                            type: 'Contact',
-                            firstName:"John",
-                            lastName:"Joe",
-                            name: "TechSoft",
-                            logoUrl:"http://www.example.com",
-                            assistantName:"Maria",
-                            startDate:"1995-10-01T00:00:00",
-                            phoneNumber: "9999",
-                            phoneSubType: PhoneNumber.Landline,
-                            contexts: ContactDetail.ContextHome
-                        },
-                    ]
-                }
-            ]
-        }
-
         function waitForContactsChanged (expectedCount) {
             contactsChangedSpy.wait();
             compare (contactsChangedSpy.count, expectedCount)
-        }
-
-        //data driven test as part of QtTest frame work
-        function test_contactDetails(data)
-        {
-            var model2 = Qt.createQmlObject(
-                    "import QtContacts 5.0;" +
-                    "ContactModel {id:model2;autoUpdate:true;}", testHelper);
-            var spy2 = Qt.createQmlObject("import QtTest 1.0;" +
-                    "SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
-            contactsChangedSpy = spy2;
-            contactsChangedSpy.target = model2;
-            contactsChangedSpy.clear()
-            testHelper.model = model2;
-            waitForContactsChanged (1)
-            testHelper.emptyContactsDb();
-            compare (model2.contacts.length, 0)
-            testHelper.addContactDetail(data.organizations)
-            compare (model2.contacts[0].organization.name, data.organizations[0].name)
-            compare (model2.contacts[0].organization.assistantName, data.organizations[0].assistantName)
-            compare (model2.contacts[0].organization.logoUrl, data.organizations[0].logoUrl)
-            compare (model2.contacts[0].phoneNumber.number, data.organizations[0].phoneNumber)
-            compare (Qt.formatDateTime(model2.contacts[0].organization.startDate,Qt.ISODate), data.organizations[0].startDate)
-            compare (model2.contacts[0].phoneNumber.subTypes[0], data.organizations[0].phoneSubType)
-            compare (model2.contacts[0].phoneNumber.contexts[0],data.organizations[0].contexts)
-            testHelper.emptyContactsDb();
-            model2.autoUpdate = false;
         }
 
         function test_addAndRemoveDetails()

@@ -1410,6 +1410,13 @@ bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &it
         return false;
     if (!alarmDueDateTime.isValid())
         return false;
+
+    QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemDetail::TypeAudibleReminder);
+    if (audibleReminder.isEmpty())
+        return false;
+
+    if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
+            alarmDueDateTime = alarmDueDateTime.addSecs(-audibleReminder.secondsBeforeStart());
     alarmObject->insert(QOrganizerJsonDbStr::alarmDueDateTime(), alarmDueDateTime.toUTC().toString(Qt::ISODate));
 
     QString alarmDisplayName = item.displayLabel();

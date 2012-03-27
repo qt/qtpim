@@ -78,7 +78,7 @@ public:
 
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
-    inline const static QString jsonDbQueryAlarmsTemplate() { return QStringLiteral("[?type=\"com.nokia.mt.alarm.Alarm\"][?eventUuid=\"%1\"]"); }
+    inline const static QString jsonDbQueryAlarmsTemplate() { return QStringLiteral("[?_type=\"com.nokia.mt.alarm.Alarm\"][?eventUuid=\"%1\"]"); }
 
     inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
 

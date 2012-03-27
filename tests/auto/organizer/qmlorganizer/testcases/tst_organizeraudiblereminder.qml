@@ -126,7 +126,7 @@ Rectangle {
                 //------Create and save the detail test------//
                 utility.debug("Create and save the detail test", debugFlag);
                 audibleReminderDetail.dataUrl = "http://www.test0.com";
-                event.addDetail(audibleReminderDetail);
+                event.setDetail(audibleReminderDetail);
                 if (managerName == "jsondb") {
                     // custom fields allowed in JsonDb for audible reminder
                     // simple test here, since already fully tested in C++
@@ -140,7 +140,7 @@ Rectangle {
                             + "  }"
                             + "}"
                             , test);
-                    event.addDetail(extendedDetail);
+                    event.setDetail(extendedDetail);
                 }
                 model.saveItem(event);
                 //Let's wait for the model to be up-to-date

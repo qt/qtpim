@@ -108,7 +108,8 @@ Rectangle {
                         , test);
 
                 utility.init(model);
-                utility.empty_calendar()
+                utility.waitModelChange();
+                utility.empty_calendar();
                 //------prepare filter data: save event and collection------//
                 var collectionLegnth = model.collections.length
 
@@ -174,6 +175,8 @@ Rectangle {
                 utility.waitModelChange(2);
                 compare(model.itemCount, 2)
                 utility.debug("Test over!", debugFlag);
+
+                utility.empty_calendar();
             }
         }
     }

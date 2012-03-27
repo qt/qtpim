@@ -215,7 +215,7 @@ TestCase {
                 s += "}"
 
                 var detail = Qt.createQmlObject(s, test)
-                var success = item.addDetail(detail)
+                var success = item.setDetail(detail)
 
             }
 

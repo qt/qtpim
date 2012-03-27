@@ -45,7 +45,7 @@ import QtOrganizer 5.0
 
 TestCase {
     id: testUtility
-    property var signalWaitTime : 500
+    property var signalWaitTime : 5000
     property var itemChange: 0
     property var collectionChange: 1
     property SignalSpy organizerChangedSpy
@@ -122,15 +122,14 @@ TestCase {
 
     function getManagerList() {
 
-        //  Javascript splice() is currently broken
-/*        var modelSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy {}", testUtility);
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
-        modelSpy.target = model;
-        modelSpy.signalName = "modelChanged";
-        modelSpy.wait();
-        var managerlist = model.availableManagers;
+        var managerlist = [];
+        for (var i = 0; i < model.availableManagers.length; i++) {
+            managerlist.push(model.availableManagers[i]);
+        }
+
         var idx = managerlist.indexOf("invalid"); // Find the index
         if (idx != -1)
             managerlist.splice(idx, 1); // Remove it if really found!
@@ -139,15 +138,15 @@ TestCase {
         if (idx != -1)
             managerlist.splice(idx, 1); // Remove it if really found!
 
-        //console.log ("Manager list:  " + managerlist);
-        return managerlist;*/
-        return ["jsondb", "memory"];
+        model.autoUpdate = false;
+        model.destroy();
+
+        return managerlist;
+
     }
 
     //Empty calendar data
     function empty_calendar(log) {
-        //waiting for model update and remove request
-        wait(500);
 
         var ids = __model.itemIds();
         if (log != undefined) {

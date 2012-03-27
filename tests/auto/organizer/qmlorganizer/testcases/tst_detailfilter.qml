@@ -47,18 +47,11 @@ TestCase {
     name: "DetailFilterTests"
     id: detailFilterTests
 
-    property bool filteringDataCreated: false
-    property bool matchflagsDataCreated: false
+    property OrganizerModel organizerModel;
     property int spyWaitDelay: 250
 
     QOrganizerTestUtility {
         id: utility
-    }
-
-    OrganizerModel{
-        id: organizerModel
-        startPeriod:'2009-01-01'
-        endPeriod:'2012-12-31'
     }
 
     // UTILITIES
@@ -73,22 +66,19 @@ TestCase {
         return spy;
     }
 
-    function test_asplice() {
-        var managerlist = organizerModel.availableManagers;
-        var idx = managerlist.indexOf("invalid"); // Find the index
-        if (idx != -1)
-            managerlist.splice(idx, 1); // Remove it if really found!
-        expectFail("", "Javascript splice() is broken")
-        verify(-1 == managerlist.indexOf("invalid"));
-    }
-
-    function empty_calendar() {
-        var ids = organizerModel.itemIds();
-        if (ids.length > 0) {
-            organizerModel.removeItems(ids);
-            wait(200);
-        }
-        organizerModel.update();
+    function createModel(managerName) {
+        var model = Qt.createQmlObject(
+              "import QtOrganizer 5.0;"
+            + "OrganizerModel {"
+            + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
+            + "   startPeriod:'2009-01-01';"
+            + "   endPeriod:'2012-12-31';"
+            + "   autoUpdate:true; }"
+            , detailFilterTests);
+        utility.init(model);
+        utility.waitModelChange();
+        utility.empty_calendar();
+        return model;
     }
 
     function create_testobject(ctorString) {
@@ -98,13 +88,11 @@ TestCase {
     }
 
     function addEventsToModel(ctrStrings) {
-        var modelChangedSpy = create_spy(organizerModel, "modelChanged");
         for (var i=0;i<ctrStrings.length;i++) {
             var event = create_testobject(ctrStrings[i]);
             organizerModel.saveItem(event);
-            modelChangedSpy.wait();
+            utility.waitModelChange();
         }
-        wait(200);
     }
 
     function addDetailWithoutConvenienceAPI(constructionString) {
@@ -534,16 +522,10 @@ TestCase {
 
             var managerToBeTested = managers[i];
             console.log("## Testing plugin: " + managerToBeTested);
-            organizerModel.manager = managerToBeTested;
-            organizerModel.filter = null;
-            wait(100);//needed so that OrganizerModel is initialised properly
+            organizerModel = createModel(managerToBeTested);
 
-            if (!detailFilterTests.filteringDataCreated || managerToBeTested == "memory") {
-                empty_calendar();
-                addEventsToModel(filterTestItems());
-                compare(organizerModel.items.length, filterTestItems().length);
-                detailFilterTests.filteringDataCreated = true;
-            }
+            addEventsToModel(filterTestItems());
+            compare(organizerModel.items.length, filterTestItems().length);
 
             if (data.separateDetailCtrStr) {
                 addDetailWithoutConvenienceAPI(data.separateDetailCtrStr);
@@ -562,6 +544,8 @@ TestCase {
             } else {
                 compare(organizerModel.items.length, data.expectedItemsAmount);
             }
+
+            organizerModel.destroy();
         }
     }
 
@@ -697,20 +681,15 @@ TestCase {
     function test_matchflags(data) {
         //preparations
         var managers = utility.getManagerList();
+
         for (var i=0;i<managers.length;i++) {
 
             var managerToBeTested = managers[i];
             console.log("## Testing plugin: " + managerToBeTested);
-            organizerModel.manager = managerToBeTested;
-            organizerModel.filter = null;
-            wait(100);//needed so that OrganizerModel is initialised properly
+            organizerModel = createModel(managerToBeTested);
 
-            if (!detailFilterTests.matchflagsDataCreated || managerToBeTested == "memory") {
-                empty_calendar();
-                addEventsToModel(matchflagTestItems());
-                compare(organizerModel.items.length, matchflagTestItems().length);
-                detailFilterTests.matchflagsDataCreated = true;
-            }
+            addEventsToModel(matchflagTestItems());
+            compare(organizerModel.items.length, matchflagTestItems().length);
 
             // for all backends
             if (data.separateDetailCtrStr) {
@@ -740,6 +719,8 @@ TestCase {
                 wait(spyWaitDelay);
                 compare(organizerModel.items.length, data.expectedItemsAmount - 1);
             }
+
+            organizerModel.destroy();
         }
     }
 
@@ -804,9 +785,7 @@ TestCase {
         console.log();
         //preparations
         // error codes are backend specific, these are tested only for jsondb
-        organizerModel.manager = "jsondb";
-        organizerModel.filter = null;
-        wait(100);//needed so that OrganizerModel is initialised properly
+        organizerModel = createModel("jsondb")
 
         var errorChangedSpy = create_spy(organizerModel, "errorChanged");
         applyFilter(data);
@@ -814,10 +793,14 @@ TestCase {
         wait(50);//why needed?
 
         compare(organizerModel.error, "BadArgument");
+        organizerModel.destroy();
     }
 
-    function cleanupTestCase() {
-        empty_calendar();
-        console.log("cleaned jsondb up!");
+    function cleanup() {
+        // Sometimes ModelChanged signal is not emitted when creating a model
+        // in beginning of a test case if there's no wait between tests.
+        // TODO: why?
+        wait(10);
     }
+
 }

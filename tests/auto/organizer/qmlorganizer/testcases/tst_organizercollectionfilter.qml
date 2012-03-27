@@ -87,6 +87,9 @@ Rectangle {
                         + "   endPeriod:'2012-12-31';"
                         + "   autoUpdate:true; }"
                         , test);
+                utility.init(model);
+                utility.waitModelChange();
+                utility.empty_calendar();
 
                 var collectionFilter = Qt.createQmlObject(data.code, test);
 
@@ -99,8 +102,6 @@ Rectangle {
                         + "   endDateTime: '2010-12-13'; }"
                         , test);
 
-                utility.init(model);
-                utility.empty_calendar();
                 //------Create and save the detail test------//
                 var collectionLength = model.collections.length;
                 model.saveCollection(testCollection)
@@ -167,6 +168,8 @@ Rectangle {
                 modelCollectionFilter.ids = [model.defaultCollection().collectionId, "12345666666",savedCollection.collectionId];
                 utility.waitModelChange(2);
                 compare(model.itemCount, 2);
+
+                utility.empty_calendar();
             }
         }
     }

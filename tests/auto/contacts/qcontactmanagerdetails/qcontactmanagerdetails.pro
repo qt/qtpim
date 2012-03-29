@@ -2,7 +2,7 @@ include(../../auto.pri)
 
 QT += contacts contacts-private
 
-HEADERS += ../qcontactmanagerdataholder.h ../../jsondbprocess.h
+HEADERS += ../qcontactmanagerdataholder.h ../../jsondbprocess-oldapi.h
 
 SOURCES  += tst_qcontactmanagerdetails.cpp
 

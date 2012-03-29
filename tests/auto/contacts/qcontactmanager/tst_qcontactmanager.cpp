@@ -48,7 +48,7 @@
 #include <QtContacts>
 #include "../qcontactmanagerdataholder.h"
 #include "../qcontactchangeset.h"
-#include "../../jsondbprocess.h"
+#include "../../jsondbprocess-oldapi.h"
 #include "../qcontactidmock.h"
 
 #if defined(USE_VERSIT_PLZ)

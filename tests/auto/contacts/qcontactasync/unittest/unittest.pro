@@ -4,6 +4,6 @@ TARGET = tst_qcontactasync
 
 QT += contacts
 
-SOURCES  += tst_qcontactasync.cpp
+SOURCES += tst_qcontactasync.cpp
 HEADERS += ../../qcontactmanagerdataholder.h
-HEADERS += ../../../jsondbprocess.h
+HEADERS += ../../../jsondbprocess-oldapi.h

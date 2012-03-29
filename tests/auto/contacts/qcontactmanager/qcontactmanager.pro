@@ -4,7 +4,7 @@ QT += contacts versit contacts-private
 
 SOURCES  += tst_qcontactmanager.cpp
 HEADERS += ../qcontactmanagerdataholder.h
-HEADERS += ../../jsondbprocess.h \
+HEADERS += ../../jsondbprocess-oldapi.h \
            ../qcontactidmock.h
 
 OTHER_FILES += lazy.json

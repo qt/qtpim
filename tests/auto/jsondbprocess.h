@@ -67,28 +67,37 @@ public:
     {
     }
 
-    bool start() {
-        if (!jsondbWorkingDirectory.isValid()) {
-            qWarning() << Q_FUNC_INFO << "JsonDb working directory is not valid.";
-            return false;
-        }
+    bool start(bool forceNewProcess = false) {
 
-        QString jsondbPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/jsondb";
-        if (!QFileInfo(jsondbPath).exists()) {
-            qWarning() << Q_FUNC_INFO << "Cannot find JsonDb binaries.";
-            return false;
-        }
+        // Start new process only if there is no existing JsonDb process
+        if (system("pidof jsondb") > 0 || forceNewProcess) {
 
-        m_process.start(jsondbPath, QStringList() << (jsondbWorkingDirectory.path() + "/"));
-        if (!m_process.waitForStarted()) {
-            qWarning() << Q_FUNC_INFO << m_process.errorString();
-            return false;
+            if (!jsondbWorkingDirectory.isValid()) {
+                qWarning() << Q_FUNC_INFO << "JsonDb working directory is not valid.";
+                return false;
+            }
+
+            QString jsondbPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/jsondb";
+            if (!QFileInfo(jsondbPath).exists()) {
+                qWarning() << Q_FUNC_INFO << "Cannot find JsonDb binaries.";
+                return false;
+            }
+
+            m_process.start(jsondbPath, QStringList() << (jsondbWorkingDirectory.path() + "/"));
+            if (!m_process.waitForStarted()) {
+                qWarning() << Q_FUNC_INFO << m_process.errorString();
+                return false;
+            }
+
         }
 
         return true;
     }
 
     void terminate() {
+        if (m_process.state() == QProcess::NotRunning)
+            return;
+
         m_process.terminate();
         if (m_process.state() != QProcess::NotRunning && !m_process.waitForFinished()) {
             qWarning() << Q_FUNC_INFO << "JsonDb did not terminate cleanly.  Killing.";

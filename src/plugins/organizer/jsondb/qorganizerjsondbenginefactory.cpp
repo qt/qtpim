@@ -70,7 +70,7 @@ QOrganizerCollectionEngineId *QOrganizerJsonDbEngineFactory::createCollectionEng
 
     QOrganizerJsonDbCollectionId *retn = new QOrganizerJsonDbCollectionId;
     if (!idString.isEmpty())
-        retn->setCollectionId(idString);
+        retn->setFullEngineId(idString);
     return retn;
 }
 

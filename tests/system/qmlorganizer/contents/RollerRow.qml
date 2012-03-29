@@ -48,6 +48,7 @@ Item {
     property alias label: nameField.text
     property alias valueRoller : valueRoller
     property alias currentIndex : valueSpinner.currentIndex
+    property alias spinnerDelegate : valueSpinner.delegate
 
     signal rollerChanged
 

@@ -45,16 +45,18 @@ Item {
     anchors.centerIn: parent
     opacity: 0
     width: calendar.width;
-    height: calendar.height - menuBar.height - statusBar.height// - editorItems.height;
+    height: settingsView.height - settingsView.buttonTabsRow.height;
 
     property Collection collection;
-
+    property bool isNewCollection: false
 
     Column {
         id: editorItems
+        y: settingsView.buttonTabsRow.height
 
         spacing: 4
         opacity: 0.8
+        width: parent.width; height: parent.height;
 
         Text {
             text: "Collection"
@@ -88,6 +90,11 @@ Item {
             label: "Image"
             value: collection? collection.image : ""
         }
+
+        StorageLocationRoller {
+            id: storageLocationRow
+            opacity: isNewCollection ? 1 : 0;
+        }
     }
 
     Rectangle {
@@ -108,12 +115,13 @@ Item {
         newCollection.description = descRow.newValue;
         newCollection.color = colorRow.newValue;
         newCollection.image = imageRow.newValue;
-        organizer.saveCollection(newCollection);
-        calendar.state = "CollectionManagerView";
+        organizer.saveCollection(newCollection, settingsView.mapStorageLocationStringToInt(
+                calendar.storageLocationModel.get(storageLocationRow.currentIndex).name));
+        settingsView.state = "CollectionManagerView";
     }
 
     function removeCollection() {
         organizer.removeCollection(collection.collectionId);
-        calendar.state = "CollectionManagerView";
+        settingsView.state = "CollectionManagerView";
     }
 }

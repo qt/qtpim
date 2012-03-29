@@ -68,10 +68,10 @@ public:
     QOrganizerManager::Error jsonDbConnectionErrorToOrganizerError(QJsonDbConnection::ErrorCode error) const;
     QOrganizerManager::Error jsonDbRequestErrorToOrganizerError(QJsonDbRequest::ErrorCode error) const;
 
-    bool jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item) const;
+    bool jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
     bool itemToJsonDbObject(const QOrganizerItem &item, QJsonObject *object) const;
 
-    bool jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection) const;
+    bool jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
     bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QJsonObject *object) const;
 
     // filter handling
@@ -81,11 +81,15 @@ public:
     // notification handling
     QString jsonDbNotificationObjectToOrganizerType(const QJsonObject &object) const;
     QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object) const;
-    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object) const;
+    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
 
     bool itemToJsondbAlarmObject(const QOrganizerItem &item, QJsonObject *alarmObject) const;
 
     void jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const;
+
+    // storage location handling
+    const QStringList storageLocationsFlagToStrings(const int storageLocationsFlag);
+    QOrganizerAbstractRequest::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
 
 private:
     void itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const;
@@ -129,6 +133,7 @@ private:
     static const QOrganizerJsonDbEnumConversionData *organizerResponseRequirementMap();
     static const QOrganizerJsonDbEnumConversionData *organizerItemTypeMap();
     static const QOrganizerJsonDbEnumConversionData *organizerTodoStatusMap();
+    static const QOrganizerJsonDbEnumConversionData *organizerStorageLocationMap();
 
 };
 

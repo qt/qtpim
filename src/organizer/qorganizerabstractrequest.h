@@ -90,6 +90,12 @@ public:
     QOrganizerManager* manager() const;
     void setManager(QOrganizerManager *manager);
 
+    enum StorageLocation {
+        UserDataStorage = 0x1,
+        SystemStorage = 0x2
+    };
+    Q_DECLARE_FLAGS(StorageLocations, StorageLocation)
+
 public Q_SLOTS:
     bool start();
     bool cancel();
@@ -113,6 +119,8 @@ private:
     friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request);
 #endif
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerAbstractRequest::StorageLocations)
 
 QTORGANIZER_END_NAMESPACE
 

@@ -54,6 +54,8 @@ Rectangle {
          property int weekDay:currentDate.getDay()
          property string status:currentDate.toDateString()
          property string preState: "MonthView"
+         property alias storageLocationModel: storageLocationModel
+         property alias contentArea : contentArea
 
         color: "#343434";
         Image { source: "contents/images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 1 }
@@ -108,6 +110,12 @@ Rectangle {
             }
         }
 
+        ListModel {
+            id: storageLocationModel
+            ListElement{name: "UserDataStorage"}
+            ListElement{name: "SystemStorage"}
+        }
+
         InfoBar {
             id: infoBar;
             anchors {
@@ -152,10 +160,10 @@ Rectangle {
             //add new item clicked
             onAddClicked : {
                 calendar.preState = calendar.state;
-                if (calendar.state != "CollectionManagerView") {
-                    calendar.state = "AddNewItemSelectView";
+                if (calendar.state == "SettingsView" && settingsView.state == "CollectionManagerView") {
+                    settingsView.collectionManagerView.addCollection();
                 } else {
-                    collectionManagerView.addCollection();
+                    calendar.state = "AddNewItemSelectView";
                 }
             }
         }
@@ -173,14 +181,9 @@ Rectangle {
             },
             State {name: "AddNewItemSelectView"; PropertyChanges { target: addNewItemview; opacity: 0.8; }},
             State {name: "OccurrenceDialogView"; PropertyChanges { target: occurrenceDialog; opacity: 0.8; }},
-            State {name: "CollectionManagerView"; PropertyChanges { target: collectionManagerView; opacity: 1; }},
-            State {
-                name: "CollectionEditorView";
-                PropertyChanges { target: collectionEditorView; opacity: 1; }
-                PropertyChanges { target: statusBar; opacity: 0; }
-            },
             State {name: "TodoView"; PropertyChanges { target: todoView; opacity: 1; }},
-            State {name: "AttendeeDetailsView"; PropertyChanges { target: attendeeDetailsView; opacity: 1; }}
+            State {name: "AttendeeDetailsView"; PropertyChanges { target: attendeeDetailsView; opacity: 1; }},
+            State {name: "SettingsView"; PropertyChanges { target: settingsView; opacity: 1; }}
         ]
         transitions: [
             Transition {
@@ -311,17 +314,14 @@ Rectangle {
                     }
                 }
             }
-            CollectionManagerView {
-                id: collectionManagerView;
-            }
-            CollectionEditorView {
-                id: collectionEditorView;
-            }
             TodoView {
                 id: todoView;
             }
             AttendeeDetailsView {
                 id: attendeeDetailsView;
+            }
+            SettingsView {
+                id: settingsView;
             }
         }
 

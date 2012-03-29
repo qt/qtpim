@@ -9,5 +9,6 @@ SUBDIRS += \
     qorganizeritemfilter \
     qorganizermanager \
     qorganizermanagerdetails \
-    qorganizere2e
+    qorganizere2e \
+    qorganizerstoragelocations
 

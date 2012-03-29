@@ -46,12 +46,13 @@ Item {
     anchors.centerIn: parent
     opacity: 0
     width: calendar.width;
-    height: calendar.height - menuBar.height - statusBar.height - 50;
+    height: settingsView.height - settingsView.buttonTabsRow.height;
 
     property Collection collection;
 
     Column {
         spacing: 2
+        y: settingsView.buttonTabsRow.height
 
         width: parent.width; height: parent.height;
 
@@ -105,17 +106,12 @@ Item {
                     }
                 }
             }
-            Rectangle {
-                width: 20; height: 20
-                border { color: "black"; width: 1; }
-                color: isEnabledInCollectionFilter ? "black" : "gray"
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        collectionList.currentIndex = index;
-                        isEnabledInCollectionFilter = !isEnabledInCollectionFilter;
-                        modifyCollectionFilter(isEnabledInCollectionFilter, index);
-                    }
+            CheckBox {
+                checked: isEnabledInCollectionFilter
+                onClicked: {
+                    collectionList.currentIndex = index;
+                    isEnabledInCollectionFilter = !isEnabledInCollectionFilter;
+                    modifyCollectionFilter(isEnabledInCollectionFilter, index);
                 }
             }
         }
@@ -123,12 +119,14 @@ Item {
 
     function addCollection() {
         collectionEditorView.collection = Qt.createQmlObject('import QtQuick 2.0; import QtOrganizer 5.0; Collection {}',organizer);
-        calendar.state = "CollectionEditorView";
+        collectionEditorView.isNewCollection = true;
+        settingsView.state = "CollectionEditorView";
     }
 
     function modifyCollection() {
         collectionEditorView.collection = organizer.collections[collectionList.currentIndex];
-        calendar.state = "CollectionEditorView";
+        collectionEditorView.isNewCollection = false;
+        settingsView.state = "CollectionEditorView";
     }
 
     function modifyCollectionFilter(enabled, index) {

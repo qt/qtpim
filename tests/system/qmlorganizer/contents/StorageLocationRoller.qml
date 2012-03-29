@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the QtPim module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** GNU Lesser General Public License Usage
@@ -40,60 +40,19 @@
 ****************************************************************************/
 
 import QtQuick 2.0
+import QtOrganizer 5.0
 
-        Rectangle {
-            id: checkBox;
-            property bool checked: false
-            property string checkMark: "x"
+RollerRow {
+    label: "Storagelocation:"
+    valueSet: createStorageLocationNameValueSet();
+    spinnerDelegate: Text { text: valueRoller.valueName(index).name; }
 
-            signal clicked( bool checked )
+    function createStorageLocationNameValueSet() {
+         var nameArray = new Array();
+         for (var i=0;i<calendar.storageLocationModel.count;i++) {
+             nameArray.push(calendar.storageLocationModel.get(i, "name"));
+             }
+         return nameArray;
+     }
+}
 
-            Component.onCompleted: {
-                if (!checked)
-                    text.text = ""
-                else
-                    text.text = checkMark
-            }
-
-            width: text.height + 5
-            height: text.height + 5
-            color: "lightgrey"
-            opacity: 0.95
-            border.width: 3
-            border.color: "white"
-            radius: 5
-            smooth: true
-
-            Text {
-                id: text
-                anchors.verticalCenter: checkBox.verticalCenter
-                anchors.horizontalCenter: checkBox.horizontalCenter
-                color: "black"
-            }
-
-            MouseArea {
-                id: mouseArea
-
-                anchors.fill: parent
-                onClicked: {
-                    checked = !checked
-                    checkBox.clicked( checked )
-                }
-            }
-
-            states: [
-            State {
-                id: stateChecked
-
-                name: "checked"; when: checked
-
-                PropertyChanges {
-                    id: propertyChangeCheckMark
-
-                    target: text
-                    text: checkMark
-                }
-                PropertyChanges { target: checkBox; border.color: "white"; color: "white"}
-                }
-            ]
-        }

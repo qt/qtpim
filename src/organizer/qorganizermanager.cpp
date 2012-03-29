@@ -365,6 +365,7 @@ QOrganizerManager::~QOrganizerManager()
     \value InvalidCollectionError The most recent operation failed because the collection is invalid
     \value InvalidOccurrenceError The most recent operation failed because it was an attempt to save an occurrence without a correct InstanceOrigin detail
     \value TimeoutError The most recent operation failed because it took longer than expected.  It may be possible to try again.
+    \value StorageLocationsNotExistingError Backend implementation might need certain storage locations to work. If those are not present this error is returned. Check backend-specific documentation.
  */
 
 /*!

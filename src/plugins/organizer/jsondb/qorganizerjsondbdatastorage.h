@@ -87,8 +87,8 @@ public:
     QList<QOrganizerItem> itemsById(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void removeItems(const QList<QOrganizerItemId>& itemIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
-    void saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
-    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
+    void saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocation storageLocation);
+    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocations storageLocations);
     void removeCollections(const QMap<int, QOrganizerCollectionId>& collectionIds, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
 
     void createDefaultCollection(QOrganizerCollection* defaultCollection, QOrganizerManager::Error* error);
@@ -165,24 +165,25 @@ private:
         JsonDbUpdateRequest,
         JsonDbRemoveRequest
     };
-    bool makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query = QString(), const QList<QJsonObject> &objects = QList<QJsonObject>());
+    bool makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query = QString(), const QList<QJsonObject> &objects = QList<QJsonObject>(), const QString &storageLocation = QString());
 
     void processRequest();
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void clearRequestData();
+    void registerForNotifications();
 
     QMutex* m_waitMutex;
     QWaitCondition m_syncWaitCondition;
 
     QOrganizerJsonDbConverter m_converter;
     QJsonDbConnection *m_jsonDbConnection;
-    QJsonDbWatcher *m_jsonDbWatcher;
 
     // "collection cache"
     QSet<QOrganizerCollectionId> m_collectionIds;
     QOrganizerCollection m_defaultCollection;
 
     QString m_notificationObjectUuid;
+    QList<QJsonDbWatcher*> m_watchers;
 
     // request data
 
@@ -191,6 +192,11 @@ private:
     QMap<QJsonDbRequest *, int> m_requestIndexMap;  // map from request to item / collection index
     QMap<int, QOrganizerManager::Error>* m_errorMap;
     QOrganizerManager::Error* m_error;
+
+    // storage location
+    QOrganizerAbstractRequest::StorageLocation m_saveToStorageLocation;
+    int m_fetchFromStorageLocations;
+    bool m_storageLocationsMissing;
 
     // SaveItems
     QMap<int, QOrganizerItem>* m_resultItems; // map from item index to item

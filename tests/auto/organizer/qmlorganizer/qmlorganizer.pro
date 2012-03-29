@@ -4,6 +4,7 @@ TARGET=tst_qmlorganizer
 SOURCES += tst_qmlorganizer.cpp
 OTHER_FILES += testcases/addEvent.qml \
     testcases/QOrganizerTestUtility.qml \
+    testcases/tst_afirstthingtorun.qml
     testcases/tst_detailfilter.qml \
     testcases/tst_organizeritem.qml \
     testcases/tst_organizeritems.qml \
@@ -20,5 +21,6 @@ OTHER_FILES += testcases/addEvent.qml \
     testcases/tst_organizere2e.qml \
     testcases/tst_organizerrecurrence.qml \
     testcases/tst_organizermodelupdate.qml \
-    testcases/tst_organizer_versit_export_import_e2e.qml
+    testcases/tst_organizer_versit_export_import_e2e.qml \
+    testcases/tst_storagelocation.qml
 include (../qmlauto.pri)

@@ -95,6 +95,7 @@ public:
         m_writer(0),
         m_startPeriod(QDateTime::currentDateTime()),
         m_endPeriod(QDateTime::currentDateTime()),
+        m_storageLocations(QOrganizerAbstractRequest::UserDataStorage),
         m_error(QOrganizerManager::NoError),
         m_autoUpdate(true),
         m_updatePending(false),
@@ -130,6 +131,7 @@ public:
     QDateTime m_startPeriod;
     QDateTime m_endPeriod;
     QList<QDeclarativeOrganizerCollection*> m_collections;
+    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 
     QOrganizerManager::Error m_error;
 
@@ -186,6 +188,7 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(storageLocationsChanged()), SLOT(doUpdate()));//FIXME; optimize with handling only the delta instead of full update
 }
 
 QDeclarativeOrganizerModel::~QDeclarativeOrganizerModel()
@@ -349,6 +352,57 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
     if (end != d->m_endPeriod) {
         d->m_endPeriod = end;
         emit endPeriodChanged();
+    }
+}
+
+/*!
+  \qmlproperty enumeration OrganizerModel::StorageLocation
+
+  Defines the different storage locations for saving items and model population purposes.
+
+  \list
+  \li OrganizerModel::UserDataStorage        A storage location where user data is usually stored.
+  \li OrganizerModel::SystemStorage          A storage location where system files are usually stored.
+  \endlist
+
+  Depending on the platform, the access rights for different storage locations might vary.
+
+  \sa OrganizerModel::storageLocations
+  \sa OrganizerModel::saveCollection(QDeclarativeOrganizerCollection *collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+*/
+
+/*!
+  \qmlsignal OrganizerModel::storageLocationsChanged()
+
+  This signal is emitted, when \l OrganizerModel::storageLocations property changes.
+
+  \sa OrganizerModel::storageLocations
+ */
+
+/*!
+  \qmlproperty int OrganizerModel::storageLocations
+
+  This property indicates which storage locations are used to populate the declarative model. As the type
+  of property is int, it can be utilized as flag with several values.
+
+  storageLocations is a backend specific feature. Some backends support it and some might just ignore it. If backend
+  is having some specific requirements and they're not met, backend returns StorageLocationsNotExistingError.
+
+  \sa OrganizerModel::StorageLocation
+  \sa OrganizerModel::saveCollection(QDeclarativeOrganizerCollection *collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+*/
+int QDeclarativeOrganizerModel::storageLocations() const
+{
+    Q_D(const QDeclarativeOrganizerModel);
+    return int(d->m_storageLocations);
+}
+
+void QDeclarativeOrganizerModel::setStorageLocations(int storageLocationsFlag)
+{
+    Q_D(QDeclarativeOrganizerModel);
+    if (storageLocations() != storageLocationsFlag) {
+        d->m_storageLocations = QOrganizerAbstractRequest::StorageLocations(storageLocationsFlag);
+        emit storageLocationsChanged();
     }
 }
 
@@ -598,6 +652,8 @@ QString QDeclarativeOrganizerModel::error() const
             return QLatin1String("InvalidItemType");
         case QOrganizerManager::InvalidOccurrenceError:
             return QLatin1String("InvalidOccurrence");
+        case QOrganizerManager::StorageLocationsNotExistingError:
+            return QLatin1String("StorageLocationsNotExistingError");
         default:
             break;
         }
@@ -1387,6 +1443,7 @@ void QDeclarativeOrganizerModel::fetchCollections()
 
     QOrganizerCollectionFetchRequest* req = new QOrganizerCollectionFetchRequest(this);
     req->setManager(d->m_manager);
+    req->setStorageLocations(d->m_storageLocations);
 
     connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionsFetched()));
 
@@ -1439,10 +1496,16 @@ void QDeclarativeOrganizerModel::collectionsFetched()
 }
 
 /*!
-  \qmlmethod OrganizerModel::saveCollection(QDeclarativeOrganizerCollection collection)
-  Saves asynchronously the given \a collection into the organizer backend.
+  \qmlmethod OrganizerModel::saveCollection(QDeclarativeOrganizerCollection* collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+
+  Saves asynchronously the given \a collection into the organizer backend. The location for storing collection
+  can be defined with \a storageLocation for new collections. When collection is updated, ie saved again,
+  \a storageLocation is ignored and collection is saved to the same location as it were before.
+
+  \sa Collection
+  \sa OrganizerModel::storageLocations
   */
-void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl)
+void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl, QDeclarativeOrganizerModel::StorageLocation storageLocation)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (declColl) {
@@ -1450,6 +1513,7 @@ void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection*
         QOrganizerCollectionSaveRequest* req = new QOrganizerCollectionSaveRequest(this);
         req->setManager(d->m_manager);
         req->setCollection(collection);
+        req->setStorageLocation(QOrganizerAbstractRequest::StorageLocation(storageLocation));
 
         connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 

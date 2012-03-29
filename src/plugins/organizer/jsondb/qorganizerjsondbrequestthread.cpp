@@ -662,11 +662,12 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
         bool collectionIsNew = collection.id().isNull();
         bool errorFound = false;
 
-        QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
-        // check manager uri if is the same with the engine uri
-        if (!collectionIsNew && (managerUri != collection.id().managerUri())) {
-            latestError = QOrganizerManager::BadArgumentError;
-            errorFound = true;
+        if (!collectionIsNew) {
+            const QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
+            if (managerUri != collection.id().managerUri()) {// check manager uri if is the same with the engine uri
+                latestError = QOrganizerManager::BadArgumentError;
+                errorFound = true;
+            }
         }
 
         if (errorFound) {
@@ -677,7 +678,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
         }
     }
     if (!collectionMap.isEmpty()) {
-        m_storage->saveCollections(&collectionMap, &errorMap, &latestError);
+        m_storage->saveCollections(&collectionMap, &errorMap, &latestError, collectionSaveReq->storageLocation());
         QMapIterator<int, QOrganizerCollection> i(collectionMap);
         while (i.hasNext()) {
             i.next();
@@ -698,7 +699,7 @@ void QOrganizerJsonDbRequestThread::handleCollectionFetchRequest(QOrganizerColle
 {
     m_requestMgr->setActive(collectionFetchReq);
     QOrganizerManager::Error error = QOrganizerManager::NoError;
-    QList<QOrganizerCollection> collections = m_storage->collections(&error);
+    QList<QOrganizerCollection> collections = m_storage->collections(&error, collectionFetchReq->storageLocations());
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionFetchReq);
     m_requestMgr->removeRequest(collectionFetchReq);
     QOrganizerManagerEngine::updateCollectionFetchRequest(collectionFetchReq, collections, error, QOrganizerAbstractRequest::FinishedState);

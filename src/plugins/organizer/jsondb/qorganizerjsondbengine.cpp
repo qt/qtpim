@@ -311,6 +311,7 @@ QOrganizerCollection QOrganizerJsonDbEngine::collection(const QOrganizerCollecti
 QList<QOrganizerCollection> QOrganizerJsonDbEngine::collections(QOrganizerManager::Error* error)
 {
     QOrganizerCollectionFetchRequest collectionFetchReq;
+    collectionFetchReq.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
     if (startRequest(&collectionFetchReq)) {
         if (waitForRequestFinished(&collectionFetchReq, 0))
             *error = collectionFetchReq.error();
@@ -327,6 +328,7 @@ bool QOrganizerJsonDbEngine::saveCollection(QOrganizerCollection* collection, QO
 {
     QOrganizerCollectionSaveRequest collectionSaveReq;
     collectionSaveReq.setCollection(*collection);
+    collectionSaveReq.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);
     if (startRequest(&collectionSaveReq)) {
         if (waitForRequestFinished(&collectionSaveReq, 0))
             *error = collectionSaveReq.error();

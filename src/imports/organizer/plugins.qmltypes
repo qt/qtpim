@@ -903,6 +903,13 @@ Module {
                 "ImportParseError": 5
             }
         }
+        Enum {
+            name: "StorageLocation"
+            values: {
+                "UserDataStorage": 1,
+                "SystemStorage": 2
+            }
+        }
         Property { name: "manager"; type: "string" }
         Property { name: "managerName"; type: "string"; isReadonly: true }
         Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
@@ -924,6 +931,7 @@ Module {
             isList: true
             isReadonly: true
         }
+        Property { name: "storageLocations"; type: "int" }
         Property { name: "error"; type: "string"; isReadonly: true }
         Property { name: "itemCount"; type: "int"; isReadonly: true }
         Signal { name: "modelChanged" }
@@ -972,6 +980,11 @@ Module {
         Method {
             name: "removeCollection"
             Parameter { name: "collectionId"; type: "string" }
+        }
+        Method {
+            name: "saveCollection"
+            Parameter { name: "collection"; type: "QDeclarativeOrganizerCollection"; isPointer: true }
+            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "saveCollection"

@@ -182,6 +182,16 @@ const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerTo
     return map;
 }
 
+const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerStorageLocationMap()
+{
+    static const QOrganizerJsonDbEnumConversionData map[] = {
+        {QOrganizerAbstractRequest::UserDataStorage,        QString(QStringLiteral("com.nokia.mt.User"))},
+        {QOrganizerAbstractRequest::SystemStorage,          QString(QStringLiteral("com.nokia.mt.System"))},
+        {enumMapEnd,                                        QString::null}
+    };
+    return map;
+}
+
 QOrganizerJsonDbConverter::QOrganizerJsonDbConverter()
 {
 }
@@ -209,6 +219,11 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     case QJsonDbRequest::InvalidLimit:
         return QOrganizerManager::BadArgumentError;
     case QJsonDbRequest::InvalidPartition:
+        // FIXME; Jsondb is returning sometimes error types outside QJsonDbRequest::ErrorCode -range,
+        // cannot return StorageLocationsNotExistingError before this is fixed
+        // FIXME; We propably need to add more finegrained error inspection
+        // related to partition accesses, now there is only InvalidPartition.
+        return QOrganizerManager::StorageLocationsNotExistingError;
     case QJsonDbRequest::DatabaseConnectionError:
         return QOrganizerManager::UnspecifiedError;
     default:
@@ -216,7 +231,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     }
 }
 
-bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item) const
+bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerAbstractRequest::StorageLocation storageLocation) const
 {
     QJsonObject objectToParse;
 
@@ -260,11 +275,15 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QO
             item->setId(QOrganizerItemId(new QOrganizerJsonDbItemId(jsonDbUuid)));
             hasItemId = true;
         } else if (i.key() == QOrganizerJsonDbStr::itemCollectionUuid()) {
-            QString jsonDbCollectionId = i.value().toString();
-            if (jsonDbCollectionId.isEmpty())
+            QString jsonDbCollectionIdStr = i.value().toString();
+            if (jsonDbCollectionIdStr.isEmpty())
                 return false;
-            item->setCollectionId(QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonDbCollectionId)));
+
+            QOrganizerJsonDbCollectionId *jsondbCollId = new QOrganizerJsonDbCollectionId(jsonDbCollectionIdStr);
+            jsondbCollId->setStorageLocation(storageLocation);
+            item->setCollectionId(QOrganizerCollectionId(jsondbCollId));
             hasCollectionId = true;
+
         } else if (i.key() == QOrganizerJsonDbStr::itemGuid()) {
             QString guid = i.value().toString();
             if (guid.isEmpty())
@@ -546,9 +565,10 @@ bool QOrganizerJsonDbConverter::itemToJsonDbObject(const QOrganizerItem &item, Q
         object->insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerManagerEngine::engineItemId(item.id())->toString());
 
     // collection ID has already been generated in QOrganizerJsonDbRequestThread::handleItemSaveRequest() if needed
-    if (!item.collectionId().isNull())
-        object->insert(QOrganizerJsonDbStr::itemCollectionUuid(), QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
-
+    if (!item.collectionId().isNull()) {
+        QOrganizerJsonDbCollectionId jsondbCollectionId(QOrganizerManagerEngine::engineCollectionId(item.collectionId())->toString());
+        object->insert(QOrganizerJsonDbStr::itemCollectionUuid(), jsondbCollectionId.jsondbUuid());
+    }
 
     // certain details that allow multiple instances
     QJsonArray comments;
@@ -1137,7 +1157,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QJsonObject &
     }
 }
 
-bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection) const
+bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerAbstractRequest::StorageLocation storageLocation) const
 {
     bool hasCollectionId(false);
 
@@ -1147,7 +1167,9 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &obje
             QString jsonUuid = i.value().toString();
             if (jsonUuid.isEmpty())
                 return false;
-            collection->setId(QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonUuid)));
+            QOrganizerJsonDbCollectionId *jsondbCollectionId = new QOrganizerJsonDbCollectionId(jsonUuid);
+            jsondbCollectionId->setStorageLocation(storageLocation);
+            collection->setId(QOrganizerCollectionId(jsondbCollectionId));
             hasCollectionId = true;
         } else if (i.key() == QOrganizerJsonDbStr::collectionDisplayName()) {
             QString name = i.value().toString();
@@ -1184,8 +1206,8 @@ bool QOrganizerJsonDbConverter::collectionToJsonDbObject(const QOrganizerCollect
 {
     QOrganizerCollectionId collectionId = collection.id();
     if (!collectionId.isNull()) {
-        object->insert(QOrganizerJsonDbStr::jsonDbUuid(),
-                       QOrganizerManagerEngine::engineCollectionId(collectionId)->toString());
+        QOrganizerJsonDbCollectionId jsondbCollectionId(QOrganizerManagerEngine::engineCollectionId(collectionId)->toString());
+        object->insert(QOrganizerJsonDbStr::jsonDbUuid(), jsondbCollectionId.jsondbUuid());
     }
 
     object->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::jsonDbCollectionType());
@@ -1240,6 +1262,23 @@ void QOrganizerJsonDbConverter::jsonDbVersionToItemVersion(const QString &jsonDb
         itemVersion->setVersion(version);
         itemVersion->setExtendedVersion(jsonDbVersions.at(1).toLatin1());
     }
+}
+
+const QStringList QOrganizerJsonDbConverter::storageLocationsFlagToStrings(const int storageLocationsFlag)
+{
+    QStringList storageLocations;
+
+    if (QOrganizerAbstractRequest::UserDataStorage & storageLocationsFlag)
+        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerAbstractRequest::UserDataStorage));
+    if (QOrganizerAbstractRequest::SystemStorage & storageLocationsFlag)
+        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerAbstractRequest::SystemStorage));
+
+    return storageLocations;
+}
+
+QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbConverter::storageLocationStringToEnum(const QString &storageLocation)
+{
+    return QOrganizerAbstractRequest::StorageLocation(stringToEnum(organizerStorageLocationMap(), storageLocation));
 }
 
 void QOrganizerJsonDbConverter::itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const
@@ -1601,13 +1640,16 @@ QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(con
         return QOrganizerItemId(new QOrganizerJsonDbItemId(jsonUuid));
 }
 
-QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QJsonObject &object) const
+QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const
 {
     QString jsonUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
-    if (jsonUuid.isEmpty())
+    if (jsonUuid.isEmpty()) {
         return QOrganizerCollectionId();
-    else
-        return QOrganizerCollectionId(new QOrganizerJsonDbCollectionId(jsonUuid));
+    } else {
+        QOrganizerJsonDbCollectionId *jsondbCollectionId = new QOrganizerJsonDbCollectionId(jsonUuid);
+        jsondbCollectionId->setStorageLocation(storageLocation);
+        return QOrganizerCollectionId(jsondbCollectionId);
+    }
 }
 
 bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
@@ -1619,8 +1661,9 @@ bool QOrganizerJsonDbConverter::collectionFilterToJsondbQuery(const QOrganizerIt
         const QString idTemplate(QStringLiteral("\"%1\","));
         QString query;
         foreach (const QOrganizerCollectionId &id, ids) {
+            QOrganizerJsonDbCollectionId jsondbCollectionId(id.toString());
             if (!id.isNull())
-                query += idTemplate.arg(QOrganizerManagerEngine::engineCollectionId(id)->toString());
+                query += idTemplate.arg(jsondbCollectionId.jsondbUuid());
         }
         if (!query.isEmpty()) {
             query.truncate(query.length() - 1);

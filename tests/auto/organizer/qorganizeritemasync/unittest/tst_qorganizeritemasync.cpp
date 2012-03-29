@@ -2250,6 +2250,12 @@ void tst_QOrganizerItemAsync::collectionFetch()
     QVERIFY(!cfr.start());
     QVERIFY(!cfr.cancel());
     QVERIFY(!cfr.waitForFinished());
+    QVERIFY(!cfr.storageLocations());
+
+    // verify storageLocations API
+    cfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    QCOMPARE(cfr.storageLocations(), (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage));
+    cfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
 
     // retrieve all collections.
     cfr.setManager(oim.data());
@@ -2522,6 +2528,12 @@ void tst_QOrganizerItemAsync::collectionSave()
     QVERIFY(!csr.start());
     QVERIFY(!csr.cancel());
     QVERIFY(!csr.waitForFinished());
+    QCOMPARE(csr.storageLocation(), QOrganizerAbstractRequest::StorageLocation(0));
+
+    // verify storageLocations API
+    csr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
+    QCOMPARE(csr.storageLocation(), QOrganizerAbstractRequest::SystemStorage);
+    csr.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);
 
     // save a new item
     int originalCount = oim->collections().size();

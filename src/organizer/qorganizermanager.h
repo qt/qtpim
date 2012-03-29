@@ -99,7 +99,8 @@ public:
         InvalidItemTypeError,
         InvalidCollectionError,
         InvalidOccurrenceError,
-        TimeoutError
+        TimeoutError,
+        StorageLocationsNotExistingError
     };
 
     enum Operation {

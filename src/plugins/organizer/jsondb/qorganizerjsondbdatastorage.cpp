@@ -50,7 +50,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerJsonDbDataStorage::QOrganizerJsonDbDataStorage()
     : m_waitMutex(0)
     , m_jsonDbConnection(0)
-    , m_jsonDbWatcher(0)
+    , m_storageLocationsMissing(false)
 {
     clearRequestData();
 }
@@ -111,22 +111,26 @@ void QOrganizerJsonDbDataStorage::removeItems(const QList<QOrganizerItemId>& ite
     clearRequestData();
 }
 
-void QOrganizerJsonDbDataStorage::saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+void QOrganizerJsonDbDataStorage::saveCollections(QMap<int, QOrganizerCollection>* collections, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error, QOrganizerAbstractRequest::StorageLocation storageLocation)
 {
     if (collections->isEmpty())
         return;
     initRequestData(SaveCollections, errorMap, error);
     m_resultCollections = collections;
     m_isDefaultCollection = false;
+    m_saveToStorageLocation = storageLocation;
     processRequest();
     clearRequestData();
 }
 
-QList<QOrganizerCollection> QOrganizerJsonDbDataStorage::collections(QOrganizerManager::Error *error)
+QList<QOrganizerCollection> QOrganizerJsonDbDataStorage::collections(QOrganizerManager::Error *error, QOrganizerAbstractRequest::StorageLocations storageLocations)
 {
     initRequestData(Collections, 0, error);
+    m_fetchFromStorageLocations = storageLocations;
     processRequest();
-    QList<QOrganizerCollection> fetchedCollections = m_collections;
+    QList<QOrganizerCollection> fetchedCollections;
+    if (*error == QOrganizerManager::NoError)
+        fetchedCollections = m_collections;
     clearRequestData();
     return fetchedCollections;
 }
@@ -149,6 +153,7 @@ void QOrganizerJsonDbDataStorage::createDefaultCollection(QOrganizerCollection* 
     collections.insert(0, *defaultCollection);
     m_resultCollections = &collections;
     m_isDefaultCollection = true;
+    m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
     processRequest();
     *defaultCollection = m_resultCollections->value(0);
     m_defaultCollection = *defaultCollection;
@@ -157,10 +162,16 @@ void QOrganizerJsonDbDataStorage::createDefaultCollection(QOrganizerCollection* 
 
 QOrganizerCollection QOrganizerJsonDbDataStorage::defaultCollection()
 {
+    // Fetching collections is the first operation done with the backend
+    // and the availability of storage locations is also checked.
     if (m_defaultCollection.id().isNull()) {
         // m_defaultCollection is updated every time collections are fetched
-        QOrganizerManager::Error error;
-        collections(&error);
+        QOrganizerManager::Error error(QOrganizerManager::NoError);
+        collections(&error, QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+        if (error == QOrganizerManager::StorageLocationsNotExistingError) {
+            qCritical("Organizer JsonDb backend does not work without storage locations!");
+            m_storageLocationsMissing = true;
+        }
     }
     return m_defaultCollection;
 }
@@ -170,7 +181,7 @@ QSet<QOrganizerCollectionId> QOrganizerJsonDbDataStorage::collectionIds()
     if (m_collectionIds.isEmpty()) {
         // m_collectionIds is updated every time collections are fetched
         QOrganizerManager::Error error;
-        collections(&error);
+        collections(&error, QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
     }
     return m_collectionIds;
 }
@@ -214,16 +225,10 @@ void QOrganizerJsonDbDataStorage::run()
             this, SLOT(onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode,QString)));
     m_jsonDbConnection->connectToServer();
 
-    m_jsonDbWatcher = new QJsonDbWatcher(this);
-    m_jsonDbWatcher->setWatchedActions(QJsonDbWatcher::All);
-    m_jsonDbWatcher->setQuery(QOrganizerJsonDbStr::jsonDbNotificationQuery());
-    connect(m_jsonDbWatcher, SIGNAL(error(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)),
-            this, SLOT(onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)));
-    connect(m_jsonDbWatcher, SIGNAL(notificationsAvailable(int)),
-            this, SLOT(onJsonDbWatcherNotificationsAvailable()));
-    m_jsonDbConnection->addWatcher(m_jsonDbWatcher);
+    registerForNotifications();
 
     connect(this, SIGNAL(requestInitialized()), this, SLOT(handleRequest()));
+
     emit threadInitialized();
     QThread::run();
 }
@@ -232,8 +237,30 @@ void QOrganizerJsonDbDataStorage::run()
 // These functions are run in the context of QOrganizerJsonDbDataStorage thread
 ////////////////////////////////////////////////////////////////////////////////
 
+void QOrganizerJsonDbDataStorage::registerForNotifications()
+{
+    const QStringList storageLocations = m_converter.storageLocationsFlagToStrings(
+                QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+
+    const int count = storageLocations.count();
+    QJsonDbWatcher *watcher;
+    for (int i=0;i<count;i++) {
+        watcher = new QJsonDbWatcher(this);
+        watcher->setWatchedActions(QJsonDbWatcher::All);
+        watcher->setQuery(QOrganizerJsonDbStr::jsonDbNotificationQuery());
+        watcher->setPartition(storageLocations.at(i));
+        connect(watcher, SIGNAL(error(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)),
+                this, SLOT(onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode,QString)));
+        connect(watcher, SIGNAL(notificationsAvailable(int)),
+                this, SLOT(onJsonDbWatcherNotificationsAvailable()));
+        m_jsonDbConnection->addWatcher(watcher);
+        m_watchers.append(watcher);
+    }
+}
+
 void QOrganizerJsonDbDataStorage::onJsonDbConnectionError(QtJsonDb::QJsonDbConnection::ErrorCode error, const QString &message)
 {
+    Q_UNUSED(error)
     Q_UNUSED(message)
 
     // currently there's no real errors from JsonDb
@@ -258,49 +285,66 @@ void QOrganizerJsonDbDataStorage::onJsonDbRequestFinished()
 
 void QOrganizerJsonDbDataStorage::onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error, const QString &message)
 {
-    // TODO handle the error when partition is supported
-    Q_UNUSED(error)
-    Q_UNUSED(message)
+    if (QJsonDbWatcher::NoError != error) {
+        QJsonDbWatcher *watcher = qobject_cast<QJsonDbWatcher *>(sender());
+        if (watcher) {
+            qCritical("Organizer - Not able to register for jsondb-notifications on '%s'!", qPrintable(watcher->partition()));
+            qCritical("Organizer - Error: '%s'.", qPrintable(message));
+            m_watchers.removeOne(watcher);
+            watcher->deleteLater();
+        }
+    }
 }
 
 void QOrganizerJsonDbDataStorage::onJsonDbWatcherNotificationsAvailable()
 {
     // no mutex is needed since this slot doesn't touch any member variables
 
-    QList<QJsonDbNotification> notifications = m_jsonDbWatcher->takeNotifications();
-    for (int i = 0; i < notifications.size(); ++i) {
-        QJsonObject jsonDbObject = notifications.at(i).object();
-        QString jsonDbType = m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject);
-        if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventType()
-            || jsonDbType == QOrganizerJsonDbStr::jsonDbEventOccurrenceType()
-            || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoType()
-            || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoOccurrenceType()) {
-            switch (notifications.at(i).action()) {
-            case QJsonDbWatcher::Created:
-                emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
-                break;
-            case QJsonDbWatcher::Updated:
-                emit itemChanged(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
-                break;
-            case QJsonDbWatcher::Removed:
-                emit itemRemoved(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
-                break;
-            default:
-                break;
-            }
-        } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbCollectionType()) {
-            switch (notifications.at(i).action()) {
-            case QJsonDbWatcher::Created:
-                emit collectionAdded(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
-                break;
-            case QJsonDbWatcher::Updated:
-                emit collectionChanged(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
-                break;
-            case QJsonDbWatcher::Removed:
-                emit collectionRemoved(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject));
-                break;
-            default:
-                break;
+    QJsonDbWatcher *watcher = qobject_cast<QJsonDbWatcher *>(sender());
+    if (watcher) {
+        const QList<QJsonDbNotification> &notifications = watcher->takeNotifications();
+        for (int i = 0; i < notifications.size(); ++i) {
+            QJsonObject jsonDbObject = notifications.at(i).object();
+            QString jsonDbType = m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject);
+            const QOrganizerAbstractRequest::StorageLocation storageLocation = m_converter.storageLocationStringToEnum(watcher->partition());
+            if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventType()
+                || jsonDbType == QOrganizerJsonDbStr::jsonDbEventOccurrenceType()
+                || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoType()
+                || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoOccurrenceType()) {
+                switch (notifications.at(i).action()) {
+                case QJsonDbWatcher::Created:
+                    emit itemAdded(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+                    break;
+                case QJsonDbWatcher::Updated:
+                    emit itemChanged(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+                    break;
+                case QJsonDbWatcher::Removed:
+                    emit itemRemoved(m_converter.jsonDbNotificationObjectToItemId(jsonDbObject));
+                    break;
+                default:
+                    break;
+                }
+            } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbCollectionType()) {
+                switch (notifications.at(i).action()) {
+                case QJsonDbWatcher::Created: {
+                    QOrganizerCollectionId newlyAddedId = m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject, storageLocation);
+                    m_collectionIds.insert(newlyAddedId);
+                    emit collectionAdded(newlyAddedId);
+                    break;
+                }
+                case QJsonDbWatcher::Updated: {
+                    emit collectionChanged(m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject, storageLocation));
+                    break;
+                }
+                case QJsonDbWatcher::Removed: {
+                    QOrganizerCollectionId removedId = m_converter.jsonDbNotificationObjectToCollectionId(jsonDbObject, storageLocation);
+                    m_collectionIds.remove(removedId);
+                    emit collectionRemoved(removedId);
+                    break;
+                }
+                default:
+                    break;
+                }
             }
         }
     }
@@ -533,7 +577,7 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
         QList<QJsonObject> results = request->takeResults();
         for (int i = 0; i < results.size(); ++i) {
             QOrganizerItem item;
-            if (m_converter.jsonDbObjectToItem(results.at(i), &item)) {
+            if (m_converter.jsonDbObjectToItem(results.at(i), &item, m_converter.storageLocationStringToEnum(request->partition()))) {
                 // FIXME: Comparing item dates should be done in database.
                 if (QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end)
                         || (m_fetchType == FetchParents && !item.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()))
@@ -573,7 +617,7 @@ void QOrganizerJsonDbDataStorage::handleItemsByIdResponse(QOrganizerManager::Err
         QMap<QOrganizerItemId, QOrganizerItem> itemMap;
         for (int i = 0; i < results.size(); ++i) {
             QOrganizerItem item;
-            if (m_converter.jsonDbObjectToItem(results.at(i), &item))
+            if (m_converter.jsonDbObjectToItem(results.at(i), &item, m_converter.storageLocationStringToEnum(request->partition())))
                 itemMap.insert(item.id(), item);
         }
 
@@ -634,11 +678,22 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsRequest()
         // if we are creating a new default collection, then m_isDefaultCollection is true
         // if we are modifying an existing default collection, then collection id should be the same
         // as m_defaultCollection id.
+
+        // ignore storageLocation on request, if collection is updated (it has been saved already atleast once)
+
         bool convertToDefaultCollection;
-        if (collectionIsNew)
+        QString storageLocation;
+        if (collectionIsNew) {
             convertToDefaultCollection = m_isDefaultCollection;
-        else
+            // first save, storage location given in request. if not, by default store to UserData.
+            m_saveToStorageLocation = m_saveToStorageLocation ? m_saveToStorageLocation : QOrganizerAbstractRequest::UserDataStorage;
+            storageLocation = m_converter.storageLocationsFlagToStrings(m_saveToStorageLocation).first();
+        } else {
             convertToDefaultCollection = (collection.id() == m_defaultCollection.id());
+            // collection has already been saved before, so we get storage location from id
+            QOrganizerJsonDbCollectionId jsondbCollectionId(collection.id().toString());
+            storageLocation = m_converter.storageLocationsFlagToStrings(jsondbCollectionId.storageLocation()).first();
+        }
 
         QJsonObject jsonDbCollection;
         if (m_converter.collectionToJsonDbObject(collection, convertToDefaultCollection, &jsonDbCollection)) {
@@ -647,7 +702,7 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsRequest()
                 requestType = JsonDbCreateRequest;
             else
                 requestType = JsonDbUpdateRequest;
-            if (makeJsonDbRequest(requestType, i.key(), QString(), QList<QJsonObject>() << jsonDbCollection))
+            if (makeJsonDbRequest(requestType, i.key(), QString(), QList<QJsonObject>() << jsonDbCollection, storageLocation))
                 requestSent = true;
         } else {
             *m_error = QOrganizerManager::InvalidCollectionError;
@@ -669,7 +724,8 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsResponse(int index, QOrga
                 QString jsonUuid = results.at(0).value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
                 if (!jsonUuid.isEmpty()) {
                     QOrganizerJsonDbCollectionId *collectionId = new QOrganizerJsonDbCollectionId;
-                    collectionId->setCollectionId(jsonUuid);
+                    collectionId->setJsonDbUuid(jsonUuid);
+                    collectionId->setStorageLocation(m_converter.storageLocationStringToEnum(request->partition()));
                     collection.setId(QOrganizerCollectionId(collectionId));
                     m_collectionIds.insert(collection.id());
                     // have we modified default collection
@@ -691,19 +747,27 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsResponse(int index, QOrga
 
 void QOrganizerJsonDbDataStorage::handleCollectionsRequest()
 {
-    if (!makeJsonDbRequest(JsonDbReadRequest, 0, QOrganizerJsonDbStr::jsonDbQueryAllCollections()))
+    const QStringList storageLocations = m_converter.storageLocationsFlagToStrings(m_fetchFromStorageLocations);
+    for (int i = 0; i < storageLocations.count(); i++) {
+        makeJsonDbRequest(JsonDbReadRequest, 0, QOrganizerJsonDbStr::jsonDbQueryAllCollections(), QList<QJsonObject>(), storageLocations.at(i));
+    }
+    if (storageLocations.isEmpty()) {
+        makeJsonDbRequest(JsonDbReadRequest, 0, QOrganizerJsonDbStr::jsonDbQueryAllCollections(), QList<QJsonObject>(),
+                          m_converter.storageLocationsFlagToStrings(QOrganizerAbstractRequest::UserDataStorage).first());
+    }
+
+    if (m_requestIndexMap.isEmpty())
         m_syncWaitCondition.wakeAll();
 }
 
 void QOrganizerJsonDbDataStorage::handleCollectionsResponse(QOrganizerManager::Error error, QJsonDbRequest *request)
 {
     if (error == QOrganizerManager::NoError) {
-        m_collectionIds.clear();
         QList<QJsonObject> results = request->takeResults();
         for (int i = 0; i < results.size(); ++i) {
             QOrganizerCollection collection;
             bool isDefaultCollection(false);
-            if (m_converter.jsonDbObjectToCollection(results.at(i), &collection, &isDefaultCollection)) {
+            if (m_converter.jsonDbObjectToCollection(results.at(i), &collection, &isDefaultCollection, m_converter.storageLocationStringToEnum(request->partition()))) {
                 if (isDefaultCollection)
                     m_defaultCollection = collection;
                 m_collections.append(collection);
@@ -713,23 +777,26 @@ void QOrganizerJsonDbDataStorage::handleCollectionsResponse(QOrganizerManager::E
     } else {
         *m_error = error;
     }
-    m_syncWaitCondition.wakeAll();
+
+    if (m_requestIndexMap.isEmpty()) {
+        // All transactions have been handled, request has been completed
+        m_syncWaitCondition.wakeAll();
+    }
 }
 
 void QOrganizerJsonDbDataStorage::handleRemoveCollectionsRequest()
 {
     QMap<int, QOrganizerCollectionId>::const_iterator i = m_removeCollectionIds.constBegin();
-    QList<QJsonObject> jsonDbCollections;
-    jsonDbCollections.reserve(m_removeCollectionIds.size());
     while (i != m_removeCollectionIds.constEnd()) {
         QJsonObject jsonDbObject;
-        QString jsonDbUuid = QOrganizerManagerEngine::engineCollectionId(i.value())->toString();
-        jsonDbObject.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonDbUuid);
-        jsonDbCollections.append(jsonDbObject);
+        QOrganizerJsonDbCollectionId jsondbCollectionId(QOrganizerManagerEngine::engineCollectionId(i.value())->toString());
+        jsonDbObject.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsondbCollectionId.jsondbUuid());
+        makeJsonDbRequest(JsonDbRemoveRequest, 0, QString(), QList<QJsonObject>() << jsonDbObject,
+                          m_converter.storageLocationsFlagToStrings(jsondbCollectionId.storageLocation()).first());
         ++i;
     }
 
-    if (!makeJsonDbRequest(JsonDbRemoveRequest, 0, QString(), QList<QJsonObject>() << jsonDbCollections))
+    if (m_requestIndexMap.isEmpty())
         m_syncWaitCondition.wakeAll();
 }
 
@@ -827,7 +894,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveAlarmResponse(QOrganizerManager::E
     m_syncWaitCondition.wakeAll();
 }
 
-bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query, const QList<QJsonObject> &objects)
+bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(JsonDbRequestType jsonDbRequestType, int index, const QString &query, const QList<QJsonObject> &objects, const QString &storageLocation)
 {
     QJsonDbRequest *request;
     switch (jsonDbRequestType) {
@@ -844,9 +911,14 @@ bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(JsonDbRequestType jsonDbRequ
         request = new QJsonDbRemoveRequest(objects, this);
         break;
     }
+    // FIXME; different storagelocations are currently only supported for collection
+    // related requests, others go directly to UserData
+    request->setPartition(storageLocation.isEmpty() ? QStringLiteral("com.nokia.mt.User") : storageLocation);
+
     connect(request, SIGNAL(error(QtJsonDb::QJsonDbRequest::ErrorCode,QString)),
             this, SLOT(onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode,QString)));
     connect(request, SIGNAL(finished()), this, SLOT(onJsonDbRequestFinished()));
+
     if (m_jsonDbConnection->send(request)) {
         m_requestIndexMap.insert(request, index);
         return true;
@@ -861,6 +933,10 @@ bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(JsonDbRequestType jsonDbRequ
 
 void QOrganizerJsonDbDataStorage::processRequest()
 {
+    if (m_storageLocationsMissing) {
+        *m_error = QOrganizerManager::StorageLocationsNotExistingError;
+        return;
+    }
     emit requestInitialized();
     QMutexLocker locker(m_waitMutex);
     int msecs = 10000; // TODO: handle timeout nicely
@@ -890,6 +966,8 @@ void QOrganizerJsonDbDataStorage::initRequestData(RequestType requestType, QMap<
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
     m_alarmId.clear();
+    m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
+    m_fetchFromStorageLocations = 0;
 }
 
 void QOrganizerJsonDbDataStorage::clearRequestData()
@@ -911,6 +989,8 @@ void QOrganizerJsonDbDataStorage::clearRequestData()
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
     m_alarmId.clear();
+    m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
+    m_fetchFromStorageLocations = 0;
 }
 
 #include "moc_qorganizerjsondbdatastorage.cpp"

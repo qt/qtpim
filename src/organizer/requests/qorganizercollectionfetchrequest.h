@@ -56,6 +56,9 @@ public:
     QOrganizerCollectionFetchRequest(QObject *parent = 0);
     ~QOrganizerCollectionFetchRequest();
 
+    void setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations);
+    QOrganizerAbstractRequest::StorageLocations storageLocations() const;
+
     QList<QOrganizerCollection> collections() const;
 
 private:

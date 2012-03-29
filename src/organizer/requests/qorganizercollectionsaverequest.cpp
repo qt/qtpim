@@ -69,6 +69,32 @@ QOrganizerCollectionSaveRequest::~QOrganizerCollectionSaveRequest()
 }
 
 /*!
+    Sets \a storageLocation where the collection is saved.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerCollectionSaveRequest::storageLocation()
+*/
+void QOrganizerCollectionSaveRequest::setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation)
+{
+    Q_D(QOrganizerCollectionSaveRequest);
+    QMutexLocker ml(&d->m_mutex);
+    d->m_storageLocation = storageLocation;
+}
+
+/*!
+    Storage location where the collection is saved.
+
+    \sa QOrganizerAbstractRequest::StorageLocation
+    \sa QOrganizerCollectionSaveRequest::setStorageLocation()
+*/
+QOrganizerAbstractRequest::StorageLocation QOrganizerCollectionSaveRequest::storageLocation() const
+{
+    Q_D(const QOrganizerCollectionSaveRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_storageLocation;
+}
+
+/*!
     Sets the collection which will be saved to \a collection.
 */
 void QOrganizerCollectionSaveRequest::setCollection(const QOrganizerCollection &collection)

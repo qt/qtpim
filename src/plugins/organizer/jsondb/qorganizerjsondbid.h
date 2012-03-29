@@ -55,6 +55,7 @@
 
 #include <qorganizeritemengineid.h>
 #include <qorganizercollectionengineid.h>
+#include <qorganizerabstractrequest.h>
 
 #include <QtCore/qdebug.h>
 
@@ -92,7 +93,7 @@ class QOrganizerJsonDbCollectionId : public QOrganizerCollectionEngineId
 {
 public:
     QOrganizerJsonDbCollectionId();
-    QOrganizerJsonDbCollectionId(const QString &collectionId);
+    QOrganizerJsonDbCollectionId(const QString &fullEngineId);
     ~QOrganizerJsonDbCollectionId();
     QOrganizerJsonDbCollectionId(const QOrganizerJsonDbCollectionId &other);
 
@@ -109,10 +110,21 @@ public:
 #endif
 
     uint hash() const;
-    void setCollectionId(const QString &collectionId);
+
+    void setFullEngineId(const QString &fullEngineId);
+
+    QString jsondbUuid() const;
+    void setJsonDbUuid(const QString &jsonDbUuid);
+
+    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
+    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
 
 private:
-    QString m_collectionId;
+    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation);
+
+private:
+    QString m_jsonDbUuid;
+    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
 };
 
 QTORGANIZER_END_NAMESPACE

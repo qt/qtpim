@@ -427,6 +427,7 @@ class QOrganizerCollectionFetchRequestPrivate : public QOrganizerAbstractRequest
 public:
     QOrganizerCollectionFetchRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
+        , m_storageLocations(0)
     {
     }
 
@@ -445,12 +446,16 @@ public:
         dbg.nospace() << "QOrganizerCollectionFetchRequest(";
         dbg.nospace() << "collections=";
         dbg.nospace() << m_collections;
+        dbg.nospace() << ",";
+        dbg.nospace() << "storageLocations=";
+        dbg.nospace() << m_storageLocations;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
 #endif
 
     QList<QOrganizerCollection> m_collections;
+    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QOrganizerCollectionRemoveRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -493,6 +498,7 @@ class QOrganizerCollectionSaveRequestPrivate : public QOrganizerAbstractRequestP
 public:
     QOrganizerCollectionSaveRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
+        , m_storageLocation(QOrganizerAbstractRequest::StorageLocation(0))
     {
     }
 
@@ -514,6 +520,9 @@ public:
         dbg.nospace() << ",";
         dbg.nospace() << "errorMap=";
         dbg.nospace() << m_errors;
+        dbg.nospace() << ",";
+        dbg.nospace() << "storageLocation=";
+        dbg.nospace() << m_storageLocation;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
@@ -521,6 +530,7 @@ public:
 
     QList<QOrganizerCollection> m_collections;
     QMap<int, QOrganizerManager::Error> m_errors;
+    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
 };
 
 QTORGANIZER_END_NAMESPACE

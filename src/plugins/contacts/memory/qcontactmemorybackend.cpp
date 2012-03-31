@@ -138,6 +138,9 @@ QContactMemoryEngine* QContactMemoryEngine::createMemoryEngine(const QMap<QStrin
 QContactMemoryEngine::QContactMemoryEngine(QContactMemoryEngineData *data)
     : d(data)
 {
+    qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
+    qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
+    qRegisterMetaType<QContactId>("QContactId");
     d->m_managerUri = managerUri();
     d->m_sharedEngines.append(this);
 }

@@ -64,6 +64,7 @@ QContactJsonDbEngine::QContactJsonDbEngine() : d(new QContactJsonDbEngineData)
 {
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
+    qRegisterMetaType<QContactId>("QContactId");
     m_thread = new QThread();
     m_thread->start();
     connect(this, SIGNAL(requestReceived(QContactAbstractRequest*)),

@@ -66,7 +66,9 @@ public:
 
         int major = 5;
         int minor = 0;
+        qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
         qRegisterMetaType<QContactId>("QContactId");
+        qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
         qmlRegisterType<QDeclarativeContactModel>(uri, major, minor, "ContactModel");
         qmlRegisterType<QDeclarativeContact>(uri, major, minor, "Contact");
         qmlRegisterType<QDeclarativeContactFetchHint>(uri, major, minor, "FetchHint");

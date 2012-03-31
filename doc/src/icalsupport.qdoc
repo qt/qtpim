@@ -1,0 +1,193 @@
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+
+\page icalsupport.html
+
+\target icalsupport
+\title Supported iCalendar Features
+
+\section1 Calendar Components
+The ical specification allows a number of components to be supported within each calendar. The
+following are supported with the QOrganizer Versit implementation.
+
+\table
+  \header
+    \li Versit Component
+    \li QOrganizer Component
+  \row
+    \li VEVENT
+    \li QOrganizerEvent, QOrganizerEventOccurrence
+  \row
+    \li VTODO
+    \li QOrganizerTodo, QOrganizerTodoOccurrence
+  \row
+    \li VJOURNAL
+    \li QOrganizerJournal
+\endtable
+
+
+\section1 Properties
+
+The following table lists the iCalendar properties that the \l{C++ Versit}{Versit API} supports
+for the Organizer calendar components.
+
+\table
+  \header
+    \li Versit Property
+    \li QOrganizerDetail
+  \row
+    \li DTSTART
+    \li QOrganizerEventTime
+  \row
+    \li DTEND
+    \li QOrganizerEventTime
+  \row
+    \li RECURRENCE-ID
+    \li QOrganizerItemParent
+  \row
+    \li UID
+    \li QOrganizerItemId
+  \row
+    \li PRIORITY
+    \li QOrganizerItemPriority
+\row
+    \li DUE
+    \li QOrganizerTodoTime
+  \row
+    \li CREATED
+    \li QOrganizerTodoTime, QOrganizerItemTimestamp
+  \row
+    \li LAST-MODIFIED
+    \li QOrganizerTodoTime, QOrganizerItemTimestamp
+  \row
+    \li RRULE
+    \li QOrganizerItemRecurrence
+  \row
+    \li EXRULE
+    \li QOrganizerRecurrenceRule
+  \row
+    \li EXDATE
+    \li QOrganizerRecurrenceRule
+  \row
+    \li INTERVAL
+    \li QOrganizerRecurrenceRule
+  \row
+    \li FREQ
+    \li QOrganizerRecurrenceRule
+  \row
+    \li RDATE
+    \li QOrganizerRecurrenceRule
+  \row
+    \li DATE
+    \li QOrganizerEventTime
+  \row
+    \li COMMENT
+    \li QOrganizerItemComment
+  \row
+    \li DUE
+    \li QOrganizerTodoTime
+\endtable
+
+
+\section1 Parameters
+
+The Versit module supports the following vCard parameter:
+\list
+  \li ENCODING (for base64 or quoted-printable values)
+  \li CHARSET (text character set for a specific property)
+  \li TYPE (see below)
+\endlist
+
+The following table lists the values that are supported for the TYPE parameter:
+
+\table
+  \header
+    \li Value of TYPE parameter
+    \li Value of QOrganizerDetail Context/SubType
+  \row
+    \li DAILY
+    \li QOrganizerRecurrenceRule::Daily
+  \row
+    \li WEEKLY
+    \li QOrganizerRecurrenceRule::Weekly
+  \row
+    \li MONTHLY
+    \li QOrganizerRecurrenceRule::Monthly
+  \row
+    \li YEARLY
+    \li QOrganizerRecurrenceRule::Yearly
+
+  \row
+    \li COUNT
+    \li QOrganizerRecurrenceRule::CountLimit
+  \row
+    \li UNTIL
+    \li QOrganizerRecurrenceRule::DateLimit
+  \row
+    \li INTERVAL
+    \li QOrganizerRecurrenceRule::Frequency
+  \row
+    \li BYDAY
+    \li Qt::DayOfWeek
+  \row
+    \li BYMONTHDAY
+    \li see \l{QOrganizerRecurrenceRule::setDaysOfMonth()}
+  \row
+    \li BYYEARDAY
+    \li see \l{QOrganizerRecurrenceRule::setDaysOfYear()}
+  \row
+    \li BYWEEKNO
+    \li see \l{QOrganizerRecurrenceRule::setWeeksOfYear()}
+  \row
+    \li BYMONTH
+    \li QOrganizerRecurrenceRule::Month
+  \row
+    \li BYSETPOS
+    \li see \l{QOrganizerRecurrenceRule::setPositions()}
+  \row
+    \li WKST
+    \li Qt::DayOfWeek
+  \row
+    \li STATUS
+    \li QOrganizerTodoProgress::FieldStatus
+  \row
+    \li IN-PROCESS
+    \li QOrganizerTodoProgress::StatusInProgress
+  \row
+    \li COMPLETED
+    \li QOrganizerTodoProgress::StatusComplete
+  \row
+    \li NEEDS-ACTION
+    \li QOrganizerTodoProgress::StatusNotStarted
+  \row
+    \li PERCENT-COMPLETE
+    \li QOrganizerTodoProgress::FieldPercentageComplete
+\endtable
+
+*/

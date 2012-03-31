@@ -124,7 +124,11 @@ by writing handlers and plugins.  For more details, please see the document on
 \annotatedlist versit-extension
 
 \section1 Supported Features
-Please see the \l{vcardsupport}{Supported vCard Features} document for a list of vCard
-features that the Versit module
-supports.
+Please see the following documents for supported Versit Module features:
+ \list
+    \li \l{vcardsupport}{Supported vCard Features} document for a list of vCard features
+     that the Versit module supports.
+    \li \l{icalsupport}{Supported iCalendar Features} document for a list of iCal features
+     that the Organizer Versit module supports.
+\endlist
 */

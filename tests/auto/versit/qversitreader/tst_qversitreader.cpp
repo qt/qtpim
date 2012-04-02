@@ -446,7 +446,14 @@ void tst_QVersitReader::testReading()
 
     qApp->processEvents(); // clean up before we start sniffing signals
 
+    // calling setData directly on reader
+    mReader->setData(validDocumentsAndGroupedDocument);
+    QVERIFY(mReader->startReading());
+    mReader->waitForFinished();
+    QCOMPARE(mReader->results().size(), 5);
+
     // Asynchronous reading
+    mReader->setDevice(mInputDevice);
     mInputDevice->close();
     mInputDevice->setData(twoDocuments);
     mInputDevice->open(QBuffer::ReadWrite);

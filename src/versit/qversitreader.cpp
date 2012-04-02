@@ -169,6 +169,7 @@ void QVersitReader::setData(const QByteArray &inputData)
     if (d->mInputBytes.isNull())
         d->mInputBytes.reset(new QBuffer);
     d->mInputBytes->setData(inputData);
+    d->mInputBytes->open(QIODevice::ReadOnly);
     d->mIoDevice = d->mInputBytes.data();
 }
 

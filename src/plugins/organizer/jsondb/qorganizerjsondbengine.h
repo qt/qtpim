@@ -74,43 +74,14 @@
 #include "qorganizercollectionengineid.h"
 #include "qorganizerjsondbrequestthread.h"
 
-
 QTORGANIZER_BEGIN_NAMESPACE
-
-
-class QOrganizerJsonDbEngineData : public QSharedData
-{
-public:
-    QOrganizerJsonDbEngineData()
-        : QSharedData()
-        , m_requestHandlerThread(0)
-    {
-
-    }
-
-    QOrganizerJsonDbEngineData(const QOrganizerJsonDbEngineData& other)
-        : QSharedData(other)
-    {
-        //TODO!!!
-    }
-
-    ~QOrganizerJsonDbEngineData()
-    {
-        if (m_requestHandlerThread)
-            delete m_requestHandlerThread;
-        m_requestHandlerThread = 0;
-    }
-
-    QOrganizerJsonDbRequestThread* m_requestHandlerThread;
-};
 
 class QOrganizerJsonDbEngine : public QOrganizerManagerEngine
 {
     Q_OBJECT
 
 public:
-    static QOrganizerJsonDbEngine *createJsonDbEngine(QOrganizerManager::Error* error);
-
+    QOrganizerJsonDbEngine(QOrganizerManager::Error *error);
     ~QOrganizerJsonDbEngine();
 
     /* URI reporting */
@@ -171,12 +142,8 @@ signals:
     void requestReceived(QOrganizerAbstractRequest* req);
 
 private:
-    QOrganizerJsonDbEngine();
-    bool initEngine(QOrganizerManager::Error* error);
-
-    QOrganizerJsonDbEngineData* d;
-
     friend class QOrganizerJsonDbEngineFactory;
+    QOrganizerJsonDbRequestThread *m_requestHandlerThread;
 };
 
 QTORGANIZER_END_NAMESPACE

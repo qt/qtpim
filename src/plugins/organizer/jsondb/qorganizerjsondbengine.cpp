@@ -48,64 +48,41 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-QOrganizerJsonDbEngine *QOrganizerJsonDbEngine::createJsonDbEngine(QOrganizerManager::Error* error)
+QOrganizerJsonDbEngine::QOrganizerJsonDbEngine(QOrganizerManager::Error *error)
+    : m_requestHandlerThread(new QOrganizerJsonDbRequestThread)
 {
-    QOrganizerJsonDbEngine* engine = new QOrganizerJsonDbEngine();
-    if (engine)
-        engine->initEngine(error);
+    m_requestHandlerThread = new QOrganizerJsonDbRequestThread();
 
-    return engine;
-}
+    // Register types to be able to send them as parameters in cross-thread signals
+    qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
+    qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
+    qRegisterMetaType<QList<QOrganizerCollectionId> >("QList<QOrganizerCollectionId>");
+    qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+    qRegisterMetaType<QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >");
+    qRegisterMetaType<QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerCollectionId,QOrganizerManager::Operation> >");
+    qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
+    qRegisterMetaType<QOrganizerCollectionId>("QOrganizerCollectionId");
 
-QOrganizerJsonDbEngine::QOrganizerJsonDbEngine()
-    :d(0)
-{
+    m_requestHandlerThread->moveToThread(m_requestHandlerThread);
+    // making sure that thread is started before exiting this function
+    QEventLoop loop;
+    connect(m_requestHandlerThread, SIGNAL(initialized()), &loop, SLOT(quit()));
+    m_requestHandlerThread->start();
+    loop.exec();
+    connect(this, SIGNAL(requestReceived(QOrganizerAbstractRequest*)),
+            m_requestHandlerThread, SLOT(handleRequest(QOrganizerAbstractRequest*)));
+    m_requestHandlerThread->setEngine(this);
 
+    *error = QOrganizerManager::NoError;
 }
 
 QOrganizerJsonDbEngine::~QOrganizerJsonDbEngine()
 {
-    if (d) {
-        d->m_requestHandlerThread->exit();
-        d->m_requestHandlerThread->wait();
-        delete d;
-        d = 0;
+    if (m_requestHandlerThread) {
+        m_requestHandlerThread->exit();
+        m_requestHandlerThread->wait();
+        delete m_requestHandlerThread;
     }
-}
-
-bool QOrganizerJsonDbEngine::initEngine (QOrganizerManager::Error* error)
-{
-    bool ret = false;
-    d = new QOrganizerJsonDbEngineData;
-    if (d) {
-        d->m_requestHandlerThread = new QOrganizerJsonDbRequestThread();
-        if (d->m_requestHandlerThread) {
-            // Register types to be able to send them as parameters in cross-thread signals
-            qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
-            qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
-            qRegisterMetaType<QList<QOrganizerCollectionId> >("QList<QOrganizerCollectionId>");
-            qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
-            qRegisterMetaType<QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >");
-            qRegisterMetaType<QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > >("QList<QPair<QOrganizerCollectionId,QOrganizerManager::Operation> >");
-            qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
-            qRegisterMetaType<QOrganizerCollectionId>("QOrganizerCollectionId");
-            d->m_requestHandlerThread->moveToThread (d->m_requestHandlerThread);
-            // making sure that thread is started before exiting this function
-            QEventLoop loop;
-            connect(d->m_requestHandlerThread, SIGNAL(initialized()), &loop, SLOT(quit()));
-            d->m_requestHandlerThread->start();
-            loop.exec();
-            connect(this, SIGNAL(requestReceived(QOrganizerAbstractRequest*)),
-                    d->m_requestHandlerThread, SLOT(handleRequest(QOrganizerAbstractRequest*)));
-            d->m_requestHandlerThread->setEngine(this);
-            ret = true;
-       } else {
-           *error = QOrganizerManager::OutOfMemoryError;
-       }
-    } else {
-       *error = QOrganizerManager::OutOfMemoryError;
-    }
-    return ret;
 }
 
 QString QOrganizerJsonDbEngine::managerName() const
@@ -293,7 +270,7 @@ bool QOrganizerJsonDbEngine::removeItems(const QList<QOrganizerItem> *items, QMa
 QOrganizerCollection QOrganizerJsonDbEngine::defaultCollection(QOrganizerManager::Error* error)
 {
     *error = QOrganizerManager::NoError;
-    return d->m_requestHandlerThread->defaultCollection();
+    return m_requestHandlerThread->defaultCollection();
 }
 
 QOrganizerCollection QOrganizerJsonDbEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
@@ -365,7 +342,7 @@ bool QOrganizerJsonDbEngine::startRequest(QOrganizerAbstractRequest* req)
     QList<QOrganizerCollection> collectionList;
     QOrganizerManager::Error error = QOrganizerManager::NoError;
     QMap<int, QOrganizerManager::Error> errorMap;
-    d->m_requestHandlerThread->addRequest(req);
+    m_requestHandlerThread->addRequest(req);
 
     switch (req->type()) {
     case QOrganizerAbstractRequest::ItemFetchRequest: {
@@ -445,12 +422,12 @@ bool QOrganizerJsonDbEngine::cancelRequest(QOrganizerAbstractRequest* req)
 
 bool QOrganizerJsonDbEngine::waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs)
 {
-    return d->m_requestHandlerThread->waitForRequestFinished(req, msecs);
+    return m_requestHandlerThread->waitForRequestFinished(req, msecs);
 }
 
 void QOrganizerJsonDbEngine::requestDestroyed(QOrganizerAbstractRequest* req)
 {
-    d->m_requestHandlerThread->requestDestroyed(req);
+    m_requestHandlerThread->requestDestroyed(req);
 }
 
 QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters() const

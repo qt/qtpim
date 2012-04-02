@@ -50,8 +50,8 @@ QOrganizerManagerEngine *QOrganizerJsonDbEngineFactory::engine(const QMap<QStrin
 {
     Q_UNUSED(parameters)
 
-    QOrganizerJsonDbEngine *ret = QOrganizerJsonDbEngine::createJsonDbEngine(error); // manager takes ownership and will clean up.
-    return ret;
+    // manager takes ownership
+    return new QOrganizerJsonDbEngine(error);
 }
 
 QOrganizerItemEngineId *QOrganizerJsonDbEngineFactory::createItemEngineId(const QMap<QString, QString> &parameters, const QString &idString) const

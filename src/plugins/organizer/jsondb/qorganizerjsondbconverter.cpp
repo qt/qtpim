@@ -1483,7 +1483,7 @@ void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrgan
     while (i != reminderValues.constEnd()) {
         if (i.key() == QOrganizerItemAudibleReminder::FieldSecondsBeforeStart) {
             int secondsBeforeStart = i.value().toInt();
-            if (secondsBeforeStart > 0)
+            if (secondsBeforeStart >= 0)
                 object->insert(QOrganizerJsonDbStr::itemReminderSecBeforeStart(), secondsBeforeStart);
         } else if (i.key() == QOrganizerItemAudibleReminder::FieldRepetitionCount) {
             int repetitionCount = i.value().toInt();

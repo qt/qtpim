@@ -103,20 +103,6 @@ QString QOrganizerJsonDbItemId::toString() const
 
 uint QOrganizerJsonDbItemId::hash() const
 {
-    /*
-      TODO
-
-      Provide a hash function for your engine-specific id.
-      Note that the hash doesn't strictly need to be unique, since isEqualTo()
-      ensures that individual id's in a single hash-bucket can be uniquely
-      determined; however a better hash function will result in better performance
-      because the ids will be distributed more randomly in a hash table.
-
-      In the example implementation below, we could simply return the id, since the
-      id is a quint32.  In more complex id classes, however, you may need to
-      qHash() individual data members and combine the results somehow.
-     */
-
     return QT_PREPEND_NAMESPACE(qHash)(m_itemId);
 }
 
@@ -192,20 +178,6 @@ QString QOrganizerJsonDbCollectionId::toString() const
 
 uint QOrganizerJsonDbCollectionId::hash() const
 {
-    /*
-      TODO
-
-      Provide a hash function for your engine-specific id.
-      Note that the hash doesn't strictly need to be unique, since isEqualTo()
-      ensures that individual id's in a single hash-bucket can be uniquely
-      determined; however a better hash function will result in better performance
-      because the ids will be distributed more randomly in a hash table.
-
-      In the example implementation below, we could simply return the id, since the
-      id is a quint32.  In more complex id classes, however, you may need to
-      qHash() individual data members and combine the results somehow.
-     */
-
     return QT_PREPEND_NAMESPACE(qHash)(toString());
 }
 

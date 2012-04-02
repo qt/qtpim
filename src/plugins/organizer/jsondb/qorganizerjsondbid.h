@@ -53,9 +53,9 @@
 // We mean it.
 //
 
-#include <qorganizeritemengineid.h>
-#include <qorganizercollectionengineid.h>
-#include <qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizeritemengineid.h>
+#include <QtOrganizer/qorganizercollectionengineid.h>
 
 #include <QtCore/qdebug.h>
 

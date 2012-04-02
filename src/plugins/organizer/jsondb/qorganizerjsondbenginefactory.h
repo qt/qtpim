@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include <qorganizermanagerenginefactory.h>
+#include <QtOrganizer/qorganizermanagerenginefactory.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

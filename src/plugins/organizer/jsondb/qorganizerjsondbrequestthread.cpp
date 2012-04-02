@@ -39,17 +39,19 @@
 **
 ****************************************************************************/
 
-#include <QCoreApplication>
-
 #include "qorganizerjsondbrequestthread.h"
-#include "qorganizerjsondbid.h"
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbrequestmanager.h"
 #include "qorganizerjsondbdatastorage.h"
 #include "qorganizerjsondbstring.h"
-#include "qorganizer.h"
+
+#include <QtOrganizer/qorganizerevent.h>
+#include <QtOrganizer/qorganizeritemcollectionfilter.h>
+#include <QtOrganizer/qorganizeritemunionfilter.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qeventloop.h>
+#include <QtCore/qmutex.h>
 #include <QtCore/qtimer.h>
 #include <QtCore/quuid.h>
 

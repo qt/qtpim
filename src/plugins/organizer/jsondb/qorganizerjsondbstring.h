@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include <qorganizerglobal.h>
+#include <QtOrganizer/qorganizerglobal.h>
 
 #include <QtCore/qstring.h>
 

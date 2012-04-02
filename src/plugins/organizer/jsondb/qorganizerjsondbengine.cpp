@@ -39,12 +39,14 @@
 **
 ****************************************************************************/
 
-#include <QEventLoop>
-#include <QAbstractSocket>
-
 #include "qorganizerjsondbengine.h"
+#include "qorganizerjsondbrequestthread.h"
 #include "qorganizerjsondbstring.h"
-#include "qorganizer.h"
+
+#include <QtOrganizer/qorganizeritemdetails.h>
+
+#include <QtCore/qeventloop.h>
+#include <QtNetwork/qabstractsocket.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

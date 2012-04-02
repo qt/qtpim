@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include <qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizerabstractrequest.h>
 
 #include <QtCore/qwaitcondition.h>
 

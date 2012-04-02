@@ -53,14 +53,14 @@
 // We mean it.
 //
 
-#include <QThread>
-#include <QMutex>
-#include <QWaitCondition>
+#include <QtOrganizer/qorganizercollectionchangeset.h>
+#include <QtOrganizer/qorganizeritemchangeset.h>
+#include <QtOrganizer/qorganizeritemrequests.h>
 
-#include "qorganizer.h"
-#include "qorganizerjsondbconverter.h"
+#include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE
+class QMutex;
 class QTimer;
 QT_END_NAMESPACE
 

@@ -53,28 +53,11 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QQueue>
-#include <QPair>
-#include <QSet>
-#include <QDateTime>
-#include <QString>
-#include <QObject>
-
-#include "qorganizeritem.h"
-#include "qorganizermanager.h"
-#include "qorganizermanagerengine.h"
-#include "qorganizermanagerenginefactory.h"
-#include "qorganizerabstractrequest.h"
-#include "qorganizeritemchangeset.h"
-#include "qorganizeritemengineid.h"
-#include "qorganizercollectionengineid.h"
-#include "qorganizerjsondbrequestthread.h"
+#include <QtOrganizer/qorganizermanagerengine.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
+
+class QOrganizerJsonDbRequestThread;
 
 class QOrganizerJsonDbEngine : public QOrganizerManagerEngine
 {

@@ -42,7 +42,9 @@
 #include "qorganizerjsondbconverter.h"
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring.h"
-#include "qorganizer.h"
+
+#include <QtOrganizer/qorganizermanagerengine.h>
+#include <QtOrganizer/qorganizeritemfilters.h>
 
 #include <QtCore/qjsonarray.h>
 

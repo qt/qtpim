@@ -38,12 +38,15 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #include "qorganizerjsondbdatastorage.h"
-
-#include <QMutexLocker>
-
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring.h"
+
+#include <QtOrganizer/qorganizeritemcollectionfilter.h>
+#include <QtOrganizer/qorganizermanagerengine.h>
+
+#include <QtCore/qmutex.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

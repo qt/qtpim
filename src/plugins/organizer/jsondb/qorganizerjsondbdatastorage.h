@@ -53,15 +53,13 @@
 // We mean it.
 //
 
-#include <QThread>
-#include <QWaitCondition>
-#include <QList>
-
-#include "qorganizer.h"
 #include "qorganizerjsondbconverter.h"
 
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbwatcher.h>
+
+#include <QtCore/qthread.h>
+#include <QtCore/qwaitcondition.h>
 
 QT_USE_NAMESPACE_JSONDB
 

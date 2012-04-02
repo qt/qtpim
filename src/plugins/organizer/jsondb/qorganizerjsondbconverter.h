@@ -53,9 +53,10 @@
 // We mean it.
 //
 
-#include <QVariant>
-
-#include "qorganizer.h"
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizermanager.h>
+#include <QtOrganizer/qorganizeritemdetails.h>
+#include <QtOrganizer/qorganizeritemdetailfilter.h>
 
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbreadrequest.h>

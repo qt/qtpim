@@ -405,9 +405,8 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         QOrganizerManager::Error alarmError;
         QString alarmId;
         QOrganizerItemId itemId;
-        QMapIterator<int, QOrganizerItem> i(itemMap);
-        while (i.hasNext()) {
-            i.next();
+        QMap<int, QOrganizerItem>::const_iterator i = itemMap.constBegin();
+        while (i != itemMap.constEnd()) {
             if (!errorMap.contains(i.key())) {
                 alarmError = QOrganizerManager::NoError;
                 alarmId.clear();
@@ -441,6 +440,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
                 // the item was not saved, let's not save the parent item either
                 parentItemMap.remove(i.key());
             }
+            ++i;
         }
     }
     // save parent items with modified exception dates
@@ -681,13 +681,13 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
     }
     if (!collectionMap.isEmpty()) {
         m_storage->saveCollections(&collectionMap, &errorMap, &latestError, collectionSaveReq->storageLocation());
-        QMapIterator<int, QOrganizerCollection> i(collectionMap);
-        while (i.hasNext()) {
-            i.next();
+        QMap<int, QOrganizerCollection>::const_iterator i = collectionMap.constBegin();
+        while (i != collectionMap.constEnd()) {
             if (!errorMap.contains(i.key())) {
                 if (collectionIsNewStatusMap.value(i.key()))
                     collections.replace(i.key(), i.value());
             }
+            ++i;
         }
     }
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionSaveReq);

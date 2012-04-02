@@ -251,6 +251,12 @@ Module {
             isPointer: true
         }
         Property { name: "tag"; type: "QDeclarativeContactTag"; isReadonly: true; isPointer: true }
+        Property {
+            name: "timestamp"
+            type: "QDeclarativeContactTimestamp"
+            isReadonly: true
+            isPointer: true
+        }
         Property { name: "url"; type: "QDeclarativeContactUrl"; isReadonly: true; isPointer: true }
         Property {
             name: "version"

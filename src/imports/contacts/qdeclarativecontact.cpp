@@ -625,6 +625,16 @@ QDeclarativeContactTag*  QDeclarativeContact::tag()
 }
 
 /*!
+    \qmlproperty Timestamp Contact::timestamp
+
+    This property holds the timestamp detail of the Contact object.
+*/
+QDeclarativeContactTimestamp*  QDeclarativeContact::timestamp()
+{
+    return getDetail<QDeclarativeContactTimestamp>(QDeclarativeContactDetail::Timestamp);
+}
+
+/*!
     \qmlproperty Url Contact::url
 
     This property holds the url detail of the Contact object.

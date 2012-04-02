@@ -728,6 +728,32 @@ TestCase {
     }
 
     Contact {
+        id: contactWithTimestamp1
+        Timestamp {
+            created: new Date(2012, 1, 1)
+        }
+    }
+
+    function test_contact_timestamp_change_emits_signal() {
+        listenToSignalFromObject("contactChanged", contactWithTimestamp1);
+        contactWithTimestamp1.timestamp.created = new Date(2012, 1, 2);
+        verifySignalReceived();
+    }
+
+    Contact {
+        id: contactWithTimestamp2
+        Timestamp {
+            created: new Date(2012, 1, 1)
+        }
+    }
+
+    function test_contact_timestamp_emits_no_signal_when_value_does_not_change() {
+        listenToSignalFromObject("contactChanged", contactWithTimestamp2);
+        contactWithTimestamp2.timestamp.created = contactWithTimestamp2.timestamp.created;
+        verifyNoSignalReceived();
+    }
+
+    Contact {
         id: contactWithUrl1
         Url {
             url: "http://old"

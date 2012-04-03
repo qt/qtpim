@@ -364,12 +364,12 @@ bool QOrganizerItemDetail::hasValue(int field) const
 }
 
 /*!
-    Sets the value of the given \a field to be \a value. If the given \a value is invalid, removes
-    the given \a field from the detail. Returns true on success, or false otherwise.
+    Sets the value of the given \a field to be \a value. If the given \a value is invalid or null,
+    removes the given \a field from the detail. Returns true on success, or false otherwise.
  */
 bool QOrganizerItemDetail::setValue(int field, const QVariant &value)
 {
-    if (!value.isValid())
+    if (!value.isValid() || value.isNull())
         return removeValue(field);
 
     d->m_values.insert(field, value);

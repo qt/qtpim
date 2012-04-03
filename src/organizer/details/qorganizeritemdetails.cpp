@@ -144,24 +144,25 @@ QString QOrganizerItemDisplayLabel::label() const
 
 /*!
     \enum QOrganizerEventAttendee::ParticipationStatus
-    \value StatusUnknown The status of the attendee is unknown or they have yet to respond
-    \value StatusAccepted The attendee has responded that they will be attending the event
-    \value StatusDeclined The attendee has responded that they will not be attending the event
-    \value StatusTentative The attendee has responded that they may be attending the event
-    \value StatusDelegated The attendee has delegated attendance at the event to another person
-    \value StatusInProcess The attendee is currently attending the event
-    \value StatusCompleted The attendee attended the event
+    \value StatusUnknown    The status of the attendee is unknown or they have yet to respond.
+    \value StatusAccepted   The attendee has responded that they will be attending the event.
+    \value StatusDeclined   The attendee has responded that they will not be attending the event.
+    \value StatusTentative  The attendee has responded that they may be attending the event.
+    \value StatusDelegated  The attendee has delegated attendance at the event to another person.
+    \value StatusInProcess  The attendee is currently attending the event.
+    \value StatusCompleted  The attendee attended the event.
 */
 
 /*!
     \enum QOrganizerEventAttendee::ParticipationRole
-    \value RoleUnknown The role of the attendee is unknown or they have yet to respond
-    \value RoleOrganizer The attendee is the organizer of the event
-    \value RoleChairperson The attendee is the chairperson of the event
-    \value RoleHost The attendee is the host of the event
-    \value RoleRequiredParticipant The attendee is a required participant of the event
-    \value RoleOptionalParticipant The attendee is an optional participant of the event
-    \value RoleNonParticipant The attendee is not participating in the event (value included for informational purposes only, as per iCalendar specification)
+    \value RoleUnknown              The role of the attendee is unknown or they have yet to respond.
+    \value RoleOrganizer            The attendee is the organizer of the event.
+    \value RoleChairperson          The attendee is the chairperson of the event.
+    \value RoleHost                 The attendee is the host of the event.
+    \value RoleRequiredParticipant  The attendee is a required participant of the event.
+    \value RoleOptionalParticipant  The attendee is an optional participant of the event.
+    \value RoleNonParticipant       The attendee is not participating in the event (value included
+                                    for informational purposes only, as per iCalendar specification).
 */
 
 /*!
@@ -171,12 +172,13 @@ void QOrganizerEventAttendee::setName(const QString &name)
 {
     setValue(FieldName, name);
 }
+
 /*!
     Returns the name (or title or other label) of the attendee.
  */
 QString QOrganizerEventAttendee::name() const
 {
-    return value<QString>(FieldName);
+    return value(FieldName).toString();
 }
 
 /*!
@@ -192,7 +194,7 @@ void QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
  */
 QString QOrganizerEventAttendee::emailAddress() const
 {
-    return value<QString>(FieldEmailAddress);
+    return value(FieldEmailAddress).toString();
 }
 
 /*!
@@ -209,7 +211,7 @@ void QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
  */
 QString QOrganizerEventAttendee::attendeeId() const
 {
-    return value<QString>(FieldAttendeeId);
+    return value(FieldAttendeeId).toString();
 }
 
 /*!
@@ -225,7 +227,7 @@ void QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
  */
 QOrganizerEventAttendee::ParticipationStatus QOrganizerEventAttendee::participationStatus() const
 {
-    return static_cast<ParticipationStatus>(value<int>(FieldParticipationStatus));
+    return static_cast<ParticipationStatus>(value(FieldParticipationStatus).toInt());
 }
 
 /*!
@@ -233,7 +235,7 @@ QOrganizerEventAttendee::ParticipationStatus QOrganizerEventAttendee::participat
  */
 void QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
 {
-    setValue(FieldParticipationRole, static_cast<int>(role));
+    setValue(FieldParticipationRole, role);
 }
 
 /*!
@@ -241,7 +243,7 @@ void QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
  */
 QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participationRole() const
 {
-    return static_cast<ParticipationRole>(value<int>(FieldParticipationRole));
+    return static_cast<ParticipationRole>(value(FieldParticipationRole).toInt());
 }
 
 /*!
@@ -269,7 +271,7 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participatio
  */
 QDateTime QOrganizerEventTime::startDateTime() const
 {
-    return value<QDateTime>(FieldStartDateTime);
+    return value(FieldStartDateTime).toDateTime();
 }
 
 /*!
@@ -304,7 +306,7 @@ void QOrganizerEventTime::setEndDateTime(const QDateTime &endDateTime)
  */
 QDateTime QOrganizerEventTime::endDateTime() const
 {
-    return value<QDateTime>(FieldEndDateTime);
+    return value(FieldEndDateTime).toDateTime();
 }
 
 /*!
@@ -323,7 +325,7 @@ void QOrganizerEventTime::setAllDay(bool isAllDay)
  */
 bool QOrganizerEventTime::isAllDay() const
 {
-    return value<bool>(FieldAllDay);
+    return value(FieldAllDay).toBool();
 }
 
 
@@ -429,7 +431,7 @@ void QOrganizerItemParent::setOriginalDate(const QDate &date)
  */
 QDateTime QOrganizerJournalTime::entryDateTime() const
 {
-    return value<QDateTime>(FieldEntryDateTime);
+    return value(FieldEntryDateTime).toDateTime();
 }
 
 /*!
@@ -459,39 +461,47 @@ void QOrganizerJournalTime::setEntryDateTime(const QDateTime &entryDateTime)
  */
 
 /*!
-    Returns the latitude value of the location's geocoordinates
+    Returns the latitude value of the location's geocoordinates.
  */
 double QOrganizerItemLocation::latitude() const
 {
-    return value<double>(FieldLatitude);
+    return value(FieldLatitude).toDouble();
 }
 
 /*!
-    Sets the latitude value of the location's geocoordinates to \a latitude
+    Sets the latitude value of the location's geocoordinates to \a latitude.
+
+    The equator has a latitude of 0, the North pole has a latitude of 90, and the South pole has a
+    latitude of -90. Values out of the range will be ignored.
  */
 void QOrganizerItemLocation::setLatitude(double latitude)
 {
-    setValue(FieldLatitude, latitude);
+    if (latitude >= -90 && latitude <= 90)
+        setValue(FieldLatitude, latitude);
 }
 
 /*!
-    Returns the longitude value of the location's geocoordinates
+    Returns the longitude value of the location's geocoordinates.
  */
 double QOrganizerItemLocation::longitude() const
 {
-    return value<double>(FieldLongitude);
+    return value(FieldLongitude).toDouble();
 }
 
 /*!
-    Sets the longitude value of the location's geocoordinates to \a longitude
+    Sets the longitude value of the location's geocoordinates to \a longitude.
+
+    The Prime Meridian has a longitude of 0, ranging to 180 eastward and -180 westward. Values out
+    of the range will be ignored.
  */
 void QOrganizerItemLocation::setLongitude(double longitude)
 {
-    setValue(FieldLongitude, longitude);
+    if (longitude >= -180 && longitude >= 180)
+        setValue(FieldLongitude, longitude);
 }
 
 /*!
-    Returns the human-readable label of the location
+    Returns the human-readable label of the location.
  */
 QString QOrganizerItemLocation::label() const
 {
@@ -499,7 +509,7 @@ QString QOrganizerItemLocation::label() const
 }
 
 /*!
-    Sets the human-readable label of the location to \a label
+    Sets the human-readable label of the location to \a label.
  */
 void QOrganizerItemLocation::setLabel(const QString &label)
 {
@@ -571,7 +581,7 @@ QString QOrganizerItemComment::comment() const
  */
 void QOrganizerItemPriority::setPriority(Priority priority)
 {
-    setValue(FieldPriority, static_cast<int>(priority));
+    setValue(FieldPriority, priority);
 }
 
 /*!
@@ -579,7 +589,7 @@ void QOrganizerItemPriority::setPriority(Priority priority)
  */
 QOrganizerItemPriority::Priority QOrganizerItemPriority::priority() const
 {
-    return static_cast<Priority>(value<int>(FieldPriority));
+    return static_cast<Priority>(value(FieldPriority).toInt());
 }
 
 
@@ -702,6 +712,8 @@ void QOrganizerItemRecurrence::setExceptionDates(const QSet<QDate> &xdates)
 
 /*!
     \enum QOrganizerItemReminder::ReminderType
+
+    This enumeration defines the type of the reminder.
     \value NoReminder This reminder is entirely unobtrusive
     \value AudibleReminder This reminder has an audible element
     \value VisualReminder This reminder has a visual element
@@ -737,21 +749,24 @@ QOrganizerItemReminder::ReminderType QOrganizerItemReminder::reminderType() cons
 /*!
     Sets the number of seconds prior to the activation of the item
     at which the user wants to be reminded of the item to \a seconds.
+
     The exact datetime of activation of the item depends on the type of
     item: for a QOrganizerTodo or QOrganizerTodoOccurrence it is the
     due date time; for a QOrganizerEvent or QOrganizerEventOccurrence
     it is the start date time.
 
-    Calling this function will clear the absolute date time, if set.
+    The value must be non-negative, and negative values will be ignored.
  */
 void QOrganizerItemReminder::setSecondsBeforeStart(int seconds)
 {
-    setValue(FieldSecondsBeforeStart, seconds);
+    if (seconds >= 0)
+        setValue(FieldSecondsBeforeStart, seconds);
 }
 
 /*!
     Returns the number of seconds prior to the activation of the item
     at which the user wants to be reminded of the item.
+
     The exact datetime of activation of the item depends on the type of
     item: for a QOrganizerTodo or QOrganizerTodoOccurrence it is the
     due date time; for a QOrganizerEvent or QOrganizerEventOccurrence
@@ -759,7 +774,7 @@ void QOrganizerItemReminder::setSecondsBeforeStart(int seconds)
  */
 int QOrganizerItemReminder::secondsBeforeStart() const
 {
-    return value<int>(FieldSecondsBeforeStart);
+    return value(FieldSecondsBeforeStart).toInt();
 }
 
 /*!
@@ -769,7 +784,7 @@ int QOrganizerItemReminder::secondsBeforeStart() const
  */
 int QOrganizerItemReminder::repetitionCount() const
 {
-    return value<int>(FieldRepetitionCount);
+    return value(FieldRepetitionCount).toInt();
 }
 
 /*!
@@ -779,18 +794,23 @@ int QOrganizerItemReminder::repetitionCount() const
  */
 int QOrganizerItemReminder::repetitionDelay() const
 {
-    return value<int>(FieldRepetitionDelay);
+    return value(FieldRepetitionDelay).toInt();
 }
 
 /*!
     Sets the number of repetitions of the reminderto \a count, and the delay (in seconds)
     between each repetition of the reminder to \a delaySeconds.
 
+    Both \a count and \a delaySeconds must be positive numbers, otherwise both will be ignored.
+
     \sa repetitionCount(), repetitionDelay()
 */
 void QOrganizerItemReminder::setRepetition(int count, int delaySeconds)
 {
-    setValue(FieldRepetitionCount, count); setValue(FieldRepetitionDelay, delaySeconds);
+    if (count > 0 && delaySeconds >= 0) {
+        setValue(FieldRepetitionCount, count);
+        setValue(FieldRepetitionDelay, delaySeconds);
+    }
 }
 
 /*!
@@ -842,7 +862,7 @@ void QOrganizerItemAudibleReminder::setDataUrl(const QUrl &dataUrl)
  */
 QUrl QOrganizerItemAudibleReminder::dataUrl() const
 {
-    return value<QUrl>(FieldDataUrl);
+    return value(FieldDataUrl).toUrl();
 }
 
 
@@ -899,7 +919,7 @@ QString QOrganizerItemEmailReminder::body() const
  */
 QVariantList QOrganizerItemEmailReminder::attachments() const
 {
-    return value<QVariantList>(FieldAttachments);
+    return value(FieldAttachments).toList();
 }
 
 /*!
@@ -916,7 +936,7 @@ void QOrganizerItemEmailReminder::setRecipients(const QStringList &recipients)
  */
 QStringList QOrganizerItemEmailReminder::recipients() const
 {
-    return value<QStringList>(FieldRecipients);
+    return value(FieldRecipients).toStringList();
 }
 
 
@@ -954,7 +974,7 @@ void QOrganizerItemVisualReminder::setMessage(const QString &message)
 */
 QString QOrganizerItemVisualReminder::message() const
 {
-    return value<QString>(FieldMessage);
+    return value(FieldMessage).toString();
 }
 
 /*!
@@ -970,7 +990,7 @@ void QOrganizerItemVisualReminder::setDataUrl(const QUrl &dataUrl)
 */
 QUrl QOrganizerItemVisualReminder::dataUrl() const
 {
-    return value<QUrl>(FieldDataUrl);
+    return value(FieldDataUrl).toUrl();
 }
 
 
@@ -1025,7 +1045,7 @@ QString QOrganizerItemTag::tag() const
  */
 QDateTime QOrganizerItemTimestamp::created() const
 {
-    return value<QDateTime>(FieldCreated);
+    return value(FieldCreated).toDateTime();
 }
 
 /*!
@@ -1033,7 +1053,7 @@ QDateTime QOrganizerItemTimestamp::created() const
  */
 QDateTime QOrganizerItemTimestamp::lastModified() const
 {
-    return value<QDateTime>(FieldLastModified);
+    return value(FieldLastModified).toDateTime();
 }
 
 /*!
@@ -1082,7 +1102,7 @@ void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
  */
 QOrganizerTodoProgress::Status QOrganizerTodoProgress::status() const
 {
-    return (Status) value<int>(FieldStatus);
+    return static_cast<Status>(value(FieldStatus).toInt());
 }
 
 /*!
@@ -1090,7 +1110,7 @@ QOrganizerTodoProgress::Status QOrganizerTodoProgress::status() const
  */
 void QOrganizerTodoProgress::setStatus(Status status)
 {
-    setValue(FieldStatus, (int) status);
+    setValue(FieldStatus, status);
 }
 
 /*!
@@ -1098,7 +1118,7 @@ void QOrganizerTodoProgress::setStatus(Status status)
  */
 QDateTime QOrganizerTodoProgress::finishedDateTime() const
 {
-    return value<QDateTime>(FieldFinishedDateTime);
+    return value(FieldFinishedDateTime).toDateTime();
 }
 
 /*!
@@ -1114,11 +1134,12 @@ void QOrganizerTodoProgress::setFinishedDateTime(const QDateTime &finishedDateTi
  */
 int QOrganizerTodoProgress::percentageComplete() const
 {
-    return value<int>(FieldPercentageComplete);
+    return value(FieldPercentageComplete).toInt();
 }
 
 /*!
-    Sets the todo progress item's completion percentage to \a percentage.
+    Sets the todo progress item's completion percentage to \a percentage. The \a percentage must
+    be between 0 and 100, and values out of the range will be ignored.
  */
 void QOrganizerTodoProgress::setPercentageComplete(int percentage)
 {
@@ -1149,7 +1170,7 @@ void QOrganizerTodoProgress::setPercentageComplete(int percentage)
  */
 QDateTime QOrganizerTodoTime::startDateTime() const
 {
-    return value<QDateTime>(FieldStartDateTime);
+    return value(FieldStartDateTime).toDateTime();
 }
 
 /*!
@@ -1167,7 +1188,7 @@ void QOrganizerTodoTime::setStartDateTime(const QDateTime &startDateTime)
  */
 QDateTime QOrganizerTodoTime::dueDateTime() const
 {
-    return value<QDateTime>(FieldDueDateTime);
+    return value(FieldDueDateTime).toDateTime();
 }
 
 /*!
@@ -1180,8 +1201,8 @@ void QOrganizerTodoTime::setDueDateTime(const QDateTime &dueDateTime)
 }
 
 /*!
-    Sets the all-day status of the todo to \a isAllDay.
-    If the tasks is an all-day todo, no time is considered to be
+    Sets the all-day status of the TODO to \a isAllDay.
+    If the tasks is an all-day TODO, no time is considered to be
     specified for the todo, even if the start date time set
     for the todo has a time component.
  */
@@ -1191,12 +1212,11 @@ void QOrganizerTodoTime::setAllDay(bool isAllDay)
 }
 
 /*!
-    Returns true if a specific time was specified for the todo.
-    Returns false if the todo is an all-day todo.
+    Returns true if the todo is an all-day TODO, or false otherwise.
  */
 bool QOrganizerTodoTime::isAllDay() const
 {
-    return value<bool>(FieldAllDay);
+    return value(FieldAllDay).toBool();
 }
 
 
@@ -1276,7 +1296,7 @@ void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
  */
 void QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
 {
-    setValue(FieldParticipationStatus, static_cast<int>(status));
+    setValue(FieldParticipationStatus, status);
 }
 
 /*!
@@ -1284,7 +1304,7 @@ void QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::Partic
  */
 QOrganizerEventAttendee::ParticipationStatus QOrganizerEventRsvp::participationStatus() const
 {
-    return static_cast<QOrganizerEventAttendee::ParticipationStatus>(value<int>(FieldParticipationStatus));
+    return static_cast<QOrganizerEventAttendee::ParticipationStatus>(value(FieldParticipationStatus).toInt());
 }
 
 /*!
@@ -1292,7 +1312,7 @@ QOrganizerEventAttendee::ParticipationStatus QOrganizerEventRsvp::participationS
  */
 void QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::ParticipationRole role)
 {
-    setValue(FieldParticipationRole, static_cast<int>(role));
+    setValue(FieldParticipationRole, role);
 }
 
 /*!
@@ -1300,7 +1320,7 @@ void QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::Particip
  */
 QOrganizerEventAttendee::ParticipationRole QOrganizerEventRsvp::participationRole() const
 {
-    return static_cast<QOrganizerEventAttendee::ParticipationRole>(value<int>(FieldParticipationRole));
+    return static_cast<QOrganizerEventAttendee::ParticipationRole>(value(FieldParticipationRole).toInt());
 }
 
 /*!
@@ -1314,7 +1334,7 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventRsvp::participationRol
  */
 void QOrganizerEventRsvp::setResponseRequirement(ResponseRequirement responseRequirement)
 {
-    setValue(FieldResponseRequirement, static_cast<int>(responseRequirement));
+    setValue(FieldResponseRequirement, responseRequirement);
 }
 
 /*!
@@ -1322,7 +1342,7 @@ void QOrganizerEventRsvp::setResponseRequirement(ResponseRequirement responseReq
  */
 QOrganizerEventRsvp::ResponseRequirement QOrganizerEventRsvp::responseRequirement() const
 {
-    return static_cast<ResponseRequirement>(value<int>(FieldResponseRequirement));
+    return static_cast<ResponseRequirement>(value(FieldResponseRequirement).toInt());
 }
 
 /*!
@@ -1338,7 +1358,7 @@ void QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
  */
 QDate QOrganizerEventRsvp::responseDeadline() const
 {
-    return value<QDate>(FieldResponseDeadline);
+    return value(FieldResponseDeadline).toDate();
 }
 
 /*!
@@ -1354,7 +1374,7 @@ void QOrganizerEventRsvp::setResponseDate(const QDate &date)
  */
 QDate QOrganizerEventRsvp::responseDate() const
 {
-    return value<QDate>(FieldResponseDate);
+    return value(FieldResponseDate).toDate();
 }
 
 /*!
@@ -1370,7 +1390,7 @@ void QOrganizerEventRsvp::setOrganizerName(const QString &name)
  */
 QString QOrganizerEventRsvp::organizerName() const
 {
-    return value<QString>(FieldOrganizerName);
+    return value(FieldOrganizerName).toString();
 }
 
 /*!
@@ -1386,7 +1406,7 @@ void QOrganizerEventRsvp::setOrganizerEmail(const QString &email)
  */
 QString QOrganizerEventRsvp::organizerEmail() const
 {
-    return value<QString>(FieldOrganizerEmail);
+    return value(FieldOrganizerEmail).toString();
 }
 
 /*!
@@ -1435,11 +1455,11 @@ void QOrganizerItemClassification::setClassification(const QString &classificati
 }
 
 /*!
-   Returns classification of the event.
+   Returns classification of the item.
  */
 QString QOrganizerItemClassification::classification() const
 {
-    return value<QString>(FieldClassification);
+    return value(FieldClassification).toString();
 }
 
 /*!
@@ -1510,11 +1530,12 @@ QVariant QOrganizerItemExtendedDetail::data() const
  */
 
 /*!
-    Sets the integer \a version.
+    Sets the integer \a version. The \a version must be a positive number, otherwise ignored.
  */
 void QOrganizerItemVersion::setVersion(int version)
 {
-    setValue(FieldVersion, version);
+    if (version > 0)
+        setValue(FieldVersion, version);
 }
 
 /*!

@@ -217,7 +217,6 @@ As previously mentioned it may implement its own sorting or filtering, in functi
 QContactManagerEngine::contacts().  An engine may also implement:
 \list
   \li QContactManagerEngine::validateContact()
-  \li QContactManagerEngine::compatibleContact()
   \li QContactManagerEngine::synthesizedDisplayLabel()
 \endlist
 

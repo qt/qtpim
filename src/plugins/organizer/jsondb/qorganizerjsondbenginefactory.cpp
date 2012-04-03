@@ -76,7 +76,7 @@ QOrganizerCollectionEngineId *QOrganizerJsonDbEngineFactory::createCollectionEng
 
 QString QOrganizerJsonDbEngineFactory::managerName() const
 {
-    return QOrganizerJsonDbStr::jsonDbEngineId();
+    return QOrganizerJsonDbStr::jsonDbManagerName();
 }
 
 #include "moc_qorganizerjsondbenginefactory.cpp"

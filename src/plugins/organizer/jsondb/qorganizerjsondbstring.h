@@ -63,8 +63,8 @@ class QOrganizerJsonDbStr
 {
 public:
     // JsonDb manager name
-    inline const static QString managerUri() { return QStringLiteral("qtorganizer:jsondb:"); }
-    inline const static QString jsonDbEngineId() { return QStringLiteral("jsondb"); }
+    inline const static QString jsonDbManagerUri() { return QStringLiteral("qtorganizer:jsondb:"); }
+    inline const static QString jsonDbManagerName() { return QStringLiteral("jsondb"); }
 
     inline const static QString jsonDbSchemaPrefix() { return QStringLiteral("com.nokia.mt.organizer."); }
 

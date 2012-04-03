@@ -89,7 +89,7 @@ QOrganizerJsonDbEngine::~QOrganizerJsonDbEngine()
 
 QString QOrganizerJsonDbEngine::managerName() const
 {
-    return QOrganizerJsonDbStr::jsonDbEngineId();
+    return QOrganizerJsonDbStr::jsonDbManagerName();
 }
 
 QMap<QString, QString> QOrganizerJsonDbEngine::managerParameters() const

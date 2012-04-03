@@ -56,7 +56,7 @@ public:
 #endif
 
     enum EventTimeField {
-        FieldStartDateTime = 0,
+        FieldStartDateTime = TypeEventTime + 1,
         FieldEndDateTime,
         FieldAllDay
     };

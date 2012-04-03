@@ -54,7 +54,7 @@ public:
 #endif
 
     enum DescriptionField {
-        FieldDescription = 0
+        FieldDescription = TypeDescription + 1
     };
 
     void setDescription(const QString &description);

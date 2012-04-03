@@ -56,7 +56,7 @@ public:
 #endif
 
     enum TodoTimeField {
-        FieldStartDateTime = 0,
+        FieldStartDateTime = TypeTodoTime + 1,
         FieldDueDateTime,
         FieldAllDay
     };

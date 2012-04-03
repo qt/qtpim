@@ -56,7 +56,7 @@ public:
 #endif
 
     enum JournalTimeField {
-        FieldEntryDateTime = 0
+        FieldEntryDateTime = TypeJournalTime + 1
     };
 
     void setEntryDateTime(const QDateTime &entryDateTime);

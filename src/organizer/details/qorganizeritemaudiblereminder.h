@@ -56,7 +56,7 @@ public:
 #endif
 
     enum AudibleReminderField {
-        FieldDataUrl = QOrganizerItemReminder::FieldRepetitionDelay + 100   // in case more fields added to QOrganizerItemReminder
+        FieldDataUrl = TypeAudibleReminder + 1
     };
 
     void setDataUrl(const QUrl &dataUrl);

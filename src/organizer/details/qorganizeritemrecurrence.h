@@ -55,7 +55,7 @@ public:
 #endif
 
     enum RecurrenceField {
-        FieldRecurrenceRules = 0,
+        FieldRecurrenceRules = TypeRecurrence + 1,
         FieldExceptionRules,
         FieldRecurrenceDates,
         FieldExceptionDates

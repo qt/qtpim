@@ -54,7 +54,7 @@ public:
 #endif
 
     enum GuidField {
-        FieldGuid = 0
+        FieldGuid = TypeGuid + 1
     };
 
     void setGuid(const QString &guid);

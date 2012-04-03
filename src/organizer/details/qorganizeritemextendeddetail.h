@@ -54,7 +54,7 @@ public:
 #endif
 
     enum ExtendedDetailField {
-        FieldName = 0,
+        FieldName = TypeExtendedDetail + 1,
         FieldData
     };
 

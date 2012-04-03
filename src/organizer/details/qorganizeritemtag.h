@@ -54,7 +54,7 @@ public:
 #endif
 
     enum TagField {
-        FieldTag = 0
+        FieldTag = TypeTag + 1
     };
 
     void setTag(const QString &tag);

@@ -56,7 +56,7 @@ public:
 #endif
 
     enum EmailReminderField {
-        FieldSubject = QOrganizerItemReminder::FieldRepetitionDelay + 100,  // in case more fields added to QOrganizerItemReminder
+        FieldSubject = TypeEmailReminder + 1,
         FieldBody,
         FieldAttachments,
         FieldRecipients

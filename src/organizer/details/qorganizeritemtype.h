@@ -54,7 +54,7 @@ public:
 #endif
 
     enum ItemType {
-        TypeUndefined = 0,
+        TypeUndefined = TypeItemType + 1,
         TypeEvent,
         TypeEventOccurrence,
         TypeTodo,
@@ -64,7 +64,7 @@ public:
     };
 
     enum ItemTypeField {
-        FieldType = 0
+        FieldType = 501
     };
 
     void setType(ItemType type);

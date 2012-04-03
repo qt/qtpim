@@ -161,7 +161,7 @@ void tst_QOrganizerItemDetails::displayLabel()
     d1.setLabel("Test 3");
     QVERIFY(oi.saveDetail(&d1));
     QCOMPARE(oi.details(QOrganizerItemDetail::TypeDisplayLabel).count(), 1);
-    QVERIFY(oi.detail(QOrganizerItemDetail::TypeDisplayLabel).value(QOrganizerItemDescription::FieldDescription) == QString("Test 3"));
+    QVERIFY(oi.detail(QOrganizerItemDetail::TypeDisplayLabel).value(QOrganizerItemDisplayLabel::FieldLabel) == QString("Test 3"));
 
     // test property remove
     QVERIFY(oi.removeDetail(&d1)); // can remove display label.  it's unique but not required.

@@ -54,7 +54,7 @@ public:
 #endif
 
     enum ClassificationField {
-        FieldClassification = 0
+        FieldClassification = TypeClassification + 1
     };
 
     static const QString Public;

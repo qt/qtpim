@@ -54,7 +54,7 @@ public:
 #endif
 
     enum DisplayLabelField {
-        FieldLabel = 0
+        FieldLabel = TypeDisplayLabel + 1
     };
 
     void setLabel(const QString &label);

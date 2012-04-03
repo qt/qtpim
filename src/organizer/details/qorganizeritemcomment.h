@@ -54,7 +54,7 @@ public:
 #endif
 
     enum CommentField {
-        FieldComment = 0
+        FieldComment = TypeComment + 1
     };
 
     void setComment(const QString &comment);

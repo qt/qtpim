@@ -54,7 +54,7 @@ public:
 #endif
 
     enum PriorityField {
-        FieldPriority = 0
+        FieldPriority = TypePriority + 1
     };
 
     // time vs impact priority?  greater granularity?

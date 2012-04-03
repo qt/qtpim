@@ -56,7 +56,7 @@ public:
 #endif
 
     enum TimestampField {
-        FieldCreated = 0,
+        FieldCreated = TypeTimestamp + 1,
         FieldLastModified
     };
 

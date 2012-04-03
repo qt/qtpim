@@ -54,7 +54,7 @@ public:
 #endif
 
     enum ReminderField {
-        FieldSecondsBeforeStart = 0,
+        FieldSecondsBeforeStart = TypeReminder + 1,
         FieldRepetitionCount,
         FieldRepetitionDelay
     };

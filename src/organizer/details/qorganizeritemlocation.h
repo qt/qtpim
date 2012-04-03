@@ -54,7 +54,7 @@ public:
 #endif
 
     enum LocationField {
-        FieldLatitude = 0,
+        FieldLatitude = TypeLocation + 1,
         FieldLongitude,
         FieldLabel
     };

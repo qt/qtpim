@@ -56,7 +56,7 @@ public:
 #endif
 
     enum TodoProgressField {
-        FieldFinishedDateTime = 0,
+        FieldFinishedDateTime = TypeTodoProgress + 1,
         FieldPercentageComplete,
         FieldStatus
     };

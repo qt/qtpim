@@ -54,7 +54,7 @@ public:
 #endif
 
     enum VisualReminderField {
-        FieldMessage = QOrganizerItemReminder::FieldRepetitionDelay + 100,   // in case more fields added to QOrganizerItemReminder
+        FieldMessage = TypeVisualReminder + 1,
         FieldDataUrl
     };
 

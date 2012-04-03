@@ -54,7 +54,7 @@ public:
 #endif
 
     enum VersionField {
-        FieldVersion = 0,
+        FieldVersion = TypeVersion + 1,
         FieldExtendedVersion
     };
 

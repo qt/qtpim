@@ -54,7 +54,7 @@ public:
 #endif
 
     enum EventAttendeeField {
-        FieldName = 0,
+        FieldName = TypeEventAttendee + 1,
         FieldEmailAddress,
         FieldAttendeeId,
         FieldParticipationStatus,

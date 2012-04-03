@@ -55,7 +55,7 @@ public:
 #endif
 
     enum EventRsvpField {
-        FieldParticipationStatus = 0,
+        FieldParticipationStatus = TypeEventRsvp + 1,
         FieldParticipationRole,
         FieldResponseRequirement,
         FieldResponseDeadline,

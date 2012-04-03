@@ -57,7 +57,7 @@ public:
 #endif
 
     enum ParentField {
-        FieldParentId = 0,
+        FieldParentId = TypeParent + 1,
         FieldOriginalDate
     };
 

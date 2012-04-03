@@ -42,7 +42,6 @@
 #ifndef QORGANIZEREVENTATTENDEE_H
 #define QORGANIZEREVENTATTENDEE_H
 
-#include <QString>
 #include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
@@ -100,4 +99,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZEREVENTATTENDEE_H

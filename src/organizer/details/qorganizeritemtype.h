@@ -53,7 +53,6 @@ public:
     Q_DECLARE_CUSTOM_ORGANIZER_DETAIL(QOrganizerItemType, QOrganizerItemDetail::TypeItemType)
 #endif
 
-
     enum ItemType {
         TypeUndefined = 0,
         TypeEvent,

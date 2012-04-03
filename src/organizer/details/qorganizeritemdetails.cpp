@@ -989,13 +989,6 @@ QUrl QOrganizerItemVisualReminder::dataUrl() const
  */
 
 /*!
-    \variable QOrganizerItemTag::Anniversary
-
-    The constant string for anniversary and birthday tag.
-*/
-const QString QOrganizerItemTag::Anniversary(QStringLiteral("ANNIVERSARY"));
-
-/*!
     Sets a tag associated with an organizer item to \a tag.
  */
 void QOrganizerItemTag::setTag(const QString &tag)

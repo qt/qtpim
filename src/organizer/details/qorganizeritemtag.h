@@ -57,8 +57,6 @@ public:
         FieldTag = 0
     };
 
-    static const QString Anniversary;
-
     void setTag(const QString &tag);
     QString tag() const;
 };

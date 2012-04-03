@@ -1898,7 +1898,8 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else if (QOrganizerItemDetail::TypeParent == detailType) {
             if (QOrganizerItemParent::FieldParentId == detailField) {
                 jsonDbQueryStr->append(equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::itemOccurrenceParent()).arg(df.value().value<QOrganizerItemId>().toString().remove(QOrganizerJsonDbStr::managerName())));
+                    .arg(QOrganizerJsonDbStr::itemOccurrenceParent())
+                    .arg(QOrganizerManagerEngine::engineItemId(df.value().value<QOrganizerItemId>())->toString()));
             } else if (QOrganizerItemParent::FieldOriginalDate == detailField) {
                 jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::itemOccurrenceOriginalDate()).arg(df.value().toDate().toString(Qt::ISODate)));

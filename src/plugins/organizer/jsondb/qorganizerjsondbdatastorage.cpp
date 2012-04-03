@@ -562,7 +562,8 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
     }
     case FetchItemOccurrences:
     {
-        jsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryOccurrenceItemsByParent().arg(m_parentItemId.toString().remove(QOrganizerJsonDbStr::managerName()));
+        jsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryOccurrenceItemsByParent()
+                          .arg(QOrganizerManagerEngine::engineItemId(m_parentItemId)->toString());
         if (!makeJsonDbRequest(JsonDbReadRequest, 0, jsonDbQuery))
             m_syncWaitCondition.wakeAll();
 

@@ -792,7 +792,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \li Name.MiddleName
    \li Name.LastName
    \li Name.Suffix
-   \li Name.CustomLabel
    \endlist
 
   This element is part of the \b{QtContacts} module.
@@ -822,11 +821,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \qmlproperty string Name::suffix
 
   This property holds the suffix part of the name.
-  */
-/*!
-  \qmlproperty string Name::customLabel
-
-  This property holds a custom formatted label for the name.
   */
 
 

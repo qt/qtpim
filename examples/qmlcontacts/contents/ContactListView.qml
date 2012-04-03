@@ -114,7 +114,7 @@ Item {
 
                                 Column {
                                     Text {
-                                        text: model.contact.displayLabel
+                                        text: model.contact.displayLabel ? model.contact.displayLabel.label : ""
                                         color: details.textColor;
                                     }
                                     Text {

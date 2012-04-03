@@ -74,10 +74,10 @@ Item {
                 font.weight: Font.Bold
             }
             FieldRow {
-                id: customLabelRow
+                id: displayLabelRow
                 width: normalView.width
                 label: "Display"
-                value: contact ? contact.name.customLabel : ""
+                value: (contact && contact.displayLabel) ? contact.displayLabel.label : ""
             }
             FieldRow {
                 id: firstNameRow
@@ -275,7 +275,7 @@ Item {
         onButtonClicked: {
                 // force the focus away from any TextInputs, to ensure they save
                 toolBar.focus = true
-                contact.name.customLabel = customLabelRow.newValue
+                contact.displayLabel.label = displayLabelRow.newValue
                 contact.name.firstName = firstNameRow.newValue
                 contact.name.lastName = lastNameRow.newValue
                 switch (index) {

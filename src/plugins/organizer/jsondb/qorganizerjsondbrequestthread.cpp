@@ -46,7 +46,7 @@
 #include "qorganizerjsondbstring.h"
 #include "qorganizerjsondbid.h"
 
-#include <QtOrganizer/qorganizerevent.h>
+#include <QtOrganizer/qorganizeritems.h>
 #include <QtOrganizer/qorganizeritemcollectionfilter.h>
 #include <QtOrganizer/qorganizeritemunionfilter.h>
 

@@ -39,23 +39,24 @@
 **
 ****************************************************************************/
 
-#include "qorganizerjournal.h"
+#include <qorganizerjournal.h>
+#include <qorganizerjournaltime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerJournal
-  \brief The QOrganizerJournal class supplies a journal which is associated with a particular point in time
-  \inmodule QtOrganizer
-  \ingroup organizer-items
+    \class QOrganizerJournal
+    \brief The QOrganizerJournal class supplies a journal which is associated with a particular point in time
+    \inmodule QtOrganizer
+    \ingroup organizer-items
 
-  A journal consists of personal data which is associated with a particular point in time.
+    A journal consists of personal data which is associated with a particular point in time.
  */
 
 /*!
-  Sets the date time which this journal is associated with to \a dateTime
+    Sets the date time which this journal is associated with to \a dateTime.
  */
-void QOrganizerJournal::setDateTime(const QDateTime& dateTime)
+void QOrganizerJournal::setDateTime(const QDateTime &dateTime)
 {
     QOrganizerJournalTime jtr = detail(QOrganizerItemDetail::TypeJournalTime);
     jtr.setEntryDateTime(dateTime);
@@ -63,7 +64,7 @@ void QOrganizerJournal::setDateTime(const QDateTime& dateTime)
 }
 
 /*!
-  Returns the date time associated with this journal
+    Returns the date time associated with this journal.
  */
 QDateTime QOrganizerJournal::dateTime() const
 {

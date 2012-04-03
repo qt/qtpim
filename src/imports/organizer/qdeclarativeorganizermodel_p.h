@@ -47,6 +47,7 @@
 #include <QQmlParserStatus>
 
 #include <qorganizeritem.h>
+#include <qorganizerabstractrequest.h>
 #include "qdeclarativeorganizeritem_p.h"
 #include <qversitreader.h>
 #include <qversitwriter.h>

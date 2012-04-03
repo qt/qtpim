@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#include "qorganizernote.h"
+#include <qorganizernote.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerNote
-  \brief The QOrganizerNote class provides a note which is not associated with any particular point in time
-  \inmodule QtOrganizer
-  \ingroup organizer-items
+    \class QOrganizerNote
+    \brief The QOrganizerNote class provides a note which is not associated with any particular point in time
+    \inmodule QtOrganizer
+    \ingroup organizer-items
 
-  A note is a convenience facade for a QOrganizerItem
-  that has its type set to TypeNote.  It contains information which is
-  not associated with a particular point in time.
+    A note is a convenience facade for a QOrganizerItem
+    that has its type set to TypeNote.  It contains information which is
+    not associated with a particular point in time.
  */
 
 QTORGANIZER_END_NAMESPACE

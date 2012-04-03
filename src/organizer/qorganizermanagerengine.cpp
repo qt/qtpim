@@ -40,9 +40,10 @@
 ****************************************************************************/
 
 #include <qorganizermanagerengine.h>
-#include <qorganizerjournal.h>
+#include <qorganizeritems.h>
 #include <qorganizeritemdetails.h>
 #include <qorganizeritemfilters.h>
+#include <qorganizeritemrequests.h>
 #include <private/qorganizeritemrequests_p.h>
 
 #include <QtCore/qmutex.h>

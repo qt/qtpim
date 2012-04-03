@@ -43,6 +43,7 @@
 
 #include <qorganizeritems.h>
 #include <qorganizermanager.h>
+#include <qorganizeritemrequests.h>
 #include "../../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE

@@ -50,63 +50,63 @@ QTORGANIZER_BEGIN_NAMESPACE
     \inmodule QtOrganizer
     \ingroup organizer-main
 
-  This class is a mapping of a subset of the iCalendar RRULE property value, and each field in this
-  class corresponds to a fragment of iCalendar's RRULE.  This class supports the same fragments as
-  those supported by RRULE, except for describing recurrences on a higher frequency than Daily.
-  That is, this class doesn't support hourly, minutely or secondly recurrences, nor does it support
-  specifying which hour, minute or second of a day to recur on.  These types of rules are
-  unsupported because most calendaring backends don't support them, and it simplifies recurrences
-  by enforcing that there can be at most one occurrence of an item per day.
+    This class is a mapping of a subset of the iCalendar RRULE property value, and each field in this
+    class corresponds to a fragment of iCalendar's RRULE.  This class supports the same fragments as
+    those supported by RRULE, except for describing recurrences on a higher frequency than Daily.
+    That is, this class doesn't support hourly, minutely or secondly recurrences, nor does it support
+    specifying which hour, minute or second of a day to recur on.  These types of rules are
+    unsupported because most calendaring backends don't support them, and it simplifies recurrences
+    by enforcing that there can be at most one occurrence of an item per day.
 
-  The general rules for interaction between the fields when generating the occurence dates is as
-  follows:
-  \list
-    \li When a criterion takes a list, the items in the list are unioned together.
+    The general rules for interaction between the fields when generating the occurence dates is as
+    follows:
     \list
-      \li eg. with [dayOfWeek == Tuesday,Thursday], the event occurs if it is Tuesday or Thursday
-    \endlist
+    \li When a criterion takes a list, the items in the list are unioned together.
+        \list
+        \li e.g. with [dayOfWeek == Tuesday,Thursday], the event occurs if it is Tuesday or Thursday.
+        \endlist
 
     \li Frequency and specific criteria interact in a more complicated fashion.  For each criterion on a
-  larger timespan than the frequency, the dates matching the criterion are intersected with the
-  dates resulting from the frequency.
-    \list
-      \li eg. [frequency = Daily, month = January] means every day in January
-  For each criterion on a shorter timespan than the frequency, the criterion is unioned.
-      \li eg. [frequency = Weekly, dayOfWeek = Wednesday,Friday] means every Wednesday and Friday of
-  every week.
-    \endlist
-  This makes the frequency field superfluous in many cases when other criteria are present.
-  eg. all of the below mean the same thing:
-    \list
-      \li [frequency = Daily, dayOfWeek = Monday,Tuesday]
-      \li [frequency = Weekly, dayOfWeek = Monday,Tuesday]
-      \li [frequency = Monthly, dayOfWeek = Monday,Tuesday]
-      \li [frequency = Yearly, dayOfWeek = Monday,Tuesday]
-    \endlist
-  However, the frequency field may start affecting the result differently when other fields are
-  added like interval and positions.
+        larger timespan than the frequency, the dates matching the criterion are intersected with the
+        dates resulting from the frequency.
+        \list
+        \li e.g. [frequency = Daily, month = January] means every day in January. For each criterion
+            on a shorter timespan than the frequency, the criterion is unioned.
+        \li e.g. [frequency = Weekly, dayOfWeek = Wednesday,Friday] means every Wednesday and Friday of
+            every week.
+        \endlist
+        This makes the frequency field superfluous in many cases when other criteria are present.
+        e.g. all of the below mean the same thing:
+        \list
+        \li [frequency = Daily, dayOfWeek = Monday,Tuesday]
+        \li [frequency = Weekly, dayOfWeek = Monday,Tuesday]
+        \li [frequency = Monthly, dayOfWeek = Monday,Tuesday]
+        \li [frequency = Yearly, dayOfWeek = Monday,Tuesday]
+        \endlist
+        However, the frequency field may start affecting the result differently when other fields are
+        added like interval and positions.
 
-  \li For the purpose of calculating occurrence dates, information not contained in the rule is in some
-  cases derived from the startDateTime field of the event that the detail is associated with.
-  There are three cases where such derivation is necessary.
-    \list
-      \li Case 1: frequency == Weekly.  If dayOfWeek is not specified, derive it from the week day that
-  the startDateTime occurs on.
-      \li Case 2: frequency == Monthly.  If neither dayOfWeek or dayOfMonth is specified, dayOfMonth should
-  be derived from the startDateTime
-      \li Case 3: frequency == Yearly.  If none of monthOfYear, weekOfYear, dayOfYear, dayOfMonth or dayOfWeek
-  are specified, derive monthOfYear and dayOfMonth.  If monthOfYear is specified but not weekOfYear, dayOfYear,
-  dayOfMonth or dayOfWeek, then derive dayOfMonth.  If weekOfYear is specified but not dayOfYear,
-  dayOfWeek or dayOfMonth, derive dayOfWeek from the startDateTime.
-  For any cases not covered here, do not derive any of the fields.
+    \li For the purpose of calculating occurrence dates, information not contained in the rule is in some
+        cases derived from the startDateTime field of the event that the detail is associated with.
+        There are three cases where such derivation is necessary.
+        \list
+        \li Case 1: frequency == Weekly.  If dayOfWeek is not specified, derive it from the week day that
+            the startDateTime occurs on.
+        \li Case 2: frequency == Monthly.  If neither dayOfWeek or dayOfMonth is specified, dayOfMonth should
+            be derived from the startDateTime
+        \li Case 3: frequency == Yearly.  If none of monthOfYear, weekOfYear, dayOfYear, dayOfMonth or dayOfWeek
+            are specified, derive monthOfYear and dayOfMonth.  If monthOfYear is specified but not weekOfYear, dayOfYear,
+            dayOfMonth or dayOfWeek, then derive dayOfMonth.  If weekOfYear is specified but not dayOfYear,
+            dayOfWeek or dayOfMonth, derive dayOfWeek from the startDateTime.
+            For any cases not covered here, do not derive any of the fields.
+        \endlist
     \endlist
-  \endlist
 
-  A recurrence rule may be limited by either count or date, or it may be unlimited.
-  If limited by count, the series generated by the rule will have at most \c count
-  occurrences.  If limited by date, the series generated by the rule may have occurrences
-  up to (and including) the limit \c date.  See \l setLimit() for more information on
-  this topic.
+    A recurrence rule may be limited by either count or date, or it may be unlimited.
+    If limited by count, the series generated by the rule will have at most \c count
+    occurrences.  If limited by date, the series generated by the rule may have occurrences
+    up to (and including) the limit \c date.  See \l setLimit() for more information on
+    this topic.
  */
 
 /*!
@@ -292,7 +292,6 @@ int QOrganizerRecurrenceRule::limitCount() const
     return -1;
 }
 
-
 /*!
     Returns the end-date condition specified by the recurrence rule. An invalid date is returned if
     the end-date condition is not set or a "count" condition is currently set.
@@ -438,7 +437,7 @@ QSet<int> QOrganizerRecurrenceRule::weeksOfYear() const
 
     This corresponds to the BYSETPOS fragment in iCalendar's RRULE.
  */
-void QOrganizerRecurrenceRule::setPositions(const QSet<int>& pos)
+void QOrganizerRecurrenceRule::setPositions(const QSet<int> &pos)
 {
     d->positions = pos;
 }
@@ -473,44 +472,47 @@ Qt::DayOfWeek QOrganizerRecurrenceRule::firstDayOfWeek() const
     return d->firstDayOfWeek;
 }
 
-
-uint qHash(const QOrganizerRecurrenceRule &rule)
+/*!
+    \relates QOrganizerRecurrenceRule
+    Returns the hash value for \a key.
+ */
+uint qHash(const QOrganizerRecurrenceRule &key)
 {
     uint hash(0);
     static const unsigned int prime1 = 11;
     static const unsigned int prime2 = 31;
     static const unsigned int prime3 = 47;
 
-    foreach (int day, rule.daysOfMonth())
+    foreach (int day, key.daysOfMonth())
         hash += day;
     hash *= prime1;
 
-    foreach (Qt::DayOfWeek day, rule.daysOfWeek())
+    foreach (Qt::DayOfWeek day, key.daysOfWeek())
         hash += day;
     hash *= prime2;
 
-    foreach (int day, rule.daysOfYear())
+    foreach (int day, key.daysOfYear())
         hash += day;
     hash *= prime3;
 
-    foreach (QOrganizerRecurrenceRule::Month month, rule.monthsOfYear())
+    foreach (QOrganizerRecurrenceRule::Month month, key.monthsOfYear())
         hash += month;
     hash *= prime1;
 
-    foreach (int week, rule.weeksOfYear())
+    foreach (int week, key.weeksOfYear())
         hash += week;
     hash *= prime2;
 
-    foreach (int pos, rule.positions())
+    foreach (int pos, key.positions())
         hash += pos;
     hash *= prime3;
 
-    hash += static_cast<uint>(rule.firstDayOfWeek())
-            + static_cast<uint>(rule.frequency())
-            + rule.interval()
-            + rule.limitCount()
-            + qHash(rule.limitDate())
-            + static_cast<uint>(rule.limitType());
+    hash += static_cast<uint>(key.firstDayOfWeek())
+            + static_cast<uint>(key.frequency())
+            + key.interval()
+            + key.limitCount()
+            + qHash(key.limitDate())
+            + static_cast<uint>(key.limitType());
 
     return hash * prime1;
 }
@@ -544,35 +546,35 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
         break;
     }
     dbg.nospace() << ",daysOfWeek=\"";
-    foreach(Qt::DayOfWeek day, rule.daysOfWeek()){
+    foreach (Qt::DayOfWeek day, rule.daysOfWeek()) {
         dbg.nospace() << static_cast<quint32>(day);
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfMonth=\"";
-    foreach(int day, rule.daysOfMonth()){
+    foreach (int day, rule.daysOfMonth()) {
         dbg.nospace() << day;
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfYear=\"";
-    foreach(int day, rule.daysOfYear()){
+    foreach (int day, rule.daysOfYear()) {
         dbg.nospace() << day;
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",monthsOfYear=\"";
-    foreach(QOrganizerRecurrenceRule::Month month, rule.monthsOfYear()){
+    foreach (QOrganizerRecurrenceRule::Month month, rule.monthsOfYear()) {
         dbg.nospace() << static_cast<quint32>(month);
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",positions=\"";
-    foreach(int position, rule.positions()){
+    foreach (int position, rule.positions()) {
         dbg.nospace() << position;
         dbg.space();
     }

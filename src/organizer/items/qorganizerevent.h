@@ -42,9 +42,9 @@
 #ifndef QORGANIZEREVENT_H
 #define QORGANIZEREVENT_H
 
-#include "qorganizer.h"
-#include "qorganizeritemrecurrence.h"
-#include "qorganizeritempriority.h"
+#include <qorganizeritem.h>
+#include <qorganizeritempriority.h>
+#include <qorganizerrecurrencerule.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -53,39 +53,40 @@ class Q_ORGANIZER_EXPORT QOrganizerEvent : public QOrganizerItem
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerEvent, QOrganizerItemType::TypeEvent)
 
-    void setStartDateTime(const QDateTime& startDateTime);
+    void setStartDateTime(const QDateTime &startDateTime);
     QDateTime startDateTime() const;
-    void setEndDateTime(const QDateTime& endDateTime);
+
+    void setEndDateTime(const QDateTime &endDateTime);
     QDateTime endDateTime() const;
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
 
-    void setRecurrenceDate(const QDate& rdate);
-    void setRecurrenceDates(const QSet<QDate>& rdates);
+    void setRecurrenceDate(const QDate &rdate);
+    void setRecurrenceDates(const QSet<QDate> &rdates);
     QSet<QDate> recurrenceDates() const;
 
-    void setRecurrenceRule(const QOrganizerRecurrenceRule& rrule);
-    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules);
+    void setRecurrenceRule(const QOrganizerRecurrenceRule &rrule);
+    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule> &rrules);
     QOrganizerRecurrenceRule recurrenceRule() const;
     QSet<QOrganizerRecurrenceRule> recurrenceRules() const;
 
-    void setExceptionDate(const QDate& exdate);
-    void setExceptionDates(const QSet<QDate>& exdates);
+    void setExceptionDate(const QDate &exdate);
+    void setExceptionDates(const QSet<QDate> &exdates);
     QSet<QDate> exceptionDates() const;
 
-    void setExceptionRule(const QOrganizerRecurrenceRule& xrule);
-    void setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules);
+    void setExceptionRule(const QOrganizerRecurrenceRule &xrule);
+    void setExceptionRules(const QSet<QOrganizerRecurrenceRule> &exrules);
     QOrganizerRecurrenceRule exceptionRule() const;
     QSet<QOrganizerRecurrenceRule> exceptionRules() const;
 
-    void setPriority(QOrganizerItemPriority::Priority);
+    void setPriority(QOrganizerItemPriority::Priority priority);
     QOrganizerItemPriority::Priority priority() const;
 
     QString location() const;
-    void setLocation(const QString& location);
+    void setLocation(const QString &label);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZEREVENT_H

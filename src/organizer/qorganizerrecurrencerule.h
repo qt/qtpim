@@ -43,10 +43,12 @@
 #define QORGANIZERRECURRENCERULE_H
 
 #include <qorganizerglobal.h>
+
 #include <QtCore/qdatetime.h>
+
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -134,7 +136,7 @@ Q_ORGANIZER_EXPORT uint qHash(const QOrganizerRecurrenceRule &rule);
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule);
-#endif
+#endif // QT_NO_DEBUG_STREAM
 
 inline uint qHash(QOrganizerRecurrenceRule::Month month)
 {
@@ -152,8 +154,8 @@ inline uint qHash(const QDate &date)
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule));
-Q_DECLARE_METATYPE(QSet<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>);
-Q_DECLARE_METATYPE(QSet<QDate>);
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule))
+Q_DECLARE_METATYPE(QSet<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule)>)
+Q_DECLARE_METATYPE(QSet<QDate>)
 
 #endif // QORGANIZERRECURRENCERULE_H

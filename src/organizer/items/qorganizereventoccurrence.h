@@ -42,8 +42,8 @@
 #ifndef QORGANIZEREVENTOCCURRENCE_H
 #define QORGANIZEREVENTOCCURRENCE_H
 
-#include "qorganizer.h"
-#include "qorganizeritempriority.h"
+#include <qorganizeritem.h>
+#include <qorganizeritempriority.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -52,23 +52,25 @@ class Q_ORGANIZER_EXPORT QOrganizerEventOccurrence : public QOrganizerItem
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerEventOccurrence, QOrganizerItemType::TypeEventOccurrence)
 
-    void setStartDateTime(const QDateTime& startDateTime);
+    void setStartDateTime(const QDateTime &startDateTime);
     QDateTime startDateTime() const;
-    void setEndDateTime(const QDateTime& endDateTime);
+
+    void setEndDateTime(const QDateTime &endDateTime);
     QDateTime endDateTime() const;
 
-    void setParentId(const QOrganizerItemId& parentId);
+    void setParentId(const QOrganizerItemId &parentId);
     QOrganizerItemId parentId() const;
-    void setOriginalDate(const QDate& date);
+
+    void setOriginalDate(const QDate &date);
     QDate originalDate() const;
 
-    void setPriority(QOrganizerItemPriority::Priority);
+    void setPriority(QOrganizerItemPriority::Priority priority);
     QOrganizerItemPriority::Priority priority() const;
 
     QString location() const;
-    void setLocation(const QString& location);
+    void setLocation(const QString &label);
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZEREVENTOCCURRENCE_H

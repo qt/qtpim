@@ -42,7 +42,7 @@
 #ifndef QORGANIZERJOURNAL_H
 #define QORGANIZERJOURNAL_H
 
-#include "qorganizer.h"
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -51,10 +51,10 @@ class Q_ORGANIZER_EXPORT QOrganizerJournal : public QOrganizerItem
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerJournal, QOrganizerItemType::TypeJournal)
 
-    void setDateTime(const QDateTime& dateTime);
+    void setDateTime(const QDateTime &dateTime);
     QDateTime dateTime() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERJOURNAL_H

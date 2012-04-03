@@ -39,31 +39,33 @@
 **
 ****************************************************************************/
 
-#include "qorganizertodooccurrence.h"
+#include <qorganizertodooccurrence.h>
+#include <qorganizertodotime.h>
+#include <qorganizeritemparent.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerTodoOccurrence
-  \brief The QOrganizerTodoOccurrence class provides an occurrence of a task which should be completed
-  \inmodule QtOrganizer
-  \ingroup organizer-items
+    \class QOrganizerTodoOccurrence
+    \brief The QOrganizerTodoOccurrence class provides an occurrence of a task which should be completed
+    \inmodule QtOrganizer
+    \ingroup organizer-items
 
-  A todo occurrence is a specific instance of a todo item.  An occurrence
-  which is retrieved from a manager may not actually be persisted in that
-  manager (for example, it may be generated automatically from the
-  recurrence rule of the parent todo stored in the manager), in which case
-  it will have a zero-id and differ from the parent todo only in its start
-  date.  Alternatively, it may be persisted in the manager (that is, the
-  client has saved the occurrence previously) where it is stored as an exception
-  to its parent todo.
+    A todo occurrence is a specific instance of a todo item.  An occurrence
+    which is retrieved from a manager may not actually be persisted in that
+    manager (for example, it may be generated automatically from the
+    recurrence rule of the parent todo stored in the manager), in which case
+    it will have a zero-id and differ from the parent todo only in its start
+    date.  Alternatively, it may be persisted in the manager (that is, the
+    client has saved the occurrence previously) where it is stored as an exception
+    to its parent todo.
  */
 
 /*!
-  Sets the date time at which the task should be started to \a startDateTime.  For all-day tasks,
-  the time part can be set to any valid value.
+    Sets the date time at which the task should be started to \a startDateTime.  For all-day tasks,
+    the time part can be set to any valid value.
  */
-void QOrganizerTodoOccurrence::setStartDateTime(const QDateTime& startDateTime)
+void QOrganizerTodoOccurrence::setStartDateTime(const QDateTime &startDateTime)
 {
     QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setStartDateTime(startDateTime);
@@ -71,8 +73,8 @@ void QOrganizerTodoOccurrence::setStartDateTime(const QDateTime& startDateTime)
 }
 
 /*!
-  Returns the date time at which the task should be started.  For all-day tasks, the time part is
-  meaningless.
+    Returns the date time at which the task should be started.  For all-day tasks, the time part is
+    meaningless.
  */
 QDateTime QOrganizerTodoOccurrence::startDateTime() const
 {
@@ -81,10 +83,10 @@ QDateTime QOrganizerTodoOccurrence::startDateTime() const
 }
 
 /*!
-  Sets the date time by which the task should be completed to \a dueDateTime.  For all-day tasks,
-  the time part can be set to any valid value.
+    Sets the date time by which the task should be completed to \a dueDateTime.  For all-day tasks,
+    the time part can be set to any valid value.
  */
-void QOrganizerTodoOccurrence::setDueDateTime(const QDateTime& dueDateTime)
+void QOrganizerTodoOccurrence::setDueDateTime(const QDateTime &dueDateTime)
 {
     QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setDueDateTime(dueDateTime);
@@ -92,8 +94,8 @@ void QOrganizerTodoOccurrence::setDueDateTime(const QDateTime& dueDateTime)
 }
 
 /*!
-  Returns the date time by which the task should be completed.  For all-day tasks, the time part is
-  meaningless.
+    Returns the date time by which the task should be completed.  For all-day tasks, the time part is
+    meaningless.
  */
 QDateTime QOrganizerTodoOccurrence::dueDateTime() const
 {
@@ -102,10 +104,10 @@ QDateTime QOrganizerTodoOccurrence::dueDateTime() const
 }
 
 /*!
-  Sets the todo occurrence's parent to be the todo identified by the
-  given \a parentId
+    Sets the todo occurrence's parent to be the todo identified by the
+    given \a parentId.
  */
-void QOrganizerTodoOccurrence::setParentId(const QOrganizerItemId& parentId)
+void QOrganizerTodoOccurrence::setParentId(const QOrganizerItemId &parentId)
 {
     QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setParentId(parentId);
@@ -113,7 +115,7 @@ void QOrganizerTodoOccurrence::setParentId(const QOrganizerItemId& parentId)
 }
 
 /*!
-  Returns the id of the todo which is this occurrence's parent
+    Returns the id of the todo which is this occurrence's parent.
  */
 QOrganizerItemId QOrganizerTodoOccurrence::parentId() const
 {
@@ -122,10 +124,10 @@ QOrganizerItemId QOrganizerTodoOccurrence::parentId() const
 }
 
 /*!
-  Sets the date at which this occurrence was originally going to occur,
-  to the given \a date.
+    Sets the date at which this occurrence was originally going to occur,
+    to the given \a date.
  */
-void QOrganizerTodoOccurrence::setOriginalDate(const QDate& date)
+void QOrganizerTodoOccurrence::setOriginalDate(const QDate &date)
 {
     QOrganizerItemParent origin = detail(QOrganizerItemDetail::TypeParent);
     origin.setOriginalDate(date);
@@ -133,7 +135,7 @@ void QOrganizerTodoOccurrence::setOriginalDate(const QDate& date)
 }
 
 /*!
-  Returns the date at which the occurrence was originally going to occur.
+    Returns the date at which the occurrence was originally going to occur.
  */
 QDate QOrganizerTodoOccurrence::originalDate() const
 {
@@ -142,7 +144,7 @@ QDate QOrganizerTodoOccurrence::originalDate() const
 }
 
 /*!
-  Sets the priority of the todo occurrence to \a priority
+    Sets the priority of the todo occurrence to \a priority.
  */
 void QOrganizerTodoOccurrence::setPriority(QOrganizerItemPriority::Priority priority)
 {
@@ -152,7 +154,7 @@ void QOrganizerTodoOccurrence::setPriority(QOrganizerItemPriority::Priority prio
 }
 
 /*!
-  Returns the priority of the todo occurrence.
+    Returns the priority of the todo occurrence..
  */
 QOrganizerItemPriority::Priority QOrganizerTodoOccurrence::priority() const
 {
@@ -161,20 +163,22 @@ QOrganizerItemPriority::Priority QOrganizerTodoOccurrence::priority() const
 }
 
 /*!
-  Sets the percentage of progress completed on the task described
-  by the todo occurrence item to \a percentage
+    Sets the percentage of progress completed on the task described
+    by the todo occurrence item to \a percentage. Note that the given
+    \a percentage must be between 0 and 100, otherwise ignored.
  */
 void QOrganizerTodoOccurrence::setProgressPercentage(int percentage)
 {
-    // XXX TODO: make the API more consistent with that in QOrganizerTodoProgress.
-    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
-    tp.setPercentageComplete(percentage);
-    saveDetail(&tp);
+    if (percentage >= 0 && percentage <= 100) {
+        QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
+        tp.setPercentageComplete(percentage);
+        saveDetail(&tp);
+    }
 }
 
 /*!
-  Returns the percentage of progress completed on the task described
-  by the todo occurrence.
+    Returns the percentage of progress completed on the task described
+    by the todo occurrence.
  */
 int QOrganizerTodoOccurrence::progressPercentage() const
 {
@@ -183,7 +187,7 @@ int QOrganizerTodoOccurrence::progressPercentage() const
 }
 
 /*!
-  Sets the progress status of the todo occurrence to \a status
+    Sets the progress status of the todo occurrence to \a status.
  */
 void QOrganizerTodoOccurrence::setStatus(QOrganizerTodoProgress::Status status)
 {
@@ -193,7 +197,7 @@ void QOrganizerTodoOccurrence::setStatus(QOrganizerTodoProgress::Status status)
 }
 
 /*!
-  Returns the progress status of the task described by the todo occurrence
+    Returns the progress status of the task described by the todo occurrence.
  */
 QOrganizerTodoProgress::Status QOrganizerTodoOccurrence::status() const
 {
@@ -202,9 +206,9 @@ QOrganizerTodoProgress::Status QOrganizerTodoOccurrence::status() const
 }
 
 /*!
-  Sets the date and time at which the task described by the todo occurrence was completed to \a finishedDateTime
+    Sets the date and time at which the task described by the todo occurrence was completed to \a finishedDateTime.
  */
-void QOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime& finishedDateTime)
+void QOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime &finishedDateTime)
 {
     QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setFinishedDateTime(finishedDateTime);
@@ -212,7 +216,7 @@ void QOrganizerTodoOccurrence::setFinishedDateTime(const QDateTime& finishedDate
 }
 
 /*!
-  Returns the date and time at which the task described by the todo occurrence was completed, if known.
+    Returns the date and time at which the task described by the todo occurrence was completed.
  */
 QDateTime QOrganizerTodoOccurrence::finishedDateTime() const
 {

@@ -39,34 +39,34 @@
 **
 ****************************************************************************/
 
-#include "qorganizertodo.h"
-#include "qorganizer.h"
+#include <qorganizertodo.h>
+#include <qorganizertodotime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-  \class QOrganizerTodo
-  \brief The QOrganizerTodo class provides a task which should be completed
-  \inmodule QtOrganizer
-  \ingroup organizer-items
+    \class QOrganizerTodo
+    \brief The QOrganizerTodo class provides a task which should be completed.
+    \inmodule QtOrganizer
+    \ingroup organizer-items
 
-  A todo is an item which contains information about a task which has to
-  be completed.  It might be associated with a particular point in time
-  (for example, water the garden tomorrow evening) or it might have no
-  specific temporal association (for example, climb Mount Everest someday).
+    A todo is an item which contains information about a task which has to
+    be completed.  It might be associated with a particular point in time
+    (for example, water the garden tomorrow evening) or it might have no
+    specific temporal association (for example, climb Mount Everest someday).
 
-  A todo can reoccur (for example, water the garden every evening) or it
-  can occur only once.
+    A todo can reoccur (for example, water the garden every evening) or it
+    can occur only once.
 
-  Todos can be used to schedule agenda items or tasks in a meaningful manner.
+    Todos can be used to schedule agenda items or tasks in a meaningful manner.
  */
 
 /*!
-  Sets the date time at which the task should be started to \a startDateTime (for recurring tasks,
-  this applies to the first instance).  For all-day tasks, the time part can be set to any valid
-  value.
+    Sets the date time at which the task should be started to \a startDateTime (for recurring tasks,
+    this applies to the first instance).  For all-day tasks, the time part can be set to any valid
+    value.
  */
-void QOrganizerTodo::setStartDateTime(const QDateTime& startDateTime)
+void QOrganizerTodo::setStartDateTime(const QDateTime &startDateTime)
 {
     QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setStartDateTime(startDateTime);
@@ -74,8 +74,8 @@ void QOrganizerTodo::setStartDateTime(const QDateTime& startDateTime)
 }
 
 /*!
-  Returns the date time at which the task should be started (for recurring tasks, this applies to
-  the first instance).  For all-day tasks, the time part is meaningless.
+    Returns the date time at which the task should be started (for recurring tasks, this applies to
+    the first instance).  For all-day tasks, the time part is meaningless.
  */
 QDateTime QOrganizerTodo::startDateTime() const
 {
@@ -84,11 +84,11 @@ QDateTime QOrganizerTodo::startDateTime() const
 }
 
 /*!
-  Sets the date time by which the task should be completed to \a dueDateTime (for recurring tasks,
-  this applies to the first instance).  For all-day tasks, the time part can be set to any valid
-  value
+    Sets the date time by which the task should be completed to \a dueDateTime (for recurring tasks,
+    this applies to the first instance).  For all-day tasks, the time part can be set to any valid
+    value.
  */
-void QOrganizerTodo::setDueDateTime(const QDateTime& dueDateTime)
+void QOrganizerTodo::setDueDateTime(const QDateTime &dueDateTime)
 {
     QOrganizerTodoTime ttr = detail(QOrganizerItemDetail::TypeTodoTime);
     ttr.setDueDateTime(dueDateTime);
@@ -96,8 +96,8 @@ void QOrganizerTodo::setDueDateTime(const QDateTime& dueDateTime)
 }
 
 /*!
-  Returns the date time by which the task should be completed (for recurring tasks, this applies to
-  the first instance).  For all-day tasks, the time part is meaningless.
+    Returns the date time by which the task should be completed (for recurring tasks, this applies to
+    the first instance).  For all-day tasks, the time part is meaningless.
  */
 QDateTime QOrganizerTodo::dueDateTime() const
 {
@@ -106,10 +106,10 @@ QDateTime QOrganizerTodo::dueDateTime() const
 }
 
 /*!
-  Sets whether the time-of-day component of the todo's start date-time or end date-time is
-  insignificant (eg. this is generally set to true for a birthday).  If \a isAllDay is true,
-  the time-of-day component is considered insignificant, and the todo will be an all-day
-  item.
+    Sets whether the time-of-day component of the todo's start date-time or end date-time is
+    insignificant (e.g. this is generally set to true for a birthday).  If \a isAllDay is true,
+    the time-of-day component is considered insignificant, and the todo will be an all-day
+    item.
  */
 void QOrganizerTodo::setAllDay(bool isAllDay)
 {
@@ -118,8 +118,9 @@ void QOrganizerTodo::setAllDay(bool isAllDay)
     saveDetail(&ttr);
 }
 
-/*! Returns true if and only if the time component of the start date/time or end date/time are
- * insignificant.
+/*!
+    Returns true if and only if the time component of the start date/time or end date/time are
+    insignificant.
 */
 bool QOrganizerTodo::isAllDay() const
 {
@@ -128,9 +129,9 @@ bool QOrganizerTodo::isAllDay() const
 }
 
 /*!
-  Sets the dates on which the todo reoccurs to \a rdates
+    Sets the dates on which the todo reoccurs to \a rdates.
  */
-void QOrganizerTodo::setRecurrenceDates(const QSet<QDate>& rdates)
+void QOrganizerTodo::setRecurrenceDates(const QSet<QDate> &rdates)
 {
     QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceDates(rdates);
@@ -138,8 +139,8 @@ void QOrganizerTodo::setRecurrenceDates(const QSet<QDate>& rdates)
 }
 
 /*!
-  Returns the dates on which the todo reoccurs, which have been explicitly set
-  by calling \l setRecurrenceDates()
+    Returns the dates on which the todo reoccurs, which have been explicitly set
+    by calling \l setRecurrenceDates().
  */
 QSet<QDate> QOrganizerTodo::recurrenceDates() const
 {
@@ -148,18 +149,18 @@ QSet<QDate> QOrganizerTodo::recurrenceDates() const
 }
 
 /*!
-  Clears the set of recurrence rules which define when the todo occurs, and replaces
-  it will the single recurrence rule \a rrule.
+    Clears the set of recurrence rules which define when the todo occurs, and replaces
+    it will the single recurrence rule \a rrule.
  */
-void QOrganizerTodo::setRecurrenceRule(const QOrganizerRecurrenceRule& rrule)
+void QOrganizerTodo::setRecurrenceRule(const QOrganizerRecurrenceRule &rrule)
 {
     setRecurrenceRules(QSet<QOrganizerRecurrenceRule>() << rrule);
 }
 
 /*!
-  Sets the recurrence rules which define when the todo occurs to \a rrules
+    Sets the recurrence rules which define when the todo occurs to \a rrules.
  */
-void QOrganizerTodo::setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules)
+void QOrganizerTodo::setRecurrenceRules(const QSet<QOrganizerRecurrenceRule> &rrules)
 {
     QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setRecurrenceRules(rrules);
@@ -167,9 +168,9 @@ void QOrganizerTodo::setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rr
 }
 
 /*!
-  Returns a recurrence rule which defines when the todo occurs.
-  If more than one recurrence rule has been set in the todo,
-  one will be returned at random.
+    Returns a recurrence rule which defines when the todo occurs.
+    If more than one recurrence rule has been set in the todo,
+    one will be returned at random.
  */
 QOrganizerRecurrenceRule QOrganizerTodo::recurrenceRule() const
 {
@@ -180,7 +181,7 @@ QOrganizerRecurrenceRule QOrganizerTodo::recurrenceRule() const
 }
 
 /*!
-  Returns the list of recurrence rules which define when the todo occurs
+    Returns the list of recurrence rules which define when the todo occurs.
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerTodo::recurrenceRules() const
 {
@@ -189,10 +190,10 @@ QSet<QOrganizerRecurrenceRule> QOrganizerTodo::recurrenceRules() const
 }
 
 /*!
-  Sets the dates on which the todo does not occur despite the date
-  fulfilling the recurrence rules of the todo, to \a exdates
+    Sets the dates on which the todo does not occur despite the date
+    fulfilling the recurrence rules of the todo, to \a exdates
  */
-void QOrganizerTodo::setExceptionDates(const QSet<QDate>& exdates)
+void QOrganizerTodo::setExceptionDates(const QSet<QDate> &exdates)
 {
     QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionDates(exdates);
@@ -200,8 +201,8 @@ void QOrganizerTodo::setExceptionDates(const QSet<QDate>& exdates)
 }
 
 /*!
-  Returns the dates on which the todo does not occur, where it otherwise
-  would occur as described by the recurrence rules.
+    Returns the dates on which the todo does not occur, where it otherwise
+    would occur as described by the recurrence rules.
  */
 QSet<QDate> QOrganizerTodo::exceptionDates() const
 {
@@ -210,21 +211,21 @@ QSet<QDate> QOrganizerTodo::exceptionDates() const
 }
 
 /*!
-  Clears the set of recurrence rules which describe the dates on which the todo does
-  not occur, where it otherwise would occur as described by the recurrence rules, and
-  inserts into the cleared list the single exception rule \a exrule.
+    Clears the set of recurrence rules which describe the dates on which the todo does
+    not occur, where it otherwise would occur as described by the recurrence rules, and
+    inserts into the cleared list the single exception rule \a exrule.
  */
-void QOrganizerTodo::setExceptionRule(const QOrganizerRecurrenceRule& exrule)
+void QOrganizerTodo::setExceptionRule(const QOrganizerRecurrenceRule &exrule)
 {
     setExceptionRules(QSet<QOrganizerRecurrenceRule>() << exrule);
 }
 
 /*!
-  Sets the recurrence rules which describe the dates on which the todo does
-  not occur, where it otherwise would occur as described by the recurrence rules
-  set with \l setRecurrenceRules(), to \a exrules
+    Sets the recurrence rules which describe the dates on which the todo does
+    not occur, where it otherwise would occur as described by the recurrence rules
+    set with \l setRecurrenceRules(), to \a exrules.
  */
-void QOrganizerTodo::setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules)
+void QOrganizerTodo::setExceptionRules(const QSet<QOrganizerRecurrenceRule> &exrules)
 {
     QOrganizerItemRecurrence rec = detail(QOrganizerItemDetail::TypeRecurrence);
     rec.setExceptionRules(exrules);
@@ -232,9 +233,9 @@ void QOrganizerTodo::setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exr
 }
 
 /*!
-  Returns a recurrence rule which describe the dates on which the todo does not occur, where
-  it otherwise would occur as described by the recurrence rules.  If more than one exception
-  rule was set for the todo item, one of those exception rules will be returned at random.
+    Returns a recurrence rule which describe the dates on which the todo does not occur, where
+    it otherwise would occur as described by the recurrence rules.  If more than one exception
+    rule was set for the todo item, one of those exception rules will be returned at random.
  */
 QOrganizerRecurrenceRule QOrganizerTodo::exceptionRule() const
 {
@@ -245,9 +246,9 @@ QOrganizerRecurrenceRule QOrganizerTodo::exceptionRule() const
 }
 
 /*!
-  Returns the recurrence rules which describe the dates on which the todo
-  does not occur, where it otherwise would occur as described by the recurrence rules
-  set the \l setRecurrenceRules().
+    Returns the recurrence rules which describe the dates on which the todo
+    does not occur, where it otherwise would occur as described by the recurrence rules
+    set the \l setRecurrenceRules().
  */
 QSet<QOrganizerRecurrenceRule> QOrganizerTodo::exceptionRules() const
 {
@@ -256,7 +257,7 @@ QSet<QOrganizerRecurrenceRule> QOrganizerTodo::exceptionRules() const
 }
 
 /*!
-  Sets the priority of the todo to \a priority
+    Sets the priority of the todo to \a priority.
  */
 void QOrganizerTodo::setPriority(QOrganizerItemPriority::Priority priority)
 {
@@ -266,7 +267,7 @@ void QOrganizerTodo::setPriority(QOrganizerItemPriority::Priority priority)
 }
 
 /*!
-  Returns the priority of the task.
+    Returns the priority of the task.
  */
 QOrganizerItemPriority::Priority QOrganizerTodo::priority() const
 {
@@ -275,20 +276,22 @@ QOrganizerItemPriority::Priority QOrganizerTodo::priority() const
 }
 
 /*!
-  Sets the percentage of progress completed on the task described
-  by the todo item to \a percentage
+    Sets the percentage of progress completed on the task described
+    by the todo item to \a percentage. Note that the \a percentage must
+    be between 0 and 100, otherwise ignored.
  */
 void QOrganizerTodo::setProgressPercentage(int percentage)
 {
-    // XXX TODO: make the API more consistent with that in QOrganizerTodoProgress.
-    QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
-    tp.setPercentageComplete(percentage);
-    saveDetail(&tp);
+    if (percentage >= 0 && percentage <= 100) {
+        QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
+        tp.setPercentageComplete(percentage);
+        saveDetail(&tp);
+    }
 }
 
 /*!
-  Returns the percentage of progress completed on the task described
-  by the todo.
+    Returns the percentage of progress completed on the task described
+    by the todo.
  */
 int QOrganizerTodo::progressPercentage() const
 {
@@ -297,7 +300,7 @@ int QOrganizerTodo::progressPercentage() const
 }
 
 /*!
-  Sets the progress status of the task to \a status
+    Sets the progress status of the task to \a status.
  */
 void QOrganizerTodo::setStatus(QOrganizerTodoProgress::Status status)
 {
@@ -307,7 +310,7 @@ void QOrganizerTodo::setStatus(QOrganizerTodoProgress::Status status)
 }
 
 /*!
-  Returns the progress status of the task described by the todo
+    Returns the progress status of the task described by the todo.
  */
 QOrganizerTodoProgress::Status QOrganizerTodo::status() const
 {
@@ -316,9 +319,9 @@ QOrganizerTodoProgress::Status QOrganizerTodo::status() const
 }
 
 /*!
-  Sets the date and time at which the task was completed to \a finishedDateTime
+    Sets the date and time at which the task was completed to \a finishedDateTime.
  */
-void QOrganizerTodo::setFinishedDateTime(const QDateTime& finishedDateTime)
+void QOrganizerTodo::setFinishedDateTime(const QDateTime &finishedDateTime)
 {
     QOrganizerTodoProgress tp = detail(QOrganizerItemDetail::TypeTodoProgress);
     tp.setFinishedDateTime(finishedDateTime);
@@ -326,7 +329,7 @@ void QOrganizerTodo::setFinishedDateTime(const QDateTime& finishedDateTime)
 }
 
 /*!
-  Returns the date and time at which the task was completed, if known.
+    Returns the date and time at which the task was completed.
  */
 QDateTime QOrganizerTodo::finishedDateTime() const
 {

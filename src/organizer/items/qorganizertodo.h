@@ -42,9 +42,10 @@
 #ifndef QORGANIZERTODO_H
 #define QORGANIZERTODO_H
 
-#include "qorganizer.h"
-#include "qorganizeritemrecurrence.h"
-#include "qorganizertodoprogress.h"
+#include <qorganizeritem.h>
+#include <qorganizeritempriority.h>
+#include <qorganizeritemrecurrence.h>
+#include <qorganizertodoprogress.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -53,42 +54,44 @@ class Q_ORGANIZER_EXPORT QOrganizerTodo : public QOrganizerItem
 public:
     Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerTodo, QOrganizerItemType::TypeTodo)
 
-    // XXX TODO: some questions about "recurring periods and doneness"...
-    void setStartDateTime(const QDateTime& dueDateTime);
+    void setStartDateTime(const QDateTime &dueDateTime);
     QDateTime startDateTime() const;
-    void setDueDateTime(const QDateTime& dueDateTime);
+
+    void setDueDateTime(const QDateTime &dueDateTime);
     QDateTime dueDateTime() const;
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
 
-    void setRecurrenceDates(const QSet<QDate>& rdates);
+    void setRecurrenceDates(const QSet<QDate> &rdates);
     QSet<QDate> recurrenceDates() const;
 
-    void setRecurrenceRule(const QOrganizerRecurrenceRule& rrule);
-    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule>& rrules);
+    void setRecurrenceRule(const QOrganizerRecurrenceRule &rrule);
+    void setRecurrenceRules(const QSet<QOrganizerRecurrenceRule> &rrules);
     QSet<QOrganizerRecurrenceRule> recurrenceRules() const;
     QOrganizerRecurrenceRule recurrenceRule() const;
 
-    void setExceptionDates(const QSet<QDate>& exdates);
+    void setExceptionDates(const QSet<QDate> &exdates);
     QSet<QDate> exceptionDates() const;
 
-    void setExceptionRule(const QOrganizerRecurrenceRule& exrule);
-    void setExceptionRules(const QSet<QOrganizerRecurrenceRule>& exrules);
+    void setExceptionRule(const QOrganizerRecurrenceRule &exrule);
+    void setExceptionRules(const QSet<QOrganizerRecurrenceRule> &exrules);
     QSet<QOrganizerRecurrenceRule> exceptionRules() const;
     QOrganizerRecurrenceRule exceptionRule() const;
 
-    void setPriority(QOrganizerItemPriority::Priority);
+    void setPriority(QOrganizerItemPriority::Priority priority);
     QOrganizerItemPriority::Priority priority() const;
 
     void setProgressPercentage(int percentage);
     int progressPercentage() const;
+
     void setStatus(QOrganizerTodoProgress::Status status);
     QOrganizerTodoProgress::Status status() const;
-    void setFinishedDateTime(const QDateTime& finishedDateTime);
+
+    void setFinishedDateTime(const QDateTime &finishedDateTime);
     QDateTime finishedDateTime() const;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERTODO_H

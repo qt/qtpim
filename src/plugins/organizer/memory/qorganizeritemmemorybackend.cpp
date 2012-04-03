@@ -41,8 +41,11 @@
 
 #include "qorganizeritemmemorybackend_p.h"
 #include <qorganizeritemrecurrence.h>
-#include <qorganizerevent.h>
-#include <qorganizertodo.h>
+#include <qorganizeritems.h>
+#include <qorganizeritemdetails.h>
+#include <qorganizeritemfilters.h>
+#include <qorganizeritemrequests.h>
+#include <qorganizercollectionchangeset.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qstringbuilder.h>

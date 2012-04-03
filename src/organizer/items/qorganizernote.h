@@ -42,7 +42,7 @@
 #ifndef QORGANIZERNOTE_H
 #define QORGANIZERNOTE_H
 
-#include "qorganizer.h"
+#include <qorganizeritem.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
@@ -54,4 +54,4 @@ public:
 
 QTORGANIZER_END_NAMESPACE
 
-#endif
+#endif // QORGANIZERNOTE_H

@@ -45,12 +45,11 @@
 // this file includes all of the organizer item
 // leaf classes that are included in the public API
 
-#include "qorganizerevent.h"
-#include "qorganizereventoccurrence.h"
-#include "qorganizerjournal.h"
-#include "qorganizertodo.h"
-#include "qorganizertodooccurrence.h"
-#include "qorganizernote.h"
+#include <qorganizerevent.h>
+#include <qorganizereventoccurrence.h>
+#include <qorganizerjournal.h>
+#include <qorganizertodo.h>
+#include <qorganizertodooccurrence.h>
+#include <qorganizernote.h>
 
-#endif
-
+#endif // QORGANIZERITEMS_H

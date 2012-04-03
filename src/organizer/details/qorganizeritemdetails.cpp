@@ -74,7 +74,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
     Sets a description associated with an organizer item to \a description.
  */
-void QOrganizerItemDescription::setDescription(const QString& description)
+void QOrganizerItemDescription::setDescription(const QString &description)
 {
     setValue(FieldDescription, description);
 }

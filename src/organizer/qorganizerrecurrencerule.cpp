@@ -517,6 +517,7 @@ uint qHash(const QOrganizerRecurrenceRule &rule)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerRecurrenceRule
     Outputs \a rule to the debug stream \a dbg.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)

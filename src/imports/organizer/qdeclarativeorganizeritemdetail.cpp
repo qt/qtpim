@@ -347,7 +347,7 @@ QString QDeclarativeOrganizerItemDescription::description() const
 
 
 /*!
-    \qmlclass DisplayLabel QDeclarativeOrganizerItemDisplayLabel
+    \qmlclass QtOrganizer::DisplayLabel QDeclarativeOrganizerItemDisplayLabel
     \brief The DisplayLabel element contains the display label of an organizer item.
     \inqmlmodule QtOrganizer
     \ingroup qml-organizer-details

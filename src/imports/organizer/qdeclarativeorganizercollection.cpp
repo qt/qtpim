@@ -137,16 +137,16 @@ void QDeclarativeOrganizerCollection::setImage(const QUrl &url)
 }
 
 /*!
-    \qmlmethod Collection::setMetaData(enum key, var value)
+    \qmlmethod Collection::setMetaData(key, value)
 
     Sets the meta data of the collection for the given \a key to the given \a value. Possible keys
     include:
     \list
-    \o Collection.KeyName
-    \o Collection.KeyDescription
-    \o Collection.KeyColor
-    \o Collection.KeyImage
-    \o Collection.KeyExtended
+    \li Collection.KeyName
+    \li Collection.KeyDescription
+    \li Collection.KeyColor
+    \li Collection.KeyImage
+    \li Collection.KeyExtended
     \endlist
  */
 void QDeclarativeOrganizerCollection::setMetaData(QOrganizerCollection::MetaDataKey key, const QVariant &value)
@@ -169,15 +169,15 @@ void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVar
 }
 
 /*!
-    \qmlmethod var Collection::metaData(enum key)
+    \qmlmethod var Collection::metaData(key)
 
     Returns the meta data stored in this collection for the given \a key. Possible keys include:
     \list
-    \o Collection.KeyName
-    \o Collection.KeyDescription
-    \o Collection.KeyColor
-    \o Collection.KeyImage
-    \o Collection.KeyExtended
+    \li Collection.KeyName
+    \li Collection.KeyDescription
+    \li Collection.KeyColor
+    \li Collection.KeyImage
+    \li Collection.KeyExtended
     \endlist
  */
 QVariant QDeclarativeOrganizerCollection::metaData(QOrganizerCollection::MetaDataKey key) const

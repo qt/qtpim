@@ -72,8 +72,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-    \fn QOrganizerItemDescription::setDescription(const QString& description)
-
     Sets a description associated with an organizer item to \a description.
  */
 void QOrganizerItemDescription::setDescription(const QString& description)
@@ -82,8 +80,6 @@ void QOrganizerItemDescription::setDescription(const QString& description)
 }
 
 /*!
-    \fn QOrganizerItemDescription::description() const
-
     Returns a string for a description associated with an organizer item.
  */
 QString QOrganizerItemDescription::description() const
@@ -100,8 +96,6 @@ QString QOrganizerItemDescription::description() const
 */
 
 /*!
-    \fn void QOrganizerItemDisplayLabel::setLabel(const QString& label)
-
     Sets the display label of the organizer item to \a label.
  */
 void QOrganizerItemDisplayLabel::setLabel(const QString &label)
@@ -110,8 +104,6 @@ void QOrganizerItemDisplayLabel::setLabel(const QString &label)
 }
 
 /*!
-    \fn QString QOrganizerItemDisplayLabel::label() const
-
     Returns the display label of the organizer item.
  */
 QString QOrganizerItemDisplayLabel::label() const
@@ -173,7 +165,6 @@ QString QOrganizerItemDisplayLabel::label() const
 */
 
 /*!
-    \fn QOrganizerEventAttendee::setName(const QString &name)
     Sets the name (or title or other label) of the attendee to \a name.
  */
 void QOrganizerEventAttendee::setName(const QString &name)
@@ -181,7 +172,6 @@ void QOrganizerEventAttendee::setName(const QString &name)
     setValue(FieldName, name);
 }
 /*!
-    \fn QOrganizerEventAttendee::name() const
     Returns the name (or title or other label) of the attendee.
  */
 QString QOrganizerEventAttendee::name() const
@@ -190,7 +180,6 @@ QString QOrganizerEventAttendee::name() const
 }
 
 /*!
-    \fn QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
     Sets the email address of the attendee to \a emailAddress.
  */
 void QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
@@ -199,7 +188,6 @@ void QOrganizerEventAttendee::setEmailAddress(const QString &emailAddress)
 }
 
 /*!
-    \fn QOrganizerEventAttendee::emailAddress() const
     Returns the email address of the attendee.
  */
 QString QOrganizerEventAttendee::emailAddress() const
@@ -216,7 +204,6 @@ void QOrganizerEventAttendee::setAttendeeId(const QString &attendeeId)
 }
 
 /*!
-    \fn QOrganizerEventAttendee::attendeeId() const
     Returns the unique identifier of the attendee.  The format of the identifier
     is platform specific and may be a serialized id, a vCard UID, or something else.
  */
@@ -226,7 +213,6 @@ QString QOrganizerEventAttendee::attendeeId() const
 }
 
 /*!
-    \fn QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
     Sets the participation status of the attendee in the event to \a status.
  */
 void QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
@@ -235,7 +221,6 @@ void QOrganizerEventAttendee::setParticipationStatus(ParticipationStatus status)
 }
 
 /*!
-    \fn QOrganizerEventAttendee::participationStatus() const
     Returns the participation status of the attendee in the event.
  */
 QOrganizerEventAttendee::ParticipationStatus QOrganizerEventAttendee::participationStatus() const
@@ -244,7 +229,6 @@ QOrganizerEventAttendee::ParticipationStatus QOrganizerEventAttendee::participat
 }
 
 /*!
-    \fn QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
     Sets the role of the attendee in the event to \a role.
  */
 void QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
@@ -253,7 +237,6 @@ void QOrganizerEventAttendee::setParticipationRole(ParticipationRole role)
 }
 
 /*!
-    \fn QOrganizerEventAttendee::participationRole() const
     Returns the participation role of the attendee in the event.
  */
 QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participationRole() const
@@ -279,12 +262,10 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventAttendee::participatio
  */
 
 /*!
-    \fn QOrganizerEventTime::startDateTime() const
-
     Returns the event time's start date and time as QDateTime.
     For all-day events, the time part is meaningless.
 
-    \sa QOrganizerEvent::setStartDateTime()
+    \sa QOrganizerEventTime::setStartDateTime()
  */
 QDateTime QOrganizerEventTime::startDateTime() const
 {
@@ -292,12 +273,10 @@ QDateTime QOrganizerEventTime::startDateTime() const
 }
 
 /*!
-    \fn QOrganizerEventTime::setStartDateTime(const QDateTime &startDateTime)
-
     Sets the event time's start date and time to \a startDateTime.
     For all-day events, the time part can be set to any valid value.
 
-    \sa QOrganizerEvent::startDateTime()
+    \sa QOrganizerEventTime::startDateTime()
  */
 void QOrganizerEventTime::setStartDateTime(const QDateTime &startDateTime)
 {
@@ -305,13 +284,11 @@ void QOrganizerEventTime::setStartDateTime(const QDateTime &startDateTime)
 }
 
 /*!
-    \fn QOrganizerEventTime::setEndDateTime(const QDateTime &endDateTime)
-
     Sets the event time's due date and time to \a endDateTime.
     For all-day events, the time part can be set to any valid value, and the date is to be
     interpreted as the inclusive end date.
 
-    \sa QOrganizerEvent::endDateTime()
+    \sa QOrganizerEventTime::endDateTime()
  */
 void QOrganizerEventTime::setEndDateTime(const QDateTime &endDateTime)
 {
@@ -319,13 +296,11 @@ void QOrganizerEventTime::setEndDateTime(const QDateTime &endDateTime)
 }
 
 /*!
-    \fn QOrganizerEventTime::endDateTime() const
-
     Returns the event time's due date and time as QDateTime.
     For all-day events, the time part is meaningless, and the date is to be interpreted as the
     inclusive end date.
 
-    \sa QOrganizerEvent::setEndDateTime()
+    \sa QOrganizerEventTime::setEndDateTime()
  */
 QDateTime QOrganizerEventTime::endDateTime() const
 {
@@ -333,8 +308,6 @@ QDateTime QOrganizerEventTime::endDateTime() const
 }
 
 /*!
-    \fn QOrganizerEventTime::setAllDay(bool isAllDay)
-
     Sets the all-day status of the event to \a isAllDay.
     If the event is an all-day event, no time is considered to be
     specified for the event, even if a start or end date time set
@@ -346,10 +319,7 @@ void QOrganizerEventTime::setAllDay(bool isAllDay)
 }
 
 /*!
-    \fn QOrganizerEventTime::isAllDay() const
-
-    Returns true if a specific time was specified for the event.
-    Returns false if the event is an all-day event.
+    Returns true if the event is an all-day event, or false otherwise.
  */
 bool QOrganizerEventTime::isAllDay() const
 {
@@ -359,7 +329,8 @@ bool QOrganizerEventTime::isAllDay() const
 
 /*!
     \class QOrganizerItemGuid
-    \brief The QOrganizerItemGuid class contains the globally unique identifier of the organizer item, which can be used for synchronization purposes.
+    \brief The QOrganizerItemGuid class contains the globally unique identifier of the organizer item,
+           which can be used for synchronization purposes.
     \inmodule QtOrganizer
     \ingroup organizer-details
  */
@@ -372,8 +343,6 @@ bool QOrganizerEventTime::isAllDay() const
  */
 
 /*!
-    \fn QOrganizerItemGuid::guid() const
-
     Returns the globally unique identifier which is stored in this detail.
  */
 QString QOrganizerItemGuid::guid() const
@@ -382,8 +351,6 @@ QString QOrganizerItemGuid::guid() const
 }
 
 /*!
-    \fn QOrganizerItemGuid::setGuid(const QString& guid)
-
     Sets the globally unique identifier which is stored in this detail to \a guid.
  */
 void QOrganizerItemGuid::setGuid(const QString &guid)
@@ -409,9 +376,7 @@ void QOrganizerItemGuid::setGuid(const QString &guid)
  */
 
 /*!
-    \fn QOrganizerItemParent::parentId() const
-
-    Returns the id of the item instance origin's parent item.
+    Returns the ID of the item instance origin's parent item.
  */
 QOrganizerItemId QOrganizerItemParent::parentId() const
 {
@@ -419,9 +384,7 @@ QOrganizerItemId QOrganizerItemParent::parentId() const
 }
 
 /*!
-    \fn QOrganizerItemParent::setParentId(const QOrganizerItemId& parentId)
-
-    Sets the parent id of this instance origin item to \a parentId.
+    Sets the parent ID of this instance origin item to \a parentId.
  */
 void QOrganizerItemParent::setParentId(const QOrganizerItemId &parentId)
 {
@@ -429,8 +392,6 @@ void QOrganizerItemParent::setParentId(const QOrganizerItemId &parentId)
 }
 
 /*!
-    \fn QOrganizerItemParent::originalDate() const
-
     Returns the original date of this instance origin item.
  */
 QDate QOrganizerItemParent::originalDate() const
@@ -439,8 +400,6 @@ QDate QOrganizerItemParent::originalDate() const
 }
 
 /*!
-    \fn QOrganizerItemParent::setOriginalDate(const QDate& date)
-
     Sets the origin date to \a date.
  */
 void QOrganizerItemParent::setOriginalDate(const QDate &date)
@@ -466,8 +425,6 @@ void QOrganizerItemParent::setOriginalDate(const QDate &date)
  */
 
 /*!
-    \fn QOrganizerJournalTime::entryDateTime() const
-
     Returns the journal entry date and time as QDateTime.
  */
 QDateTime QOrganizerJournalTime::entryDateTime() const
@@ -476,8 +433,6 @@ QDateTime QOrganizerJournalTime::entryDateTime() const
 }
 
 /*!
-    \fn QOrganizerJournalTime::setEntryDateTime(const QDateTime& entryDateTime)
-
     Sets the journal entry date and time to \a entryDateTime.
  */
 void QOrganizerJournalTime::setEntryDateTime(const QDateTime &entryDateTime)
@@ -504,8 +459,6 @@ void QOrganizerJournalTime::setEntryDateTime(const QDateTime &entryDateTime)
  */
 
 /*!
-    \fn QOrganizerItemLocation::latitude() const
-
     Returns the latitude value of the location's geocoordinates
  */
 double QOrganizerItemLocation::latitude() const
@@ -514,8 +467,6 @@ double QOrganizerItemLocation::latitude() const
 }
 
 /*!
-    \fn QOrganizerItemLocation::setLatitude(double latitude)
-
     Sets the latitude value of the location's geocoordinates to \a latitude
  */
 void QOrganizerItemLocation::setLatitude(double latitude)
@@ -524,8 +475,6 @@ void QOrganizerItemLocation::setLatitude(double latitude)
 }
 
 /*!
-    \fn QOrganizerItemLocation::longitude() const
-
     Returns the longitude value of the location's geocoordinates
  */
 double QOrganizerItemLocation::longitude() const
@@ -534,8 +483,6 @@ double QOrganizerItemLocation::longitude() const
 }
 
 /*!
-    \fn QOrganizerItemLocation::setLongitude(double longitude)
-
     Sets the longitude value of the location's geocoordinates to \a longitude
  */
 void QOrganizerItemLocation::setLongitude(double longitude)
@@ -544,8 +491,6 @@ void QOrganizerItemLocation::setLongitude(double longitude)
 }
 
 /*!
-    \fn QOrganizerItemLocation::label() const
-
     Returns the human-readable label of the location
  */
 QString QOrganizerItemLocation::label() const
@@ -554,8 +499,6 @@ QString QOrganizerItemLocation::label() const
 }
 
 /*!
-    \fn QOrganizerItemLocation::setLabel(const QString& label)
-
     Sets the human-readable label of the location to \a label
  */
 void QOrganizerItemLocation::setLabel(const QString &label)
@@ -579,8 +522,6 @@ void QOrganizerItemLocation::setLabel(const QString &label)
  */
 
 /*!
-    \fn QOrganizerItemComment::setComment(const QString &comment)
-
     Sets a comment associated with an organizer item to \a comment.
  */
 void QOrganizerItemComment::setComment(const QString &comment)
@@ -589,8 +530,6 @@ void QOrganizerItemComment::setComment(const QString &comment)
 }
 
 /*!
-    \fn QOrganizerItemComment::comment() const
-
     Returns a string for a comment associated with an organizer item.
  */
 QString QOrganizerItemComment::comment() const
@@ -628,8 +567,6 @@ QString QOrganizerItemComment::comment() const
  */
 
 /*!
-    \fn QOrganizerItemPriority::setPriority(Priority priority)
-
     Sets the priority associated with an organizer item to \a priority.
  */
 void QOrganizerItemPriority::setPriority(Priority priority)
@@ -638,8 +575,6 @@ void QOrganizerItemPriority::setPriority(Priority priority)
 }
 
 /*!
-    \fn Priority QOrganizerItemPriority::priority() const
-
     Returns the priority associated with an organizer item.
  */
 QOrganizerItemPriority::Priority QOrganizerItemPriority::priority() const
@@ -676,8 +611,7 @@ bool QOrganizerItemRecurrence::operator==(const QOrganizerItemRecurrence &other)
 /*!
     \fn QOrganizerItemRecurrence::operator!=(const QOrganizerItemRecurrence &other) const
 
-    Returns true if the \a other recurrence detail is equal to this detail; otherwise, false.
-    Implemented in terms of operator==() for QOrganizerItemRecurrence detail.
+    Returns true if the \a other recurrence detail is not equal to this detail; otherwise, false.
  */
 
 /*!
@@ -801,8 +735,6 @@ QOrganizerItemReminder::ReminderType QOrganizerItemReminder::reminderType() cons
 }
 
 /*!
-    \fn QOrganizerItemReminder::setSecondsBeforeStart(int seconds)
-
     Sets the number of seconds prior to the activation of the item
     at which the user wants to be reminded of the item to \a seconds.
     The exact datetime of activation of the item depends on the type of
@@ -818,8 +750,6 @@ void QOrganizerItemReminder::setSecondsBeforeStart(int seconds)
 }
 
 /*!
-    \fn int QOrganizerItemReminder::secondsBeforeStart() const
-
     Returns the number of seconds prior to the activation of the item
     at which the user wants to be reminded of the item.
     The exact datetime of activation of the item depends on the type of
@@ -833,8 +763,6 @@ int QOrganizerItemReminder::secondsBeforeStart() const
 }
 
 /*!
-    \fn int QOrganizerItemReminder::repetitionCount() const
-
     Returns the number of times the user should be reminded of the item.
 
     \sa repetitionDelay()
@@ -845,8 +773,6 @@ int QOrganizerItemReminder::repetitionCount() const
 }
 
 /*!
-    \fn int QOrganizerItemReminder::repetitionDelay() const
-
     Returns the delay (in seconds) between each repetition of the reminder.
 
     \sa repetitionCount()
@@ -857,8 +783,6 @@ int QOrganizerItemReminder::repetitionDelay() const
 }
 
 /*!
-    \fn QOrganizerItemReminder::setRepetition(int count, int delaySeconds)
-
     Sets the number of repetitions of the reminderto \a count, and the delay (in seconds)
     between each repetition of the reminder to \a delaySeconds.
 
@@ -906,8 +830,6 @@ void QOrganizerItemReminder::setRepetition(int count, int delaySeconds)
  */
 
 /*!
-    \fn QOrganizerItemAudibleReminder::setDataUrl(const QUrl& dataUrl)
-
     Sets the url of the audible data which should be played to \a dataUrl.
  */
 void QOrganizerItemAudibleReminder::setDataUrl(const QUrl &dataUrl)
@@ -916,8 +838,6 @@ void QOrganizerItemAudibleReminder::setDataUrl(const QUrl &dataUrl)
 }
 
 /*!
-    \fn QUrl QOrganizerItemAudibleReminder::dataUrl() const
-
     Returns the url of the audible data which should be played.
  */
 QUrl QOrganizerItemAudibleReminder::dataUrl() const
@@ -951,8 +871,6 @@ QUrl QOrganizerItemAudibleReminder::dataUrl() const
  */
 
 /*!
-    \fn QOrganizerItemEmailReminder::setContents(const QString& subject, const QString& body, const QVariantList& attachments)
-
     Sets the contents of the email reminder to be the given \a subject, \a body and \a attachments.
  */
 void QOrganizerItemEmailReminder::setContents(const QString &subject, const QString &body, const QVariantList &attachments)
@@ -961,8 +879,6 @@ void QOrganizerItemEmailReminder::setContents(const QString &subject, const QStr
 }
 
 /*!
-    \fn QString QOrganizerItemEmailReminder::subject() const
-
     Returns the subject of the email.
  */
 QString QOrganizerItemEmailReminder::subject() const
@@ -971,8 +887,6 @@ QString QOrganizerItemEmailReminder::subject() const
 }
 
 /*!
-    \fn QString QOrganizerItemEmailReminder::body() const
-
     Returns the body of the email.
  */
 QString QOrganizerItemEmailReminder::body() const
@@ -981,8 +895,6 @@ QString QOrganizerItemEmailReminder::body() const
 }
 
 /*!
-    \fn QVariantList QOrganizerItemEmailReminder::attachments() const
-
     Returns the attachments of the email.
  */
 QVariantList QOrganizerItemEmailReminder::attachments() const
@@ -991,8 +903,6 @@ QVariantList QOrganizerItemEmailReminder::attachments() const
 }
 
 /*!
-    \fn QOrganizerItemEmailReminder::setRecipients(const QStringList& recipients)
-
     Sets the list of recipients that the user wishes to be sent an email as part of the reminder
     to \a recipients.
  */
@@ -1002,8 +912,6 @@ void QOrganizerItemEmailReminder::setRecipients(const QStringList &recipients)
 }
 
 /*!
-    \fn QStringList QOrganizerItemEmailReminder::recipients() const
-
     Returns the list of recipients that the user wishes to be sent an email as part of the reminder.
  */
 QStringList QOrganizerItemEmailReminder::recipients() const
@@ -1034,8 +942,6 @@ QStringList QOrganizerItemEmailReminder::recipients() const
  */
 
 /*!
-    \fn QOrganizerItemVisualReminder::setMessage(const QString& message)
-
     Sets the message which the user wishes to be displayed as part of the reminder to \a message.
 */
 void QOrganizerItemVisualReminder::setMessage(const QString &message)
@@ -1044,8 +950,6 @@ void QOrganizerItemVisualReminder::setMessage(const QString &message)
 }
 
 /*!
-    \fn QString QOrganizerItemVisualReminder::message() const
-
     Returns the message which the user wishes to be displayed as part of the reminder.
 */
 QString QOrganizerItemVisualReminder::message() const
@@ -1054,8 +958,6 @@ QString QOrganizerItemVisualReminder::message() const
 }
 
 /*!
-    \fn QOrganizerItemVisualReminder::setDataUrl(const QUrl& dataUrl)
-
     Sets the url of the visual data which the user wishes to be displayed as part of the reminder to \a dataUrl.
 */
 void QOrganizerItemVisualReminder::setDataUrl(const QUrl &dataUrl)
@@ -1064,8 +966,6 @@ void QOrganizerItemVisualReminder::setDataUrl(const QUrl &dataUrl)
 }
 
 /*!
-    \fn QUrl QOrganizerItemVisualReminder::dataUrl() const
-
     Returns the url of the visual data which the user wishes to be displayed as part of the reminder.
 */
 QUrl QOrganizerItemVisualReminder::dataUrl() const
@@ -1096,8 +996,6 @@ QUrl QOrganizerItemVisualReminder::dataUrl() const
 const QString QOrganizerItemTag::Anniversary(QStringLiteral("ANNIVERSARY"));
 
 /*!
-    \fn QOrganizerItemTag::setTag(const QString &tag)
-
     Sets a tag associated with an organizer item to \a tag.
  */
 void QOrganizerItemTag::setTag(const QString &tag)
@@ -1106,8 +1004,6 @@ void QOrganizerItemTag::setTag(const QString &tag)
 }
 
 /*!
-    \fn QOrganizerItemTag::tag() const
-
     Returns the tag associated with an organizer item which is stored in this detail.
  */
 QString QOrganizerItemTag::tag() const
@@ -1132,8 +1028,6 @@ QString QOrganizerItemTag::tag() const
  */
 
 /*!
-    \fn QOrganizerItemTimestamp::created() const
-
     Returns the creation timestamp saved in this detail.
  */
 QDateTime QOrganizerItemTimestamp::created() const
@@ -1142,8 +1036,6 @@ QDateTime QOrganizerItemTimestamp::created() const
 }
 
 /*!
-    \fn QOrganizerItemTimestamp::lastModified() const
-
     Returns the last-modified timestamp saved in this detail.
  */
 QDateTime QOrganizerItemTimestamp::lastModified() const
@@ -1152,9 +1044,7 @@ QDateTime QOrganizerItemTimestamp::lastModified() const
 }
 
 /*!
-    \fn QOrganizerItemTimestamp::setCreated(const QDateTime& dateTime)
-
-    Sets the creation timestamp saved in this detail to \a dateTime.
+    Sets the creation timestamp saved in this detail to \a timestamp.
  */
 void QOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
 {
@@ -1162,9 +1052,7 @@ void QOrganizerItemTimestamp::setCreated(const QDateTime &timestamp)
 }
 
 /*!
-    \fn QOrganizerItemTimestamp::setLastModified(const QDateTime& dateTime)
-
-    Sets the last-modified timestamp saved in this detail to \a dateTime.
+    Sets the last-modified timestamp saved in this detail to \a timestamp.
  */
 void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
 {
@@ -1197,8 +1085,6 @@ void QOrganizerItemTimestamp::setLastModified(const QDateTime &timestamp)
  */
 
 /*!
-    \fn QOrganizerTodoProgress::status() const
-
     Returns the todo progress item's current status as QOrganizerTodoProgress::Status.
  */
 QOrganizerTodoProgress::Status QOrganizerTodoProgress::status() const
@@ -1207,8 +1093,6 @@ QOrganizerTodoProgress::Status QOrganizerTodoProgress::status() const
 }
 
 /*!
-    \fn QOrganizerTodoProgress::setStatus(Status status)
-
     Sets the todo progress item's current status to \a status.
  */
 void QOrganizerTodoProgress::setStatus(Status status)
@@ -1217,8 +1101,6 @@ void QOrganizerTodoProgress::setStatus(Status status)
 }
 
 /*!
-    \fn QOrganizerTodoProgress::finishedDateTime() const
-
     Returns the todo progress item's finished date and timeas QDateTime.
  */
 QDateTime QOrganizerTodoProgress::finishedDateTime() const
@@ -1227,8 +1109,6 @@ QDateTime QOrganizerTodoProgress::finishedDateTime() const
 }
 
 /*!
-    \fn QOrganizerTodoProgress::setFinishedDateTime(const QDateTime& finishedDateTime)
-
     Sets the todo progress item's finished date and time to \a finishedDateTime.
  */
 void QOrganizerTodoProgress::setFinishedDateTime(const QDateTime &finishedDateTime)
@@ -1237,8 +1117,6 @@ void QOrganizerTodoProgress::setFinishedDateTime(const QDateTime &finishedDateTi
 }
 
 /*!
-    \fn QOrganizerTodoProgress::percentageComplete() const
-
     Returns the todo progress item's completion percentage.
  */
 int QOrganizerTodoProgress::percentageComplete() const
@@ -1247,8 +1125,6 @@ int QOrganizerTodoProgress::percentageComplete() const
 }
 
 /*!
-    \fn QOrganizerTodoProgress::setPercentageComplete(int percentage)
-
     Sets the todo progress item's completion percentage to \a percentage.
  */
 void QOrganizerTodoProgress::setPercentageComplete(int percentage)
@@ -1275,8 +1151,6 @@ void QOrganizerTodoProgress::setPercentageComplete(int percentage)
  */
 
 /*!
-    \fn QOrganizerTodoTime::startDateTime() const
-
     Returns the todo time's start date and time as QDateTime.
     For all-day tasks, the time part is meaningless.
  */
@@ -1286,8 +1160,6 @@ QDateTime QOrganizerTodoTime::startDateTime() const
 }
 
 /*!
-    \fn QOrganizerTodoTime::setStartDateTime(const QDateTime& startDateTime)
-
     Sets the todo time's start date and time to \a startDateTime.
     For all-day tasks, the time part can be set to any valid value.
  */
@@ -1297,8 +1169,6 @@ void QOrganizerTodoTime::setStartDateTime(const QDateTime &startDateTime)
 }
 
 /*!
-    \fn QOrganizerTodoTime::dueDateTime() const
-
     Returns the todo time's due date and time as QDateTime.
     For all-day tasks, the time part is meaningless.
  */
@@ -1308,8 +1178,6 @@ QDateTime QOrganizerTodoTime::dueDateTime() const
 }
 
 /*!
-    \fn QOrganizerTodoTime::setDueDateTime(const QDateTime& dueDateTime)
-
     Sets the todo time's due date and time to \a dueDateTime.
     For all-day tasks, the time part can be set to any valid value.
  */
@@ -1319,8 +1187,6 @@ void QOrganizerTodoTime::setDueDateTime(const QDateTime &dueDateTime)
 }
 
 /*!
-    \fn QOrganizerTodoTime::setAllDay(bool isAllDay)
-
     Sets the all-day status of the todo to \a isAllDay.
     If the tasks is an all-day todo, no time is considered to be
     specified for the todo, even if the start date time set
@@ -1332,8 +1198,6 @@ void QOrganizerTodoTime::setAllDay(bool isAllDay)
 }
 
 /*!
-    \fn QOrganizerTodoTime::isAllDay() const
-
     Returns true if a specific time was specified for the todo.
     Returns false if the todo is an all-day todo.
  */
@@ -1415,7 +1279,6 @@ void QOrganizerItemType::setType(QOrganizerItemType::ItemType type)
  */
 
 /*!
-   \fn QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
    Sets the participation status of the user of the calendar in the event to \a status.
  */
 void QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::ParticipationStatus status)
@@ -1424,7 +1287,6 @@ void QOrganizerEventRsvp::setParticipationStatus(QOrganizerEventAttendee::Partic
 }
 
 /*!
-   \fn QOrganizerEventRsvp::participationStatus() const
    Returns the participation status of the user of the calendar in the event.
  */
 QOrganizerEventAttendee::ParticipationStatus QOrganizerEventRsvp::participationStatus() const
@@ -1433,7 +1295,6 @@ QOrganizerEventAttendee::ParticipationStatus QOrganizerEventRsvp::participationS
 }
 
 /*!
-   \fn QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::ParticipationRole role)
    Sets the role of the user of the calendar in the event to \a role.
  */
 void QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::ParticipationRole role)
@@ -1442,7 +1303,6 @@ void QOrganizerEventRsvp::setParticipationRole(QOrganizerEventAttendee::Particip
 }
 
 /*!
-   \fn QOrganizerEventRsvp::participationRole() const
    Returns the participation role of the user of the calendar in the event.
  */
 QOrganizerEventAttendee::ParticipationRole QOrganizerEventRsvp::participationRole() const
@@ -1457,7 +1317,6 @@ QOrganizerEventAttendee::ParticipationRole QOrganizerEventRsvp::participationRol
 */
 
 /*!
-   \fn QOrganizerEventRsvp::setResponseRequirement(QOrganizerEventRsvp::ResponseRequirement responseRequirement)
    Sets the response requirement for the invitation to \a responseRequirement.
  */
 void QOrganizerEventRsvp::setResponseRequirement(ResponseRequirement responseRequirement)
@@ -1466,7 +1325,6 @@ void QOrganizerEventRsvp::setResponseRequirement(ResponseRequirement responseReq
 }
 
 /*!
-   \fn QOrganizerEventRsvp::responseRequirement() const
    Returns the response requirement of the invitation.
  */
 QOrganizerEventRsvp::ResponseRequirement QOrganizerEventRsvp::responseRequirement() const
@@ -1475,7 +1333,6 @@ QOrganizerEventRsvp::ResponseRequirement QOrganizerEventRsvp::responseRequiremen
 }
 
 /*!
-   \fn QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
    Sets the date by which the user was requested to have responded to the invitation to the event to \a date.
  */
 void QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
@@ -1484,7 +1341,6 @@ void QOrganizerEventRsvp::setResponseDeadline(const QDate &date)
 }
 
 /*!
-   \fn QOrganizerEventRsvp::responseDeadline() const
    Returns the date by which the user was requested to have responded to the invitation to the event.
  */
 QDate QOrganizerEventRsvp::responseDeadline() const
@@ -1493,7 +1349,6 @@ QDate QOrganizerEventRsvp::responseDeadline() const
 }
 
 /*!
-   \fn QOrganizerEventRsvp::setResponseDate(const QDate &date)
    Sets the date at which the user responded to the invitation to the event to \a date.
  */
 void QOrganizerEventRsvp::setResponseDate(const QDate &date)
@@ -1502,7 +1357,6 @@ void QOrganizerEventRsvp::setResponseDate(const QDate &date)
 }
 
 /*!
-   \fn QOrganizerEventRsvp::responseDate() const
    Returns the date at which user responded to the invitation to the event.
  */
 QDate QOrganizerEventRsvp::responseDate() const
@@ -1511,7 +1365,6 @@ QDate QOrganizerEventRsvp::responseDate() const
 }
 
 /*!
-   \fn QOrganizerEventRsvp::setOrganizerName(const QString &name)
    Sets the name of the organizer of the event (who sent the invitation) to \a name.
  */
 void QOrganizerEventRsvp::setOrganizerName(const QString &name)
@@ -1520,7 +1373,6 @@ void QOrganizerEventRsvp::setOrganizerName(const QString &name)
 }
 
 /*!
-   \fn QOrganizerEventRsvp::organizerName() const
    Returns the name of the organizer of the event.
  */
 QString QOrganizerEventRsvp::organizerName() const
@@ -1529,8 +1381,7 @@ QString QOrganizerEventRsvp::organizerName() const
 }
 
 /*!
-   \fn QOrganizerEventRsvp::setOrganizerEmail(const QString &emailAddress)
-   Sets the email address of the organizer of the event (who sent the invitation) to \a emailAddress.
+   Sets the email address of the organizer of the event (who sent the invitation) to \a email.
  */
 void QOrganizerEventRsvp::setOrganizerEmail(const QString &email)
 {
@@ -1538,7 +1389,6 @@ void QOrganizerEventRsvp::setOrganizerEmail(const QString &email)
 }
 
 /*!
-   \fn QOrganizerEventRsvp::organizerEmail() const
    Returns the email address of the organizer of the event.
  */
 QString QOrganizerEventRsvp::organizerEmail() const
@@ -1584,8 +1434,6 @@ const QString QOrganizerItemClassification::Private(QStringLiteral("PRIVATE"));
 const QString QOrganizerItemClassification::Confidential(QStringLiteral("CONFIDENTIAL"));
 
 /*!
-   \fn QOrganizerItemClassification::setClassification(const QString &classification)
-
    Sets the classification of the item \a classification.
  */
 void QOrganizerItemClassification::setClassification(const QString &classification)
@@ -1594,8 +1442,6 @@ void QOrganizerItemClassification::setClassification(const QString &classificati
 }
 
 /*!
-   \fn QOrganizerItemClassification::classification() const
-
    Returns classification of the event.
  */
 QString QOrganizerItemClassification::classification() const
@@ -1622,8 +1468,6 @@ QString QOrganizerItemClassification::classification() const
  */
 
 /*!
-    \fn void QOrganizerItemExtendedDetail::setName(const QString &name)
-
     Sets the \a name of this extended detail.
  */
 void QOrganizerItemExtendedDetail::setName(const QString &name)
@@ -1632,8 +1476,6 @@ void QOrganizerItemExtendedDetail::setName(const QString &name)
 }
 
 /*!
-    \fn QString QOrganizerItemExtendedDetail::name() const
-
     Gets the name of this extended detail.
  */
 QString QOrganizerItemExtendedDetail::name() const
@@ -1642,8 +1484,6 @@ QString QOrganizerItemExtendedDetail::name() const
 }
 
 /*!
-    \fn void QOrganizerItemExtendedDetail::setData(const QVariant &data)
-
     Sets the \a data of the extended detail.
  */
 void QOrganizerItemExtendedDetail::setData(const QVariant &data)
@@ -1652,8 +1492,6 @@ void QOrganizerItemExtendedDetail::setData(const QVariant &data)
 }
 
 /*!
-    \fn QVariant QOrganizerItemExtendedDetail::data() const
-
     Gets the data of this extended detail.
  */
 QVariant QOrganizerItemExtendedDetail::data() const

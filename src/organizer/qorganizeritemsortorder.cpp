@@ -140,6 +140,7 @@ bool QOrganizerItemSortOrder::operator ==(const QOrganizerItemSortOrder &other) 
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerItemSortOrder
     Writes \a sortOrder to the stream \a out.
  */
 QDataStream &operator<<(QDataStream &out, const QOrganizerItemSortOrder &sortOrder)
@@ -154,6 +155,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemSortOrder &sortOrd
 }
 
 /*!
+    \relates QOrganizerItemSortOrder
     Reads a sort order from stream \a in into \a sortOrder.
  */
 QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder)
@@ -180,6 +182,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOrder &sortOrder)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerItemSortOrder
     Outputs \a sortOrder to the debug stream \a dbg.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)

@@ -118,6 +118,7 @@ QTORGANIZER_BEGIN_NAMESPACE
     \value TypeRecurrence       This detail is a recurrence. Should not be used in occurrences.
     \value TypeTag              This detail is a tag.
     \value TypeTimestamp        This detail is a timestamp.
+    \value TypeVersion          This detail is a version.
     \value TypeReminder         This detail is a reminder. Should not be directly used.
     \value TypeAudibleReminder  This detail is an audible reminder.
     \value TypeEmailReminder    This detail is an email reminder.
@@ -248,6 +249,7 @@ bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 }
 
 /*!
+    \relates QOrganizerItemDetail
     Returns the hash value for \a key.
  */
 Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key)
@@ -262,6 +264,10 @@ Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key)
 }
 
 #ifndef QT_NO_DEBUG_STREAM
+/*!
+    \relates QOrganizerItemDetail
+    Streams the \a detail to the given debug stream \a dbg, and returns the stream.
+ */
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail)
 {
     dbg.nospace() << "QOrganizerItemDetail(name=" << detail.type() << ", key=" << detail.key();
@@ -276,6 +282,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &det
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerItemDetail
     Writes \a detail to the stream \a out.
  */
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail)
@@ -287,7 +294,8 @@ Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerIte
 }
 
 /*!
-    Reads aan organizer item detail from stream \a in into \a detail.
+    \relates QOrganizerItemDetail
+    Reads an organizer item detail from stream \a in into \a detail.
  */
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail)
 {

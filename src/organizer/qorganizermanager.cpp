@@ -68,6 +68,39 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+    \enum QOrganizerManager::Operation
+
+    This enumeration describes the operation that has been done to the item or collection modified.
+    \value Add     The item / collection has been added.
+    \value Change  The item / collection has been changed.
+    \value Remove  The item / collection has been removed.
+ */
+
+/*!
+    \fn QOrganizerManager::itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
+
+    This signal is emitted at some point once the items have been modified in a datastore managed by
+    this manager. In the \a itemIds list, the item ID tells which item has been modified with the
+    corresponding operation.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
+ */
+
+/*!
+    \fn QOrganizerManager::collectionsModified(const QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > &collectionIds);
+
+    This signal is emitted at some point once the collections have been modified in a datastore managed
+    by this manager. In the \a collectionIds list, the collection ID tells which item has been modified
+    with the corresponding operation.
+
+    This signal will not be emitted if the dataChanged() signal was previously emitted for these changes.
+
+    \sa dataChanged()
+ */
+
+/*!
     \macro QTORGANIZER_BACKEND_VERSION
     \relates QOrganizerManager
 
@@ -392,7 +425,7 @@ QMap<int, QOrganizerManager::Error> QOrganizerManager::errorMap() const
     which occurs up until the \a endDateTime), and a default-constructed (invalid) \a endDateTime
     specifies an open end date time (matches anything which occurs after the \a startDateTime). If
     both the \a startDateTime and \a endDateTime are invalid, this function will return the IDs of
-    all items which match the \a filter criteria.
+    all items.
 
     Note that backends will decide how many occurrences are returned if \a maxCount is negative.
 
@@ -601,7 +634,7 @@ bool QOrganizerManager::saveItem(QOrganizerItem *item, const QList<QOrganizerIte
 }
 
 /*!
-    Removes all the item whose ID is \a itemIds, and all its occurrences. Returns true if the item
+    Removes all the item whose ID is \a itemId, and all its occurrences. Returns true if the item
     and occurrences are successfully removed, or false otherwise.
 
     \sa removeItems

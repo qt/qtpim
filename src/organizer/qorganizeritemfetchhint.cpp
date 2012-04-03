@@ -175,6 +175,10 @@ void QOrganizerItemFetchHint::setOptimizationHints(OptimizationHints hints)
 }
 
 #ifndef QT_NO_DATASTREAM
+/*!
+    \relates QOrganizerItemFetchHint
+    Streams \a hint to the data stream \a out.
+ */
 QDataStream &operator<<(QDataStream &out, const QOrganizerItemFetchHint &hint)
 {
     quint8 formatVersion = 1;
@@ -183,6 +187,10 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemFetchHint &hint)
                << static_cast<quint32>(hint.optimizationHints());
 }
 
+/*!
+    \relates QOrganizerItemFetchHint
+    Streams \a hint in from the data stream \a in.
+ */
 QDataStream &operator>>(QDataStream &in, QOrganizerItemFetchHint &hint)
 {
     quint8 formatVersion;
@@ -207,6 +215,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemFetchHint &hint)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerItemFetchHint
     Outputs \a hint to the debug stream \a dbg.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint &hint)

@@ -416,7 +416,7 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemD
 
     \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
         EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
-        Timestamp, Type, Tag
+        Timestamp, ItemType, Tag
   */
 int QDeclarativeOrganizerItemDetailFilter::field() const
 {
@@ -570,7 +570,7 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizer
 
     \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
         EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
-        Timestamp, Type, Tag
+        Timestamp, ItemType, Tag
   */
 int QDeclarativeOrganizerItemDetailRangeFilter::field() const
 {

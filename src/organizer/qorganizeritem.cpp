@@ -102,7 +102,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
     Construct an empty organizer item.
 
-    The organizer item will have an empty item ID, and an empty collection ID. It's of type \l QOrganizerItemType::TypeUnknown.
+    The organizer item will have an empty item ID, and an empty collection ID. It's of type \l QOrganizerItemType::TypeUndefined.
  */
 QOrganizerItem::QOrganizerItem()
     : d(new QOrganizerItemData)
@@ -184,7 +184,7 @@ bool QOrganizerItem::isEmpty() const
 }
 
 /*!
-    Removes all details of the organizer item, and resets the type to be \l QOrganizerItemType::TypeUnknown.
+    Removes all details of the organizer item, and resets the type to be \l QOrganizerItemType::TypeUndefined.
  */
 void QOrganizerItem::clearDetails()
 {
@@ -455,6 +455,7 @@ uint qHash(const QOrganizerItem &key)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerItem
     Streams the \a item to the given debug stream \a dbg, and returns the stream.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerItem &item)
@@ -468,6 +469,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerItem &item)
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerItem
     Writes \a item to the stream \a out.
  */
 QDataStream &operator<<(QDataStream &out, const QOrganizerItem &item)
@@ -481,6 +483,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItem &item)
 }
 
 /*!
+    \relates QOrganizerItem
     Reads an item from stream \a in into \a item.
  */
 QDataStream &operator>>(QDataStream &in, QOrganizerItem &item)

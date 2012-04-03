@@ -178,6 +178,7 @@ bool QOrganizerCollectionId::isNull() const
 }
 
 /*!
+    \relates QOrganizerCollectionId
     Returns the hash value for \a key.
  */
 uint qHash(const QOrganizerCollectionId &key)
@@ -189,6 +190,7 @@ uint qHash(const QOrganizerCollectionId &key)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerCollectionId
     Outputs \a id to the debug stream \a dbg.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
@@ -204,6 +206,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerCollectionId
     Streams \a collectionId to the data stream \a out.
  */
 QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &collectionId)
@@ -213,6 +216,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &collecti
 }
 
 /*!
+    \relates QOrganizerCollectionId
     Streams \a collectionId in from the data stream \a in.
  */
 QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &collectionId)

@@ -247,6 +247,7 @@ QVariant QOrganizerCollection::metaData(const QString &key) const
 }
 
 /*!
+    \relates QOrganizerCollection
     Returns the hash value for \a key.
  */
 uint qHash(const QOrganizerCollection &key)
@@ -271,6 +272,7 @@ uint qHash(const QOrganizerCollection &key)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerCollection
     Streams the \a collection to the given debug stream \a dbg, and returns the stream.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
@@ -290,6 +292,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerCollection
     Writes \a collection to the stream \a out.
  */
 QDataStream &operator<<(QDataStream &out, const QOrganizerCollection &collection)
@@ -301,6 +304,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerCollection &collection
 }
 
 /*!
+    \relates QOrganizerCollection
     Reads an organizer collection from stream \a in into \a collection.
  */
 QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection)

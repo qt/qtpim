@@ -216,7 +216,6 @@ includes:
 \li \l{QOrganizerManager::managerName()}{managerName}
 \li \l{QOrganizerManager::managerParameters()}{managerParameters}
 \li \l{QOrganizerManager::managerUri()}{managerUri}
-\li \l{QOrganizerManager::managerVersion()}{managerVersion}
 \li \l{QOrganizerManager::parseUri()}{parseUri}
 \li \l{QOrganizerManager::buildUri()}{buildUri}
 \endlist

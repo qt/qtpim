@@ -99,7 +99,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemSortOrder::
 
     \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
         EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
-        Timestamp, Type, Tag
+        Timestamp, ItemType, Tag
  */
 void QDeclarativeOrganizerItemSortOrder::setField(int field)
 {

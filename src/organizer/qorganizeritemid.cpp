@@ -166,7 +166,8 @@ bool QOrganizerItemId::operator<(const QOrganizerItemId &other) const
 }
 
 /*!
-    Returns the hash value for \a key..
+    \relates QOrganizerItemId
+    Returns the hash value for \a key.
  */
 Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key)
 {
@@ -176,6 +177,10 @@ Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key)
 }
 
 #ifndef QT_NO_DEBUG_STREAM
+/*!
+    \relates QOrganizerItemId
+    Outputs \a id to the debug stream \a dbg.
+ */
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 {
     dbg.nospace() << "QOrganizerItemId(";
@@ -189,6 +194,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerItemId
     Streams \a itemId to the data stream \a out.
  */
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId)
@@ -198,7 +204,8 @@ Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerIte
 }
 
 /*!
-    Streams \a collectionId in from the data stream \a in.
+    \relates QOrganizerItemId
+    Streams \a itemId in from the data stream \a in.
  */
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &itemId)
 {

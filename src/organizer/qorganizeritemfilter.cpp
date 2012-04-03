@@ -162,6 +162,7 @@ bool QOrganizerItemFilter::operator==(const QOrganizerItemFilter &other) const
 
 #ifndef QT_NO_DATASTREAM
 /*!
+    \relates QOrganizerItemFilter
     Writes \a filter to the stream \a out.
 
     A QOrganizerItemIdFilter will not be preserved if streamed to a QDataStream.
@@ -176,6 +177,7 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerItemFilter &filter)
 }
 
 /*!
+    \relates QOrganizerItemFilter
     Reads an organizer item filter from stream \a in into \a filter.
 
     A QOrganizerItemIdFilter will not be preserved if streamed from a QDataStream.
@@ -222,6 +224,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter)
 
 #ifndef QT_NO_DEBUG_STREAM
 /*!
+    \relates QOrganizerItemFilter
     Outputs \a filter to the debug stream \a dbg.
  */
 QDebug operator<<(QDebug dbg, const QOrganizerItemFilter &filter)

@@ -13,7 +13,6 @@ DESTDIR = $$QT.contacts.plugins/contacts
 # Input
 HEADERS += qcontactjsondbenginefactory.h \
     qcontactjsondbengine.h \
-    qcontactjsondbenginedata.h \
     qcontactjsondbrequesthandler.h \
     qcontactjsondbrequestmanager.h \
     qcontactjsondbconverter.h \

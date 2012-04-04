@@ -46,6 +46,7 @@
 #include "qcontactjsondbglobal.h"
 #include "qcontactpersonid.h"
 #include "qcontactjsondbstring.h"
+#include "qcontactjsondbrequesthandler.h"
 
 #include <QDebug>
 #include <QEventLoop>
@@ -60,19 +61,20 @@ QTCONTACTS_BEGIN_NAMESPACE
   The JsonDb engine.
  */
 
-QContactJsonDbEngine::QContactJsonDbEngine(const QMap<QString, QString>& parameters) : d(new QContactJsonDbEngineData)
+QContactJsonDbEngine::QContactJsonDbEngine(const QMap<QString, QString>& parameters)
 {
     Q_UNUSED(parameters);
+    m_requestHandler = new QContactJsonDbRequestHandler();
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
     qRegisterMetaType<QContactId>("QContactId");
     m_thread = new QThread();
     m_thread->start();
     connect(this, SIGNAL(requestReceived(QContactAbstractRequest*)),
-            d->m_requestHandler, SLOT(handleRequest(QContactAbstractRequest*)));
-    d->m_requestHandler->moveToThread(m_thread);
-    QMetaObject::invokeMethod(d->m_requestHandler,"init",Qt::BlockingQueuedConnection);
-    d->m_requestHandler->setEngine(this);
+            m_requestHandler, SLOT(handleRequest(QContactAbstractRequest*)));
+    m_requestHandler->moveToThread(m_thread);
+    QMetaObject::invokeMethod(m_requestHandler,"init",Qt::BlockingQueuedConnection);
+    m_requestHandler->setEngine(this);
 }
 
 
@@ -81,11 +83,12 @@ QContactJsonDbEngine::QContactJsonDbEngine(const QMap<QString, QString>& paramet
 
 QContactJsonDbEngine::~QContactJsonDbEngine()
 {
-
+    if (m_requestHandler)
+        m_requestHandler->deleteLater();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        m_thread->deleteLater();
+        delete m_thread;
     }
 
 }
@@ -95,19 +98,9 @@ QContactJsonDbEngine::~QContactJsonDbEngine()
 
 
 
-QContactJsonDbEngine& QContactJsonDbEngine::operator=(const QContactJsonDbEngine& other)
-{
-    d = other.d;
-    return *this;
-}
-
-
-
-
-
 bool QContactJsonDbEngine::startRequest(QContactAbstractRequest* req){
     QContactManagerEngine::updateRequestState(req, QContactAbstractRequest::ActiveState);
-    connect(req, SIGNAL(destroyed(QObject*)), d->m_requestHandler, SLOT(removeDestroyed(QObject*)),Qt::QueuedConnection);
+    connect(req, SIGNAL(destroyed(QObject*)), m_requestHandler, SLOT(removeDestroyed(QObject*)),Qt::QueuedConnection);
     emit requestReceived(req);
     return true;
 }
@@ -422,7 +415,7 @@ void QContactJsonDbEngine::requestDestroyed(QContactAbstractRequest* req){
    //We inform the handler that this request is about to be destroyed so as to
    //avoid that the worker handler thread will start handling request objects during
    //their destruction.
-   QMetaObject::invokeMethod(d->m_requestHandler,"removeDestroyed",Qt::BlockingQueuedConnection,Q_ARG(QObject*, req));
+   QMetaObject::invokeMethod(m_requestHandler,"removeDestroyed",Qt::BlockingQueuedConnection,Q_ARG(QObject*, req));
    return QContactManagerEngine::requestDestroyed(req);
 }
 
@@ -445,7 +438,7 @@ bool QContactJsonDbEngine::waitForRequestProgress(QContactAbstractRequest* req, 
 
 bool QContactJsonDbEngine::waitForRequestFinished(QContactAbstractRequest* req, int msecs){
     bool result = false;
-    result = d->m_requestHandler->waitForRequestFinished(req, msecs);
+    result = m_requestHandler->waitForRequestFinished(req, msecs);
     return result;
 }
 

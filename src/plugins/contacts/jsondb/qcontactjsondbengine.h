@@ -63,10 +63,11 @@
 #include <qcontacts.h>
 #include <qcontactmanager.h>
 #include <private/qcontactmanager_p.h>
-#include "qcontactjsondbenginedata.h"
 #include "qcontactjsondbstring.h"
 
 QTCONTACTS_BEGIN_NAMESPACE
+
+class QContactJsonDbRequestHandler;
 
 class QContactJsonDbEngine : public QContactManagerEngine
 {
@@ -75,7 +76,6 @@ class QContactJsonDbEngine : public QContactManagerEngine
 public:
     ~QContactJsonDbEngine();
     QContactJsonDbEngine(const QMap<QString, QString> &parameters = (QMap<QString, QString>()));
-    QContactJsonDbEngine& operator=(const QContactJsonDbEngine& other);
 
     QString managerName() const;
     bool validateContact(const QContact&, QContactManager::Error* error) const;
@@ -114,8 +114,10 @@ public:
   private:
     bool doSyncRequest(QContactAbstractRequest* req, int msecs) const;
 
+    Q_DISABLE_COPY(QContactJsonDbEngine);
+
     QQueue<QContactAbstractRequest*> m_asynchronousOperations; // async requests to be performed.
-    QSharedDataPointer<QContactJsonDbEngineData> d;
+    QContactJsonDbRequestHandler *m_requestHandler;
     QThread* m_thread;
 };
 

@@ -43,10 +43,14 @@
 #define QCONTACTJSONDBCONVERTER_H
 
 #include <QHash>
+#include <QtJsonDb/qjsondbrequest.h>
+
 #include "qcontact.h"
 #include "qcontactjsondbengine.h"
 #include "qcontactabstractrequest.h"
 #include "qcontactfilter.h"
+
+QT_USE_NAMESPACE_JSONDB
 
 QTCONTACTS_BEGIN_NAMESPACE
 

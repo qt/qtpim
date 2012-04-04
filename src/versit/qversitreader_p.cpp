@@ -291,22 +291,35 @@ void LineReader::setCodecUtf8Incompatible() {
 bool LineReader::tryReadLine(LByteArray *cursor, bool atEnd)
 {
     int crlfPos = -1;
+    int doubleCrLfCheck = -1;
     QByteArray space(VersitUtils::encode(' ', mCodec));
     QByteArray tab(VersitUtils::encode('\t', mCodec));
+    QByteArray equals(VersitUtils::encode('=', mCodec));
 
     int spaceLength = space.length();
+    int equalsLength = equals.length();
 
     forever {
         foreach(const QByteArrayMatcher& crlf, mCrlfList) {
             int crlfLength = crlf.pattern().length();
             crlfPos = crlf.indexIn(cursor->mData, mSearchFrom);
-            if (crlfPos == cursor->mStart) {
-                // Newline at start of line.  Set mStart to directly after it.
+            doubleCrLfCheck = crlf.indexIn(cursor->mData, mSearchFrom + crlfLength);
+            if ((crlfPos == cursor->mStart) && (doubleCrLfCheck != crlfPos + crlfLength)) {
+                // Single Newline at start of line.  Ignore and Set mStart to directly after it.
                 cursor->mStart += crlfLength;
                 mSearchFrom = cursor->mStart;
                 break;
+            } else if ((crlfPos == cursor->mStart) && (doubleCrLfCheck == crlfPos + crlfLength)) {
+                // Found '=CrLfCrLf' - We choose to see this as badly formed,
+                // but clear end of the versit property.
+                cursor->mData.remove(crlfPos, crlfLength);
+                cursor->mEnd = crlfPos;
+                if (QVersitReaderPrivate::containsAt(cursor->mData, equals, crlfPos - equalsLength) ) {
+                    cursor->mData.remove(crlfPos -1, 1);
+                }
+                return true;
             } else if (crlfPos > cursor->mStart) {
-                // Found the CRLF.
+                // Found the first occurance of CRLF in the current buffer.
                 if (QVersitReaderPrivate::containsAt(cursor->mData, space, crlfPos + crlfLength)
                     || QVersitReaderPrivate::containsAt(cursor->mData, tab, crlfPos + crlfLength)) {
                     // If it's followed by whitespace, collapse it.

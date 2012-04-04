@@ -379,6 +379,24 @@ void tst_QVersitReader::testReading()
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(results.count(),1);
 
+
+    // Exception case for a property ending in =CrLfCrLf, ie "=\r\n\r\n"
+    const QByteArray& myTest =
+            "BEGIN:VCARD\r\nVERSION:4.0\r\nFN:John\r\n"
+            "EMAIL;ENCODING=QUOTED-PRINTABLE:john.citizen=40exam=\r\nple.com=abc=\r\n\r\n"
+            "END:VCARD\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(myTest);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(),1);
+
+
     // vCard 4.0
     const QByteArray& vcard40 =
         "BEGIN:VCARD\r\nVERSION:4.0\r\nFN:John\r\nEND:VCARD\r\n";

@@ -406,6 +406,52 @@ bool QDeclarativeOrganizerItem::generatedOccurrence() const
     return (m_id.isNull() && (type == QDeclarativeOrganizerItemType::EventOccurrence || type == QDeclarativeOrganizerItemType::TodoOccurrence));
 }
 
+/*!
+    \internal
+ */
+QDateTime QDeclarativeOrganizerItem::itemStartTime() const
+{
+    switch (itemType()) {
+    case QDeclarativeOrganizerItemType::Event:
+        return static_cast<const QDeclarativeOrganizerEvent*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::Todo:
+        return static_cast<const QDeclarativeOrganizerTodo*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->startDateTime();
+    case QDeclarativeOrganizerItemType::Journal:
+        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime();
+    case QDeclarativeOrganizerItemType::Note:
+    default:
+        break;
+    }
+    return QDateTime();
+}
+
+/*!
+    \internal
+ */
+QDateTime QDeclarativeOrganizerItem::itemEndTime() const
+{
+    switch (itemType()) {
+    case QDeclarativeOrganizerItemType::Event:
+        return static_cast<const QDeclarativeOrganizerEvent*>(this)->endDateTime();
+    case QDeclarativeOrganizerItemType::EventOccurrence:
+        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->endDateTime();
+    case QDeclarativeOrganizerItemType::Todo:
+        return static_cast<const QDeclarativeOrganizerTodo*>(this)->dueDateTime();
+    case QDeclarativeOrganizerItemType::TodoOccurrence:
+        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->dueDateTime();
+    case QDeclarativeOrganizerItemType::Journal:
+        //there is no end time for journal item,  make it 30mins later for display purpose
+        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime().addSecs(60*30);
+    case QDeclarativeOrganizerItemType::Note:
+    default:
+        break;
+    }
+    return QDateTime();
+}
 
 // call-back functions for list property
 /*!
@@ -516,107 +562,6 @@ bool QDeclarativeOrganizerItem::_q_clearDetails()
         ret = true;
     }
     return ret;
-}
-
-// to be removed
-/*!
-    WARNING: This is to be removed soon.
- */
-bool QDeclarativeOrganizerItem::isFloatingTime()
-{
-    switch (itemType()) {
-    case QDeclarativeOrganizerItemType::Event:
-        return static_cast<QDeclarativeOrganizerEvent *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return static_cast<QDeclarativeOrganizerEventOccurrence *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItemType::Todo:
-        return static_cast<QDeclarativeOrganizerTodo *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return static_cast<QDeclarativeOrganizerTodoOccurrence *>(this)->startDateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItemType::Journal:
-        return static_cast<QDeclarativeOrganizerJournal *>(this)->dateTime().timeSpec() == Qt::LocalTime;
-    case QDeclarativeOrganizerItemType::Note:
-    default:
-        break;
-    }
-
-    QDeclarativeOrganizerItemTimestamp *timestamp = static_cast<QDeclarativeOrganizerItemTimestamp *>(detail(QDeclarativeOrganizerItemDetail::Timestamp));
-    bool floatingTime = timestamp->created().timeSpec() == Qt::LocalTime;
-    delete timestamp;
-    return floatingTime;
-}
-
-/*!
-    WARNING: This is to be removed soon.
- */
-QDateTime QDeclarativeOrganizerItem::itemStartTime() const
-{
-    switch (itemType()) {
-    case QDeclarativeOrganizerItemType::Event:
-        return static_cast<const QDeclarativeOrganizerEvent*>(this)->startDateTime();
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->startDateTime();
-    case QDeclarativeOrganizerItemType::Todo:
-        return static_cast<const QDeclarativeOrganizerTodo*>(this)->startDateTime();
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->startDateTime();
-    case QDeclarativeOrganizerItemType::Journal:
-        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime();
-    case QDeclarativeOrganizerItemType::Note:
-    default:
-        break;
-    }
-    return QDateTime();
-}
-
-/*!
-    WARNING: This is to be removed soon.
- */
-QDateTime QDeclarativeOrganizerItem::itemEndTime() const
-{
-    switch (itemType()) {
-    case QDeclarativeOrganizerItemType::Event:
-        return static_cast<const QDeclarativeOrganizerEvent*>(this)->endDateTime();
-    case QDeclarativeOrganizerItemType::EventOccurrence:
-        return static_cast<const QDeclarativeOrganizerEventOccurrence*>(this)->endDateTime();
-    case QDeclarativeOrganizerItemType::Todo:
-        return static_cast<const QDeclarativeOrganizerTodo*>(this)->dueDateTime();
-    case QDeclarativeOrganizerItemType::TodoOccurrence:
-        return static_cast<const QDeclarativeOrganizerTodoOccurrence*>(this)->dueDateTime();
-    case QDeclarativeOrganizerItemType::Journal:
-        //there is no end time for journal item,  make it 30mins later for display purpose
-        return static_cast<const QDeclarativeOrganizerJournal*>(this)->dateTime().addSecs(60*30);
-    case QDeclarativeOrganizerItemType::Note:
-    default:
-        break;
-    }
-    return QDateTime();
-}
-
-/*!
-    WARNING: This is to be removed soon.
- */
-bool QDeclarativeOrganizerItem::addDetail(QDeclarativeOrganizerItemDetail *detail)
-{
-    if (!detail)
-        return false;
-
-    QDeclarativeOrganizerItemDetail *itemDetail = QDeclarativeOrganizerItemDetailFactory::createItemDetail(detail->type());
-    itemDetail->setDetail(detail->detail());
-    m_details.append(itemDetail);
-
-    m_modified = true;
-    emit itemChanged();
-    return true;
-}
-
-/*!
-    WARNING: This is to be removed soon.
- */
-bool QDeclarativeOrganizerItem::isOccurrence() const
-{
-    QDeclarativeOrganizerItemType::ItemType type = itemType();
-    return type == QDeclarativeOrganizerItemType::EventOccurrence || type == QDeclarativeOrganizerItemType::TodoOccurrence;
 }
 
 
@@ -1333,7 +1278,6 @@ void QDeclarativeOrganizerTodo::setAllDay(bool allDay)
 
 bool QDeclarativeOrganizerTodo::isAllDay() const
 {
-    qWarning()<<"Todo's isAllDay-property will be removed soon. Use allDay-property instead.";
     foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
         if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
             return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->isAllDay();

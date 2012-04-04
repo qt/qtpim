@@ -109,19 +109,6 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetail::typ
 }
 
 /*!
-    \qmlproperty list<int> Detail::fieldNames
-
-    This property holds the list of all field names which this detail currently contains. Thse names are
-    used as the key for value(), setValue() and removeValue().
-
-    This property is read only.
- */
-QList<int> QDeclarativeOrganizerItemDetail::fieldNames() const
-{
-    return m_detail.values().keys();
-}
-
-/*!
     \qmlmethod variant Detail::value(field)
 
     Returns the value stored in this detail for the given \a field, or an empty variant if not available.
@@ -220,7 +207,6 @@ void QDeclarativeOrganizerEventTime::setAllDay(bool allDay)
 
 bool QDeclarativeOrganizerEventTime::isAllDay()
 {
-    qWarning()<<"EventTime's isAllDay-property will be removed soon. Use allDay-property instead.";
     return m_detail.value<bool>(QOrganizerEventTime::FieldAllDay);
 }
 
@@ -1183,7 +1169,6 @@ void QDeclarativeOrganizerTodoProgress::setPercentageComplete(int newPercentageC
 
 int QDeclarativeOrganizerTodoProgress::percentageComplete() const
 {
-    qWarning()<<"TodoProgress's percentage-property will be removed soon. Use percentageComplete-property instead.";
     return m_detail.value<int>(QOrganizerTodoProgress::FieldPercentageComplete);
 }
 

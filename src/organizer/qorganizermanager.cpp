@@ -457,44 +457,11 @@ QList<QOrganizerItem> QOrganizerManager::itemOccurrences(const QOrganizerItem &p
 
     Note that certain backends may ignore the given \a filter.
  */
-QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter &filter,
-                                                   const QDateTime &startDateTime, const QDateTime &endDateTime,
-                                                   const QList<QOrganizerItemSortOrder> &sortOrders)
+QList<QOrganizerItemId> QOrganizerManager::itemIds(const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                                   const QOrganizerItemFilter &filter, const QList<QOrganizerItemSortOrder> &sortOrders)
 {
     QOrganizerManagerSyncOpErrorHolder h(this);
     return d->m_engine->itemIds(filter, startDateTime, endDateTime, sortOrders, &h.error);
-}
-
-/*!
-    \obsolete
- */
-QList<QOrganizerItemId> QOrganizerManager::itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders)
-{
-    return itemIds(filter, QDateTime(), QDateTime(), sortOrders);
-}
-
-/*!
-    \obsolete
- */
-QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint)
-{
-    return items(filter, QDateTime(), QDateTime(), -1, sortOrders, fetchHint);
-}
-
-/*!
-    \obsolete
- */
-QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint)
-{
-    return items(filter, startDate, endDate, -1, sortOrders, fetchHint);
-}
-
-/*!
-    \obsolete
- */
-QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const QDateTime& endDate, int maxCount, const QOrganizerItemFilter& filter, const QOrganizerItemFetchHint& fetchHint)
-{
-    return items(filter, startDate, endDate, maxCount, QList<QOrganizerItemSortOrder>(), fetchHint);
 }
 
 /*!
@@ -521,8 +488,8 @@ QList<QOrganizerItem> QOrganizerManager::items(const QDateTime& startDate, const
     back using a partial save, masked by the same set of detail types in order to avoid information
     loss.
  */
-QList<QOrganizerItem> QOrganizerManager::items(const QOrganizerItemFilter &filter, const QDateTime &startDateTime,
-                                               const QDateTime &endDateTime, int maxCount,
+QList<QOrganizerItem> QOrganizerManager::items(const QDateTime &startDateTime, const QDateTime &endDateTime,
+                                               const QOrganizerItemFilter &filter, int maxCount,
                                                const QList<QOrganizerItemSortOrder> &sortOrders,
                                                const QOrganizerItemFetchHint &fetchHint)
 {

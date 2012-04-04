@@ -55,9 +55,6 @@ class QDeclarativeOrganizerItemDetail : public QObject
 
     Q_PROPERTY(DetailType type READ type)
 
-    // to be removed
-    Q_PROPERTY(QList<int> fieldNames READ fieldNames)
-
 public:
     enum DetailType {
         Undefined = QOrganizerItemDetail::TypeUndefined,
@@ -101,9 +98,6 @@ public:
     QOrganizerItemDetail detail() const;
     void setDetail(const QOrganizerItemDetail &detail);
 
-    // to be removed
-    QList<int> fieldNames() const;
-
 Q_SIGNALS:
     void detailChanged();
 
@@ -121,7 +115,6 @@ class QDeclarativeOrganizerEventTime : public QDeclarativeOrganizerItemDetail
 
     Q_ENUMS(EventTimeField)
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)// Will be removed, use "allDay" instead!
     Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
@@ -536,7 +529,6 @@ class QDeclarativeOrganizerTodoProgress : public QDeclarativeOrganizerItemDetail
     Q_ENUMS(TodoProgressField)
     Q_ENUMS(StatusType)
 
-    Q_PROPERTY(int percentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
     Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime finishedDateTime READ finishedDateTime WRITE setFinishedDateTime NOTIFY valueChanged)
     Q_PROPERTY(StatusType status READ status WRITE setStatus NOTIFY valueChanged)

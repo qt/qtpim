@@ -586,7 +586,7 @@ void tst_QOrganizerItemAsync::itemFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    mitems = oim->items(dfil);
+    mitems = oim->items(QDateTime(), QDateTime(), dfil);
     items = ifr.items();
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!mitems.isEmpty());
@@ -614,7 +614,7 @@ void tst_QOrganizerItemAsync::itemFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    mitems = oim->items(QOrganizerItemFilter(), sorting);
+    mitems = oim->items(QDateTime(), QDateTime(), QOrganizerItemFilter(), -1, sorting);
     items = ifr.items();
     QCOMPARE(mitems.size(), items.size());
     for (int i = 0; i < items.size(); i++) {
@@ -639,7 +639,7 @@ void tst_QOrganizerItemAsync::itemFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    mitems = oim->items(QOrganizerItemFilter(), sorting);
+    mitems = oim->items(QDateTime(), QDateTime(), QOrganizerItemFilter(), -1, sorting);
     items = ifr.items();
     QCOMPARE(mitems.size(), items.size());
     for (int i = 0; i < mitems.size(); i++) {
@@ -896,7 +896,7 @@ void tst_QOrganizerItemAsync::itemIdFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    itemIds = oim->itemIds(dfil);
+    itemIds = oim->itemIds(QDateTime(), QDateTime(), dfil);
     result = ifr.itemIds();
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!itemIds.isEmpty());
@@ -921,7 +921,7 @@ void tst_QOrganizerItemAsync::itemIdFetch()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    itemIds = oim->itemIds(QOrganizerItemFilter(), sorting);
+    itemIds = oim->itemIds(QDateTime(), QDateTime(), QOrganizerItemFilter(), sorting);
     result = ifr.itemIds();
     QCOMPARE(itemIds, result);
 
@@ -1509,7 +1509,7 @@ void tst_QOrganizerItemAsync::itemRemove()
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    irr.setItems(oim->items(dfil));
+    irr.setItems(oim->items(QDateTime(), QDateTime(), dfil));
     irr.setManager(oim.data());
     QCOMPARE(irr.manager(), oim.data());
     QVERIFY(!irr.isActive());
@@ -1521,7 +1521,7 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(!irr.cancel()); // not started
 
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
-    QVERIFY(!oim->items(dfil).isEmpty());
+    QVERIFY(!oim->items(QDateTime(), QDateTime(), dfil).isEmpty());
 
     QVERIFY(irr.start());
 
@@ -1535,7 +1535,7 @@ void tst_QOrganizerItemAsync::itemRemove()
 
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QCOMPARE(oim->itemIds().size(), originalCount - 1);
-    QVERIFY(oim->itemIds(dfil).isEmpty());
+    QVERIFY(oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
     // remove all items
 
@@ -1688,7 +1688,7 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     int originalCount = oim->itemIds().size();
     QOrganizerItemDetailFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    irr.setItemIds(oim->itemIds(dfil));
+    irr.setItemIds(oim->itemIds(QDateTime(), QDateTime(), dfil));
     irr.setManager(oim.data());
     QCOMPARE(irr.manager(), oim.data());
     QVERIFY(!irr.isActive());
@@ -1700,7 +1700,7 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     QVERIFY(!irr.cancel()); // not started
 
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
-    QVERIFY(!oim->itemIds(dfil).isEmpty());
+    QVERIFY(!oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
     QVERIFY(irr.start());
 
@@ -1714,7 +1714,7 @@ void tst_QOrganizerItemAsync::itemRemoveById()
 
     QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QCOMPARE(oim->itemIds().size(), originalCount - 1);
-    QVERIFY(oim->itemIds(dfil).isEmpty());
+    QVERIFY(oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
     // remove all items
 ////    dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel); // delete everything.

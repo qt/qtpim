@@ -115,13 +115,13 @@ public:
 
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint = QOrganizerItemFetchHint());
 
-    QList<QOrganizerItem> items(const QOrganizerItemFilter &filter = QOrganizerItemFilter(),
-                                const QDateTime &startDateTime = QDateTime(), const QDateTime &endDateTime = QDateTime(), int maxCount = -1,
+    QList<QOrganizerItem> items(const QDateTime &startDateTime = QDateTime(), const QDateTime &endDateTime = QDateTime(),
+                                const QOrganizerItemFilter &filter = QOrganizerItemFilter(), int maxCount = -1,
                                 const QList<QOrganizerItemSortOrder> &sortOrders = QList<QOrganizerItemSortOrder>(),
                                 const QOrganizerItemFetchHint &fetchHint = QOrganizerItemFetchHint());
 
-    QList<QOrganizerItemId> itemIds(const QOrganizerItemFilter &filter = QOrganizerItemFilter(),
-                                    const QDateTime &startDateTime = QDateTime(), const QDateTime &endDateTime = QDateTime(),
+    QList<QOrganizerItemId> itemIds(const QDateTime &startDateTime = QDateTime(), const QDateTime &endDateTime = QDateTime(),
+                                    const QOrganizerItemFilter &filter = QOrganizerItemFilter(),
                                     const QList<QOrganizerItemSortOrder> &sortOrders = QList<QOrganizerItemSortOrder>());
 
     QList<QOrganizerItem> itemOccurrences(const QOrganizerItem &parentItem, const QDateTime &startDateTime = QDateTime(),
@@ -160,12 +160,6 @@ public:
 
     // helper
     static QList<QOrganizerItemId> extractIds(const QList<QOrganizerItem> &items);
-
-    // to be removed
-    QList<QOrganizerItemId> itemIds(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders);
-    QList<QOrganizerItem> items(const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint = QOrganizerItemFetchHint());
-    QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter = QOrganizerItemFilter(), const QList<QOrganizerItemSortOrder>& sortOrders = QList<QOrganizerItemSortOrder>(), const QOrganizerItemFetchHint& fetchHint = QOrganizerItemFetchHint());
-    QList<QOrganizerItem> items(const QDateTime& startDate, const QDateTime& endDate, int maxCount, const QOrganizerItemFilter& filter = QOrganizerItemFilter(), const QOrganizerItemFetchHint& fetchHint = QOrganizerItemFetchHint());
 
 Q_SIGNALS:
     void dataChanged();

@@ -1865,13 +1865,13 @@ void tst_QOrganizerManager::invalidManager()
     QOrganizerItemFilter f; // matches everything
     QOrganizerItemDetailFilter df;
     df.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
-    QVERIFY(manager.itemIds(QOrganizerItemFilter()).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), QOrganizerItemFilter()).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    QVERIFY(manager.itemIds(df).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), df).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    QVERIFY(manager.itemIds(f | f).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), f | f).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    QVERIFY(manager.itemIds(df | df).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), df | df).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
 
     QVERIFY(manager.supportedFilters().size() == 0);
@@ -3046,39 +3046,39 @@ void tst_QOrganizerManager::itemFilterFetch()
     // 1
     dfil.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
     dfil.setValue(QOrganizerItemPriority::VeryHighPriority);
-    QCOMPARE(cm->items(dfil).count(), 0);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 0);
     dfil.setValue(QOrganizerItemPriority::VeryLowPriority);
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
     // 2
     dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     dfil.setValue("my comment");
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
     // 3-4
     dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     dfil.setValue("my 3rd event!");
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
     dfil.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
     dfil.setValue("event!");
-    QCOMPARE(cm->items(dfil).count(), 2);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
     dfil.setValue("event");
     dfil.setMatchFlags(QOrganizerItemFilter::MatchContains);
-    QCOMPARE(cm->items(dfil).count(), cm->items().count());
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), cm->items().count());
     dfil.setValue("my");
-    QCOMPARE(cm->items(dfil).count(), 2);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
     dfil.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
-    QCOMPARE(cm->items(dfil).count(), 2);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
     dfil.setValue("event");
-    QCOMPARE(cm->items(dfil).count(), 4);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 4);
     // 5
     dfil.setMatchFlags(QOrganizerItemFilter::MatchExactly);
     dfil.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
     dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
     // 6
     dfil.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
     dfil.setValue("DetailOfMine");
-    QCOMPARE(cm->items(dfil).count(), 1);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
 }
 
 void tst_QOrganizerManager::itemFetch()
@@ -3105,8 +3105,7 @@ void tst_QOrganizerManager::itemFetch()
     QVERIFY(cm->saveItem(&recEvent));
 
     //fetch all recurrences
-    QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 9, 8)),
-                                            QDateTime(QDate(2010, 9, 12)));
+    QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 9, 8)), QDateTime(QDate(2010, 9, 12)));
     QCOMPARE(items.count(), 4); // should return event + 3 x occurrencesOfRecEvent
 
     //fetch only the originating items
@@ -3121,11 +3120,10 @@ void tst_QOrganizerManager::itemFetch()
     recEvent.setRecurrenceRule(rrule);
     recEvent.setId(QOrganizerItemId());
     cm->saveItem(&recEvent);
-    items = cm->items(QDateTime(), QDateTime());
+    items = cm->items();
     QCOMPARE(items.count(), 3);
-    foreach (const QOrganizerItem& item, items) {
+    foreach (const QOrganizerItem &item, items)
         QVERIFY(item.type() == QOrganizerItemType::TypeEventOccurrence);
-    }
 
     // second - the same situation, but giving a time span that only covers the first day - should get back a single occurrence.
     items = cm->items(QDateTime(QDate(2010, 9, 1), QTime(15, 0, 0)), QDateTime(QDate(2010, 9, 1), QTime(18, 0, 0)));
@@ -3139,18 +3137,16 @@ void tst_QOrganizerManager::itemFetch()
     recEvent.setRecurrenceRules(QSet<QOrganizerRecurrenceRule>()); // clear rrule.
     recEvent.setId(QOrganizerItemId());
     cm->saveItem(&recEvent);
-    items = cm->items(QDateTime(), QDateTime());
+    items = cm->items();
     QCOMPARE(items.count(), 1);
-    foreach (const QOrganizerItem& item, items) {
+    foreach (const QOrganizerItem &item, items)
         QVERIFY(item.type() == QOrganizerItemType::TypeEvent);
-    }
 
     // fourth - the same situation, but giving a time span.  should still get back the parent.
     items = cm->items(QDateTime(QDate(2010, 9, 1), QTime(15, 0, 0)), QDateTime(QDate(2010, 9, 1), QTime(18, 0, 0)));
     QCOMPARE(items.count(), 1);
-    foreach (const QOrganizerItem& item, items) {
+    foreach (const QOrganizerItem &item, items)
         QVERIFY(item.type() == QOrganizerItemType::TypeEvent);
-    }
 
     // test semantics of itemsForExport():
     // first - save event with multiple occurrences; call ife() -- get back that parent
@@ -3205,7 +3201,7 @@ void tst_QOrganizerManager::itemFetch()
     QOrganizerItemDetailFilter df;
     df.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
     df.setValue(QVariant::fromValue(recEvent.id()));
-    QCOMPARE(cm->items(df).count(), 3);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), df).count(), 3);
     QCOMPARE(cm->itemsForExport(QDateTime(), QDateTime(), df).count(), 2);
 
     // third, have all occurrences persisted
@@ -3328,8 +3324,7 @@ void tst_QOrganizerManager::todoItemFetch()
     QVERIFY(cm->saveItem(&recTodo));
 
     //fetch all recurrences
-    items = cm->items(QDateTime(QDate(2010, 9, 8)),
-                      QDateTime(QDate(2010, 9, 12)));
+    items = cm->items(QDateTime(QDate(2010, 9, 8)), QDateTime(QDate(2010, 9, 12)));
     QCOMPARE(items.count(), 4); // should return todo + 3 x occurrencesOfRecTodo
 
     //fetch only the originating items
@@ -3344,7 +3339,7 @@ void tst_QOrganizerManager::todoItemFetch()
     recTodo.setRecurrenceRule(rrule);
     recTodo.setId(QOrganizerItemId());
     cm->saveItem(&recTodo);
-    items = cm->items(QDateTime(), QDateTime());
+    items = cm->items();
     QCOMPARE(items.count(), 3);
     foreach (const QOrganizerItem& item, items) {
         QVERIFY(item.type() == QOrganizerItemType::TypeTodoOccurrence);
@@ -3362,7 +3357,7 @@ void tst_QOrganizerManager::todoItemFetch()
     recTodo.setRecurrenceRules(QSet<QOrganizerRecurrenceRule>()); // clear rrule.
     recTodo.setId(QOrganizerItemId());
     cm->saveItem(&recTodo);
-    items = cm->items(QDateTime(), QDateTime());
+    items = cm->items();
     QCOMPARE(items.count(), 1);
     foreach (const QOrganizerItem& item, items) {
         QVERIFY(item.type() == QOrganizerItemType::TypeTodo);
@@ -3474,8 +3469,7 @@ void tst_QOrganizerManager::itemFetchV2()
     QVERIFY(cm->saveItem(&event2));
 
     // Get items without a maxCount, check that they're date sorted
-    QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
-                                            QDateTime());
+    QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)), QDateTime());
     QCOMPARE(items.size(), 4);
     QCOMPARE(items[0].displayLabel(), QLatin1String("event1"));
     QCOMPARE(items[1].displayLabel(), QLatin1String("event2"));
@@ -3485,6 +3479,7 @@ void tst_QOrganizerManager::itemFetchV2()
     // Get the next 3 items from 2010-02-01
     items = cm->items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
                       QDateTime(),  // no end date limit
+                      QOrganizerItemFilter(),
                       3);           // maxCount
     QCOMPARE(items.size(), 3);
     QCOMPARE(items[0].displayLabel(), QLatin1String("event1"));
@@ -4207,7 +4202,7 @@ void tst_QOrganizerManager::collections()
         QVERIFY(oim->saveItem(&i1));
         QVERIFY(i1.collectionId() == c1.id());
 
-        QList<QOrganizerItem> c1Items = oim->items(fil);
+        QList<QOrganizerItem> c1Items = oim->items(QDateTime(), QDateTime(), fil);
         int itemIndex = -1;
         for (int i = 0; i < c1Items.count(); i++) {
             if (c1Items.at(i).id() == i1.id()) {
@@ -4216,10 +4211,10 @@ void tst_QOrganizerManager::collections()
             }
         }
         QVERIFY(itemIndex >= 0);
-        QVERIFY(oim->items(fil).contains(i1) || isSuperset(c1Items.at(itemIndex), i1));
+        QVERIFY(oim->items(QDateTime(), QDateTime(), fil).contains(i1) || isSuperset(c1Items.at(itemIndex), i1));
 
         fil.setCollectionId(oim->defaultCollection().id());
-        QVERIFY(!oim->items(fil).contains(i1)); // it should not be in the default collection.
+        QVERIFY(!oim->items(QDateTime(), QDateTime(), fil).contains(i1)); // it should not be in the default collection.
     }
 
     // second test
@@ -4505,17 +4500,17 @@ void tst_QOrganizerManager::testIntersectionFilter()
     QOrganizerItemIntersectionFilter isf;
     isf.append(cf1);
     isf.append(cf2);
-    QList<QOrganizerItem> itemList = mgr->items(cf1);
+    QList<QOrganizerItem> itemList = mgr->items(QDateTime(), QDateTime(), cf1);
     QCOMPARE(itemList.size(), 1);
     QCOMPARE(itemList.at(0), event1);
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 0);
 
     //Test intersection filter with 2 same collection filter
     isf.remove(cf2);
     cf2.setCollectionId(c1.id());
     isf.append(cf2);
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 1);
 
     //Test intersection filter with 2 collection filter and one of them is bigger than another
@@ -4525,7 +4520,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     cf2.setCollectionIds(collectionList);
     isf.append(cf2);
     isf.append(cf1);
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 1);
 
     //Bad case: one empty filter
@@ -4533,7 +4528,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     cf2.setCollectionId(QOrganizerCollectionId());
     isf.append(cf2);
     QCOMPARE(isf.filters().size(), 2);
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 0);
 
     //QOrganizerItemIdFilter test
@@ -4544,7 +4539,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     mgr->saveItem(&event3);
     ids << event1.id() << event3.id();
     idFilter.setIds(ids);
-    itemList = mgr->items(idFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), idFilter);
     QCOMPARE(itemList.size(), 2);
     if (itemList.at(0).id() == event1.id()){
         QCOMPARE(itemList.at(0), event1);
@@ -4558,7 +4553,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     QOrganizerItem badEvent;
     ids.prepend(badEvent.id());
     idFilter.setIds(ids);
-    itemList = mgr->items(idFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), idFilter);
     QCOMPARE(itemList.size(), 2);
 
     //intersection filter contains QOrganizerItemIdFilter and QOrganizerItemCollectionFilter
@@ -4566,7 +4561,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     isf.clear();
     isf.append(cf2);//event1 event2
     isf.append(idFilter);//event1 event3
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 1);
     QCOMPARE(itemList.at(0), event1);//expect event1
 
@@ -4575,7 +4570,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     ids.append(event1.id());
     idFilter.setIds(ids);
     isf.append(idFilter);//event1
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 1);
 
     //empty intersection
@@ -4583,7 +4578,7 @@ void tst_QOrganizerManager::testIntersectionFilter()
     ids.append(event3.id());
     idFilter.setIds(ids);
     isf.append(idFilter);//event3
-    itemList = mgr->items(isf);
+    itemList = mgr->items(QDateTime(), QDateTime(), isf);
     QCOMPARE(itemList.size(), 0);
 }
 
@@ -4615,19 +4610,19 @@ void tst_QOrganizerManager::testNestCompoundFilter()
 
     QOrganizerItemIntersectionFilter isfLevel1;
     isfLevel1.append(isf);
-    QList<QOrganizerItem> itemList = mgr->items(isfLevel1);
+    QList<QOrganizerItem> itemList = mgr->items(QDateTime(), QDateTime(), isfLevel1);
     QCOMPARE(itemList.size(), 1);
 
     QOrganizerItemIntersectionFilter isfLevel2;
     isfLevel2.append(isfLevel1);
 
-    itemList = mgr->items(isfLevel2);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel2);
     QCOMPARE(itemList.size(), 1);
 
     QOrganizerItemIntersectionFilter isfLevel3;
     isfLevel3.append(isfLevel2);
 
-    itemList = mgr->items(isfLevel3);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel3);
     QCOMPARE(itemList.size(), 1);
 
     // union filter nest in interseion filter
@@ -4636,11 +4631,11 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     unf.append(cf1);
 
     isfLevel1.append(unf);
-    itemList = mgr->items(isfLevel1);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel1);
     QCOMPARE(itemList.size(), 1);
 
     isfLevel2.append(unf);
-    itemList = mgr->items(isfLevel2);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel2);
     QCOMPARE(itemList.size(), 1);
 
     QList<QOrganizerItemId> idList;
@@ -4650,19 +4645,19 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     idf.setIds(idList);
     isfLevel3.append(idf);
 
-    itemList = mgr->items(isfLevel3);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel3);
     QCOMPARE(itemList.size(), 1);
 
     QOrganizerItemUnionFilter unfLevel4;
     unfLevel4.append(isfLevel3);
     unfLevel4.append(idf);
 
-    itemList = mgr->items(unfLevel4);
+    itemList = mgr->items(QDateTime(), QDateTime(), unfLevel4);
     QCOMPARE(itemList.size(), 2);
 
     //attach each other
     isfLevel3.append(unfLevel4);
-    itemList = mgr->items(isfLevel3);
+    itemList = mgr->items(QDateTime(), QDateTime(), isfLevel3);
     QCOMPARE(itemList.size(), 1);
 
     //actual use case test
@@ -4677,19 +4672,19 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     //collection
     QOrganizerItemCollectionFilter collectionFilter;
     collectionFilter.setCollectionId(c1.id());
-    itemList = mgr->items(collectionFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), collectionFilter);
     QCOMPARE(itemList.size(), 2);
     //event
     QOrganizerItemDetailFilter detailFilter;
     detailFilter.setDetail(QOrganizerItemDetail::TypeItemType, QOrganizerItemType::FieldType);
     detailFilter.setValue(QOrganizerItemType::TypeEvent);
-    itemList = mgr->items(detailFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), detailFilter);
     QVERIFY(itemList.size() >= 2);
     //event + collection
     QOrganizerItemIntersectionFilter intersFilter;
     intersFilter.append(detailFilter);
     intersFilter.append(collectionFilter);
-    itemList = mgr->items(intersFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), intersFilter);
     QCOMPARE(itemList.size(), 1);
     //filter event + collection + id
     idList << event1.id() << event2.id() << todo.id();
@@ -4698,7 +4693,7 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     QOrganizerItemIntersectionFilter intersFilter2;
     intersFilter2.append(idf1);
     intersFilter2.append(intersFilter);
-    itemList = mgr->items(intersFilter);
+    itemList = mgr->items(QDateTime(), QDateTime(), intersFilter);
     QCOMPARE(itemList.size(), 1);
     QCOMPARE(itemList[0].id(), event1.id());
 
@@ -4706,26 +4701,26 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     QOrganizerItemDetailFilter detailFilter2;
     detailFilter2.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     detailFilter2.setValue("myTodo");
-    itemList = mgr->items(detailFilter2);
+    itemList = mgr->items(QDateTime(), QDateTime(), detailFilter2);
     QCOMPARE(itemList.size(), 1);
 
     QOrganizerItemUnionFilter unf2;
     unf2.append(detailFilter2);
     unf2.append(detailFilter);
-    itemList = mgr->items(unf2);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf2);
     QVERIFY(itemList.size() >= 3);
 
     //event or myTodo + collection
     QOrganizerItemIntersectionFilter intersFilter3;
     intersFilter3.append(unf2);
     intersFilter3.append(collectionFilter);
-    itemList = mgr->items(intersFilter3);
+    itemList = mgr->items(QDateTime(), QDateTime(), intersFilter3);
     QCOMPARE(itemList.size(), 2);
     // ... + id
     QOrganizerItemIntersectionFilter intersFilter4;
     intersFilter4.append(idf1);
     intersFilter4.append(intersFilter3);
-    itemList = mgr->items(intersFilter4);
+    itemList = mgr->items(QDateTime(), QDateTime(), intersFilter4);
     QCOMPARE(itemList.size(), 2);
     QVERIFY(itemList.contains(event1));
     QVERIFY(itemList.contains(todo));
@@ -4757,17 +4752,17 @@ void tst_QOrganizerManager::testUnionFilter()
     QOrganizerItemUnionFilter unf;
     unf.append(cf1);
     unf.append(cf2);
-    QList<QOrganizerItem> itemList = mgr->items(cf1);
+    QList<QOrganizerItem> itemList = mgr->items(QDateTime(), QDateTime(), cf1);
     QCOMPARE(itemList.size(), 1);
     QCOMPARE(itemList.at(0), event1);
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 2);
 
     //Test union filter with 2 same collection filter
     unf.remove(cf2);
     cf2.setCollectionId(c1.id());
     unf.append(cf2);
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 1);
 
     //Test union filter with 2 collection filter and one of them is biger than another
@@ -4777,7 +4772,7 @@ void tst_QOrganizerManager::testUnionFilter()
     cf2.setCollectionIds(collectionList);
     unf.append(cf2);
     unf.append(cf1);
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 2);
 
     //Bad case: one empty filter
@@ -4785,7 +4780,7 @@ void tst_QOrganizerManager::testUnionFilter()
     cf2.setCollectionId(QOrganizerCollectionId());
     unf.append(cf2);
     QCOMPARE(unf.filters().size(), 2);
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 1);
 
     //union filter contains QOrganizerItemIdFilter and QOrganizerItemCollectionFilter
@@ -4801,7 +4796,7 @@ void tst_QOrganizerManager::testUnionFilter()
     unf.clear();
     unf.append(cf2);//event1 event2
     unf.append(idFilter);// event3
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 3);//expect event1 event2 event3
 
     //3 filters union
@@ -4812,7 +4807,7 @@ void tst_QOrganizerManager::testUnionFilter()
     ids.append(event4.id());
     idFilter.setIds(ids);
     unf.append(idFilter);//event4
-    itemList = mgr->items(unf);
+    itemList = mgr->items(QDateTime(), QDateTime(), unf);
     QCOMPARE(itemList.size(), 4);//expect event1 event2 event3 event4
 }
 

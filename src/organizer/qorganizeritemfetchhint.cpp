@@ -128,14 +128,6 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailTypesHint
 }
 
 /*!
-    Note this is to be removed soon, please use detailTypesHint() instead.
- */
-QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailDefinitionsHint() const
-{
-    return detailTypesHint();
-}
-
-/*!
     Sets the list of detail types to \a detailTypes that identify details which should be retrieved'
     by the manager when fetching items.
 
@@ -144,14 +136,6 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemFetchHint::detailDefinitio
 void QOrganizerItemFetchHint::setDetailTypesHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes)
 {
     d->m_detailTypesHint = detailTypes;
-}
-
-/*!
-    Note this is to be removed soon, please use setDetailTypesHint() instead.
- */
-void QOrganizerItemFetchHint::setDetailDefinitionsHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes)
-{
-    setDetailTypesHint(detailTypes);
 }
 
 /*!

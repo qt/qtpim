@@ -66,12 +66,6 @@ class QDeclarativeOrganizerItem : public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY itemChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY itemChanged)
     Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY itemChanged)
-
-    // to be removed
-    Q_PROPERTY(bool isOccurrence READ isOccurrence)
-    Q_PROPERTY(bool isFloatingTime READ isFloatingTime)
-    Q_PROPERTY(QDateTime itemStartTime READ itemStartTime NOTIFY itemChanged)
-    Q_PROPERTY(QDateTime itemEndTime READ itemEndTime NOTIFY itemChanged)
     Q_CLASSINFO("DefaultProperty", "itemDetails")
 
 public:
@@ -104,9 +98,9 @@ public:
     Q_INVOKABLE QDeclarativeOrganizerItemDetail *detail(int type);
     Q_INVOKABLE QVariantList details(int type);
 
-    virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
-    virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
-    virtual Q_INVOKABLE void clearDetails();
+    Q_INVOKABLE virtual void setDetail(QDeclarativeOrganizerItemDetail *detail);
+    Q_INVOKABLE virtual void removeDetail(QDeclarativeOrganizerItemDetail *detail);
+    Q_INVOKABLE virtual void clearDetails();
 
     // non-QML APIs, used internal only
     bool _q_setDetail(QDeclarativeOrganizerItemDetail *detail);
@@ -121,15 +115,8 @@ public:
 
     bool generatedOccurrence() const;
 
-    // to be removed
-    bool isFloatingTime();
-
     QDateTime itemStartTime() const;
     QDateTime itemEndTime() const;
-
-    bool isOccurrence() const;
-
-    Q_INVOKABLE bool addDetail(QDeclarativeOrganizerItemDetail* detail);
 
 Q_SIGNALS:
     void itemChanged();
@@ -172,9 +159,9 @@ public:
 
     QQmlListProperty<QDeclarativeOrganizerEventAttendee> attendees();
 
-    virtual Q_INVOKABLE void setDetail(QDeclarativeOrganizerItemDetail *detail);
-    virtual Q_INVOKABLE void removeDetail(QDeclarativeOrganizerItemDetail *detail);
-    virtual Q_INVOKABLE void clearDetails();
+    Q_INVOKABLE virtual void setDetail(QDeclarativeOrganizerItemDetail *detail);
+    Q_INVOKABLE virtual void removeDetail(QDeclarativeOrganizerItemDetail *detail);
+    Q_INVOKABLE virtual void clearDetails();
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
@@ -275,9 +262,7 @@ class QDeclarativeOrganizerTodo : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isAllDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)// Will be removed, use "allDay" instead!
     Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
-    Q_PROPERTY(int progressPercentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
     Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime dueDateTime READ dueDateTime WRITE setDueDateTime NOTIFY valueChanged)
@@ -321,7 +306,6 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int progressPercentage READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)// Will be removed, use "percentageComplete" instead!
     Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)

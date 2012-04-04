@@ -76,10 +76,6 @@ public:
     OptimizationHints optimizationHints() const;
     void setOptimizationHints(OptimizationHints hints);
 
-    // to be removed
-    QList<QOrganizerItemDetail::DetailType> detailDefinitionsHint() const;
-    void setDetailDefinitionsHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes);
-
 private:
     QSharedDataPointer<QOrganizerItemFetchHintPrivate> d;
 };

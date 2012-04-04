@@ -1386,63 +1386,74 @@ void QOrganizerJsonDbConverter::jsonDbObjectToRecurrenceRule(const QJsonObject &
 
 void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRecurrenceRule &rule, QJsonObject *object) const
 {
-    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFrequency(), enumToString(organizerFrequencyEnumMap(), rule.frequency()));
-    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleInterval(), rule.interval());
-    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitCount(), rule.limitCount());
-    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitDate(), rule.limitDate().toString(Qt::ISODate));
+    // Invalid is the default value, so no need to save
+    QOrganizerRecurrenceRule::Frequency frequency = rule.frequency();
+    if (frequency != QOrganizerRecurrenceRule::Invalid)
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFrequency(), enumToString(organizerFrequencyEnumMap(), frequency));
+
+
+    // 1 is the default value, so no need to save
+    int interval = rule.interval();
+    if (interval > 1)
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleInterval(), rule.interval());
+
+    // only saves the limit value if it's used
+    QOrganizerRecurrenceRule::LimitType limitType = rule.limitType();
+    if (limitType == QOrganizerRecurrenceRule::CountLimit)
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitCount(), rule.limitCount());
+    else if (limitType == QOrganizerRecurrenceRule::DateLimit)
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleLimitDate(), rule.limitDate().toString(Qt::ISODate));
+
+    // Monday is the default value, so no need to save
+    Qt::DayOfWeek firstDayOfWeek = rule.firstDayOfWeek();
+    if (firstDayOfWeek != Qt::Monday)
+        object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFirstDayOfWeek(), enumToString(organizerDayEnumMap(), firstDayOfWeek));
+
     QSet<int> positions = rule.positions();
     if (!positions.isEmpty()) {
         QJsonArray positionsList;
-        foreach (int position, positions) {
+        foreach (int position, positions)
             positionsList.append(position);
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRulePositions(), positionsList);
     }
-
-    object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFirstDayOfWeek(), enumToString(organizerDayEnumMap(), rule.firstDayOfWeek()));
 
     QSet<Qt::DayOfWeek> daysOfWeek = rule.daysOfWeek();
     if (!daysOfWeek.isEmpty()) {
         QJsonArray daysOfWeekList;
-        foreach (Qt::DayOfWeek day, daysOfWeek) {
+        foreach (Qt::DayOfWeek day, daysOfWeek)
             daysOfWeekList.append(enumToString(organizerDayEnumMap(), day));
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfWeek(), daysOfWeekList);
     }
 
     QSet<int> daysOfMonth = rule.daysOfMonth();
     if (!daysOfMonth.isEmpty()) {
         QJsonArray daysOfMonthList;
-        foreach (int day, daysOfMonth) {
+        foreach (int day, daysOfMonth)
             daysOfMonthList.append(day);
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfMonth(), daysOfMonthList);
     }
 
     QSet<int> daysOfYear = rule.daysOfYear();
     if (!daysOfYear.isEmpty()) {
         QJsonArray daysOfYearList;
-        foreach (int day, daysOfYear) {
+        foreach (int day, daysOfYear)
             daysOfYearList.append(day);
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleDaysOfYear(), daysOfYearList);
     }
 
     QSet<int> weeksOfYear = rule.weeksOfYear();
     if (!weeksOfYear.isEmpty()) {
         QJsonArray weeksOfYearList;
-        foreach (int week, weeksOfYear) {
+        foreach (int week, weeksOfYear)
             weeksOfYearList.append(week);
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleWeeksOfYear(), weeksOfYearList);
     }
 
     QSet<QOrganizerRecurrenceRule::Month> monthsOfYear = rule.monthsOfYear();
     if (!monthsOfYear.isEmpty()) {
         QJsonArray monthsOfYearList;
-        foreach (QOrganizerRecurrenceRule::Month month, monthsOfYear) {
+        foreach (QOrganizerRecurrenceRule::Month month, monthsOfYear)
             monthsOfYearList.append(enumToString(organizerMonthEnumMap(), month));
-        }
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleMonthsOfYear(), monthsOfYearList);
     }
 }

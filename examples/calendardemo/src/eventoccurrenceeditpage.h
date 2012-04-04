@@ -44,6 +44,7 @@
 #include <QDate>
 #include <qorganizeritemid.h>
 #include <qorganizerevent.h>
+#include <qorganizereventoccurrence.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;

@@ -1391,7 +1391,6 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
     if (frequency != QOrganizerRecurrenceRule::Invalid)
         object->insert(QOrganizerJsonDbStr::itemRecurrenceRuleFrequency(), enumToString(organizerFrequencyEnumMap(), frequency));
 
-
     // 1 is the default value, so no need to save
     int interval = rule.interval();
     if (interval > 1)

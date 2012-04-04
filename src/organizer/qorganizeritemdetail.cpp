@@ -321,7 +321,7 @@ Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail
 #endif // QT_NO_DATASTREAM
 
 /*!
-    Returns true if no values are contained in this detail.  Note that context is stored as a value; hence, if a context is set, this function will return false.
+    Returns true if no values are contained in this detail.
  */
 bool QOrganizerItemDetail::isEmpty() const
 {

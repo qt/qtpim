@@ -45,6 +45,7 @@
 #include <QDate>
 #include <qorganizeritemid.h>
 #include <qorganizerjournal.h>
+#include <qorganizercollection.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 class QOrganizerManager;

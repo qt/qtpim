@@ -852,7 +852,7 @@ void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
 {
     const QOrganizerJsonDbItemId jsonDbItemId(m_itemIds.at(0).toString());
     if (!makeJsonDbRequest(JsonDbReadRequest, 0, jsonDbItemId.storageLocation(),
-                           QOrganizerJsonDbStr::jsonDbQueryAlarmsTemplate().arg(jsonDbItemId.jsondbUuid()))) {
+                           QOrganizerJsonDbStr::jsonDbQueryAlarmsTemplate().arg(jsonDbItemId.toString()))) {
         m_syncWaitCondition.wakeAll();
     }
 }
@@ -861,12 +861,15 @@ void QOrganizerJsonDbDataStorage::handleAlarmIdResponse(QOrganizerManager::Error
 {
     if (error == QOrganizerManager::NoError) {
         QList<QJsonObject> results = request->takeResults();
-        if (results.size() == 1) {
-            m_alarmId = results.at(0).value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
-        } else if (results.size() > 1) {
-            m_alarmId = results.at(0).value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
-            *m_error = QOrganizerManager::InvalidDetailError;
-            qWarning("More than one alarm for one event!");
+        if (!results.isEmpty()) {
+            QOrganizerJsonDbItemId jsonDbItemId;
+            jsonDbItemId.setJsonDbUuid(results.at(0).value(QOrganizerJsonDbStr::jsonDbUuid()).toString());
+            jsonDbItemId.setStorageLocation(m_converter.storageLocationStringToEnum(request->partition()));
+            m_alarmId = jsonDbItemId.toString();
+            if (results.size() > 1) {
+                *m_error = QOrganizerManager::InvalidDetailError;
+                qWarning("More than one alarm for one event!");
+            }
         }
     } else {
         *m_error = error;
@@ -884,11 +887,11 @@ void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
         if (m_alarmId.isEmpty()) {
             requestType = JsonDbCreateRequest;
         } else {
-            jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), m_alarmId);
+            jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerJsonDbItemId(m_alarmId).jsondbUuid());
             requestType = JsonDbUpdateRequest;
         }
 
-        const QOrganizerJsonDbItemId jsonDbItemId(QOrganizerManagerEngine::engineItemId(item.id())->toString());
+        const QOrganizerJsonDbItemId jsonDbItemId(item.id().toString());
         requestSent = makeJsonDbRequest(requestType, 0, jsonDbItemId.storageLocation(), QString(), QList<QJsonObject>() << jsonDbAlarm);
 
     } else {
@@ -909,10 +912,10 @@ void QOrganizerJsonDbDataStorage::handleRemoveAlarmRequest()
 {
     bool requestSent = false;
     if (!m_alarmId.isEmpty()) {
+        const QOrganizerJsonDbItemId jsonDbItemId(m_alarmId);
         QJsonObject jsonDbAlarm;
-        jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), m_alarmId);
-        QOrganizerAbstractRequest::StorageLocation storageLocation = QOrganizerJsonDbItemId(m_alarmId).storageLocation();
-        requestSent = makeJsonDbRequest(JsonDbRemoveRequest, 0, storageLocation, QString(), QList<QJsonObject>() << jsonDbAlarm);
+        jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonDbItemId.jsondbUuid());
+        requestSent = makeJsonDbRequest(JsonDbRemoveRequest, 0, jsonDbItemId.storageLocation(), QString(), QList<QJsonObject>() << jsonDbAlarm);
     } else {
         *m_error = QOrganizerManager::InvalidDetailError;
     }

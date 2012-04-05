@@ -923,7 +923,9 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
 
     // contactId filtering
     QContactIdFilter idFilter;
-    QContactJsonDbId *engineId = new QContactJsonDbId("123");
+    QUuid filterUuid("123");
+    QString expectedUuid = filterUuid.toString();
+    QContactJsonDbId *engineId = new QContactJsonDbId();
     QContactId testId (engineId);
     QList<QContactId> ids;
     ids.append(testId);
@@ -931,7 +933,7 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     request.setFilter(idFilter);
     QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
     QCOMPARE(jsonDbQuery,
-             QString("[?_type=\"%1\"][?_uuid in [\"123\"]]").arg(QContactJsonDbStr::contactsJsonDbType()));
+             QString("[?_type=\"%1\"][?_uuid in [\"" + expectedUuid + "\"]]").arg(QContactJsonDbStr::contactsJsonDbType()));
     jsonDbQuery.clear();
 
     // Sortings
@@ -942,7 +944,7 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     request.setSorting(QList<QContactSortOrder>() << sort);
     QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
     QCOMPARE(jsonDbQuery,
-             QString("[?_type=\"%1\"][?_uuid in [\"123\"]][\\name.firstName]").arg(QContactJsonDbStr::contactsJsonDbType()));
+             QString("[?_type=\"%1\"][?_uuid in [\"" + expectedUuid + "\"]][\\name.firstName]").arg(QContactJsonDbStr::contactsJsonDbType()));
     jsonDbQuery.clear();
     // Sort by lastname, ascending
     sort.setDetailType(QContactName::Type, QContactName::FieldLastName);
@@ -950,7 +952,7 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     request.setSorting(QList<QContactSortOrder>() << sort);
     QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
     QCOMPARE(jsonDbQuery,
-             QString("[?_type=\"%1\"][?_uuid in [\"123\"]][/name.lastName]").arg(QContactJsonDbStr::contactsJsonDbType()));
+             QString("[?_type=\"%1\"][?_uuid in [\"" + expectedUuid + "\"]][/name.lastName]").arg(QContactJsonDbStr::contactsJsonDbType()));
     jsonDbQuery.clear();
 }
 
@@ -961,7 +963,9 @@ void tst_QcontactJsondbConverter::convertCompoundFilterTest()
 
     // prepare ContactId filter
     QContactIdFilter idFilter;
-    QContactJsonDbId *engineId = new QContactJsonDbId("123");
+    QUuid filterUuid("123");
+    QString expectedUuid = filterUuid.toString();
+    QContactJsonDbId *engineId = new QContactJsonDbId(filterUuid);
     QContactId testId (engineId);
     QList<QContactId> ids;
     ids.append(testId);
@@ -982,7 +986,7 @@ void tst_QcontactJsondbConverter::convertCompoundFilterTest()
     QString filterStr;
     QVERIFY(converter.compoundFilterToJsondbQuery(filter,filterStr));
     QCOMPARE(filterStr,
-             QString("[?name.firstName=\"John\"][?_uuid in [\"123\"]]"));
+             QString("[?name.firstName=\"John\"][?_uuid in [\"" + expectedUuid + "\"]]"));
     filterStr.clear();
 }
 
@@ -995,12 +999,13 @@ void tst_QcontactJsondbConverter::convertSortOrderTest()
 void tst_QcontactJsondbConverter::convertIdTest()
 {
     QContactJsonDbConverter converter;
-    QString fakeId("123");
-    QContactJsonDbId *engineId = new QContactJsonDbId(fakeId);
+    QUuid filterUuid("123");
+    QString expectedUuid = filterUuid.toString();
+    QContactJsonDbId *engineId = new QContactJsonDbId(filterUuid);
     QContactId qid(engineId);
     QString jsonId;
     jsonId = converter.convertId(qid);
-    QCOMPARE(jsonId, fakeId);
+    QCOMPARE(jsonId, expectedUuid);
 }
 
 void tst_QcontactJsondbConverter::testJsonDetailItems(const QJsonObject& values, const QString& extractField,

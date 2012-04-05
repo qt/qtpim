@@ -58,13 +58,19 @@
 
 #include <QtCore/qdebug.h>
 
+QT_BEGIN_NAMESPACE
+
+class QUuid;
+
+QT_END_NAMESPACE
+
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactJsonDbId : public QContactEngineId
 {
 public:
     QContactJsonDbId();
-    QContactJsonDbId(const QString &contactId);
+    QContactJsonDbId(const QUuid &contactId);
     ~QContactJsonDbId();
     QContactJsonDbId(const QContactJsonDbId &other);
 
@@ -85,7 +91,7 @@ public:
     void setContactId(const QString &contactId);
 
 private:
-    QString m_contactId;
+    QUuid m_contactId;
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
+#include <QUuid>
 #include "qcontactjsondbid.h"
 #include "qcontactjsondbstring.h"
 
@@ -50,7 +50,7 @@ QContactJsonDbId::QContactJsonDbId()
 {
 }
 
-QContactJsonDbId::QContactJsonDbId(const QString &contactId)
+QContactJsonDbId::QContactJsonDbId(const QUuid &contactId)
     : QContactEngineId()
     , m_contactId(contactId)
 {
@@ -68,13 +68,13 @@ QContactJsonDbId::~QContactJsonDbId()
 
 bool QContactJsonDbId::isEqualTo(const QContactEngineId *other) const
 {
-    QString otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
+    QUuid otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
     return (m_contactId == otherContactId);
 }
 
 bool QContactJsonDbId::isLessThan(const QContactEngineId *other) const
 {
-    QString otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
+    QUuid otherContactId = static_cast<const QContactJsonDbId *>(other)->m_contactId;
     return (m_contactId < otherContactId);
 }
 
@@ -98,7 +98,7 @@ QDebug &QContactJsonDbId::debugStreamOut(QDebug &dbg) const
 
 QString QContactJsonDbId::toString() const
 {
-    return m_contactId;
+    return m_contactId.toString();
 }
 
 uint QContactJsonDbId::hash() const

@@ -48,6 +48,13 @@
 
 QTORGANIZER_USE_NAMESPACE
 
+struct ManagerExistingStorageLocationDetails {
+    int m_collectionAmountOnUserData;
+    int m_collectionAmountOnSystem;
+    int m_itemAmountOnUserData;
+    int m_itemAmountOnSystem;
+};
+
 class tst_QOrganizerStorageLocations : public QObject
 {
     Q_OBJECT
@@ -64,13 +71,11 @@ private slots:
 
 private:
     void addManager();
-    QList<QOrganizerCollection> collectionsFromAllStorageLocations(QOrganizerManager &organizerManager);
+    QList<QOrganizerCollection> collectionsFromStorageLocation(QOrganizerManager &organizerManager, QOrganizerAbstractRequest::StorageLocations storageLocations);
+    QList<QOrganizerItem> itemsFromStorageLocation(QOrganizerManager &organizerManager, QOrganizerAbstractRequest::StorageLocations storageLocations);
 
-    // <manager, items> pair for existing items
-    QMap<QString, QList<QOrganizerItem> > existingItems;
-    QMap<QString, QList<QOrganizerCollection> > existingCollections;
-
-    JsonDbProcess jsondbProcess;
+    QMap<QString, ManagerExistingStorageLocationDetails> m_managerStorageLocationDetails;
+    JsonDbProcess m_jsondbProcess;
 };
 
 void tst_QOrganizerStorageLocations::addManager()
@@ -85,15 +90,26 @@ void tst_QOrganizerStorageLocations::addManager()
         QTest::newRow(manager.toLatin1().constData()) << manager;
 }
 
-QList<QOrganizerCollection> tst_QOrganizerStorageLocations::collectionsFromAllStorageLocations(QOrganizerManager &organizerManager)
+QList<QOrganizerCollection> tst_QOrganizerStorageLocations::collectionsFromStorageLocation(QOrganizerManager &organizerManager, QOrganizerAbstractRequest::StorageLocations storageLocations)
 {
     QOrganizerCollectionFetchRequest cfr;
     cfr.setManager(&organizerManager);
-    cfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    cfr.setStorageLocations(storageLocations);
     cfr.start();
     cfr.waitForFinished();
     cfr.isFinished();
     return cfr.collections();
+}
+
+QList<QOrganizerItem> tst_QOrganizerStorageLocations::itemsFromStorageLocation(QOrganizerManager &organizerManager, QOrganizerAbstractRequest::StorageLocations storageLocations)
+{
+    QOrganizerItemFetchRequest ifr;
+    ifr.setManager(&organizerManager);
+    ifr.setStorageLocations(storageLocations);
+    ifr.start();
+    ifr.waitForFinished();
+    ifr.isFinished();
+    return ifr.items();
 }
 
 void tst_QOrganizerStorageLocations::initTestCase()
@@ -102,76 +118,32 @@ void tst_QOrganizerStorageLocations::initTestCase()
     if (QOrganizerManager::availableManagers().contains("jsondb")) {
         QString partitions_json = QFINDTESTDATA("partitions.json");
         QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
+        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
     }
 
-    // back-up all existing items
     QStringList availableManagers(QOrganizerManager::availableManagers());
     availableManagers.removeAll("invalid");
     availableManagers.removeAll("skeleton");
 
+    // gather information from storagelocations
     foreach (const QString &manager, availableManagers) {
         QOrganizerManager organizerManager(manager);
-        // items
-        QList<QOrganizerItem> items(organizerManager.items());
-        if (items.size() > 0) {
-            existingItems.insert(manager, items);
-            QList<QOrganizerItemId> itemIds(organizerManager.itemIds());
-            organizerManager.removeItems(itemIds);
-        }
-        // collections
-        QList<QOrganizerCollection> collections(collectionsFromAllStorageLocations(organizerManager));
-        QVERIFY(collections.count() >= 1);//there should always be atleast default collection
-        existingCollections.insert(manager, collections);
-        foreach (const QOrganizerCollection &collection, collections) {
-            if (collection.id() != organizerManager.defaultCollection().id())
-                organizerManager.removeCollection(collection.id());
-        }
+        ManagerExistingStorageLocationDetails details;
+        details.m_collectionAmountOnUserData = collectionsFromStorageLocation(organizerManager, QOrganizerAbstractRequest::UserDataStorage).count();
+        details.m_collectionAmountOnSystem = collectionsFromStorageLocation(organizerManager, QOrganizerAbstractRequest::SystemStorage).count();
+        details.m_itemAmountOnUserData = itemsFromStorageLocation(organizerManager, QOrganizerAbstractRequest::UserDataStorage).count();
+        details.m_itemAmountOnSystem = itemsFromStorageLocation(organizerManager, QOrganizerAbstractRequest::SystemStorage).count();
+        m_managerStorageLocationDetails.insert(manager, details);
     }
 }
 
 void tst_QOrganizerStorageLocations::cleanupTestCase()
 {
-    // remove all items generated when running tests
-    QStringList availableManagers(QOrganizerManager::availableManagers());
-    availableManagers.removeAll("invalid");
-    availableManagers.removeAll("skeleton");
-
-    foreach (const QString &manager, availableManagers) {
-        QOrganizerManager organizerManager(manager);
-        // items
-        organizerManager.removeItems(organizerManager.itemIds());
-        // collections
-        QList<QOrganizerCollection> collections(collectionsFromAllStorageLocations(organizerManager));
-        QVERIFY(collections.count() >= 1);//there should always be atleast default collection
-        foreach (const QOrganizerCollection &collection, collections) {
-            if (collection.id() != organizerManager.defaultCollection().id())
-                organizerManager.removeCollection(collection.id());
-        }
-    }
-
-    // restore all existing items
-    QMap<QString, QList<QOrganizerItem> >::iterator i = existingItems.begin();
-    while (i != existingItems.end()) {
-        QOrganizerManager organizerManager(i.key());
-        organizerManager.saveItems(&(i.value()));
-        ++i;
-    }
-
-    // collections
-    QMap<QString, QList<QOrganizerCollection> >::iterator c = existingCollections.begin();
-    while (c != existingCollections.end()) {
-        QOrganizerManager organizerManager(c.key());
-        foreach (const QOrganizerCollection &collection, c.value()) {
-            if (collection.id() != organizerManager.defaultCollection().id())
-                organizerManager.saveCollection(const_cast<QOrganizerCollection *>(&collection));
-        }
-        ++c;
-    }
-
     // Kill jsondb-process, if started one
     if (QOrganizerManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
+        m_jsondbProcess.terminate();
+
+    m_managerStorageLocationDetails.clear();
 }
 
 void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
@@ -181,10 +153,10 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
         QSKIP("Test is only for jsondb backend.");
 
     QOrganizerManager organizerManager(managerName);
+    ManagerExistingStorageLocationDetails existingDetails = m_managerStorageLocationDetails.value(managerName);
 
-    QList<QOrganizerCollection> savedCollectionsUserData;//plus default collection
+    QList<QOrganizerCollection> savedCollectionsUserData;
     QList<QOrganizerCollection> savedCollectionsSystemData;
-    savedCollectionsUserData<<organizerManager.defaultCollection();
 
     // Save 2 collections on default storagelocation
     // - storagelocation not set, should go to UserDataStorage
@@ -211,7 +183,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(savedCollectionsUserData.count(), cfr.collections().count());
+    QCOMPARE(savedCollectionsUserData.count(), cfr.collections().count()-existingDetails.m_collectionAmountOnUserData);
 
     // Save 1 collection to different storageLocation
     testCollection.setMetaData(QOrganizerCollection::KeyName, "Collection on SystemStorage");
@@ -224,13 +196,13 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(savedCollectionsUserData.count(), cfr.collections().count());// should be the same as in last fetch
+    QCOMPARE(savedCollectionsUserData.count(), cfr.collections().count()-existingDetails.m_collectionAmountOnUserData);// should be the same as in last fetch
     // - should be visible (1 and only 1) if fetching only from SystemStorage
     cfr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(1, cfr.collections().count());
+    QCOMPARE(1, cfr.collections().count()-existingDetails.m_collectionAmountOnSystem);
 
     // Modify collection and resave
     testCollection = cfr.collections().at(0);
@@ -246,19 +218,28 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(1, cfr.collections().count());
-    QCOMPARE(savedCollectionsSystemData, cfr.collections());
+    QCOMPARE(1, cfr.collections().count()-existingDetails.m_collectionAmountOnSystem);
+    bool exactMatch = false;
+    foreach (const QOrganizerCollection &collection, cfr.collections()) {
+        if (collection == savedCollectionsSystemData.at(0))// 0 = only one
+            exactMatch = true;
+    }
+    QVERIFY(exactMatch);
 
     // All the collections should be visible when fetching from multiple storagelocations
     cfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(savedCollectionsUserData.count() + savedCollectionsSystemData.count(), cfr.collections().count());// all
+    QCOMPARE(savedCollectionsUserData.count() + savedCollectionsSystemData.count(),
+             cfr.collections().count()-existingDetails.m_collectionAmountOnSystem-existingDetails.m_collectionAmountOnUserData);// all
 
     // Remove collections from multiple storageLocations with one request
     QList<QOrganizerCollectionId> collIdListFromDifferentPartitions;
-    foreach (const QOrganizerCollection &collection, cfr.collections()) {
+    foreach (const QOrganizerCollection &collection, savedCollectionsSystemData) {
+        collIdListFromDifferentPartitions<<collection.id();
+    }
+    foreach (const QOrganizerCollection &collection, savedCollectionsUserData) {
         if (collection.id() != organizerManager.defaultCollection().id())
             collIdListFromDifferentPartitions<<collection.id();
     }
@@ -271,8 +252,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForCollections()
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(1, cfr.collections().count());
-    QCOMPARE(cfr.collections().at(0).id(), organizerManager.defaultCollection().id());
+    QCOMPARE(existingDetails.m_collectionAmountOnSystem+existingDetails.m_collectionAmountOnUserData, cfr.collections().count());
 }
 
 void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
@@ -282,6 +262,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
         QSKIP("Test is only for jsondb backend.");
 
     QOrganizerManager organizerManager(managerName);
+    ManagerExistingStorageLocationDetails existingDetails = m_managerStorageLocationDetails.value(managerName);
 
     QList<QOrganizerItem> savedItemsUserData;
     QList<QOrganizerItem> savedItemsSystem;
@@ -315,7 +296,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
     QVERIFY(!ifr.error());
-    QCOMPARE(savedItemsUserData.count(), ifr.items().count());
+    QCOMPARE(savedItemsUserData.count(), ifr.items().count()-existingDetails.m_itemAmountOnUserData);
 
     // Save 1 item to different storageLocation
     // - try to save to new event to different storage than the collection is, should fail
@@ -336,14 +317,8 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.isFinished());
-    QOrganizerCollectionFetchRequest cfr;
-    cfr.setManager(&organizerManager);
-    cfr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
-    QVERIFY(cfr.start());
-    QVERIFY(cfr.waitForFinished());
-    QVERIFY(cfr.isFinished());
-    QCOMPARE(1, cfr.collections().count());
-    collectionOnSystem = cfr.collections().at(0);
+    QVERIFY(!csr.error());
+    collectionOnSystem = csr.collections().at(0);
     // - now we can save event there
     testEvent.setDisplayLabel("Event on SystemStorage");
     testEvent.setCollectionId(collectionOnSystem.id());
@@ -357,18 +332,18 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
-    QCOMPARE(savedItemsUserData.count(), ifr.items().count());// should be the same as in last fetch
+    QCOMPARE(savedItemsUserData.count(), ifr.items().count()-existingDetails.m_itemAmountOnUserData);// should be the same as in last fetch
     // - should be visible (1 and only 1) if fetching only from SystemStorage
     ifr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
     QVERIFY(!ifr.error());
-    QCOMPARE(1, ifr.items().count());
+    QCOMPARE(ifr.items().count()-existingDetails.m_itemAmountOnSystem, 1);
 
     // Modify item and resave
     // - resave with collection in different location, should fail
-    testEvent = ifr.items().at(0);
+    testEvent = isr.items().at(0);
     testEvent.setDisplayLabel("Event saved again on SystemStorage, with default collection.");
     testEvent.setCollectionId(organizerManager.defaultCollection().id());
     isr.setItem(testEvent);
@@ -377,7 +352,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(isr.isFinished());
     QCOMPARE(isr.error(), QOrganizerManager::InvalidCollectionError);
     // - resave with correct collection (collection on same storage)
-    testEvent = ifr.items().at(0);
+    testEvent.setCollectionId(collectionOnSystem.id());
     testEvent.setDisplayLabel("Event saved again on SystemStorage");
     isr.setItem(testEvent);
     isr.setStorageLocation(QOrganizerAbstractRequest::UserDataStorage);//this should be ignored when saving already saved collection
@@ -392,8 +367,13 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
     QVERIFY(!ifr.error());
-    QCOMPARE(1, ifr.items().count());
-    QCOMPARE(savedItemsSystem, ifr.items());
+    QCOMPARE(1, ifr.items().count()-existingDetails.m_itemAmountOnSystem);
+    bool exactMatch = false;
+    foreach (const QOrganizerItem &item, ifr.items()) {
+        if (item == savedItemsSystem.at(0))// 0 = only one
+            exactMatch = true;
+    }
+    QVERIFY(exactMatch);
 
     // All the items should be visible when fetching from multiple storagelocations
     // - QOrganizerItemFetchRequest - all locations
@@ -401,7 +381,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
-    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), ifr.items().count());// all
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), ifr.items().count()-existingDetails.m_itemAmountOnUserData-existingDetails.m_itemAmountOnSystem);// all
 
     // Try out other fetch request types
     // QOrganizerItemFetchByIdRequest - uses storagelocations saved on the item ids
@@ -434,7 +414,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(iidfr.waitForFinished());
     QVERIFY(iidfr.isFinished());
     QVERIFY(!iidfr.error());
-    QCOMPARE(savedItemsUserData.count(), iidfr.itemIds().count());
+    QCOMPARE(savedItemsUserData.count(), iidfr.itemIds().count()-existingDetails.m_itemAmountOnUserData);
     // QOrganizerItemIdFetchRequest
     // - all locations
     iidfr.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
@@ -442,7 +422,7 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(iidfr.waitForFinished());
     QVERIFY(iidfr.isFinished());
     QVERIFY(!iidfr.error());
-    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iidfr.itemIds().count());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iidfr.itemIds().count()-existingDetails.m_itemAmountOnUserData-existingDetails.m_itemAmountOnSystem);
     // QOrganizerItemFetchForExportRequest
     // - default storage location
     QOrganizerItemFetchForExportRequest iffer;
@@ -451,18 +431,20 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(iffer.waitForFinished());
     QVERIFY(iffer.isFinished());
     QVERIFY(!iffer.error());
-    QCOMPARE(savedItemsUserData.count(), iffer.items().count());
+    QCOMPARE(savedItemsUserData.count(), iffer.items().count()-existingDetails.m_itemAmountOnUserData);
     // - all locations
     iffer.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(iffer.start());
     QVERIFY(iffer.waitForFinished());
     QVERIFY(iffer.isFinished());
     QVERIFY(!iffer.error());
-    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iffer.items().count());
+    QCOMPARE(savedItemsUserData.count() + savedItemsSystem.count(), iffer.items().count()-existingDetails.m_itemAmountOnUserData-existingDetails.m_itemAmountOnSystem);
 
     // Remove items from multiple storageLocations with one request
     QList<QOrganizerItemId> itemIdListFromDifferentPartitions;
-    foreach (const QOrganizerItem &item, ifr.items())
+    foreach (const QOrganizerItem &item, savedItemsUserData)
+        itemIdListFromDifferentPartitions<<item.id();
+    foreach (const QOrganizerItem &item, savedItemsSystem)
         itemIdListFromDifferentPartitions<<item.id();
 
     QOrganizerItemRemoveByIdRequest irbir;
@@ -474,7 +456,15 @@ void tst_QOrganizerStorageLocations::testStorageLocationsForItems()
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
-    QCOMPARE(0, ifr.items().count());
+    QCOMPARE(ifr.items().count()-existingDetails.m_itemAmountOnUserData-existingDetails.m_itemAmountOnSystem, 0);
+
+    QOrganizerCollectionRemoveRequest crr;
+    crr.setManager(&organizerManager);
+    crr.setCollectionIds(QList<QOrganizerCollectionId>()<<collectionOnSystem.id());
+    QVERIFY(crr.start());
+    QVERIFY(crr.waitForFinished());
+    QVERIFY(crr.isFinished());
+    QVERIFY(!crr.error());
 }
 
 QTEST_MAIN(tst_QOrganizerStorageLocations)

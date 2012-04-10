@@ -51,7 +51,6 @@
 #include <QStringList>
 #include <QList>
 #include <QPixmap>
-#include <QImageWriter>
 #include <QtTest/QtTest>
 #include <qcontacts.h>
 

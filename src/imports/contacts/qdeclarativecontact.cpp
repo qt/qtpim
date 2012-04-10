@@ -46,7 +46,6 @@
 
 #include <QtQml/qqmlengine.h>
 
-#include <QImage>
 #include <QUrl>
 #include <QQmlListProperty>
 

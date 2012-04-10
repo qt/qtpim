@@ -47,8 +47,6 @@
 
 #include <qcontact.h>
 
-#include <QImage>
-
 QTCONTACTS_USE_NAMESPACE
 
 QTVERSIT_BEGIN_NAMESPACE

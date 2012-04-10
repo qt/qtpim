@@ -223,23 +223,22 @@ void QDeclarativeContactModel::setStorageLocations(int storageLocations)
 {
     QContactAbstractRequest::StorageLocations newStorageLocation = 0;
     // only one storage location for a model is supported
-    if (storageLocations == UserDataStorage) {
+    switch (storageLocations) {
+    case UserDataStorage:
         newStorageLocation = QContactAbstractRequest::UserDataStorage;
-    }
-    else if (storageLocations == SystemStorage) {
+        break;
+    case SystemStorage:
         newStorageLocation = QContactAbstractRequest::SystemStorage;
-    }
-    else if (storageLocations == (UserDataStorage | SystemStorage)) {
+        break;
+    case (UserDataStorage | SystemStorage):
         qWarning() << Q_FUNC_INFO << "Model does not support multiple storage locations";
         updateError(QContactManager::NotSupportedError);
         return;
-    }
-    else {
+    default:
         qWarning() << Q_FUNC_INFO << "Unknown storage location";
         updateError(QContactManager::BadArgumentError);
         return;
     }
-
     if (d->m_storageLocations != newStorageLocation) {
         d->m_storageLocations = newStorageLocation;
         emit storageLocationsChanged();

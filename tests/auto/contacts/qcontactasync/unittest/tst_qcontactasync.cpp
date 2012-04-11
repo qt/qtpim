@@ -65,7 +65,7 @@
 #include <QContactName>
 #include <QContactIdFilter>
 
-#include "../../../jsondbprocess-oldapi.h"
+#include "../../../jsondbprocess.h"
 #include "../../qcontactidmock.h"
 #include "../../qcontactmanagerdataholder.h" //QContactManagerDataHolder
 

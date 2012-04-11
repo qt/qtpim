@@ -64,7 +64,7 @@
 #include <QContactTag>
 #include <QContactOrganization>
 #include "../../qcontactidmock.h"
-#include "../../../jsondbprocess-oldapi.h"
+#include "../../../jsondbprocess.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE

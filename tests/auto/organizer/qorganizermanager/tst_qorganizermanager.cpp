@@ -288,7 +288,7 @@ void tst_QOrganizerManager::initTestCase()
 {
     // Start JsonDb daemon if needed
     if (QOrganizerManager::availableManagers().contains("jsondb"))
-        QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
+        QVERIFY2(jsondbProcess.start(QFINDTESTDATA("partitions.json")), "Failed to start JsonDb process");
 
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 

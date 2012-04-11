@@ -30,4 +30,4 @@ HEADERS += qcontactjsondbbackup.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbid.h \
            synchronizedjsondbclient.h \
            synchronizedworker.h \
-           ../../jsondbprocess-oldapi.h
+           ../../jsondbprocess.h

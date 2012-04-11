@@ -48,11 +48,6 @@
 #include <QCoreApplication>
 #include <QLibraryInfo>
 
-#if !defined(QT_NO_JSONDB)
-#include <QtJsonDb>
-QT_USE_NAMESPACE_JSONDB
-#endif//QT_NO_JSONDB
-
 //
 //  W A R N I N G
 //  -------------
@@ -64,36 +59,47 @@ QT_USE_NAMESPACE_JSONDB
 // We mean it.
 //
 
-class JsonDbProcess : public QObject
+class JsonDbProcess
 {
-    Q_OBJECT
 public:
-    JsonDbProcess();
+    JsonDbProcess()
+    {
+    }
 
-    bool start(bool forceNewProcess = false, QStringList &wantedPartitions = QStringList()<<"com.nokia.mt.User"<<"com.nokia.mt.System");
-    void terminate();
+    bool start(const QString &partitionsFilePath = QString(), bool killAllJsonDb = true) {
 
-#if !defined(QT_NO_JSONDB)
-signals:
-    void quitEventLoop();
+        if (killAllJsonDb)
+            system("killall jsondb");
+        QFileInfo partitionsFileInfo(partitionsFilePath);
+        // Start new process
+        QString jsondbPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/jsondb";
+        if (!QFileInfo(jsondbPath).exists()) {
+            qWarning() << Q_FUNC_INFO << "Cannot find JsonDb binaries.";
+            return false;
+        }
 
-private:
-    void checkPartitions();
+        m_process.start(jsondbPath, QStringList() << partitionsFileInfo.absolutePath());
+        if (!m_process.waitForStarted()) {
+            qWarning() << Q_FUNC_INFO << m_process.errorString();
+            return false;
+        }
+        return true;
+    }
 
-private slots:
-    void onConnection(QtJsonDb::QJsonDbConnection::ErrorCode error = QJsonDbConnection::NoError , const QString &message = QString());
-    void onPartitionsChecked(QtJsonDb::QJsonDbRequest::ErrorCode error = QJsonDbRequest::NoError , const QString &message = QString());
-    void onPartitionsCreated(QtJsonDb::QJsonDbRequest::ErrorCode error = QJsonDbRequest::NoError , const QString &message = QString());
-#endif//QT_NO_JSONDB
+    void terminate() {
+        if (m_process.state() == QProcess::NotRunning)
+            return;
+
+        m_process.terminate();
+        if (m_process.state() != QProcess::NotRunning && !m_process.waitForFinished()) {
+            qWarning() << Q_FUNC_INFO << "JsonDb did not terminate cleanly.  Killing.";
+            m_process.kill();
+        }
+    }
 
 private:
     QProcess m_process;
-    QTemporaryDir jsondbWorkingDirectory;
-#if !defined(QT_NO_JSONDB)
-    int m_CreationRequestAmount;
-    QStringList m_wantedPartitions;
-    QJsonDbConnection m_JsonDbConnection;
-#endif//QT_NO_JSONDB
+
 };
 
 #endif // JSONDBPROCESS_H

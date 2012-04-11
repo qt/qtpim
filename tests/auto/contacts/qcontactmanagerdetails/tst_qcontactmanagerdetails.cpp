@@ -44,7 +44,7 @@
 #include <QtContacts>
 
 #include "../qcontactmanagerdataholder.h"
-#include "../../jsondbprocess-oldapi.h"
+#include "../../jsondbprocess.h"
 
 QTCONTACTS_USE_NAMESPACE
 

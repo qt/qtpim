@@ -81,7 +81,7 @@ void tst_QOrganizerStorageLocationsMissing::testMissingStorageLocations()
         QSKIP("Test is only for jsondb backend.");
 
     QStringList emptyList;
-    QVERIFY2(jsondbProcess.start(emptyList), "Failed to start JsonDb process");
+    QVERIFY2(jsondbProcess.start(), "Failed to start JsonDb process");
 
     QOrganizerManager organizerManager(managerName);
 

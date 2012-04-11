@@ -47,7 +47,7 @@
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbconverter.h"
 #include "synchronizedjsondbclient.h"
-#include "jsondbprocess-oldapi.h"
+#include "jsondbprocess.h"
 
 QTCONTACTS_USE_NAMESPACE
 

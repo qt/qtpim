@@ -1433,7 +1433,9 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     //                ------------  MATCH FLAG = CONTAINS  ------------
 
     // retrieve contacts filtering by first name
-    QString firstName = "li";
+    QString firstName = "   li   ";
+    // This is to test the string sanitation: the filter will use the
+    // sanitized version of this string, thus: "li"
     QContactDetailFilter dfil;
     dfil.setDetailType(QContactName::Type, QContactName::FieldFirstName);
     dfil.setValue(firstName);
@@ -1503,7 +1505,9 @@ void tst_QContactJsondbEngine::testContactDetailFilter() {
     }
 
     // retrieve contacts filtering by email
-    QString email = "on";
+    QString email = "     on  ";
+    // This is to test the string sanitation: the filter will use the
+    // sanitized version of this string, thus: "on"
     dfil.setDetailType(QContactEmailAddress::Type, QContactEmailAddress::FieldEmailAddress);
     dfil.setValue(email);
     QVERIFY(dfil.matchFlags() == QContactFilter::MatchContains);

@@ -123,22 +123,26 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             //name
             QContactName name;
             temporaryJsonObject = i.value().toObject();
-            stringValue = temporaryJsonObject.value(contactNameFieldsMapping.value(QContactName::FieldFirstName)).toString();
-            if (!stringValue.isEmpty())
-                name.setFirstName(stringValue);
-            stringValue = temporaryJsonObject.value(contactNameFieldsMapping.value(QContactName::FieldMiddleName)).toString();
-            if (!stringValue.isEmpty())
-                name.setMiddleName(stringValue);
-            stringValue = temporaryJsonObject.value(contactNameFieldsMapping.value(QContactName::FieldLastName)).toString();
-            if (!stringValue.isEmpty())
-                name.setLastName(stringValue);
-            stringValue = temporaryJsonObject.value(contactNameFieldsMapping.value(QContactName::FieldPrefix)).toString();
-            if (!stringValue.isEmpty())
-                name.setPrefix(stringValue);
-            stringValue = temporaryJsonObject.value(contactNameFieldsMapping.value(QContactName::FieldSuffix)).toString();
-            if (!stringValue.isEmpty())
-                name.setSuffix(stringValue);
-            contact->appendDetail(name);
+            QHash<int, QString>::ConstIterator nameFieldsIterator = contactNameFieldsMapping.constBegin();
+            while (nameFieldsIterator != contactNameFieldsMapping.constEnd()) {
+                stringValue = temporaryJsonObject.value(nameFieldsIterator.value()).toString();
+                if (!stringValue.isEmpty()) {
+                    switch (sanitizeContactDetailString(&stringValue)) {
+                    case QContactJsonDbConverter::InvalidArgumentError:
+                        qWarning() << Q_FUNC_INFO <<": Name field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                        return false;
+                        break;
+                    case QContactJsonDbConverter::NoError:
+                        name.setValue(nameFieldsIterator.key(), stringValue);
+                        break;
+                    case QContactJsonDbConverter::EmptyArgumentError:
+                        break;
+                    }
+                }
+                nameFieldsIterator++;
+            }
+            if (!name.isEmpty())
+                contact->appendDetail(name);
         } else if (i.key() == detailsToJsonMapping.value(QContactGender::Type)) {
             //gender
             QContactGender gender;
@@ -146,33 +150,32 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             stringValue = temporaryJsonObject.value(detailsToJsonMapping.value(QContactGender::Type)).toString();
             if (!stringValue.isEmpty())
                 gender.setGender(static_cast<QContactGender::GenderField>(genderValuesMapping.key(stringValue)));
-            contact->appendDetail(gender);
+            if (!gender.isEmpty())
+                contact->appendDetail(gender);
         } else if (i.key() == detailsToJsonMapping.value(QContactOrganization::Type)) {
             //organization
             QJsonArray array = i.value().toArray();
             for (int i = 0; i < array.size(); ++i) {
                 QContactOrganization organization;
                 QJsonObject temporaryJsonObject = array.at(i).toObject();
-                // name
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldName)).toString();
-                if (!stringValue.isEmpty())
-                    organization.setName(stringValue);
-                // department
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldDepartment)).toString();
-                if (!stringValue.isEmpty())
-                    organization.setDepartment(QStringList() << stringValue);
-                // title
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldTitle)).toString();
-                if (!stringValue.isEmpty())
-                    organization.setTitle(stringValue);
-                // role
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldRole)).toString();
-                if (!stringValue.isEmpty())
-                    organization.setRole(stringValue);
-                // assistantName
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)).toString();
-                if (!stringValue.isEmpty())
-                    organization.setAssistantName(stringValue);
+                QHash<QContactOrganization::OrganizationField, QString>::ConstIterator organizationIter = organizationFieldsMapping.constBegin();
+                while (organizationIter != organizationFieldsMapping.constEnd()) {
+                    stringValue = temporaryJsonObject.value(organizationIter.value()).toString();
+                    if (!stringValue.isEmpty()) {
+                        switch (sanitizeContactDetailString(&stringValue)) {
+                        case QContactJsonDbConverter::InvalidArgumentError:
+                            qWarning() << Q_FUNC_INFO <<": Organization field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                            return false;
+                            break;
+                        case QContactJsonDbConverter::NoError:
+                            organization.setValue(organizationIter.key(), stringValue);
+                            break;
+                        case QContactJsonDbConverter::EmptyArgumentError:
+                            break;
+                        }
+                    }
+                    organizationIter++;
+                }
                 // logoUrl
                 stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)).toString();
                 if (!stringValue.isEmpty())
@@ -190,7 +193,8 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                     organization.setEndDate(date);
                 }
                 // Add organization to details
-                contact->appendDetail(organization);
+                if (!organization.isEmpty())
+                    contact->appendDetail(organization);
             }
         } else if (i.key() == QContactJsonDbStr::contactDetails()) {
             temporaryJsonObject = i.value().toObject();
@@ -225,13 +229,23 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             }
 
             //nickname
-            QString nickString;
-            nickString = temporaryJsonObject[detailsToJsonMapping.value(QContactNickname::Type)].toString();
-            if (!nickString.isEmpty()) {
-                QContactNickname nick;
-                nick.setNickname(nickString);
-                contact->appendDetail(nick);
+            QContactNickname nick;
+            if (!temporaryJsonObject[detailsToJsonMapping.value(QContactNickname::Type)].toString().isEmpty()) {
+                QString nickString = temporaryJsonObject[detailsToJsonMapping.value(QContactNickname::Type)].toString();
+                switch (sanitizeContactDetailString(&nickString)) {
+                case QContactJsonDbConverter::InvalidArgumentError:
+                    qWarning() << Q_FUNC_INFO <<": Nickname field of json object " << object << "does not contain a valid " << " jsondb detail" << nickString;
+                    return false;
+                    break;
+                case QContactJsonDbConverter::NoError:
+                    nick.setNickname(nickString);
+                    break;
+                case QContactJsonDbConverter::EmptyArgumentError:
+                    break;
+                }
             }
+            if (!nick.isEmpty())
+                contact->appendDetail(nick);
 
             //displayLabel
             QString displayLabelString;
@@ -243,22 +257,49 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             }
 
             //note
-            QString noteString;
-            noteString = temporaryJsonObject[detailsToJsonMapping.value(QContactNote::Type)].toString();
-            if (!noteString.isEmpty()) {
-                QContactNote note;
-                note.setNote(noteString);
+            QContactNote note;
+            if (!temporaryJsonObject[detailsToJsonMapping.value(QContactNote::Type)].toString().isEmpty()) {
+                QString noteString = temporaryJsonObject[detailsToJsonMapping.value(QContactNote::Type)].toString();
+                switch (sanitizeContactDetailString(&noteString, 1000)) {
+                case QContactJsonDbConverter::InvalidArgumentError:
+                    qWarning() << Q_FUNC_INFO <<": Note field of json object " << object << "does not contain a valid " << " jsondb detail" << noteString;
+                    return false;
+                    break;
+                case QContactJsonDbConverter::NoError:
+                    note.setNote(noteString);
+                    break;
+                case QContactJsonDbConverter::EmptyArgumentError:
+                    break;
+                }
+            }
+            if (!note.isEmpty()) {
                 contact->appendDetail(note);
             }
+
         } else if (i.key() == detailsToJsonMapping.value(QContactEmailAddress::Type)) {
             //email
             QJsonArray array = i.value().toArray();
             for (int i = 0; i < array.size(); ++i) {
                 QContactEmailAddress email;
                 QJsonObject temporaryJsonObject = array[i].toObject();
-                email.setEmailAddress(temporaryJsonObject["value"].toString());
-                updateContexts(temporaryJsonObject,&email);
-                contact->appendDetail(email);
+                if (!temporaryJsonObject["value"].toString().isEmpty()) {
+                    QString emailString = temporaryJsonObject["value"].toString();
+                    switch (sanitizeContactDetailString(&emailString, 126)) {
+                    case QContactJsonDbConverter::InvalidArgumentError:
+                        qWarning() << Q_FUNC_INFO <<": email field of json object " << object << "does not contain a valid " << " jsondb detail" << emailString;
+                        return false;
+                        break;
+                    case QContactJsonDbConverter::NoError:
+                        email.setEmailAddress(emailString);
+                        break;
+                    case QContactJsonDbConverter::EmptyArgumentError:
+                        break;
+                    }
+                }
+                if (!email.isEmpty()) {
+                    updateContexts(temporaryJsonObject,&email);
+                    contact->appendDetail(email);
+                }
             }
         } else if (i.key() == detailsToJsonMapping.value(QContactPhoneNumber::Type)) {
             //phone number
@@ -306,26 +347,28 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             for (int j = 0; j < array.size(); ++j) {
                 QContactAddress address;
                 QJsonObject temporaryJsonObject = array.at(j).toObject();
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldStreet)).toString();
-                if (!stringValue.isEmpty())
-                    address.setStreet(stringValue);
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldLocality)).toString();
-                if (!stringValue.isEmpty())
-                    address.setLocality(stringValue);
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldPostcode)).toString();
-                if (!stringValue.isEmpty())
-                    address.setPostcode(stringValue);
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldPostOfficeBox)).toString();
-                if (!stringValue.isEmpty())
-                    address.setPostOfficeBox(stringValue);
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldRegion)).toString();
-                if (!stringValue.isEmpty())
-                    address.setRegion(stringValue);
-                stringValue = temporaryJsonObject.value(addressFieldsMapping.value(QContactAddress::FieldCountry)).toString();
-                if (!stringValue.isEmpty())
-                    address.setCountry(stringValue);
-                updateContexts(temporaryJsonObject, &address);
-                contact->appendDetail(address);
+                QHash<QContactAddress::AddressField, QString>::ConstIterator addressIter = addressFieldsMapping.constBegin();
+                while (addressIter != addressFieldsMapping.constEnd()) {
+                    stringValue = temporaryJsonObject.value(addressIter.value()).toString();
+                    if (!stringValue.isEmpty()) {
+                        switch (sanitizeContactDetailString(&stringValue)) {
+                        case QContactJsonDbConverter::InvalidArgumentError:
+                            qWarning() << Q_FUNC_INFO <<": address field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                            return false;
+                            break;
+                        case QContactJsonDbConverter::NoError:
+                            address.setValue(addressIter.key(), stringValue);
+                            break;
+                        case QContactJsonDbConverter::EmptyArgumentError:
+                            break;
+                        }
+                    }
+                    addressIter++;
+                }
+                if (!address.isEmpty()) {
+                    updateContexts(temporaryJsonObject, &address);
+                    contact->appendDetail(address);
+                }
             }
         } else if (i.key() == detailsToJsonMapping.value(QContactUrl::Type)) {
             //url
@@ -441,17 +484,27 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         case QContactDetail::TypeName: {
             QJsonObject nameObject;
             name = static_cast<QContactName *>(&detail);
-            if(!name->prefix().isEmpty())
-                nameObject[contactNameFieldsMapping.value(QContactName::FieldPrefix)] = name->prefix();
-            if(!name->suffix().isEmpty())
-                nameObject[contactNameFieldsMapping.value(QContactName::FieldSuffix)] = name->suffix();
-            if(!name->lastName().isEmpty())
-                nameObject[contactNameFieldsMapping.value(QContactName::FieldLastName)] = name->lastName();
-            if(!name->firstName().isEmpty())
-                nameObject[contactNameFieldsMapping.value(QContactName::FieldFirstName)] = name->firstName();
-            if(!name->middleName().isEmpty())
-                nameObject[contactNameFieldsMapping.value(QContactName::FieldMiddleName)] = name->middleName();
-            object->insert(detailsToJsonMapping.value(QContactName::Type), nameObject);
+            QMap<int, QVariant>::const_iterator nameFieldsIterator = name->values().constBegin();
+            QString name_field;
+            while (nameFieldsIterator != name->values().constEnd()) {
+                if (nameFieldsIterator.value().type() == QVariant::String) {
+                    name_field = nameFieldsIterator.value().toString();
+                    switch (sanitizeContactDetailString(&name_field)) {
+                    case QContactJsonDbConverter::InvalidArgumentError:
+                        qWarning() << Q_FUNC_INFO <<": Name detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << name_field;
+                        return false;
+                        break;
+                    case QContactJsonDbConverter::NoError:
+                        nameObject[contactNameFieldsMapping.value(nameFieldsIterator.key())] = name_field;
+                        break;
+                    case QContactJsonDbConverter::EmptyArgumentError:
+                        break;
+                    }
+                }
+                nameFieldsIterator++;
+            }
+            if (!nameObject.isEmpty())
+                object->insert(detailsToJsonMapping.value(QContactName::Type), nameObject);
             break;
         }
         case QContactDetail::TypePersonId: {
@@ -470,11 +523,89 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         case QContactDetail::TypeOrganization: {
             QJsonObject jsonObject;
             organization = static_cast<QContactOrganization *>(&detail);
-            jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldName)] = organization->name();
-            jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldDepartment)] = organization->department().join("");
-            jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldTitle)] = organization->title();
-            jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldRole)] = organization->role();
-            jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization->assistantName();
+            QMap<int, QVariant>::const_iterator organizationIter = organization->values().constBegin();
+            QString organization_field;
+            organization_field = organizationIter.value().toString();
+            switch (sanitizeContactDetailString(&organization_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Name field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldName)] = organization_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            for (int i=0; i<organization->department().count();i++)
+            {
+                organization_field = organization->department().at(i); // .join("")
+                switch (sanitizeContactDetailString(&organization_field)) {
+                case QContactJsonDbConverter::InvalidArgumentError:
+                    qWarning() << Q_FUNC_INFO <<": Department field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                    return false;
+                    break;
+                case QContactJsonDbConverter::NoError:
+                    jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldDepartment)] = organization_field;
+                    break;
+                case QContactJsonDbConverter::EmptyArgumentError:
+                    break;
+                }
+            }
+            //
+            organization_field = organization->title();
+            switch (sanitizeContactDetailString(&organization_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Title field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldTitle)] = organization_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            organization_field = organization->role();
+            switch (sanitizeContactDetailString(&organization_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Role field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldRole)] = organization_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            organization_field = organization->assistantName();
+            switch (sanitizeContactDetailString(&organization_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": AssistantName field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldAssistantName)] = organization_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            organization_field = organization->location();
+            switch (sanitizeContactDetailString(&organization_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Location field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldLocation)] = organization_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+
             jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl().toString();
             QDateTime startDate = organization->startDate();
             if (startDate.isValid()) {
@@ -486,9 +617,11 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
                 QString organizationEndDate = toJsonDate(endDate);
                 jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
             }
-            updateContexts(*organization, &jsonObject);
-            organizations.append(jsonObject);
-            break;
+            if (!jsonObject.isEmpty()) {
+                updateContexts(*organization, &jsonObject);
+                organizations.append(jsonObject);
+                break;
+            }
         }
         case QContactDetail::TypeBirthday: {
             birthday = static_cast<QContactBirthday *>(&detail);
@@ -512,8 +645,20 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         }
         case QContactDetail::TypeNickname: {
             nick = static_cast<QContactNickname *>(&detail);
-            embeddedDetailsObject[detailsToJsonMapping.value(QContactNickname::Type)] = nick->nickname();
-            object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
+            QString nickname_field = nick->nickname();
+            switch (sanitizeContactDetailString(&nickname_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": nick detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << nickname_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                embeddedDetailsObject[detailsToJsonMapping.value(QContactNickname::Type)] = nickname_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            if (!embeddedDetailsObject.isEmpty())
+                object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
             break;
         }
         case QContactDetail::TypeDisplayLabel: {
@@ -524,16 +669,41 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         }
         case QContactDetail::TypeNote: {
             note = static_cast<QContactNote *>(&detail);
-            embeddedDetailsObject[detailsToJsonMapping.value(QContactNote::Type)] = note->note();
-            object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
+            QString note_field = note->note();
+            switch (sanitizeContactDetailString(&note_field, 1000)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": note detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << note_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                embeddedDetailsObject[detailsToJsonMapping.value(QContactNote::Type)] = note_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            if (!embeddedDetailsObject.isEmpty())
+                object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
             break;
         }
         case QContactDetail::TypeEmailAddress: {
             QJsonObject emailObject;
             email = static_cast<QContactEmailAddress *>(&detail);
-            emailObject["value"] = email->emailAddress();
-            updateContexts(*email, &emailObject);
-            emails.append(emailObject);
+            QString email_field = email->emailAddress();
+            switch (sanitizeContactDetailString(&email_field, 126)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": email detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << email_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                emailObject["value"] = email_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            if (!emailObject.isEmpty()) {
+                updateContexts(*email, &emailObject);
+                emails.append(emailObject);
+            }
             break;
         }
         case QContactDetail::TypePhoneNumber: {
@@ -557,20 +727,90 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         case QContactDetail::TypeAddress: {
             QJsonObject addressObject;
             address = static_cast<QContactAddress *>(&detail);
-            if(!address->street().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldStreet)] = address->street();
-            if(!address->locality().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldLocality)] = address->locality();
-            if(!address->postcode().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldPostcode)] = address->postcode();
-            if(!address->postOfficeBox().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldPostOfficeBox)] = address->postOfficeBox();
-            if(!address->region().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldRegion)] = address->region();
-            if(!address->country().isEmpty())
-                addressObject[addressFieldsMapping.value(QContactAddress::FieldCountry)] = address->country();
-            updateContexts(*address, &addressObject);
-            addresses.append(addressObject);
+            QMap<int, QVariant>::const_iterator addressIter = address->values().constBegin();
+            QString address_field;
+            address_field = addressIter.value().toString();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Street field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldStreet)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            address_field = address->locality();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Locality field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldLocality)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            address_field = address->postcode();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": PostCode field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldPostcode)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            address_field = address->postOfficeBox();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": PostOfficeBox field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldPostOfficeBox)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            address_field = address->region();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Region field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldRegion)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            address_field = address->country();
+            switch (sanitizeContactDetailString(&address_field)) {
+            case QContactJsonDbConverter::InvalidArgumentError:
+                qWarning() << Q_FUNC_INFO <<": Country field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                return false;
+                break;
+            case QContactJsonDbConverter::NoError:
+                addressObject[addressFieldsMapping.value(QContactAddress::FieldCountry)] = address_field;
+                break;
+            case QContactJsonDbConverter::EmptyArgumentError:
+                break;
+            }
+            //
+            if (!addressObject.isEmpty()) {
+                updateContexts(*address, &addressObject);
+                addresses.append(addressObject);
+            }
             break;
         }
         case QContactDetail::TypeUrl: {
@@ -804,7 +1044,12 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
             qDebug() << "Filter by name";
         jsonDbQueryStr.append("[?" + jsondbField + "." + contactNameFieldsMapping.value(detailFilter.detailField()));
         QString paramValue = detailFilter.value().toString();
-        createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        if (paramValue.isEmpty() || (sanitizeContactDetailString(&paramValue)!=InvalidArgumentError)) {
+            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+        } else {
+            //detail value could not be sanitized, hence the filter is not valid
+            isValidFilter = false;
+        }
     }
     // Filter by phone number
     else if (detailFilter.detailType() == QContactPhoneNumber::Type)
@@ -833,7 +1078,13 @@ bool QContactJsonDbConverter::detailFilterToJsondbQuery(const QContactFilter &fi
         if (detailFilter.detailField() == QContactEmailAddress::FieldEmailAddress) {
             jsonDbQueryStr.append("[?" + jsondbField + ".0.value" );
             QString paramValue = detailFilter.value().toString();
-            createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+            if (paramValue.isEmpty() || (sanitizeContactDetailString(&paramValue)!=InvalidArgumentError)) {
+                createMatchFlagQuery(jsonDbQueryStr, detailFilter.matchFlags(), paramValue);
+            }
+            else {
+                //detail value could not be sanitized, hence the filter is not valid
+                isValidFilter = false;
+            }
         } else {
             //We do not support currently filter by other fields than email address
             isValidFilter = false;
@@ -1138,6 +1389,36 @@ const QStringList QContactJsonDbConverter::storageLocationsToPartitionNames(
         partitionNames.append(storageLocationMapping[QContactAbstractRequest::SystemStorage]);
 
     return partitionNames;
+}
+
+/*!
+  Parses the input string to eliminate extra white spaces and enforce maximum length.
+ */
+QContactJsonDbConverter::SanitizeError QContactJsonDbConverter::sanitizeContactDetailString(QString *stringToBeSanitized, int maxStringLength) const
+{
+    if (!stringToBeSanitized->isEmpty()) {
+        // cut leading and trailing white spaces
+        QString simplified = stringToBeSanitized->simplified();
+        QString cleaned;
+        const int len = simplified.length();
+        if (!len)
+            return InvalidArgumentError; // The string is empty after being simplified, return error
+        cleaned.reserve(int(len));
+        QString::ConstIterator numberCharsIterator = simplified.constBegin();
+        while (numberCharsIterator != simplified.constEnd()) {
+            cleaned += numberCharsIterator->toLatin1();
+            numberCharsIterator++;
+        }
+        cleaned.squeeze();
+        *stringToBeSanitized = cleaned;
+        if ((stringToBeSanitized->length() > maxStringLength) || (stringToBeSanitized->isEmpty())) {
+            return InvalidArgumentError; // String too long, return error
+        } else {
+            return NoError; // No error
+        }
+    } else {
+        return EmptyArgumentError;  // The string passed as argument was empty in the first place
+    }
 }
 
 QTCONTACTS_END_NAMESPACE

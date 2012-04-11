@@ -121,7 +121,61 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(name->middleName(), QString("Tom"));
     // cleanup
     contact.clearDetails();
-
+    // test name with white spaces to be trimmed
+    jsonData.insert("firstName", QString("John"));
+    jsonData.insert("lastName", QString("Doe  "));
+    jsonData.insert("middleName", QString(" Tom"));
+    jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactName::Type);
+    QVERIFY(!detail.isEmpty());
+    name = static_cast<QContactName*>(&detail);
+    QVERIFY(name != NULL);
+    QCOMPARE(name->firstName(), QString("John"));
+    QCOMPARE(name->lastName(), QString("Doe"));
+    QCOMPARE(name->middleName(), QString("Tom"));
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test invalid name (name is too long)
+    jsonData.insert("firstName", QString("   John   "));
+    jsonData.insert("lastName", QString("Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"));
+    jsonData.insert("middleName", QString(" Tom"));
+    jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactName::Type);
+    QVERIFY(detail.isEmpty());
+    name = static_cast<QContactName*>(&detail);
+    QVERIFY(name->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test passing an empty string in the first place: allowed
+    QString emptyName;
+    jsonData.insert("firstName", emptyName);
+    jsonData.insert("lastName", emptyName);
+    jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactName::Type);
+    QVERIFY(detail.isEmpty());
+    name = static_cast<QContactName*>(&detail);
+    QVERIFY(name->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    QString invalidName = "      ";
+    jsonData.insert("firstName", QString("   John   "));
+    jsonData.insert("lastName", invalidName);
+    jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactName::Type);
+    QVERIFY(detail.isEmpty());
+    name = static_cast<QContactName*>(&detail);
+    QVERIFY(name->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
     // gender
     initializeJsonContact(jsonContact);
@@ -168,7 +222,65 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     contact.clearDetails();
     jsonData = QJsonObject();
-
+    // test organization with white spaces to be trimmed
+    jsonData.insert("name", QString(" ACME2"));
+    jsonData.insert("department", QString("Spy2 "));
+    jsonData.insert("title", QString(" Vice President 2"));
+    jsonData.insert("role", QString("    Superhero2    "));
+    jsonData.insert("assistantName", QString("    Daisy Duck 2"));
+    QJsonArray organizationData1;
+    organizationData1.append(jsonData);
+    jsonContact.insert("organization", organizationData1);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactOrganization::Type);
+    QVERIFY(!detail.isEmpty());
+    org = static_cast<QContactOrganization*>(&detail);
+    QVERIFY(org != NULL);
+    QCOMPARE(org->name(), QString("ACME2"));
+    QCOMPARE(org->department().at(0), QString("Spy2"));
+    QCOMPARE(org->title(), QString("Vice President 2"));
+    QCOMPARE(org->role(), QString("Superhero2"));
+    QCOMPARE(org->assistantName(), QString("Daisy Duck 2"));
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    // test invalid organization name (name is too long)
+    jsonData.insert("name", QString("Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"));
+    QJsonArray organizationData2;
+    organizationData2.append(jsonData);
+    jsonContact.insert(QContactJsonDbStr::organizationDefinitionName(), organizationData2);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactOrganization::Type);
+    QVERIFY(detail.isEmpty());
+    org = static_cast<QContactOrganization*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test passing an empty string in the first place: allowed
+    jsonData.insert("name", emptyName);
+    jsonContact.insert(QContactJsonDbStr::organizationDefinitionName(), jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactOrganization::Type);
+    QVERIFY(detail.isEmpty());
+    org = static_cast<QContactOrganization*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    jsonData.insert("name", invalidName);
+    QJsonArray organizationData3;
+    organizationData3.append(jsonData);
+    jsonContact.insert(QContactJsonDbStr::organizationDefinitionName(), organizationData3);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactOrganization::Type);
+    QVERIFY(detail.isEmpty());
+    org = static_cast<QContactOrganization*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
 
     // birthday
@@ -226,7 +338,51 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     contact.clearDetails();
     jsonData = QJsonObject();
-
+    // test nickname with white spaces to be trimmed
+    jsonData.insert("nickname", QString("   Chupacabra"));
+    jsonContact.insert("details", jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNickname::Type);
+    QVERIFY(!detail.isEmpty());
+    nick = static_cast<QContactNickname*>(&detail);
+    QVERIFY(nick != NULL);
+    QCOMPARE(nick->nickname(), QString("Chupacabra"));
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test invalid nickname (nickname is too long)
+    jsonData.insert("nickname", QString("Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"));
+    jsonContact.insert("details", jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNickname::Type);
+    QVERIFY(detail.isEmpty());
+    nick = static_cast<QContactNickname*>(&detail);
+    QVERIFY(nick->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test passing an empty string in the first place: allowed
+    jsonData.insert("nickname", emptyName);
+    jsonContact.insert("details", jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNickname::Type);
+    QVERIFY(detail.isEmpty());
+    nick = static_cast<QContactNickname*>(&detail);
+    QVERIFY(nick->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    jsonData.insert("nickname", invalidName);
+    jsonContact.insert("details", jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNickname::Type);
+    QVERIFY(detail.isEmpty());
+    nick = static_cast<QContactNickname*>(&detail);
+    QVERIFY(nick->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
     // note
     initializeJsonContact(jsonContact);
@@ -241,6 +397,55 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     contact.clearDetails();
     jsonData = QJsonObject();
+    // test note with white spaces to be trimmed
+    jsonData.insert("note", QString("   Chupacabra"));
+    jsonContact.insert("details", jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNote::Type);
+    QVERIFY(!detail.isEmpty());
+    note = static_cast<QContactNote*>(&detail);
+    QVERIFY(note != NULL);
+    QCOMPARE(note->note(), QString("Chupacabra"));
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test invalid note (note is too long)
+    QString tooLongNote;
+    for (int i=0; i<10001; i++) {
+        tooLongNote += 'a';
+    }
+    jsonData.insert("note", tooLongNote);
+    jsonContact.insert("details", jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNote::Type);
+    QVERIFY(detail.isEmpty());
+    note = static_cast<QContactNote*>(&detail);
+    QVERIFY(note->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test passing an empty string in the first place: allowed
+    jsonData.insert("note", emptyName);
+    jsonContact.insert("details", jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNote::Type);
+    QVERIFY(detail.isEmpty());
+    note = static_cast<QContactNote*>(&detail);
+    QVERIFY(note->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    jsonData.insert("note", invalidName);
+    jsonContact.insert("details", jsonData);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactNote::Type);
+    QVERIFY(detail.isEmpty());
+    note = static_cast<QContactNote*>(&detail);
+    QVERIFY(note->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
     // email
     initializeJsonContact(jsonContact);
@@ -260,6 +465,71 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     contact.clearDetails();
     jsonData = QJsonObject();
+    emails.removeFirst();
+    // test email with white spaces to be trimmed
+    jsonData.insert("value", QString("   john@doe.com"));
+    jsonData.insert("context", QString("home"));
+    emails.append(jsonData);
+    jsonContact.insert("emails", emails);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactEmailAddress::Type);
+    QVERIFY(!detail.isEmpty());
+    email = static_cast<QContactEmailAddress*>(&detail);
+    QVERIFY(email != NULL);
+    QCOMPARE(email->emailAddress(), QString("john@doe.com"));
+    QVERIFY(email->contexts().size() == 1);
+    QVERIFY(email->contexts()[0] == QContactEmailAddress::ContextHome);
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    emails.removeFirst();
+    // test invalid email (email is too long)
+    QString tooLongEmail;
+    for (int i=0; i<127; i++) {
+        tooLongEmail += 'a';
+    }
+    jsonData.insert("value", tooLongEmail);
+    jsonData.insert("context", QString("home"));
+    emails.append(jsonData);
+    jsonContact.insert("emails", emails);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactEmailAddress::Type);
+    QVERIFY(detail.isEmpty());
+    email = static_cast<QContactEmailAddress*>(&detail);
+    QVERIFY(email != NULL);
+    QVERIFY(email->isEmpty());
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    emails.removeFirst();
+    // test passing an empty string in the first place: allowed
+    jsonData.insert("value", emptyName);
+    jsonData.insert("context", QString("home"));
+    emails.append(jsonData);
+    jsonContact.insert("emails", emails);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactEmailAddress::Type);
+    QVERIFY(detail.isEmpty());
+    email = static_cast<QContactEmailAddress*>(&detail);
+    QVERIFY(email->isEmpty());
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    emails.removeFirst();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    jsonData.insert("value", invalidName);
+    jsonData.insert("context", QString("home"));
+    emails.append(jsonData);
+    jsonContact.insert("emails", emails);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactEmailAddress::Type);
+    QVERIFY(detail.isEmpty());
+    email = static_cast<QContactEmailAddress*>(&detail);
+    QVERIFY(email->isEmpty());
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    emails.removeFirst();
 
     // phone number
     initializeJsonContact(jsonContact);
@@ -371,6 +641,67 @@ void tst_QcontactJsondbConverter::toQContactTest()
     contact.clearDetails();
     jsonData = QJsonObject();
 
+    // test address with white spaces to be trimmed
+    jsonData.insert("country", QString("   Finland2"));
+    jsonData.insert("postOfficeBox", QString("347  "));
+    jsonData.insert("postcode", QString(" 33101 "));
+    jsonData.insert("locality", QString("    Tampere2 "));
+    jsonData.insert("region", QString(" Pirkanmaa2 "));
+    jsonData.insert("street", QString("    PL     347  "));
+    QJsonArray addressData1;
+    addressData1.append(jsonData);
+    jsonContact.insert("addresses", addressData1);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactAddress::Type);
+    QVERIFY(!detail.isEmpty());
+    addr = static_cast<QContactAddress*>(&detail);
+    QVERIFY(addr != NULL);
+    QCOMPARE(addr->country(), QString("Finland2"));
+    QCOMPARE(addr->postOfficeBox(), QString("347"));
+    QCOMPARE(addr->postcode(), QString("33101"));
+    QCOMPARE(addr->locality(), QString("Tampere2"));
+    QCOMPARE(addr->region(), QString("Pirkanmaa2"));
+    QCOMPARE(addr->street(), QString("PL 347"));
+    // cleanup
+    contact.clearDetails();
+    jsonData = QJsonObject();
+    // test invalid address name (name is too long)
+    jsonData.insert("country", QString("Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"));
+    QJsonArray addressData2;
+    addressData2.append(jsonData);
+    jsonContact.insert(QContactJsonDbStr::addressDefinitionName(), addressData2);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactAddress::Type);
+    QVERIFY(detail.isEmpty());
+    addr = static_cast<QContactAddress*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test passing an empty string in the first place: allowed
+    jsonData.insert("country", emptyName);
+    jsonContact.insert(QContactJsonDbStr::addressDefinitionName(), jsonData);
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactAddress::Type);
+    QVERIFY(detail.isEmpty());
+    addr = static_cast<QContactAddress*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
+    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    jsonData.insert("country", invalidName);
+    QJsonArray addressData3;
+    addressData3.append(jsonData);
+    jsonContact.insert(QContactJsonDbStr::addressDefinitionName(), addressData3);
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    detail = contact.detail(QContactAddress::Type);
+    QVERIFY(detail.isEmpty());
+    addr = static_cast<QContactAddress*>(&detail);
+    QVERIFY(org->isEmpty());
+    // cleanup
+    jsonData = QJsonObject();
+    contact.clearDetails();
 
     // url
     initializeJsonContact(jsonContact);

@@ -57,6 +57,11 @@ QTCONTACTS_BEGIN_NAMESPACE
 class QContactJsonDbConverter
 {
 public:
+    enum SanitizeError {
+        NoError = 0x0000,
+        EmptyArgumentError = 0x0001,
+        InvalidArgumentError = 0x0002
+    };
     QContactJsonDbConverter();
     ~QContactJsonDbConverter();
     QContactManager::Error jsonDbRequestErrorToContactError(QJsonDbRequest::ErrorCode error) const;
@@ -76,6 +81,7 @@ public:
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
     bool sanitizePhoneNumberString(QString *phoneNumberString) const;
     const QStringList storageLocationsToPartitionNames(QContactAbstractRequest::StorageLocations storageLocations);
+    SanitizeError sanitizeContactDetailString(QString *stringToBeSanitized, int maxStringLength = 50) const;
 
     QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
     QHash<int, QString> contactNameFieldsMapping;

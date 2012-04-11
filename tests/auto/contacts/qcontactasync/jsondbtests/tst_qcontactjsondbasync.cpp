@@ -848,7 +848,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QVERIFY(!csr.waitForFinished());
 
     // Save a group of contacts, including few  TypeGroup contacts which are not supported by jsondb backend.
-    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6, testContact7;
+    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6, testContact7,testContact8;
     QContactName nameDetail;
     nameDetail.setFirstName("Test Contact1");
     testContact1.saveDetail(&nameDetail);
@@ -864,6 +864,8 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     testContact6.saveDetail(&nameDetail);
     nameDetail.setFirstName("Test Contact7");
     testContact7.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact8");
+    testContact8.saveDetail(&nameDetail);
 
 
     // Set group type to first, middle and last contact in the list.
@@ -883,8 +885,13 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     sanitizablePhone.setNumber("       +123458++++++++*#");
     testContact5.saveDetail(&sanitizablePhone);
 
+    // Set an invalid name
+    QContactName invalidName;
+    invalidName.setFirstName("     ");
+    testContact8.saveDetail(&invalidName);
+
     QList<QContact> saveList;
-    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7;
+    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7 << testContact8;
 
     csr.setManager(cm.data());
     QCOMPARE(csr.manager(), cm.data());
@@ -896,7 +903,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
 
     QList<QContact> testContacts;
-    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7;
+    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7 << testContact8;
     csr.setContacts(testContacts);
 
     QCOMPARE(csr.contacts(), saveList);
@@ -919,6 +926,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
     QCOMPARE(csr.errorMap().value(5), QContactManager::InvalidContactTypeError);
     QCOMPARE(csr.errorMap().value(6), QContactManager::BadArgumentError);
+    QCOMPARE(csr.errorMap().value(7), QContactManager::BadArgumentError);
     QVERIFY(csr.contacts()[5].id().isNull());
     QCOMPARE(csr.error(), QContactManager::BadArgumentError);
 }

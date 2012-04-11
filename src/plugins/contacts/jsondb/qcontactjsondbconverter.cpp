@@ -1267,17 +1267,35 @@ bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects,
 
 void QContactJsonDbConverter::createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value) const
 {
-    switch (flags) {
-        // The "contains" word is not recognized by JsonDb, we are forced to use a workaround here
-        case QContactFilter::MatchContains: queryString.append("=~\"/*" + value + "*/wi\"]"); break;
-        case QContactFilter::MatchFixedString: break;
-        case QContactFilter::MatchCaseSensitive: break;
-        case QContactFilter::MatchExactly: queryString.append("=\"" + value + "\"]"); break;
-        case QContactFilter::MatchStartsWith: queryString.append(" =~ \"/"+ value + "*/wi\"]"); break;
-        case QContactFilter::MatchEndsWith: queryString.append(" =~ \"/*" + value + "/wi\"]"); break;
-        default:
-          break;
+
+    // 1)Any flag combined with MatchExactly is a invalid combination this is handled in documentation
+
+    //Assuming other combinations as valid
+    QString queryWithWildCards;
+    if (flags.testFlag(QContactFilter::MatchExactly))
+        queryWithWildCards = QStringLiteral("=\"");
+    else
+        queryWithWildCards = QStringLiteral("=~\"/");
+
+    if (flags.testFlag(QContactFilter::MatchContains) || flags.testFlag(QContactFilter::MatchEndsWith))
+        queryWithWildCards += QStringLiteral("*");
+
+    queryWithWildCards += value;
+
+    if (flags.testFlag(QContactFilter::MatchContains) || flags.testFlag(QContactFilter::MatchStartsWith))
+        queryWithWildCards += QStringLiteral("*");
+
+    if (!(flags.testFlag(QContactFilter::MatchExactly))) {
+        queryWithWildCards += QStringLiteral("/w");
+        if (!(flags.testFlag(QContactFilter::MatchCaseSensitive)))
+            queryWithWildCards += QStringLiteral("i");
     }
+
+    if (flags.testFlag(QContactFilter::MatchFixedString))
+        queryWithWildCards += QStringLiteral("/");
+
+    queryWithWildCards.append("\"]");
+    queryString.append(queryWithWildCards);
 }
 
 QString QContactJsonDbConverter::toJsonDate(const QDateTime& date) const

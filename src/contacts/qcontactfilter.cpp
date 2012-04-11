@@ -83,7 +83,7 @@
 /*!
   \enum QContactFilter::MatchFlag
   Describes the semantics of matching followed by the filter
-  \value MatchExactly Performs QVariant-based matching
+  \value MatchExactly Performs QVariant-based matching , combination of MatchExactly with other flags is not supported
   \value MatchContains The search term is contained in the item
   \value MatchStartsWith The search term matches the start of the item
   \value MatchEndsWith The search term matches the end of the item

@@ -90,16 +90,15 @@ public:
 
     FilterType type() const;
 
-    // Qt::MatchFlags don't quite match here
     enum MatchFlag {
-        MatchExactly = Qt::MatchExactly,    // 0
-        MatchContains = Qt::MatchContains,  // 1
-        MatchStartsWith = Qt::MatchStartsWith,  // 2
-        MatchEndsWith = Qt::MatchEndsWith, // 3
-        MatchFixedString = Qt::MatchFixedString, // 8
-        MatchCaseSensitive = Qt::MatchCaseSensitive, // 16
-        MatchPhoneNumber = 1024,
-        MatchKeypadCollation = 2048
+        MatchExactly = 0x0000,        // 0
+        MatchContains = 0x0001,       // 1
+        MatchStartsWith = 0x0002,     // 2
+        MatchEndsWith = 0x0004,       // 4
+        MatchFixedString = 0x0008,      // 8
+        MatchCaseSensitive = 0x0010,    // 16
+        MatchPhoneNumber = 0x400,    //1024
+        MatchKeypadCollation = 0x800 //2048
     };
     Q_DECLARE_FLAGS(MatchFlags, MatchFlag)
 

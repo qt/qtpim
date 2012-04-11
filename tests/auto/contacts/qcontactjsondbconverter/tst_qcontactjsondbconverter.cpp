@@ -1243,14 +1243,112 @@ void tst_QcontactJsondbConverter::queryFromRequestTest()
     request.setFilter(detailFilter);
     QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
     QCOMPARE(jsonDbQuery,
-             QString("[?_type=\"%1\"][?name.firstName =~ \"/John*/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John*/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
     jsonDbQuery.clear();
     // Ends with flag
     detailFilter.setMatchFlags(QContactFilter::MatchEndsWith);
     request.setFilter(detailFilter);
     QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
     QCOMPARE(jsonDbQuery,
-             QString("[?_type=\"%1\"][?name.firstName =~ \"/*John/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+             QString("[?_type=\"%1\"][?name.firstName=~\"/*John/wi\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // CaseSensitive flag
+    detailFilter.setMatchFlags(QContactFilter::MatchCaseSensitive);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John/w\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // FixedString flag
+    detailFilter.setMatchFlags(QContactFilter::MatchFixedString);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John/wi/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "MatchFixedString and CaseSensitive"
+    QContactFilter::MatchFlags flags;
+    flags = QContactFilter::MatchFixedString;
+    flags = flags | QContactFilter::MatchCaseSensitive;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John/w/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "MatchFixedString and MatchStartsWith"
+    flags = QContactFilter::MatchFixedString;
+    flags = flags | QContactFilter::MatchStartsWith;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John*/wi/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "MatchFixedString and MatchEndsWith"
+    flags = QContactFilter::MatchFixedString;
+    flags = flags | QContactFilter::MatchEndsWith;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/*John/wi/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "MatchFixedString and MatchContains"
+    flags = QContactFilter::MatchFixedString;
+    flags = flags | QContactFilter::MatchContains;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/*John*/wi/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "MatchFixedString, MatchStartsWith and MatchCaseSensitive"
+    flags = QContactFilter::MatchFixedString;
+    flags = flags | QContactFilter::MatchStartsWith;
+    flags = flags | QContactFilter::MatchCaseSensitive;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John*/w/\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "Starts with and CaseSensitive"
+    flags = QContactFilter::MatchStartsWith;
+    flags = flags | QContactFilter::MatchCaseSensitive;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/John*/w\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "Ends with and CaseSensitive"
+    flags = QContactFilter::MatchEndsWith;
+    flags = flags | QContactFilter::MatchCaseSensitive;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/*John/w\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
+    jsonDbQuery.clear();
+
+    // Multiple flags "Contains and CaseSensitive"
+    flags = QContactFilter::MatchContains;
+    flags = flags | QContactFilter::MatchCaseSensitive;
+    detailFilter.setMatchFlags(flags);
+    request.setFilter(detailFilter);
+    QVERIFY(converter.queryFromRequest(&request,jsonDbQuery));
+    QCOMPARE(jsonDbQuery,
+             QString("[?_type=\"%1\"][?name.firstName=~\"/*John*/w\"]").arg(QContactJsonDbStr::contactsJsonDbType()));
     jsonDbQuery.clear();
 
     // Detail range filtering

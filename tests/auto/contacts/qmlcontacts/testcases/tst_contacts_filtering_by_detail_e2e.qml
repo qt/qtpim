@@ -74,6 +74,16 @@ ContactsSavingTestCase {
         }
     }
 
+    Contact {
+        id: contact3;
+        Name {
+            firstName: "John Joe"
+        }
+        PhoneNumber {
+            number: "3333333333"
+        }
+    }
+
     function initTestCase() {
         initTestForModel(model);
         waitForContactsChanged();
@@ -85,7 +95,9 @@ ContactsSavingTestCase {
         waitForContactsChanged();
         model.saveContact(contact2);
         waitForContactsChanged();
-        compare(model.contacts.length, 2);
+        model.saveContact(contact3);
+        waitForContactsChanged();
+        compare(model.contacts.length, 3);
     }
 
     function createDetailFilter(detail, field, value, matchFlags) {
@@ -143,7 +155,7 @@ ContactsSavingTestCase {
                 {
                     tag: "Phone number, match contains, empty string",
                     filter: createPhoneNumberFilter("", Filter.MatchContains),
-                    matches: [contact1, contact2]
+                    matches: [contact1, contact2, contact3]
                 },
                 {
                     tag: "Phone number, match starts with, identical value",
@@ -163,7 +175,7 @@ ContactsSavingTestCase {
                 {
                     tag: "Phone number, match starts with, empty string",
                     filter: createPhoneNumberFilter("", Filter.MatchStartsWith),
-                    matches: [contact1, contact2]
+                    matches: [contact1, contact2, contact3]
                 },
                 {
                     tag: "Phone number, match ends with, identical value",
@@ -183,7 +195,7 @@ ContactsSavingTestCase {
                 {
                     tag: "Phone number, match ends with, empty string",
                     filter: createPhoneNumberFilter("", Filter.MatchEndsWith),
-                    matches: [contact1, contact2]
+                    matches: [contact1, contact2, contact3]
                 },
                 {
                     tag: "First name, match exactly, identical value",
@@ -194,6 +206,81 @@ ContactsSavingTestCase {
                     tag: "First name, match exactly, no match",
                     filter: createFirstNameFilter("C", Filter.MatchExactly),
                     matches: []
+                },
+                {
+                    tag: "First name, match contains , matching substring",
+                    filter: createFirstNameFilter("Joe", Filter.MatchContains),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match contains , caseInsensitive by default so matches",
+                    filter: createFirstNameFilter("joe", Filter.MatchContains),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match exactly ,always case sensitive so no matches here",
+                    filter: createFirstNameFilter("john joe", Filter.MatchExactly),
+                    matches: []
+                },
+                {
+                    tag: "First name, match fixed string , identical value",
+                    filter: createFirstNameFilter("John Joe", Filter.MatchFixedString),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match fixed string , no match",
+                    filter: createFirstNameFilter("John", Filter.MatchFixedString),
+                    matches: []
+                },
+                {
+                    tag: "First name, match fixed string, caseInsensitive by default so matches",
+                    filter: createFirstNameFilter("john joe", Filter.MatchFixedString),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match fixed string and case sensitive, no match",
+                    filter: createFirstNameFilter("john joe", Filter.MatchFixedString | Filter.MatchCaseSensitive),
+                    matches: []
+                },
+                {
+                    tag: "First name, match starts with, caseInsensitive by default so matches",
+                    filter: createFirstNameFilter("john", Filter.MatchStartsWith),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match starts with and match caseSensitive, matching substring",
+                    filter: createFirstNameFilter("John", Filter.MatchStartsWith | Filter.MatchCaseSensitive),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match starts with and match caseSensitive, no match",
+                    filter: createFirstNameFilter("john", Filter.MatchStartsWith | Filter.MatchCaseSensitive),
+                    matches: []
+                },
+                {
+                    tag: "First name, match ends with and match caseSensitive, matching substring",
+                    filter: createFirstNameFilter("Joe", Filter.MatchEndsWith | Filter.MatchCaseSensitive),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match ends with and match caseSensitive, no match",
+                    filter: createFirstNameFilter("joe", Filter.MatchEndsWith | Filter.MatchCaseSensitive),
+                    matches: []
+                },
+                {
+                    tag: "First name, match ends with, caseInsensitive by default so matches",
+                    filter: createFirstNameFilter("joe", Filter.MatchEndsWith),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match fixedString and match ends with, matching substring",
+                    filter: createFirstNameFilter("John Joe", Filter.MatchFixedString | Filter.MatchEndsWith),
+                    matches: [contact3]
+                },
+                {
+                    tag: "First name, match fixedString and match startsWith, matching substring",
+                    filter: createFirstNameFilter("John Joe", Filter.MatchFixedString | Filter.MatchStartsWith),
+                    matches: [contact3]
                 },
                 {
                     tag: "Last name, match exactly, no contact has a value for last name",

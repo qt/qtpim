@@ -4,14 +4,12 @@ TARGET = QtVersitOrganizer
 QPRO_PWD = $PWD
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_versitorganizer.pri
 
-QT = core versit versit-private organizer
+QT = core versit-private organizer
 
 DEFINES += QT_BUILD_VERSITORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
-VERSION = $$QT.versitorganizer.VERSION
 
 PUBLIC_HEADERS += \
     qversitorganizerglobal.h \

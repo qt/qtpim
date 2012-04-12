@@ -4,14 +4,12 @@ TARGET = QtVersit
 QPRO_PWD = $PWD
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_versit.pri
 
 QT = core contacts
 
 DEFINES += QT_BUILD_VERSIT_LIB QT_MAKEDLL
 
 load(qt_module_config)
-VERSION = $$QT.versit.VERSION
 
 PUBLIC_HEADERS += \
     qversitglobal.h \

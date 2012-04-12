@@ -4,14 +4,12 @@ TARGET = QtContacts
 QPRO_PWD = $PWD
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_contacts.pri
 
-QT = core core-private
+QT = core-private
 
 DEFINES += QT_BUILD_CONTACTS_LIB QT_MAKEDLL
 
 load(qt_module_config)
-VERSION = $$QT.contacts.VERSION
 
 include(details/details.pri)
 include(engines/engines.pri)

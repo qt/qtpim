@@ -4,14 +4,12 @@ TARGET = QtOrganizer
 QPRO_PWD = $PWD
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_organizer.pri
 
-QT = core core-private
+QT = core-private
 
 DEFINES += QT_BUILD_ORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
-VERSION = $$QT.organizer.VERSION
 
 include(details/details.pri)
 include(items/items.pri)

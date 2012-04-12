@@ -182,6 +182,7 @@ QList<QOrganizerItem> QOrganizerJsonDbEngine::itemsForExport(const QDateTime &st
     request.setFilter(filter);
     request.setSorting(sortOrders);
     request.setFetchHint(fetchHint);
+    request.setStorageLocations(QOrganizerAbstractRequest::UserDataStorage);
     if (startRequest(&request)) {
         if (waitForRequestFinished(&request, 0))
             *error = request.error();

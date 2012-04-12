@@ -91,8 +91,11 @@ void tst_QOrganizerManagerDetails::addManagers()
 void tst_QOrganizerManagerDetails::initTestCase()
 {
     // Start JsonDb daemon if needed
-    if (QOrganizerManager::availableManagers().contains("jsondb"))
-        QVERIFY2(jsondbProcess.start(QFINDTESTDATA("partitions.json")), "Failed to start JsonDb process");
+    if (QOrganizerManager::availableManagers().contains("jsondb")) {
+        QString partitions_json = QFINDTESTDATA("partitions.json");
+        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
+        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
+    }
 
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 }

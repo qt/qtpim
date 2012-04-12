@@ -43,11 +43,12 @@
 #define QORGANIZERITEMPARENT_H
 
 #include <qorganizeritemdetail.h>
-#include <qorganizeritemid.h>
 
 #include <QtCore/qdatetime.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
+
+class QOrganizerItemId;
 
 class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {

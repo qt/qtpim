@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMID_H
 #define QORGANIZERITEMID_H
 
-#include <qorganizeritemengineid.h>
+#include <qorganizerglobal.h>
 
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
@@ -59,6 +59,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 // MSVC needs the function declared before the friend declaration
 class QOrganizerItemId;
+class QOrganizerItemEngineId;
 Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key);
 
 #ifndef QT_NO_DATASTREAM

@@ -60,6 +60,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemObserver;
 class QOrganizerManagerEngineFactory;
+class QOrganizerItemEngineId;
 
 class QOrganizerManagerData
 {

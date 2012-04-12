@@ -41,6 +41,8 @@
 
 #include <qorganizercollectionfetchrequest.h>
 #include <private/qorganizeritemrequests_p.h>
+#include <qorganizercollectionengineid.h>
+#include <qorganizeritemengineid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

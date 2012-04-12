@@ -42,6 +42,7 @@
 #include <qorganizertodooccurrence.h>
 #include <qorganizertodotime.h>
 #include <qorganizeritemparent.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

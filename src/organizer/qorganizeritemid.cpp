@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include <qorganizeritemid.h>
+#include <qorganizeritemengineid.h>
 #include <private/qorganizermanager_p.h>
 
 #ifndef QT_NO_DATASTREAM

@@ -43,6 +43,7 @@
 #include <qorganizereventtime.h>
 #include <qorganizeritemlocation.h>
 #include <qorganizeritemparent.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

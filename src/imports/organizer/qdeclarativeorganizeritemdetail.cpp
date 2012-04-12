@@ -42,6 +42,7 @@
 #include "qdeclarativeorganizeritemdetail_p.h"
 #include <QtQml/qqmlinfo.h>
 #include <qorganizeritemdetails.h>
+#include <qorganizeritemid.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 

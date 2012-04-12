@@ -41,6 +41,7 @@
 
 #include <qorganizeritemdetails.h>
 #include <qorganizeritemdetailfilter.h>
+#include <qorganizeritemid.h>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by

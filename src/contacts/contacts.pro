@@ -1,13 +1,7 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtContacts
-QPRO_PWD = $PWD
-
-CONFIG += module
-
 QT = core-private
-
-DEFINES += QT_BUILD_CONTACTS_LIB QT_MAKEDLL
 
 load(qt_module_config)
 
@@ -81,4 +75,4 @@ contains(QT_CONFIG, jsondb) {
 
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 
-HEADERS += qtcontactsversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

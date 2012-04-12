@@ -1,13 +1,7 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtOrganizer
-QPRO_PWD = $PWD
-
-CONFIG += module
-
 QT = core-private
-
-DEFINES += QT_BUILD_ORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
 
@@ -82,4 +76,4 @@ simulator {
 
 !isEmpty(ORGANIZER_DEFAULT_ENGINE): DEFINES += Q_ORGANIZER_DEFAULT_ENGINE=$$ORGANIZER_DEFAULT_ENGINE
 
-HEADERS += qtorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

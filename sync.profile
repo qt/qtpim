@@ -6,18 +6,6 @@
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
-%classnames = (
-    "qtcontactsversion.h" => "QtContactsVersion",
-    "qtorganizerversion.h" => "QtOrganizerVersion",
-    "qtversitversion.h" => "QtVersitVersion",
-    "qtversitorganizerversion.h" => "QtVersitOrganizerVersion",
-);
-%mastercontent = (
-    "contacts" => "#include <QtContacts/QtContacts>\n",
-    "organizer" => "#include <QtOrganizer/QtOrganizer>\n",
-    "versit" => "#include <QtVersit/QtVersit>\n",
-    "versitorganizer" => "#include <QtVersitOrganizer/QtVersitOrganizer>\n",
-);
 # Module dependencies.
 # Every module that is required to build this module should have one entry.
 # Each of the module version specifiers can take one of the following values:

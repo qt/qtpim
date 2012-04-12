@@ -1,13 +1,7 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtVersit
-QPRO_PWD = $PWD
-
-CONFIG += module
-
 QT = core contacts
-
-DEFINES += QT_BUILD_VERSIT_LIB QT_MAKEDLL
 
 load(qt_module_config)
 
@@ -60,4 +54,4 @@ SOURCES += \
     qversitcontactpluginloader_p.cpp \
     qversitutils.cpp
 
-HEADERS += qtversitversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

@@ -1,13 +1,7 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtVersitOrganizer
-QPRO_PWD = $PWD
-
-CONFIG += module
-
 QT = core versit-private organizer
-
-DEFINES += QT_BUILD_VERSITORGANIZER_LIB QT_MAKEDLL
 
 load(qt_module_config)
 
@@ -35,4 +29,4 @@ SOURCES += \
     qversitorganizerpluginloader_p.cpp \
     qtimezones_p.cpp
 
-HEADERS += qtversitorganizerversion.h $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

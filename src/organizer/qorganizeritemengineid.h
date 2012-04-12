@@ -43,6 +43,7 @@
 #define QORGANIZERITEMENGINEID_H
 
 #include <qorganizerglobal.h>
+#include <qorganizerabstractrequest.h>
 
 #include <QtCore/qshareddata.h>
 
@@ -57,6 +58,8 @@ public:
     virtual bool isLessThan(const QOrganizerItemEngineId *other) const = 0;
 
     virtual QString managerUri() const = 0;
+    virtual QOrganizerAbstractRequest::StorageLocation storageLocation() const;
+
     virtual QOrganizerItemEngineId *clone() const = 0;
 
     virtual QString toString() const = 0;

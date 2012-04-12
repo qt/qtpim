@@ -890,14 +890,11 @@ bool QOrganizerJsonDbRequestThread::fixCollectionReferences(QOrganizerItem *item
     // Then item's location must be the same as with collection's location
     storageLocation = storageLocation == 0 ? QOrganizerAbstractRequest::UserDataStorage : storageLocation;
     QOrganizerAbstractRequest::StorageLocation collectionStorageLocation =
-            QOrganizerJsonDbCollectionId(item->collectionId().toString()).storageLocation();
-    if (itemIsNew && storageLocation != collectionStorageLocation) {
+            QOrganizerManagerEngine::engineCollectionId(item->collectionId())->storageLocation();
+    if (itemIsNew && storageLocation != collectionStorageLocation)
         return false;
-    } else if (!itemIsNew) {
-        QOrganizerJsonDbItemId jsondbItemId(item->id().toString());
-        if (jsondbItemId.storageLocation() != collectionStorageLocation)
-            return false;
-    }
+    else if (!itemIsNew && QOrganizerManagerEngine::engineItemId(item->id())->storageLocation() != collectionStorageLocation)
+        return false;
 
     return true;
 }
@@ -1197,10 +1194,14 @@ QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resol
     // figure out wich storage locations are needed based on items
     QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded(0);
     foreach (QOrganizerItemId id, itemIds) {
-        QOrganizerJsonDbItemId jsonDbItemId(id.toString());
-        if (jsonDbItemId.storageLocation() & QOrganizerAbstractRequest::UserDataStorage)
+        const QOrganizerItemEngineId *engineId = QOrganizerManagerEngine::engineItemId(id);
+        if (!engineId)
+            continue;
+
+        const QOrganizerAbstractRequest::StorageLocations locations = engineId->storageLocation();
+        if (locations & QOrganizerAbstractRequest::UserDataStorage)
             storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
-        else if (jsonDbItemId.storageLocation() & QOrganizerAbstractRequest::SystemStorage)
+        else if (locations & QOrganizerAbstractRequest::SystemStorage)
             storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
         if (storageLocationsNeeded == (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage))
             break;
@@ -1213,10 +1214,14 @@ QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resol
     // figure out wich storage locations are needed based on collections
     QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded(0);
     foreach (QOrganizerCollectionId id, collectionIds) {
-        QOrganizerJsonDbCollectionId jsonDbCollectionId(id.toString());
-        if (jsonDbCollectionId.storageLocation() & QOrganizerAbstractRequest::UserDataStorage)
+        const QOrganizerCollectionEngineId *engineId = QOrganizerManagerEngine::engineCollectionId(id);
+        if (!engineId)
+            continue;
+
+        const QOrganizerAbstractRequest::StorageLocations locations = engineId->storageLocation();
+        if (locations & QOrganizerAbstractRequest::UserDataStorage)
             storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
-        else if (jsonDbCollectionId.storageLocation() & QOrganizerAbstractRequest::SystemStorage)
+        else if (locations & QOrganizerAbstractRequest::SystemStorage)
             storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
         if (storageLocationsNeeded == (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage))
             break;

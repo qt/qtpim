@@ -92,6 +92,16 @@ QOrganizerCollectionEngineId::~QOrganizerCollectionEngineId()
  */
 
 /*!
+  \fn QOrganizerAbstractRequest::StorageLocation QOrganizerCollectionEngineId::storageLocation() const
+
+  Returns the storage location where the collection is from. Default value is UserDataStorage.
+ */
+QOrganizerAbstractRequest::StorageLocation QOrganizerCollectionEngineId::storageLocation() const
+{
+    return QOrganizerAbstractRequest::UserDataStorage;
+}
+
+/*!
     \fn QOrganizerCollectionEngineId::toString() const
 
     Serializes the id to a string. It contains all of the information required to identify a particular

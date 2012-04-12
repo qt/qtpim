@@ -470,7 +470,7 @@ void QOrganizerJsonDbDataStorage::handleSaveItemsRequest()
             } else {
                 requestType = JsonDbUpdateRequest;
                 // item has already been saved before, use location from id
-                storageLocation = QOrganizerJsonDbItemId(itemId.toString()).storageLocation();
+                storageLocation = QOrganizerManagerEngine::engineItemId(itemId)->storageLocation();
             }
             if (makeJsonDbRequest(requestType, i.key(), storageLocation, QString(), QList<QJsonObject>() << jsonDbItem))
                 requestSent = true;
@@ -726,7 +726,7 @@ void QOrganizerJsonDbDataStorage::handleSaveCollectionsRequest()
         } else {
             convertToDefaultCollection = (collection.id() == m_defaultCollection.id());
             // collection has already been saved before, so we get storage location from id
-            storageLocation = QOrganizerJsonDbCollectionId(collection.id().toString()).storageLocation();
+            storageLocation = QOrganizerManagerEngine::engineCollectionId(collection.id())->storageLocation();
         }
 
         QJsonObject jsonDbCollection;
@@ -891,9 +891,8 @@ void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
             requestType = JsonDbUpdateRequest;
         }
 
-        const QOrganizerJsonDbItemId jsonDbItemId(item.id().toString());
-        requestSent = makeJsonDbRequest(requestType, 0, jsonDbItemId.storageLocation(), QString(), QList<QJsonObject>() << jsonDbAlarm);
-
+        requestSent = makeJsonDbRequest(requestType, 0, QOrganizerManagerEngine::engineItemId(item.id())->storageLocation(),
+                                        QString(), QList<QJsonObject>() << jsonDbAlarm);
     } else {
         *m_error = QOrganizerManager::InvalidDetailError;
     }

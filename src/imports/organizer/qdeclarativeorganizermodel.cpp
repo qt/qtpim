@@ -368,7 +368,8 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   Depending on the platform, the access rights for different storage locations might vary.
 
   \sa OrganizerModel::storageLocations
-  \sa OrganizerModel::saveCollection(QDeclarativeOrganizerCollection *collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+  \sa OrganizerModel::saveCollection()
+  \sa OrganizerModel::saveItem()
 */
 
 /*!
@@ -389,7 +390,6 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   is having some specific requirements and they're not met, backend returns StorageLocationsNotExistingError.
 
   \sa OrganizerModel::StorageLocation
-  \sa OrganizerModel::saveCollection(QDeclarativeOrganizerCollection *collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
 */
 int QDeclarativeOrganizerModel::storageLocations() const
 {
@@ -1086,10 +1086,12 @@ void QDeclarativeOrganizerModel::requestUpdated()
 }
 
 /*!
-  \qmlmethod OrganizerModel::saveItem(OrganizerItem item)
+  \qmlmethod OrganizerModel::saveItem(OrganizerItem item, StorageLocation storageLocation = UserDataStorage)
+
   Saves asynchronously the given \a item into the organizer backend. The location for storing item
-  can be defined with \a storageLocation for new items. When item is updated, ie saved again,
-  \a storageLocation is ignored and item is saved to the same location as it were before.
+  can be defined with optional \a storageLocation for new items. If optional \a storageLocation is not given, item
+  will be stored to UserDataStorage. When item is updated, ie saved again, \a storageLocation is ignored and
+  item is saved to the same location where it was originally saved.
 
   */
 void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di, QDeclarativeOrganizerModel::StorageLocation storageLocation)
@@ -1493,14 +1495,13 @@ void QDeclarativeOrganizerModel::collectionsFetched()
 }
 
 /*!
-  \qmlmethod OrganizerModel::saveCollection(QDeclarativeOrganizerCollection* collection, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+  \qmlmethod OrganizerModel::saveCollection(Collection collection, StorageLocation storageLocation = UserDataStorage)
 
   Saves asynchronously the given \a collection into the organizer backend. The location for storing collection
-  can be defined with \a storageLocation for new collections. When collection is updated, ie saved again,
-  \a storageLocation is ignored and collection is saved to the same location as it were before.
+  can be defined with optional \a storageLocation for new collections. If optional \a storageLocation is not given,
+  collection will be stored to UserDataStorage. When collection is updated, ie saved again, \a storageLocation is
+  ignored and collection is saved to the same location where it was originally saved.
 
-  \sa Collection
-  \sa OrganizerModel::storageLocations
   */
 void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl, QDeclarativeOrganizerModel::StorageLocation storageLocation)
 {

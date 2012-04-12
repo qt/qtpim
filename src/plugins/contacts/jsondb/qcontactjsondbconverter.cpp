@@ -84,8 +84,7 @@ QContactJsonDbConverter::~QContactJsonDbConverter()
 {
 }
 
-bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine, const QString &partitionName) {
-    Q_UNUSED(engine)
+bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* contact, const QString &partitionName) {
     QList<QContactDetail*> detailList;
     QJsonObject temporaryJsonObject;
     QString stringValue;
@@ -999,7 +998,7 @@ void QContactJsonDbConverter::initializeMappings()
     // - QContactOnlineAccount
 }
 
-bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error, const QString &partitionName)
+bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects, QList<QContact>& convertedContacts, QContactManager::Error& error, const QString &partitionName)
 {//TODO: ERROR HANDLING
     if (jsonObjects.isEmpty()) {
         error = QContactManager::DoesNotExistError;
@@ -1007,7 +1006,7 @@ bool QContactJsonDbConverter::toQContacts(const QList<QJsonObject>& jsonObjects,
     }
     for (int i = 0; i < jsonObjects.size(); i++) {
         QContact contact;
-        if (this->toQContact(jsonObjects.at(i), &contact, engine, partitionName)) {
+        if (this->toQContact(jsonObjects.at(i), &contact, partitionName)) {
             convertedContacts.append(contact);
         }
     }

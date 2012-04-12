@@ -60,8 +60,8 @@ public:
     QContactJsonDbConverter();
     ~QContactJsonDbConverter();
     QContactManager::Error jsonDbRequestErrorToContactError(QJsonDbRequest::ErrorCode error) const;
-    bool toQContact(const QJsonObject& object, QContact* contact, const QContactJsonDbEngine& engine, const QString &partitionName);
-    bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, const QContactJsonDbEngine& engine, QContactManager::Error& error, const QString &partitionName);
+    bool toQContact(const QJsonObject& object, QContact* contact, const QString &partitionName);
+    bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, QContactManager::Error& error, const QString &partitionName);
     bool toJsonContact(QJsonObject* object, const QContact& contact);
     bool updateContexts(const QJsonObject& object, QContactDetail* detail);
     bool updateContexts(const QContactDetail& detail, QJsonObject* object);

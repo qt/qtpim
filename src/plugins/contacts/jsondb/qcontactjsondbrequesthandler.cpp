@@ -719,7 +719,7 @@ void QContactJsonDbRequestHandler::handleContactFetchResponse(QContactFetchReque
         QJsonObject object = jsonDbObjectList.at(i);
         QContact contact;
         if (!object.isEmpty()) {
-            m_converter->toQContact(object, &contact, *m_engine, partitionName);
+            m_converter->toQContact(object, &contact, partitionName);
             contacts.append(contact);
         }
     }

@@ -111,7 +111,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
 
     // test name (set in initialization)
     initializeJsonContact(jsonContact);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactName::Type);
     QVERIFY(!detail.isEmpty());
     QContactName* name = static_cast<QContactName*>(&detail);
@@ -127,7 +127,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     initializeJsonContact(jsonContact);
     jsonData.insert("gender", QString("male"));
     jsonContact.insert("gender", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactGender::Type);
     QVERIFY(!detail.isEmpty());
     QContactGender* gender = static_cast<QContactGender*>(&detail);
@@ -152,7 +152,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray organizationData;
     organizationData.append(jsonData);
     jsonContact.insert("organization", organizationData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactOrganization::Type);
     QVERIFY(!detail.isEmpty());
     QContactOrganization* org = static_cast<QContactOrganization*>(&detail);
@@ -176,7 +176,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QDateTime birthDayDate = QDateTime::fromString("1979-11-22", Qt::ISODate).toUTC();
     jsonData.insert("birthday", convertToISODate("1979-11-22"));
     jsonContact.insert("details", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactBirthday::Type);
     QVERIFY(!detail.isEmpty());
     QContactBirthday* bd = static_cast<QContactBirthday*>(&detail);
@@ -189,7 +189,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     initializeJsonContact(jsonContact);
     jsonData.insert("photoUrl", QString("http://www.acme.com/logo.jpg"));
     jsonContact.insert("details", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactAvatar::Type);
     QVERIFY(!detail.isEmpty());
     QContactAvatar* avatar = static_cast<QContactAvatar*>(&detail);
@@ -203,7 +203,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     initializeJsonContact(jsonContact);
     jsonData.insert("ringtoneUrl", QString("http://www.acme.com/ring.mp3"));
     jsonContact.insert("details", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactRingtone::Type);
     QVERIFY(!detail.isEmpty());
     QContactRingtone* ring = static_cast<QContactRingtone*>(&detail);
@@ -217,7 +217,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     initializeJsonContact(jsonContact);
     jsonData.insert("nickname", QString("Chupacabra"));
     jsonContact.insert("details", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactNickname::Type);
     QVERIFY(!detail.isEmpty());
     QContactNickname* nick = static_cast<QContactNickname*>(&detail);
@@ -232,7 +232,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     initializeJsonContact(jsonContact);
     jsonData.insert("note", QString("test note"));
     jsonContact.insert("details", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactNote::Type);
     QVERIFY(!detail.isEmpty());
     QContactNote* note = static_cast<QContactNote*>(&detail);
@@ -249,7 +249,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray emails;
     emails.append(jsonData);
     jsonContact.insert("emails", emails);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactEmailAddress::Type);
     QVERIFY(!detail.isEmpty());
     QContactEmailAddress* email = static_cast<QContactEmailAddress*>(&detail);
@@ -268,7 +268,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray phones;
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(!detail.isEmpty());
     QContactPhoneNumber* phone = static_cast<QContactPhoneNumber*>(&detail);
@@ -287,7 +287,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("subType", QString("cell"));
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(!detail.isEmpty());
     phone = static_cast<QContactPhoneNumber*>(&detail);
@@ -306,7 +306,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("subType", QString("cell"));
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(detail.isEmpty());
     phone = static_cast<QContactPhoneNumber*>(&detail);
@@ -322,7 +322,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("value", tooLongNumber);
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(detail.isEmpty());
     phone = static_cast<QContactPhoneNumber*>(&detail);
@@ -336,7 +336,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("value", emptyNumber);
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactPhoneNumber::Type);
     QVERIFY(detail.isEmpty());
     phone = static_cast<QContactPhoneNumber*>(&detail);
@@ -356,7 +356,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray addresses;
     addresses.append(jsonData);
     jsonContact.insert("addresses", addresses);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactAddress::Type);
     QVERIFY(!detail.isEmpty());
     QContactAddress* addr = static_cast<QContactAddress*>(&detail);
@@ -378,7 +378,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray urls;
     urls.append(jsonData);
     jsonContact.insert("urls", urls);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactUrl::Type);
     QVERIFY(!detail.isEmpty());
     QContactUrl* url = static_cast<QContactUrl*>(&detail);
@@ -396,7 +396,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QByteArray expectedExtendedVersion(versionString.toLatin1());
 
     jsonContact.insert("_version", jsonVersion);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactVersion::Type);
     QVERIFY(!detail.isEmpty());
     QContactVersion* version = static_cast<QContactVersion*>(&detail);
@@ -410,7 +410,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // extended detail with simple string data
     initializeJsonContact(jsonContact);
     jsonContact.insert("simpleStringDetail", QString("Simple string as detail data."));
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     QList<QContactExtendedDetail> extendedDetails = contact.details<QContactExtendedDetail>();
     QCOMPARE(extendedDetails[0].name(), QString("simpleStringDetail"));
     QCOMPARE(extendedDetails[0].data().toString(), QString("Simple string as detail data."));
@@ -425,7 +425,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("Item3", QString("Content for list item 3."));
     jsonData.insert("Item4", QString("Content for list item 4."));
     jsonContact.insert("jsonObjectDetail", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactExtendedDetail::Type);
     QContactExtendedDetail* extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
     QCOMPARE(extendedDetail->name(), QString("jsonObjectDetail"));
@@ -444,7 +444,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     extendedDetailsStringList<<"QStringInListFirst"<<"QStringInListSecond";
     QJsonArray array = QJsonArray::fromStringList(extendedDetailsStringList);
     jsonContact.insert("jsonArrayDetail", array);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactExtendedDetail::Type);
     extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
     QCOMPARE(extendedDetail->name(), QString("jsonArrayDetail"));
@@ -471,7 +471,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("QStringItem", QString("Content for QStringItem."));
     jsonData.insert("arrayInMap", QJsonObject::fromVariantMap(variantMap));
     jsonContact.insert("complexObjectDetail", jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, engine, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactExtendedDetail::Type);
     extendedDetail = static_cast<QContactExtendedDetail*>(&detail);
     QCOMPARE(extendedDetail->name(), QString("complexObjectDetail"));
@@ -522,7 +522,7 @@ void tst_QcontactJsondbConverter::toQContactsTest()
     QContactDetail detail;
     QString number;
     // convert
-    QVERIFY(converter.toQContacts(contacts, qcontacts, engine, error, m_partitionName));
+    QVERIFY(converter.toQContacts(contacts, qcontacts, error, m_partitionName));
     QCOMPARE(error, QContactManager::NoError);
     QCOMPARE(qcontacts.size(), contacts.size());
     int i = 1;

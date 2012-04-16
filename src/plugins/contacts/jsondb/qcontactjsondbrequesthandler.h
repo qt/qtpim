@@ -123,6 +123,10 @@ private:
 
     void startTimer();
 
+private:
+    Q_DISABLE_COPY(QContactJsonDbRequestHandler)
+
+private:
     QContactJsonDbEngine* m_engine;
     QJsonDbConnection *m_jsonDbConnection;
     QContactJsonDbRequestManager* m_requestMgr;
@@ -149,6 +153,9 @@ public:
 private slots:
     void onJsonDbWatcherNotificationsAvailable();
     void onJsonDbWatcherError(QtJsonDb::QJsonDbWatcher::ErrorCode error, QString message);
+
+private:
+    Q_DISABLE_COPY(QContactJsonDbPartitionWatcher)
 
 private:
     QContactJsonDbRequestHandler *m_requestHandler;

@@ -64,9 +64,13 @@ class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QContactManagerEngineFa
   Q_OBJECT
   Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "jsondb.json")
   public:
+    QContactJsonDbEngineFactory();
     QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error*);
     QString managerName() const;
     QContactEngineId *createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
+
+  private:
+    Q_DISABLE_COPY(QContactJsonDbEngineFactory)
 };
 
 QTCONTACTS_END_NAMESPACE

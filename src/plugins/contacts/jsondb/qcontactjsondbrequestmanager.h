@@ -121,6 +121,9 @@ signals:
 public slots:
 
 private:
+    Q_DISABLE_COPY(QContactJsonDbRequestManager)
+
+private:
     QMap<QContactAbstractRequest*, QContactRequestData* > m_activeRequests;
     QMap<QContactAbstractRequest*, QWaitCondition* > m_inactiveRequests;
     QMap<QContactFetchRequest*, QContactSaveRequest*> m_prefetchRequestsMap;

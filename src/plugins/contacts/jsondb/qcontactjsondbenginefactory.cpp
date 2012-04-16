@@ -44,6 +44,11 @@
 
 QTCONTACTS_BEGIN_NAMESPACE
 
+QContactJsonDbEngineFactory::QContactJsonDbEngineFactory()
+{
+}
+
+
 QContactManagerEngine* QContactJsonDbEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
     Q_UNUSED(error);

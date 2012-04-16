@@ -58,12 +58,7 @@
 #include <qcontactabstractrequest.h>
 
 #include <QtCore/qdebug.h>
-
-QT_BEGIN_NAMESPACE
-
-class QUuid;
-
-QT_END_NAMESPACE
+#include <QtCore/quuid.h>
 
 QTCONTACTS_BEGIN_NAMESPACE
 

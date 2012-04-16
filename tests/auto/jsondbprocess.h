@@ -78,11 +78,30 @@ public:
             return false;
         }
 
-        m_process.start(jsondbPath, QStringList() << partitionsFileInfo.absolutePath());
+        QStringList args;
+        if (!partitionsFilePath.isEmpty())
+            args << "-config-path" << partitionsFileInfo.absolutePath();
+        m_process.start(jsondbPath, args);
+
         if (!m_process.waitForStarted()) {
             qWarning() << Q_FUNC_INFO << m_process.errorString();
             return false;
+        } else {
+            // Wait is needed so we get to know if the process was immediately exited
+            QTest::qWait(100);
+
+            // The process was immediately exited
+            if (m_process.state() == QProcess::NotRunning) {
+                // Maybe older JsonDb version is in use and -config-path argument is invalid?
+                // TODO: remove this and the above wait later when it's safe
+                m_process.start(jsondbPath, QStringList() << partitionsFileInfo.absolutePath());
+                if (!m_process.waitForStarted()) {
+                    qWarning() << Q_FUNC_INFO << m_process.errorString();
+                    return false;
+                }
+            }
         }
+
         return true;
     }
 

@@ -50,6 +50,8 @@ QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemId;
 
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerItemParent : public QOrganizerItemDetail
 {
 public:

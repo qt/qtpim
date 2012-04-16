@@ -46,6 +46,8 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerNote : public QOrganizerItem
 {
 public:

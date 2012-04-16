@@ -48,6 +48,9 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerCollectionFetchRequestPrivate;
+
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerCollectionFetchRequest : public QOrganizerAbstractRequest
 {
     Q_OBJECT

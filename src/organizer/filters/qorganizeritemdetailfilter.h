@@ -48,6 +48,9 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemDetailFilterPrivate;
+
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerItemDetailFilter : public QOrganizerItemFilter
 {
 public:

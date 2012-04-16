@@ -52,6 +52,9 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemRemoveByIdRequestPrivate;
+
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerItemRemoveByIdRequest : public QOrganizerAbstractRequest
 {
     Q_OBJECT

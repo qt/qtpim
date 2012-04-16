@@ -77,7 +77,7 @@ QContactIdFetchRequest::~QContactIdFetchRequest()
 
 /*!
   Sets the storage location from where the contact ids will be retrieved.
-  Storage locations is a flag so it is possible to define multiple locations in it.
+  \a storageLocations is a flag so it is possible to define multiple locations in it.
   \sa QContactAbstractRequest::StorageLocation
   \sa QContactAbstractRequest::StorageLocations
  */

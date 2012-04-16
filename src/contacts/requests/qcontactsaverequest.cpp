@@ -76,14 +76,14 @@ QContactSaveRequest::~QContactSaveRequest()
 }
 
 /*!
-  Sets the storage location where the new contacts will be saved to.
+  Sets the \a storageLocation where the new contacts will be saved to.
 
   This is ignored for contacts which have already been saved. Instead,
   those contacts are saved back to the storage location where they were
   originally stored.
 
   \sa QContactAbstractRequest::StorageLocation
-  \sa QContactSaveRequest::storageLocation
+  \sa storageLocation()
 
  */
 void QContactSaveRequest::setStorageLocation(QContactAbstractRequest::StorageLocation storageLocation)
@@ -101,7 +101,7 @@ void QContactSaveRequest::setStorageLocation(QContactAbstractRequest::StorageLoc
   originally stored.
 
   \sa QContactAbstractRequest::StorageLocation
-  \sa QContactSaveRequest::setStorageLocation
+  \sa setStorageLocation()
  */
 QContactAbstractRequest::StorageLocation QContactSaveRequest::storageLocation() const
 {

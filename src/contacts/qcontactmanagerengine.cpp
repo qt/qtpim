@@ -317,7 +317,7 @@ QContactId QContactManagerEngine::selfContactId(QContactManager::Error* error) c
   Returns a list of relationships of the given \a relationshipType in which the contact identified by the given \a participant participates in the given \a role.
   If \a participant is empty, \a role is ignored and all relationships of the given \a relationshipType are returned.
   If \a relationshipType is empty, relationships of any type are returned.
-  If no relationships of the given \a relationshipType in which the contact identified by the given \a participantId is involved in the given \a role exists,
+  If no relationships of the given \a relationshipType in which the contact identified by the given \a participant is involved in the given \a role exists,
   \a error is set to QContactManager::DoesNotExistError.
  */
 QList<QContactRelationship> QContactManagerEngine::relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const
@@ -1430,7 +1430,7 @@ void QContactManagerEngine::setContactRelationships(QContact* contact, const QLi
 
 
 /*!
-    Returns the engine ID from the given contact \a id.
+    Returns the engine ID from the given \a contactId.
 
     The caller does not take ownership of the pointer, and should not delete returned id or undefined
     behavior may occur.

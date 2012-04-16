@@ -78,7 +78,7 @@ QContactFetchRequest::~QContactFetchRequest()
 /*!
   Sets the storage location from where the contacts will be retrieved.
 
-  StorageLocations is a flag so it is possible to define multiple locations in it.
+  \a storageLocations is a flag so it is possible to define multiple locations in it.
   However, some backend implementations may accept only one flag to be set. In case multiple
   flags are set fetching is done from the default storage location.
   \sa QContactAbstractRequest::StorageLocation

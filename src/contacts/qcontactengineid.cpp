@@ -90,7 +90,7 @@ QTCONTACTS_BEGIN_NAMESPACE
  */
 
 /*!
-  \fn QContactAbstractRequest::StorageLocation storageLocation() const
+  \fn QContactAbstractRequest::StorageLocation QContactEngineId::storageLocation() const
 
   Returns the storage location where the contact is from.
  */

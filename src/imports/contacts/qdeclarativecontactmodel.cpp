@@ -756,7 +756,7 @@ void QDeclarativeContactModel::requestUpdated()
 }
 
 /*!
-  \qmlmethod ContactModel::saveContact(Contact contact, StorageLocation storageLocation)
+  \qmlmethod ContactModel::saveContact(Contact contact, StorageLocation storageLocation = UserDataStorage)
 
   Save the given \a contact into the contacts backend.
 

@@ -66,8 +66,6 @@ QTCONTACTS_BEGIN_NAMESPACE
   It consists of a manager URI which identifies the manager which contains the contact,
 
   A QContactId is "null" when it is default-constructed and therefore not associated with a contact in any manager.
-
-  \sa QContactId
 */
 
 /*!
@@ -114,7 +112,7 @@ QContactId& QContactId::operator=(const QContactId &other)
     return *this;
 }
 
-/*! Returns true if the contact id has the same manager URI
+/*! Returns true if the \a other contact id has the same manager URI
     and they have equal engine ids. Returns true also, if both are null contact ids.
 */
 bool QContactId::operator==(const QContactId &other) const

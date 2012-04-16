@@ -133,7 +133,7 @@ Event {
     }
 
     Classification {
-        classification: "Classified"
+        classification: Classification.AccessConfidential
     }
 
     Version {

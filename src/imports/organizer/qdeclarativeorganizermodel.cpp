@@ -173,6 +173,14 @@ public:
     \sa OrganizerItem, {QOrganizerManager}
 */
 
+/*!
+  \qmlsignal OrganizerModel::modelChanged()
+
+  This signal is emitted, when there are changes in items contained by \l OrganizerModel's data model. Items have either
+  been added, removed or modified. This signal is also always emitted during OrganizerModel construction when data model is
+  ready for use, even in cases when data model is not having any items in it.
+ */
+
 QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     QAbstractListModel(parent),
     d_ptr(new QDeclarativeOrganizerModelPrivate)
@@ -405,6 +413,33 @@ void QDeclarativeOrganizerModel::setStorageLocations(int storageLocationsFlag)
         emit storageLocationsChanged();
     }
 }
+
+/*!
+  \qmlproperty enumeration OrganizerModel::ImportError
+
+  Defines the errors cases for \l OrganizerModel::importItems() -function.
+
+  \list
+  \li OrganizerModel::ImportNoError             Completed succesfully, no error.
+  \li OrganizerModel::ImportUnspecifiedError    Unspecified error.
+  \li OrganizerModel::ImportIOError             Input/output error.
+  \li OrganizerModel::ImportOutOfMemoryError    Out of memory error.
+  \li OrganizerModel::ImportNotReadyError       Not ready for importing. Only one import operation can be active at a time.
+  \li OrganizerModel::ImportParseError          Error during parsing.
+  \endlist
+*/
+
+/*!
+  \qmlsignal OrganizerModel::importCompleted()
+
+  This signal is emitted, when \l OrganizerModel::importItems() completes. The success of operation
+  can be seen on \a error which is defined in \l OrganizerModel::ImportError. \a url indicates the
+  file, which was imported.
+
+  If the operation was succesful, items are now imported to backend. If \l OrganizerModel::autoUpdate
+  is enabled, \l OrganizerModel::modelChanged will be emitted when imported items are also visible on
+  \l OrganizerModel's data model.
+ */
 
 /*!
   \qmlmethod OrganizerModel::importItems(url url, list<string> profiles)

@@ -148,6 +148,9 @@ TestCase {
     //Empty calendar data
     function empty_calendar(log) {
 
+        if (organizerChangedSpy != undefined)
+            organizerChangedSpy.clear();
+
         var ids = __model.itemIds();
         if (log != undefined) {
             console.log("items count :" + __model.itemCount);
@@ -156,12 +159,13 @@ TestCase {
 
         if (ids.length > 0) {
             __model.removeItems(ids);
+            if (!__model.autoUpdate)
+                __model.update();
             if (organizerChangedSpy != undefined)
                 organizerChangedSpy.wait();
             else
                 wait(100);
         }
-        __model.update();
 
         if (__model.itemCount >0) {
             if (log != undefined)

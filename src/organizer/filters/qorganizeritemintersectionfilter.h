@@ -48,6 +48,9 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemIntersectionFilterPrivate;
+
+/* Leaf class */
+
 class Q_ORGANIZER_EXPORT QOrganizerItemIntersectionFilter : public QOrganizerItemFilter
 {
 public:

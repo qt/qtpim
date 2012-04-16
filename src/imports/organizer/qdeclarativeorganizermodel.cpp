@@ -898,8 +898,8 @@ QList<bool> QDeclarativeOrganizerModel::containsItems(const QDateTime &start, co
                 startTime = item->itemStartTime();
                 endTime = item->itemEndTime();
                 if ((startTime.isValid() && startTime <= dateTime.at(i) && endTime >= dateTime.at(i + 1))
-                    || (startTime >= dateTime.at(i) && startTime <= dateTime.at(i + 1))
-                    || (endTime >= dateTime.at(i) && endTime <= dateTime.at(i + 1))) {
+                    || (startTime >= dateTime.at(i) && startTime < dateTime.at(i + 1))
+                    || (endTime > dateTime.at(i) && endTime <= dateTime.at(i + 1))) {
                     list[i] = true;
                 }
             }
@@ -1284,7 +1284,6 @@ void QDeclarativeOrganizerModel::onItemsModified(const QList<QPair<QOrganizerIte
     Q_D(QDeclarativeOrganizerModel);
     if (!d->m_autoUpdate)
         return;
-
     QSet<QOrganizerItemId> addedAndChangedItems;
     QList<QString> removedItems;
     for (int i = itemIds.size() - 1; i >= 0; i--) {

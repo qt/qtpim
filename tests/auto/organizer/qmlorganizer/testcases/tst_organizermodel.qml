@@ -430,7 +430,9 @@ TestCase {
             + "  startPeriod: new Date(2011, 12, 8, 14, 0)\n"
             + "  endPeriod: new Date(2011, 12, 8, 16, 0)\n"
             + "}\n", modelTests);
-        wait(500);
+        utility.init(organizerModel)
+        utility.waitModelChange()
+        utility.empty_calendar()
 
         var event1 = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
@@ -466,11 +468,15 @@ TestCase {
             + "}\n", modelTests);
 
         organizerModel.saveItem(event1);
+        utility.waitModelChange()
         organizerModel.saveItem(event2);
+        utility.waitModelChange()
         organizerModel.saveItem(event3);
+        utility.waitModelChange()
         organizerModel.saveItem(event4);
+        utility.waitModelChange()
         organizerModel.saveItem(event5);
-        wait(2000);
+        utility.waitModelChange()
         compare(organizerModel.items.length, 5);
 
         var containsItems = organizerModel.containsItems(new Date(2011, 12, 8, 14, 0), new Date(2011, 12, 8, 16, 0), 600);
@@ -487,6 +493,90 @@ TestCase {
         compare(containsItems[9], false);
         compare(containsItems[10], false);
         compare(containsItems[11], false);
+    }
+
+    function test_organizermodel_containsitems2_data() {
+        return [
+            {tag: "memory backend", managerToBeTested: "memory"},
+            {tag: "jsondb backend", managerToBeTested: "jsondb"}
+        ]
+    }
+
+    function test_organizermodel_containsitems2(data) {
+        var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "OrganizerModel {\n"
+            + "  manager: '" + data.managerToBeTested + "'\n"
+            + "  startPeriod: new Date(2011, 12, 7)\n"
+            + "  endPeriod: new Date(2011, 12, 9)\n"
+            + "}\n", modelTests);
+        utility.init(organizerModel)
+        utility.waitModelChange()
+        utility.empty_calendar()
+
+        var event0 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 1)\n"
+            + "}\n", modelTests);
+
+        var event1 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 3)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 3, 30)\n"
+            + "}\n", modelTests);
+
+        var event2 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 5)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 6)\n"
+            + "}\n", modelTests);
+
+
+        var event3 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 8)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 10)\n"
+            + "}\n", modelTests);
+
+        var event4 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 11, 30)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 12)\n"
+            + "}\n", modelTests);
+
+        compare(organizerModel.items.length, 0);
+        organizerModel.saveItem(event0);
+        utility.waitModelChange()
+        organizerModel.saveItem(event1);
+        utility.waitModelChange()
+        organizerModel.saveItem(event2);
+        utility.waitModelChange()
+        organizerModel.saveItem(event3);
+        utility.waitModelChange()
+        organizerModel.saveItem(event4);
+        utility.waitModelChange()
+        compare(organizerModel.items.length, 5);
+
+        var containsItems = organizerModel.containsItems(new Date(2011, 12, 8), new Date(2011, 12, 8, 12), 3600);
+
+        compare(containsItems.length, 12);
+        compare(containsItems[0], false);
+        compare(containsItems[1], true);
+        compare(containsItems[2], false);
+        compare(containsItems[3], true);
+        compare(containsItems[4], false);
+        compare(containsItems[5], true);
+        compare(containsItems[6], false);
+        compare(containsItems[7], false);
+        compare(containsItems[8], true);
+        compare(containsItems[9], true);
+        compare(containsItems[10], false);
+        compare(containsItems[11], true);
     }
 
     function modelChangedSignalTestItems() {
@@ -557,7 +647,6 @@ TestCase {
             wait(signalWaitTime);
             compare(modelChangedSpy.count, 1)
             compare(model.itemCount, 2)
-
             utility.empty_calendar()
         }
     }

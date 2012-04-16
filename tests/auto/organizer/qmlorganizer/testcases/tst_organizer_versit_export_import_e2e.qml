@@ -127,7 +127,7 @@ TestCase {
     }
 
     function saveTestEvent() {
-        var modelChangedSpy = create_spy(organizerModel, "modelChanged")
+        modelChangedSpy.clear()
         var detailEvent = create_testobject(
                     "import QtQuick 2.0\n" + "import QtOrganizer 5.0 \n" + "   Event {\n"
                     + "  displayLabel:\"Event 1\"\n" + "  description:\"Event 1 description\"\n"
@@ -228,6 +228,7 @@ TestCase {
         exportModelChangedSpy.wait()
 
         // Import Events form ical file just created.
+        modelChangedSpy.clear()
         var importModelChangedSpy = create_spy(organizerModel,
                                                "importCompleted")
         organizerModel.importItems(icalFilePath1, ["Sync"])
@@ -243,7 +244,8 @@ TestCase {
                 'Overlapping import file path incorrect.')
 
         // Check that the first import enters finished state properly.
-        importModelChangedSpy.wait()
+        importModelChangedSpy.wait()// import finished
+        modelChangedSpy.wait()// imported items also now in model
 
         compare(importFileName, icalFilePath1, 'Imported item failed filename.')
         compare(importErrorCode, OrganizerModel.ImportNoError,

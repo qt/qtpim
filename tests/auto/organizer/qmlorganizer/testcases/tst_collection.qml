@@ -54,21 +54,16 @@ TestCase {
 
     function empty_calendar(organizerModel) {
 
-        var modelChangedSpy = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
-        modelChangedSpy.target = organizerModel;
-        modelChangedSpy.signalName= "modelChanged";
+        organizerModel.autoUpdate = false;
 
         var ids = organizerModel.itemIds();
         if (ids.length > 0) {
             organizerModel.removeItems(ids);
-            modelChangedSpy.wait(200);
         }
-        organizerModel.autoUpdate = false;
         for (var i = 0; i < organizerModel.collections.length; ++i) {
             var collId = organizerModel.collections[i].collectionId;
             if (collId != organizerModel.defaultCollection().collectionId) {
                 organizerModel.removeCollection(collId);
-                wait(300);
             }
         }
         organizerModel.autoUpdate = true;
@@ -488,6 +483,7 @@ TestCase {
           + "  endDateTime: '2010-12-13'\n"
           + "}\n");
         event.collectionId = toBeDeletedCollection.collectionId;
+        modelChangedSpy.clear();
         organizerModel.saveItem(event);
         modelChangedSpy.wait(spyWaitDelay);
         var eventItemId = organizerModel.items[organizerModel.items.length - 1].itemId;

@@ -258,13 +258,6 @@ ContactsSavingTestCase {
         compare(model.error, "NotSupported", "error");
     }
 
-    property list<Contact> lastContactsFetched
-
-    function onContactsFetched(requestId, fetchedContacts) {
-        logDebug("onContactsFetched" + ": fetchedContacts " + JSON.stringify(fetchedContacts))
-        lastContactsFetched = fetchedContacts;
-    }
-
     function test_fetchContactsFromThePartitionInTheModel()
     {
         createAndInitModelForPartition(defaultPartition);
@@ -293,10 +286,7 @@ ContactsSavingTestCase {
         // the completion of the save does not signal through the model since it does not change
         wait(500);
 
-        var contacts = queryContactsInPartition(testPartition);
-        compare(contacts.length, 1, "guard: partition has a contact");
-        var uuid = contacts[0]["_uuid"];
-        var id = convertJsonDbUuidOnPartitionToContactId(uuid, testPartition);
+        var id = queryContactIdOfTheContactOnPartition(testPartition);
         model.fetchContacts([id]);
         waitForContactsFetched();
 
@@ -304,7 +294,36 @@ ContactsSavingTestCase {
         compare(lastContactsFetched[0].contactId, id, "contact id");
     }
 
+    function test_fetchContactsFromMultiplePartitions()
+    {
+        createAndInitModelForPartition(defaultPartition);
+
+        initContactsFetchTestForModel(model);
+
+        createContactToPartition({}, defaultPartition);
+        waitForContactsChanged();
+        createContactToPartition({}, testPartition);
+        // the completion of the save does not signal through the model since it does not change
+        wait(500);
+
+        var id1 = queryContactIdOfTheContactOnPartition(defaultPartition);
+        var id2 = queryContactIdOfTheContactOnPartition(testPartition);
+        model.fetchContacts([id1, id2]);
+        waitForContactsFetched();
+
+        expectFail("", "contacts are not fetched");
+        compare(lastContactsFetched.length, 2, "contacts length");
+        compare(lastContactsFetched[0].contactId, id1, "contact id 1");
+        compare(lastContactsFetched[1].contactId, id2, "contact id 2");
+    }
+
     property SignalSpy contactsFetchedSpy
+    property list<Contact> lastContactsFetched
+
+    function onContactsFetched(requestId, fetchedContacts) {
+        logDebug("onContactsFetched" + ": fetchedContacts " + JSON.stringify(fetchedContacts));
+        lastContactsFetched = fetchedContacts;
+    }
 
     function initContactsFetchTestForModel(model) {
         contactsFetchedSpy = initTestForTargetListeningToSignal(model, "contactsFetched");
@@ -386,6 +405,13 @@ ContactsSavingTestCase {
 
     function removeContactWithUuidFromPartition(contactUuid, partition) {
         partition.testHelper.removeContactWithUuidFromJsonDb(contactUuid);
+    }
+
+    function queryContactIdOfTheContactOnPartition(partition) {
+        var contacts = queryContactsInPartition(partition);
+        compare(contacts.length, 1, "guard: partition has one contact");
+        var uuid = contacts[0]["_uuid"];
+        return convertJsonDbUuidOnPartitionToContactId(uuid, partition);
     }
 
     function convertJsonDbUuidOnPartitionToContactId(uuid, partition) {

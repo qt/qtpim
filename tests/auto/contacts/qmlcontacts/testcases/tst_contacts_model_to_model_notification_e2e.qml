@@ -49,12 +49,14 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: modifiedModel
+        manager: getManagerUnderTest()
         autoUpdate: false
         // otherwise this model will distract the test helper functions
     }
 
     ContactModel {
         id: notifiedModel
+        manager: getManagerUnderTest()
         autoUpdate:true
     }
 

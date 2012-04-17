@@ -45,10 +45,11 @@ import QtContacts 5.0
 
 ContactsSavingTestCase {
 
-    name: "ContactsVersitExportSignalingTest"
+    name: "ContactsExportImportSignalingTest"
 
     ContactModel {
         id: model
+        manager: getManagerUnderTest()
         autoUpdate: true
         onExportCompleted: {
             exportErrorCode = error;

@@ -45,7 +45,7 @@ import QtContacts 5.0
 
 ContactsSavingTestCase {
 
-    name: "ContactsVersitExportImportDetailsE2ETests"
+    name: "ContactsExportImportDetailsE2ETests"
 
     ContactModel {
         id: model

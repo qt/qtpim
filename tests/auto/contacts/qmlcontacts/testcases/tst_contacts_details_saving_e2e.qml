@@ -51,6 +51,7 @@ ContactsSavingTestCase {
 
     ContactModel {
         id: model
+        manager: getManagerUnderTest()
         autoUpdate: true
     }
 

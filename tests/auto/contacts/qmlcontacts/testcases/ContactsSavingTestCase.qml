@@ -50,6 +50,18 @@ TestCase {
     property SignalSpy spy
     property bool debug: false
 
+    ContactsTestConfiguration {
+        id: configuration
+    }
+
+    function getManagerUnderTest() {
+        logDebug("getManagerUnderTest");
+        var managerName = configuration.getManagerUnderTest();
+        if (managerName.length > 0)
+            console.log("ContactsSavingTestCase: Testing against '" + managerName + "' manager backend.");
+        return managerName;
+    }
+
     function initTestForModel(model) {
         logDebug("initTestForModel");
         spy = Qt.createQmlObject(

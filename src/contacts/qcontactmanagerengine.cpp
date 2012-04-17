@@ -1766,33 +1766,6 @@ void QContactManagerEngine::updateRelationshipRemoveRequest(QContactRelationship
 }
 
 /*!
-  \class QContactManagerEngineV2
-  \brief The QContactManagerEngineV2 class provides the interface for
-  implementations of the contact manager backend functionality.
-  \inmodule QtContacts
-
-  \ingroup contacts-backends
-
-  Instances of this class are usually provided by a
-  \l QContactManagerEngineFactory, which is loaded from a plugin.
-
-  The default implementation of this interface provides a basic
-  level of functionality for some functions so that specific engines
-  can simply implement the functionality that is supported by
-  the specific contacts engine that is being adapted.
-
-  More information on writing a contacts engine plugin is available in
-  the \l{Qt Contacts Manager Engines} documentation.
-
-  Engines that support the QContactManagerEngine interface but not the
-  QContactManagerEngineV2 interface will be wrapped by the QContactManager
-  by a class that emulates the extra functionality of the
-  QContactManagerEngineV2 interface.
-
-  \sa QContactManagerEngine, QContactManager, QContactManagerEngineFactory
- */
-
-/*!
   Updates the given QContactRelationshipFetchRequest \a req with the latest results \a result, and operation error \a error.
   In addition, the state of the request will be changed to \a newState.
 
@@ -1818,23 +1791,6 @@ void QContactManagerEngine::updateRelationshipFetchRequest(QContactRelationshipF
 }
 
 /*!
-  \fn QContactManagerEngineV2::QContactManagerEngineV2()
-  Constructs an empty QContactManagerEngineV2.
- */
-
-/*! \reimp */
-bool QContactManagerEngineV2::saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)
-{
-    return QContactManagerEngine::saveContacts(contacts, errorMap, error);
-}
-
-/*! \reimp */
-QList<QContact> QContactManagerEngineV2::contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders, const QContactFetchHint& fetchHint, QContactManager::Error* error) const
-{
-    return QContactManagerEngine::contacts(filter, sortOrders, fetchHint, error);
-}
-
-/*!
   For each contact in \a contacts, either add it to the database or update an existing one.
 
   This function accepts a \a typeMask, which specifies which details of the contacts should be
@@ -1857,7 +1813,7 @@ QList<QContact> QContactManagerEngineV2::contacts(const QContactFilter& filter, 
 
   Any errors encountered during this operation should be stored to \a error.
  */
-bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QList<QContactDetail::DetailType> &typeMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error)
+bool QContactManagerEngine::saveContacts(QList<QContact> *contacts, const QList<QContactDetail::DetailType> &typeMask, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error)
 {
     // TODO should the default implementation do the right thing, or return false?
     if (typeMask.isEmpty()) {
@@ -1989,7 +1945,7 @@ bool QContactManagerEngineV2::saveContacts(QList<QContact> *contacts, const QLis
 
   \sa QContactFetchHint
  */
-QList<QContact> QContactManagerEngineV2::contacts(const QList<QContactId> &contactIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error) const
+QList<QContact> QContactManagerEngine::contacts(const QList<QContactId> &contactIds, const QContactFetchHint &fetchHint, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error) const
 {
     QContactIdFilter lif;
     lif.setIds(contactIds);
@@ -2030,7 +1986,8 @@ QList<QContact> QContactManagerEngineV2::contacts(const QList<QContactId> &conta
 
   If the new request state is different from the previous state, the stateChanged() signal will also be emitted from the request.
  */
-void QContactManagerEngineV2::updateContactFetchByIdRequest(QContactFetchByIdRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
+void QContactManagerEngine::updateContactFetchByIdRequest(QContactFetchByIdRequest *req, const QList<QContact> &result, QContactManager::Error error,
+                                                          const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State newState)
 {
     if (req) {
         QWeakPointer<QContactFetchByIdRequest> ireq(req); // Take this in case the first emit deletes us

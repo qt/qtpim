@@ -226,7 +226,7 @@ static uint qHash(const QMetaMethod &m)
 QT_END_NAMESPACE
 
 /* Two backends for testing lazy signal connections */
-class QContactLazyEngine2 : public QContactManagerEngineV2
+class QContactLazyEngine2 : public QContactManagerEngine
 {
 public:
     QContactLazyEngine2() {}

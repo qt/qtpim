@@ -258,104 +258,13 @@ QList<QContact> QContactMemoryEngine::contacts(const QContactFilter &filter, con
 */
 bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &changeSet, QContactManager::Error *error)
 {
-    // ensure that the contact's details conform to their definitions
-    if (!validateContact(*theContact, error)) {
-        return false;
-    }
-
-    QContactId id(theContact->id());
-    if (!id.managerUri().isEmpty() && id.managerUri() != managerUri()) {
-        // the contact doesn't belong to this manager
-        *error = QContactManager::DoesNotExistError;
-        return false;
-    }
-
-    // check to see if this contact already exists
-    int index = d->m_contactIds.indexOf(id);
-    if (index != -1) {
-        /* We also need to check that there are no modified create only details */
-        QContact oldContact = d->m_contacts.at(index);
-
-        if (oldContact.type() != theContact->type()) {
-            *error = QContactManager::AlreadyExistsError;
-            return false;
-        }
-
-        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
-        ts.setLastModified(QDateTime::currentDateTime());
-        QContactManagerEngine::setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
-        theContact->saveDetail(&ts);
-
-        // Looks ok, so continue
-        d->m_contacts.replace(index, *theContact);
-        changeSet.insertChangedContact(theContact->id());
-    } else {
-        // id does not exist; if not zero, fail.
-        QContactId newId;
-        if (theContact->id() != QContactId() && theContact->id() != newId) {
-            // the ID is not empty, and it doesn't identify an existing contact in our database either.
-            *error = QContactManager::DoesNotExistError;
-            return false;
-        }
-
-        /* New contact */
-        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
-        ts.setLastModified(QDateTime::currentDateTime());
-        ts.setCreated(ts.lastModified());
-        setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
-        theContact->saveDetail(&ts);
-
-        // update the contact item - set its ID
-        quint32 nextContactId = d->m_nextContactId; // don't increment the persistent version until we're successful or we know it collides.
-        nextContactId += 1; // but do increment the temporary version to check for collision
-        QContactMemoryEngineId *newMemoryEngineId = new QContactMemoryEngineId;
-        newMemoryEngineId->m_contactId = nextContactId;
-        newMemoryEngineId->m_managerUri = d->m_managerUri;
-        QContactId newContactId = QContactId(newMemoryEngineId);
-        theContact->setId(newContactId);
-
-        // note: do NOT delete the QContactMemoryEngineId -- the QContactId ctor takes ownership of it.
-
-
-        // finally, add the contact to our internal lists and return
-        d->m_contacts.append(*theContact);                   // add contact to list
-        d->m_contactIds.append(theContact->id());  // track the contact id.
-
-        changeSet.insertAddedContact(theContact->id());
-        // successful, now increment the persistent version of the next item id.
-        d->m_nextContactId += 1;
-    }
-
-    *error = QContactManager::NoError;     // successful.
-    return true;
+    return saveContact(theContact, changeSet, error, QList<QContactDetail::DetailType>());
 }
 
 /*! \reimp */
 bool QContactMemoryEngine::saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error)
 {
-    if (!contacts) {
-        *error = QContactManager::BadArgumentError;
-        return false;
-    }
-
-    QContactChangeSet changeSet;
-    QContact current;
-    QContactManager::Error operationError = QContactManager::NoError;
-    for (int i = 0; i < contacts->count(); i++) {
-        current = contacts->at(i);
-        if (!saveContact(&current, changeSet, error)) {
-            operationError = *error;
-            if (errorMap)
-                errorMap->insert(i, operationError);
-        } else {
-            (*contacts)[i] = current;
-        }
-    }
-
-    *error = operationError;
-    d->emitSharedSignals(&changeSet);
-    // return false if some error occurred
-    return (*error == QContactManager::NoError);
+    return saveContacts(contacts, errorMap, error, QList<QContactDetail::DetailType>());
 }
 
 /*! Removes the contact identified by the given \a contactId, storing any error to \a error and
@@ -704,7 +613,7 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 
             // update the request with the results.
             if (!requestedContacts.isEmpty() || error != QContactManager::NoError)
-                QContactManagerEngineV2::updateContactFetchByIdRequest(r, results, error, errorMap, QContactAbstractRequest::FinishedState);
+                QContactManagerEngine::updateContactFetchByIdRequest(r, results, error, errorMap, QContactAbstractRequest::FinishedState);
             else
                 updateRequestState(currentRequest, QContactAbstractRequest::FinishedState);
         }
@@ -733,7 +642,7 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 
             QContactManager::Error operationError = QContactManager::NoError;
             QMap<int, QContactManager::Error> errorMap;
-            saveContacts(&contacts, &errorMap, &operationError);
+            saveContacts(&contacts, &errorMap, &operationError, r->typeMask());
 
             updateContactSaveRequest(r, contacts, operationError, errorMap, QContactAbstractRequest::FinishedState);
         }
@@ -834,6 +743,29 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
     d->emitSharedSignals(&changeSet);
 }
 
+void QContactMemoryEngine::partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask)
+{
+    // these details in old contact
+    QList<QContactDetail> fromDetails;
+    // these details in new contact
+    QList<QContactDetail> toDetails;
+    // Collect details that match mask
+    foreach (QContactDetail::DetailType type, mask) {
+        fromDetails.append(from.details(type));
+        toDetails.append(to->details(type));
+    }
+    // check details to remove
+    foreach (QContactDetail detail, toDetails) {
+        if (!fromDetails.contains(detail))
+            to->removeDetail(&detail);
+    }
+    // check details to save
+    foreach (QContactDetail detail, fromDetails) {
+        if (!toDetails.contains(detail))
+            to->saveDetail(&detail);
+    }
+}
+
 /*!
  * \reimp
  */
@@ -880,6 +812,123 @@ bool QContactMemoryEngine::isFilterSupported(const QContactFilter &filter) const
     Q_UNUSED(filter);
     // Until we add hashes for common stuff, fall back to slow code
     return false;
+}
+
+bool QContactMemoryEngine::saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap,
+                                        QContactManager::Error *error, const QList<QContactDetail::DetailType> &mask)
+{
+    if (!contacts) {
+        *error = QContactManager::BadArgumentError;
+        return false;
+    }
+
+    QContactChangeSet changeSet;
+    QContact current;
+    QContactManager::Error operationError = QContactManager::NoError;
+    for (int i = 0; i < contacts->count(); i++) {
+        current = contacts->at(i);
+        if (!saveContact(&current, changeSet, error, mask)) {
+            operationError = *error;
+            if (errorMap)
+                errorMap->insert(i, operationError);
+        } else {
+            (*contacts)[i] = current;
+        }
+    }
+
+    *error = operationError;
+    d->emitSharedSignals(&changeSet);
+    // return false if some error occurred
+    return (*error == QContactManager::NoError);
+}
+
+bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &changeSet,
+                                       QContactManager::Error *error, const QList<QContactDetail::DetailType> &mask)
+{
+    // ensure that the contact's details conform to their definitions
+    if (!validateContact(*theContact, error)) {
+        return false;
+    }
+
+    QContactId id(theContact->id());
+    if (!id.managerUri().isEmpty() && id.managerUri() != managerUri()) {
+        // the contact doesn't belong to this manager
+        *error = QContactManager::DoesNotExistError;
+        return false;
+    }
+
+    // check to see if this contact already exists
+    int index = d->m_contactIds.indexOf(id);
+    if (index != -1) {
+        /* We also need to check that there are no modified create only details */
+        QContact oldContact = d->m_contacts.at(index);
+
+        if (oldContact.type() != theContact->type()) {
+            *error = QContactManager::AlreadyExistsError;
+            return false;
+        }
+
+        // check if this is partial save
+        if (!mask.isEmpty()) {
+            QContact tempContact = oldContact;
+            partiallySyncDetails(&tempContact, *theContact, mask);
+            *theContact = tempContact;
+        }
+
+        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
+        ts.setLastModified(QDateTime::currentDateTime());
+        QContactManagerEngine::setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
+        theContact->saveDetail(&ts);
+
+        // Looks ok, so continue
+        d->m_contacts.replace(index, *theContact);
+        changeSet.insertChangedContact(theContact->id());
+    } else {
+        // id does not exist; if not zero, fail.
+        QContactId newId;
+        if (theContact->id() != QContactId() && theContact->id() != newId) {
+            // the ID is not empty, and it doesn't identify an existing contact in our database either.
+            *error = QContactManager::DoesNotExistError;
+            return false;
+        }
+
+        // check if this is partial save
+        if (!mask.isEmpty()) {
+            QContact tempContact;
+            partiallySyncDetails(&tempContact, *theContact, mask);
+            *theContact = tempContact;
+        }
+
+        /* New contact */
+        QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
+        ts.setLastModified(QDateTime::currentDateTime());
+        ts.setCreated(ts.lastModified());
+        setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
+        theContact->saveDetail(&ts);
+
+        // update the contact item - set its ID
+        quint32 nextContactId = d->m_nextContactId; // don't increment the persistent version until we're successful or we know it collides.
+        nextContactId += 1; // but do increment the temporary version to check for collision
+        QContactMemoryEngineId *newMemoryEngineId = new QContactMemoryEngineId;
+        newMemoryEngineId->m_contactId = nextContactId;
+        newMemoryEngineId->m_managerUri = d->m_managerUri;
+        QContactId newContactId = QContactId(newMemoryEngineId);
+        theContact->setId(newContactId);
+
+        // note: do NOT delete the QContactMemoryEngineId -- the QContactId ctor takes ownership of it.
+
+
+        // finally, add the contact to our internal lists and return
+        d->m_contacts.append(*theContact);                   // add contact to list
+        d->m_contactIds.append(theContact->id());  // track the contact id.
+
+        changeSet.insertAddedContact(theContact->id());
+        // successful, now increment the persistent version of the next item id.
+        d->m_nextContactId += 1;
+    }
+
+    *error = QContactManager::NoError;     // successful.
+    return true;
 }
 
 /*!

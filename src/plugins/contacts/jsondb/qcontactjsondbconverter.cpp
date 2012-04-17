@@ -396,7 +396,8 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
     };
 }
 
-bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact& contact) {
+bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact& contact, const QList<QContactDetail::DetailType> &detailMask)
+{
 
     QList<QContactDetail> details = contact.details();
     QContactDetail detail;
@@ -430,32 +431,49 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
     // get all available contact details.
     object->insert(QContactJsonDbStr::type(), QContactJsonDbStr::contactsJsonDbType());
 
-    // Quickfix for preserving possible extra fields in jsondb contact.
-    // Wipe QContact fields that may be empty/deleted, preserve all other data.
     if (!object->empty()) {
-        object->remove(detailsToJsonMapping.value(QContactName::Type));
-        object->remove(detailsToJsonMapping.value(QContactGender::Type));
-        object->remove(detailsToJsonMapping.value(QContactOrganization::Type));
-        object->remove(detailsToJsonMapping.value(QContactEmailAddress::Type));
-        object->remove(detailsToJsonMapping.value(QContactPhoneNumber::Type));
-        object->remove(detailsToJsonMapping.value(QContactAddress::Type));
-        object->remove(detailsToJsonMapping.value(QContactUrl::Type));
-        embeddedDetailsObject = object->value(QContactJsonDbStr::contactDetails()).toObject();
-        object->remove(QContactJsonDbStr::contactDetails());
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactBirthday::Type));
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactAvatar::Type));
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactRingtone::Type));
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactNickname::Type));
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactNote::Type));
-        embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactDisplayLabel::Type));
-        //  Preseserve possible extra contact details jsondb contact object may have.
-        if (!embeddedDetailsObject.isEmpty()) {
-            object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
+        if (detailMask.empty()) {
+            // Quickfix for preserving possible extra fields in jsondb contact.
+            // Wipe QContact fields that may be empty/deleted, preserve all other data.
+            object->remove(detailsToJsonMapping.value(QContactName::Type));
+            object->remove(detailsToJsonMapping.value(QContactGender::Type));
+            object->remove(detailsToJsonMapping.value(QContactOrganization::Type));
+            object->remove(detailsToJsonMapping.value(QContactEmailAddress::Type));
+            object->remove(detailsToJsonMapping.value(QContactPhoneNumber::Type));
+            object->remove(detailsToJsonMapping.value(QContactAddress::Type));
+            object->remove(detailsToJsonMapping.value(QContactUrl::Type));
+            embeddedDetailsObject = object->value(QContactJsonDbStr::contactDetails()).toObject();
+            object->remove(QContactJsonDbStr::contactDetails());
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactBirthday::Type));
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactAvatar::Type));
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactRingtone::Type));
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactNickname::Type));
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactNote::Type));
+            embeddedDetailsObject.remove(detailsToJsonMapping.value(QContactDisplayLabel::Type));
+            //  Preseserve possible extra contact details jsondb contact object may have.
+            if (!embeddedDetailsObject.isEmpty()) {
+                object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
+            }
+            // End of Quickfix
+        } else {
+            // Remove masked details from the object as they will be updated later
+            // with a new value if one exists in the in given QContact.
+            // If a new value does not exists in the QContact the detail stays removed.
+            foreach (const QContactDetail::DetailType &type, detailMask) {
+                // For now, try to remove from both though each type is in one object only.
+                object->remove(detailsToJsonMapping.value(type));
+                embeddedDetailsObject.remove(detailsToJsonMapping.value(type));
+           }
         }
     }
-    // End of Quickfix
+
     for(int i = 0; i < details.size(); ++i) {
         detail = details.at(i);
+
+        // If it is partial save and the detail is not in the mask we keep the original detail.
+        if (!detailMask.isEmpty() && !detailMask.contains(detail.type()))
+            continue;
+
         switch (detail.type()) {
         case QContactDetail::TypeName: {
             QJsonObject nameObject;

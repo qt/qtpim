@@ -880,7 +880,6 @@ QString QContactManager::managerUri() const
     return d->m_engine->managerUri();
 }
 
-
 /*!
     \internal
 
@@ -911,11 +910,8 @@ static QMetaMethod proxyToSourceSignal(const QMetaMethod &proxySignal, QObject *
 void QContactManager::connectNotify(const QMetaMethod &signal)
 {
     /* For most signals we just connect from the engine to ourselves, since we just proxy, but we should connect only once */
-    // As a special case, we know that the V2 wrapper just proxies all the signals
-    // so we skip the second proxy.  If a wrapper ever emits signals itself then we
-    // can't do this.
-    QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_signalSource);
-    connect(d->m_signalSource, sourceSignal, this, signal, Qt::UniqueConnection);
+    QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_engine);
+    connect(d->m_engine, sourceSignal, this, signal, Qt::UniqueConnection);
 }
 
 /*!
@@ -926,8 +922,8 @@ void QContactManager::connectNotify(const QMetaMethod &signal)
 void QContactManager::disconnectNotify(const QMetaMethod &signal)
 {
     if (!isSignalConnected(signal)) {
-        QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_signalSource);
-        disconnect(d->m_signalSource, sourceSignal, this, signal);
+        QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_engine);
+        disconnect(d->m_engine, sourceSignal, this, signal);
     }
 }
 

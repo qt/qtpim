@@ -116,8 +116,6 @@ private:
     QContactAbstractRequest(QObject* parent = 0) : QObject(parent), d_ptr(0) {}
     Q_DISABLE_COPY(QContactAbstractRequest)
     friend class QContactManagerEngine;
-    friend class QContactManagerEngineV2;
-    friend class QContactManagerEngineV2Wrapper;
     friend class QContactAbstractRequestPrivate;
 
 #ifndef QT_NO_DEBUG_STREAM

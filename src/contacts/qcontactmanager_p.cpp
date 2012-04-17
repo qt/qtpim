@@ -43,7 +43,6 @@
 #include "qcontactmanager_p.h"
 #include "qcontactmanagerengine.h"
 #include "qcontactmanagerenginefactory.h"
-#include "qcontactmanagerenginev2wrapper_p.h"
 
 #include "qcontact_p.h"
 
@@ -152,18 +151,13 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
             if (implementationVersion == -1 ||//no given implementation version required
                     versions.isEmpty() || //the manager engine factory does not report any version
                     versions.contains(implementationVersion)) {
-                QContactManagerEngine* engine = f->engine(parameters, &m_lastError);
-                // if it's a V2, use it
-                m_engine = qobject_cast<QContactManagerEngineV2*>(engine);
-                if (!m_engine && engine) {
-                    // Nope, v1, so wrap it
-                    m_engine = new QContactManagerEngineV2Wrapper(engine);
-                    m_signalSource = engine;
+                m_engine = f->engine(parameters, &m_lastError);
+                if (!m_engine) {
+                    qWarning() << "Creation of" << managerName << "engine failed.";
                 } else {
-                    m_signalSource = m_engine; // use the v2 engine directly
+                    found = true;
+                    break;
                 }
-                found = true;
-                break;
             }
         }
 
@@ -193,13 +187,13 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
     // the engine factory could lie to us, so check the real implementation version
     if (m_engine && (implementationVersion != -1 && m_engine->managerVersion() != implementationVersion)) {
         m_lastError = QContactManager::VersionMismatchError;
-        m_signalSource = m_engine = 0;
+        m_engine = 0;
     }
 
     if (!m_engine) {
         if (m_lastError == QContactManager::NoError)
             m_lastError = QContactManager::DoesNotExistError;
-        m_signalSource = m_engine = new QContactInvalidEngine();
+        m_engine = new QContactInvalidEngine();
     }
 }
 
@@ -351,7 +345,7 @@ QContactManagerData* QContactManagerData::get(const QContactManager *manager)
     return manager->d;
 }
 
-QContactManagerEngineV2* QContactManagerData::engine(const QContactManager *manager)
+QContactManagerEngine* QContactManagerData::engine(const QContactManager *manager)
 {
     if (manager)
         return manager->d->m_engine;

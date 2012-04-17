@@ -228,6 +228,11 @@ protected:
     virtual bool removeRelationship(const QContactRelationship &relationship, QContactChangeSet &changeSet, QContactManager::Error *error);
 
 private:
+    /* For partial save */
+    bool saveContacts(QList<QContact> *contacts, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error, const QList<QContactDetail::DetailType> &mask);
+    bool saveContact(QContact *theContact, QContactChangeSet &changeSet, QContactManager::Error *error, const QList<QContactDetail::DetailType> &mask);
+    void partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask);
+
     void performAsynchronousOperation(QContactAbstractRequest *request);
 
     QContactMemoryEngineData *d;

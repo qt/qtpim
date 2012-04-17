@@ -1345,6 +1345,8 @@ void tst_QContactAsync::contactPartialSave()
     QList<QContact> originalContacts(contacts);
     QCOMPARE(contacts.count(), 3);
 
+    qDebug() << Q_FUNC_INFO << "contacts:" << contacts;
+
     QContactId aId = contacts[0].id();
     QContactId bId = contacts[1].id();
 
@@ -1454,7 +1456,7 @@ void tst_QContactAsync::contactPartialSave()
     csr.setContacts(contacts);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
+    QVERIFY(csr.error() == QContactManager::DoesNotExistError); // error in the middle in this partial save
     QMap<int, QContactManager::Error> errorMap(csr.errorMap());
     QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[3], QContactManager::DoesNotExistError);
@@ -1465,7 +1467,7 @@ void tst_QContactAsync::contactPartialSave()
     csr.setContacts(contacts);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
+    QVERIFY(csr.error() == QContactManager::DoesNotExistError); // error in the middle in this partial save
     errorMap = csr.errorMap();
     QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[3], QContactManager::DoesNotExistError);
@@ -1521,7 +1523,7 @@ void tst_QContactAsync::contactPartialSave()
     csr.setContacts(contacts2);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
-    QVERIFY(csr.error() == QContactManager::NoError);//no save error in this partial save
+    QVERIFY(csr.error() == QContactManager::DoesNotExistError); // error in the middle in this partial save
     errorMap = csr.errorMap();
     QCOMPARE(errorMap.count(), 1);//one error in error map, related to the fetch phase of this partial save
     QCOMPARE(errorMap[0], QContactManager::DoesNotExistError);

@@ -67,7 +67,7 @@ public:
     QContactManager::Error jsonDbRequestErrorToContactError(QJsonDbRequest::ErrorCode error) const;
     bool toQContact(const QJsonObject& object, QContact* contact, const QString &partitionName);
     bool toQContacts(const QList<QJsonObject> &jsonObjects, QList<QContact>& convertedContacts, QContactManager::Error& error, const QString &partitionName);
-    bool toJsonContact(QJsonObject* object, const QContact& contact);
+    bool toJsonContact(QJsonObject* object, const QContact& contact, const QList<QContactDetail::DetailType> &detailMask = QList<QContactDetail::DetailType>());
     bool updateContexts(const QJsonObject& object, QContactDetail* detail);
     bool updateContexts(const QContactDetail& detail, QJsonObject* object);
     bool queryFromRequest(QContactAbstractRequest* request,QString &jsonDbQueryStr);

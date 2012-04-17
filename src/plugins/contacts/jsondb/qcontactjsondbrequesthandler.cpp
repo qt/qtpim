@@ -228,7 +228,7 @@ void QContactJsonDbRequestHandler::handleContactSaveRequest(QContactSaveRequest*
             } else {
                 // No prefetch needed, just create a new contact.
                 QJsonObject newJsonDbItem;
-                if (m_converter->toJsonContact(&newJsonDbItem, contact)) {
+                if (m_converter->toJsonContact(&newJsonDbItem, contact, saveReq->typeMask())) {
                     QString partition = storageLocationToPartition(saveReq->storageLocation());
                     if (!makeJsonDbRequest(saveReq,
                                            QContactJsonDbRequestManager::SaveRequest,
@@ -354,7 +354,7 @@ void QContactJsonDbRequestHandler::handleContactFetchByIdRequest(QContactFetchBy
 
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
-        QContactManagerEngineV2::updateContactFetchByIdRequest(req, emptyContactList, error, errorMap, QContactAbstractRequest::FinishedState);
+        QContactManagerEngine::updateContactFetchByIdRequest(req, emptyContactList, error, errorMap, QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
     }
@@ -630,12 +630,12 @@ void QContactJsonDbRequestHandler::onJsonDbRequestError(QtJsonDb::QJsonDbRequest
             QList<QContact> contacts = orderedContacts(fetchByIdrequest->contactIds(), fetchByIdrequest->contacts(), &errorMap, &errorToDiscard);
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);
-            QContactManagerEngineV2::updateContactFetchByIdRequest(fetchByIdrequest, contacts, contactError,
+            QContactManagerEngine::updateContactFetchByIdRequest(fetchByIdrequest, contacts, contactError,
                                                                    errorMap, QContactAbstractRequest::FinishedState);
             if (waitCondition)
                 waitCondition->wakeAll();
         } else {
-            QContactManagerEngineV2::updateContactFetchByIdRequest(fetchByIdrequest, fetchByIdrequest->contacts(),
+            QContactManagerEngine::updateContactFetchByIdRequest(fetchByIdrequest, fetchByIdrequest->contacts(),
                                                                    contactError, fetchByIdrequest->errorMap(),
                                                                    QContactAbstractRequest::ActiveState);
         }
@@ -753,7 +753,12 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactFet
             // Convert QContact to jsondb contact over the prefetched jsondb contact and save it.
             QString partition = storageLocationToPartition(
                         extractStorageLocation(saveReq->contacts().at(index).id()));
-            if (m_converter->toJsonContact(&result, saveReq->contacts().at(index))) {
+            if (!m_converter->toJsonContact(&result, saveReq->contacts().at(index),saveReq->typeMask())) {
+                qWarning() << Q_FUNC_INFO << "Conversion from QContact to QJsonObject failed.";
+                // Converter failed to map this QContact to Jsondb contact.
+                lastError = QContactManager::BadArgumentError;
+            } else {
+                // Save request
                 if (!makeJsonDbRequest(saveReq,
                                        QContactJsonDbRequestManager::UpdateRequest,
                                        index,
@@ -761,19 +766,14 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactFet
                                        QString(),
                                        QList<QJsonObject>() << result))
                     lastError = QContactManager::TimeoutError;
-
                 return;
-            } else {
-                //  Converter failed to map this QContact to Jsondb contact.
-                lastError = QContactManager::BadArgumentError;
             }
         }
     }
     // In a rare case of an error we need to update the error map and last error.
     QMap<int, QContactManager::Error> errorMap = saveReq->errorMap();
-    if (results.isEmpty()) {
+    if (results.isEmpty())
         lastError = QContactManager::DoesNotExistError;
-    }
     errorMap.insert(index, lastError);
     QList<QContact> contacts = m_requestMgr->contacts(saveReq);
     if ((!m_requestMgr->pendingPrefetchRequests(saveReq)) &&
@@ -844,12 +844,12 @@ void QContactJsonDbRequestHandler::handleContactFetchByIdResponse(QContactFetchB
             error = errorFromOrdering;
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);
-        QContactManagerEngineV2::updateContactFetchByIdRequest(req, contacts, error, errorMap, QContactAbstractRequest::FinishedState);
+        QContactManagerEngine::updateContactFetchByIdRequest(req, contacts, error, errorMap, QContactAbstractRequest::FinishedState);
         if (waitCondition)
             waitCondition->wakeAll();
     } else {
         QMap<int, QContactManager::Error> emptyErrorMap; // Error map can be properly updated only when request is completely finished.
-        QContactManagerEngineV2::updateContactFetchByIdRequest(req, fetchedContacts, error, emptyErrorMap, QContactAbstractRequest::ActiveState);
+        QContactManagerEngine::updateContactFetchByIdRequest(req, fetchedContacts, error, emptyErrorMap, QContactAbstractRequest::ActiveState);
     }
 }
 

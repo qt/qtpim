@@ -76,8 +76,7 @@ class QContactManagerData
 public:
     QContactManagerData()
         : m_engine(0),
-        m_lastError(QContactManager::NoError),
-        m_signalSource(0)
+        m_lastError(QContactManager::NoError)
     {
     }
 
@@ -89,10 +88,10 @@ public:
 
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
     static QContactManagerData* get(const QContactManager *manager);
-    static QContactManagerEngineV2* engine(const QContactManager *manager);
+    static QContactManagerEngine* engine(const QContactManager *manager);
     static QContactEngineId* createEngineContactId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
 
-    QContactManagerEngineV2* m_engine;
+    QContactManagerEngine* m_engine;
     QContactManager::Error m_lastError;
     QMap<int, QContactManager::Error> m_lastErrorMap;
 
@@ -116,11 +115,6 @@ public:
     void _q_contactsDeleted(const QList<QContactId> &ids);
 
     QMultiHash<QContactId, QContactObserver*> m_observerForContact;
-
-    // If this is a wrapperv2, connect to the wrappee signals directly rather
-    // than bouncing them twice
-    QObject *m_signalSource; // where the signals we proxy come from - either m_engine or a v1engine that is wrapped
-
 private:
     Q_DISABLE_COPY(QContactManagerData)
 };

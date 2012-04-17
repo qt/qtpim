@@ -124,12 +124,42 @@ Module {
         name: "QDeclarativeOrganizerCollection"
         prototype: "QObject"
         exports: ["Collection 5.0"]
+        Enum {
+            name: "MetaDataKey"
+            values: {
+                "KeyName": 0,
+                "KeyDescription": 1,
+                "KeyColor": 2,
+                "KeyImage": 3,
+                "KeyExtended": 4
+            }
+        }
         Property { name: "collectionId"; type: "string" }
         Property { name: "name"; type: "string" }
         Property { name: "description"; type: "string" }
         Property { name: "color"; type: "QColor" }
         Property { name: "image"; type: "QUrl" }
         Signal { name: "valueChanged" }
+        Method {
+            name: "setMetaData"
+            Parameter { name: "key"; type: "QOrganizerCollection::MetaDataKey" }
+            Parameter { name: "value"; type: "QVariant" }
+        }
+        Method {
+            name: "metaData"
+            type: "QVariant"
+            Parameter { name: "key"; type: "QOrganizerCollection::MetaDataKey" }
+        }
+        Method {
+            name: "setExtendedMetaData"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "QVariant" }
+        }
+        Method {
+            name: "extendedMetaData"
+            type: "QVariant"
+            Parameter { name: "key"; type: "string" }
+        }
         Method {
             name: "setMetaData"
             Parameter { name: "key"; type: "string" }
@@ -181,11 +211,11 @@ Module {
         Enum {
             name: "EventAttendeeField"
             values: {
-                "FieldName": 0,
-                "FieldEmailAddress": 1,
-                "FieldAddendeeId": 2,
-                "FieldParticipationStatus": 3,
-                "FieldParticipationRole": 4
+                "FieldName": 1901,
+                "FieldEmailAddress": 1902,
+                "FieldAddendeeId": 1903,
+                "FieldParticipationStatus": 1904,
+                "FieldParticipationRole": 1905
             }
         }
         Enum {
@@ -224,7 +254,7 @@ Module {
         defaultProperty: "itemDetails"
         prototype: "QDeclarativeOrganizerItem"
         exports: ["EventOccurrence 5.0"]
-        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "originalDate"; type: "QDateTime" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "endDateTime"; type: "QDateTime" }
         Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
@@ -239,13 +269,13 @@ Module {
         Enum {
             name: "EventRsvpField"
             values: {
-                "FieldParticipationStatus": 0,
-                "FieldParticipationRole": 1,
-                "FieldResponseRequirement": 2,
-                "FieldResponseDeadline": 3,
-                "FieldResponseDate": 4,
-                "FieldOrganizerName": 5,
-                "FieldOrganizerEmail": 6
+                "FieldParticipationStatus": 2001,
+                "FieldParticipationRole": 2002,
+                "FieldResponseRequirement": 2003,
+                "FieldResponseDeadline": 2004,
+                "FieldResponseDate": 2005,
+                "FieldOrganizerName": 2006,
+                "FieldOrganizerEmail": 2007
             }
         }
         Enum {
@@ -264,8 +294,8 @@ Module {
             type: "QDeclarativeOrganizerEventAttendee::ParticipationRole"
         }
         Property { name: "responseRequirement"; type: "ResponseRequirement" }
-        Property { name: "responseDeadline"; type: "QDate" }
-        Property { name: "responseDate"; type: "QDate" }
+        Property { name: "responseDeadline"; type: "QDateTime" }
+        Property { name: "responseDate"; type: "QDateTime" }
         Property { name: "organizerName"; type: "string" }
         Property { name: "organizerEmail"; type: "string" }
         Signal { name: "valueChanged" }
@@ -277,12 +307,11 @@ Module {
         Enum {
             name: "EventTimeField"
             values: {
-                "FieldStartDateTime": 0,
-                "FieldEndDateTime": 1,
-                "FieldAllDay": 2
+                "FieldStartDateTime": 2101,
+                "FieldEndDateTime": 2102,
+                "FieldAllDay": 2103
             }
         }
-        Property { name: "isAllDay"; type: "bool" }
         Property { name: "allDay"; type: "bool" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "endDateTime"; type: "QDateTime" }
@@ -307,10 +336,6 @@ Module {
         Property { name: "description"; type: "string" }
         Property { name: "displayLabel"; type: "string" }
         Property { name: "guid"; type: "string" }
-        Property { name: "isOccurrence"; type: "bool"; isReadonly: true }
-        Property { name: "isFloatingTime"; type: "bool"; isReadonly: true }
-        Property { name: "itemStartTime"; type: "QDateTime"; isReadonly: true }
-        Property { name: "itemEndTime"; type: "QDateTime"; isReadonly: true }
         Signal { name: "itemChanged" }
         Method {
             name: "detail"
@@ -332,11 +357,6 @@ Module {
         }
         Method { name: "clearDetails" }
         Method { name: "save" }
-        Method {
-            name: "addDetail"
-            type: "bool"
-            Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
-        }
     }
     Component {
         name: "QDeclarativeOrganizerItemAudibleReminder"
@@ -345,7 +365,7 @@ Module {
         Enum {
             name: "AudibleReminderField"
             values: {
-                "FieldDataUrl": 102
+                "FieldDataUrl": 1501
             }
         }
         Property { name: "dataUrl"; type: "QUrl" }
@@ -358,10 +378,18 @@ Module {
         Enum {
             name: "Field"
             values: {
-                "FieldClassification": 0
+                "FieldClassification": 101
             }
         }
-        Property { name: "classification"; type: "string" }
+        Enum {
+            name: "AccessClassification"
+            values: {
+                "AccessPublic": 0,
+                "AccessConfidential": 1,
+                "AccessPrivate": 2
+            }
+        }
+        Property { name: "classification"; type: "AccessClassification" }
         Signal { name: "valueChanged" }
     }
     Component {
@@ -378,7 +406,7 @@ Module {
         Enum {
             name: "CommentField"
             values: {
-                "FieldComment": 0
+                "FieldComment": 201
             }
         }
         Property { name: "comment"; type: "string" }
@@ -403,7 +431,7 @@ Module {
         Enum {
             name: "DescriptionField"
             values: {
-                "FieldDescription": 0
+                "FieldDescription": 301
             }
         }
         Property { name: "description"; type: "string" }
@@ -417,34 +445,33 @@ Module {
             name: "DetailType"
             values: {
                 "Undefined": 0,
-                "Classification": 1,
-                "Comment": 2,
-                "Description": 3,
-                "DisplayLabel": 4,
-                "ItemType": 5,
-                "Guid": 6,
-                "Location": 7,
-                "Parent": 8,
-                "Priority": 9,
-                "Recurrence": 10,
-                "Tag": 11,
-                "Timestamp": 12,
-                "Version": 13,
-                "Reminder": 14,
-                "AudibleReminder": 15,
-                "EmailReminder": 16,
-                "VisualReminder": 17,
-                "ExtendedDetail": 18,
-                "EventAttendee": 19,
-                "EventRsvp": 20,
-                "EventTime": 21,
-                "JournalTime": 22,
-                "TodoTime": 23,
-                "TodoProgress": 24
+                "Classification": 100,
+                "Comment": 200,
+                "Description": 300,
+                "DisplayLabel": 400,
+                "ItemType": 500,
+                "Guid": 600,
+                "Location": 700,
+                "Parent": 800,
+                "Priority": 900,
+                "Recurrence": 1000,
+                "Tag": 1100,
+                "Timestamp": 1200,
+                "Version": 1300,
+                "Reminder": 1400,
+                "AudibleReminder": 1500,
+                "EmailReminder": 1600,
+                "VisualReminder": 1700,
+                "ExtendedDetail": 1800,
+                "EventAttendee": 1900,
+                "EventRsvp": 2000,
+                "EventTime": 2100,
+                "JournalTime": 2200,
+                "TodoTime": 2400,
+                "TodoProgress": 2300
             }
         }
         Property { name: "type"; type: "DetailType"; isReadonly: true }
-        Property { name: "fieldNames"; type: "QList<int>"; isReadonly: true }
         Signal { name: "detailChanged" }
         Method {
             name: "value"
@@ -509,7 +536,7 @@ Module {
         Enum {
             name: "DisplayLabelField"
             values: {
-                "FieldLabel": 0
+                "FieldLabel": 401
             }
         }
         Property { name: "label"; type: "string" }
@@ -522,10 +549,10 @@ Module {
         Enum {
             name: "EmailReminderField"
             values: {
-                "FieldSubject": 102,
-                "FieldBody": 103,
-                "FieldRecipients": 105,
-                "FieldAttachments": 104
+                "FieldSubject": 1601,
+                "FieldBody": 1602,
+                "FieldRecipients": 1604,
+                "FieldAttachments": 1603
             }
         }
         Property { name: "body"; type: "string" }
@@ -541,8 +568,8 @@ Module {
         Enum {
             name: "ExtendedDetailField"
             values: {
-                "FieldName": 0,
-                "FieldData": 1
+                "FieldName": 1801,
+                "FieldData": 1802
             }
         }
         Property { name: "name"; type: "string" }
@@ -610,7 +637,7 @@ Module {
         Enum {
             name: "GuidField"
             values: {
-                "FieldGuid": 0
+                "FieldGuid": 601
             }
         }
         Property { name: "guid"; type: "string" }
@@ -641,9 +668,9 @@ Module {
         Enum {
             name: "LocationField"
             values: {
-                "FieldLabel": 2,
-                "FieldLatitude": 0,
-                "FieldLongitude": 1
+                "FieldLabel": 703,
+                "FieldLatitude": 701,
+                "FieldLongitude": 702
             }
         }
         Property { name: "latitude"; type: "double" }
@@ -658,11 +685,11 @@ Module {
         Enum {
             name: "ParentField"
             values: {
-                "FieldParentId": 0,
-                "FieldOriginalDate": 1
+                "FieldParentId": 801,
+                "FieldOriginalDate": 802
             }
         }
-        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "originalDate"; type: "QDateTime" }
         Property { name: "parentId"; type: "string" }
         Signal { name: "valueChanged" }
     }
@@ -673,7 +700,7 @@ Module {
         Enum {
             name: "PriorityField"
             values: {
-                "FieldPriority": 0
+                "FieldPriority": 901
             }
         }
         Enum {
@@ -701,10 +728,10 @@ Module {
         Enum {
             name: "RecurrenceField"
             values: {
-                "FieldRecurrenceRules": 0,
-                "FieldExceptionRules": 1,
-                "FieldRecurrenceDates": 2,
-                "FieldExceptionDates": 3
+                "FieldRecurrenceRules": 1001,
+                "FieldExceptionRules": 1002,
+                "FieldRecurrenceDates": 1003,
+                "FieldExceptionDates": 1004
             }
         }
         Property {
@@ -730,9 +757,9 @@ Module {
         Enum {
             name: "ReminderField"
             values: {
-                "FieldRepetitionCount": 1,
-                "FieldRepetitionDelay": 2,
-                "FieldSecondsBeforeStart": 0
+                "FieldRepetitionCount": 1402,
+                "FieldRepetitionDelay": 1403,
+                "FieldSecondsBeforeStart": 1401
             }
         }
         Enum {
@@ -775,7 +802,7 @@ Module {
         Enum {
             name: "TagField"
             values: {
-                "FieldTag": 0
+                "FieldTag": 1101
             }
         }
         Property { name: "tag"; type: "string" }
@@ -788,8 +815,8 @@ Module {
         Enum {
             name: "TimestampField"
             values: {
-                "FieldCreated": 0,
-                "FieldLastModified": 1
+                "FieldCreated": 1201,
+                "FieldLastModified": 1202
             }
         }
         Property { name: "created"; type: "QDateTime" }
@@ -803,19 +830,19 @@ Module {
         Enum {
             name: "ItemTypeField"
             values: {
-                "FieldType": 0
+                "FieldType": 501
             }
         }
         Enum {
             name: "ItemType"
             values: {
-                "Undefined": 0,
-                "Event": 1,
-                "EventOccurrence": 2,
-                "Todo": 3,
-                "TodoOccurrence": 4,
-                "Journal": 5,
-                "Note": 6
+                "Undefined": 501,
+                "Event": 502,
+                "EventOccurrence": 503,
+                "Todo": 504,
+                "TodoOccurrence": 505,
+                "Journal": 506,
+                "Note": 507
             }
         }
         Property { name: "itemType"; type: "ItemType" }
@@ -834,8 +861,8 @@ Module {
         Enum {
             name: "Field"
             values: {
-                "FieldVersion": 0,
-                "FieldExtendedVersion": 1
+                "FieldVersion": 1301,
+                "FieldExtendedVersion": 1302
             }
         }
         Property { name: "version"; type: "int" }
@@ -849,8 +876,8 @@ Module {
         Enum {
             name: "VisualReminderField"
             values: {
-                "FieldDataUrl": 103,
-                "FieldMessage": 102
+                "FieldDataUrl": 1702,
+                "FieldMessage": 1701
             }
         }
         Property { name: "message"; type: "string" }
@@ -872,7 +899,7 @@ Module {
         Enum {
             name: "JournalTimeField"
             values: {
-                "FieldEntryDateTime": 0
+                "FieldEntryDateTime": 2201
             }
         }
         Property { name: "entryDateTime"; type: "QDateTime" }
@@ -1122,9 +1149,7 @@ Module {
         defaultProperty: "itemDetails"
         prototype: "QDeclarativeOrganizerItem"
         exports: ["Todo 5.0"]
-        Property { name: "isAllDay"; type: "bool" }
         Property { name: "allDay"; type: "bool" }
-        Property { name: "progressPercentage"; type: "int" }
         Property { name: "percentageComplete"; type: "int" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "dueDateTime"; type: "QDateTime" }
@@ -1144,9 +1169,8 @@ Module {
         defaultProperty: "itemDetails"
         prototype: "QDeclarativeOrganizerItem"
         exports: ["TodoOccurrence 5.0"]
-        Property { name: "progressPercentage"; type: "int" }
         Property { name: "percentageComplete"; type: "int" }
-        Property { name: "originalDate"; type: "QDate" }
+        Property { name: "originalDate"; type: "QDateTime" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "dueDateTime"; type: "QDateTime" }
         Property { name: "finishedDateTime"; type: "QDateTime" }
@@ -1162,9 +1186,9 @@ Module {
         Enum {
             name: "TodoProgressField"
             values: {
-                "FieldStatus": 2,
-                "FieldPercentageComplete": 1,
-                "FieldFinishedDateTime": 0
+                "FieldStatus": 2303,
+                "FieldPercentageComplete": 2302,
+                "FieldFinishedDateTime": 2301
             }
         }
         Enum {
@@ -1175,7 +1199,6 @@ Module {
                 "Complete": 2
             }
         }
-        Property { name: "percentage"; type: "int" }
         Property { name: "percentageComplete"; type: "int" }
         Property { name: "finishedDateTime"; type: "QDateTime" }
         Property { name: "status"; type: "StatusType" }
@@ -1188,9 +1211,9 @@ Module {
         Enum {
             name: "TodoTimeField"
             values: {
-                "FieldStartDateTime": 0,
-                "FieldDueDateTime": 1,
-                "FieldAllDay": 2
+                "FieldStartDateTime": 2401,
+                "FieldDueDateTime": 2402,
+                "FieldAllDay": 2403
             }
         }
         Property { name: "allDay"; type: "bool" }

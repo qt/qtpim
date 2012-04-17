@@ -658,8 +658,10 @@ void QContactJsonDbRequestHandler::handleContactSavePrefetchResponse(QContactFet
     QContactManager::Error lastError = QContactManager::NoError;
     QList<QJsonObject> jsonDbObjectList = jsonDbRequest->takeResults();
     QContactSaveRequest *saveReq = m_requestMgr->removePrefetchRequest(prefetchReq);
-    if (!saveReq)
-        qWarning()<<Q_FUNC_INFO<<"prefetch request not found";
+    if (!saveReq) {
+        qWarning() << Q_FUNC_INFO << "prefetch request not found";
+        return;
+    }
     for (int i = 0; i < jsonDbObjectList.size(); ++i) {
         QJsonObject object = jsonDbObjectList.at(i);
         if (object.isEmpty()) {

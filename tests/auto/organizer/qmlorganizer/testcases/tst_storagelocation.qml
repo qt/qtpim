@@ -291,13 +291,20 @@ TestCase {
             collectionsChangedSpy.wait(spyWaitDelay);
         }
 
-        modelChangedSpy.clear();
+        organizerModel.autoUpdate = false;
+
         organizerModel.removeCollection(collectionOnSystemId);
         organizerModel.removeCollection(collectionOnUserDataId);
         organizerModel.removeItem(eventOnUserDataId);
+
+        modelChangedSpy.clear();
+        organizerModel.update();
         modelChangedSpy.wait(spyWaitDelay);
+
         compare(organizerModel.items.length, 0);
         compare(organizerModel.collections.length, 1);
+
+        organizerModel.autoUpdate = true;
     }
 }
 

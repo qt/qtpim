@@ -59,13 +59,6 @@ ContactsSavingTestCase {
                     contactsJsonDbPartitionsE2ETests);
     }
 
-    function createModelForPartition(partition) {
-        createModel();
-        waitForModelToBeReady(model);
-        if (partition)
-            model.storageLocations = partition.storageLocation;
-    }
-
     function destroyModel() {
         if (model) {
             model.autoUpdate = false;
@@ -91,10 +84,9 @@ ContactsSavingTestCase {
         }
     }
 
-    function test_fetchContactFromTheDefaultPartition()
+    function test_fetchContactWithoutSpecifyingPartition()
     {
-        createModelForPartition(); // does not set storage location
-        initTestForModel(model);
+        createAndInitModelForPartition(); // does not set partition
 
         createContactToPartition({name: {firstName: "contactFromDefaultPartition"}}, defaultPartition);
         waitForContactsChanged();
@@ -105,8 +97,7 @@ ContactsSavingTestCase {
 
     function test_fetchContactFromTheDefaultPartitionWhenThereAreContactsInAnotherPartition()
     {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         // create a contact to the other partition (does not change the model)
         listenToContactsChanged();
@@ -122,9 +113,7 @@ ContactsSavingTestCase {
     }
 
     function test_fetchContactsToModelFromGivenPartition() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         createContactToPartition({name: {firstName: "contactFromGivenPartition"}}, testPartition);
         waitForContactsChanged();
@@ -134,8 +123,7 @@ ContactsSavingTestCase {
     }
 
     function test_createNewContactAndSaveItToDefaultPartition() {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         model.saveContact(contactInTheDefaultPartition);
         waitForContactsChanged();
@@ -154,9 +142,7 @@ ContactsSavingTestCase {
     }
 
     function test_createNewContactAndSaveItToGivenPartition() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         model.saveContact(contactInTheTargetPartition, testPartition.storageLocation);
         waitForContactsChanged();
@@ -168,8 +154,7 @@ ContactsSavingTestCase {
     }
 
     function test_createNewContactAndSaveItToPartitionWhichIsNotInTheModel() {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         model.saveContact(contactInTheTargetPartition, testPartition.storageLocation);
         // the completion of the save does not signal through the model since it does not change
@@ -182,9 +167,7 @@ ContactsSavingTestCase {
     }
 
     function test_removeContactFromGivenPartition() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         createContactToPartition({name: {firstName: "contactToBeRemoved"}}, testPartition);
         waitForContactsChanged();
@@ -199,9 +182,7 @@ ContactsSavingTestCase {
     }
 
     function test_fetchContactFromGivenPartitionChangeItAndSaveBackToTheSamePartition() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         createContactToPartition({name: {firstName: "contactToBeChanged"}}, testPartition);
         waitForContactsChanged();
@@ -219,8 +200,7 @@ ContactsSavingTestCase {
     }
 
     function test_updateContactInAnotherPartitionDoesNotChangeModel() {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         createContactToPartition({name: {firstName: "old"}}, testPartition);
         compare(model.contacts.length, 0, "guard: model does not see the contact");
@@ -236,8 +216,7 @@ ContactsSavingTestCase {
     }
 
     function test_removeContactInAnotherPartitionDoesNotChangeModel() {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         createContactToPartition({}, testPartition);
 
@@ -250,8 +229,7 @@ ContactsSavingTestCase {
     }
 
     function test_setStorageLocationToGivenPartitionShouldFetchContacts() {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
+        createAndInitModelForPartition(defaultPartition);
 
         createContactToPartition({name: {firstName: "contactFromGivenPartition"}}, testPartition);
         // the completion of the save does not signal through the model since it does not change
@@ -265,9 +243,7 @@ ContactsSavingTestCase {
     }
 
     function test_setIncorrectStorageLocationRaisesError() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         model.storageLocations = 0;
 
@@ -275,9 +251,7 @@ ContactsSavingTestCase {
     }
 
     function test_setMultipleStorageLocationsRaisesError() {
-        createModelForPartition(testPartition);
-        waitForModelToBeReady(model);
-        initTestForModel(model);
+        createAndInitModelForPartition(testPartition);
 
         model.storageLocations = ContactModel.UserDataStorage | ContactModel.SystemStorage;
 
@@ -293,10 +267,9 @@ ContactsSavingTestCase {
 
     function test_fetchContactsFromThePartitionInTheModel()
     {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
-        initContactsFetchSpy(model);
-        model.contactsFetched.connect(onContactsFetched);
+        createAndInitModelForPartition(defaultPartition);
+
+        initContactsFetchTestForModel(model);
 
         createContactToPartition({}, defaultPartition);
         waitForContactsChanged();
@@ -312,10 +285,9 @@ ContactsSavingTestCase {
 
     function test_fetchContactsFromPartitionNotInTheModel()
     {
-        createModelForPartition(defaultPartition);
-        initTestForModel(model);
-        initContactsFetchSpy(model);
-        model.contactsFetched.connect(onContactsFetched);
+        createAndInitModelForPartition(defaultPartition);
+
+        initContactsFetchTestForModel(model);
 
         createContactToPartition({}, testPartition);
         // the completion of the save does not signal through the model since it does not change
@@ -335,9 +307,10 @@ ContactsSavingTestCase {
 
     property SignalSpy contactsFetchedSpy
 
-    function initContactsFetchSpy(model) {
+    function initContactsFetchTestForModel(model) {
         contactsFetchedSpy = initTestForTargetListeningToSignal(model, "contactsFetched");
         lastContactsFetched = [];
+        model.contactsFetched.connect(onContactsFetched);
     }
 
     function waitForContactsFetched() {
@@ -368,12 +341,33 @@ ContactsSavingTestCase {
         emptyContactsInPartition(testPartition);
     }
 
+    // Helpers
+
+    function createAndInitModelForPartition(partition) {
+        if (partition === defaultPartition) {
+            createModelForPartition(defaultPartition);
+        } else if (partition === testPartition) {
+            createModelForPartition(testPartition);
+            waitForModelToBeReady(model); // change to another partition
+        } else if (!partition) {
+            createModelForPartition(); // does not set partition
+        } else {
+            fail("Failed to initialize partition for the model under test.")
+        }
+        initTestForModel(model);
+    }
+
+    function createModelForPartition(partition) {
+        createModel();
+        waitForModelToBeReady(model);
+        if (partition)
+            model.storageLocations = partition.storageLocation;
+    }
+
     function waitForModelToBeReady(model) {
         initTestForModel(model);
         waitForContactsChanged();
     }
-
-    // Helpers
 
     function emptyContactsInPartition(partition) {
         partition.testHelper.emptyContacts();

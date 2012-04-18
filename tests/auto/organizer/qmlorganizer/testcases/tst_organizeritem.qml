@@ -98,8 +98,8 @@ TestCase {
     function test_todoOccurrence() {
         compare(todoOccurrence.itemType, Type.TodoOccurrence)
 
-        todoOccurrence.progressPercentage = 89
-        compare(todoOccurrence.progressPercentage, 89)
+        todoOccurrence.percentageComplete = 89
+        compare(todoOccurrence.percentageComplete, 89)
 
         var originalDate = new Date("2008-12-28")
         todoOccurrence.originalDate = originalDate
@@ -133,8 +133,8 @@ TestCase {
         todo.allDay = true;
         compare(todo.allDay, true)
 
-        todo.progressPercentage = 64
-        compare(todo.progressPercentage, 64)
+        todo.percentageComplete = 64
+        compare(todo.percentageComplete, 64)
 
         var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
         todo.startDateTime = startDateTime

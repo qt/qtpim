@@ -399,8 +399,8 @@ TestCase {
         compare(todoProgress.value(TodoProgress.FieldFinishedDateTime), finishedDateTime)
 
         compare(todoProgress.value(TodoProgress.FieldPercentageComplete), undefined)
-        todoProgress.percentage = 64
-        compare(todoProgress.percentage, 64)
+        todoProgress.percentageComplete = 64
+        compare(todoProgress.percentageComplete, 64)
         compare(todoProgress.value(TodoProgress.FieldPercentageComplete), 64)
 
         compare(todoProgress.value(TodoProgress.FieldStatus), undefined)

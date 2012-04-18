@@ -269,6 +269,7 @@ Rectangle {
                         onClicked: {
                             detailsView.isNewItem = true;
                             detailsView.item = createEmptyItem(Type.Event);
+                            detailsView.item.displayLabel = "Event"+(organizer.itemCount+1)
                             calendar.state = "DetailsView";
                         }
                     }
@@ -278,6 +279,7 @@ Rectangle {
                         onClicked: {
                             detailsView.isNewItem = true;
                             detailsView.item = createEmptyItem(Type.Todo);
+                            detailsView.item.displayLabel = "Todo"+(organizer.itemCount+1)
                             calendar.state = "DetailsView";
                         }
                     }

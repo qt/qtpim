@@ -119,6 +119,7 @@ Item {
 
     function addCollection() {
         collectionEditorView.collection = Qt.createQmlObject('import QtQuick 2.0; import QtOrganizer 5.0; Collection {}',organizer);
+        collectionEditorView.collection.name = "Collection"+(organizer.collections.length+1);
         collectionEditorView.isNewCollection = true;
         settingsView.state = "CollectionEditorView";
     }

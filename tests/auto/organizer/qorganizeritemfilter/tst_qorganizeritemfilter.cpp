@@ -1330,7 +1330,8 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         ids << id1 << id2 << id3;
         filter.setCollectionIds(ids);
         // Testing method setCollectionIds
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(5), QOrganizerCollectionId(6), QOrganizerCollectionId(7)) ))";
+        // FIXME: QTBUG-25382: Assumes QSet is an ordered collection, which it's not
+        // QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(5), QOrganizerCollectionId(6), QOrganizerCollectionId(7)) ))";
 
         filter.setCollectionId(id2);
         // Testing method setCollectionId (and the related clearing of the collection)

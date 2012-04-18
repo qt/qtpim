@@ -237,6 +237,7 @@ void tst_QVCard30Writer::testEncodeParameters()
     encodedParameters.clear();
     buffer.open(QIODevice::WriteOnly);
     mWriter->encodeParameters(parameters);
+    QSKIP("QTBUG-25382: Assumes QHash is ordered, which it's not");
     QCOMPARE(encodedParameters, QByteArray(";X-PARAM=VALUE;ENCODING=8BIT"));
 
     // Parameter with characters that require backslash escaping

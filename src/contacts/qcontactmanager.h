@@ -146,10 +146,12 @@ public:
     bool removeRelationship(const QContactRelationship& relationship);
     bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap = 0);
 
+    /* Capabilities reporting */
     bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType = QContactType::TypeContact) const;
     QList<QVariant::Type> supportedDataTypes() const;
     bool isFilterSupported(const QContactFilter& filter) const;
     QList<QContactType::TypeValues> supportedContactTypes() const;
+    QList<QContactDetail::DetailType> supportedContactDetailTypes() const;
 
     /* return a list of available backends for which a QContactManager can be constructed. */
     static QStringList availableManagers();

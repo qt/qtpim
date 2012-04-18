@@ -837,6 +837,17 @@ QList<QContactType::TypeValues> QContactManager::supportedContactTypes() const
 }
 
 /*!
+  Returns the list of contact detail types which are supported by this manager.
+  The returned list can be used by clients to identify incompatibilities between
+  contact objects to be saved and the actual subset of detail types supported by
+  this manager.
+ */
+QList<QContactDetail::DetailType> QContactManager::supportedContactDetailTypes() const
+{
+    return d->m_engine->supportedContactDetailTypes();
+}
+
+/*!
   Returns the engine backend implementation version number
  */
 int QContactManager::managerVersion() const

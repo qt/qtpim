@@ -104,6 +104,7 @@ public:
     virtual bool isFilterSupported(const QContactFilter& filter) const {return m_engine->isFilterSupported(filter);}
     virtual QList<QVariant::Type> supportedDataTypes() const {return m_engine->supportedDataTypes();}
     virtual QList<QContactType::TypeValues> supportedContactTypes() const {return m_engine->supportedContactTypes();}
+    virtual QList<QContactDetail::DetailType> supportedContactDetailTypes() const {return m_engine->supportedContactDetailTypes();}
 
 private Q_SLOTS:
     void requestStateChanged(QContactAbstractRequest::State state);

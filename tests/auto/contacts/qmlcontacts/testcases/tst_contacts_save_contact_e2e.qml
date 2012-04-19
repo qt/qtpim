@@ -45,6 +45,7 @@ import QtContacts 5.0
 
 ContactsSavingTestCase {
     name: "ContactsSaveContactE2ETests"
+    id: contactsSaveContactE2ETests
 
     ContactModel {
         id: model
@@ -76,16 +77,37 @@ ContactsSavingTestCase {
         model.saveContact(contactWithDetail);
         waitForContactsChanged();
 
-        var contact = model.contacts[0];
-        compare(contact.name.firstName, "Joe", "contact name");
+        compare(model.contacts[0].name.firstName, contactWithDetail.name.firstName, "contact name");
+    }
+
+    function test_saveDynamicallyCreatedContact() {
+        var contact = Qt.createQmlObject(
+                    'import QtContacts 5.0;' +
+                    'Contact {' +
+                    '  Name {' +
+                    '    firstName: "A"' +
+                    '  }' +
+                    '}',
+                    contactsSaveContactE2ETests);
+        model.saveContact(contact);
+        waitForContactsChanged();
+
+        compare(model.contacts.length, 1, "contacts.length");
+        compare(model.contacts[0].name.firstName, contact.name.firstName, 'contact name');
     }
 
     Contact {
         id: firstOfMultipleContacts
+        Name {
+            firstName: "A"
+        }
     }
 
     Contact {
         id: secondOfMultipleContacts
+        Name {
+            firstName: "B"
+        }
     }
 
     function test_saveMultipleContacts() {
@@ -96,6 +118,40 @@ ContactsSavingTestCase {
         waitForContactsChanged();
 
         compare(model.contacts.length, 2, "contacts.length");
+        compare(model.contacts[0].name.firstName, firstOfMultipleContacts.name.firstName, 'contacts[0].name.firstName');
+        compare(model.contacts[1].name.firstName, secondOfMultipleContacts.name.firstName, 'contacts[1].name.firstName');
+    }
+
+    Contact {
+        id: contactToSaveMultipleTimes
+    }
+
+    function test_saveTheSameContactMultipleTimes() {
+        model.saveContact(contactToSaveMultipleTimes);
+        waitForContactsChanged();
+
+        model.saveContact(contactToSaveMultipleTimes);
+        waitForContactsChanged();
+
+        compare(model.contacts.length, 2, "contacts.length");
+        verify(model.contacts[0].contactId !== model.contacts[1].contactId, "contact ids are different");
+    }
+
+    Contact {
+        id: contactToSaveMultipleTimesWithoutWaitingForTheModel
+    }
+
+    function test_saveTheSameContactMultipleTimesWithoutWaitingForTheModel() {
+        model.saveContact(contactToSaveMultipleTimes);
+
+        model.saveContact(contactToSaveMultipleTimes);
+
+        waitForContactsChanged();
+        if (model.contacts.length < 2)
+            waitForContactsChanged();
+
+        compare(model.contacts.length, 2, "contacts.length");
+        verify(model.contacts[0].contactId !== model.contacts[1].contactId, "contact ids are different");
     }
 
     // Init & teardown

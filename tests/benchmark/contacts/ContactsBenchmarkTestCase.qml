@@ -56,7 +56,6 @@ TestCase {
             var temp = contactsList
             temp[it] = contact;
             contactsList = temp
-            model.saveContact(contactsList[it]);
         }
     }
 }

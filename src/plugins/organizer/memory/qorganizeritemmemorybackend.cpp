@@ -660,8 +660,10 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItems(const QDateTime&
 void QOrganizerItemMemoryEngine::addItemRecurrences(QList<QOrganizerItem>& sorted, const QOrganizerItem& c, const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, bool forExport, QSet<QOrganizerItemId>* parentsAdded) const
 {
     QOrganizerManager::Error error = QOrganizerManager::NoError;
-    QList<QOrganizerItem> recItems = internalItemOccurrences(c, startDate, endDate, forExport ? 1 : 50, false, false, 0, &error); // XXX TODO: why maxcount of 50?
+    if (forExport && parentsAdded->contains(c.id()))
+        return;
 
+    QList<QOrganizerItem> recItems = internalItemOccurrences(c, startDate, endDate, forExport ? 1 : 50, false, false, 0, &error); // XXX TODO: why maxcount of 50?
     if (filter.type() == QOrganizerItemFilter::DefaultFilter) {
         foreach(const QOrganizerItem& oi, recItems) {
             QOrganizerManagerEngine::addSorted(&sorted, forExport ? c : oi, sortOrders);

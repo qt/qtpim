@@ -268,8 +268,8 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QO
     bool hasItemVersion(false);
 
     // go through all fields
-    QJsonObject::const_iterator i = object.constBegin();
-    while (i != object.constEnd()) {
+    QJsonObject::const_iterator i = objectToParse.constBegin();
+    while (i != objectToParse.constEnd()) {
         if (i.key() == QOrganizerJsonDbStr::jsonDbUuid()) {
             QString jsonDbUuid = i.value().toString();
             if (jsonDbUuid.isEmpty())

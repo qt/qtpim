@@ -4312,10 +4312,6 @@ void tst_QOrganizerManager::testReminder()
     oi.setDisplayLabel("test reminder");
     audioReminder.setRepetition(3, 100);
     QVERIFY(oi.saveDetail(&audioReminder));
-    if ("qtorganizer:jsondb:" == uri) {// alarm object needs start date time for jsondb
-        QVERIFY(!oim->saveItem(&oi));
-        QVERIFY(oim->error() == QOrganizerManager::InvalidDetailError);
-    }
     oi.setStartDateTime(QDateTime::currentDateTime());
     QVERIFY(oim->saveItem(&oi));
 

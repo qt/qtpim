@@ -1457,48 +1457,6 @@ void QOrganizerJsonDbConverter::recurrenceRuleToJsonDbObject(const QOrganizerRec
     }
 }
 
-bool QOrganizerJsonDbConverter::itemToJsondbAlarmObject(const QOrganizerItem &item, QJsonObject *alarmObject) const
-{
-    QOrganizerItemId id = item.id();
-    if (id.isNull())
-        return false;
-    alarmObject->insert(QOrganizerJsonDbStr::alarmEventUuid(), QOrganizerManagerEngine::engineItemId(id)->toString());
-
-    QDateTime alarmDueDateTime;
-    QOrganizerItemType::ItemType itemType = item.type();
-    if (itemType == QOrganizerItemType::TypeEvent || itemType == QOrganizerItemType::TypeEventOccurrence)
-        alarmDueDateTime = item.detail(QOrganizerItemDetail::TypeEventTime).value(QOrganizerEventTime::FieldStartDateTime).toDateTime();
-    else if (itemType == QOrganizerItemType::TypeTodo || itemType == QOrganizerItemType::TypeTodoOccurrence)
-        alarmDueDateTime = item.detail(QOrganizerItemDetail::TypeTodoTime).value(QOrganizerTodoTime::FieldStartDateTime).toDateTime();
-    else
-        return false;
-    if (!alarmDueDateTime.isValid())
-        return false;
-
-    QOrganizerItemAudibleReminder audibleReminder = item.detail(QOrganizerItemDetail::TypeAudibleReminder);
-    if (audibleReminder.isEmpty())
-        return false;
-
-    if (audibleReminder.hasValue(audibleReminder.FieldSecondsBeforeStart))
-            alarmDueDateTime = alarmDueDateTime.addSecs(-audibleReminder.secondsBeforeStart());
-    alarmObject->insert(QOrganizerJsonDbStr::alarmDueDateTime(), alarmDueDateTime.toUTC().toString(Qt::ISODate));
-
-    QString alarmDisplayName = item.displayLabel();
-    if (!alarmDisplayName.isEmpty())
-        alarmObject->insert(QOrganizerJsonDbStr::alarmDisplayName(), alarmDisplayName);
-
-    QString alarmDescription = item.description();
-    if (!alarmDescription.isEmpty())
-        alarmObject->insert(QOrganizerJsonDbStr::alarmDescription(), alarmDescription);
-
-    alarmObject->insert(QOrganizerJsonDbStr::jsonDbType(), QOrganizerJsonDbStr::alarm());
-    alarmObject->insert(QOrganizerJsonDbStr::alarmEnabled(), true);
-    alarmObject->insert(QOrganizerJsonDbStr::alarmLaunchIdentifier(), QOrganizerJsonDbStr::alarmCalendarIdentifier());
-    alarmObject->insert(QOrganizerJsonDbStr::alarmType(), QOrganizerJsonDbStr::alarmTypeCalendar());
-
-    return true;
-}
-
 void QOrganizerJsonDbConverter::audibleReminderDetailToJsonDbObject(const QOrganizerItemAudibleReminder &itemReminder, QJsonObject *object) const
 {
     const QMap<int, QVariant> reminderValues = itemReminder.values();

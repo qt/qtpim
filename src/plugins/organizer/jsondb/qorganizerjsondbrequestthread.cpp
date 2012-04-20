@@ -59,7 +59,6 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);
-const int QOrganizerJsonDbRequestThread::ALARM_REMOVE_MAXLOOP(10);
 const int QOrganizerJsonDbRequestThread::DefaultTimePeriod(1461);
 const int QOrganizerJsonDbRequestThread::MaxOccurrenceCount(50);
 
@@ -403,45 +402,13 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     // save items
     if (!itemMap.isEmpty()) {
         m_storage->saveItems(&itemMap, &errorMap, &latestError, saveReq->storageLocation());
-        QOrganizerManager::Error alarmError;
-        QString alarmId;
-        QOrganizerItemId itemId;
-        QMap<int, QOrganizerItem>::const_iterator i = itemMap.constBegin();
-        while (i != itemMap.constEnd()) {
-            if (!errorMap.contains(i.key())) {
-                alarmError = QOrganizerManager::NoError;
-                alarmId.clear();
+        QMapIterator<int, QOrganizerItem> i(itemMap);
+        while (i.hasNext()) {
+            i.next();
+            if (!errorMap.contains(i.key()))
                 items.replace(i.key(), i.value()); // always replacing because of version updating
-                if (!itemIsNewStatusMap.value(i.key())) {
-                    // Query alarm object if the item is not new one
-                    itemId = i.value().id();
-                    alarmId = m_storage->alarmId(&itemId, &alarmError);
-                    if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
-                        int count = 0;
-                        do {//Try to delete all the alarm objects
-                            m_storage->removeAlarm(&alarmId, &alarmError);
-                            alarmId = m_storage->alarmId(&itemId, &alarmError);
-                            ++count;//Prevent infinite loop
-                        } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
-                    }
-                }
-
-                if (QOrganizerManager::NoError == alarmError) {
-                    if (!i.value().detail(QOrganizerItemDetail::TypeAudibleReminder).isEmpty())
-                        m_storage->saveAlarm(&i.value(), &alarmId, &alarmError);// Save/Update alarm object for the saved item
-                    else if (!alarmId.isEmpty())
-                        m_storage->removeAlarm(&alarmId, &alarmError);
-                }
-
-                if (QOrganizerManager::NoError != alarmError) {
-                    latestError = alarmError;
-                    errorMap.insert(i.key(), alarmError);
-                }
-            } else {
-                // the item was not saved, let's not save the parent item either
-                parentItemMap.remove(i.key());
-            }
-            ++i;
+            else
+                parentItemMap.remove(i.key()); // the item was not saved, let's not save the parent item either
         }
     }
     // save parent items with modified exception dates
@@ -1133,7 +1100,6 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
                 removedParentIds.append(item.id());
         }
         m_storage->removeItems(itemIds, errorMap, error);
-        removeAlarmObjects(itemIds, *errorMap);
 
         // remove all persisted occurrences of removed parent items
         if (!removedParentIds.isEmpty()) {
@@ -1159,33 +1125,6 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
         tmpErrorMap.clear();
         tmpError = QOrganizerManager::NoError;
         m_storage->removeItems(occurrenceIds, &tmpErrorMap, &tmpError);
-        removeAlarmObjects(occurrenceIds, tmpErrorMap);
-    }
-}
-
-void QOrganizerJsonDbRequestThread::removeAlarmObjects(const QList<QOrganizerItemId> &itemIds, const QMap<int, QOrganizerManager::Error> &errorMap)
-{
-    QOrganizerManager::Error alarmError;
-    QString alarmId;
-    int index = 0;
-
-    foreach (const QOrganizerItemId &id, itemIds) {
-        if (!errorMap.contains(index)) {
-            alarmError = QOrganizerManager::NoError;
-            alarmId = m_storage->alarmId(&id, &alarmError);
-            if (QOrganizerManager::NoError == alarmError && !alarmId.isEmpty()) {
-                m_storage->removeAlarm(&alarmId, &alarmError);
-            } else if (QOrganizerManager::InvalidDetailError == alarmError && !alarmId.isEmpty()) {
-                int count = 0;
-                do {
-                    //Try to delete all the alarm objects
-                    m_storage->removeAlarm(&alarmId, &alarmError);
-                    alarmId = m_storage->alarmId(&id, &alarmError);
-                    ++count;
-                } while (!alarmId.isEmpty() && count < ALARM_REMOVE_MAXLOOP);
-            }
-        }
-        ++index;
     }
 }
 

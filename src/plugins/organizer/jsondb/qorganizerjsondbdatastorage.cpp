@@ -195,36 +195,6 @@ QSet<QOrganizerCollectionId> QOrganizerJsonDbDataStorage::collectionIds()
     return m_collectionIds;
 }
 
-QString QOrganizerJsonDbDataStorage::alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error)
-{
-    if (itemId->isNull())
-        return QString();
-    initRequestData(AlarmId, 0, error);
-    m_itemIds.append(*itemId);
-    processRequest();
-    QString ret = m_alarmId;
-    clearRequestData();
-    return ret;
-}
-
-void QOrganizerJsonDbDataStorage::saveAlarm(const QOrganizerItem *item, const QString *alarmUuid, QOrganizerManager::Error *error)
-{
-    initRequestData(SaveAlarm, 0, error);
-    m_items.append(*item);
-    if (!alarmUuid->isEmpty())
-        m_alarmId = *alarmUuid;
-    processRequest();
-    clearRequestData();
-}
-
-void QOrganizerJsonDbDataStorage::removeAlarm(const QString *alarmUuid, QOrganizerManager::Error *error)
-{
-    initRequestData(RemoveAlarm, 0, error);
-    m_alarmId = *alarmUuid;
-    processRequest();
-    clearRequestData();
-}
-
 void QOrganizerJsonDbDataStorage::run()
 {
     m_waitMutex = new QMutex();
@@ -382,15 +352,6 @@ void QOrganizerJsonDbDataStorage::handleRequest()
     case RemoveCollections:
         handleRemoveCollectionsRequest();
         break;
-    case AlarmId:
-        handleAlarmIdRequest();
-        break;
-    case SaveAlarm:
-        handleSaveAlarmRequest();
-        break;
-    case RemoveAlarm:
-        handleRemoveAlarmRequest();
-        break;
     default:
         break;
     }
@@ -431,15 +392,6 @@ void QOrganizerJsonDbDataStorage::handleResponse(QOrganizerManager::Error error,
         break;
     case RemoveCollections:
         handleRemoveCollectionsResponse(error);
-        break;
-    case AlarmId:
-        handleAlarmIdResponse(error, request);
-        break;
-    case SaveAlarm:
-        handleSaveAlarmResponse(error);
-        break;
-    case RemoveAlarm:
-        handleRemoveAlarmResponse(error);
         break;
     case Invalid:
         // no active request at the moment, internal variables have been cleared and some pointers have
@@ -848,87 +800,6 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerMana
     m_syncWaitCondition.wakeAll();
 }
 
-void QOrganizerJsonDbDataStorage::handleAlarmIdRequest()
-{
-    const QOrganizerJsonDbItemId jsonDbItemId(m_itemIds.at(0).toString());
-    if (!makeJsonDbRequest(JsonDbReadRequest, 0, jsonDbItemId.storageLocation(),
-                           QOrganizerJsonDbStr::jsonDbQueryAlarmsTemplate().arg(jsonDbItemId.toString()))) {
-        m_syncWaitCondition.wakeAll();
-    }
-}
-
-void QOrganizerJsonDbDataStorage::handleAlarmIdResponse(QOrganizerManager::Error error, QJsonDbRequest *request)
-{
-    if (error == QOrganizerManager::NoError) {
-        QList<QJsonObject> results = request->takeResults();
-        if (!results.isEmpty()) {
-            QOrganizerJsonDbItemId jsonDbItemId;
-            jsonDbItemId.setJsonDbUuid(results.at(0).value(QOrganizerJsonDbStr::jsonDbUuid()).toString());
-            jsonDbItemId.setStorageLocation(m_converter.storageLocationStringToEnum(request->partition()));
-            m_alarmId = jsonDbItemId.toString();
-            if (results.size() > 1) {
-                *m_error = QOrganizerManager::InvalidDetailError;
-                qWarning("More than one alarm for one event!");
-            }
-        }
-    } else {
-        *m_error = error;
-    }
-    m_syncWaitCondition.wakeAll();
-}
-
-void QOrganizerJsonDbDataStorage::handleSaveAlarmRequest()
-{
-    bool requestSent = false;
-    const QOrganizerItem &item = m_items.at(0);
-    QJsonObject jsonDbAlarm;
-    if (m_converter.itemToJsondbAlarmObject(item, &jsonDbAlarm)) {
-        JsonDbRequestType requestType;
-        if (m_alarmId.isEmpty()) {
-            requestType = JsonDbCreateRequest;
-        } else {
-            jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), QOrganizerJsonDbItemId(m_alarmId).jsondbUuid());
-            requestType = JsonDbUpdateRequest;
-        }
-
-        requestSent = makeJsonDbRequest(requestType, 0, QOrganizerManagerEngine::engineItemId(item.id())->storageLocation(),
-                                        QString(), QList<QJsonObject>() << jsonDbAlarm);
-    } else {
-        *m_error = QOrganizerManager::InvalidDetailError;
-    }
-    if (!requestSent)
-        m_syncWaitCondition.wakeAll();
-}
-
-void QOrganizerJsonDbDataStorage::handleSaveAlarmResponse(QOrganizerManager::Error error)
-{
-    if (error != QOrganizerManager::NoError)
-        *m_error = error;
-    m_syncWaitCondition.wakeAll();
-}
-
-void QOrganizerJsonDbDataStorage::handleRemoveAlarmRequest()
-{
-    bool requestSent = false;
-    if (!m_alarmId.isEmpty()) {
-        const QOrganizerJsonDbItemId jsonDbItemId(m_alarmId);
-        QJsonObject jsonDbAlarm;
-        jsonDbAlarm.insert(QOrganizerJsonDbStr::jsonDbUuid(), jsonDbItemId.jsondbUuid());
-        requestSent = makeJsonDbRequest(JsonDbRemoveRequest, 0, jsonDbItemId.storageLocation(), QString(), QList<QJsonObject>() << jsonDbAlarm);
-    } else {
-        *m_error = QOrganizerManager::InvalidDetailError;
-    }
-    if (!requestSent)
-        m_syncWaitCondition.wakeAll();
-}
-
-void QOrganizerJsonDbDataStorage::handleRemoveAlarmResponse(QOrganizerManager::Error error)
-{
-    if (QOrganizerManager::NoError != error)
-        *m_error = error;
-    m_syncWaitCondition.wakeAll();
-}
-
 bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(
         JsonDbRequestType jsonDbRequestType, int index, QOrganizerAbstractRequest::StorageLocation storageLocation, const QString &query, const QList<QJsonObject> &objects)
 {
@@ -1000,7 +871,6 @@ void QOrganizerJsonDbDataStorage::initRequestData(RequestType requestType, QMap<
     m_removeItemParentIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
-    m_alarmId.clear();
     m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
     m_fetchFromStorageLocations = 0;
 }
@@ -1024,7 +894,6 @@ void QOrganizerJsonDbDataStorage::clearRequestData()
     m_removeItemParentIds.clear();
     m_removeCollectionIds.clear();
     m_isDefaultCollection = false;
-    m_alarmId.clear();
     m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
     m_fetchFromStorageLocations = 0;
 }

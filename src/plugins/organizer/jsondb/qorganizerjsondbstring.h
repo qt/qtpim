@@ -88,7 +88,6 @@ public:
 
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
-    inline const static QString jsonDbQueryAlarmsTemplate() { return QStringLiteral("[?_type=\"com.nokia.mt.alarm.Alarm\"][?eventUuid=\"%1\"]"); }
 
     inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
 
@@ -189,19 +188,6 @@ public:
     inline const static QString todoFinishedDateTime() { return QStringLiteral("finishedDateTime"); }
     inline const static QString todoProgressPercentage() { return QStringLiteral("progressPercentage"); }
     inline const static QString todoStatus() { return QStringLiteral("status"); }
-
-    // alarms
-    inline const static QString alarm() { return QStringLiteral("com.nokia.mt.alarm.Alarm"); }
-    inline const static QString alarmDisplayName() { return QStringLiteral("displayName"); }
-    inline const static QString alarmDescription() { return QStringLiteral("description"); }
-    inline const static QString alarmEventUuid() { return QStringLiteral("eventUuid"); }
-    inline const static QString alarmDueDateTime() { return QStringLiteral("dueDateTime"); }
-    inline const static QString alarmAudioUrl() { return QStringLiteral("audioUrl"); }
-    inline const static QString alarmEnabled() { return QStringLiteral("enabled"); }
-    inline const static QString alarmLaunchIdentifier() { return QStringLiteral("launchIdentifier"); }
-    inline const static QString alarmCalendarIdentifier() { return QStringLiteral("com.nokia.mt.calendar"); }
-    inline const static QString alarmType() { return QStringLiteral("alarmType"); }
-    inline const static QString alarmTypeCalendar() { return QStringLiteral("Calendar"); }
 
     //warning string
     inline const static QString warningCollectionRemove() { return QStringLiteral("Number of items deleted from jsondb is not equal to request!!"); }

@@ -104,10 +104,6 @@ public:
     QOrganizerCollection defaultCollection();
     QSet<QOrganizerCollectionId> collectionIds();
 
-    void saveAlarm(const QOrganizerItem *item, const QString *alarmUuid, QOrganizerManager::Error *error);
-    void removeAlarm(const QString *alarmUuid, QOrganizerManager::Error *error);
-    QString alarmId(const QOrganizerItemId *itemId, QOrganizerManager::Error *error);
-
 signals:
     void threadInitialized();
     void requestInitialized();
@@ -140,10 +136,7 @@ private:
         RemoveItems,
         SaveCollections,
         Collections,
-        RemoveCollections,
-        AlarmId,
-        SaveAlarm,
-        RemoveAlarm
+        RemoveCollections
     };
 
     void handleResponse(QOrganizerManager::Error error, QJsonDbRequest *request);
@@ -240,9 +233,6 @@ private:
 
     // RemoveCollections
     QMap<int, QOrganizerCollectionId> m_removeCollectionIds;
-
-    // Alarm Id string
-    QString m_alarmId;
 };
 
 QTORGANIZER_END_NAMESPACE

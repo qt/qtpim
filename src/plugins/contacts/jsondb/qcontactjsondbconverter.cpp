@@ -119,7 +119,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                 if (!stringValue.isEmpty()) {
                     switch (sanitizeContactDetailString(&stringValue)) {
                     case QContactJsonDbConverter::InvalidArgumentError:
-                        qWarning() << Q_FUNC_INFO <<": Name field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                        qWarning() << Q_FUNC_INFO <<": Name field of json object does not contain a valid jsondb detail";
                         return false;
                         break;
                     case QContactJsonDbConverter::NoError:
@@ -154,7 +154,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                     if (!stringValue.isEmpty()) {
                         switch (sanitizeContactDetailString(&stringValue)) {
                         case QContactJsonDbConverter::InvalidArgumentError:
-                            qWarning() << Q_FUNC_INFO <<": Organization field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                            qWarning() << Q_FUNC_INFO <<": Organization field of json object does not contain a valid jsondb detail";
                             return false;
                             break;
                         case QContactJsonDbConverter::NoError:
@@ -212,7 +212,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                 QString nickString = temporaryJsonObject[detailsToJsonMapping.value(QContactNickname::Type)].toString();
                 switch (sanitizeContactDetailString(&nickString)) {
                 case QContactJsonDbConverter::InvalidArgumentError:
-                    qWarning() << Q_FUNC_INFO <<": Nickname field of json object " << object << "does not contain a valid " << " jsondb detail" << nickString;
+                    qWarning() << Q_FUNC_INFO <<": Nickname field of json object does not contain a valid jsondb detail";
                     return false;
                     break;
                 case QContactJsonDbConverter::NoError:
@@ -240,7 +240,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                 QString noteString = temporaryJsonObject[detailsToJsonMapping.value(QContactNote::Type)].toString();
                 switch (sanitizeContactDetailString(&noteString, 1000)) {
                 case QContactJsonDbConverter::InvalidArgumentError:
-                    qWarning() << Q_FUNC_INFO <<": Note field of json object " << object << "does not contain a valid " << " jsondb detail" << noteString;
+                    qWarning() << Q_FUNC_INFO <<": Note field of json object does not contain a valid jsondb detail";
                     return false;
                     break;
                 case QContactJsonDbConverter::NoError:
@@ -264,7 +264,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                     QString emailString = temporaryJsonObject["value"].toString();
                     switch (sanitizeContactDetailString(&emailString, 126)) {
                     case QContactJsonDbConverter::InvalidArgumentError:
-                        qWarning() << Q_FUNC_INFO <<": email field of json object " << object << "does not contain a valid " << " jsondb detail" << emailString;
+                        qWarning() << Q_FUNC_INFO <<": email field of json object does not contain a valid jsondb detail";
                         return false;
                         break;
                     case QContactJsonDbConverter::NoError:
@@ -319,7 +319,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                     };
                     contact->appendDetail(number);
                 } else {
-                    qWarning() << Q_FUNC_INFO <<":Number field of json object " << object << "does not contain a valid "
+                    qWarning() << Q_FUNC_INFO <<":Number field of json object does not contain a valid "
                                << " jsondb phone number.";
                     return false;
                 }
@@ -336,7 +336,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                     if (!stringValue.isEmpty()) {
                         switch (sanitizeContactDetailString(&stringValue)) {
                         case QContactJsonDbConverter::InvalidArgumentError:
-                            qWarning() << Q_FUNC_INFO <<": address field of json object " << object << "does not contain a valid " << " jsondb detail" << stringValue;
+                            qWarning() << Q_FUNC_INFO <<": address field of json object does not contain a valid jsondb detail";
                             return false;
                             break;
                         case QContactJsonDbConverter::NoError:
@@ -467,7 +467,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
                     name_field = nameFieldsIterator.value().toString();
                     switch (sanitizeContactDetailString(&name_field)) {
                     case QContactJsonDbConverter::InvalidArgumentError:
-                        qWarning() << Q_FUNC_INFO <<": Name detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << name_field;
+                        qWarning() << Q_FUNC_INFO <<": Name detail does not contain a valid jsondb detail";
                         return false;
                         break;
                     case QContactJsonDbConverter::NoError:
@@ -498,7 +498,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             organization_field = organizationIter.value().toString();
             switch (sanitizeContactDetailString(&organization_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Name field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                qWarning() << Q_FUNC_INFO <<": Name field of organization detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -513,7 +513,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
                 organization_field = organization->department().at(i); // .join("")
                 switch (sanitizeContactDetailString(&organization_field)) {
                 case QContactJsonDbConverter::InvalidArgumentError:
-                    qWarning() << Q_FUNC_INFO <<": Department field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                    qWarning() << Q_FUNC_INFO <<": Department field of organization detail does not contain a valid jsondb detail";
                     return false;
                     break;
                 case QContactJsonDbConverter::NoError:
@@ -527,7 +527,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             organization_field = organization->title();
             switch (sanitizeContactDetailString(&organization_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Title field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                qWarning() << Q_FUNC_INFO <<": Title field of organization detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -540,7 +540,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             organization_field = organization->role();
             switch (sanitizeContactDetailString(&organization_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Role field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                qWarning() << Q_FUNC_INFO <<": Role field of organization detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -553,7 +553,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             organization_field = organization->assistantName();
             switch (sanitizeContactDetailString(&organization_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": AssistantName field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                qWarning() << Q_FUNC_INFO <<": AssistantName field of organization detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -566,7 +566,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             organization_field = organization->location();
             switch (sanitizeContactDetailString(&organization_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Location field of organization detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << organization_field;
+                qWarning() << Q_FUNC_INFO <<": Location field of organization detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -608,7 +608,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             QString nickname_field = nick->nickname();
             switch (sanitizeContactDetailString(&nickname_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": nick detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << nickname_field;
+                qWarning() << Q_FUNC_INFO <<": nick detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -632,7 +632,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             QString note_field = note->note();
             switch (sanitizeContactDetailString(&note_field, 1000)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": note detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << note_field;
+                qWarning() << Q_FUNC_INFO <<": note detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -651,7 +651,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             QString email_field = email->emailAddress();
             switch (sanitizeContactDetailString(&email_field, 126)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": email detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << email_field;
+                qWarning() << Q_FUNC_INFO <<": email detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -697,7 +697,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = addressIter.value().toString();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Street field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                qWarning() << Q_FUNC_INFO <<": Street field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -710,7 +710,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = address->locality();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Locality field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                qWarning() << Q_FUNC_INFO <<": Locality field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -723,7 +723,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = address->postcode();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": PostCode field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                qWarning() << Q_FUNC_INFO <<": PostCode field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -736,7 +736,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = address->postOfficeBox();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": PostOfficeBox field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                qWarning() << Q_FUNC_INFO <<": PostOfficeBox field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -749,7 +749,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = address->region();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Region field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                 qWarning() << Q_FUNC_INFO <<": Region field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -762,7 +762,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             address_field = address->country();
             switch (sanitizeContactDetailString(&address_field)) {
             case QContactJsonDbConverter::InvalidArgumentError:
-                qWarning() << Q_FUNC_INFO <<": Country field of address detail of qcontact " << object << "does not contain a valid " << " jsondb detail" << address_field;
+                qWarning() << Q_FUNC_INFO <<": Country field of address detail does not contain a valid jsondb detail";
                 return false;
                 break;
             case QContactJsonDbConverter::NoError:
@@ -1406,6 +1406,7 @@ QContactJsonDbConverter::SanitizeError QContactJsonDbConverter::sanitizeContactD
         cleaned.squeeze();
         *stringToBeSanitized = cleaned;
         if ((stringToBeSanitized->length() > maxStringLength) || (stringToBeSanitized->isEmpty())) {
+            qWarning() << Q_FUNC_INFO <<"The string is either empty or too long. The maximum length allowed is " << maxStringLength;
             return InvalidArgumentError; // String too long, return error
         } else {
             return NoError; // No error

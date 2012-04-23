@@ -1296,6 +1296,15 @@ QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbConverter::storageLoc
     return QOrganizerAbstractRequest::StorageLocation(stringToEnum(organizerStorageLocationMap(), storageLocation));
 }
 
+QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbConverter::storageLocationListToFlag(const QList<QOrganizerAbstractRequest::StorageLocation> storageLocationsList)
+{
+    QOrganizerAbstractRequest::StorageLocations locationsFlag(0);
+    foreach (QOrganizerAbstractRequest::StorageLocation location, storageLocationsList) {
+        locationsFlag |= location;
+    }
+    return locationsFlag;
+}
+
 void QOrganizerJsonDbConverter::itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const
 {
     int version = itemVersion.version();

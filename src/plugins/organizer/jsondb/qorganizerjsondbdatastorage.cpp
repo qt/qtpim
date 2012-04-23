@@ -53,7 +53,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerJsonDbDataStorage::QOrganizerJsonDbDataStorage()
     : m_waitMutex(0)
     , m_jsonDbConnection(0)
-    , m_storageLocationsMissing(false)
+    , m_mandatoryStorageLocationMissing(false)
 {
     m_availableStorageLocations<<QOrganizerAbstractRequest::UserDataStorage<<QOrganizerAbstractRequest::SystemStorage;
     clearRequestData();
@@ -70,6 +70,7 @@ void QOrganizerJsonDbDataStorage::saveItems(QMap<int, QOrganizerItem>* items, QM
         return;
     initRequestData(SaveItems, errorMap, error);
     m_saveToStorageLocation = storageLocation;
+    checkMissingRequestSpecificStorageLocations(m_saveToStorageLocation);
     m_resultItems = items;
     processRequest();
     clearRequestData();
@@ -90,6 +91,7 @@ QList<QOrganizerItem> QOrganizerJsonDbDataStorage::items(const QDateTime &startD
         m_parentItemId = parentId;
     m_fetchType = type;
     m_fetchFromStorageLocations = storageLocations;
+    checkMissingRequestSpecificStorageLocations(m_fetchFromStorageLocations);
     processRequest();
     QList<QOrganizerItem> fetchedItems = m_items;
     clearRequestData();
@@ -104,6 +106,7 @@ QList<QOrganizerItem> QOrganizerJsonDbDataStorage::itemsById(const QList<QOrgani
     initRequestData(ItemsById, errorMap, error);
     m_itemIds = itemIds;
     m_fetchFromStorageLocations = storageLocations;
+    checkMissingRequestSpecificStorageLocations(m_fetchFromStorageLocations);
     processRequest();
     QList<QOrganizerItem> fetchedItems = m_items;
     clearRequestData();
@@ -128,6 +131,7 @@ void QOrganizerJsonDbDataStorage::saveCollections(QMap<int, QOrganizerCollection
     m_resultCollections = collections;
     m_isDefaultCollection = false;
     m_saveToStorageLocation = storageLocation;
+    checkMissingRequestSpecificStorageLocations(m_saveToStorageLocation);
     processRequest();
     clearRequestData();
 }
@@ -136,6 +140,7 @@ QList<QOrganizerCollection> QOrganizerJsonDbDataStorage::collections(QOrganizerM
 {
     initRequestData(Collections, 0, error);
     m_fetchFromStorageLocations = storageLocations;
+    checkMissingRequestSpecificStorageLocations(m_fetchFromStorageLocations);
     processRequest();
     QList<QOrganizerCollection> fetchedCollections;
     if (*error == QOrganizerManager::NoError)
@@ -175,12 +180,8 @@ QOrganizerCollection QOrganizerJsonDbDataStorage::defaultCollection()
     // and the availability of storage locations is also checked.
     if (m_defaultCollection.id().isNull()) {
         // m_defaultCollection is updated every time collections are fetched
-        QOrganizerManager::Error error(QOrganizerManager::NoError);
-        collections(&error, QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
-        if (error == QOrganizerManager::StorageLocationsNotExistingError) {
-            qCritical("Organizer JsonDb backend does not work without storage locations!");
-            m_storageLocationsMissing = true;
-        }
+        QOrganizerManager::Error error;
+        collections(&error, m_converter.storageLocationListToFlag(m_availableStorageLocations));
     }
     return m_defaultCollection;
 }
@@ -190,9 +191,23 @@ QSet<QOrganizerCollectionId> QOrganizerJsonDbDataStorage::collectionIds()
     if (m_collectionIds.isEmpty()) {
         // m_collectionIds is updated every time collections are fetched
         QOrganizerManager::Error error;
-        collections(&error, QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+        collections(&error, m_converter.storageLocationListToFlag(m_availableStorageLocations));
     }
     return m_collectionIds;
+}
+
+const QList<QOrganizerAbstractRequest::StorageLocation>& QOrganizerJsonDbDataStorage::availableStorageLocations() const
+{
+    return m_availableStorageLocations;
+}
+
+void QOrganizerJsonDbDataStorage::checkMissingRequestSpecificStorageLocations(const QOrganizerAbstractRequest::StorageLocations &storageLocations)
+{
+    // UserDataStorage is mandatory and checked elsewhere. Here we need to check only additional partitions.
+    if (QOrganizerAbstractRequest::SystemStorage & storageLocations && (-1 == m_availableStorageLocations.indexOf(QOrganizerAbstractRequest::SystemStorage))) {
+        qWarning("Organizer - Request cannot access '%s'!", qPrintable("QOrganizerAbstractRequest::SystemStorage"));
+        m_requestSpecificStorageLocationsMissing = true;
+    }
 }
 
 void QOrganizerJsonDbDataStorage::run()
@@ -251,8 +266,18 @@ void QOrganizerJsonDbDataStorage::onJsonDbRequestError(QtJsonDb::QJsonDbRequest:
     Q_UNUSED(message)
     // if the error() signal is emitted, the finished() signal won't be emitted, so need to call handleResponse()
     QJsonDbRequest *request = qobject_cast<QJsonDbRequest *>(sender());
-    if (request)
-        handleResponse(m_converter.jsonDbRequestErrorToOrganizerError(error), request);
+    if (request) {
+        const QOrganizerManager::Error organizerError = m_converter.jsonDbRequestErrorToOrganizerError(error);
+        if (organizerError == QOrganizerManager::StorageLocationsNotExistingError && !m_mandatoryStorageLocationMissing) {
+            const QOrganizerAbstractRequest::StorageLocation requestStorageLocation = m_converter.storageLocationStringToEnum(request->partition());
+            m_availableStorageLocations.removeOne(requestStorageLocation);
+            if (QOrganizerAbstractRequest::UserDataStorage == requestStorageLocation) {
+                qCritical("Organizer - JsonDb backend does not work without UserDataStorage!");
+                m_mandatoryStorageLocationMissing = true;
+            }
+        }
+        handleResponse(organizerError, request);
+    }
 }
 
 void QOrganizerJsonDbDataStorage::onJsonDbRequestFinished()
@@ -838,10 +863,15 @@ bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(
 
 void QOrganizerJsonDbDataStorage::processRequest()
 {
-    if (m_storageLocationsMissing) {
+    // storage location related checks
+    if (m_mandatoryStorageLocationMissing) {
         *m_error = QOrganizerManager::StorageLocationsNotExistingError;
         return;
+    } else if (m_requestSpecificStorageLocationsMissing) {
+        *m_error = QOrganizerManager::BadArgumentError;
+        return;
     }
+
     emit requestInitialized();
     QMutexLocker locker(m_waitMutex);
     int msecs = 10000; // TODO: handle timeout nicely
@@ -873,6 +903,7 @@ void QOrganizerJsonDbDataStorage::initRequestData(RequestType requestType, QMap<
     m_isDefaultCollection = false;
     m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
     m_fetchFromStorageLocations = 0;
+    m_requestSpecificStorageLocationsMissing = false;
 }
 
 void QOrganizerJsonDbDataStorage::clearRequestData()
@@ -896,6 +927,7 @@ void QOrganizerJsonDbDataStorage::clearRequestData()
     m_isDefaultCollection = false;
     m_saveToStorageLocation = QOrganizerAbstractRequest::UserDataStorage;
     m_fetchFromStorageLocations = 0;
+    m_requestSpecificStorageLocationsMissing = false;
 }
 
 #include "moc_qorganizerjsondbdatastorage.cpp"

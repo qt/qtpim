@@ -100,6 +100,7 @@ public:
     // storage location handling
     const QStringList storageLocationsFlagToStrings(const QOrganizerAbstractRequest::StorageLocations storageLocationsFlag);
     QOrganizerAbstractRequest::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
+    QOrganizerAbstractRequest::StorageLocations storageLocationListToFlag(const QList<QOrganizerAbstractRequest::StorageLocation> storageLocationsList);
 
 private:
     void itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const;

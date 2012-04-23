@@ -307,6 +307,16 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             errorFound = true;
         }
 
+        if (!errorFound) {
+            // check the request is targeted to available non-mandatory storage location
+            if (QOrganizerAbstractRequest::SystemStorage & saveReq->storageLocation()
+                && (-1 == m_storage->availableStorageLocations().indexOf(QOrganizerAbstractRequest::SystemStorage))) {
+                qWarning("Organizer - Request cannot access '%s'!", qPrintable("QOrganizerAbstractRequest::SystemStorage"));
+                latestError = QOrganizerManager::BadArgumentError;
+                errorFound = true;
+            }
+        }
+
         // TODO: to be replaced by new validity check, collection id and guid should not be mandatory fields
         //       this checks e.g. that occurrences have parent ids and original dates?
         //        // ensure that the organizeritem's details conform to their definitions

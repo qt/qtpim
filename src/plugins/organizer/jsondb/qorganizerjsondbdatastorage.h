@@ -104,6 +104,8 @@ public:
     QOrganizerCollection defaultCollection();
     QSet<QOrganizerCollectionId> collectionIds();
 
+    const QList<QOrganizerAbstractRequest::StorageLocation>& availableStorageLocations() const;
+
 signals:
     void threadInitialized();
     void requestInitialized();
@@ -173,6 +175,7 @@ private:
     void initRequestData(RequestType requestType, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     void clearRequestData();
     void registerForNotifications();
+    void checkMissingRequestSpecificStorageLocations(const QOrganizerAbstractRequest::StorageLocations &storageLocations);
 
     QMutex* m_waitMutex;
     QWaitCondition m_syncWaitCondition;
@@ -199,7 +202,8 @@ private:
     QList<QOrganizerAbstractRequest::StorageLocation> m_availableStorageLocations;
     QOrganizerAbstractRequest::StorageLocation m_saveToStorageLocation;
     QOrganizerAbstractRequest::StorageLocations m_fetchFromStorageLocations;
-    bool m_storageLocationsMissing;
+    bool m_mandatoryStorageLocationMissing;
+    bool m_requestSpecificStorageLocationsMissing;
 
     // SaveItems
     QMap<int, QOrganizerItem>* m_resultItems; // map from item index to item

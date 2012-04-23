@@ -412,15 +412,16 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     // save items
     if (!itemMap.isEmpty()) {
         m_storage->saveItems(&itemMap, &errorMap, &latestError, saveReq->storageLocation());
-        QMapIterator<int, QOrganizerItem> i(itemMap);
-        while (i.hasNext()) {
-            i.next();
+        QMap<int, QOrganizerItem>::const_iterator i = itemMap.constBegin();
+        while (i != itemMap.constEnd()) {
             if (!errorMap.contains(i.key()))
                 items.replace(i.key(), i.value()); // always replacing because of version updating
             else
                 parentItemMap.remove(i.key()); // the item was not saved, let's not save the parent item either
+            ++i;
         }
     }
+
     // save parent items with modified exception dates
     if (!parentItemMap.isEmpty())
         m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError, saveReq->storageLocation());

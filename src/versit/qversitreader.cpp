@@ -166,8 +166,11 @@ QIODevice* QVersitReader::device() const
  */
 void QVersitReader::setData(const QByteArray &inputData)
 {
-    if (d->mInputBytes.isNull())
+    if (d->mInputBytes.isNull()) {
         d->mInputBytes.reset(new QBuffer);
+    } else if (d->mInputBytes->isOpen()) {
+        d->mInputBytes->close();
+    }
     d->mInputBytes->setData(inputData);
     d->mInputBytes->open(QIODevice::ReadOnly);
     d->mIoDevice = d->mInputBytes.data();

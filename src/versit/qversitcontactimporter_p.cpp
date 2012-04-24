@@ -788,20 +788,25 @@ bool QVersitContactImporterPrivate::createGender(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    QString val = property.value();
-    QContactGender gender = contact->detail<QContactGender>();
-    if (property.name() == QStringLiteral("X-GENDER")) {
-        if (val.isEmpty()) {
+    QContactGender gender;
+    QContactDetail detail = contact->detail(QContactGender::Type);
+    if (!detail.isEmpty()) {
+        // If multiple gender properties exist,
+        // discard all except the first occurrence
+        if (!detail.value(QContactGender::FieldGender).toBool())
             return false;
-        } else {
-            if (val == QStringLiteral("Male")) {
-                gender.setGender(QContactGender::GenderMale);
-            } else if (val == QStringLiteral("Female")) {
-                gender.setGender(QContactGender::GenderFemale);
-            } else {
-                gender.setGender(QContactGender::GenderUnspecified);
-            }
-        }
+        else
+            gender = QContactGender(static_cast<QContactGender>(detail));
+    }
+    QString val = property.value().toUpper();
+    if (property.name() != QStringLiteral("X-GENDER") || val.isEmpty())
+        return false;
+    if (val == QStringLiteral("MALE")) {
+        gender.setGender(QContactGender::GenderMale);
+    } else if (val == QStringLiteral("FEMALE")) {
+        gender.setGender(QContactGender::GenderFemale);
+    } else if (val == QStringLiteral("UNSPECIFIED")) {
+        gender.setGender(QContactGender::GenderUnspecified);
     } else {
         return false;
     }

@@ -747,16 +747,56 @@ void tst_QVersitContactImporter::testBirthday()
 
 void tst_QVersitContactImporter::testGender()
 {
-    // Date : ISO 8601 extended format
-    QVersitProperty property;
-    property.setName(QLatin1String("X-GENDER"));
-    QString val(QLatin1String("Male"));
-    property.setValue(val);
-    QVersitDocument document = createDocumentWithProperty(property);
-    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
-    QContact contact = mImporter->contacts().first();
-    QContactGender  gender = contact.detail<QContactGender >();
-    QCOMPARE(gender.gender(),QContactGender::GenderMale);
+    // Check empty property.
+    QVersitProperty property1;
+    property1.setName(QLatin1String("X-GENDER"));
+    QString val1(QLatin1String(""));
+    property1.setValue(val1);
+    QVersitDocument document1 = createDocumentWithProperty(property1);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document1));
+    QContact contact1 = mImporter->contacts().first();
+    QCOMPARE (contact1, QContact());
+
+    // Check valid values.
+    QVersitProperty property2;
+    property2.setName(QLatin1String("X-GENDER"));
+    QString val2(QLatin1String("male"));
+    property2.setValue(val2);
+    QVersitDocument document2 = createDocumentWithProperty(property2);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document2));
+    QContact contact2 = mImporter->contacts().first();
+    QContactGender  gender2 = contact2.detail<QContactGender >();
+    QCOMPARE(gender2.gender(),QContactGender::GenderMale);
+
+    QVersitProperty property3;
+    property3.setName(QLatin1String("x-gender"));
+    QString val3(QLatin1String("FEMALE"));
+    property3.setValue(val3);
+    QVersitDocument document3 = createDocumentWithProperty(property3);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document3));
+    QContact contact3 = mImporter->contacts().first();
+    QContactGender gender3 = contact3.detail<QContactGender >();
+    QCOMPARE(gender3.gender(),QContactGender::GenderFemale);
+
+    QVersitProperty property4;
+    property4.setName(QLatin1String("x-Gender"));
+    QString val4(QLatin1String("Unspecified"));
+    property4.setValue(val4);
+    QVersitDocument document4 = createDocumentWithProperty(property4);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document4));
+    QContact contact4 = mImporter->contacts().first();
+    QContactGender gender4 = contact4.detail<QContactGender >();
+    QCOMPARE(gender4.gender(),QContactGender::GenderUnspecified);
+
+    // Check property having an invalid value.
+    QVersitProperty property5;
+    property5.setName(QLatin1String("X-GENDER"));
+    QString val5(QLatin1String("Garbage"));
+    property5.setValue(val5);
+    QVersitDocument document5 = createDocumentWithProperty(property5);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document5));
+    QContact contact5 = mImporter->contacts().first();
+    QCOMPARE(contact5, QContact());
 }
 
 void tst_QVersitContactImporter::testNickname()

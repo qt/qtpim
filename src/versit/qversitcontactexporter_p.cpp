@@ -641,9 +641,27 @@ void QVersitContactExporterPrivate::encodeGender(
     QSet<int>* processedFields)
 {
     QContactGender gender = static_cast<QContactGender>(detail);
+    if (!gender.gender())
+        return;
+
     QVersitProperty property;
     property.setName(mPropertyMappings.value(detail.type()).second);
-    property.setValue(gender.gender());
+    switch (gender.gender()) {
+    case QContactGender::GenderMale:
+        property.setValue(QLatin1String("Male"));
+        break;
+    case QContactGender::GenderFemale:
+        property.setValue(QLatin1String("Female"));
+        break;
+    case QContactGender::GenderUnspecified:
+        property.setValue(QLatin1String("Unspecified"));
+        break;
+    default:
+        // May only happen if new gender values are added to QContactGender
+        // without adding them support above.
+        qWarning() << "Trying to encode unknown gender value.";
+        return;
+    }
     *generatedProperties << property;
     *processedFields << QContactGender::FieldGender;
 }

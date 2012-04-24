@@ -395,7 +395,6 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportGender() {
-        expectFail("", "Gender is not successfully exported at the moment");
         compare(importedContact.gender.gender, megaContact.gender.gender, "gender");
     }
 

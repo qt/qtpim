@@ -955,16 +955,47 @@ void tst_QVersitContactExporter::testEncodeParameters()
 void tst_QVersitContactExporter::testEncodeGender()
 {
     QContact contact(createContactWithName(QLatin1String("asdf")));
+
+    // Check that empty gender detail is not encoded.
     QContactGender gender;
+    contact.saveDetail(&gender);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+    QVersitDocument document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 0);
+    QVersitProperty property = findPropertyByName(document, QLatin1String("X-GENDER"));
+    QVERIFY(property.isEmpty());
+
+    // Check that all valid values are encoded properly.
     gender.setGender(QContactGender::GenderMale);
     gender.setContexts(QContactGender::ContextHome); // Should not be encoded
     contact.saveDetail(&gender);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
-    QVersitDocument document = mExporter->documents().first();
+    document = mExporter->documents().first();
     QCOMPARE(countProperties(document), 1);
-    QVersitProperty property = findPropertyByName(document, QLatin1String("X-GENDER"));
+    property = findPropertyByName(document, QLatin1String("X-GENDER"));
     QVERIFY(!property.isEmpty());
     QCOMPARE(property.parameters().count(), 0);
+    QCOMPARE(property.value(), QLatin1String("Male"));
+
+    gender.setGender(QContactGender::GenderFemale);
+    contact.saveDetail(&gender);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+    document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 1);
+    property = findPropertyByName(document, QLatin1String("X-GENDER"));
+    QVERIFY(!property.isEmpty());
+    QCOMPARE(property.parameters().count(), 0);
+    QCOMPARE(property.value(), QLatin1String("Female"));
+
+    gender.setGender(QContactGender::GenderUnspecified);
+    contact.saveDetail(&gender);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+    document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 1);
+    property = findPropertyByName(document, QLatin1String("X-GENDER"));
+    QVERIFY(!property.isEmpty());
+    QCOMPARE(property.parameters().count(), 0);
+    QCOMPARE(property.value(), QLatin1String("Unspecified"));
     //TODO: Add a helper function in this test module to convert gender versity property to gender enum
 }
 

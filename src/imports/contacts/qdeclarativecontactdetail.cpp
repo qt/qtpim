@@ -257,6 +257,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactExtendedDetail;
     else if (type == QDeclarativeContactDetail::Family)
         contactDetail = new QDeclarativeContactFamily;
+    else if (type == QDeclarativeContactDetail::Favorite)
+        contactDetail = new QDeclarativeContactFavorite;
     else if (type == QDeclarativeContactDetail::Gender)
         contactDetail = new QDeclarativeContactGender;
     else if (type == QDeclarativeContactDetail::Geolocation)
@@ -265,6 +267,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactGlobalPresence;
     else if (type == QDeclarativeContactDetail::Guid)
         contactDetail = new QDeclarativeContactGuid;
+    else if (type == QDeclarativeContactDetail::Hobby)
+        contactDetail = new QDeclarativeContactHobby;
     else if (type == QDeclarativeContactDetail::Name)
         contactDetail = new QDeclarativeContactName;
     else if (type == QDeclarativeContactDetail::NickName)
@@ -275,6 +279,8 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactOnlineAccount;
     else if (type == QDeclarativeContactDetail::Organization)
         contactDetail = new QDeclarativeContactOrganization;
+    else if (type == QDeclarativeContactDetail::PersonId)
+        contactDetail = new QDeclarativeContactPersonId;
     else if (type == QDeclarativeContactDetail::PhoneNumber)
         contactDetail = new QDeclarativeContactPhoneNumber;
     else if (type == QDeclarativeContactDetail::Presence)
@@ -293,10 +299,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactUrl;
     else if (type == QDeclarativeContactDetail::Version)
         contactDetail = new QDeclarativeContactVersion;
-    else if (type == QDeclarativeContactDetail::Hobby)
-        contactDetail = new QDeclarativeContactHobby;
-    else if (type == QDeclarativeContactDetail::PersonId)
-        contactDetail = new QDeclarativeContactPersonId;
     else
         contactDetail = new QDeclarativeContactDetail;
     return contactDetail;

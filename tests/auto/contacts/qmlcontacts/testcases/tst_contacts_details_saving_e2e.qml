@@ -260,6 +260,22 @@ ContactsSavingTestCase {
         compare(details[1].emailAddress, emailAddresses2.emailAddress, "email address 1");
     }
 
+    Favorite {
+        id: favorite
+    }
+
+    function test_favorite() {
+        if (model.manager === "jsondb")
+            skip("jsondb does not save favorite correctly");
+        favorite.favorite = true;
+        favorite.index = 1;
+        contact.addDetail(favorite);
+        saveAndRefreshContact();
+        var detail = contact.detail(ContactDetail.Favorite);
+        compare(detail.favorite, true);
+        compare(detail.index, 1);
+    }
+
     Gender {
         id: gender
     }

@@ -910,6 +910,7 @@ void tst_QVersitContactExporter::testEncodeEmbeddedContent()
 
 void tst_QVersitContactExporter::testEncodeRingtone()
 {
+    // Test local ringtone
     QContactRingtone ringtone;
     mResourceHandler->clear();
     mResourceHandler->mSimulatedMimeType = QLatin1String("audio/wav");
@@ -929,6 +930,21 @@ void tst_QVersitContactExporter::testEncodeRingtone()
     QVariant variantValue = soundProperty.variantValue();
     QVERIFY(variantValue.type() == QVariant::ByteArray);
     QCOMPARE(variantValue.value<QByteArray>(), mResourceHandler->mSimulatedData);
+
+    // Test url ringtone
+    QContactRingtone urlRingtone;
+    QContact urlContact(createContactWithName(QLatin1String("asdf")));
+    const QUrl url(QLatin1String("http://qt.nokia.com/audioringtoneurl"));
+    urlRingtone.setAudioRingtoneUrl(url);
+    urlContact.saveDetail(&urlRingtone);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << urlContact, QVersitDocument::VCard30Type));
+    document = mExporter->documents().first();
+    soundProperty = findPropertyByName(document, QLatin1String("SOUND"));
+    QVERIFY(!soundProperty.isEmpty());
+    QCOMPARE(soundProperty.parameters().count(), 1);
+    QVERIFY(soundProperty.parameters().contains(
+            QLatin1String("VALUE"),QLatin1String("URL")));
+    QCOMPARE(soundProperty.value(), url.toString());
 }
 
 void tst_QVersitContactExporter::testEncodeParameters()

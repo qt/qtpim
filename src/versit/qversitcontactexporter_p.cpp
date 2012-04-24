@@ -600,7 +600,16 @@ void QVersitContactExporterPrivate::encodeRingtone(
     QContactRingtone ringtone = static_cast<QContactRingtone>(detail);
     QVersitProperty property;
     property.setName(mPropertyMappings.value(detail.type()).second);
-    if (encodeContentFromFile(ringtone.audioRingtoneUrl().toLocalFile(), property)) {
+    QUrl audioUrl(ringtone.audioRingtoneUrl());
+    // Url value
+    if (!audioUrl.scheme().isEmpty() && !audioUrl.host().isEmpty() &&
+            audioUrl.scheme() != QLatin1String("file")) {
+        property.insertParameter(QLatin1String("VALUE"), QLatin1String("URL"));
+        property.setValue(audioUrl.toString());
+        *generatedProperties << property;
+        *processedFields << QContactRingtone::FieldAudioRingtoneUrl;
+    // Local value
+    } else if (encodeContentFromFile(ringtone.audioRingtoneUrl().toLocalFile(), property)) {
         *generatedProperties << property;
         *processedFields << QContactRingtone::FieldAudioRingtoneUrl;
     }

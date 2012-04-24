@@ -1275,6 +1275,7 @@ void tst_QVersitContactImporter::addFavoritePropertyToDocument(QString favorite,
 
 void tst_QVersitContactImporter::testSound()
 {
+    // Test embedded sound file
     QVersitDocument document(QVersitDocument::VCard30Type);
     QVersitProperty soundProperty;
     QMultiHash<QString,QString> param;
@@ -1289,6 +1290,19 @@ void tst_QVersitContactImporter::testSound()
     QContactRingtone ringtone = contact.detail<QContactRingtone>();
     QByteArray content = mResourceHandler->mObjects.value(ringtone.audioRingtoneUrl());
     QCOMPARE(content, val);
+
+    // Test sound file as URL
+    document.clear();
+    soundProperty.clear();
+    soundProperty.setName(QLatin1String("SOUND"));
+    QString soundUrl(QLatin1String("http://qt.nokia.com/audioringtoneurl"));
+    soundProperty.setValue(soundUrl);
+    soundProperty.insertParameter(QLatin1String("VALUE"),QLatin1String("URL"));
+    document = createDocumentWithProperty(soundProperty);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    contact = mImporter->contacts().first();
+    ringtone = contact.detail<QContactRingtone>();
+    QCOMPARE(ringtone.audioRingtoneUrl().toString(), soundUrl);
 }
 
 void tst_QVersitContactImporter::testTag()

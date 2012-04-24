@@ -526,9 +526,7 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportRingtone() {
-        expectFail("", "Ringtone is not exported at the moment.");
-        // For some reason this passes!!! (only megaContact really has the detail)
-        // compare(importedContact.ringtone.audioRingtoneUrl, megaContact.ringtone.audioRingtoneUrl);
+        compare(importedContact.ringtone.audioRingtoneUrl, megaContact.ringtone.audioRingtoneUrl);
         compare(importedContact.ringtone.audioRingtoneUrl, "http://qt.nokia.com/audioringtoneurl");
     }
 

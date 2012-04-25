@@ -440,7 +440,8 @@ void tst_QVersitContactExporter::testEncodePhoneNumber()
     assistantNumber.setNumber(QLatin1String("4321"));
     assistantNumber.setContexts(QContactDetail::ContextWork);
     expectedSubTypes.clear();
-    expectedSubTypes << QContactPhoneNumber::SubTypeAssistant;
+    expectedSubTypes << QContactPhoneNumber::SubTypeAssistant
+                     << QContactPhoneNumber::SubTypeLandline;
     assistantNumber.setSubTypes(expectedSubTypes);
     contact.saveDetail(&assistantNumber);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
@@ -448,9 +449,11 @@ void tst_QVersitContactExporter::testEncodePhoneNumber()
     QCOMPARE(countProperties(document), 2);
     property = findPropertyByName(document, QLatin1String("X-ASSISTANT-TEL"));
     QVERIFY(!property.isEmpty());
-    QCOMPARE(property.parameters().count(), 1);
+    QCOMPARE(property.parameters().count(), 2);
     QVERIFY(property.parameters().contains(
         QLatin1String("TYPE"),QLatin1String("WORK")));
+    QVERIFY(property.parameters().contains(
+        QLatin1String("TYPE"), QLatin1String("ISDN")));
     QCOMPARE(property.value(), assistantNumber.number());
 }
 

@@ -491,6 +491,7 @@ void tst_QVersitContactImporter::testTel()
     property.insertParameter(QLatin1String("TYPE"),QLatin1String("PAGER"));
     property.insertParameter(QLatin1String("TYPE"),QLatin1String("HOME"));
     property.insertParameter(QLatin1String("TYPE"),QLatin1String("WORK"));
+    property.insertParameter(QLatin1String("TYPE"),QLatin1String("ISDN"));
 
     document.addProperty(property);
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
@@ -499,7 +500,7 @@ void tst_QVersitContactImporter::testTel()
     QCOMPARE(phone.number(),QString(value));
 
     const QList<int> subTypes = phone.subTypes();
-    QCOMPARE(subTypes.count(),8);
+    QCOMPARE(subTypes.count(), 9);
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeVoice));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeMobile));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeModem));
@@ -508,6 +509,7 @@ void tst_QVersitContactImporter::testTel()
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeFax));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeBulletinBoardSystem));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypePager));
+    QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeLandline));
 
     const QList<int> contexts = phone.contexts();
     QCOMPARE(contexts.count(),2);

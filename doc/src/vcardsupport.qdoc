@@ -187,6 +187,9 @@ The following table lists the values that are supported for the TYPE parameter:
     \li PAGER
     \li QContactPhoneNumber::SubTypePager
   \row
+    \li ISDN
+    \li QContactPhoneNumber::SubTypeLandline
+  \row
     \li SWIS
     \li QContactOnlineAccount::SubTypeVideoShare
   \row

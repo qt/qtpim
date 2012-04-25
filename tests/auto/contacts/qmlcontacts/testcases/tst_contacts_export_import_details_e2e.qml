@@ -388,9 +388,7 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportFavorite() {
-        expectFail("", "Favorite is not exported at the moment");
         compare(importedContact.favorite.favorite, megaContact.favorite.favorite, "favorite");
-        expectFail("", "Favorite is not exported at the moment");
         compare(importedContact.favorite.index, megaContact.favorite.index, "index");
     }
 

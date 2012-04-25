@@ -147,6 +147,9 @@ void QVersitContactExporterPrivate::exportContact(
         case QContactDetail::TypeFamily:
             encodeFamily(detail, &generatedProperties, &processedFields);
             break;
+        case QContactDetail::TypeFavorite:
+            encodeFavorite(detail, &generatedProperties, &processedFields);
+            break;
         case QContactDetail::TypeGender:
             encodeGender(detail, &generatedProperties, &processedFields);
             break;
@@ -805,6 +808,26 @@ void QVersitContactExporterPrivate::encodeFamily(
         *generatedProperties << property;
         *processedFields << QContactFamily::FieldChildren;
     }
+}
+
+/*!
+ * Encode favorite versit property if its supported in Versit Document
+ */
+void QVersitContactExporterPrivate::encodeFavorite(
+        const QContactDetail &detail,
+        QList<QVersitProperty>* generatedProperties,
+        QSet<int>* processedFields)
+{
+    QContactFavorite favorite = static_cast<QContactFavorite>(detail);
+    QVersitProperty property;
+    property.setName(mPropertyMappings.value(detail.type()).second);
+    QString isFavorite = favorite.isFavorite() ? QStringLiteral("true") : QStringLiteral("false");
+    property.setValue(QStringList() << isFavorite
+                      << QString::number(favorite.index()));
+    property.setValueType(QVersitProperty::CompoundType);
+    *generatedProperties << property;
+    *processedFields << QContactFavorite::FieldFavorite
+                     << QContactFavorite::FieldIndex;
 }
 
 /*!

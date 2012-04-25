@@ -434,6 +434,12 @@ QVersitReaderPrivate::valueTypeMap() {
                              QVersitProperty::ListType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromAscii("X-NICKNAME")),
                              QVersitProperty::ListType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard21Type, QString::fromAscii("X-QTPROJECT-FAVORITE")),
+                             QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromAscii("X-QTPROJECT-FAVORITE")),
+                             QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromAscii("X-QTPROJECT-FAVORITE")),
+                             QVersitProperty::CompoundType);
 
         // Some MeeGo specific types, for EDS/SyncEvolution roundtripping until the API allows
         // better control over the type of custom properties.

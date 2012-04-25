@@ -143,6 +143,9 @@ protected:
     void encodeFamily(const QContactDetail &detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int> *processedFields);
+    void encodeFavorite(const QContactDetail &detail,
+            QList<QVersitProperty>* generatedProperties,
+            QSet<int> *processedFields);
     void encodeDisplayLabel(
             const QContactDetail &detail,
             const QVersitDocument& document,

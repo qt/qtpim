@@ -113,6 +113,9 @@ The following table lists the vCard properties that the \l{C++ Versit}{Versit AP
     \li X-CHILDREN
     \li QContactFamily (Children field)
   \row
+    \li X-QTPROJECT-FAVORITE
+    \li QContactFavorite
+  \row
     \li X-GENDER
     \li QContactGender
   \row

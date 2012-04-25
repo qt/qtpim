@@ -173,6 +173,8 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
                       QContactNickname::FieldNickname},
     {"X-QQ",          QContactOnlineAccount::Type,
                       -1},
+    {"X-QTPROJECT-FAVORITE", QContactFavorite::Type,
+                      -1},
     {"X-SIP",         QContactOnlineAccount::Type,
                       -1},
     {"X-SKYPE",       QContactOnlineAccount::Type,

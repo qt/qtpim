@@ -1266,8 +1266,8 @@ void tst_QVersitContactExporter::testEncodeFamily()
     QCOMPARE(countProperties(document), 0);
 
     // Only spouse present
-    QString spouce = QLatin1String("ABC");
-    family.setSpouse(spouce);
+    QString spouse = QLatin1String("ABC");
+    family.setSpouse(spouse);
     contact.saveDetail(&family);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     document = mExporter->documents().first();
@@ -1275,13 +1275,13 @@ void tst_QVersitContactExporter::testEncodeFamily()
     QVersitProperty spouseProperty = findPropertyByName(document, QLatin1String("X-SPOUSE"));
     QVERIFY(!spouseProperty.isEmpty());
     QCOMPARE(spouseProperty.parameters().count(), 0);
-    QCOMPARE(spouseProperty.value(), spouce);
+    QCOMPARE(spouseProperty.value(), spouse);
 
     // Spouse and children
     QStringList children;
     children << QLatin1String("A") << QLatin1String("B") ;
     family.setChildren(children);
-    family.setSpouse(spouce);
+    family.setSpouse(spouse);
     contact.saveDetail(&family);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     document = mExporter->documents().first();
@@ -1289,7 +1289,7 @@ void tst_QVersitContactExporter::testEncodeFamily()
     spouseProperty = findPropertyByName(document, QLatin1String("X-SPOUSE"));
     QVERIFY(!spouseProperty.isEmpty());
     QCOMPARE(spouseProperty.parameters().count(), 0);
-    QCOMPARE(spouseProperty.value(), spouce);
+    QCOMPARE(spouseProperty.value(), spouse);
     QVersitProperty childrenProperty = findPropertyByName(document, QLatin1String("X-CHILDREN"));
     QVERIFY(!spouseProperty.isEmpty());
     QCOMPARE(childrenProperty.parameters().count(), 0);
@@ -1297,6 +1297,25 @@ void tst_QVersitContactExporter::testEncodeFamily()
     CHECK_VALUE(childrenProperty, QVersitProperty::ListType, children);
 }
 
+void tst_QVersitContactExporter::testEncodeFavorite()
+{
+    QContact contact(createContactWithName(QLatin1String("asdf")));
+    QContactFavorite favorite;
+    int favoriteIndex = 1;
+    favorite.setIndex(favoriteIndex);
+    favorite.setFavorite(true);
+    contact.saveDetail(&favorite);
+
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+
+    QVersitDocument document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 1);
+    QVersitProperty favoriteProperty = findPropertyByName(document, QLatin1String("X-QTPROJECT-FAVORITE"));
+    QVERIFY(!favoriteProperty.isEmpty());
+    QCOMPARE(favoriteProperty.parameters().count(), 0);
+    CHECK_VALUE(favoriteProperty, QVersitProperty::CompoundType,
+                QStringList() << QStringLiteral("true") << QString::number(favoriteIndex));
+}
 
 void tst_QVersitContactExporter::testDefaultResourceHandler()
 {

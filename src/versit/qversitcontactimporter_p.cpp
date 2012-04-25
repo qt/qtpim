@@ -212,6 +212,9 @@ void QVersitContactImporterPrivate::importProperty(
     case QContactDetail::TypeFamily:
         success = createFamily(property, contact, &updatedDetails);
         break;
+    case QContactDetail::TypeFavorite:
+        success = createFavorite(property, contact, &updatedDetails);
+        break;
     case QContactDetail::TypeGender:
         success = createGender(property, contact, &updatedDetails);
         break;
@@ -777,6 +780,53 @@ bool QVersitContactImporterPrivate::createFamily(
     }
 
     saveDetailWithContext(updatedDetails, family, extractContexts(property));
+    return true;
+}
+
+/*!
+ * Creates a QContactFavorite from \a property
+ */
+bool QVersitContactImporterPrivate::createFavorite(
+    const QVersitProperty& property,
+    QContact* contact,
+    QList<QContactDetail>* updatedDetails)
+{
+    QContactDetail detail = contact->detail(QContactFavorite::Type);
+    if (!detail.isEmpty()) {
+        // If multiple favorite properties exist,
+        // discard all except the first occurrence
+        return false;
+    }
+
+    QContactFavorite favorite;
+    QVariant variant = property.variantValue();
+    if (property.valueType() != QVersitProperty::CompoundType
+            || variant.type() != QVariant::StringList)
+        return false;
+
+    QStringList values = variant.toStringList();
+
+    QString value(takeFirst(values));
+    if (value.isEmpty())
+        return false;
+    if (value == QStringLiteral("true"))
+        favorite.setFavorite(true);
+    else if (value == QStringLiteral("false"))
+        favorite.setFavorite(false);
+    else
+        return false;
+
+    value = takeFirst(values);
+    if (value.isEmpty())
+        return false;
+    bool ok = true;
+    int index = value.toInt(&ok);
+    if (ok)
+        favorite.setIndex(index);
+    else
+        return false;
+
+    saveDetailWithContext(updatedDetails, favorite, extractContexts(property));
     return true;
 }
 

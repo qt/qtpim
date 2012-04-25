@@ -1206,6 +1206,73 @@ void tst_QVersitContactImporter::testFamily()
     QCOMPARE(family.spouse(),val); // make sure thats your wife:(
 }
 
+void tst_QVersitContactImporter::testFavorite()
+{
+    QFETCH(QString, favoriteValue);
+    QFETCH(QString, indexValue);
+    QFETCH(bool, favoriteCreated);
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addFavoritePropertyToDocument(favoriteValue, indexValue, document);
+
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+
+    QContact contact = mImporter->contacts().first();
+    if (!favoriteCreated) {
+        QCOMPARE(contact.details(QContactFavorite::Type).size(), 0);
+        return;
+    }
+    QContactFavorite favorite = (QContactFavorite)contact.detail(QContactFavorite::Type);
+    QString actualFavoriteValue = favorite.isFavorite() ? QStringLiteral("true") : QStringLiteral("false");
+    QCOMPARE(actualFavoriteValue, favoriteValue);
+    QCOMPARE(QString::number(favorite.index()), indexValue);
+}
+
+void tst_QVersitContactImporter::testFavorite_data()
+{
+    QTest::addColumn<QString>("favoriteValue");
+    QTest::addColumn<QString>("indexValue");
+    QTest::addColumn<bool>("favoriteCreated");
+
+    {
+        QTest::newRow("favorite true") << QString("true") << QString("1") << true;
+        QTest::newRow("favorite false") << QString("false") << QString("1") << true;
+        QTest::newRow("favorite invalid") << QString("invalid") << QString("1") << false;
+        QTest::newRow("favorite empty") << QString("") << QString("1") << false;
+        QTest::newRow("index negative") << QString("true") << QString("-1") << true;
+        QTest::newRow("index multiple digits") << QString("true") << QString("10") << true;
+        QTest::newRow("index invalid") << QString("true") << QString("invalid") << false;
+        QTest::newRow("index invalid mix") << QString("true") << QString("2letters") << false;
+        QTest::newRow("index empty") << QString("true") << QString("") << false;
+    }
+}
+
+void tst_QVersitContactImporter::testMultipleFavorites()
+{
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addFavoritePropertyToDocument(QLatin1String("true"), QLatin1String("1"), document);
+    addFavoritePropertyToDocument(QLatin1String("false"), QLatin1String("2"), document);
+
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+
+    QContact contact = mImporter->contacts().first();
+    QCOMPARE(contact.details(QContactFavorite::Type).size(), 1);
+    QContactFavorite favorite = (QContactFavorite)contact.detail(QContactFavorite::Type);
+    QCOMPARE(favorite.isFavorite(), true);
+    QCOMPARE(favorite.index(), 1);
+}
+
+void tst_QVersitContactImporter::addFavoritePropertyToDocument(QString favorite, QString index, QVersitDocument &document)
+{
+    QVersitProperty property;
+    property.setName(QLatin1String("X-QTPROJECT-FAVORITE"));
+    QStringList value;
+    value.append(favorite);
+    value.append(index);
+    property.setValue(value);
+    property.setValueType(QVersitProperty::CompoundType);
+    document.addProperty(property);
+}
+
 void tst_QVersitContactImporter::testSound()
 {
     QVersitDocument document(QVersitDocument::VCard30Type);

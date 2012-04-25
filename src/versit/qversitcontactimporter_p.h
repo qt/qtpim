@@ -104,6 +104,7 @@ private:
     bool createAvatar(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createGeoLocation(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createFamily(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    bool createFavorite(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNameValueDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createGender(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     QList<int> extractContexts(const QVersitProperty& property) const;

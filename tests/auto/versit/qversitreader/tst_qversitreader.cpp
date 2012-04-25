@@ -642,6 +642,20 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
 
     {
         QVersitProperty expectedProperty;
+        expectedProperty.setName(QLatin1String("X-QTPROJECT-FAVORITE"));
+        QStringList components;
+        components << QLatin1String("false")
+            << QLatin1String("10");
+        expectedProperty.setValue(components);
+        expectedProperty.setValueType(QVersitProperty::CompoundType);
+        QTest::newRow("vcard21 favorite")
+            << QVersitDocument::VCard21Type
+            << QByteArray("X-QTPROJECT-FAVORITE:false;10")
+            << expectedProperty;
+    }
+
+    {
+        QVersitProperty expectedProperty;
         expectedProperty.setName(QLatin1String("X-CHILDREN"));
         expectedProperty.setValue(QStringList() << QLatin1String("Child1") << QLatin1String("Child2"));
         expectedProperty.setValueType(QVersitProperty::ListType);

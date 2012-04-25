@@ -88,6 +88,9 @@ private slots: // Tests
     void testDisplayLabel();
     void testOnlineAccount();
     void testFamily();
+    void testFavorite();
+    void testFavorite_data();
+    void testMultipleFavorites();
     void testSound();
     void testTag();
     void testPref();
@@ -102,6 +105,8 @@ private: // Utilities
         const QString& name,
         QByteArray image,
         const QString& photoType);
+
+    void addFavoritePropertyToDocument(QString favorite, QString index, QVersitDocument &document);
 
 private:
     QVersitContactImporter* mImporter;

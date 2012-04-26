@@ -108,6 +108,7 @@ private:
     bool createFavorite(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createNameValueDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createGender(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    bool createExtendedDetail(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     QList<int> extractContexts(const QVersitProperty& property) const;
     QStringList extractSubTypes(const QVersitProperty& property) const;
     QString takeFirst(QList<QString>& list) const;

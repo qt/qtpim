@@ -1398,6 +1398,81 @@ void tst_QVersitContactImporter::testTag()
     QCOMPARE(tagDetails.at(2).tag(), QLatin1String("blue"));
 }
 
+void tst_QVersitContactImporter::testExtendedDetail()
+{
+    QFETCH(QString, extendedDetailName);
+    QFETCH(QString, extendedDetailDataType);
+    QFETCH(QVariant, extendedDetailData);
+    QFETCH(bool, extendedDetailCreated);
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addExtendedDetailPropertyToDocument(extendedDetailName, extendedDetailDataType, extendedDetailData.toString(), document);
+
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+
+    QContact contact = mImporter->contacts().first();
+    if (!extendedDetailCreated) {
+        QCOMPARE(contact.details(QContactExtendedDetail::Type).size(), 0);
+        return;
+    }
+    QContactExtendedDetail extendedDetail = (QContactExtendedDetail)contact.detail(QContactExtendedDetail::Type);
+    QCOMPARE(extendedDetail.name(), extendedDetailName);
+    QCOMPARE(extendedDetail.data(), extendedDetailData);
+    QCOMPARE(QString(extendedDetail.data().typeName()), extendedDetailDataType);
+}
+
+void tst_QVersitContactImporter::testExtendedDetail_data()
+{
+    QTest::addColumn<QString>("extendedDetailName");
+    QTest::addColumn<QString>("extendedDetailDataType");
+    QTest::addColumn<QVariant>("extendedDetailData");
+    QTest::addColumn<bool>("extendedDetailCreated");
+
+    {
+        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
+        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
+        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
+        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
+        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
+        QTest::newRow("integer data type, data not a valid integer") << QString("name") << QString("int") << QVariant(QString("invalid")) << false;
+        QTest::newRow("integer data type, data invalid mixture") << QString("name") << QString("int") << QVariant(QString("2invalid")) << false;
+        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+    }
+}
+
+void tst_QVersitContactImporter::addExtendedDetailPropertyToDocument(QString name, QString typeName, QVariant data, QVersitDocument &document)
+{
+    QVersitProperty property;
+    property.setName(QLatin1String("X-QTPROJECT-EXTENDED-DETAIL"));
+    property.setValue(QStringList()
+                      << name
+                      << typeName
+                      << data.toString());
+    property.setValueType(QVersitProperty::CompoundType);
+    document.addProperty(property);
+}
+
+void tst_QVersitContactImporter::testMultipleExtendedDetails()
+{
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addExtendedDetailPropertyToDocument("detailName1", "QString", "detailData1", document);
+    addExtendedDetailPropertyToDocument("detailName2", "QString", "detailData2", document);
+
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+
+    QContact contact = mImporter->contacts().first();
+    QCOMPARE(contact.details(QContactDetail::TypeExtendedDetail).size(), 2);
+    QList<QContactDetail> actualDetails = contact.details(QContactDetail::TypeExtendedDetail);
+    QContactExtendedDetail extendedDetail1 = (QContactExtendedDetail)actualDetails.at(0);
+    QContactExtendedDetail extendedDetail2 = (QContactExtendedDetail)actualDetails.at(1);
+    QCOMPARE(extendedDetail1.name(), QString("detailName1"));
+    QCOMPARE(extendedDetail1.data().toString(), QString("detailData1"));
+    QCOMPARE(extendedDetail2.name(), QString("detailName2"));
+    QCOMPARE(extendedDetail2.data().toString(), QString("detailData2"));
+}
+
 void tst_QVersitContactImporter::testPref()
 {
     QVersitDocument document(QVersitDocument::VCard30Type);

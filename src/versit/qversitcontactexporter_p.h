@@ -155,6 +155,9 @@ protected:
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
             QSet<int>* processedFields);
+    void encodeExtendedDetail(const QContactDetail &detail,
+            QList<QVersitProperty>* generatedProperties,
+            QSet<int> *processedFields);
 
     bool isValidRemoteUrl(const QString& resourceIdentifier);
     void encodeParameters(QVersitProperty& property,

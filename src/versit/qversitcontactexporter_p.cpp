@@ -144,6 +144,9 @@ void QVersitContactExporterPrivate::exportContact(
         case QContactDetail::TypeEmailAddress:
             encodeEmail(detail, &generatedProperties, &processedFields);
             break;
+        case QContactDetail::TypeExtendedDetail:
+            encodeExtendedDetail(detail, &generatedProperties, &processedFields);
+            break;
         case QContactDetail::TypeFamily:
             encodeFamily(detail, &generatedProperties, &processedFields);
             break;
@@ -860,6 +863,30 @@ void QVersitContactExporterPrivate::encodeFavorite(
     *generatedProperties << property;
     *processedFields << QContactFavorite::FieldFavorite
                      << QContactFavorite::FieldIndex;
+}
+
+/*!
+ * Encode extended detail into the Versit Document
+ */
+void QVersitContactExporterPrivate::encodeExtendedDetail(
+    const QContactDetail &detail,
+    QList<QVersitProperty>* generatedProperties,
+    QSet<int>* processedFields)
+{
+    QContactExtendedDetail extendedDetail = static_cast<QContactExtendedDetail>(detail);
+    if ((extendedDetail.data().type() == QVariant::String) || (extendedDetail.data().type() == QVariant::Int)) {
+        QVersitProperty property;
+        property.setName(mPropertyMappings.value(extendedDetail.type()).second);
+        property.setValue(QStringList()
+                          << extendedDetail.name()
+                          << QString::fromLatin1(extendedDetail.data().typeName())
+                          << extendedDetail.data().toString());
+
+        property.setValueType(QVersitProperty::CompoundType);
+        *generatedProperties << property;
+        *processedFields << QContactExtendedDetail::FieldName
+                         << QContactExtendedDetail::FieldData;
+    }
 }
 
 /*!

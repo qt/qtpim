@@ -109,7 +109,7 @@ ContactsSavingTestCase {
 
         ExtendedDetail {
             name: "Extended detail"
-            data: 1
+            data: "string 1"
         }
 
         ExtendedDetail {
@@ -366,18 +366,15 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportExtendedDetail() {
-        expectFail("", "Extended details are not exported at the moment");
         compare(importedContact.extendedDetails.length, 2, "Error importing/exporting multiple extended details");
 
         var importedExtendedDetails = importedContact.details(ContactDetail.ExtendedDetail);
 
-        if (importedExtendedDetails[0].name === megaContact.importedExtendedDetails[1].name)
+        if (importedExtendedDetails[0].name === megaContact.extendedDetails[1].name)
             importedExtendedDetails.reverse();
 
         for (var i = 0; i < 2; i++) {
-            expectFail("", "Extended details are not exported at the moment");
             compare(importedExtendedDetails[i].name, megaContact.extendedDetails[i].name, "extended detail name");
-            expectFail("", "Extended details are not exported at the moment");
             compare(importedExtendedDetails[i].data, megaContact.extendedDetails[i].data, "extended detail data");
         }
     }

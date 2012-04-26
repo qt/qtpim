@@ -96,6 +96,9 @@ private slots: // Tests
     void testMultipleFavorites();
     void testSound();
     void testTag();
+    void testExtendedDetail();
+    void testExtendedDetail_data();
+    void testMultipleExtendedDetails();
     void testPref();
     void testPropertyHandler();
     void testInvalidDocument();
@@ -111,6 +114,7 @@ private: // Utilities
 
     void addVersionPropertyToDocument(QString sequenceNumber, QString extendedVersion, QVersitDocument &document);
     void addFavoritePropertyToDocument(QString favorite, QString index, QVersitDocument &document);
+    void addExtendedDetailPropertyToDocument(QString name, QString typeName, QVariant data, QVersitDocument &document);
 
 private:
     QVersitContactImporter* mImporter;

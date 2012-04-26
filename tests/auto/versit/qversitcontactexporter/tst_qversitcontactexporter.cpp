@@ -1354,6 +1354,84 @@ void tst_QVersitContactExporter::testEncodeFavorite()
                 QStringList() << QStringLiteral("true") << QString::number(favoriteIndex));
 }
 
+void tst_QVersitContactExporter::testEncodeExtendedDetail()
+{
+    QFETCH(QString, extendedDetailName);
+    QFETCH(QString, extendedDetailDataType);
+    QFETCH(QVariant, extendedDetailData);
+    QFETCH(bool, extendedDetailCreated);
+    QContact contact(createContactWithName(QLatin1String("asdf")));
+    QContactExtendedDetail extendedDetail;
+    extendedDetail.setName(extendedDetailName);
+    extendedDetail.setData(extendedDetailData);
+    contact.saveDetail(&extendedDetail);
+
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+
+    QVersitDocument document = mExporter->documents().first();
+    if (!extendedDetailCreated) {
+        QCOMPARE(countProperties(document), 0);
+        return;
+    }
+    QCOMPARE(countProperties(document), 1);
+    QVersitProperty property = findPropertyByName(document, QLatin1String("X-QTPROJECT-EXTENDED-DETAIL"));
+    QVERIFY(!property.isEmpty());
+    QCOMPARE(property.parameters().count(), 0);
+    CHECK_VALUE(property, QVersitProperty::CompoundType,
+                QStringList() << extendedDetailName << extendedDetailDataType << extendedDetailData.toString());
+}
+
+void tst_QVersitContactExporter::testEncodeExtendedDetail_data()
+{
+    QTest::addColumn<QString>("extendedDetailName");
+    QTest::addColumn<QString>("extendedDetailDataType");
+    QTest::addColumn<QVariant>("extendedDetailData");
+    QTest::addColumn<bool>("extendedDetailCreated");
+
+    {
+        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
+        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
+        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
+        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
+        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
+        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+    }
+}
+
+void tst_QVersitContactExporter::testEncodeMultipleExtendedDetails()
+{
+    QContact contact(createContactWithName(QLatin1String("asdf")));
+    QContactExtendedDetail extendedDetail1;
+    extendedDetail1.setName(QLatin1String("detailName1"));
+    extendedDetail1.setData(QLatin1String("detailData1"));
+    contact.saveDetail(&extendedDetail1);
+    QContactExtendedDetail extendedDetail2;
+    extendedDetail2.setName(QLatin1String("detailName2"));
+    extendedDetail2.setData(QLatin1String("detailData2"));
+    contact.saveDetail(&extendedDetail2);
+    QList<QContactExtendedDetail> expected;
+    expected << extendedDetail1 << extendedDetail2;
+
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+
+    QVersitDocument document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 2);
+    QList<QVersitProperty> actual;
+    foreach (const QVersitProperty &property, document.properties()) {
+        if (property.name() == QLatin1String("X-QTPROJECT-EXTENDED-DETAIL"))
+            actual << property;
+    }
+    for (int i = 0; i < actual.size(); i++) {
+        QVERIFY(!actual[i].isEmpty());
+        QCOMPARE(actual[i].parameters().count(), 0);
+        CHECK_VALUE(actual[i], QVersitProperty::CompoundType,
+                    QStringList() << expected[i].name() << QStringLiteral("QString") << expected[i].data().toString());
+    }
+}
+
 void tst_QVersitContactExporter::testDefaultResourceHandler()
 {
     QVersitDefaultResourceHandler handler;

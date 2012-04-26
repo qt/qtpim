@@ -210,6 +210,9 @@ void QVersitContactImporterPrivate::importProperty(
     case QContactDetail::TypeBirthday:
         success = createBirthday(property, contact, &updatedDetails);
         break;
+    case QContactDetail::TypeExtendedDetail:
+        success = createExtendedDetail(property, contact, &updatedDetails);
+        break;
     case QContactDetail::TypeFamily:
         success = createFamily(property, contact, &updatedDetails);
         break;
@@ -896,6 +899,41 @@ bool QVersitContactImporterPrivate::createGender(
     }
 
     saveDetailWithContext(updatedDetails, gender, extractContexts(property));
+    return true;
+}
+
+/*!
+ * Creates a QContactExtendedDetail from \a property
+ */
+bool QVersitContactImporterPrivate::createExtendedDetail(
+    const QVersitProperty& property,
+    QContact* contact,
+    QList<QContactDetail>* updatedDetails)
+{
+    Q_UNUSED(contact)
+    QContactExtendedDetail extendedDetail;
+    QVariant variant = property.variantValue();
+    if (property.valueType() != QVersitProperty::CompoundType
+            || variant.type() != QVariant::StringList)
+        return false;
+
+    QStringList values = variant.toStringList();
+    QString typeInfo;
+
+    extendedDetail.setName(takeFirst(values));
+    typeInfo = takeFirst(values);
+    if (typeInfo == QStringLiteral("QString")) {
+        extendedDetail.setData(QVariant(takeFirst(values)));
+    } else if (typeInfo == QStringLiteral("int")) {
+        bool conversionSuccessful = true;
+        extendedDetail.setData(QVariant(takeFirst(values).toInt(&conversionSuccessful)));
+        if (!conversionSuccessful)
+            return false;
+    } else {
+        return false;
+    }
+
+    saveDetailWithContext(updatedDetails, extendedDetail, extractContexts(property));
     return true;
 }
 

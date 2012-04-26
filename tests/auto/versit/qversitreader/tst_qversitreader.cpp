@@ -656,6 +656,20 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
 
     {
         QVersitProperty expectedProperty;
+        expectedProperty.setName(QLatin1String("X-QTPROJECT-EXTENDED-DETAIL"));
+        QStringList components;
+        components << QLatin1String("name")
+            << QLatin1String("data");
+        expectedProperty.setValue(components);
+        expectedProperty.setValueType(QVersitProperty::CompoundType);
+        QTest::newRow("qtproject extended detail")
+            << QVersitDocument::VCard21Type
+            << QByteArray("X-QTPROJECT-EXTENDED-DETAIL:name;data")
+            << expectedProperty;
+    }
+
+    {
+        QVersitProperty expectedProperty;
         expectedProperty.setName(QLatin1String("X-CHILDREN"));
         expectedProperty.setValue(QStringList() << QLatin1String("Child1") << QLatin1String("Child2"));
         expectedProperty.setValueType(QVersitProperty::ListType);

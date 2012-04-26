@@ -122,6 +122,9 @@ The following table lists the vCard properties that the \l{C++ Versit}{Versit AP
     \li X-JABBER
     \li QContactOnlineAccount (SubTypeImpp)
   \row
+    \li X-QTPROJECT-EXTENDED-DETAIL
+    \li QContactExtendedDetail
+  \row
     \li X-SIP
     \li QContactOnlineAccount
   \row

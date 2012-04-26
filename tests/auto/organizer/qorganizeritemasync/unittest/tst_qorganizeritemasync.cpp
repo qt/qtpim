@@ -2450,6 +2450,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
     QVERIFY(crr1.isFinished());
     QVERIFY(crr1.error() == QOrganizerManager::NoError);
 
+#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData("description", "Should not be removed!");
@@ -2534,6 +2535,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
 
     // now clean up our temp collection.
     oim->removeCollection(temp.id());
+#endif
 }
 
 void tst_QOrganizerItemAsync::collectionSave()
@@ -2634,6 +2636,7 @@ void tst_QOrganizerItemAsync::collectionSave()
     QVERIFY(csr1.isFinished());
     QVERIFY(csr1.error() == QOrganizerManager::NoError);
 
+#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData(testCollection.metaData());
@@ -2719,6 +2722,7 @@ void tst_QOrganizerItemAsync::collectionSave()
         QCOMPARE(oim->collections().size(), originalCount + 1);
         break;
     }
+#endif
 }
 
 

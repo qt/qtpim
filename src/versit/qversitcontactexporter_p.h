@@ -102,6 +102,9 @@ protected:
     void encodeRev(const QContactDetail& detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int> *processedFields);
+    void encodeVersion(const QContactDetail &detail,
+            QList<QVersitProperty>* generatedProperties,
+            QSet<int> *processedFields);
     void encodeBirthDay(const QContactDetail& detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int> *processedFields);

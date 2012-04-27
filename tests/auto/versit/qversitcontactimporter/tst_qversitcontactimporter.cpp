@@ -623,6 +623,67 @@ void tst_QVersitContactImporter::testTimeStamp()
     QCOMPARE(timeStamp.lastModified().timeSpec(),Qt::UTC);
 }
 
+void tst_QVersitContactImporter::testVersion()
+{
+    QFETCH(QString, sequenceNumber);
+    QFETCH(QString, extendedVersion);
+    QFETCH(bool, versionCreated);
+
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addVersionPropertyToDocument(sequenceNumber,extendedVersion,document);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    QContact contact = mImporter->contacts().first();
+    if (!versionCreated) {
+        QCOMPARE(contact.details(QContactVersion::Type).size(), 0);
+        return;
+    }
+    QContactVersion version = (QContactVersion)contact.detail(QContactVersion::Type);
+    QCOMPARE(version.sequenceNumber(), sequenceNumber.toInt());
+    QCOMPARE(QString(version.extendedVersion()), extendedVersion);
+}
+
+void tst_QVersitContactImporter::testVersion_data()
+{
+    QTest::addColumn<QString>("sequenceNumber");
+    QTest::addColumn<QString>("extendedVersion");
+    QTest::addColumn<bool>("versionCreated");
+
+    {
+        QTest::newRow("proper version") << QString("4711") << QString("134f23dbb2") << true;
+        QTest::newRow("all empty") << QString("") << QString("") << false;
+        QTest::newRow("sequenceNumber empty") << QString("") << QString("134f23dbb3") << false;
+        QTest::newRow("sequenceNumber negative") << QString("-2") << QString("134f23dbb4") << true;
+        QTest::newRow("sequenceNumber invalid mix") << QString("2withletters") << QString("134f23dbb5") << false;
+        QTest::newRow("extendedVersion empty") << QString("4712") << QString("") << true;
+        QTest::newRow("extendedVersion negative") << QString("4713") << QString("-1234567") << true;
+    }
+}
+
+void tst_QVersitContactImporter::testMultipleVersions()
+{
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    addVersionPropertyToDocument(QLatin1String("1"), QLatin1String("134f23dbb2"), document);
+    addVersionPropertyToDocument(QLatin1String("2"), QLatin1String("134f23dbb3"), document);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    QContact contact = mImporter->contacts().first();
+    QCOMPARE(contact.details(QContactVersion::Type).size(), 1);
+    QContactVersion version = (QContactVersion)contact.detail(QContactVersion::Type);
+    QCOMPARE(version.sequenceNumber(), 1);
+    QCOMPARE(version.extendedVersion(), QByteArray("134f23dbb2"));
+}
+
+void tst_QVersitContactImporter::addVersionPropertyToDocument(QString sequenceNumber, QString extendedVersion, QVersitDocument &document)
+{
+    QVersitProperty property;
+    property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+    QStringList value;
+    value.append(sequenceNumber);
+    value.append(extendedVersion);
+    property.setValue(value);
+    property.setValueType(QVersitProperty::CompoundType);
+    document.addProperty(property);
+}
+
 void tst_QVersitContactImporter::testAnniversary()
 {
     // Date : ISO 8601 extended format

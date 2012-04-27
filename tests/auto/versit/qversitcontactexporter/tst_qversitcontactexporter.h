@@ -80,6 +80,7 @@ private slots:
     void testEncodeParameters();
     void testEncodeUid();
     void testEncodeRev();
+    void testEncodeVersion();
     void testEncodeBirthDay();
     void testEncodeNote();
     void testEncodeGeoLocation();

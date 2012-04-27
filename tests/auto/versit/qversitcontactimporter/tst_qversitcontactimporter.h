@@ -77,6 +77,9 @@ private slots: // Tests
     void testOrganizationAssistant();
     void testOrganizationRole();
     void testTimeStamp();
+    void testVersion();
+    void testVersion_data();
+    void testMultipleVersions();
     void testAnniversary();
     void testBirthday();
     void testGender();
@@ -106,6 +109,7 @@ private: // Utilities
         QByteArray image,
         const QString& photoType);
 
+    void addVersionPropertyToDocument(QString sequenceNumber, QString extendedVersion, QVersitDocument &document);
     void addFavoritePropertyToDocument(QString favorite, QString index, QVersitDocument &document);
 
 private:

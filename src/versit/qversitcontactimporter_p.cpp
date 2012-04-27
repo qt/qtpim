@@ -249,6 +249,9 @@ void QVersitContactImporterPrivate::importProperty(
     case QContactDetail::TypeTimestamp:
         success = createTimeStamp(property, contact, &updatedDetails);
         break;
+    case QContactDetail::TypeVersion:
+        success = createVersion(property, contact, &updatedDetails);
+        break;
     default:
         // Look up mDetailMappings for a simple mapping from property to detail.
         success = createNameValueDetail(property, contact, &updatedDetails);
@@ -486,6 +489,36 @@ bool QVersitContactImporterPrivate::createTimeStamp(
     timeStamp.setLastModified(dateTime);
     saveDetailWithContext(updatedDetails, timeStamp, extractContexts(property));
     return true;
+}
+
+/*!
+ * Creates a QContactVersion from \a property
+ */
+bool QVersitContactImporterPrivate::createVersion(
+    const QVersitProperty& property,
+    QContact* contact,
+    QList<QContactDetail>* updatedDetails)
+{
+    // Allow only on version detail, discard others.
+    QContactDetail detail = contact->detail(QContactVersion::Type);
+    if (!detail.isEmpty())
+        return false; // Only one version detail is created
+
+    QVariant variant = property.variantValue();
+    if (property.valueType() != QVersitProperty::CompoundType
+            || variant.type() != QVariant::StringList)
+        return false;
+    QStringList values = variant.toStringList();
+    bool ok;
+    QContactVersion version;
+    version.setSequenceNumber(takeFirst(values).toInt(&ok));
+    version.setExtendedVersion(takeFirst(values).toLocal8Bit());
+    if (ok) {
+        saveDetailWithContext(updatedDetails, version, extractContexts(property));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /*!

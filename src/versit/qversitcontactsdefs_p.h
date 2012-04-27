@@ -78,6 +78,7 @@ class QContactRingtone;
 class QContactTag;
 class QContactTimestamp;
 class QContactUrl;
+class QContactVersion;
 QTCONTACTS_END_NAMESPACE
 
 QTCONTACTS_USE_NAMESPACE
@@ -174,6 +175,8 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
     {"X-QQ",          QContactOnlineAccount::Type,
                       -1},
     {"X-QTPROJECT-FAVORITE", QContactFavorite::Type,
+                      -1},
+    {"X-QTPROJECT-VERSION", QContactVersion::Type,
                       -1},
     {"X-SIP",         QContactOnlineAccount::Type,
                       -1},

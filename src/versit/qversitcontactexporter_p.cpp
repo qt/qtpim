@@ -189,6 +189,9 @@ void QVersitContactExporterPrivate::exportContact(
         case QContactDetail::TypeUrl:
             encodeUrl(detail, &generatedProperties, &processedFields);
             break;
+        case QContactDetail::TypeVersion:
+            encodeVersion(detail, &generatedProperties, &processedFields);
+            break;
         default:
             break;
         }
@@ -457,6 +460,26 @@ void QVersitContactExporterPrivate::encodeRev(
         *generatedProperties << property;
         *processedFields << QContactTimestamp::FieldCreationTimestamp;
     }
+}
+
+/*!
+ * Encode Contact Version Field Information into the Versit Document
+ */
+void QVersitContactExporterPrivate::encodeVersion(
+    const QContactDetail& detail,
+    QList<QVersitProperty>* generatedProperties,
+    QSet<int>* processedFields)
+{
+    QContactVersion version = static_cast<QContactVersion>(detail);
+    QVersitProperty property;
+    property.setName(mPropertyMappings.value(detail.type()).second);
+    QStringList values(QString::number(version.sequenceNumber()));
+    values.append(QString::fromLocal8Bit(version.extendedVersion()));
+    property.setValue(values);
+    property.setValueType(QVersitProperty::CompoundType);
+    *generatedProperties << property;
+    *processedFields << QContactVersion::FieldSequenceNumber
+                      << QContactVersion::FieldExtendedVersion;
 }
 
 /*!

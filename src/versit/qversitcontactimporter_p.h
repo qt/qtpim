@@ -94,6 +94,7 @@ private:
     void setOrganizationNames(QContactOrganization& org, const QVersitProperty& property) const;
     void setOrganizationLogo(QContactOrganization& org, const QVersitProperty& property) const;
     bool createTimeStamp(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
+    bool createVersion(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createAnniversary(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createBirthday(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);
     bool createDisplaylabel(const QVersitProperty& property, QContact* contact, QList<QContactDetail>* updatedDetails);

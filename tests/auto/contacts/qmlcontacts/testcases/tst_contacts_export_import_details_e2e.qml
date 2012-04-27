@@ -559,9 +559,7 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportVersion() {
-        expectFail("", "Version is not exported at the moment.");
         compare(importedContact.version.sequenceNumber, megaContact.version.sequenceNumber, "sequence number");
-        expectFail("", "Version is not exported at the moment.")
         compare(importedContact.version.extendedVersion, megaContact.version.extendedVersion, "extended version");
     }
 

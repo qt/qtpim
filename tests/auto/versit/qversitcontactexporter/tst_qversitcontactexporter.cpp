@@ -614,6 +614,27 @@ void tst_QVersitContactExporter::testEncodeRev()
     QCOMPARE(countProperties(document), 0);
 }
 
+void tst_QVersitContactExporter::testEncodeVersion()
+{
+    QContact contact(createContactWithName(QLatin1String("asdf")));
+    QContactVersion version;
+    int sequenceNumber = 4711;
+    QByteArray extendedVersion("134f23dbb2");
+    version.setSequenceNumber(sequenceNumber);
+    version.setExtendedVersion(extendedVersion);
+    // Contexts not allowed in X-QTPROJECT-VERSION property, check that they are not added.
+    version.setContexts(QContactDetail::ContextHome);
+    contact.saveDetail(&version);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+    QVersitDocument document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 1);
+    QVersitProperty property = findPropertyByName(document, QLatin1String("X-QTPROJECT-VERSION"));
+    QVERIFY(!property.isEmpty());
+    QCOMPARE(property.parameters().count(), 0);
+    CHECK_VALUE(property, QVersitProperty::CompoundType,
+                QStringList() << QLatin1String("4711") << QLatin1String("134f23dbb2"));
+}
+
 void tst_QVersitContactExporter::testEncodeBirthDay()
 {
     QContact contact(createContactWithName(QLatin1String("asdf")));

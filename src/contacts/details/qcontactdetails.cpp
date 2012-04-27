@@ -1531,8 +1531,6 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    \value FieldRole The value stored in this field contains the contact's role in the organization.
    \value FieldTitle The value stored in this field contains the contact's title in the organization.
    \value FieldAssistantName The value stored in this field contains the contact's assistant.
-   \value FieldStartDate The value stored in this field contains the contact's start date in organization.
-   \value FieldEndDate The value stored in this field contains the contact's end date in organization.
    \sa department(), setDepartment()
    \sa name(), setName()
    \sa logoUrl(), setLogoUrl()
@@ -1541,8 +1539,6 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    \sa role(), setRole()
    \sa title(), setTitle()
    \sa assistantName(), setAssistantName()
-   \sa startDate(), setStartDate()
-   \sa endDate(), setEndDate()
  */
 
 /*!
@@ -1626,23 +1622,6 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
 
    Returns the name of the default assistant of contacts belonging to
    this organization.
- */
-
-/*!
-   \fn QContactOrganization::setStartDate(const QDateTime& dateTime)
-   Sets the start date and time of the organization  which is stored in this detail to \a dateTime.
- */
-/*!
-   \fn QContactOrganization::startDate() const
-    Returns the start date and time of the organization which is stored in this detail.
- */
-/*!
-   \fn QContactOrganization::setEndDate(const QDateTime& dateTime)
-   Sets the end date and time of the organization  which is stored in this detail to \a dateTime.
- */
-/*!
-   \fn QContactOrganization::endDate() const
-   Returns the end date and time of the organization which is stored in this detail.
  */
 
 /* ==================== QContactRingtone ======================= */

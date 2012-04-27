@@ -191,8 +191,6 @@ ContactsSavingTestCase {
             title: "Title"
             role: "Role"
             assistantName: "Assistant"
-            startDate: new Date(2000, 1, 1, 12, 0, 0)
-            endDate: new Date(2012, 1, 1, 12, 0, 0)
         }
 
         Organization {
@@ -203,8 +201,6 @@ ContactsSavingTestCase {
             title: "Title2"
             role: "Role2"
             assistantName: "Assistant2"
-            startDate: new Date(2000, 1, 1, 12, 0, 0)
-            endDate: new Date(2012, 1, 1, 12, 0, 0)
         }
 
         Personid {
@@ -479,10 +475,6 @@ ContactsSavingTestCase {
             compare(importedOrganizations[i].assistantName, megaContact.organizations[i].assistantName, "assistant name");
             expectFail("", "Organization location is not exported at the moment.");
             compare(importedOrganizations[i].location, megaContact.organizations[i].location, "location");
-            expectFail("", "Organization start date is not exported at the moment.");
-            compare(importedOrganizations[i].startDate, megaContact.organizations[i].startDate, "start date");
-            expectFail("", "Organization end date is not exported at the moment.");
-            compare(importedOrganizations[i].endDate, megaContact.organizations[i].endDate, "start date");
         }
 
     }

@@ -935,8 +935,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \li Organization.Role
    \li Organization.Title
    \li Organization.AssistantName
-   \li Organization.StartDate
-   \li Organization.EndDate
    \endlist
 
   This element is part of the \b{QtContacts} module.
@@ -976,17 +974,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \qmlproperty string Organization::assistantName
 
   This property holds the value of the name of the contact's assistant.
-  */
-
-/*!
-  \qmlproperty datetime Organization::startDate
-
-  This property holds the value of the contact's startDate in the organization.
-  */
-/*!
-  \qmlproperty datetime Organization::endDate
-
-  This property holds the value of the contact's endDate in the organization.
   */
 
 /* ==================== QDeclarativeContactPhoneNumber ======================= */

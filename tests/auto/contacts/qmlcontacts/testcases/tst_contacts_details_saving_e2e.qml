@@ -512,8 +512,6 @@ ContactsSavingTestCase {
         organization.role = "Role"
         organization.title = "Title"
         organization.assistantName = "Assistant name"
-        organization.startDate = new Date(2012, 12, 01)
-        organization.endDate = new Date(2012, 12, 02)
         organization.contexts = ["Home"]
         contact.addDetail(organization)
         saveAndRefreshContact()
@@ -529,12 +527,7 @@ ContactsSavingTestCase {
         compare(detail.role, "Role")
         compare(detail.title, "Title")
         compare(detail.assistantName, "Assistant name")
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO:  startDate is not working as expected at the moment");
-        compare(new Date(detail.startDate), new Date(2012, 12, 01))
-        expectFail("", "TODO: endDate is not working as expected at the moment");
-        compare(detail.endDate, new Date(2012, 12, 03))
-        compare(new Date(detail.endDate), new Date(2012, 12, 02))
+
         expectFail("", "TODO: contexts are not working as expected at the moment");
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], "Home", "contexts")

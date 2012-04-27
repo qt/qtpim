@@ -262,20 +262,6 @@ TestCase {
         compare(detailContexts.contexts, [ContactDetail.ContextHome], "context");
     }
 
-    Organization {
-        id: detailWithDateFormats
-        startDate: "2012-03-27" // qml date basic type
-        endDate: new Date(2020, 2, 3) // javascript date
-    }
-
-    function test_detail_date_formats() {
-        compare(detailWithDateFormats.startDate, new Date(2012, 2, 27), "qml date to javascript date");
-        compare(Qt.formatDate(detailWithDateFormats.startDate, Qt.ISODate), "2012-03-27", "qml date to date as string in ISO format");
-
-        compare(detailWithDateFormats.endDate, new Date(2020, 2, 3), "javascript date to javascript date");
-        compare(Qt.formatDate(detailWithDateFormats.endDate, Qt.ISODate), "2020-03-03", "javascript date to date as string in ISO format");
-    }
-
     function test_displayLabel() {
         compare(displaylabel.label, "")
         displaylabel.label = "exampleFullName";
@@ -516,13 +502,6 @@ TestCase {
         organization.assistantName = "Pamela";
         compare(organization.assistantName, "Pamela")
 
-        var startDateTime = new Date(2001, 5, 21)  // 21 May 2001
-        organization.startDate = startDateTime;
-        compare(organization.startDate, startDateTime)
-
-        var endDateTime = new Date(2002, 5, 21)  // 21 May 2002
-        organization.startDate = endDateTime;
-        compare(organization.startDate, endDateTime)
     }
 
     function test_personid() {
@@ -601,10 +580,6 @@ TestCase {
         var modifiedDateTime = new Date(2002, 5, 21)  // 21 May 2001
         timestamp.lastModified = modifiedDateTime;
         compare(timestamp.lastModified, modifiedDateTime)
-
-        var createdDateTime = new Date(2002, 5, 21)  // 21 May 2002
-        organization.startDate = createdDateTime;
-        compare(organization.startDate, createdDateTime)
     }
 
 

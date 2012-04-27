@@ -650,7 +650,7 @@ Module {
                 "MatchExactly": 0,
                 "MatchContains": 1,
                 "MatchStartsWith": 2,
-                "MatchEndsWith": 3,
+                "MatchEndsWith": 4,
                 "MatchFixedString": 8,
                 "MatchCaseSensitive": 16,
                 "MatchPhoneNumber": 1024,
@@ -980,9 +980,7 @@ Module {
                 "Location": 3,
                 "Role": 4,
                 "Title": 5,
-                "AssistantName": 6,
-                "StartDate": 7,
-                "EndDate": 8
+                "AssistantName": 6
             }
         }
         Property { name: "name"; type: "string" }
@@ -992,8 +990,6 @@ Module {
         Property { name: "role"; type: "string" }
         Property { name: "title"; type: "string" }
         Property { name: "assistantName"; type: "string" }
-        Property { name: "startDate"; type: "QDateTime" }
-        Property { name: "endDate"; type: "QDateTime" }
         Signal { name: "valueChanged" }
     }
     Component {

@@ -180,18 +180,6 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
                 stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)).toString();
                 if (!stringValue.isEmpty())
                     organization.setLogoUrl(QUrl(stringValue));
-                //startDate
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldStartDate)).toString();
-                if (!stringValue.isEmpty()) {
-                    QDateTime date = toContactDate(stringValue);
-                    organization.setStartDate(date);
-                }
-                //endDate
-                stringValue = temporaryJsonObject.value(organizationFieldsMapping.value(QContactOrganization::FieldEndDate)).toString();
-                if (!stringValue.isEmpty()) {
-                    QDateTime date = toContactDate(stringValue);
-                    organization.setEndDate(date);
-                }
                 // Add organization to details
                 if (!organization.isEmpty())
                     contact->appendDetail(organization);
@@ -612,16 +600,6 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             }
 
             jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldLogoUrl)] = organization->logoUrl().toString();
-            QDateTime startDate = organization->startDate();
-            if (startDate.isValid()) {
-                QString organizationStartDate = toJsonDate(startDate);
-                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldStartDate)] = organizationStartDate;
-            }
-            QDateTime endDate = organization->endDate();
-            if (endDate.isValid()) {
-                QString organizationEndDate = toJsonDate(endDate);
-                jsonObject[organizationFieldsMapping.value(QContactOrganization::FieldEndDate)] = organizationEndDate;
-            }
             if (!jsonObject.isEmpty()) {
                 updateContexts(*organization, &jsonObject);
                 organizations.append(jsonObject);
@@ -1253,8 +1231,6 @@ void QContactJsonDbConverter::initializeMappings()
     organizationFieldsMapping.insert(QContactOrganization::FieldRole, QContactJsonDbStr::organizationFieldRole());
     organizationFieldsMapping.insert(QContactOrganization::FieldAssistantName, QContactJsonDbStr::organizationFieldAssistantName());
     organizationFieldsMapping.insert(QContactOrganization::FieldLogoUrl, QContactJsonDbStr::organizationFieldLogoUrl());
-    organizationFieldsMapping.insert(QContactOrganization::FieldStartDate, QContactJsonDbStr::organizationFieldStartDate());
-    organizationFieldsMapping.insert(QContactOrganization::FieldEndDate, QContactJsonDbStr::organizationFieldEndDate());
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeMobile, QContactJsonDbStr::subTypeCell());
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeFax, QContactJsonDbStr::subTypeFax());
     phoneNumbersSubtypesMapping.insert(QContactPhoneNumber::SubTypeVideo, QContactJsonDbStr::subTypeVideo());

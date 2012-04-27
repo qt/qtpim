@@ -59,8 +59,6 @@ class QDeclarativeContactOrganization : public QDeclarativeContactDetail
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY valueChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY valueChanged)
     Q_PROPERTY(QString assistantName READ assistantName WRITE setAssistantName NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime startDate READ startDate WRITE setStartDate NOTIFY valueChanged)
-    Q_PROPERTY(QDateTime endDate READ endDate WRITE setEndDate NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "name")
     Q_ENUMS(FieldType)
 public:
@@ -71,9 +69,7 @@ public:
         Location = QContactOrganization::FieldLocation,
         Role = QContactOrganization::FieldRole,
         Title = QContactOrganization::FieldTitle,
-        AssistantName = QContactOrganization::FieldAssistantName,
-        StartDate = QContactOrganization::FieldStartDate,
-        EndDate = QContactOrganization::FieldEndDate
+        AssistantName = QContactOrganization::FieldAssistantName
     };
 
     QDeclarativeContactOrganization(QObject* parent = 0)
@@ -143,22 +139,7 @@ public:
         }
     }
     QString assistantName() const {return detail().value(QContactOrganization::FieldAssistantName).toString();}
-    void setStartDate(const QDateTime& v)
-    {
-        if (!readOnly() && v != startDate()) {
-            detail().setValue(QContactOrganization::FieldStartDate, v);
-            emit valueChanged();
-        }
-    }
-    QDateTime startDate() const {return detail().value<QDateTime>(QContactOrganization::FieldStartDate);}
-    void setEndDate(const QDateTime& v)
-    {
-        if (!readOnly() && v != endDate()) {
-            detail().setValue(QContactOrganization::FieldEndDate, v);
-            emit valueChanged();
-        }
-    }
-    QDateTime endDate() const {return detail().value<QDateTime>(QContactOrganization::FieldEndDate);}
+
 signals:
     void valueChanged();
 

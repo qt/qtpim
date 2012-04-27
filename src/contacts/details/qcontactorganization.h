@@ -69,8 +69,6 @@ public:
         FieldRole,
         FieldTitle,
         FieldAssistantName,
-        FieldStartDate,
-        FieldEndDate
     };
 
     void setName(const QString& name) {setValue(FieldName, name);}
@@ -87,10 +85,6 @@ public:
     QString title() const {return value(FieldTitle).toString();}
     void setAssistantName(const QString& assistantName) {setValue(FieldAssistantName, assistantName);}
     QString assistantName() const {return value(FieldAssistantName).toString();}
-    void setStartDate(const QDateTime& dateTime) {setValue(FieldStartDate, dateTime);}
-    QDateTime startDate() const {return value<QDateTime>(FieldStartDate);}
-    void setEndDate(const QDateTime& dateTime) {setValue(FieldEndDate, dateTime);}
-    QDateTime endDate() const {return value<QDateTime>(FieldEndDate);}
 };
 
 QTCONTACTS_END_NAMESPACE

@@ -193,8 +193,6 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData = QJsonObject();
 
     // organization
-    QDateTime startDate = QDateTime::fromString("1970-01-01", Qt::ISODate).toUTC();
-    QDateTime endDate = QDateTime::fromString("2038-01-19", Qt::ISODate).toUTC();
     initializeJsonContact(jsonContact);
     jsonData.insert("name", QString("ACME"));
     jsonData.insert("department", QString("Spy"));
@@ -202,8 +200,6 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("role", QString("Superhero"));
     jsonData.insert("assistantName", QString("Daisy Duck"));
     jsonData.insert("logoUrl", QString("http://www.acme.com/logo.jpg"));
-    jsonData.insert("startDate",convertToISODate("1970-01-01"));
-    jsonData.insert("endDate",convertToISODate("2038-01-19"));
     QJsonArray organizationData;
     organizationData.append(jsonData);
     jsonContact.insert("organization", organizationData);
@@ -218,8 +214,6 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QCOMPARE(org->role(), QString("Superhero"));
     QCOMPARE(org->assistantName(), QString("Daisy Duck"));
     QCOMPARE(org->logoUrl(), QUrl("http://www.acme.com/logo.jpg"));
-    QCOMPARE(org->startDate(),startDate);
-    QCOMPARE(org->endDate(),endDate);
     // cleanup
     contact.clearDetails();
     jsonData = QJsonObject();
@@ -925,24 +919,17 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     organization.setRole("Superhero");
     organization.setAssistantName("Daisy Duck");
     organization.setLogoUrl(QUrl("http://www.acme.com/logo.jpg"));
-    organization.setStartDate(QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
-    organization.setEndDate(QDateTime::fromString("Thu Jan 1 00:01:02 1998"));
     QList<int> OrganizationContextList;
     OrganizationContextList << QContactDetail::ContextWork;
     organization.setContexts(OrganizationContextList);
     contact.saveDetail(&organization);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    QString expectedStartDate,expectedEndDate;
-    expectedStartDate = organization.startDate().toUTC().toString(Qt::ISODate);
-    expectedEndDate = organization.endDate().toUTC().toString(Qt::ISODate);
     testFields.insert("name", "ACME");
     testFields.insert("department", "Spy");
     testFields.insert("title", "Vice President");
     testFields.insert("role", "Superhero");
     testFields.insert("assistantName", "Daisy Duck");
     testFields.insert("logoUrl", "http://www.acme.com/logo.jpg");
-    testFields.insert("startDate", expectedStartDate);
-    testFields.insert("endDate", expectedEndDate);
     testFields.insert("context", "work");
     // test fields
     testJsonDetailItems(jsonContact, "organization", testFields);

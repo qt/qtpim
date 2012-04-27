@@ -46,6 +46,7 @@
 #include "qcontactmanager_p.h"
 #include "qcontactfetchhint.h"
 
+#include <QMetaMethod>
 #include <QSharedData>
 #include <QPair>
 #include <QSet>
@@ -883,19 +884,38 @@ QString QContactManager::managerUri() const
 /*!
     \internal
 
+    Returns the signal that corresponds to \a proxySignal in the
+    meta-object of the \a sourceObject.
+*/
+static QMetaMethod proxyToSourceSignal(const QMetaMethod &proxySignal, QObject *sourceObject)
+{
+    if (!proxySignal.isValid())
+        return proxySignal;
+    Q_ASSERT(proxySignal.methodType() == QMetaMethod::Signal);
+    Q_ASSERT(sourceObject != 0);
+    const QMetaObject *sourceMeta = sourceObject->metaObject();
+    int sourceIndex = sourceMeta->indexOfSignal(proxySignal.methodSignature());
+    Q_ASSERT(sourceIndex != -1);
+    return sourceMeta->method(sourceIndex);
+}
+
+/*!
+    \internal
+
     When someone connects to this manager, connect the corresponding signal from the engine, if we
     haven't before. If we have, just increment a count.
 
     This allows lazy evaluation on the engine side (e.g. setting up dbus watchers) and prevents
     unnecessary work.
 */
-void QContactManager::connectNotify(const char *signal)
+void QContactManager::connectNotify(const QMetaMethod &signal)
 {
     /* For most signals we just connect from the engine to ourselves, since we just proxy, but we should connect only once */
     // As a special case, we know that the V2 wrapper just proxies all the signals
     // so we skip the second proxy.  If a wrapper ever emits signals itself then we
     // can't do this.
-    connect(d->m_signalSource, signal, this, signal, Qt::UniqueConnection);
+    QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_signalSource);
+    connect(d->m_signalSource, sourceSignal, this, signal, Qt::UniqueConnection);
 }
 
 /*!
@@ -903,10 +923,12 @@ void QContactManager::connectNotify(const char *signal)
 
     When someone disconnects, disconnect from the engine too if there are no more users of that signal.
 */
-void QContactManager::disconnectNotify(const char *signal)
+void QContactManager::disconnectNotify(const QMetaMethod &signal)
 {
-    if (receivers(signal) == 0)
-        disconnect(d->m_signalSource, signal, this, signal);
+    if (!isSignalConnected(signal)) {
+        QMetaMethod sourceSignal = proxyToSourceSignal(signal, d->m_signalSource);
+        disconnect(d->m_signalSource, sourceSignal, this, signal);
+    }
 }
 
 

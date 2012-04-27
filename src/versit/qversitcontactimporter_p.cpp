@@ -206,6 +206,7 @@ void QVersitContactImporterPrivate::importProperty(
         break;
     case QContactDetail::TypeAvatar:
         success = createAvatar(property, contact, &updatedDetails);
+        break;
     case QContactDetail::TypeBirthday:
         success = createBirthday(property, contact, &updatedDetails);
         break;

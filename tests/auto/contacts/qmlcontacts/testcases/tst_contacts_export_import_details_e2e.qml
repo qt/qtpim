@@ -508,7 +508,6 @@ ContactsSavingTestCase {
         for (var i = 0; i < 2; i++) {
             compare(importedPhoneNumbers[i].number, megaContact.phoneNumbers[i].number, "phone number");
             compareSets(importedPhoneNumbers[i].contexts, megaContact.phoneNumbers[i].contexts);
-            expectFail("", "Phone number subtypes are not exported successfully at the moment.");
             compareSets(importedPhoneNumbers[i].subTypes, megaContact.phoneNumbers[i].subTypes);
         }
     }

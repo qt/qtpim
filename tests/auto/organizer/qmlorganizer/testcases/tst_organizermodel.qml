@@ -514,6 +514,13 @@ TestCase {
         utility.waitModelChange()
         utility.empty_calendar()
 
+        var event00 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 7, 11)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 0, 30)\n"
+            + "}\n", modelTests);
+
         var event0 = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
             + "Event {\n"
@@ -549,7 +556,16 @@ TestCase {
             + "  endDateTime: new Date(2011, 12, 8, 12)\n"
             + "}\n", modelTests);
 
+        var event5 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 8, 13)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 13, 30)\n"
+            + "}\n", modelTests);
+
         compare(organizerModel.items.length, 0);
+        organizerModel.saveItem(event00);
+        utility.waitModelChange()
         organizerModel.saveItem(event0);
         utility.waitModelChange()
         organizerModel.saveItem(event1);
@@ -560,12 +576,14 @@ TestCase {
         utility.waitModelChange()
         organizerModel.saveItem(event4);
         utility.waitModelChange()
-        compare(organizerModel.items.length, 5);
+        organizerModel.saveItem(event5);
+        utility.waitModelChange()
+        compare(organizerModel.items.length, 7);
 
-        var containsItems = organizerModel.containsItems(new Date(2011, 12, 8), new Date(2011, 12, 8, 12), 3600);
+        var containsItems = organizerModel.containsItems(new Date(2011, 12, 8), new Date(2011, 12, 8, 13), 3600);
 
-        compare(containsItems.length, 12);
-        compare(containsItems[0], false);
+        compare(containsItems.length, 13);
+        compare(containsItems[0], true);
         compare(containsItems[1], true);
         compare(containsItems[2], false);
         compare(containsItems[3], true);
@@ -577,6 +595,7 @@ TestCase {
         compare(containsItems[9], true);
         compare(containsItems[10], false);
         compare(containsItems[11], true);
+        compare(containsItems[12], false);
     }
 
     function modelChangedSignalTestItems() {

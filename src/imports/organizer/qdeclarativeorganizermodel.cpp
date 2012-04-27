@@ -873,39 +873,57 @@ void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstr
 QList<bool> QDeclarativeOrganizerModel::containsItems(const QDateTime &start, const QDateTime &end, int interval)
 {
     Q_D(QDeclarativeOrganizerModel);
-    QList<bool> list;
-    if (start.isValid() && end.isValid() && start < end && interval > 0) {
-        int count = qCeil(start.secsTo(end) / static_cast<double>(interval));
-        list.reserve(count);
-        int i(0);
-        for (; i < count; ++i)
-            list.append(false);
 
-        QList<QDateTime> dateTime;
-        dateTime.reserve(count + 1);
-        dateTime.append(start);
-        for (i = 1; i < count; ++i)
-            dateTime.append(dateTime.at(i - 1).addSecs(interval));
-        dateTime.append(end);
+    if (!(start.isValid() && end.isValid() && start < end && interval > 0))
+        return QList<bool>();
 
-        QDateTime startTime;
-        QDateTime endTime;
-        foreach (QDeclarativeOrganizerItem *item, d->m_items) {
-            for (i = 0; i < count; ++i) {
-                if (list.at(i))
-                    continue;
+    int i(0);
+    int count = qCeil(start.secsTo(end) / static_cast<double>(interval));
+    QVector<bool> occupiedTimeSlots(count, false);
 
-                startTime = item->itemStartTime();
-                endTime = item->itemEndTime();
-                if ((startTime.isValid() && startTime <= dateTime.at(i) && endTime >= dateTime.at(i + 1))
-                    || (startTime >= dateTime.at(i) && startTime < dateTime.at(i + 1))
-                    || (endTime > dateTime.at(i) && endTime <= dateTime.at(i + 1))) {
-                    list[i] = true;
-                }
+    QVector<QDateTime> dateTime(count + 1);
+    dateTime[0] = start;
+    for (i = 1; i < count; ++i)
+        dateTime[i] = dateTime.at(i - 1).addSecs(interval);
+    dateTime[count] = end;
+
+    QDateTime startTime;
+    QDateTime endTime;
+    bool itemStartFound;
+
+    foreach (QDeclarativeOrganizerItem *item, d->m_items) {
+        startTime = item->itemStartTime();
+        endTime = item->itemEndTime();
+
+        // check if item is occurring between start and end
+        if (!((!startTime.isNull() && startTime >= start && startTime < end)
+              || (!endTime.isNull() && endTime > start && endTime <= end)
+              || (!startTime.isNull() && !endTime.isNull() && startTime <= start && endTime >= end)))
+            continue;
+
+        itemStartFound = (!startTime.isNull() &&  startTime <= start);
+        for (i = 0; i < count; ++i) {
+
+            if (!endTime.isNull() && endTime > dateTime.at(i) && endTime <= dateTime.at(i + 1)) {
+                // item end time found, no need to check more time slots
+                occupiedTimeSlots[i] = true;
+                break;
+            }
+            if (occupiedTimeSlots.at(i))
+                continue;
+
+            if (itemStartFound) {
+                occupiedTimeSlots[i] = true;
+            } else if (!startTime.isNull() && startTime < dateTime.at(i + 1)) {
+                if (startTime >= dateTime.at(i))
+                    occupiedTimeSlots[i] = true;
+                if (endTime.isNull())
+                    break;
+                itemStartFound = true;
             }
         }
     }
-    return list;
+    return occupiedTimeSlots.toList();
 }
 
 /*!

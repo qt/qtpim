@@ -81,7 +81,8 @@ const VersitOrganizerDetailMapping versitOrganizerDetailMappings[] = {
     // FIXME
     {"SUMMARY", QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel},
     {"DESCRIPTION", QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription},
-    {"UID", QOrganizerItemDetail::TypeGuid, QOrganizerItemGuid::FieldGuid}
+    {"UID", QOrganizerItemDetail::TypeGuid, QOrganizerItemGuid::FieldGuid},
+    {"CATEGORIES", QOrganizerItemDetail::TypeTag, QOrganizerItemTag::FieldTag}
 };
 
 QTVERSITORGANIZER_END_NAMESPACE

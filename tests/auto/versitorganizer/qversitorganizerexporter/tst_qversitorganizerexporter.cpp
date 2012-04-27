@@ -559,6 +559,32 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property;
+        property.setName(QLatin1String("CATEGORIES"));
+        property.setValue(QLatin1String("Important Event"));
+        QOrganizerItemTag tag;
+        tag.setTag(QLatin1String("Important Event"));
+        QTest::newRow("tag 1")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
+
+        // Set another one for multiple handling test
+        property.setValue(QLatin1String("Important Event 2"));
+        tag.setTag(QLatin1String("Important Event 2"));
+        QTest::newRow("tag 2")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
+
+        // Empty tag
+        property.clear();
+        property.setName("CATEGORIES");
+        tag.removeValue(QOrganizerItemTag::FieldTag);
+        QTest::newRow("empty tag")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
         property.setName(QLatin1String("PRIORITY"));
         property.setValue(QLatin1String("0"));
 
@@ -719,6 +745,32 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QTest::newRow("completed")
             << (QList<QOrganizerItemDetail>() << progress)
             << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        property.setName(QLatin1String("CATEGORIES"));
+        property.setValue(QLatin1String("Important Event"));
+        QOrganizerItemTag tag;
+        tag.setTag(QLatin1String("Important Event"));
+        QTest::newRow("tag 1")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
+
+        // Set another one for multiple handling test
+        property.setValue(QLatin1String("Important Event 2"));
+        tag.setTag(QLatin1String("Important Event 2"));
+        QTest::newRow("tag 2")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
+
+        // Empty tag
+        property.clear();
+        property.setName("CATEGORIES");
+        tag.removeValue(QOrganizerItemTag::FieldTag);
+        QTest::newRow("empty tag")
+                << (QList<QOrganizerItemDetail>() << tag)
+                << (QList<QVersitProperty>() << property);
     }
 }
 

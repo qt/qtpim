@@ -112,6 +112,9 @@ for the Organizer calendar components.
   \row
     \li DUE
     \li QOrganizerTodoTime
+  \row
+    \li CATEGORIES
+    \li QOrganizerItemTag
 \endtable
 
 

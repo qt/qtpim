@@ -877,7 +877,7 @@ void QOrganizerJsonDbDataStorage::processRequest()
     int msecs = 10000; // TODO: handle timeout nicely
     bool requestFinished = m_syncWaitCondition.wait(m_waitMutex, msecs);
     if (!requestFinished) {
-        qWarning() << "Timeout, not response received!!!";
+        qWarning() << "Timeout, no response received!!!";
         // timeout TODO: check which items have completed and update error map accordingly...
     }
 }

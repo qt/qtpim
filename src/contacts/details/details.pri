@@ -30,7 +30,6 @@ PUBLIC_HEADERS += \
     details/qcontacttype.h \
     details/qcontacturl.h \
     details/qcontactversion.h \
-    details/qcontactpersonid.h \
     details/qcontactextendeddetail.h
 
 SOURCES += details/qcontactdetails.cpp

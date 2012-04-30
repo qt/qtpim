@@ -71,6 +71,5 @@ QTCONTACTS_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontacttimestamp_p.cpp"
 #include "moc_qdeclarativecontacturl_p.cpp"
 #include "moc_qdeclarativecontactversion_p.cpp"
-#include "moc_qdeclarativecontactpersonid_p.cpp"
 
 QTCONTACTS_END_NAMESPACE

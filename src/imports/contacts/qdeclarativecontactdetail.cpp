@@ -175,7 +175,6 @@ void QDeclarativeContactDetail::setLinkedDetailUris(const QStringList& linkedDet
     \li ContactDetail.Note
     \li ContactDetail.OnlineAccount
     \li ContactDetail.Organization
-    \li ContactDetail.PersonId
     \li ContactDetail.PhoneNumber
     \li ContactDetail.Presence
     \li ContactDetail.Ringtone
@@ -279,8 +278,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
         contactDetail = new QDeclarativeContactOnlineAccount;
     else if (type == QDeclarativeContactDetail::Organization)
         contactDetail = new QDeclarativeContactOrganization;
-    else if (type == QDeclarativeContactDetail::PersonId)
-        contactDetail = new QDeclarativeContactPersonId;
     else if (type == QDeclarativeContactDetail::PhoneNumber)
         contactDetail = new QDeclarativeContactPhoneNumber;
     else if (type == QDeclarativeContactDetail::Presence)
@@ -1218,26 +1215,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \endlist
   */
 
-/* ==================== QDeclarativeContactPersonId ======================= */
-/*!
-    \qmlclass PersonID QDeclarativeContactPersonId
-    \brief The PersonId element contains a unique Id of a contact This groups all together a persons contact details.
-    \ingroup qml-contacts-details
-    \inqmlmodule QtContacts
-
-    PersonId element contains the following field types:
-    \list
-    \li PersonId.PersonId
-    \endlist
-
-    This element is part of the \b{QtContacts} module.
- */
-
-/*!
-    \qmlproperty string PersonId::personid
-
-    This property holds the value of the PersonId.
- */
 
 /* ==================== QDeclarativeContactExtendedDetail ======================= */
 /*!

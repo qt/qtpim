@@ -680,16 +680,6 @@ QDeclarativeContactHobby*  QDeclarativeContact::hobby()
 }
 
 /*!
-    \qmlproperty PersonID Contact::personid
-
-    This property holds the personid detail of the Contact object.
-*/
-QDeclarativeContactPersonId*  QDeclarativeContact::personid()
-{
-    return getDetail<QDeclarativeContactPersonId>(QDeclarativeContactDetail::PersonId);
-}
-
-/*!
     \qmlproperty ExtendedDetail Contact::extendedDetail
 
     This property holds the extended detail of the Contact object. In case a contact has several extended

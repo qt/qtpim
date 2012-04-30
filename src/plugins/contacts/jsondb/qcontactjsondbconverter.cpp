@@ -103,18 +103,8 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
 
     // Go through all fields in loop.
     QJsonObject::ConstIterator i = object.constBegin();
-    QContactPersonId personid;
     while (i != object.constEnd()) {
-        if (i.key() == detailsToJsonMapping.value(QContactPersonId::Type)) {
-            //personid
-            stringValue = i.value().toString();
-            if (!stringValue.isEmpty()) {
-                personid.setPersonId(stringValue);
-            }
-            else { // if no personid is stored in backend, we return the local
-                personid.setPersonId(contact->id().toString());
-            }
-        } else if (i.key() == QContactJsonDbStr::version()) {
+        if (i.key() == QContactJsonDbStr::version()) {
             //version
             QContactVersion contactVersion;
             jsonDbVersionToContactVersion(i.value().toString(), &contactVersion);
@@ -399,11 +389,6 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
         }
         ++i;
     }
-
-    // Each contact should have at least a uuid and personid in JsonDb
-    if (personid.isEmpty())
-         personid.setPersonId(contact->id().toString());
-    contact->appendDetail(personid);
     if (contact->isEmpty()) {
         return false;
     } else {
@@ -429,7 +414,6 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
     QContactRingtone* ringtone;
     QContactNote* note;
     QContactGender* gender;
-    QContactPersonId* personid;
     QContactExtendedDetail* extendedDetail;
     QContactSyncTarget* syncTarget;
     QContactGuid* guid;
@@ -450,7 +434,6 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
     // Wipe QContact fields that may be empty/deleted, preserve all other data.
     if (!object->empty()) {
         object->remove(detailsToJsonMapping.value(QContactName::Type));
-        object->remove(detailsToJsonMapping.value(QContactPersonId::Type));
         object->remove(detailsToJsonMapping.value(QContactGender::Type));
         object->remove(detailsToJsonMapping.value(QContactOrganization::Type));
         object->remove(detailsToJsonMapping.value(QContactEmailAddress::Type));
@@ -498,12 +481,6 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             }
             if (!nameObject.isEmpty())
                 object->insert(detailsToJsonMapping.value(QContactName::Type), nameObject);
-            break;
-        }
-        case QContactDetail::TypePersonId: {
-            personid = static_cast<QContactPersonId *>(&detail);
-            if(!personid->personId().isEmpty() )
-                object->insert(detailsToJsonMapping.value(QContactPersonId::Type),personid->personId());
             break;
         }
         case QContactDetail::TypeGender: {
@@ -1211,7 +1188,6 @@ void QContactJsonDbConverter::initializeMappings()
     detailsToJsonMapping.insert(QContactRingtone::Type, QContactJsonDbStr::ringtoneDefinitionName());
     detailsToJsonMapping.insert(QContactOrganization::Type,QContactJsonDbStr::organizationDefinitionName());
     detailsToJsonMapping.insert(QContactNote::Type, QContactJsonDbStr::noteDefinitionName());
-    detailsToJsonMapping.insert(QContactPersonId::Type, QContactJsonDbStr::personIdDefinitionName());
     detailsToJsonMapping.insert(QContactSyncTarget::Type, QContactJsonDbStr::syncTargetDefinitionName());
     detailsToJsonMapping.insert(QContactGuid::Type, QContactJsonDbStr::guidDefinitionName());
     contactNameFieldsMapping.insert(QContactName::FieldFirstName, QContactJsonDbStr::nameFieldFirstName());

@@ -267,12 +267,6 @@ Module {
         Property { name: "urls"; type: "QDeclarativeContactUrl"; isList: true; isReadonly: true }
         Property { name: "hobby"; type: "QDeclarativeContactHobby"; isReadonly: true; isPointer: true }
         Property {
-            name: "personid"
-            type: "QDeclarativeContactPersonId"
-            isReadonly: true
-            isPointer: true
-        }
-        Property {
             name: "extendedDetail"
             type: "QDeclarativeContactExtendedDetail"
             isReadonly: true
@@ -455,16 +449,15 @@ Module {
                 "Note": 17,
                 "OnlineAccount": 18,
                 "Organization": 19,
-                "PersonId": 20,
-                "PhoneNumber": 21,
-                "Presence": 22,
-                "Ringtone": 23,
-                "SyncTarget": 24,
-                "Tag": 25,
-                "Timestamp": 26,
-                "Type": 27,
-                "Url": 28,
-                "Version": 29,
+                "PhoneNumber": 20,
+                "Presence": 21,
+                "Ringtone": 22,
+                "SyncTarget": 23,
+                "Tag": 24,
+                "Timestamp": 25,
+                "Type": 26,
+                "Url": 27,
+                "Version": 28,
                 "Unknown": 0
             }
         }
@@ -990,20 +983,6 @@ Module {
         Property { name: "role"; type: "string" }
         Property { name: "title"; type: "string" }
         Property { name: "assistantName"; type: "string" }
-        Signal { name: "valueChanged" }
-    }
-    Component {
-        name: "QDeclarativeContactPersonId"
-        defaultProperty: "personid"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Personid 5.0"]
-        Enum {
-            name: "FieldType"
-            values: {
-                "Personid": 0
-            }
-        }
-        Property { name: "personid"; type: "string" }
         Signal { name: "valueChanged" }
     }
     Component {

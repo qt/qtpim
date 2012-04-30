@@ -89,7 +89,6 @@ public:
         TypeNote,
         TypeOnlineAccount,
         TypeOrganization,
-        TypePersonId,
         TypePhoneNumber,
         TypePresence,
         TypeRingtone,

@@ -662,7 +662,6 @@ QList<QContactDetail::DetailType> QContactManagerEngine::supportedContactDetailT
                      << QContactNote::Type
                      << QContactOnlineAccount::Type
                      << QContactOrganization::Type
-                     << QContactPersonId::Type
                      << QContactPhoneNumber::Type
                      << QContactPresence::Type
                      << QContactRingtone::Type

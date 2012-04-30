@@ -44,7 +44,6 @@
 #include "qcontactjsondbengine.h"
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
-#include "qcontactpersonid.h"
 #include "qcontactjsondbstring.h"
 #include "qcontactjsondbrequesthandler.h"
 
@@ -130,7 +129,6 @@ QList<QContactDetail::DetailType> QContactJsonDbEngine::supportedContactDetailTy
                      << QContactNickname::Type
                      << QContactNote::Type
                      << QContactOrganization::Type
-                     << QContactPersonId::Type
                      << QContactPhoneNumber::Type
                      << QContactRingtone::Type
                      << QContactSyncTarget::Type

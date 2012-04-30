@@ -73,6 +73,5 @@
 #include <qcontacttype.h>
 #include <qcontacturl.h>
 #include <qcontactversion.h>
-#include <qcontactpersonid.h>
 
 #endif

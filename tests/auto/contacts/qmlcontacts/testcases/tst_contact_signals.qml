@@ -560,34 +560,6 @@ TestCase {
     }
 
     Contact {
-        id: contactWithPersonid1
-        Personid {
-            personid: "old"
-        }
-    }
-
-    function test_contact_personid_change_emits_signal()
-    {
-        listenToSignalFromObject("contactChanged", contactWithPersonid1);
-        contactWithPersonid1.personid.personid = "new";
-        verifySignalReceived();
-    }
-
-    Contact {
-        id: contactWithPersonid2
-        Personid {
-            personid: "old"
-        }
-    }
-
-    function test_contact_personid_emits_no_signal_when_value_does_not_change()
-    {
-        listenToSignalFromObject("contactChanged", contactWithPersonid2);
-        contactWithPersonid2.personid.personid = contactWithPersonid2.personid.personid;
-        verifyNoSignalReceived();
-    }
-
-    Contact {
         id: contactWithPhoneNumber1
         PhoneNumber {
             number: "1234"

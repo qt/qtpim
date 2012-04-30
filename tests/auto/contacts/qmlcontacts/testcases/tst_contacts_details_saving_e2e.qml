@@ -588,18 +588,6 @@ ContactsSavingTestCase {
         compare(details[1].name, organizations2.name, "name 1");
     }
 
-    Personid {
-        id: personid
-    }
-
-    function test_personId() {
-        personid.personid = "Person id"
-        contact.addDetail(personid)
-        saveAndRefreshContact()
-        var detail = contact.detail(ContactDetail.PersonId)
-        compare(detail.personid, "Person id")
-    }
-
     PhoneNumber {
         id: phonenumber
     }

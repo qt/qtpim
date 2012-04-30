@@ -150,12 +150,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     jsonData = QJsonObject();
     contact.clearDetails();
-    // test passing an empty string in the first place: allowed
+    // test passing an empty string in the first place: invalid
     QString emptyName;
     jsonData.insert("firstName", emptyName);
     jsonData.insert("lastName", emptyName);
     jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
-    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactName::Type);
     QVERIFY(detail.isEmpty());
     name = static_cast<QContactName*>(&detail);

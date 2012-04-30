@@ -1413,10 +1413,6 @@ void tst_QContactJsondbEngine::testSaveContact() {
     nameDetail.setFirstName("Test Contact");
     testContact.saveDetail(&nameDetail);
 
-    QContactPersonId personIdDetail;
-    personIdDetail.setPersonId("1234567890123456");
-    testContact.saveDetail(&personIdDetail);
-
     // testing
     QContactFilter filter;
     QList<QContactSortOrder> sortOrders;
@@ -1430,7 +1426,6 @@ void tst_QContactJsondbEngine::testSaveContact() {
     QCOMPARE(cm.contactIds().size(), originalCount + 1);
     QCOMPARE(testContact.id(), expected.id());
     QCOMPARE(testContact.detail(QContactName::Type), expected.detail(QContactName::Type));
-    QCOMPARE(testContact.detail(QContactPersonId::Type), expected.detail(QContactPersonId::Type));
 }
 
 void tst_QContactJsondbEngine::testSaveContacts() {

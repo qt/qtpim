@@ -38,8 +38,6 @@ function detailTypeToString(detailType) {
         return "OnlineAccount";
     case ContactDetail.Organization:
         return "Organization";
-    case ContactDetail.PersonId:
-        return "PersonId";
     case ContactDetail.PhoneNumber:
         return "PhoneNumber";
     case ContactDetail.Presence:

@@ -85,7 +85,6 @@ public:
         Note = QContactDetail::TypeNote,
         OnlineAccount = QContactDetail::TypeOnlineAccount,
         Organization = QContactDetail::TypeOrganization,
-        PersonId = QContactDetail::TypePersonId,
         PhoneNumber = QContactDetail::TypePhoneNumber,
         Presence = QContactDetail::TypePresence,
         Ringtone = QContactDetail::TypeRingtone,

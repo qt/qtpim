@@ -131,10 +131,6 @@ TestCase {
         id: organization
     }
 
-    Personid {
-        id: personid
-    }
-
     PhoneNumber {
         id: phonenumber
     }
@@ -502,12 +498,6 @@ TestCase {
         organization.assistantName = "Pamela";
         compare(organization.assistantName, "Pamela")
 
-    }
-
-    function test_personid() {
-        compare(personid.personid, "")
-        personid.personid  = "myPersonId";
-        compare(personid.personid , "myPersonId")
     }
 
     function test_phonenumber() {

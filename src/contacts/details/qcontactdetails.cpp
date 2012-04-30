@@ -1968,39 +1968,6 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
     return f;
 }
 
-/* ==================== QContactPersonId ======================= */
-
-/*!
-   \class QContactPersonId
-   \brief The QContactPersonId class contains the personid of a contact.This groups all together a persons contact details.
-   \ingroup contacts-details
- */
-
-/*!
-   \variable QContactPersonId::Type
-   The enum constant for the type identifier of QContactPersonId details.
- */
-const QContactDetail::DetailType QContactPersonId::Type(QContactDetail::TypePersonId);
-
-/*!
-   \enum QContactPersonId::PersonIdField
-   This enumeration defines the fields supported by QContactPersonId.
-   \value FieldPersonId The value stored in this field contains the value containing the personid.
-   \sa personId(), setPersonId()
- */
-
-/*!
-   \fn QContactPersonId::personId() const
-
-   Returns the personid of the contact, as stored in this detail.This groups all together a persons contact details.
- */
-
-/*!
-   \fn QContactPersonId::setPersonId(const QString& personid)
-
-   Sets the personid of the contact (as stored in this detail) to \a personid.
- */
-
 
 /* ==================== QContactExtendedDetail ======================= */
 /*!

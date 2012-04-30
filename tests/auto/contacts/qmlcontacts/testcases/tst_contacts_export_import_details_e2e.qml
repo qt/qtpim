@@ -203,10 +203,6 @@ ContactsSavingTestCase {
             assistantName: "Assistant2"
         }
 
-        Personid {
-            personid: "Person ID"
-        }
-
         PhoneNumber {
             subTypes: [
                 PhoneNumber.Landline,
@@ -477,11 +473,6 @@ ContactsSavingTestCase {
             compare(importedOrganizations[i].location, megaContact.organizations[i].location, "location");
         }
 
-    }
-
-    function test_exportImportPersonId() {
-        expectFail("", "Person id is not exported at the moment.");
-        compare(importedContact.personid.personid, megaContact.personid.personid, "person id");
     }
 
     function test_exportImportPhoneNumber() {

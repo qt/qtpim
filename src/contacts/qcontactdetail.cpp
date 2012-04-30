@@ -187,7 +187,6 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
    \value TypeNote Detail type of a QContactNote detail.
    \value TypeOnlineAccount Detail type of a QContactOnlineAccount detail.
    \value TypeOrganization Detail type of a QContactOrganization detail.
-   \value TypePersonId Detail type of a QContactPersonId detail.
    \value TypePhoneNumber Detail type of a QContactPhoneNumber detail.
    \value TypePresence Detail type of a QContactPresence detail.
    \value TypeRingtone Detail type of a QContactRingtone detail.

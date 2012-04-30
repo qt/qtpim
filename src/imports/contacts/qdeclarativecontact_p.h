@@ -46,7 +46,6 @@
 #include "qdeclarativecontactdetails_p.h"
 #include "qdeclarativecontacturl_p.h"
 #include "qdeclarativecontacthobby_p.h"
-#include "qdeclarativecontactpersonid_p.h"
 #include "qdeclarativecontactdetail_p.h"
 #include <QtQml/qqmllist.h>
 
@@ -94,7 +93,6 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeContactPersonId*  personid READ personid NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
@@ -152,7 +150,6 @@ public:
     QDeclarativeContactVersion*  version();
     QQmlListProperty<QDeclarativeContactUrl>  urls();
     QDeclarativeContactHobby*  hobby();
-    QDeclarativeContactPersonId* personid();
     QDeclarativeContactExtendedDetail*  extendedDetail();
     QQmlListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
 

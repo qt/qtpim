@@ -287,6 +287,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerItem> items = saveReq->items();
+    QOrganizerAbstractRequest::StorageLocation targetStorageLocation = saveReq->storageLocation();
     QMap<int, QOrganizerItem> parentItemMap;
     QMap<int, QOrganizerManager::Error> parentErrorMap;
     QOrganizerManager::Error parentError = QOrganizerManager::NoError;
@@ -309,7 +310,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
         if (!errorFound) {
             // check the request is targeted to available non-mandatory storage location
-            if (QOrganizerAbstractRequest::SystemStorage & saveReq->storageLocation()
+            if (QOrganizerAbstractRequest::SystemStorage & targetStorageLocation
                 && (-1 == m_storage->availableStorageLocations().indexOf(QOrganizerAbstractRequest::SystemStorage))) {
                 qWarning("Organizer - Request cannot access '%s'!", qPrintable("QOrganizerAbstractRequest::SystemStorage"));
                 latestError = QOrganizerManager::BadArgumentError;
@@ -322,6 +323,15 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         //        // ensure that the organizeritem's details conform to their definitions
         //        if (!errorFound && !m_engine->validateItem(item, &latestError))
         //            errorFound = true;
+
+
+        // check for view object
+        if (item.data(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
+            item.setData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
+            item.setId(QOrganizerItemId());
+            targetStorageLocation = QOrganizerAbstractRequest::SystemStorage;
+            itemIsNew = true;
+        }
 
         if (!errorFound) {
             if (itemIsOccurrence) {
@@ -355,7 +365,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         }
 
         if (!errorFound) {
-            if (!fixCollectionReferences(&item, parentItem, itemIsNew, saveReq->storageLocation())) {
+            if (!fixCollectionReferences(&item, parentItem, itemIsNew, targetStorageLocation)) {
                 latestError = QOrganizerManager::InvalidCollectionError;
                 errorFound = true;
             }
@@ -386,14 +396,6 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         // NOTE: currently there is work-around for this: some cross-checking is done when fetching items
         // }
 
-
-        // check for view object
-        if (item.data(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
-            item.setData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
-            item.setId(QOrganizerItemId());
-            itemIsNew = true;
-        }
-
         // remove version in case the item ID is reset
         if (itemIsNew) {
             QOrganizerItemVersion version = item.detail(QOrganizerItemDetail::TypeVersion);
@@ -411,7 +413,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
     // save items
     if (!itemMap.isEmpty()) {
-        m_storage->saveItems(&itemMap, &errorMap, &latestError, saveReq->storageLocation());
+        m_storage->saveItems(&itemMap, &errorMap, &latestError, targetStorageLocation);
         QMap<int, QOrganizerItem>::const_iterator i = itemMap.constBegin();
         while (i != itemMap.constEnd()) {
             if (!errorMap.contains(i.key()))
@@ -424,7 +426,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
     // save parent items with modified exception dates
     if (!parentItemMap.isEmpty())
-        m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError, saveReq->storageLocation());
+        m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError, targetStorageLocation);
 
     QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
     m_requestMgr->removeRequest(saveReq);
@@ -851,7 +853,6 @@ bool QOrganizerJsonDbRequestThread::fixCollectionReferences(QOrganizerItem *item
         //If we could find the collection id in collection id list
         if (!m_storage->collectionIds().contains(collectionId))
             return false;
-
         if (itemIsOccurrence) {
             // Does this occurrence have different collection id than it's parent
             if (collectionId != parentCollectionId)

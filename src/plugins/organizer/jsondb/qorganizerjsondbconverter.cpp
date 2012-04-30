@@ -244,12 +244,13 @@ bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QO
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventOccurrenceType()) {
         item->setType(QOrganizerItemType::TypeEventOccurrence);
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType()) {
-        item->setType(QOrganizerItemType::TypeEvent);
-        item->setData(QOrganizerJsonDbStr::eventIsSynthetic(), true);
-
         // the data is stored in the "value" field, so dirty code here ;)
         objectToParse = object.value(QOrganizerJsonDbStr::jsonDbValue()).toObject();
+        if (!objectToParse.value("isVisible").toBool())
+            return false;
         objectToParse.insert(QOrganizerJsonDbStr::jsonDbUuid(), object.value(QOrganizerJsonDbStr::jsonDbUuid()));
+        item->setType(QOrganizerItemType::TypeEvent);
+        item->setData(QOrganizerJsonDbStr::eventIsSynthetic(), true);
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbTodoType()) {
         item->setType(QOrganizerItemType::TypeTodo);
     } else if (jsonDbType == QOrganizerJsonDbStr::jsonDbTodoOccurrenceType()) {

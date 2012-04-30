@@ -80,11 +80,13 @@ public:
 
     // JsonDb query strings
     inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
-    inline const static QString jsonDbQueryEventViews() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.EventView\"]"); }
     inline const static QString jsonDbQueryAllCollections() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.Collection\"]"); }
     inline const static QString jsonDbQueryParentItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\"]][?recurrenceDates exists | recurrenceRules exists | exceptionDates exists | exceptionRules exists]"); }
     inline const static QString jsonDbQueryOccurrenceItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
     inline const static QString jsonDbQueryOccurrenceItemsByParent() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]][?parentUuid = \"%1\"]"); }
+
+    inline const static QString jsonDbQueryEventViews() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.EventView\"]"); }
+    inline const static QString jsonDbQueryEventViewParentItems() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.EventView\"][?value.recurrenceRules exists]"); }
 
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }

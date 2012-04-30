@@ -532,13 +532,8 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
 
             foreach (QOrganizerAbstractRequest::StorageLocation location, m_availableStorageLocations) {
                 if (m_fetchFromStorageLocations & location)
-                    if (makeJsonDbRequest(JsonDbReadRequest, 0, location, jsonDbQuery))
-                        // can't query normal object and view object at the same time
-                        // TODO only query view objects for when needed
-                        // needed for all the storage locations?
-                        makeJsonDbRequest(JsonDbReadRequest, 0, location, QOrganizerJsonDbStr::jsonDbQueryEventViews() + filterString);
+                    makeJsonDbRequest(JsonDbReadRequest, 0, location, jsonDbQuery);
             }
-
         } else {
             *m_error = QOrganizerManager::BadArgumentError;
         }
@@ -548,10 +543,16 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
     {
         // This is used for fetching all parent items
         foreach (QOrganizerAbstractRequest::StorageLocation location, m_availableStorageLocations) {
-            if (m_fetchFromStorageLocations & location)
-                makeJsonDbRequest(JsonDbReadRequest, 0, location, QOrganizerJsonDbStr::jsonDbQueryParentItems());
+            if (m_fetchFromStorageLocations & location) {
+                if (makeJsonDbRequest(JsonDbReadRequest, 0, location, QOrganizerJsonDbStr::jsonDbQueryParentItems())) {
+                    if (location == QOrganizerAbstractRequest::SystemStorage) {
+                        // can't query normal object and view object at the same time
+                        // TODO only query view objects for when needed
+                        makeJsonDbRequest(JsonDbReadRequest, 0, location, QOrganizerJsonDbStr::jsonDbQueryEventViewParentItems());
+                    }
+                }
+            }
         }
-        // TODO: handle view objects
         break;
     }
     case FetchItemOccurrences:
@@ -562,7 +563,6 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
             if (m_fetchFromStorageLocations & location)
                 makeJsonDbRequest(JsonDbReadRequest, 0, location, jsonDbQuery);
         }
-        // TODO: handle view objects
         break;
     }
     default:
@@ -609,9 +609,15 @@ void QOrganizerJsonDbDataStorage::handleItemsByIdRequest()
     QString newJsonDbQuery(QOrganizerJsonDbStr::jsonDbQueryAllItems());
     newJsonDbQuery.append(QOrganizerJsonDbStr::jsonDbQueryUuidsTemplate().arg(itemQuery));
 
+    QString viewObjectJsonDbQuery(QOrganizerJsonDbStr::jsonDbQueryEventViews());
+    viewObjectJsonDbQuery.append(QOrganizerJsonDbStr::jsonDbQueryUuidsTemplate().arg(itemQuery));
+
     foreach (QOrganizerAbstractRequest::StorageLocation location, m_availableStorageLocations) {
-        if (m_fetchFromStorageLocations & location)
+        if (m_fetchFromStorageLocations & location) {
             makeJsonDbRequest(JsonDbReadRequest, 0, location, newJsonDbQuery);
+            if (location == QOrganizerAbstractRequest::SystemStorage)
+                makeJsonDbRequest(JsonDbReadRequest, 0, location, viewObjectJsonDbQuery);
+        }
     }
 
     if (m_requestIndexMap.isEmpty())

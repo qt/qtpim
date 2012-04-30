@@ -110,7 +110,7 @@ Item {
                             label: modelData.contexts.toString()
                             value: modelData.number
                             onBlur: {
-                                        modelData.setValue("PhoneNumber", newValue);
+                                        modelData.setValue(PhoneNumber.Number, newValue);
                                 }
                         }
                 }
@@ -143,7 +143,7 @@ Item {
                             label: modelData.contexts.toString()
                             value: modelData.emailAddress
                             onBlur: {
-                                        modelData.setValue("EmailAddress", newValue);
+                                        modelData.setValue(EmailAddress.EmailAddress, newValue);
                                 }
                         }
                 }
@@ -177,7 +177,7 @@ Item {
                                 label: "Name"
                                 value: modelData.name
                                 onBlur: {
-                                            modelData.setValue("Name", newValue);
+                                            modelData.setValue(ExtendedDetail.Name, newValue);
                                     }
                             }
                             FieldRow {
@@ -185,7 +185,7 @@ Item {
                                 label: "Data"
                                 value: modelData.data
                                 onBlur: {
-                                            modelData.setValue("Data", newValue);
+                                            modelData.setValue(ExtendedDetail.Data, newValue);
                                     }
                             }
                         }

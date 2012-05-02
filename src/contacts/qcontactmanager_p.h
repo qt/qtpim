@@ -117,9 +117,6 @@ public:
 
     QMultiHash<QContactId, QContactObserver*> m_observerForContact;
 
-    // Lazy connection stuff - reference counted set
-    QHash<QByteArray, int> m_connectedSignals;
-
     // If this is a wrapperv2, connect to the wrappee signals directly rather
     // than bouncing them twice
     QObject *m_signalSource; // where the signals we proxy come from - either m_engine or a v1engine that is wrapped

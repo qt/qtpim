@@ -134,7 +134,7 @@ void tst_QDeclarativeContact::construction()
             qWarning("--------- ------------- ------------- ---------------------- ------------ ");
         }
         QVERIFY(obj != 0);
-        QCOMPARE(obj->metaObject()->className(), expectedClassName.toAscii().constData());
+        QCOMPARE(obj->metaObject()->className(), expectedClassName.toLatin1().constData());
     } else {
         QVERIFY(obj == 0);
     }

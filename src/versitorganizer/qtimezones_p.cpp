@@ -48,7 +48,7 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
 QOrganizerManager* TimeZone::getManager()
 {
     // We use the memory engine to do time zone recurrence calculations
-    static QOrganizerManager* manager(new QOrganizerManager(QString::fromAscii("memory")));
+    static QOrganizerManager* manager(new QOrganizerManager(QString::fromLatin1("memory")));
     return manager;
 }
 

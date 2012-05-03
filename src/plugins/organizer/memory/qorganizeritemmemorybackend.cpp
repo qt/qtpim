@@ -77,7 +77,7 @@ QOrganizerCollectionEngineId* QOrganizerItemMemoryFactory::createCollectionEngin
 
 QString QOrganizerItemMemoryFactory::managerName() const
 {
-    return QString::fromAscii("memory");
+    return QString::fromLatin1("memory");
 }
 
 /*!

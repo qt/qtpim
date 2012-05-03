@@ -306,7 +306,7 @@ QTestData& tst_QContactManagerFiltering::newMRow(const char *tag, QContactManage
 {
     // allocate a tag
     QString foo = QString("%1[%2]").arg(tag).arg(cm->objectName());
-    return QTest::newRow(foo.toAscii().constData());
+    return QTest::newRow(foo.toLatin1().constData());
 }
 
 
@@ -2057,7 +2057,7 @@ void tst_QContactManagerFiltering::relationshipFiltering()
         QCOMPARE_UNSORTED(output, expected);
     } else {
         QString msg = "Manager does not support relationship type " + relationshipType + " between " + contactA.type() + " and " + contactB.type() + " type contacts.";
-        QSKIP(msg.toAscii());
+        QSKIP(msg.toLatin1());
     }
 }
 
@@ -2752,7 +2752,7 @@ void tst_QContactManagerFiltering::invalidFiltering_data()
 
     for (int i = 0; i < managers.size(); i++) {
         QContactManager *manager = managers.at(i);
-        QTest::newRow(manager->managerName().toAscii().constData()) << manager;
+        QTest::newRow(manager->managerName().toLatin1().constData()) << manager;
     }
 }
 
@@ -2779,7 +2779,7 @@ void tst_QContactManagerFiltering::allFiltering_data()
 
     for (int i = 0; i < managers.size(); i++) {
         QContactManager *manager = managers.at(i);
-        QTest::newRow(manager->managerName().toAscii().constData()) << manager;
+        QTest::newRow(manager->managerName().toLatin1().constData()) << manager;
     }
 }
 
@@ -2811,7 +2811,7 @@ void tst_QContactManagerFiltering::fetchHint_data()
 
     for (int i = 0; i < managers.size(); i++) {
         QContactManager *manager = managers.at(i);
-        QTest::newRow(manager->managerName().toAscii().constData()) << manager;
+        QTest::newRow(manager->managerName().toLatin1().constData()) << manager;
     }
 }
 

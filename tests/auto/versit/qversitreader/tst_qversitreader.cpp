@@ -263,8 +263,8 @@ void tst_QVersitReader::testDetectCodec()
     mInputDevice->seek(0);
     mReader->setDevice(mInputDevice);
     QVERIFY(mReader->defaultCodec() == 0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QVERIFY(mReader->defaultCodec() == 0); // shouldn't change
@@ -287,41 +287,41 @@ void tst_QVersitReader::testDetectCodec_data()
     {
         const QByteArray& document =
             "\xef\xbb\xbf" + documentString.toUtf8();
-        QTest::newRow("UTF-8 with BOM") << document << QString::fromAscii("John");
+        QTest::newRow("UTF-8 with BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
             QTextCodec::codecForName("UTF-16BE")->fromUnicode(documentString);
-        QTest::newRow("UTF-16BE with BOM") << document << QString::fromAscii("John");
+        QTest::newRow("UTF-16BE with BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
             QTextCodec::codecForName("UTF-16LE")->fromUnicode(documentString);
-        QTest::newRow("UTF-16LE with BOM") << document << QString::fromAscii("John");
+        QTest::newRow("UTF-16LE with BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
-            VersitUtils::encode(documentString.toAscii(), QTextCodec::codecForName("UTF-16BE"));
-        QTest::newRow("UTF-16BE without BOM") << document << QString::fromAscii("John");
+            VersitUtils::encode(documentString.toLatin1(), QTextCodec::codecForName("UTF-16BE"));
+        QTest::newRow("UTF-16BE without BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
-            VersitUtils::encode(documentString.toAscii(), QTextCodec::codecForName("UTF-16LE"));
-        QTest::newRow("UTF-16LE without BOM") << document << QString::fromAscii("John");
+            VersitUtils::encode(documentString.toLatin1(), QTextCodec::codecForName("UTF-16LE"));
+        QTest::newRow("UTF-16LE without BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
             QTextCodec::codecForName("UTF-32BE")->fromUnicode(documentString);
-        QTest::newRow("UTF-32BE with BOM") << document << QString::fromAscii("John");
+        QTest::newRow("UTF-32BE with BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document =
             QTextCodec::codecForName("UTF-32LE")->fromUnicode(documentString);
-        QTest::newRow("UTF-32LE with BOM") << document << QString::fromAscii("John");
+        QTest::newRow("UTF-32LE with BOM") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document = documentString.toUtf8();
-        QTest::newRow("Plain ASCII") << document << QString::fromAscii("John");
+        QTest::newRow("Plain ASCII") << document << QString::fromLatin1("John");
     }
     {
         const QByteArray& document = "BEGIN:VCARD\r\nVERSION:2.1\r\nFN:"
@@ -358,8 +358,8 @@ void tst_QVersitReader::testReading()
     // Device set, no data
     mReader->setDevice(mInputDevice);
     mInputDevice->open(QBuffer::ReadOnly);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     QList<QVersitDocument> results(mReader->results());
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -372,8 +372,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->setData(oneDocument);
     mInputDevice->open(QBuffer::ReadOnly);
     mInputDevice->seek(0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -389,8 +389,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->setData(myTest);
     mInputDevice->open(QBuffer::ReadOnly);
     mInputDevice->seek(0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -404,8 +404,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->setData(vcard40);
     mInputDevice->open(QBuffer::ReadOnly);
     mInputDevice->seek(0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -422,8 +422,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->open(QBuffer::ReadOnly);
     mInputDevice->seek(0);
     mReader->setDefaultCodec(codec);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -437,8 +437,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->setData(twoDocuments);
     mInputDevice->open(QBuffer::ReadOnly);
     mInputDevice->seek(0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -455,8 +455,8 @@ void tst_QVersitReader::testReading()
     mInputDevice->setData(validDocumentsAndGroupedDocument);
     mInputDevice->open(QBuffer::ReadWrite);
     mInputDevice->seek(0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
@@ -478,7 +478,7 @@ void tst_QVersitReader::testReading()
     mInputDevice->seek(0);
     mSignalCatcher->mStateChanges.clear();
     mSignalCatcher->mResultsCount = 0;
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
     QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2);
     QCOMPARE(mSignalCatcher->mStateChanges.at(0), QVersitReader::ActiveState);
     QCOMPARE(mSignalCatcher->mStateChanges.at(1), QVersitReader::FinishedState);
@@ -493,7 +493,7 @@ void tst_QVersitReader::testReading()
     mInputDevice->seek(0);
     mSignalCatcher->mStateChanges.clear();
     mSignalCatcher->mResultsCount = 0;
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
     mReader->cancel();
     mReader->waitForFinished();
     QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2);
@@ -857,7 +857,7 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
         values << "This is a test";
         values << "I have a ; in the middle";
         values << "fini";
-        expectedProperty.setValue(QString::fromAscii("This is a test;I have a \\; in the middle;fini"));
+        expectedProperty.setValue(QString::fromLatin1("This is a test;I have a \\; in the middle;fini"));
         expectedProperty.setValueType(QVersitProperty::PlainType);
         QTest::newRow("org utf8")
             << QVersitDocument::VCard21Type
@@ -879,8 +879,8 @@ void tst_QVersitReader::testParseVersitDocument()
     LineReader lineReader(&buffer, QTextCodec::codecForName("UTF-8"));
 
     mReader->setDevice(&buffer);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     QCOMPARE(mReader->error(), expectedSuccess ? QVersitReader::NoError : QVersitReader::ParseError);
     if (expectedSuccess) {
         QList<QVersitDocument> documents = mReader->results();
@@ -1800,8 +1800,8 @@ void tst_QVersitReader::testByteArrayInput()
 
     mReader = new QVersitReader(oneDocument);
     QVERIFY(mReader->device() == 0);
-    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toAscii().data());
-    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toAscii().data());
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
     QList<QVersitDocument> results = mReader->results();
     QCOMPARE(mReader->state(), QVersitReader::FinishedState);
     QCOMPARE(mReader->error(), QVersitReader::NoError);

@@ -104,8 +104,8 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
     QByteArray codec("ISO-8859_1");
 
     // normal case
-    property.setName(QString::fromAscii("FN"));
-    property.setValue(QString::fromAscii("John Citizen"));
+    property.setName(QString::fromLatin1("FN"));
+    property.setValue(QString::fromLatin1("John Citizen"));
     property.setValueType(QVersitProperty::PlainType);
     expectedResult = "FN:John Citizen\r\n";
     QTest::newRow("No parameters") << property << expectedResult << codec;
@@ -161,14 +161,14 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
     // With parameter(s). No special characters in the value.
     // -> No need to Quoted-Printable encode the value.
     expectedResult = "TEL;HOME:123\r\n";
-    property.setName(QString::fromAscii("TEL"));
-    property.setValue(QString::fromAscii("123"));
-    property.insertParameter(QString::fromAscii("TYPE"),QString::fromAscii("HOME"));
+    property.setName(QString::fromLatin1("TEL"));
+    property.setValue(QString::fromLatin1("123"));
+    property.insertParameter(QString::fromLatin1("TYPE"),QString::fromLatin1("HOME"));
     QTest::newRow("With parameters, plain value") << property << expectedResult << codec;
 
     expectedResult = "EMAIL;HOME;ENCODING=QUOTED-PRINTABLE:john.citizen=40example.com\r\n";
-    property.setName(QString::fromAscii("EMAIL"));
-    property.setValue(QString::fromAscii("john.citizen@example.com"));
+    property.setName(QString::fromLatin1("EMAIL"));
+    property.setValue(QString::fromLatin1("john.citizen@example.com"));
     QTest::newRow("With parameters, special value") << property << expectedResult << codec;
 
     // AGENT property with parameter
@@ -180,14 +180,14 @@ FN:Secret Agent\r\n\
 END:VCARD\r\n\
 \r\n";
     property.setParameters(QMultiHash<QString,QString>());
-    property.setName(QString::fromAscii("AGENT"));
+    property.setName(QString::fromLatin1("AGENT"));
     property.setValue(QString());
-    property.insertParameter(QString::fromAscii("X-PARAMETER"),QString::fromAscii("VALUE"));
+    property.insertParameter(QString::fromLatin1("X-PARAMETER"),QString::fromLatin1("VALUE"));
     QVersitDocument document(QVersitDocument::VCard21Type);
     document.setComponentType(QLatin1String("VCARD"));
     QVersitProperty embeddedProperty;
-    embeddedProperty.setName(QString(QString::fromAscii("FN")));
-    embeddedProperty.setValue(QString::fromAscii("Secret Agent"));
+    embeddedProperty.setName(QString(QString::fromLatin1("FN")));
+    embeddedProperty.setValue(QString::fromLatin1("Secret Agent"));
     document.addProperty(embeddedProperty);
     property.setValue(QVariant::fromValue(document));
     QTest::newRow("AGENT property") << property << expectedResult << codec;
@@ -196,11 +196,11 @@ END:VCARD\r\n\
     // Check that the extra folding and the line break are added
     QByteArray value("value");
     expectedResult = "Springfield.HOUSE.PHOTO;ENCODING=BASE64:\r\n " + value.toBase64() + "\r\n\r\n";
-    QStringList groups(QString::fromAscii("Springfield"));
-    groups.append(QString::fromAscii("HOUSE"));
+    QStringList groups(QString::fromLatin1("Springfield"));
+    groups.append(QString::fromLatin1("HOUSE"));
     property.setGroups(groups);
     property.setParameters(QMultiHash<QString,QString>());
-    property.setName(QString::fromAscii("PHOTO"));
+    property.setName(QString::fromLatin1("PHOTO"));
     property.setValue(value);
     QTest::newRow("base64 encoded") << property << expectedResult << codec;
 
@@ -269,19 +269,19 @@ void tst_QVCard21Writer::testEncodeParameters_data()
 
     QTest::newRow("No parameters") << parameters << QByteArray("");
 
-    parameters.insert(QLatin1String("TYPE"), QString::fromAscii("HOME"));
+    parameters.insert(QLatin1String("TYPE"), QString::fromLatin1("HOME"));
     QTest::newRow("One TYPE parameter") << parameters << QByteArray(";HOME");
 
     // HOME should appear before VOICE because it is more "important" and some vCard
     // parsers may ignore everything after the first TYPE
-    parameters.insert(QLatin1String("TYPE"), QString::fromAscii("VOICE"));
+    parameters.insert(QLatin1String("TYPE"), QString::fromLatin1("VOICE"));
     QTest::newRow("Two TYPE parameters") << parameters << QByteArray(";HOME;VOICE");
 
     parameters.clear();
-    parameters.insert(QLatin1String("ENCODING"), QString::fromAscii("8BIT"));
+    parameters.insert(QLatin1String("ENCODING"), QString::fromLatin1("8BIT"));
     QTest::newRow("One ENCODING parameter") << parameters << QByteArray(";ENCODING=8BIT");
 
-    parameters.insert(QString::fromAscii("X-PARAM"),QString::fromAscii("VALUE"));
+    parameters.insert(QString::fromLatin1("X-PARAM"),QString::fromLatin1("VALUE"));
     QTest::newRow("Two parameters") << parameters << QByteArray(";X-PARAM=VALUE;ENCODING=8BIT");
 
     parameters.clear();
@@ -314,7 +314,7 @@ void tst_QVCard21Writer::testEncodeGroupsAndName()
 
     // No groups
 
-    property.setName(QString::fromAscii("name"));
+    property.setName(QString::fromLatin1("name"));
     QByteArray expected("NAME");
     mWriter->encodeGroupsAndName(property);
     QCOMPARE(result, expected);
@@ -324,7 +324,7 @@ void tst_QVCard21Writer::testEncodeGroupsAndName()
     buffer.close();
     result.clear();
     buffer.open(QIODevice::WriteOnly);
-    property.setGroups(QStringList(QString::fromAscii("group")));
+    property.setGroups(QStringList(QString::fromLatin1("group")));
     expected = "group.NAME";
     mWriter->encodeGroupsAndName(property);
     QCOMPARE(result, expected);
@@ -334,8 +334,8 @@ void tst_QVCard21Writer::testEncodeGroupsAndName()
     buffer.close();
     result.clear();
     buffer.open(QIODevice::WriteOnly);
-    QStringList groups(QString::fromAscii("group1"));
-    groups.append(QString::fromAscii("group2"));
+    QStringList groups(QString::fromLatin1("group1"));
+    groups.append(QString::fromLatin1("group2"));
     property.setGroups(groups);
     expected = "group1.group2.NAME";
     mWriter->encodeGroupsAndName(property);

@@ -90,8 +90,8 @@ void tst_QVersitWriter::testWritingVersions()
 
     QVersitDocument document;
     QVersitProperty property;
-    property.setName(QString(QString::fromAscii("FN")));
-    property.setValue(QString::fromAscii("John"));
+    property.setName(QString(QString::fromLatin1("FN")));
+    property.setValue(QString::fromLatin1("John"));
     document.addProperty(property);
 
     QByteArray vCard30(
@@ -160,8 +160,8 @@ END:VCARD\r\n");
 
     // Now open the device and it should work.
     mOutputDevice->open(QBuffer::ReadWrite);
-    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     QCOMPARE(mWriter->state(), QVersitWriter::FinishedState);
     QCOMPARE(mWriter->error(), QVersitWriter::NoError);
     mOutputDevice->seek(0);
@@ -175,8 +175,8 @@ END:VCARD\r\n");
     mWriter->setDevice(mOutputDevice);
     QTextCodec* utf16(QTextCodec::codecForName("UTF-16"));
     mWriter->setDefaultCodec(utf16);
-    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     QCOMPARE(mWriter->state(), QVersitWriter::FinishedState);
     QCOMPARE(mWriter->error(), QVersitWriter::NoError);
     mOutputDevice->seek(0);
@@ -207,8 +207,8 @@ END:VCARD\r\n");
     // Basic 3.0 test
     mOutputDevice->open(QBuffer::ReadWrite);
     mWriter->setDevice(mOutputDevice);
-    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     QCOMPARE(mWriter->state(), QVersitWriter::FinishedState);
     QCOMPARE(mWriter->error(), QVersitWriter::NoError);
     mOutputDevice->seek(0);
@@ -220,7 +220,7 @@ END:VCARD\r\n");
     // Asynchronous writing
     mOutputDevice->reset();
     mSignalCatcher->mReceived.clear();
-    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(list), QString::number(mWriter->error()).toLatin1().data());
     QTRY_VERIFY(mSignalCatcher->mReceived.count() >= 2);
     QCOMPARE(mSignalCatcher->mReceived.at(0), QVersitWriter::ActiveState);
     QCOMPARE(mSignalCatcher->mReceived.at(1), QVersitWriter::FinishedState);
@@ -263,8 +263,8 @@ void tst_QVersitWriter::testByteArrayOutput()
     property.setName(QString(QLatin1String("FN")));
     property.setValue(QLatin1String("John"));
     document.addProperty(property);
-    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     QCOMPARE(output, vCard30);
 }
 
@@ -275,8 +275,8 @@ void tst_QVersitWriter::testWritingDocument()
 
     mOutputDevice->open(QBuffer::ReadWrite);
     mWriter->setDevice(mOutputDevice);
-    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     mOutputDevice->seek(0);
     QByteArray result(mOutputDevice->readAll());
     if (result!=expected) qDebug() << result << expected;
@@ -287,11 +287,11 @@ void tst_QVersitWriter::testWritingDocument()
     mWriter->setDefaultCodec(utf16);
     mOutputDevice->buffer().clear();
     mOutputDevice->seek(0);
-    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toAscii().data());
-    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toAscii().data());
+    QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toLatin1().data());
+    QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     mOutputDevice->seek(0);
     result = mOutputDevice->readAll();
-    expected = utf16->fromUnicode(QString::fromAscii(expected));
+    expected = utf16->fromUnicode(QString::fromLatin1(expected));
     if (result!=expected) qDebug() << result << expected;
     QCOMPARE(result, expected);
 }
@@ -413,7 +413,7 @@ void tst_QVersitWriter::testWritingDocument_data()
         QTest::newRow("folding 3.0") << document << expected30;
 
         document.setType(QVersitDocument::VCard21Type);
-        property.setValue(longString.toAscii());
+        property.setValue(longString.toLatin1());
         property.setValueType(QVersitProperty::BinaryType);
         document.removeProperties("FN");
         document.addProperty(property);

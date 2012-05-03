@@ -92,15 +92,15 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
 
     // No parameters
     expectedResult = "FN:John Citizen\r\n";
-    property.setName(QString::fromAscii("FN"));
-    property.setValue(QString::fromAscii("John Citizen"));
+    property.setName(QString::fromLatin1("FN"));
+    property.setValue(QString::fromLatin1("John Citizen"));
     QTest::newRow("No parameters") << property << expectedResult;
 
     // With parameter(s)
     expectedResult = "TEL;TYPE=HOME:123\r\n";
-    property.setName(QString::fromAscii("TEL"));
-    property.setValue(QString::fromAscii("123"));
-    property.insertParameter(QString::fromAscii("TYPE"),QString::fromAscii("HOME"));
+    property.setName(QString::fromLatin1("TEL"));
+    property.setValue(QString::fromLatin1("123"));
+    property.insertParameter(QString::fromLatin1("TYPE"),QString::fromLatin1("HOME"));
     QTest::newRow("With parameters, plain value") << property << expectedResult;
 
     // normal FN property is backslash escaped
@@ -137,26 +137,26 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
     // Convert X-NICKNAME to NICKNAME
     expectedResult = "NICKNAME:Jack\r\n";
     property.setParameters(QMultiHash<QString,QString>());
-    property.setName(QString::fromAscii("X-NICKNAME"));
-    property.setValue(QString::fromAscii("Jack"));
+    property.setName(QString::fromLatin1("X-NICKNAME"));
+    property.setValue(QString::fromLatin1("Jack"));
     QTest::newRow("NICKNAME property") << property << expectedResult;
 
     // Convert X-IMPP to IMPP;
     expectedResult = "IMPP:msn:msn-address\r\n";
     property.setParameters(QMultiHash<QString,QString>());
-    property.setName(QString::fromAscii("X-IMPP"));
-    property.setValue(QString::fromAscii("msn:msn-address"));
+    property.setName(QString::fromLatin1("X-IMPP"));
+    property.setValue(QString::fromLatin1("msn:msn-address"));
     QTest::newRow("IMPP property") << property << expectedResult;
 
     // AGENT property
     expectedResult = "AGENT:BEGIN:VCARD\\nVERSION:3.0\\nFN:Secret Agent\\nEND:VCARD\\n\r\n";
-    property.setName(QString::fromAscii("AGENT"));
+    property.setName(QString::fromLatin1("AGENT"));
     property.setValue(QString());
     QVersitDocument document(QVersitDocument::VCard30Type);
     document.setComponentType(QLatin1String("VCARD"));
     QVersitProperty embeddedProperty;
-    embeddedProperty.setName(QString(QString::fromAscii("FN")));
-    embeddedProperty.setValue(QString::fromAscii("Secret Agent"));
+    embeddedProperty.setName(QString(QString::fromLatin1("FN")));
+    embeddedProperty.setValue(QString::fromLatin1("Secret Agent"));
     document.addProperty(embeddedProperty);
     property.setValue(QVariant::fromValue(document));
     QTest::newRow("AGENT property") << property << expectedResult;
@@ -164,11 +164,11 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
     // Value is base64 encoded.
     QByteArray value("value");
     expectedResult = "Springfield.HOUSE.PHOTO;ENCODING=b:" + value.toBase64() + "\r\n";
-    QStringList groups(QString::fromAscii("Springfield"));
-    groups.append(QString::fromAscii("HOUSE"));
+    QStringList groups(QString::fromLatin1("Springfield"));
+    groups.append(QString::fromLatin1("HOUSE"));
     property.setGroups(groups);
     property.setParameters(QMultiHash<QString,QString>());
-    property.setName(QString::fromAscii("PHOTO"));
+    property.setName(QString::fromLatin1("PHOTO"));
     property.setValue(value);
     QTest::newRow("base64 encoded") << property << expectedResult;
 
@@ -183,7 +183,7 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
     expectedResult = "EMAIL:john@" + KATAKANA_NOKIA.toUtf8() + ".com\r\n";
     property = QVersitProperty();
     property.setName(QLatin1String("EMAIL"));
-    property.setValue(QString::fromAscii("john@%1.com").arg(KATAKANA_NOKIA));
+    property.setValue(QString::fromLatin1("john@%1.com").arg(KATAKANA_NOKIA));
     QTest::newRow("special chars") << property << expectedResult;
 }
 
@@ -194,8 +194,8 @@ void tst_QVCard30Writer::testEncodeParameters()
     mWriter->setDevice(&buffer);
     buffer.open(QIODevice::WriteOnly);
 
-    QString typeParameterName(QString::fromAscii("TYPE"));
-    QString encodingParameterName(QString::fromAscii("ENCODING"));
+    QString typeParameterName(QString::fromLatin1("TYPE"));
+    QString encodingParameterName(QString::fromLatin1("ENCODING"));
 
     // No parameters
     QMultiHash<QString,QString> parameters;
@@ -203,7 +203,7 @@ void tst_QVCard30Writer::testEncodeParameters()
     QCOMPARE(encodedParameters, QByteArray(""));
 
     // One TYPE parameter
-    parameters.insert(typeParameterName,QString::fromAscii("HOME"));
+    parameters.insert(typeParameterName,QString::fromLatin1("HOME"));
     mWriter->writeCrlf(); // so it doesn't start folding
     buffer.close();
     encodedParameters.clear();
@@ -212,7 +212,7 @@ void tst_QVCard30Writer::testEncodeParameters()
     QCOMPARE(encodedParameters, QByteArray(";TYPE=HOME"));
 
     // Two TYPE parameters
-    parameters.insert(typeParameterName,QString::fromAscii("VOICE"));
+    parameters.insert(typeParameterName,QString::fromLatin1("VOICE"));
     mWriter->writeCrlf(); // so it doesn't start folding
     buffer.close();
     encodedParameters.clear();
@@ -222,7 +222,7 @@ void tst_QVCard30Writer::testEncodeParameters()
 
     // One ENCODING parameter
     parameters.clear();
-    parameters.insert(encodingParameterName,QString::fromAscii("8BIT"));
+    parameters.insert(encodingParameterName,QString::fromLatin1("8BIT"));
     mWriter->writeCrlf(); // so it doesn't start folding
     buffer.close();
     encodedParameters.clear();
@@ -231,7 +231,7 @@ void tst_QVCard30Writer::testEncodeParameters()
     QCOMPARE(encodedParameters, QByteArray(";ENCODING=8BIT"));
 
     // Two parameters
-    parameters.insert(QString::fromAscii("X-PARAM"),QString::fromAscii("VALUE"));
+    parameters.insert(QString::fromLatin1("X-PARAM"),QString::fromLatin1("VALUE"));
     mWriter->writeCrlf(); // so it doesn't start folding
     buffer.close();
     encodedParameters.clear();
@@ -242,7 +242,7 @@ void tst_QVCard30Writer::testEncodeParameters()
 
     // Parameter with characters that require backslash escaping
     parameters.clear();
-    parameters.insert(QString::fromAscii("X-P;ARAM"),QString::fromAscii("VA,LUE"));
+    parameters.insert(QString::fromLatin1("X-P;ARAM"),QString::fromLatin1("VA,LUE"));
     mWriter->writeCrlf(); // so it doesn't start folding
     buffer.close();
     encodedParameters.clear();
@@ -259,54 +259,54 @@ void tst_QVCard30Writer::testBackSlashEscape()
     QCOMPARE(input,QString());
 
     // Nothing to escape in the string
-    input = QString::fromAscii("Nothing to escape");
+    input = QString::fromLatin1("Nothing to escape");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("Nothing to escape"));
+    QCOMPARE(input,QString::fromLatin1("Nothing to escape"));
 
     // Line break in the beginning
-    input = QString::fromAscii("\r\n input");
+    input = QString::fromLatin1("\r\n input");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("\\n input"));
+    QCOMPARE(input,QString::fromLatin1("\\n input"));
 
     // Line break in the end
-    input = QString::fromAscii("input\r\n");
+    input = QString::fromLatin1("input\r\n");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("input\\n"));
+    QCOMPARE(input,QString::fromLatin1("input\\n"));
 
     // Semicolon in the beginning
-    input = QString::fromAscii(";input");
+    input = QString::fromLatin1(";input");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("\\;input"));
+    QCOMPARE(input,QString::fromLatin1("\\;input"));
 
     // Semicolon in the end
-    input = QString::fromAscii("input;");
+    input = QString::fromLatin1("input;");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("input\\;"));
+    QCOMPARE(input,QString::fromLatin1("input\\;"));
 
     // Comma in the beginning
-    input = QString::fromAscii(",input");
+    input = QString::fromLatin1(",input");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("\\,input"));
+    QCOMPARE(input,QString::fromLatin1("\\,input"));
 
     // Comma in the end
-    input = QString::fromAscii("input,");
+    input = QString::fromLatin1("input,");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("input\\,"));
+    QCOMPARE(input,QString::fromLatin1("input\\,"));
 
     // Backslash in the beginning
-    input = QString::fromAscii("\\input");
+    input = QString::fromLatin1("\\input");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("\\\\input"));
+    QCOMPARE(input,QString::fromLatin1("\\\\input"));
 
     // Backslash in the end
-    input = QString::fromAscii("input\\");
+    input = QString::fromLatin1("input\\");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input,QString::fromAscii("input\\\\"));
+    QCOMPARE(input,QString::fromLatin1("input\\\\"));
 
     // Line break, semicolon, backslash and comma in the middle of the string
-    input = QString::fromAscii("Escape these \r\n ; , \\ ");
+    input = QString::fromLatin1("Escape these \r\n ; , \\ ");
     QVCard30Writer::backSlashEscape(&input);
-    QCOMPARE(input, QString::fromAscii("Escape these \\n \\; \\, \\\\ "));
+    QCOMPARE(input, QString::fromLatin1("Escape these \\n \\; \\, \\\\ "));
 }
 #endif
 QTEST_MAIN(tst_QVCard30Writer)

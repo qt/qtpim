@@ -119,9 +119,9 @@ static void qContactsCleanEngines()
 
 static int parameterValue(const QMap<QString, QString> &parameters, const char *key, int defaultValue)
 {
-    if (parameters.contains(QString::fromAscii(key))) {
+    if (parameters.contains(QString::fromLatin1(key))) {
         bool ok;
-        int version = parameters.value(QString::fromAscii(key)).toInt(&ok);
+        int version = parameters.value(QString::fromLatin1(key)).toInt(&ok);
 
         if (ok)
             return version;

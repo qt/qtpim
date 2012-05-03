@@ -60,8 +60,8 @@
 
 QTCONTACTS_USE_NAMESPACE
 
-#define QCONTACTMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromAscii(QTCONTACTS_VERSION_NAME)); \
-                                                          params.remove(QString::fromAscii(QTCONTACTS_IMPLEMENTATION_VERSION_NAME))
+#define QCONTACTMANAGER_REMOVE_VERSIONS_FROM_URI(params)  params.remove(QString::fromLatin1(QTCONTACTS_VERSION_NAME)); \
+                                                          params.remove(QString::fromLatin1(QTCONTACTS_IMPLEMENTATION_VERSION_NAME))
 
 #define QTRY_COMPARE_SIGNALS_LOCALID_COUNT(__signalSpy, __expectedCount) \
     do { \
@@ -745,7 +745,7 @@ void tst_QContactManager::ctors()
 #if defined(QT_JSONDB_ENABLED)
     QCOMPARE(defaultStore, QString("jsondb"));
 #elif !defined(QT_NO_JSONDB)
-    QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
+    QCOMPARE(defaultStore, QString::fromLatin1("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("invalid"));
 #endif

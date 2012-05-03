@@ -151,7 +151,7 @@ void exportExample()
     QContact contact;
     // Create a name
     QContactName name;
-    name.setFirstName(QString::fromAscii("John"));
+    name.setFirstName(QString::fromLatin1("John"));
     contact.saveDetail(&name);
 
     if (!contactExporter.exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type))
@@ -171,11 +171,11 @@ void importExample()
     QVersitDocument document;
 
     QVersitProperty property;
-    property.setName(QString::fromAscii("N"));
+    property.setName(QString::fromLatin1("N"));
     property.setValue("Citizen;John;Q;;");
     document.addProperty(property);
 
-    property.setName(QString::fromAscii("X-UNKNOWN-PROPERTY"));
+    property.setName(QString::fromLatin1("X-UNKNOWN-PROPERTY"));
     property.setValue("some value");
     document.addProperty(property);
 

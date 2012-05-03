@@ -224,7 +224,7 @@ QString QContactManager::buildUri(const QString &managerName, const QMap<QString
 
     if (implementationVersion != -1) {
         QString versionString = QString(QLatin1String(QTCONTACTS_IMPLEMENTATION_VERSION_NAME));
-        versionString += QString::fromAscii("=");
+        versionString += QString::fromLatin1("=");
         versionString += QString::number(implementationVersion);
         escapedParams.append(versionString);
     }
@@ -866,8 +866,8 @@ QMap<QString, QString> QContactManager::managerParameters() const
 {
     QMap<QString, QString> params = d->m_engine->managerParameters();
 
-    params.remove(QString::fromAscii(QTCONTACTS_VERSION_NAME));
-    params.remove(QString::fromAscii(QTCONTACTS_IMPLEMENTATION_VERSION_NAME));
+    params.remove(QString::fromLatin1(QTCONTACTS_VERSION_NAME));
+    params.remove(QString::fromLatin1(QTCONTACTS_IMPLEMENTATION_VERSION_NAME));
     return params;
 }
 

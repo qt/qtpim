@@ -914,7 +914,7 @@ QString Duration::nextToken(QString* str)
 {
     int len = str->length();
     if (len == 0)
-        return QString::fromAscii(""); // empty (not null) QString
+        return QString::fromLatin1(""); // empty (not null) QString
     QChar first = str->at(0);
     if (first == QLatin1Char('+') || first == QLatin1Char('-') || first.isUpper()) {
         QString ret(str->left(1));

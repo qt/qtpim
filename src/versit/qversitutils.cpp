@@ -70,7 +70,7 @@ QByteArray VersitUtils::encode(char ch, QTextCodec* codec)
 QByteArray VersitUtils::encode(const QByteArray& ba, QTextCodec* codec)
 {
     QTextCodec::ConverterState state(QTextCodec::IgnoreHeader);
-    return codec->fromUnicode(QString::fromAscii(ba.data()).data(), ba.length(), &state);
+    return codec->fromUnicode(QString::fromLatin1(ba.data()).data(), ba.length(), &state);
 }
 
 /*!

@@ -732,7 +732,7 @@ void tst_QOrganizerManager::ctors()
 
     // Finally test the platform specific engines are actually the defaults
 #if !defined(QT_NO_JSONDB)
-    QCOMPARE(defaultStore, QString::fromAscii("jsondb"));
+    QCOMPARE(defaultStore, QString::fromLatin1("jsondb"));
 #else
     QCOMPARE(defaultStore, QString("invalid"));
 #endif
@@ -4814,30 +4814,30 @@ void tst_QOrganizerManager::testTags()
 
     // save & load
     QOrganizerEvent event;
-    event.setTags(QStringList() << QString::fromAscii("Tag1") << QString::fromAscii("Tag2"));
-    event.addTag(QString::fromAscii("Tag3"));
+    event.setTags(QStringList() << QString::fromLatin1("Tag1") << QString::fromLatin1("Tag2"));
+    event.addTag(QString::fromLatin1("Tag3"));
     QVERIFY(mgr->saveItem(&event));
     QOrganizerItemId id = event.id();
     QOrganizerItem item = mgr->item(id);
     QVERIFY(item.tags().size() == 3);
-    QVERIFY(item.tags().contains(QString::fromAscii("Tag1")));
-    QVERIFY(item.tags().contains(QString::fromAscii("Tag2")));
-    QVERIFY(item.tags().contains(QString::fromAscii("Tag3")));
+    QVERIFY(item.tags().contains(QString::fromLatin1("Tag1")));
+    QVERIFY(item.tags().contains(QString::fromLatin1("Tag2")));
+    QVERIFY(item.tags().contains(QString::fromLatin1("Tag3")));
 
     // update
-    item.addTag(QString::fromAscii("Tag4"));QVERIFY(mgr->saveItem(&event));
+    item.addTag(QString::fromLatin1("Tag4"));QVERIFY(mgr->saveItem(&event));
     QList<QOrganizerItemDetail> details = item.details(QOrganizerItemDetail::TypeTag);
     QOrganizerItemTag tag = details.at(1);
-    tag.setTag(QString::fromAscii("Tag222"));
+    tag.setTag(QString::fromLatin1("Tag222"));
     item.saveDetail(&tag);
     item.removeDetail(&details[2]);
     QVERIFY(mgr->saveItem(&item));
     QOrganizerItemId id2 = item.id();
     QOrganizerItem item2 = mgr->item(id2);
     QVERIFY(item2.tags().size() == 3);
-    QVERIFY(item2.tags().contains(QString::fromAscii("Tag1")));
-    QVERIFY(item2.tags().contains(QString::fromAscii("Tag222")));
-    QVERIFY(item2.tags().contains(QString::fromAscii("Tag4")));
+    QVERIFY(item2.tags().contains(QString::fromLatin1("Tag1")));
+    QVERIFY(item2.tags().contains(QString::fromLatin1("Tag222")));
+    QVERIFY(item2.tags().contains(QString::fromLatin1("Tag4")));
 }
 
 void tst_QOrganizerManager::testExtendedDetail()

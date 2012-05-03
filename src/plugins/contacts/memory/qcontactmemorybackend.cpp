@@ -73,7 +73,7 @@ QContactEngineId* QContactMemoryEngineFactory::createContactEngineId(const QMap<
 
 QString QContactMemoryEngineFactory::managerName() const
 {
-    return QString::fromAscii("memory");
+    return QString::fromLatin1("memory");
 }
 
 /*!

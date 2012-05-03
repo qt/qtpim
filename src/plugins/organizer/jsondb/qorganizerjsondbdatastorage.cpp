@@ -311,6 +311,7 @@ void QOrganizerJsonDbDataStorage::onJsonDbWatcherNotificationsAvailable()
             QString jsonDbType = m_converter.jsonDbNotificationObjectToOrganizerType(jsonDbObject);
             const QOrganizerAbstractRequest::StorageLocation storageLocation = m_converter.storageLocationStringToEnum(watcher->partition());
             if (jsonDbType == QOrganizerJsonDbStr::jsonDbEventType()
+                || jsonDbType == QOrganizerJsonDbStr::jsonDbEventViewType()
                 || jsonDbType == QOrganizerJsonDbStr::jsonDbEventOccurrenceType()
                 || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoType()
                 || jsonDbType == QOrganizerJsonDbStr::jsonDbTodoOccurrenceType()) {

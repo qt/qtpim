@@ -91,7 +91,7 @@ public:
     inline const static QString jsonDbQueryCollectionUuidsTemplate() { return QStringLiteral("[?collectionUuid in [%1]]"); }
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
 
-    inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
+    inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventView\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
 
     // collections
     inline const static QString jsonDbCollectionType() { return QStringLiteral("com.nokia.mt.organizer.Collection"); }

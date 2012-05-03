@@ -142,6 +142,7 @@ private slots:
     void add();
     void update();
     void remove();
+    void addAndUpdate();
     void batch();
     void observerDeletion();
     void signalEmission();
@@ -180,6 +181,7 @@ private slots:
     void add_data() {addManagers();}
     void update_data() {addManagers();}
     void remove_data() {addManagers();}
+    void addAndUpdate_data() {addManagers();}
     void batch_data() {addManagers();}
     void signalEmission_data() {addManagers();}
     void actionPreferences_data() {addManagers();}
@@ -1084,6 +1086,46 @@ void tst_QContactManager::remove()
     QCOMPARE(cm->contactIds().count(), contactCount - 1);
     QVERIFY(cm->contact(alice.id()).isEmpty());
     QCOMPARE(cm->error(), QContactManager::DoesNotExistError);
+}
+
+void tst_QContactManager::addAndUpdate()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    int originalCount = cm->contactIds().size();
+    // save a few new contacts
+    QList<QContact> saveList;
+    QContactName nameDetail;
+    for (int i=0; i<20; i++) {
+        QContact testContact;
+        nameDetail.setFirstName(QStringLiteral("Test Contact ") + QString::number(i));
+        testContact.saveDetail(&nameDetail);
+        saveList << testContact;
+    }
+    QMap<int, QContactManager::Error> errorMap;
+    cm->saveContacts(&saveList, &errorMap);
+    QCOMPARE(cm->contactIds().size(), originalCount + saveList.size());
+    QCOMPARE(errorMap.size(), 0);
+    // update previously saved contacts
+    for (int i=0; i<saveList.size(); i++) {
+        QContactPhoneNumber phn;
+        phn.setNumber(QString::number(i));
+        saveList[i].saveDetail(&phn);
+    }
+    // add new contacts in front of the saveList list
+    for (int i=20; i<40; i++) {
+        QContact testContact;
+        QContactName nameDetail;
+        nameDetail.setFirstName(QStringLiteral("Test Contact ") + QString::number(i));
+        testContact.saveDetail(&nameDetail);
+        saveList.insert(0, testContact);
+    }
+    cm->saveContacts(&saveList, &errorMap);
+    QCOMPARE(cm->contactIds().size(), originalCount + saveList.size());
+    QCOMPARE(errorMap.size(), 0);
+    foreach (const QContact contact, saveList) {
+        QVERIFY(cm->removeContact(contact.id()));
+    }
 }
 
 void tst_QContactManager::batch()

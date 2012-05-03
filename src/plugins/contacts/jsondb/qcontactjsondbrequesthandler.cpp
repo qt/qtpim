@@ -642,7 +642,7 @@ void QContactJsonDbRequestHandler::handleContactSaveResponse(QContactSaveRequest
             m_requestMgr->addContact(req, contact, index);
         }
     }
-    if (m_requestMgr->isRequestCompleted(req)) {
+    if (!m_requestMgr->pendingPrefetchRequests(req) && m_requestMgr->isRequestCompleted(req)) {
         QList<QContact> contacts = m_requestMgr->contacts(req);
         QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
         m_requestMgr->removeRequest(req);

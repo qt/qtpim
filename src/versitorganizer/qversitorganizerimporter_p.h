@@ -132,6 +132,10 @@ private:
             const QVersitProperty& property,
             QOrganizerItem* item,
             QList<QOrganizerItemDetail>* updatedDetails);
+    bool createVersion(
+            const QVersitProperty& property,
+            QOrganizerItem* item,
+            QList<QOrganizerItemDetail>* updatedDetails);
     bool createPriority(
             const QVersitProperty& property,
             QOrganizerItem* item,
@@ -202,6 +206,8 @@ private:
 
     TimeZone importTimeZone(const QVersitDocument& document) const;
     TimeZonePhase importTimeZonePhase(const QVersitDocument& document) const;
+
+    QString takeFirst(QList<QString>& list) const;
 
     // versit property name -> <definition name, field name>:
     QMap<QString, QPair<QOrganizerItemDetail::DetailType, int> > mPropertyMappings;

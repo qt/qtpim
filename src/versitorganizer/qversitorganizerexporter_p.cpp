@@ -147,6 +147,8 @@ void QVersitOrganizerExporterPrivate::exportDetail(
         encodeTodoProgress(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     } else if (detail.type() == QOrganizerItemDetail::TypeComment) {
         encodeComment(detail, &generatedProperties, &processedFields);
+    } else if (detail.type() == QOrganizerItemDetail::TypeVersion) {
+        encodeVersion(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     } else if (mPropertyMappings.contains(detail.type())) {
         encodeSimpleProperty(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     }
@@ -269,6 +271,25 @@ void QVersitOrganizerExporterPrivate::encodeTimestamp(
     *generatedProperties << property;
     *processedFields << QOrganizerItemTimestamp::FieldCreated
                      << QOrganizerItemTimestamp::FieldLastModified;
+}
+
+void QVersitOrganizerExporterPrivate::encodeVersion(
+        const QOrganizerItemDetail& detail,
+        const QVersitDocument& document,
+        QList<QVersitProperty>* removedProperties,
+        QList<QVersitProperty>* generatedProperties,
+        QSet<int>* processedFields)
+{
+    QOrganizerItemVersion version = static_cast<QOrganizerItemVersion>(detail);
+    QVersitProperty property = takeProperty(document, QLatin1String("X-QTPROJECT-VERSION"), removedProperties);
+    property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+    QStringList values(QString::number(version.version()));
+    values.append(QString::fromLocal8Bit(version.extendedVersion()));
+    property.setValue(values);
+    property.setValueType(QVersitProperty::CompoundType);
+    *generatedProperties << property;
+    *processedFields << QOrganizerItemVersion::FieldVersion
+                      << QOrganizerItemVersion::FieldExtendedVersion;
 }
 
 void QVersitOrganizerExporterPrivate::encodeRecurrence(

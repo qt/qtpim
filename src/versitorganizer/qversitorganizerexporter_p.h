@@ -101,6 +101,12 @@ private:
             QList<QVersitProperty>* removedProperties,
             QList<QVersitProperty>* generatedProperties,
             QSet<int>* processedFields);
+    void encodeVersion(
+            const QOrganizerItemDetail& detail,
+            const QVersitDocument& document,
+            QList<QVersitProperty>* removedProperties,
+            QList<QVersitProperty>* generatedProperties,
+            QSet<int>* processedFields);
     void encodeRecurrence(
             const QOrganizerItem& item,
             const QOrganizerItemDetail& detail,

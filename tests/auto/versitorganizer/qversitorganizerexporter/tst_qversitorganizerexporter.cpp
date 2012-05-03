@@ -254,6 +254,51 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     }
 
     {
+        QVersitProperty property; // Proper version.
+        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setValueType(QVersitProperty::CompoundType);
+        property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral("134f23dbb2"));
+        QOrganizerItemVersion version;
+        version.setVersion(4711);
+        version.setExtendedVersion(QByteArray("134f23dbb2"));
+        QTest::newRow("version") << (QList<QOrganizerItemDetail>() << version)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property; // Extended version empty.
+        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setValueType(QVersitProperty::CompoundType);
+        property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral(""));
+        QOrganizerItemVersion version;
+        version.setVersion(4711);
+        version.setExtendedVersion(QByteArray(""));
+        QTest::newRow("version") << (QList<QOrganizerItemDetail>() << version)
+                                 << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property; // No extended version.
+        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setValueType(QVersitProperty::CompoundType);
+        property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral(""));
+        QOrganizerItemVersion version;
+        version.setVersion(4711);
+        QTest::newRow("version") << (QList<QOrganizerItemDetail>() << version)
+                                 << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property; // Empty version detail.
+        QOrganizerItemVersion version;
+        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setValueType(QVersitProperty::CompoundType);
+        property.setValue(QStringList() << QStringLiteral("0") << QStringLiteral(""));
+        QTest::newRow("version") << (QList<QOrganizerItemDetail>() << version)
+                                 << (QList<QVersitProperty>());
+    }
+
+    {
         QVersitProperty property1;
         property1.setName(QLatin1String("COMMENT"));
         property1.setValue(QLatin1String("Comment 1"));

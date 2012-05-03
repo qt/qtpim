@@ -298,6 +298,8 @@ TestCase {
         compare(importedEvent.detail(Detail.Timestamp).created, megaEvent.detail(Detail.Timestamp).created)
         expectFail("", "During import the timestamp information gets overwritten with current datetime")
         compare(importedEvent.detail(Detail.Timestamp).lastModified, megaEvent.detail(Detail.Timestamp).lastModified)
+        compare(importedEvent.detail(Detail.Version).version, megaEvent.detail(Detail.Version).version)
+        compare(importedEvent.detail(Detail.Version).extendedVersion, megaEvent.detail(Detail.Version).extendedVersion)
 
         memoryModel.removeItem(memoryModel.items[0])
         memoryModelSpy.wait()

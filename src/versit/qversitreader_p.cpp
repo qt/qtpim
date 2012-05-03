@@ -452,6 +452,8 @@ QVersitReaderPrivate::valueTypeMap() {
                              QVersitProperty::CompoundType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromLatin1("X-QTPROJECT-VERSION")),
                              QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::ICalendar20Type, QString::fromLatin1("X-QTPROJECT-VERSION")),
+                             QVersitProperty::CompoundType);
 
         // Some MeeGo specific types, for EDS/SyncEvolution roundtripping until the API allows
         // better control over the type of custom properties.

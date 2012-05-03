@@ -127,6 +127,8 @@ void QVersitOrganizerImporterPrivate::importProperty(
         success = createTimestampCreated(property, item, &updatedDetails);
     } else if (property.name() == QLatin1String("LAST-MODIFIED")) {
         success = createTimestampModified(property, item, &updatedDetails);
+    } else if (property.name() == QLatin1String("X-QTPROJECT-VERSION")) {
+        success = createVersion(property, item, &updatedDetails);
     } else if (property.name() == QLatin1String("PRIORITY")) {
         success = createPriority(property, item, &updatedDetails);
     } else if (property.name() == QLatin1String("COMMENT")) {
@@ -235,6 +237,41 @@ bool QVersitOrganizerImporterPrivate::createTimestampModified(
     timestamp.setLastModified(datetime);
     updatedDetails->append(timestamp);
     return true;
+}
+
+/*!
+ * Takes the first value in \a list, or an empty QString is if the list is empty.
+ */
+QString QVersitOrganizerImporterPrivate::takeFirst(QList<QString>& list) const
+{
+    return list.empty() ? QString() : list.takeFirst();
+}
+
+bool QVersitOrganizerImporterPrivate::createVersion(
+        const QVersitProperty& property,
+        QOrganizerItem* item,
+        QList<QOrganizerItemDetail>* updatedDetails) {
+
+    QVariant variant = property.variantValue();
+    if (property.valueType() != QVersitProperty::CompoundType
+            || variant.type() != QVariant::StringList) {
+        return false;
+    }
+    QStringList values = variant.toStringList();
+
+    bool conversionOk;
+    QOrganizerItemVersion version(item->detail(QOrganizerItemDetail::TypeVersion));
+    version.setVersion(takeFirst(values).toInt(&conversionOk));
+    QString extendedVersionString = takeFirst(values);
+    if (!extendedVersionString.isEmpty())
+        version.setExtendedVersion(extendedVersionString.toLocal8Bit());
+
+    if (conversionOk) {
+        updatedDetails->append(version);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool QVersitOrganizerImporterPrivate::createPriority(

@@ -172,6 +172,10 @@ private:
                 const QOrganizerItem &item,
                 const QOrganizerItemReminder &reminder,
                 QSet<int> *processedFields);
+    void encodeExtendedDetail(
+            const QOrganizerItemDetail &detail,
+            QList<QVersitProperty> *generatedProperties,
+            QSet<int> *processedFields);
     void encodeSimpleProperty(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,

@@ -118,6 +118,9 @@ for the Organizer calendar components.
   \row
     \li CATEGORIES
     \li QOrganizerItemTag
+  \row
+    \li X-QTPROJECT-EXTENDED-DETAIL
+    \li QOrganizerItemExtendedDetail
 \endtable
 
 

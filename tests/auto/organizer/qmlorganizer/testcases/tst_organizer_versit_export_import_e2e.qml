@@ -44,6 +44,7 @@ import QtOrganizer 5.0
 
 TestCase {
     id: test
+    name: "OrganizerVersitExportImportTests"
 
     property int spyWaitDelay: 250
 
@@ -293,6 +294,10 @@ TestCase {
         compare(importedEvent.displayLabel, megaEvent.displayLabel)
         compare(importedEvent.priority, megaEvent.priority)
         compare(importedEvent.description, megaEvent.description)
+        compare(importedEvent.details(Detail.ExtendedDetail)[0].name, megaEvent.details(Detail.ExtendedDetail)[0].name)
+        compare(importedEvent.details(Detail.ExtendedDetail)[0].data, megaEvent.details(Detail.ExtendedDetail)[0].data)
+        compare(importedEvent.details(Detail.ExtendedDetail)[1].name, megaEvent.details(Detail.ExtendedDetail)[1].name)
+        compare(importedEvent.details(Detail.ExtendedDetail)[1].data, megaEvent.details(Detail.ExtendedDetail)[1].data)
         compare(importedEvent.detail(Detail.Comment).comment, megaEvent.detail(Detail.Comment).comment)
         compare(importedEvent.detail(Detail.AudibleReminder).repetitionCount, megaEvent.detail(Detail.AudibleReminder).repetitionCount)
         compare(importedEvent.detail(Detail.AudibleReminder).repetitionDelay, megaEvent.detail(Detail.AudibleReminder).repetitionDelay)

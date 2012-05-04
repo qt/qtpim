@@ -616,6 +616,13 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     }
 
     {
+        QVersitProperty property = createExtendedDetailProperty("name", "QString", "data");
+        QOrganizerItemExtendedDetail extendedDetail = createExtendedDetail("name", QStringLiteral("data"));
+        QTest::newRow("extended detail") << (QList<QOrganizerItemDetail>() << extendedDetail)
+                                         << (QList<QVersitProperty>() << property);
+    }
+
+    {
         QVersitProperty property; // Proper version.
         property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
@@ -1411,8 +1418,120 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
                 << (QList<QOrganizerItemDetail>() << tag)
                 << (QList<QVersitProperty>() << property);
     }
+
+    {
+        QVersitProperty property = createExtendedDetailProperty("name", "QString", "data");
+        QOrganizerItemExtendedDetail extendedDetail = createExtendedDetail("name", QStringLiteral("data"));
+        QTest::newRow("extended detail") << (QList<QOrganizerItemDetail>() << extendedDetail)
+            << (QList<QVersitProperty>() << property);
+    }
 }
 
+void tst_QVersitOrganizerExporter::testExtendedDetail()
+{
+    QFETCH(QString, extendedDetailName);
+    QFETCH(QString, extendedDetailDataType);
+    QFETCH(QVariant, extendedDetailData);
+    QFETCH(bool, extendedDetailCreated);
+
+    QOrganizerEvent item;
+    QOrganizerItemExtendedDetail extendedDetail = createExtendedDetail(extendedDetailName, extendedDetailData);
+    item.saveDetail(&extendedDetail);
+
+    QVersitProperty expectedProperty =
+            createExtendedDetailProperty(extendedDetailName, extendedDetailDataType, extendedDetailData);
+
+    QVersitOrganizerExporter exporter;
+    QVERIFY(exporter.exportItems(QList<QOrganizerItem>() << item));
+
+    QVersitDocument document = exporter.document().subDocuments().first();
+    QList<QVersitProperty> actualProperties =
+            findPropertiesByName(document, expectedProperty.name());
+    if (!extendedDetailCreated) {
+        QCOMPARE(actualProperties.size(), 0);
+    } else {
+        QCOMPARE(actualProperties.size(), 1);
+        if (!actualProperties.contains(expectedProperty)) {
+        qDebug() << "Actual:" << actualProperties;
+        qDebug() << "Expected to find:" << expectedProperty;
+        QVERIFY(false);
+        }
+    }
+}
+
+void tst_QVersitOrganizerExporter::testExtendedDetail_data()
+{
+    QTest::addColumn<QString>("extendedDetailName");
+    QTest::addColumn<QString>("extendedDetailDataType");
+    QTest::addColumn<QVariant>("extendedDetailData");
+    QTest::addColumn<bool>("extendedDetailCreated");
+
+    {
+        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
+        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
+        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
+        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
+        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
+        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+    }
+}
+
+void tst_QVersitOrganizerExporter::testMultipleExtendedDetails()
+{
+    QOrganizerEvent item;
+    QOrganizerItemExtendedDetail extendedDetail1 = createExtendedDetail("detailName1", "detailData1");
+    item.saveDetail(&extendedDetail1);
+    QOrganizerItemExtendedDetail extendedDetail2 = createExtendedDetail("detailName2", "detailData2");
+    item.saveDetail(&extendedDetail2);
+
+    QList<QVersitProperty> expectedProperties;
+    expectedProperties << createExtendedDetailProperty(extendedDetail1.name(),
+                                                       extendedDetail1.data().typeName(),
+                                                       extendedDetail1.data());
+    expectedProperties << createExtendedDetailProperty(extendedDetail2.name(),
+                                                       extendedDetail2.data().typeName(),
+                                                       extendedDetail2.data());
+
+    QVersitOrganizerExporter exporter;
+    QVERIFY(exporter.exportItems(QList<QOrganizerItem>() << item));
+
+    QVersitDocument document = exporter.document().subDocuments().first();
+    QCOMPARE(findPropertiesByName(document, expectedProperties.first().name()).size(), 2);
+    foreach (const QVersitProperty& expectedProperty, expectedProperties) {
+        QList<QVersitProperty> actualProperties =
+            findPropertiesByName(document, expectedProperty.name());
+        if (!actualProperties.contains(expectedProperty)) {
+            qDebug() << "Actual:" << actualProperties;
+            qDebug() << "Expected to find:" << expectedProperty;
+            QVERIFY(false);
+        }
+    }
+}
+
+QOrganizerItemExtendedDetail tst_QVersitOrganizerExporter::createExtendedDetail(
+        const QString &name,
+        const QVariant &data)
+{
+    QOrganizerItemExtendedDetail extendedDetail;
+    extendedDetail.setName(name);
+    extendedDetail.setData(data);
+    return extendedDetail;
+}
+
+QVersitProperty tst_QVersitOrganizerExporter::createExtendedDetailProperty(
+        const QString &name,
+        const QString &dataType,
+        const QVariant &data)
+{
+    QVersitProperty property;
+    property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
+    property.setValueType(QVersitProperty::CompoundType);
+    property.setValue(QStringList() << name << dataType << data.toString());
+    return property;
+}
 
 QList<QVersitProperty> tst_QVersitOrganizerExporter::findPropertiesByName(
         const QVersitDocument &document, const QString &propertyName)

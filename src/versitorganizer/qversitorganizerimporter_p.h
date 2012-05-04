@@ -155,6 +155,9 @@ private:
             QList<QOrganizerItemDetail> *updatedDetails);
     int triggerToSecondsBeforeStart(const QVersitProperty& triggerProperty, const QOrganizerItem &item);
 
+    bool createExtendedDetail(
+            const QVersitProperty &property,
+            QList<QOrganizerItemDetail> *updatedDetails);
     bool createRecurrenceId(
             const QVersitProperty& property,
             QOrganizerItem* item,

@@ -104,8 +104,13 @@ Event {
     }
 
     ExtendedDetail {
-        name: "extended detail"
-        data: "extended detail data"
+        name: "extended detail: string data"
+        data: "data"
+    }
+
+    ExtendedDetail {
+        name: "extended detail: integer data"
+        data: 1
     }
 
     EventAttendee {

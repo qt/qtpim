@@ -439,7 +439,9 @@ QVersitReaderPrivate::valueTypeMap() {
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromLatin1("X-QTPROJECT-EXTENDED-DETAIL")),
                              QVersitProperty::CompoundType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromLatin1("X-QTPROJECT-EXTENDED-DETAIL")),
-                              QVersitProperty::CompoundType);
+                             QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::ICalendar20Type, QString::fromLatin1("X-QTPROJECT-EXTENDED-DETAIL")),
+                             QVersitProperty::CompoundType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard21Type, QString::fromLatin1("X-QTPROJECT-FAVORITE")),
                               QVersitProperty::CompoundType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromLatin1("X-QTPROJECT-FAVORITE")),

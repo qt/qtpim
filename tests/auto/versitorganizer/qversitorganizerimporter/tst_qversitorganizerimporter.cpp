@@ -679,6 +679,14 @@ void tst_QVersitOrganizerImporter::testImportEventProperties_data()
     }
 
     {
+        QVersitProperty property = createExtendedDetailProperty("name", "QString", "data");
+        QOrganizerItemExtendedDetail extendedDetail = createExtendedDetail("name", "data");
+        QTest::newRow("extended detail")
+                << (QList<QVersitProperty>() << property)
+                << (QList<QOrganizerItemDetail>() << extendedDetail);
+    }
+
+    {
         QVersitProperty property; // Proper property.
         property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
@@ -1646,6 +1654,123 @@ void tst_QVersitOrganizerImporter::testImportTodoProperties_data()
                 << (QList<QVersitProperty>() << property)
                 << (QList<QOrganizerItemDetail>() ); // Detail side should be empty
     }
+
+    {
+        QVersitProperty property = createExtendedDetailProperty("name", "QString", "data");
+        QOrganizerItemExtendedDetail extendedDetail = createExtendedDetail("name", "data");
+        QTest::newRow("extended detail")
+            << (QList<QVersitProperty>() << property)
+            << (QList<QOrganizerItemDetail>() << extendedDetail);
+    }
+}
+
+void tst_QVersitOrganizerImporter::testExtendedDetail()
+{
+    QFETCH(QString, extendedDetailName);
+    QFETCH(QString, extendedDetailDataType);
+    QFETCH(QVariant, extendedDetailData);
+    QFETCH(bool, extendedDetailCreated);
+
+    QVersitDocument document(QVersitDocument::ICalendar20Type);
+    document.setComponentType(QStringLiteral("VCALENDAR"));
+    QVersitDocument nested(QVersitDocument::ICalendar20Type);
+    nested.setComponentType(QStringLiteral("VEVENT"));
+    nested.addProperty(createExtendedDetailProperty(extendedDetailName,
+                                                    extendedDetailDataType,
+                                                    extendedDetailData));
+    document.addSubDocument(nested);
+
+    QOrganizerItemExtendedDetail expectedDetail =
+            createExtendedDetail(extendedDetailName, extendedDetailData);
+
+    QVersitOrganizerImporter importer;
+    QVERIFY(importer.importDocument(document));
+
+    QList<QOrganizerItem> items = importer.items();
+    QList<QOrganizerItemDetail> actualDetails = items.first().details(expectedDetail.type());
+    if (!extendedDetailCreated) {
+        QCOMPARE(actualDetails.size(), 0);
+    } else {
+        QCOMPARE(actualDetails.size(), 1);
+        if (!actualDetails.contains(expectedDetail)) {
+        qDebug() << "Actual:" << actualDetails;
+        qDebug() << "Expected to find:" << expectedDetail;
+        QVERIFY(false);
+        }
+    }
+}
+
+void tst_QVersitOrganizerImporter::testExtendedDetail_data()
+{
+    QTest::addColumn<QString>("extendedDetailName");
+    QTest::addColumn<QString>("extendedDetailDataType");
+    QTest::addColumn<QVariant>("extendedDetailData");
+    QTest::addColumn<bool>("extendedDetailCreated");
+
+    {
+        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
+        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
+        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
+        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
+        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
+        QTest::newRow("integer data type, data not a valid integer") << QString("name") << QString("int") << QVariant(QString("invalid")) << false;
+        QTest::newRow("integer data type, data invalid mixture") << QString("name") << QString("int") << QVariant(QString("2invalid")) << false;
+        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
+        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+    }
+}
+
+void tst_QVersitOrganizerImporter::testMultipleExtendedDetails()
+{
+    QVersitDocument document(QVersitDocument::ICalendar20Type);
+    document.setComponentType(QStringLiteral("VCALENDAR"));
+    QVersitDocument nested(QVersitDocument::ICalendar20Type);
+    nested.setComponentType(QStringLiteral("VEVENT"));
+    nested.addProperty(createExtendedDetailProperty("detailName1", "QString", "detailData1"));
+    nested.addProperty(createExtendedDetailProperty("detailName2", "QString", "detailData2"));
+    document.addSubDocument(nested);
+
+    QList<QOrganizerItemExtendedDetail> expectedDetails;
+    expectedDetails << createExtendedDetail("detailName1", "detailData1");
+    expectedDetails << createExtendedDetail("detailName2", "detailData2");
+
+    QVersitOrganizerImporter importer;
+    QVERIFY(importer.importDocument(document));
+
+    QList<QOrganizerItem> items = importer.items();
+    QList<QOrganizerItemDetail> actualDetails = items.first().details(QOrganizerItemDetail::TypeExtendedDetail);
+    QCOMPARE(actualDetails.size(), 2);
+    foreach (const QOrganizerItemDetail& expectedDetail, expectedDetails) {
+        if (!actualDetails.contains(expectedDetail)) {
+            qDebug() << "Actual:" << actualDetails;
+            qDebug() << "Expected to find:" << expectedDetail;
+            QVERIFY(false);
+        }
+    }
+}
+
+QOrganizerItemExtendedDetail tst_QVersitOrganizerImporter::createExtendedDetail(
+        const QString &name,
+        const QVariant &data)
+{
+    QOrganizerItemExtendedDetail extendedDetail;
+    extendedDetail.setName(name);
+    extendedDetail.setData(data);
+    return extendedDetail;
+}
+
+QVersitProperty tst_QVersitOrganizerImporter::createExtendedDetailProperty(
+        const QString &name,
+        const QString &dataType,
+        const QVariant &data)
+{
+    QVersitProperty property;
+    property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
+    property.setValue(QStringList() << name << dataType << data.toString());
+    property.setValueType(QVersitProperty::CompoundType);
+    return property;
 }
 
 void tst_QVersitOrganizerImporter::testTimeZones()

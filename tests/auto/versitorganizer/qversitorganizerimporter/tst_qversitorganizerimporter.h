@@ -62,6 +62,17 @@ private slots:
     void testImportTodoProperties();
     void testImportTodoProperties_data();
 
+    void testExtendedDetail();
+    void testExtendedDetail_data();
+    void testMultipleExtendedDetails();
+    QOrganizerItemExtendedDetail createExtendedDetail(
+            const QString &name,
+            const QVariant &data);
+    QVersitProperty createExtendedDetailProperty(
+            const QString &name,
+            const QString &dataType,
+            const QVariant &data);
+
     void testTimeZones();
     void testTimeZones_data();
 };

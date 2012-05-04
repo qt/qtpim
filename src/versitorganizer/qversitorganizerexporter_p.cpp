@@ -147,6 +147,8 @@ void QVersitOrganizerExporterPrivate::exportDetail(
         encodeTodoProgress(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     } else if (detail.type() == QOrganizerItemDetail::TypeComment) {
         encodeComment(detail, &generatedProperties, &processedFields);
+    } else if (detail.type() == QOrganizerItemDetail::TypeExtendedDetail) {
+        encodeExtendedDetail(detail, &generatedProperties, &processedFields);
     } else if (detail.type() == QOrganizerItemDetail::TypeVersion) {
         encodeVersion(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     } else if (detail.type() == QOrganizerItemDetail::TypeAudibleReminder) {
@@ -766,6 +768,26 @@ QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
     }
     valarmDocument.setProperties(reminderProperties);
     return valarmDocument;
+}
+
+void QVersitOrganizerExporterPrivate::encodeExtendedDetail(
+        const QOrganizerItemDetail &detail,
+        QList<QVersitProperty> *generatedProperties,
+        QSet<int> *processedFields)
+{
+    const QOrganizerItemExtendedDetail &extendedDetail = static_cast<const QOrganizerItemExtendedDetail &>(detail);
+    if ((extendedDetail.data().type() == QVariant::String) || (extendedDetail.data().type() == QVariant::Int)) {
+        QVersitProperty property;
+        property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
+        property.setValue(QStringList()
+                          << extendedDetail.name()
+                          << QString::fromLatin1(extendedDetail.data().typeName())
+                          << extendedDetail.data().toString());
+        property.setValueType(QVersitProperty::CompoundType);
+        *generatedProperties << property;
+        *processedFields << QOrganizerItemExtendedDetail::FieldName
+                         << QOrganizerItemExtendedDetail::FieldData;
+    }
 }
 
 void QVersitOrganizerExporterPrivate::encodeSimpleProperty(

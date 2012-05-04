@@ -141,6 +141,8 @@ void QVersitOrganizerImporterPrivate::importProperty(
         success = createPriority(property, item, &updatedDetails);
     } else if (property.name() == QStringLiteral("COMMENT")) {
         success = createComment(property, &updatedDetails);
+    } else if (property.name() == QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL")) {
+        success = createExtendedDetail(property, &updatedDetails);
     } else if (mPropertyMappings.contains(property.name())) {
         success = createSimpleDetail(property, item, &updatedDetails);
     } else if (document.componentType() == QStringLiteral("VEVENT")) {
@@ -458,6 +460,35 @@ int QVersitOrganizerImporterPrivate::triggerToSecondsBeforeStart(const QVersitPr
         }
     }
     return result >= 0 ? result: 0;
+}
+
+bool QVersitOrganizerImporterPrivate::createExtendedDetail(
+        const QVersitProperty &property,
+        QList<QOrganizerItemDetail> *updatedDetails) {
+    QOrganizerItemExtendedDetail extendedDetail;
+    const QVariant variant = property.variantValue();
+    if (property.valueType() != QVersitProperty::CompoundType
+            || variant.type() != QVariant::StringList)
+        return false;
+
+    QStringList values = variant.toStringList();
+    QString typeInfo;
+
+    extendedDetail.setName(takeFirst(values));
+    typeInfo = takeFirst(values);
+    if (typeInfo == QString::fromLatin1(QVariant::typeToName(QVariant::String))) {
+        extendedDetail.setData(QVariant(takeFirst(values)));
+    } else if (typeInfo == QString::fromLatin1(QVariant::typeToName(QVariant::Int))) {
+        bool conversionSuccessful = true;
+        extendedDetail.setData(QVariant(takeFirst(values).toInt(&conversionSuccessful)));
+        if (!conversionSuccessful)
+            return false;
+    } else {
+        return false;
+    }
+
+    updatedDetails->append(extendedDetail);
+    return true;
 }
 
 bool QVersitOrganizerImporterPrivate::createRecurrenceId(

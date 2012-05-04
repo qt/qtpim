@@ -852,6 +852,9 @@ bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(
     default:
         return false;
     }
+    QJsonDbWriteRequest *writeRequest = qobject_cast<QJsonDbWriteRequest*>(request);
+    if (writeRequest)
+        writeRequest->setConflictResolutionMode(QJsonDbWriteRequest::Replace);
     request->setPartition(m_converter.storageLocationsFlagToStrings(storageLocation).first());
 
     connect(request, SIGNAL(error(QtJsonDb::QJsonDbRequest::ErrorCode,QString)),

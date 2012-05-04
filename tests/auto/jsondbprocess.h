@@ -81,6 +81,7 @@ public:
         QStringList args;
         if (!partitionsFilePath.isEmpty())
             args << "-config-path" << partitionsFileInfo.absolutePath();
+        args << "-reject-stale-updates";
         m_process.start(jsondbPath, args);
 
         if (!m_process.waitForStarted()) {

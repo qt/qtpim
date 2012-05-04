@@ -801,7 +801,9 @@ bool QContactJsonDbRequestHandler::makeJsonDbRequest(QContactAbstractRequest *co
         request = NULL;
         break;
     }
-
+    QJsonDbWriteRequest *writeRequest = qobject_cast<QJsonDbWriteRequest*>(request);
+    if (writeRequest)
+        writeRequest->setConflictResolutionMode(QJsonDbWriteRequest::Replace);
     request->setPartition(partition);
     connect(request, SIGNAL(error(QtJsonDb::QJsonDbRequest::ErrorCode,QString)),
             this, SLOT(onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode,

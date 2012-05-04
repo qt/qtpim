@@ -84,6 +84,5 @@
 
 #define QTCONTACTS_VERSION_NAME "org.qt-project.Qt.contacts.api.version"
 #define QTCONTACTS_IMPLEMENTATION_VERSION_NAME "org.qt-project.Qt.contacts.implementation.version"
-#define QTCONTACTS_VERSION 1
 
 #endif

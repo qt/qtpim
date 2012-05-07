@@ -835,7 +835,7 @@ void QOrganizerJsonDbDataStorage::handleRemoveCollectionsResponse(QOrganizerMana
 bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(
         JsonDbRequestType jsonDbRequestType, int index, QOrganizerAbstractRequest::StorageLocation storageLocation, const QString &query, const QList<QJsonObject> &objects)
 {
-    QJsonDbRequest *request;
+    QJsonDbRequest *request = 0;
     switch (jsonDbRequestType) {
     case JsonDbReadRequest:
         request = new QJsonDbReadRequest(query, this);
@@ -849,6 +849,8 @@ bool QOrganizerJsonDbDataStorage::makeJsonDbRequest(
     case JsonDbRemoveRequest:
         request = new QJsonDbRemoveRequest(objects, this);
         break;
+    default:
+        return false;
     }
     request->setPartition(m_converter.storageLocationsFlagToStrings(storageLocation).first());
 

@@ -1430,7 +1430,7 @@ QContactJsonDbConverter::SanitizeError QContactJsonDbConverter::sanitizeContactD
         QString cleaned;
         const int len = simplified.length();
         if (!len)
-            return InvalidArgumentError; // The string is empty after being simplified, return error
+            return EmptyArgumentError; // The string is empty after being simplified, return error
         cleaned.reserve(int(len));
         QString::ConstIterator numberCharsIterator = simplified.constBegin();
         while (numberCharsIterator != simplified.constEnd()) {

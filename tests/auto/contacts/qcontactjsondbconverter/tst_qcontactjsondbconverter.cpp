@@ -168,11 +168,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("firstName", QString("   John   "));
     jsonData.insert("lastName", invalidName);
     jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactName::Type);
-    QVERIFY(detail.isEmpty());
+    QVERIFY(!detail.isEmpty());
     name = static_cast<QContactName*>(&detail);
-    QVERIFY(name->isEmpty());
+    QVERIFY(!name->isEmpty());
+    QVERIFY(name->lastName().isEmpty());
     // cleanup
     jsonData = QJsonObject();
     contact.clearDetails();
@@ -268,12 +269,12 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     jsonData = QJsonObject();
     contact.clearDetails();
-    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    // test with a string which becomes empty after sanitizing it: detail is ignored
     jsonData.insert("name", invalidName);
     QJsonArray organizationData3;
     organizationData3.append(jsonData);
     jsonContact.insert(QContactJsonDbStr::organizationDefinitionName(), organizationData3);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactOrganization::Type);
     QVERIFY(detail.isEmpty());
     org = static_cast<QContactOrganization*>(&detail);
@@ -372,10 +373,10 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     jsonData = QJsonObject();
     contact.clearDetails();
-    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    // test with a string which becomes empty after sanitizing it: invalid, detail ignored
     jsonData.insert("nickname", invalidName);
     jsonContact.insert("details", jsonData);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactNickname::Type);
     QVERIFY(detail.isEmpty());
     nick = static_cast<QContactNickname*>(&detail);
@@ -435,10 +436,10 @@ void tst_QcontactJsondbConverter::toQContactTest()
     // cleanup
     jsonData = QJsonObject();
     contact.clearDetails();
-    // test with a string which becomes empty after sanitizing it: invalid, contact not saved
+    // test with a string which becomes empty after sanitizing it: invalid, detail ignored
     jsonData.insert("note", invalidName);
     jsonContact.insert("details", jsonData);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactNote::Type);
     QVERIFY(detail.isEmpty());
     note = static_cast<QContactNote*>(&detail);
@@ -521,7 +522,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("context", QString("home"));
     emails.append(jsonData);
     jsonContact.insert("emails", emails);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactEmailAddress::Type);
     QVERIFY(detail.isEmpty());
     email = static_cast<QContactEmailAddress*>(&detail);
@@ -693,7 +694,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     QJsonArray addressData3;
     addressData3.append(jsonData);
     jsonContact.insert(QContactJsonDbStr::addressDefinitionName(), addressData3);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactAddress::Type);
     QVERIFY(detail.isEmpty());
     addr = static_cast<QContactAddress*>(&detail);

@@ -926,7 +926,7 @@ void tst_QContactJsonDbAsync::contactSaveErrorHandling()
     QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
     QCOMPARE(csr.errorMap().value(5), QContactManager::InvalidContactTypeError);
     QCOMPARE(csr.errorMap().value(6), QContactManager::BadArgumentError);
-    QCOMPARE(csr.errorMap().value(7), QContactManager::BadArgumentError);
+    QCOMPARE(csr.errorMap().value(7), QContactManager::NoError);
     QVERIFY(csr.contacts()[5].id().isNull());
     QCOMPARE(csr.error(), QContactManager::BadArgumentError);
 }

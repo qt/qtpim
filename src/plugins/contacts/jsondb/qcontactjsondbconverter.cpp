@@ -307,6 +307,11 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             for (int i = 0; i < array.size(); ++i) {
                 QJsonObject temporaryJsonObject = array[i].toObject();
                 stringValue = temporaryJsonObject.value("value").toString();
+                if (stringValue.isEmpty()) {
+                    qWarning() << Q_FUNC_INFO <<": ignoring phone number field of json object "
+                               << object << "because it is empty.";
+                    continue;
+                }
                 if (sanitizePhoneNumberString(&stringValue)) {
                     QContactPhoneNumber number;
                     number.setNumber(stringValue);
@@ -710,6 +715,11 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
             QJsonObject phoneObject;
             number = static_cast<QContactPhoneNumber *>(&detail);
             QString phoneString (number->number());
+            if (phoneString.isEmpty()) {
+                qWarning() << Q_FUNC_INFO <<": Ignoring number field of detail "
+                           << detail << "because it is empty. ";
+                break;
+            }
             if (sanitizePhoneNumberString(&phoneString)) {
                 phoneObject["value"] = phoneString;
                 updateContexts(*number, &phoneObject);
@@ -1392,7 +1402,7 @@ bool QContactJsonDbConverter::sanitizePhoneNumberString(QString *phoneNumberStri
             return true;
         }
     } else {
-        return false;
+        return true;
     }
 }
 

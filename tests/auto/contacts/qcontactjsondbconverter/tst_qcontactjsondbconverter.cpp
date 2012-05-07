@@ -601,14 +601,13 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData = QJsonObject();
     phones = QJsonArray();
     contact.clearDetails();
-    //last but not least invalid phone number (empty)
+    //last but not least, empty phone number should be ignored
     QString emptyNumber;
     jsonData.insert("value", emptyNumber);
     phones.append(jsonData);
     jsonContact.insert("phones", phones);
-    QVERIFY(!converter.toQContact(jsonContact, &contact, m_partitionName));
-    detail = contact.detail(QContactPhoneNumber::Type);
-    QVERIFY(detail.isEmpty());
+    QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
+    QVERIFY(contact.details(QContactPhoneNumber::Type).isEmpty());
     phone = static_cast<QContactPhoneNumber*>(&detail);
     QVERIFY(phone->isEmpty());
     // cleanup
@@ -1049,11 +1048,12 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     contact.clearDetails();
     jsonContact = QJsonObject();
     testFields.clear();
-    //last but not least invalid phone number (empty)
+    //last but not least empty phone number should be ignored
     QString emptyNumber;
     number.setNumber(emptyNumber);
     contact.saveDetail(&number);
-    QVERIFY(!converter.toJsonContact(&jsonContact, contact));
+    QVERIFY(converter.toJsonContact(&jsonContact, contact));
+    QCOMPARE(jsonContact.value("phones").toArray().size(), 0);
     //cleanup
     contact.clearDetails();
     jsonContact = QJsonObject();

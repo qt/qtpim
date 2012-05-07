@@ -127,6 +127,7 @@ private slots:
     void itemFetchV2();
     void itemFilterFetch();
     void spanOverDays();
+    void incompleteTodoTime();
     void recurrence();
     void idComparison();
     void emptyItemManipulation();
@@ -173,6 +174,7 @@ private slots:
     void itemFetchV2_data() {addManagers();}
     void itemFilterFetch_data() {addManagers();}
     void spanOverDays_data() {addManagers();}
+    void incompleteTodoTime_data() {addManagers();}
     void recurrence_data() {addManagers();}
     void idComparison_data() {addManagers();}
     void testReminder_data() {addManagers();}
@@ -3532,6 +3534,109 @@ void tst_QOrganizerManager::spanOverDays()
     // fetch an interval starting from the middle of the event until infinity
     items = cm->items(QDateTime(QDate(2010, 8, 10), QTime(0,0,0)), QDateTime());
     QCOMPARE(items.count(), 1);
+
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+
+    QOrganizerEvent event2;
+    QOrganizerRecurrenceRule rrule;
+    event2.setDisplayLabel("huge recurring event");
+    event2.setStartDateTime(QDateTime(QDate(2010, 8, 9), QTime(11, 0, 0)));
+    event2.setEndDateTime(QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    rrule.setFrequency(QOrganizerRecurrenceRule::Weekly);
+    rrule.setLimit(QDate(2010, 9, 2));
+    event2.setRecurrenceRule(rrule);
+    QVERIFY(cm->saveItem(&event2));
+
+    items = cm->items(QDateTime(QDate(2010, 8, 8)), QDateTime(QDate(2010, 9, 3)));
+    QCOMPARE(items.count(), 4);
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[0]).startDateTime(), QDateTime(QDate(2010, 8, 9), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[0]).endDateTime(), QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[1]).startDateTime(), QDateTime(QDate(2010, 8, 16), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[1]).endDateTime(), QDateTime(QDate(2010, 8, 18), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[2]).startDateTime(), QDateTime(QDate(2010, 8, 23), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[2]).endDateTime(), QDateTime(QDate(2010, 8, 25), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[3]).startDateTime(), QDateTime(QDate(2010, 8, 30), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerEventOccurrence>(items[3]).endDateTime(), QDateTime(QDate(2010, 9, 1), QTime(11, 30, 0)));
+
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    QOrganizerTodo todo;
+    QOrganizerRecurrenceRule rrule2;
+    todo.setDisplayLabel("huge overlapping recurring todo");
+    todo.setStartDateTime(QDateTime(QDate(2010, 8, 9), QTime(11, 0, 0)));
+    todo.setDueDateTime(QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    rrule2.setFrequency(QOrganizerRecurrenceRule::Daily);
+    rrule2.setLimit(4);
+    todo.setRecurrenceRule(rrule2);
+    QVERIFY(cm->saveItem(&todo));
+
+    items = cm->items(QDateTime(QDate(2010, 8, 8)), QDateTime(QDate(2010, 9, 3)));
+    QCOMPARE(items.count(), 4);
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[0]).startDateTime(), QDateTime(QDate(2010, 8, 9), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[0]).dueDateTime(), QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[1]).startDateTime(), QDateTime(QDate(2010, 8, 10), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[1]).dueDateTime(), QDateTime(QDate(2010, 8, 12), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[2]).startDateTime(), QDateTime(QDate(2010, 8, 11), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[2]).dueDateTime(), QDateTime(QDate(2010, 8, 13), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[3]).startDateTime(), QDateTime(QDate(2010, 8, 12), QTime(11, 0, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[3]).dueDateTime(), QDateTime(QDate(2010, 8, 14), QTime(11, 30, 0)));
+}
+
+
+void tst_QOrganizerManager::incompleteTodoTime()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    QOrganizerTodo todo;
+    QOrganizerRecurrenceRule rrule;
+    rrule.setFrequency(QOrganizerRecurrenceRule::Daily);
+    rrule.setLimit(4);
+    todo.setDisplayLabel("recurring todo without start date");
+    todo.setDueDateTime(QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    todo.setRecurrenceRule(rrule);
+    QVERIFY(cm->saveItem(&todo));
+
+    QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 8, 8)), QDateTime(QDate(2010, 9, 3)));
+    QCOMPARE(items.count(), 4);
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[0]).dueDateTime(), QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[1]).dueDateTime(), QDateTime(QDate(2010, 8, 12), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[2]).dueDateTime(), QDateTime(QDate(2010, 8, 13), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[3]).dueDateTime(), QDateTime(QDate(2010, 8, 14), QTime(11, 30, 0)));
+
+    // same test as previous, but with date limit
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    QOrganizerTodo todo2;
+    todo2.setDisplayLabel("recurring todo without start date with date limit");
+    todo2.setDueDateTime(QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    QOrganizerRecurrenceRule rrule2;
+    rrule2.setFrequency(QOrganizerRecurrenceRule::Daily);
+    rrule2.setLimit(QDate(2010, 8, 13));
+    todo2.setRecurrenceRule(rrule2);
+    QVERIFY(cm->saveItem(&todo2));
+
+    items = cm->items(QDateTime(QDate(2010, 8, 8)), QDateTime(QDate(2010, 9, 3)));
+    QCOMPARE(items.count(), 3);
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[0]).dueDateTime(), QDateTime(QDate(2010, 8, 11), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[1]).dueDateTime(), QDateTime(QDate(2010, 8, 12), QTime(11, 30, 0)));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[2]).dueDateTime(), QDateTime(QDate(2010, 8, 13), QTime(11, 30, 0)));
+
+    cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
+    QOrganizerTodo todo3;
+    todo3.setDisplayLabel("recurring todo without start and due date");
+    todo3.setRecurrenceRule(rrule2);
+    QVERIFY(cm->saveItem(&todo3));
+    items = cm->items();
+    QCOMPARE(items.count(), 0);
+    items = cm->items(QDateTime(QDate(2010, 8, 8)), QDateTime(QDate(2010, 9, 3)));
+    QCOMPARE(items.count(), 6);
+
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[0]).originalDate(), QDate(2010, 8, 8));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[1]).originalDate(), QDate(2010, 8, 9));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[2]).dueDateTime(), QDateTime());
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[3]).dueDateTime(), QDateTime());
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[4]).originalDate(), QDate(2010, 8, 12));
+    QCOMPARE(static_cast<QOrganizerTodoOccurrence>(items[5]).originalDate(), QDate(2010, 8, 13));
+    cm->removeItem(todo3.id());
 }
 
 void tst_QOrganizerManager::recurrence()

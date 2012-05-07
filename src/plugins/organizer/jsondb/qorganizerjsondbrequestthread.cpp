@@ -891,7 +891,6 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItems(const QDateTi
     QList<QOrganizerItem> sorted;
     QMap<QOrganizerItemId, QList<QDate> > exceptionDateMap;
     bool isDefaultFilter = (filter.type() == QOrganizerItemFilter::DefaultFilter);
-
     // fetch all parents stored to db
     QList<QOrganizerItem> parentItems = m_storage->items(QDateTime(), QDateTime(), QOrganizerItemFilter(), QList<QOrganizerItemSortOrder>(), fetchHint,
                                                          error, storageLocations, QOrganizerJsonDbDataStorage::FetchParents);
@@ -988,7 +987,7 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
         initialDateTime = evt.startDateTime();
     } else if (parentItem.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodo todo = parentItem;
-        initialDateTime = todo.startDateTime();
+        initialDateTime = todo.startDateTime().isValid() ? todo.startDateTime() : todo.dueDateTime();
     } else {
         // erm... not a recurring item in our schema...
         return QList<QOrganizerItem>();
@@ -1032,14 +1031,16 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
     foreach (const QDate &xdate, recur.exceptionDates()) {
         xdates += xdate;
     }
-    QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
-    foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
-        if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
-                && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
-            // we cannot skip it, since it applies in the given time period.
-            QList<QDateTime> xdatetimes = QOrganizerManagerEngine::generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
-            foreach (const QDateTime& xdatetime, xdatetimes) {
-                xdates += xdatetime.date();
+    if (realPeriodStart.isValid()) {
+        QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
+        foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
+            if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
+                    && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
+                // we cannot skip it, since it applies in the given time period.
+                QList<QDateTime> xdatetimes = QOrganizerManagerEngine::generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
+                foreach (const QDateTime& xdatetime, xdatetimes) {
+                    xdates += xdatetime.date();
+                }
             }
         }
     }
@@ -1049,21 +1050,25 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItemOccurrences(con
         rdates += QDateTime(rdate, initialDateTime.time());
     }
     bool hasValidRule = false;
-    QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
-    foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
-        if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid) {
-            hasValidRule = true;
-            if ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date())) {
-                // we cannot skip it, since it applies in the given time period.
-                rdates += QOrganizerManagerEngine::generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
+    if (realPeriodStart.isValid()) {
+        QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
+        foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
+            if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid) {
+                hasValidRule = true;
+                if ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date())) {
+                    // we cannot skip it, since it applies in the given time period.
+                    rdates += QOrganizerManagerEngine::generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, QOrganizerJsonDbRequestThread::MaxOccurrenceCount);
+                }
             }
         }
     }
+
     // now order the contents of retn by date
     qSort(rdates);
     if (!hasValidRule && initialDateTime.isValid() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
         rdates.prepend(initialDateTime);
     }
+
     // now for each rdate which isn't also an xdate
     foreach (const QDateTime& rdate, rdates) {
         if ((rdate >= realPeriodStart && rdate <= realPeriodEnd)

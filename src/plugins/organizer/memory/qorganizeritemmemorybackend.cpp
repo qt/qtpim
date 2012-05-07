@@ -418,17 +418,22 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     QDateTime initialDateTime;
     if (parentItem.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEvent evt = parentItem;
-        initialDateTime = evt.startDateTime();
+        initialDateTime = evt.startDateTime().isValid() ? evt.startDateTime() : evt.endDateTime();
     } else if (parentItem.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodo todo = parentItem;
-        initialDateTime = todo.startDateTime();
+        initialDateTime = todo.startDateTime().isValid() ? todo.startDateTime() : todo.dueDateTime();
     } else {
         // erm... not a recurring item in our schema...
         return QList<QOrganizerItem>();
     }
 
-    if (initialDateTime > realPeriodStart)
+    if (realPeriodStart.isValid() && initialDateTime.isValid()) {
+        if (initialDateTime > realPeriodStart)
+            realPeriodStart = initialDateTime;
+    } else if (initialDateTime.isValid()) {
         realPeriodStart = initialDateTime;
+    }
+
     if (!periodEnd.isValid()) {
         // If no endDateTime is given, we'll only generate items that occur within the next 4 years of realPeriodStart.
         realPeriodEnd.setDate(realPeriodStart.date().addDays(1461));
@@ -473,35 +478,38 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     foreach (const QDate& xdate, recur.exceptionDates()) {
         xdates += xdate;
     }
-    QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
-    foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
-        if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
-                && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
-            // we cannot skip it, since it applies in the given time period.
-            QList<QDateTime> xdatetimes = generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
-            foreach (const QDateTime& xdatetime, xdatetimes) {
-                xdates += xdatetime.date();
+    if (realPeriodStart.isValid()) {
+        QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
+        foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
+            if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
+                    && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
+                // we cannot skip it, since it applies in the given time period.
+                QList<QDateTime> xdatetimes = generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
+                foreach (const QDateTime& xdatetime, xdatetimes) {
+                    xdates += xdatetime.date();
+                }
             }
         }
     }
-
     // now generate a list of rdates (from the recurrenceDates and recurrenceRules)
     QList<QDateTime> rdates;
     foreach (const QDate& rdate, recur.recurrenceDates()) {
         rdates += QDateTime(rdate, initialDateTime.time());
     }
-    QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
-    foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
-        if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid
-                && ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date()))) {
-            // we cannot skip it, since it applies in the given time period.
-            rdates += generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
+
+    if (realPeriodStart.isValid()) {
+        QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
+        foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
+            if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid
+                    && ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date()))) {
+                // we cannot skip it, since it applies in the given time period.
+                rdates += generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
+            }
         }
     }
-
     // now order the contents of retn by date
     qSort(rdates);
-    if (!recur.recurrenceDates().isEmpty() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
+    if (initialDateTime.isValid() && !recur.recurrenceDates().isEmpty() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
         rdates.prepend(initialDateTime);
     }
 

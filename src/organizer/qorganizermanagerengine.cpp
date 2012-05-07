@@ -1262,25 +1262,37 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
     // and update the time range in the instance based on the current instance date
     if (parentItem.type() == QOrganizerItemType::TypeEvent) {
         QOrganizerEventTime etr = parentItem.detail(QOrganizerItemDetail::TypeEventTime);
-        QDateTime temp = etr.startDateTime();
-        temp.setDate(rdate.date());
-        etr.setStartDateTime(temp);
-        temp = etr.endDateTime();
-        temp.setDate(rdate.date());
-        etr.setEndDateTime(temp);
-        instanceItem.saveDetail(&etr);
+        if (!etr.isEmpty()) {
+            int eventDayCount = 0;
+            if (etr.startDateTime().isValid() && etr.endDateTime().isValid())
+                eventDayCount = etr.startDateTime().daysTo(etr.endDateTime());
+            QDateTime temp = etr.startDateTime();
+            temp.setDate(rdate.date());
+            etr.setStartDateTime(temp);
+            temp = etr.endDateTime();
+            QDate endDate = rdate.addDays(eventDayCount).date();
+            temp.setDate(endDate);
+            etr.setEndDateTime(temp);
+            instanceItem.saveDetail(&etr);
+        }
     }
 
-    // for todo's?
+    // for todo's
     if (parentItem.type() == QOrganizerItemType::TypeTodo) {
         QOrganizerTodoTime ttr = parentItem.detail(QOrganizerItemDetail::TypeTodoTime);
-        QDateTime temp = ttr.dueDateTime();
-        temp.setDate(rdate.date());
-        ttr.setDueDateTime(temp);
-        temp = ttr.startDateTime();
-        temp.setDate(rdate.date());
-        ttr.setStartDateTime(temp);
-        instanceItem.saveDetail(&ttr);
+        if (!ttr.isEmpty()) {
+            int todoDayCount = 0;
+            if (ttr.startDateTime().isValid() && ttr.dueDateTime().isValid())
+                todoDayCount = ttr.startDateTime().daysTo(ttr.dueDateTime());
+            QDateTime temp = ttr.startDateTime();
+            temp.setDate(rdate.date());
+            ttr.setStartDateTime(temp);
+            temp = ttr.dueDateTime();
+            QDate endDate = rdate.addDays(todoDayCount).date();
+            temp.setDate(endDate);
+            ttr.setDueDateTime(temp);
+            instanceItem.saveDetail(&ttr);
+        }
     }
 
     return instanceItem;
@@ -1316,7 +1328,6 @@ QList<QDateTime> QOrganizerManagerEngine::generateDateTimes(const QDateTime &ini
     while (!periodEndReached && nextDate <= realPeriodEnd.date() && retn.size() < maxCount) {
         if (rrule.limitType() == QOrganizerRecurrenceRule::CountLimit && countLimitDates >= rrule.limitCount())
             break; // reached limit count defined in the recurrence rule
-
         // Skip nextDate if it is not the right multiple of intervals away from initialDateTime.
         if (inMultipleOfInterval(nextDate, initialDateTime.date(), rrule.frequency(), rrule.interval(), rrule.firstDayOfWeek())) {
             // Calculate the inclusive start and inclusive end of nextDate's week/month/year
@@ -1546,7 +1557,6 @@ QList<QDate> QOrganizerManagerEngine::matchingDates(const QDate &periodStart, co
         }
         tempDate = tempDate.addDays(1);
     }
-
     return retn;
 }
 

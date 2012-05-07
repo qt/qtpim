@@ -107,6 +107,8 @@ QList<QJsonObject> SynchronizedJsonDbClient::getResults(QJsonDbRequest *request)
         m_worker->exec(); // Wait for db client to finish
         QList<QJsonObject> results = request->takeResults();
         return results;
+    } else {
+        return QList<QJsonObject>();
     }
 }
 

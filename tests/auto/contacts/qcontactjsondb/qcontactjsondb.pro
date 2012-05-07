@@ -22,7 +22,6 @@ INCLUDEPATH += ../..
 HEADERS += qcontactjsondbbackup.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbenginefactory.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbengine.h \
-           ../../../../src/plugins/contacts/jsondb/qcontactjsondbenginedata.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbrequesthandler.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbrequestmanager.h \
            ../../../../src/plugins/contacts/jsondb/qcontactjsondbconverter.h \

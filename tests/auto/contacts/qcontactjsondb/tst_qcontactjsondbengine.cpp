@@ -1822,7 +1822,6 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     expectedContacts << expectedContact1LastName << expectedContact3LastName << expectedContact4LastName << expectedContact2LastName << expectedContact5LastName;
     if (qt_debug_jsondb_contacts())
         qDebug() << " (TEST) EXPECTED contacts sorted by surname: " << expectedContacts;
-    bool found = false;
     for (int i = 0; i < contacts.size(); i++) {
         QVERIFY (contacts.at(i).detail<QContactName>().lastName() == expectedContacts.at(i));
     }
@@ -1846,7 +1845,6 @@ void tst_QContactJsondbEngine::testContactSortOrder() {
     QVERIFY(expectedContacts.size() == 5);
     if (qt_debug_jsondb_contacts())
         qDebug() << " (TEST) EXPECTED contacts sorted by email: " << expectedContacts;
-    found = false;
     for (int i = 0; i < contacts.size(); i++) {
         QVERIFY (contacts.at(i).detail<QContactEmailAddress>().emailAddress() == expectedContacts.at(i));
     }

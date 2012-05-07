@@ -284,6 +284,7 @@ class LazyEngineFactory : public QContactManagerEngineFactory
 QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
     // Return one or the other
+    Q_UNUSED(error)
     if (parameters.value("version") == QString("1"))
         return new QContactLazyEngine();
     else
@@ -292,6 +293,8 @@ QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& p
 
 QContactEngineId* LazyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
 {
+    Q_UNUSED(parameters)
+    Q_UNUSED(idString)
     return new QContactIdMock("",1);
 }
 

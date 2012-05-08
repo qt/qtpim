@@ -486,7 +486,8 @@ void QContactJsonDbRequestHandler::startTimer()
         m_timer->setInterval(TIMEOUT_INTERVAL);
         connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     }
-    m_timer->start();
+    if (!m_timer->isActive())
+        m_timer->start();
 }
 
 void QContactJsonDbRequestHandler::onTimeout()

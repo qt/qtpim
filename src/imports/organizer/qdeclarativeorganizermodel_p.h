@@ -201,10 +201,13 @@ signals:
 
 public slots:
     void update();
+    void updateItems();
+    void updateCollections();
     void cancelUpdate();
 
 private slots:
     void doUpdate();
+    void doUpdateItems();
     void fetchAgain();
     void requestUpdated();
 

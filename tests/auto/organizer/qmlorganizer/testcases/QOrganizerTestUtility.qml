@@ -167,10 +167,29 @@ TestCase {
                 wait(100);
         }
 
+        empty_calendar_collections(log);
+
         if (__model.itemCount >0) {
             if (log != undefined)
                 console.log("Not empty database! " + __model.itemCount);
             empty_calendar(log);
+        }
+    }
+
+    function empty_calendar_collections(log) {
+
+        if (__model.collections.length > 1) {
+            var setAutoUpdate = __model.autoUpdate;
+            __model.autoUpdate = false;
+            for (var i = 0; i < __model.collections.length; ++i) {
+                var collId = __model.collections[i].collectionId;
+                if (collId != __model.defaultCollection().collectionId) {
+                    __model.removeCollection(collId);
+                }
+            }
+            __model.autoUpdate = setAutoUpdate;
+            __model.update();
+            wait(300);
         }
     }
 

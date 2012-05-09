@@ -305,31 +305,36 @@ TestCase {
         modelChangedSpy.wait(spyWaitDelay);
         var savedEvent = organizerModel.items[organizerModel.items.length - 1];
         compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);//savedEvent sometimes undefined!?!?!?
-        spy.target = savedEvent;
-        spy.signalName = "itemChanged";
+        spySettingCollectionId.target = savedEvent;
 
         // set different collection
         verify(savedCollection.collectionId != organizerModel.defaultCollection().collectionId)
         savedEvent.collectionId = savedCollection.collectionId;
-        spy.wait(spyWaitDelay);
-        compare(spy.count, 1);
+        spySettingCollectionId.wait(spyWaitDelay);
+        compare(spySettingCollectionId.count, 1);
         // set same collection again
         savedEvent.collectionId = savedCollection.collectionId;
-        compare(spy.count, 1);
+        compare(spySettingCollectionId.count, 1);
 
         // check the changed collection is saved
+        var errorsChangedSpy = create_testobject("import QtTest 1.0 \nSignalSpy {}");
+        errorsChangedSpy.target = organizerModel;
+        errorsChangedSpy.signalName = "errorChanged";
         organizerModel.saveItem(savedEvent);
 
         if (data.managerToBeTested == "jsondb") {
             // jsondb backend supports changing collection of an item, collection id changes
             modelChangedSpy.wait(spyWaitDelay);
             savedEvent = organizerModel.items[organizerModel.items.length - 1];
+            compare(organizerModel.error, "NoError");
             compare(savedEvent.collectionId, savedCollection.collectionId);
         }
         else if (data.managerToBeTested == "memory") {
             // memory backend does not support changing collection of an item, collection id does not change
-            wait(noSpyWaitDelay);
+            errorsChangedSpy.wait(spyWaitDelay);
             savedEvent = organizerModel.items[organizerModel.items.length - 1];
+            compare(organizerModel.error, "InvalidCollection");
+            expectFailContinue("memory backend", "Model is updated even in error case.")
             compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);
         }
 

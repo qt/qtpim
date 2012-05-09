@@ -669,5 +669,188 @@ TestCase {
             utility.empty_calendar()
         }
     }
+
+    function test_updateMethods() {
+        var managerlist = utility.getManagerList();
+        if (managerlist.length < 0) {
+            console.log("No manager to test");
+            return;
+        }
+        for (var i = 0; i < managerlist.length; i ++) {
+            var organizerModel = Qt.createQmlObject(
+                    "import QtOrganizer 5.0;"
+                    + "OrganizerModel {"
+                    + "   manager: '" + managerlist[i] + "'\n"
+                    + "   startPeriod:'2009-01-01'\n"
+                    + "   endPeriod:'2012-12-31'\n"
+                    + "}"
+                    , modelTests);
+            console.log("## Testing plugin: " + managerlist[i]);
+
+            utility.init(organizerModel);
+            utility.waitModelChange();
+            utility.empty_calendar();
+
+            var event1 = utility.create_testobject(
+                "import QtOrganizer 5.0\n"
+                + "Event {\n"
+                + "  startDateTime: new Date(2011, 12, 7, 11)\n"
+                + "  endDateTime: new Date(2011, 12, 8, 0, 30)\n"
+                + "}\n", modelTests);
+            var event2 = utility.create_testobject(
+                "import QtOrganizer 5.0\n"
+                + "Event {\n"
+                + "  startDateTime: new Date(2011, 13, 7, 11)\n"
+                + "  endDateTime: new Date(2011, 13, 8, 0, 30)\n"
+                + "}\n", modelTests);
+
+            var collection1 = utility.create_testobject("import QtQuick 2.0 \n"
+              + "import QtOrganizer 5.0\n"
+              + "Collection {\n"
+              + "id: coll1\n"
+              + "}\n", modelTests);
+
+            var collection2 = utility.create_testobject("import QtQuick 2.0 \n"
+              + "import QtOrganizer 5.0\n"
+              + "Collection {\n"
+              + "id: coll1\n"
+              + "}\n", modelTests);
+
+            var modelChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+            modelChangedSpy.target = organizerModel
+            modelChangedSpy.signalName = "modelChanged"
+            var collectionsChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+            collectionsChangedSpy.target = organizerModel
+            collectionsChangedSpy.signalName = "collectionsChanged"
+
+            organizerModel.autoUpdate = false;
+
+            // starting point
+            compare(organizerModel.items.length, 0);
+            compare(organizerModel.collections.length, 1);
+
+            // updateItems() - should update only items
+            organizerModel.saveItem(event1);
+            organizerModel.saveCollection(collection1);
+            wait(signalWaitTime)
+            compare(modelChangedSpy.count, 0)
+            compare(collectionsChangedSpy.count, 0)
+            compare(organizerModel.items.length, 0)
+            compare(organizerModel.collections.length, 1)
+            organizerModel.updateItems();
+            modelChangedSpy.wait(signalWaitTime)
+            compare(modelChangedSpy.count, 1)
+            compare(collectionsChangedSpy.count, 0)
+            compare(organizerModel.items.length, 1)//+1
+            compare(organizerModel.collections.length, 1)// collection change not visible, only default collection visible
+
+            // updateCollections() - should update only collections
+            modelChangedSpy.clear();
+            collectionsChangedSpy.clear();
+            organizerModel.saveItem(event2);
+            // - there is saved unseen collection from updateItems()-test
+            wait(signalWaitTime)
+            compare(modelChangedSpy.count, 0)
+            compare(collectionsChangedSpy.count, 0)
+            organizerModel.updateCollections();
+            collectionsChangedSpy.wait(signalWaitTime)
+            compare(modelChangedSpy.count, 0)
+            compare(collectionsChangedSpy.count, 1)
+            compare(organizerModel.items.length, 1)// event2 not visible, only event1 saved in updateItems()-test visible
+            compare(organizerModel.collections.length, 2)//+1
+
+            // update() - should update both
+            modelChangedSpy.clear();
+            collectionsChangedSpy.clear();
+            // - there is saved unseen item from updateCollections()-test
+            organizerModel.saveCollection(collection2);
+            wait(signalWaitTime)
+            compare(modelChangedSpy.count, 0)
+            compare(collectionsChangedSpy.count, 0)
+            organizerModel.update();
+            modelChangedSpy.wait(signalWaitTime)
+            compare(modelChangedSpy.count, 1)
+            compare(collectionsChangedSpy.count, 1)
+            compare(organizerModel.items.length, 2)//+1
+            compare(organizerModel.collections.length, 3)//+1
+
+            modelChangedSpy.destroy();
+            collectionsChangedSpy.destroy();
+            organizerModel.destroy();
+        }
+    }
+
+    function test_updateMethodsStartWithAutoupdateFalse() {
+
+        var organizerModel = Qt.createQmlObject(
+                "import QtOrganizer 5.0;"
+                + "OrganizerModel {"
+                + "   manager: 'jsondb'\n"
+                + "   startPeriod:'2009-01-01'\n"
+                + "   endPeriod:'2012-12-31'\n"
+                + "   autoUpdate: false\n"
+                + "}"
+                , modelTests);
+        console.log("## Testing only jsondb-plugin");
+
+        var modelChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+        modelChangedSpy.target = organizerModel
+        modelChangedSpy.signalName = "modelChanged"
+        var collectionsChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+        collectionsChangedSpy.target = organizerModel
+        collectionsChangedSpy.signalName = "collectionsChanged"
+
+        // After test_updateMethods()-test there should be
+        // 2 items and 2 collections (+ default collection)
+        // on the jsondb. They're just not visible, since
+        // autoUpdate is false.
+        compare(organizerModel.items.length, 0);
+        compare(organizerModel.collections.length, 0);
+
+        // Check we see still only collections after updating collections
+        organizerModel.updateCollections();
+        collectionsChangedSpy.wait(signalWaitTime)
+        compare(organizerModel.items.length, 0);
+        compare(organizerModel.collections.length, 3);// 2 + default collection
+
+        // Save there item with other collection than default collection
+        var event = utility.create_testobject(
+            "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 7, 11)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 0, 30)\n"
+            + "}\n", modelTests);
+        for (var i = 0; i < organizerModel.collections.length; ++i) {
+            var collId = organizerModel.collections[i].collectionId;
+            if (collId != organizerModel.defaultCollection().collectionId) {
+                event.collectionId = collId;
+            }
+        }
+        organizerModel.saveItem(event);
+        wait(signalWaitTime)
+
+        // Create collection filter and check that only the item with that collection is visible
+        var collectionFilter = Qt.createQmlObject("import QtOrganizer 5.0;CollectionFilter{}", modelTests);
+        collectionFilter.ids = [event.collectionId];
+        organizerModel.filter = collectionFilter;
+        organizerModel.updateItems();
+        modelChangedSpy.wait(signalWaitTime)
+        compare(organizerModel.items.length, 1);// 1 with that collection
+
+        // Lastly check we get everything if filter is reset
+        organizerModel.filter = null;
+        organizerModel.updateItems();
+        modelChangedSpy.wait(signalWaitTime)
+        compare(organizerModel.items.length, 3); // all items
+
+        // cleanup
+        utility.init(organizerModel);
+        utility.empty_calendar();
+
+        collectionFilter.destroy();
+        modelChangedSpy.destroy();
+        collectionsChangedSpy.destroy();
+        organizerModel.destroy();
+    }
 }
 

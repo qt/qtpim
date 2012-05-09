@@ -9,83 +9,97 @@ Module {
         prototype: "QObject"
         Signal {
             name: "dataChanged"
+            type: "void"
             Parameter { name: "topLeft"; type: "QModelIndex" }
             Parameter { name: "bottomRight"; type: "QModelIndex" }
             Parameter { name: "roles"; type: "QSet<int>" }
         }
         Signal {
             name: "dataChanged"
+            type: "void"
             Parameter { name: "topLeft"; type: "QModelIndex" }
             Parameter { name: "bottomRight"; type: "QModelIndex" }
         }
         Signal {
             name: "headerDataChanged"
+            type: "void"
             Parameter { name: "orientation"; type: "Qt::Orientation" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "layoutChanged"
+            type: "void"
             Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
         }
-        Signal { name: "layoutChanged" }
+        Signal { name: "layoutChanged"; type: "void" }
         Signal {
             name: "layoutAboutToBeChanged"
+            type: "void"
             Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
         }
-        Signal { name: "layoutAboutToBeChanged" }
+        Signal { name: "layoutAboutToBeChanged"; type: "void" }
         Signal {
             name: "rowsAboutToBeInserted"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "rowsInserted"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "rowsAboutToBeRemoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "rowsRemoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "columnsAboutToBeInserted"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "columnsInserted"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "columnsAboutToBeRemoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
         Signal {
             name: "columnsRemoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "first"; type: "int" }
             Parameter { name: "last"; type: "int" }
         }
-        Signal { name: "modelAboutToBeReset" }
-        Signal { name: "modelReset" }
+        Signal { name: "modelAboutToBeReset"; type: "void" }
+        Signal { name: "modelReset"; type: "void" }
         Signal {
             name: "rowsAboutToBeMoved"
+            type: "void"
             Parameter { name: "sourceParent"; type: "QModelIndex" }
             Parameter { name: "sourceStart"; type: "int" }
             Parameter { name: "sourceEnd"; type: "int" }
@@ -94,6 +108,7 @@ Module {
         }
         Signal {
             name: "rowsMoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "start"; type: "int" }
             Parameter { name: "end"; type: "int" }
@@ -102,6 +117,7 @@ Module {
         }
         Signal {
             name: "columnsAboutToBeMoved"
+            type: "void"
             Parameter { name: "sourceParent"; type: "QModelIndex" }
             Parameter { name: "sourceStart"; type: "int" }
             Parameter { name: "sourceEnd"; type: "int" }
@@ -110,6 +126,7 @@ Module {
         }
         Signal {
             name: "columnsMoved"
+            type: "void"
             Parameter { name: "parent"; type: "QModelIndex" }
             Parameter { name: "start"; type: "int" }
             Parameter { name: "end"; type: "int" }
@@ -117,7 +134,7 @@ Module {
             Parameter { name: "column"; type: "int" }
         }
         Method { name: "submit"; type: "bool" }
-        Method { name: "revert" }
+        Method { name: "revert"; type: "void" }
     }
     Component { name: "QAbstractListModel"; prototype: "QAbstractItemModel" }
     Component {
@@ -139,9 +156,10 @@ Module {
         Property { name: "description"; type: "string" }
         Property { name: "color"; type: "QColor" }
         Property { name: "image"; type: "QUrl" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
         Method {
             name: "setMetaData"
+            type: "void"
             Parameter { name: "key"; type: "QOrganizerCollection::MetaDataKey" }
             Parameter { name: "value"; type: "QVariant" }
         }
@@ -152,6 +170,7 @@ Module {
         }
         Method {
             name: "setExtendedMetaData"
+            type: "void"
             Parameter { name: "key"; type: "string" }
             Parameter { name: "value"; type: "QVariant" }
         }
@@ -162,6 +181,7 @@ Module {
         }
         Method {
             name: "setMetaData"
+            type: "void"
             Parameter { name: "key"; type: "string" }
             Parameter { name: "value"; type: "QVariant" }
         }
@@ -193,16 +213,18 @@ Module {
             isList: true
             isReadonly: true
         }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
         Method {
             name: "setDetail"
+            type: "void"
             Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
         }
         Method {
             name: "removeDetail"
+            type: "void"
             Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
         }
-        Method { name: "clearDetails" }
+        Method { name: "clearDetails"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerEventAttendee"
@@ -247,7 +269,7 @@ Module {
         Property { name: "attendeeId"; type: "string" }
         Property { name: "participationStatus"; type: "ParticipationStatus" }
         Property { name: "participationRole"; type: "ParticipationRole" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerEventOccurrence"
@@ -260,7 +282,7 @@ Module {
         Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
         Property { name: "location"; type: "string" }
         Property { name: "parentId"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerEventRsvp"
@@ -298,7 +320,7 @@ Module {
         Property { name: "responseDate"; type: "QDateTime" }
         Property { name: "organizerName"; type: "string" }
         Property { name: "organizerEmail"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerEventTime"
@@ -315,7 +337,7 @@ Module {
         Property { name: "allDay"; type: "bool" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "endDateTime"; type: "QDateTime" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItem"
@@ -336,7 +358,7 @@ Module {
         Property { name: "description"; type: "string" }
         Property { name: "displayLabel"; type: "string" }
         Property { name: "guid"; type: "string" }
-        Signal { name: "itemChanged" }
+        Signal { name: "itemChanged"; type: "void" }
         Method {
             name: "detail"
             type: "QDeclarativeOrganizerItemDetail*"
@@ -349,14 +371,16 @@ Module {
         }
         Method {
             name: "setDetail"
+            type: "void"
             Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
         }
         Method {
             name: "removeDetail"
+            type: "void"
             Parameter { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
         }
-        Method { name: "clearDetails" }
-        Method { name: "save" }
+        Method { name: "clearDetails"; type: "void" }
+        Method { name: "save"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemAudibleReminder"
@@ -369,7 +393,7 @@ Module {
             }
         }
         Property { name: "dataUrl"; type: "QUrl" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemClassification"
@@ -390,14 +414,14 @@ Module {
             }
         }
         Property { name: "classification"; type: "AccessClassification" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemCollectionFilter"
         prototype: "QDeclarativeOrganizerItemFilter"
         exports: ["CollectionFilter 5.0"]
         Property { name: "ids"; type: "QStringList" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemComment"
@@ -410,7 +434,7 @@ Module {
             }
         }
         Property { name: "comment"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemCompoundFilter"
@@ -422,7 +446,7 @@ Module {
             isList: true
             isReadonly: true
         }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemDescription"
@@ -435,7 +459,7 @@ Module {
             }
         }
         Property { name: "description"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemDetail"
@@ -472,7 +496,7 @@ Module {
             }
         }
         Property { name: "type"; type: "DetailType"; isReadonly: true }
-        Signal { name: "detailChanged" }
+        Signal { name: "detailChanged"; type: "void" }
         Method {
             name: "value"
             type: "QVariant"
@@ -498,6 +522,7 @@ Module {
         Property { name: "matchFlags"; type: "QDeclarativeOrganizerItemFilter::MatchFlags" }
         Property { name: "field"; type: "int" }
         Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemDetailRangeFilter"
@@ -527,7 +552,7 @@ Module {
         Property { name: "rangeFlags"; type: "RangeFlags" }
         Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
         Property { name: "field"; type: "int" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemDisplayLabel"
@@ -540,7 +565,7 @@ Module {
             }
         }
         Property { name: "label"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemEmailReminder"
@@ -559,7 +584,7 @@ Module {
         Property { name: "subject"; type: "string" }
         Property { name: "recipients"; type: "QStringList" }
         Property { name: "attachments"; type: "QVariantList" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemExtendedDetail"
@@ -574,7 +599,7 @@ Module {
         }
         Property { name: "name"; type: "string" }
         Property { name: "data"; type: "QVariant" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemFetchHint"
@@ -597,7 +622,7 @@ Module {
             }
         }
         Property { name: "optimizationHints"; type: "OptimizationHints" }
-        Signal { name: "fetchHintChanged" }
+        Signal { name: "fetchHintChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemFilter"
@@ -628,7 +653,7 @@ Module {
             }
         }
         Property { name: "type"; type: "FilterType"; isReadonly: true }
-        Signal { name: "filterChanged" }
+        Signal { name: "filterChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemGuid"
@@ -641,14 +666,14 @@ Module {
             }
         }
         Property { name: "guid"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemIdFilter"
         prototype: "QDeclarativeOrganizerItemFilter"
         exports: ["IdFilter 5.0"]
         Property { name: "ids"; type: "QStringList" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemIntersectionFilter"
@@ -676,7 +701,7 @@ Module {
         Property { name: "latitude"; type: "double" }
         Property { name: "longitude"; type: "double" }
         Property { name: "label"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemParent"
@@ -691,7 +716,7 @@ Module {
         }
         Property { name: "originalDate"; type: "QDateTime" }
         Property { name: "parentId"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemPriority"
@@ -719,7 +744,7 @@ Module {
             }
         }
         Property { name: "priority"; type: "Priority" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemRecurrence"
@@ -748,7 +773,9 @@ Module {
         }
         Property { name: "recurrenceDates"; type: "QVariantList" }
         Property { name: "exceptionDates"; type: "QVariantList" }
-        Signal { name: "valueChanged" }
+        Signal { name: "recurrenceRulesChanged"; type: "void" }
+        Signal { name: "exceptionRulesChanged"; type: "void" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemReminder"
@@ -775,7 +802,7 @@ Module {
         Property { name: "repetitionCount"; type: "int" }
         Property { name: "repetitionDelay"; type: "int" }
         Property { name: "secondsBeforeStart"; type: "int" }
-        Signal { name: "reminderChanged" }
+        Signal { name: "reminderChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemSortOrder"
@@ -793,7 +820,7 @@ Module {
         Property { name: "blankPolicy"; type: "BlankPolicy" }
         Property { name: "direction"; type: "Qt::SortOrder" }
         Property { name: "sensitivity"; type: "Qt::CaseSensitivity" }
-        Signal { name: "sortOrderChanged" }
+        Signal { name: "sortOrderChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemTag"
@@ -806,7 +833,7 @@ Module {
             }
         }
         Property { name: "tag"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemTimestamp"
@@ -821,7 +848,7 @@ Module {
         }
         Property { name: "created"; type: "QDateTime" }
         Property { name: "lastModified"; type: "QDateTime" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemType"
@@ -846,7 +873,7 @@ Module {
             }
         }
         Property { name: "itemType"; type: "ItemType" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemUnionFilter"
@@ -867,7 +894,7 @@ Module {
         }
         Property { name: "version"; type: "int" }
         Property { name: "extendedVersion"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerItemVisualReminder"
@@ -882,7 +909,7 @@ Module {
         }
         Property { name: "message"; type: "string" }
         Property { name: "dataUrl"; type: "QUrl" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerJournal"
@@ -890,7 +917,7 @@ Module {
         prototype: "QDeclarativeOrganizerItem"
         exports: ["Journal 5.0"]
         Property { name: "dateTime"; type: "QDateTime" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerJournalTime"
@@ -903,7 +930,7 @@ Module {
             }
         }
         Property { name: "entryDateTime"; type: "QDateTime" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerModel"
@@ -961,47 +988,69 @@ Module {
         Property { name: "storageLocations"; type: "int" }
         Property { name: "error"; type: "string"; isReadonly: true }
         Property { name: "itemCount"; type: "int"; isReadonly: true }
-        Signal { name: "modelChanged" }
+        Signal { name: "managerChanged"; type: "void" }
+        Signal { name: "availableManagersChanged"; type: "void" }
+        Signal { name: "filterChanged"; type: "void" }
+        Signal { name: "fetchHintChanged"; type: "void" }
+        Signal { name: "modelChanged"; type: "void" }
+        Signal { name: "sortOrdersChanged"; type: "void" }
+        Signal { name: "errorChanged"; type: "void" }
+        Signal { name: "startPeriodChanged"; type: "void" }
+        Signal { name: "endPeriodChanged"; type: "void" }
+        Signal { name: "autoUpdateChanged"; type: "void" }
+        Signal { name: "collectionsChanged"; type: "void" }
         Signal {
             name: "itemsFetched"
+            type: "void"
             Parameter { name: "requestId"; type: "int" }
             Parameter { name: "fetchedItems"; type: "QVariantList" }
         }
         Signal {
             name: "exportCompleted"
+            type: "void"
             Parameter { name: "error"; type: "ExportError" }
             Parameter { name: "url"; type: "QUrl" }
         }
         Signal {
             name: "importCompleted"
+            type: "void"
             Parameter { name: "error"; type: "ImportError" }
             Parameter { name: "url"; type: "QUrl" }
         }
-        Method { name: "update" }
-        Method { name: "cancelUpdate" }
+        Signal { name: "storageLocationsChanged"; type: "void" }
+        Method { name: "update"; type: "void" }
+        Method { name: "updateItems"; type: "void" }
+        Method { name: "updateCollections"; type: "void" }
+        Method { name: "cancelUpdate"; type: "void" }
         Method {
             name: "removeItem"
+            type: "void"
             Parameter { name: "id"; type: "string" }
         }
         Method {
             name: "removeItem"
+            type: "void"
             Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
         }
         Method {
             name: "removeItems"
+            type: "void"
             Parameter { name: "ids"; type: "QStringList" }
         }
         Method {
             name: "removeItems"
+            type: "void"
             Parameter { name: "items"; type: "QList<QDeclarativeOrganizerItem>" }
         }
         Method {
             name: "saveItem"
+            type: "void"
             Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
             Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "saveItem"
+            type: "void"
             Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
         }
         Method {
@@ -1011,18 +1060,21 @@ Module {
         }
         Method {
             name: "removeCollection"
+            type: "void"
             Parameter { name: "collectionId"; type: "string" }
         }
         Method {
             name: "saveCollection"
+            type: "void"
             Parameter { name: "collection"; type: "QDeclarativeOrganizerCollection"; isPointer: true }
             Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "saveCollection"
+            type: "void"
             Parameter { name: "collection"; type: "QDeclarativeOrganizerCollection"; isPointer: true }
         }
-        Method { name: "fetchCollections" }
+        Method { name: "fetchCollections"; type: "void" }
         Method {
             name: "containsItems"
             type: "QList<bool>"
@@ -1078,20 +1130,24 @@ Module {
         }
         Method {
             name: "importItems"
+            type: "void"
             Parameter { name: "url"; type: "QUrl" }
             Parameter { name: "profiles"; type: "QStringList" }
         }
         Method {
             name: "importItems"
+            type: "void"
             Parameter { name: "url"; type: "QUrl" }
         }
         Method {
             name: "exportItems"
+            type: "void"
             Parameter { name: "url"; type: "QUrl" }
             Parameter { name: "profiles"; type: "QStringList" }
         }
         Method {
             name: "exportItems"
+            type: "void"
             Parameter { name: "url"; type: "QUrl" }
         }
     }
@@ -1100,7 +1156,7 @@ Module {
         defaultProperty: "itemDetails"
         prototype: "QDeclarativeOrganizerItem"
         exports: ["Note 5.0"]
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerRecurrenceRule"
@@ -1142,7 +1198,7 @@ Module {
         Property { name: "monthsOfYear"; type: "QVariantList" }
         Property { name: "positions"; type: "QVariantList" }
         Property { name: "firstDayOfWeek"; type: "Qt::DayOfWeek" }
-        Signal { name: "recurrenceRuleChanged" }
+        Signal { name: "recurrenceRuleChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerTodo"
@@ -1162,7 +1218,7 @@ Module {
             isReadonly: true
             isPointer: true
         }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerTodoOccurrence"
@@ -1177,7 +1233,7 @@ Module {
         Property { name: "priority"; type: "QDeclarativeOrganizerItemPriority::Priority" }
         Property { name: "status"; type: "QDeclarativeOrganizerTodoProgress::StatusType" }
         Property { name: "parentId"; type: "string" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerTodoProgress"
@@ -1202,7 +1258,7 @@ Module {
         Property { name: "percentageComplete"; type: "int" }
         Property { name: "finishedDateTime"; type: "QDateTime" }
         Property { name: "status"; type: "StatusType" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
     Component {
         name: "QDeclarativeOrganizerTodoTime"
@@ -1219,6 +1275,6 @@ Module {
         Property { name: "allDay"; type: "bool" }
         Property { name: "startDateTime"; type: "QDateTime" }
         Property { name: "dueDateTime"; type: "QDateTime" }
-        Signal { name: "valueChanged" }
+        Signal { name: "valueChanged"; type: "void" }
     }
 }

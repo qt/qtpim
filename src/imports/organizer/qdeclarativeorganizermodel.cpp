@@ -98,7 +98,7 @@ public:
         m_storageLocations(QOrganizerAbstractRequest::UserDataStorage),
         m_error(QOrganizerManager::NoError),
         m_autoUpdate(true),
-        m_updatePending(false),
+        m_updatePendingFlag(QDeclarativeOrganizerModelPrivate::NonePending),
         m_componentCompleted(false),
         m_initialUpdate(false),
         m_lastRequestId(0)
@@ -136,7 +136,12 @@ public:
     QOrganizerManager::Error m_error;
 
     bool m_autoUpdate;
-    bool m_updatePending;
+    enum UpdateTypePending {
+        NonePending = 0x0,
+        UpdatingItemsPending = 0x1,
+        UpdatingCollectionsPending = 0x2
+    };
+    int m_updatePendingFlag;
     bool m_componentCompleted;
     bool m_initialUpdate;
 
@@ -191,11 +196,11 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     setRoleNames(roleNames);
 
     connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(filterChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(filterChanged()), SLOT(doUpdateItems()));
+    connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdateItems()));
+    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdateItems()));
+    connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdateItems()));
+    connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdateItems()));
     connect(this, SIGNAL(storageLocationsChanged()), SLOT(doUpdate()));//FIXME; optimize with handling only the delta instead of full update
 }
 
@@ -286,16 +291,20 @@ bool QDeclarativeOrganizerModel::autoUpdate() const
 /*!
   \qmlmethod OrganizerModel::update()
 
-  Manually update the organizer model content.
+  Manually update the organizer model content including both
+  items and collections.
 
+  \sa OrganizerModel::updateItems
+  \sa OrganizerModel::updateCollections
   \sa OrganizerModel::autoUpdate
   */
 void QDeclarativeOrganizerModel::update()
 {
     Q_D(QDeclarativeOrganizerModel);
-    if (!d->m_componentCompleted || d->m_updatePending)
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
         return;
-    d->m_updatePending = true; // Disallow possible duplicate request triggering
+    // Disallow possible duplicate request triggering
+    d->m_updatePendingFlag = (QDeclarativeOrganizerModelPrivate::UpdatingItemsPending | QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending);
     QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
 }
 
@@ -304,6 +313,49 @@ void QDeclarativeOrganizerModel::doUpdate()
     Q_D(QDeclarativeOrganizerModel);
     if (d->m_autoUpdate)
         update();
+}
+
+void QDeclarativeOrganizerModel::doUpdateItems()
+{
+    Q_D(QDeclarativeOrganizerModel);
+    if (d->m_autoUpdate)
+        updateItems();
+}
+
+/*!
+  \qmlmethod OrganizerModel::updateItems()
+
+  Manually update the organizer model items.
+
+  \sa OrganizerModel::update
+  \sa OrganizerModel::updateCollections
+  \sa OrganizerModel::autoUpdate
+  */
+void QDeclarativeOrganizerModel::updateItems()
+{
+    Q_D(QDeclarativeOrganizerModel);
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
+        return;
+    d->m_updatePendingFlag = QDeclarativeOrganizerModelPrivate::UpdatingItemsPending;// Disallow possible duplicate request triggering
+    QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+}
+
+/*!
+  \qmlmethod OrganizerModel::updateCollections()
+
+  Manually update the organizer model collections.
+
+  \sa OrganizerModel::update
+  \sa OrganizerModel::updateItems
+  \sa OrganizerModel::autoUpdate
+  */
+void QDeclarativeOrganizerModel::updateCollections()
+{
+    Q_D(QDeclarativeOrganizerModel);
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
+        return;
+    d->m_updatePendingFlag = QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending;// Disallow possible duplicate request triggering
+    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
 }
 
 /*!
@@ -320,7 +372,7 @@ void QDeclarativeOrganizerModel::cancelUpdate()
         d->m_fetchRequest->cancel();
         d->m_fetchRequest->deleteLater();
         d->m_fetchRequest = 0;
-        d->m_updatePending = false;
+        d->m_updatePendingFlag = QDeclarativeOrganizerModelPrivate::NonePending;
     }
 }
 /*!
@@ -547,7 +599,7 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
 
     if (d->m_manager) {
         cancelUpdate();
-        d->m_updatePending = false;
+        d->m_updatePendingFlag = QDeclarativeOrganizerModelPrivate::NonePending;
         delete d->m_manager;
     }
 
@@ -1081,7 +1133,7 @@ void QDeclarativeOrganizerModel::requestUpdated()
         checkError(ifr);
         ifr->deleteLater();
         d->m_fetchRequest = 0;
-        d->m_updatePending = false;
+        d->m_updatePendingFlag &= ~QDeclarativeOrganizerModelPrivate::UpdatingItemsPending;
     } else {
         return;
     }
@@ -1508,6 +1560,7 @@ void QDeclarativeOrganizerModel::collectionsFetched()
     Q_D(QDeclarativeOrganizerModel);
     QOrganizerCollectionFetchRequest* req = qobject_cast<QOrganizerCollectionFetchRequest*>(QObject::sender());
     if (req->isFinished() && QOrganizerManager::NoError == req->error()) {
+        d->m_updatePendingFlag &= ~QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending;
         // prepare tables
         QHash<QString, const QOrganizerCollection*> collections;
         foreach (const QOrganizerCollection& collection, req->collections()) {
@@ -1542,7 +1595,8 @@ void QDeclarativeOrganizerModel::collectionsFetched()
             }
         }
         emit collectionsChanged();
-        QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+        if (d->m_updatePendingFlag & QDeclarativeOrganizerModelPrivate::UpdatingItemsPending)
+            QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
         req->deleteLater();
     }
     checkError(req);

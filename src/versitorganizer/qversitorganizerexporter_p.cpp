@@ -149,6 +149,12 @@ void QVersitOrganizerExporterPrivate::exportDetail(
         encodeComment(detail, &generatedProperties, &processedFields);
     } else if (detail.type() == QOrganizerItemDetail::TypeVersion) {
         encodeVersion(detail, *document, &removedProperties, &generatedProperties, &processedFields);
+    } else if (detail.type() == QOrganizerItemDetail::TypeAudibleReminder) {
+        encodeAudibleReminder(item, detail, &generatedProperties, &processedFields);
+    } else if (detail.type() == QOrganizerItemDetail::TypeVisualReminder) {
+        encodeVisualReminder(item, detail, &generatedProperties, &processedFields);
+    } else if (detail.type() == QOrganizerItemDetail::TypeEmailReminder) {
+        encodeEmailReminder(item, detail, &generatedProperties, &processedFields);
     } else if (mPropertyMappings.contains(detail.type())) {
         encodeSimpleProperty(detail, *document, &removedProperties, &generatedProperties, &processedFields);
     }
@@ -168,7 +174,13 @@ void QVersitOrganizerExporterPrivate::exportDetail(
         document->removeProperty(property);
     }
     foreach(const QVersitProperty& property, generatedProperties) {
-        document->addProperty(property);
+        if (property.valueType() == QVersitProperty::VersitDocumentType) {
+            QVersitDocument subDocument(QVersitDocument::ICalendar20Type);
+            subDocument = property.value<QVersitDocument>();
+            document->addSubDocument(subDocument);
+        } else {
+            document->addProperty(property);
+        }
     }
 }
 
@@ -576,6 +588,184 @@ void QVersitOrganizerExporterPrivate::encodeComment(
     property.setValue(comment.comment());
     *generatedProperties << property;
     *processedFields << QOrganizerItemComment::FieldComment;
+}
+
+void QVersitOrganizerExporterPrivate::encodeAudibleReminder(
+        const QOrganizerItem &item,
+        const QOrganizerItemDetail &detail,
+        QList<QVersitProperty> *generatedProperties,
+        QSet<int> *processedFields)
+{
+    QOrganizerItemAudibleReminder audibleReminder = static_cast<QOrganizerItemAudibleReminder>(detail);
+    QVersitProperty property;
+    QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, audibleReminder, processedFields);
+
+    const QUrl attachUrl = audibleReminder.dataUrl();
+    if (!attachUrl.isEmpty()) {
+        property.setName(QLatin1String("ATTACH"));
+        property.setValue(attachUrl.toString());
+        valarmDocument.addProperty(property);
+        *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
+    }
+    property.setValueType(QVersitProperty::VersitDocumentType);
+    property.setValue(QVariant::fromValue(valarmDocument));
+    property.setName(QLatin1String("VALARM"));
+    *generatedProperties << property;
+}
+
+void QVersitOrganizerExporterPrivate::encodeEmailReminder(
+        const QOrganizerItem &item,
+        const QOrganizerItemDetail &detail,
+        QList<QVersitProperty> *generatedProperties,
+        QSet<int> *processedFields)
+{
+    QOrganizerItemEmailReminder emailReminder = static_cast<QOrganizerItemEmailReminder>(detail);
+    QVersitProperty property;
+    QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, emailReminder, processedFields);
+
+    foreach (const QVariant &attachment, emailReminder.attachments()) {
+        property.setName(QLatin1String("ATTACH"));
+        property.setValue(attachment);
+        valarmDocument.addProperty(property);
+        *processedFields << QOrganizerItemEmailReminder::FieldAttachments;
+    }
+
+    if (emailReminder.hasValue(QOrganizerItemEmailReminder::FieldRecipients)) {
+        property.setName(QLatin1String("ATTENDEE"));
+        foreach (const QString &recipient, emailReminder.recipients()) {
+            property.setValue(recipient);
+            valarmDocument.addProperty(property);
+        }
+        *processedFields << QOrganizerItemEmailReminder::FieldRecipients;
+    }
+
+    // DESCRIPTION and SUMMARY properties are not optional,
+    // so we add them anyway even when empty
+    property.setName(QLatin1String("DESCRIPTION"));
+    property.setValue(emailReminder.body());
+    valarmDocument.addProperty(property);
+    *processedFields << QOrganizerItemEmailReminder::FieldBody;
+    property.setName(QLatin1String("SUMMARY"));
+    property.setValue(emailReminder.subject());
+    valarmDocument.addProperty(property);
+    *processedFields << QOrganizerItemEmailReminder::FieldSubject;
+
+    property.setValueType(QVersitProperty::VersitDocumentType);
+    property.setValue(QVariant::fromValue(valarmDocument));
+    property.setName(QLatin1String("VALARM"));
+    *generatedProperties << property;
+}
+
+void QVersitOrganizerExporterPrivate::encodeVisualReminder(
+        const QOrganizerItem &item,
+        const QOrganizerItemDetail &detail,
+        QList<QVersitProperty> *generatedProperties,
+        QSet<int> *processedFields)
+{
+    QOrganizerItemVisualReminder visualReminder = static_cast<QOrganizerItemVisualReminder>(detail);
+    QVersitProperty property;
+    QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, visualReminder, processedFields);
+
+    const QUrl attachUrl = visualReminder.dataUrl();
+    const QString message = visualReminder.message();
+
+    if (!attachUrl.isEmpty()) {
+        //ICAL specs do not include ATTACH property for DISPLAY VALARM components
+        //Hence, we add it here as an (optional) extended QTPROJECT-specific property
+        property.setName(QLatin1String("X-QTPROJECT-ATTACH"));
+        property.setValue(attachUrl.toString());
+        valarmDocument.addProperty(property);
+        *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
+    }
+
+    //DESCRIPTION property is not optional, so we add it anyway even when empty
+    property.setName(QLatin1String("DESCRIPTION"));
+    property.setValue(message);
+    valarmDocument.addProperty(property);
+    *processedFields << QOrganizerItemVisualReminder::FieldMessage;
+    property.setValueType(QVersitProperty::VersitDocumentType);
+    property.setValue(QVariant::fromValue(valarmDocument));
+    property.setName(QLatin1String("VALARM"));
+    *generatedProperties << property;
+}
+
+QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
+        const QOrganizerItem &item,
+        const QOrganizerItemReminder &reminder,
+        QSet<int> *processedFields)
+{
+    QVersitProperty property;
+    QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+    QList<QVersitProperty> reminderProperties;
+    valarmDocument.setComponentType(QLatin1String("VALARM"));
+    property.setName(QLatin1String("ACTION"));
+    switch (reminder.type()) {
+    case QOrganizerItemDetail::TypeAudibleReminder:
+        property.setValue(QLatin1String("AUDIO"));
+        break;
+    case QOrganizerItemDetail::TypeVisualReminder:
+        property.setValue(QLatin1String("DISPLAY"));
+        break;
+    case QOrganizerItemDetail::TypeEmailReminder:
+        property.setValue(QLatin1String("EMAIL"));
+        break;
+    default:
+        return QVersitDocument();
+    }
+    reminderProperties << property;
+    QMap<int, QVariant>::const_iterator valueIter = reminder.values().constBegin();
+    bool triggerFound = false;
+    while (valueIter != reminder.values().constEnd()) {
+        switch (valueIter.key()) {
+        case QOrganizerItemReminder::FieldSecondsBeforeStart: {
+            property.setName(QLatin1String("TRIGGER"));
+            property.setValue(QString(QLatin1String("-PT%1S")).arg(
+                                  QString::number(valueIter.value().toInt())));
+            switch (item.type()) {
+            case QOrganizerItemType::TypeEvent:
+            case QOrganizerItemType::TypeEventOccurrence:
+                property.insertParameter(QLatin1String("RELATED"), QLatin1String("START"));
+                break;
+            case QOrganizerItemType::TypeTodo:
+            case QOrganizerItemType::TypeTodoOccurrence:
+                property.insertParameter(QLatin1String("RELATED"), QLatin1String("END"));
+                break;
+            default:
+                break;
+            }
+            triggerFound = true;
+            break;
+        }
+        case QOrganizerItemReminder::FieldRepetitionCount: {
+            property.setName(QLatin1String("REPEAT"));
+            property.setValue(valueIter.value().toString());
+            break;
+        }
+        case QOrganizerItemReminder::FieldRepetitionDelay: {
+            property.setName(QLatin1String("DURATION"));
+            property.setValue(QString(QLatin1String("PT%1S")).arg(
+                                  QString::number(valueIter.value().toInt())));
+            break;
+        }
+        default:
+            valueIter ++;
+            property.clear();
+            continue;
+            break;
+        }
+        reminderProperties << property;
+        *processedFields << valueIter.key();
+        property.clear();
+        valueIter ++;
+    }
+    if (!triggerFound) {
+        property.setName(QLatin1String("TRIGGER"));
+        property.setValue(QString(QLatin1String("-PT%1S")).arg(
+                              QString::number(0)));
+        reminderProperties << property;
+    }
+    valarmDocument.setProperties(reminderProperties);
+    return valarmDocument;
 }
 
 void QVersitOrganizerExporterPrivate::encodeSimpleProperty(

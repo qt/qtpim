@@ -52,6 +52,10 @@ QTVERSIT_BEGIN_NAMESPACE
 class QVersitDocument;
 QTVERSIT_END_NAMESPACE
 
+QTORGANIZER_BEGIN_NAMESPACE
+class QOrganizerItemReminder;
+QTORGANIZER_END_NAMESPACE
+
 QTVERSIT_USE_NAMESPACE
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
@@ -149,6 +153,25 @@ private:
             const QOrganizerItemDetail& detail,
             QList<QVersitProperty>* generatedProperties,
             QSet<int>* processedFields);
+    void encodeAudibleReminder(
+            const QOrganizerItem &item,
+            const QOrganizerItemDetail &detail,
+            QList<QVersitProperty> *generatedProperties,
+            QSet<int> *processedFields);
+    void encodeEmailReminder(
+            const QOrganizerItem &item,
+            const QOrganizerItemDetail &detail,
+            QList<QVersitProperty> *generatedProperties,
+            QSet<int> *processedFields);
+    void encodeVisualReminder(
+            const QOrganizerItem &item,
+            const QOrganizerItemDetail &detail,
+            QList<QVersitProperty> *generatedProperties,
+            QSet<int> *processedFields);
+    QVersitDocument encodeItemReminderCommonFields(
+                const QOrganizerItem &item,
+                const QOrganizerItemReminder &reminder,
+                QSet<int> *processedFields);
     void encodeSimpleProperty(
             const QOrganizerItemDetail& detail,
             const QVersitDocument& document,

@@ -78,17 +78,11 @@ Event {
         lastModified: new Date("2012-01-01 12:00:00 GMT+0000")
     }
 
-    Reminder {
-        repetitionCount: 1
-        repetitionDelay: 1
-        secondsBeforeStart: 0
-    }
-
     AudibleReminder {
         repetitionCount: 1
         repetitionDelay: 1
         secondsBeforeStart: 0
-        dataUrl: "Audible reminder data url"
+        dataUrl: "ftp://Audible_reminder_data_url"
     }
 
     EmailReminder {
@@ -106,7 +100,7 @@ Event {
         repetitionDelay: 1
         secondsBeforeStart: 0
         message: "Visual reminder message"
-        dataUrl: "Visual reminder data url"
+        dataUrl: "ftp://visual_reminder_data_url"
     }
 
     ExtendedDetail {

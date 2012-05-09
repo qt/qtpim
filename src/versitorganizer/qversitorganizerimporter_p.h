@@ -87,6 +87,12 @@ class Duration
         int minutes() { return mNegative ? -mMinutes : mMinutes; }
         int seconds() { return mNegative ? -mSeconds : mSeconds; }
         bool isValid() { return mValid; }
+        int toSeconds() { return (seconds()
+                                  + 60*minutes()
+                                  + 3600*hours()
+                                  + 86400*days()
+                                  + 604800*weeks());
+                        }
 
     private:
         bool mNegative;
@@ -143,6 +149,12 @@ private:
     bool createComment(
             const QVersitProperty& property,
             QList<QOrganizerItemDetail>* updatedDetails);
+    bool createItemReminder(
+            const QVersitDocument &valarmDocument,
+            QOrganizerItem *item,
+            QList<QOrganizerItemDetail> *updatedDetails);
+    int triggerToSecondsBeforeStart(const QVersitProperty& triggerProperty, const QOrganizerItem &item);
+
     bool createRecurrenceId(
             const QVersitProperty& property,
             QOrganizerItem* item,

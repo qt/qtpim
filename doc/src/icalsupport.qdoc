@@ -49,6 +49,9 @@ following are supported with the QOrganizer Versit implementation.
   \row
     \li VJOURNAL
     \li QOrganizerJournal
+  \row
+    \li VALARM
+    \li QOrganizerItemAudibleReminder, QOrganizerItemEmailReminder, QOrganizerItemVisualReminder
 \endtable
 
 

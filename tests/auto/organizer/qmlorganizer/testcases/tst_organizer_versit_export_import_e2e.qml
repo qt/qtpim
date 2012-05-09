@@ -294,6 +294,14 @@ TestCase {
         compare(importedEvent.priority, megaEvent.priority)
         compare(importedEvent.description, megaEvent.description)
         compare(importedEvent.detail(Detail.Comment).comment, megaEvent.detail(Detail.Comment).comment)
+        compare(importedEvent.detail(Detail.AudibleReminder).repetitionCount, megaEvent.detail(Detail.AudibleReminder).repetitionCount)
+        compare(importedEvent.detail(Detail.AudibleReminder).repetitionDelay, megaEvent.detail(Detail.AudibleReminder).repetitionDelay)
+        compare(importedEvent.detail(Detail.AudibleReminder).secondsBeforeStart, megaEvent.detail(Detail.AudibleReminder).secondsBeforeStart)
+        compare(importedEvent.detail(Detail.AudibleReminder).dataUrl, megaEvent.detail(Detail.AudibleReminder).dataUrl)
+        //Only one reminder is allowed in an organizer item, so there should be no Visual or Email reminder in the imported event
+        compare(importedEvent.detail(Detail.VisualReminder), null)
+        compare(importedEvent.detail(Detail.EmailReminder), null)
+
         expectFail("", "During import the timestamp information gets overwritten with current datetime")
         compare(importedEvent.detail(Detail.Timestamp).created, megaEvent.detail(Detail.Timestamp).created)
         expectFail("", "During import the timestamp information gets overwritten with current datetime")

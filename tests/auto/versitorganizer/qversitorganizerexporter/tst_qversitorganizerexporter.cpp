@@ -216,11 +216,25 @@ void tst_QVersitOrganizerExporter::testExportEventDetails()
     QVersitDocument document = exporter.document();
     QList<QVersitDocument> subDocuments = document.subDocuments();
     QCOMPARE(subDocuments.size(), 1);
-
+    int currentVAlarmSubDocumentIndex = 0;
     foreach(const QVersitProperty& expectedProperty, expectedProperties) {
         QList<QVersitProperty> actualProperties =
             findPropertiesByName(subDocuments.first(), expectedProperty.name());
-        if (!actualProperties.contains(expectedProperty)) {
+        if (expectedProperty.valueType() == QVersitProperty::VersitDocumentType) {
+            QCOMPARE(subDocuments.first().subDocuments().size(), expectedProperties.size());
+            QVersitDocument actualVAlarmDocument =
+                    subDocuments.first().subDocuments().at(currentVAlarmSubDocumentIndex);
+            QVersitDocument expectedVAlarmDocument =
+                    expectedProperty.variantValue().value<QVersitDocument>();
+            foreach (const QVersitProperty &valarmProp, expectedVAlarmDocument.properties()) {
+                if (!actualVAlarmDocument.properties().contains(valarmProp)) {
+                            qDebug() << "Actual:" << actualVAlarmDocument.properties();
+                            qDebug() << "Expected to find:" << valarmProp;
+                            QVERIFY(false);
+                }
+            }
+            currentVAlarmSubDocumentIndex ++; //move to next expected valarm document
+        } else if (!actualProperties.contains(expectedProperty)) {
             qDebug() << "Actual:" << actualProperties;
             qDebug() << "Expected to find:" << expectedProperty;
             QVERIFY(false);
@@ -243,6 +257,354 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             << (QList<QVersitProperty>() << property);
     }
 
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("AUDIO"));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemAudibleReminder audibleReminder;
+        audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        audibleReminder.setRepetition(3, 5);
+        audibleReminder.setSecondsBeforeStart(90);
+        QTest::newRow("audible reminder") << (QList<QOrganizerItemDetail>() << audibleReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("DISPLAY"));
+        valarmProperties << property;
+        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String("Test visual reminder"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemVisualReminder visualReminder;
+        visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        visualReminder.setRepetition(3, 5);
+        visualReminder.setSecondsBeforeStart(90);
+        visualReminder.setMessage(QLatin1String("Test visual reminder"));
+        QTest::newRow("visual reminder") << (QList<QOrganizerItemDetail>() << visualReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("DISPLAY"));
+        valarmProperties << property;
+        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemVisualReminder visualReminder;
+        visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        visualReminder.setRepetition(3, 5);
+        visualReminder.setSecondsBeforeStart(90);
+        QTest::newRow("visual reminder: no message") << (QList<QOrganizerItemDetail>() << visualReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("EMAIL"));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String("Test email body"));
+        valarmProperties << property;
+        property.setName(QLatin1String("SUMMARY"));
+        property.setValue(QLatin1String("Test email subject"));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTENDEE"));
+        property.setValue(QLatin1String("First email recipient"));
+        valarmProperties << property;
+        property.setValue(QLatin1String("Second email recipient"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemEmailReminder emailReminder;
+        QVariantList attachments;
+        emailReminder.setRepetition(3, 5);
+        emailReminder.setSecondsBeforeStart(90);
+        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
+                                    << QLatin1String("Second email recipient")));
+        emailReminder.setContents(QLatin1String("Test email subject"),
+                                  QLatin1String("Test email body"),
+                                  attachments);
+        QTest::newRow("email reminder") << (QList<QOrganizerItemDetail>() << emailReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("EMAIL"));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+        property.setName(QLatin1String("SUMMARY"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTENDEE"));
+        property.setValue(QLatin1String("First email recipient"));
+        valarmProperties << property;
+        property.setValue(QLatin1String("Second email recipient"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemEmailReminder emailReminder;
+        QVariantList attachments;
+        emailReminder.setRepetition(3, 5);
+        emailReminder.setSecondsBeforeStart(90);
+        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
+                                    << QLatin1String("Second email recipient")));
+        emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
+        QTest::newRow("email reminder: no subject, no body") << (QList<QOrganizerItemDetail>() << emailReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QList<QOrganizerItemDetail> detailsToExport;
+        QList<QVersitProperty> expectedProperties;
+        {
+            QVersitProperty property;
+            QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+            QList<QVersitProperty> valarmProperties;
+            QMultiHash<QString, QString> parameters;
+            property.setName(QLatin1String("ACTION"));
+            property.setValue(QLatin1String("AUDIO"));
+            valarmProperties << property;
+            property.setName(QLatin1String("ATTACH"));
+            property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+            valarmProperties << property;
+            property.setName(QLatin1String("DURATION"));
+            property.setValue(QLatin1String("PT5S"));
+            valarmProperties << property;
+            property.setName(QLatin1String("REPEAT"));
+            property.setValue(3);
+            valarmProperties << property;
+            property.setName(QLatin1String("TRIGGER"));
+            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setParameters(parameters);
+            property.setValue(QLatin1String("-PT90S"));
+            valarmProperties << property;
+            property.clear();
+            valarmDocument.setComponentType("VALARM");
+            valarmDocument.setProperties(valarmProperties);
+            property.setValueType(QVersitProperty::VersitDocumentType);
+            property.setName(QLatin1String("VALARM"));
+            property.setValue(QVariant::fromValue(valarmDocument));
+            QOrganizerItemAudibleReminder audibleReminder;
+            audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+            audibleReminder.setRepetition(3, 5);
+            audibleReminder.setSecondsBeforeStart(90);
+            detailsToExport << audibleReminder;
+            expectedProperties << property;
+        }
+
+        {
+            QVersitProperty property;
+            QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+            QList<QVersitProperty> valarmProperties;
+            QMultiHash<QString, QString> parameters;
+
+            property.setName(QLatin1String("ACTION"));
+            property.setValue(QLatin1String("DISPLAY"));
+            valarmProperties << property;
+            property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
+            property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+            valarmProperties << property;
+            property.setName(QLatin1String("DURATION"));
+            property.setValue(QLatin1String("PT5S"));
+            valarmProperties << property;
+            property.setName(QLatin1String("REPEAT"));
+            property.setValue(3);
+            valarmProperties << property;
+            property.setName(QLatin1String("TRIGGER"));
+            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setParameters(parameters);
+            property.setValue(QLatin1String("-PT90S"));
+            valarmProperties << property;
+            property.clear();
+            property.setName(QLatin1String("DESCRIPTION"));
+            property.setValue(QLatin1String(""));
+            valarmProperties << property;
+
+            valarmDocument.setComponentType("VALARM");
+            valarmDocument.setProperties(valarmProperties);
+            property.setValueType(QVersitProperty::VersitDocumentType);
+            property.setName(QLatin1String("VALARM"));
+            property.setValue(QVariant::fromValue(valarmDocument));
+            QOrganizerItemVisualReminder visualReminder;
+            visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+            visualReminder.setRepetition(3, 5);
+            visualReminder.setSecondsBeforeStart(90);
+            detailsToExport << visualReminder;
+            expectedProperties << property;
+        }
+        {
+            QVersitProperty property;
+            QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+            QList<QVersitProperty> valarmProperties;
+            QMultiHash<QString, QString> parameters;
+
+            property.setName(QLatin1String("ACTION"));
+            property.setValue(QLatin1String("EMAIL"));
+            valarmProperties << property;
+            property.setName(QLatin1String("DURATION"));
+            property.setValue(QLatin1String("PT5S"));
+            valarmProperties << property;
+            property.setName(QLatin1String("REPEAT"));
+            property.setValue(3);
+            valarmProperties << property;
+            property.setName(QLatin1String("TRIGGER"));
+            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setParameters(parameters);
+            property.setValue(QLatin1String("-PT90S"));
+            valarmProperties << property;
+            property.clear();
+            property.setName(QLatin1String("DESCRIPTION"));
+            property.setValue(QLatin1String(""));
+            valarmProperties << property;
+            property.setName(QLatin1String("SUMMARY"));
+            property.setValue(QLatin1String(""));
+            valarmProperties << property;
+            property.setName(QLatin1String("ATTENDEE"));
+            property.setValue(QLatin1String("First email recipient"));
+            valarmProperties << property;
+            property.setValue(QLatin1String("Second email recipient"));
+            valarmProperties << property;
+
+            valarmDocument.setComponentType("VALARM");
+            valarmDocument.setProperties(valarmProperties);
+            property.setValueType(QVersitProperty::VersitDocumentType);
+            property.setName(QLatin1String("VALARM"));
+            property.setValue(QVariant::fromValue(valarmDocument));
+            QOrganizerItemEmailReminder emailReminder;
+            QVariantList attachments;
+            emailReminder.setRepetition(3, 5);
+            emailReminder.setSecondsBeforeStart(90);
+            emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
+                                        << QLatin1String("Second email recipient")));
+            emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
+            detailsToExport << emailReminder;
+            expectedProperties << property;
+        }
+        QTest::newRow("multiple reminders") << detailsToExport << expectedProperties;
+    }
     {
         QVersitProperty property;
         property.setName(QLatin1String("DESCRIPTION"));
@@ -710,11 +1072,23 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails()
     QVersitDocument document = exporter.document();
     QList<QVersitDocument> subDocuments = document.subDocuments();
     QCOMPARE(subDocuments.size(), 1);
-
     foreach(const QVersitProperty& expectedProperty, expectedProperties) {
         QList<QVersitProperty> actualProperties =
             findPropertiesByName(subDocuments.first(), expectedProperty.name());
-        if (!actualProperties.contains(expectedProperty)) {
+        if (expectedProperty.valueType() == QVersitProperty::VersitDocumentType) {
+            QCOMPARE(subDocuments.first().subDocuments().size(), 1);
+            QVersitDocument actualVAlarmDocument =
+                    subDocuments.first().subDocuments().first();
+            QVersitDocument expectedVAlarmDocument =
+                    expectedProperty.variantValue().value<QVersitDocument>();
+            foreach (const QVersitProperty &valarmProp, expectedVAlarmDocument.properties()) {
+                if (!actualVAlarmDocument.properties().contains(valarmProp)) {
+                            qDebug() << "Actual:" << actualVAlarmDocument.properties();
+                            qDebug() << "Expected to find:" << valarmProp;
+                            QVERIFY(false);
+                }
+            }
+        } else if (!actualProperties.contains(expectedProperty)) {
             qDebug() << "Actual:" << actualProperties;
             qDebug() << "Expected to find:" << expectedProperty;
             QVERIFY(false);
@@ -746,6 +1120,226 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QTest::newRow("all day todo") << (QList<QOrganizerItemDetail>() << todoTime)
             << properties;
     }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("AUDIO"));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemAudibleReminder audibleReminder;
+        audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        audibleReminder.setRepetition(3, 5);
+        audibleReminder.setSecondsBeforeStart(90);
+        QTest::newRow("audible reminder") << (QList<QOrganizerItemDetail>() << audibleReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("DISPLAY"));
+        valarmProperties << property;
+        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String("Test visual reminder"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemVisualReminder visualReminder;
+        visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        visualReminder.setRepetition(3, 5);
+        visualReminder.setSecondsBeforeStart(90);
+        visualReminder.setMessage(QLatin1String("Test visual reminder"));
+        QTest::newRow("visual reminder") << (QList<QOrganizerItemDetail>() << visualReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("DISPLAY"));
+        valarmProperties << property;
+        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemVisualReminder visualReminder;
+        visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
+        visualReminder.setRepetition(3, 5);
+        visualReminder.setSecondsBeforeStart(90);
+        QTest::newRow("visual reminder: no message") << (QList<QOrganizerItemDetail>() << visualReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("EMAIL"));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String("Test email body"));
+        valarmProperties << property;
+        property.setName(QLatin1String("SUMMARY"));
+        property.setValue(QLatin1String("Test email subject"));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTENDEE"));
+        property.setValue(QLatin1String("First email recipient"));
+        valarmProperties << property;
+        property.setValue(QLatin1String("Second email recipient"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemEmailReminder emailReminder;
+        QVariantList attachments;
+        emailReminder.setRepetition(3, 5);
+        emailReminder.setSecondsBeforeStart(90);
+        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
+                                    << QLatin1String("Second email recipient")));
+        emailReminder.setContents(QLatin1String("Test email subject"),
+                                  QLatin1String("Test email body"),
+                                  attachments);
+        QTest::newRow("email reminder") << (QList<QOrganizerItemDetail>() << emailReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
+    {
+        QVersitProperty property;
+        QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
+        QList<QVersitProperty> valarmProperties;
+        QMultiHash<QString, QString> parameters;
+
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("EMAIL"));
+        valarmProperties << property;
+        property.setName(QLatin1String("DURATION"));
+        property.setValue(QLatin1String("PT5S"));
+        valarmProperties << property;
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(3);
+        valarmProperties << property;
+        property.setName(QLatin1String("TRIGGER"));
+        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("-PT90S"));
+        valarmProperties << property;
+        property.clear();
+        property.setName(QLatin1String("DESCRIPTION"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+        property.setName(QLatin1String("SUMMARY"));
+        property.setValue(QLatin1String(""));
+        valarmProperties << property;
+        property.setName(QLatin1String("ATTENDEE"));
+        property.setValue(QLatin1String("First email recipient"));
+        valarmProperties << property;
+        property.setValue(QLatin1String("Second email recipient"));
+        valarmProperties << property;
+
+        valarmDocument.setComponentType("VALARM");
+        valarmDocument.setProperties(valarmProperties);
+        property.setValueType(QVersitProperty::VersitDocumentType);
+        property.setName(QLatin1String("VALARM"));
+        property.setValue(QVariant::fromValue(valarmDocument));
+        QOrganizerItemEmailReminder emailReminder;
+        QVariantList attachments;
+        emailReminder.setRepetition(3, 5);
+        emailReminder.setSecondsBeforeStart(90);
+        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
+                                    << QLatin1String("Second email recipient")));
+        emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
+        QTest::newRow("email reminder: no subject, no body") << (QList<QOrganizerItemDetail>() << emailReminder)
+            << (QList<QVersitProperty>() << property);
+    }
+
 
     {
         QVersitProperty property;

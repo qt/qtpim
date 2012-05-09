@@ -1106,6 +1106,31 @@ void tst_QVersitReader::testParseVersitDocument_data()
         property.setName(QLatin1String("SUMMARY"));
         property.setValue(QLatin1String("Bastille Day Party"));
         nested.addProperty(property);
+        QMultiHash<QString,QString> parameters;
+        QVersitDocument nestedAlarm(QVersitDocument::ICalendar20Type);
+        nestedAlarm.setComponentType("VALARM");
+        property.setName("TRIGGER");
+        parameters.insert(QLatin1String("VALUE"), QLatin1String("DATE-TIME"));
+        property.setParameters(parameters);
+        property.setValue(QLatin1String("19970714T170000Z"));
+        nestedAlarm.addProperty(property);
+        property.clear();
+        property.setName(QLatin1String("REPEAT"));
+        property.setValue(4);
+        nestedAlarm.addProperty(property);
+        property.setName("DURATION");
+        property.setValue(QLatin1String("PT15M"));
+        nestedAlarm.addProperty(property);
+        property.setName(QLatin1String("ACTION"));
+        property.setValue(QLatin1String("AUDIO"));
+        nestedAlarm.addProperty(property);
+        property.setName(QLatin1String("ATTACH"));
+        parameters.clear();
+        parameters.insert(QLatin1String("FMTTYPE"), QLatin1String("audio/basic"));
+        property.setParameters(parameters);
+        property.setValue(QUrl(QLatin1String("ftp://host.com/pub/sounds/bell-01.aud")));
+        nestedAlarm.addProperty(property);
+        nested.addSubDocument(nestedAlarm);
         expected.addSubDocument(nested);
         QTest::newRow("iCalendar sample from spec")
             << QByteArray(
@@ -1116,6 +1141,13 @@ void tst_QVersitReader::testParseVersitDocument_data()
                     "DTSTART:19970714T170000Z\r\n"
                     "DTEND:19970715T035959Z\r\n"
                     "SUMMARY:Bastille Day Party\r\n"
+                    "BEGIN:VALARM\r\n"
+                    "TRIGGER;VALUE=DATE-TIME:19970714T170000Z\r\n"
+                    "REPEAT:4\r\n"
+                    "DURATION:PT15M\r\n"
+                    "ACTION:AUDIO\r\n"
+                    "ATTACH;FMTTYPE=audio/basic:ftp://host.com/pub/sounds/bell-01.aud\r\n"
+                    "END:VALARM\r\n"
                     "END:VEVENT\r\n"
                     "END:VCALENDAR\r\n")
             << true

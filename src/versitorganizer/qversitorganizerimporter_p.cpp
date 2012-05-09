@@ -96,13 +96,21 @@ bool QVersitOrganizerImporterPrivate::importDocument(
         return false;
     }
     const QList<QVersitProperty> properties = subDocument.properties();
-    if (properties.isEmpty()) {
+    if ( (subDocument.subDocuments().isEmpty()) && (properties.isEmpty())) {
         *error = QVersitOrganizerImporter::EmptyDocumentError;
         return false;
     }
-
     foreach (const QVersitProperty& property, properties) {
         importProperty(subDocument, property, item);
+    }
+
+    if (!subDocument.subDocuments().isEmpty()) {
+        foreach (const QVersitDocument &nestedSubDoc, subDocument.subDocuments())
+            foreach (const QVersitProperty &nestedProp, nestedSubDoc.properties()) {
+                importProperty(nestedSubDoc, nestedProp, item);
+                if (nestedSubDoc.componentType() == QLatin1String("VALARM"))
+                    break;
+            }
     }
     // run plugin handlers
     foreach (QVersitOrganizerImporterPropertyHandler* handler, mPluginPropertyHandlers) {
@@ -171,6 +179,8 @@ void QVersitOrganizerImporterPrivate::importProperty(
         } else if (property.name() == QLatin1String("RECURRENCE-ID")) {
             success = createRecurrenceId(property, item, &updatedDetails);
         }
+    } else if (document.componentType() == QLatin1String("VALARM")) {
+            success = createItemReminder(document, item, &updatedDetails);
     } else if (document.componentType() == QLatin1String("VJOURNAL")) {
         if (property.name() == QLatin1String("DTSTART")) {
             success = createJournalEntryDateTime(property, item, &updatedDetails);
@@ -300,6 +310,154 @@ bool QVersitOrganizerImporterPrivate::createComment(
     comment.setComment(property.value());
     updatedDetails->append(comment);
     return true;
+}
+
+bool QVersitOrganizerImporterPrivate::createItemReminder(
+        const QVersitDocument& valarmDocument,
+        QOrganizerItem* item,
+        QList<QOrganizerItemDetail>* updatedDetails)
+{
+    QOrganizerItemReminder itemReminder;
+    int repetitionCount;
+    int repetitionDelay;
+    int secondsBeforeStart;
+    bool alreadySetSecondsBeforeStart = false;
+    const QList<QVersitProperty> valarmProperties = valarmDocument.properties();
+    QString actionValue;
+    QVariantList attachValues;
+    QString descriptionValue;
+    QString summaryValue;
+    QStringList attendees;
+
+    foreach (const QVersitProperty &valarmProperty, valarmProperties) {
+        if (valarmProperty.name() == QLatin1String("TRIGGER")) {
+            secondsBeforeStart = triggerToSecondsBeforeStart(valarmProperty, *item);
+            alreadySetSecondsBeforeStart = true;
+        } else if (valarmProperty.name() == QLatin1String("REPEAT")) {
+            repetitionCount = valarmProperty.value().toInt();
+        } else if (valarmProperty.name() == QLatin1String("DURATION")) {
+            repetitionDelay = Duration::parseDuration(valarmProperty.value()).toSeconds();
+        } else if (valarmProperty.name() == QLatin1String("ACTION")) {
+            actionValue = valarmProperty.value().toUpper();
+        } else if (valarmProperty.name() == QLatin1String("ATTACH")) {
+            attachValues.append(valarmProperty.variantValue());
+        } else if (valarmProperty.name() == QLatin1String("DESCRIPTION")) {
+            descriptionValue = valarmProperty.value();
+        } else if (valarmProperty.name() == QLatin1String("SUMMARY")) {
+            summaryValue = valarmProperty.value();
+        } else if (valarmProperty.name() == QLatin1String("ATTENDEE")) {
+            attendees << valarmProperty.value();
+        }
+    }
+    if ((actionValue.isEmpty()) || (!alreadySetSecondsBeforeStart) ) {
+        //ACTION and TRIGGER are mandatory in a VALARM component.
+        return false;
+    } else if (actionValue == QLatin1String("AUDIO")) {
+        QOrganizerItemAudibleReminder audibleReminder;
+        audibleReminder.setRepetition(repetitionCount, repetitionDelay);
+        audibleReminder.setSecondsBeforeStart(secondsBeforeStart);
+        if (!attachValues.isEmpty())
+            audibleReminder.setDataUrl(QUrl(attachValues.first().toString()));
+        updatedDetails->append(audibleReminder);
+        return true;
+    } else if (actionValue == QLatin1String("DISPLAY")) {
+        if (descriptionValue.isNull())
+            return false;//Invalid since REQUIRED properties are not found
+        QOrganizerItemVisualReminder visualReminder;
+        visualReminder.setRepetition(repetitionCount, repetitionDelay);
+        visualReminder.setSecondsBeforeStart(secondsBeforeStart);
+        if (!descriptionValue.isEmpty()) {
+            visualReminder.setMessage(descriptionValue);
+            updatedDetails->append(visualReminder);
+            return true;
+        } else {
+            return false;
+        }
+    } else if (actionValue == QLatin1String("EMAIL")) {
+        if (descriptionValue.isNull() || summaryValue.isNull() || attendees.isEmpty())
+            return false;//Invalid since REQUIRED properties are not found
+        QOrganizerItemEmailReminder emailReminder;
+        emailReminder.setRepetition(repetitionCount, repetitionDelay);
+        emailReminder.setSecondsBeforeStart(secondsBeforeStart);
+        emailReminder.setValue(QOrganizerItemEmailReminder::FieldBody, descriptionValue);
+        emailReminder.setValue(QOrganizerItemEmailReminder::FieldSubject, summaryValue);
+        if (!attachValues.isEmpty())
+            emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachValues);
+        emailReminder.setContents(summaryValue, descriptionValue, attachValues);
+        emailReminder.setRecipients(attendees);
+        updatedDetails->append(emailReminder);
+        return true;
+    } else { //ACTION property had an invalid value
+        return false;
+    }
+}
+
+int QVersitOrganizerImporterPrivate::triggerToSecondsBeforeStart(const QVersitProperty &triggerProperty, const QOrganizerItem &item)
+{
+    int result = 0;
+
+    //The default value type for TRIGGER property is DURATION.
+    bool encodedAsDuration = true;
+
+    if (!triggerProperty.parameters().isEmpty()) {
+        const QString triggerValue = triggerProperty.parameters().value(QLatin1String("VALUE")).toUpper();
+        if (triggerValue == QLatin1String("DATE-TIME"))
+            encodedAsDuration = false;
+        else if ( (!triggerValue.isEmpty()) &&
+                  (triggerValue != QLatin1String("DURATION")) ) {
+            return 0;//Invalid trigger property...just return default value.
+        }
+    }
+
+    if (encodedAsDuration) {
+        const QString related = triggerProperty.parameters().value(QLatin1String("RELATED")).toUpper();
+        result = Duration::parseDuration(triggerProperty.value()).toSeconds();
+        switch (item.type()) {
+        case QOrganizerItemType::TypeTodo:
+        case QOrganizerItemType::TypeTodoOccurrence: {
+            if (related == QLatin1String("START")) {
+                QOrganizerTodoTime todoTime = item.detail(QOrganizerItemDetail::TypeTodoTime);
+                QDateTime relativeTrigger = todoTime.startDateTime().addSecs(result);
+                result = relativeTrigger.secsTo(todoTime.dueDateTime());
+            } else if ( (related.isEmpty()) || (related == QLatin1String("END")) ) {
+                result = (-1 * result);
+            }
+            break;
+        }
+        case QOrganizerItemType::TypeEvent:
+        case QOrganizerItemType::TypeEventOccurrence: {
+            if (related == QLatin1String("END")) {
+                QOrganizerEventTime eventTime = item.detail(QOrganizerItemDetail::TypeEventTime);
+                QDateTime relativeTrigger = eventTime.endDateTime().addSecs(result);
+                result = relativeTrigger.secsTo(eventTime.startDateTime());
+            } else if ( (related.isEmpty()) || (related == QLatin1String("START")) ) {
+                result = (-1 * result);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    } else {
+        QDateTime absoluteTrigger = parseDateTime(triggerProperty.value());
+        switch (item.type()) {
+        case QOrganizerItemType::TypeTodo:
+        case QOrganizerItemType::TypeTodoOccurrence: {
+            QOrganizerTodoTime todoTime = item.detail(QOrganizerItemDetail::TypeTodoTime);
+            result = absoluteTrigger.secsTo(todoTime.dueDateTime());
+            break;
+        }
+        case QOrganizerItemType::TypeEvent:
+        case QOrganizerItemType::TypeEventOccurrence: {
+            QOrganizerEventTime eventTime = item.detail(QOrganizerItemDetail::TypeEventTime);
+            result = absoluteTrigger.secsTo(eventTime.startDateTime());
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    return result >= 0 ? result: 0;
 }
 
 bool QVersitOrganizerImporterPrivate::createRecurrenceId(

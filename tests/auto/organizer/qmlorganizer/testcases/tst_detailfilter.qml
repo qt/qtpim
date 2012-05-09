@@ -311,6 +311,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime: new Date('2011-10-23T16:42:00')\n" //notice, date-object
+            + "  endDateTime: new Date('2011-10-23T17:42:00')\n" //notice, date-object
             + "  description: 'for exact filter - EventTime.StartDateTime'\n"
             + "   }",
             "import QtQuick 2.0\n"
@@ -324,6 +325,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime: '2011-10-23T15:00:00'\n"
+            + "  endDateTime: '2011-10-23T16:00:00'\n"
             + "  allDay: true\n"
             + "  description: 'for exact filter - EventTime.AllDayEvent'\n"
             + "   }",
@@ -331,12 +333,14 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:'2011-10-23T15:00:00'\n"
+            + "  endDateTime: '2011-11-23T16:00:00'\n"
             + "  description: 'for exact filter - Description'\n"
             + "   }",
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:'2011-10-23T15:00:00Z'\n"
+            + "  endDateTime: '2011-11-23T16:00:00'\n"
             + "  displayLabel: 'my displayLabel'\n"
             + "  description: 'for exact filter - DisplayLabel'\n"
             + "   }",
@@ -344,6 +348,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:'2011-10-23T15:00:00Z'\n"
+            + "  endDateTime: '2011-11-23T16:00:00'\n"
             + "  guid: 'my guid'\n"
             + "  description: 'for exact filter - Guid'\n"
             + "   }",
@@ -351,6 +356,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:'2011-10-23T15:00:00Z'\n"
+            + "  endDateTime: '2011-11-23T16:00:00'\n"
             + "  location: 'my location'\n"
             + "  description: 'for exact filter - Location'\n"
             + "   }",
@@ -358,6 +364,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:'2011-10-23T15:00:00Z'\n"
+            + "  endDateTime: '2011-11-23T16:00:00'\n"
             + "  priority: Priority.VeryHigh\n"
             + "  description: 'for exact filter - Priority'\n"
             + "   }",
@@ -365,7 +372,7 @@ TestCase {
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Todo {\n"
-            + "  startDateTime:'2010-10-23T15:00:00Z'\n"
+            + "  dueDateTime:'2010-10-23T15:00:00Z'\n"
             + "  status:TodoProgress.InProgress\n"
             + "  percentageComplete:89\n"
             + "  description: 'for exact filter - Type'\n"
@@ -557,6 +564,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:new Date('2010-10-20')\n"
+            + "  endDateTime:new Date('2010-10-21')\n"
             + "  description: 'aa bb cc'\n"
             + "  EventRsvp {\n"
             + "    organizerName: 'QtPim'\n"
@@ -567,6 +575,7 @@ TestCase {
             + "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "  startDateTime:new Date('2011-10-22')\n"
+            + "  endDateTime:new Date('2011-10-23')\n"
             + "  description: 'bB cc dd'\n"
             + "  EventRsvp {\n"
             + "    organizerName: 'random organizer name'\n"
@@ -576,7 +585,7 @@ TestCase {
             "import QtQuick 2.0\n"
             + "import QtOrganizer 5.0 \n"
             + "   Todo {\n"
-            + "  startDateTime:new Date('2010-12-22')\n"
+            + "  dueDateTime:new Date('2010-12-22')\n"
             + "  description: 'cc dd ee'\n"
             + "   }"
         ]

@@ -448,16 +448,16 @@ TestCase {
             + "  endDateTime: new Date(2011, 12, 8, 14, 15)\n"
             + "}\n", modelTests);
 
-        var event3 = utility.create_testobject("import QtQuick 2.0\n"
+        var todo3 = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
-            + "Event {\n"
+            + "Todo {\n"
             + "  startDateTime: new Date(2011, 12, 8, 14, 25, 0)\n"
             + "}\n", modelTests);
 
-        var event4 = utility.create_testobject("import QtQuick 2.0\n"
+        var todo4 = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
-            + "Event {\n"
-            + "  endDateTime: new Date(2011, 12, 8, 14, 45)\n"
+            + "Todo {\n"
+            + "  dueDateTime: new Date(2011, 12, 8, 14, 45)\n"
             + "}\n", modelTests);
 
         var event5 = utility.create_testobject("import QtQuick 2.0\n"
@@ -471,9 +471,9 @@ TestCase {
         utility.waitModelChange()
         organizerModel.saveItem(event2);
         utility.waitModelChange()
-        organizerModel.saveItem(event3);
+        organizerModel.saveItem(todo3);
         utility.waitModelChange()
-        organizerModel.saveItem(event4);
+        organizerModel.saveItem(todo4);
         utility.waitModelChange()
         organizerModel.saveItem(event5);
         utility.waitModelChange()
@@ -523,7 +523,7 @@ TestCase {
 
         var event0 = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
-            + "Event {\n"
+            + "Todo {\n"
             + "  startDateTime: new Date(2011, 12, 8, 1)\n"
             + "}\n", modelTests);
 
@@ -604,11 +604,13 @@ TestCase {
             "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "   startDateTime:'2011-10-25'\n"
+            + "   endDateTime:'2011-10-26'\n"
             + "   allDay: false\n"
             + "   }",
             "import QtOrganizer 5.0 \n"
             + "   Event {\n"
             + "   startDateTime:'2011-10-26'\n"
+            + "   endDateTime:'2011-10-27'\n"
             + "   allDay: true\n"
             + "   }"
         ]

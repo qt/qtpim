@@ -87,8 +87,8 @@ public:
     bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QJsonObject *object) const;
 
     // filter handling
-    bool singleFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
-    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
+    bool singleFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const;
+    bool compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const;
 
     // notification handling
     QString jsonDbNotificationObjectToOrganizerType(const QJsonObject &object) const;
@@ -101,6 +101,12 @@ public:
     const QStringList storageLocationsFlagToStrings(const QOrganizerAbstractRequest::StorageLocations storageLocationsFlag);
     QOrganizerAbstractRequest::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
     QOrganizerAbstractRequest::StorageLocations storageLocationListToFlag(const QList<QOrganizerAbstractRequest::StorageLocation> storageLocationsList);
+
+    int supportedItemTypeFlag() const;
+    bool itemTypeFlagToJsonDbEventQuery(const int &flag, QString *jsonDbQueryStr);
+    bool itemTypeFlagToJsonDbTodoQuery(const int &flag, QString *jsonDbQueryStr);
+
+    bool createJsonDbQuery(const QOrganizerItemFilter &filter, const QDateTime &startTime, const QDateTime &endTime, QList<QString> *jsonDbQueryList);
 
 private:
     void itemVersionToJsonDbVersion(const QOrganizerItemVersion &itemVersion, QString *jsonDbVersion) const;
@@ -129,7 +135,7 @@ private:
     // separate filter type specific handling
     bool collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
     bool idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
-    bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
+    bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const;
     bool isSupportedDetailFilter(
         const QOrganizerItemDetailFilter &filter, QOrganizerItemDetail::DetailType detailType, int detailFieldName) const;
     QString createMatchFlagQuery(const QString &value, QOrganizerItemFilter::MatchFlags flags) const;

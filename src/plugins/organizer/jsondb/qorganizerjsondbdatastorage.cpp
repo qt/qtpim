@@ -519,21 +519,19 @@ void QOrganizerJsonDbDataStorage::handleItemsRequest()
         // break;
     case FetchItemIds:
     {
-        // TODO: We should use jsondb query to correctly fetch items within certain
-        // time period. Then it would be enough to get just a list of uuids from db
+        // TODO: it would be enough to get just a list of uuids from db
         // For now we fetch the whole item, even though more optimal would be to fetch
         // only uuid, startdate and enddate fields
 
         // for now, this is common for FetchItems and FetchItemIds
-        jsonDbQuery = QOrganizerJsonDbStr::jsonDbQueryAllItems();
-        //Apply Filter and get jsondb query expression
-        QString filterString;
-        if (m_converter.compoundFilterToJsondbQuery(m_filter, &filterString)) {
-            jsonDbQuery += filterString;
-
-            foreach (QOrganizerAbstractRequest::StorageLocation location, m_availableStorageLocations) {
-                if (m_fetchFromStorageLocations & location)
-                    makeJsonDbRequest(JsonDbReadRequest, 0, location, jsonDbQuery);
+        // Apply Filter and get jsondb query expression
+        QList<QString> jsonDbQueryList;
+        if (m_converter.createJsonDbQuery(m_filter, m_start, m_end, &jsonDbQueryList)) {
+            foreach (const QString &jsonDbQuery, jsonDbQueryList) {
+                foreach (QOrganizerAbstractRequest::StorageLocation location, m_availableStorageLocations) {
+                    if (m_fetchFromStorageLocations & location)
+                        makeJsonDbRequest(JsonDbReadRequest, 0, location, jsonDbQuery);
+                }
             }
         } else {
             *m_error = QOrganizerManager::BadArgumentError;
@@ -581,10 +579,16 @@ void QOrganizerJsonDbDataStorage::handleItemsResponse(QOrganizerManager::Error e
         for (int i = 0; i < results.size(); ++i) {
             QOrganizerItem item;
             if (m_converter.jsonDbObjectToItem(results.at(i), &item, m_converter.storageLocationStringToEnum(request->partition()))) {
-                // FIXME: Comparing item dates should be done in database.
-                if (QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end)
-                        || (m_fetchType == FetchParents && !item.detail(QOrganizerItemDetail::TypeRecurrence).isEmpty()))
-                    m_items.append(item);
+                if (m_start.isValid() || m_end.isValid()) {
+                    QOrganizerItemType::ItemType itemType = item.type();
+                    if ((QOrganizerItemType::TypeTodo == itemType || QOrganizerItemType::TypeTodoOccurrence == itemType)
+                        && !QOrganizerManagerEngine::isItemBetweenDates(item, m_start, m_end)) {
+                            continue;
+                    }
+                }
+                // if m_fetchType is FetchParents, items are always added to m_items, because m_start and m_end
+                // are default constructed QDateTimes
+                m_items.append(item);
             }
         }
     } else {

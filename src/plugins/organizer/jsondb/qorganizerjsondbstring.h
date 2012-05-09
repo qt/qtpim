@@ -80,6 +80,13 @@ public:
 
     // JsonDb query strings
     inline const static QString jsonDbQueryAllItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
+    inline const static QString jsonDbQueryAllEventItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventOccurrence\"]]"); }
+    inline const static QString jsonDbQueryEventTypeItems() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.Event\"]"); }
+    inline const static QString jsonDbQueryEventOccurenceTypeItems() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.EventOccurrence\"]"); }
+    inline const static QString jsonDbQueryAllTodoItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
+    inline const static QString jsonDbQueryTodoTypeItems() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.Todo\"]"); }
+    inline const static QString jsonDbQueryTodoOccurenceTypeItems() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.TodoOccurrence\"]"); }
+
     inline const static QString jsonDbQueryAllCollections() { return QStringLiteral("[?_type=\"com.nokia.mt.organizer.Collection\"]"); }
     inline const static QString jsonDbQueryParentItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.Todo\"]][?recurrenceDates exists | recurrenceRules exists | exceptionDates exists | exceptionRules exists]"); }
     inline const static QString jsonDbQueryOccurrenceItems() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.TodoOccurrence\"]]"); }
@@ -92,6 +99,8 @@ public:
     inline const static QString jsonDbQueryUuidsTemplate() { return QStringLiteral("[?_uuid in [%1]]"); }
 
     inline const static QString jsonDbNotificationQuery() { return QStringLiteral("[?_type in [\"com.nokia.mt.organizer.Event\", \"com.nokia.mt.organizer.EventView\", \"com.nokia.mt.organizer.EventOccurrence\", \"com.nokia.mt.organizer.Todo\", \"com.nokia.mt.organizer.TodoOccurrence\", \"com.nokia.mt.organizer.Collection\"]]"); }
+    inline const static QString jsonDbQueryEventStartDateTimeTemplate() { return QStringLiteral("[?startDateTime<=\"%1\"]"); }
+    inline const static QString jsonDbQueryEventEndDateTimeTemplate() { return QStringLiteral("[?endDateTime>=\"%1\"]"); }
 
     // collections
     inline const static QString jsonDbCollectionType() { return QStringLiteral("com.nokia.mt.organizer.Collection"); }

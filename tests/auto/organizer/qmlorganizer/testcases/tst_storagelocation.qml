@@ -202,7 +202,7 @@ TestCase {
 
         // Save eventOnUserData and confirm it to be visible on UserDataStorage-storageLocation
         var eventOnUserData = utility.create_testobject("import QtOrganizer 5.0 \n"
-            + "  Event { displayLabel: 'item 1' \n startDateTime:new Date('2010-10-22') }", storageLocationTests)
+            + "  Event { displayLabel: 'item 1' \n startDateTime:new Date('2010-10-22') \n endDateTime:new Date('2010-10-23')}", storageLocationTests)
         modelChangedSpy.clear();
         organizerModel.saveItem(eventOnUserData);// should be by default OrganizerModel.UserDataStorage
         modelChangedSpy.wait(spyWaitDelay);

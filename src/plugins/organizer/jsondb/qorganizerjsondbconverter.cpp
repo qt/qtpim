@@ -1549,7 +1549,7 @@ QString QOrganizerJsonDbConverter::enumToString(const QOrganizerJsonDbEnumConver
     return conversionData[0].enumStr;
 }
 
-bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const
 {
     bool isValidFilter = true;
     switch (filter.type()) {
@@ -1560,10 +1560,13 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
             //query filter1 filter2 filter3 ...
             //query [?definition="value"][?definition="value"][?definition="value"]
             QString filterStr;
-            if (compoundFilterToJsondbQuery(filter, &filterStr))
+            int subtypeFilterFlag = supportedItemTypeFlag();
+            if (compoundFilterToJsondbQuery(filter, &filterStr, &subtypeFilterFlag)) {
                 *jsonDbQueryStr += filterStr;
-            else //For intersection filter, single filter invalid means empty result from jsondb query
+                *typeFilterFlag = *typeFilterFlag & subtypeFilterFlag;
+            } else {//For intersection filter, single filter invalid means empty result from jsondb query
                 isValidFilter = false;
+            }
         }
         return isValidFilter;
     }
@@ -1571,13 +1574,16 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
         const QOrganizerItemUnionFilter uf(filter);
         const QList<QOrganizerItemFilter> filterList = uf.filters();
         int validFilterCount = 0;
+        *typeFilterFlag = 0;
         foreach (const QOrganizerItemFilter &filter, filterList){
             //query filter1 filter2 filter3 ...
             //query [?definition="value" | definition="value" | definition="value"]
             QString filterStr;
-            if (compoundFilterToJsondbQuery(filter, &filterStr)) {
+            int subtypeFilterFlag = supportedItemTypeFlag();
+            if (compoundFilterToJsondbQuery(filter, &filterStr, &subtypeFilterFlag)) {
                 *jsonDbQueryStr += filterStr;
                 validFilterCount ++;
+                *typeFilterFlag = *typeFilterFlag | subtypeFilterFlag;
             } else {//For union filter, single filter invalid means we could skip this filter
                 continue;
             }
@@ -1589,7 +1595,7 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
         return isValidFilter;
     }
     default:
-        isValidFilter = singleFilterToJsondbQuery(filter, jsonDbQueryStr);
+        isValidFilter = singleFilterToJsondbQuery(filter, jsonDbQueryStr, typeFilterFlag);
         break;
     }
 
@@ -1599,7 +1605,7 @@ bool QOrganizerJsonDbConverter::compoundFilterToJsondbQuery(const QOrganizerItem
     return isValidFilter;
 }
 
-bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString *jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFilter& filter, QString *jsonDbQueryStr, int *typeFilterFlag) const
 {
     bool isValidFilter = true;
     switch (filter.type()) {
@@ -1610,7 +1616,7 @@ bool QOrganizerJsonDbConverter::singleFilterToJsondbQuery(const QOrganizerItemFi
         isValidFilter = idFilterToJsondbQuery(filter, jsonDbQueryStr);
         break;
     case QOrganizerItemFilter::DetailFilter:
-        isValidFilter = detailFilterToJsondbQuery(filter, jsonDbQueryStr);
+        isValidFilter = detailFilterToJsondbQuery(filter, jsonDbQueryStr, typeFilterFlag);
         break;
     default:
         break;
@@ -1751,7 +1757,7 @@ bool QOrganizerJsonDbConverter::isSupportedDetailFilter(
     return isValidFilter;
 }
 
-bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const
+bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const
 {
     /*
     Jsondb backend specific notes related to OrganizerItemDetailFilter
@@ -1885,6 +1891,7 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
             jsonDbQueryStr->append(equalsQueryTemplate
                 .arg(QOrganizerJsonDbStr::jsonDbType())
                 .arg(QOrganizerJsonDbStr::jsonDbSchemaPrefix() + enumToString(organizerItemTypeMap(), df.value().toInt())));
+            *typeFilterFlag = 0x01 << (df.value().toInt() - QOrganizerItemType::TypeUndefined);
 
         } else if (QOrganizerItemDetail::TypeTag == detailType
             && QOrganizerItemTag::FieldTag == detailField) {
@@ -1970,6 +1977,71 @@ QString QOrganizerJsonDbConverter::createMatchFlagQuery(const QString &value, QO
             queryWithWildCards += QStringLiteral("i");
     }
     return queryWithWildCards;
+}
+
+int QOrganizerJsonDbConverter::supportedItemTypeFlag() const
+{
+//     int typeFilterFlag = 0x01 << QOrganizerItemType::TypeUndefined - QOrganizerItemType::TypeUndefined
+//                        + 0x01 << (QOrganizerItemType::TypeEvent - QOrganizerItemType::TypeUndefined)
+//                        + 0x01 << (QOrganizerItemType::TypeEventOccurrence - QOrganizerItemType::TypeUndefined);
+//                        + 0x01 << (QOrganizerItemType::TypeTodo - QOrganizerItemType::TypeUndefined);
+//                        + 0x01 << (QOrganizerItemType::TypeTodoOccurrence - QOrganizerItemType::TypeUndefined);
+    return 0xf1;//typeFilterFlag;
+}
+
+bool QOrganizerJsonDbConverter::itemTypeFlagToJsonDbEventQuery(const int &flag, QString *jsonDbQueryStr)
+{
+    if (!flag)
+        return false;
+    if (supportedItemTypeFlag() == flag)
+        *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryAllEventItems() + *jsonDbQueryStr;
+    else if (!((flag >> (QOrganizerItemType::TypeEvent - QOrganizerItemType::TypeUndefined)) & 0x01)
+             && !((flag >> (QOrganizerItemType::TypeEventOccurrence - QOrganizerItemType::TypeUndefined)) & 0x01)) {
+        return false;
+    }
+    return true;
+}
+
+bool QOrganizerJsonDbConverter::itemTypeFlagToJsonDbTodoQuery(const int &flag, QString *jsonDbQueryStr)
+{
+    if (!flag)
+        return false;
+    if (supportedItemTypeFlag() == flag)
+        *jsonDbQueryStr = QOrganizerJsonDbStr::jsonDbQueryAllTodoItems() + *jsonDbQueryStr;
+    else if (!((flag >> (QOrganizerItemType::TypeTodo - QOrganizerItemType::TypeUndefined)) & 0x01)
+             && !((flag >> (QOrganizerItemType::TypeTodoOccurrence - QOrganizerItemType::TypeUndefined)) & 0x01)) {
+        return false;
+    }
+    return true;
+}
+
+bool QOrganizerJsonDbConverter::createJsonDbQuery(const QOrganizerItemFilter &filter, const QDateTime &startTime, const QDateTime &endTime, QList<QString> *jsonDbQueryList)
+{
+    QString filterString;
+    int typeFilterFlag = supportedItemTypeFlag();
+    if (compoundFilterToJsondbQuery(filter, &filterString, &typeFilterFlag)) {
+        if (startTime.isValid() || endTime.isValid()) {
+            QString eventJsonDbQuery;
+            if (itemTypeFlagToJsonDbEventQuery(typeFilterFlag, &eventJsonDbQuery)) {
+                eventJsonDbQuery += filterString;
+                if (startTime.isValid())
+                    eventJsonDbQuery += QOrganizerJsonDbStr::jsonDbQueryEventEndDateTimeTemplate().arg(startTime.toUTC().toString(Qt::ISODate));
+                if (endTime.isValid())
+                    eventJsonDbQuery += QOrganizerJsonDbStr::jsonDbQueryEventStartDateTimeTemplate().arg(endTime.toUTC().toString(Qt::ISODate));
+                jsonDbQueryList->append(eventJsonDbQuery);
+            }
+
+            if (itemTypeFlagToJsonDbTodoQuery(typeFilterFlag, &filterString))
+                jsonDbQueryList->append(filterString);
+        } else {
+            //No time period terms and create one request for both todo and event
+            if (supportedItemTypeFlag() == typeFilterFlag)
+                filterString = QOrganizerJsonDbStr::jsonDbQueryAllItems() + filterString;
+            jsonDbQueryList->append(filterString);
+        }
+        return true;
+    }
+    return false;
 }
 
 QTORGANIZER_END_NAMESPACE

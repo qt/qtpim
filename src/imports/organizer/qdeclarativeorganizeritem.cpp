@@ -346,7 +346,7 @@ void QDeclarativeOrganizerItem::clearDetails()
 
     Saves this OrganizerItem if the item has been modified.
 
-    \sa  OrganizerItem::modified
+    \sa OrganizerItem::modified
  */
 void QDeclarativeOrganizerItem::save()
 {

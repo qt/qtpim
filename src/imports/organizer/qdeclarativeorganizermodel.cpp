@@ -311,7 +311,7 @@ void QDeclarativeOrganizerModel::doUpdate()
 
   Cancel the running organizer model content update request.
 
-  \sa OrganizerModel::autoUpdate  OrganizerModel::update
+  \sa OrganizerModel::autoUpdate, OrganizerModel::update
   */
 void QDeclarativeOrganizerModel::cancelUpdate()
 {

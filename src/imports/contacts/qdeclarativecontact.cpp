@@ -320,7 +320,7 @@ void QDeclarativeContact::clearDetails()
 
     Saves this Contact if the contact has been modified.
 
-    \sa  Contact::modified
+    \sa Contact::modified
 */
 void QDeclarativeContact::save()
 {

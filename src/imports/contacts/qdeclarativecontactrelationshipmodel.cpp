@@ -66,7 +66,7 @@ QTCONTACTS_BEGIN_NAMESPACE
     At the moment only data role provided by the model is \c relationship (\l Relationship).
     Through that one can access any data provided by the Relationship element.
 
-   \sa Relationship {QContactRelationship}
+   \sa Relationship, {QContactRelationship}
  */
 
 class QDeclarativeContactRelationshipModelPrivate

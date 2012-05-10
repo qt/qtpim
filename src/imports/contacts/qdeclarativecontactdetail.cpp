@@ -55,7 +55,7 @@
    \sa QContactDetail
 
     The ContactDetail element is part of the \b{QtContacts} module.
- */
+*/
 
 QTCONTACTS_BEGIN_NAMESPACE
 
@@ -90,7 +90,7 @@ void QDeclarativeContactDetail::setDetail(const QContactDetail& detail)
 /*!
   \qmlproperty list<int> ContactDetail::contexts
   This property holds one or more contexts that this detail is associated with.
-  */
+*/
 QList<int> QDeclarativeContactDetail::contexts() const
 {
     return m_detail.contexts();
@@ -105,7 +105,7 @@ void QDeclarativeContactDetail::setContexts(const QList<int>& contexts)
 
   This property indicates whether or not this detail is writable.
   This property is read only.
-  */
+*/
 bool QDeclarativeContactDetail::readOnly() const
 {
     return m_detail.accessConstraints().testFlag(QContactDetail::ReadOnly);
@@ -116,7 +116,7 @@ bool QDeclarativeContactDetail::readOnly() const
 
   This property indicates whether or not this detail is removale.
   This property is read only.
-  */
+*/
 bool QDeclarativeContactDetail::removable() const
 {
     return !m_detail.accessConstraints().testFlag(QContactDetail::Irremovable);
@@ -126,7 +126,7 @@ bool QDeclarativeContactDetail::removable() const
   \qmlproperty string ContactDetail::detailUri
 
   This property holds the unique URI of the detail if one exists.
-  */
+*/
 QString QDeclarativeContactDetail::detailUri() const
 {
     return m_detail.detailUri();
@@ -140,7 +140,7 @@ void QDeclarativeContactDetail::setDetailUri(const QString& detailUri)
   \qmlproperty list<string> ContactDetail::linkedDetailUris
 
   This property holds a list of detail URIs to which this detail is linked.
-  */
+*/
 QStringList QDeclarativeContactDetail::linkedDetailUris() const
 {
     return m_detail.linkedDetailUris();
@@ -199,7 +199,7 @@ QDeclarativeContactDetail::DetailType QDeclarativeContactDetail::detailType() co
   This property holds the list of all fields which this detail supports.
 
   This property is read only.
-  */
+*/
 QList<int> QDeclarativeContactDetail::fields() const
 {
     return m_detail.values().keys();
@@ -228,7 +228,7 @@ bool QDeclarativeContactDetail::setValue(int field, const QVariant& v)
 
     Removes the value stored in this detail for the given \a field. Returns true if a value was stored for
     the given field and the operation succeeded, and false otherwise.
- */
+*/
 bool QDeclarativeContactDetail::removeValue(int field)
 {
     bool ok = m_detail.removeValue(field);
@@ -325,32 +325,32 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
    Versit \reg is a trademark of the Internet Mail Consortium.
    This element is part of the \b{QtContacts} module.
- */
+*/
 /*!
   \qmlproperty string Address::street
 
   This property holds the street number and street name of the address.
-  */
+*/
 /*!
   \qmlproperty string Address::locality
 
   This property holds the name of the city, town or suburb of the address.
-  */
+*/
 /*!
   \qmlproperty string Address::region
 
   This property holds the name or identifier of the state, province or region of the address.
-  */
+*/
 /*!
   \qmlproperty string Address::postcode
 
   This property holds the postal code for the address.
-  */
+*/
 /*!
   \qmlproperty string Address::country
 
   This property holds the name of the country of the address.
-  */
+*/
 /*!
   \qmlproperty list<variant> Address::subTypes
 
@@ -362,14 +362,14 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Address.Domestic - An address for domestic mail delivery.
   \li Address.International - An address for international mail delivery.
   \endlist
-  */
+*/
 /*!
   \qmlproperty string Address::postOfficeBox
 
   This property holds the post office box identifier of the mailing address.
 
   This element is part of the \b{QtContacts} module.
-  */
+*/
 
 /* ==================== QDeclarativeContactAnniversary ======================= */
 
@@ -389,24 +389,24 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Anniversary::calendarId
 
   This property holds the id of the calendar event.
-  */
+*/
 /*!
   \qmlproperty date Anniversary::originalDate
 
   This property holds the original anniversary date value.
   This property is either a date, or a date and time.
-  */
+*/
 /*!
   \qmlproperty string Anniversary::event
 
   This property holds the name of the event value.
-  */
+*/
 /*!
   \qmlproperty enumeration Anniversary::subType
 
@@ -420,7 +420,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Employment - A start of employment anniversary.
   \li Memorial - An event of sentimental significance.
   \endlist
-  */
+*/
 
 /* ==================== QDeclarativeContactAvatar ======================= */
 /*!
@@ -436,18 +436,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Avatar::imageUrl
 
   This property holds the URL of the avatar image.
-  */
+*/
 /*!
   \qmlproperty string Avatar::videoUrl
 
   This property holds the URL of a video avatar.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactBirthday ======================= */
@@ -463,13 +463,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty date Birthday::birthday
 
   This property holds the birthday date. The property value is either a date, or a date and time.
-  */
+*/
 
 /* ==================== QDeclarativeContactDisplayLabel ======================= */
 /*!
@@ -484,13 +484,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string DisplayLabel::label
 
   This property holds the value of the display label.
-  */
+*/
 
 /* ==================== QDeclarativeContactEmailAddress ======================= */
 /*!
@@ -505,13 +505,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string EmailAddress::emailAddress
 
   This property holds the email address value.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactFamily ======================= */
@@ -529,19 +529,19 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Family::spouse
 
   This property holds the name of a spouse.
-  */
+*/
 
 /*!
   \qmlproperty list<string> Family::children
 
   This property holds the the names of children.
-  */
+*/
 
 /* ==================== QDeclarativeContactFavorite ======================= */
 /*!
@@ -558,19 +558,19 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty bool Favorite::favorite
 
   This property holds the value that indicates whether a contact is a favorite.
-  */
+*/
 
 /*!
   \qmlproperty int Favorite::index
 
   This property holds the index of the favorite contact (which determines the order they appear).
-  */
+*/
 
 
 /* ==================== QDeclarativeContactGender ======================= */
@@ -586,7 +586,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty enumeration Gender::gender
@@ -597,7 +597,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Gender.Male
   \li Gender.Female
   \endlist
-  */
+*/
 
 
 /* ==================== QDeclarativeContactGeoLocation ======================= */
@@ -621,53 +621,53 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string GeoLocation::label
 
   This property holds the location label.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::latitude
 
   This property holds the value of the latitude.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::longitude
 
   This property holds the value of the longitude.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::accuracy
 
   This property holds the value of the location (latitude/longitude) accuracy.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::altitude
 
   This property holds the value of the altitude.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::altitudeAccuracy
 
   This property holds the value of the accuracy of the altitude.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::heading
 
   This property holds the value of the heading.
-  */
+*/
 /*!
   \qmlproperty double GeoLocation::speed
 
   This property holds the value of the speed.
-  */
+*/
 /*!
   \qmlproperty date GeoLocation::timestamp
 
   This property holds the value of the timestamp of the location information.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactGlobalPresence ======================= */
@@ -689,18 +689,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty date GlobalPresence::timestamp
 
   This property holds the timestamp value of the GlobalPresence.
-  */
+*/
 /*!
   \qmlproperty string GlobalPresence::nickname
 
   This property holds the nickname value of the GlobalPresence.
-  */
+*/
 /*!
   \qmlproperty enumeration GlobalPresence::state
 
@@ -715,24 +715,24 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
   \li Presence.Offline - Signifies that the contact is offline.
   \endlist
-  */
+*/
 /*!
   \qmlproperty string GlobalPresence::stateText
 
   This property holds the text corresponding to the current presence state.
-  */
+*/
 /*!
   \qmlproperty url GlobalPresence::imageUrl
 
   This property holds the last-known status image url of the contact for the online account
    about which this detail stores presence information.
-  */
+*/
 /*!
   \qmlproperty string GlobalPresence::customMessage
 
   This property holds the custom status message from the contact for the online account
    about which this detail stores presence information.
-  */
+*/
 
 /* ==================== QDeclarativeContactGuid ======================= */
 /*!
@@ -747,13 +747,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Guid::guid
 
   This property holds the value of the GUID.
-  */
+*/
 
 /* ==================== QDeclarativeContactHobby ======================= */
 /*!
@@ -768,13 +768,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Hobby::hobby
 
   This property holds the name of the hobby.
-  */
+*/
 
 /* ==================== QDeclarativeContactName ======================= */
 /*!
@@ -794,33 +794,33 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Name::prefix
 
   This property holds the prefix name part of the name.
-  */
+*/
 /*!
   \qmlproperty string Name::firstName
 
   This property holds the first name part of the name.
-  */
+*/
 /*!
   \qmlproperty string Name::middleName
 
   This property holds the middle name part of the name.
-  */
+*/
 /*!
   \qmlproperty string Name::lastName
 
   This property holds the last name part of the name.
-  */
+*/
 /*!
   \qmlproperty string Name::suffix
 
   This property holds the suffix part of the name.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactNickname ======================= */
@@ -837,13 +837,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Nickname::nickname
 
   This property holds the value of the nickname.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactNote ======================= */
@@ -859,13 +859,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Note::note
 
   This property holds the value of the note.
-  */
+*/
 
 
 /* ==================== QDeclarativeContactOnlineAccount ======================= */
@@ -884,23 +884,23 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string OnlineAccount::accountUri
 
   This property holds the value of the account uri.
-  */
+*/
 /*!
   \qmlproperty string OnlineAccount::serviceProvider
 
   This property holds the value of the account service provider name.
-  */
+*/
 /*!
   \qmlproperty list<string> OnlineAccount::capabilities
 
   This property holds the value of the account capabilities.
-  */
+*/
 /*!
   \qmlproperty list<variant> OnlineAccount::subTypes
 
@@ -913,7 +913,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li OnlineAccount.Impp - indicating this online account supports IMPP.
   \li OnlineAccount.VideoShare - indicating this online account supports VideoShare.
   \endlist
-  */
+*/
 
 /* ==================== QDeclarativeContactOrganization ======================= */
 /*!
@@ -935,43 +935,43 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string Organization::name
 
   This property holds the value of the organization name.
-  */
+*/
 /*!
   \qmlproperty url Organization::logoUrl
 
   This property holds the URL of the organization logo image.
-  */
+*/
 /*!
   \qmlproperty list<string> Organization::department
 
   This property holds the value of the department name.
-  */
+*/
 /*!
   \qmlproperty string Organization::location
 
   This property holds the value of the location of the organization.
-  */
+*/
 /*!
   \qmlproperty string Organization::role
 
   This property holds the value of the contact's role in the organization.
-  */
+*/
 /*!
   \qmlproperty string Organization::title
 
   This property holds the value of the contact's title in the organization.
-  */
+*/
 /*!
   \qmlproperty string Organization::assistantName
 
   This property holds the value of the name of the contact's assistant.
-  */
+*/
 
 /* ==================== QDeclarativeContactPhoneNumber ======================= */
 /*!
@@ -987,13 +987,13 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty string PhoneNumber::number
 
   This property holds the value of the phone number.
-  */
+*/
 
 /*!
   \qmlproperty list<variant> PhoneNumber::subTypes
@@ -1015,7 +1015,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li PhoneNumber.Assistant - indicating this phone number is the number of an assistant.
   \li PhoneNumber.DtmfMenu - indicating this phone number supports DTMF-controlled voice menu navigation.
   \endlist
-  */
+*/
 
 /* ==================== QDeclarativeContactPresence ======================= */
 /*!
@@ -1035,18 +1035,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty date Presence::timestamp
 
   This property holds the timestamp value of the Presence.
-  */
+*/
 /*!
   \qmlproperty string Presence::nickname
 
   This property holds the nickname value of the Presence.
-  */
+*/
 /*!
   \qmlproperty enumeration Presence::state
 
@@ -1061,24 +1061,24 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Presence.ExtendedAway - Signifies that the contact is away for an extended period of time.
   \li Presence.Offline - Signifies that the contact is offline.
   \endlist
-  */
+*/
 /*!
   \qmlproperty string Presence::stateText
 
   This property holds the text corresponding to the current presence state.
-  */
+*/
 /*!
   \qmlproperty url Presence::imageUrl
 
   This property holds the last-known status image url of the contact for the online account
    about which this detail stores presence information.
-  */
+*/
 /*!
   \qmlproperty string Presence::customMessage
 
   This property holds the custom status message from the contact for the online account
    about which this detail stores presence information.
-  */
+*/
 
 
 
@@ -1096,25 +1096,25 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 
 /*!
   \qmlproperty url Ringtone::audioRingtoneUrl
 
   This property holds the value of the URL for an audio ringtone.
-  */
+*/
 /*!
   \qmlproperty url Ringtone::videoRingtoneUrl
 
   This property holds the value of the URL for a video ringtone.
-  */
+*/
 
 // Not in use (note the missing ! below)
 /*
   \qmlproperty url Ringtone::vibrationRingtoneUrl
 
   This property holds the value of the URL for a vibration ringtone.
-  */
+*/
 
 /* ==================== QDeclarativeContactSyncTarget ======================= */
 /*!
@@ -1128,14 +1128,15 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \li SyncTarget.SyncTarget
    \endlist
 
-  \sa QContactSyncTarget
-  This element is part of the \b{QtContacts} module.
- */
+   \sa QContactSyncTarget
+
+   This element is part of the \b{QtContacts} module.
+*/
 /*!
   \qmlproperty string SyncTarget::syncTarget
 
   This property holds the sync target value.
-  */
+*/
 
 /* ==================== QDeclarativeContactTag ======================= */
 /*!
@@ -1148,14 +1149,15 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \list
    \li Tag.Tag
    \endlist
-  \sa QContactTag
-  This element is part of the \b{QtContacts} module.
- */
+   \sa QContactTag
+
+   This element is part of the \b{QtContacts} module.
+*/
 /*!
   \qmlproperty string Tag::tag
 
   This property holds the value of the tag.
-  */
+*/
 
 /* ==================== QDeclarativeContactTimestamp ======================= */
 /*!
@@ -1171,17 +1173,17 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 /*!
   \qmlproperty date Timestamp::lastModified
 
   This property holds the value of the last modified timestamp.
-  */
+*/
 /*!
   \qmlproperty date Timestamp::created
 
   This property holds the value of the timestamp a contact was created.
-  */
+*/
 
 /* ==================== QDeclarativeContactUrl ======================= */
 /*!
@@ -1197,12 +1199,12 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \endlist
 
   This element is part of the \b{QtContacts} module.
- */
+*/
 /*!
   \qmlproperty string Url::url
 
   This property holds the value of the URL.
-  */
+*/
 /*!
   \qmlproperty enumeration Url::subType
 
@@ -1213,7 +1215,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Url.HomePage - indicating this url is a contact's home page.
   \li Url.Favourite - indicating this url is one of the contact's favourite URLs (or bookmarks).
   \endlist
-  */
+*/
 
 
 /* ==================== QDeclarativeContactExtendedDetail ======================= */
@@ -1223,19 +1225,19 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
     \ingroup qml-contacts
 
     This element is part of the \b{QtContacts 5.0} module.
- */
+*/
 
 /*!
     \qmlproperty string ExtendedDetail::name
 
     This property holds the name of the extended detail.
- */
+*/
 
 /*!
     \qmlproperty variant ExtendedDetail::data
 
     This property holds the data of the extended detail.
- */
+*/
 
 #include "moc_qdeclarativecontactdetail_p.cpp"
 

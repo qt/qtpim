@@ -44,9 +44,9 @@
 #include <QMetaObject>
 #include <QDateTime>
 #include <QMap>
-#include <QtDeclarative/qdeclarativeengine.h>
-#include <QtDeclarative/qdeclarativecomponent.h>
-#include <QDeclarativeListProperty>
+#include <QtQml/qqmlengine.h>
+#include <QtQml/qqmlcomponent.h>
+#include <QQmlListProperty>
 
 
 #include "qdeclarativecontactmodel_p.h"
@@ -99,7 +99,7 @@ private:
 
 private:
     // Engine is needed for instantiating declarative components
-    QDeclarativeEngine engine;
+    QQmlEngine engine;
 };
 
 tst_QDeclarativeContact::tst_QDeclarativeContact() {}
@@ -189,7 +189,7 @@ void tst_QDeclarativeContact::contact()
 void tst_QDeclarativeContact::contactModel()
 {
     //TODO
-//    QDeclarativeComponent component(&engine);
+//    QQmlComponent component(&engine);
 //    component.loadUrl(QUrl::fromLocalFile(SRCDIR "./data/contactmodel.qml"));
 
 //    QDeclarativeContactModel *contactModel = static_cast<QDeclarativeContactModel*>(component.create());
@@ -1071,7 +1071,7 @@ void tst_QDeclarativeContact::fetchHint()
 */
 QObject* tst_QDeclarativeContact::createComponent(const QString& componentString)
 {
-    QDeclarativeComponent component(&engine);
+    QQmlComponent component(&engine);
     component.setData(componentString.toLatin1(), QUrl::fromLocalFile(""));
     QObject* source_obj = component.create();
     if (!source_obj)

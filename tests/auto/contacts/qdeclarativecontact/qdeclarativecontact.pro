@@ -1,6 +1,6 @@
 include(../../auto.pri)
 
-QT += contacts declarative versit
+QT += contacts qml versit
 
 DEFINES+=IGNORE_METAOBJECTBUILDER_EXPORT 
 

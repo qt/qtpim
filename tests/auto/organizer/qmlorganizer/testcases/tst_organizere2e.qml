@@ -47,17 +47,25 @@ TestCase {
     id: test
     name: "OrganizerE2ETests"
 
-    OrganizerModel {
-        id: model
-        autoUpdate:true
-        startPeriod:'2009-01-01'
-        endPeriod:'2012-12-31'
+    property OrganizerModel model: {}
+    property SignalSpy spy: {}
+
+    function initTestCase() {
+        model = Qt.createQmlObject(
+              "import QtOrganizer 5.0;"
+            + "OrganizerModel {"
+            + "   startPeriod:'2009-01-01';"
+            + "   endPeriod:'2012-12-31'; }"
+            , test);
+
+        spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", test);
+        spy.target = model;
+        spy.signalName = "modelChanged";
     }
 
-    SignalSpy {
-        id: spy
-        signalName: "modelChanged"
-        target: model
+    function cleanup() {
+        model.destroy()
+        spy.destroy()
     }
 
     function test_megaitems_data() {
@@ -167,8 +175,6 @@ TestCase {
             compareViewToModel(qmlItems, model)
             cleanDatabase()
         }
-        model.destroy()
-        spy.destroy()
     }
 
 

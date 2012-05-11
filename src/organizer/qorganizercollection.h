@@ -89,7 +89,7 @@ public:
     QVariant metaData(const QString &key) const;
 
 private:
-    friend uint qHash(const QOrganizerCollection &key);
+    friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
     friend class QOrganizerManagerEngine;
     QSharedDataPointer<QOrganizerCollectionData> d;
 };

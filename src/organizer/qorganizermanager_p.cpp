@@ -156,13 +156,13 @@ void QOrganizerManagerData::loadFactories()
     loadStaticFactories();
 
     QFactoryLoader *l = loader();
-    QStringList keys = l->keys();
+    const QStringList keys = l->keyMap().values();
     if (!m_discovered || keys != m_pluginPaths) {
         m_discovered = true;
         m_pluginPaths = keys;
 
         for (int i = 0; i < keys.size(); ++i) {
-            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(l->instance(keys.at(i)));
+            QOrganizerManagerEngineFactory *f = qobject_cast<QOrganizerManagerEngineFactory *>(l->instance(i));
             if (f) {
                 const QString name = f->managerName();
 #if !defined QT_NO_DEBUG
@@ -183,8 +183,8 @@ void QOrganizerManagerData::loadFactories()
 #if !defined QT_NO_DEBUG
             if (showDebug && !f) {
                 qDebug() << "Unknown plugin!";
-                if (l->instance(keys.at(i)))
-                    qDebug() << "[qobject:" << l->instance(keys.at(i)) << "]";
+                if (const QObject *instance = l->instance(i))
+                    qDebug() << "[qobject:" << instance << "]";
             }
 #endif
         }

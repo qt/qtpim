@@ -1433,12 +1433,11 @@ void tst_QContactFilter::datastream_data()
 void tst_QContactFilter::traits()
 {
     QCOMPARE(sizeof(QContactFilter), sizeof(void *));
-    QTypeInfo<QContactFilter> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QContactFilter>::isComplex);
+    QVERIFY(!QTypeInfo<QContactFilter>::isStatic);
+    QVERIFY(!QTypeInfo<QContactFilter>::isLarge);
+    QVERIFY(!QTypeInfo<QContactFilter>::isPointer);
+    QVERIFY(!QTypeInfo<QContactFilter>::isDummy);
 
     QCOMPARE(sizeof(QContactDetailFilter), sizeof(void*));
     QCOMPARE(sizeof(QContactChangeLogFilter), sizeof(void*));
@@ -1447,12 +1446,11 @@ void tst_QContactFilter::traits()
 void tst_QContactFilter::sortTraits()
 {
     QCOMPARE(sizeof(QContactSortOrder), sizeof(void *));
-    QTypeInfo<QContactSortOrder> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QContactSortOrder>::isComplex);
+    QVERIFY(!QTypeInfo<QContactSortOrder>::isStatic);
+    QVERIFY(!QTypeInfo<QContactSortOrder>::isLarge);
+    QVERIFY(!QTypeInfo<QContactSortOrder>::isPointer);
+    QVERIFY(!QTypeInfo<QContactSortOrder>::isDummy);
 }
 
 

@@ -425,34 +425,31 @@ void tst_QOrganizerCollection::datastream()
 void tst_QOrganizerCollection::traits()
 {
     QVERIFY(sizeof(QOrganizerCollection) == sizeof(void *));
-    QTypeInfo<QOrganizerCollection> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QOrganizerCollection>::isComplex);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isStatic);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isLarge);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isPointer);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isDummy);
 }
 
 void tst_QOrganizerCollection::idTraits()
 {
     QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QTypeInfo<QOrganizerCollectionId> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QOrganizerCollection>::isComplex);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isStatic);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isLarge);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isPointer);
+    QVERIFY(!QTypeInfo<QOrganizerCollection>::isDummy);
 }
 
 void tst_QOrganizerCollection::localIdTraits()
 {
     QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QTypeInfo<QOrganizerCollectionId> ti;
-    QVERIFY(ti.isComplex); // unlike QContactLocalId (int typedef), we have a ctor
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QOrganizerCollectionId>::isComplex); // unlike QContactLocalId (int typedef), we have a ctor
+    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isStatic);
+    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isLarge);
+    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isPointer);
+    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isDummy);
 }
 
 QTEST_MAIN(tst_QOrganizerCollection)

@@ -250,7 +250,7 @@ QVariant QOrganizerCollection::metaData(const QString &key) const
     \relates QOrganizerCollection
     Returns the hash value for \a key.
  */
-uint qHash(const QOrganizerCollection &key)
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key)
 {
     uint hash = qHash(key.id());
     QMap<QOrganizerCollection::MetaDataKey, QVariant>::const_iterator i = key.d->m_metaData.constBegin();

@@ -590,6 +590,8 @@ void QDeclarativeOrganizerModel::componentComplete()
 
   This property holds the filter instance used by the organizer model.
 
+  Set filter property to 'null', when you want to reset it to default value.
+
   \sa Filter
   */
 QDeclarativeOrganizerItemFilter* QDeclarativeOrganizerModel::filter() const

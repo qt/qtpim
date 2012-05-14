@@ -58,7 +58,7 @@ class QDeclarativeContact : public QObject
     // basic information
     Q_PROPERTY (bool modified READ modified)
 
-    Q_PROPERTY(QDeclarativeContactType::ContactType type READ type NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactType::ContactType type READ type NOTIFY contactChanged)
     Q_PROPERTY (QString contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY (QString manager READ manager NOTIFY managerChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactDetail> contactDetails READ contactDetails NOTIFY contactChanged)
@@ -70,12 +70,15 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactDisplayLabel*  displayLabel READ displayLabel NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactEmailAddress*  email READ email NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactEmailAddress> emails READ emails NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
+    Q_PROPERTY (QQmlListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactFamily*  family READ family NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactFavorite*  favorite READ favorite NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactGender*  gender READ gender NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactGeoLocation*  geolocation READ geolocation NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactGlobalPresence*  globalPresence READ globalPresence NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactGuid*  guid READ guid NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactName*  name READ name NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactNickname*  nickname READ nickname  NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactNote*  note READ note NOTIFY contactChanged)
@@ -90,11 +93,8 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactTag*  tag READ tag NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactTimestamp*  timestamp READ timestamp NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeContactHobby*  hobby READ hobby NOTIFY contactChanged)
-    Q_PROPERTY (QDeclarativeContactExtendedDetail*  extendedDetail READ extendedDetail NOTIFY contactChanged)
-    Q_PROPERTY (QQmlListProperty<QDeclarativeContactExtendedDetail> extendedDetails READ extendedDetails NOTIFY contactChanged)
+    Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
@@ -127,12 +127,15 @@ public:
     QDeclarativeContactDisplayLabel* displayLabel();
     QDeclarativeContactEmailAddress*  email();
     QQmlListProperty<QDeclarativeContactEmailAddress>  emails();
+    QDeclarativeContactExtendedDetail*  extendedDetail();
+    QQmlListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
     QDeclarativeContactFamily*  family();
     QDeclarativeContactFavorite*  favorite();
     QDeclarativeContactGender*  gender();
     QDeclarativeContactGeoLocation*  geolocation();
     QDeclarativeContactGlobalPresence*  globalPresence();
     QDeclarativeContactGuid*  guid();
+    QDeclarativeContactHobby*  hobby();
     QDeclarativeContactName*  name();
     QDeclarativeContactNickname*  nickname();
     QDeclarativeContactNote*  note();
@@ -147,11 +150,8 @@ public:
     QDeclarativeContactTag*  tag();
     QDeclarativeContactTimestamp*  timestamp();
     QDeclarativeContactUrl*  url();
-    QDeclarativeContactVersion*  version();
     QQmlListProperty<QDeclarativeContactUrl>  urls();
-    QDeclarativeContactHobby*  hobby();
-    QDeclarativeContactExtendedDetail*  extendedDetail();
-    QQmlListProperty<QDeclarativeContactExtendedDetail>  extendedDetails();
+    QDeclarativeContactVersion*  version();
 
 protected:
     bool m_modified;

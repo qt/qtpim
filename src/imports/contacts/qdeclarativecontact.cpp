@@ -430,6 +430,33 @@ QQmlListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
 }
 
 /*!
+    \qmlproperty ExtendedDetail Contact::extendedDetail
+
+    This property holds the extended detail of the Contact object. In case a contact has several extended
+    details then the first one is returned.
+*/
+QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
+{
+    return getDetail<QDeclarativeContactExtendedDetail>(QDeclarativeContactDetail::ExtendedDetail);
+}
+
+/*!
+    \qmlproperty list<ExtendedDetail> Contact::extendedDetails
+
+    This property holds the extended details of the Contact object.
+*/
+QQmlListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
+{
+    return QQmlListProperty<QDeclarativeContactExtendedDetail>(
+                this,
+                0,
+                &list_property_append<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_count<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_at<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+                &list_property_clear<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>);
+}
+
+/*!
     \qmlproperty Family Contact::family
 
     This property holds the family detail of the Contact object.
@@ -487,6 +514,16 @@ QDeclarativeContactGlobalPresence*  QDeclarativeContact::globalPresence()
 QDeclarativeContactGuid*  QDeclarativeContact::guid()
 {
     return getDetail<QDeclarativeContactGuid>(QDeclarativeContactDetail::Guid);
+}
+
+/*!
+    \qmlproperty Hobby Contact::hobby
+
+    This property holds the hobby detail of the Contact object.
+*/
+QDeclarativeContactHobby*  QDeclarativeContact::hobby()
+{
+    return getDetail<QDeclarativeContactHobby>(QDeclarativeContactDetail::Hobby);
 }
 
 /*!
@@ -667,43 +704,6 @@ QQmlListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
 QDeclarativeContactVersion*  QDeclarativeContact::version()
 {
     return getDetail<QDeclarativeContactVersion>(QDeclarativeContactDetail::Version);
-}
-
-/*!
-    \qmlproperty Hobby Contact::hobby
-
-    This property holds the hobby detail of the Contact object.
-*/
-QDeclarativeContactHobby*  QDeclarativeContact::hobby()
-{
-    return getDetail<QDeclarativeContactHobby>(QDeclarativeContactDetail::Hobby);
-}
-
-/*!
-    \qmlproperty ExtendedDetail Contact::extendedDetail
-
-    This property holds the extended detail of the Contact object. In case a contact has several extended
-    details then the first one is returned.
-*/
-QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
-{
-    return getDetail<QDeclarativeContactExtendedDetail>(QDeclarativeContactDetail::ExtendedDetail);
-}
-
-/*!
-    \qmlproperty list<ExtendedDetail> Contact::extendedDetails
-
-    This property holds the extended details of the Contact object.
-*/
-QQmlListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
-{
-    return QQmlListProperty<QDeclarativeContactExtendedDetail>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_count<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_at<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_clear<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>);
 }
 
 // call-back functions for list property

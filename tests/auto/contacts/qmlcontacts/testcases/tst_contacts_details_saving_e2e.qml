@@ -183,6 +183,18 @@ ContactsSavingTestCase {
         compare(new Date(detail.birthday), new Date(2012, 12, 01))
     }
 
+    DisplayLabel {
+        id: displaylabel
+    }
+
+    function test_displaylabel() {
+        displaylabel.label = "Dummy"
+        contact.addDetail(displaylabel)
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.DisplayLabel)
+        compare(detail.label, "Dummy")
+    }
+
     EmailAddress {
         id: emailaddress
     }
@@ -421,18 +433,6 @@ ContactsSavingTestCase {
             var detail = contact.detail(ContactDetail.NickName)
             compare(detail.nickname, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
         }
-    }
-
-    DisplayLabel {
-        id: displaylabel
-    }
-
-    function test_displaylabel() {
-        displaylabel.label = "Dummy"
-        contact.addDetail(displaylabel)
-        saveAndRefreshContact()
-        var detail = contact.detail(ContactDetail.DisplayLabel)
-        compare(detail.label, "Dummy")
     }
 
     Note {

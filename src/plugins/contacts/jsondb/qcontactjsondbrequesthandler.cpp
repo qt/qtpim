@@ -651,8 +651,12 @@ void QContactJsonDbRequestHandler::onJsonDbRequestError(QtJsonDb::QJsonDbRequest
         if (contactError != QContactManager::NoError) {
             errorMap.insert(contactIndex, contactError);
         }
-        qWarning() << Q_FUNC_INFO << "Save request failed for contact index" << contactIndex
-                   << "and contact id" << contacts.at(contactIndex).id();
+        if (contacts.size() > contactIndex) {
+            qWarning() << Q_FUNC_INFO << "Save request failed for contact at index" << contactIndex
+                       << "and contact id" << contacts.at(contactIndex).id();
+        } else {
+            qWarning() << Q_FUNC_INFO << "Save request failed for contact at index" << contactIndex;
+        }
         if (m_requestMgr->isRequestCompleted(req)) {
             QWaitCondition* waitCondition = m_requestMgr->waitCondition(req);
             m_requestMgr->removeRequest(req);

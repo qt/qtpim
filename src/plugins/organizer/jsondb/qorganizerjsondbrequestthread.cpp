@@ -1023,14 +1023,20 @@ bool QOrganizerJsonDbRequestThread::fixCollectionReferences(QOrganizerItem *item
             item->setCollectionId(m_storage->defaultCollection().id());
     }
 
-    // Check storage locations match. Then item's location must be the same as with collection's location
-    QOrganizerAbstractRequest::StorageLocation collectionStorageLocation =
-            QOrganizerManagerEngine::engineCollectionId(item->collectionId())->storageLocation();
-    if (itemIsNew && storageLocation != collectionStorageLocation)
-        return false;
-    else if (!itemIsNew && QOrganizerManagerEngine::engineItemId(item->id())->storageLocation() != collectionStorageLocation)
+    const QOrganizerCollectionEngineId *collectionIdPtr = QOrganizerManagerEngine::engineCollectionId(item->collectionId());
+    const QOrganizerItemEngineId *itemIdPtr = QOrganizerManagerEngine::engineItemId(item->id());
+    if (!itemIdPtr && !itemIsNew)
         return false;
 
+    QOrganizerAbstractRequest::StorageLocation collectionStorageLocation;
+    if (collectionIdPtr)
+        collectionStorageLocation = collectionIdPtr->storageLocation();
+    else
+        return false;
+    if (itemIsNew && storageLocation != collectionStorageLocation)
+        return false;
+    else if (!itemIsNew && itemIdPtr->storageLocation() != collectionStorageLocation)
+        return false;
     return true;
 }
 

@@ -1897,9 +1897,14 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
 
         } else if (QOrganizerItemDetail::TypeParent == detailType) {
             if (QOrganizerItemParent::FieldParentId == detailField) {
-                jsonDbQueryStr->append(equalsQueryTemplate
-                    .arg(QOrganizerJsonDbStr::itemOccurrenceParent())
-                    .arg(QOrganizerManagerEngine::engineItemId(df.value().value<QOrganizerItemId>())->toString()));
+                const QOrganizerItemEngineId *itemIdPtr = QOrganizerManagerEngine::engineItemId(df.value().value<QOrganizerItemId>());
+                if (!itemIdPtr) {
+                    isValidFilter = false;
+                } else {
+                    jsonDbQueryStr->append(equalsQueryTemplate
+                        .arg(QOrganizerJsonDbStr::itemOccurrenceParent())
+                        .arg(itemIdPtr->toString()));
+                }
             } else if (QOrganizerItemParent::FieldOriginalDate == detailField) {
                 jsonDbQueryStr->append(equalsQueryTemplate
                     .arg(QOrganizerJsonDbStr::itemOccurrenceOriginalDate()).arg(df.value().toDate().toString(Qt::ISODate)));

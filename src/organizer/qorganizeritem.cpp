@@ -521,8 +521,14 @@ QOrganizerItemType::ItemType QOrganizerItem::type() const
  */
 void QOrganizerItem::setType(QOrganizerItemType::ItemType type)
 {
-    // type is always the first detail
-    d->m_details.first().setValue(QOrganizerItemType::FieldType, type);
+    if (d->m_details.isEmpty()) {
+        QOrganizerItemType organizeritemType;
+        organizeritemType.setType(type);
+        d->m_details.append(organizeritemType);
+    } else {
+        // type is always the first detail
+        d->m_details.first().setValue(QOrganizerItemType::FieldType, type);
+    }
 }
 
 /*!

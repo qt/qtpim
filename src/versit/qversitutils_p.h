@@ -78,6 +78,8 @@ public:
                                         const QString& propertyName,
                                         QList<QVersitProperty>* toBeRemoved);
     static bool isValidUtf8(const QByteArray& bytes);
+    static bool convertToJson(const QVariant &data, QString *json);
+    static bool convertFromJson(const QString &json, QVariant *data);
 
 private:
     // These are caches for performance:

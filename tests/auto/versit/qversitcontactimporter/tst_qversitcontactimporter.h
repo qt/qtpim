@@ -114,7 +114,7 @@ private: // Utilities
 
     void addVersionPropertyToDocument(QString sequenceNumber, QString extendedVersion, QVersitDocument &document);
     void addFavoritePropertyToDocument(QString favorite, QString index, QVersitDocument &document);
-    void addExtendedDetailPropertyToDocument(QString name, QString typeName, QVariant data, QVersitDocument &document);
+    void addExtendedDetailPropertyToDocument(QString name, QString data, QVersitDocument &document);
 
 private:
     QVersitContactImporter* mImporter;

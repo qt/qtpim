@@ -108,13 +108,28 @@ ContactsSavingTestCase {
         }
 
         ExtendedDetail {
-            name: "Extended detail"
+            name: "Extended detail: string data"
             data: "string 1"
         }
 
         ExtendedDetail {
-            name: "Extended detail2"
+            name: "Extended detail: number data"
             data: 2
+        }
+
+        ExtendedDetail {
+            name: "Extended detail: date data"
+            data: new Date(2000, 0, 2, 12, 13, 14)
+        }
+
+        ExtendedDetail {
+            name: "Extended detail: array data"
+            data: ["string 1", "string 2"]
+        }
+
+        ExtendedDetail {
+            name: "Extended detail: object data"
+            data: {"key 1": "string 1", "key 2": "string 2"}
         }
 
         Family {
@@ -358,16 +373,21 @@ ContactsSavingTestCase {
     }
 
     function test_exportImportExtendedDetail() {
-        compare(importedContact.extendedDetails.length, 2, "Error importing/exporting multiple extended details");
+        compare(importedContact.extendedDetails.length, 5, "Error importing/exporting multiple extended details");
 
         var importedExtendedDetails = importedContact.details(ContactDetail.ExtendedDetail);
 
-        if (importedExtendedDetails[0].name === megaContact.extendedDetails[1].name)
-            importedExtendedDetails.reverse();
-
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i < 4; i++) {
             compare(importedExtendedDetails[i].name, megaContact.extendedDetails[i].name, "extended detail name");
-            compare(importedExtendedDetails[i].data, megaContact.extendedDetails[i].data, "extended detail data");
+            if (importedExtendedDetails[i].name === "Extended detail: date data") {
+                // A date is exported as a string in local time without timezone specified.
+                // QML/V8 javascript Date.parse cannot be used to parse it,
+                // since it interprets a date string without timezone as using UTC.
+                compare(importedExtendedDetails[i].data,
+                        Qt.formatDateTime(megaContact.extendedDetails[i].data, 'yyyy-MM-ddThh:mm:ss'), "extended detail data");
+            } else {
+                compare(importedExtendedDetails[i].data, megaContact.extendedDetails[i].data, "extended detail data");
+            }
         }
     }
 

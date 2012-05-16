@@ -46,6 +46,9 @@
 #include <QMap>
 #include <QTextCodec>
 #include <QScopedPointer>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonValue>
 
 QTVERSIT_BEGIN_NAMESPACE
 
@@ -197,6 +200,48 @@ bool VersitUtils::isValidUtf8(const QByteArray& bytes) {
         }
     }
     return continuation == 0;
+}
+
+/*!
+ * Convert variant \a data to string \a json in JSON format.
+ *
+ * The data is encoded as an array containing one item
+ * to allow the same encoding to be used for both
+ * primitive and compound data types.
+ *
+ * Returns true if the conversion is successful, false otherwise.
+ *
+ * \sa convertFromJson()
+ */
+bool VersitUtils::convertToJson(const QVariant &data, QString *json)
+{
+    const QJsonValue dataAsJsonValue = QJsonValue::fromVariant(data);
+    if (data.isValid() && dataAsJsonValue.isNull())
+        return false;
+    QJsonArray jsonArray;
+    jsonArray.append(dataAsJsonValue);
+    const QJsonDocument jsonDocument(jsonArray);
+    *json = QString::fromUtf8(jsonDocument.toJson());
+    return true;
+}
+
+/*!
+ * Convert string \a json in JSON format to variant \a data.
+ *
+ * The format of the json string is assumed to be a one-item array.
+ *
+ * Returns true if the conversion is successful, false otherwise.
+ *
+ * \sa convertToJson()
+ */
+bool VersitUtils::convertFromJson(const QString &json, QVariant *data)
+{
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(json.toUtf8());
+    const QJsonValue jsonValue = jsonDoc.array().at(0);
+    if (jsonValue.isUndefined())
+        return false;
+    *data = jsonValue.toVariant();
+    return true;
 }
 
 QTVERSIT_END_NAMESPACE

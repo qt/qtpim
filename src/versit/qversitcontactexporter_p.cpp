@@ -873,20 +873,21 @@ void QVersitContactExporterPrivate::encodeExtendedDetail(
     QList<QVersitProperty>* generatedProperties,
     QSet<int>* processedFields)
 {
-    const QContactExtendedDetail &extendedDetail = static_cast<const QContactExtendedDetail &>(detail);
-    if ((extendedDetail.data().type() == QVariant::String) || (extendedDetail.data().type() == QVariant::Int)) {
-        QVersitProperty property;
-        property.setName(mPropertyMappings.value(extendedDetail.type()).second);
-        property.setValue(QStringList()
-                          << extendedDetail.name()
-                          << QString::fromLatin1(extendedDetail.data().typeName())
-                          << extendedDetail.data().toString());
-
-        property.setValueType(QVersitProperty::CompoundType);
-        *generatedProperties << property;
-        *processedFields << QContactExtendedDetail::FieldName
-                         << QContactExtendedDetail::FieldData;
+    const QContactExtendedDetail &extendedDetail =
+            static_cast<const QContactExtendedDetail &>(detail);
+    QVersitProperty property;
+    property.setName(mPropertyMappings.value(extendedDetail.type()).second);
+    QString dataAsJson;
+    if (VersitUtils::convertToJson(extendedDetail.data(), &dataAsJson)) {
+        property.setValue(QStringList() << extendedDetail.name() << dataAsJson);
+    } else {
+        qWarning() << Q_FUNC_INFO << "Failed to export an extended detail";
+        return;
     }
+    property.setValueType(QVersitProperty::CompoundType);
+    *generatedProperties << property;
+    *processedFields << QContactExtendedDetail::FieldName
+                     << QContactExtendedDetail::FieldData;
 }
 
 /*!

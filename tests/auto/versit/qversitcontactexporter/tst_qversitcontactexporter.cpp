@@ -1357,9 +1357,9 @@ void tst_QVersitContactExporter::testEncodeFavorite()
 void tst_QVersitContactExporter::testEncodeExtendedDetail()
 {
     QFETCH(QString, extendedDetailName);
-    QFETCH(QString, extendedDetailDataType);
     QFETCH(QVariant, extendedDetailData);
-    QFETCH(bool, extendedDetailCreated);
+    QFETCH(QString, extendedDetailDataInProperty);
+    QFETCH(bool, extendedDetailPropertyCreated);
     QContact contact(createContactWithName(QStringLiteral("asdf")));
     QContactExtendedDetail extendedDetail;
     extendedDetail.setName(extendedDetailName);
@@ -1369,7 +1369,7 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail()
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
 
     QVersitDocument document = mExporter->documents().first();
-    if (!extendedDetailCreated) {
+    if (!extendedDetailPropertyCreated) {
         QCOMPARE(countProperties(document), 0);
         return;
     }
@@ -1378,26 +1378,150 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail()
     QVERIFY(!property.isEmpty());
     QCOMPARE(property.parameters().count(), 0);
     CHECK_VALUE(property, QVersitProperty::CompoundType,
-                QStringList() << extendedDetailName << extendedDetailDataType << extendedDetailData.toString());
+                QStringList() << extendedDetailName << extendedDetailDataInProperty);
 }
 
 void tst_QVersitContactExporter::testEncodeExtendedDetail_data()
 {
     QTest::addColumn<QString>("extendedDetailName");
-    QTest::addColumn<QString>("extendedDetailDataType");
     QTest::addColumn<QVariant>("extendedDetailData");
-    QTest::addColumn<bool>("extendedDetailCreated");
+    QTest::addColumn<QString>("extendedDetailDataInProperty");
+    QTest::addColumn<bool>("extendedDetailPropertyCreated");
+
+    QString jsonArrayWith("[\n    %1\n]\n");
+    QString jsonArrayWithString = jsonArrayWith.arg("\"%1\"");
+    {
+        QTest::newRow("string data")
+                << QString("name")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+        QTest::newRow("string data, empty")
+                << QString("name")
+                << QVariant(QString(""))
+                << jsonArrayWithString.arg("")
+                << true;
+        QTest::newRow("string data, containing reserved characters")
+                << QString("name")
+                << QVariant(QString(",;:\\"))
+                << jsonArrayWithString.arg(",;:\\\\")
+                << true;
+    }
 
     {
-        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
-        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
-        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
-        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
-        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
-        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+        QTest::newRow("double data")
+                << QString("name")
+                << QVariant((double)2.0)
+                << jsonArrayWith.arg("2")
+                << true;
+        QTest::newRow("double data, negative")
+                << QString("name")
+                << QVariant((double)-1.0)
+                << jsonArrayWith.arg("-1")
+                << true;
+        QTest::newRow("double data, multiple digits")
+                << QString("name")
+                << QVariant((double)10.2)
+                << jsonArrayWith.arg("10.2")
+                << true;
+    }
+
+    {
+        QTest::newRow("boolean data")
+                << QString("name")
+                << QVariant(true)
+                << jsonArrayWith.arg("true")
+                << true;
+    }
+
+    {
+        QTest::newRow("integer data, serialized as number/double")
+                << QString("name")
+                << QVariant((int)2)
+                << jsonArrayWith.arg("2")
+                << true;
+        QTest::newRow("integer data, serialized as number/double")
+                << QString("name")
+                << QVariant((int)-10)
+                << jsonArrayWith.arg("-10")
+                << true;
+    }
+    {
+        QTest::newRow("datetime data (using local time)")
+                << QString("name")
+                << QVariant(QDateTime::fromString("1997-07-16T19:20:30.123+01:00", Qt::ISODate))
+                << jsonArrayWithString.arg("1997-07-16T19:20:30+01:00")
+                << true;
+        QTest::newRow("datetime data (using UTC)")
+                << QString("name")
+                << QVariant(QDateTime::fromString("1997-07-16T19:20:30.123+01:00", Qt::ISODate).toUTC())
+                << jsonArrayWithString.arg("1997-07-16T18:20:30Z")
+                << true;
+        QTest::newRow("datetime data (using local time with unspecified timezone)")
+                << QString("name")
+                << QVariant(QDateTime::fromString("1997-07-16T19:20:30", Qt::ISODate))
+                << jsonArrayWithString.arg("1997-07-16T19:20:30")
+                << true;
+    }
+
+    {
+        QTest::newRow("list data")
+                << QString("name")
+                << QVariant(QVariantList() << QString("string 1") << QString("string 2"))
+                << QString("[\n    [\n        \"string 1\",\n        \"string 2\"\n    ]\n]\n")
+                << true;
+    }
+
+    {
+        QVariantMap map;
+        map["key 1"] = QString("string 1");
+        map["key 2"] = QString("string 2");
+        QTest::newRow("map data")
+                << QString("name")
+                << QVariant(map)
+                << QString("[\n    {\n        \"key 1\": \"string 1\",\n        \"key 2\": \"string 2\"\n    }\n]\n")
+                << true;
+    }
+
+    {
+        QVariantMap map;
+        map["key"] = QVariantList() << (double)1 << (double)2;
+        QTest::newRow("map data, containing a nested list")
+                << QString("name")
+                << QVariant(map)
+                << QString("[\n    {\n        \"key\": [\n            1,\n            2\n        ]\n    }\n]\n")
+                << true;
+    }
+
+    {
+        QTest::newRow("empty string as name")
+                << QString("")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+        QTest::newRow("name containing reserved characters")
+                << QString(",;:\\")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+    }
+
+    {
+        QTest::newRow("empty variant as data")
+                << QString("name")
+                << QVariant()
+                << jsonArrayWith.arg("null")
+                << true;
+    }
+
+    {
+        QVariantHash hash;
+        hash["key"] = QVariant(QString("string"));
+        QTest::newRow("data type not supported")
+                << QString("name")
+                << QVariant(hash)
+                << QString()
+                << false;
     }
 }
 
@@ -1427,8 +1551,12 @@ void tst_QVersitContactExporter::testEncodeMultipleExtendedDetails()
     for (int i = 0; i < actual.size(); i++) {
         QVERIFY(!actual[i].isEmpty());
         QCOMPARE(actual[i].parameters().count(), 0);
+        QString jsonArrayWith("[\n    %1\n]\n");
+        QString jsonArrayWithString = jsonArrayWith.arg("\"%1\"");
         CHECK_VALUE(actual[i], QVersitProperty::CompoundType,
-                    QStringList() << expected[i].name() << QStringLiteral("QString") << expected[i].data().toString());
+                    QStringList()
+                    << expected[i].name()
+                    << jsonArrayWithString.arg(expected[i].data().toString()));
     }
 }
 

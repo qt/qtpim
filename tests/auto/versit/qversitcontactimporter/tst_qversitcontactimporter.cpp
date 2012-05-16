@@ -1401,11 +1401,11 @@ void tst_QVersitContactImporter::testTag()
 void tst_QVersitContactImporter::testExtendedDetail()
 {
     QFETCH(QString, extendedDetailName);
-    QFETCH(QString, extendedDetailDataType);
     QFETCH(QVariant, extendedDetailData);
+    QFETCH(QString, extendedDetailDataInProperty);
     QFETCH(bool, extendedDetailCreated);
     QVersitDocument document(QVersitDocument::VCard30Type);
-    addExtendedDetailPropertyToDocument(extendedDetailName, extendedDetailDataType, extendedDetailData.toString(), document);
+    addExtendedDetailPropertyToDocument(extendedDetailName, extendedDetailDataInProperty, document);
 
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
 
@@ -1417,39 +1417,146 @@ void tst_QVersitContactImporter::testExtendedDetail()
     QContactExtendedDetail extendedDetail = (QContactExtendedDetail)contact.detail(QContactExtendedDetail::Type);
     QCOMPARE(extendedDetail.name(), extendedDetailName);
     QCOMPARE(extendedDetail.data(), extendedDetailData);
-    QCOMPARE(QString(extendedDetail.data().typeName()), extendedDetailDataType);
+    QCOMPARE(extendedDetail.data().type(), extendedDetailData.type());
 }
 
 void tst_QVersitContactImporter::testExtendedDetail_data()
 {
     QTest::addColumn<QString>("extendedDetailName");
-    QTest::addColumn<QString>("extendedDetailDataType");
     QTest::addColumn<QVariant>("extendedDetailData");
+    QTest::addColumn<QString>("extendedDetailDataInProperty");
     QTest::addColumn<bool>("extendedDetailCreated");
 
+    QString jsonArrayWith("[\n    %1\n]\n");
+    QString jsonArrayWithString = jsonArrayWith.arg("\"%1\"");
     {
-        QTest::newRow("string data") << QString("name") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("empty string as data") << QString("name") << QString("QString") << QVariant(QString("")) << true;
-        QTest::newRow("string data, containing reserved characters") << QString("name") << QString("QString") << QVariant(QString(",;:\\")) << true;
-        QTest::newRow("integer data") << QString("name") << QString("int") << QVariant(2) << true;
-        QTest::newRow("integer data, negative") << QString("name") << QString("int") << QVariant(-1) << true;
-        QTest::newRow("integer data, multiple digits") << QString("name") << QString("int") << QVariant(10) << true;
-        QTest::newRow("integer data type, data not a valid integer") << QString("name") << QString("int") << QVariant(QString("invalid")) << false;
-        QTest::newRow("integer data type, data invalid mixture") << QString("name") << QString("int") << QVariant(QString("2invalid")) << false;
-        QTest::newRow("empty string as name") << QString("") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("name containing reserved characters") << QString(",;:\\") << QString("QString") << QVariant(QString("data")) << true;
-        QTest::newRow("data type not supported") << QString("name") << QString("bool") << QVariant(true) << false;
+        QTest::newRow("string data")
+                << QString("name")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+        QTest::newRow("string data, empty")
+                << QString("name")
+                << QVariant(QString(""))
+                << jsonArrayWithString.arg("")
+                << true;
+        QTest::newRow("string data, containing reserved characters")
+                << QString("name")
+                << QVariant(QString(",;:\\"))
+                << jsonArrayWithString.arg(",;:\\\\")
+                << true;
+    }
+
+    {
+        QTest::newRow("double data")
+                << QString("name")
+                << QVariant((double)2.0)
+                << jsonArrayWith.arg("2")
+                << true;
+        QTest::newRow("double data, negative")
+                << QString("name")
+                << QVariant((double)-1.0)
+                << jsonArrayWith.arg("-1")
+                << true;
+        QTest::newRow("double data, multiple digits")
+                << QString("name")
+                << QVariant((double)10.2)
+                << jsonArrayWith.arg("10.2")
+                << true;
+    }
+
+    {
+        QTest::newRow("boolean data")
+                << QString("name")
+                << QVariant(true)
+                << jsonArrayWith.arg("true")
+                << true;
+    }
+
+    {
+        QTest::newRow("datetime data, imported as a string")
+                << QString("name")
+                << QVariant(QString("1997-07-16T19:20:30+01:00"))
+                << jsonArrayWithString.arg("1997-07-16T19:20:30+01:00")
+                << true;
+    }
+
+    {
+        QTest::newRow("list data")
+                << QString("name")
+                << QVariant(QVariantList() << QString("string 1") << QString("string 2"))
+                << QString("[\n    [\n        \"string 1\",\n        \"string 2\"\n    ]\n]\n")
+                << true;
+    }
+
+    {
+        QVariantMap map;
+        map["key 1"] = QString("string 1");
+        map["key 2"] = QString("string 2");
+        QTest::newRow("map data")
+                << QString("name")
+                << QVariant(map)
+                << QString("[\n    {\n        \"key 1\": \"string 1\",\n        \"key 2\": \"string 2\"\n    }\n]\n")
+                << true;
+    }
+
+    {
+        QVariantMap map;
+        map["key"] = QVariantList() << (double)1 << (double)2;
+        QTest::newRow("map data, containing a nested list")
+                << QString("name")
+                << QVariant(map)
+                << QString("[\n    {\n        \"key\": [\n            1,\n            2\n        ]\n    }\n]\n")
+                << true;
+    }
+
+    {
+        QTest::newRow("empty string as name")
+                << QString("")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+        QTest::newRow("name containing reserved characters")
+                << QString(",;:\\")
+                << QVariant(QString("data"))
+                << jsonArrayWithString.arg("data")
+                << true;
+    }
+
+    {
+        QTest::newRow("null denoting an empty variant")
+                << QString("name")
+                << QVariant()
+                << jsonArrayWith.arg("null")
+                << true;
+        QTest::newRow("compact json with extra whitespace removed")
+                << QString("name")
+                << QVariant(QString("data"))
+                << QString("[\"data\"]")
+                << true;
+    }
+
+    {
+        QTest::newRow("invalid property value: empty json array as property value")
+                << QString("name")
+                << QVariant()
+                << jsonArrayWith.arg("")
+                << false;
+        QTest::newRow("invalid property value: invalid json value")
+                << QString("name")
+                << QVariant()
+                << jsonArrayWith.arg("invalid")
+                << false;
     }
 }
 
-void tst_QVersitContactImporter::addExtendedDetailPropertyToDocument(QString name, QString typeName, QVariant data, QVersitDocument &document)
+void tst_QVersitContactImporter::addExtendedDetailPropertyToDocument(QString name, QString data, QVersitDocument &document)
 {
     QVersitProperty property;
     property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
     property.setValue(QStringList()
                       << name
-                      << typeName
-                      << data.toString());
+                      << data);
     property.setValueType(QVersitProperty::CompoundType);
     document.addProperty(property);
 }
@@ -1457,8 +1564,10 @@ void tst_QVersitContactImporter::addExtendedDetailPropertyToDocument(QString nam
 void tst_QVersitContactImporter::testMultipleExtendedDetails()
 {
     QVersitDocument document(QVersitDocument::VCard30Type);
-    addExtendedDetailPropertyToDocument("detailName1", "QString", "detailData1", document);
-    addExtendedDetailPropertyToDocument("detailName2", "QString", "detailData2", document);
+    QString jsonArrayWith("[\n    %1\n]\n");
+    QString jsonArrayWithString = jsonArrayWith.arg("\"%1\"");
+    addExtendedDetailPropertyToDocument("detailName1", jsonArrayWithString.arg("detailData1"), document);
+    addExtendedDetailPropertyToDocument("detailName2", jsonArrayWithString.arg("detailData2"), document);
 
     QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
 

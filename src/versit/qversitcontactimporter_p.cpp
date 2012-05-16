@@ -44,6 +44,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 #include "qversitpluginsearch_p.h"
+#include "qversitutils_p.h"
 
 #include <qcontactmanagerengine.h>
 #include <qcontact.h>
@@ -912,26 +913,18 @@ bool QVersitContactImporterPrivate::createExtendedDetail(
 {
     Q_UNUSED(contact)
     QContactExtendedDetail extendedDetail;
-    QVariant variant = property.variantValue();
+    const QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::CompoundType
             || variant.type() != QVariant::StringList)
         return false;
 
     QStringList values = variant.toStringList();
-    QString typeInfo;
-
     extendedDetail.setName(takeFirst(values));
-    typeInfo = takeFirst(values);
-    if (typeInfo == QStringLiteral("QString")) {
-        extendedDetail.setData(QVariant(takeFirst(values)));
-    } else if (typeInfo == QStringLiteral("int")) {
-        bool conversionSuccessful = true;
-        extendedDetail.setData(QVariant(takeFirst(values).toInt(&conversionSuccessful)));
-        if (!conversionSuccessful)
-            return false;
-    } else {
+    QVariant data;
+    if (VersitUtils::convertFromJson(takeFirst(values), &data))
+        extendedDetail.setData(data);
+    else
         return false;
-    }
 
     saveDetailWithContext(updatedDetails, extendedDetail, extractContexts(property));
     return true;

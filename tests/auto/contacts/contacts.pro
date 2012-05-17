@@ -17,6 +17,8 @@ SUBDIRS += \
 
 contains(QT_CONFIG, jsondb) {
     SUBDIRS += qcontactjsondb \
-               qcontactjsondbconverter
+               qcontactjsondbconverter \
+               qcontactjsondbstoragelocations
+
 }
 

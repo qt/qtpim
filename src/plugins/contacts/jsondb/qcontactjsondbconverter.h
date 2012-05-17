@@ -81,6 +81,7 @@ public:
     void contactVersionToJsonDbVersion(const QContactVersion &contactVersion, QString *jsonDbVersion) const;
     bool sanitizePhoneNumberString(QString *phoneNumberString) const;
     const QStringList storageLocationsToPartitionNames(QContactAbstractRequest::StorageLocations storageLocations);
+    QContactAbstractRequest::StorageLocation partitionNameToStorageLocation(const QString partitionName);
     SanitizeError sanitizeContactDetailString(QString *stringToBeSanitized, int maxStringLength = 50) const;
 
 private:

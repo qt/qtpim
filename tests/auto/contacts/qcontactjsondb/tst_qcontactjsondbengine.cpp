@@ -517,7 +517,6 @@ void tst_QContactJsondbEngine::testMultiFetchFromUserAndSystemStorages()
 
     // Check that fetch from both storages at the same time gives the right contacts back to us.
     QList<QContact> contacts = fetchTestContacts(cm, QContactAbstractRequest::SystemStorage | QContactAbstractRequest::UserDataStorage);
-    QEXPECT_FAIL("","Fetch from multiple partitions only partly implemented.", Continue);
     QCOMPARE(contacts.size(), originalCount+2);
 
     int contactsDefaultFound = 0;
@@ -534,7 +533,6 @@ void tst_QContactJsondbEngine::testMultiFetchFromUserAndSystemStorages()
     }
 
     QCOMPARE(contactsDefaultFound, 1);
-    QEXPECT_FAIL("","Fetch from multiple partitions only partly implemented.", Continue);
     QCOMPARE(contactsSystemFound, 1);
 }
 

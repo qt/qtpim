@@ -99,12 +99,17 @@ private slots:
 private:
     void createWatcherForStorageLocation(QContactAbstractRequest::StorageLocation storageLocation);
 
-    void handleContactSaveRequest(QContactSaveRequest* req);
-    QString storageLocationToPartition(QContactAbstractRequest::StorageLocations storageLocation);
+    QString storageLocationToPartition(QContactAbstractRequest::StorageLocation storageLocation);
     QContactAbstractRequest::StorageLocations storageLocationsOrDefault(
             QContactAbstractRequest::StorageLocations storageLocation);
-    QContactAbstractRequest::StorageLocations extractStorageLocation(const QContactId &id);
+    QContactAbstractRequest::StorageLocation extractStorageLocation(const QContactId &id);
     QContactAbstractRequest::StorageLocations extractStorageLocations(const QList<QContactId> &contactIds);
+    inline static QContactAbstractRequest::StorageLocations supportedStorageLocations()
+    {
+        return QContactAbstractRequest::UserDataStorage | QContactAbstractRequest::SystemStorage;
+    }
+
+    void handleContactSaveRequest(QContactSaveRequest* req);
     void handleContactFetchRequest(QContactFetchRequest* req);
     void handleContactRemoveRequest(QContactRemoveRequest* req);
     void handleContactIdFetchRequest(QContactIdFetchRequest* req);
@@ -129,6 +134,13 @@ private:
 
     void startTimer();
 
+    inline static QContactManager::Error errorPrecedence(QContactManager::Error firstError, QContactManager::Error secondError)
+    {
+        // Currently this makes a simple precedence for error codes.
+        // In case of nonidentical mapping is needed you need to modify this.
+        return (firstError < secondError) ? secondError : firstError;
+    }
+
 private:
     Q_DISABLE_COPY(QContactJsonDbRequestHandler)
 
@@ -146,6 +158,9 @@ private:
     QContactChangeSet m_ccs;
     static const int TIMEOUT_INTERVAL;
     QTimer *m_timer;
+
+    // For maintaining storage locations availability status.
+    QContactAbstractRequest::StorageLocations m_availableStorageLocations;
 };
 
 class QContactJsonDbPartitionWatcher : public QObject

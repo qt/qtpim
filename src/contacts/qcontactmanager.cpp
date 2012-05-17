@@ -394,6 +394,8 @@ QContactManager::~QContactManager()
   \value BadArgumentError The most recent operation failed because one or more of the parameters to the operation were invalid
   \value TimeoutError The most recent operation failed because it took longer than expected.  It may be possible to try again.
   \value UnspecifiedError The most recent operation failed for an undocumented reason
+  \value InvalidStorageLocationError The most recent operation failed due to requested storage location is unavailable or invalid.
+  \value MissingPlatformRequirementsError The most recent operation failed due to all storage locations are unavailable.
  */
 
 /*!

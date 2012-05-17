@@ -110,7 +110,9 @@ public:
         VersionMismatchError,
         LimitReachedError,
         InvalidContactTypeError,
-        TimeoutError
+        TimeoutError,
+        InvalidStorageLocationError,
+        MissingPlatformRequirementsError
     };
 
     /* Error reporting */

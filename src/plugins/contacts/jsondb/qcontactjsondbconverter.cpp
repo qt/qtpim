@@ -1343,7 +1343,7 @@ QContactManager::Error QContactJsonDbConverter::jsonDbRequestErrorToContactError
     case QJsonDbRequest::InvalidLimit:
         return QContactManager::BadArgumentError;
     case QJsonDbRequest::InvalidPartition:
-        return QContactManager::UnspecifiedError;
+        return QContactManager::InvalidStorageLocationError;
     case QJsonDbRequest::DatabaseConnectionError:
         return QContactManager::TimeoutError;
     default:
@@ -1385,6 +1385,12 @@ bool QContactJsonDbConverter::sanitizePhoneNumberString(QString *phoneNumberStri
     } else {
         return true;
     }
+}
+
+QContactAbstractRequest::StorageLocation QContactJsonDbConverter::partitionNameToStorageLocation(
+        const QString partitionName)
+{
+    return storageLocationMapping.key(partitionName);
 }
 
 const QStringList QContactJsonDbConverter::storageLocationsToPartitionNames(

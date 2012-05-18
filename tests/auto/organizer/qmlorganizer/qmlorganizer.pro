@@ -4,7 +4,7 @@ TARGET=tst_qmlorganizer
 SOURCES += tst_qmlorganizer.cpp
 OTHER_FILES += testcases/addEvent.qml \
     testcases/QOrganizerTestUtility.qml \
-    testcases/tst_afirstthingtorun.qml
+    testcases/tst_afirstthingtorun.qml \
     testcases/tst_detailfilter.qml \
     testcases/tst_organizeritem.qml \
     testcases/tst_organizeritems.qml \

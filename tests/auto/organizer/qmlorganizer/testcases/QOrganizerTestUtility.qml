@@ -145,39 +145,45 @@ TestCase {
 
     }
 
-    //Empty calendar data
     function empty_calendar(log) {
+        var ids = [];
+        var removeIds = [];
+        var i;
+        var j;
+        for (i = 0; i < __model.itemCount; i++) {
+            if (__model.items[i].itemType == Type.EventOccurrence || __model.items[i].itemType == Type.TodoOccurrence)
+                ids.push(__model.items[i].parentId)
+            if (__model.items[i].itemId !== "qtorganizer:::")
+                ids.push(__model.items[i].itemId)
+        }
+        // remove duplicates
 
-        if (organizerChangedSpy != undefined)
-            organizerChangedSpy.clear();
-
-        var ids = __model.itemIds();
+        for (i = 0; i < ids.length; i++) {
+            for (j = 0; j < removeIds.length; j++) {
+                if (ids[i] == removeIds[j])
+                    break;
+            }
+            if (j == removeIds.length)
+                removeIds.push(ids[i])
+        }
         if (log != undefined) {
             console.log("items count :" + __model.itemCount);
-            console.log("items  :" + ids);
+            console.log("items  :" + removeIds);
         }
 
-        if (ids.length > 0) {
-            __model.removeItems(ids);
-            if (!__model.autoUpdate)
-                __model.update();
-            if (organizerChangedSpy != undefined)
-                organizerChangedSpy.wait();
-            else
-                wait(100);
+        organizerChangedSpy.clear()
+        if (removeIds.length > 0) {
+            __model.removeItems(removeIds)
+            organizerChangedSpy.wait()
+            // there might be more than one modelChanged signal, so waiting
+            // for a while to get them all
+            wait(500);
         }
-
+        compare(__model.items.length, 0)
         empty_calendar_collections(log);
-
-        if (__model.itemCount >0) {
-            if (log != undefined)
-                console.log("Not empty database! " + __model.itemCount);
-            empty_calendar(log);
-        }
     }
 
     function empty_calendar_collections(log) {
-
         if (__model.collections.length > 1) {
             var setAutoUpdate = __model.autoUpdate;
             __model.autoUpdate = false;

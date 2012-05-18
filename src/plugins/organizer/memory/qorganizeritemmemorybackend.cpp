@@ -485,17 +485,19 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
                     && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
                 // we cannot skip it, since it applies in the given time period.
                 QList<QDateTime> xdatetimes = generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
-                foreach (const QDateTime& xdatetime, xdatetimes) {
+                foreach (const QDateTime& xdatetime, xdatetimes)
                     xdates += xdatetime.date();
-                }
             }
         }
     }
     // now generate a list of rdates (from the recurrenceDates and recurrenceRules)
-    QList<QDateTime> rdates;
-    foreach (const QDate& rdate, recur.recurrenceDates()) {
-        rdates += QDateTime(rdate, initialDateTime.time());
-    }
+
+    // QMap is used for storing dates, because we don't want to have duplicate dates and
+    // we want to have dates sorted
+    // Only key of the map is relevant (QDateTime), the value (int) is not used
+    QMap<QDateTime, int> rdateMap;
+    foreach (const QDate& rdate, recur.recurrenceDates())
+        rdateMap.insert(QDateTime(rdate, initialDateTime.time()), 0);
 
     if (realPeriodStart.isValid()) {
         QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
@@ -503,12 +505,15 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
             if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid
                     && ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date()))) {
                 // we cannot skip it, since it applies in the given time period.
-                rdates += generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
+                QList<QDateTime> rdatetimes = generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
+                foreach (const QDateTime& rdatetime, rdatetimes)
+                    rdateMap.insert(rdatetime, 0);
             }
         }
     }
     // now order the contents of retn by date
-    qSort(rdates);
+    QList<QDateTime> rdates = rdateMap.keys();
+
     if (initialDateTime.isValid() && !recur.recurrenceDates().isEmpty() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
         rdates.prepend(initialDateTime);
     }

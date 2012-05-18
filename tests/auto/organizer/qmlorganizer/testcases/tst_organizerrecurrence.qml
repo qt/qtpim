@@ -696,7 +696,6 @@ TestCase {
             model.saveItem(testEvent)
             spy.wait();
 
-            expectFail("", "Currently there can be duplicate occurrences if there is > 1 recurrence rule.");
             compareResultDatesToModel([new Date('2012-01-01T14:00:00'),
                                        new Date('2012-01-03T14:00:00'),
                                        new Date('2012-01-04T14:00:00'),

@@ -230,6 +230,7 @@ public:
 
         supported << QOrganizerItemFilter::InvalidFilter
                   << QOrganizerItemFilter::DetailFilter
+                  << QOrganizerItemFilter::DetailFieldFilter
                   << QOrganizerItemFilter::DetailRangeFilter
                   << QOrganizerItemFilter::IntersectionFilter
                   << QOrganizerItemFilter::UnionFilter

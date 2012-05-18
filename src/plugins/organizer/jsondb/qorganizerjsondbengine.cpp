@@ -435,6 +435,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerJsonDbEngine::supportedFilters
 
     supported << QOrganizerItemFilter::InvalidFilter
               << QOrganizerItemFilter::DetailFilter
+              << QOrganizerItemFilter::DetailFieldFilter
               << QOrganizerItemFilter::IntersectionFilter
               << QOrganizerItemFilter::UnionFilter
               << QOrganizerItemFilter::IdFilter
@@ -509,6 +510,104 @@ QList<QOrganizerItemType::ItemType> QOrganizerJsonDbEngine::supportedItemTypes()
     ret << QOrganizerItemType::TypeTodoOccurrence;
 
     return  ret;
+}
+
+const QList<int> QOrganizerJsonDbEngine::supportedDetailFields(QOrganizerItemDetail::DetailType detailType)
+{
+    static QMap<int, QList<int> > supportedFieldsByType;
+    if (supportedFieldsByType.isEmpty()) {
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeAudibleReminder,
+                                     QList<int>()  << QOrganizerItemAudibleReminder::FieldDataUrl
+                                     << QOrganizerItemAudibleReminder::FieldRepetitionCount
+                                     << QOrganizerItemAudibleReminder::FieldRepetitionDelay
+                                     << QOrganizerItemAudibleReminder::FieldSecondsBeforeStart);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeClassification,
+                                     QList<int>() << QOrganizerItemClassification::FieldClassification);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeComment,
+                                     QList<int>() << QOrganizerItemComment::FieldComment);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeDescription,
+                                     QList<int>() << QOrganizerItemDescription::FieldDescription);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeDisplayLabel,
+                                     QList<int>() << QOrganizerItemDisplayLabel::FieldLabel);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeEmailReminder,
+                                     QList<int>() << QOrganizerItemEmailReminder::FieldAttachments
+                                     << QOrganizerItemEmailReminder::FieldBody
+                                     << QOrganizerItemEmailReminder::FieldRecipients
+                                     << QOrganizerItemEmailReminder::FieldRepetitionCount
+                                     << QOrganizerItemEmailReminder::FieldRepetitionDelay
+                                     << QOrganizerItemEmailReminder::FieldSecondsBeforeStart
+                                     << QOrganizerItemEmailReminder::FieldSubject);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeEventAttendee,
+                                     QList<int>() << QOrganizerEventAttendee::FieldAttendeeId
+                                     << QOrganizerEventAttendee::FieldEmailAddress
+                                     << QOrganizerEventAttendee::FieldName
+                                     << QOrganizerEventAttendee::FieldParticipationRole
+                                     << QOrganizerEventAttendee::FieldParticipationStatus);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeEventRsvp,
+                                     QList<int>() << QOrganizerEventRsvp::FieldOrganizerEmail
+                                     << QOrganizerEventRsvp::FieldOrganizerName
+                                     << QOrganizerEventRsvp::FieldParticipationRole
+                                     << QOrganizerEventRsvp::FieldParticipationStatus
+                                     << QOrganizerEventRsvp::FieldResponseDate
+                                     << QOrganizerEventRsvp::FieldResponseDeadline
+                                     << QOrganizerEventRsvp::FieldResponseRequirement);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeEventTime,
+                                     QList<int>() << QOrganizerEventTime::FieldAllDay
+                                     << QOrganizerEventTime::FieldEndDateTime
+                                     << QOrganizerEventTime::FieldStartDateTime);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeExtendedDetail,
+                                     QList<int>() << QOrganizerItemExtendedDetail::FieldData
+                                     << QOrganizerItemExtendedDetail::FieldName);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeGuid,
+                                     QList<int>() << QOrganizerItemGuid::FieldGuid);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeItemType,
+                                     QList<int>() << QOrganizerItemType::FieldType);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeJournalTime,
+                                     QList<int>() << QOrganizerJournalTime::FieldEntryDateTime);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeLocation,
+                                     QList<int>() << QOrganizerItemLocation::FieldLabel
+                                     << QOrganizerItemLocation::FieldLatitude
+                                     << QOrganizerItemLocation::FieldLongitude);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeParent,
+                                     QList<int>() << QOrganizerItemParent::FieldOriginalDate
+                                     << QOrganizerItemParent::FieldParentId);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypePriority,
+                                     QList<int>() << QOrganizerItemPriority::FieldPriority);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeRecurrence,
+                                     QList<int>() << QOrganizerItemRecurrence::FieldExceptionDates
+                                     << QOrganizerItemRecurrence::FieldExceptionRules
+                                     << QOrganizerItemRecurrence::FieldRecurrenceDates
+                                     << QOrganizerItemRecurrence::FieldRecurrenceRules);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeReminder,
+                                     QList<int>() << QOrganizerItemReminder::FieldRepetitionCount
+                                     << QOrganizerItemReminder::FieldRepetitionDelay
+                                     << QOrganizerItemReminder::FieldSecondsBeforeStart);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeTag,
+                                     QList<int>() << QOrganizerItemTag::FieldTag);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeTimestamp,
+                                     QList<int>() << QOrganizerItemTimestamp::FieldCreated
+                                     << QOrganizerItemTimestamp::FieldLastModified);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeTodoProgress,
+                                     QList<int>() << QOrganizerTodoProgress::FieldFinishedDateTime
+                                     << QOrganizerTodoProgress::FieldPercentageComplete
+                                     << QOrganizerTodoProgress::FieldStatus);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeTodoTime,
+                                     QList<int>() << QOrganizerTodoTime::FieldAllDay
+                                     << QOrganizerTodoTime::FieldDueDateTime
+                                     << QOrganizerTodoTime::FieldStartDateTime);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeUndefined,
+                                     QList<int>());
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeVersion,
+                                     QList<int>() << QOrganizerItemVersion::FieldExtendedVersion
+                                     << QOrganizerItemVersion::FieldVersion);
+        supportedFieldsByType.insert(QOrganizerItemDetail::TypeVisualReminder,
+                                     QList<int>() << QOrganizerItemVisualReminder::FieldDataUrl
+                                     << QOrganizerItemVisualReminder::FieldMessage
+                                     << QOrganizerItemVisualReminder::FieldRepetitionCount
+                                     << QOrganizerItemVisualReminder::FieldRepetitionDelay
+                                     << QOrganizerItemVisualReminder::FieldSecondsBeforeStart);
+    }
+    return supportedFieldsByType.value(detailType, QList<int>());
 }
 
 #include "moc_qorganizerjsondbengine.cpp"

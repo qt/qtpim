@@ -57,8 +57,10 @@
 
     This enumeration describes the type of the filter.
     \value InvalidFilter       An invalid filter which matches nothing.
-    \value DetailFilter        A filter which matches items containing a detail of a particular type
-                               and value.
+    \value DetailFilter        A filter which matches items containing a detail identical to that
+                               used by the filter for matching.
+    \value DetailFieldFilter   A filter which matches items containing a detail of a particular type,
+                               having a given value for a particular field.
     \value DetailRangeFilter   A filter which matches items containing a detail of a particular type,
                                whose values are within a particular range.
     \value IntersectionFilter  A filter which matches all items that are matched by all filters it includes.
@@ -195,6 +197,8 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter)
                 break;
             case QOrganizerItemFilter::DetailFilter:
                 filter = QOrganizerItemDetailFilter();
+            case QOrganizerItemFilter::DetailFieldFilter:
+                filter = QOrganizerItemDetailFieldFilter();
                 break;
             case QOrganizerItemFilter::DetailRangeFilter:
                 filter = QOrganizerItemDetailRangeFilter();

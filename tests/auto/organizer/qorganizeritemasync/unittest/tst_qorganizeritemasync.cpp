@@ -571,8 +571,8 @@ void tst_QOrganizerItemAsync::itemFetch()
         QVERIFY(containsIgnoringDetailKeys(mitems, items.at(i)));
     }
 
-    // asynchronous detail filtering
-    QOrganizerItemDetailFilter dfil;
+    // asynchronous detail field filtering
+    QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
@@ -880,8 +880,8 @@ void tst_QOrganizerItemAsync::itemIdFetch()
     QList<QOrganizerItemId> result = ifr.itemIds();
     QCOMPARE(itemIds, result);
 
-    // asynchronous detail filtering
-    QOrganizerItemDetailFilter dfil;
+    // asynchronous detail field filtering
+    QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
@@ -1259,8 +1259,8 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
     }
 
 #if defined(QT_NO_JSONDB)
-    // asynchronous detail filtering
-    QOrganizerItemDetailFilter dfil;
+    // asynchronous detail field filtering
+    QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     ifr.setFilter(dfil);
     QVERIFY(ifr.filter() == dfil);
@@ -1505,9 +1505,9 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(irr1.isFinished());
     QVERIFY(irr1.error() == QOrganizerManager::NoError);
 
-    // specific item removal via detail filter
+    // specific item removal via detail field filter
     int originalCount = oim->itemIds().size();
-    QOrganizerItemDetailFilter dfil;
+    QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     irr.setItems(oim->items(QDateTime(), QDateTime(), dfil));
     irr.setManager(oim.data());
@@ -1684,9 +1684,9 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     QVERIFY(irr1.isFinished());
     QVERIFY(irr1.error() == QOrganizerManager::NoError);
 
-    // specific item removal via detail filter
+    // specific item removal via detail field filter
     int originalCount = oim->itemIds().size();
-    QOrganizerItemDetailFilter dfil;
+    QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     irr.setItemIds(oim->itemIds(QDateTime(), QDateTime(), dfil));
     irr.setManager(oim.data());

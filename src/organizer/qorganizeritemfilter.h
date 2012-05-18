@@ -71,6 +71,7 @@ public:
     enum FilterType {
         InvalidFilter = 0,
         DetailFilter,
+        DetailFieldFilter,
         DetailRangeFilter,
         IntersectionFilter,
         UnionFilter,

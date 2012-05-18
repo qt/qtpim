@@ -162,6 +162,9 @@ public:
     bool cancelRequest(QOrganizerAbstractRequest* req);
     bool waitForRequestFinished(QOrganizerAbstractRequest* req, int msecs);
 
+    /* JsonDb Engine internal capability reporting */
+    static const QList<int> supportedDetailFields(QOrganizerItemDetail::DetailType detailType);
+
 signals:
     void requestReceived(QOrganizerAbstractRequest* req);
 

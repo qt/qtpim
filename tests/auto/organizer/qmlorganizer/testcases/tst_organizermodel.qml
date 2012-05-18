@@ -89,7 +89,7 @@ TestCase {
                  code: "import QtOrganizer 5.0\n"
                    + "OrganizerModel {\n"
                    + "    id:organizerModelId\n"
-                   + "    filter:DetailFilter{\n"
+                   + "    filter:DetailFieldFilter{\n"
                    + "        id:filter\n"
                    + "        field:EventTime.FieldStartDateTime\n"
                    + "        value:'2010-08-12T13:22:01'\n"
@@ -134,7 +134,7 @@ TestCase {
                     + "   filter:IntersectionFilter {\n"
                     + "       id:filter\n"
                     + "       filters:[\n"
-                    + "           DetailFilter{\n"
+                    + "           DetailFieldFilter{\n"
                     + "               id:filter1\n"
                     + "               field:EventTime.FieldStartDateTime\n"
                     + "               value:'2010-08-12T13:22:01'\n"
@@ -870,7 +870,7 @@ TestCase {
         }
         for (var i = 0; i < managerlist.length; i ++) {
 
-            var filter = Qt.createQmlObject("import QtOrganizer 5.0; DetailFilter{}", modelTests)
+            var filter = Qt.createQmlObject("import QtOrganizer 5.0; DetailFieldFilter{}", modelTests)
             filter.detail = Detail.EventTime
             filter.field = EventTime.FieldAllDay
             filter.value = true

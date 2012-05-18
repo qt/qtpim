@@ -937,7 +937,7 @@ QOrganizerItem QOrganizerJsonDbRequestThread::fetchParentItem(const QOrganizerIt
     }
     // if parent was not found based on id, try with guid
     if (!occurrence.guid().isEmpty()) {
-        QOrganizerItemDetailFilter guidFilter;
+        QOrganizerItemDetailFieldFilter guidFilter;
         guidFilter.setDetail(QOrganizerItemDetail::TypeGuid, QOrganizerItemGuid::FieldGuid);
         guidFilter.setValue(occurrence.guid());
 
@@ -1296,10 +1296,10 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
 
             QOrganizerItemUnionFilter unionFilter;
             for (int i = 0; i < removedParentIds.size(); i++) {
-                QOrganizerItemDetailFilter detailFilter;
-                detailFilter.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
-                detailFilter.setValue(QVariant::fromValue(removedParentIds[i]));
-                unionFilter.append(detailFilter);
+                QOrganizerItemDetailFieldFilter detailFieldFilter;
+                detailFieldFilter.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
+                detailFieldFilter.setValue(QVariant::fromValue(removedParentIds[i]));
+                unionFilter.append(detailFieldFilter);
             }
 
             tmpError = QOrganizerManager::NoError;

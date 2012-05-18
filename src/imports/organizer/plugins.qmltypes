@@ -515,13 +515,20 @@ Module {
         }
     }
     Component {
-        name: "QDeclarativeOrganizerItemDetailFilter"
+        name: "QDeclarativeOrganizerItemDetailFieldFilter"
         prototype: "QDeclarativeOrganizerItemFilter"
-        exports: ["DetailFilter 5.0"]
+        exports: ["DetailFieldFilter 5.0"]
         Property { name: "value"; type: "QVariant" }
         Property { name: "matchFlags"; type: "QDeclarativeOrganizerItemFilter::MatchFlags" }
         Property { name: "field"; type: "int" }
         Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail::DetailType" }
+        Signal { name: "valueChanged"; type: "void" }
+    }
+    Component {
+        name: "QDeclarativeOrganizerItemDetailFilter"
+        prototype: "QDeclarativeOrganizerItemFilter"
+        exports: ["DetailFilter 5.0"]
+        Property { name: "detail"; type: "QDeclarativeOrganizerItemDetail"; isPointer: true }
         Signal { name: "valueChanged"; type: "void" }
     }
     Component {
@@ -631,14 +638,15 @@ Module {
         Enum {
             name: "FilterType"
             values: {
-                "DefaultFilter": 7,
+                "DefaultFilter": 8,
                 "InvalidFilter": 0,
-                "IntersectionFilter": 3,
-                "UnionFilter": 4,
-                "CollectionFilter": 6,
+                "IntersectionFilter": 4,
+                "UnionFilter": 5,
+                "CollectionFilter": 7,
                 "DetailFilter": 1,
-                "DetailRangeFilter": 2,
-                "IdFilter": 5
+                "DetailFieldFilter": 2,
+                "DetailRangeFilter": 3,
+                "IdFilter": 6
             }
         }
         Enum {

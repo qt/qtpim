@@ -65,6 +65,7 @@ public:
         UnionFilter = QOrganizerItemFilter::UnionFilter,
         CollectionFilter = QOrganizerItemFilter::CollectionFilter,
         DetailFilter = QOrganizerItemFilter::DetailFilter,
+        DetailFieldFilter = QOrganizerItemFilter::DetailFieldFilter,
         DetailRangeFilter = QOrganizerItemFilter::DetailRangeFilter,
         IdFilter = QOrganizerItemFilter::IdFilter
     };
@@ -174,6 +175,37 @@ private:
 class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
 {
     Q_OBJECT
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail *detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_INTERFACES(QQmlParserStatus)
+
+public:
+    QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
+
+    // inherited from QQmlParserStatus
+    void classBegin();
+    void componentComplete();
+
+    QDeclarativeOrganizerItemDetail *detail() const;
+    void setDetail(QDeclarativeOrganizerItemDetail *detail);
+
+    // used by model
+    QOrganizerItemFilter filter() const;
+
+signals:
+    void valueChanged();
+
+private:
+    void setDetail();
+
+    QDeclarativeOrganizerItemDetail *m_detail;
+    bool m_componentCompleted;
+    QOrganizerItemDetailFilter d;
+};
+
+
+class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
+{
+    Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
@@ -181,7 +213,7 @@ class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFi
     Q_INTERFACES(QQmlParserStatus)
 
 public:
-    QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent = 0);
 
     // inherited from QQmlParserStatus
     void classBegin();
@@ -211,7 +243,7 @@ private:
     QDeclarativeOrganizerItemDetail::DetailType m_detail;
     int m_field;
     bool m_componentCompleted;
-    QOrganizerItemDetailFilter d;
+    QOrganizerItemDetailFieldFilter d;
 };
 
 
@@ -308,6 +340,7 @@ QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIntersec
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemUnionFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemCollectionFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailFilter))
+QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailFieldFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetailRangeFilter))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemIdFilter))
 

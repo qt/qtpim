@@ -580,8 +580,8 @@ bool QOrganizerManagerEngine::removeCollection(const QOrganizerCollectionId& col
    \li An empty QOrganizerItemUnionFilter will be replaced with a QOrganizerItemInvalidFilter
    \li An empty QOrganizerItemIdFilter will be replaced with a QOrganizerItemInvalidFilter
    \li An intersection or union filter with a single entry will be replaced by that entry
-   \li A QOrganizerItemDetailFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
-   \li A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFilter
+   \li A QOrganizerItemDetailFieldFilter or QOrganizerItemDetailRangeFilter with no definition name will be replaced with a QOrganizerItemInvalidFilter
+   \li A QOrganizerItemDetailRangeFilter with no range specified will be converted to a QOrganizerItemDetailFieldFilter
   \endlist
 */
 QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganizerItemFilter &filter)
@@ -662,7 +662,7 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
                 && f.rangeFlags() == (QOrganizerItemDetailRangeFilter::ExcludeLower | QOrganizerItemDetailRangeFilter::ExcludeUpper))
                 return QOrganizerItemInvalidFilter();
             if ((f.minValue().isNull() && f.maxValue().isNull()) || (f.minValue() == f.maxValue())) {
-                QOrganizerItemDetailFilter df;
+                QOrganizerItemDetailFieldFilter df;
                 df.setDetail(f.detailType(), f.detailField());
                 df.setMatchFlags(f.matchFlags());
                 df.setValue(f.minValue());
@@ -671,9 +671,9 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
         }
         break; // fall through to return at end
 
-        case QOrganizerItemFilter::DetailFilter:
+        case QOrganizerItemFilter::DetailFieldFilter:
         {
-            QOrganizerItemDetailFilter f(filter);
+            QOrganizerItemDetailFieldFilter f(filter);
             if (f.detailType() == QOrganizerItemDetail::TypeUndefined)
                 return QOrganizerItemInvalidFilter();
         }
@@ -769,10 +769,42 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
             }
             // Fall through to end
             break;
-
         case QOrganizerItemFilter::DetailFilter:
             {
                 const QOrganizerItemDetailFilter cdf(filter);
+
+                //Compatibility with obsoleted API
+                //TODO: Remove when detailFilter API is cleaned up
+                if ( (cdf.detailType() != QOrganizerItemDetail::TypeUndefined) &&
+                     (cdf.detailField() != -1) ) {
+                    QOrganizerItemDetailFieldFilter newFilter;
+                    newFilter.setDetail(cdf.detailType(), cdf.detailField());
+                    newFilter.setMatchFlags(cdf.matchFlags());
+                    newFilter.setValue(cdf.value());
+                    return testFilter(newFilter, item);
+                }
+
+                QOrganizerItemDetail matchingDetail = cdf.detail();
+                if ( (matchingDetail.isEmpty()) || (matchingDetail.type() == QOrganizerItemDetail::TypeUndefined) )
+                    return false;
+
+                /* See if this organizer item has one of these details in it */
+                const QList<QOrganizerItemDetail>& details = item.details(cdf.detail().type());
+                if (details.count() == 0)
+                    return false; /* can't match */
+
+                /* Value equality test */
+                for (int j=0; j < details.count(); j++) {
+                    if (details.at(j) == matchingDetail)
+                        return true;
+                }
+                return false;
+            }
+            // Fall through to end
+            break;
+        case QOrganizerItemFilter::DetailFieldFilter:
+            {
+                const QOrganizerItemDetailFieldFilter cdf(filter);
                 if (cdf.detailType() == QOrganizerItemDetail::TypeUndefined)
                     return false;
 

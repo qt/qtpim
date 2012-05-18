@@ -47,6 +47,7 @@
 
 #include <qorganizeritemunionfilter.h>
 #include <qorganizeritemdetailfilter.h>
+#include <qorganizeritemdetailfieldfilter.h>
 #include <qorganizeritemdetailrangefilter.h>
 #include <qorganizeritemintersectionfilter.h>
 #include <qorganizeriteminvalidfilter.h>

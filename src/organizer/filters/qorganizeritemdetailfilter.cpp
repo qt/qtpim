@@ -50,7 +50,8 @@ QTORGANIZER_BEGIN_NAMESPACE
     \inmodule QtOrganizer
     \ingroup organizer-filters
 
-    It may be used to select organizeritems which contain a detail of a particular type and a particular value.
+    It may be used to select organizeritems which contain a detail identical to that used by
+    this filter for matching.
  */
 
 Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)
@@ -70,41 +71,90 @@ QOrganizerItemDetailFilter::QOrganizerItemDetailFilter()
 }
 
 /*!
-    Sets the type of detail which will be matched to \a detailType, and the field of the detail
-    which will contain the value criterion to \a field.
+    Sets the type of detail that will be matched to \a detailType, and the field of the detail
+    that will contain the value criterion to \a field.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa detailType(), detailField()
+    \deprecated
  */
 void QOrganizerItemDetailFilter::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::setDetail() instead."
+             , Q_FUNC_INFO);
     Q_D(QOrganizerItemDetailFilter);
+    int fieldId;
     if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
         d->m_detailType = detailType;
-        d->m_detailField = field;
+        fieldId = field;
     } else {
         d->m_detailType = QOrganizerItemDetail::TypeUndefined;
-        d->m_detailField = -1;
+        fieldId = -1;
     }
+    if (d->m_detailFields.isEmpty())
+        d->m_detailFields.append(fieldId);
+    else
+        d->m_detailFields[0] = fieldId;
+}
+
+/*!
+    Sets the detail that will be matched to \a detail.
+
+    \sa detail()
+ */
+void QOrganizerItemDetailFilter::setDetail(const QOrganizerItemDetail &detail)
+{
+    Q_D(QOrganizerItemDetailFilter);
+    d->m_detail = detail;
+}
+
+/*!
+    Returns the detail which will be matched by this filter.
+
+    \sa setDetail()
+ */
+QOrganizerItemDetail QOrganizerItemDetailFilter::detail() const
+{
+    Q_D(const QOrganizerItemDetailFilter);
+    return d->m_detail;
 }
 
 /*!
     Sets the value criterion of the filter to \a value.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa value()
+    \deprecated
  */
 void QOrganizerItemDetailFilter::setValue(const QVariant &value)
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::setValue() instead."
+             , Q_FUNC_INFO);
     Q_D(QOrganizerItemDetailFilter);
-    d->m_exactValue = value;
+    if (!value.isNull()) {
+        if (d->m_exactValues.isEmpty())
+            d->m_exactValues.append(value);
+        else
+            d->m_exactValues[0] = value;
+    }
 }
 
 /*!
     Sets the semantics of the value matching criterion to those defined in \a flags.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa matchFlags()
  */
 void QOrganizerItemDetailFilter::setMatchFlags(QOrganizerItemFilter::MatchFlags flags)
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::setMatchFlags() instead."
+             , Q_FUNC_INFO);
     Q_D(QOrganizerItemDetailFilter);
     d->m_flags = flags;
 }
@@ -112,10 +162,15 @@ void QOrganizerItemDetailFilter::setMatchFlags(QOrganizerItemFilter::MatchFlags 
 /*!
     Returns the semantics of the value matching criterion.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa setMatchFlags()
  */
 QOrganizerItemFilter::MatchFlags QOrganizerItemDetailFilter::matchFlags() const
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::matchFlags() instead."
+             , Q_FUNC_INFO);
     Q_D(const QOrganizerItemDetailFilter);
     return d->m_flags;
 }
@@ -123,10 +178,16 @@ QOrganizerItemFilter::MatchFlags QOrganizerItemDetailFilter::matchFlags() const
 /*!
     Returns the type of the detail which will be inspected for matching values.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa setDetail()
+    \deprecated
  */
 QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailType() const
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::detailType() instead."
+             , Q_FUNC_INFO);
     Q_D(const QOrganizerItemDetailFilter);
     return d->m_detailType;
 }
@@ -134,23 +195,35 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetailFilter::detailType() const
 /*!
     Returns the detail field containing the value which will be matched against the value criterion.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa setDetail()
+    \deprecated
  */
 int QOrganizerItemDetailFilter::detailField() const
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::detailField() instead."
+             , Q_FUNC_INFO);
     Q_D(const QOrganizerItemDetailFilter);
-    return d->m_detailField;
+    return d->m_detailFields.isEmpty() ? -1 : d->m_detailFields.first() ;
 }
 
 /*!
     Returns the value criterion of the detail filter.
 
+    \warning This method is deprecated because same functionality
+             has been migrated to QOrganizerItemDetailFieldFilter. Use the
+             new QOrganizerItemDetailFieldFilter class instead.
     \sa setValue()
+    \deprecated
  */
 QVariant QOrganizerItemDetailFilter::value() const
 {
+    qWarning("%s is deprecated, use QOrganizerItemDetailFieldFilter::value() instead."
+             , Q_FUNC_INFO);
     Q_D(const QOrganizerItemDetailFilter);
-    return d->m_exactValue;
+    return d->m_exactValues.isEmpty() ? QVariant() : d->m_exactValues.first();
 }
 
 QTORGANIZER_END_NAMESPACE

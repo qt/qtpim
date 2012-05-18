@@ -39,41 +39,38 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILFILTER_H
-#define QORGANIZERITEMDETAILFILTER_H
+#ifndef QORGANIZERITEMDETAILFIELDFILTER_H
+#define QORGANIZERITEMDETAILFIELDFILTER_H
 
 #include <qorganizeritemfilter.h>
 #include <qorganizeritemdetail.h>
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerItemDetailFilterPrivate;
+class QOrganizerItemDetailFieldFilterPrivate;
 
 /* Leaf class */
 
-class Q_ORGANIZER_EXPORT QOrganizerItemDetailFilter : public QOrganizerItemFilter
+class Q_ORGANIZER_EXPORT QOrganizerItemDetailFieldFilter : public QOrganizerItemFilter
 {
 public:
-    QOrganizerItemDetailFilter();
-    QOrganizerItemDetailFilter(const QOrganizerItemFilter &other);
+    QOrganizerItemDetailFieldFilter();
+    QOrganizerItemDetailFieldFilter(const QOrganizerItemFilter &other);
 
-    QT_DEPRECATED void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
-    void setDetail(const QOrganizerItemDetail &detail);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
+    QOrganizerItemDetail::DetailType detailType() const;
+    int detailField() const;
 
-    QT_DEPRECATED QOrganizerItemDetail::DetailType detailType() const;
-    QT_DEPRECATED int detailField() const;
-    QOrganizerItemDetail detail() const;
+    void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
+    QOrganizerItemFilter::MatchFlags matchFlags() const;
 
-    QT_DEPRECATED void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
-    QT_DEPRECATED QOrganizerItemFilter::MatchFlags matchFlags() const;
-
-    QT_DEPRECATED void setValue(const QVariant &value);
-    QT_DEPRECATED QVariant value() const;
+    void setValue(const QVariant &value);
+    QVariant value() const;
 
 private:
-    Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)
+    Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFieldFilter)
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif // QORGANIZERITEMDETAILFILTER_H
+#endif // QORGANIZERITEMDETAILFIELDFILTER_H

@@ -74,8 +74,9 @@ QDeclarativeOrganizerItemFilter::QDeclarativeOrganizerItemFilter(QObject *parent
     \li Filter.UnionFilter         A filter which matches any organizer item that is matched by any
                                   of the filters it includes.
     \li Filter.CollectionFilter    A filter which matches any organizer item that is matched by collection.
-    \li Filter.DetailFilter        A filter which matches organizer items containing one or more details
-                                  of a particular type with a particular value.
+    \li Filter.DetailFilter        A filter which matches organizer items containing exactly one given detail.
+    \li Filter.DetailFieldFilter   A filter which matches organizer items containing one or more details
+                                  of a particular type with a particular field having a particular value.
     \li Filter.DetailRangeFilter   A filter which matches organizer items containing one or more details
                                   of a particular type whose values are within a particular range.
     \li Filter.IdFilter            A filter which matches any organizer item whose ID is contained in
@@ -324,6 +325,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
 }
 
 
+
 /*!
     \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
     \brief The DetailFilter element provides a filter based around a detail value criterion.
@@ -342,11 +344,14 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
             filter: todoFilter
         }
 
+        Type {
+            id: typeDetailToMatch
+            type: Type.Todo
+        }
+
         DetailFilter {
             id: todoFilter
-            detail: Detail.Type
-            field: Type.FieldType
-            value: Type.Todo
+            detail: typeDetailToMatch
         }
 
         ListView {
@@ -365,9 +370,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
  */
 QDeclarativeOrganizerItemDetailFilter::QDeclarativeOrganizerItemDetailFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
-    , m_field(-1)
-    , m_componentCompleted(false)
+    , m_detail(0), m_componentCompleted(false)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
 }
@@ -389,17 +392,16 @@ void QDeclarativeOrganizerItemDetailFilter::componentComplete()
 }
 
 /*!
-    \qmlproperty enum DetailFilter::detail
+    \qmlproperty Detail DetailFilter::detail
 
-    This property holds the detail type of which the detail filter will be matched to. The value
-    shuold be the enumeration value of Detail::type.
+    This property holds the detail instance used by this filter for matching.
   */
-QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailFilter::detail() const
+QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFilter::detail() const
 {
     return m_detail;
 }
 
-void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
+void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemDetail *detail)
 {
     if (m_detail != detail) {
         m_detail = detail;
@@ -408,82 +410,6 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemD
     }
 }
 
-/*!
-    \qmlproperty enum DetailFilter::field
-
-    This property holds the detail field type of which the detail filter will be matched to. The
-    value should be the filld enumeration value defined in each detail element.
-
-    \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
-        EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
-        Timestamp, ItemType, Tag
-  */
-int QDeclarativeOrganizerItemDetailFilter::field() const
-{
-    return m_field;
-}
-
-void QDeclarativeOrganizerItemDetailFilter::setField(int field)
-{
-    if (field != m_field) {
-        m_field = field;
-        if (m_componentCompleted)
-            setDetail();
-    }
-}
-
-/*!
-  \qmlproperty variant DetailFilter::value
-
-  This property holds the value criterion of the detail filter.
-  */
-QVariant QDeclarativeOrganizerItemDetailFilter::value() const
-{
-    return d.value();
-}
-
-void QDeclarativeOrganizerItemDetailFilter::setValue(const QVariant &newValue)
-{
-    if (newValue != value()) {
-        if (QVariant::DateTime == newValue.type()) {
-            // handling dates and datetimes internally as UTC
-            d.setValue(newValue.toDateTime().toUTC());
-        } else {
-            d.setValue(newValue);
-        }
-        emit valueChanged();
-    }
-}
-
-/*!
-  \qmlproperty enumeration DetailFilter::matchFlags
-
-  This property holds the semantics of the value matching criterion. The valid match flags include:
-  \list
-  \li MatchExactly - Performs QVariant-based matching (default).
-  \li MatchContains - The search term is contained in the item.
-  \li MatchStartsWith - The search term matches the start of the item.
-  \li MatchEndsWith - The search term matches the end of the item.
-  \li MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
-  \li MatchCaseSensitive - The search is case sensitive.
-  \endlist
- */
-QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailFilter::matchFlags() const
-{
-    QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
-    newFlags = ~newFlags & (int)d.matchFlags();
-    return newFlags;
-}
-
-void QDeclarativeOrganizerItemDetailFilter::setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
-{
-    QOrganizerItemFilter::MatchFlags newFlags;
-    newFlags = ~newFlags & (int)flags;
-    if (newFlags != d.matchFlags()) {
-        d.setMatchFlags(newFlags);
-        emit valueChanged();
-    }
-}
 
 /*!
     \internal
@@ -497,6 +423,187 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
     \internal
  */
 void QDeclarativeOrganizerItemDetailFilter::setDetail()
+{
+    if (m_detail) {
+        d.setDetail(m_detail->detail());
+        emit valueChanged();
+    }
+}
+
+
+/*!
+    \qmlclass DetailFieldFilter QDeclarativeOrganizerItemDetailFieldFilter
+    \brief The DetailFieldFilter element provides a filter based around a detail value criterion.
+    \inqmlmodule QtOrganizer
+    \ingroup qml-organizer-filters
+
+    Simple example how to utilize DetailFieldFilter element together with OrganizerModel and ListView elements:
+    \code
+    Rectangle {
+        height: 400; width: 400;
+
+        OrganizerModel{
+            id: organizer
+            startPeriod: "2009-01-01"
+            endPeriod: "2012-12-31"
+            filter: todoFilter
+        }
+
+        DetailFieldFilter {
+            id: todoFilter
+            detail: Detail.Type
+            field: Type.FieldType
+            value: Type.Todo
+        }
+
+        ListView {
+            width: parent.width; height: parent.height;
+            model: organizer.items
+            delegate: Text {text: displayLabel}
+        }
+    }
+    \endcode
+
+    \sa QOrganizerItemDetailFieldFilter
+ */
+
+/*!
+    \internal
+ */
+QDeclarativeOrganizerItemDetailFieldFilter::QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent)
+    : QDeclarativeOrganizerItemFilter(parent)
+    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
+    , m_field(-1)
+    , m_componentCompleted(false)
+{
+    connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFieldFilter::classBegin()
+{
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFieldFilter::componentComplete()
+{
+    setDetail();
+    m_componentCompleted = true;
+}
+
+/*!
+    \qmlproperty enum DetailFieldFilter::detail
+
+    This property holds the detail type of which the detail filter will be matched to. The value
+    shuold be the enumeration value of Detail::type.
+  */
+QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailFieldFilter::detail() const
+{
+    return m_detail;
+}
+
+void QDeclarativeOrganizerItemDetailFieldFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
+{
+    if (m_detail != detail) {
+        m_detail = detail;
+        if (m_componentCompleted)
+            setDetail();
+    }
+}
+
+/*!
+    \qmlproperty enum DetailFieldFilter::field
+
+    This property holds the detail field type of which the detail field filter will be matched to. The
+    value should be the filld enumeration value defined in each detail element.
+
+    \sa EventTime, JournalTime, TodoTime, TodoProgress, Reminder, AudibleReminder, VisualReminder,
+        EmailReminder, Comment, Description, DisplayLabel, Guid, Location, Parent, Priority, Recurrence,
+        Timestamp, ItemType, Tag
+  */
+int QDeclarativeOrganizerItemDetailFieldFilter::field() const
+{
+    return m_field;
+}
+
+void QDeclarativeOrganizerItemDetailFieldFilter::setField(int field)
+{
+    if (field != m_field) {
+        m_field = field;
+        if (m_componentCompleted)
+            setDetail();
+    }
+}
+
+/*!
+  \qmlproperty variant DetailFieldFilter::value
+
+  This property holds the value criterion of the detail field filter.
+  */
+QVariant QDeclarativeOrganizerItemDetailFieldFilter::value() const
+{
+    return d.value();
+}
+
+void QDeclarativeOrganizerItemDetailFieldFilter::setValue(const QVariant &newValue)
+{
+    if (newValue != value()) {
+        if (QVariant::DateTime == newValue.type()) {
+            // handling dates and datetimes internally as UTC
+            d.setValue(newValue.toDateTime().toUTC());
+        } else {
+            d.setValue(newValue);
+        }
+        emit valueChanged();
+    }
+}
+
+/*!
+  \qmlproperty enumeration DetailFieldFilter::matchFlags
+
+  This property holds the semantics of the value matching criterion. The valid match flags include:
+  \list
+  \li MatchExactly - Performs QVariant-based matching (default).
+  \li MatchContains - The search term is contained in the item.
+  \li MatchStartsWith - The search term matches the start of the item.
+  \li MatchEndsWith - The search term matches the end of the item.
+  \li MatchFixedString - Performs string-based matching. String-based comparisons are case-insensitive unless the \c MatchCaseSensitive flag is also specified.
+  \li MatchCaseSensitive - The search is case sensitive.
+  \endlist
+ */
+QDeclarativeOrganizerItemFilter::MatchFlags QDeclarativeOrganizerItemDetailFieldFilter::matchFlags() const
+{
+    QDeclarativeOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)d.matchFlags();
+    return newFlags;
+}
+
+void QDeclarativeOrganizerItemDetailFieldFilter::setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
+{
+    QOrganizerItemFilter::MatchFlags newFlags;
+    newFlags = ~newFlags & (int)flags;
+    if (newFlags != d.matchFlags()) {
+        d.setMatchFlags(newFlags);
+        emit valueChanged();
+    }
+}
+
+/*!
+    \internal
+ */
+QOrganizerItemFilter QDeclarativeOrganizerItemDetailFieldFilter::filter() const
+{
+    return d;
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeOrganizerItemDetailFieldFilter::setDetail()
 {
     d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
     emit valueChanged();
@@ -625,7 +732,7 @@ QVariant QDeclarativeOrganizerItemDetailRangeFilter::maxValue() const
   \qmlproperty enumeration DetailRangeFilter::matchFlags
 
   This property holds the match flags of the criterion, which define semantics such as case sensitivity, and exact matching.
-  \sa DetailFilter::matchFlags
+  \sa DetailFieldFilter::matchFlags
   */
 void QDeclarativeOrganizerItemDetailRangeFilter::setMatchFlags(QDeclarativeOrganizerItemFilter::MatchFlags flags)
 {

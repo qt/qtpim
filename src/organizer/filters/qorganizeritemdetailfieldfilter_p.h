@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QORGANIZERITEMDETAILFILTER_P_H
-#define QORGANIZERITEMDETAILFILTER_P_H
+#ifndef QORGANIZERITEMDETAILFIELDFILTER_P_H
+#define QORGANIZERITEMDETAILFIELDFILTER_P_H
 
 //
 //  W A R N I N G
@@ -58,26 +58,26 @@
 
 QTORGANIZER_BEGIN_NAMESPACE
 
-class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
+class QOrganizerItemDetailFieldFilterPrivate : public QOrganizerItemFilterPrivate
 {
 public:
-    QOrganizerItemDetailFilterPrivate()
-        : QOrganizerItemFilterPrivate(), m_detailType(QOrganizerItemDetail::TypeUndefined), m_detailFields(QList<int>()), m_flags(0)
+    QOrganizerItemDetailFieldFilterPrivate()
+        : QOrganizerItemFilterPrivate(), m_detailType(QOrganizerItemDetail::TypeUndefined), m_detailField(-1), m_flags(0)
     {
     }
 
-    QOrganizerItemDetailFilterPrivate(const QOrganizerItemDetailFilterPrivate& other)
-        : QOrganizerItemFilterPrivate(other), m_detailType(other.m_detailType), m_detailFields(other.m_detailFields),
-          m_exactValues(other.m_exactValues), m_flags(other.m_flags)
+    QOrganizerItemDetailFieldFilterPrivate(const QOrganizerItemDetailFieldFilterPrivate& other)
+        : QOrganizerItemFilterPrivate(other), m_detailType(other.m_detailType), m_detailField(other.m_detailField),
+          m_exactValue(other.m_exactValue), m_flags(other.m_flags)
     {
     }
 
     virtual bool compare(const QOrganizerItemFilterPrivate *other) const
     {
-        const QOrganizerItemDetailFilterPrivate *od = static_cast<const QOrganizerItemDetailFilterPrivate *>(other);
+        const QOrganizerItemDetailFieldFilterPrivate *od = static_cast<const QOrganizerItemDetailFieldFilterPrivate *>(other);
         if (od) {
-            return (m_detailType == od->m_detailType) && (m_detailFields == od->m_detailFields)
-                   && (m_exactValues == od->m_exactValues) && (m_flags == od->m_flags);
+            return (m_detailType == od->m_detailType) && (m_detailField == od->m_detailField)
+                   && (m_exactValue == od->m_exactValue) && (m_flags == od->m_flags);
         }
         return false;
     }
@@ -86,7 +86,7 @@ public:
     QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
         if (formatVersion == 1)
-            stream << m_detailType << m_detailFields << m_exactValues << static_cast<quint32>(m_flags);
+            stream << m_detailType << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
         return stream;
     }
 
@@ -95,7 +95,7 @@ public:
         if (formatVersion == 1) {
             quint32 flags;
             quint32 defId;
-            stream >> defId >> m_detailFields >> m_exactValues >> flags;
+            stream >> defId >> m_detailField >> m_exactValue >> flags;
             m_detailType = static_cast<QOrganizerItemDetail::DetailType>(defId);
             m_flags = static_cast<QOrganizerItemFilter::MatchFlags>(flags);
         }
@@ -106,15 +106,15 @@ public:
 #ifndef QT_NO_DEBUG_STREAM
     QDebug &debugStreamOut(QDebug &dbg) const
     {
-        dbg.nospace() << "QOrganizerItemDetailFilter(";
+        dbg.nospace() << "QOrganizerItemDetailFieldFilter(";
         dbg.nospace() << "detailType=";
         dbg.nospace() << m_detailType;
         dbg.nospace() << ",";
-        dbg.nospace() << "detailFields=";
-        dbg.nospace() << m_detailFields;
+        dbg.nospace() << "detailField=";
+        dbg.nospace() << m_detailField;
         dbg.nospace() << ",";
-        dbg.nospace() << "values=";
-        dbg.nospace() << m_exactValues;
+        dbg.nospace() << "value=";
+        dbg.nospace() << m_exactValue;
         dbg.nospace() << ",";
         dbg.nospace() << "matchFlags=";
         dbg.nospace() << static_cast<quint32>(m_flags);
@@ -123,15 +123,14 @@ public:
     }
 #endif // QT_NO_DEBUG_STREAM
 
-    Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFilter, QOrganizerItemFilter::DetailFilter)
+    Q_IMPLEMENT_ORGANIZERITEMFILTER_VIRTUALCTORS(QOrganizerItemDetailFieldFilter, QOrganizerItemFilter::DetailFieldFilter)
 
-    QOrganizerItemDetail m_detail;
     QOrganizerItemDetail::DetailType m_detailType;
-    QList<int> m_detailFields;
-    QVariantList m_exactValues;
+    int m_detailField;
+    QVariant m_exactValue;
     QOrganizerItemFilter::MatchFlags m_flags;
 };
 
 QTORGANIZER_END_NAMESPACE
 
-#endif // QORGANIZERITEMDETAILFILTER_P_H
+#endif // QORGANIZERITEMDETAILFIELDFILTER_P_H

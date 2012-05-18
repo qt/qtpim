@@ -1865,15 +1865,15 @@ void tst_QOrganizerManager::invalidManager()
 
     /* filters */
     QOrganizerItemFilter f; // matches everything
-    QOrganizerItemDetailFilter df;
-    df.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
+    QOrganizerItemDetailFieldFilter dff;
+    dff.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     QVERIFY(manager.itemIds(QDateTime(), QDateTime(), QOrganizerItemFilter()).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), df).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), dff).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
     QVERIFY(manager.itemIds(QDateTime(), QDateTime(), f | f).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
-    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), df | df).count() == 0);
+    QVERIFY(manager.itemIds(QDateTime(), QDateTime(), dff | dff).count() == 0);
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
 
     QVERIFY(manager.supportedFilters().size() == 0);
@@ -2920,8 +2920,8 @@ void tst_QOrganizerManager::testFilterFunction()
     QVERIFY(fdf.type() == QOrganizerItemFilter::DefaultFilter);
     QVERIFY(QOrganizerManagerEngine::testFilter(fdf, item));
 
-    // Test for QOrganizerItemFilter::OrganizerItemDetailFilter:
-    QOrganizerItemDetailFilter fdef;
+    // Test for QOrganizerItemFilter::OrganizerItemDetailFieldFilter:
+    QOrganizerItemDetailFieldFilter fdef;
     fdef.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
     fdef.setValue("invalid");
     // test for nonexistent label
@@ -3005,6 +3005,8 @@ void tst_QOrganizerManager::itemFilterFetch()
     // Preparations
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
+    QOrganizerItemExtendedDetail extDetail;
+    QOrganizerItemComment comment;
     cm->removeItems(cm->itemIds()); // empty the calendar to prevent the previous test from interfering this one
     for (int i=0; i<6; i++) {
         QOrganizerEvent event;
@@ -3016,7 +3018,6 @@ void tst_QOrganizerManager::itemFilterFetch()
             event.setPriority(QOrganizerItemPriority::VeryLowPriority);
         } else if (i==1) {
             // 2
-            QOrganizerItemComment comment;
             comment.setComment("my comment");
             event.saveDetail(&comment);
         } else if (i==2) {
@@ -3034,7 +3035,6 @@ void tst_QOrganizerManager::itemFilterFetch()
             event.setEndDateTime(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
         } else if (i==5) {
             // 6
-            QOrganizerItemExtendedDetail extDetail;
             extDetail.setName("DetailOfMine");
             extDetail.setData(42);
             event.saveDetail(&extDetail);
@@ -3043,44 +3043,120 @@ void tst_QOrganizerManager::itemFilterFetch()
     }
     QCOMPARE(cm->items().count(), 6);
 
-    // Checks
-    QOrganizerItemDetailFilter dfil;
+    // DetailFieldFilter Checks
+    QOrganizerItemDetailFieldFilter dFieldFilter;
     // 1
-    dfil.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
-    dfil.setValue(QOrganizerItemPriority::VeryHighPriority);
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 0);
-    dfil.setValue(QOrganizerItemPriority::VeryLowPriority);
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
+    dFieldFilter.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
+    dFieldFilter.setValue(QOrganizerItemPriority::VeryHighPriority);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 0);
+    dFieldFilter.setValue(QOrganizerItemPriority::VeryLowPriority);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
     // 2
-    dfil.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    dfil.setValue("my comment");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
+    dFieldFilter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
+    dFieldFilter.setValue("my comment");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
     // 3-4
-    dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
-    dfil.setValue("my 3rd event!");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
-    dfil.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
-    dfil.setValue("event!");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
-    dfil.setValue("event");
-    dfil.setMatchFlags(QOrganizerItemFilter::MatchContains);
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), cm->items().count());
-    dfil.setValue("my");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
-    dfil.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 2);
-    dfil.setValue("event");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 4);
+    dFieldFilter.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
+    dFieldFilter.setValue("my 3rd event!");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+    dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+    dFieldFilter.setValue("event!");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+    dFieldFilter.setValue("event");
+    dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchContains);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), cm->items().count());
+    dFieldFilter.setValue("my");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+    dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+    dFieldFilter.setValue("event");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 4);
     // 5
-    dfil.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-    dfil.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
-    dfil.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
+    dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchExactly);
+    dFieldFilter.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
+    dFieldFilter.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
     // 6
-    dfil.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
-    dfil.setValue("DetailOfMine");
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), dfil).count(), 1);
+    dFieldFilter.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
+    dFieldFilter.setValue("DetailOfMine");
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+
+    // DetailFilter Checks: Compatibility with deprecated API
+    //TODO: remove when cleaning up detailFilter API
+    if (cm->managerName() == QStringLiteral("memory")) {
+        QOrganizerItemDetailFilter dFieldFilter;
+        // 1
+        dFieldFilter.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
+        dFieldFilter.setValue(QOrganizerItemPriority::VeryHighPriority);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 0);
+        dFieldFilter.setValue(QOrganizerItemPriority::VeryLowPriority);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+        // 2
+        dFieldFilter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
+        dFieldFilter.setValue("my comment");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+        // 3-4
+        dFieldFilter.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
+        dFieldFilter.setValue("my 3rd event!");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+        dFieldFilter.setValue("event!");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+        dFieldFilter.setValue("event");
+        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchContains);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), cm->items().count());
+        dFieldFilter.setValue("my");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
+        dFieldFilter.setValue("event");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 4);
+        // 5
+        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchExactly);
+        dFieldFilter.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
+        dFieldFilter.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+        // 6
+        dFieldFilter.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
+        dFieldFilter.setValue("DetailOfMine");
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
+    }
+
+    // DetailFilter Checks
+    if (cm->managerName() == QStringLiteral("memory")) {
+        QOrganizerItemDetailFilter dFilter;
+        // 1
+        QOrganizerItemPriority priority;
+        priority.setPriority(QOrganizerItemPriority::VeryHighPriority);
+        dFilter.setDetail(priority);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 0);
+        priority.setPriority(QOrganizerItemPriority::VeryLowPriority);
+        dFilter.setDetail(priority);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 1);
+        // 2
+        dFilter.setDetail(comment);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 1);
+        // 3-4
+        QOrganizerItemDisplayLabel displayLabel;
+        displayLabel.setLabel(QStringLiteral("my 3rd event!"));
+        dFilter.setDetail(displayLabel);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 1);
+        displayLabel.setLabel(QStringLiteral("my non existing event!"));
+        dFilter.setDetail(displayLabel);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 0);
+        // 5
+        QOrganizerEventTime eventTime;
+        eventTime.setEndDateTime(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
+        eventTime.setStartDateTime(QDateTime(QDate(2010, 9, 9), QTime(11, 0, 0)));
+        dFilter.setDetail(eventTime);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 1);
+        // 6
+        dFilter.setDetail(extDetail);
+        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFilter).count(), 1);
+    }
+
 }
 
 void tst_QOrganizerManager::itemFetch()
@@ -3200,11 +3276,11 @@ void tst_QOrganizerManager::itemFetch()
     QCOMPARE(eventOccurrenceCount, 1);
 
     //make a parent filter and test item count
-    QOrganizerItemDetailFilter df;
-    df.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
-    df.setValue(QVariant::fromValue(recEvent.id()));
-    QCOMPARE(cm->items(QDateTime(), QDateTime(), df).count(), 3);
-    QCOMPARE(cm->itemsForExport(QDateTime(), QDateTime(), df).count(), 2);
+    QOrganizerItemDetailFieldFilter dff;
+    dff.setDetail(QOrganizerItemDetail::TypeParent, QOrganizerItemParent::FieldParentId);
+    dff.setValue(QVariant::fromValue(recEvent.id()));
+    QCOMPARE(cm->items(QDateTime(), QDateTime(), dff).count(), 3);
+    QCOMPARE(cm->itemsForExport(QDateTime(), QDateTime(), dff).count(), 2);
 
     // third, have all occurrences persisted
     items = cm->items();
@@ -4776,14 +4852,14 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     itemList = mgr->items(QDateTime(), QDateTime(), collectionFilter);
     QCOMPARE(itemList.size(), 2);
     //event
-    QOrganizerItemDetailFilter detailFilter;
-    detailFilter.setDetail(QOrganizerItemDetail::TypeItemType, QOrganizerItemType::FieldType);
-    detailFilter.setValue(QOrganizerItemType::TypeEvent);
-    itemList = mgr->items(QDateTime(), QDateTime(), detailFilter);
+    QOrganizerItemDetailFieldFilter detailFieldFilter;
+    detailFieldFilter.setDetail(QOrganizerItemDetail::TypeItemType, QOrganizerItemType::FieldType);
+    detailFieldFilter.setValue(QOrganizerItemType::TypeEvent);
+    itemList = mgr->items(QDateTime(), QDateTime(), detailFieldFilter);
     QVERIFY(itemList.size() >= 2);
     //event + collection
     QOrganizerItemIntersectionFilter intersFilter;
-    intersFilter.append(detailFilter);
+    intersFilter.append(detailFieldFilter);
     intersFilter.append(collectionFilter);
     itemList = mgr->items(QDateTime(), QDateTime(), intersFilter);
     QCOMPARE(itemList.size(), 1);
@@ -4799,15 +4875,15 @@ void tst_QOrganizerManager::testNestCompoundFilter()
     QCOMPARE(itemList[0].id(), event1.id());
 
     //case 2: myTodo or event + collection + id
-    QOrganizerItemDetailFilter detailFilter2;
-    detailFilter2.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
-    detailFilter2.setValue("myTodo");
-    itemList = mgr->items(QDateTime(), QDateTime(), detailFilter2);
+    QOrganizerItemDetailFieldFilter detailFieldFilter2;
+    detailFieldFilter2.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
+    detailFieldFilter2.setValue("myTodo");
+    itemList = mgr->items(QDateTime(), QDateTime(), detailFieldFilter2);
     QCOMPARE(itemList.size(), 1);
 
     QOrganizerItemUnionFilter unf2;
-    unf2.append(detailFilter2);
-    unf2.append(detailFilter);
+    unf2.append(detailFieldFilter2);
+    unf2.append(detailFieldFilter);
     itemList = mgr->items(QDateTime(), QDateTime(), unf2);
     QVERIFY(itemList.size() >= 3);
 

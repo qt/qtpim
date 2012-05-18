@@ -57,6 +57,7 @@
 #include <QtOrganizer/qorganizermanager.h>
 #include <QtOrganizer/qorganizeritemdetails.h>
 #include <QtOrganizer/qorganizeritemdetailfilter.h>
+#include <QtOrganizer/qorganizeritemdetailfieldfilter.h>
 
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbreadrequest.h>
@@ -136,11 +137,21 @@ private:
     bool collectionFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
     bool idFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const;
-    bool isSupportedDetailFilter(
-        const QOrganizerItemDetailFilter &filter, QOrganizerItemDetail::DetailType detailType, int detailFieldName) const;
+    bool detailFieldFilterToJsondbQuery(const QOrganizerItemFilter &filter, QString *jsonDbQueryStr, int *typeFilterFlag) const;
+    bool isSupportedDetailFieldFilter(const QVariant &fieldValue,
+                                      QOrganizerItemDetail::DetailType detailType,
+                                      int detailFieldName,
+                                      QOrganizerItemFilter::MatchFlags matchFlags) const;
     QString createMatchFlagQuery(const QString &value, QOrganizerItemFilter::MatchFlags flags) const;
+    void addFieldToFilterQuery(QOrganizerItemDetail::DetailType detailType,
+                               int detailField,
+                               const QVariant &fieldValue,
+                               QString *jsonDbQueryStr,
+                               QOrganizerItemFilter::MatchFlags matchFlags,
+                               int *typeFilterFlag) const;
 
     static const int enumMapEnd;
+    static const QMap<int, QString> filterablePropertyNames();
     static const QOrganizerJsonDbEnumConversionData *organizerPriorityEnumMap();
     static const QOrganizerJsonDbEnumConversionData *organizerFrequencyEnumMap();
     static const QOrganizerJsonDbEnumConversionData *organizerDayEnumMap();

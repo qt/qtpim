@@ -97,7 +97,7 @@ QTORGANIZER_BEGIN_NAMESPACE
     // otherLabel.type() == QOrganizerItemDetail::TypeDisplayLabel
     \endcode
 
-    \sa QOrganizerItem, QOrganizerItemDetailFilter, QOrganizerItemDetailRangeFilter
+    \sa QOrganizerItem, QOrganizerItemDetailFilter, QOrganizerItemDetailFieldFilter, QOrganizerItemDetailRangeFilter
  */
 
 /*!

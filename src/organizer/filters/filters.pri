@@ -4,6 +4,7 @@ INCLUDEPATH += filters \
 PUBLIC_HEADERS += \
     filters/qorganizeritemfilters.h \
     filters/qorganizeritemdetailfilter.h \
+    filters/qorganizeritemdetailfieldfilter.h \
     filters/qorganizeritemdetailrangefilter.h \
     filters/qorganizeritemintersectionfilter.h \
     filters/qorganizeriteminvalidfilter.h \
@@ -13,6 +14,7 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     filters/qorganizeritemdetailfilter_p.h \
+    filters/qorganizeritemdetailfieldfilter_p.h \
     filters/qorganizeritemdetailrangefilter_p.h \
     filters/qorganizeritemintersectionfilter_p.h \
     filters/qorganizeritemidfilter_p.h \
@@ -21,6 +23,7 @@ PRIVATE_HEADERS += \
 
 SOURCES += \
     filters/qorganizeritemdetailfilter.cpp \
+    filters/qorganizeritemdetailfieldfilter.cpp \
     filters/qorganizeritemdetailrangefilter.cpp \
     filters/qorganizeritemintersectionfilter.cpp \
     filters/qorganizeriteminvalidfilter.cpp \

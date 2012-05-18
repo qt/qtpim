@@ -50,7 +50,7 @@ QTORGANIZER_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QOrganizerItem)
 Q_DECLARE_METATYPE(QOrganizerItemFilter)
-Q_DECLARE_METATYPE(QOrganizerItemDetailFilter)
+Q_DECLARE_METATYPE(QOrganizerItemDetailFieldFilter)
 
 class tst_QOrganizerItemFilter : public QObject
 {
@@ -67,7 +67,9 @@ private slots:
     void classHierarchy();
     void intersectionFilter();
     void unionFilter();
+    void detailFilterDeprecatedApi();
     void detailFilter();
+    void detailFieldFilter();
     void detailRangeFilter();
     void boringFilters();
     void idListFilter();
@@ -180,16 +182,16 @@ void tst_QOrganizerItemFilter::cleanup()
 void tst_QOrganizerItemFilter::classHierarchy()
 {
     /* Test "casting" up and down the hierarchy */
-    QOrganizerItemDetailFilter df;
-    QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
+    QOrganizerItemDetailFieldFilter df;
+    QVERIFY(df.type() == QOrganizerItemFilter::DetailFieldFilter);
     df.setDetail(QOrganizerItemDetail::TypeUndefined, 101);
     df.setValue(42);
 
     QOrganizerItemFilter f = df;
-    QVERIFY(f.type() == QOrganizerItemFilter::DetailFilter);
+    QVERIFY(f.type() == QOrganizerItemFilter::DetailFieldFilter);
 
-    QOrganizerItemDetailFilter df2 = f;
-    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
+    QOrganizerItemDetailFieldFilter df2 = f;
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value() == 42);
@@ -198,18 +200,18 @@ void tst_QOrganizerItemFilter::classHierarchy()
     {
         QOrganizerItemFilter f2 = df2;
     }
-    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value() == 42);
 
     {
-        QOrganizerItemDetailFilter sdf2 = df2;
+        QOrganizerItemDetailFieldFilter sdf2 = df2;
         sdf2.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
         QVERIFY(sdf2.detailType() == QOrganizerItemDetail::TypeComment);
         QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
     }
-    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(df2.detailField() == -1);
     QVERIFY(df2.value() == 42);
@@ -249,13 +251,13 @@ void tst_QOrganizerItemFilter::classHierarchy()
 void tst_QOrganizerItemFilter::intersectionFilter()
 {
     /* Test boolean ops */
-    QOrganizerItemDetailFilter df;
+    QOrganizerItemDetailFieldFilter df;
     df.setDetail(QOrganizerItemDetail::TypeUndefined, -1);
 
-    QOrganizerItemDetailFilter df2;
+    QOrganizerItemDetailFieldFilter df2;
     df2.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
 
-    QOrganizerItemDetailFilter df3;
+    QOrganizerItemDetailFieldFilter df3;
     df3.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
 
     QOrganizerItemIntersectionFilter bf;
@@ -340,13 +342,13 @@ void tst_QOrganizerItemFilter::intersectionFilter()
 void tst_QOrganizerItemFilter::unionFilter()
 {
     /* Test boolean ops */
-    QOrganizerItemDetailFilter df;
+    QOrganizerItemDetailFieldFilter df;
     df.setDetail(QOrganizerItemDetail::TypeUndefined, -1);
 
-    QOrganizerItemDetailFilter df2;
+    QOrganizerItemDetailFieldFilter df2;
     df2.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
 
-    QOrganizerItemDetailFilter df3;
+    QOrganizerItemDetailFieldFilter df3;
     df3.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
 
     QOrganizerItemUnionFilter bf;
@@ -434,13 +436,13 @@ void tst_QOrganizerItemFilter::unionFilter()
     QVERIFY(bf3.filters().isEmpty());
 }
 
-
-void tst_QOrganizerItemFilter::detailFilter()
+void tst_QOrganizerItemFilter::detailFilterDeprecatedApi()
 {
     QOrganizerItemDetailFilter df;
 
     QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
 
+    // Verify that deprecated API still works
     QVERIFY(df.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(df.detailField() == -1);
     QVERIFY(df.matchFlags() == 0);
@@ -517,6 +519,177 @@ void tst_QOrganizerItemFilter::detailFilter()
     /* Now test copy ctor through base class */
     QOrganizerItemDetailFilter df4(f);
     QVERIFY(df4.type() == QOrganizerItemFilter::DetailFilter);
+    QVERIFY(df4.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df4.detailField() == -1);
+    QVERIFY(df4.value().isNull());
+
+    /* reset it */
+    df4 = df;
+    QVERIFY(df4.detailType() == QOrganizerItemDetail::TypeDescription);
+    QVERIFY(df4.detailField() == QOrganizerItemDescription::FieldDescription);
+}
+
+void tst_QOrganizerItemFilter::detailFilter()
+{
+    QOrganizerItemDetailFilter df;
+
+    QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
+
+    QVERIFY(df.detail().type() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df.detail().isEmpty());
+
+    QOrganizerItemComment comment;
+    df.setDetail(comment);
+    QVERIFY(df.detail().isEmpty());
+    QVERIFY(df.detail().type() == QOrganizerItemDetail::TypeComment);
+    QVERIFY(!df.detail().values().keys().contains(QOrganizerItemComment::FieldComment));
+    QVERIFY(df.detail().value(QOrganizerItemComment::FieldComment).isNull());
+
+    comment.setComment(QStringLiteral("TestComment"));
+    df.setDetail(comment);
+    QVERIFY(!df.detail().isEmpty());
+    QCOMPARE(df.detail().type(), QOrganizerItemDetail::TypeComment);
+    QVERIFY(df.detail().values().keys().contains(QOrganizerItemComment::FieldComment));
+    QCOMPARE(df.detail().value(QOrganizerItemComment::FieldComment).toString(), QString(QStringLiteral("TestComment")));
+
+
+    /* Test op= */
+    QOrganizerItemFilter f = df;
+    QVERIFY(f == df);
+
+    QOrganizerItemDetailFilter df2 = f;
+    QVERIFY(df2 == df);
+    QCOMPARE(df2.detail(), df.detail());
+
+    /* Self assignment should do nothing */
+    df2 = df2;
+    QVERIFY(df2 == df);
+
+    /* Some cross casting */
+    QOrganizerItemDetailRangeFilter rf;
+
+    /* Directly */
+    df2 = rf;
+    QCOMPARE(df2.type(), QOrganizerItemFilter::DetailFilter);
+    QCOMPARE(df2.detail().type(), QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df2.detail().isEmpty());
+
+    /* reset it */
+    df2 = df;
+    QCOMPARE(df2.detail().type(), QOrganizerItemDetail::TypeComment);
+    QVERIFY(df2.detail().values().keys().contains(QOrganizerItemComment::FieldComment));
+
+    /* Through base class */
+    f = rf;
+    df2 = f;
+    QCOMPARE(df2.detail().type(), QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df2.detail().isEmpty());
+
+    /* Now test copy ctor */
+    QOrganizerItemDetailFilter df3(rf);
+    QVERIFY(df3.type() == QOrganizerItemFilter::DetailFilter);
+    QCOMPARE(df3.detail().type(), QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df3.detail().isEmpty());
+
+    /* reset it */
+    df3 = df;
+    QCOMPARE(df3.detail().type(), QOrganizerItemDetail::TypeComment);
+    QVERIFY(df3.detail().values().keys().contains(QOrganizerItemComment::FieldComment));
+
+    /* Now test copy ctor through base class */
+    QOrganizerItemDetailFilter df4(f);
+    QCOMPARE(df4.type(), QOrganizerItemFilter::DetailFilter);
+    QCOMPARE(df4.detail().type(), QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df4.detail().isEmpty());
+
+    /* reset it */
+    df4 = df;
+    QCOMPARE(df4.detail().type(), QOrganizerItemDetail::TypeComment);
+    QVERIFY(df4.detail().values().keys().contains(QOrganizerItemComment::FieldComment));
+}
+
+void tst_QOrganizerItemFilter::detailFieldFilter()
+{
+    QOrganizerItemDetailFieldFilter df;
+
+    QVERIFY(df.type() == QOrganizerItemFilter::DetailFieldFilter);
+
+    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df.detailField() == -1);
+    QVERIFY(df.matchFlags() == 0);
+    QVERIFY(df.value().isNull());
+
+    df.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
+    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeComment);
+    QVERIFY(df.detailField() == QOrganizerItemComment::FieldComment);
+    QVERIFY(df.matchFlags() == 0);
+    QVERIFY(df.value().isNull());
+
+    df.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
+    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeDescription);
+    QVERIFY(df.detailField() == QOrganizerItemDescription::FieldDescription);
+    QVERIFY(df.matchFlags() == 0);
+    QVERIFY(df.value().isNull());
+
+    df.setMatchFlags(QOrganizerItemFilter::MatchExactly);
+    QVERIFY(df.matchFlags() == QOrganizerItemFilter::MatchExactly);
+
+    df.setValue(5);
+    QVERIFY(df.value() == 5);
+
+    df.setValue("String value");
+    QVERIFY(df.value() == "String value");
+
+    /* Test op= */
+    QOrganizerItemFilter f = df;
+    QVERIFY(f == df);
+
+    QOrganizerItemDetailFieldFilter df2 = f;
+    QVERIFY(df2 == df);
+    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeDescription);
+    QVERIFY(df2.detailField() == QOrganizerItemDescription::FieldDescription);
+
+    /* Self assignment should do nothing */
+    df2 = df2;
+    QVERIFY(df2 == df);
+
+    /* Some cross casting */
+    QOrganizerItemDetailRangeFilter rf;
+
+    /* Directly */
+    df2 = rf;
+    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
+    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df2.detailField() == -1);
+    QVERIFY(df2.value().isNull());
+
+    /* reset it */
+    df2 = df;
+    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeDescription);
+    QVERIFY(df2.detailField() == QOrganizerItemDescription::FieldDescription);
+
+    /* Through base class */
+    f = rf;
+    df2 = f;
+    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df2.detailField() == -1);
+    QVERIFY(df2.value().isNull());
+
+    /* Now test copy ctor */
+    QOrganizerItemDetailFieldFilter df3(rf);
+    QVERIFY(df3.type() == QOrganizerItemFilter::DetailFieldFilter);
+    QVERIFY(df3.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(df3.detailField() == -1);
+    QVERIFY(df3.value().isNull());
+
+    /* reset it */
+    df3 = df;
+    QVERIFY(df3.detailType() == QOrganizerItemDetail::TypeDescription);
+    QVERIFY(df3.detailField() == QOrganizerItemDescription::FieldDescription);
+
+    /* Now test copy ctor through base class */
+    QOrganizerItemDetailFieldFilter df4(f);
+    QVERIFY(df4.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df4.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(df4.detailField() == -1);
     QVERIFY(df4.value().isNull());
@@ -858,7 +1031,7 @@ void tst_QOrganizerItemFilter::idListFilter()
     idf2 = idf2;
     QVERIFY(idf2 == idf);
 
-    QOrganizerItemDetailFilter dfil;
+    QOrganizerItemDetailFieldFilter dfil;
     QOrganizerItemIdFilter idf3(dfil);
     QVERIFY(idf3.type() == QOrganizerItemFilter::IdFilter); // should be a blank id list filter
     QOrganizerItemIdFilter idf4(idf);
@@ -917,11 +1090,11 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
     QTest::addColumn<QOrganizerItemFilter>("in");
     QTest::addColumn<QOrganizerItemFilter>("expected");
 
-    QOrganizerItemDetailFilter detailFilter1;
+    QOrganizerItemDetailFieldFilter detailFilter1;
     detailFilter1.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     detailFilter1.setValue("1");
     detailFilter1.setMatchFlags(QOrganizerItemFilter::MatchContains);
-    QOrganizerItemDetailFilter detailFilter2;
+    QOrganizerItemDetailFieldFilter detailFilter2;
     detailFilter2.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
     detailFilter2.setValue("2");
     detailFilter2.setMatchFlags(QOrganizerItemFilter::MatchContains);
@@ -1046,7 +1219,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
     {
         QOrganizerItemDetailRangeFilter qcdrf;
         qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
-        QOrganizerItemDetailFilter expected;
+        QOrganizerItemDetailFieldFilter expected;
         expected.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         QTest::newRow("Null valued range filter")
                 << static_cast<QOrganizerItemFilter>(qcdrf)
@@ -1058,7 +1231,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
         qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QStringLiteral("a"), QStringLiteral("a"));
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
-        QOrganizerItemDetailFilter expected;
+        QOrganizerItemDetailFieldFilter expected;
         expected.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         expected.setValue(QStringLiteral("a"));
         expected.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
@@ -1093,7 +1266,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
         qcdrf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdrf.setRange(QVariant(QVariant::String), QVariant(QVariant::String)); // null bounds
         qcdrf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
-        QOrganizerItemDetailFilter qcdf;
+        QOrganizerItemDetailFieldFilter qcdf;
         qcdf.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         qcdf.setMatchFlags(QOrganizerItemFilter::MatchFixedString);
         qcdf.setValue(QVariant(QVariant::String));
@@ -1120,7 +1293,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
     }
 
     {
-        QOrganizerItemDetailFilter qcdf;
+        QOrganizerItemDetailFieldFilter qcdf;
         QTest::newRow("Empty detail filter")
                 << static_cast<QOrganizerItemFilter>(qcdf)
                 << static_cast<QOrganizerItemFilter>(invalidFilter);
@@ -1130,7 +1303,7 @@ void tst_QOrganizerItemFilter::canonicalizedFilter_data()
 void tst_QOrganizerItemFilter::testFilter()
 {
     QFETCH(QOrganizerItem, item);
-    QFETCH(QOrganizerItemDetailFilter, filter);
+    QFETCH(QOrganizerItemDetailFieldFilter, filter);
     QFETCH(bool, expected);
 
     QCOMPARE(QOrganizerManagerEngine::testFilter(filter, item), expected);
@@ -1139,7 +1312,7 @@ void tst_QOrganizerItemFilter::testFilter()
 void tst_QOrganizerItemFilter::testFilter_data()
 {
     QTest::addColumn<QOrganizerItem>("item");
-    QTest::addColumn<QOrganizerItemDetailFilter>("filter");
+    QTest::addColumn<QOrganizerItemDetailFieldFilter>("filter");
     QTest::addColumn<bool>("expected");
 
     // XXX TODO: other detail types (comment, description, ...)
@@ -1150,7 +1323,7 @@ void tst_QOrganizerItemFilter::testFilter_data()
         name.setLabel("test location");
         item.saveDetail(&name);
 
-        QOrganizerItemDetailFilter filter;
+        QOrganizerItemDetailFieldFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
         filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -1177,7 +1350,7 @@ void tst_QOrganizerItemFilter::testFilter_data()
         QOrganizerItem item;
         item.setDisplayLabel(QStringLiteral("foo"));
 
-        QOrganizerItemDetailFilter filter;
+        QOrganizerItemDetailFieldFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
         filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -1206,7 +1379,7 @@ void tst_QOrganizerItemFilter::testFilter_data()
         priority.setPriority(QOrganizerItemPriority::VeryHighPriority);
         item.saveDetail(&priority);
 
-        QOrganizerItemDetailFilter filter;
+        QOrganizerItemDetailFieldFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
         filter.setMatchFlags(QOrganizerItemFilter::MatchContains);
 
@@ -1250,7 +1423,7 @@ void tst_QOrganizerItemFilter::datastream_data()
     }
 
     {
-        QOrganizerItemDetailFilter filter;
+        QOrganizerItemDetailFieldFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
         filter.setValue("ski");
@@ -1359,11 +1532,11 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
     }
 
     {
-        QOrganizerItemDetailFilter filter;
+        QOrganizerItemDetailFieldFilter filter;
         filter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
         filter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
         filter.setValue("ski");
-        QTest::newRow("detail") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=200,detailField=201,value=QVariant(QString, \"ski\") ,matchFlags=3))";
+        QTest::newRow("detail") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemDetailFieldFilter(detailType=200,detailField=201,value=QVariant(QString, \"ski\") ,matchFlags=3))";
     }
 
     {
@@ -1473,7 +1646,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         filter2 = filter2;
         QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(5), QOrganizerItemId(6), QOrganizerItemId(17)) ))";
 
-        QOrganizerItemDetailFilter dfil;
+        QOrganizerItemDetailFieldFilter dfil;
         QOrganizerItemIdFilter filter3(dfil);
         QTest::newRow("Id") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=() ))";
 
@@ -1494,17 +1667,17 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=() ))";
 
         // Test boolean ops
-        QOrganizerItemDetailFilter filter1;
+        QOrganizerItemDetailFieldFilter filter1;
         filter1.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
 
-        QOrganizerItemDetailFilter filter2;
+        QOrganizerItemDetailFieldFilter filter2;
         filter2.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
 
-        QOrganizerItemDetailFilter filter3;
+        QOrganizerItemDetailFieldFilter filter3;
         filter3.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
 
         filter << filter1 << filter2;
-        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=200,detailField=201,value=QVariant(Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=300,detailField=301,value=QVariant(Invalid) ,matchFlags=0))) ))";
+        QTest::newRow("intersection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIntersectionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFieldFilter(detailType=200,detailField=201,value=QVariant(Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFieldFilter(detailType=300,detailField=301,value=QVariant(Invalid) ,matchFlags=0))) ))";
     }
 
     {
@@ -1517,18 +1690,18 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         QTest::newRow("union") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=() ))";
 
         // Test boolean ops
-        QOrganizerItemDetailFilter df;
+        QOrganizerItemDetailFieldFilter df;
         df.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
 
-        QOrganizerItemDetailFilter df2;
+        QOrganizerItemDetailFieldFilter df2;
         df2.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
 
-        QOrganizerItemDetailFilter df3;
+        QOrganizerItemDetailFieldFilter df3;
         df3.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
 
         QOrganizerItemUnionFilter bf;
         bf << df << df2;
-        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=200,detailField=201,value=QVariant(Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFilter(detailType=300,detailField=301,value=QVariant(Invalid) ,matchFlags=0))) ))";
+        QTest::newRow("union") << (QOrganizerItemFilter)bf << "QOrganizerItemFilter(QOrganizerItemUnionFilter(filters=(QOrganizerItemFilter(QOrganizerItemDetailFieldFilter(detailType=200,detailField=201,value=QVariant(Invalid) ,matchFlags=0)), QOrganizerItemFilter(QOrganizerItemDetailFieldFilter(detailType=300,detailField=301,value=QVariant(Invalid) ,matchFlags=0))) ))";
     }
 
 }

@@ -53,7 +53,7 @@
     \qmlclass Contact QDeclarativeContact
     \brief The Contact element represents an addressbook contact.
     \ingroup qml-contacts-main
-    \inqmlmodule QtContacts
+    \inqmlmodule QtContacts 5.0
 
     The Contact element is part of the \b{QtContacts} module.
 

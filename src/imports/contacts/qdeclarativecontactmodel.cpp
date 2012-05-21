@@ -65,7 +65,7 @@
     \qmlclass ContactModel QDeclarativeContactModel
     \brief The ContactModel element provides access to contacts from the contacts store.
     \ingroup qml-contacts-main
-    \inqmlmodule QtContacts
+    \inqmlmodule QtContacts 5.0
 
     This element is part of the \b{QtContacts} module.
 

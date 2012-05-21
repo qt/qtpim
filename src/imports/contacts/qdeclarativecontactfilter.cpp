@@ -49,7 +49,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    selection of contacts which have certain details or properties.
 
    \ingroup qml-contacts-main
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -81,7 +81,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The ActionFilter element provides a filter based around an action availability criterion.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -99,7 +99,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The ChangeLogFilter element provides a filter based around a contact timestamp criterion.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -128,7 +128,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The \l DetailFilter element provides a filter based around a detail value criterion.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -202,7 +202,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -261,7 +261,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -280,7 +280,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The UnionFilter element provides a filter which unions the results of other filters.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -298,7 +298,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The IdFilter element provides a filter based around a list of contact ids.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 
@@ -317,7 +317,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief The RelationshipFilter element provides a filter based around relationship criteria.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
 
    This element is part of the \b{QtContacts} module.
@@ -359,7 +359,7 @@ QTCONTACTS_BEGIN_NAMESPACE
    \brief the InvalidFilter element provides a filter which will never match any contacts.
 
    \ingroup qml-contacts-filters
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 

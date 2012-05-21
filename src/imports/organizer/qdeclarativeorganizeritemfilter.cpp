@@ -46,7 +46,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
     \qmlclass Filter QDeclarativeOrganizerItemFilter
     \brief The Filter element is used to filter items made available through a backend.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-main
     \sa QOrganizerItemFilter
  */
@@ -99,7 +99,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemFilter::filter() const
 /*!
     \qmlclass InvalidFilter QDeclarativeOrganizerItemInvalidFilter
     \brief the InvalidFilter element provides a filter which will never match any organizer items.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa QOrganizerItemInvalidFilter
  */
@@ -189,7 +189,7 @@ void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QQmlListProperty<QDe
 /*!
     \qmlclass IntersectionFilter QDeclarativeOrganizerItemIntersectionFilter
     \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa QOrganizerItemIntersectionFilter
  */
@@ -225,7 +225,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemIntersectionFilter::filter() const
 /*!
     \qmlclass UnionFilter QDeclarativeOrganizerItemUnionFilter
     \brief The UnionFilter element provides a filter which unions the results of other filters.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa QOrganizerItemUnionFilter
  */
@@ -262,7 +262,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemUnionFilter::filter() const
     \qmlclass CollectionFilter QDeclarativeOrganizerItemCollectionFilter
     \brief The CollectionFilter element provides a filter based around the collection one organizer
            item belongs to.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa Collection
  */
@@ -327,7 +327,7 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
 /*!
     \qmlclass DetailFilter QDeclarativeOrganizerItemDetailFilter
     \brief The DetailFilter element provides a filter based around a detail value criterion.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
 
     Simple example how to utilize DetailFilter element together with OrganizerModel and ListView elements:
@@ -506,7 +506,7 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail()
 /*!
     \qmlclass DetailRangeFilter QDeclarativeOrganizerItemDetailRangeFilter
     \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa QOrganizerItemDetailRangeFilter
  */
@@ -692,7 +692,7 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetail()
 /*!
     \qmlclass IdFilter QDeclarativeOrganizerItemIdFilter
     \brief The IdFilter element provides a filter based around a list of organizer item IDs.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
     \sa {QOrganizerItemIdFilter}
  */

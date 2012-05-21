@@ -46,7 +46,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 /*!
     \qmlclass SortOrder QDeclarativeOrganizerItemSortOrder
     \brief The SortOrder element defines how a list of organizer item should be ordered according to some criteria.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)

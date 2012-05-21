@@ -52,7 +52,7 @@ QTCONTACTS_BEGIN_NAMESPACE
   function call.
 
    \ingroup qml-contacts-main
-   \inqmlmodule QtContacts
+   \inqmlmodule QtContacts 5.0
 
    This element is part of the \b{QtContacts} module.
 

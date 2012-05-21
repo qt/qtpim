@@ -117,6 +117,12 @@ private:
     void handleCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* collectionRemoveReq);
     void initDefaultCollection();
 
+    void finishRequest(QOrganizerAbstractRequest &request, QOrganizerManager::Error latestError,
+                              const QMap<int, QOrganizerManager::Error> &errorMap,
+                              const QList<QOrganizerItem> &itemList = QList<QOrganizerItem>(),
+                              const QList<QOrganizerCollection> &collectionList = QList<QOrganizerCollection>(),
+                              const QList<QOrganizerItemId> &itemIdList = QList<QOrganizerItemId>());
+
     QOrganizerItem fetchParentItem(const QOrganizerItem &occurrence);
     bool typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType);
     bool fixParentReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
@@ -131,6 +137,10 @@ private:
     void removeItems(const QList<QOrganizerItemId> &itemIds, QOrganizerManager::Error *error, QMap<int, QOrganizerManager::Error> *errorMap);
     void removeAlarmObjects(const QList<QOrganizerItemId> &itemIds, const QMap<int, QOrganizerManager::Error> &errorMap);
 
+    bool validRequest(QOrganizerAbstractRequest *req);
+    bool validPlatform(QOrganizerAbstractRequest *req);
+
+    QOrganizerManager::Error checkRequestSpecificStorageLocation(const QOrganizerAbstractRequest::StorageLocations &requestSpecificStorageLocations);
     QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForItems(const QList<QOrganizerItemId> &itemIds) const;
     QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForCollections(const QList<QOrganizerCollectionId> &collectionIds) const;
 

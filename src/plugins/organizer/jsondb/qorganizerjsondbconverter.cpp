@@ -221,8 +221,6 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     case QJsonDbRequest::InvalidLimit:
         return QOrganizerManager::BadArgumentError;
     case QJsonDbRequest::InvalidPartition:
-        // FIXME; Jsondb is returning sometimes error types outside QJsonDbRequest::ErrorCode -range,
-        // cannot return StorageLocationsNotExistingError before this is fixed
         // FIXME; We propably need to add more finegrained error inspection
         // related to partition accesses, now there is only InvalidPartition.
         return QOrganizerManager::StorageLocationsNotExistingError;

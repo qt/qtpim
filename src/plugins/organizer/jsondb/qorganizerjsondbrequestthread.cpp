@@ -162,16 +162,39 @@ QOrganizerCollection QOrganizerJsonDbRequestThread::defaultCollection() const
     return m_storage->defaultCollection();
 }
 
-void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req)
+bool QOrganizerJsonDbRequestThread::validRequest(QOrganizerAbstractRequest *req)
 {
-    QMutexLocker locker(m_reqStateMutex);
     QOrganizerJsonDbRequestManager::HandlingStatus status = m_requestMgr->requestStatus(req);
     if (status == QOrganizerJsonDbRequestManager::Deleted) {
         m_requestMgr->removeRequest(req);
-        return;
+        return false;
     } else if (status == QOrganizerJsonDbRequestManager::Invalid) {
-        return;
+        return false;
     }
+    return true;
+}
+
+bool QOrganizerJsonDbRequestThread::validPlatform(QOrganizerAbstractRequest *req)
+{
+    if (!(QOrganizerAbstractRequest::UserDataStorage & m_storage->availableStorageLocationsFlag())) {
+        // UserDataStorage not available is a fatal issue
+        qCritical("Organizer - JsonDb backend does not work without UserDataStorage!");
+        finishRequest(*req, QOrganizerManager::StorageLocationsNotExistingError, QMap<int, QOrganizerManager::Error>());
+        return false;
+    } else {
+        return true;
+    }
+}
+
+void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req)
+{
+    QMutexLocker locker(m_reqStateMutex);
+
+    if (!validRequest(req))
+        return;
+    if (!validPlatform(req))
+        return;
+
     switch (req->type()) {
     case QOrganizerAbstractRequest::ItemSaveRequest:
         handleItemSaveRequest(static_cast<QOrganizerItemSaveRequest*>(req));
@@ -220,6 +243,77 @@ void QOrganizerJsonDbRequestThread::handleRequest(QOrganizerAbstractRequest *req
     default:
         break;
     }
+}
+
+void QOrganizerJsonDbRequestThread::finishRequest(QOrganizerAbstractRequest &request, QOrganizerManager::Error latestError,
+    const QMap<int, QOrganizerManager::Error> &errorMap, const QList<QOrganizerItem> &itemList, const QList<QOrganizerCollection> &collectionList,
+    const QList<QOrganizerItemId> &itemIdList)
+{
+    QWaitCondition* waitCondition = m_requestMgr->waitCondition(&request);
+    m_requestMgr->removeRequest(&request);
+
+    switch (request.type()) {
+    case QOrganizerAbstractRequest::ItemSaveRequest:
+        QOrganizerManagerEngine::updateItemSaveRequest(qobject_cast<QOrganizerItemSaveRequest*>(&request),
+           itemList, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemFetchRequest:
+        QOrganizerManagerEngine::updateItemFetchRequest(qobject_cast<QOrganizerItemFetchRequest*>(&request),
+            itemList, latestError, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemIdFetchRequest:
+        QOrganizerManagerEngine::updateItemIdFetchRequest(qobject_cast<QOrganizerItemIdFetchRequest*>(&request),
+            itemIdList, latestError, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemFetchByIdRequest:
+        QOrganizerManagerEngine::updateItemFetchByIdRequest(qobject_cast<QOrganizerItemFetchByIdRequest*>(&request),
+            itemList, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemFetchForExportRequest:
+        QOrganizerManagerEngine::updateItemFetchForExportRequest(qobject_cast<QOrganizerItemFetchForExportRequest*>(&request),
+            itemList, latestError, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemOccurrenceFetchRequest:
+        QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(qobject_cast<QOrganizerItemOccurrenceFetchRequest*>(&request),
+           itemList, latestError, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemRemoveRequest:
+        QOrganizerManagerEngine::updateItemRemoveRequest(qobject_cast<QOrganizerItemRemoveRequest*>(&request),
+            latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::ItemRemoveByIdRequest:
+        QOrganizerManagerEngine::updateItemRemoveByIdRequest(qobject_cast<QOrganizerItemRemoveByIdRequest*>(&request),
+            latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::CollectionSaveRequest:
+        QOrganizerManagerEngine::updateCollectionSaveRequest(qobject_cast<QOrganizerCollectionSaveRequest*>(&request),
+            collectionList, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::CollectionFetchRequest:
+        QOrganizerManagerEngine::updateCollectionFetchRequest(qobject_cast<QOrganizerCollectionFetchRequest*>(&request),
+            collectionList, latestError, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    case QOrganizerAbstractRequest::CollectionRemoveRequest:
+        QOrganizerManagerEngine::updateCollectionRemoveRequest(qobject_cast<QOrganizerCollectionRemoveRequest*>(&request),
+           latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
+        break;
+
+    default:
+        break;
+    }
+
+    if (waitCondition)
+        waitCondition->wakeAll();
 }
 
 void QOrganizerJsonDbRequestThread::onItemAdded(const QOrganizerItemId &itemId)
@@ -287,10 +381,12 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerItem> items = saveReq->items();
-    QOrganizerAbstractRequest::StorageLocation targetStorageLocation = saveReq->storageLocation();
     QMap<int, QOrganizerItem> parentItemMap;
     QMap<int, QOrganizerManager::Error> parentErrorMap;
     QOrganizerManager::Error parentError = QOrganizerManager::NoError;
+    // if not defined, backend decides the default storage location -> UserDataStorage
+    QOrganizerAbstractRequest::StorageLocation storageLocation =
+        saveReq->storageLocation()? saveReq->storageLocation() : QOrganizerAbstractRequest::UserDataStorage;
 
     m_requestMgr->setActive(saveReq);
 
@@ -308,16 +404,6 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
             errorFound = true;
         }
 
-        if (!errorFound) {
-            // check the request is targeted to available non-mandatory storage location
-            if (QOrganizerAbstractRequest::SystemStorage & targetStorageLocation
-                && (-1 == m_storage->availableStorageLocations().indexOf(QOrganizerAbstractRequest::SystemStorage))) {
-                qWarning("Organizer - Request cannot access '%s'!", qPrintable("QOrganizerAbstractRequest::SystemStorage"));
-                latestError = QOrganizerManager::BadArgumentError;
-                errorFound = true;
-            }
-        }
-
         // TODO: to be replaced by new validity check, collection id and guid should not be mandatory fields
         //       this checks e.g. that occurrences have parent ids and original dates?
         //        // ensure that the organizeritem's details conform to their definitions
@@ -329,8 +415,22 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         if (item.data(QOrganizerJsonDbStr::eventIsSynthetic()).toBool()) {
             item.setData(QOrganizerJsonDbStr::eventIsSynthetic(), false);
             item.setId(QOrganizerItemId());
-            targetStorageLocation = QOrganizerAbstractRequest::SystemStorage;
+            storageLocation = QOrganizerAbstractRequest::SystemStorage;
             itemIsNew = true;
+        }
+
+        // Check the request is targeted to available storage location.
+        // Storage location errors are prioritised over less important other possible errors.
+        if (!errorFound) {
+            QOrganizerManager::Error error = QOrganizerManager::NoError;
+            if (itemIsNew)
+                error = checkRequestSpecificStorageLocation(storageLocation);
+            else
+                error = checkRequestSpecificStorageLocation(QOrganizerManagerEngine::engineItemId(item.id())->storageLocation());
+            if (QOrganizerManager::NoError != error) {
+                latestError = error;
+                errorFound = true;
+            }
         }
 
         if (!errorFound) {
@@ -365,7 +465,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
         }
 
         if (!errorFound) {
-            if (!fixCollectionReferences(&item, parentItem, itemIsNew, targetStorageLocation)) {
+            if (!fixCollectionReferences(&item, parentItem, itemIsNew, storageLocation)) {
                 latestError = QOrganizerManager::InvalidCollectionError;
                 errorFound = true;
             }
@@ -413,7 +513,7 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
     // save items
     if (!itemMap.isEmpty()) {
-        m_storage->saveItems(&itemMap, &errorMap, &latestError, targetStorageLocation);
+        m_storage->saveItems(&itemMap, &errorMap, &latestError, storageLocation);
         QMap<int, QOrganizerItem>::const_iterator i = itemMap.constBegin();
         while (i != itemMap.constEnd()) {
             if (!errorMap.contains(i.key()))
@@ -426,13 +526,9 @@ void QOrganizerJsonDbRequestThread::handleItemSaveRequest(QOrganizerItemSaveRequ
 
     // save parent items with modified exception dates
     if (!parentItemMap.isEmpty())
-        m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError, targetStorageLocation);
+        m_storage->saveItems(&parentItemMap, &parentErrorMap, &parentError, storageLocation);
 
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(saveReq);
-    m_requestMgr->removeRequest(saveReq);
-    QOrganizerManagerEngine::updateItemSaveRequest(saveReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    finishRequest(*saveReq, latestError, errorMap, items);
 }
 
 void QOrganizerJsonDbRequestThread::handleItemFetchRequest(QOrganizerItemFetchRequest *fetchReq)
@@ -442,13 +538,13 @@ void QOrganizerJsonDbRequestThread::handleItemFetchRequest(QOrganizerItemFetchRe
     // UserDataStorage is default storage location, if not otherwise set
     QOrganizerAbstractRequest::StorageLocations storageLocations = fetchReq->storageLocations() ?
                 fetchReq->storageLocations() : QOrganizerAbstractRequest::UserDataStorage;
-    QList<QOrganizerItem> items = internalItems(fetchReq->startDate(), fetchReq->endDate(), fetchReq->filter(), fetchReq->sorting(),
+    latestError = checkRequestSpecificStorageLocation(storageLocations);
+    QList<QOrganizerItem> items;
+    if (QOrganizerManager::NoError == latestError)
+        items = internalItems(fetchReq->startDate(), fetchReq->endDate(), fetchReq->filter(), fetchReq->sorting(),
                                                 fetchReq->fetchHint(), &latestError, false, storageLocations);
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchReq);
-    m_requestMgr->removeRequest(fetchReq);
-    QOrganizerManagerEngine::updateItemFetchRequest(fetchReq, items.mid(0, fetchReq->maxCount()), latestError, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+
+    finishRequest(*fetchReq, latestError, QMap<int, QOrganizerManager::Error>(), items.mid(0, fetchReq->maxCount()));
 }
 
 void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFetchRequest *idFetchReq)
@@ -458,18 +554,18 @@ void QOrganizerJsonDbRequestThread::handleItemIdFetchRequest(QOrganizerItemIdFet
     // UserDataStorage is default storage location, if not otherwise set
     QOrganizerAbstractRequest::StorageLocations storageLocations = idFetchReq->storageLocations() ?
                 idFetchReq->storageLocations() : QOrganizerAbstractRequest::UserDataStorage;
-    QList<QOrganizerItem> items = internalItems(idFetchReq->startDate(), idFetchReq->endDate(), idFetchReq->filter(), idFetchReq->sorting(),
-                                                QOrganizerItemFetchHint(), &latestError, true, storageLocations);
+
+    latestError = checkRequestSpecificStorageLocation(storageLocations);
+    QList<QOrganizerItem> items;
+    if (QOrganizerManager::NoError == latestError)
+        items = internalItems(idFetchReq->startDate(), idFetchReq->endDate(), idFetchReq->filter(), idFetchReq->sorting(),
+                              QOrganizerItemFetchHint(), &latestError, true, storageLocations);
     QList<QOrganizerItemId> ids;
     for (int i = 0; i < items.length(); i++) {
         ids.append(items[i].id());
     }
 
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(idFetchReq);
-    m_requestMgr->removeRequest(idFetchReq);
-    QOrganizerManagerEngine::updateItemIdFetchRequest(idFetchReq, ids, latestError, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    finishRequest(*idFetchReq, latestError, QMap<int, QOrganizerManager::Error>(), QList<QOrganizerItem>(), QList<QOrganizerCollection>(), ids);
 }
 
 void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *fetchByIdReq)
@@ -477,13 +573,15 @@ void QOrganizerJsonDbRequestThread::handleItemFetchByIdRequest(QOrganizerItemFet
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     m_requestMgr->setActive(fetchByIdReq);
-    QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForItems(fetchByIdReq->ids());
-    QList<QOrganizerItem> items = m_storage->itemsById(fetchByIdReq->ids(), &errorMap, &latestError, storageLocationsNeeded);
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchByIdReq);
-    m_requestMgr->removeRequest(fetchByIdReq);
-    QOrganizerManagerEngine::updateItemFetchByIdRequest(fetchByIdReq, items, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    QList<QOrganizerItem> items;
+    if (!fetchByIdReq->ids().isEmpty()) {
+        QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForItems(fetchByIdReq->ids());
+        latestError = checkRequestSpecificStorageLocation(storageLocationsNeeded);
+        if (QOrganizerManager::NoError == latestError)
+            items = m_storage->itemsById(fetchByIdReq->ids(), &errorMap, &latestError, storageLocationsNeeded);
+    }
+
+    finishRequest(*fetchByIdReq, latestError, errorMap, items);
 }
 
 void QOrganizerJsonDbRequestThread::handleItemFetchForExportRequest(QOrganizerItemFetchForExportRequest *fetchForExportReq)
@@ -493,13 +591,13 @@ void QOrganizerJsonDbRequestThread::handleItemFetchForExportRequest(QOrganizerIt
     // UserDataStorage is default storage location, if not otherwise set
     QOrganizerAbstractRequest::StorageLocations storageLocations = fetchForExportReq->storageLocations() ?
                 fetchForExportReq->storageLocations() : QOrganizerAbstractRequest::UserDataStorage;
-    QList<QOrganizerItem> items = internalItems(fetchForExportReq->startDate(), fetchForExportReq->endDate(), fetchForExportReq->filter(), fetchForExportReq->sorting(),
+    latestError = checkRequestSpecificStorageLocation(storageLocations);
+    QList<QOrganizerItem> items;
+    if (QOrganizerManager::NoError == latestError)
+        items = internalItems(fetchForExportReq->startDate(), fetchForExportReq->endDate(), fetchForExportReq->filter(), fetchForExportReq->sorting(),
                                                 fetchForExportReq->fetchHint(), &latestError, true, storageLocations);
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(fetchForExportReq);
-    m_requestMgr->removeRequest(fetchForExportReq);
-    QOrganizerManagerEngine::updateItemFetchForExportRequest(fetchForExportReq, items, latestError, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+
+    finishRequest(*fetchForExportReq, latestError, QMap<int, QOrganizerManager::Error>(), items);
 }
 
 
@@ -509,11 +607,8 @@ void QOrganizerJsonDbRequestThread::handleItemOccurrenceFetchRequest(QOrganizerI
     m_requestMgr->setActive(occurrenceFetchReq);
 
     QList<QOrganizerItem> items = internalItemOccurrences(occurrenceFetchReq->parentItem(), occurrenceFetchReq->startDate(), occurrenceFetchReq->endDate(), occurrenceFetchReq->fetchHint(), occurrenceFetchReq->maxOccurrences(), true, true, 0, &latestError);
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(occurrenceFetchReq);
-    m_requestMgr->removeRequest(occurrenceFetchReq);
-    QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(occurrenceFetchReq, items, latestError, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+
+    finishRequest(*occurrenceFetchReq, latestError, QMap<int, QOrganizerManager::Error>(), items);
 }
 
 void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemoveRequest *removeReq)
@@ -534,97 +629,128 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
     int i;
     for (i = 0; i < items.size(); i++) {
         item = items[i];
+        bool nullItemId = item.id().isNull();
         if ((item.type() == QOrganizerItemType::TypeEventOccurrence
              || item.type() == QOrganizerItemType::TypeTodoOccurrence)
-                && item.id().isNull()) {
+                && nullItemId) {
+            // Dealing with occurence parent
+            // - check first if the occurence is valid
+            // - check then the storage location defined in id to be available
             QOrganizerItemParent parentDetail = item.detail(QOrganizerItemDetail::TypeParent);
             if (!parentDetail.parentId().isNull() && parentDetail.originalDate().isValid()) {
-                exceptionDates.insert(parentDetail.parentId(), parentDetail.originalDate());
-                parentIds.insert(i, parentDetail.parentId());
+                if (QOrganizerManager::NoError == checkRequestSpecificStorageLocation(
+                            QOrganizerManagerEngine::engineItemId(parentDetail.parentId())->storageLocation())) {
+                    // ok, insert to parentIds
+                    exceptionDates.insert(parentDetail.parentId(), parentDetail.originalDate());
+                    parentIds.insert(i, parentDetail.parentId());
+                } else {
+                    // invalid storage location
+                    qWarning("Organizer - Operation cannot access defined storage location!");
+                    latestError = QOrganizerManager::BadArgumentError;
+                    errorMap.insert(i, latestError);
+                }
             } else {
+                // invalid occurence
                 latestError = QOrganizerManager::InvalidOccurrenceError;
                 errorMap.insert(i, latestError);
             }
         } else {
-            itemIds.insert(i, item.id());
-        }
-    }
-
-    // handle normal events
-    QMap<int, QOrganizerManager::Error> removeErrorMap;
-    QOrganizerManager::Error removeError = QOrganizerManager::NoError;
-    QList<QOrganizerItemId> itemIdsList = itemIds.values();
-    removeItems(itemIdsList, &removeError, &removeErrorMap);
-    if (!removeErrorMap.isEmpty()) {
-        int itemIdsValuesIndex = 0;
-        QMap<int, QOrganizerItemId>::const_iterator iterator = itemIds.constBegin();
-        while (iterator != itemIds.constEnd()) {
-            if (removeErrorMap.contains(itemIdsValuesIndex)) {
-                latestError = removeErrorMap.value(itemIdsValuesIndex);
-                errorMap.insert(iterator.key(), latestError);
+            // Dealing with normal item
+            // - check first if the id is valid
+            // - check then the storage location defined in id to be available
+            if (!nullItemId) {
+                if (QOrganizerManager::NoError == checkRequestSpecificStorageLocation(
+                            QOrganizerManagerEngine::engineItemId(item.id())->storageLocation())) {
+                    // ok, insert to itemIds
+                    itemIds.insert(i, item.id());
+                } else {
+                    // invalid storage location
+                    qWarning("Organizer - Operation cannot access defined storage location!");
+                    latestError = QOrganizerManager::BadArgumentError;
+                    errorMap.insert(i, latestError);
+                }
+            } else {
+                // invalid id, since on removal there should not be "new items"
+                latestError = QOrganizerManager::BadArgumentError;
+                errorMap.insert(i, latestError);
             }
-            itemIdsValuesIndex++;
         }
     }
 
-    // check if any of the removed "normal" items was the parent of an occurrence to be removed
-    if (!exceptionDates.isEmpty()) {
-        foreach (const QOrganizerItemId &id, itemIdsList) {
-            if (exceptionDates.contains(id))
-                exceptionDates.remove(id);
+    if (!itemIds.isEmpty() || !parentIds.isEmpty()) {
+
+        // handle normal events
+        QMap<int, QOrganizerManager::Error> removeErrorMap;
+        QOrganizerManager::Error removeError = QOrganizerManager::NoError;
+        QList<QOrganizerItemId> itemIdsList = itemIds.values();
+        removeItems(itemIdsList, &removeError, &removeErrorMap);
+        if (!removeErrorMap.isEmpty()) {
+            int itemIdsValuesIndex = 0;
+            QMap<int, QOrganizerItemId>::const_iterator iterator = itemIds.constBegin();
+            while (iterator != itemIds.constEnd()) {
+                if (removeErrorMap.contains(itemIdsValuesIndex)) {
+                    latestError = removeErrorMap.value(itemIdsValuesIndex);
+                    errorMap.insert(iterator.key(), latestError);
+                }
+                itemIdsValuesIndex++;
+            }
         }
-    }
 
-    // handle generated item occurrences: add new exception date to item's parent item recurrence detail
-    QMap<int, QOrganizerManager::Error> fetchErrorMap;
-    QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
-
-    QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForItems(exceptionDates.keys());
-    QList<QOrganizerItem> parentItems = m_storage->itemsById(exceptionDates.keys(), &fetchErrorMap, &fetchError, storageLocationsNeeded);
-    for (i = 0; i < parentItems.size(); i++) {
-        if (!fetchErrorMap.contains(i)) {
-            QOrganizerItem parentItem = parentItems[i];
-            QList<QDate> addDateList = exceptionDates.values(parentItem.id());
-            if (addDateList.isEmpty())
-                continue;
-            QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
-            QSet<QDate> exceptionDateSet = recurrenceDetail.exceptionDates();
-            for (int j = 0; j < addDateList.size(); j++)
-                exceptionDateSet.insert(addDateList[j]);
-
-
-            recurrenceDetail.setExceptionDates(exceptionDateSet);
-            parentItem.saveDetail(&recurrenceDetail);
-
-            modifiedParents.insert(i, parentItem);
+        // check if any of the removed "normal" items was the parent of an occurrence to be removed
+        if (!exceptionDates.isEmpty()) {
+            foreach (const QOrganizerItemId &id, itemIdsList) {
+                if (exceptionDates.contains(id))
+                    exceptionDates.remove(id);
+            }
         }
-    }
 
-    QMap<int, QOrganizerManager::Error> saveErrorMap;
-    QOrganizerManager::Error saveError = QOrganizerManager::NoError;
-    // modifiedParents all are already old items, so the storageLocation-param in saveItems() will be ignored
-    if (!modifiedParents.isEmpty())
-        m_storage->saveItems(&modifiedParents, &saveErrorMap, &saveError, QOrganizerAbstractRequest::UserDataStorage);
+        // handle generated item occurrences: add new exception date to item's parent item recurrence detail
+        QMap<int, QOrganizerManager::Error> fetchErrorMap;
+        QOrganizerManager::Error fetchError = QOrganizerManager::NoError;
 
-    if (!fetchErrorMap.isEmpty() || !saveErrorMap.isEmpty()) {
+        QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForItems(exceptionDates.keys());
+        QList<QOrganizerItem> parentItems = m_storage->itemsById(exceptionDates.keys(), &fetchErrorMap, &fetchError, storageLocationsNeeded);
         for (i = 0; i < parentItems.size(); i++) {
-            if (fetchErrorMap.contains(i) || saveErrorMap.contains(i)) {
-                QOrganizerItemId parentId = parentItems[i].id();
-                // find the indexes in the original items list where this parent item was the parent of occurrence
-                QList<int> originalIndexes = parentIds.keys(parentId);
-                for (int j = 0; j < originalIndexes.size(); j++) {
-                    latestError = QOrganizerManager::InvalidOccurrenceError;
-                    errorMap.insert(j, latestError);
+            if (!fetchErrorMap.contains(i)) {
+                QOrganizerItem parentItem = parentItems[i];
+                QList<QDate> addDateList = exceptionDates.values(parentItem.id());
+                if (addDateList.isEmpty())
+                    continue;
+                QOrganizerItemRecurrence recurrenceDetail = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
+                QSet<QDate> exceptionDateSet = recurrenceDetail.exceptionDates();
+                for (int j = 0; j < addDateList.size(); j++)
+                    exceptionDateSet.insert(addDateList[j]);
+
+
+                recurrenceDetail.setExceptionDates(exceptionDateSet);
+                parentItem.saveDetail(&recurrenceDetail);
+
+                modifiedParents.insert(i, parentItem);
+            }
+        }
+
+        QMap<int, QOrganizerManager::Error> saveErrorMap;
+        QOrganizerManager::Error saveError = QOrganizerManager::NoError;
+        // modifiedParents all are already old items, so the storageLocation-param in saveItems() will be ignored
+        if (!modifiedParents.isEmpty())
+            m_storage->saveItems(&modifiedParents, &saveErrorMap, &saveError, QOrganizerAbstractRequest::UserDataStorage);
+
+        if (!fetchErrorMap.isEmpty() || !saveErrorMap.isEmpty()) {
+            for (i = 0; i < parentItems.size(); i++) {
+                if (fetchErrorMap.contains(i) || saveErrorMap.contains(i)) {
+                    QOrganizerItemId parentId = parentItems[i].id();
+                    // find the indexes in the original items list where this parent item was the parent of occurrence
+                    QList<int> originalIndexes = parentIds.keys(parentId);
+                    for (int j = 0; j < originalIndexes.size(); j++) {
+                        latestError = QOrganizerManager::InvalidOccurrenceError;
+                        errorMap.insert(j, latestError);
+                    }
                 }
             }
         }
     }
 
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeReq);
-    m_requestMgr->removeRequest(removeReq);
-    QOrganizerManagerEngine::updateItemRemoveRequest(removeReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    finishRequest(*removeReq, latestError, errorMap);
 }
 
 void QOrganizerJsonDbRequestThread::handleItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest *removeByIdReq)
@@ -632,15 +758,30 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveByIdRequest(QOrganizerItemRe
     QMap<int, QOrganizerManager::Error> errorMap;
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerItemId> itemIds = removeByIdReq->itemIds();
-
     m_requestMgr->setActive(removeByIdReq);
-    removeItems(itemIds, &latestError, &errorMap);
 
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(removeByIdReq);
-    m_requestMgr->removeRequest(removeByIdReq);
-    QOrganizerManagerEngine::updateItemRemoveByIdRequest(removeByIdReq, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    QList<QOrganizerItem> items;
+    if (!itemIds.isEmpty()) {
+        // FIXME: something to combine with validation work
+        bool validItemIds = false;
+        for (int i = 0; i < itemIds.size(); i++) {
+            const QOrganizerItemId &itemId = itemIds.at(i);
+            if (!itemId.isNull()) {
+                validItemIds = true;
+                break;
+            }
+        }
+        if (validItemIds) {
+            QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForItems(itemIds);
+            latestError = checkRequestSpecificStorageLocation(storageLocationsNeeded);
+            if (QOrganizerManager::NoError == latestError)
+                removeItems(itemIds, &latestError, &errorMap);
+        } else {
+            latestError = QOrganizerManager::DoesNotExistError;
+        }
+    }
+
+    finishRequest(*removeByIdReq, latestError, errorMap);
 }
 
 
@@ -652,6 +793,9 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
     QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerCollection> collections = collectionSaveReq->collections();
     m_requestMgr->setActive(collectionSaveReq);
+    // if not defined, backend decides the default storage location -> UserDataStorage
+    const QOrganizerAbstractRequest::StorageLocation storageLocation =
+        collectionSaveReq->storageLocation()? collectionSaveReq->storageLocation() : QOrganizerAbstractRequest::UserDataStorage;
 
     for (int i = 0; i < collections.size(); i++) {
         QOrganizerCollection collection = collections.at(i);
@@ -662,6 +806,20 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
             const QString managerUri = QOrganizerManager::buildUri(m_engine->managerName(), m_engine->managerParameters());
             if (managerUri != collection.id().managerUri()) {// check manager uri if is the same with the engine uri
                 latestError = QOrganizerManager::BadArgumentError;
+                errorFound = true;
+            }
+        }
+
+        // Check the request is targeted to available storage location.
+        // Storage location errors are prioritised over less important other possible errors.
+        if (!errorFound) {
+            QOrganizerManager::Error error = QOrganizerManager::NoError;
+            if (collectionIsNew)
+                error = checkRequestSpecificStorageLocation(storageLocation);
+            else
+                error = checkRequestSpecificStorageLocation(QOrganizerManagerEngine::engineCollectionId(collection.id())->storageLocation());
+            if (QOrganizerManager::NoError != error) {
+                latestError = error;
                 errorFound = true;
             }
         }
@@ -684,71 +842,73 @@ void QOrganizerJsonDbRequestThread::handleCollectionSaveRequest(QOrganizerCollec
             ++i;
         }
     }
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionSaveReq);
-    m_requestMgr->removeRequest(collectionSaveReq);
-    QOrganizerManagerEngine::updateCollectionSaveRequest(collectionSaveReq, collections, latestError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+
+    finishRequest(*collectionSaveReq, latestError, errorMap, QList<QOrganizerItem>(), collections);
 }
 
 void QOrganizerJsonDbRequestThread::handleCollectionFetchRequest(QOrganizerCollectionFetchRequest *collectionFetchReq)
 {
     m_requestMgr->setActive(collectionFetchReq);
-    QOrganizerManager::Error error = QOrganizerManager::NoError;
+    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     // UserDataStorage is default storage location, if not otherwise set
     QOrganizerAbstractRequest::StorageLocations storageLocations = collectionFetchReq->storageLocations() ?
                 collectionFetchReq->storageLocations() : QOrganizerAbstractRequest::UserDataStorage;
-    QList<QOrganizerCollection> collections = m_storage->collections(&error, storageLocations);
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionFetchReq);
-    m_requestMgr->removeRequest(collectionFetchReq);
-    QOrganizerManagerEngine::updateCollectionFetchRequest(collectionFetchReq, collections, error, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    latestError = checkRequestSpecificStorageLocation(storageLocations);
+    QList<QOrganizerCollection> collections;
+    if (QOrganizerManager::NoError == latestError)
+        collections = m_storage->collections(&latestError, storageLocations);
+
+    finishRequest(*collectionFetchReq, latestError, QMap<int, QOrganizerManager::Error>(), QList<QOrganizerItem>(), collections);
 }
 
 void QOrganizerJsonDbRequestThread::handleCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* collectionRemoveReq)
 {
     QMap<int, QOrganizerManager::Error> errorMap;
-    QOrganizerManager::Error lastError = QOrganizerManager::NoError;
+    QOrganizerManager::Error latestError = QOrganizerManager::NoError;
     QList<QOrganizerCollectionId> collectionIds = collectionRemoveReq->collectionIds();
     m_requestMgr->setActive(collectionRemoveReq);
-    // only contain valid ones, i.e. default collection, empty, non-existing ones are removed
-    QMap<int, QOrganizerCollectionId> validCollectionIds;
-    for (int i = 0; i < collectionIds.size(); ++i) {
-        if (collectionIds.at(i) == m_storage->defaultCollection().id()) {
-            lastError = QOrganizerManager::PermissionsError;
-            errorMap.insert(i, lastError);
-            qWarning() << QOrganizerJsonDbStr::warningDefaultCollectionRemove();
-        } else if (m_storage->collectionIds().contains(collectionIds.at(i))) {
-            validCollectionIds.insert(i, collectionIds.at(i));
-        } else {
-            lastError = QOrganizerManager::BadArgumentError;
-            errorMap.insert(i, lastError);
-        }
-    }
-    int errorCount = errorMap.size();
-    if (!validCollectionIds.isEmpty()) {
-        m_storage->removeCollections(validCollectionIds, &errorMap, &lastError);
-        // either all removed, or none removed
-        if (errorCount == errorMap.size()) {
-            // remove all items in those collections
-            QOrganizerItemCollectionFilter collectonFilter;
-            collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(validCollectionIds.values()));
-            QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForCollections(validCollectionIds.values());
-            QList<QOrganizerItem> items = m_storage->items(QDateTime(), QDateTime(), collectonFilter, QList<QOrganizerItemSortOrder>(),
-                                                           QOrganizerItemFetchHint(), &lastError, storageLocationsNeeded,
-                                                           QOrganizerJsonDbDataStorage::FetchItemIds);
-            QList<QOrganizerItemId> itemIds;
-            for (int i = 0; i < items.length(); ++i)
-                itemIds.append(items.at(i).id());
-            removeItems(itemIds, &lastError, &errorMap);
+
+    if (!collectionIds.isEmpty()) {
+        QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForCollections(collectionIds);
+        latestError = checkRequestSpecificStorageLocation(storageLocationsNeeded);
+
+        if (QOrganizerManager::NoError == latestError) {
+            // only contain valid ones, i.e. default collection, empty, non-existing ones are removed
+            QMap<int, QOrganizerCollectionId> validCollectionIds;
+            for (int i = 0; i < collectionIds.size(); ++i) {
+                if (collectionIds.at(i) == m_storage->defaultCollection().id()) {
+                    latestError = QOrganizerManager::PermissionsError;
+                    errorMap.insert(i, latestError);
+                    qWarning() << QOrganizerJsonDbStr::warningDefaultCollectionRemove();
+                } else if (m_storage->collectionIds().contains(collectionIds.at(i))) {
+                    validCollectionIds.insert(i, collectionIds.at(i));
+                } else {
+                    latestError = QOrganizerManager::BadArgumentError;
+                    errorMap.insert(i, latestError);
+                }
+            }
+            int errorCount = errorMap.size();
+            if (!validCollectionIds.isEmpty()) {
+                m_storage->removeCollections(validCollectionIds, &errorMap, &latestError);
+                // either all removed, or none removed
+                if (errorCount == errorMap.size()) {
+                    // remove all items in those collections
+                    QOrganizerItemCollectionFilter collectonFilter;
+                    collectonFilter.setCollectionIds(QSet<QOrganizerCollectionId>::fromList(validCollectionIds.values()));
+                    QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded = resolveNeededStorageLocationsForCollections(validCollectionIds.values());
+                    QList<QOrganizerItem> items = m_storage->items(QDateTime(), QDateTime(), collectonFilter, QList<QOrganizerItemSortOrder>(),
+                                                                   QOrganizerItemFetchHint(), &latestError, storageLocationsNeeded,
+                                                                   QOrganizerJsonDbDataStorage::FetchItemIds);
+                    QList<QOrganizerItemId> itemIds;
+                    for (int i = 0; i < items.length(); ++i)
+                        itemIds.append(items.at(i).id());
+                    removeItems(itemIds, &latestError, &errorMap);
+                }
+            }
         }
     }
 
-    QWaitCondition* waitCondition = m_requestMgr->waitCondition(collectionRemoveReq);
-    QOrganizerManagerEngine::updateCollectionRemoveRequest(collectionRemoveReq, lastError, errorMap, QOrganizerAbstractRequest::FinishedState);
-    if (waitCondition)
-        waitCondition->wakeAll();
+    finishRequest(*collectionRemoveReq, latestError, errorMap);
 }
 
 void QOrganizerJsonDbRequestThread::initDefaultCollection()
@@ -865,9 +1025,7 @@ bool QOrganizerJsonDbRequestThread::fixCollectionReferences(QOrganizerItem *item
             item->setCollectionId(m_storage->defaultCollection().id());
     }
 
-    // Check storage locations match. if storage location is 0, it's not set -> UserDataStorage
-    // Then item's location must be the same as with collection's location
-    storageLocation = storageLocation == 0 ? QOrganizerAbstractRequest::UserDataStorage : storageLocation;
+    // Check storage locations match. Then item's location must be the same as with collection's location
     QOrganizerAbstractRequest::StorageLocation collectionStorageLocation =
             QOrganizerManagerEngine::engineCollectionId(item->collectionId())->storageLocation();
     if (itemIsNew && storageLocation != collectionStorageLocation)
@@ -894,6 +1052,9 @@ QList<QOrganizerItem> QOrganizerJsonDbRequestThread::internalItems(const QDateTi
     // fetch all parents stored to db
     QList<QOrganizerItem> parentItems = m_storage->items(QDateTime(), QDateTime(), QOrganizerItemFilter(), QList<QOrganizerItemSortOrder>(), fetchHint,
                                                          error, storageLocations, QOrganizerJsonDbDataStorage::FetchParents);
+    if (QOrganizerManager::NoError != *error)
+        return sorted;
+
     // fetch all items (normal items and exception occurrences) stored in the given time period
     // apply filters
     QList<QOrganizerItem> items = m_storage->items(startDate, endDate, filter, sortOrders, fetchHint, error, storageLocations, QOrganizerJsonDbDataStorage::FetchItems);
@@ -1155,6 +1316,7 @@ void QOrganizerJsonDbRequestThread::removeItems(const QList<QOrganizerItemId> &i
 QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resolveNeededStorageLocationsForItems(const QList<QOrganizerItemId> &itemIds) const
 {
     // figure out wich storage locations are needed based on items
+    const QOrganizerAbstractRequest::StorageLocations availableStorageLocations = m_storage->availableStorageLocationsFlag();
     QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded(0);
     foreach (QOrganizerItemId id, itemIds) {
         const QOrganizerItemEngineId *engineId = QOrganizerManagerEngine::engineItemId(id);
@@ -1162,19 +1324,22 @@ QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resol
             continue;
 
         const QOrganizerAbstractRequest::StorageLocations locations = engineId->storageLocation();
-        if (locations & QOrganizerAbstractRequest::UserDataStorage)
-            storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
-        else if (locations & QOrganizerAbstractRequest::SystemStorage)
-            storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
-        if (storageLocationsNeeded == (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage))
-            break;
+        if (locations > 0) {
+            if (locations & QOrganizerAbstractRequest::UserDataStorage)
+                storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
+            else if (locations & QOrganizerAbstractRequest::SystemStorage)
+                storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
+            if (storageLocationsNeeded == availableStorageLocations)
+                break;
+        }
     }
-    return storageLocationsNeeded ? storageLocationsNeeded : (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    return storageLocationsNeeded;
 }
 
 QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resolveNeededStorageLocationsForCollections(const QList<QOrganizerCollectionId> &collectionIds) const
 {
     // figure out wich storage locations are needed based on collections
+    const QOrganizerAbstractRequest::StorageLocations availableStorageLocations = m_storage->availableStorageLocationsFlag();
     QOrganizerAbstractRequest::StorageLocations storageLocationsNeeded(0);
     foreach (QOrganizerCollectionId id, collectionIds) {
         const QOrganizerCollectionEngineId *engineId = QOrganizerManagerEngine::engineCollectionId(id);
@@ -1182,14 +1347,26 @@ QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbRequestThread::resol
             continue;
 
         const QOrganizerAbstractRequest::StorageLocations locations = engineId->storageLocation();
-        if (locations & QOrganizerAbstractRequest::UserDataStorage)
-            storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
-        else if (locations & QOrganizerAbstractRequest::SystemStorage)
-            storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
-        if (storageLocationsNeeded == (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage))
-            break;
+        if (locations > 0) {
+            if (locations & QOrganizerAbstractRequest::UserDataStorage)
+                storageLocationsNeeded |= QOrganizerAbstractRequest::UserDataStorage;
+            else if (locations & QOrganizerAbstractRequest::SystemStorage)
+                storageLocationsNeeded |= QOrganizerAbstractRequest::SystemStorage;
+            if (storageLocationsNeeded == availableStorageLocations)
+                break;
+        }
     }
-    return storageLocationsNeeded ? storageLocationsNeeded : (QOrganizerAbstractRequest::UserDataStorage | QOrganizerAbstractRequest::SystemStorage);
+    return storageLocationsNeeded;
+}
+
+QOrganizerManager::Error QOrganizerJsonDbRequestThread::checkRequestSpecificStorageLocation(const QOrganizerAbstractRequest::StorageLocations &requestSpecificStorageLocations)
+{
+    // Check the request is targeted to available storage location.
+    const QOrganizerAbstractRequest::StorageLocations availableStoragelocations = m_storage->availableStorageLocationsFlag();
+    if (requestSpecificStorageLocations && ((requestSpecificStorageLocations | availableStoragelocations) == availableStoragelocations))
+        return QOrganizerManager::NoError;
+    else
+        return QOrganizerManager::BadArgumentError;
 }
 
 #include "moc_qorganizerjsondbrequestthread.cpp"

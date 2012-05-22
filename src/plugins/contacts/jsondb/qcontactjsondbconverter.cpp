@@ -85,7 +85,6 @@ QContactJsonDbConverter::~QContactJsonDbConverter()
 }
 
 bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* contact, const QString &partitionName) {
-    QList<QContactDetail*> detailList;
     QJsonObject temporaryJsonObject;
     QString stringValue;
 

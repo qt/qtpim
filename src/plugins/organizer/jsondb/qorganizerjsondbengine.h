@@ -66,10 +66,10 @@ QTORGANIZER_BEGIN_NAMESPACE
  QOrganizerAbstractRequest API's QOrganizerAbstractRequest::StorageLocation.
 
  Organizer jsondb backend engine requires storage locations (partitions in qtjsondb-module
- terminology) to be present. If StorageLocationsNotExistingError is received from requests,
+ terminology) to be present. If MissingPlatformRequirementsError is received from requests,
  it means that the mandatory UserDataStorage storage location is missing or cannot be accessed due
  to missing security access rights and Organizer jsondb backend cannot work properly.
- BadArgumentError is returned in cases when the operation is targeted to non-mandatory, but not
+ InvalidStorageLocationError is returned in cases when the operation is targeted to non-mandatory, but not
  accessible storage location.
 
  To create missing partitions, create a file named partitions.json having the following lines

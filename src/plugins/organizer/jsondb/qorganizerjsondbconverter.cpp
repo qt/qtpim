@@ -223,7 +223,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     case QJsonDbRequest::InvalidPartition:
         // FIXME; We propably need to add more finegrained error inspection
         // related to partition accesses, now there is only InvalidPartition.
-        return QOrganizerManager::StorageLocationsNotExistingError;
+        return QOrganizerManager::InvalidStorageLocationError;
     case QJsonDbRequest::DatabaseConnectionError:
         return QOrganizerManager::UnspecifiedError;
     default:

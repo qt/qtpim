@@ -118,30 +118,30 @@ void tst_QOrganizerStorageLocationsMissing::testAllStorageLocationsMissing()
 
     QOrganizerManager organizerManager(managerName);
 
-    // try some operatios, they should return with StorageLocationsNotExistingError
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    // try some operatios, they should return with MissingPlatformRequirementsError
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerCollectionFetchRequest cfr;
     cfr.setManager(&organizerManager);
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(cfr.error(), QOrganizerManager::StorageLocationsNotExistingError);
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    QCOMPARE(cfr.error(), QOrganizerManager::MissingPlatformRequirementsError);
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerItemFetchRequest ifr;
     ifr.setManager(&organizerManager);
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
-    QCOMPARE(ifr.error(), QOrganizerManager::StorageLocationsNotExistingError);
+    QCOMPARE(ifr.error(), QOrganizerManager::MissingPlatformRequirementsError);
     QOrganizerCollectionRemoveRequest crr;
     crr.setManager(&organizerManager);
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerCollectionId dummyCollIdOnUser = QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::1/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}"));
     crr.setCollectionId(dummyCollIdOnUser);
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::StorageLocationsNotExistingError);
+    QCOMPARE(crr.error(), QOrganizerManager::MissingPlatformRequirementsError);
 
     m_jsondbProcess.terminate();
 }
@@ -160,8 +160,8 @@ void tst_QOrganizerStorageLocationsMissing::testUserDataStorageLocationMissing()
 
     QOrganizerManager organizerManager(managerName);
 
-    // try some operatios, they should return with StorageLocationsNotExistingError
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    // try some operatios, they should return with MissingPlatformRequirementsError
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerCollectionSaveRequest csr;
     csr.setManager(&organizerManager);
     QOrganizerCollection testCollection;
@@ -170,8 +170,8 @@ void tst_QOrganizerStorageLocationsMissing::testUserDataStorageLocationMissing()
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.isFinished());
-    QCOMPARE(csr.error(), QOrganizerManager::StorageLocationsNotExistingError);
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    QCOMPARE(csr.error(), QOrganizerManager::MissingPlatformRequirementsError);
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerItemSaveRequest isr;
     isr.setManager(&organizerManager);
     QOrganizerEvent testEvent;
@@ -180,8 +180,8 @@ void tst_QOrganizerStorageLocationsMissing::testUserDataStorageLocationMissing()
     QVERIFY(isr.start());
     QVERIFY(isr.waitForFinished());
     QVERIFY(isr.isFinished());
-    QCOMPARE(isr.error(), QOrganizerManager::StorageLocationsNotExistingError);
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
+    QCOMPARE(isr.error(), QOrganizerManager::MissingPlatformRequirementsError);
+    qDebug()<<"NOTE: Jsondb backend warns when there is no UserDataStorage available!";
     QOrganizerItemRemoveRequest irr;
     irr.setManager(&organizerManager);
     QOrganizerItemId dummyIdOnUser = QOrganizerItemId::fromString(QString("qtorganizer:jsondb::1/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}"));
@@ -190,7 +190,7 @@ void tst_QOrganizerStorageLocationsMissing::testUserDataStorageLocationMissing()
     QVERIFY(irr.start());
     QVERIFY(irr.waitForFinished());
     QVERIFY(irr.isFinished());
-    QCOMPARE(irr.error(), QOrganizerManager::StorageLocationsNotExistingError);
+    QCOMPARE(irr.error(), QOrganizerManager::MissingPlatformRequirementsError);
 
     m_jsondbProcess.terminate();
 }
@@ -228,13 +228,12 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(csr.isFinished());
     savedCollectionsUserData<<csr.collections();
     // - storagelocation explicitly set to SystemStorage - should fail
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     csr.setCollection(testCollection);
     csr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(csr.start());
     QVERIFY(csr.waitForFinished());
     QVERIFY(csr.isFinished());
-    QCOMPARE(csr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(csr.error(), QOrganizerManager::InvalidStorageLocationError);
     // - storagelocation explicitly set to UserDataStorage
     testCollection.setMetaData(QOrganizerCollection::KeyName, "Collection on UserDataStorage");
     csr.setCollection(testCollection);
@@ -262,47 +261,45 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(cfr.isFinished());
     QCOMPARE(savedCollectionsUserData.count(), cfr.collections().count()-existingCollectionCountOnUser);
     // Fetch from system - should fail
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     cfr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(cfr.start());
     QVERIFY(cfr.waitForFinished());
     QVERIFY(cfr.isFinished());
-    QCOMPARE(cfr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(cfr.error(), QOrganizerManager::InvalidStorageLocationError);
     // Check collection removal from non-accessible storage location
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     QOrganizerCollectionRemoveRequest crr;
     crr.setManager(&organizerManager);
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::2/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
     // -invalid storage location defined
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::4/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::0/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::-1/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::2//{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
     crr.setCollectionId(QOrganizerCollectionId::fromString(QString("qtorganizer:jsondb::-3*abg/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(crr.start());
     QVERIFY(crr.waitForFinished());
     QVERIFY(crr.isFinished());
-    QCOMPARE(crr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(crr.error(), QOrganizerManager::InvalidStorageLocationError);
 
     // Item related requests
 
@@ -319,14 +316,13 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(!isr.error());
     savedItemsUserData<<isr.items();
     // - storagelocation explicitly set to SystemStorage - should fail
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     QOrganizerTodo testTodo;
     isr.setItem(testTodo);
     isr.setStorageLocation(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(isr.start());
     QVERIFY(isr.waitForFinished());
     QVERIFY(isr.isFinished());
-    QCOMPARE(isr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(isr.error(), QOrganizerManager::InvalidStorageLocationError);
     // - storagelocation explicitly set to UserDataStorage
     testTodo.setDisplayLabel("Todo on UserData");
     isr.setItem(testTodo);
@@ -356,14 +352,12 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(!ifr.error());
     QCOMPARE(savedItemsUserData.count(), ifr.items().count()-existingItemCountOnUser);
     // Fetch from system - should fail
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     ifr.setStorageLocations(QOrganizerAbstractRequest::SystemStorage);
     QVERIFY(ifr.start());
     QVERIFY(ifr.waitForFinished());
     QVERIFY(ifr.isFinished());
-    QCOMPARE(ifr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(ifr.error(), QOrganizerManager::InvalidStorageLocationError);
     // Check removing itemid from non-accessible storage location
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     QOrganizerItemRemoveByIdRequest irbir;
     irbir.setManager(&organizerManager);
     QOrganizerItemId dummyIdOnSystem = QOrganizerItemId::fromString(QString("qtorganizer:jsondb::2/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}"));
@@ -371,35 +365,34 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     // -invalid storage location defined
     irbir.setItemId(QOrganizerItemId::fromString(QString("qtorganizer:jsondb::4/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     irbir.setItemId(QOrganizerItemId::fromString(QString("qtorganizer:jsondb::0/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     irbir.setItemId(QOrganizerItemId::fromString(QString("qtorganizer:jsondb::-1/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     irbir.setItemId(QOrganizerItemId::fromString(QString("qtorganizer:jsondb::2//{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     irbir.setItemId(QOrganizerItemId::fromString(QString("qtorganizer:jsondb::qw-e*34/{05c5b1f5-6988-4401-b7bd-0edaf7733f88}")));
     QVERIFY(irbir.start());
     QVERIFY(irbir.waitForFinished());
     QVERIFY(irbir.isFinished());
-    QCOMPARE(irbir.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irbir.error(), QOrganizerManager::InvalidStorageLocationError);
     // Check removing item from non-accessible storage location
-    qDebug()<<"NOTE: Jsondb backend warns when trying to operate on non-accessible storage location!";
     QOrganizerItemRemoveRequest irr;
     irr.setManager(&organizerManager);
     testEvent.setId(dummyIdOnSystem);
@@ -407,7 +400,7 @@ void tst_QOrganizerStorageLocationsMissing::testSystemStorageLocationMissing()
     QVERIFY(irr.start());
     QVERIFY(irr.waitForFinished());
     QVERIFY(irr.isFinished());
-    QCOMPARE(irr.error(), QOrganizerManager::BadArgumentError);
+    QCOMPARE(irr.error(), QOrganizerManager::InvalidStorageLocationError);
 
     // cleaning up
     // -removal of created items

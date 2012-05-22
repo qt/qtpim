@@ -251,17 +251,20 @@ void QOrganizerJsonDbDataStorage::onJsonDbConnectionError(QtJsonDb::QJsonDbConne
 void QOrganizerJsonDbDataStorage::onJsonDbRequestError(QtJsonDb::QJsonDbRequest::ErrorCode error, const QString &message)
 {
     Q_UNUSED(message)
+
     // if the error() signal is emitted, the finished() signal won't be emitted, so need to call handleResponse()
     QJsonDbRequest *request = qobject_cast<QJsonDbRequest *>(sender());
     if (request) {
-        const QOrganizerManager::Error organizerError = m_converter.jsonDbRequestErrorToOrganizerError(error);
-        if (organizerError == QOrganizerManager::StorageLocationsNotExistingError && !m_mandatoryStorageLocationMissing) {
+        QOrganizerManager::Error organizerError = m_converter.jsonDbRequestErrorToOrganizerError(error);
+        // check first the storage location
+        if (QOrganizerManager::InvalidStorageLocationError == organizerError && !m_mandatoryStorageLocationMissing) {
             const QOrganizerAbstractRequest::StorageLocation requestStorageLocation = m_converter.storageLocationStringToEnum(request->partition());
             m_availableStorageLocations.removeOne(requestStorageLocation);
             m_availableStorageLocationsFlag = m_converter.storageLocationListToFlag(m_availableStorageLocations);
             if (QOrganizerAbstractRequest::UserDataStorage == requestStorageLocation) {
                 qCritical("Organizer - JsonDb backend does not work without UserDataStorage!");
                 m_mandatoryStorageLocationMissing = true;
+                organizerError = QOrganizerManager::MissingPlatformRequirementsError;
             }
         }
         handleResponse(organizerError, request);
@@ -872,7 +875,7 @@ void QOrganizerJsonDbDataStorage::processRequest()
 {
     // storage location related checks
     if (m_mandatoryStorageLocationMissing) {
-        *m_error = QOrganizerManager::StorageLocationsNotExistingError;
+        *m_error = QOrganizerManager::MissingPlatformRequirementsError;
         return;
     }
 

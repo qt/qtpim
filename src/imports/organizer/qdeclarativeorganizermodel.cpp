@@ -739,8 +739,10 @@ QString QDeclarativeOrganizerModel::error() const
             return QLatin1String("InvalidItemType");
         case QOrganizerManager::InvalidOccurrenceError:
             return QLatin1String("InvalidOccurrence");
-        case QOrganizerManager::StorageLocationsNotExistingError:
-            return QLatin1String("StorageLocationsNotExistingError");
+        case QOrganizerManager::InvalidStorageLocationError:
+            return QLatin1String("InvalidStorageLocationError");
+        case QOrganizerManager::MissingPlatformRequirementsError:
+            return QLatin1String("MissingPlatformRequirementsError");
         default:
             break;
         }

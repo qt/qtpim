@@ -179,7 +179,7 @@ bool QOrganizerJsonDbRequestThread::validPlatform(QOrganizerAbstractRequest *req
     if (!(QOrganizerAbstractRequest::UserDataStorage & m_storage->availableStorageLocationsFlag())) {
         // UserDataStorage not available is a fatal issue
         qCritical("Organizer - JsonDb backend does not work without UserDataStorage!");
-        finishRequest(*req, QOrganizerManager::StorageLocationsNotExistingError, QMap<int, QOrganizerManager::Error>());
+        finishRequest(*req, QOrganizerManager::MissingPlatformRequirementsError, QMap<int, QOrganizerManager::Error>());
         return false;
     } else {
         return true;
@@ -645,8 +645,7 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
                     parentIds.insert(i, parentDetail.parentId());
                 } else {
                     // invalid storage location
-                    qWarning("Organizer - Operation cannot access defined storage location!");
-                    latestError = QOrganizerManager::BadArgumentError;
+                    latestError = QOrganizerManager::InvalidStorageLocationError;
                     errorMap.insert(i, latestError);
                 }
             } else {
@@ -665,8 +664,7 @@ void QOrganizerJsonDbRequestThread::handleItemRemoveRequest(QOrganizerItemRemove
                     itemIds.insert(i, item.id());
                 } else {
                     // invalid storage location
-                    qWarning("Organizer - Operation cannot access defined storage location!");
-                    latestError = QOrganizerManager::BadArgumentError;
+                    latestError = QOrganizerManager::InvalidStorageLocationError;
                     errorMap.insert(i, latestError);
                 }
             } else {
@@ -1366,7 +1364,7 @@ QOrganizerManager::Error QOrganizerJsonDbRequestThread::checkRequestSpecificStor
     if (requestSpecificStorageLocations && ((requestSpecificStorageLocations | availableStoragelocations) == availableStoragelocations))
         return QOrganizerManager::NoError;
     else
-        return QOrganizerManager::BadArgumentError;
+        return QOrganizerManager::InvalidStorageLocationError;
 }
 
 #include "moc_qorganizerjsondbrequestthread.cpp"

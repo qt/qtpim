@@ -367,8 +367,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \qmlproperty string Address::postOfficeBox
 
   This property holds the post office box identifier of the mailing address.
-
-  This element is part of the \b{QtContacts} module.
 */
 
 /* ==================== QDeclarativeContactAnniversary ======================= */

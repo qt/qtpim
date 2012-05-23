@@ -664,8 +664,6 @@ const QContactDetail::DetailType QContactPhoneNumber::Type(QContactDetail::TypeP
 
    \value FieldNumber The value stored in this field contains the phone number.
    \value FieldSubTypes The value stored in this field contains the sub types of a QContactPhoneNumber.
-   \variable QContactPhoneNumber::FieldNumber
-   The field key constant for the value containing the phone number.
    \sa number(), setNumber()
  */
 
@@ -1401,16 +1399,14 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
 
    This enumeration defines the fields supported by QContactOnlineAccount.
 
-   \value FieldCapabilities The value stored in this field contains the value of the account capabilities.
    \value FieldAccountUri The value stored in this field contains the value of the account uri.
    \value FieldServiceProvider The value stored in this field contains the value of the provider name.
    \value FieldProtocol The value stored in this field contains the value of the protocol.
+   \value FieldCapabilities The value stored in this field contains the value of the account capabilities.
    \value FieldSubTypes The value stored in this field contains the value of the sub types of a QContactOnlineAccount.
-   \variable QContactOnlineAccount::FieldCapabilities
-   The field key constant for the account capabilities value.
-   \sa capabilities(), setCapabilities()
    \sa accountUri(), setAccountUri()
    \sa serviceProvider(), setServiceProvider()
+   \sa capabilities(), setCapabilities()
  */
 
 /*!

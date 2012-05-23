@@ -66,8 +66,8 @@ ContactsSavingTestCase {
     function test_withBoolean()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForBoolean);
-        compare(fetchedExtendedDetail.name, "boolean", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myBoolean, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "boolean", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myBoolean, "extendedDetail.data");
     }
 
 
@@ -84,8 +84,8 @@ ContactsSavingTestCase {
     function test_withColor()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForColor);
-        compare(fetchedExtendedDetail.name, "color", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myColor, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "color", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myColor, "extendedDetail.data");
     }
 
 
@@ -102,14 +102,31 @@ ContactsSavingTestCase {
     function test_withDate()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForDate);
-        compare(fetchedExtendedDetail.name, "date", "extendDetail.name");
+        compare(fetchedExtendedDetail.name, "date", "extendedDetail.name");
         if (model.manager == "jsondb") {
-            // In jsondb date is a bit tricky as UTC format with trailing Zulu is used.
-            // Also backend does not convert it back but returns a string in the zulu format.
-            compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00", "extendDetail.data");
+            // Jsondb backend converts dates to strings in ISO 8601 format containing
+            // date and time in local time without timezone specified.
+            compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00", "extendedDetail.data");
        } else {
-            compare(fetchedExtendedDetail.data, myDate, "extendDetail.data");
+            compare(fetchedExtendedDetail.data, myDate, "extendedDetail.data");
        }
+    }
+
+
+    Contact {
+        id: contactForDateAsString
+        ExtendedDetail {
+            name: "date"
+            data: new Date(Date.UTC(2000, 0, 2, 12, 13, 14)).toISOString()
+        }
+    }
+
+    function test_withDateAsString()
+    {
+        var fetchedExtendedDetail = saveAndUpdate(contactForDateAsString);
+        compare(fetchedExtendedDetail.data, "2000-01-02T12:13:14.000Z", "data as string");
+        compare(Date.parse(fetchedExtendedDetail.data),
+                Date.UTC(2000, 0, 2, 12, 13, 14), "data parsed to Date (in milliseconds)");
     }
 
 
@@ -126,8 +143,8 @@ ContactsSavingTestCase {
     function test_withDouble()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForDouble);
-        compare(fetchedExtendedDetail.name, "double", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myDouble, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "double", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myDouble, "extendedDetail.data");
     }
 
 
@@ -144,8 +161,8 @@ ContactsSavingTestCase {
     function test_withInt()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForInt);
-        compare(fetchedExtendedDetail.name, "int", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myInt, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "int", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myInt, "extendedDetail.data");
     }
 
 
@@ -162,8 +179,8 @@ ContactsSavingTestCase {
     function test_withNegativeInt()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForNegativeInt);
-        compare(fetchedExtendedDetail.name, "negativeInt", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myNegativeInt, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "negativeInt", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myNegativeInt, "extendedDetail.data");
     }
 
 
@@ -180,8 +197,8 @@ ContactsSavingTestCase {
     function test_withReal()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForReal );
-        compare(fetchedExtendedDetail.name, "real", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myReal, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "real", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myReal, "extendedDetail.data");
     }
 
 
@@ -198,8 +215,8 @@ ContactsSavingTestCase {
     function test_withNegReal()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForNegativeReal);
-        compare(fetchedExtendedDetail.name, "negativeReal", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myNegativeReal, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "negativeReal", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myNegativeReal, "extendedDetail.data");
     }
 
 
@@ -216,8 +233,8 @@ ContactsSavingTestCase {
     function test_withString()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForString);
-        compare(fetchedExtendedDetail.name, "string", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myString, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "string", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myString, "extendedDetail.data");
     }
 
 
@@ -234,8 +251,8 @@ ContactsSavingTestCase {
     function test_withUrl()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForUrl);
-        compare(fetchedExtendedDetail.name, "url", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myUrl, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "url", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myUrl, "extendedDetail.data");
     }
 
 
@@ -253,9 +270,9 @@ ContactsSavingTestCase {
     function test_withVariant()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForVariant);
-        compare(fetchedExtendedDetail.name, "stringInVariant", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myVariant, "extendDetail.data Variant");
-        compare(fetchedExtendedDetail.data, stringForVariant, "extendDetail.data String");
+        compare(fetchedExtendedDetail.name, "stringInVariant", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myVariant, "extendedDetail.data Variant");
+        compare(fetchedExtendedDetail.data, stringForVariant, "extendedDetail.data String");
     }
 
 
@@ -273,8 +290,8 @@ ContactsSavingTestCase {
     function test_withIntList()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForIntList);
-        compare(fetchedExtendedDetail.name, "intList", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myIntList, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "intList", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myIntList, "extendedDetail.data");
     }
 
 
@@ -291,8 +308,8 @@ ContactsSavingTestCase {
     function test_withStringList()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForStringList);
-        compare(fetchedExtendedDetail.name, "stringList", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myStringList, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "stringList", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myStringList, "extendedDetail.data");
     }
 
 
@@ -309,8 +326,8 @@ ContactsSavingTestCase {
     function test_withVariantList()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForVariantList);
-        compare(fetchedExtendedDetail.name, "variantList", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myVariantList, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "variantList", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myVariantList, "extendedDetail.data");
     }
 
 
@@ -327,43 +344,44 @@ ContactsSavingTestCase {
     function test_withEmbeddedVariantsList()
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForEmbeddedVariantLists);
-        compare(fetchedExtendedDetail.name, "embeddedVariantLists", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myEmbeddedVariantLists, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "embeddedVariantLists", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myEmbeddedVariantLists, "extendedDetail.data");
 
     }
 
 
-    property variant myDeeblyEmbeddedVariantLists: [["one", "two", [3, 4, [5, 6], 7], 8], 9, "ten", [ "eleven", 12]]
+    property variant myDeeplyEmbeddedVariantLists: [["one", "two", [3, 4, [5, 6], 7], 8], 9, "ten", [ "eleven", 12]]
 
     Contact {
-        id: contactForDeeblyEmbeddedVariantLists
+        id: contactForDeeplyEmbeddedVariantLists
         ExtendedDetail {
-            name: "deeblyEmbeddedVariantLists"
-            data: myDeeblyEmbeddedVariantLists
+            name: "deeplyEmbeddedVariantLists"
+            data: myDeeplyEmbeddedVariantLists
         }
     }
 
-    function test_withDeeblyEmbeddedVariantLists()
+    function test_withDeeplyEmbeddedVariantLists()
     {
-        var fetchedExtendedDetail = saveAndUpdate(contactForDeeblyEmbeddedVariantLists);
-        compare(fetchedExtendedDetail.name, "deeblyEmbeddedVariantLists", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myDeeblyEmbeddedVariantLists, "extendDetail.data");
+        var fetchedExtendedDetail = saveAndUpdate(contactForDeeplyEmbeddedVariantLists);
+        compare(fetchedExtendedDetail.name, "deeplyEmbeddedVariantLists", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myDeeplyEmbeddedVariantLists, "extendedDetail.data");
     }
+
+    property variant myMap: {"key1": 1, "key2": 2, "key3": 3}
 
     Contact {
         id: contactForMap
         ExtendedDetail {
             name: "mapData"
+            data: myMap
         }
     }
 
     function test_withMap()
     {
-        var myMapData = { key1: 1, key2: 2, key3: 3}
-        contactForMap.extendedDetail.data = myMapData;
         var fetchedExtendedDetail = saveAndUpdate(contactForMap);
-        compare(fetchedExtendedDetail.name, "mapData", "extendDetail.name");
-        compare(fetchedExtendedDetail.data, myMapData, "extendDetail.data");
+        compare(fetchedExtendedDetail.name, "mapData", "extendedDetail.name");
+        compare(fetchedExtendedDetail.data, myMap, "extendedDetail.data");
     }
 
     Contact {

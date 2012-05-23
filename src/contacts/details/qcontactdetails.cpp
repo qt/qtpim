@@ -1973,7 +1973,8 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
     \ingroup contacts-details
 
     Different back-end engines may or may not support extended details for different contact types. Even
-    if supported, they may accept different QVariant types as the data.
+    if supported, they may accept different QVariant types as the data. The back-end engine may convert
+    the data to another type that the engine supports.
  */
 
 /*!

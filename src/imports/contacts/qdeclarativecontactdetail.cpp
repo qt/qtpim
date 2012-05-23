@@ -512,6 +512,45 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 */
 
 
+/* ==================== QDeclarativeContactExtendedDetail ======================= */
+/*!
+    \qmlclass ExtendedDetail QDeclarativeContactExtendedDetail
+    \brief The ExtendedDetail element contains an extended detail of a contact.
+    \ingroup qml-contacts-details
+    \inqmlmodule QtContacts 5.0
+
+    Note for the jsondb manager backend: it converts extended detail data of type date,
+    time or javascript Date to a string expressed in local timezone in ISO 8601 format
+    without timezone specified. Javascript function Date.parse() cannot be used
+    to parse this string, since it interprets the string without timezone specified
+    being in UTC. It is recommended to convert dates to strings before storing them
+    to extended details. For example, javascript functions Date.toISOString() and
+    Date.parse() can be used for the conversion.
+
+    ExtendedDetail element contains the following field types:
+    \list
+    \li ExtendedDetail.Name
+    \li ExtendedDetail.Data
+    \endlist
+
+    This element is part of the \b{QtContacts} module.
+
+    \sa QContactExtendedDetail
+*/
+
+/*!
+    \qmlproperty string ExtendedDetail::name
+
+    This property holds the name of the extended detail.
+*/
+
+/*!
+    \qmlproperty variant ExtendedDetail::data
+
+    This property holds the data of the extended detail.
+*/
+
+
 /* ==================== QDeclarativeContactFamily ======================= */
 /*!
    \qmlclass Family QDeclarativeContactFamily
@@ -1213,28 +1252,6 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li Url.HomePage - indicating this url is a contact's home page.
   \li Url.Favourite - indicating this url is one of the contact's favourite URLs (or bookmarks).
   \endlist
-*/
-
-
-/* ==================== QDeclarativeContactExtendedDetail ======================= */
-/*!
-    \qmlclass ExtendedDetail QDeclarativeContactExtendedDetail
-    \brief The ExtendedDetail element contains a extended detail of a contact.
-    \ingroup qml-contacts
-
-    This element is part of the \b{QtContacts 5.0} module.
-*/
-
-/*!
-    \qmlproperty string ExtendedDetail::name
-
-    This property holds the name of the extended detail.
-*/
-
-/*!
-    \qmlproperty variant ExtendedDetail::data
-
-    This property holds the data of the extended detail.
 */
 
 #include "moc_qdeclarativecontactdetail_p.cpp"

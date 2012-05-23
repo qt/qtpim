@@ -615,7 +615,11 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
     connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
 
-    if (d->m_error != QOrganizerManager::NoError) {
+    const QOrganizerManager::Error managerError = d->m_manager->error();
+    if (QOrganizerManager::NoError != managerError && d->m_error != managerError) {
+        d->m_error = managerError;
+        emit errorChanged();
+    } else if (QOrganizerManager::NoError != d->m_error) {
         d->m_error = QOrganizerManager::NoError;
         emit errorChanged();
     }

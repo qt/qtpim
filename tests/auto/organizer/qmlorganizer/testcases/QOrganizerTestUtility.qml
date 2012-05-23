@@ -50,6 +50,7 @@ TestCase {
     property var collectionChange: 1
     property SignalSpy organizerChangedSpy
     property SignalSpy organizerCollectionChangedSpy
+    property bool modelChanged: false
 
     //---------internal use---------//
     property OrganizerModel __model
@@ -68,11 +69,30 @@ TestCase {
                 , testUtility);
         organizerCollectionChangedSpy.target = model;
         organizerCollectionChangedSpy.signalName = "collectionsChanged";
+
+        __model.modelChanged.connect(modelChangedSignalHandler);
     }
 
     function debug(string, flag) {
         if (flag == 1)
             console.log(string);
+    }
+
+    function modelChangedSignalHandler() {
+        modelChanged = true;
+    }
+
+    function waitModelChanged(waitTimeCounter) {
+        // Something funny with the SignalSpy. It does not catch always the modelChanged-signal.
+        // Therefore having the own temporary "SignalSpy" here..
+        var counter = 0;
+        modelChanged = false;
+        while (counter < waitTimeCounter) {
+            wait(1);
+            counter++;
+            if (modelChanged)
+                return;
+        }
     }
 
     function create_testobject(ctorString, parent) {
@@ -174,10 +194,16 @@ TestCase {
         organizerChangedSpy.clear()
         if (removeIds.length > 0) {
             __model.removeItems(removeIds)
-            organizerChangedSpy.wait()
+            // Something funny with the SignalSpy. It does not catch always the modelChanged-signal.
+            //organizerChangedSpy.wait()
+            if (!__model.autoUpdate)
+                __model.update()
+            else
+                waitModelChanged(200);
+
             // there might be more than one modelChanged signal, so waiting
             // for a while to get them all
-            wait(500);
+            wait(300);
         }
         compare(__model.items.length, 0)
         empty_calendar_collections(log);

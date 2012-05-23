@@ -53,8 +53,6 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerJsonDbEngine::QOrganizerJsonDbEngine(QOrganizerManager::Error *error)
     : m_requestHandlerThread(new QOrganizerJsonDbRequestThread)
 {
-    m_requestHandlerThread = new QOrganizerJsonDbRequestThread();
-
     // Register types to be able to send them as parameters in cross-thread signals
     qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
     qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");

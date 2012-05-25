@@ -83,7 +83,6 @@ private:
     void testJsonDetailItems(const QJsonObject& values, const QString& extractField,
                              const QMap<QString, QString>& fields, bool testSize = true);
     void initializeJsonContact(QJsonObject& jsonContact, unsigned int numbering = 0);
-    QString convertToISODate(QString date);
 
 private:
     QString m_partitionName;
@@ -280,8 +279,8 @@ void tst_QcontactJsondbConverter::toQContactTest()
 
     // birthday
     initializeJsonContact(jsonContact);
-    QDateTime birthDayDate = QDateTime::fromString("1979-11-22", Qt::ISODate).toUTC();
-    jsonData.insert("birthday", convertToISODate("1979-11-22"));
+    QDateTime birthDayDate = QDateTime::fromString("1979-11-22", Qt::ISODate);
+    jsonData.insert("birthday", QStringLiteral("1979-11-22"));
     jsonContact.insert("details", jsonData);
     QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactBirthday::Type);
@@ -944,10 +943,8 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     QContactBirthday birthday;
     birthday.setDate(QDate(1979, 11, 22));
     contact.saveDetail(&birthday);
-    QString expectedBirthDayDate;
-    expectedBirthDayDate = birthday.dateTime().toUTC().toString(Qt::ISODate);
     QVERIFY(converter.toJsonContact(&jsonContact, contact));
-    testFields.insert("birthday", expectedBirthDayDate);
+    testFields.insert("birthday", "1979-11-22");
     // avatar
     QContactAvatar avatar;
     avatar.setImageUrl(QUrl("http://www.acme.com/logo.jpg"));
@@ -1468,14 +1465,6 @@ void tst_QcontactJsondbConverter::initializeJsonContact(QJsonObject& jsonContact
     jsonData.insert("middleName", QString("Tom" + number));
     jsonContact.insert(QContactJsonDbStr::nameDefinitionName(), jsonData);
 }
-
-QString tst_QcontactJsondbConverter::convertToISODate(QString date)
-{
-    QDateTime dateTime;
-    dateTime = QDateTime::fromString(date, Qt::ISODate).toUTC();
-    return dateTime.toUTC().toString(Qt::ISODate);
-}
-
 
 QTEST_APPLESS_MAIN(tst_QcontactJsondbConverter);
 

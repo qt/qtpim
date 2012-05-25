@@ -95,8 +95,8 @@ public:
 private:
     void initializeMappings();
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value) const;
-    QString toJsonDate(const QDateTime& date) const;
-    QDateTime toContactDate(const QString& dateString) const;
+    QString toJsonDbDate(const QDateTime& dateAsQDateTime) const;
+    QDateTime toQDateTime(const QString& jsonDbDate) const;
     bool idFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     bool detailFilterToJsondbQuery(const QContactFilter &filter, QString &jsonDbQueryStr) const;
     void idsToJsondbQuery(const QList<QContactId> &ids, QString &newJsonDbQuery) const;

@@ -179,7 +179,7 @@ bool QContactJsonDbConverter::toQContact(const QJsonObject& object, QContact* co
             QString dateString;
             dateString = temporaryJsonObject[detailsToJsonMapping.value(QContactBirthday::Type)].toString();
             if (!dateString.isEmpty()) {
-                QDateTime date = toContactDate(dateString);
+                QDateTime date = toQDateTime(dateString);
                 QContactBirthday birthday;
                 birthday.setDateTime(date);
                 contact->appendDetail(birthday);
@@ -603,7 +603,7 @@ bool QContactJsonDbConverter::toJsonContact(QJsonObject* object, const QContact&
         case QContactDetail::TypeBirthday: {
             birthday = static_cast<QContactBirthday *>(&detail);
             QDateTime date = birthday->dateTime();
-            QString dateString = toJsonDate(date);
+            QString dateString = toJsonDbDate(date);
             embeddedDetailsObject[detailsToJsonMapping.value(QContactBirthday::Type)] = dateString;
             object->insert(QContactJsonDbStr::contactDetails(), embeddedDetailsObject);
             break;
@@ -1291,16 +1291,14 @@ void QContactJsonDbConverter::createMatchFlagQuery(QString& queryString, QContac
     queryString.append(queryWithWildCards);
 }
 
-QString QContactJsonDbConverter::toJsonDate(const QDateTime& date) const
+QString QContactJsonDbConverter::toJsonDbDate(const QDateTime& dateAsQDateTime) const
 {
-    QString dateString = date.toUTC().toString(Qt::ISODate);
-    return dateString;
+    return dateAsQDateTime.toLocalTime().toString("yyyy-MM-dd");
 }
 
-QDateTime QContactJsonDbConverter::toContactDate(const QString &dateString) const
+QDateTime QContactJsonDbConverter::toQDateTime(const QString &jsonDbDate) const
 {
-    QDateTime date = QDateTime::fromString((dateString),Qt::ISODate).toUTC();
-    return date;
+    return QDateTime(QDate::fromString(jsonDbDate, Qt::ISODate));
 }
 
 QContactId QContactJsonDbConverter::jsonDbNotificationObjectToContactId(const QJsonObject &object, QContactAbstractRequest::StorageLocation storageLocation) const

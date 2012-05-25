@@ -199,11 +199,11 @@ TestCase {
             if (!__model.autoUpdate)
                 __model.update()
             else
-                waitModelChanged(200);
+                waitModelChanged(500);
 
             // there might be more than one modelChanged signal, so waiting
             // for a while to get them all
-            wait(300);
+            wait(500);
         }
         compare(__model.items.length, 0)
         empty_calendar_collections(log);

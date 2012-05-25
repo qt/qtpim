@@ -42,16 +42,10 @@
 import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
-import QtJsonDb 1.0 as JsonDb
 
-ContactsSavingTestCase {
+ContactsJsonDbTestCase {
     name: "ContactsJsonDbToModelNotificationE2ETests"
     id: contactsJsonDbToModelNotificationE2ETests
-
-    ContactsJsonDbPartitions {
-        id: jsonDbPartitions
-    }
-    property string jsonDbPartitionForDefaultStorageLocation: jsonDbPartitions.userPartition.name
 
     property ContactModel model
 
@@ -79,10 +73,6 @@ ContactsSavingTestCase {
         waitForContactsChanged();
 
         compare(model.contacts.length, 1, "model has a contact");
-    }
-
-    Contact {
-        id: contactToBeRemovedWhenAutoUpdateIsOff
     }
 
     function test_createContactPassesDetailsToModel()
@@ -129,6 +119,10 @@ ContactsSavingTestCase {
         waitForContactsChanged();
 
         compare(model.contacts.length, 0, "model is empty");
+    }
+
+    Contact {
+        id: contactToBeRemovedWhenAutoUpdateIsOff
     }
 
     function test_removeContactWhenAutoUpdateIsOff()
@@ -482,27 +476,6 @@ ContactsSavingTestCase {
 
         modelForCleanup.autoUpdate = false;
         modelForCleanup.destroy();
-    }
-
-    function initJsonDbAccess() {
-        jsonDbTestHelper.initTestHelper();
-    }
-
-    ContactsJsonDbTestHelper {
-        id: jsonDbTestHelper
-        partition: contactsJsonDbToModelNotificationE2ETests.jsonDbPartitionForDefaultStorageLocation
-    }
-
-    function createContactToJsonDb(contact) {
-        jsonDbTestHelper.createContactToJsonDb(contact);
-    }
-
-    function removeContactFromJsonDb(contact) {
-        jsonDbTestHelper.removeContactFromJsonDb(contact);
-    }
-
-    function updateContactInJsonDb(contact, update) {
-        jsonDbTestHelper.updateContactInJsonDb(contact, update);
     }
 
     function compareContactArrays(actual, expected) {

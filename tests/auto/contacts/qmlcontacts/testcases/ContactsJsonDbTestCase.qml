@@ -43,64 +43,37 @@ import QtQuick 2.0
 import QtTest 1.0
 import QtContacts 5.0
 
-ContactsJsonDbTestCase {
-    name: "ContactsJsonDbDetailsSavingE2ETests"
-    id: contactsJsonDbDetailsSavingE2ETests
+ContactsSavingTestCase {
+    name: "ContactsJsonDbTestCase"
+    id: contactsJsonDbTestCase
 
-    ContactModel {
-        id: model
-        manager: "jsondb"
-        autoUpdate: true
+    ContactsJsonDbPartitions {
+        id: jsonDbPartitions
+    }
+    property string jsonDbPartitionForDefaultStorageLocation: jsonDbPartitions.userPartition.name
+
+    ContactsJsonDbTestHelper {
+        id: jsonDbTestHelper
+        partition: jsonDbPartitionForDefaultStorageLocation
     }
 
-    // Tests
-
-    Contact {
-        id: contactWithBirthday
-        Birthday {
-            birthday: new Date(2012,0,2)
-        }
+    function initJsonDbAccess() {
+        jsonDbTestHelper.initTestHelper();
     }
 
-    function test_saveBirthday()
-    {
-        initTestForModel(model);
-
-        model.saveContact(contactWithBirthday);
-        waitForContactsChanged();
-
-        var contacts = queryContactsInJsonDb();
-        verify(contacts, "contacts is defined");
-        compare(contacts.length, 1, "contact present");
-        compare(contacts[0].details.birthday, "2012-01-02", "birthday matches");
+    function createContactToJsonDb(contact) {
+        jsonDbTestHelper.createContactToJsonDb(contact);
     }
 
-    // Init & teardown
-
-    function initTestCase() {
-        waitForModelToBeReady(model);
-        cleanupContacts();
-        initJsonDbAccess();
+    function removeContactFromJsonDb(contact) {
+        jsonDbTestHelper.removeContactFromJsonDb(contact);
     }
 
-    function init() {
-        cleanupContacts();
+    function updateContactInJsonDb(contact, update) {
+        jsonDbTestHelper.updateContactInJsonDb(contact, update);
     }
 
-    function cleanup() {
-        cleanupContacts();
-    }
-
-    function cleanupTestCase() {
-        cleanupContacts();
-    }
-
-    function waitForModelToBeReady(model) {
-        initTestForModel(model);
-        waitForContactsChanged();
-    }
-
-    function cleanupContacts() {
-        emptyContacts(model);
+    function queryContactsInJsonDb() {
+        return jsonDbTestHelper.queryContactsInJsonDb();
     }
 }

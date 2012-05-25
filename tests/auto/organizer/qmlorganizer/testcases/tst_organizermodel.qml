@@ -389,14 +389,14 @@ TestCase {
         compare(organizerModel.error, "PermissionsError");
     }
 
-    function test_organizermodel_fetchitems_data() {
+    function test_organizermodel_fetchitemsbyid_data() {
         return [
             {tag: "memory backend", managerToBeTested: "memory"},
             {tag: "jsondb backend", managerToBeTested: "jsondb"}
         ]
     }
 
-    function test_organizermodel_fetchitems(data) {
+    function test_organizermodel_fetchitemsbyid(data) {
         var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"
             + "OrganizerModel {\n"
@@ -415,11 +415,260 @@ TestCase {
         compare(spy.count, 1)
     }
 
-    function test_organizermodel_containsitems_data() {
+
+   function fetchItemsPopulation_data() {
+
+        var event1 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  displayLabel: \"event1:\"\n"
+            + "  id: event1\n"
+            + "  startDateTime: new Date(2011, 11, 8, 13, 55)\n"
+            + "  endDateTime: new Date(2011, 11, 8, 14, 07)\n"
+            + "}\n", modelTests);
+
+        var event2 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  displayLabel: \"event2:\"\n"
+            + "  id: event2\n"
+            + "  startDateTime: new Date(2011, 11, 8, 14, 11)\n"
+            + "  endDateTime: new Date(2011, 11, 8, 14, 15)\n"
+            + "}\n", modelTests);
+
+        var event3 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  displayLabel: \"event3:\"\n"
+            + "  id: event3\n"
+            + "  startDateTime: new Date(2011, 11, 9, 14, 25, 0)\n"
+            + "  endDateTime: new Date(2011, 11, 9, 14, 45)\n"
+            + "}\n", modelTests);
+
+        var event4 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  displayLabel: \"event4:\"\n"
+            + "  id: event4\n"
+            + "  startDateTime: new Date(2011, 11, 10, 14, 11)\n"
+            + "  endDateTime: new Date(2011, 11, 10, 14, 45)\n"
+            + "}\n", modelTests);
+
+        var event5 = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  displayLabel: \"event5:\"\n"
+            + "  id: event5\n"
+            + "  startDateTime: new Date(2011, 12, 11, 14, 55)\n"
+            + "  endDateTime: new Date(2011, 12, 11, 15, 05)\n"
+            + "}\n", modelTests);
+
+        return [
+            {
+                tag: "Event set 1",
+                events:[
+                    event1,
+                    event2,
+                    event3,
+                    event4,
+                    event5,
+                ]
+            }
+        ]
+    }
+
+    function test_organizermodel_fetchitems_data() {
         return [
             {tag: "memory backend", managerToBeTested: "memory"},
             {tag: "jsondb backend", managerToBeTested: "jsondb"}
         ]
+    }
+
+    function test_organizermodel_fetchitems(data) {
+        var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "OrganizerModel {\n"
+            + "    manager: '" + data.managerToBeTested + "'\n"
+            + "    id:fetchItemsTestModel\n"
+            + "    autoUpdate:true\n "
+            + "    property list<OrganizerItem> testFetchedItems: [OrganizerItem{},OrganizerItem{}]\n"
+            + "    onItemsFetched: {\n"
+            + "        testFetchedItems = fetchedItems;\n"
+            + "    }\n"
+            + "}\n", modelTests);
+
+        var modelChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+        modelChangedSpy.target = organizerModel
+        modelChangedSpy.signalName = "modelChanged"
+
+        var modelItemsFetchedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
+        modelItemsFetchedSpy.target = organizerModel
+        modelItemsFetchedSpy.signalName = "itemsFetched"
+
+        var startDate = new Date(1977, 12, 9, 8, 0);
+        var endDate = new Date(2022, 12, 9, 8, 0);
+        organizerModel.startPeriod = startDate;
+        organizerModel.endPeriod = endDate;
+
+        // during initialisation only one modelChanged allowed
+        modelChangedSpy.wait();
+        compare(modelChangedSpy.count, 1)
+
+        //Cleanup
+        modelChangedSpy.clear();
+        var ids = organizerModel.itemIds();
+        if (ids.length != 0) {
+            organizerModel.removeItems(ids);
+            modelChangedSpy.wait();
+            compare(modelChangedSpy.count, 1);
+            compare(organizerModel.items.length, 0);
+        }
+
+        // Store some test data....
+        var testDataSet = fetchItemsPopulation_data()[0] //Event set 1
+        console.log("Test Set:" + testDataSet.tag)
+        console.log(" Saving " + testDataSet.events.length + " events...")
+        for (var index = 0; index < testDataSet.events.length; index++){
+            modelChangedSpy.clear();
+            console.log("saving event:" + testDataSet.events[index]);
+            organizerModel.saveItem( testDataSet.events[index]);
+            modelChangedSpy.wait();
+            compare(modelChangedSpy.count, 1)
+        }
+        console.log("Orgnizer itemcount = " + organizerModel.items.length);
+        compare(organizerModel.items.length, testDataSet.events.length);
+
+        // 1. Only fetch events with start/end dates before any stored events
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(1977, 11, 9, 8, 0);
+        endDate = new Date(2010, 11, 9, 8, 0);
+        verify(organizerModel.fetchItems( startDate, endDate ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1);
+        compare(organizerModel.fetchItems.length,0);
+
+        // 2. Nothing fetched if start+end dates are after any stored events
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(2012, 11, 9, 8, 0);
+        endDate = new Date(2099, 11, 9, 8, 0);
+        verify( organizerModel.fetchItems( startDate, endDate ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1);
+        compare(organizerModel.fetchItems.length,0);
+
+        // 3. All events fetched
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(1977, 11, 9, 8, 0);
+        endDate = new Date(2099, 11, 9, 8, 0);
+        verify( organizerModel.fetchItems( startDate, endDate ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1)
+        compare(organizerModel.testFetchedItems.length, 5);
+
+        // 4. Only items within start+end fetched
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(2011, 11, 8, 14, 10);
+        endDate = new Date(2011, 11, 10, 20, 0);
+        verify(organizerModel.fetchItems( startDate, endDate ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1)
+        compare(organizerModel.testFetchedItems.length, 3);
+
+         // 5. Sorting
+        var sortAscending = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "    SortOrder {\n"
+            + "    detail: Detail.DisplayLabel\n"
+            + "    field: DisplayLabel.FieldLabel\n" //field: DisplayLabelField.FieldLabel\n"
+            + "    id: testAscendingOrder\n"
+            + "    direction: Qt.AscendingOrder\n"
+            + "}\n", organizerModel);
+
+        var sortDescending = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "    SortOrder {\n"
+            + "    detail: Detail.DisplayLabel\n"
+            + "    field: DisplayLabel.FieldLabel\n" //field: DisplayLabelField.FieldLabel\n"
+            + "    id: testDecendingOrder\n"
+            + "    direction: Qt.DescendingOrder\n"
+            + "}\n", organizerModel);
+
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(2011, 11, 8, 14, 10);
+        endDate = new Date(2011, 11, 10, 20, 0);
+        modelItemsFetchedSpy.clear();
+        verify( organizerModel.fetchItems( startDate, endDate, [sortAscending] ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1);
+        compare(organizerModel.testFetchedItems.length, 3);
+        var expectedSortOrder = [ "event2:", "event3:", "event4:"]
+        compare(expectedSortOrder.length, organizerModel.testFetchedItems.length);
+        for (var j = 0; j < organizerModel.testFetchedItems.length; j++) {
+            verify(organizerModel.testFetchedItems[j].displayLabel === expectedSortOrder[j], "FetchItems Ascending Sort Order Incorrect.");
+        }
+
+        modelItemsFetchedSpy.clear();
+        verify( organizerModel.fetchItems( startDate, endDate, [sortDescending] ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1);
+        compare(organizerModel.testFetchedItems.length, 3);
+        compare(expectedSortOrder.length, organizerModel.testFetchedItems.length);
+        for ( j = 0; j < organizerModel.testFetchedItems.length; j++) {
+            verify(organizerModel.testFetchedItems[j].displayLabel == expectedSortOrder[2-j], "FetchItems Decending Sort Order Incorrect.");
+        }
+
+        // 6. Filtering
+        var testFilterDisplayLabel = Qt.createQmlObject("import QtOrganizer 5.0; DetailFilter{}", organizerModel)
+        testFilterDisplayLabel.detail = Detail.DisplayLabel
+        testFilterDisplayLabel.field = DisplayLabel.FieldLabel
+        testFilterDisplayLabel.value = "event2:"
+        testFilterDisplayLabel.matchFlags = DetailFilter.MatchContains
+        modelItemsFetchedSpy.clear();
+        startDate = new Date(1977, 11, 9, 8, 0);
+        endDate = new Date(2099, 11, 9, 8, 0);
+        verify( organizerModel.fetchItems( startDate, endDate, [sortDescending], testFilterDisplayLabel ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1)
+        compare(organizerModel.testFetchedItems.length, 1);
+
+        // 7. fetch hints
+        var fetchhint = utility.create_testobject("import QtQuick 2.0\n"
+            + "import QtOrganizer 5.0\n"
+            + "    FetchHint {\n"
+            + "        id:hint\n"
+            + "        optimizationHints:FetchHint.AllRequired\n"
+            + "}\n", organizerModel);
+        modelItemsFetchedSpy.clear();
+        verify( organizerModel.fetchItems( startDate, endDate, [sortDescending], testFilterDisplayLabel, fetchhint ) != -1);
+        modelItemsFetchedSpy.wait();
+        compare(modelItemsFetchedSpy.count, 1)
+        compare(organizerModel.testFetchedItems.length, 1);
+
+        // 8. storage locations and maxcount are not available in Memory model
+        if (data.managerToBeTested != "memory")
+        {
+            modelItemsFetchedSpy.clear();
+            organizerModel.fetchItems( startDate, endDate, [sortDescending], testFilterDisplayLabel, fetchhint , OrganizerModel.SystemStorage);
+            modelItemsFetchedSpy.wait();
+            compare(modelItemsFetchedSpy.count, 1)
+            compare(organizerModel.testFetchedItems.length, 0);
+
+            // 9. MaxCount
+            var testDefaultFilter = Qt.createQmlObject("import QtOrganizer 5.0; Filter{}", organizerModel)
+            modelItemsFetchedSpy.clear();
+            verify( organizerModel.fetchItems( startDate, endDate, [sortDescending], testDefaultFilter, fetchhint , OrganizerModel.UserDataStorage, 2) != -1);
+            modelItemsFetchedSpy.wait();
+            compare(modelItemsFetchedSpy.count, 1)
+            compare(organizerModel.testFetchedItems.length, 2);
+        }
+
+        //Cleanup
+        modelChangedSpy.clear();
+        ids = organizerModel.itemIds();
+        organizerModel.removeItems(ids);
+        modelChangedSpy.wait();
+        compare(organizerModel.items.length, 0);
+        compare(modelChangedSpy.count, 1);
     }
 
     function test_organizermodel_containsitems(data) {

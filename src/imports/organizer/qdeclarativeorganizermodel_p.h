@@ -158,6 +158,12 @@ public:
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item,
                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
     Q_INVOKABLE int fetchItems(const QStringList &itemIds);
+    Q_INVOKABLE int fetchItems(const QDateTime &start, const QDateTime &end,
+                               const QVariantList &sortList = QVariantList(),
+                               QDeclarativeOrganizerItemFilter *filter = new QDeclarativeOrganizerItemFilter(),
+                               QDeclarativeOrganizerItemFetchHint *fetchHint = new QDeclarativeOrganizerItemFetchHint(),
+                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage,
+                               int maxCount = -1);
     Q_INVOKABLE void removeCollection(const QString& collectionId);
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection,
                          QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);

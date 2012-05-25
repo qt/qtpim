@@ -840,6 +840,76 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
  */
 
 /*!
+    \qmlmethod int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTime &end,
+                           const QVariantList &sortList,
+                           QDeclarativeOrganizerItemFilter *filter,
+                           QDeclarativeOrganizerItemFetchHint *hint,
+                           QDeclarativeOrganizerModel::StorageLocation storageLocation,
+                           const int maxCount)
+
+    This method will start a request to fetch items between the given \a start and \a end dates.
+    Optionally a \a sort order, \a filter, \a fetchHint, \a storageLocation and \a maxCount can
+    be specified to narrow the search. If nothing is set for these optional paramenters then
+    defaults are applied, essentially any sort order, default filter, default storage location and all items.
+
+    The unique ID of this request will be returned.  If the request can't be started -1 is returned.
+    The end date must be greater than the start date for this method to start a fetch request.
+
+    Note that the items fetched won't be added to the model, but can be accessed through the onItemsFetched
+    handler. No properties in the model are updated with this information either.
+
+    \sa onItemsFetched
+  */
+int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTime &end,
+                           const QVariantList &sortList,
+                           QDeclarativeOrganizerItemFilter *filter,
+                           QDeclarativeOrganizerItemFetchHint *fetchHint,
+                           QDeclarativeOrganizerModel::StorageLocation storageLocation,
+                           int maxCount)
+{
+    Q_D(QDeclarativeOrganizerModel);
+    if (!start.isValid() || !end.isValid() || !(end > start))
+    {
+        return -1;
+    }
+
+    // Parameter validation left to fetch request method.
+    QOrganizerItemFetchRequest *fetchRequest = new QOrganizerItemFetchRequest(this);
+    connect(fetchRequest, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)),
+            this, SLOT(onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State)));
+
+    QList<QOrganizerItemSortOrder> sList;
+    QVariantList::const_iterator it = sortList.begin();
+    while (it != sortList.end()) {
+        if ((*it).canConvert<QObject *>()) {
+            QDeclarativeOrganizerItemSortOrder *sortOrderItem = (*it).value<QDeclarativeOrganizerItemSortOrder *>();
+            sList << sortOrderItem->sortOrder();
+        }
+        ++it;
+    }
+
+    const QOrganizerItemFilter &fetchFilter = filter->filter();
+    fetchRequest->setFilter( fetchFilter );
+    const QOrganizerItemFetchHint &hint = fetchHint->fetchHint();
+
+    fetchRequest->setManager(d->m_manager);
+    fetchRequest->setStartDate(start);
+    fetchRequest->setEndDate(end);
+    fetchRequest->setSorting(sList);
+    fetchRequest->setStorageLocations(QOrganizerAbstractRequest::StorageLocations(storageLocation));
+    fetchRequest->setMaxCount(maxCount);
+    fetchRequest->setFetchHint(hint);
+
+    if (fetchRequest->start()) {
+        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
+        d->m_requestIdHash.insert(fetchRequest, requestId);
+        return requestId;
+    } else {
+        return -1;
+    }
+}
+
+/*!
     \qmlmethod int OrganizerModel::fetchItems(stringlist itemIds)
 
     Starts a request to fetch items by the given \a itemIds, and returns the unique ID of this request.
@@ -880,19 +950,24 @@ int QDeclarativeOrganizerModel::fetchItems(const QStringList &itemIds)
 void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State state)
 {
     Q_D(QDeclarativeOrganizerModel);
-    if (state != QOrganizerAbstractRequest::FinishedState || !sender())
+
+    QOrganizerAbstractRequest *request=qobject_cast<QOrganizerAbstractRequest *>(sender());
+
+    if (state != QOrganizerAbstractRequest::FinishedState || !request)
         return;
 
-    QOrganizerItemFetchByIdRequest *request = qobject_cast<QOrganizerItemFetchByIdRequest *>(sender());
-    if (!request)
+    QOrganizerItemFetchRequest *itemFetchRequest = qobject_cast<QOrganizerItemFetchRequest *>(request);
+    QOrganizerItemFetchByIdRequest *itemByIdFetchRequest = qobject_cast<QOrganizerItemFetchByIdRequest *>(request);
+
+    if (!itemFetchRequest && !itemByIdFetchRequest)
         return;
 
     checkError(request);
+    const int requestId = d->m_requestIdHash.value(request, -1);
 
-    int requestId(d->m_requestIdHash.value(request, -1));
     QVariantList list;
     if (request->error() == QOrganizerManager::NoError) {
-        QList<QOrganizerItem> items(request->items());
+            const QList<QOrganizerItem> &items((!itemFetchRequest) ? itemByIdFetchRequest->items():itemFetchRequest->items());
         QDeclarativeOrganizerItem *declarativeItem(0);
         foreach (const QOrganizerItem &item, items) {
             switch (item.type()) {

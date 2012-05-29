@@ -191,7 +191,7 @@ void QVersitOrganizerExporterPrivate::encodeEventTimeRange(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerEventTime etr = static_cast<QOrganizerEventTime>(detail);
+    const QOrganizerEventTime &etr = static_cast<const QOrganizerEventTime &>(detail);
     bool isAllDay = etr.isAllDay();
     QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
     property.setName(QLatin1String("DTSTART"));
@@ -224,7 +224,7 @@ void QVersitOrganizerExporterPrivate::encodeTodoTimeRange(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerTodoTime ttr = static_cast<QOrganizerTodoTime>(detail);
+    const QOrganizerTodoTime &ttr = static_cast<const QOrganizerTodoTime &>(detail);
     bool isAllDay = ttr.isAllDay();
     QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
     property.setName(QLatin1String("DTSTART"));
@@ -256,7 +256,7 @@ void QVersitOrganizerExporterPrivate::encodeJournalTimeRange(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerJournalTime jtr = static_cast<QOrganizerJournalTime>(detail);
+    const QOrganizerJournalTime &jtr = static_cast<const QOrganizerJournalTime &>(detail);
     QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
     property.setName(QLatin1String("DTSTART"));
     property.setValue(encodeDateTime(jtr.entryDateTime()));
@@ -271,7 +271,7 @@ void QVersitOrganizerExporterPrivate::encodeTimestamp(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemTimestamp timestamp = static_cast<QOrganizerItemTimestamp>(detail);
+    const QOrganizerItemTimestamp &timestamp = static_cast<const QOrganizerItemTimestamp &>(detail);
     QVersitProperty property = takeProperty(document, QLatin1String("CREATED"), removedProperties);
     property.setName(QLatin1String("CREATED"));
     property.setValue(encodeDateTime(timestamp.created().toUTC()));
@@ -292,7 +292,7 @@ void QVersitOrganizerExporterPrivate::encodeVersion(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemVersion version = static_cast<QOrganizerItemVersion>(detail);
+    const QOrganizerItemVersion &version = static_cast<const QOrganizerItemVersion &>(detail);
     QVersitProperty property = takeProperty(document, QLatin1String("X-QTPROJECT-VERSION"), removedProperties);
     property.setName(QLatin1String("X-QTPROJECT-VERSION"));
     QStringList values(QString::number(version.version()));
@@ -312,7 +312,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurrence(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemRecurrence recurrence = static_cast<QOrganizerItemRecurrence>(detail);
+    const QOrganizerItemRecurrence &recurrence = static_cast<const QOrganizerItemRecurrence &>(detail);
     QSet<QOrganizerRecurrenceRule> rrules = recurrence.recurrenceRules();
     QSet<QOrganizerRecurrenceRule> exrules = recurrence.exceptionRules();
     QSet<QDate> rdates = recurrence.recurrenceDates();
@@ -503,7 +503,7 @@ void QVersitOrganizerExporterPrivate::encodePriority(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemPriority priority = static_cast<QOrganizerItemPriority>(detail);
+    const QOrganizerItemPriority &priority = static_cast<const QOrganizerItemPriority &>(detail);
     QVersitProperty property =
         takeProperty(document, QLatin1String("PRIORITY"), removedProperties);
     property.setName(QLatin1String("PRIORITY"));
@@ -519,7 +519,7 @@ void QVersitOrganizerExporterPrivate::encodeInstanceOrigin(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemParent instanceOrigin = static_cast<QOrganizerItemParent>(detail);
+    const QOrganizerItemParent &instanceOrigin = static_cast<const QOrganizerItemParent &>(detail);
     QVersitProperty property =
         takeProperty(document, QLatin1String("RECURRENCE-ID"), removedProperties);
     property.setName(QLatin1String("RECURRENCE-ID"));
@@ -535,7 +535,7 @@ void QVersitOrganizerExporterPrivate::encodeTodoProgress(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerTodoProgress todoProgress = static_cast<QOrganizerTodoProgress>(detail);
+    const QOrganizerTodoProgress &todoProgress = static_cast<const QOrganizerTodoProgress &>(detail);
 
     if (todoProgress.finishedDateTime().isValid()) {
         QVersitProperty property =
@@ -582,7 +582,7 @@ void QVersitOrganizerExporterPrivate::encodeComment(
         QList<QVersitProperty>* generatedProperties,
         QSet<int>* processedFields)
 {
-    QOrganizerItemComment comment = static_cast<QOrganizerItemComment>(detail);
+    const QOrganizerItemComment &comment = static_cast<const QOrganizerItemComment &>(detail);
     QVersitProperty property;
     property.setName(QLatin1String("COMMENT"));
     property.setValue(comment.comment());
@@ -596,7 +596,7 @@ void QVersitOrganizerExporterPrivate::encodeAudibleReminder(
         QList<QVersitProperty> *generatedProperties,
         QSet<int> *processedFields)
 {
-    QOrganizerItemAudibleReminder audibleReminder = static_cast<QOrganizerItemAudibleReminder>(detail);
+    const QOrganizerItemAudibleReminder &audibleReminder = static_cast<const QOrganizerItemAudibleReminder &>(detail);
     QVersitProperty property;
     QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, audibleReminder, processedFields);
 
@@ -619,7 +619,7 @@ void QVersitOrganizerExporterPrivate::encodeEmailReminder(
         QList<QVersitProperty> *generatedProperties,
         QSet<int> *processedFields)
 {
-    QOrganizerItemEmailReminder emailReminder = static_cast<QOrganizerItemEmailReminder>(detail);
+    const QOrganizerItemEmailReminder &emailReminder = static_cast<const QOrganizerItemEmailReminder &>(detail);
     QVersitProperty property;
     QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, emailReminder, processedFields);
 
@@ -662,7 +662,7 @@ void QVersitOrganizerExporterPrivate::encodeVisualReminder(
         QList<QVersitProperty> *generatedProperties,
         QSet<int> *processedFields)
 {
-    QOrganizerItemVisualReminder visualReminder = static_cast<QOrganizerItemVisualReminder>(detail);
+    const QOrganizerItemVisualReminder &visualReminder = static_cast<const QOrganizerItemVisualReminder &>(detail);
     QVersitProperty property;
     QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, visualReminder, processedFields);
 

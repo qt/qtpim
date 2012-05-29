@@ -66,7 +66,7 @@ QDateTime TimeZone::convert(const QDateTime& dateTime) const
         QList<QOrganizerItem> occurrences =
             manager->itemOccurrences(event, phase.startDateTime(), dateTime, 500);
         if (!occurrences.isEmpty()) {
-            QDateTime phaseStart(static_cast<QOrganizerEventOccurrence>(occurrences.last()).startDateTime());
+            QDateTime phaseStart(static_cast<const QOrganizerEventOccurrence &>(occurrences.last()).startDateTime());
             if (phaseStart > latestPhase) {
                 latestPhase = phaseStart;
                 offset = phase.utcOffset();

@@ -52,7 +52,7 @@
 #include <QSharedData>
 #include <QtPlugin>
 #include <QPluginLoader>
-#include <QWeakPointer>
+#include <QPointer>
 
 #include <QDebug>
 #include <QDir>
@@ -85,12 +85,12 @@ static void qContactsCleanEngines()
 {
     // This is complicated by needing to remove any engines before we unload factories
     // guard pointers as one engine could be parent of another manager and cause doubledelete
-    QList<QWeakPointer<QContactManager> > aliveManagers;
+    QList<QPointer<QContactManager> > aliveManagers;
     foreach(QContactManager* manager, QContactManagerData::m_aliveEngines) {
-        aliveManagers << QWeakPointer<QContactManager>(manager);
+        aliveManagers << QPointer<QContactManager>(manager);
     }
 
-    foreach(QWeakPointer<QContactManager> manager, aliveManagers) {
+    foreach(QPointer<QContactManager> manager, aliveManagers) {
         if (!manager) {
             // deleting engine of one manager, could cause deleting next manager in list (aggregation case)
             continue;

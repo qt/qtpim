@@ -525,7 +525,7 @@ bool QContactMemoryEngine::startRequest(QContactAbstractRequest *req)
     if (!req)
         return false;
 
-    QWeakPointer<QContactAbstractRequest> checkDeletion(req);
+    QPointer<QContactAbstractRequest> checkDeletion(req);
     updateRequestState(req, QContactAbstractRequest::ActiveState);
     if (!checkDeletion.isNull())
         performAsynchronousOperation(req);

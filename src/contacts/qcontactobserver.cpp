@@ -43,13 +43,15 @@
 #include "qcontactid.h"
 #include "qcontactmanager_p.h"
 
+#include <QPointer>
+
 QTCONTACTS_BEGIN_NAMESPACE
 
 class QContactObserverPrivate
 {
     public:
         QContactId m_contactId;
-        QWeakPointer<QContactManager> m_manager;
+        QPointer<QContactManager> m_manager;
 };
 
 /*!

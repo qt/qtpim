@@ -1707,7 +1707,7 @@ void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req,
 void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemOccurrenceFetchRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemOccurrenceFetchRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemOccurrenceFetchRequestPrivate* rd = static_cast<QOrganizerItemOccurrenceFetchRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1732,7 +1732,7 @@ void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOcc
 void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequest* req, const QList<QOrganizerItemId>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemIdFetchRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemIdFetchRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemIdFetchRequestPrivate* rd = static_cast<QOrganizerItemIdFetchRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1760,7 +1760,7 @@ void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequ
 void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *req, const QList<QOrganizerItem> &result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemFetchByIdRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemFetchByIdRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemFetchByIdRequestPrivate *rd = static_cast<QOrganizerItemFetchByIdRequestPrivate *>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1786,7 +1786,7 @@ void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchById
 void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemFetchRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemFetchRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemFetchRequestPrivate* rd = static_cast<QOrganizerItemFetchRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1811,7 +1811,7 @@ void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest*
 void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemFetchForExportRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemFetchForExportRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemFetchForExportRequestPrivate* rd = static_cast<QOrganizerItemFetchForExportRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1836,7 +1836,7 @@ void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetc
 void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemRemoveRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemRemoveRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemRemoveRequestPrivate* rd = static_cast<QOrganizerItemRemoveRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1861,7 +1861,7 @@ void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveReques
 void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemRemoveByIdRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemRemoveByIdRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemRemoveByIdRequestPrivate* rd = static_cast<QOrganizerItemRemoveByIdRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1886,7 +1886,7 @@ void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveBy
 void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerItemSaveRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerItemSaveRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemSaveRequestPrivate* rd = static_cast<QOrganizerItemSaveRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1911,7 +1911,7 @@ void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* r
 void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionFetchRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerCollectionFetchRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerCollectionFetchRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerCollectionFetchRequestPrivate* rd = static_cast<QOrganizerCollectionFetchRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1935,7 +1935,7 @@ void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionF
 void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerCollectionRemoveRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerCollectionRemoveRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerCollectionRemoveRequestPrivate* rd = static_cast<QOrganizerCollectionRemoveRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1959,7 +1959,7 @@ void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollection
 void QOrganizerManagerEngine::updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QWeakPointer<QOrganizerCollectionSaveRequest> ireq(req); // Take this in case the first emit deletes us
+        QPointer<QOrganizerCollectionSaveRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerCollectionSaveRequestPrivate* rd = static_cast<QOrganizerCollectionSaveRequestPrivate*>(ireq.data()->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;

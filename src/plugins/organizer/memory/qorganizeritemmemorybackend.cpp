@@ -1399,7 +1399,7 @@ bool QOrganizerItemMemoryEngine::startRequest(QOrganizerAbstractRequest* req)
     if (!req)
         return false;
 
-    QWeakPointer<QOrganizerAbstractRequest> checkDeletion(req);
+    QPointer<QOrganizerAbstractRequest> checkDeletion(req);
     updateRequestState(req, QOrganizerAbstractRequest::ActiveState);
     if (!checkDeletion.isNull())
         performAsynchronousOperation(req);

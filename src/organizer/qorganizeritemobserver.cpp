@@ -42,13 +42,15 @@
 #include <qorganizeritemobserver.h>
 #include <private/qorganizermanager_p.h>
 
+#include <QtCore/QPointer>
+
 QTORGANIZER_BEGIN_NAMESPACE
 
 class QOrganizerItemObserverPrivate
 {
 public:
     QOrganizerItemId m_id;
-    QWeakPointer<QOrganizerManager> m_manager;
+    QPointer<QOrganizerManager> m_manager;
     QOrganizerManagerData *m_managerPrivate;
 };
 

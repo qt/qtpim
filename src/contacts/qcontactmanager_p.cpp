@@ -230,7 +230,7 @@ void QContactManagerData::loadStaticFactories()
                 if (showDebug)
                     qDebug() << "Static: found an engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
                         qWarning() << "Static contacts plugin" << name << "has the same name as a currently loaded plugin; ignored";

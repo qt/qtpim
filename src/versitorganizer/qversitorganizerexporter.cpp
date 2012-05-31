@@ -165,7 +165,7 @@ bool QVersitOrganizerExporter::exportItems(
     d->mErrors.clear();
     d->mResult.clear();
     d->mResult.setType(versitType);
-    d->mResult.setComponentType(QLatin1String("VCALENDAR"));
+    d->mResult.setComponentType(QStringLiteral("VCALENDAR"));
     bool ok = true;
     QList<QTVERSIT_PREPEND_NAMESPACE(QVersitDocument)> results;
     foreach (const QOrganizerItem& item, items) {

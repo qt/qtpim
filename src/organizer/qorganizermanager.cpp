@@ -200,7 +200,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 QStringList QOrganizerManager::availableManagers()
 {
     QStringList ret;
-    ret << QLatin1String("invalid");
+    ret << QStringLiteral("invalid");
     QOrganizerManagerData::loadFactories();
     ret.append(QOrganizerManagerData::m_engines.keys());
 
@@ -229,7 +229,7 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap
     QStringList colonSplit = uri.split(QLatin1Char(':'));
     QString prefix = colonSplit.value(0);
 
-    if (prefix != QLatin1String("qtorganizer"))
+    if (prefix != QStringLiteral("qtorganizer"))
         return false;
 
     QString managerName = colonSplit.value(1);
@@ -244,22 +244,22 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap
 
     // Now we have to decode each parameter
     if (!paramString.isEmpty()) {
-        QStringList params = paramString.split(QRegExp(QLatin1String("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
+        QStringList params = paramString.split(QRegExp(QStringLiteral("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
         // If we have an empty string for paramstring, we get one entry in params,
         // so skip that case.
         for (int i = 0; i < params.count(); ++i) {
             /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
-            QStringList paramChunk = params.value(i).split(QLatin1String("="), QString::KeepEmptyParts);
+            QStringList paramChunk = params.value(i).split(QStringLiteral("="), QString::KeepEmptyParts);
 
             if (paramChunk.count() != 2)
                 return false;
 
             QString arg = paramChunk.value(0);
             QString param = paramChunk.value(1);
-            arg.replace(QLatin1String("&equ;"), QLatin1String("="));
-            arg.replace(QLatin1String("&amp;"), QLatin1String("&"));
-            param.replace(QLatin1String("&equ;"), QLatin1String("="));
-            param.replace(QLatin1String("&amp;"), QLatin1String("&"));
+            arg.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            arg.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+            param.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            param.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
             if (arg.isEmpty())
                 return false;
             outParams.insert(arg, param);
@@ -279,22 +279,22 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *pManagerName, QMap
  */
 QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QString, QString> &params)
 {
-    QString ret(QLatin1String("qtorganizer:%1:%2"));
+    QString ret(QStringLiteral("qtorganizer:%1:%2"));
     // we have to escape each param
     QStringList escapedParams;
     QStringList keys = params.keys();
     for (int i=0; i < keys.size(); ++i) {
         QString key = keys.at(i);
         QString arg = params.value(key);
-        arg = arg.replace(QLatin1Char('&'), QLatin1String("&amp;"));
-        arg = arg.replace(QLatin1Char('='), QLatin1String("&equ;"));
-        key = key.replace(QLatin1Char('&'), QLatin1String("&amp;"));
-        key = key.replace(QLatin1Char('='), QLatin1String("&equ;"));
+        arg = arg.replace(QLatin1Char('&'), QStringLiteral("&amp;"));
+        arg = arg.replace(QLatin1Char('='), QStringLiteral("&equ;"));
+        key = key.replace(QLatin1Char('&'), QStringLiteral("&amp;"));
+        key = key.replace(QLatin1Char('='), QStringLiteral("&equ;"));
         key = key + QLatin1Char('=') + arg;
         escapedParams.append(key);
     }
 
-    return ret.arg(managerName, escapedParams.join(QLatin1String("&")));
+    return ret.arg(managerName, escapedParams.join(QStringLiteral("&")));
 }
 
 /*!
@@ -311,7 +311,7 @@ QOrganizerManager *QOrganizerManager::fromUri(const QString &uri, QObject *paren
         if (parseUri(uri, &id, &parameters))
             return new QOrganizerManager(id, parameters, parent);
         else
-            return new QOrganizerManager(QLatin1String("invalid"), QMap<QString, QString>(), parent);
+            return new QOrganizerManager(QStringLiteral("invalid"), QMap<QString, QString>(), parent);
     }
 }
 

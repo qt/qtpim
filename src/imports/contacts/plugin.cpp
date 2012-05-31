@@ -62,7 +62,7 @@ class QContactQmlPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("QtContacts"));
+        Q_ASSERT(uri == QStringLiteral("QtContacts"));
 
         int major = 5;
         int minor = 0;

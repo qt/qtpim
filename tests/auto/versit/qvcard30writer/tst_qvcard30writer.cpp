@@ -105,31 +105,31 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
 
     // normal FN property is backslash escaped
     property.clear();
-    property.setName(QLatin1String("FN"));
-    property.setValue(QLatin1String(";,:\\"));
+    property.setName(QStringLiteral("FN"));
+    property.setValue(QStringLiteral(";,:\\"));
     // semicolons, commas and backslashes are escaped (not colons, as per RFC2426)
     expectedResult = "FN:\\;\\,:\\\\\r\n";
     QTest::newRow("FN property") << property << expectedResult;
 
     // Structured N
-    property.setName(QLatin1String("N"));
+    property.setName(QStringLiteral("N"));
     property.setValue(QStringList()
-                      << QLatin1String("La;st")    // needs to be backslash escaped
-                      << QLatin1String("Fi,rst")
-                      << QLatin1String("Mi:ddle")
-                      << QLatin1String("Pr\\efix") // needs to be QP encoded
-                      << QLatin1String("Suffix"));
+                      << QStringLiteral("La;st")    // needs to be backslash escaped
+                      << QStringLiteral("Fi,rst")
+                      << QStringLiteral("Mi:ddle")
+                      << QStringLiteral("Pr\\efix") // needs to be QP encoded
+                      << QStringLiteral("Suffix"));
     property.setValueType(QVersitProperty::CompoundType);
     expectedResult = "N:La\\;st;Fi\\,rst;Mi:ddle;Pr\\\\efix;Suffix\r\n";
     QTest::newRow("N property") << property << expectedResult;
 
     // Structured CATEGORIES
-    property.setName(QLatin1String("CATEGORIES"));
+    property.setName(QStringLiteral("CATEGORIES"));
     property.setValue(QStringList()
-                      << QLatin1String("re;d")
-                      << QLatin1String("gr,een")
-                      << QLatin1String("bl:ue")
-                      << QLatin1String("ye\\llow"));
+                      << QStringLiteral("re;d")
+                      << QStringLiteral("gr,een")
+                      << QStringLiteral("bl:ue")
+                      << QStringLiteral("ye\\llow"));
     property.setValueType(QVersitProperty::ListType);
     expectedResult = "CATEGORIES:re\\;d,gr\\,een,bl:ue,ye\\\\llow\r\n";
     QTest::newRow("CATEGORIES property") << property << expectedResult;
@@ -153,7 +153,7 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
     property.setName(QString::fromLatin1("AGENT"));
     property.setValue(QString());
     QVersitDocument document(QVersitDocument::VCard30Type);
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty embeddedProperty;
     embeddedProperty.setName(QString(QString::fromLatin1("FN")));
     embeddedProperty.setValue(QString::fromLatin1("Secret Agent"));
@@ -175,14 +175,14 @@ void tst_QVCard30Writer::testEncodeVersitProperty_data()
     // Characters other than ASCII:
     expectedResult = "ORG:" + KATAKANA_NOKIA.toUtf8() + "\r\n";
     property = QVersitProperty();
-    property.setName(QLatin1String("ORG"));
+    property.setName(QStringLiteral("ORG"));
     property.setValue(KATAKANA_NOKIA);
     QTest::newRow("non-ASCII") << property << expectedResult;
 
     // No CHARSET and QUOTED-PRINTABLE parameters
     expectedResult = "EMAIL:john@" + KATAKANA_NOKIA.toUtf8() + ".com\r\n";
     property = QVersitProperty();
-    property.setName(QLatin1String("EMAIL"));
+    property.setName(QStringLiteral("EMAIL"));
     property.setValue(QString::fromLatin1("john@%1.com").arg(KATAKANA_NOKIA));
     QTest::newRow("special chars") << property << expectedResult;
 }

@@ -135,10 +135,10 @@ VERSION:2.1\r\n\
 FN:John\r\n\
 END:VCARD\r\n");
     QVersitDocument document;
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty property;
-    property.setName(QString(QLatin1String("FN")));
-    property.setValue(QLatin1String("John"));
+    property.setName(QString(QStringLiteral("FN")));
+    property.setValue(QStringLiteral("John"));
     document.addProperty(property);
     document.setType(QVersitDocument::VCard21Type);
     QList<QVersitDocument> list;
@@ -195,10 +195,10 @@ FN:John\r\n\
 END:VCARD\r\n");
 
     QVersitDocument document;
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty property;
-    property.setName(QString(QLatin1String("FN")));
-    property.setValue(QLatin1String("John"));
+    property.setName(QString(QStringLiteral("FN")));
+    property.setValue(QStringLiteral("John"));
     document.addProperty(property);
     document.setType(QVersitDocument::VCard30Type);
     QList<QVersitDocument> list;
@@ -258,10 +258,10 @@ void tst_QVersitWriter::testByteArrayOutput()
     QVERIFY(mWriter->device() == 0);
 
     QVersitDocument document(QVersitDocument::VCard30Type);
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty property;
-    property.setName(QString(QLatin1String("FN")));
-    property.setValue(QLatin1String("John"));
+    property.setName(QString(QStringLiteral("FN")));
+    property.setValue(QStringLiteral("John"));
     document.addProperty(property);
     QVERIFY2(mWriter->startWriting(document), QString::number(mWriter->error()).toLatin1().data());
     QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
@@ -302,10 +302,10 @@ void tst_QVersitWriter::testWritingDocument_data()
     QTest::addColumn<QByteArray>("expected");
 
     QVersitDocument document(QVersitDocument::VCard21Type);
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty property;
-    property.setName(QLatin1String("FN"));
-    property.setValue(QLatin1String("Bob"));
+    property.setName(QStringLiteral("FN"));
+    property.setValue(QStringLiteral("Bob"));
     document.addProperty(property);
     QTest::newRow("basic vCard 2.1") << document << QByteArray(
             "BEGIN:VCARD\r\n"
@@ -314,7 +314,7 @@ void tst_QVersitWriter::testWritingDocument_data()
             "END:VCARD\r\n"
             );
 
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     document.setType(QVersitDocument::VCard30Type);
     QTest::newRow("basic vCard 3.0") << document << QByteArray(
             "BEGIN:VCARD\r\n"
@@ -323,7 +323,7 @@ void tst_QVersitWriter::testWritingDocument_data()
             "END:VCARD\r\n"
             );
 
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     document.setType(QVersitDocument::VCard40Type);
     QTest::newRow("basic vCard 4.0") << document << QByteArray(
             "BEGIN:VCARD\r\n"
@@ -334,12 +334,12 @@ void tst_QVersitWriter::testWritingDocument_data()
     
     {
         QVersitDocument document(QVersitDocument::ICalendar20Type);
-        document.setComponentType(QLatin1String("VCALENDAR"));
+        document.setComponentType(QStringLiteral("VCALENDAR"));
         QVersitDocument subdocument(QVersitDocument::ICalendar20Type);
-        subdocument.setComponentType(QLatin1String("VEVENT"));
+        subdocument.setComponentType(QStringLiteral("VEVENT"));
         property.setValueType(QVersitProperty::PreformattedType);
-        property.setName(QLatin1String("RRULE"));
-        property.setValue(QLatin1String("FREQ=MONTHLY;BYMONTHDAY=1,3"));
+        property.setName(QStringLiteral("RRULE"));
+        property.setValue(QStringLiteral("FREQ=MONTHLY;BYMONTHDAY=1,3"));
         subdocument.addProperty(property);
         document.addSubDocument(subdocument);
         QTest::newRow("basic iCalendar 2.0") << document << QByteArray(
@@ -353,21 +353,21 @@ void tst_QVersitWriter::testWritingDocument_data()
 
     {
         QVersitDocument document(QVersitDocument::ICalendar20Type);
-        document.setComponentType(QLatin1String("VCALENDAR"));
+        document.setComponentType(QStringLiteral("VCALENDAR"));
         QVersitProperty property;
-        property.setName(QLatin1String("PRODID"));
-        property.setValue(QLatin1String("-//hacksw/handcal//NONSGML v1.0//EN"));
+        property.setName(QStringLiteral("PRODID"));
+        property.setValue(QStringLiteral("-//hacksw/handcal//NONSGML v1.0//EN"));
         document.addProperty(property);
         QVersitDocument nested(QVersitDocument::ICalendar20Type);
-        nested.setComponentType(QLatin1String("VEVENT"));
-        property.setName(QLatin1String("DTSTART"));
-        property.setValue(QLatin1String("19970714T170000Z"));
+        nested.setComponentType(QStringLiteral("VEVENT"));
+        property.setName(QStringLiteral("DTSTART"));
+        property.setValue(QStringLiteral("19970714T170000Z"));
         nested.addProperty(property);
-        property.setName(QLatin1String("DTEND"));
-        property.setValue(QLatin1String("19970715T035959Z"));
+        property.setName(QStringLiteral("DTEND"));
+        property.setValue(QStringLiteral("19970715T035959Z"));
         nested.addProperty(property);
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Bastille Day Party"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Bastille Day Party"));
         nested.addProperty(property);
         document.addSubDocument(nested);
         QTest::newRow("iCalendar 2.0 from spec") << document << QByteArray(
@@ -388,9 +388,9 @@ void tst_QVersitWriter::testWritingDocument_data()
             "234567890123456789012345678901234567890123456789012345678901234567890123456"
             "234567890123456789012"));
         QVersitDocument document(QVersitDocument::VCard21Type);
-        document.setComponentType(QLatin1String("VCARD"));
+        document.setComponentType(QStringLiteral("VCARD"));
         QVersitProperty property;
-        property.setName(QLatin1String("FN"));
+        property.setName(QStringLiteral("FN"));
         property.setValue(longString);
         document.addProperty(property);
         QByteArray expected21(

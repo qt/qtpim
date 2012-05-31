@@ -124,27 +124,27 @@ bool QVersitDocumentWriter::encodeVersitDocument(const QVersitDocument& document
 
     if (document.componentType().isEmpty()) {
         // for compatibility with code for Qt Mobility 1.0, which didn't have componentType
-        writeString(QLatin1String("BEGIN:VCARD"));
+        writeString(QStringLiteral("BEGIN:VCARD"));
     } else {
-        writeString(QLatin1String("BEGIN:") + document.componentType());
+        writeString(QStringLiteral("BEGIN:") + document.componentType());
     }
     writeCrlf();
     if (encodeVersion) {
         switch (mType) {
         case QVersitDocument::VCard21Type:
-            writeString(QLatin1String("VERSION:2.1"));
+            writeString(QStringLiteral("VERSION:2.1"));
             writeCrlf();
             break;
         case QVersitDocument::VCard30Type:
-            writeString(QLatin1String("VERSION:3.0"));
+            writeString(QStringLiteral("VERSION:3.0"));
             writeCrlf();
             break;
         case QVersitDocument::VCard40Type:
-            writeString(QLatin1String("VERSION:4.0"));
+            writeString(QStringLiteral("VERSION:4.0"));
             writeCrlf();
             break;
         case QVersitDocument::ICalendar20Type:
-            writeString(QLatin1String("VERSION:2.0"));
+            writeString(QStringLiteral("VERSION:2.0"));
             writeCrlf();
             break;
         default:
@@ -161,9 +161,9 @@ bool QVersitDocumentWriter::encodeVersitDocument(const QVersitDocument& document
     }
 
     if (document.componentType().isEmpty()) {
-        writeString(QLatin1String("END:VCARD"));
+        writeString(QStringLiteral("END:VCARD"));
     } else {
-        writeString(QLatin1String("END:") + document.componentType());
+        writeString(QStringLiteral("END:") + document.componentType());
     }
     writeCrlf();
 
@@ -178,8 +178,8 @@ void QVersitDocumentWriter::encodeGroupsAndName(const QVersitProperty& property)
 {
     QStringList groups = property.groups();
     if (!groups.isEmpty()) {
-        writeString(groups.join(QLatin1String(".")));
-        writeString(QLatin1String("."));
+        writeString(groups.join(QStringLiteral(".")));
+        writeString(QStringLiteral("."));
     }
     writeString(property.name());
 }
@@ -219,7 +219,7 @@ void QVersitDocumentWriter::writeString(const QString &value)
 {
     int spaceRemaining = MAX_LINE_LENGTH - mCurrentLineLength;
     int charsWritten = 0;
-    QString crlfSpace(QLatin1String("\r\n "));
+    QString crlfSpace(QStringLiteral("\r\n "));
     while (spaceRemaining < value.length() - charsWritten) {
         // Write the first "spaceRemaining" characters
         QStringRef line(&value, charsWritten, spaceRemaining);
@@ -247,7 +247,7 @@ void QVersitDocumentWriter::writeStringQp(const QString &value)
     int spaceRemaining = MAX_LINE_LENGTH - mCurrentLineLength - 1;
                                              // minus 1 for the equals required at the end
     int charsWritten = 0;
-    QString softBreak(QLatin1String("=\r\n"));
+    QString softBreak(QStringLiteral("=\r\n"));
     while (spaceRemaining < value.length() - charsWritten) {
         // Write the first "spaceRemaining" characters
         if (value[charsWritten + spaceRemaining - 2] == QLatin1Char('=')) {
@@ -276,7 +276,7 @@ void QVersitDocumentWriter::writeStringQp(const QString &value)
   */
 void QVersitDocumentWriter::writeCrlf()
 {
-    writeString(QLatin1String("\r\n"));
+    writeString(QStringLiteral("\r\n"));
     mCurrentLineLength = 0;
 }
 

@@ -298,38 +298,38 @@ QString QDeclarativeContactModel::error() const
     if (d->m_manager) {
         switch (d->m_error) {
         case QContactManager::DoesNotExistError:
-            return QLatin1String("DoesNotExist");
+            return QStringLiteral("DoesNotExist");
         case QContactManager::AlreadyExistsError:
-            return QLatin1String("AlreadyExists");
+            return QStringLiteral("AlreadyExists");
         case QContactManager::InvalidDetailError:
-            return QLatin1String("InvalidDetail");
+            return QStringLiteral("InvalidDetail");
         case QContactManager::InvalidRelationshipError:
-            return QLatin1String("InvalidRelationship");
+            return QStringLiteral("InvalidRelationship");
         case QContactManager::LockedError:
-            return QLatin1String("LockedError");
+            return QStringLiteral("LockedError");
         case QContactManager::DetailAccessError:
-            return QLatin1String("DetailAccessError");
+            return QStringLiteral("DetailAccessError");
         case QContactManager::PermissionsError:
-            return QLatin1String("PermissionsError");
+            return QStringLiteral("PermissionsError");
         case QContactManager::OutOfMemoryError:
-            return QLatin1String("OutOfMemory");
+            return QStringLiteral("OutOfMemory");
         case QContactManager::NotSupportedError:
-            return QLatin1String("NotSupported");
+            return QStringLiteral("NotSupported");
         case QContactManager::BadArgumentError:
-            return QLatin1String("BadArgument");
+            return QStringLiteral("BadArgument");
         case QContactManager::UnspecifiedError:
-            return QLatin1String("UnspecifiedError");
+            return QStringLiteral("UnspecifiedError");
         case QContactManager::VersionMismatchError:
-            return QLatin1String("VersionMismatch");
+            return QStringLiteral("VersionMismatch");
         case QContactManager::LimitReachedError:
-            return QLatin1String("LimitReached");
+            return QStringLiteral("LimitReached");
         case QContactManager::InvalidContactTypeError:
-            return QLatin1String("InvalidContactType");
+            return QStringLiteral("InvalidContactType");
         default:
             break;
         }
     }
-    return QLatin1String("NoError");
+    return QStringLiteral("NoError");
 }
 
 

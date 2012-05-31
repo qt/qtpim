@@ -318,9 +318,9 @@ QVariant QVersitProperty::variantValue() const
 QString QVersitProperty::value() const
 {
     if (d->mValue.type() == QVariant::ByteArray) {
-        if (d->mParameters.contains(QLatin1String("CHARSET"))) {
+        if (d->mParameters.contains(QStringLiteral("CHARSET"))) {
             QTextCodec* codec = QTextCodec::codecForName(
-                    d->mParameters.value(QLatin1String("CHARSET")).toLatin1());
+                    d->mParameters.value(QStringLiteral("CHARSET")).toLatin1());
             if (codec != NULL) {
                 return codec->toUnicode(d->mValue.toByteArray());
             }

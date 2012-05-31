@@ -183,8 +183,8 @@ void tst_QContactJsondbEngine::createPartition(const QString partition)
     // If no such partition, create one.
     if (queryResponse.isEmpty()) {
         QJsonObject object;
-        object.insert(QLatin1String("_type"), QLatin1String("Partition"));
-        object.insert(QLatin1String("name"), partition);
+        object.insert(QStringLiteral("_type"), QStringLiteral("Partition"));
+        object.insert(QStringLiteral("name"), partition);
         QVariantMap partitionCreateResponse = m_dbClient->create(object).first().toVariantMap();
         qWarning() << Q_FUNC_INFO << "Created partition:" << partition << "with reponse:" << partitionCreateResponse;
         return;

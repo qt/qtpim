@@ -61,7 +61,7 @@ class QOrganizerQmlPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("QtOrganizer"));
+        Q_ASSERT(uri == QStringLiteral("QtOrganizer"));
 
         int major = 5;
         int minor = 0;

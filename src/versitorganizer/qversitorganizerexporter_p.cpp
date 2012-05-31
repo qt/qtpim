@@ -85,12 +85,12 @@ bool QVersitOrganizerExporterPrivate::exportItem(
     }
     if (item.type() == QOrganizerItemType::TypeEvent
         || item.type() == QOrganizerItemType::TypeEventOccurrence) {
-        document->setComponentType(QLatin1String("VEVENT"));
+        document->setComponentType(QStringLiteral("VEVENT"));
     } else if (item.type() == QOrganizerItemType::TypeTodo
         || item.type() == QOrganizerItemType::TypeTodoOccurrence) {
-        document->setComponentType(QLatin1String("VTODO"));
+        document->setComponentType(QStringLiteral("VTODO"));
     } else if (item.type() == QOrganizerItemType::TypeJournal) {
-        document->setComponentType(QLatin1String("VJOURNAL"));
+        document->setComponentType(QStringLiteral("VJOURNAL"));
     } else {
         *error = QVersitOrganizerExporter::UnknownComponentTypeError;
         return false;
@@ -193,22 +193,22 @@ void QVersitOrganizerExporterPrivate::encodeEventTimeRange(
 {
     const QOrganizerEventTime &etr = static_cast<const QOrganizerEventTime &>(detail);
     bool isAllDay = etr.isAllDay();
-    QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
-    property.setName(QLatin1String("DTSTART"));
+    QVersitProperty property = takeProperty(document, QStringLiteral("DTSTART"), removedProperties);
+    property.setName(QStringLiteral("DTSTART"));
     if (isAllDay) {
-        property.setValue(etr.startDateTime().date().toString(QLatin1String("yyyyMMdd")));
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        property.setValue(etr.startDateTime().date().toString(QStringLiteral("yyyyMMdd")));
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
     } else {
         property.setValue(encodeDateTime(etr.startDateTime()));
     }
     *generatedProperties << property;
 
-    property = takeProperty(document, QLatin1String("DTEND"), removedProperties);
-    property.setName(QLatin1String("DTEND"));
+    property = takeProperty(document, QStringLiteral("DTEND"), removedProperties);
+    property.setName(QStringLiteral("DTEND"));
     if (isAllDay) {
         // In iCalendar, the end date is exclusive while in Qt Organizer, it is inclusive.
-        property.setValue(etr.endDateTime().date().addDays(1).toString(QLatin1String("yyyyMMdd")));
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        property.setValue(etr.endDateTime().date().addDays(1).toString(QStringLiteral("yyyyMMdd")));
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
     } else {
         property.setValue(encodeDateTime(etr.endDateTime()));
     }
@@ -226,21 +226,21 @@ void QVersitOrganizerExporterPrivate::encodeTodoTimeRange(
 {
     const QOrganizerTodoTime &ttr = static_cast<const QOrganizerTodoTime &>(detail);
     bool isAllDay = ttr.isAllDay();
-    QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
-    property.setName(QLatin1String("DTSTART"));
+    QVersitProperty property = takeProperty(document, QStringLiteral("DTSTART"), removedProperties);
+    property.setName(QStringLiteral("DTSTART"));
     if (isAllDay) {
-        property.setValue(ttr.startDateTime().date().toString(QLatin1String("yyyyMMdd")));
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        property.setValue(ttr.startDateTime().date().toString(QStringLiteral("yyyyMMdd")));
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
     } else {
         property.setValue(encodeDateTime(ttr.startDateTime()));
     }
     *generatedProperties << property;
 
-    property = takeProperty(document, QLatin1String("DUE"), removedProperties);
-    property.setName(QLatin1String("DUE"));
+    property = takeProperty(document, QStringLiteral("DUE"), removedProperties);
+    property.setName(QStringLiteral("DUE"));
     if (isAllDay) {
-        property.setValue(ttr.dueDateTime().date().toString(QLatin1String("yyyyMMdd")));
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        property.setValue(ttr.dueDateTime().date().toString(QStringLiteral("yyyyMMdd")));
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
     } else {
         property.setValue(encodeDateTime(ttr.dueDateTime()));
     }
@@ -257,8 +257,8 @@ void QVersitOrganizerExporterPrivate::encodeJournalTimeRange(
         QSet<int>* processedFields)
 {
     const QOrganizerJournalTime &jtr = static_cast<const QOrganizerJournalTime &>(detail);
-    QVersitProperty property = takeProperty(document, QLatin1String("DTSTART"), removedProperties);
-    property.setName(QLatin1String("DTSTART"));
+    QVersitProperty property = takeProperty(document, QStringLiteral("DTSTART"), removedProperties);
+    property.setName(QStringLiteral("DTSTART"));
     property.setValue(encodeDateTime(jtr.entryDateTime()));
     *generatedProperties << property;
     *processedFields << QOrganizerJournalTime::FieldEntryDateTime;
@@ -272,13 +272,13 @@ void QVersitOrganizerExporterPrivate::encodeTimestamp(
         QSet<int>* processedFields)
 {
     const QOrganizerItemTimestamp &timestamp = static_cast<const QOrganizerItemTimestamp &>(detail);
-    QVersitProperty property = takeProperty(document, QLatin1String("CREATED"), removedProperties);
-    property.setName(QLatin1String("CREATED"));
+    QVersitProperty property = takeProperty(document, QStringLiteral("CREATED"), removedProperties);
+    property.setName(QStringLiteral("CREATED"));
     property.setValue(encodeDateTime(timestamp.created().toUTC()));
     *generatedProperties << property;
 
-    property = takeProperty(document, QLatin1String("LAST-MODIFIED"), removedProperties);
-    property.setName(QLatin1String("LAST-MODIFIED"));
+    property = takeProperty(document, QStringLiteral("LAST-MODIFIED"), removedProperties);
+    property.setName(QStringLiteral("LAST-MODIFIED"));
     property.setValue(encodeDateTime(timestamp.lastModified().toUTC()));
     *generatedProperties << property;
     *processedFields << QOrganizerItemTimestamp::FieldCreated
@@ -293,8 +293,8 @@ void QVersitOrganizerExporterPrivate::encodeVersion(
         QSet<int>* processedFields)
 {
     const QOrganizerItemVersion &version = static_cast<const QOrganizerItemVersion &>(detail);
-    QVersitProperty property = takeProperty(document, QLatin1String("X-QTPROJECT-VERSION"), removedProperties);
-    property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+    QVersitProperty property = takeProperty(document, QStringLiteral("X-QTPROJECT-VERSION"), removedProperties);
+    property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
     QStringList values(QString::number(version.version()));
     values.append(QString::fromLocal8Bit(version.extendedVersion()));
     property.setValue(values);
@@ -319,22 +319,22 @@ void QVersitOrganizerExporterPrivate::encodeRecurrence(
     QSet<QDate> exdates = recurrence.exceptionDates();
     if (!rrules.isEmpty()) {
         foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
-            encodeRecurRule(QLatin1String("RRULE"), rrule, generatedProperties);
+            encodeRecurRule(QStringLiteral("RRULE"), rrule, generatedProperties);
         }
         *processedFields << QOrganizerItemRecurrence::FieldRecurrenceRules;
     }
     if (!exrules.isEmpty()) {
         foreach (const QOrganizerRecurrenceRule& exrule, exrules) {
-            encodeRecurRule(QLatin1String("EXRULE"), exrule, generatedProperties);
+            encodeRecurRule(QStringLiteral("EXRULE"), exrule, generatedProperties);
         }
         *processedFields << QOrganizerItemRecurrence::FieldExceptionRules;
     }
     if (!rdates.isEmpty()) {
-        encodeRecurDates(QLatin1String("RDATE"), item, rdates, document, removedProperties, generatedProperties);
+        encodeRecurDates(QStringLiteral("RDATE"), item, rdates, document, removedProperties, generatedProperties);
         *processedFields << QOrganizerItemRecurrence::FieldRecurrenceDates;
     }
     if (!exdates.isEmpty()) {
-        encodeRecurDates(QLatin1String("EXDATE"), item, exdates, document, removedProperties, generatedProperties);
+        encodeRecurDates(QStringLiteral("EXDATE"), item, exdates, document, removedProperties, generatedProperties);
         *processedFields << QOrganizerItemRecurrence::FieldExceptionDates;
     }
 }
@@ -347,79 +347,79 @@ void QVersitOrganizerExporterPrivate::encodeRecurRule(
 {
     QVersitProperty property;
     property.setName(propertyName);
-    QString value = QLatin1String("FREQ=");
+    QString value = QStringLiteral("FREQ=");
     switch (rule.frequency()) {
         case QOrganizerRecurrenceRule::Daily:
-            value.append(QLatin1String("DAILY"));
+            value.append(QStringLiteral("DAILY"));
             break;
         case QOrganizerRecurrenceRule::Weekly:
-            value.append(QLatin1String("WEEKLY"));
+            value.append(QStringLiteral("WEEKLY"));
             break;
         case QOrganizerRecurrenceRule::Monthly:
-            value.append(QLatin1String("MONTHLY"));
+            value.append(QStringLiteral("MONTHLY"));
             break;
         case QOrganizerRecurrenceRule::Yearly:
-            value.append(QLatin1String("YEARLY"));
+            value.append(QStringLiteral("YEARLY"));
             break;
         case QOrganizerRecurrenceRule::Invalid:
         default:
             return;
     }
     if (rule.limitType() == QOrganizerRecurrenceRule::CountLimit) {
-        value.append(QLatin1String(";COUNT="));
+        value.append(QStringLiteral(";COUNT="));
         value.append(QString::number(rule.limitCount()));
     }
     if (rule.limitType() == QOrganizerRecurrenceRule::DateLimit) {
-        value.append(QLatin1String(";UNTIL="));
-        value.append(rule.limitDate().toString(QLatin1String("yyyyMMdd")));
+        value.append(QStringLiteral(";UNTIL="));
+        value.append(rule.limitDate().toString(QStringLiteral("yyyyMMdd")));
     }
     if (rule.interval() > 1) {
-        value.append(QLatin1String(";INTERVAL="));
+        value.append(QStringLiteral(";INTERVAL="));
         value.append(QString::number(rule.interval()));
     }
     if (!rule.daysOfWeek().isEmpty()) {
-        value.append(QLatin1String(";BYDAY="));
+        value.append(QStringLiteral(";BYDAY="));
         bool first = true;
         QList<Qt::DayOfWeek> daysOfWeek(QList<Qt::DayOfWeek>::fromSet(rule.daysOfWeek()));
         qSort(daysOfWeek);
         foreach (Qt::DayOfWeek day, daysOfWeek) {
             if (!first)
-                value.append(QLatin1String(","));
+                value.append(QStringLiteral(","));
             first = false;
             value.append(weekString(day));
         }
     }
     if (!rule.daysOfMonth().isEmpty()) {
-        value.append(QLatin1String(";BYMONTHDAY="));
+        value.append(QStringLiteral(";BYMONTHDAY="));
         appendInts(&value, rule.daysOfMonth());
     }
     if (!rule.daysOfYear().isEmpty()) {
-        value.append(QLatin1String(";BYYEARDAY="));
+        value.append(QStringLiteral(";BYYEARDAY="));
         appendInts(&value, rule.daysOfYear());
     }
     if (!rule.weeksOfYear().isEmpty()) {
-        value.append(QLatin1String(";BYWEEKNO="));
+        value.append(QStringLiteral(";BYWEEKNO="));
         appendInts(&value, rule.weeksOfYear());
     }
     if (!rule.monthsOfYear().isEmpty()) {
-        value.append(QLatin1String(";BYMONTH="));
+        value.append(QStringLiteral(";BYMONTH="));
         bool first = true;
         QList<QOrganizerRecurrenceRule::Month> months(
                 QList<QOrganizerRecurrenceRule::Month>::fromSet(rule.monthsOfYear()));
         qSort(months);
         foreach (QOrganizerRecurrenceRule::Month month, months) {
             if (!first)
-                value.append(QLatin1String(","));
+                value.append(QStringLiteral(","));
             first = false;
             value.append(QString::number(month));
         }
     }
     if (!rule.positions().isEmpty()) {
-        value.append(QLatin1String(";BYSETPOS="));
+        value.append(QStringLiteral(";BYSETPOS="));
         appendInts(&value, rule.positions());
     }
     if (rule.firstDayOfWeek() != Qt::Monday && rule.firstDayOfWeek() > 0) {
-        value.append(QLatin1String(";WKST="));
+        value.append(QStringLiteral(";WKST="));
         value.append(weekString(rule.firstDayOfWeek()));
     }
     property.setValue(value);
@@ -435,7 +435,7 @@ void QVersitOrganizerExporterPrivate::appendInts(QString* str, const QSet<int>& 
     qSort(intList);
     foreach (int n, intList) {
         if (!first)
-            str->append(QLatin1String(","));
+            str->append(QStringLiteral(","));
         first = false;
         str->append(QString::number(n));
     }
@@ -445,19 +445,19 @@ void QVersitOrganizerExporterPrivate::appendInts(QString* str, const QSet<int>& 
 QString QVersitOrganizerExporterPrivate::weekString(Qt::DayOfWeek day) {
     switch (day) {
         case Qt::Monday:
-            return QLatin1String("MO");
+            return QStringLiteral("MO");
         case Qt::Tuesday:
-            return QLatin1String("TU");
+            return QStringLiteral("TU");
         case Qt::Wednesday:
-            return QLatin1String("WE");
+            return QStringLiteral("WE");
         case Qt::Thursday:
-            return QLatin1String("TH");
+            return QStringLiteral("TH");
         case Qt::Friday:
-            return QLatin1String("FR");
+            return QStringLiteral("FR");
         case Qt::Saturday:
-            return QLatin1String("SA");
+            return QStringLiteral("SA");
         case Qt::Sunday:
-            return QLatin1String("SU");
+            return QStringLiteral("SU");
         default:
             return QString();
     }
@@ -476,7 +476,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
     QVersitProperty property;
     property = takeProperty(document, propertyName, removedProperties);
     property.setName(propertyName);
-    property.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+    property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
     QString value = property.value();
     bool valueIsEmpty = value.isEmpty();
 
@@ -485,7 +485,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
     foreach (const QDate& dt, dateList) {
         QString str;
         if (dt.isValid()) {
-            str = dt.toString(QLatin1String("yyyyMMdd"));
+            str = dt.toString(QStringLiteral("yyyyMMdd"));
             if (!valueIsEmpty)
                 value += QLatin1Char(',');
             value += str;
@@ -505,8 +505,8 @@ void QVersitOrganizerExporterPrivate::encodePriority(
 {
     const QOrganizerItemPriority &priority = static_cast<const QOrganizerItemPriority &>(detail);
     QVersitProperty property =
-        takeProperty(document, QLatin1String("PRIORITY"), removedProperties);
-    property.setName(QLatin1String("PRIORITY"));
+        takeProperty(document, QStringLiteral("PRIORITY"), removedProperties);
+    property.setName(QStringLiteral("PRIORITY"));
     property.setValue(QString::number(priority.priority()));
     *generatedProperties << property;
     *processedFields << QOrganizerItemPriority::FieldPriority;
@@ -521,9 +521,9 @@ void QVersitOrganizerExporterPrivate::encodeInstanceOrigin(
 {
     const QOrganizerItemParent &instanceOrigin = static_cast<const QOrganizerItemParent &>(detail);
     QVersitProperty property =
-        takeProperty(document, QLatin1String("RECURRENCE-ID"), removedProperties);
-    property.setName(QLatin1String("RECURRENCE-ID"));
-    property.setValue(instanceOrigin.originalDate().toString(QLatin1String("yyyyMMdd")));
+        takeProperty(document, QStringLiteral("RECURRENCE-ID"), removedProperties);
+    property.setName(QStringLiteral("RECURRENCE-ID"));
+    property.setValue(instanceOrigin.originalDate().toString(QStringLiteral("yyyyMMdd")));
     *generatedProperties << property;
     *processedFields << QOrganizerItemParent::FieldOriginalDate;
 }
@@ -539,17 +539,17 @@ void QVersitOrganizerExporterPrivate::encodeTodoProgress(
 
     if (todoProgress.finishedDateTime().isValid()) {
         QVersitProperty property =
-            takeProperty(document, QLatin1String("COMPLETED"), removedProperties);
-        property.setName(QLatin1String("COMPLETED"));
-        property.setValue(todoProgress.finishedDateTime().toString(QLatin1String("yyyyMMddTHHmmss")));
+            takeProperty(document, QStringLiteral("COMPLETED"), removedProperties);
+        property.setName(QStringLiteral("COMPLETED"));
+        property.setValue(todoProgress.finishedDateTime().toString(QStringLiteral("yyyyMMddTHHmmss")));
         *generatedProperties << property;
         *processedFields << QOrganizerTodoProgress::FieldFinishedDateTime;
     }
 
     if (todoProgress.hasValue(QOrganizerTodoProgress::FieldPercentageComplete)) {
         QVersitProperty property =
-            takeProperty(document, QLatin1String("PERCENT-COMPLETE"), removedProperties);
-        property.setName(QLatin1String("PERCENT-COMPLETE"));
+            takeProperty(document, QStringLiteral("PERCENT-COMPLETE"), removedProperties);
+        property.setName(QStringLiteral("PERCENT-COMPLETE"));
         property.setValue(QString::number(todoProgress.percentageComplete()));
         *generatedProperties << property;
         *processedFields << QOrganizerTodoProgress::FieldPercentageComplete;
@@ -557,17 +557,17 @@ void QVersitOrganizerExporterPrivate::encodeTodoProgress(
 
     if (todoProgress.hasValue(QOrganizerTodoProgress::FieldStatus)) {
         QVersitProperty property =
-            takeProperty(document, QLatin1String("STATUS"), removedProperties);
-        property.setName(QLatin1String("STATUS"));
+            takeProperty(document, QStringLiteral("STATUS"), removedProperties);
+        property.setName(QStringLiteral("STATUS"));
         switch (todoProgress.status()) {
             case QOrganizerTodoProgress::StatusNotStarted:
-                property.setValue(QLatin1String("NEEDS-ACTION"));
+                property.setValue(QStringLiteral("NEEDS-ACTION"));
                 break;
             case QOrganizerTodoProgress::StatusInProgress:
-                property.setValue(QLatin1String("IN-PROCESS"));
+                property.setValue(QStringLiteral("IN-PROCESS"));
                 break;
             case QOrganizerTodoProgress::StatusComplete:
-                property.setValue(QLatin1String("COMPLETED"));
+                property.setValue(QStringLiteral("COMPLETED"));
                 break;
             default:
                 return;
@@ -584,7 +584,7 @@ void QVersitOrganizerExporterPrivate::encodeComment(
 {
     const QOrganizerItemComment &comment = static_cast<const QOrganizerItemComment &>(detail);
     QVersitProperty property;
-    property.setName(QLatin1String("COMMENT"));
+    property.setName(QStringLiteral("COMMENT"));
     property.setValue(comment.comment());
     *generatedProperties << property;
     *processedFields << QOrganizerItemComment::FieldComment;
@@ -602,14 +602,14 @@ void QVersitOrganizerExporterPrivate::encodeAudibleReminder(
 
     const QUrl attachUrl = audibleReminder.dataUrl();
     if (!attachUrl.isEmpty()) {
-        property.setName(QLatin1String("ATTACH"));
+        property.setName(QStringLiteral("ATTACH"));
         property.setValue(attachUrl.toString());
         valarmDocument.addProperty(property);
         *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
     }
     property.setValueType(QVersitProperty::VersitDocumentType);
     property.setValue(QVariant::fromValue(valarmDocument));
-    property.setName(QLatin1String("VALARM"));
+    property.setName(QStringLiteral("VALARM"));
     *generatedProperties << property;
 }
 
@@ -624,14 +624,14 @@ void QVersitOrganizerExporterPrivate::encodeEmailReminder(
     QVersitDocument valarmDocument = encodeItemReminderCommonFields(item, emailReminder, processedFields);
 
     foreach (const QVariant &attachment, emailReminder.attachments()) {
-        property.setName(QLatin1String("ATTACH"));
+        property.setName(QStringLiteral("ATTACH"));
         property.setValue(attachment);
         valarmDocument.addProperty(property);
         *processedFields << QOrganizerItemEmailReminder::FieldAttachments;
     }
 
     if (emailReminder.hasValue(QOrganizerItemEmailReminder::FieldRecipients)) {
-        property.setName(QLatin1String("ATTENDEE"));
+        property.setName(QStringLiteral("ATTENDEE"));
         foreach (const QString &recipient, emailReminder.recipients()) {
             property.setValue(recipient);
             valarmDocument.addProperty(property);
@@ -641,18 +641,18 @@ void QVersitOrganizerExporterPrivate::encodeEmailReminder(
 
     // DESCRIPTION and SUMMARY properties are not optional,
     // so we add them anyway even when empty
-    property.setName(QLatin1String("DESCRIPTION"));
+    property.setName(QStringLiteral("DESCRIPTION"));
     property.setValue(emailReminder.body());
     valarmDocument.addProperty(property);
     *processedFields << QOrganizerItemEmailReminder::FieldBody;
-    property.setName(QLatin1String("SUMMARY"));
+    property.setName(QStringLiteral("SUMMARY"));
     property.setValue(emailReminder.subject());
     valarmDocument.addProperty(property);
     *processedFields << QOrganizerItemEmailReminder::FieldSubject;
 
     property.setValueType(QVersitProperty::VersitDocumentType);
     property.setValue(QVariant::fromValue(valarmDocument));
-    property.setName(QLatin1String("VALARM"));
+    property.setName(QStringLiteral("VALARM"));
     *generatedProperties << property;
 }
 
@@ -672,20 +672,20 @@ void QVersitOrganizerExporterPrivate::encodeVisualReminder(
     if (!attachUrl.isEmpty()) {
         //ICAL specs do not include ATTACH property for DISPLAY VALARM components
         //Hence, we add it here as an (optional) extended QTPROJECT-specific property
-        property.setName(QLatin1String("X-QTPROJECT-ATTACH"));
+        property.setName(QStringLiteral("X-QTPROJECT-ATTACH"));
         property.setValue(attachUrl.toString());
         valarmDocument.addProperty(property);
         *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
     }
 
     //DESCRIPTION property is not optional, so we add it anyway even when empty
-    property.setName(QLatin1String("DESCRIPTION"));
+    property.setName(QStringLiteral("DESCRIPTION"));
     property.setValue(message);
     valarmDocument.addProperty(property);
     *processedFields << QOrganizerItemVisualReminder::FieldMessage;
     property.setValueType(QVersitProperty::VersitDocumentType);
     property.setValue(QVariant::fromValue(valarmDocument));
-    property.setName(QLatin1String("VALARM"));
+    property.setName(QStringLiteral("VALARM"));
     *generatedProperties << property;
 }
 
@@ -697,17 +697,17 @@ QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
     QVersitProperty property;
     QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
     QList<QVersitProperty> reminderProperties;
-    valarmDocument.setComponentType(QLatin1String("VALARM"));
-    property.setName(QLatin1String("ACTION"));
+    valarmDocument.setComponentType(QStringLiteral("VALARM"));
+    property.setName(QStringLiteral("ACTION"));
     switch (reminder.type()) {
     case QOrganizerItemDetail::TypeAudibleReminder:
-        property.setValue(QLatin1String("AUDIO"));
+        property.setValue(QStringLiteral("AUDIO"));
         break;
     case QOrganizerItemDetail::TypeVisualReminder:
-        property.setValue(QLatin1String("DISPLAY"));
+        property.setValue(QStringLiteral("DISPLAY"));
         break;
     case QOrganizerItemDetail::TypeEmailReminder:
-        property.setValue(QLatin1String("EMAIL"));
+        property.setValue(QStringLiteral("EMAIL"));
         break;
     default:
         return QVersitDocument();
@@ -718,17 +718,17 @@ QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
     while (valueIter != reminder.values().constEnd()) {
         switch (valueIter.key()) {
         case QOrganizerItemReminder::FieldSecondsBeforeStart: {
-            property.setName(QLatin1String("TRIGGER"));
-            property.setValue(QString(QLatin1String("-PT%1S")).arg(
+            property.setName(QStringLiteral("TRIGGER"));
+            property.setValue(QString(QStringLiteral("-PT%1S")).arg(
                                   QString::number(valueIter.value().toInt())));
             switch (item.type()) {
             case QOrganizerItemType::TypeEvent:
             case QOrganizerItemType::TypeEventOccurrence:
-                property.insertParameter(QLatin1String("RELATED"), QLatin1String("START"));
+                property.insertParameter(QStringLiteral("RELATED"), QStringLiteral("START"));
                 break;
             case QOrganizerItemType::TypeTodo:
             case QOrganizerItemType::TypeTodoOccurrence:
-                property.insertParameter(QLatin1String("RELATED"), QLatin1String("END"));
+                property.insertParameter(QStringLiteral("RELATED"), QStringLiteral("END"));
                 break;
             default:
                 break;
@@ -737,13 +737,13 @@ QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
             break;
         }
         case QOrganizerItemReminder::FieldRepetitionCount: {
-            property.setName(QLatin1String("REPEAT"));
+            property.setName(QStringLiteral("REPEAT"));
             property.setValue(valueIter.value().toString());
             break;
         }
         case QOrganizerItemReminder::FieldRepetitionDelay: {
-            property.setName(QLatin1String("DURATION"));
-            property.setValue(QString(QLatin1String("PT%1S")).arg(
+            property.setName(QStringLiteral("DURATION"));
+            property.setValue(QString(QStringLiteral("PT%1S")).arg(
                                   QString::number(valueIter.value().toInt())));
             break;
         }
@@ -759,8 +759,8 @@ QVersitDocument QVersitOrganizerExporterPrivate::encodeItemReminderCommonFields(
         valueIter ++;
     }
     if (!triggerFound) {
-        property.setName(QLatin1String("TRIGGER"));
-        property.setValue(QString(QLatin1String("-PT%1S")).arg(
+        property.setName(QStringLiteral("TRIGGER"));
+        property.setValue(QString(QStringLiteral("-PT%1S")).arg(
                               QString::number(0)));
         reminderProperties << property;
     }
@@ -790,9 +790,9 @@ void QVersitOrganizerExporterPrivate::encodeSimpleProperty(
 QString QVersitOrganizerExporterPrivate::encodeDateTime(const QDateTime& dateTime)
 {
     if (dateTime.timeSpec() == Qt::UTC)
-        return dateTime.toString(QLatin1String("yyyyMMddTHHmmssZ"));
+        return dateTime.toString(QStringLiteral("yyyyMMddTHHmmssZ"));
     else
-        return dateTime.toString(QLatin1String("yyyyMMddTHHmmss"));
+        return dateTime.toString(QStringLiteral("yyyyMMddTHHmmss"));
 }
 
 /*!
@@ -804,11 +804,11 @@ bool QVersitOrganizerExporterPrivate::documentContainsUidAndRecurrenceId(const Q
     bool hasRecurId = false;
     foreach (const QVersitProperty& property, document.properties()) {
         const QString& name = property.name();
-        if (name == QLatin1String("UID")) {
+        if (name == QStringLiteral("UID")) {
             if (hasRecurId)
                 return true;
             hasUid = true;
-        } else if (name == QLatin1String("RECURRENCE-ID")) {
+        } else if (name == QStringLiteral("RECURRENCE-ID")) {
             if (hasUid)
                 return true;
             hasRecurId = true;

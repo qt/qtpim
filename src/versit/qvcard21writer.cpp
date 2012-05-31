@@ -84,14 +84,14 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
         QStringList values = property.variantValue().toStringList();
         QString separator;
         if (property.valueType() == QVersitProperty::CompoundType) {
-            separator = QLatin1String(";");
+            separator = QStringLiteral(";");
         } else {
             if (property.valueType() != QVersitProperty::ListType) {
                 qWarning("Variant value is a QStringList but the property's value type is neither "
                          "CompoundType or ListType");
             }
             // Assume it's a ListType
-            separator = QLatin1String(",");
+            separator = QStringLiteral(",");
         }
         QString replacement = QLatin1Char('\\') + separator;
         QRegExp separatorRegex = QRegExp(separator);
@@ -115,7 +115,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
         renderedValue = variant.toString();
         encodeVersitValue(parameters, renderedValue, false);
     } else if (variant.type() == QVariant::ByteArray) {
-        parameters.replace(QLatin1String("ENCODING"), QLatin1String("BASE64"));
+        parameters.replace(QStringLiteral("ENCODING"), QStringLiteral("BASE64"));
         if (mCodecIsAsciiCompatible) // optimize by not converting to unicode
             renderedBytes = variant.toByteArray().toBase64();
         else
@@ -126,7 +126,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
     encodeParameters(parameters);
 
     // Encode value
-    writeString(QLatin1String(":"));
+    writeString(QStringLiteral(":"));
     if (variant.canConvert<QVersitDocument>()) {
         writeCrlf();
         QVersitDocument embeddedDocument = variant.value<QVersitDocument>();
@@ -135,7 +135,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
         // Some devices don't support vCard-style line folding if the property is
         // quoted-printable-encoded.  Therefore, we use QP soft linebreaks if the property is being
         // QP-encoded, and normal vCard folding otherwise.
-        if (parameters.contains(QLatin1String("ENCODING"), QLatin1String("QUOTED-PRINTABLE")))
+        if (parameters.contains(QStringLiteral("ENCODING"), QStringLiteral("QUOTED-PRINTABLE")))
             writeStringQp(renderedValue);
         else
             writeString(renderedValue);
@@ -143,7 +143,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
         // One extra folding before the value and
         // one extra line break after the value are needed in vCard 2.1
         writeCrlf();
-        writeString(QLatin1String(" "));
+        writeString(QStringLiteral(" "));
         if (renderedBytes.isEmpty())
             writeString(renderedValue);
         else
@@ -175,21 +175,21 @@ void QVCard21Writer::encodeVersitValue(QMultiHash<QString,QString>& parameters, 
             || !mCodec->canEncode(value)
             // if codec is ASCII and there is a character > U+007F in value, encode it as UTF-8
             || (mCodecIsAscii && containsNonAscii(value))) {
-        parameters.replace(QLatin1String("CHARSET"), QLatin1String("UTF-8"));
+        parameters.replace(QStringLiteral("CHARSET"), QStringLiteral("UTF-8"));
         value = QString::fromLatin1(utf8Encoder()->fromUnicode(value));
     }
 
     // Quoted-Printable encode the value and add Quoted-Printable parameter, if necessary
     if (quotedPrintableEncode(value))
-        parameters.replace(QLatin1String("ENCODING"), QLatin1String("QUOTED-PRINTABLE"));
+        parameters.replace(QStringLiteral("ENCODING"), QStringLiteral("QUOTED-PRINTABLE"));
 }
 
 int sortIndexOfTypeValue(const QString& type) {
-    if (   type == QLatin1String("CELL")
-        || type == QLatin1String("FAX")) {
+    if (   type == QStringLiteral("CELL")
+        || type == QStringLiteral("FAX")) {
         return 0;
-    } else if (type == QLatin1String("HOME")
-            || type == QLatin1String("WORK")) {
+    } else if (type == QStringLiteral("HOME")
+            || type == QStringLiteral("WORK")) {
         return 1;
     } else {
         return 2;
@@ -215,15 +215,15 @@ void QVCard21Writer::encodeParameters(const QMultiHash<QString,QString>& paramet
     QList<QString> names = parameters.uniqueKeys();
     foreach (const QString& name, names) {
         QStringList values = parameters.values(name);
-        if (name == QLatin1String("TYPE")) {
+        if (name == QStringLiteral("TYPE")) {
             // TYPE parameters should be sorted
             sortTypeValues(&values);
         }
         foreach (const QString& value, values) {
-            writeString(QLatin1String(";"));
-            if (name.length() > 0 && name != QLatin1String("TYPE")) {
+            writeString(QStringLiteral(";"));
+            if (name.length() > 0 && name != QStringLiteral("TYPE")) {
                 writeString(name);
-                writeString(QLatin1String("="));
+                writeString(QStringLiteral("="));
             }
             writeString(value);
         }

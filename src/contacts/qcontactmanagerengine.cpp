@@ -196,7 +196,7 @@ static bool validateActionFilter(const QContactFilter& filter);
 */
 QString QContactManagerEngine::managerName() const
 {
-    return QString(QLatin1String("base"));
+    return QString(QStringLiteral("base"));
 }
 
 /*!

@@ -716,42 +716,42 @@ QString QDeclarativeOrganizerModel::error() const
     if (d->m_manager) {
         switch (d->m_error) {
         case QOrganizerManager::DoesNotExistError:
-            return QLatin1String("DoesNotExist");
+            return QStringLiteral("DoesNotExist");
         case QOrganizerManager::AlreadyExistsError:
-            return QLatin1String("AlreadyExists");
+            return QStringLiteral("AlreadyExists");
         case QOrganizerManager::InvalidDetailError:
-            return QLatin1String("InvalidDetail");
+            return QStringLiteral("InvalidDetail");
         case QOrganizerManager::InvalidCollectionError:
-            return QLatin1String("InvalidCollection");
+            return QStringLiteral("InvalidCollection");
         case QOrganizerManager::LockedError:
-            return QLatin1String("LockedError");
+            return QStringLiteral("LockedError");
         case QOrganizerManager::DetailAccessError:
-            return QLatin1String("DetailAccessError");
+            return QStringLiteral("DetailAccessError");
         case QOrganizerManager::PermissionsError:
-            return QLatin1String("PermissionsError");
+            return QStringLiteral("PermissionsError");
         case QOrganizerManager::OutOfMemoryError:
-            return QLatin1String("OutOfMemory");
+            return QStringLiteral("OutOfMemory");
         case QOrganizerManager::NotSupportedError:
-            return QLatin1String("NotSupported");
+            return QStringLiteral("NotSupported");
         case QOrganizerManager::BadArgumentError:
-            return QLatin1String("BadArgument");
+            return QStringLiteral("BadArgument");
         case QOrganizerManager::UnspecifiedError:
-            return QLatin1String("UnspecifiedError");
+            return QStringLiteral("UnspecifiedError");
         case QOrganizerManager::LimitReachedError:
-            return QLatin1String("LimitReached");
+            return QStringLiteral("LimitReached");
         case QOrganizerManager::InvalidItemTypeError:
-            return QLatin1String("InvalidItemType");
+            return QStringLiteral("InvalidItemType");
         case QOrganizerManager::InvalidOccurrenceError:
-            return QLatin1String("InvalidOccurrence");
+            return QStringLiteral("InvalidOccurrence");
         case QOrganizerManager::InvalidStorageLocationError:
-            return QLatin1String("InvalidStorageLocationError");
+            return QStringLiteral("InvalidStorageLocationError");
         case QOrganizerManager::MissingPlatformRequirementsError:
-            return QLatin1String("MissingPlatformRequirementsError");
+            return QStringLiteral("MissingPlatformRequirementsError");
         default:
             break;
         }
     }
-    return QLatin1String("NoError");
+    return QStringLiteral("NoError");
 }
 
 /*!

@@ -154,7 +154,7 @@ bool QVersitOrganizerImporter::importDocument(const QVersitDocument& document)
     d->mErrors.clear();
     bool ok = true;
     if (document.type() != QVersitDocument::ICalendar20Type
-        || document.componentType() != QLatin1String("VCALENDAR")) {
+        || document.componentType() != QStringLiteral("VCALENDAR")) {
         d->mErrors.insert(-1, QVersitOrganizerImporter::InvalidDocumentError);
         return false;
     }

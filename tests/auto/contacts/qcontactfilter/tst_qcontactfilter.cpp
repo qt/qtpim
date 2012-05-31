@@ -1061,11 +1061,11 @@ void tst_QContactFilter::canonicalizedFilter_data()
     {
         QContactDetailRangeFilter qcdrf;
         qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
-        qcdrf.setRange(QLatin1String("a"), QLatin1String("a"));
+        qcdrf.setRange(QStringLiteral("a"), QStringLiteral("a"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QContactDetailFilter expected;
         expected.setDetailType(QContactName::Type, QContactName::FieldFirstName);
-        expected.setValue(QLatin1String("a"));
+        expected.setValue(QStringLiteral("a"));
         expected.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Equal valued range filter")
                 << static_cast<QContactFilter>(qcdrf)
@@ -1075,7 +1075,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
     {
         QContactDetailRangeFilter qcdrf;
         qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
-        qcdrf.setRange(QLatin1String("a"), QLatin1String("a"),
+        qcdrf.setRange(QStringLiteral("a"), QStringLiteral("a"),
                QContactDetailRangeFilter::ExcludeLower | QContactDetailRangeFilter::ExcludeUpper);
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Equal valued range filter with excluded bounds")
@@ -1086,7 +1086,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
     {
         QContactDetailRangeFilter qcdrf;
         qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
-        qcdrf.setRange(QLatin1String("a"), QLatin1String("b"));
+        qcdrf.setRange(QStringLiteral("a"), QStringLiteral("b"));
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("Normal range filter")
                 << static_cast<QContactFilter>(qcdrf)
@@ -1110,7 +1110,7 @@ void tst_QContactFilter::canonicalizedFilter_data()
     {
         QContactDetailRangeFilter qcdrf;
         qcdrf.setDetailType(QContactName::Type, QContactName::FieldFirstName);
-        qcdrf.setRange(QVariant(QVariant::String), QLatin1String("a")); // min is null
+        qcdrf.setRange(QVariant(QVariant::String), QStringLiteral("a")); // min is null
         qcdrf.setMatchFlags(QContactFilter::MatchFixedString);
         QTest::newRow("One sided range filter")
                 << static_cast<QContactFilter>(qcdrf)
@@ -1150,11 +1150,11 @@ void tst_QContactFilter::testFilter_data()
     {
         QContact contact;
         QContactName name;
-        name.setFirstName(QLatin1String("first"));
-        name.setMiddleName(QLatin1String("middle"));
-        name.setLastName(QLatin1String("last"));
-        name.setPrefix(QLatin1String("prefix"));
-        name.setSuffix(QLatin1String("suffix"));
+        name.setFirstName(QStringLiteral("first"));
+        name.setMiddleName(QStringLiteral("middle"));
+        name.setLastName(QStringLiteral("last"));
+        name.setPrefix(QStringLiteral("prefix"));
+        name.setSuffix(QStringLiteral("suffix"));
         contact.saveDetail(&name);
 
         QTest::newRow("QContactName::match firstname")
@@ -1179,15 +1179,15 @@ void tst_QContactFilter::testFilter_data()
                 << true;
         QTest::newRow("QContactName::match first last")
                 << contact
-                << QContactName::match(QLatin1String("first"), QLatin1String("last"))
+                << QContactName::match(QStringLiteral("first"), QStringLiteral("last"))
                 << true;
         QTest::newRow("QContactName::match substring")
                 << contact
-                << QContactName::match(QLatin1String("irs"))
+                << QContactName::match(QStringLiteral("irs"))
                 << true;
         QTest::newRow("QContactName::match first last substring")
                 << contact
-                << QContactName::match(QLatin1String("irs"), QLatin1String("as"))
+                << QContactName::match(QStringLiteral("irs"), QStringLiteral("as"))
                 << true;
         QTest::newRow("QContactName::match negative")
                 << contact

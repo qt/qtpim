@@ -111,23 +111,23 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
     QTest::newRow("No parameters") << property << expectedResult << codec;
 
     // Structured N - escaping should happen for semicolons, not for commas
-    property.setName(QLatin1String("N"));
+    property.setName(QStringLiteral("N"));
     property.setValue(QStringList()
-                      << QLatin1String("La;st")    // needs to be backslash escaped
-                      << QLatin1String("Fi,rst")
-                      << QLatin1String("Mi:ddle")
-                      << QLatin1String("Pr\\efix") // needs to be QP encoded
-                      << QLatin1String("Suffix"));
+                      << QStringLiteral("La;st")    // needs to be backslash escaped
+                      << QStringLiteral("Fi,rst")
+                      << QStringLiteral("Mi:ddle")
+                      << QStringLiteral("Pr\\efix") // needs to be QP encoded
+                      << QStringLiteral("Suffix"));
     property.setValueType(QVersitProperty::CompoundType);
     expectedResult = "N;ENCODING=QUOTED-PRINTABLE:La\\;st;Fi,rst;Mi:ddle;Pr=5Cefix;Suffix\r\n";
     QTest::newRow("N property") << property << expectedResult << codec;
 
     // Structured N - there was a bug where if two fields had to be escaped,
     // two ENCODING parameters were added
-    property.setName(QLatin1String("N"));
+    property.setName(QStringLiteral("N"));
     property.setValue(QStringList()
-                      << QLatin1String("La\\st")
-                      << QLatin1String("Fi\\rst")
+                      << QStringLiteral("La\\st")
+                      << QStringLiteral("Fi\\rst")
                       << QString()
                       << QString()
                       << QString());
@@ -137,7 +137,7 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
 
     // Structured N - one field needs to be encoded in UTF-8 while the other doesn't
     // correct behaviour is to encode the whole thing in UTF-8
-    property.setName(QLatin1String("N"));
+    property.setName(QStringLiteral("N"));
     property.setValue(QStringList()
                       << QString::fromUtf8("\xE2\x82\xAC") // euro sign
                       << QString::fromLatin1("\xA3") // pound sign (upper Latin-1)
@@ -149,11 +149,11 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
     QTest::newRow("N property, double-encoded") << property << expectedResult << codec;
 
     // Structured CATEGORIES - escaping should happen for commas, not semicolons
-    property.setName(QLatin1String("CATEGORIES"));
+    property.setName(QStringLiteral("CATEGORIES"));
     property.setValue(QStringList()
-                      << QLatin1String("re;d")
-                      << QLatin1String("gr,een")
-                      << QLatin1String("bl:ue"));
+                      << QStringLiteral("re;d")
+                      << QStringLiteral("gr,een")
+                      << QStringLiteral("bl:ue"));
     property.setValueType(QVersitProperty::ListType);
     expectedResult = "CATEGORIES:re;d,gr\\,een,bl:ue\r\n";
     QTest::newRow("CATEGORIES property") << property << expectedResult << codec;
@@ -184,7 +184,7 @@ END:VCARD\r\n\
     property.setValue(QString());
     property.insertParameter(QString::fromLatin1("X-PARAMETER"),QString::fromLatin1("VALUE"));
     QVersitDocument document(QVersitDocument::VCard21Type);
-    document.setComponentType(QLatin1String("VCARD"));
+    document.setComponentType(QStringLiteral("VCARD"));
     QVersitProperty embeddedProperty;
     embeddedProperty.setName(QString(QString::fromLatin1("FN")));
     embeddedProperty.setValue(QString::fromLatin1("Secret Agent"));
@@ -213,30 +213,30 @@ END:VCARD\r\n\
     expectedResult = "ORG;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=E3=83=8E=E3=82=AD=E3=82=A2=E3=\r\n"
                      "=83=8E=E3=82=AD=E3=82=A2\r\n";
     property = QVersitProperty();
-    property.setName(QLatin1String("ORG"));
+    property.setName(QStringLiteral("ORG"));
     property.setValue(KATAKANA_NOKIA + KATAKANA_NOKIA);
     QTest::newRow("non-ASCII 1") << property << expectedResult << codec;
 
     expectedResult = "ORG;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:a=E3=83=8E=E3=82=AD=E3=82=A2=E3=\r\n"
                      "=83=8E=E3=82=AD=E3=82=A2\r\n";
     property = QVersitProperty();
-    property.setName(QLatin1String("ORG"));
+    property.setName(QStringLiteral("ORG"));
     property.setValue("a" + KATAKANA_NOKIA + KATAKANA_NOKIA);
     QTest::newRow("non-ASCII 2") << property << expectedResult << codec;
 
     expectedResult = "ORG;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:aa=E3=83=8E=E3=82=AD=E3=82=A2=\r\n"
                      "=E3=83=8E=E3=82=AD=E3=82=A2\r\n";
     property = QVersitProperty();
-    property.setName(QLatin1String("ORG"));
+    property.setName(QStringLiteral("ORG"));
     property.setValue("aa" + KATAKANA_NOKIA + KATAKANA_NOKIA);
     QTest::newRow("non-ASCII 3") << property << expectedResult << codec;
 
     // In Shift-JIS codec.
     QTextCodec* jisCodec = QTextCodec::codecForName("Shift-JIS");
     expectedResult = jisCodec->fromUnicode(
-            QLatin1String("ORG:") + KATAKANA_NOKIA + QLatin1String("\r\n"));
+            QStringLiteral("ORG:") + KATAKANA_NOKIA + QStringLiteral("\r\n"));
     property = QVersitProperty();
-    property.setName(QLatin1String("ORG"));
+    property.setName(QStringLiteral("ORG"));
     property.setValue(KATAKANA_NOKIA);
     QTest::newRow("JIS codec") << property << expectedResult << QByteArray("Shift-JIS");
 }
@@ -269,32 +269,32 @@ void tst_QVCard21Writer::testEncodeParameters_data()
 
     QTest::newRow("No parameters") << parameters << QByteArray("");
 
-    parameters.insert(QLatin1String("TYPE"), QString::fromLatin1("HOME"));
+    parameters.insert(QStringLiteral("TYPE"), QString::fromLatin1("HOME"));
     QTest::newRow("One TYPE parameter") << parameters << QByteArray(";HOME");
 
     // HOME should appear before VOICE because it is more "important" and some vCard
     // parsers may ignore everything after the first TYPE
-    parameters.insert(QLatin1String("TYPE"), QString::fromLatin1("VOICE"));
+    parameters.insert(QStringLiteral("TYPE"), QString::fromLatin1("VOICE"));
     QTest::newRow("Two TYPE parameters") << parameters << QByteArray(";HOME;VOICE");
 
     parameters.clear();
-    parameters.insert(QLatin1String("ENCODING"), QString::fromLatin1("8BIT"));
+    parameters.insert(QStringLiteral("ENCODING"), QString::fromLatin1("8BIT"));
     QTest::newRow("One ENCODING parameter") << parameters << QByteArray(";ENCODING=8BIT");
 
     parameters.insert(QString::fromLatin1("X-PARAM"),QString::fromLatin1("VALUE"));
     QTest::newRow("Two parameters") << parameters << QByteArray(";X-PARAM=VALUE;ENCODING=8BIT");
 
     parameters.clear();
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("VOICE"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("CELL"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("MODEM"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("CAR"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("VIDEO"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("FAX"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("BBS"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("PAGER"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("HOME"));
-    parameters.insert(QLatin1String("TYPE"), QLatin1String("WORK"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("VOICE"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("CELL"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("MODEM"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("CAR"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("VIDEO"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("FAX"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("BBS"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("PAGER"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("HOME"));
+    parameters.insert(QStringLiteral("TYPE"), QStringLiteral("WORK"));
     // Ensure CELL and FAX are at the front because they are "more important" and some vCard
     // parsers may ignore everything after the first TYPE
     // Ensure WORK and HOME come next.
@@ -348,61 +348,61 @@ void tst_QVCard21Writer::testQuotedPrintableEncode()
     QByteArray encodedBytes;
 
     // Nothing to encode
-    QString nothingToEncode(QLatin1String("nothing to encode"));
+    QString nothingToEncode(QStringLiteral("nothing to encode"));
     QVERIFY(!mWriter->quotedPrintableEncode(nothingToEncode));
 
     // Special characters
-    QString inputOutput(QLatin1String("\n"));
+    QString inputOutput(QStringLiteral("\n"));
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=0A"));
-    inputOutput = QLatin1String("\r");
+    QCOMPARE(inputOutput, QStringLiteral("=0A"));
+    inputOutput = QStringLiteral("\r");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=0D"));
-    inputOutput = QLatin1String("!");
+    QCOMPARE(inputOutput, QStringLiteral("=0D"));
+    inputOutput = QStringLiteral("!");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=21"));
-    inputOutput = QLatin1String("\"");
+    QCOMPARE(inputOutput, QStringLiteral("=21"));
+    inputOutput = QStringLiteral("\"");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=22"));
-    inputOutput = QLatin1String("#");
+    QCOMPARE(inputOutput, QStringLiteral("=22"));
+    inputOutput = QStringLiteral("#");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=23"));
-    inputOutput = QLatin1String("$");
+    QCOMPARE(inputOutput, QStringLiteral("=23"));
+    inputOutput = QStringLiteral("$");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=24"));
-    inputOutput = QLatin1String("=");
+    QCOMPARE(inputOutput, QStringLiteral("=24"));
+    inputOutput = QStringLiteral("=");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=3D"));
-    inputOutput = QLatin1String("@");
+    QCOMPARE(inputOutput, QStringLiteral("=3D"));
+    inputOutput = QStringLiteral("@");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=40"));
-    inputOutput = QLatin1String("[");
+    QCOMPARE(inputOutput, QStringLiteral("=40"));
+    inputOutput = QStringLiteral("[");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=5B"));
-    inputOutput = QLatin1String("\\");
+    QCOMPARE(inputOutput, QStringLiteral("=5B"));
+    inputOutput = QStringLiteral("\\");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=5C"));
-    inputOutput = QLatin1String("]");
+    QCOMPARE(inputOutput, QStringLiteral("=5C"));
+    inputOutput = QStringLiteral("]");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=5D"));
-    inputOutput = QLatin1String("^");
+    QCOMPARE(inputOutput, QStringLiteral("=5D"));
+    inputOutput = QStringLiteral("^");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=5E"));
-    inputOutput = QLatin1String("`");
+    QCOMPARE(inputOutput, QStringLiteral("=5E"));
+    inputOutput = QStringLiteral("`");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=60"));
-    inputOutput = QLatin1String("{");
+    QCOMPARE(inputOutput, QStringLiteral("=60"));
+    inputOutput = QStringLiteral("{");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=7B"));
-    inputOutput = QLatin1String("|");
+    QCOMPARE(inputOutput, QStringLiteral("=7B"));
+    inputOutput = QStringLiteral("|");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=7C"));
-    inputOutput = QLatin1String("}");
+    QCOMPARE(inputOutput, QStringLiteral("=7C"));
+    inputOutput = QStringLiteral("}");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=7D"));
-    inputOutput = QLatin1String("~");
+    QCOMPARE(inputOutput, QStringLiteral("=7D"));
+    inputOutput = QStringLiteral("~");
     QVERIFY(mWriter->quotedPrintableEncode(inputOutput));
-    QCOMPARE(inputOutput, QLatin1String("=7E"));
+    QCOMPARE(inputOutput, QStringLiteral("=7E"));
 }
 #endif
 

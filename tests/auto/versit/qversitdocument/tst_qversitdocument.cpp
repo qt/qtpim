@@ -93,22 +93,22 @@ void tst_QVersitDocument::testRemoveProperty()
     QCOMPARE(mVersitDocument->properties().count(), 0);
 
     // A full property.
-    property.setName(QLatin1String("TEL"));
-    property.setGroups(QStringList(QLatin1String("HOME")));
+    property.setName(QStringLiteral("TEL"));
+    property.setGroups(QStringList(QStringLiteral("HOME")));
     QMultiHash<QString, QString> params;
-    params.insert(QLatin1String("TYPE"), QLatin1String("HOME"));
+    params.insert(QStringLiteral("TYPE"), QStringLiteral("HOME"));
     property.setParameters(params);
-    property.setValue(QLatin1String("123"));
+    property.setValue(QStringLiteral("123"));
     mVersitDocument->addProperty(property);
     QCOMPARE(mVersitDocument->properties().count(), 1);
     QVersitProperty property2;
-    property2.setName(QLatin1String("TEL"));
+    property2.setName(QStringLiteral("TEL"));
     // Remove with a partial property fails.
     mVersitDocument->removeProperty(property2);
     QCOMPARE(mVersitDocument->properties().count(), 1);
-    property2.setGroups(QStringList(QLatin1String("HOME")));
+    property2.setGroups(QStringList(QStringLiteral("HOME")));
     property2.setParameters(params);
-    property2.setValue(QLatin1String("123"));
+    property2.setValue(QStringLiteral("123"));
     // Remove with a fully specified property succeeds.
     mVersitDocument->removeProperty(property2);
     QCOMPARE(mVersitDocument->properties().count(), 0);
@@ -116,7 +116,7 @@ void tst_QVersitDocument::testRemoveProperty()
 
 void tst_QVersitDocument::testRemoveAllProperties()
 {
-    QString name(QLatin1String("FN"));
+    QString name(QStringLiteral("FN"));
 
     // Try to remove from an empty document
     QCOMPARE(0, mVersitDocument->properties().count());
@@ -125,20 +125,20 @@ void tst_QVersitDocument::testRemoveAllProperties()
 
     // Try to remove from a non-empty document, name does not match
     QVersitProperty property;
-    property.setName(QLatin1String("TEL"));
+    property.setName(QStringLiteral("TEL"));
     mVersitDocument->addProperty(property);
     QCOMPARE(1, mVersitDocument->properties().count());
     mVersitDocument->removeProperties(name);
     QCOMPARE(1, mVersitDocument->properties().count());
 
     // Remove from a non-empty document, name matches
-    mVersitDocument->removeProperties(QLatin1String("TEL"));
+    mVersitDocument->removeProperties(QStringLiteral("TEL"));
     QCOMPARE(0, mVersitDocument->properties().count());
 
     // Remove from a document with two properties, first matches
     property.setName(name);
     mVersitDocument->addProperty(property);
-    property.setName(QLatin1String("TEL"));
+    property.setName(QStringLiteral("TEL"));
     mVersitDocument->addProperty(property);
     QCOMPARE(2, mVersitDocument->properties().count());
     mVersitDocument->removeProperties(name);
@@ -160,8 +160,8 @@ void tst_QVersitDocument::testEquality()
     QVERIFY(document1 == document2);
     QVERIFY(!(document1 != document2));
     QVersitProperty property;
-    property.setName(QLatin1String("FN"));
-    property.setValue(QLatin1String("John Citizen"));
+    property.setName(QStringLiteral("FN"));
+    property.setValue(QStringLiteral("John Citizen"));
     document2.addProperty(property);
     QVERIFY(!(document1 == document2));
     QVERIFY(document1 != document2);
@@ -192,8 +192,8 @@ void tst_QVersitDocument::testHash()
     QVersitDocument document1;
     document1.setType(QVersitDocument::VCard30Type);
     QVersitProperty property1;
-    property1.setName(QLatin1String("name"));
-    property1.setValue(QLatin1String("value"));
+    property1.setName(QStringLiteral("name"));
+    property1.setValue(QStringLiteral("value"));
     document1.addProperty(property1);
 
     QVersitDocument document2;
@@ -203,8 +203,8 @@ void tst_QVersitDocument::testHash()
     QVersitDocument document3;
     document3.setType(QVersitDocument::VCard30Type);
     QVersitProperty property3;
-    property3.setName(QLatin1String("name"));
-    property3.setValue(QLatin1String("another value"));
+    property3.setName(QStringLiteral("name"));
+    property3.setValue(QStringLiteral("another value"));
     document3.addProperty(property3);
 
     QVersitDocument document4; // no properties
@@ -214,7 +214,7 @@ void tst_QVersitDocument::testHash()
     document5.addSubDocument(document4);
 
     QVersitDocument document6 = document1;
-    document6.setComponentType(QLatin1String("VEVENT"));
+    document6.setComponentType(QStringLiteral("VEVENT"));
 
     QVersitDocument document7 = document1;
     document7.addProperty(QVersitProperty());

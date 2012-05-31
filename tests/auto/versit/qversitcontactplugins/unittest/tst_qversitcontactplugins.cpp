@@ -109,11 +109,11 @@ void tst_QVersitContactPlugins::testExporterPlugins() {
     foreach (QVersitProperty property, properties) {
         if (property.name() == "TEST-PROPERTY") {
             switch (n) {
-                case 0: QCOMPARE(property.value(), QLatin1String("5")); break;
-                case 1: QCOMPARE(property.value(), QLatin1String("4")); break;
-                case 2: QCOMPARE(property.value(), QLatin1String("3")); break;
-                case 3: QCOMPARE(property.value(), QLatin1String("2")); break;
-                case 4: QCOMPARE(property.value(), QLatin1String("1")); break;
+                case 0: QCOMPARE(property.value(), QStringLiteral("5")); break;
+                case 1: QCOMPARE(property.value(), QStringLiteral("4")); break;
+                case 2: QCOMPARE(property.value(), QStringLiteral("3")); break;
+                case 3: QCOMPARE(property.value(), QStringLiteral("2")); break;
+                case 4: QCOMPARE(property.value(), QStringLiteral("1")); break;
             }
             n++;
         }

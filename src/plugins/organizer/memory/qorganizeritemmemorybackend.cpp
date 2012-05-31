@@ -136,10 +136,10 @@ QOrganizerItemMemoryEngineId::QOrganizerItemMemoryEngineId(const QString& idStri
     : QOrganizerItemEngineId()
 {
     int temp = 0;
-    int colonIndex = idString.indexOf(QLatin1String(":"), 0);
+    int colonIndex = idString.indexOf(QStringLiteral(":"), 0);
     m_collectionId = idString.mid(temp, colonIndex).toUInt();
     temp = colonIndex + 1;
-    colonIndex = idString.indexOf(QLatin1String(":"), temp);
+    colonIndex = idString.indexOf(QStringLiteral(":"), temp);
     m_itemId = idString.mid(temp, (colonIndex-temp)).toUInt();
     temp = colonIndex + 1;
     m_managerUri = idString.mid(temp);
@@ -230,7 +230,7 @@ QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId(const QOr
 QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId(const QString& idString)
     : QOrganizerCollectionEngineId()
 {
-    int colonIndex = idString.indexOf(QLatin1String(":"));
+    int colonIndex = idString.indexOf(QStringLiteral(":"));
     m_collectionId = idString.mid(0, colonIndex).toUInt();
     m_managerUri = idString.mid(colonIndex+1);
 }
@@ -309,7 +309,7 @@ QOrganizerItemMemoryEngineData::QOrganizerItemMemoryEngineData()
 QOrganizerItemMemoryEngine* QOrganizerItemMemoryEngine::createMemoryEngine(const QMap<QString, QString>& parameters)
 {
     bool anonymous = false;
-    QString idValue = parameters.value(QLatin1String("id"));
+    QString idValue = parameters.value(QStringLiteral("id"));
     if (idValue.isNull() || idValue.isEmpty()) {
         // no store given?  new, anonymous store.
         idValue = QUuid::createUuid().toString();
@@ -343,7 +343,7 @@ QOrganizerItemMemoryEngine::QOrganizerItemMemoryEngine(QOrganizerItemMemoryEngin
         QOrganizerCollectionId defaultId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri));
         QOrganizerCollection defaultCollection;
         defaultCollection.setId(defaultId);
-        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QString(QLatin1String("Default Collection")));
+        defaultCollection.setMetaData(QOrganizerCollection::KeyName, QString(QStringLiteral("Default Collection")));
         d->m_organizerCollectionIds << defaultId;
         d->m_organizerCollections << defaultCollection;
     }
@@ -364,7 +364,7 @@ QOrganizerItemMemoryEngine::~QOrganizerItemMemoryEngine()
 */
 QString QOrganizerItemMemoryEngine::managerName() const
 {
-    return QLatin1String("memory");
+    return QStringLiteral("memory");
 }
 
 /*! \reimp
@@ -372,7 +372,7 @@ QString QOrganizerItemMemoryEngine::managerName() const
 QMap<QString, QString> QOrganizerItemMemoryEngine::managerParameters() const
 {
     QMap<QString, QString> params;
-    params.insert(QLatin1String("id"), d->m_id);
+    params.insert(QStringLiteral("id"), d->m_id);
     return params;
 }
 

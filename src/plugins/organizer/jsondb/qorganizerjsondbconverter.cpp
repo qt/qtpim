@@ -1310,7 +1310,7 @@ void QOrganizerJsonDbConverter::itemVersionToJsonDbVersion(const QOrganizerItemV
     QByteArray extendedVersion = itemVersion.extendedVersion();
 
     if (version > 0) {
-        *jsonDbVersion = QString::number(version) + QLatin1String("-") + QString::fromLatin1(extendedVersion.constData());
+        *jsonDbVersion = QString::number(version) + QStringLiteral("-") + QString::fromLatin1(extendedVersion.constData());
     }
 }
 

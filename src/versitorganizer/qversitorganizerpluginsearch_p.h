@@ -94,10 +94,10 @@ inline QStringList mobilityPlugins(const QString& plugintype)
         }
 #endif
 
-        QString subdir(QLatin1String("plugins/"));
+        QString subdir(QStringLiteral("plugins/"));
         subdir += plugintype;
-        if (pluginsDir.path().endsWith(QLatin1String("/plugins"))
-            || pluginsDir.path().endsWith(QLatin1String("/plugins/")))
+        if (pluginsDir.path().endsWith(QStringLiteral("/plugins"))
+            || pluginsDir.path().endsWith(QStringLiteral("/plugins/")))
             subdir = plugintype;
 
         if (CHECKDIR(QDir(pluginsDir.filePath(subdir)))) {

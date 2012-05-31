@@ -165,14 +165,14 @@ QVersitDocumentWriter* QVersitWriterPrivate::writerForType(QVersitDocument::Vers
             // Neither startWriting or the document provided the type.
             // Need to infer the type from the document's componentType
             QString componentType(document.componentType());
-            if (componentType == QLatin1String("VCARD")) {
+            if (componentType == QStringLiteral("VCARD")) {
                 return new QVCard30Writer(QVersitDocument::VCard30Type);
-            } else if (componentType == QLatin1String("VCALENDAR")
-                    || componentType == QLatin1String("VEVENT")
-                    || componentType == QLatin1String("VTODO")
-                    || componentType == QLatin1String("VJOURNAL")
-                    || componentType == QLatin1String("VTIMEZONE")
-                    || componentType == QLatin1String("VALARM")) {
+            } else if (componentType == QStringLiteral("VCALENDAR")
+                    || componentType == QStringLiteral("VEVENT")
+                    || componentType == QStringLiteral("VTODO")
+                    || componentType == QStringLiteral("VJOURNAL")
+                    || componentType == QStringLiteral("VTIMEZONE")
+                    || componentType == QStringLiteral("VALARM")) {
                 return new QVCard30Writer(QVersitDocument::ICalendar20Type);
             } else {
                 return new QVCard30Writer(QVersitDocument::VCard30Type);

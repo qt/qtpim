@@ -651,7 +651,7 @@ void tst_QContactDetails::globalPresence()
     p2.setCustomMessage("C is for generic biscuit-type pastry product!");
 
     // now test that the setPresenceStateImageUrl function doesn't escape spaces and so forth.
-    QString imgUrlStr(QLatin1String("http://example.com/some image.png"));
+    QString imgUrlStr(QStringLiteral("http://example.com/some image.png"));
     QUrl imgUrl(imgUrlStr);
     QContactPresence p3;
     p3.setPresenceStateImageUrl(imgUrl);
@@ -1288,8 +1288,8 @@ void tst_QContactDetails::url()
     QCOMPARE(u3.url(), urlValue.toString());
     QVERIFY(c.saveDetail(&u3));
     QVERIFY(c.details(QContactUrl::Type).contains(u3));
-    u3.setUrl(QString(QLatin1String("http://www.anotherexample.com")));
-    QCOMPARE(u3.url(), QString(QLatin1String("http://www.anotherexample.com")));
+    u3.setUrl(QString(QStringLiteral("http://www.anotherexample.com")));
+    QCOMPARE(u3.url(), QString(QStringLiteral("http://www.anotherexample.com")));
     QVERIFY(c.saveDetail(&u3));
 
     // test property remove

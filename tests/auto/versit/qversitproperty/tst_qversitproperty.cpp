@@ -63,15 +63,15 @@ void tst_QVersitProperty::cleanup()
 void tst_QVersitProperty::testGroup()
 {
     // One group
-    QStringList group(QLatin1String("GROUP_NAME"));
+    QStringList group(QStringLiteral("GROUP_NAME"));
     mVersitProperty->setGroups(group);
     QCOMPARE(mVersitProperty->groups(), group);
 
     // Several groups
     QStringList groupList;
-    groupList.append(QLatin1String("GROUP1"));
-    groupList.append(QLatin1String("Group2"));
-    groupList.append(QLatin1String("group3"));
+    groupList.append(QStringLiteral("GROUP1"));
+    groupList.append(QStringLiteral("Group2"));
+    groupList.append(QStringLiteral("group3"));
     mVersitProperty->setGroups(groupList);
     QCOMPARE(mVersitProperty->groups(), groupList);
 }
@@ -79,36 +79,36 @@ void tst_QVersitProperty::testGroup()
 void tst_QVersitProperty::testName()
 {
     // Name in upper case
-    QString name(QLatin1String("TEL"));
+    QString name(QStringLiteral("TEL"));
     mVersitProperty->setName(name);
     QCOMPARE(mVersitProperty->name(), name);
 
     // Name in lower case, converted automatically to upper case
-    mVersitProperty->setName(QLatin1String("tel"));
+    mVersitProperty->setName(QStringLiteral("tel"));
     QCOMPARE(mVersitProperty->name(), name);
 }
 
 void tst_QVersitProperty::testParameters()
 {
-    QString typeParameterName(QLatin1String("TYPE"));
+    QString typeParameterName(QStringLiteral("TYPE"));
 
-    QString name(QLatin1String("type"));
-    QString value1(QLatin1String("home"));
+    QString name(QStringLiteral("type"));
+    QString value1(QStringLiteral("home"));
     mVersitProperty->insertParameter(name,value1);
     QMultiHash<QString,QString> parameters = mVersitProperty->parameters();
     QCOMPARE(parameters.count(), 1);
-    QVERIFY(parameters.contains(typeParameterName,QLatin1String("home")));
+    QVERIFY(parameters.contains(typeParameterName,QStringLiteral("home")));
 
-    QString value2(QLatin1String("voice"));
+    QString value2(QStringLiteral("voice"));
     mVersitProperty->insertParameter(name,value2);
     parameters = mVersitProperty->parameters();
     QCOMPARE(parameters.count(), 2);
-    QVERIFY(parameters.contains(typeParameterName,QLatin1String("home")));
-    QVERIFY(parameters.contains(typeParameterName,QLatin1String("voice")));
+    QVERIFY(parameters.contains(typeParameterName,QStringLiteral("home")));
+    QVERIFY(parameters.contains(typeParameterName,QStringLiteral("voice")));
 
     mVersitProperty->removeParameter(name,value1);
     QCOMPARE(mVersitProperty->parameters().count(), 1);
-    QVERIFY(parameters.contains(typeParameterName,QLatin1String("home")));
+    QVERIFY(parameters.contains(typeParameterName,QStringLiteral("home")));
 
     mVersitProperty->removeParameter(name,value2);
     QCOMPARE(mVersitProperty->parameters().count(), 0);
@@ -122,7 +122,7 @@ void tst_QVersitProperty::testParameters()
 
 void tst_QVersitProperty::testValue()
 {
-    QString value(QLatin1String("050484747"));
+    QString value(QStringLiteral("050484747"));
     mVersitProperty->setValue(value);
     QCOMPARE(mVersitProperty->value(), value);
 }
@@ -131,13 +131,13 @@ void tst_QVersitProperty::testEmbeddedDocument()
 {
     QVersitDocument document;
     QVersitProperty property;
-    property.setName(QLatin1String("X-tension"));
+    property.setName(QStringLiteral("X-tension"));
     document.addProperty(property);
     mVersitProperty->setValue(QVariant::fromValue(document));
     QList<QVersitProperty> embeddedDocumentProperties =
         mVersitProperty->value<QVersitDocument>().properties();
     QCOMPARE(embeddedDocumentProperties.count(),1);
-    QCOMPARE(embeddedDocumentProperties[0].name(),QLatin1String("X-TENSION"));
+    QCOMPARE(embeddedDocumentProperties[0].name(),QStringLiteral("X-TENSION"));
 }
 
 void tst_QVersitProperty::testEquality()
@@ -147,14 +147,14 @@ void tst_QVersitProperty::testEquality()
     QVERIFY(property1.isEmpty());
     QVERIFY(property1 == property2);
     QVERIFY(!(property1 != property2));
-    property2.setName(QLatin1String("FN"));
-    property2.setValue(QLatin1String("John Citizen"));
+    property2.setName(QStringLiteral("FN"));
+    property2.setValue(QStringLiteral("John Citizen"));
     QVERIFY(!(property1 == property2));
     QVERIFY(property1 != property2);
     QVERIFY(!property2.isEmpty());
 
-    property1.setName(QLatin1String("FN"));
-    property1.setValue(QLatin1String("John Citizen"));
+    property1.setName(QStringLiteral("FN"));
+    property1.setValue(QStringLiteral("John Citizen"));
     QVERIFY(property1 == property2);
     QVERIFY(!(property1 != property2));
 
@@ -169,23 +169,23 @@ void tst_QVersitProperty::testEquality()
 void tst_QVersitProperty::testHash()
 {
     QVersitProperty property1;
-    property1.setGroups(QStringList() << QLatin1String("group1") << QLatin1String("group2"));
-    property1.setName(QLatin1String("name"));
-    property1.setValue(QLatin1String("value"));
-    property1.insertParameter(QLatin1String("param"), QLatin1String("value"));
+    property1.setGroups(QStringList() << QStringLiteral("group1") << QStringLiteral("group2"));
+    property1.setName(QStringLiteral("name"));
+    property1.setValue(QStringLiteral("value"));
+    property1.insertParameter(QStringLiteral("param"), QStringLiteral("value"));
     QVersitProperty property2;
-    property2.setGroups(QStringList() << QLatin1String("group1") << QLatin1String("group2"));
-    property2.setName(QLatin1String("name"));
-    property2.setValue(QLatin1String("value"));
-    property2.insertParameter(QLatin1String("param"), QLatin1String("value"));
+    property2.setGroups(QStringList() << QStringLiteral("group1") << QStringLiteral("group2"));
+    property2.setName(QStringLiteral("name"));
+    property2.setValue(QStringLiteral("value"));
+    property2.insertParameter(QStringLiteral("param"), QStringLiteral("value"));
     QVersitProperty property3; // no groups
-    property3.setName(QLatin1String("name"));
-    property3.setValue(QLatin1String("value"));
-    property3.insertParameter(QLatin1String("param"), QLatin1String("value"));
+    property3.setName(QStringLiteral("name"));
+    property3.setValue(QStringLiteral("value"));
+    property3.insertParameter(QStringLiteral("param"), QStringLiteral("value"));
     QVersitProperty property4; // no params
-    property4.setGroups(QStringList() << QLatin1String("group1") << QLatin1String("group2"));
-    property4.setName(QLatin1String("name"));
-    property4.setValue(QLatin1String("value"));
+    property4.setGroups(QStringList() << QStringLiteral("group1") << QStringLiteral("group2"));
+    property4.setName(QStringLiteral("name"));
+    property4.setValue(QStringLiteral("value"));
 
     QVERIFY(qHash(property1) == qHash(property2));
     QVERIFY(qHash(property1) != qHash(property3));

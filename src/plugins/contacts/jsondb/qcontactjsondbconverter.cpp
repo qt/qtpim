@@ -1327,7 +1327,7 @@ void QContactJsonDbConverter::contactVersionToJsonDbVersion(const QContactVersio
     int sequenceNumber = contactVersion.sequenceNumber();
     QByteArray extendedVersion = contactVersion.extendedVersion();
     if (sequenceNumber > 0 && extendedVersion.length() == jsonDbVersionLength) {
-        *jsonDbVersion = QString::number(sequenceNumber) + QLatin1String("-") + QString::fromLatin1(extendedVersion.constData());
+        *jsonDbVersion = QString::number(sequenceNumber) + QStringLiteral("-") + QString::fromLatin1(extendedVersion.constData());
     }
 }
 

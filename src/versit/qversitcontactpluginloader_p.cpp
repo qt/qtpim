@@ -85,7 +85,7 @@ QVersitContactPluginLoader* QVersitContactPluginLoader::instance()
 }
 
 void QVersitContactPluginLoader::loadPlugins() {
-    QStringList plugins = mobilityPlugins(QLatin1String("versit"));
+    QStringList plugins = mobilityPlugins(QStringLiteral("versit"));
     if (plugins != mPluginPaths) {
         mPluginPaths = plugins;
 

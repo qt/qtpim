@@ -74,58 +74,58 @@ void tst_QVersitOrganizerExporter::testExport_data()
 
     {
         QVersitDocument document(QVersitDocument::ICalendar20Type);
-        document.setComponentType(QLatin1String("VCALENDAR"));
+        document.setComponentType(QStringLiteral("VCALENDAR"));
         QVersitDocument nested(QVersitDocument::ICalendar20Type);
-        nested.setComponentType(QLatin1String("VEVENT"));
+        nested.setComponentType(QStringLiteral("VEVENT"));
         QVersitProperty property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Bastille Day Party"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Bastille Day Party"));
         nested.addProperty(property);
-        property.setName(QLatin1String("DTSTART"));
-        property.setValue(QLatin1String("19970714T170000Z"));
+        property.setName(QStringLiteral("DTSTART"));
+        property.setValue(QStringLiteral("19970714T170000Z"));
         nested.addProperty(property);
-        property.setName(QLatin1String("DTEND"));
-        property.setValue(QLatin1String("19970715T035959Z"));
-        nested.addProperty(property);
-        document.addSubDocument(nested);
-
-        nested.clear();
-        nested.setType(QVersitDocument::ICalendar20Type);
-        nested.setComponentType(QLatin1String("VTODO"));
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Take out the garbage"));
-        nested.addProperty(property);
-        property.setName(QLatin1String("DTSTART"));
-        property.setValue(QLatin1String("20100609T080000"));
-        nested.addProperty(property);
-        property.setName(QLatin1String("DUE"));
-        property.setValue(QLatin1String("20100610T080000"));
+        property.setName(QStringLiteral("DTEND"));
+        property.setValue(QStringLiteral("19970715T035959Z"));
         nested.addProperty(property);
         document.addSubDocument(nested);
 
         nested.clear();
         nested.setType(QVersitDocument::ICalendar20Type);
-        nested.setComponentType(QLatin1String("VJOURNAL"));
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Trip to Thailand"));
+        nested.setComponentType(QStringLiteral("VTODO"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Take out the garbage"));
         nested.addProperty(property);
-        property.setName(QLatin1String("DTSTART"));
-        property.setValue(QLatin1String("20100615T112300"));
+        property.setName(QStringLiteral("DTSTART"));
+        property.setValue(QStringLiteral("20100609T080000"));
+        nested.addProperty(property);
+        property.setName(QStringLiteral("DUE"));
+        property.setValue(QStringLiteral("20100610T080000"));
+        nested.addProperty(property);
+        document.addSubDocument(nested);
+
+        nested.clear();
+        nested.setType(QVersitDocument::ICalendar20Type);
+        nested.setComponentType(QStringLiteral("VJOURNAL"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Trip to Thailand"));
+        nested.addProperty(property);
+        property.setName(QStringLiteral("DTSTART"));
+        property.setValue(QStringLiteral("20100615T112300"));
         nested.addProperty(property);
         document.addSubDocument(nested);
 
         QOrganizerEvent event;
-        event.setDisplayLabel(QLatin1String("Bastille Day Party"));
+        event.setDisplayLabel(QStringLiteral("Bastille Day Party"));
         event.setStartDateTime(QDateTime(QDate(1997, 7, 14), QTime(17, 0, 0), Qt::UTC));
         event.setEndDateTime(QDateTime(QDate(1997, 7, 15), QTime(3, 59, 59), Qt::UTC));
 
         QOrganizerTodo todo;
-        todo.setDisplayLabel(QLatin1String("Take out the garbage"));
+        todo.setDisplayLabel(QStringLiteral("Take out the garbage"));
         todo.setStartDateTime(QDateTime(QDate(2010, 6, 9), QTime(8, 0, 0)));
         todo.setDueDateTime(QDateTime(QDate(2010, 6, 10), QTime(8, 0, 0)));
 
         QOrganizerJournal journal;
-        journal.setDisplayLabel(QLatin1String("Trip to Thailand"));
+        journal.setDisplayLabel(QStringLiteral("Trip to Thailand"));
         journal.setDateTime(QDateTime(QDate(2010, 6, 15), QTime(11, 23, 0)));
 
         QList<QOrganizerItem> items;
@@ -138,21 +138,21 @@ void tst_QVersitOrganizerExporter::testExport_data()
 
     {
         QVersitDocument document(QVersitDocument::ICalendar20Type);
-        document.setComponentType(QLatin1String("VCALENDAR"));
+        document.setComponentType(QStringLiteral("VCALENDAR"));
         QVersitDocument nested(QVersitDocument::ICalendar20Type);
-        nested.setComponentType(QLatin1String("VEVENT"));
+        nested.setComponentType(QStringLiteral("VEVENT"));
         QVersitProperty property;
-        property.setName(QLatin1String("UID"));
-        property.setValue(QLatin1String("1234"));
+        property.setName(QStringLiteral("UID"));
+        property.setValue(QStringLiteral("1234"));
         nested.addProperty(property);
-        property.setName(QLatin1String("RECURRENCE-ID"));
-        property.setValue(QLatin1String("20100608"));
+        property.setName(QStringLiteral("RECURRENCE-ID"));
+        property.setValue(QStringLiteral("20100608"));
         nested.addProperty(property);
         document.addSubDocument(nested);
 
         // An event occurrence with OriginalDate and Guid set
         QOrganizerEventOccurrence event;
-        event.setGuid(QLatin1String("1234"));
+        event.setGuid(QStringLiteral("1234"));
         event.setOriginalDate(QDate(2010, 6, 8));
 
         QList<QOrganizerItem> items;
@@ -188,7 +188,7 @@ void tst_QVersitOrganizerExporter::testExportError_data()
     QTest::addColumn<int>("expectedError");
 
     QVersitDocument document(QVersitDocument::ICalendar20Type);
-    document.setComponentType(QLatin1String("VCALENDAR"));
+    document.setComponentType(QStringLiteral("VCALENDAR"));
 
     // An event occurrence with OriginalDate set but no Guid
     QOrganizerEventOccurrence event;
@@ -249,10 +249,10 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("jabberwocky"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("jabberwocky"));
         QOrganizerItemDisplayLabel displayLabel;
-        displayLabel.setLabel(QLatin1String("jabberwocky"));
+        displayLabel.setLabel(QStringLiteral("jabberwocky"));
         QTest::newRow("one summary") << (QList<QOrganizerItemDetail>() << displayLabel)
             << (QList<QVersitProperty>() << property);
     }
@@ -262,28 +262,28 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
         QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("AUDIO"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("AUDIO"));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemAudibleReminder audibleReminder;
         audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -299,38 +299,38 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("DISPLAY"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("DISPLAY"));
         valarmProperties << property;
-        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String("Test visual reminder"));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral("Test visual reminder"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
         visualReminder.setRepetition(3, 5);
         visualReminder.setSecondsBeforeStart(90);
-        visualReminder.setMessage(QLatin1String("Test visual reminder"));
+        visualReminder.setMessage(QStringLiteral("Test visual reminder"));
         QTest::newRow("visual reminder") << (QList<QOrganizerItemDetail>() << visualReminder)
             << (QList<QVersitProperty>() << property);
     }
@@ -341,32 +341,32 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("DISPLAY"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("DISPLAY"));
         valarmProperties << property;
-        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -382,46 +382,46 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("EMAIL"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("EMAIL"));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String("Test email body"));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral("Test email body"));
         valarmProperties << property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Test email subject"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Test email subject"));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTENDEE"));
-        property.setValue(QLatin1String("First email recipient"));
+        property.setName(QStringLiteral("ATTENDEE"));
+        property.setValue(QStringLiteral("First email recipient"));
         valarmProperties << property;
-        property.setValue(QLatin1String("Second email recipient"));
+        property.setValue(QStringLiteral("Second email recipient"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemEmailReminder emailReminder;
         QVariantList attachments;
         emailReminder.setRepetition(3, 5);
         emailReminder.setSecondsBeforeStart(90);
-        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
-                                    << QLatin1String("Second email recipient")));
-        emailReminder.setContents(QLatin1String("Test email subject"),
-                                  QLatin1String("Test email body"),
+        emailReminder.setRecipients((QStringList() << QStringLiteral("First email recipient")
+                                    << QStringLiteral("Second email recipient")));
+        emailReminder.setContents(QStringLiteral("Test email subject"),
+                                  QStringLiteral("Test email body"),
                                   attachments);
         QTest::newRow("email reminder") << (QList<QOrganizerItemDetail>() << emailReminder)
             << (QList<QVersitProperty>() << property);
@@ -433,44 +433,44 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("EMAIL"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("EMAIL"));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTENDEE"));
-        property.setValue(QLatin1String("First email recipient"));
+        property.setName(QStringLiteral("ATTENDEE"));
+        property.setValue(QStringLiteral("First email recipient"));
         valarmProperties << property;
-        property.setValue(QLatin1String("Second email recipient"));
+        property.setValue(QStringLiteral("Second email recipient"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemEmailReminder emailReminder;
         QVariantList attachments;
         emailReminder.setRepetition(3, 5);
         emailReminder.setSecondsBeforeStart(90);
-        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
-                                    << QLatin1String("Second email recipient")));
+        emailReminder.setRecipients((QStringList() << QStringLiteral("First email recipient")
+                                    << QStringLiteral("Second email recipient")));
         emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
         QTest::newRow("email reminder: no subject, no body") << (QList<QOrganizerItemDetail>() << emailReminder)
             << (QList<QVersitProperty>() << property);
@@ -484,28 +484,28 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
             QList<QVersitProperty> valarmProperties;
             QMultiHash<QString, QString> parameters;
-            property.setName(QLatin1String("ACTION"));
-            property.setValue(QLatin1String("AUDIO"));
+            property.setName(QStringLiteral("ACTION"));
+            property.setValue(QStringLiteral("AUDIO"));
             valarmProperties << property;
-            property.setName(QLatin1String("ATTACH"));
-            property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+            property.setName(QStringLiteral("ATTACH"));
+            property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
             valarmProperties << property;
-            property.setName(QLatin1String("DURATION"));
-            property.setValue(QLatin1String("PT5S"));
+            property.setName(QStringLiteral("DURATION"));
+            property.setValue(QStringLiteral("PT5S"));
             valarmProperties << property;
-            property.setName(QLatin1String("REPEAT"));
+            property.setName(QStringLiteral("REPEAT"));
             property.setValue(3);
             valarmProperties << property;
-            property.setName(QLatin1String("TRIGGER"));
-            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setName(QStringLiteral("TRIGGER"));
+            parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
             property.setParameters(parameters);
-            property.setValue(QLatin1String("-PT90S"));
+            property.setValue(QStringLiteral("-PT90S"));
             valarmProperties << property;
             property.clear();
             valarmDocument.setComponentType("VALARM");
             valarmDocument.setProperties(valarmProperties);
             property.setValueType(QVersitProperty::VersitDocumentType);
-            property.setName(QLatin1String("VALARM"));
+            property.setName(QStringLiteral("VALARM"));
             property.setValue(QVariant::fromValue(valarmDocument));
             QOrganizerItemAudibleReminder audibleReminder;
             audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -521,32 +521,32 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             QList<QVersitProperty> valarmProperties;
             QMultiHash<QString, QString> parameters;
 
-            property.setName(QLatin1String("ACTION"));
-            property.setValue(QLatin1String("DISPLAY"));
+            property.setName(QStringLiteral("ACTION"));
+            property.setValue(QStringLiteral("DISPLAY"));
             valarmProperties << property;
-            property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
-            property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+            property.setName(QStringLiteral("x-QTPROJECT-ATTACH"));
+            property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
             valarmProperties << property;
-            property.setName(QLatin1String("DURATION"));
-            property.setValue(QLatin1String("PT5S"));
+            property.setName(QStringLiteral("DURATION"));
+            property.setValue(QStringLiteral("PT5S"));
             valarmProperties << property;
-            property.setName(QLatin1String("REPEAT"));
+            property.setName(QStringLiteral("REPEAT"));
             property.setValue(3);
             valarmProperties << property;
-            property.setName(QLatin1String("TRIGGER"));
-            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setName(QStringLiteral("TRIGGER"));
+            parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
             property.setParameters(parameters);
-            property.setValue(QLatin1String("-PT90S"));
+            property.setValue(QStringLiteral("-PT90S"));
             valarmProperties << property;
             property.clear();
-            property.setName(QLatin1String("DESCRIPTION"));
-            property.setValue(QLatin1String(""));
+            property.setName(QStringLiteral("DESCRIPTION"));
+            property.setValue(QStringLiteral(""));
             valarmProperties << property;
 
             valarmDocument.setComponentType("VALARM");
             valarmDocument.setProperties(valarmProperties);
             property.setValueType(QVersitProperty::VersitDocumentType);
-            property.setName(QLatin1String("VALARM"));
+            property.setName(QStringLiteral("VALARM"));
             property.setValue(QVariant::fromValue(valarmDocument));
             QOrganizerItemVisualReminder visualReminder;
             visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -561,44 +561,44 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             QList<QVersitProperty> valarmProperties;
             QMultiHash<QString, QString> parameters;
 
-            property.setName(QLatin1String("ACTION"));
-            property.setValue(QLatin1String("EMAIL"));
+            property.setName(QStringLiteral("ACTION"));
+            property.setValue(QStringLiteral("EMAIL"));
             valarmProperties << property;
-            property.setName(QLatin1String("DURATION"));
-            property.setValue(QLatin1String("PT5S"));
+            property.setName(QStringLiteral("DURATION"));
+            property.setValue(QStringLiteral("PT5S"));
             valarmProperties << property;
-            property.setName(QLatin1String("REPEAT"));
+            property.setName(QStringLiteral("REPEAT"));
             property.setValue(3);
             valarmProperties << property;
-            property.setName(QLatin1String("TRIGGER"));
-            parameters.insert(QLatin1String("RELATED"), QLatin1String("START"));
+            property.setName(QStringLiteral("TRIGGER"));
+            parameters.insert(QStringLiteral("RELATED"), QStringLiteral("START"));
             property.setParameters(parameters);
-            property.setValue(QLatin1String("-PT90S"));
+            property.setValue(QStringLiteral("-PT90S"));
             valarmProperties << property;
             property.clear();
-            property.setName(QLatin1String("DESCRIPTION"));
-            property.setValue(QLatin1String(""));
+            property.setName(QStringLiteral("DESCRIPTION"));
+            property.setValue(QStringLiteral(""));
             valarmProperties << property;
-            property.setName(QLatin1String("SUMMARY"));
-            property.setValue(QLatin1String(""));
+            property.setName(QStringLiteral("SUMMARY"));
+            property.setValue(QStringLiteral(""));
             valarmProperties << property;
-            property.setName(QLatin1String("ATTENDEE"));
-            property.setValue(QLatin1String("First email recipient"));
+            property.setName(QStringLiteral("ATTENDEE"));
+            property.setValue(QStringLiteral("First email recipient"));
             valarmProperties << property;
-            property.setValue(QLatin1String("Second email recipient"));
+            property.setValue(QStringLiteral("Second email recipient"));
             valarmProperties << property;
 
             valarmDocument.setComponentType("VALARM");
             valarmDocument.setProperties(valarmProperties);
             property.setValueType(QVersitProperty::VersitDocumentType);
-            property.setName(QLatin1String("VALARM"));
+            property.setName(QStringLiteral("VALARM"));
             property.setValue(QVariant::fromValue(valarmDocument));
             QOrganizerItemEmailReminder emailReminder;
             QVariantList attachments;
             emailReminder.setRepetition(3, 5);
             emailReminder.setSecondsBeforeStart(90);
-            emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
-                                        << QLatin1String("Second email recipient")));
+            emailReminder.setRecipients((QStringList() << QStringLiteral("First email recipient")
+                                        << QStringLiteral("Second email recipient")));
             emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
             detailsToExport << emailReminder;
             expectedProperties << property;
@@ -607,17 +607,17 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     }
     {
         QVersitProperty property;
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String("Twinkle, twinkle, little bat! How I wonder what you're at."));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral("Twinkle, twinkle, little bat! How I wonder what you're at."));
         QOrganizerItemDescription description;
-        description.setDescription(QLatin1String("Twinkle, twinkle, little bat! How I wonder what you're at."));
+        description.setDescription(QStringLiteral("Twinkle, twinkle, little bat! How I wonder what you're at."));
         QTest::newRow("one description") << (QList<QOrganizerItemDetail>() << description)
             << (QList<QVersitProperty>() << property);
     }
 
     {
         QVersitProperty property; // Proper version.
-        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
         property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral("134f23dbb2"));
         QOrganizerItemVersion version;
@@ -629,7 +629,7 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property; // Extended version empty.
-        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
         property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral(""));
         QOrganizerItemVersion version;
@@ -641,7 +641,7 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property; // No extended version.
-        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
         property.setValue(QStringList() << QStringLiteral("4711") << QStringLiteral(""));
         QOrganizerItemVersion version;
@@ -653,7 +653,7 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty property; // Empty version detail.
         QOrganizerItemVersion version;
-        property.setName(QLatin1String("X-QTPROJECT-VERSION"));
+        property.setName(QStringLiteral("X-QTPROJECT-VERSION"));
         property.setValueType(QVersitProperty::CompoundType);
         property.setValue(QStringList() << QStringLiteral("0") << QStringLiteral(""));
         QTest::newRow("version") << (QList<QOrganizerItemDetail>() << version)
@@ -662,15 +662,15 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property1;
-        property1.setName(QLatin1String("COMMENT"));
-        property1.setValue(QLatin1String("Comment 1"));
+        property1.setName(QStringLiteral("COMMENT"));
+        property1.setValue(QStringLiteral("Comment 1"));
         QVersitProperty property2;
-        property2.setName(QLatin1String("COMMENT"));
-        property2.setValue(QLatin1String("Comment 2"));
+        property2.setName(QStringLiteral("COMMENT"));
+        property2.setValue(QStringLiteral("Comment 2"));
         QOrganizerItemComment comment1;
-        comment1.setComment(QLatin1String("Comment 1"));
+        comment1.setComment(QStringLiteral("Comment 1"));
         QOrganizerItemComment comment2;
-        comment2.setComment(QLatin1String("Comment 2"));
+        comment2.setComment(QStringLiteral("Comment 2"));
         QTest::newRow("two comments")
             << (QList<QOrganizerItemDetail>() << comment1 << comment2)
             << (QList<QVersitProperty>() << property1 << property2);
@@ -678,10 +678,10 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("UID"));
-        property.setValue(QLatin1String("1234567"));
+        property.setName(QStringLiteral("UID"));
+        property.setValue(QStringLiteral("1234567"));
         QOrganizerItemGuid guid;
-        guid.setGuid(QLatin1String("1234567"));
+        guid.setGuid(QStringLiteral("1234567"));
         QTest::newRow("guid") << (QList<QOrganizerItemDetail>() << guid)
             << (QList<QVersitProperty>() << property);
     }
@@ -689,12 +689,12 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QList<QVersitProperty> properties;
         QVersitProperty dtstart;
-        dtstart.setName(QLatin1String("DTSTART"));
-        dtstart.setValue(QLatin1String("20100102T030405"));
+        dtstart.setName(QStringLiteral("DTSTART"));
+        dtstart.setValue(QStringLiteral("20100102T030405"));
         properties << dtstart;
         QVersitProperty dtend;
-        dtend.setName(QLatin1String("DTEND"));
-        dtend.setValue(QLatin1String("20100102T030406"));
+        dtend.setName(QStringLiteral("DTEND"));
+        dtend.setValue(QStringLiteral("20100102T030406"));
         properties << dtend;
         QOrganizerEventTime etr;
         etr.setStartDateTime(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 5)));
@@ -706,16 +706,16 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QList<QVersitProperty> properties;
         QVersitProperty dtstart;
-        dtstart.setName(QLatin1String("DTSTART"));
-        dtstart.setValue(QLatin1String("20100102"));
-        dtstart.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        dtstart.setName(QStringLiteral("DTSTART"));
+        dtstart.setValue(QStringLiteral("20100102"));
+        dtstart.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
         properties << dtstart;
         QVersitProperty dtend;
-        dtend.setName(QLatin1String("DTEND"));
+        dtend.setName(QStringLiteral("DTEND"));
         // Note: in iCalendar, the end date is exclusive while in Qt Organizer, it is inclusive.
         // Hence, this is an event that occurs all day on 2 January (not including 3 January)
-        dtend.setValue(QLatin1String("20100103"));
-        dtend.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        dtend.setValue(QStringLiteral("20100103"));
+        dtend.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
         properties << dtend;
         QOrganizerEventTime etr;
         etr.setStartDateTime(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 5)));
@@ -728,14 +728,14 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QList<QVersitProperty> properties;
         QVersitProperty created;
-        created.setName(QLatin1String("CREATED"));
+        created.setName(QStringLiteral("CREATED"));
         created.setValue(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 5)).toUTC().toString(
-                    QLatin1String("yyyyMMddTHHmmssZ")));
+                    QStringLiteral("yyyyMMddTHHmmssZ")));
         properties << created;
         QVersitProperty modified;
-        modified.setName(QLatin1String("LAST-MODIFIED"));
+        modified.setName(QStringLiteral("LAST-MODIFIED"));
         modified.setValue(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 6)).toUTC().toString(
-                    QLatin1String("yyyyMMddTHHmmssZ")));
+                    QStringLiteral("yyyyMMddTHHmmssZ")));
         properties << modified;
         QOrganizerItemTimestamp timestamp;
         timestamp.setCreated(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 5)));
@@ -748,8 +748,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=DAILY"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=DAILY"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Daily);
@@ -758,28 +758,28 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             << (QList<QOrganizerItemDetail>() << recurrence)
             << (QList<QVersitProperty>() << rrule);
 
-        rrule.setValue(QLatin1String("FREQ=WEEKLY"));
+        rrule.setValue(QStringLiteral("FREQ=WEEKLY"));
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Weekly);
         recurrence.setRecurrenceRules(QSet<QOrganizerRecurrenceRule>() << recurrenceRule);
         QTest::newRow("rrule weekly")
             << (QList<QOrganizerItemDetail>() << recurrence)
             << (QList<QVersitProperty>() << rrule);
 
-        rrule.setValue(QLatin1String("FREQ=MONTHLY"));
+        rrule.setValue(QStringLiteral("FREQ=MONTHLY"));
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Monthly);
         recurrence.setRecurrenceRules(QSet<QOrganizerRecurrenceRule>() << recurrenceRule);
         QTest::newRow("rrule monthly")
             << (QList<QOrganizerItemDetail>() << recurrence)
             << (QList<QVersitProperty>() << rrule);
 
-        rrule.setValue(QLatin1String("FREQ=YEARLY"));
+        rrule.setValue(QStringLiteral("FREQ=YEARLY"));
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Yearly);
         recurrence.setRecurrenceRules(QSet<QOrganizerRecurrenceRule>() << recurrenceRule);
         QTest::newRow("rrule yearly")
             << (QList<QOrganizerItemDetail>() << recurrence)
             << (QList<QVersitProperty>() << rrule);
 
-        rrule.setValue(QLatin1String("FREQ=MONTHLY;INTERVAL=2;BYDAY=TU"));
+        rrule.setValue(QStringLiteral("FREQ=MONTHLY;INTERVAL=2;BYDAY=TU"));
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Monthly);
         recurrenceRule.setInterval(2);
         recurrenceRule.setDaysOfWeek(QSet<Qt::DayOfWeek>() << Qt::Tuesday);
@@ -792,8 +792,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=MONTHLY;BYMONTHDAY=-3,1"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=MONTHLY;BYMONTHDAY=-3,1"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Monthly);
@@ -807,8 +807,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=YEARLY;BYWEEKNO=-3,1"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=YEARLY;BYWEEKNO=-3,1"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Yearly);
@@ -822,8 +822,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=YEARLY;BYMONTH=1,10"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=YEARLY;BYMONTH=1,10"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Yearly);
@@ -839,8 +839,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=YEARLY;BYYEARDAY=-1,1,366"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=YEARLY;BYYEARDAY=-1,1,366"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Yearly);
@@ -854,8 +854,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=SU"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=SU"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Weekly);
@@ -872,8 +872,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Monthly);
@@ -889,8 +889,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=DAILY;UNTIL=20000131;BYMONTH=1"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=DAILY;UNTIL=20000131;BYMONTH=1"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Daily);
@@ -906,8 +906,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
     {
         QVersitProperty rrule;
         rrule.setValueType(QVersitProperty::PreformattedType);
-        rrule.setName(QLatin1String("RRULE"));
-        rrule.setValue(QLatin1String("FREQ=DAILY;COUNT=5;BYMONTH=1"));
+        rrule.setName(QStringLiteral("RRULE"));
+        rrule.setValue(QStringLiteral("FREQ=DAILY;COUNT=5;BYMONTH=1"));
         QOrganizerItemRecurrence recurrence;
         QOrganizerRecurrenceRule recurrenceRule;
         recurrenceRule.setFrequency(QOrganizerRecurrenceRule::Daily);
@@ -922,9 +922,9 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty rdate;
-        rdate.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
-        rdate.setName(QLatin1String("RDATE"));
-        rdate.setValue(QLatin1String("19970304"));
+        rdate.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
+        rdate.setName(QStringLiteral("RDATE"));
+        rdate.setValue(QStringLiteral("19970304"));
         QOrganizerEventTime etr;
         etr.setStartDateTime(QDateTime(QDate(1997, 3, 4), QTime(11, 0, 0)));
         etr.setEndDateTime(QDateTime(QDate(1997, 3, 4), QTime(11, 0, 0)));
@@ -936,7 +936,7 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             << (QList<QOrganizerItemDetail>() << etr << recurrence)
             << (QList<QVersitProperty>() << rdate);
 
-        rdate.setValue(QLatin1String("19970304,19970504,19970704"));
+        rdate.setValue(QStringLiteral("19970304,19970504,19970704"));
         recurrenceDates.clear();
         recurrenceDates << QDate(1997, 3, 4)
                         << QDate(1997, 5, 4)
@@ -949,9 +949,9 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty rdate;
-        rdate.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
-        rdate.setName(QLatin1String("EXDATE"));
-        rdate.setValue(QLatin1String("19970304"));
+        rdate.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
+        rdate.setName(QStringLiteral("EXDATE"));
+        rdate.setValue(QStringLiteral("19970304"));
         QOrganizerEventTime etr;
         etr.setStartDateTime(QDateTime(QDate(1997, 3, 4), QTime(11, 0, 0)));
         etr.setEndDateTime(QDateTime(QDate(1997, 3, 4), QTime(11, 0, 0)));
@@ -966,17 +966,17 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("CATEGORIES"));
-        property.setValue(QLatin1String("Important Event"));
+        property.setName(QStringLiteral("CATEGORIES"));
+        property.setValue(QStringLiteral("Important Event"));
         QOrganizerItemTag tag;
-        tag.setTag(QLatin1String("Important Event"));
+        tag.setTag(QStringLiteral("Important Event"));
         QTest::newRow("tag 1")
                 << (QList<QOrganizerItemDetail>() << tag)
                 << (QList<QVersitProperty>() << property);
 
         // Set another one for multiple handling test
-        property.setValue(QLatin1String("Important Event 2"));
-        tag.setTag(QLatin1String("Important Event 2"));
+        property.setValue(QStringLiteral("Important Event 2"));
+        tag.setTag(QStringLiteral("Important Event 2"));
         QTest::newRow("tag 2")
                 << (QList<QOrganizerItemDetail>() << tag)
                 << (QList<QVersitProperty>() << property);
@@ -992,8 +992,8 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("PRIORITY"));
-        property.setValue(QLatin1String("0"));
+        property.setName(QStringLiteral("PRIORITY"));
+        property.setValue(QStringLiteral("0"));
 
         QOrganizerItemPriority detail;
         detail.setPriority(QOrganizerItemPriority::UnknownPriority);
@@ -1001,55 +1001,55 @@ void tst_QVersitOrganizerExporter::testExportEventDetails_data()
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("1"));
+        property.setValue(QStringLiteral("1"));
         detail.setPriority(QOrganizerItemPriority::HighestPriority);
         QTest::newRow("priority 1")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("2"));
+        property.setValue(QStringLiteral("2"));
         detail.setPriority(QOrganizerItemPriority::ExtremelyHighPriority);
         QTest::newRow("priority 2")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("3"));
+        property.setValue(QStringLiteral("3"));
         detail.setPriority(QOrganizerItemPriority::VeryHighPriority);
         QTest::newRow("priority 3")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("4"));
+        property.setValue(QStringLiteral("4"));
         detail.setPriority(QOrganizerItemPriority::HighPriority);
         QTest::newRow("priority 4")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("5"));
+        property.setValue(QStringLiteral("5"));
         detail.setPriority(QOrganizerItemPriority::MediumPriority);
         QTest::newRow("priority 5")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("6"));
+        property.setValue(QStringLiteral("6"));
         detail.setPriority(QOrganizerItemPriority::LowPriority);
         QTest::newRow("priority 6")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("7"));
+        property.setValue(QStringLiteral("7"));
         detail.setPriority(QOrganizerItemPriority::VeryLowPriority);
         QTest::newRow("priority 7")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("8"));
+        property.setValue(QStringLiteral("8"));
         detail.setPriority(QOrganizerItemPriority::ExtremelyLowPriority);
         QTest::newRow("priority 8")
             << (QList<QOrganizerItemDetail>() << detail)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("9"));
+        property.setValue(QStringLiteral("9"));
         detail.setPriority(QOrganizerItemPriority::LowestPriority);
         QTest::newRow("priority 9")
             << (QList<QOrganizerItemDetail>() << detail)
@@ -1104,14 +1104,14 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
     {
         QList<QVersitProperty> properties;
         QVersitProperty dtstart;
-        dtstart.setName(QLatin1String("DTSTART"));
-        dtstart.setValue(QLatin1String("20100102"));
-        dtstart.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        dtstart.setName(QStringLiteral("DTSTART"));
+        dtstart.setValue(QStringLiteral("20100102"));
+        dtstart.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
         properties << dtstart;
         QVersitProperty due;
-        due.setName(QLatin1String("DUE"));
-        due.setValue(QLatin1String("20100103"));
-        due.insertParameter(QLatin1String("VALUE"), QLatin1String("DATE"));
+        due.setName(QStringLiteral("DUE"));
+        due.setValue(QStringLiteral("20100103"));
+        due.insertParameter(QStringLiteral("VALUE"), QStringLiteral("DATE"));
         properties << due;
         QOrganizerTodoTime todoTime;
         todoTime.setStartDateTime(QDateTime(QDate(2010, 1, 2), QTime(3, 4, 5)));
@@ -1126,28 +1126,28 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QVersitDocument valarmDocument(QVersitDocument::ICalendar20Type);
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("AUDIO"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("AUDIO"));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("END"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemAudibleReminder audibleReminder;
         audibleReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -1163,38 +1163,38 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("DISPLAY"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("DISPLAY"));
         valarmProperties << property;
-        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("END"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String("Test visual reminder"));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral("Test visual reminder"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
         visualReminder.setRepetition(3, 5);
         visualReminder.setSecondsBeforeStart(90);
-        visualReminder.setMessage(QLatin1String("Test visual reminder"));
+        visualReminder.setMessage(QStringLiteral("Test visual reminder"));
         QTest::newRow("visual reminder") << (QList<QOrganizerItemDetail>() << visualReminder)
             << (QList<QVersitProperty>() << property);
     }
@@ -1205,32 +1205,32 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("DISPLAY"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("DISPLAY"));
         valarmProperties << property;
-        property.setName(QLatin1String("x-QTPROJECT-ATTACH"));
-        property.setValue(QUrl(QLatin1String("http://qt.nokia.com")));
+        property.setName(QStringLiteral("x-QTPROJECT-ATTACH"));
+        property.setValue(QUrl(QStringLiteral("http://qt.nokia.com")));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("END"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setDataUrl(QUrl("http://qt.nokia.com"));
@@ -1246,46 +1246,46 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("EMAIL"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("EMAIL"));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("END"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String("Test email body"));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral("Test email body"));
         valarmProperties << property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String("Test email subject"));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral("Test email subject"));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTENDEE"));
-        property.setValue(QLatin1String("First email recipient"));
+        property.setName(QStringLiteral("ATTENDEE"));
+        property.setValue(QStringLiteral("First email recipient"));
         valarmProperties << property;
-        property.setValue(QLatin1String("Second email recipient"));
+        property.setValue(QStringLiteral("Second email recipient"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemEmailReminder emailReminder;
         QVariantList attachments;
         emailReminder.setRepetition(3, 5);
         emailReminder.setSecondsBeforeStart(90);
-        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
-                                    << QLatin1String("Second email recipient")));
-        emailReminder.setContents(QLatin1String("Test email subject"),
-                                  QLatin1String("Test email body"),
+        emailReminder.setRecipients((QStringList() << QStringLiteral("First email recipient")
+                                    << QStringLiteral("Second email recipient")));
+        emailReminder.setContents(QStringLiteral("Test email subject"),
+                                  QStringLiteral("Test email body"),
                                   attachments);
         QTest::newRow("email reminder") << (QList<QOrganizerItemDetail>() << emailReminder)
             << (QList<QVersitProperty>() << property);
@@ -1297,44 +1297,44 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
         QList<QVersitProperty> valarmProperties;
         QMultiHash<QString, QString> parameters;
 
-        property.setName(QLatin1String("ACTION"));
-        property.setValue(QLatin1String("EMAIL"));
+        property.setName(QStringLiteral("ACTION"));
+        property.setValue(QStringLiteral("EMAIL"));
         valarmProperties << property;
-        property.setName(QLatin1String("DURATION"));
-        property.setValue(QLatin1String("PT5S"));
+        property.setName(QStringLiteral("DURATION"));
+        property.setValue(QStringLiteral("PT5S"));
         valarmProperties << property;
-        property.setName(QLatin1String("REPEAT"));
+        property.setName(QStringLiteral("REPEAT"));
         property.setValue(3);
         valarmProperties << property;
-        property.setName(QLatin1String("TRIGGER"));
-        parameters.insert(QLatin1String("RELATED"), QLatin1String("END"));
+        property.setName(QStringLiteral("TRIGGER"));
+        parameters.insert(QStringLiteral("RELATED"), QStringLiteral("END"));
         property.setParameters(parameters);
-        property.setValue(QLatin1String("-PT90S"));
+        property.setValue(QStringLiteral("-PT90S"));
         valarmProperties << property;
         property.clear();
-        property.setName(QLatin1String("DESCRIPTION"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("DESCRIPTION"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
-        property.setName(QLatin1String("SUMMARY"));
-        property.setValue(QLatin1String(""));
+        property.setName(QStringLiteral("SUMMARY"));
+        property.setValue(QStringLiteral(""));
         valarmProperties << property;
-        property.setName(QLatin1String("ATTENDEE"));
-        property.setValue(QLatin1String("First email recipient"));
+        property.setName(QStringLiteral("ATTENDEE"));
+        property.setValue(QStringLiteral("First email recipient"));
         valarmProperties << property;
-        property.setValue(QLatin1String("Second email recipient"));
+        property.setValue(QStringLiteral("Second email recipient"));
         valarmProperties << property;
 
         valarmDocument.setComponentType("VALARM");
         valarmDocument.setProperties(valarmProperties);
         property.setValueType(QVersitProperty::VersitDocumentType);
-        property.setName(QLatin1String("VALARM"));
+        property.setName(QStringLiteral("VALARM"));
         property.setValue(QVariant::fromValue(valarmDocument));
         QOrganizerItemEmailReminder emailReminder;
         QVariantList attachments;
         emailReminder.setRepetition(3, 5);
         emailReminder.setSecondsBeforeStart(90);
-        emailReminder.setRecipients((QStringList() << QLatin1String("First email recipient")
-                                    << QLatin1String("Second email recipient")));
+        emailReminder.setRecipients((QStringList() << QStringLiteral("First email recipient")
+                                    << QStringLiteral("Second email recipient")));
         emailReminder.setValue(QOrganizerItemEmailReminder::FieldAttachments, attachments);
         QTest::newRow("email reminder: no subject, no body") << (QList<QOrganizerItemDetail>() << emailReminder)
             << (QList<QVersitProperty>() << property);
@@ -1343,21 +1343,21 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("STATUS"));
-        property.setValue(QLatin1String("COMPLETED"));
+        property.setName(QStringLiteral("STATUS"));
+        property.setValue(QStringLiteral("COMPLETED"));
         QOrganizerTodoProgress progress;
         progress.setStatus(QOrganizerTodoProgress::StatusComplete);
         QTest::newRow("status completed")
             << (QList<QOrganizerItemDetail>() << progress)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("NEEDS-ACTION"));
+        property.setValue(QStringLiteral("NEEDS-ACTION"));
         progress.setStatus(QOrganizerTodoProgress::StatusNotStarted);
         QTest::newRow("status needs-action")
             << (QList<QOrganizerItemDetail>() << progress)
             << (QList<QVersitProperty>() << property);
 
-        property.setValue(QLatin1String("IN-PROCESS"));
+        property.setValue(QStringLiteral("IN-PROCESS"));
         progress.setStatus(QOrganizerTodoProgress::StatusInProgress);
         QTest::newRow("status in-process")
             << (QList<QOrganizerItemDetail>() << progress)
@@ -1366,8 +1366,8 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("PERCENT-COMPLETE"));
-        property.setValue(QLatin1String("42"));
+        property.setName(QStringLiteral("PERCENT-COMPLETE"));
+        property.setValue(QStringLiteral("42"));
         QOrganizerTodoProgress progress;
         progress.setPercentageComplete(42);
         QTest::newRow("percent-complete")
@@ -1377,8 +1377,8 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("COMPLETED"));
-        property.setValue(QLatin1String("20100609T161500"));
+        property.setName(QStringLiteral("COMPLETED"));
+        property.setValue(QStringLiteral("20100609T161500"));
         QOrganizerTodoProgress progress;
         progress.setFinishedDateTime(QDateTime(QDate(2010, 6, 9), QTime(16, 15, 0)));
         QTest::newRow("completed")
@@ -1388,17 +1388,17 @@ void tst_QVersitOrganizerExporter::testExportTodoDetails_data()
 
     {
         QVersitProperty property;
-        property.setName(QLatin1String("CATEGORIES"));
-        property.setValue(QLatin1String("Important Event"));
+        property.setName(QStringLiteral("CATEGORIES"));
+        property.setValue(QStringLiteral("Important Event"));
         QOrganizerItemTag tag;
-        tag.setTag(QLatin1String("Important Event"));
+        tag.setTag(QStringLiteral("Important Event"));
         QTest::newRow("tag 1")
                 << (QList<QOrganizerItemDetail>() << tag)
                 << (QList<QVersitProperty>() << property);
 
         // Set another one for multiple handling test
-        property.setValue(QLatin1String("Important Event 2"));
-        tag.setTag(QLatin1String("Important Event 2"));
+        property.setValue(QStringLiteral("Important Event 2"));
+        tag.setTag(QStringLiteral("Important Event 2"));
         QTest::newRow("tag 2")
                 << (QList<QOrganizerItemDetail>() << tag)
                 << (QList<QVersitProperty>() << property);

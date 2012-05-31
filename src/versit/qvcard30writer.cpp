@@ -50,9 +50,9 @@ QTVERSIT_BEGIN_NAMESPACE
 QVCard30Writer::QVCard30Writer(QVersitDocument::VersitType type) : QVersitDocumentWriter(type)
 {
     mPropertyNameMappings.insert(
-        QLatin1String("X-NICKNAME"),QLatin1String("NICKNAME"));
+        QStringLiteral("X-NICKNAME"),QStringLiteral("NICKNAME"));
     mPropertyNameMappings.insert(
-        QLatin1String("X-IMPP"),QLatin1String("IMPP"));
+        QStringLiteral("X-IMPP"),QStringLiteral("IMPP"));
 }
 
 /*! Destroys a writer. */
@@ -72,10 +72,10 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
 
     QVariant variant(modifiedProperty.variantValue());
     if (variant.type() == QVariant::ByteArray) {
-        modifiedProperty.insertParameter(QLatin1String("ENCODING"), QLatin1String("b"));
+        modifiedProperty.insertParameter(QStringLiteral("ENCODING"), QStringLiteral("b"));
     }
     encodeParameters(modifiedProperty.parameters());
-    writeString(QLatin1String(":"));
+    writeString(QStringLiteral(":"));
 
     QString renderedValue;
     QByteArray renderedBytes;
@@ -101,14 +101,14 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
         QStringList values = property.variantValue().toStringList();
         QString separator;
         if (property.valueType() == QVersitProperty::CompoundType) {
-            separator = QLatin1String(";");
+            separator = QStringLiteral(";");
         } else {
             if (property.valueType() != QVersitProperty::ListType) {
                 qWarning("Variant value is a QStringList but the property's value type is neither "
                          "CompoundType or ListType");
             }
             // Assume it's a ListType
-            separator = QLatin1String(",");
+            separator = QStringLiteral(",");
         }
         bool first = true;
         foreach (QString value, values) {
@@ -142,14 +142,14 @@ void QVCard30Writer::encodeParameters(const QMultiHash<QString,QString>& paramet
 {
     QList<QString> names = parameters.uniqueKeys();
     foreach (QString nameString, names) {
-        writeString(QLatin1String(";"));
+        writeString(QStringLiteral(";"));
         QStringList values = parameters.values(nameString);
         backSlashEscape(&nameString);
         writeString(nameString);
-        writeString(QLatin1String("="));
+        writeString(QStringLiteral("="));
         for (int i=0; i<values.size(); i++) {
             if (i > 0)
-                writeString(QLatin1String(","));
+                writeString(QStringLiteral(","));
             QString value = values.at(i);
 
             backSlashEscape(&value);
@@ -166,10 +166,10 @@ void QVCard30Writer::encodeParameters(const QMultiHash<QString,QString>& paramet
  */
 void QVCard30Writer::backSlashEscape(QString* text)
 {
-    static const QString m1(QLatin1String("([;,\\\\])"));
-    static const QString r1(QLatin1String("\\\\1"));
-    static const QString m2(QLatin1String("\r\n|\r|\n"));
-    static const QString r2(QLatin1String("\\n"));
+    static const QString m1(QStringLiteral("([;,\\\\])"));
+    static const QString r1(QStringLiteral("\\\\1"));
+    static const QString m2(QStringLiteral("\r\n|\r|\n"));
+    static const QString r2(QStringLiteral("\\n"));
     /* replaces ; with \;
                 , with \,
                 \ with \\

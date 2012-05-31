@@ -106,7 +106,7 @@ public:
         return m_managerUri < static_cast<const BasicCollectionLocalId*>(other)->m_managerUri;
     }
     QString managerUri() const {
-        static const QString uri(QLatin1String("qtorganizer:basic:"));
+        static const QString uri(QStringLiteral("qtorganizer:basic:"));
         return uri;
     }
     QOrganizerCollectionEngineId* clone() const {

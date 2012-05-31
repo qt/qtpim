@@ -131,7 +131,7 @@ QStringList QContactManager::availableManagers()
     QContactManagerData::loadFactoriesMetadata();
     ret = QContactManagerData::m_managerNames;
 
-    ret << QLatin1String("invalid");
+    ret << QStringLiteral("invalid");
 
     // now swizzle the default engine to pole position
 #if defined(Q_CONTACTS_DEFAULT_ENGINE)
@@ -157,7 +157,7 @@ bool QContactManager::parseUri(const QString &uri, QString *pManagerId, QMap<QSt
     QStringList colonSplit = uri.split(QLatin1Char(':'));
     QString prefix = colonSplit.value(0);
 
-    if (prefix != QLatin1String("qtcontacts"))
+    if (prefix != QStringLiteral("qtcontacts"))
         return false;
 
     QString managerName = colonSplit.value(1);
@@ -172,22 +172,22 @@ bool QContactManager::parseUri(const QString &uri, QString *pManagerId, QMap<QSt
 
     // Now we have to decode each parameter
     if (!paramString.isEmpty()) {
-        QStringList params = paramString.split(QRegExp(QLatin1String("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
+        QStringList params = paramString.split(QRegExp(QStringLiteral("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
         // If we have an empty string for paramstring, we get one entry in params,
         // so skip that case.
         for(int i = 0; i < params.count(); i++) {
             /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
-            QStringList paramChunk = params.value(i).split(QLatin1String("="), QString::KeepEmptyParts);
+            QStringList paramChunk = params.value(i).split(QStringLiteral("="), QString::KeepEmptyParts);
 
             if (paramChunk.count() != 2)
                 return false;
 
             QString arg = paramChunk.value(0);
             QString param = paramChunk.value(1);
-            arg.replace(QLatin1String("&equ;"), QLatin1String("="));
-            arg.replace(QLatin1String("&amp;"), QLatin1String("&"));
-            param.replace(QLatin1String("&equ;"), QLatin1String("="));
-            param.replace(QLatin1String("&amp;"), QLatin1String("&"));
+            arg.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            arg.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+            param.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            param.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
             if (arg.isEmpty())
                 return false;
             outParams.insert(arg, param);
@@ -210,7 +210,7 @@ bool QContactManager::parseUri(const QString &uri, QString *pManagerId, QMap<QSt
 */
 QString QContactManager::buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion)
 {
-    QString ret(QLatin1String("qtcontacts:%1:%2"));
+    QString ret(QStringLiteral("qtcontacts:%1:%2"));
     // we have to escape each param
     QStringList escapedParams;
     QStringList keys = params.keys();
@@ -224,13 +224,13 @@ QString QContactManager::buildUri(const QString &managerName, const QMap<QString
     }
 
     if (implementationVersion != -1) {
-        QString versionString = QString(QLatin1String(QTCONTACTS_IMPLEMENTATION_VERSION_NAME));
+        QString versionString = QString(QStringLiteral(QTCONTACTS_IMPLEMENTATION_VERSION_NAME));
         versionString += QString::fromLatin1("=");
         versionString += QString::number(implementationVersion);
         escapedParams.append(versionString);
     }
 
-    return ret.arg(managerName, escapedParams.join(QLatin1String("&")));
+    return ret.arg(managerName, escapedParams.join(QStringLiteral("&")));
 }
 
 /*!
@@ -248,7 +248,7 @@ QContactManager* QContactManager::fromUri(const QString &managerUri, QObject *pa
             return new QContactManager(id, parameters, parent);
         } else {
             // invalid
-            return new QContactManager(QLatin1String("invalid"), QMap<QString, QString>(), parent);
+            return new QContactManager(QStringLiteral("invalid"), QMap<QString, QString>(), parent);
         }
     }
 }
@@ -300,7 +300,7 @@ QContactManager::QContactManager(const QString &managerName, int implementationV
     d(new QContactManagerData)
 {
     QMap<QString, QString> params = parameters;
-    params[QString(QLatin1String(QTCONTACTS_IMPLEMENTATION_VERSION_NAME))] = QString::number(implementationVersion);
+    params[QString(QStringLiteral(QTCONTACTS_IMPLEMENTATION_VERSION_NAME))] = QString::number(implementationVersion);
     createEngine(managerName, params);
 }
 

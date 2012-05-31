@@ -243,7 +243,7 @@ void QVersitContactExporterPrivate::ensureDocumentContainsName(QVersitDocument* 
     bool containsN = false;
     foreach (const QVersitProperty& property, document->properties()) {
         const QString& name = property.name();
-        if (name == QLatin1String("N")) {
+        if (name == QStringLiteral("N")) {
             containsN = true;
         }
     }
@@ -251,7 +251,7 @@ void QVersitContactExporterPrivate::ensureDocumentContainsName(QVersitDocument* 
     if (!containsN) {
         QVersitProperty nProperty;
         nProperty.setValueType(QVersitProperty::CompoundType);
-        nProperty.setName(QLatin1String("N"));
+        nProperty.setName(QStringLiteral("N"));
         nProperty.setValue(QStringList() << QString() << QString()
                            << QString() << QString() << QString());
         document->addProperty(nProperty);
@@ -312,9 +312,9 @@ void QVersitContactExporterPrivate::encodePhoneNumber(
 
     QVersitProperty property;
     if (subTypes.contains(QContactPhoneNumber::SubTypeAssistant))
-        property.setName(QLatin1String("X-ASSISTANT-TEL"));
+        property.setName(QStringLiteral("X-ASSISTANT-TEL"));
     else
-        property.setName(QLatin1String("TEL"));
+        property.setName(QStringLiteral("TEL"));
     encodeParameters(property, detail.type(), phoneNumberContextInt, subTypes);
     property.setValue(phoneNumber.number());
     *generatedProperties << property;
@@ -522,8 +522,8 @@ void QVersitContactExporterPrivate::encodeDisplayLabel(
 {
     const QContactDisplayLabel &displaylabelDetail = static_cast<const QContactDisplayLabel &>(detail);
     QVersitProperty property =
-        VersitUtils::takeProperty(document, QLatin1String("FN"), removedProperties);
-    property.setName(QLatin1String("FN"));
+        VersitUtils::takeProperty(document, QStringLiteral("FN"), removedProperties);
+    property.setName(QStringLiteral("FN"));
     QStringList value(property.variantValue().toStringList());
     value.append(displaylabelDetail.label());
     property.setValue(value);
@@ -577,14 +577,14 @@ void QVersitContactExporterPrivate::encodeOrganization(
     const QContactOrganization &organization = static_cast<const QContactOrganization &>(detail);
     if (organization.title().length() > 0) {
         QVersitProperty property;
-        property.setName(QLatin1String("TITLE"));
+        property.setName(QStringLiteral("TITLE"));
         property.setValue(organization.title());
         *generatedProperties << property;
         *processedFields << QContactOrganization::FieldTitle;
     }
     if (organization.name().length() > 0 || organization.department().size() > 0) {
         QVersitProperty property;
-        property.setName(QLatin1String("ORG"));
+        property.setName(QStringLiteral("ORG"));
         QStringList values(organization.name());
         values.append(organization.department());
         property.setValue(values);
@@ -596,14 +596,14 @@ void QVersitContactExporterPrivate::encodeOrganization(
     if (organization.logoUrl().isValid()) {
         QVersitProperty property;
         if (encodeContentFromFile(organization.logoUrl().toString(), property)) {
-            property.setName(QLatin1String("LOGO"));
+            property.setName(QStringLiteral("LOGO"));
             *generatedProperties << property;
             *processedFields << QContactOrganization::FieldLogoUrl;
         }
     }
     if (organization.assistantName().length() > 0) {
         QVersitProperty property;
-        property.setName(QLatin1String("X-ASSISTANT"));
+        property.setName(QStringLiteral("X-ASSISTANT"));
         property.setValue(organization.assistantName());
         *generatedProperties << property;
         *processedFields << QContactOrganization::FieldAssistantName;
@@ -611,7 +611,7 @@ void QVersitContactExporterPrivate::encodeOrganization(
 
     if (organization.role().length() > 0) {
         QVersitProperty property;
-        property.setName(QLatin1String("ROLE"));
+        property.setName(QStringLiteral("ROLE"));
         property.setValue(organization.role());
         *generatedProperties << property;
         *processedFields << QContactOrganization::FieldRole;
@@ -629,8 +629,8 @@ void QVersitContactExporterPrivate::encodeRingtone(
     QUrl audioUrl(ringtone.audioRingtoneUrl());
     // Url value
     if (!audioUrl.scheme().isEmpty() && !audioUrl.host().isEmpty() &&
-            audioUrl.scheme() != QLatin1String("file")) {
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("URL"));
+            audioUrl.scheme() != QStringLiteral("file")) {
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("URL"));
         property.setValue(audioUrl.toString());
         *generatedProperties << property;
         *processedFields << QContactRingtone::FieldAudioRingtoneUrl;
@@ -650,15 +650,15 @@ void QVersitContactExporterPrivate::encodeAvatar(
     QSet<int>* processedFields)
 {
     QVersitProperty property;
-    property.setName(QLatin1String("PHOTO"));
+    property.setName(QStringLiteral("PHOTO"));
     const QContactAvatar &contactAvatar = static_cast<const QContactAvatar &>(detail);
     QUrl imageUrl(contactAvatar.imageUrl());
     // XXX: fix up this mess: checking the scheme here and in encodeContentFromFile,
     // organisation logo and ringtone are QStrings but avatar is a QUrl
     if (!imageUrl.scheme().isEmpty()
             && !imageUrl.host().isEmpty()
-            && imageUrl.scheme() != QLatin1String("file")) {
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("URL"));
+            && imageUrl.scheme() != QStringLiteral("file")) {
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("URL"));
         property.setValue(imageUrl.toString());
         *generatedProperties << property;
         *processedFields << QContactAvatar::FieldImageUrl;
@@ -686,13 +686,13 @@ void QVersitContactExporterPrivate::encodeGender(
     property.setName(mPropertyMappings.value(detail.type()).second);
     switch (gender.gender()) {
     case QContactGender::GenderMale:
-        property.setValue(QLatin1String("Male"));
+        property.setValue(QStringLiteral("Male"));
         break;
     case QContactGender::GenderFemale:
-        property.setValue(QLatin1String("Female"));
+        property.setValue(QStringLiteral("Female"));
         break;
     case QContactGender::GenderUnspecified:
-        property.setValue(QLatin1String("Unspecified"));
+        property.setValue(QStringLiteral("Unspecified"));
         break;
     default:
         // May only happen if new gender values are added to QContactGender
@@ -716,8 +716,8 @@ void QVersitContactExporterPrivate::encodeNickname(
 {
     const QContactNickname &nicknameDetail = static_cast<const QContactNickname &>(detail);
     QVersitProperty property =
-        VersitUtils::takeProperty(document, QLatin1String("X-NICKNAME"), removedProperties);
-    property.setName(QLatin1String("X-NICKNAME"));
+        VersitUtils::takeProperty(document, QStringLiteral("X-NICKNAME"), removedProperties);
+    property.setName(QStringLiteral("X-NICKNAME"));
     QStringList value(property.variantValue().toStringList());
     value.append(nicknameDetail.nickname());
     property.setValue(value);
@@ -738,8 +738,8 @@ void QVersitContactExporterPrivate::encodeTag(
 {
     const QContactTag &tagDetail = static_cast<const QContactTag &>(detail);
     QVersitProperty property =
-        VersitUtils::takeProperty(document, QLatin1String("CATEGORIES"), removedProperties);
-    property.setName(QLatin1String("CATEGORIES"));
+        VersitUtils::takeProperty(document, QStringLiteral("CATEGORIES"), removedProperties);
+    property.setName(QStringLiteral("CATEGORIES"));
     QStringList value(property.variantValue().toStringList());
     value.append(tagDetail.tag());
     property.setValue(value);
@@ -780,25 +780,25 @@ void QVersitContactExporterPrivate::encodeOnlineAccount(
     QString propertyName;
 
     if (protocol == QContactOnlineAccount::ProtocolJabber) {
-        propertyName = QLatin1String("X-JABBER");
+        propertyName = QStringLiteral("X-JABBER");
     } else if (protocol == QContactOnlineAccount::ProtocolAim) {
-        propertyName = QLatin1String("X-AIM");
+        propertyName = QStringLiteral("X-AIM");
     } else if (protocol == QContactOnlineAccount::ProtocolIcq) {
-        propertyName = QLatin1String("X-ICQ");
+        propertyName = QStringLiteral("X-ICQ");
     } else if (protocol == QContactOnlineAccount::ProtocolMsn) {
-        propertyName = QLatin1String("X-MSN");
+        propertyName = QStringLiteral("X-MSN");
     } else if (protocol == QContactOnlineAccount::ProtocolQq) {
-        propertyName = QLatin1String("X-QQ");
+        propertyName = QStringLiteral("X-QQ");
     } else if (protocol == QContactOnlineAccount::ProtocolYahoo) {
-        propertyName = QLatin1String("X-YAHOO");
+        propertyName = QStringLiteral("X-YAHOO");
     } else if (protocol == QContactOnlineAccount::ProtocolSkype) {
-        propertyName = QLatin1String("X-SKYPE");
+        propertyName = QStringLiteral("X-SKYPE");
     } else if (subTypes.contains(QContactOnlineAccount::SubTypeSip) ||
                subTypes.contains(QContactOnlineAccount::SubTypeSipVoip) ||
                subTypes.contains(QContactOnlineAccount::SubTypeVideoShare)) {
-        propertyName = QLatin1String("X-SIP");
+        propertyName = QStringLiteral("X-SIP");
     } else if (subTypes.contains(QContactOnlineAccount::SubTypeImpp)) {
-        propertyName = QLatin1String("X-IMPP");
+        propertyName = QStringLiteral("X-IMPP");
     }
 
     if (!propertyName.isEmpty()) {
@@ -829,7 +829,7 @@ void QVersitContactExporterPrivate::encodeFamily(
 
     if (family.spouse().size()) {
         QVersitProperty property;
-        property.setName(QLatin1String("X-SPOUSE"));
+        property.setName(QStringLiteral("X-SPOUSE"));
         property.setValue(family.spouse());
         *generatedProperties << property;
         *processedFields << QContactFamily::FieldSpouse;
@@ -837,7 +837,7 @@ void QVersitContactExporterPrivate::encodeFamily(
 
     if (family.children().size()) {
         QVersitProperty property;
-        property.setName(QLatin1String("X-CHILDREN"));
+        property.setName(QStringLiteral("X-CHILDREN"));
         property.setValue(family.children());
         property.setValueType(QVersitProperty::ListType);
         *generatedProperties << property;
@@ -898,7 +898,7 @@ bool QVersitContactExporterPrivate::isValidRemoteUrl(
     QUrl remoteResource(resourceIdentifier);
     if ((!remoteResource.scheme().isEmpty() &&
          !remoteResource.host().isEmpty()) ||
-        resourceIdentifier.contains(QLatin1String("www."), Qt::CaseInsensitive))
+        resourceIdentifier.contains(QStringLiteral("www."), Qt::CaseInsensitive))
         return true;
     return false;
 }
@@ -921,7 +921,7 @@ void QVersitContactExporterPrivate::encodeParameters(
         if (mappedValue.length() > 0) {
             // QVersitProperty::addParameter inserts into beginning.
             // This is why the last value is taken from the list
-            property.insertParameter(QLatin1String("TYPE"),mappedValue);
+            property.insertParameter(QStringLiteral("TYPE"),mappedValue);
         }
     }
 
@@ -932,7 +932,7 @@ void QVersitContactExporterPrivate::encodeParameters(
         if (mappedValue.length() > 0) {
             // QVersitProperty::addParameter inserts into beginning.
             // This is why the last value is taken from the list
-            property.insertParameter(QLatin1String("TYPE"),mappedValue);
+            property.insertParameter(QStringLiteral("TYPE"),mappedValue);
         }
     }
 }
@@ -950,7 +950,7 @@ bool QVersitContactExporterPrivate::encodeContentFromFile(const QString& resourc
     if (isValidRemoteUrl( resourcePath )) {
         encodeContent = true;
         value.setValue(resourcePath);
-        property.insertParameter(QLatin1String("VALUE"), QLatin1String("uri"));
+        property.insertParameter(QStringLiteral("VALUE"), QStringLiteral("uri"));
     } else if (mResourceHandler
                && mResourceHandler->loadResource(resourcePath, &imageData, &mimeType)) {
         value.setValue(imageData);
@@ -958,7 +958,7 @@ bool QVersitContactExporterPrivate::encodeContentFromFile(const QString& resourc
             // If mimeType is (eg.) "image/jpeg", set type parameter to "JPEG"
             int slashIndex = mimeType.indexOf(QLatin1Char('/'));
             if (slashIndex >= 0)
-                property.insertParameter(QLatin1String("TYPE"),
+                property.insertParameter(QStringLiteral("TYPE"),
                                          mimeType.remove(0, slashIndex+1).toUpper());
         }
         encodeContent = true;

@@ -194,7 +194,7 @@ QOrganizerManagerEngine::QOrganizerManagerEngine(QObject *parent)
 */
 QString QOrganizerManagerEngine::managerName() const
 {
-    return QString(QLatin1String("invalid"));
+    return QString(QStringLiteral("invalid"));
 }
 
 /*!

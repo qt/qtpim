@@ -101,7 +101,7 @@ QOrganizerCollectionEngineId* QOrganizerItemSkeletonFactory::createCollectionEng
 QString QOrganizerItemSkeletonFactory::managerName() const
 {
     /* TODO - put your engine name here */
-    return QLatin1String("skeleton");
+    return QStringLiteral("skeleton");
 }
 
 QOrganizerItemSkeletonEngineId::QOrganizerItemSkeletonEngineId()
@@ -194,7 +194,7 @@ QString QOrganizerItemSkeletonEngineId::managerUri() const
 {
     // TODO: make this return the actual managerUri (including params) of the
     // engine it is associated with
-    static const QString uri(QLatin1String("qtorganizer:skeleton:"));
+    static const QString uri(QStringLiteral("qtorganizer:skeleton:"));
     return uri;
 }
 
@@ -368,7 +368,7 @@ QString QOrganizerCollectionSkeletonEngineId::managerUri() const
 {
     // TODO: make this return the actual managerUri (including params) of the
     // engine it is associated with
-    static const QString uri(QLatin1String("qtorganizer:skeleton:"));
+    static const QString uri(QStringLiteral("qtorganizer:skeleton:"));
     return uri;
 }
 
@@ -460,7 +460,7 @@ QOrganizerItemSkeletonEngine::~QOrganizerItemSkeletonEngine()
 QString QOrganizerItemSkeletonEngine::managerName() const
 {
     /* TODO - put your engine name here */
-    return QLatin1String("skeleton");
+    return QStringLiteral("skeleton");
 }
 
 QMap<QString, QString> QOrganizerItemSkeletonEngine::managerParameters() const

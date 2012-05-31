@@ -131,7 +131,7 @@ void QOrganizerManagerData::loadStaticFactories()
                 if (showDebug)
                     qDebug() << "Static: found an engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name))
                         qWarning() << "Static organizeritems plugin" << name << "has the same name as a currently loaded plugin; ignored";
@@ -169,7 +169,7 @@ void QOrganizerManagerData::loadFactories()
                 if (showDebug)
                     qDebug() << "Dynamic: found a organizer engine plugin" << f << "with name" << name;
 #endif
-                if (name != QLatin1String("invalid") && !name.isEmpty()) {
+                if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name))
                         qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";

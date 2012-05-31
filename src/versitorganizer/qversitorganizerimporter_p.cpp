@@ -81,13 +81,13 @@ bool QVersitOrganizerImporterPrivate::importDocument(
         QOrganizerItem* item,
         QVersitOrganizerImporter::Error* error)
 {
-    if (subDocument.componentType() == QLatin1String("VEVENT")) {
+    if (subDocument.componentType() == QStringLiteral("VEVENT")) {
         item->setType(QOrganizerItemType::TypeEvent);
-    } else if (subDocument.componentType() == QLatin1String("VTODO")) {
+    } else if (subDocument.componentType() == QStringLiteral("VTODO")) {
         item->setType(QOrganizerItemType::TypeTodo);
-    } else if (subDocument.componentType() == QLatin1String("VJOURNAL")) {
+    } else if (subDocument.componentType() == QStringLiteral("VJOURNAL")) {
         item->setType(QOrganizerItemType::TypeJournal);
-    } else if (subDocument.componentType() == QLatin1String("VTIMEZONE")) {
+    } else if (subDocument.componentType() == QStringLiteral("VTIMEZONE")) {
         mTimeZones.addTimeZone(importTimeZone(subDocument));
         *error = QVersitOrganizerImporter::NoError;
         return false;
@@ -108,7 +108,7 @@ bool QVersitOrganizerImporterPrivate::importDocument(
         foreach (const QVersitDocument &nestedSubDoc, subDocument.subDocuments())
             foreach (const QVersitProperty &nestedProp, nestedSubDoc.properties()) {
                 importProperty(nestedSubDoc, nestedProp, item);
-                if (nestedSubDoc.componentType() == QLatin1String("VALARM"))
+                if (nestedSubDoc.componentType() == QStringLiteral("VALARM"))
                     break;
             }
     }
@@ -131,58 +131,58 @@ void QVersitOrganizerImporterPrivate::importProperty(
     QList<QOrganizerItemDetail> updatedDetails;
 
     bool success = false;
-    if (property.name() == QLatin1String("CREATED")) {
+    if (property.name() == QStringLiteral("CREATED")) {
         success = createTimestampCreated(property, item, &updatedDetails);
-    } else if (property.name() == QLatin1String("LAST-MODIFIED")) {
+    } else if (property.name() == QStringLiteral("LAST-MODIFIED")) {
         success = createTimestampModified(property, item, &updatedDetails);
-    } else if (property.name() == QLatin1String("X-QTPROJECT-VERSION")) {
+    } else if (property.name() == QStringLiteral("X-QTPROJECT-VERSION")) {
         success = createVersion(property, item, &updatedDetails);
-    } else if (property.name() == QLatin1String("PRIORITY")) {
+    } else if (property.name() == QStringLiteral("PRIORITY")) {
         success = createPriority(property, item, &updatedDetails);
-    } else if (property.name() == QLatin1String("COMMENT")) {
+    } else if (property.name() == QStringLiteral("COMMENT")) {
         success = createComment(property, &updatedDetails);
     } else if (mPropertyMappings.contains(property.name())) {
         success = createSimpleDetail(property, item, &updatedDetails);
-    } else if (document.componentType() == QLatin1String("VEVENT")) {
-        if (property.name() == QLatin1String("DTSTART")) {
+    } else if (document.componentType() == QStringLiteral("VEVENT")) {
+        if (property.name() == QStringLiteral("DTSTART")) {
             success = createStartDateTime(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("DTEND")) {
+        } else if (property.name() == QStringLiteral("DTEND")) {
             success = createEndDateTime(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("DURATION")) {
+        } else if (property.name() == QStringLiteral("DURATION")) {
             success = createDuration(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RRULE")
-               || (property.name() == QLatin1String("EXRULE"))) {
+        } else if (property.name() == QStringLiteral("RRULE")
+               || (property.name() == QStringLiteral("EXRULE"))) {
             success = createRecurrenceRule(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RDATE")
-               || (property.name() == QLatin1String("EXDATE"))) {
+        } else if (property.name() == QStringLiteral("RDATE")
+               || (property.name() == QStringLiteral("EXDATE"))) {
             success = createRecurrenceDates(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RECURRENCE-ID")) {
+        } else if (property.name() == QStringLiteral("RECURRENCE-ID")) {
             success = createRecurrenceId(property, item, &updatedDetails);
         }
-    } else if (document.componentType() == QLatin1String("VTODO")) {
-        if (property.name() == QLatin1String("DTSTART")) {
+    } else if (document.componentType() == QStringLiteral("VTODO")) {
+        if (property.name() == QStringLiteral("DTSTART")) {
             success = createTodoStartDateTime(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("DUE")) {
+        } else if (property.name() == QStringLiteral("DUE")) {
             success = createDueDateTime(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RRULE")
-               || (property.name() == QLatin1String("EXRULE"))) {
+        } else if (property.name() == QStringLiteral("RRULE")
+               || (property.name() == QStringLiteral("EXRULE"))) {
             success = createRecurrenceRule(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RDATE")
-               || (property.name() == QLatin1String("EXDATE"))) {
+        } else if (property.name() == QStringLiteral("RDATE")
+               || (property.name() == QStringLiteral("EXDATE"))) {
             success = createRecurrenceDates(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("STATUS")) {
+        } else if (property.name() == QStringLiteral("STATUS")) {
             success = createStatus(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("PERCENT-COMPLETE")) {
+        } else if (property.name() == QStringLiteral("PERCENT-COMPLETE")) {
             success = createPercentageComplete(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("COMPLETED")) {
+        } else if (property.name() == QStringLiteral("COMPLETED")) {
             success = createFinishedDateTime(property, item, &updatedDetails);
-        } else if (property.name() == QLatin1String("RECURRENCE-ID")) {
+        } else if (property.name() == QStringLiteral("RECURRENCE-ID")) {
             success = createRecurrenceId(property, item, &updatedDetails);
         }
-    } else if (document.componentType() == QLatin1String("VALARM")) {
+    } else if (document.componentType() == QStringLiteral("VALARM")) {
             success = createItemReminder(document, item, &updatedDetails);
-    } else if (document.componentType() == QLatin1String("VJOURNAL")) {
-        if (property.name() == QLatin1String("DTSTART")) {
+    } else if (document.componentType() == QStringLiteral("VJOURNAL")) {
+        if (property.name() == QStringLiteral("DTSTART")) {
             success = createJournalEntryDateTime(property, item, &updatedDetails);
         }
     }
@@ -330,29 +330,29 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
     QStringList attendees;
 
     foreach (const QVersitProperty &valarmProperty, valarmProperties) {
-        if (valarmProperty.name() == QLatin1String("TRIGGER")) {
+        if (valarmProperty.name() == QStringLiteral("TRIGGER")) {
             secondsBeforeStart = triggerToSecondsBeforeStart(valarmProperty, *item);
             alreadySetSecondsBeforeStart = true;
-        } else if (valarmProperty.name() == QLatin1String("REPEAT")) {
+        } else if (valarmProperty.name() == QStringLiteral("REPEAT")) {
             repetitionCount = valarmProperty.value().toInt();
-        } else if (valarmProperty.name() == QLatin1String("DURATION")) {
+        } else if (valarmProperty.name() == QStringLiteral("DURATION")) {
             repetitionDelay = Duration::parseDuration(valarmProperty.value()).toSeconds();
-        } else if (valarmProperty.name() == QLatin1String("ACTION")) {
+        } else if (valarmProperty.name() == QStringLiteral("ACTION")) {
             actionValue = valarmProperty.value().toUpper();
-        } else if (valarmProperty.name() == QLatin1String("ATTACH")) {
+        } else if (valarmProperty.name() == QStringLiteral("ATTACH")) {
             attachValues.append(valarmProperty.variantValue());
-        } else if (valarmProperty.name() == QLatin1String("DESCRIPTION")) {
+        } else if (valarmProperty.name() == QStringLiteral("DESCRIPTION")) {
             descriptionValue = valarmProperty.value();
-        } else if (valarmProperty.name() == QLatin1String("SUMMARY")) {
+        } else if (valarmProperty.name() == QStringLiteral("SUMMARY")) {
             summaryValue = valarmProperty.value();
-        } else if (valarmProperty.name() == QLatin1String("ATTENDEE")) {
+        } else if (valarmProperty.name() == QStringLiteral("ATTENDEE")) {
             attendees << valarmProperty.value();
         }
     }
     if ((actionValue.isEmpty()) || (!alreadySetSecondsBeforeStart) ) {
         //ACTION and TRIGGER are mandatory in a VALARM component.
         return false;
-    } else if (actionValue == QLatin1String("AUDIO")) {
+    } else if (actionValue == QStringLiteral("AUDIO")) {
         QOrganizerItemAudibleReminder audibleReminder;
         audibleReminder.setRepetition(repetitionCount, repetitionDelay);
         audibleReminder.setSecondsBeforeStart(secondsBeforeStart);
@@ -360,7 +360,7 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
             audibleReminder.setDataUrl(QUrl(attachValues.first().toString()));
         updatedDetails->append(audibleReminder);
         return true;
-    } else if (actionValue == QLatin1String("DISPLAY")) {
+    } else if (actionValue == QStringLiteral("DISPLAY")) {
         if (descriptionValue.isNull())
             return false;//Invalid since REQUIRED properties are not found
         QOrganizerItemVisualReminder visualReminder;
@@ -373,7 +373,7 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
         } else {
             return false;
         }
-    } else if (actionValue == QLatin1String("EMAIL")) {
+    } else if (actionValue == QStringLiteral("EMAIL")) {
         if (descriptionValue.isNull() || summaryValue.isNull() || attendees.isEmpty())
             return false;//Invalid since REQUIRED properties are not found
         QOrganizerItemEmailReminder emailReminder;
@@ -400,37 +400,37 @@ int QVersitOrganizerImporterPrivate::triggerToSecondsBeforeStart(const QVersitPr
     bool encodedAsDuration = true;
 
     if (!triggerProperty.parameters().isEmpty()) {
-        const QString triggerValue = triggerProperty.parameters().value(QLatin1String("VALUE")).toUpper();
-        if (triggerValue == QLatin1String("DATE-TIME"))
+        const QString triggerValue = triggerProperty.parameters().value(QStringLiteral("VALUE")).toUpper();
+        if (triggerValue == QStringLiteral("DATE-TIME"))
             encodedAsDuration = false;
         else if ( (!triggerValue.isEmpty()) &&
-                  (triggerValue != QLatin1String("DURATION")) ) {
+                  (triggerValue != QStringLiteral("DURATION")) ) {
             return 0;//Invalid trigger property...just return default value.
         }
     }
 
     if (encodedAsDuration) {
-        const QString related = triggerProperty.parameters().value(QLatin1String("RELATED")).toUpper();
+        const QString related = triggerProperty.parameters().value(QStringLiteral("RELATED")).toUpper();
         result = Duration::parseDuration(triggerProperty.value()).toSeconds();
         switch (item.type()) {
         case QOrganizerItemType::TypeTodo:
         case QOrganizerItemType::TypeTodoOccurrence: {
-            if (related == QLatin1String("START")) {
+            if (related == QStringLiteral("START")) {
                 QOrganizerTodoTime todoTime = item.detail(QOrganizerItemDetail::TypeTodoTime);
                 QDateTime relativeTrigger = todoTime.startDateTime().addSecs(result);
                 result = relativeTrigger.secsTo(todoTime.dueDateTime());
-            } else if ( (related.isEmpty()) || (related == QLatin1String("END")) ) {
+            } else if ( (related.isEmpty()) || (related == QStringLiteral("END")) ) {
                 result = (-1 * result);
             }
             break;
         }
         case QOrganizerItemType::TypeEvent:
         case QOrganizerItemType::TypeEventOccurrence: {
-            if (related == QLatin1String("END")) {
+            if (related == QStringLiteral("END")) {
                 QOrganizerEventTime eventTime = item.detail(QOrganizerItemDetail::TypeEventTime);
                 QDateTime relativeTrigger = eventTime.endDateTime().addSecs(result);
                 result = relativeTrigger.secsTo(eventTime.startDateTime());
-            } else if ( (related.isEmpty()) || (related == QLatin1String("START")) ) {
+            } else if ( (related.isEmpty()) || (related == QStringLiteral("START")) ) {
                 result = (-1 * result);
             }
             break;
@@ -633,14 +633,14 @@ QDateTime QVersitOrganizerImporterPrivate::parseDateTime(const QVersitProperty& 
                                                          bool* hasTime) const
 {
     const QMultiHash<QString, QString> parameters = property.parameters();
-    if (parameters.find(QLatin1String("VALUE"), QLatin1String("DATE")) == parameters.constEnd()) {
+    if (parameters.find(QStringLiteral("VALUE"), QStringLiteral("DATE")) == parameters.constEnd()) {
         // try parsing a datetime
         if (hasTime)
             *hasTime = true;
         QDateTime datetime(parseDateTime(property.value()));
         if (datetime.isValid() && datetime.timeSpec() == Qt::LocalTime) {
             QMultiHash<QString, QString> params = property.parameters();
-            QString tzid = params.value(QLatin1String("TZID"));
+            QString tzid = params.value(QStringLiteral("TZID"));
             if (!tzid.isEmpty()) {
                 if (tzid.at(0) == QLatin1Char('/') && mTimeZoneHandler)
                     datetime = mTimeZoneHandler->convertTimeZoneToUtc(datetime, tzid);
@@ -653,7 +653,7 @@ QDateTime QVersitOrganizerImporterPrivate::parseDateTime(const QVersitProperty& 
         if (hasTime)
             *hasTime = false;
         QDateTime retn;
-        retn.setDate(QDate::fromString(property.value(), QLatin1String("yyyyMMdd")));
+        retn.setDate(QDate::fromString(property.value(), QStringLiteral("yyyyMMdd")));
         retn.setTime(QTime(0, 0, 0));
         return retn;
     }
@@ -667,7 +667,7 @@ QDateTime QVersitOrganizerImporterPrivate::parseDateTime(QString str) const
     bool utc = str.endsWith(QLatin1Char('Z'), Qt::CaseInsensitive);
     if (utc)
         str.chop(1); // take away z from end;
-    QDateTime dt(QDateTime::fromString(str, QLatin1String("yyyyMMddTHHmmss")));
+    QDateTime dt(QDateTime::fromString(str, QStringLiteral("yyyyMMddTHHmmss")));
     if (utc)
         dt.setTimeSpec(Qt::UTC);
     return dt;
@@ -686,9 +686,9 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceRule(
     if (!parseRecurRule(property.value(), &rule))
         return false;
     QOrganizerItemRecurrence detail(item->detail(QOrganizerItemDetail::TypeRecurrence));
-    if (property.name() == QLatin1String("RRULE")) {
+    if (property.name() == QStringLiteral("RRULE")) {
         detail.setRecurrenceRules(detail.recurrenceRules() << rule);
-    } else if (property.name() == QLatin1String("EXRULE")) {
+    } else if (property.name() == QStringLiteral("EXRULE")) {
         detail.setExceptionRules(detail.exceptionRules() << rule);
     } 
     updatedDetails->append(detail);
@@ -709,16 +709,16 @@ bool QVersitOrganizerImporterPrivate::parseRecurRule(const QString& str, QOrgani
     QStringList freqParts = freqPart.split(QLatin1Char('='));
     if (freqParts.size() != 2)
         return false;
-    if (freqParts.at(0) != QLatin1String("FREQ"))
+    if (freqParts.at(0) != QStringLiteral("FREQ"))
         return false;
     QString freqValue = freqParts.at(1);
-    if (freqValue == QLatin1String("DAILY")) {
+    if (freqValue == QStringLiteral("DAILY")) {
         rule->setFrequency(QOrganizerRecurrenceRule::Daily);
-    } else if (freqValue == QLatin1String("WEEKLY")) {
+    } else if (freqValue == QStringLiteral("WEEKLY")) {
         rule->setFrequency(QOrganizerRecurrenceRule::Weekly);
-    } else if (freqValue == QLatin1String("MONTHLY")) {
+    } else if (freqValue == QStringLiteral("MONTHLY")) {
         rule->setFrequency(QOrganizerRecurrenceRule::Monthly);
-    } else if (freqValue == QLatin1String("YEARLY")) {
+    } else if (freqValue == QStringLiteral("YEARLY")) {
         rule->setFrequency(QOrganizerRecurrenceRule::Yearly);
     } else {
         return false;
@@ -740,28 +740,28 @@ bool QVersitOrganizerImporterPrivate::parseRecurRule(const QString& str, QOrgani
 void QVersitOrganizerImporterPrivate::parseRecurFragment(const QString& key, const QString& value,
                                                          QOrganizerRecurrenceRule* rule) const
 {
-    if (key == QLatin1String("INTERVAL")) {
+    if (key == QStringLiteral("INTERVAL")) {
         bool ok;
         int n = value.toInt(&ok);
         if (ok && n >= 1)
             rule->setInterval(n);
-    } else if (key == QLatin1String("COUNT")) {
+    } else if (key == QStringLiteral("COUNT")) {
         bool ok;
         int count = value.toInt(&ok);
         if (ok && count >= 0) {
             rule->setLimit(count);
         }
-    } else if (key == QLatin1String("UNTIL")) {
+    } else if (key == QStringLiteral("UNTIL")) {
         QDate date;
         if (value.contains(QLatin1Char('T'))) {
             QDateTime dt = parseDateTime(value);
             date = dt.date();
         } else {
-            date = QDate::fromString(value, QLatin1String("yyyyMMdd"));
+            date = QDate::fromString(value, QStringLiteral("yyyyMMdd"));
         }
         if (date.isValid())
             rule->setLimit(date);
-    } else if (key == QLatin1String("BYDAY")) {
+    } else if (key == QStringLiteral("BYDAY")) {
         QSet<Qt::DayOfWeek> days;
         QStringList dayParts = value.split(QLatin1Char(','));
         foreach (QString dayStr, dayParts) {
@@ -787,17 +787,17 @@ void QVersitOrganizerImporterPrivate::parseRecurFragment(const QString& key, con
         if (!days.isEmpty()) {
             rule->setDaysOfWeek(days);
         }
-    } else if (key == QLatin1String("BYMONTHDAY")) {
+    } else if (key == QStringLiteral("BYMONTHDAY")) {
         QSet<int> days = parseInts(value, -31, 31);
         if (!days.isEmpty()) {
             rule->setDaysOfMonth(days);
         }
-    } else if (key == QLatin1String("BYWEEKNO")) {
+    } else if (key == QStringLiteral("BYWEEKNO")) {
         QSet<int> weeks = parseInts(value, -53, 53);
         if (!weeks.isEmpty()) {
             rule->setWeeksOfYear(weeks);
         }
-    } else if (key == QLatin1String("BYMONTH")) {
+    } else if (key == QStringLiteral("BYMONTH")) {
         QSet<QOrganizerRecurrenceRule::Month> months;
         QStringList monthParts = value.split(QLatin1Char(','));
         foreach (const QString& monthPart, monthParts) {
@@ -810,17 +810,17 @@ void QVersitOrganizerImporterPrivate::parseRecurFragment(const QString& key, con
         if (!months.isEmpty()) {
             rule->setMonthsOfYear(months);
         }
-    } else if (key == QLatin1String("BYYEARDAY")) {
+    } else if (key == QStringLiteral("BYYEARDAY")) {
         QSet<int> days = parseInts(value, -366, 366);
         if (!days.isEmpty()) {
             rule->setDaysOfYear(days);
         }
-    } else if (key == QLatin1String("BYSETPOS")) {
+    } else if (key == QStringLiteral("BYSETPOS")) {
         QSet<int> poss = parseInts(value, -366, 366);
         if (!poss.isEmpty()) {
             rule->setPositions(poss);
         }
-    } else if (key == QLatin1String("WKST")) {
+    } else if (key == QStringLiteral("WKST")) {
         int day = parseDayOfWeek(value);
         if (day != -1) {
             rule->setFirstDayOfWeek((Qt::DayOfWeek)day);
@@ -852,19 +852,19 @@ QSet<int> QVersitOrganizerImporterPrivate::parseInts(const QString& str, int min
  */
 int QVersitOrganizerImporterPrivate::parseDayOfWeek(const QString& str) const
 {
-    if (str == QLatin1String("MO")) {
+    if (str == QStringLiteral("MO")) {
         return Qt::Monday;
-    } else if (str == QLatin1String("TU")) {
+    } else if (str == QStringLiteral("TU")) {
         return Qt::Tuesday;
-    } else if (str == QLatin1String("WE")) {
+    } else if (str == QStringLiteral("WE")) {
         return Qt::Wednesday;
-    } else if (str == QLatin1String("TH")) {
+    } else if (str == QStringLiteral("TH")) {
         return Qt::Thursday;
-    } else if (str == QLatin1String("FR")) {
+    } else if (str == QStringLiteral("FR")) {
         return Qt::Friday;
-    } else if (str == QLatin1String("SA")) {
+    } else if (str == QStringLiteral("SA")) {
         return Qt::Saturday;
-    } else if (str == QLatin1String("SU")) {
+    } else if (str == QStringLiteral("SU")) {
         return Qt::Sunday;
     } else {
         return -1;
@@ -886,9 +886,9 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceDates(
     if (!parseDates(property.value(), &dates))
         return false;
     QOrganizerItemRecurrence detail(item->detail(QOrganizerItemDetail::TypeRecurrence));
-    if (property.name() == QLatin1String("RDATE")) {
+    if (property.name() == QStringLiteral("RDATE")) {
         detail.setRecurrenceDates(detail.recurrenceDates() + dates);
-    } else if (property.name() == QLatin1String("EXDATE")) {
+    } else if (property.name() == QStringLiteral("EXDATE")) {
         detail.setExceptionDates(detail.exceptionDates() + dates);
     } 
     updatedDetails->append(detail);
@@ -924,7 +924,7 @@ QDate QVersitOrganizerImporterPrivate::parseDate(QString str) const
     if (tIndex >= 0) {
         str = str.left(tIndex);
     }
-    return QDate::fromString(str, QLatin1String("yyyyMMdd"));
+    return QDate::fromString(str, QStringLiteral("yyyyMMdd"));
 }
 
 bool QVersitOrganizerImporterPrivate::createStatus(
@@ -932,11 +932,11 @@ bool QVersitOrganizerImporterPrivate::createStatus(
         QOrganizerItem* item,
         QList<QOrganizerItemDetail>* updatedDetails) {
     QOrganizerTodoProgress::Status status;
-    if (property.value() == QLatin1String("COMPLETED"))
+    if (property.value() == QStringLiteral("COMPLETED"))
         status = QOrganizerTodoProgress::StatusComplete;
-    else if (property.value() == QLatin1String("NEEDS-ACTION"))
+    else if (property.value() == QStringLiteral("NEEDS-ACTION"))
         status = QOrganizerTodoProgress::StatusNotStarted;
-    else if (property.value() == QLatin1String("IN-PROCESS"))
+    else if (property.value() == QStringLiteral("IN-PROCESS"))
         status = QOrganizerTodoProgress::StatusInProgress;
     else
         return false;
@@ -987,9 +987,9 @@ Duration Duration::parseDuration(QString str)
 
     Duration dur;
     // Accept a + or - if present
-    if (token == QLatin1String("+")) {
+    if (token == QStringLiteral("+")) {
         token = nextToken(&str);
-    } else if (token == QLatin1String("-")) {
+    } else if (token == QStringLiteral("-")) {
         dur.setNegative(true);
         token = nextToken(&str);
     } else if (token.isEmpty()) {
@@ -999,28 +999,28 @@ Duration Duration::parseDuration(QString str)
     }
 
     // Accept a P
-    if (token != QLatin1String("P")) {
+    if (token != QStringLiteral("P")) {
         return invalidDuration();
     }
 
     token = nextToken(&str);
     if (token.isEmpty()) {
         return invalidDuration();
-    } else if (token == QLatin1String("T")) {
+    } else if (token == QStringLiteral("T")) {
         // we see a time
         parseDurationTime(&str, &dur);
     } else if (token.at(0).isDigit()) {
         // it's either a date or a week - we're not sure yet
         int value = token.toInt(); // always succeeds because nextToken next returns a mix of digits/nondigits
         token = nextToken(&str);
-        if (token == QLatin1String("D")) {
+        if (token == QStringLiteral("D")) {
             // it's a date
             dur.setDays(value);
             token = nextToken(&str);
             // dates optionally define a time
-            if (token == QLatin1String("T"))
+            if (token == QStringLiteral("T"))
                 parseDurationTime(&str, &dur);
-        } else if (token == QLatin1String("W")) {
+        } else if (token == QStringLiteral("W")) {
             dur.setWeeks(value);
         } else {
             return invalidDuration();
@@ -1048,15 +1048,15 @@ void Duration::parseDurationTime(QString* str, Duration* dur)
     int value = token.toInt(); // always succeeds
 
     token = nextToken(str);
-    if (token == QLatin1String("H")) {
+    if (token == QStringLiteral("H")) {
         dur->setHours(value);
         if (!str->isEmpty())
             parseDurationMinutes(str, dur);
-    } else if (token == QLatin1String("M")) {
+    } else if (token == QStringLiteral("M")) {
         dur->setMinutes(value);
         if (!str->isEmpty())
             parseDurationSeconds(str, dur);
-    } else if (token == QLatin1String("S")) {
+    } else if (token == QStringLiteral("S")) {
         dur->setSeconds(value);
     }
 }
@@ -1072,7 +1072,7 @@ void Duration::parseDurationMinutes(QString* str, Duration* dur)
 
     int value = token.toInt(); // always succeeds
     token = nextToken(str);
-    if (token != QLatin1String("M")) {
+    if (token != QStringLiteral("M")) {
         dur->setValid(false);
         return;
     }
@@ -1093,7 +1093,7 @@ void Duration::parseDurationSeconds(QString* str, Duration* dur)
 
     int value = token.toInt(); // always succeeds
     token = nextToken(str);
-    if (token != QLatin1String("S")) {
+    if (token != QStringLiteral("S")) {
         dur->setValid(false);
         return;
     }
@@ -1132,7 +1132,7 @@ TimeZone QVersitOrganizerImporterPrivate::importTimeZone(const QVersitDocument& 
 {
     TimeZone timeZone;
     foreach (const QVersitProperty& property, document.properties()) {
-        if (property.name() == QLatin1String("TZID") && !property.value().isEmpty()) {
+        if (property.name() == QStringLiteral("TZID") && !property.value().isEmpty()) {
             timeZone.setTzid(property.value());
         }
     }
@@ -1145,10 +1145,10 @@ TimeZone QVersitOrganizerImporterPrivate::importTimeZone(const QVersitDocument& 
 TimeZonePhase QVersitOrganizerImporterPrivate::importTimeZonePhase(const QVersitDocument& document) const
 {
     TimeZonePhase phase;
-    phase.setStandard(document.componentType() == QLatin1String("STANDARD"));
+    phase.setStandard(document.componentType() == QStringLiteral("STANDARD"));
 
     foreach (const QVersitProperty& property, document.properties()) {
-        if (property.name() == QLatin1String("TZOFFSETTO")) {
+        if (property.name() == QStringLiteral("TZOFFSETTO")) {
             QString value(property.value());
             if (value.size() == 5
                     && (value.at(0) == QLatin1Char('+') || value.at(0) == QLatin1Char('-'))
@@ -1161,17 +1161,17 @@ TimeZonePhase QVersitOrganizerImporterPrivate::importTimeZonePhase(const QVersit
                         + value.mid(3, 2).toInt() * 60 // minutes part
                         ));
             }
-        } else if (property.name() == QLatin1String("DTSTART")) {
+        } else if (property.name() == QStringLiteral("DTSTART")) {
             QDateTime dt(parseDateTime(property.value()));
             if (dt.isValid() && dt.timeSpec() == Qt::LocalTime) {
                 phase.setStartDateTime(dt);
             }
-        } else if (property.name() == QLatin1String("RRULE")) {
+        } else if (property.name() == QStringLiteral("RRULE")) {
             QOrganizerRecurrenceRule rrule;
             if (parseRecurRule(property.value(), &rrule)) {
                 phase.setRecurrenceRule(rrule);
             }
-        } else if (property.name() == QLatin1String("RDATE")) {
+        } else if (property.name() == QStringLiteral("RDATE")) {
             QSet<QDate> dates;
             if (parseDates(property.value(), &dates)) {
                 phase.setRecurrenceDates(dates);

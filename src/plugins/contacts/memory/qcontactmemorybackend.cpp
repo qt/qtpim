@@ -112,7 +112,7 @@ QMap<QString, QContactMemoryEngineData*> QContactMemoryEngine::engineDatas;
 QContactMemoryEngine* QContactMemoryEngine::createMemoryEngine(const QMap<QString, QString> &parameters)
 {
     bool anonymous = false;
-    QString idValue = parameters.value(QLatin1String("id"));
+    QString idValue = parameters.value(QStringLiteral("id"));
     if (idValue.isNull() || idValue.isEmpty()) {
         // no store given?  new, anonymous store.
         idValue = QUuid::createUuid().toString();
@@ -158,14 +158,14 @@ QContactMemoryEngine::~QContactMemoryEngine()
 /*! \reimp */
 QString QContactMemoryEngine::managerName() const
 {
-    return QLatin1String("memory");
+    return QStringLiteral("memory");
 }
 
 /*! \reimp */
 QMap<QString, QString> QContactMemoryEngine::managerParameters() const
 {
     QMap<QString, QString> params;
-    params.insert(QLatin1String("id"), d->m_id);
+    params.insert(QStringLiteral("id"), d->m_id);
     return params;
 }
 

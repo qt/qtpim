@@ -65,7 +65,7 @@ QContactInvalidEngine::QContactInvalidEngine()
 */
 QString QContactInvalidEngine::managerName() const
 {
-    return QString(QLatin1String("invalid"));
+    return QString(QStringLiteral("invalid"));
 }
 
 QTCONTACTS_END_NAMESPACE

@@ -197,11 +197,11 @@ QString QContactId::escapeUriParam(const QString &param)
     rich.reserve(int(len * 1.1));
     for (int i = 0; i < len; ++i) {
         if (param.at(i) == QLatin1Char(':'))
-            rich += QLatin1String("&#58;");
+            rich += QStringLiteral("&#58;");
         else if (param.at(i) == QLatin1Char('='))
-            rich += QLatin1String("&equ;");
+            rich += QStringLiteral("&equ;");
         else if (param.at(i) == QLatin1Char('&'))
-            rich += QLatin1String("&amp;");
+            rich += QStringLiteral("&amp;");
         else
             rich += param.at(i);
     }
@@ -218,7 +218,7 @@ bool QContactId::parseIdString(const QString &idString, QString* managerName, QM
     QStringList colonSplit = idString.split(QLatin1Char(':'));
 
     QString prefix = colonSplit.value(0);
-    if (prefix != QLatin1String("qtcontacts") || colonSplit.size() != 4)
+    if (prefix != QStringLiteral("qtcontacts") || colonSplit.size() != 4)
         return false; // invalid serialized string.  we cannot continue.
 
     QString mgrName = colonSplit.value(1);
@@ -228,12 +228,12 @@ bool QContactId::parseIdString(const QString &idString, QString* managerName, QM
     // Now we have to decode each parameter
     QMap<QString, QString> outParams;
     if (!paramString.isEmpty()) {
-        QStringList params = paramString.split(QLatin1String("&(?!(amp;|equ;))"), QString::KeepEmptyParts);
+        QStringList params = paramString.split(QStringLiteral("&(?!(amp;|equ;))"), QString::KeepEmptyParts);
         // If we have an empty string for paramstring, we get one entry in params,
         // so skip that case.
         for (int i = 0; i < params.count(); i++) {
             /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
-            QStringList paramChunk = params.value(i).split(QLatin1String("="), QString::KeepEmptyParts);
+            QStringList paramChunk = params.value(i).split(QStringLiteral("="), QString::KeepEmptyParts);
 
             if (paramChunk.count() != 2)
                 return false;
@@ -241,12 +241,12 @@ bool QContactId::parseIdString(const QString &idString, QString* managerName, QM
             QString arg = paramChunk.value(0);
             QString param = paramChunk.value(1);
 
-            arg.replace(QLatin1String("&#58;"), QLatin1String(":"));
-            arg.replace(QLatin1String("&equ;"), QLatin1String("="));
-            arg.replace(QLatin1String("&amp;"), QLatin1String("&"));
-            param.replace(QLatin1String("&#58;"), QLatin1String(":"));
-            param.replace(QLatin1String("&equ;"), QLatin1String("="));
-            param.replace(QLatin1String("&amp;"), QLatin1String("&"));
+            arg.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
+            arg.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            arg.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+            param.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
+            param.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+            param.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
             if (arg.isEmpty())
                 return false;
             outParams.insert(arg, param);
@@ -254,8 +254,8 @@ bool QContactId::parseIdString(const QString &idString, QString* managerName, QM
     }
 
     // and unescape the engine id string.
-    engIdString.replace(QLatin1String("&#58;"), QLatin1String(":"));
-    engIdString.replace(QLatin1String("&amp;"), QLatin1String("&"));
+    engIdString.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
+    engIdString.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
 
     // now fill the return values.
     if (managerName)

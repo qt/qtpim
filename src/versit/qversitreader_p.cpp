@@ -581,10 +581,10 @@ bool QVersitReaderPrivate::parseVersitDocument(LineReader* lineReader, QVersitDo
         // A blank document (or end of file) was found.
         document->clear();
         return true;
-    } else if (property.name() == QLatin1String("BEGIN")) {
-        if (propertyValue == QLatin1String("VCARD")) {
+    } else if (property.name() == QStringLiteral("BEGIN")) {
+        if (propertyValue == QStringLiteral("VCARD")) {
             document->setComponentType(propertyValue);
-        } else if (propertyValue == QLatin1String("VCALENDAR")) {
+        } else if (propertyValue == QStringLiteral("VCALENDAR")) {
             document->setType(QVersitDocument::ICalendar20Type);
             document->setComponentType(propertyValue);
         } else {
@@ -610,7 +610,7 @@ bool QVersitReaderPrivate::parseVersitDocumentBody(LineReader* lineReader, QVers
         /* Grab it */
         QVersitProperty property = parseNextVersitProperty(document->type(), lineReader);
 
-        if (property.name() == QLatin1String("BEGIN")) {
+        if (property.name() == QStringLiteral("BEGIN")) {
             // Nested Versit document
             QVersitDocument subDocument;
             subDocument.setType(document->type()); // the nested document inherits the parent's type
@@ -618,13 +618,13 @@ bool QVersitReaderPrivate::parseVersitDocumentBody(LineReader* lineReader, QVers
             if (!parseVersitDocumentBody(lineReader, &subDocument))
                 break;
             document->addSubDocument(subDocument);
-        } else if (property.name() == QLatin1String("VERSION")) {
+        } else if (property.name() == QStringLiteral("VERSION")) {
             // A version property
             if (!setVersionFromProperty(document, property)) {
                 parsingOk = false;
                 break;
             }
-        } else if (property.name() == QLatin1String("END")) {
+        } else if (property.name() == QStringLiteral("END")) {
             // End of document
             break;
         } else if (property.name().isEmpty()) {
@@ -777,18 +777,18 @@ void QVersitReaderPrivate::parseVCard30Property(QVersitDocument::VersitType vers
 bool QVersitReaderPrivate::setVersionFromProperty(QVersitDocument* document, const QVersitProperty& property) const
 {
     QString value = property.value().trimmed();
-    if (document->componentType() == QLatin1String("VCARD")
-            && value == QLatin1String("2.1")) {
+    if (document->componentType() == QStringLiteral("VCARD")
+            && value == QStringLiteral("2.1")) {
         document->setType(QVersitDocument::VCard21Type);
-    } else if (document->componentType() == QLatin1String("VCARD")
-            && value == QLatin1String("3.0")) {
+    } else if (document->componentType() == QStringLiteral("VCARD")
+            && value == QStringLiteral("3.0")) {
         document->setType(QVersitDocument::VCard30Type);
-    } else if (document->componentType() == QLatin1String("VCARD")
-            && value == QLatin1String("4.0")) {
+    } else if (document->componentType() == QStringLiteral("VCARD")
+            && value == QStringLiteral("4.0")) {
         document->setType(QVersitDocument::VCard40Type);
-    } else if ((document->componentType() == QLatin1String("VCALENDAR")
+    } else if ((document->componentType() == QStringLiteral("VCALENDAR")
                 || document->type() == QVersitDocument::ICalendar20Type) // covers VEVENT, etc. when nested inside a VCALENDAR
-            && value == QLatin1String("2.0")) {
+            && value == QStringLiteral("2.0")) {
         document->setType(QVersitDocument::ICalendar20Type);
     } else {
         return false;
@@ -807,9 +807,9 @@ bool QVersitReaderPrivate::unencode(QByteArray* value,
                                     QVersitProperty* property,
                                     LineReader* lineReader) const
 {
-    QStringList encodingParameters = property->parameters().values(QLatin1String("ENCODING"));
-    QStringList typeParameters = property->parameters().values(QLatin1String("TYPE"));
-    if (encodingParameters.contains(QLatin1String("QUOTED-PRINTABLE"), Qt::CaseInsensitive)) {
+    QStringList encodingParameters = property->parameters().values(QStringLiteral("ENCODING"));
+    QStringList typeParameters = property->parameters().values(QStringLiteral("TYPE"));
+    if (encodingParameters.contains(QStringLiteral("QUOTED-PRINTABLE"), Qt::CaseInsensitive)) {
         // At this point, we need to accumulate bytes until we hit a real line break (no = before
         // it) value already contains everything up to the character before the newline
         while (value->endsWith('=')) {
@@ -819,15 +819,15 @@ bool QVersitReaderPrivate::unencode(QByteArray* value,
         }
         decodeQuotedPrintable(value);
         // Remove the encoding parameter as the value is now decoded
-        property->removeParameters(QLatin1String("ENCODING"));
+        property->removeParameters(QStringLiteral("ENCODING"));
         return false;
-    } else if (encodingParameters.contains(QLatin1String("BASE64"), Qt::CaseInsensitive)
-        || encodingParameters.contains(QLatin1String("B"), Qt::CaseInsensitive)
-        || typeParameters.contains(QLatin1String("BASE64"), Qt::CaseInsensitive)
-        || typeParameters.contains(QLatin1String("B"), Qt::CaseInsensitive)) {
+    } else if (encodingParameters.contains(QStringLiteral("BASE64"), Qt::CaseInsensitive)
+        || encodingParameters.contains(QStringLiteral("B"), Qt::CaseInsensitive)
+        || typeParameters.contains(QStringLiteral("BASE64"), Qt::CaseInsensitive)
+        || typeParameters.contains(QStringLiteral("B"), Qt::CaseInsensitive)) {
         *value = QByteArray::fromBase64(*value);
         // Remove the encoding parameter as the value is now decoded
-        property->removeParameters(QLatin1String("ENCODING"));
+        property->removeParameters(QStringLiteral("ENCODING"));
         return true;
     }
     return false;
@@ -843,7 +843,7 @@ QString QVersitReaderPrivate::decodeCharset(const QByteArray& value,
                                             LineReader* lineReader,
                                             QTextCodec** codec) const
 {
-    static const QString charset(QLatin1String("CHARSET"));
+    static const QString charset(QStringLiteral("CHARSET"));
 
     *codec = NULL;
     if (property->parameters().contains(charset)) {
@@ -1073,7 +1073,7 @@ QString QVersitReaderPrivate::paramName(const QByteArray& parameter, QTextCodec*
          return codec->toUnicode(parameter.left(equalsIndex)).trimmed();
      }
 
-     return QLatin1String("TYPE");
+     return QStringLiteral("TYPE");
 }
 
 /*!
@@ -1195,9 +1195,9 @@ void QVersitReaderPrivate::removeBackSlashEscaping(QString* text)
                     \: with :
                     \\ with \
          */
-        text->replace(QRegExp(QLatin1String("\\\\([;,:\\\\])")), QLatin1String("\\1"));
+        text->replace(QRegExp(QStringLiteral("\\\\([;,:\\\\])")), QStringLiteral("\\1"));
         // replaces \n with a CRLF
-        text->replace(QLatin1String("\\n"), QLatin1String("\r\n"), Qt::CaseInsensitive);
+        text->replace(QStringLiteral("\\n"), QStringLiteral("\r\n"), Qt::CaseInsensitive);
     }
 }
 

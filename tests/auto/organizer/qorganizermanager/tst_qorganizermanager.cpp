@@ -219,7 +219,7 @@ public:
         return cloned;
     }
     QString managerUri() const {
-        static const QString uri(QLatin1String("qtorganizer:basicItem:"));
+        static const QString uri(QStringLiteral("qtorganizer:basicItem:"));
         return uri;
     }
     QDebug& debugStreamOut(QDebug& dbg) const {
@@ -251,7 +251,7 @@ public:
         return cloned;
     }
     QString managerUri() const {
-        static const QString uri(QLatin1String("qtorganizer:basicCollection:"));
+        static const QString uri(QStringLiteral("qtorganizer:basicCollection:"));
         return uri;
     }
     QDebug& debugStreamOut(QDebug& dbg) const {
@@ -903,7 +903,7 @@ void tst_QOrganizerManager::saveRecurrence()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
     QOrganizerEvent event;
-    event.setDisplayLabel(QLatin1String("meeting"));
+    event.setDisplayLabel(QStringLiteral("meeting"));
     event.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(11, 0, 0)));
     event.setEndDateTime(QDateTime(QDate(2010, 1, 1), QTime(12, 0, 0)));
     QOrganizerRecurrenceRule rrule;
@@ -951,7 +951,7 @@ void tst_QOrganizerManager::persistence()
     
     // Add an event
     QOrganizerEvent event;
-    event.setDisplayLabel(QLatin1String("meeting"));
+    event.setDisplayLabel(QStringLiteral("meeting"));
     event.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(11, 0, 0)));
     event.setEndDateTime(QDateTime(QDate(2010, 1, 1), QTime(12, 0, 0)));
     QVERIFY(cm->saveItem(&event));
@@ -980,7 +980,7 @@ void tst_QOrganizerManager::persistence()
     QCOMPARE(cm2->collections().size(), cm->collections().size());
 
     QOrganizerCollection collection;
-    collection.setMetaData(QOrganizerCollection::KeyName, QLatin1String("test collection"));
+    collection.setMetaData(QOrganizerCollection::KeyName, QStringLiteral("test collection"));
     QVERIFY(cm->saveCollection(&collection));
     QTest::qWait(500);
     QCOMPARE(cm2->collections().size(), cm->collections().size());
@@ -993,7 +993,7 @@ void tst_QOrganizerManager::addExceptions()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
     QOrganizerEvent event;
-    event.setDisplayLabel(QLatin1String("meeting"));
+    event.setDisplayLabel(QStringLiteral("meeting"));
     event.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(11, 0, 0)));
     event.setEndDateTime(QDateTime(QDate(2010, 1, 1), QTime(12, 0, 0)));
     QOrganizerRecurrenceRule rrule;
@@ -1018,7 +1018,7 @@ void tst_QOrganizerManager::addExceptions()
     QCOMPARE(secondEvent.parentId(), event.id());
 
     // save a change to an occurrence's detail (ie. create an exception)
-    secondEvent.setDisplayLabel(QLatin1String("seminar"));
+    secondEvent.setDisplayLabel(QStringLiteral("seminar"));
     QVERIFY(cm->saveItem(&secondEvent));
     event = cm->item(event.id()); // reload the event to pick up any changed exception dates.
     items = cm->itemOccurrences(event, QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
@@ -1060,13 +1060,13 @@ void tst_QOrganizerManager::addExceptions()
 
     // check that saving an exception doesn't change other items
     QVERIFY(foundFirst); // there should still be one "generated" occurrence
-    QCOMPARE(firstItem.displayLabel(), QLatin1String("meeting")); // and it should have the original label.
+    QCOMPARE(firstItem.displayLabel(), QStringLiteral("meeting")); // and it should have the original label.
     // item occurrences which are not exceptions should have zero id
     QVERIFY(firstItem.id().isNull());
 
     // the exception's changes have been persisted
     QVERIFY(foundSecond);
-    QCOMPARE(secondEvent.displayLabel(), QLatin1String("seminar"));
+    QCOMPARE(secondEvent.displayLabel(), QStringLiteral("seminar"));
     // item occurrences which are persisted exceptions should have non-zero id
     QVERIFY(!secondEvent.id().isNull());
 
@@ -1095,7 +1095,7 @@ void tst_QOrganizerManager::modifyRecurrence()
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
     QOrganizerEvent event;
-    event.setDisplayLabel(QLatin1String("recurring meeting"));
+    event.setDisplayLabel(QStringLiteral("recurring meeting"));
     event.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(11, 0, 0)));
     event.setEndDateTime(QDateTime(QDate(2010, 1, 1), QTime(12, 0, 0)));
     QOrganizerRecurrenceRule rrule;
@@ -1117,7 +1117,7 @@ void tst_QOrganizerManager::modifyRecurrence()
     QCOMPARE(secondEvent.parentId(), event.id());
 
     // save a change to an occurrence's detail (ie. create an exception)
-    secondEvent.setDisplayLabel(QLatin1String("exceptional display label"));
+    secondEvent.setDisplayLabel(QStringLiteral("exceptional display label"));
     QVERIFY(cm->saveItem(&secondEvent));
     event = cm->item(event.id()); // reload the event to pick up any changed exception dates.
     items = cm->itemOccurrences(event);
@@ -1163,7 +1163,7 @@ void tst_QOrganizerManager::testItemOccurrences()
 
     //Create the weekly recurrence event data that is used by the test
     QOrganizerEvent event;
-    event.setDisplayLabel (QLatin1String ("meeting"));
+    event.setDisplayLabel (QStringLiteral ("meeting"));
     event.setStartDateTime (QDateTime (QDate (2010, 1, 1), QTime (11, 0, 0)));
     event.setEndDateTime (QDateTime (QDate (2010, 1, 1), QTime (12, 0, 0)));
 
@@ -1217,7 +1217,7 @@ void tst_QOrganizerManager::testItemOccurrences()
 */
     //Create 2nd Daily event data and limitation is 20
     QOrganizerEvent event2;
-    event2.setDisplayLabel (QLatin1String ("meeting2"));
+    event2.setDisplayLabel (QStringLiteral ("meeting2"));
     event2.setStartDateTime (QDateTime (QDate (2010, 1, 1), QTime (11, 0, 0)));
     event2.setEndDateTime (QDateTime (QDate (2010, 1, 1), QTime (12, 0, 0)));
     rrule.setFrequency (QOrganizerRecurrenceRule::Daily);
@@ -1274,7 +1274,7 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     christmas.setGuid("christmas");
     christmas.setStartDateTime(QDateTime(QDate(2009, 12, 25), QTime(0, 0, 0)));
     christmas.setEndDateTime(QDateTime(QDate(2009, 12, 26), QTime(0, 0, 0)));
-    christmas.setDisplayLabel(QLatin1String("Christmas"));
+    christmas.setDisplayLabel(QStringLiteral("Christmas"));
     QOrganizerRecurrenceRule rrule;
     rrule.setFrequency(QOrganizerRecurrenceRule::Yearly);
     christmas.setRecurrenceRule(rrule);
@@ -1286,14 +1286,14 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     newYearsDay.setGuid("newyear");
     newYearsDay.setStartDateTime(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)));
     newYearsDay.setEndDateTime(QDateTime(QDate(2010, 1, 2), QTime(0, 0, 0)));
-    newYearsDay.setDisplayLabel(QLatin1String("New Years Day"));
+    newYearsDay.setDisplayLabel(QStringLiteral("New Years Day"));
     newYearsDay.setRecurrenceRule(rrule);
     QVERIFY(cm->saveItem(&newYearsDay));
 
     QOrganizerTodo report;
     report.setGuid("report");
     report.setDueDateTime(QDateTime(QDate(2010, 1, 11), QTime(0, 0, 0)));
-    report.setDisplayLabel(QLatin1String("Report"));
+    report.setDisplayLabel(QStringLiteral("Report"));
     QVERIFY(cm->saveItem(&report));
 
     // The tests:
@@ -1302,7 +1302,7 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception.setOriginalDate(QDate(2010, 12, 25));
     exception.setStartDateTime(QDateTime(QDate(2010, 12, 25), QTime(0, 0, 0)));
     exception.setEndDateTime(QDateTime(QDate(2010, 12, 26), QTime(0, 0, 0)));
-    exception.setDisplayLabel(QLatin1String("Xmas"));
+    exception.setDisplayLabel(QStringLiteral("Xmas"));
 //    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
 //        exception.addComment(QLatin1String("With the in-laws"));
     QVERIFY(!cm->saveItem(&exception));
@@ -1310,13 +1310,13 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
 
     // exception with invalid guid fails
     exception.setId(QOrganizerItemId());
-    exception.setGuid(QLatin1String("halloween"));
+    exception.setGuid(QStringLiteral("halloween"));
     QVERIFY(!cm->saveItem(&exception));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
     
     // with the guid set, it should work
     exception.setId(QOrganizerItemId());
-    exception.setGuid(QLatin1String("christmas"));
+    exception.setGuid(QStringLiteral("christmas"));
     QVERIFY(cm->saveItem(&exception));
     QVERIFY(!exception.id().isNull());
     QOrganizerEventOccurrence savedException = cm->item(exception.id());
@@ -1334,7 +1334,7 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception2.setOriginalDate(QDate(2011, 12, 25));
     exception2.setStartDateTime(QDateTime(QDate(2011, 12, 25), QTime(0, 0, 0)));
     exception2.setEndDateTime(QDateTime(QDate(2011, 12, 26), QTime(0, 0, 0)));
-    exception2.setDisplayLabel(QLatin1String("XMas"));
+    exception2.setDisplayLabel(QStringLiteral("XMas"));
 //    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
 //        exception2.addComment(QLatin1String("With the in-laws"));
     exception2.setParentId(report.id()); // report is not an event
@@ -1342,34 +1342,34 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
 
     // can't set guid to a non-event
-    exception2.setGuid(QLatin1String("report"));
+    exception2.setGuid(QStringLiteral("report"));
     exception2.setParentId(QOrganizerItemId());
     QVERIFY(!cm->saveItem(&exception2));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
 
     // can't make the guid inconsistent with the parentId
     exception2.setParentId(christmas.id());
-    exception2.setGuid(QLatin1String("newyear"));
+    exception2.setGuid(QStringLiteral("newyear"));
     QVERIFY(!cm->saveItem(&exception2));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
 
     // with just the parentId set to a valid parent, it should work
-    exception2.setGuid(QLatin1String(""));
+    exception2.setGuid(QStringLiteral(""));
     QVERIFY(cm->saveItem(&exception2));
     savedException = cm->item(exception2.id());
     QCOMPARE(savedException.parentId(), christmas.id());
-    QCOMPARE(savedException.guid(), QLatin1String("christmas")); // guid should be set by manager
+    QCOMPARE(savedException.guid(), QStringLiteral("christmas")); // guid should be set by manager
 
     // Make a fresh exception object on a fresh date to avoid clashing with the previously saved one
     // exception without originalDate fails
     QOrganizerEventOccurrence exception3;
     exception3.setStartDateTime(QDateTime(QDate(2012, 12, 25), QTime(0, 0, 0)));
     exception3.setEndDateTime(QDateTime(QDate(2012, 12, 26), QTime(0, 0, 0)));
-    exception3.setDisplayLabel(QLatin1String("XMas"));
+    exception3.setDisplayLabel(QStringLiteral("XMas"));
 //    if (cm->detailDefinitions(QOrganizerItemType::TypeEventOccurrence).contains(QOrganizerItemComment::DefinitionName))
 //        exception3.addComment(QLatin1String("With the in-laws"));
     exception3.setParentId(christmas.id());
-    exception3.setGuid(QLatin1String("christmas"));
+    exception3.setGuid(QStringLiteral("christmas"));
     QVERIFY(!cm->saveItem(&exception3));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
 
@@ -1451,7 +1451,7 @@ void tst_QOrganizerManager::update()
     foreach (const QOrganizerEventOccurrence& curr, items) {
         if (curr.startDateTime() == QDateTime(QDate(2010, 10, 21), QTime(8, 0, 0))) {
             QVERIFY(!curr.id().isNull());
-            QCOMPARE(curr.description(), QLatin1String("different description"));
+            QCOMPARE(curr.description(), QStringLiteral("different description"));
         } else {
             QVERIFY(curr.id().isNull());
         }
@@ -3473,10 +3473,10 @@ void tst_QOrganizerManager::itemFetchV2()
     // Get items without a maxCount, check that they're date sorted
     QList<QOrganizerItem> items = cm->items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)), QDateTime());
     QCOMPARE(items.size(), 4);
-    QCOMPARE(items[0].displayLabel(), QLatin1String("event1"));
-    QCOMPARE(items[1].displayLabel(), QLatin1String("event2"));
-    QCOMPARE(items[2].displayLabel(), QLatin1String("event1"));
-    QCOMPARE(items[3].displayLabel(), QLatin1String("event2"));
+    QCOMPARE(items[0].displayLabel(), QStringLiteral("event1"));
+    QCOMPARE(items[1].displayLabel(), QStringLiteral("event2"));
+    QCOMPARE(items[2].displayLabel(), QStringLiteral("event1"));
+    QCOMPARE(items[3].displayLabel(), QStringLiteral("event2"));
 
     // Get the next 3 items from 2010-02-01
     items = cm->items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
@@ -3484,9 +3484,9 @@ void tst_QOrganizerManager::itemFetchV2()
                       QOrganizerItemFilter(),
                       3);           // maxCount
     QCOMPARE(items.size(), 3);
-    QCOMPARE(items[0].displayLabel(), QLatin1String("event1"));
-    QCOMPARE(items[1].displayLabel(), QLatin1String("event2"));
-    QCOMPARE(items[2].displayLabel(), QLatin1String("event1"));
+    QCOMPARE(items[0].displayLabel(), QStringLiteral("event1"));
+    QCOMPARE(items[1].displayLabel(), QStringLiteral("event2"));
+    QCOMPARE(items[2].displayLabel(), QStringLiteral("event1"));
 }
 
 void tst_QOrganizerManager::spanOverDays()
@@ -4960,8 +4960,8 @@ void tst_QOrganizerManager::testExtendedDetail()
 
     event = mgr->item(event.id());
     basicString = event.detail(QOrganizerItemDetail::TypeExtendedDetail);
-    QCOMPARE(basicString.name(), QLatin1String("basic-string"));
-    QCOMPARE(basicString.data().toString(), QLatin1String("Qt Everywhere"));
+    QCOMPARE(basicString.name(), QStringLiteral("basic-string"));
+    QCOMPARE(basicString.data().toString(), QStringLiteral("Qt Everywhere"));
 
     // simple list
     QOrganizerItemExtendedDetail basicList;
@@ -4981,8 +4981,8 @@ void tst_QOrganizerManager::testExtendedDetail()
         if (extendedDetail.name() == QStringLiteral("basic-list")) {
             QVariantList data = extendedDetail.data().toList();
             QCOMPARE(data.size(), 3);
-            QCOMPARE(data.at(0).toString(), QLatin1String("data 1"));
-            QCOMPARE(data.at(1).toString(), QLatin1String("data 2"));
+            QCOMPARE(data.at(0).toString(), QStringLiteral("data 1"));
+            QCOMPARE(data.at(1).toString(), QStringLiteral("data 2"));
             QCOMPARE(data.at(2).toInt(), 3);
             break;
         }
@@ -5006,8 +5006,8 @@ void tst_QOrganizerManager::testExtendedDetail()
         if (extendedDetail.name() == QStringLiteral("basic map")) {
             QVariantMap data = extendedDetail.data().toMap();
             QCOMPARE(data.size(), 3);
-            QCOMPARE(data.value(QStringLiteral("key1")).toString(), QLatin1String("data-1"));
-            QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QLatin1String("data2"));
+            QCOMPARE(data.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
+            QCOMPARE(data.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
             QCOMPARE(data.value(QStringLiteral("key_3")).toInt(), 1989);
             break;
         }
@@ -5027,11 +5027,11 @@ void tst_QOrganizerManager::testExtendedDetail()
         if (extendedDetail.name() == QStringLiteral("map in list")) {
             QVariantList data = extendedDetail.data().toList();
             QCOMPARE(data.size(), 2);
-            QCOMPARE(data.at(0).toString(), QLatin1String("Qt is cute"));
+            QCOMPARE(data.at(0).toString(), QStringLiteral("Qt is cute"));
 
             QVariantMap map = data.at(1).toMap();
-            QCOMPARE(map.value(QStringLiteral("key1")).toString(), QLatin1String("data-1"));
-            QCOMPARE(map.value(QStringLiteral("key-2")).toString(), QLatin1String("data2"));
+            QCOMPARE(map.value(QStringLiteral("key1")).toString(), QStringLiteral("data-1"));
+            QCOMPARE(map.value(QStringLiteral("key-2")).toString(), QStringLiteral("data2"));
             QCOMPARE(map.value(QStringLiteral("key_3")).toInt(), 1989);
             break;
         }

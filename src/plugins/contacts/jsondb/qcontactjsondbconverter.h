@@ -83,15 +83,6 @@ public:
     const QStringList storageLocationsToPartitionNames(QContactAbstractRequest::StorageLocations storageLocations);
     SanitizeError sanitizeContactDetailString(QString *stringToBeSanitized, int maxStringLength = 50) const;
 
-    QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
-    QHash<int, QString> contactNameFieldsMapping;
-    QHash<QContactOrganization::OrganizationField, QString> organizationFieldsMapping;
-    QHash<QContactAddress::AddressField, QString> addressFieldsMapping;
-    QHash<int, QString> phoneNumbersSubtypesMapping;
-    QHash<int, QString> genderValuesMapping;
-    QHash<QContactDetail::DetailContext, QString> contextsToJsonMapping;
-    QHash<QContactAbstractRequest::StorageLocation, QString> storageLocationMapping;
-
 private:
     void initializeMappings();
     void createMatchFlagQuery(QString& queryString, QContactFilter::MatchFlags flags, const QString& value) const;
@@ -104,6 +95,15 @@ private:
     static bool isValidPhoneNumberCharacter (const QChar *character);
 
     static const int jsonDbVersionLength;
+
+    QHash<QContactDetail::DetailType, QString> detailsToJsonMapping;
+    QHash<int, QString> contactNameFieldsMapping;
+    QHash<QContactOrganization::OrganizationField, QString> organizationFieldsMapping;
+    QHash<QContactAddress::AddressField, QString> addressFieldsMapping;
+    QHash<int, QString> phoneNumbersSubtypesMapping;
+    QHash<int, QString> genderValuesMapping;
+    QHash<QContactDetail::DetailContext, QString> contextsToJsonMapping;
+    QHash<QContactAbstractRequest::StorageLocation, QString> storageLocationMapping;
 };
 
 QTCONTACTS_END_NAMESPACE

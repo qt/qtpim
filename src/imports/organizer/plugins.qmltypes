@@ -1059,6 +1059,57 @@ Module {
             Parameter { name: "itemIds"; type: "QStringList" }
         }
         Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+            Parameter { name: "maxCount"; type: "int" }
+            Parameter { name: "sortOrders"; type: "QVariantList" }
+            Parameter { name: "fetchHint"; type: "QDeclarativeOrganizerItemFetchHint"; isPointer: true }
+            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+            Parameter { name: "maxCount"; type: "int" }
+            Parameter { name: "sortOrders"; type: "QVariantList" }
+            Parameter { name: "fetchHint"; type: "QDeclarativeOrganizerItemFetchHint"; isPointer: true }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+            Parameter { name: "maxCount"; type: "int" }
+            Parameter { name: "sortOrders"; type: "QVariantList" }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+            Parameter { name: "maxCount"; type: "int" }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+            Parameter { name: "filter"; type: "QDeclarativeOrganizerItemFilter"; isPointer: true }
+        }
+        Method {
+            name: "fetchItems"
+            type: "int"
+            Parameter { name: "start"; type: "QDateTime" }
+            Parameter { name: "end"; type: "QDateTime" }
+        }
+        Method {
             name: "removeCollection"
             type: "void"
             Parameter { name: "collectionId"; type: "string" }

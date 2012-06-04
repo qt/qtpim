@@ -841,11 +841,11 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
 
 /*!
     \qmlmethod int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTime &end,
-                           const QVariantList &sortList,
-                           QDeclarativeOrganizerItemFilter *filter,
-                           QDeclarativeOrganizerItemFetchHint *hint,
-                           QDeclarativeOrganizerModel::StorageLocation storageLocation,
-                           const int maxCount)
+                               QDeclarativeOrganizerItemFilter *filter,
+                               int maxCount,
+                               const QVariantList &sortOrders,
+                               QDeclarativeOrganizerItemFetchHint *fetchHint,
+                               QDeclarativeOrganizerModel::StorageLocation storageLocation)
 
     This method will start a request to fetch items between the given \a start and \a end dates.
     Optionally a \a sort order, \a filter, \a fetchHint, \a storageLocation and \a maxCount can
@@ -856,16 +856,16 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
     The end date must be greater than the start date for this method to start a fetch request.
 
     Note that the items fetched won't be added to the model, but can be accessed through the onItemsFetched
-    handler. No properties in the model are updated with this information either.
+    handler. No properties in the model are updated at all.
 
     \sa onItemsFetched
   */
 int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTime &end,
-                           const QVariantList &sortList,
-                           QDeclarativeOrganizerItemFilter *filter,
-                           QDeclarativeOrganizerItemFetchHint *fetchHint,
-                           QDeclarativeOrganizerModel::StorageLocation storageLocation,
-                           int maxCount)
+                                           QDeclarativeOrganizerItemFilter *filter,
+                                           int maxCount,
+                                           const QVariantList &sortOrders,
+                                           QDeclarativeOrganizerItemFetchHint *fetchHint,
+                                           QDeclarativeOrganizerModel::StorageLocation storageLocation)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (!start.isValid() || !end.isValid() || !(end > start))
@@ -879,8 +879,8 @@ int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTi
             this, SLOT(onFetchItemsRequestStateChanged(QOrganizerAbstractRequest::State)));
 
     QList<QOrganizerItemSortOrder> sList;
-    QVariantList::const_iterator it = sortList.begin();
-    while (it != sortList.end()) {
+    QVariantList::const_iterator it = sortOrders.begin();
+    while (it != sortOrders.end()) {
         if ((*it).canConvert<QObject *>()) {
             QDeclarativeOrganizerItemSortOrder *sortOrderItem = (*it).value<QDeclarativeOrganizerItemSortOrder *>();
             sList << sortOrderItem->sortOrder();

@@ -159,11 +159,11 @@ public:
                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
     Q_INVOKABLE int fetchItems(const QStringList &itemIds);
     Q_INVOKABLE int fetchItems(const QDateTime &start, const QDateTime &end,
-                               const QVariantList &sortList = QVariantList(),
                                QDeclarativeOrganizerItemFilter *filter = new QDeclarativeOrganizerItemFilter(),
+                               int maxCount = -1,
+                               const QVariantList &sortOrders = QVariantList(),
                                QDeclarativeOrganizerItemFetchHint *fetchHint = new QDeclarativeOrganizerItemFetchHint(),
-                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage,
-                               int maxCount = -1);
+                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
     Q_INVOKABLE void removeCollection(const QString& collectionId);
     Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection,
                          QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);

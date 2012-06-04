@@ -215,13 +215,23 @@ private slots:
     void contactFetchByIdMixingEmptyIds_data() { addManagers(); }
     void contactFetchByIdWithNonExistingButValidIds();
     void contactFetchByIdWithNonExistingButValidIds_data() { addManagers(); }
+    void contactFetchByIdErrorHandling();
+    void contactFetchByIdErrorHandling_data() { addManagers(); }
 
     void contactIdFetch();
     void contactIdFetch_data() { addManagers(); }
     void contactRemove();
     void contactRemove_data() { addManagers(); }
+    void contactRemoveErrorHandling();
+    void contactRemoveErrorHandling_data() {addManagers();}
     void contactSave();
     void contactSave_data() { addManagers(); }
+    void contactSaveErrorHandling();
+    void contactSaveErrorHandling_data() { addManagers(); }
+    void contactSaveRemovedContacts();
+    void contactSaveRemovedContacts_data() { addManagers(); }
+    void contactSaveRemovedContactsWithCleanIds();
+    void contactSaveRemovedContactsWithCleanIds_data() { addManagers(); }
     void contactPartialSave();
     void contactPartialSave_data() { addManagers(); }
     void contactPartialSaveAsync();
@@ -855,6 +865,57 @@ void tst_QContactAsync::contactFetchByIdWithNonExistingButValidIds()
     }
 }
 
+void tst_QContactAsync::contactFetchByIdErrorHandling()
+{
+    // Testing error handling by fetching by non existing local ids.
+
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    QContactFetchByIdRequest cfrCausingErrors;
+    QVERIFY(cfrCausingErrors.type() == QContactAbstractRequest::ContactFetchByIdRequest);
+
+    // Check initial state - not started, no manager.
+    QVERIFY(!cfrCausingErrors.isActive());
+    QVERIFY(!cfrCausingErrors.isFinished());
+    QVERIFY(!cfrCausingErrors.start());
+    QVERIFY(!cfrCausingErrors.cancel());
+    QVERIFY(!cfrCausingErrors.waitForFinished());
+
+    // Prepare non-existing contact ids for request we like to result.
+    QList<QContactId> nonExistingContactIds;
+    nonExistingContactIds << QContactId() << QContactId() << QContactId();
+
+    // "Make contacts" retrieval with some extra checking.
+    cfrCausingErrors.setManager(cm.data());
+    cfrCausingErrors.setIds(nonExistingContactIds);
+    QCOMPARE(cfrCausingErrors.manager(), cm.data());
+    QVERIFY(!cfrCausingErrors.isActive());
+    QVERIFY(!cfrCausingErrors.isFinished());
+    QVERIFY(!cfrCausingErrors.cancel());
+    QVERIFY(!cfrCausingErrors.waitForFinished());
+
+    qRegisterMetaType<QContactFetchByIdRequest*>("QContactFetchByIdRequest*");
+    QThreadSignalSpy spy2(&cfrCausingErrors, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+
+    QVERIFY(!cfrCausingErrors.cancel()); // not started
+
+    QVERIFY(cfrCausingErrors.start());
+    QVERIFY((cfrCausingErrors.isActive() && cfrCausingErrors.state() == QContactAbstractRequest::ActiveState) || cfrCausingErrors.isFinished());
+    QVERIFY(cfrCausingErrors.waitForFinished());
+    QVERIFY(cfrCausingErrors.isFinished());
+
+    QVERIFY(spy2.count() >= 1); // active + finished progress signals
+    spy2.clear();
+
+    // Check errors, they should be stored in the errorMap using index of local id in the request as a key for the error.
+    // Note, the returned values are actually set in to the errorMap by common code in qcontactmanagerenginev2wrapper_p.cpp.
+
+    QVERIFY(cfrCausingErrors.errorMap().value(0) == QContactManager::DoesNotExistError);
+    QVERIFY(cfrCausingErrors.errorMap().value(1) == QContactManager::DoesNotExistError);
+    QVERIFY(cfrCausingErrors.errorMap().value(2) == QContactManager::DoesNotExistError);
+}
+
 void tst_QContactAsync::contactIdFetch()
 {
     QFETCH(QString, uri);
@@ -1155,6 +1216,112 @@ void tst_QContactAsync::contactRemove()
 
 }
 
+void tst_QContactAsync::contactRemoveErrorHandling() {
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    // Make save request and make initial setup for it with some verifications.
+    QContactSaveRequest csr;
+    QVERIFY(csr.type() == QContactAbstractRequest::ContactSaveRequest);
+    csr.setManager(cm.data());
+    QCOMPARE(csr.manager(), cm.data());
+    QVERIFY(!csr.isActive());
+    QVERIFY(!csr.isFinished());
+    QVERIFY(!csr.cancel());
+    QVERIFY(!csr.waitForFinished());
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+    QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+
+    // Setup a two identical lists of contacts for testing save and remove.
+    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6;
+    QContactName nameDetail;
+    nameDetail.setFirstName("Test Contact1");
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact2");
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact3");
+    testContact3.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact4");
+    testContact4.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact5");
+    testContact5.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact6");
+    testContact6.saveDetail(&nameDetail);
+    QList<QContact> saveList, testContacts;
+    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6;
+    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6;
+
+    // Check save requests takes test contacts ok, start save and wait for finished.
+    csr.setContacts(testContacts);
+    QCOMPARE(csr.contacts(), saveList);
+    QVERIFY(!csr.cancel()); // not started
+    QVERIFY(csr.start());
+    QVERIFY((csr.isActive() && csr.state() == QContactAbstractRequest::ActiveState) || csr.isFinished());
+    QVERIFY(csr.waitForFinished());
+    QVERIFY(csr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    // foreach (QContact testc, csr.contacts()) {
+    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().managerUri();
+    //     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTACT: " << testc.id().id();
+    // }
+    // qDebug() << "Returned errors:" << csr.errorMap();
+    QVERIFY(csr.errorMap().isEmpty());
+
+    // Setup remove initial remove request and verify it takes data ok.
+    QContactRemoveRequest contactRemoveRequest;
+    QVERIFY(contactRemoveRequest.type() == QContactAbstractRequest::ContactRemoveRequest);
+    contactRemoveRequest.setManager(cm.data());
+    QCOMPARE(contactRemoveRequest.manager(), cm.data());
+    QVERIFY(!contactRemoveRequest.isActive());
+    QVERIFY(!contactRemoveRequest.isFinished());
+    QVERIFY(!contactRemoveRequest.cancel());
+    QVERIFY(!contactRemoveRequest.waitForFinished());
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+    QThreadSignalSpy spy2(&contactRemoveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+
+    // Setup valid and invalid contact ids for remove request, start it and wait for finished.
+    QContactId emptyId;
+    QContactId failingId = QContactIdMock::createId("Failing", 0);
+    QList<QContactId> toRemove;
+    toRemove << emptyId << cm.data()->contactIds();
+    toRemove.insert(3, emptyId);
+    toRemove.insert(4, failingId);
+    toRemove << emptyId << failingId << failingId;
+    // qDebug() << "TO REMOVE: " << toRemove;
+    contactRemoveRequest.setContactIds(toRemove);
+    QCOMPARE(contactRemoveRequest.contactIds(), toRemove);
+    QVERIFY(!contactRemoveRequest.cancel()); // not started
+    QVERIFY(contactRemoveRequest.start());
+    QVERIFY((contactRemoveRequest.isActive() && contactRemoveRequest.state() == QContactAbstractRequest::ActiveState) || contactRemoveRequest.isFinished());
+    QVERIFY(contactRemoveRequest.waitForFinished());
+    QVERIFY(contactRemoveRequest.isFinished());
+    QVERIFY(spy2.count() >= 1); // active + finished progress signals
+    spy2.clear();
+
+    // Check ok and errors, empty ids in the beginning, middle and in the end of the contact id list,
+    // qDebug() << "Returned errors:" << contactRemoveRequest.errorMap();
+    QVERIFY(contactRemoveRequest.errorMap().value(0) == QContactManager::DoesNotExistError);
+    QVERIFY(contactRemoveRequest.errorMap().value(1) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(2) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(3) == QContactManager::DoesNotExistError);
+    QVERIFY(contactRemoveRequest.errorMap().value(4) == QContactManager::DoesNotExistError);
+    QVERIFY(contactRemoveRequest.errorMap().value(5) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(6) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(7) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(9) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(10) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(11) == QContactManager::NoError);
+    QVERIFY(contactRemoveRequest.errorMap().value(12) == QContactManager::DoesNotExistError);
+    QVERIFY(contactRemoveRequest.errorMap().value(13) == QContactManager::DoesNotExistError);
+    QVERIFY(contactRemoveRequest.errorMap().value(14) == QContactManager::DoesNotExistError);
+
+    // Check that all the contacts have been removed
+    QList<QContactId> contactsLeft = cm.data()->contactIds();
+    QVERIFY(contactsLeft.isEmpty());
+}
+
 void tst_QContactAsync::contactSave()
 {
     QFETCH(QString, uri);
@@ -1334,6 +1501,217 @@ void tst_QContactAsync::contactSave()
         QCOMPARE(cm->contactIds().size(), originalCount + 1);
         break;
     }
+}
+
+void tst_QContactAsync::contactSaveErrorHandling()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactSaveRequest csr;
+    QVERIFY(csr.type() == QContactAbstractRequest::ContactSaveRequest);
+
+    // initial state - not started, no manager.
+    QVERIFY(!csr.isActive());
+    QVERIFY(!csr.isFinished());
+    QVERIFY(!csr.start());
+    QVERIFY(!csr.cancel());
+    QVERIFY(!csr.waitForFinished());
+
+    // Save a group of contacts, including few  TypeGroup contacts which are not supported by jsondb backend.
+    QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6, testContact7,testContact8;
+    QContactName nameDetail;
+    nameDetail.setFirstName("Test Contact1");
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact2");
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact3");
+    testContact3.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact4");
+    testContact4.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact5");
+    testContact5.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact6");
+    testContact6.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact7");
+    testContact7.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test Contact8");
+    testContact8.saveDetail(&nameDetail);
+
+    // Set group type to first, middle and last contact in the list.
+    QContactType typeDetail;
+    typeDetail.setType(QContactType::TypeGroup);
+    testContact1.saveDetail(&typeDetail);
+    testContact3.saveDetail(&typeDetail);
+    testContact6.saveDetail(&typeDetail);
+
+    // Set an invalid phone number
+    QContactPhoneNumber invalidPhone;
+    invalidPhone.setNumber("      hjkjkjhkjkhjkhj       //////");
+    testContact7.saveDetail(&invalidPhone);
+
+    // This phone number can be cleaned up, so no error should be generated
+    QContactPhoneNumber sanitizablePhone;
+    sanitizablePhone.setNumber("       +123458++++++++*#");
+    testContact5.saveDetail(&sanitizablePhone);
+
+    // Set an invalid name
+    QContactName invalidName;
+    invalidName.setFirstName("     ");
+    testContact8.saveDetail(&invalidName);
+
+    QList<QContact> saveList;
+    saveList << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7 << testContact8;
+
+    csr.setManager(cm.data());
+    QCOMPARE(csr.manager(), cm.data());
+    QVERIFY(!csr.isActive());
+    QVERIFY(!csr.isFinished());
+    QVERIFY(!csr.cancel());
+    QVERIFY(!csr.waitForFinished());
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+    QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+
+    QList<QContact> testContacts;
+    testContacts << testContact1 << testContact2 << testContact3 << testContact4 << testContact5 << testContact6 << testContact7 << testContact8;
+    csr.setContacts(testContacts);
+
+    QCOMPARE(csr.contacts(), saveList);
+    QVERIFY(!csr.cancel()); // not started
+    QVERIFY(csr.start());
+
+    QVERIFY((csr.isActive() && csr.state() == QContactAbstractRequest::ActiveState) || csr.isFinished());
+    //QVERIFY(csr.isFinished() || !csr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(csr.waitForFinished());
+    QVERIFY(csr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    // Check errors, the group type is not supported by jsondb backend so contacts with that detail should report error.
+    // Note, the returned value is actually set/remapped in to the errorMap by common code in qcontactmanagerengine
+    // TODO: move these tests to JsonDb-specific test class
+    if (cm->managerName() == "jsondb") {
+        QCOMPARE(csr.errorMap().value(0), QContactManager::InvalidContactTypeError);
+        QCOMPARE(csr.errorMap().value(2), QContactManager::InvalidContactTypeError);
+        QCOMPARE(csr.errorMap().value(5), QContactManager::InvalidContactTypeError);
+        QCOMPARE(csr.errorMap().value(6), QContactManager::BadArgumentError);
+        QVERIFY(csr.contacts()[5].id().isNull());
+        QCOMPARE(csr.error(), QContactManager::InvalidContactTypeError);
+    }
+    else {
+        QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(2), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(5), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(6), QContactManager::NoError);
+        QCOMPARE(csr.error(), QContactManager::NoError);
+    }
+    QCOMPARE(csr.errorMap().value(1), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
+    QCOMPARE(csr.errorMap().value(7), QContactManager::NoError);
+
+}
+
+void tst_QContactAsync::contactSaveRemovedContacts()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactSaveRequest csr;
+
+    // Make three test contacts.
+    QContactName nameDetail;
+    nameDetail.setFirstName("Test1");
+    QContact testContact1;
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test2");
+    QContact testContact2;
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Test3");
+    QContact testContact3;
+    testContact3.saveDetail(&nameDetail);
+    QList<QContact> testContacts;
+    testContacts << testContact1 << testContact2 << testContact3;
+
+    // Save all three test contacts.
+    csr.setManager(cm.data());
+    qRegisterMetaType<QContactSaveRequest*>("QContactSaveRequest*");
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
+    QCOMPARE(csr.error(), QContactManager::NoError);
+
+    // And then remove all of them.
+    QList<QContactId> contactIds = cm->contactIds();
+    QVERIFY(cm->removeContacts(contactIds));
+
+    // Try now to save again the same three test contacts with the ids of
+    // just removed contacts to fail and check proper error code.
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.error(), QContactManager::DoesNotExistError);
+
+    //test case for existing and non existing contacts after remove in contact
+    //save request
+    nameDetail.setFirstName("Test4");
+    QContact testContact4;
+    testContact4.saveDetail(&nameDetail);
+    testContacts = csr.contacts();
+    testContacts << testContact4;
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(1), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(2), QContactManager::DoesNotExistError);
+    QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
+}
+
+void tst_QContactAsync::contactSaveRemovedContactsWithCleanIds()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactSaveRequest csr;
+
+    // Make three test contacts.
+    QContactName nameDetail;
+    nameDetail.setFirstName("Testing1");
+    QContact testContact1;
+    testContact1.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Testing2");
+    QContact testContact2;
+    testContact2.saveDetail(&nameDetail);
+    nameDetail.setFirstName("Testing3");
+    QContact testContact3;
+    testContact3.saveDetail(&nameDetail);
+    QList<QContact> testContacts;
+    testContacts << testContact1 << testContact2 << testContact3;
+
+    // Save all three test contacts.
+    csr.setManager(cm.data());
+    csr.setContacts(testContacts);
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
+    QCOMPARE(csr.error(), QContactManager::NoError);
+
+    // And then remove all of them.
+    QList<QContactId> contactIds = cm->contactIds();
+    QVERIFY(cm->removeContacts(contactIds));
+
+    // Use the same contacts but clean their ids before saving them.
+    QList<QContact> contactsWithCleanIds = csr.contacts();
+    contactsWithCleanIds[0].setId(QContactId());
+    contactsWithCleanIds[1].setId(QContactId());
+    contactsWithCleanIds[2].setId(QContactId());
+    csr.setContacts(contactsWithCleanIds);
+
+    // Save and check no errors occured.
+    QVERIFY(csr.start());
+    QVERIFY(csr.waitForFinished());
+    QCOMPARE(csr.error(), QContactManager::NoError);
 }
 
 void tst_QContactAsync::contactPartialSave()

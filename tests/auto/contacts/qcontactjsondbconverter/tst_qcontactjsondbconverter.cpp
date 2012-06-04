@@ -201,7 +201,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("logoUrl", QString("http://www.acme.com/logo.jpg"));
     QJsonArray organizationData;
     organizationData.append(jsonData);
-    jsonContact.insert("organization", organizationData);
+    jsonContact.insert("organizations", organizationData);
     QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactOrganization::Type);
     QVERIFY(!detail.isEmpty());
@@ -224,7 +224,7 @@ void tst_QcontactJsondbConverter::toQContactTest()
     jsonData.insert("assistantName", QString("    Daisy Duck 2"));
     QJsonArray organizationData1;
     organizationData1.append(jsonData);
-    jsonContact.insert("organization", organizationData1);
+    jsonContact.insert("organizations", organizationData1);
     QVERIFY(converter.toQContact(jsonContact, &contact, m_partitionName));
     detail = contact.detail(QContactOrganization::Type);
     QVERIFY(!detail.isEmpty());
@@ -931,7 +931,7 @@ void tst_QcontactJsondbConverter::toJsonContactTest()
     testFields.insert("logoUrl", "http://www.acme.com/logo.jpg");
     testFields.insert("context", "work");
     // test fields
-    testJsonDetailItems(jsonContact, "organization", testFields);
+    testJsonDetailItems(jsonContact, "organizations", testFields);
     // cleanup
     contact.clearDetails();
     jsonContact = QJsonObject();

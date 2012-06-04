@@ -75,7 +75,7 @@ public:
     inline const static QString birthdayDefinitionName() { return QStringLiteral("birthday"); }
     inline const static QString avatarDefinitionName() { return QStringLiteral("photoUrl"); }
     inline const static QString ringtoneDefinitionName() { return QStringLiteral("ringtoneUrl"); }
-    inline const static QString organizationDefinitionName() { return QStringLiteral("organization"); }
+    inline const static QString organizationDefinitionName() { return QStringLiteral("organizations"); }
     inline const static QString noteDefinitionName() { return QStringLiteral("note"); }
     inline const static QString syncTargetDefinitionName() { return QStringLiteral("synctarget"); }
     inline const static QString guidDefinitionName() { return QStringLiteral("guid"); }

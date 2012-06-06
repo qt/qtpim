@@ -639,12 +639,14 @@ int QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
     foreach (const QString &contactId, contactIds)
         ids.append(QContactId::fromString(contactId));
     fetchRequest->setIds(ids);
+    int requestId = d->m_lastRequestId.fetchAndAddOrdered(1);
+    d->m_requestIdHash.insert(fetchRequest, requestId);
     if (fetchRequest->start()) {
-        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
-        d->m_requestIdHash.insert(fetchRequest, requestId);
         return requestId;
-    } else
+    } else {
+        d->m_requestIdHash.remove(fetchRequest);
         return -1;
+    }
 }
 
 /*!

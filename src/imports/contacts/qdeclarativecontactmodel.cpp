@@ -663,9 +663,11 @@ void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstra
 
     checkError(request);
 
-    int requestId(d->m_requestIdHash.value(request, -1));
+    const int requestId = d->m_requestIdHash.value(request, -1);
     if (requestId == -1)
-        qWarning()<<Q_FUNC_INFO<<"transaction not found from the request hash";
+        qWarning() << Q_FUNC_INFO << "transaction not found from the request hash";
+    else
+        d->m_requestIdHash.remove(request);
     QVariantList list;
     if (request->error() == QContactManager::NoError) {
         QList<QContact> contacts(request->contacts());

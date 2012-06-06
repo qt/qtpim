@@ -206,13 +206,25 @@ void tst_QOrganizerItemDetails::location()
 {
     QOrganizerItemLocation l1;
     QOrganizerItem oi;
-
     QVERIFY(l1.isEmpty());
-    l1.setLatitude(0.12345);
+
+    l1.setLatitude(89.999);
     QVERIFY(!l1.isEmpty());
-    QVERIFY(l1.latitude() == 0.12345);
-    l1.setValue(QOrganizerItemLocation::FieldLongitude, 0.54321);
-    QVERIFY(l1.longitude() == 0.54321);
+    QVERIFY(l1.latitude() == 89.999);
+    l1.setValue(QOrganizerItemLocation::FieldLatitude, -89.12345);
+    QVERIFY(l1.value(QOrganizerItemLocation::FieldLatitude) == -89.12345);
+    l1.setLatitude(-90.12345);
+    l1.setLatitude(91);
+    QVERIFY(l1.latitude() == -89.12345);
+
+    l1.setLongitude(179);
+    QVERIFY(l1.longitude() == 179);
+    l1.setValue(QOrganizerItemLocation::FieldLongitude, -179.54321);
+    QVERIFY(l1.value(QOrganizerItemLocation::FieldLongitude) == -179.54321);
+    l1.setLongitude(180.1);
+    l1.setLongitude(-180.1);
+    QVERIFY(l1.longitude() == -179.54321);
+
     l1.setLabel("test");
     QVERIFY(l1.label() == QString("test"));
 

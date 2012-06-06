@@ -497,7 +497,7 @@ double QOrganizerItemLocation::longitude() const
  */
 void QOrganizerItemLocation::setLongitude(double longitude)
 {
-    if (longitude >= -180 && longitude >= 180)
+    if (longitude >= -180 && longitude <= 180)
         setValue(FieldLongitude, longitude);
 }
 

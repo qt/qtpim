@@ -667,6 +667,13 @@ TestCase {
         compare(organizerModel.items.length, 0);
     }
 
+    function test_organizermodel_containsitems_data() {
+        return [
+            {tag: "memory backend", managerToBeTested: "memory"},
+            {tag: "jsondb backend", managerToBeTested: "jsondb"}
+        ]
+    }
+
     function test_organizermodel_containsitems(data) {
         var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
             + "import QtOrganizer 5.0\n"

@@ -360,7 +360,7 @@ ContactsSavingTestCase {
             compare(detail.prefix, "    Mr.  ")
             compare(detail.firstName, " Matti-Tapio ")
             compare(detail.middleName, "C. ")
-            compare(detail.lastName, "De  Angelis")
+            compare(detail.lastName, " De  Angelis")
             compare(detail.suffix, "Sr.")
         }
     }
@@ -528,9 +528,10 @@ ContactsSavingTestCase {
         compare(detail.title, "Title")
         compare(detail.assistantName, "Assistant name")
 
-        expectFail("", "TODO: contexts are not working as expected at the moment");
+        if (model.manager == 'jsondb')
+            expectFail("", "TODO: contexts are not working as expected at the moment");
         compare(detail.contexts.length, 1, "contexts length")
-        compare(detail.contexts[0], "Home", "contexts")
+        compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
 
     Organization {

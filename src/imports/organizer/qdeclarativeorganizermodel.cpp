@@ -898,11 +898,12 @@ int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTi
     fetchRequest->setMaxCount(maxCount);
     fetchRequest->setFetchHint(hint);
 
+    int requestId = d->m_lastRequestId.fetchAndAddOrdered(1);
+    d->m_requestIdHash.insert(fetchRequest, requestId);
     if (fetchRequest->start()) {
-        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
-        d->m_requestIdHash.insert(fetchRequest, requestId);
         return requestId;
     } else {
+        d->m_requestIdHash.remove(fetchRequest);
         return -1;
     }
 }
@@ -933,11 +934,12 @@ int QDeclarativeOrganizerModel::fetchItems(const QStringList &itemIds)
     foreach (const QString &itemId, itemIds)
         ids.append(QOrganizerItemId::fromString(itemId));
     fetchRequest->setIds(ids);
+    int requestId = d->m_lastRequestId.fetchAndAddOrdered(1);
+    d->m_requestIdHash.insert(fetchRequest, requestId);
     if (fetchRequest->start()) {
-        int requestId(d->m_lastRequestId.fetchAndAddOrdered(1));
-        d->m_requestIdHash.insert(fetchRequest, requestId);
         return requestId;
     } else {
+        d->m_requestIdHash.remove(fetchRequest);
         return -1;
     }
 }
@@ -962,6 +964,10 @@ void QDeclarativeOrganizerModel::onFetchItemsRequestStateChanged(QOrganizerAbstr
 
     checkError(request);
     const int requestId = d->m_requestIdHash.value(request, -1);
+    if (requestId == -1)
+        qWarning() << Q_FUNC_INFO << "transaction not found from the request hash";
+    else
+        d->m_requestIdHash.remove(request);
 
     QVariantList list;
     if (request->error() == QOrganizerManager::NoError) {

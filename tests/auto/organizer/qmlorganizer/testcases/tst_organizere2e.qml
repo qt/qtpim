@@ -246,7 +246,25 @@ TestCase {
                         for (var l = 0; l < model.items[j].itemDetails.length; l++) {
                             if (qmlItems[i].itemDetails[k].type == model.items[j].itemDetails[l].type) {
                                 match = true;
-                                // Todo, verify also detail fields
+                                var originalDetail = qmlItems[i].itemDetails[k];
+                                var modelDetail = model.items[j].itemDetails[l];
+                                var fieldType = originalDetail.type;
+                                // 10 is big enough number to go through all the fields of invidual detail
+                                for (var m = 0; m < 10; m++) {
+                                    fieldType++;
+                                    var originalFieldValue = originalDetail.value(fieldType);
+                                    var modelFieldValue = modelDetail.value(fieldType);
+                                    if (originalFieldValue == undefined) {
+                                        if (fieldType == Guid.FieldGuid) {
+                                            // exceptions, where model is updating the fields so they differ from original test set
+                                            continue;
+                                        }
+                                        verify(modelFieldValue == undefined)
+                                        break;// all fields for this detail have been checked
+                                    }
+                                    compare(modelFieldValue, originalFieldValue)
+                                }
+
                                 break;
                             }
                         }

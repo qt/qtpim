@@ -93,7 +93,7 @@ QContactActionFactory::~QContactActionFactory()
 /*!
   \fn QContactActionFactory::supportsContact(const QContact& contact, const QContactActionDescriptor& which) const
 
-  Returns true if the there are any targets for the given \a contact supported by the action described by \a which.
+  Returns true if there are any targets for the given \a contact supported by the action described by \a which.
  */
 
 /*!

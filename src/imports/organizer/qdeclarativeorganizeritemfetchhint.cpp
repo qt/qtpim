@@ -54,6 +54,12 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+  \qmlsignal FetchHint::onFetchHintChanged()
+
+  This signal is emitted, when any of the FetchHint's properties have been changed.
+ */
+
+/*!
     \internal
  */
 QDeclarativeOrganizerItemFetchHint::QDeclarativeOrganizerItemFetchHint(QObject *parent)
@@ -62,7 +68,7 @@ QDeclarativeOrganizerItemFetchHint::QDeclarativeOrganizerItemFetchHint(QObject *
 }
 
 /*!
-    \qmlproperty enumeration QtOrganizer::FetchHint::optimizationHints
+    \qmlproperty enumeration FetchHint::optimizationHints
 
     This property holds the optimization hint flags specified by the client.
 

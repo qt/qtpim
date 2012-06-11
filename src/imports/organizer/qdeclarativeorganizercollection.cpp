@@ -195,6 +195,8 @@ QVariant QDeclarativeOrganizerCollection::metaData(const QString &key) const
 }
 
 /*!
+    \qmlmethod Collection::setExtendedMetaData(key, value)
+
     Sets the value of the extended metadata with the given \a key to \a value.
  */
 void QDeclarativeOrganizerCollection::setExtendedMetaData(const QString &key, const QVariant &value)
@@ -206,6 +208,8 @@ void QDeclarativeOrganizerCollection::setExtendedMetaData(const QString &key, co
 }
 
 /*!
+    \qmlmethod var Collection::extendedMetaData(key)
+
     Returns the value of extended metadata with the given \a key.
  */
 QVariant QDeclarativeOrganizerCollection::extendedMetaData(const QString &key) const

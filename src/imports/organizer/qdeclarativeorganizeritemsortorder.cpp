@@ -57,6 +57,12 @@ QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *
 }
 
 /*!
+  \qmlsignal SortOrder::onSortOrderChanged()
+
+  This signal is emitted, when any of the SortOrder's properties have been changed.
+ */
+
+/*!
     \internal
  */
 void QDeclarativeOrganizerItemSortOrder::classBegin()

@@ -53,6 +53,12 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+  \qmlsignal QtOrganizer5::Filter::onFilterChanged()
+
+  This signal is emitted, when any of the Filter's or child element's (like DetailFilter, CollectionFilter etc) properties have been changed.
+ */
+
+/*!
     \internal
  */
 QDeclarativeOrganizerItemFilter::QDeclarativeOrganizerItemFilter(QObject *parent)
@@ -106,6 +112,12 @@ QOrganizerItemFilter QDeclarativeOrganizerItemFilter::filter() const
     \ingroup qml-organizer-filters
     \sa QOrganizerItemInvalidFilter
  */
+
+/*!
+  \qmlsignal InvalidFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -199,6 +211,12 @@ void QDeclarativeOrganizerItemCompoundFilter::filters_clear(QQmlListProperty<QDe
  */
 
 /*!
+  \qmlsignal InvalidFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
+
+/*!
     \internal
  */
 QDeclarativeOrganizerItemIntersectionFilter::QDeclarativeOrganizerItemIntersectionFilter(QObject *parent)
@@ -234,6 +252,12 @@ QOrganizerItemFilter QDeclarativeOrganizerItemIntersectionFilter::filter() const
     \ingroup qml-organizer-filters
     \sa QOrganizerItemUnionFilter
  */
+
+/*!
+  \qmlsignal UnionFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -272,6 +296,12 @@ QOrganizerItemFilter QDeclarativeOrganizerItemUnionFilter::filter() const
     \ingroup qml-organizer-filters
     \sa Collection
  */
+
+/*!
+  \qmlsignal CollectionFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -370,6 +400,12 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
 
     \sa QOrganizerItemDetailFilter
  */
+
+/*!
+  \qmlsignal DetailFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -473,6 +509,12 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail()
 
     \sa QOrganizerItemDetailFieldFilter
  */
+
+/*!
+  \qmlsignal DetailFieldFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -625,6 +667,12 @@ void QDeclarativeOrganizerItemDetailFieldFilter::setDetail()
     \ingroup qml-organizer-filters
     \sa QOrganizerItemDetailRangeFilter
  */
+
+/*!
+  \qmlsignal DetailRangeFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal
@@ -812,6 +860,12 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetail()
     \ingroup qml-organizer-filters
     \sa {QOrganizerItemIdFilter}
  */
+
+/*!
+  \qmlsignal IdFilter::onFilterChanged()
+
+  \sa QtOrganizer5::Filter::onFilterChanged
+*/
 
 /*!
     \internal

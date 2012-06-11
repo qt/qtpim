@@ -57,6 +57,12 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+  \qmlsignal Detail::onDetailChanged()
+
+  This signal is emitted, when any of the Details's or child element's (like EventTime, DisplayLabel etc) properties have been changed.
+ */
+
+/*!
     \internal
  */
 QDeclarativeOrganizerItemDetail::QDeclarativeOrganizerItemDetail(QObject *parent)
@@ -103,6 +109,10 @@ QDeclarativeOrganizerItemDetail::~QDeclarativeOrganizerItemDetail()
     \li Detail.TodoTime
     \li Detail.TodoProgress
     \endlist
+
+    \sa Classification, Comment, Description, DisplayLabel, ItemType, Guid, Location, Parent, Priority, Recurrence, Tag, Timestamp
+    \sa Version, Reminder, AudibleReminder, EmailReminder, VisualReminder, ExtendedDetail, EventAttendee, EventRsvp, EventTime
+    \sa JournalTime, TodoTime TodoProgress
  */
 QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetail::type() const
 {
@@ -181,7 +191,16 @@ void QDeclarativeOrganizerItemDetail::setDetail(const QOrganizerItemDetail &deta
     \li EventTime.FieldEndDateTime
     \li EventTime.FieldAllDay
     \endlist
+
+    \sa QOrganizerEventTime
  */
+
+/*!
+  \qmlsignal EventTime::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerEventTime::QDeclarativeOrganizerEventTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -260,7 +279,16 @@ QDateTime QDeclarativeOrganizerEventTime::endDateTime() const
     \list
     \li Comment.FieldComment
     \endlist
+
+    \sa QOrganizerItemComment
  */
+
+/*!
+  \qmlsignal Comment::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemComment::QDeclarativeOrganizerItemComment(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -303,7 +331,16 @@ QString QDeclarativeOrganizerItemComment::comment() const
     \list
     \li Description.FieldDescription
     \endlist
+
+    \sa QOrganizerItemDescription
  */
+
+/*!
+  \qmlsignal Description::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemDescription::QDeclarativeOrganizerItemDescription(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -346,7 +383,16 @@ QString QDeclarativeOrganizerItemDescription::description() const
     \list
     \li DisplayLabel.FieldLabel
     \endlist
+
+    \sa QOrganizerItemDisplayLabel
  */
+
+/*!
+  \qmlsignal DisplayLabel::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemDisplayLabel::QDeclarativeOrganizerItemDisplayLabel(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -360,7 +406,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDisplayLabe
 }
 
 /*!
-    \qmlproperty string DisplayLabel::displayLabel
+    \qmlproperty string DisplayLabel::label
 
     This property holds the display label text.
  */
@@ -389,7 +435,16 @@ QString QDeclarativeOrganizerItemDisplayLabel::label() const
     \list
     \li Guid.FieldGuid
     \endlist
+
+    \sa QOrganizerItemGuid
  */
+
+/*!
+  \qmlsignal Guid::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemGuid::QDeclarativeOrganizerItemGuid(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -434,7 +489,16 @@ QString QDeclarativeOrganizerItemGuid::guid() const
     \li Location.FieldLatitude
     \li Location.FieldLongitude
     \endlist
+
+    \sa QOrganizerItemLocation
  */
+
+/*!
+  \qmlsignal Location::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemLocation::QDeclarativeOrganizerItemLocation(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -514,7 +578,16 @@ QString QDeclarativeOrganizerItemLocation::label() const
     \li Parent.FieldParentId
     \li Parent.FieldOriginalDate
     \endlist
+
+    \sa QOrganizerItemParent
  */
+
+/*!
+  \qmlsignal Parent::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemParent::QDeclarativeOrganizerItemParent(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -530,7 +603,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemParent::typ
 /*!
     \qmlmethod variant Parent::value(field)
 
-    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+    \sa Detail::value
  */
 QVariant QDeclarativeOrganizerItemParent::value(int field) const
 {
@@ -555,10 +628,7 @@ QVariant QDeclarativeOrganizerItemParent::value(int field) const
 /*!
     \qmlmethod bool Parent::setValue(field, value)
 
-    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
-    the field with the given key from the detail. Returns true if the given value was set for the key (if
-    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
-    returns false if the key was unable to be removed (and the value was invalid).
+    \sa Detail::setValue
  */
 bool QDeclarativeOrganizerItemParent::setValue(int field, const QVariant &value)
 {
@@ -637,7 +707,16 @@ QString QDeclarativeOrganizerItemParent::parentId() const
     \list
     \li Priority.FieldPriority
     \endlist
+
+    \sa QOrganizerItemPriority
  */
+
+/*!
+  \qmlsignal Priority::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemPriority::QDeclarativeOrganizerItemPriority(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -698,6 +777,13 @@ QDeclarativeOrganizerItemPriority::Priority QDeclarativeOrganizerItemPriority::p
     \li Recurrence.FieldExceptionDates
     \endlist
  */
+
+/*!
+  \qmlsignal Recurrence::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemRecurrence::QDeclarativeOrganizerItemRecurrence(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -715,7 +801,7 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemRecurrence:
 /*!
     \qmlmethod variant Recurrence::value(field)
 
-    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+    \sa Detail::value
  */
 QVariant QDeclarativeOrganizerItemRecurrence::value(int field) const
 {
@@ -742,10 +828,7 @@ QVariant QDeclarativeOrganizerItemRecurrence::value(int field) const
 /*!
     \qmlmethod bool Recurrence::setValue(field, value)
 
-    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
-    the field with the given key from the detail. Returns true if the given value was set for the key (if
-    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
-    returns false if the key was unable to be removed (and the value was invalid).
+    \sa Detail::setValue
  */
 bool QDeclarativeOrganizerItemRecurrence::setValue(int field, const QVariant &value)
 {
@@ -952,7 +1035,16 @@ void QDeclarativeOrganizerItemRecurrence::xrule_clear(QQmlListProperty<QDeclarat
     \list
     \li Tag.FieldTag
     \endlist
+
+    \sa QOrganizerItemTag
  */
+
+/*!
+  \qmlsignal Tag::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemTag::QDeclarativeOrganizerItemTag(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -996,7 +1088,16 @@ QString QDeclarativeOrganizerItemTag::tag() const
     \li Timestamp.FieldCreated
     \li Timestamp.FieldLastModified
     \endlist
+
+    \sa QOrganizerItemTimestamp
  */
+
+/*!
+  \qmlsignal Timestamp::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemTimestamp::QDeclarativeOrganizerItemTimestamp(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1057,7 +1158,16 @@ QDateTime QDeclarativeOrganizerItemTimestamp::lastModified() const
     \list
     \li ItemType.FieldType
     \endlist
+
+    \sa QOrganizerItemType
  */
+
+/*!
+  \qmlsignal ItemType::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemType::QDeclarativeOrganizerItemType(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1109,7 +1219,16 @@ QDeclarativeOrganizerItemType::ItemType QDeclarativeOrganizerItemType::itemType(
     \list
     \li JournalTime.FieldEntryDateTime
     \endlist
+
+    \sa QOrganizerJournalTime
  */
+
+/*!
+  \qmlsignal JournalTime::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerJournalTime::QDeclarativeOrganizerJournalTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1153,7 +1272,16 @@ QDateTime QDeclarativeOrganizerJournalTime::entryDateTime() const
     \li TodoProgress.FieldPercentage
     \li TodoProgress.FieldFinishedDateTime
     \endlist
+
+    \sa QOrganizerTodoProgress
  */
+
+/*!
+  \qmlsignal TodoProgress::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerTodoProgress::QDeclarativeOrganizerTodoProgress(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1244,7 +1372,16 @@ QDeclarativeOrganizerTodoProgress::StatusType QDeclarativeOrganizerTodoProgress:
     \li TodoTime.FieldDueDateTime
     \li TodoTime.FieldAllDay
     \endlist
+
+    \sa QOrganizerTodoTime
  */
+
+/*!
+  \qmlsignal TodoTime::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerTodoTime::QDeclarativeOrganizerTodoTime(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1325,7 +1462,16 @@ QDateTime QDeclarativeOrganizerTodoTime::dueDateTime() const
     \li Reminder.FieldRepetitionDelay
     \li Reminder.FieldSecondsBeforeStart
     \endlist
+
+    \sa QOrganizerItemReminder
  */
+
+/*!
+  \qmlsignal Reminder::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemReminder::QDeclarativeOrganizerItemReminder(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1432,7 +1578,16 @@ int QDeclarativeOrganizerItemReminder::secondsBeforeStart() const
     \li AudibleReminder.FieldSecondsBeforeStart
     \li AudibleReminder.FieldDataUrl
     \endlist
+
+    \sa Reminder QOrganizerItemAudibleReminder
  */
+
+/*!
+  \qmlsignal AudibleReminder::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemAudibleReminder::QDeclarativeOrganizerItemAudibleReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
 {
@@ -1482,7 +1637,16 @@ QUrl QDeclarativeOrganizerItemAudibleReminder::dataUrl() const
     \li EmailReminder.FieldRecipients
     \li EmailReminder.FieldAttachments
     \endlist
+
+    \sa Reminder QOrganizerItemEmailReminder
  */
+
+/*!
+  \qmlsignal EmailReminder::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemEmailReminder::QDeclarativeOrganizerItemEmailReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
 {
@@ -1585,7 +1749,16 @@ QVariantList QDeclarativeOrganizerItemEmailReminder::attachments()
     \li VisualReminder.FieldDataUrl
     \li VisualReminder.FieldMessage
     \endlist
+
+    \sa Reminder QOrganizerItemVisualReminder
  */
+
+/*!
+  \qmlsignal VisualReminder::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemVisualReminder::QDeclarativeOrganizerItemVisualReminder(QObject *parent)
     : QDeclarativeOrganizerItemReminder(parent)
 {
@@ -1647,7 +1820,16 @@ QUrl QDeclarativeOrganizerItemVisualReminder::dataUrl() const
     \li ExtendedDetail.FieldName
     \li ExtendedDetail.FieldData
     \endlist
+
+    \sa QOrganizerItemExtendedDetail
  */
+
+/*!
+  \qmlsignal ExtendedDetail::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemExtendedDetail::QDeclarativeOrganizerItemExtendedDetail(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1711,7 +1893,16 @@ QVariant QDeclarativeOrganizerItemExtendedDetail::data() const
     \li EventAttendee.FieldParticipationStatus
     \li EventAttendee.FieldParticipationRole
     \endlist
+
+    \sa QOrganizerEventAttendee
  */
+
+/*!
+  \qmlsignal EventAttendee::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerEventAttendee::QDeclarativeOrganizerEventAttendee(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1846,6 +2037,13 @@ QString QDeclarativeOrganizerEventAttendee::attendeeId() const
 
     \sa QOrganizerEventRsvp
  */
+
+/*!
+  \qmlsignal EventRsvp::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerEventRsvp::QDeclarativeOrganizerEventRsvp(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -1861,7 +2059,7 @@ QDeclarativeOrganizerEventRsvp::DetailType QDeclarativeOrganizerEventRsvp::type(
 /*!
     \qmlmethod variant EventRsvp::value(field)
 
-    Returns the value stored in this detail for the given \a field, or an empty variant if not available.
+    \sa Detail::value
  */
 QVariant QDeclarativeOrganizerEventRsvp::value(int field) const
 {
@@ -1886,10 +2084,7 @@ QVariant QDeclarativeOrganizerEventRsvp::value(int field) const
 /*!
     \qmlmethod bool EventRsvp::setValue(field, value)
 
-    Inserts \a value into the detail for the given \a key if value is valid. If value is invalid, removes
-    the field with the given key from the detail. Returns true if the given value was set for the key (if
-    the value was valid), or if the given key was removed from detail (if the value was invalid), otherwise
-    returns false if the key was unable to be removed (and the value was invalid).
+    \sa Detail::setValue
  */
 bool QDeclarativeOrganizerEventRsvp::setValue(int field, const QVariant &value)
 {
@@ -2069,6 +2264,13 @@ QString QDeclarativeOrganizerEventRsvp::organizerEmail() const
 
     \sa QOrganizerItemClassification
  */
+
+/*!
+  \qmlsignal Classification::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemClassification::QDeclarativeOrganizerItemClassification(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {
@@ -2115,6 +2317,13 @@ QDeclarativeOrganizerItemClassification::AccessClassification QDeclarativeOrgani
 
     \sa QOrganizerItemVersion
  */
+
+/*!
+  \qmlsignal Version::onDetailChanged()
+
+  \sa Detail::onDetailChanged
+*/
+
 QDeclarativeOrganizerItemVersion::QDeclarativeOrganizerItemVersion(QObject *parent)
     : QDeclarativeOrganizerItemDetail(parent)
 {

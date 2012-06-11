@@ -63,6 +63,12 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
+  \qmlsignal OrganizerItem::onItemChanged()
+
+  This signal is emitted, when any of the OrganizerItem's or child element's (like Event, Todo etc) properties have been changed.
+ */
+
+/*!
     \internal
  */
 QDeclarativeOrganizerItem::QDeclarativeOrganizerItem(QObject *parent)
@@ -85,7 +91,7 @@ QDeclarativeOrganizerItem::~QDeclarativeOrganizerItem()
 
     This property holds the dirty flag of the OrganizerItem object.
 
-    \sa OrganizerItem::save
+    \sa save
  */
 bool QDeclarativeOrganizerItem::modified() const
 {
@@ -271,9 +277,11 @@ void QDeclarativeOrganizerItem::setGuid(const QString &guid)
 
 // functions
 /*!
-    \qmlmethod Detail OrganizerItem::detail(Detail::ItemDetailType)
+    \qmlmethod Detail OrganizerItem::detail(type)
 
     Returns the first detail stored in the organizer item with the given \a type.
+
+    \sa Detail::type
  */
 QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::detail(int type)
 {
@@ -289,9 +297,11 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItem::detail(int type)
 }
 
 /*!
-    \qmlmethod list<Detail> OrganizerItem::details(Detail::ItemDetailType)
+    \qmlmethod list<Detail> OrganizerItem::details(type)
 
     Returns all the details stored in the organizer item with the given \a type.
+
+    \sa Detail::type
  */
 QVariantList QDeclarativeOrganizerItem::details(int type)
 {
@@ -334,7 +344,7 @@ void QDeclarativeOrganizerItem::removeDetail(QDeclarativeOrganizerItemDetail *de
 
     Removes all details from the organizer item.
 
-    \sa OrganizerItem::removeDetail()
+    \sa removeDetail
  */
 void QDeclarativeOrganizerItem::clearDetails()
 {
@@ -347,7 +357,7 @@ void QDeclarativeOrganizerItem::clearDetails()
 
     Saves this OrganizerItem if the item has been modified.
 
-    \sa OrganizerItem::modified
+    \sa modified
  */
 void QDeclarativeOrganizerItem::save()
 {
@@ -577,6 +587,12 @@ bool QDeclarativeOrganizerItem::_q_clearDetails()
 */
 
 /*!
+  \qmlsignal Event::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
+*/
+
+/*!
     \internal
  */
 QDeclarativeOrganizerEvent::QDeclarativeOrganizerEvent(QObject *parent)
@@ -613,7 +629,7 @@ void QDeclarativeOrganizerEvent::removeDetail(QDeclarativeOrganizerItemDetail *d
 
     Removes all details from the organizer event.
 
-    \sa Event::removeDetail()
+    \sa removeDetail()
  */
 void QDeclarativeOrganizerEvent::clearDetails()
 {
@@ -925,6 +941,12 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
  */
 
 /*!
+  \qmlsignal EventOccurrence::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
+*/
+
+/*!
     \internal
  */
 QDeclarativeOrganizerEventOccurrence::QDeclarativeOrganizerEventOccurrence(QObject *parent)
@@ -1204,6 +1226,12 @@ bool QDeclarativeOrganizerEventOccurrence::isAllDay() const
  */
 
 /*!
+  \qmlsignal Journal::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
+*/
+
+/*!
     \internal
  */
 QDeclarativeOrganizerJournal::QDeclarativeOrganizerJournal(QObject *parent)
@@ -1260,6 +1288,12 @@ QDateTime QDeclarativeOrganizerJournal::dateTime() const
  */
 
 /*!
+  \qmlsignal Note::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
+*/
+
+/*!
     \internal
  */
 QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
@@ -1278,6 +1312,12 @@ QDeclarativeOrganizerNote::QDeclarativeOrganizerNote(QObject *parent)
     \ingroup qml-organizer-items
 
     \sa OrganizerItem, Event, EventOccurrence, Journal, TodoOccurrence, Note, {QOrganizerTodo}
+*/
+
+/*!
+  \qmlsignal Todo::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
 */
 
 /*!
@@ -1581,6 +1621,13 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
 
     \sa OrganizerItem, Event, EventOccurrence, Journal, Todo, Note, {QOrganizerTodoOccurrence}
  */
+
+/*!
+  \qmlsignal TodoOccurrence::onItemChanged()
+
+  \sa OrganizerItem::onItemChanged
+*/
+
 QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject *parent)
     : QDeclarativeOrganizerItem(parent)
 {

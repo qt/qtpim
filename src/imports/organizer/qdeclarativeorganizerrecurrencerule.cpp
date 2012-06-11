@@ -53,6 +53,12 @@ QTORGANIZER_BEGIN_NAMESPACE
 */
 
 /*!
+  \qmlsignal RecurrenceRule::onRecurrenceRuleChanged()
+
+  This signal is emitted, when any of the RecurrenceRule's properties have been changed.
+ */
+
+/*!
     \internal
  */
 QDeclarativeOrganizerRecurrenceRule::QDeclarativeOrganizerRecurrenceRule(QObject *parent)

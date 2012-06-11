@@ -180,13 +180,12 @@ public:
 */
 
 /*!
-  \qmlsignal OrganizerModel::modelChanged()
+  \qmlsignal OrganizerModel::onModelChanged()
 
   This signal is emitted, when there are changes in items contained by \l OrganizerModel's data model. Items have either
   been added, removed or modified. This signal is also always emitted during OrganizerModel construction when data model is
   ready for use, even in cases when data model is not having any items in it.
  */
-
 QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     QAbstractListModel(parent),
     d_ptr(new QDeclarativeOrganizerModelPrivate)
@@ -432,15 +431,6 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   \sa OrganizerModel::saveCollection()
   \sa OrganizerModel::saveItem()
 */
-
-/*!
-  \qmlsignal OrganizerModel::storageLocationsChanged()
-
-  This signal is emitted, when \l OrganizerModel::storageLocations property changes.
-
-  \sa OrganizerModel::storageLocations
- */
-
 /*!
   \qmlproperty int OrganizerModel::storageLocations
 
@@ -448,7 +438,7 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   of property is int, it can be utilized as flag with several values.
 
   storageLocations is a backend specific feature. Some backends support it and some might just ignore it. If backend
-  is having some specific requirements and they're not met, backend returns StorageLocationsNotExistingError.
+  is having some specific requirements and they're not met, backend returns MissingPlatformRequirementsError.
 
   \sa OrganizerModel::StorageLocation
 */
@@ -483,7 +473,7 @@ void QDeclarativeOrganizerModel::setStorageLocations(int storageLocationsFlag)
 */
 
 /*!
-  \qmlsignal OrganizerModel::importCompleted()
+  \qmlsignal OrganizerModel::onImportCompleted()
 
   This signal is emitted, when \l OrganizerModel::importItems() completes. The success of operation
   can be seen on \a error which is defined in \l OrganizerModel::ImportError. \a url indicates the
@@ -534,6 +524,13 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList 
     emit importCompleted(importError, url);
 }
 
+/*!
+  \qmlsignal OrganizerModel::onExportCompleted()
+
+  This signal is emitted, when \l OrganizerModel::exportItems() completes. The success of operation
+  can be seen on \a error which is defined in \l OrganizerModel::ExportError. \a url indicates the
+  file, which was exported.
+ */
 /*!
   \qmlmethod OrganizerModel::exportItems(url url, list<string> profiles)
   Export organizer items into a vcalendar file to the given \a url by optional \a profiles.
@@ -841,12 +838,12 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
  */
 
 /*!
-    \qmlmethod int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTime &end,
-                               QDeclarativeOrganizerItemFilter *filter,
+    \qmlmethod int OrganizerModel::fetchItems(date start, date end,
+                               Filter filter,
                                int maxCount,
-                               const QVariantList &sortOrders,
-                               QDeclarativeOrganizerItemFetchHint *fetchHint,
-                               QDeclarativeOrganizerModel::StorageLocation storageLocation)
+                               list<SortOrder> sortOrders,
+                               FetchHint fetchHint,
+                               StorageLocation storageLocation)
 
     This method will start a request to fetch items between the given \a start and \a end dates.
     Optionally a \a sort order, \a filter, \a fetchHint, \a storageLocation and \a maxCount can

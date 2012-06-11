@@ -338,9 +338,9 @@ void matchCall(QContactManager* cm, const QString& incomingCallNbr)
 void viewSpecificDetail(QContactManager* cm)
 {
     QList<QContactId> contactIds = cm->contactIds();
-    QContact a = cm->contact(contactIds.first());
-    qDebug() << "The first phone number of" << a.displayLabel()
-             << "is" << a.detail(QContactPhoneNumber::Type).value(QContactPhoneNumber::FieldNumber);
+    QContact exampleContact = cm->contact(contactIds.first());
+    qDebug() << "The first phone number of" << exampleContact.displayLabel()
+             << "is" << exampleContact.detail(QContactPhoneNumber::Type).value(QContactPhoneNumber::FieldNumber);
 }
 //! [Viewing a specific detail of a contact]
 
@@ -348,8 +348,8 @@ void viewSpecificDetail(QContactManager* cm)
 void viewDetails(QContactManager* cm)
 {
     QList<QContactId> contactIds = cm->contactIds();
-    QContact a = cm->contact(contactIds.first());
-    qDebug() << "Viewing the details of" << a.displayLabel();
+    QContact exampleContact = cm->contact(contactIds.first());
+    qDebug() << "Viewing the details of" << exampleContact.displayLabel();
 
     QList<QContactDetail> allDetails = a.details();
     for (int i = 0; i < allDetails.size(); i++) {

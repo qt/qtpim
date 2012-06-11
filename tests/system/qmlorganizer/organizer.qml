@@ -74,7 +74,7 @@ Rectangle {
             }
         }
 
-        DetailFilter {
+        DetailFieldFilter {
             id: todoFilter
             detail: Detail.ItemType
             field: Type.FieldType

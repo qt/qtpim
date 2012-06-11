@@ -219,7 +219,7 @@ void MonthPage::refresh()
     }
 
     // As the day item list is not showed do not refresh
-    // the day items in Maemo5 or Maemo6 to improve performance
+    // the day items to improve performance
     refreshDayItems();
 }
 

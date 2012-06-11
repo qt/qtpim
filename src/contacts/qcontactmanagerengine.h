@@ -70,7 +70,7 @@ public:
     QContactManagerEngine() {}
 
     /* URI reporting */
-    virtual QString managerName() const = 0;                       // e.g. "Symbian"
+    virtual QString managerName() const = 0;                       // e.g. "memory"
     virtual QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
     virtual int managerVersion() const = 0;
 

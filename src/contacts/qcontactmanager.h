@@ -86,7 +86,7 @@ public:
     static QContactManager* fromUri(const QString& uri, QObject* parent = 0);
     ~QContactManager();                     // dtor
 
-    QString managerName() const;                       // e.g. "Symbian"
+    QString managerName() const;                       // e.g. "memory"
     QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
     QString managerUri() const;                        // managerName + managerParameters
     int managerVersion() const;

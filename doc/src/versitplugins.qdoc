@@ -69,7 +69,7 @@ Writing a plugin involves these steps:
 \li Include the following two lines at the top of the factory declaration:
 \code
 Q_OBJECT
-Q_INTERFACES(QtMobility::QVersitContactHandlerFactory)
+Q_INTERFACES(QtVersit::QVersitContactHandlerFactory)
 \endcode
 \li Export the plugin using the Q_EXPORT_PLUGIN2 macro.
 \li Build the plugin using a suitable \tt{.pro} file.

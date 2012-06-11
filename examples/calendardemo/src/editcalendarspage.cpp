@@ -54,7 +54,7 @@ EditCalendarsPage::EditCalendarsPage(QWidget *parent)
     m_calendarList = new QListWidget(this);
     connect(m_calendarList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(itemDoubleClicked(QListWidgetItem *)));
 
-    // Add push buttons for non-Symbian platforms as they do not support soft keys
+    // Add push buttons
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *addButton = new QPushButton("Add new", this);
     connect(addButton,SIGNAL(clicked()), this, SIGNAL(addClicked()));

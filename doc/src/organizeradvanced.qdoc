@@ -114,39 +114,16 @@ client API to access organizer information from any QOrganizerManager.}
 
 \section2 Provided Engines
 
-The Organizer module of the QtMobility project includes several backends
-already, some of which are designed to interface with the default calendar on
-their particular platform.
+The Qt Organizer module includes several backends already, some of which are
+designed to interface with the default calendar on their particular platform.
 
 \section3 In-Memory Example Engine
 
-The in-memory engine identifies itself as the "memory" engine. It is available
-on all platforms which are supported by the QtMobility project.
+The in-memory engine identifies itself as the "memory" engine.
 
 The in-memory engine supports the default schema, and provides almost all
-functionality available through the QtMobility Organizer API; however, all data
+functionality available through the Qt Organizer API; however, all data
 is stored in-memory and is not persisted in any way.
-
-\section3 Symbian Engine
-
-The Symbian engine identifies itself as the "symbian" engine, and is only
-available on the Symbian S60 3.1, S60 3.2, S60 5.0 and Symbian^3 platforms.
-
-The Symbian engine supports a modified version of the default schema. The schema
-supported by the Symbian engine depends on which version of the platform is
-being used.
-
-The Symbian engine allows clients to use both the asynchronous and synchronous
-interfaces, and persists all saved data to the system calendar.
-
-\section3 Maemo 5 (Fremantle) Engine
-
-The Maemo 5 (Fremantle) engine identifies itself as the "maemo5" engine, but is
-only available on the Maemo 5 (Fremantle) platform which has the correct
-libraries installed (including calendar-backend).
-
-The Maemo 5 (Fremantle) engine supports a modified version of the default
-schema, and persists all saved information to the system calendar.
 
 \section1 Manager Settings And Configuration
 
@@ -171,7 +148,7 @@ Qt Service Framework), this code assumes that the client has prior knowledge of
 the backend in question:
 
 \code
-     QOrganizerManager specificManager("symbian");
+     QOrganizerManager specificManager("memory");
 \endcode
 
 Clients may wish to use this feature of the API if they wish to store or

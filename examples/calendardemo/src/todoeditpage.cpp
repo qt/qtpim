@@ -86,7 +86,7 @@ TodoEditPage::TodoEditPage(QWidget *parent)
     m_calendarComboBox = new QComboBox(this);
     // the calendar names are not know here, fill the combo box later...
 
-    // Add push buttons for non-Symbian platforms as they do not support soft keys
+    // Add push buttons
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Save", this);
     connect(okButton,SIGNAL(clicked()),this,SLOT(saveClicked()));

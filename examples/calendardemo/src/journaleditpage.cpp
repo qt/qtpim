@@ -76,7 +76,7 @@ JournalEditPage::JournalEditPage(QWidget *parent)
     m_calendarComboBox = new QComboBox(this);
     // the calendar names are not know here, fill the combo box later...
 
-    // Add push buttons for Maemo as it does not support soft keys
+    // Add push buttons
     QHBoxLayout* hbLayout = new QHBoxLayout();
     QPushButton *okButton = new QPushButton("Ok", this);
     connect(okButton,SIGNAL(clicked()),this,SLOT(saveClicked()));

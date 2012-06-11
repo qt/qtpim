@@ -68,7 +68,7 @@ A manager backend may be implemented by subclassing
 
 Each engine interfaces with a particular datastore, and that datastore may
 have its own particular way of identifying items stored in it.  The
-QtMobility Organizer API allows engine implementers to define their own
+Qt Organizer API allows engine implementers to define their own
 id format.
 
 Engine implementers must implement their own id classes derived from
@@ -227,7 +227,7 @@ implemented in a similar manner to the (provided) memory engine's naive implemen
 
 \section2 Example Implementation
 
-There are several implementations of QOrganizerManagerEngine available in the QtMobility
+There are several implementations of QOrganizerManagerEngine available in the QtPim
 source code repository.  In particular, the "memory" engine provides an implementation of
 an in-memory, anonymous datastore which supports almost every feature in the API, and therefore
 is useful for demonstration purposes.  Be aware, however, that the implementation of all

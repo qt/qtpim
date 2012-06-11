@@ -43,6 +43,9 @@
 
 QTVERSIT_BEGIN_NAMESPACE
 
+/*!
+  \internal
+ */
 QStringList QVersitContactHandlerFactory::keys() const
 {
     return QStringList() << name();

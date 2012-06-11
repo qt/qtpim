@@ -78,7 +78,7 @@ QContactRelationshipFetchRequest::~QContactRelationshipFetchRequest()
     QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
-/*! Sets the source contact criterion of the fetch request to \a firstId.
+/*! Sets the source contact criterion of the fetch request to \a firstContact.
     If \a firstContact is empty, or the first contact is not set,
     the request will fetch relationships involving any first contact.
 */
@@ -118,8 +118,8 @@ QString QContactRelationshipFetchRequest::relationshipType() const
     return d->m_relationshipType;
 }
 
-/*! Sets the destination contact criterion of the fetch request to \a secondId.
-    If \a secondId is the default-constructed id, or the second contact id is not set,
+/*! Sets the destination contact criterion of the fetch request to \a secondContact.
+    If \a secondContact is the default-constructed empty contact or the second contact is not set,
     the request will fetch relationships involving any second contact.
 */
 void QContactRelationshipFetchRequest::setSecond(const QContact& secondContact)

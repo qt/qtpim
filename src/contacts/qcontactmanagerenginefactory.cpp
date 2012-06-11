@@ -71,6 +71,9 @@ QContactManagerEngineFactory::~QContactManagerEngineFactory()
 {
 }
 
+/*!
+  \internal
+ */
 QStringList QContactManagerEngineFactory::keys() const
 {
     return QStringList() << managerName();

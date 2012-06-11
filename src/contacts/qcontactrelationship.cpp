@@ -245,7 +245,7 @@ QString QContactRelationship::relationshipType() const
 }
 
 /*!
- * Sets the id of the first contact in the relationship to \a firstId.  This contact
+ * Sets the first contact in the relationship to \a firstContact.  This contact
  * must be stored in the manager in which the relationship is stored, and has
  * a relationship of the specified type with the second contact.
  * \sa first()
@@ -256,7 +256,7 @@ void QContactRelationship::setFirst(const QContact& firstContact)
 }
 
 /*!
- * Sets the second contact in the relationship to \a secondId.  The first contact
+ * Sets the second contact in the relationship to \a secondContact.  The first contact
  * has a relationship of the specified type with this contact.
  * \sa second()
  */

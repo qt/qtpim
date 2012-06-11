@@ -125,7 +125,7 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
    \qmlclass DetailFilter QDeclarativeContactDetailFilter
-   \brief The \l DetailFilter element provides a filter based around a detail value criterion.
+   \brief The DetailFilter element provides a filter based around a detail value criterion.
 
    \ingroup qml-contacts-filters
    \inqmlmodule QtContacts 5.0

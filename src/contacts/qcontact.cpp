@@ -367,6 +367,8 @@ QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
  * of an existing detail. For this use case, the clients must use the
  * saveDetail() method.
  *
+ * Returns true if the detail was appended successfully, otherwise returns false.
+ *
  * \sa saveDetail()
  */
 bool QContact::appendDetail(const QContactDetail &detail)

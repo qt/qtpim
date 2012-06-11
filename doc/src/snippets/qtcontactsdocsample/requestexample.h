@@ -55,11 +55,11 @@
 //
 
 #include <QObject>
-#include "qmobilityglobal.h"
+#include "qcontactsglobal.h"
 #include "qcontactrequests.h"
 
 //! [Class setup]
-QTM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 class AsyncRequestExample : public QObject
 {
     Q_OBJECT

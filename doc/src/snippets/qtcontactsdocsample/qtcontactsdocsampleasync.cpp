@@ -39,16 +39,17 @@
 **
 ****************************************************************************/
 
-#include "qmobilityglobal.h"
-#include "qtcontacts.h"
 #include "requestexample.h"
+
+#include <qcontactsglobal.h>
+#include <qcontacts.h>
 
 #include <QDebug>
 #include <QCoreApplication>
 #include <QObject>
 #include <QTimer>
 
-QTM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 
 AsyncRequestExample::AsyncRequestExample()
     : QObject()
@@ -73,7 +74,7 @@ void AsyncRequestExample::contactFetchRequestStateChanged(QContactAbstractReques
 
         QList<QContact> results = request->contacts();
         for (int i = 0; i < results.size(); i++) {
-            qDebug() << "Retrieved contact:" << results.at(i).displayLabel();
+            qDebug() << "Retrieved contact:" << results.at(i);
         }
     } else if (newState == QContactAbstractRequest::CanceledState) {
         qDebug() << "Fetch operation canceled!";
@@ -213,9 +214,9 @@ void AsyncRequestExample::performRequests()
 
     // third, create the relationship between those contacts
     QContactRelationship groupRelationship;
-    groupRelationship.setFirst(exampleGroup.id());
-    groupRelationship.setRelationshipType(QContactRelationship::HasMember);
-    groupRelationship.setSecond(exampleGroupMember.id());
+    groupRelationship.setFirst(exampleGroup);
+    groupRelationship.setRelationshipType(QContactRelationship::HasMember());
+    groupRelationship.setSecond(exampleGroupMember);
 
     // finally, save the relationship in the manager
     connect(&m_relationshipSaveRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(relationshipSaveRequestStateChanged(QContactAbstractRequest::State)));
@@ -233,8 +234,8 @@ void AsyncRequestExample::performRequests()
     // where the group contact is the first contact in the relationship, and the member contact is the
     // second contact in the relationship.  In order to fetch all relationships between them, another
     // relationship fetch must be performed with their roles reversed, and the results added together.
-    m_relationshipFetchRequest.setFirst(exampleGroup.id());
-    m_relationshipFetchRequest.setSecond(exampleGroupMember.id());
+    m_relationshipFetchRequest.setFirst(exampleGroup);
+    m_relationshipFetchRequest.setSecond(exampleGroupMember);
     m_relationshipFetchRequest.start();
 //! [Retrieving relationships between contacts]
 
@@ -242,7 +243,7 @@ void AsyncRequestExample::performRequests()
 
 //! [Providing a fetch hint]
     QContactFetchHint hasMemberRelationshipsOnly;
-    hasMemberRelationshipsOnly.setRelationshipTypesHint(QStringList(QContactRelationship::HasMember));
+    hasMemberRelationshipsOnly.setRelationshipTypesHint(QStringList(QContactRelationship::HasMember()));
 
     m_contactFetchRequest.setManager(m_manager);
     m_contactFetchRequest.setFilter(QContactFilter()); // all contacts

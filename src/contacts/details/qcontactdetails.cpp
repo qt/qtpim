@@ -280,12 +280,12 @@ const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeA
 
    This enumeration defines the fields supported by QContactAnniversary.
 
+   \value FieldCalendarId The value stored in this field is the id of the calendar event.
    \value FieldOriginalDate The value stored in this field is either a date, or a date and time.  Some managers
    may support either type, while others may convert the value here
    to a specific type (either discarding the time if only a date is
    supported, or by using midnight if a time is not supplied).
    \value FieldEvent The value stored in this field is the name of the event value.
-   \value FieldCalendarId The value stored in this field is the id of the calendar event.
    \value FieldSubType The value stored in this field is the sub type of a QContactAnniversary.
    \sa originalDate(), setOriginalDate(), originalDateTime(), setOriginalDateTime()
    \sa event(), setEvent()
@@ -1426,6 +1426,7 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
 
    This enumeration defines the predefined enum constants for a protocol value of a QContactOnlineAccount.
 
+   \value ProtocolUnknown The value stored indicates this online account is for one unsupported protocol.
    \value ProtocolAim The value stored indicates this online account is for the AIM protocol.
    \value ProtocolIcq The value stored indicates this online account is for the ICQ protocol.
    \value ProtocolIrc The value stored indicates this online account is for the IRC protocol.
@@ -1434,7 +1435,6 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    \value ProtocolQq The value stored indicates this online account is for the QQ protocol.
    \value ProtocolSkype The value stored indicates this online account is for the Skype protocol.
    \value ProtocolYahoo The value stored indicates this online account is for the Yahoo protocol.
-   \value ProtocolUnknown The value stored indicates this online account is for one unsupported protocol.
    \sa protocol(), setProtocol()
  */
 

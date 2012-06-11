@@ -555,14 +555,14 @@ void shortsnippets()
         //! [5]
         //! [6]
         // Who are the members of a group contact?
-        QList<QContactId> groupMembers = groupContact.relatedContacts(QContactRelationship::HasMember, QContactRelationship::Second);
+        QList<QContact> groupMembers = groupContact.relatedContacts(QContactRelationship::HasMember, QContactRelationship::Second);
         // What groups is this contact in?
-        QList<QContactId> contactGroups = contact.relatedContacts(QContactRelationship::HasMember, QContactRelationship::First);
+        QList<QContact> contactGroups = contact.relatedContacts(QContactRelationship::HasMember, QContactRelationship::First);
         // An alternative to QContact::relationships()
-        QList<QContactId> spouses = contact.relatedContacts(QContactRelationship::HasSpouse, QContactRelationship::Either);
+        QList<QContact> spouses = contact.relatedContacts(QContactRelationship::HasSpouse, QContactRelationship::Either);
         if (spouses.count() > 1) {
             // Custom relationship type
-            QList<QContactId> therapists = contact.relatedContacts("HasTherapist", QContactRelationship::Second);
+            QList<QContact> therapists = contact.relatedContacts("HasTherapist", QContactRelationship::Second);
         }
         //! [6]
         //! [Getting all tags]

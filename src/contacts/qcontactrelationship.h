@@ -62,12 +62,12 @@ class QContact;
 class Q_CONTACTS_EXPORT QContactRelationship
 {
 public:
-    inline static const QString HasMember() {return QStringLiteral("HasMember");};
-    inline static const QString Aggregates() {return QStringLiteral("Aggregates");};
-    inline static const QString IsSameAs() {return QStringLiteral("IsSameAs");};
-    inline static const QString HasAssistant() {return QStringLiteral("HasAssistant");};
-    inline static const QString HasManager() {return QStringLiteral("HasManager");};
-    inline static const QString HasSpouse() {return QStringLiteral("HasSpouse");};
+    inline static const QString HasMember() {return QStringLiteral("HasMember");}
+    inline static const QString Aggregates() {return QStringLiteral("Aggregates");}
+    inline static const QString IsSameAs() {return QStringLiteral("IsSameAs");}
+    inline static const QString HasAssistant() {return QStringLiteral("HasAssistant");}
+    inline static const QString HasManager() {return QStringLiteral("HasManager");}
+    inline static const QString HasSpouse() {return QStringLiteral("HasSpouse");}
 
     QContactRelationship();
     ~QContactRelationship();

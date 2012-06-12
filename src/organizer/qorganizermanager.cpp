@@ -592,7 +592,7 @@ QOrganizerItem QOrganizerManager::item(const QOrganizerItemId& itemId, const QOr
     Note that upon successful saving, the backend may update the item, e.g. item ID for newly saved
     items, GUID, timestamp, version, etc.
 
-    \sa saveItems
+    \sa saveItems()
  */
 bool QOrganizerManager::saveItem(QOrganizerItem *item, const QList<QOrganizerItemDetail::DetailType> &detailMask)
 {
@@ -607,7 +607,7 @@ bool QOrganizerManager::saveItem(QOrganizerItem *item, const QList<QOrganizerIte
     Removes all the item whose ID is \a itemId, and all its occurrences. Returns true if the item
     and occurrences are successfully removed, or false otherwise.
 
-    \sa removeItems
+    \sa removeItems()
  */
 bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
 {
@@ -619,7 +619,7 @@ bool QOrganizerManager::removeItem(const QOrganizerItemId& itemId)
     the start date of the occurrence is added to its parent item's exception date list.
     Returns true if the organizer item was removed successfully, otherwise returns false.
 
-    \sa removeItems
+    \sa removeItems()
  */
 bool QOrganizerManager::removeItem(const QOrganizerItem *item)
 {
@@ -648,7 +648,7 @@ bool QOrganizerManager::removeItem(const QOrganizerItem *item)
     Calling errorMap() will return the per-input errors for the operation. The error() function will
     only return QOrganizerManager::NoError if all organizer items were saved successfully.
 
-    \sa saveItem
+    \sa saveItem()
  */
 bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QList<QOrganizerItemDetail::DetailType> &detailMask)
 {
@@ -668,7 +668,7 @@ bool QOrganizerManager::saveItems(QList<QOrganizerItem>* items, const QList<QOrg
     Calling errorMap() will return the per-input errors for the operation. The error() function will
     only return QOrganizerManager::NoError if all organizer items were saved successfully.
 
-    \sa removeItem
+    \sa removeItem()
  */
 bool QOrganizerManager::removeItems(const QList<QOrganizerItemId> &itemIds)
 {

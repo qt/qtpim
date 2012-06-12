@@ -82,7 +82,9 @@ public:
     int repetitionCount() const;
 
 protected:
+    /*! \internal */
     QOrganizerItemReminder(DetailType detailType) : QOrganizerItemDetail(detailType) {}
+    /*! \internal */
     QOrganizerItemReminder(const QOrganizerItemDetail &detail, DetailType detailType) : QOrganizerItemDetail(detail, detailType) {}
 };
 

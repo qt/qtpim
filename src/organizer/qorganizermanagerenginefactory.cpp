@@ -104,7 +104,6 @@ QOrganizerManagerEngineFactory::~QOrganizerManagerEngineFactory()
 
 /*!
     \internal
-    \reimp
  */
 QStringList QOrganizerManagerEngineFactory::keys() const
 {

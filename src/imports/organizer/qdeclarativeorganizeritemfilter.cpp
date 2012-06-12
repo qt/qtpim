@@ -434,7 +434,7 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail()
 /*!
     \qmlclass DetailFieldFilter QDeclarativeOrganizerItemDetailFieldFilter
     \brief The DetailFieldFilter element provides a filter based around a detail value criterion.
-    \inqmlmodule QtOrganizer
+    \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-filters
 
     Simple example how to utilize DetailFieldFilter element together with OrganizerModel and ListView elements:

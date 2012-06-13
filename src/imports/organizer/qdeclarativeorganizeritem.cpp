@@ -1153,6 +1153,42 @@ QString QDeclarativeOrganizerEventOccurrence::parentId() const
     return QString::null;
 }
 
+/*!
+    \qmlproperty bool EventOccurrence::allDay
+
+    This property indicates whether the time-of-day component of the event occurrence's start date-time or end date-time is
+    insignificant. If allDay is true, the time-of-day component is considered insignificant, and the event occurrence will
+    be an all-day item.
+ */
+void QDeclarativeOrganizerEventOccurrence::setAllDay(bool allDay)
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type()) {
+            QDeclarativeOrganizerEventTime *eventTime = static_cast<QDeclarativeOrganizerEventTime *>(detail);
+            if (eventTime->isAllDay() != allDay) {
+                eventTime->setAllDay(allDay);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
+        }
+    }
+
+    QDeclarativeOrganizerEventTime *eventTime = new QDeclarativeOrganizerEventTime(this);
+    eventTime->setAllDay(allDay);
+    m_details.append(eventTime);
+    m_modified = true;
+    emit valueChanged();
+}
+
+bool QDeclarativeOrganizerEventOccurrence::isAllDay() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::EventTime == detail->type())
+            return static_cast<QDeclarativeOrganizerEventTime *>(detail)->isAllDay();
+    }
+    return false;
+}
 
 /*!
     \qmlclass Journal QDeclarativeOrganizerJournal
@@ -1543,6 +1579,43 @@ QDeclarativeOrganizerTodoOccurrence::QDeclarativeOrganizerTodoOccurrence(QObject
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(itemChanged()));
     setItem(QOrganizerTodoOccurrence());
+}
+
+/*!
+    \qmlproperty bool TodoOccurrence::allDay
+
+    This property indicates whether the time-of-day component of the todo occurrence's start date-time or due date-time is
+    insignificant. If allDay is true, the time-of-day component is considered insignificant, and the todo occurrence will
+    be an all-day item.
+ */
+void QDeclarativeOrganizerTodoOccurrence::setAllDay(bool allDay)
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type()) {
+            QDeclarativeOrganizerTodoTime *todoTime = static_cast<QDeclarativeOrganizerTodoTime *>(detail);
+            if (todoTime->isAllDay() != allDay) {
+                todoTime->setAllDay(allDay);
+                m_modified = true;
+                emit valueChanged();
+            }
+            return;
+        }
+    }
+
+    QDeclarativeOrganizerTodoTime *todoTime = new QDeclarativeOrganizerTodoTime(this);
+    todoTime->setAllDay(allDay);
+    m_details.append(todoTime);
+    m_modified = true;
+    emit valueChanged();
+}
+
+bool QDeclarativeOrganizerTodoOccurrence::isAllDay() const
+{
+    foreach (QDeclarativeOrganizerItemDetail *detail, m_details) {
+        if (QDeclarativeOrganizerItemDetail::TodoTime == detail->type())
+            return static_cast<QDeclarativeOrganizerTodoTime *>(detail)->isAllDay();
+    }
+    return false;
 }
 
 /*!

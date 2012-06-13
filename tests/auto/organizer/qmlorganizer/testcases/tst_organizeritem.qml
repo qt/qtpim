@@ -96,7 +96,24 @@ TestCase {
     }
 
     function test_todoOccurrence() {
+        var itemChangedSpy = utility.create_testobject("import QtTest 1.0;"
+                 + "SignalSpy {}"
+                 , organizerItemTests);
+        itemChangedSpy.target = todoOccurrence;
+        itemChangedSpy.signalName = "itemChanged";
+        var count = 0;
+
         compare(todoOccurrence.itemType, Type.TodoOccurrence)
+
+        compare(todoOccurrence.allDay, false)
+        todoOccurrence.allDay = true;
+        itemChangedSpy.wait(waitTime);
+        compare(todoOccurrence.allDay, true)
+        compare(itemChangedSpy.count, ++count)
+        todoOccurrence.allDay = false;
+        itemChangedSpy.wait(waitTime);
+        compare(todoOccurrence.allDay, false)
+        compare(itemChangedSpy.count, ++count)
 
         todoOccurrence.percentageComplete = 89
         compare(todoOccurrence.percentageComplete, 89)
@@ -183,6 +200,16 @@ TestCase {
         itemChangedSpy.target = eventOccurrence;
         itemChangedSpy.signalName = "itemChanged";
         var count = 0;
+
+        compare(eventOccurrence.allDay, false)
+        eventOccurrence.allDay = true;
+        itemChangedSpy.wait(waitTime);
+        compare(eventOccurrence.allDay, true)
+        compare(itemChangedSpy.count, ++count)
+        eventOccurrence.allDay = false;
+        itemChangedSpy.wait(waitTime);
+        compare(eventOccurrence.allDay, false)
+        compare(itemChangedSpy.count, ++count)
 
         compare(eventOccurrence.itemType, Type.EventOccurrence)
 

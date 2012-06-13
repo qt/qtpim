@@ -196,6 +196,7 @@ class QDeclarativeOrganizerEventOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(QDateTime originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
     Q_PROPERTY(QDateTime endDateTime READ endDateTime WRITE setEndDateTime NOTIFY valueChanged)
@@ -205,6 +206,9 @@ class QDeclarativeOrganizerEventOccurrence : public QDeclarativeOrganizerItem
 
 public:
     explicit QDeclarativeOrganizerEventOccurrence(QObject *parent = 0);
+
+    void setAllDay(bool isAllDay);
+    bool isAllDay() const;
 
     void setOriginalDate(const QDateTime &date);
     QDateTime originalDate() const;
@@ -306,6 +310,7 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool allDay READ isAllDay WRITE setAllDay NOTIFY valueChanged)
     Q_PROPERTY(int percentageComplete READ percentageComplete WRITE setPercentageComplete NOTIFY valueChanged)
     Q_PROPERTY(QDateTime originalDate READ originalDate WRITE setOriginalDate NOTIFY valueChanged)
     Q_PROPERTY(QDateTime startDateTime READ startDateTime WRITE setStartDateTime NOTIFY valueChanged)
@@ -317,6 +322,9 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
 
 public:
     explicit QDeclarativeOrganizerTodoOccurrence(QObject *parent = 0);
+
+    void setAllDay(bool isAllDay);
+    bool isAllDay() const;
 
     void setPercentageComplete(int percentageComplete);
     int percentageComplete() const;

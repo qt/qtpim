@@ -113,6 +113,16 @@ Event {
         data: 1
     }
 
+    ExtendedDetail {
+        name: "extended detail: array data"
+        data: ["string 1", "string 2"]
+    }
+
+    ExtendedDetail {
+        name: "extended detail: object data"
+        data: {"key 1": "string 1", "key 2": "string 2"}
+    }
+
     EventAttendee {
         name: "Event attendee"
         emailAddress: "new.attendee@qt.com"

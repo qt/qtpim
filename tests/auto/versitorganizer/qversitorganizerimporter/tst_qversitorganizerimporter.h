@@ -70,8 +70,10 @@ private slots:
             const QVariant &data);
     QVersitProperty createExtendedDetailProperty(
             const QString &name,
-            const QString &dataType,
             const QVariant &data);
+    QVersitProperty createExtendedDetailPropertyForStringData(
+            const QString &name,
+            const QString &data);
 
     void testTimeZones();
     void testTimeZones_data();

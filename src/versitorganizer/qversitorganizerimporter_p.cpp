@@ -45,6 +45,7 @@
 #include <qorganizer.h>
 #include "qversitorganizerdefs_p.h"
 #include "qversitorganizerpluginloader_p.h"
+#include <private/qversitutils_p.h>
 
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
@@ -472,20 +473,12 @@ bool QVersitOrganizerImporterPrivate::createExtendedDetail(
         return false;
 
     QStringList values = variant.toStringList();
-    QString typeInfo;
-
     extendedDetail.setName(takeFirst(values));
-    typeInfo = takeFirst(values);
-    if (typeInfo == QString::fromLatin1(QVariant::typeToName(QVariant::String))) {
-        extendedDetail.setData(QVariant(takeFirst(values)));
-    } else if (typeInfo == QString::fromLatin1(QVariant::typeToName(QVariant::Int))) {
-        bool conversionSuccessful = true;
-        extendedDetail.setData(QVariant(takeFirst(values).toInt(&conversionSuccessful)));
-        if (!conversionSuccessful)
-            return false;
-    } else {
+    QVariant data;
+    if (VersitUtils::convertFromJson(takeFirst(values), &data))
+        extendedDetail.setData(data);
+    else
         return false;
-    }
 
     updatedDetails->append(extendedDetail);
     return true;

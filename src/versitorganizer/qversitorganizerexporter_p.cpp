@@ -46,6 +46,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 #include "qversitorganizerpluginloader_p.h"
+#include <private/qversitutils_p.h>
 
 QTVERSITORGANIZER_BEGIN_NAMESPACE
 
@@ -776,18 +777,19 @@ void QVersitOrganizerExporterPrivate::encodeExtendedDetail(
         QSet<int> *processedFields)
 {
     const QOrganizerItemExtendedDetail &extendedDetail = static_cast<const QOrganizerItemExtendedDetail &>(detail);
-    if ((extendedDetail.data().type() == QVariant::String) || (extendedDetail.data().type() == QVariant::Int)) {
-        QVersitProperty property;
-        property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
-        property.setValue(QStringList()
-                          << extendedDetail.name()
-                          << QString::fromLatin1(extendedDetail.data().typeName())
-                          << extendedDetail.data().toString());
-        property.setValueType(QVersitProperty::CompoundType);
-        *generatedProperties << property;
-        *processedFields << QOrganizerItemExtendedDetail::FieldName
-                         << QOrganizerItemExtendedDetail::FieldData;
+    QVersitProperty property;
+    property.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
+    QString dataAsJson;
+    if (VersitUtils::convertToJson(extendedDetail.data(), &dataAsJson)) {
+        property.setValue(QStringList() << extendedDetail.name() << dataAsJson);
+    } else {
+        qWarning() << Q_FUNC_INFO << "Failed to export an extended detail";
+        return;
     }
+    property.setValueType(QVersitProperty::CompoundType);
+    *generatedProperties << property;
+    *processedFields << QOrganizerItemExtendedDetail::FieldName
+                     << QOrganizerItemExtendedDetail::FieldData;
 }
 
 void QVersitOrganizerExporterPrivate::encodeSimpleProperty(

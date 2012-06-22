@@ -56,30 +56,14 @@
 #  define QTORGANIZER_USE_NAMESPACE using namespace QtOrganizer;
 #endif
 
-#if defined(Q_OS_WIN)
-#  if defined(QT_NODLL)
-#    undef QT_MAKEDLL
-#    undef QT_DLL
-#  elif defined(QT_MAKEDLL)
-#    if defined(QT_DLL)
-#      undef QT_DLL
-#    endif
-#    if defined(QT_BUILD_ORGANIZER_LIB)
-#      define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
-#    else
-#      define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
-#    endif
-#  elif defined(QT_DLL)
-#    define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
-#  endif
-#endif
-
-#if !defined(Q_ORGANIZER_EXPORT)
-#  if defined(QT_SHARED)
+#ifndef QT_STATIC
+#  if defined(QT_BUILD_ORGANIZER_LIB)
 #    define Q_ORGANIZER_EXPORT Q_DECL_EXPORT
 #  else
-#    define Q_ORGANIZER_EXPORT
+#    define Q_ORGANIZER_EXPORT Q_DECL_IMPORT
 #  endif
+#else
+#  define Q_ORGANIZER_EXPORT
 #endif
 
 #define QTORGANIZER_BACKEND_VERSION QString(QStringLiteral("org.qt-project.Qt.organizer.backendVersion"))

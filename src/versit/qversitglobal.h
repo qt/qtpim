@@ -56,30 +56,14 @@
 #  define QTVERSIT_USE_NAMESPACE using namespace QtVersit;
 #endif
 
-#if defined(Q_OS_WIN)
-#  if defined(QT_NODLL)
-#    undef QT_MAKEDLL
-#    undef QT_DLL
-#  elif defined(QT_MAKEDLL)
-#    if defined(QT_DLL)
-#      undef QT_DLL
-#    endif
-#    if defined(QT_BUILD_VERSIT_LIB)
-#      define Q_VERSIT_EXPORT Q_DECL_EXPORT
-#    else
-#      define Q_VERSIT_EXPORT Q_DECL_IMPORT
-#    endif
-#  elif defined(QT_DLL)
-#    define Q_VERSIT_EXPORT Q_DECL_IMPORT
-#  endif
-#endif
-
-#if !defined(Q_VERSIT_EXPORT)
-#  if defined(QT_SHARED)
+#ifndef QT_STATIC
+#  if defined(QT_BUILD_VERSIT_LIB)
 #    define Q_VERSIT_EXPORT Q_DECL_EXPORT
 #  else
-#    define Q_VERSIT_EXPORT
+#    define Q_VERSIT_EXPORT Q_DECL_IMPORT
 #  endif
+#else
+#  define Q_VERSIT_EXPORT
 #endif
 
 #endif // QVERSITGLOBAL_H

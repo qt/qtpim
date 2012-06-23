@@ -6,3 +6,4 @@ SUBDIRS += \
     organizer \
     versit \
     versitorganizer \
+    cmake \

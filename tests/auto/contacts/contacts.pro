@@ -7,8 +7,6 @@ SUBDIRS += \
     qcontactdetail \
     qcontactdetails \
     qcontactfilter \
-    qcontactmanager \
-    qcontactmanagerdetails \
 #TODO: re-enable the manager plugins test
 #when it has been adapted to new Qt plugin mechanism
 #    qcontactmanagerplugins \
@@ -18,7 +16,9 @@ SUBDIRS += \
 contains(QT_CONFIG, jsondb) {
     SUBDIRS += qcontactjsondb \
                qcontactjsondbconverter \
-               qcontactjsondbstoragelocations
+               qcontactjsondbstoragelocations \
+               qcontactmanager \
+               qcontactmanagerdetails
 
 }
 

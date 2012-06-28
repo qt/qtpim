@@ -41,6 +41,7 @@
 
 #include "qorganizeritemfetchhint_p.h"
 
+#include <QtCore/QDataStream>
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif // QT_NO_DEBUG_STREAM

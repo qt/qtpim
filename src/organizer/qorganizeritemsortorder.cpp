@@ -42,6 +42,7 @@
 #include <qorganizeritemsortorder.h>
 #include <private/qorganizeritemsortorder_p.h>
 
+#include <QtCore/QDataStream>
 #ifndef QT_NO_DEBUG_STREAM
 #include <QDebug>
 #endif

@@ -1,19 +1,3 @@
-TARGET  = declarative_organizer
-TARGETPATH = QtOrganizer
-
-include(qorganizerimport.pri)
-target.path = $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-DESTDIR = $$QT.organizer.imports/$$TARGETPATH
-INSTALLS += target
-
-qmldir.files += $$PWD/qmldir
-qmldir.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-INSTALLS += qmldir
-
-qmlplugintypes.files += $$PWD/plugins.qmltypes
-qmlplugintypes.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-INSTALLS += qmlplugintypes
-
 QT += qml organizer versit versitorganizer
 
 # Input
@@ -35,3 +19,5 @@ SOURCES += plugin.cpp \
            qdeclarativeorganizeritemsortorder.cpp \
            qdeclarativeorganizerrecurrencerule.cpp \
            qdeclarativeorganizeritemfetchhint.cpp
+
+load(qml_plugin)

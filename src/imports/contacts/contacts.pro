@@ -1,22 +1,5 @@
-TARGET  = declarative_contacts
-TARGETPATH = QtContacts
-
-include(qcontactsimport.pri)
-target.path = $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-DESTDIR = $$QT.contacts.imports/$$TARGETPATH
-INSTALLS += target
-
-qmldir.files += $$PWD/qmldir
-qmldir.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-INSTALLS += qmldir
-
-qmlplugintypes.files += $$PWD/plugins.qmltypes
-qmlplugintypes.path +=  $$[QT_INSTALL_IMPORTS]/$$TARGETPATH
-INSTALLS += qmlplugintypes
-
 QT += qml contacts versit
 
-# Input
 include(details/details.pri)
 include(filters/filters.pri)
 
@@ -42,3 +25,5 @@ SOURCES += plugin.cpp \
 RESOURCES += contacts.qrc
 
 OTHER_FILES += contacts.json
+
+load(qml_plugin)

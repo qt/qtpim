@@ -146,11 +146,6 @@ inline uint qHash(QOrganizerRecurrenceRule::Month month)
 QTORGANIZER_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
-inline uint qHash(const QDate &date)
-{
-    return date.toJulianDay();
-}
-
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 

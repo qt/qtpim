@@ -45,7 +45,8 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-    \qmlclass RecurrenceRule QDeclarativeOrganizerRecurrenceRule
+    \qmltype RecurrenceRule
+    \instantiates QDeclarativeOrganizerRecurrenceRule
     \brief The RecurrenceRule element represents a rule by which a organizer item repeats.
     \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-main

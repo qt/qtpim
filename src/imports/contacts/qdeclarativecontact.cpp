@@ -50,7 +50,8 @@
 #include <QQmlListProperty>
 
 /*!
-    \qmlclass Contact QDeclarativeContact
+    \qmltype Contact
+    \instantiates QDeclarativeContact
     \brief The Contact element represents an addressbook contact.
     \ingroup qml-contacts-main
     \inqmlmodule QtContacts 5.0

@@ -44,7 +44,8 @@
 QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass Filter QDeclarativeContactFilter
+   \qmltype Filter
+    \instantiates QDeclarativeContactFilter
    \brief The Filter element is used as a property of ContactModel, to allow
    selection of contacts which have certain details or properties.
 
@@ -77,7 +78,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass ActionFilter QDeclarativeContactActionFilter
+   \qmltype ActionFilter
+    \instantiates QDeclarativeContactActionFilter
    \brief The ActionFilter element provides a filter based around an action availability criterion.
 
    \ingroup qml-contacts-filters
@@ -95,7 +97,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass ChangeLogFilter QDeclarativeContactChangeLogFilter
+   \qmltype ChangeLogFilter
+    \instantiates QDeclarativeContactChangeLogFilter
    \brief The ChangeLogFilter element provides a filter based around a contact timestamp criterion.
 
    \ingroup qml-contacts-filters
@@ -124,7 +127,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass DetailFilter QDeclarativeContactDetailFilter
+   \qmltype DetailFilter
+    \instantiates QDeclarativeContactDetailFilter
    \brief The DetailFilter element provides a filter based around a detail value criterion.
 
    \ingroup qml-contacts-filters
@@ -197,7 +201,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass DetailRangeFilter QDeclarativeContactDetailRangeFilter
+   \qmltype DetailRangeFilter
+    \instantiates QDeclarativeContactDetailRangeFilter
    \brief The DetailRangeFilter element provides a filter based around a detail value range criterion.
 
 
@@ -257,7 +262,8 @@ QTCONTACTS_BEGIN_NAMESPACE
     \endlist
   */
 /*!
-   \qmlclass IntersectionFilter QDeclarativeContactIntersectionFilter
+   \qmltype IntersectionFilter
+    \instantiates QDeclarativeContactIntersectionFilter
    \brief The IntersectionFilter element provides a filter which intersects the results of other filters.
 
    \ingroup qml-contacts-filters
@@ -276,7 +282,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
 /*!
-   \qmlclass UnionFilter QDeclarativeContactUnionFilter
+   \qmltype UnionFilter
+    \instantiates QDeclarativeContactUnionFilter
    \brief The UnionFilter element provides a filter which unions the results of other filters.
 
    \ingroup qml-contacts-filters
@@ -294,7 +301,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass IdFilter QDeclarativeContactIdFilter
+   \qmltype IdFilter
+    \instantiates QDeclarativeContactIdFilter
    \brief The IdFilter element provides a filter based around a list of contact ids.
 
    \ingroup qml-contacts-filters
@@ -313,7 +321,8 @@ QTCONTACTS_BEGIN_NAMESPACE
 
 
 /*!
-   \qmlclass RelationshipFilter QDeclarativeContactRelationshipFilter
+   \qmltype RelationshipFilter
+    \instantiates QDeclarativeContactRelationshipFilter
    \brief The RelationshipFilter element provides a filter based around relationship criteria.
 
    \ingroup qml-contacts-filters
@@ -355,7 +364,8 @@ QTCONTACTS_BEGIN_NAMESPACE
   */
 
 /*!
-   \qmlclass InvalidFilter QDeclarativeContactInvalidFilter
+   \qmltype InvalidFilter
+    \instantiates QDeclarativeContactInvalidFilter
    \brief the InvalidFilter element provides a filter which will never match any contacts.
 
    \ingroup qml-contacts-filters

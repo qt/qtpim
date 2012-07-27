@@ -44,7 +44,8 @@
 QTORGANIZER_BEGIN_NAMESPACE
 
 /*!
-    \qmlclass Collection QDeclarativeOrganizerCollection
+    \qmltype Collection
+    \instantiates QDeclarativeOrganizerCollection
     \brief The Collection element represents a collection of items in an organizer manager.
     \inqmlmodule QtOrganizer 5.0
     \ingroup qml-organizer-main

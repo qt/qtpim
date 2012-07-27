@@ -45,7 +45,8 @@
 QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass Relationship QDeclarativeContactRelationship
+   \qmltype Relationship
+    \instantiates QDeclarativeContactRelationship
    \brief The Relationship element describes a one-to-one relationship
   between a locally-stored contact and another (possibly remote) contact.
 

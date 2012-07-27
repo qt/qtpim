@@ -46,7 +46,8 @@
 QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass FetchHint QDeclarativeContactFetchHint
+   \qmltype FetchHint
+    \instantiates QDeclarativeContactFetchHint
    \brief The FetchHint element provides hints to the manager about which contact
   information needs to be retrieved in an asynchronous fetch request or a synchronous
   function call.

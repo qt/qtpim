@@ -48,7 +48,8 @@
 QTCONTACTS_BEGIN_NAMESPACE
 
 /*!
-   \qmlclass RelationshipModel QDeclarativeContactRelationshipModel
+   \qmltype RelationshipModel
+    \instantiates QDeclarativeContactRelationshipModel
    \brief The RelationshipModel provides a model of contact relationships from the contacts store.
 
    \ingroup qml-contacts-main

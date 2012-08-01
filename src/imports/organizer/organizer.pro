@@ -20,4 +20,6 @@ SOURCES += plugin.cpp \
            qdeclarativeorganizerrecurrencerule.cpp \
            qdeclarativeorganizeritemfetchhint.cpp
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+
 load(qml_plugin)

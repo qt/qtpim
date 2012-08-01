@@ -43,3 +43,4 @@ OTHER_FILES += \
     testcases/tst_contacts_sorting_e2e.qml \
     testcases/tst_contact_urls.qml
 QT += qmltest contacts versit
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

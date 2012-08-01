@@ -19,3 +19,4 @@ CONFIG += mobility
 MOBILITY = contacts serviceframework
 SOURCES  += tst_qcontactactions.cpp
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -10,3 +10,4 @@ HEADERS += ../../qcontactmanagerdataholder.h
 HEADERS += ../../../jsondbprocess.h
 INCLUDEPATH += ../..
 INCLUDEPATH += ../../..
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

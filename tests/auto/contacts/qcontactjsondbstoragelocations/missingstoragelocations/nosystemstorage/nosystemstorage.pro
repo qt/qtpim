@@ -18,3 +18,4 @@ INCLUDEPATH += ../../../..
 INCLUDEPATH += ../../../../../../src/plugins/contacts/jsondb
 
 OTHER_FILES += partitions.json
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

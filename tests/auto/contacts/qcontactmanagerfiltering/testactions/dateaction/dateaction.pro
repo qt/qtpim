@@ -26,3 +26,4 @@ xml.files = xmldata/dateactionservice.xml
 xml.CONFIG = no_link no_dependencies explicit_dependencies no_build combine ignore_no_exist no_clean
 INSTALLS += xml
 build_pass:ALL_DEPS+=install_xml
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

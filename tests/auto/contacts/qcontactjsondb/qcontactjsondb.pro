@@ -30,3 +30,4 @@ HEADERS += qcontactjsondbbackup.h \
            synchronizedjsondbclient.h \
            synchronizedworker.h \
            ../../jsondbprocess.h
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -21,3 +21,4 @@ HEADERS += ../../../../src/plugins/contacts/jsondb/qcontactjsondbenginefactory.h
 
 INCLUDEPATH += ../../../../src/plugins/contacts/jsondb
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

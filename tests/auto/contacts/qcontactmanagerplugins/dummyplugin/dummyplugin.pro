@@ -15,3 +15,4 @@ DEFINES += DUMMYPLUGINNAME=testdummy
 target.path += $$[QT_INSTALL_PLUGINS]/contacts
 INSTALLS += target
 OTHER_FILES += dummy.json
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -965,13 +965,6 @@ Module {
                 "ImportParseError": 5
             }
         }
-        Enum {
-            name: "StorageLocation"
-            values: {
-                "UserDataStorage": 1,
-                "SystemStorage": 2
-            }
-        }
         Property { name: "manager"; type: "string" }
         Property { name: "managerName"; type: "string"; isReadonly: true }
         Property { name: "availableManagers"; type: "QStringList"; isReadonly: true }
@@ -993,7 +986,6 @@ Module {
             isList: true
             isReadonly: true
         }
-        Property { name: "storageLocations"; type: "int" }
         Property { name: "error"; type: "string"; isReadonly: true }
         Property { name: "itemCount"; type: "int"; isReadonly: true }
         Signal { name: "managerChanged"; type: "void" }
@@ -1025,7 +1017,6 @@ Module {
             Parameter { name: "error"; type: "ImportError" }
             Parameter { name: "url"; type: "QUrl" }
         }
-        Signal { name: "storageLocationsChanged"; type: "void" }
         Method { name: "update"; type: "void" }
         Method { name: "updateItems"; type: "void" }
         Method { name: "updateCollections"; type: "void" }
@@ -1054,7 +1045,6 @@ Module {
             name: "saveItem"
             type: "void"
             Parameter { name: "item"; type: "QDeclarativeOrganizerItem"; isPointer: true }
-            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "saveItem"
@@ -1075,7 +1065,6 @@ Module {
             Parameter { name: "maxCount"; type: "int" }
             Parameter { name: "sortOrders"; type: "QVariantList" }
             Parameter { name: "fetchHint"; type: "QDeclarativeOrganizerItemFetchHint"; isPointer: true }
-            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "fetchItems"
@@ -1126,7 +1115,6 @@ Module {
             name: "saveCollection"
             type: "void"
             Parameter { name: "collection"; type: "QDeclarativeOrganizerCollection"; isPointer: true }
-            Parameter { name: "storageLocation"; type: "QDeclarativeOrganizerModel::StorageLocation" }
         }
         Method {
             name: "saveCollection"

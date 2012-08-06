@@ -89,16 +89,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-  \fn QOrganizerAbstractRequest::StorageLocation QOrganizerItemEngineId::storageLocation() const
-
-  Returns the storage location where the item is from. Default value is UserDataStorage.
- */
-QOrganizerAbstractRequest::StorageLocation QOrganizerItemEngineId::storageLocation() const
-{
-    return QOrganizerAbstractRequest::UserDataStorage;
-}
-
-/*!
   \fn QOrganizerItemEngineId::toString() const
   Serializes the id to a string.  It contains all of the information
   required to identify a particular item in the manager which created

@@ -256,9 +256,9 @@ const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerTo
 const QOrganizerJsonDbEnumConversionData *QOrganizerJsonDbConverter::organizerStorageLocationMap()
 {
     static const QOrganizerJsonDbEnumConversionData map[] = {
-        {QOrganizerAbstractRequest::UserDataStorage,        QString(QStringLiteral("com.nokia.mt.User"))},
-        {QOrganizerAbstractRequest::SystemStorage,          QString(QStringLiteral("com.nokia.mt.System"))},
-        {enumMapEnd,                                        QString::null}
+        {QOrganizerJsonDbEngine::UserDataStorage,        QString(QStringLiteral("com.nokia.mt.User"))},
+        {QOrganizerJsonDbEngine::SystemStorage,          QString(QStringLiteral("com.nokia.mt.System"))},
+        {enumMapEnd,                                     QString::null}
     };
     return map;
 }
@@ -292,7 +292,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     case QJsonDbRequest::InvalidPartition:
         // FIXME; We propably need to add more finegrained error inspection
         // related to partition accesses, now there is only InvalidPartition.
-        return QOrganizerManager::InvalidStorageLocationError;
+        return QOrganizerManager::UnspecifiedError;
     case QJsonDbRequest::DatabaseConnectionError:
         return QOrganizerManager::UnspecifiedError;
     default:
@@ -300,7 +300,7 @@ QOrganizerManager::Error QOrganizerJsonDbConverter::jsonDbRequestErrorToOrganize
     }
 }
 
-bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerAbstractRequest::StorageLocation storageLocation) const
+bool QOrganizerJsonDbConverter::jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerJsonDbEngine::StorageLocation storageLocation) const
 {
     QJsonObject objectToParse;
 
@@ -1230,7 +1230,7 @@ void QOrganizerJsonDbConverter::jsonDbObjectToLocationDetail(const QJsonObject &
     }
 }
 
-bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerAbstractRequest::StorageLocation storageLocation) const
+bool QOrganizerJsonDbConverter::jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerJsonDbEngine::StorageLocation storageLocation) const
 {
     bool hasCollectionId(false);
 
@@ -1347,27 +1347,27 @@ void QOrganizerJsonDbConverter::jsonDbVersionToItemVersion(const QString &jsonDb
     }
 }
 
-const QStringList QOrganizerJsonDbConverter::storageLocationsFlagToStrings(const QOrganizerAbstractRequest::StorageLocations storageLocationsFlag)
+const QStringList QOrganizerJsonDbConverter::storageLocationsFlagToStrings(const QOrganizerJsonDbEngine::StorageLocations storageLocationsFlag)
 {
     QStringList storageLocations;
 
-    if (QOrganizerAbstractRequest::UserDataStorage & storageLocationsFlag)
-        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerAbstractRequest::UserDataStorage));
-    if (QOrganizerAbstractRequest::SystemStorage & storageLocationsFlag)
-        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerAbstractRequest::SystemStorage));
+    if (QOrganizerJsonDbEngine::UserDataStorage & storageLocationsFlag)
+        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerJsonDbEngine::UserDataStorage));
+    if (QOrganizerJsonDbEngine::SystemStorage & storageLocationsFlag)
+        storageLocations.append(enumToString(organizerStorageLocationMap(), QOrganizerJsonDbEngine::SystemStorage));
 
     return storageLocations;
 }
 
-QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbConverter::storageLocationStringToEnum(const QString &storageLocation)
+QOrganizerJsonDbEngine::StorageLocation QOrganizerJsonDbConverter::storageLocationStringToEnum(const QString &storageLocation)
 {
-    return QOrganizerAbstractRequest::StorageLocation(stringToEnum(organizerStorageLocationMap(), storageLocation));
+    return QOrganizerJsonDbEngine::StorageLocation(stringToEnum(organizerStorageLocationMap(), storageLocation));
 }
 
-QOrganizerAbstractRequest::StorageLocations QOrganizerJsonDbConverter::storageLocationListToFlag(const QList<QOrganizerAbstractRequest::StorageLocation> storageLocationsList)
+QOrganizerJsonDbEngine::StorageLocations QOrganizerJsonDbConverter::storageLocationListToFlag(const QList<QOrganizerJsonDbEngine::StorageLocation> storageLocationsList)
 {
-    QOrganizerAbstractRequest::StorageLocations locationsFlag(0);
-    foreach (QOrganizerAbstractRequest::StorageLocation location, storageLocationsList) {
+    QOrganizerJsonDbEngine::StorageLocations locationsFlag(0);
+    foreach (QOrganizerJsonDbEngine::StorageLocation location, storageLocationsList) {
         locationsFlag |= location;
     }
     return locationsFlag;
@@ -1700,7 +1700,7 @@ QString QOrganizerJsonDbConverter::jsonDbNotificationObjectToOrganizerType(const
     return object.value(QOrganizerJsonDbStr::jsonDbType()).toString();
 }
 
-QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const
+QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(const QJsonObject &object, QOrganizerJsonDbEngine::StorageLocation storageLocation) const
 {
     QString jsonDbUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonDbUuid.isEmpty()) {
@@ -1713,7 +1713,7 @@ QOrganizerItemId QOrganizerJsonDbConverter::jsonDbNotificationObjectToItemId(con
     }
 }
 
-QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const
+QOrganizerCollectionId QOrganizerJsonDbConverter::jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerJsonDbEngine::StorageLocation storageLocation) const
 {
     QString jsonUuid = object.value(QOrganizerJsonDbStr::jsonDbUuid()).toString();
     if (jsonUuid.isEmpty()) {
@@ -1846,7 +1846,6 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         } else {
             QVariant extDetailDataValue = detail.value(QOrganizerItemExtendedDetail::FieldData);
             QString extDetailValueString = extDetailDataValue.toString();
-            QVariant::Type dataValueType = extDetailDataValue.type();
             QJsonValue jsonVal = QJsonValue::fromVariant(extDetailDataValue);
             if ( jsonVal.isString())
                 extDetailValueString = QString(QStringLiteral("\"%1\"").arg(extDetailValueString));
@@ -1857,7 +1856,6 @@ bool QOrganizerJsonDbConverter::detailFilterToJsondbQuery(const QOrganizerItemFi
         }
     }
 
-    QMap<int, QVariant>::const_iterator fieldsIterator = detail.values().constBegin();
     QVariant fieldValue;
     foreach (int field, QOrganizerJsonDbEngine::supportedDetailFields(detailType)) {
         if (detail.hasValue(field)) {

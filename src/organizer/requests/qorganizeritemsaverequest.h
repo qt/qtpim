@@ -66,9 +66,6 @@ public:
     void setDetailMask(const QList<QOrganizerItemDetail::DetailType> &detailMask);
     QList<QOrganizerItemDetail::DetailType> detailMask() const;
 
-    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
-    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
-
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
 private:

@@ -53,6 +53,8 @@
 // We mean it.
 //
 
+#include "qorganizerjsondbengine.h"
+
 #include <QtOrganizer/qorganizercollectionchangeset.h>
 #include <QtOrganizer/qorganizeritemchangeset.h>
 #include <QtOrganizer/qorganizeritemrequests.h>
@@ -127,10 +129,10 @@ private:
     bool typesAreRelated(QOrganizerItemType::ItemType occurrenceType, QOrganizerItemType::ItemType parentType);
     bool fixParentReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
     bool fixGuidReferences(QOrganizerItem *item, const QOrganizerItem &parentItem);
-    bool fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem, bool itemIsNew, QOrganizerAbstractRequest::StorageLocation storageLocation);
+    bool fixCollectionReferences(QOrganizerItem *item, const QOrganizerItem &parentItem, bool itemIsNew, QOrganizerJsonDbEngine::StorageLocation storageLocation);
 
     QList<QOrganizerItem> internalItems(const QDateTime &startDate, const QDateTime &endDate, const QOrganizerItemFilter &filter, const QList<QOrganizerItemSortOrder> &sortOrders,
-                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, bool forExport, QOrganizerAbstractRequest::StorageLocations storageLocations) const;
+                                        const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error, bool forExport, QOrganizerJsonDbEngine::StorageLocations storageLocations) const;
     QList<QOrganizerItem> internalItemOccurrences(const QOrganizerItem &parentItem, const QDateTime &periodStart, const QDateTime &periodEnd, const QOrganizerItemFetchHint &fetchHint,
                                                   int maxCount, bool includeExceptions, bool sortItems, QList<QDate> *exceptionDates, QOrganizerManager::Error *error) const;
 
@@ -140,9 +142,9 @@ private:
     bool validRequest(QOrganizerAbstractRequest *req);
     bool validPlatform(QOrganizerAbstractRequest *req);
 
-    QOrganizerManager::Error checkRequestSpecificStorageLocation(const QOrganizerAbstractRequest::StorageLocations &requestSpecificStorageLocations);
-    QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForItems(const QList<QOrganizerItemId> &itemIds) const;
-    QOrganizerAbstractRequest::StorageLocations resolveNeededStorageLocationsForCollections(const QList<QOrganizerCollectionId> &collectionIds) const;
+    QOrganizerManager::Error checkRequestSpecificStorageLocation(const QOrganizerJsonDbEngine::StorageLocations &requestSpecificStorageLocations);
+    QOrganizerJsonDbEngine::StorageLocations resolveNeededStorageLocationsForItems(const QList<QOrganizerItemId> &itemIds) const;
+    QOrganizerJsonDbEngine::StorageLocations resolveNeededStorageLocationsForCollections(const QList<QOrganizerCollectionId> &collectionIds) const;
 
     // Member variables
     QOrganizerJsonDbEngine* m_engine;

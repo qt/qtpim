@@ -53,6 +53,8 @@
 // We mean it.
 //
 
+#include "qorganizerjsondbengine.h"
+
 #include <QtOrganizer/qorganizerabstractrequest.h>
 #include <QtOrganizer/qorganizermanager.h>
 #include <QtOrganizer/qorganizeritemdetails.h>
@@ -81,10 +83,10 @@ public:
     QOrganizerManager::Error jsonDbConnectionErrorToOrganizerError(QJsonDbConnection::ErrorCode error) const;
     QOrganizerManager::Error jsonDbRequestErrorToOrganizerError(QJsonDbRequest::ErrorCode error) const;
 
-    bool jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
+    bool jsonDbObjectToItem(const QJsonObject &object, QOrganizerItem *item, QOrganizerJsonDbEngine::StorageLocation storageLocation) const;
     bool itemToJsonDbObject(const QOrganizerItem &item, QJsonObject *object) const;
 
-    bool jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
+    bool jsonDbObjectToCollection(const QJsonObject &object, QOrganizerCollection *collection, bool *isDefaultCollection, QOrganizerJsonDbEngine::StorageLocation storageLocation) const;
     bool collectionToJsonDbObject(const QOrganizerCollection &collection, bool isDefaultCollection, QJsonObject *object) const;
 
     // filter handling
@@ -93,15 +95,15 @@ public:
 
     // notification handling
     QString jsonDbNotificationObjectToOrganizerType(const QJsonObject &object) const;
-    QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
-    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerAbstractRequest::StorageLocation storageLocation) const;
+    QOrganizerItemId jsonDbNotificationObjectToItemId(const QJsonObject &object, QOrganizerJsonDbEngine::StorageLocation storageLocation) const;
+    QOrganizerCollectionId jsonDbNotificationObjectToCollectionId(const QJsonObject &object, QOrganizerJsonDbEngine::StorageLocation storageLocation) const;
 
     void jsonDbVersionToItemVersion(const QString &jsonDbVersion, QOrganizerItemVersion *itemVersion) const;
 
     // storage location handling
-    const QStringList storageLocationsFlagToStrings(const QOrganizerAbstractRequest::StorageLocations storageLocationsFlag);
-    QOrganizerAbstractRequest::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
-    QOrganizerAbstractRequest::StorageLocations storageLocationListToFlag(const QList<QOrganizerAbstractRequest::StorageLocation> storageLocationsList);
+    const QStringList storageLocationsFlagToStrings(const QOrganizerJsonDbEngine::StorageLocations storageLocationsFlag);
+    QOrganizerJsonDbEngine::StorageLocation storageLocationStringToEnum(const QString &storageLocation);
+    QOrganizerJsonDbEngine::StorageLocations storageLocationListToFlag(const QList<QOrganizerJsonDbEngine::StorageLocation> storageLocationsList);
 
     int supportedItemTypeFlag() const;
     bool itemTypeFlagToJsonDbEventQuery(const int &flag, QString *jsonDbQueryStr);

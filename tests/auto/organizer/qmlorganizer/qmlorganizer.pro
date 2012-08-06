@@ -22,7 +22,6 @@ OTHER_FILES += testcases/addEvent.qml \
     testcases/tst_organizere2e.qml \
     testcases/tst_organizerrecurrence.qml \
     testcases/tst_organizermodelupdate.qml \
-    testcases/tst_organizer_versit_export_import_e2e.qml \
-    testcases/tst_storagelocation.qml
+    testcases/tst_organizer_versit_export_import_e2e.qml
 include (../qmlauto.pri)
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

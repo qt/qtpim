@@ -155,32 +155,6 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::detailMask() 
     return d->m_detailMask;
 }
 
-/*!
-    Sets \a storageLocation where the item is saved.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerItemSaveRequest::storageLocation()
-*/
-void QOrganizerItemSaveRequest::setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation)
-{
-    Q_D(QOrganizerItemSaveRequest);
-    QMutexLocker ml(&d->m_mutex);
-    d->m_storageLocation = storageLocation;
-}
-
-/*!
-    Storage location where the item is saved.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerItemSaveRequest::setStorageLocation()
-*/
-QOrganizerAbstractRequest::StorageLocation QOrganizerItemSaveRequest::storageLocation() const
-{
-    Q_D(const QOrganizerItemSaveRequest);
-    QMutexLocker ml(&d->m_mutex);
-    return d->m_storageLocation;
-}
-
 #include "moc_qorganizeritemsaverequest.cpp"
 
 QTORGANIZER_END_NAMESPACE

@@ -95,7 +95,6 @@ public:
         m_writer(0),
         m_startPeriod(QDateTime::currentDateTime()),
         m_endPeriod(QDateTime::currentDateTime()),
-        m_storageLocations(QOrganizerAbstractRequest::UserDataStorage),
         m_error(QOrganizerManager::NoError),
         m_autoUpdate(true),
         m_updatePendingFlag(QDeclarativeOrganizerModelPrivate::NonePending),
@@ -131,7 +130,6 @@ public:
     QDateTime m_startPeriod;
     QDateTime m_endPeriod;
     QList<QDeclarativeOrganizerCollection*> m_collections;
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 
     QOrganizerManager::Error m_error;
 
@@ -201,7 +199,6 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdateItems()));
     connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdateItems()));
     connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdateItems()));
-    connect(this, SIGNAL(storageLocationsChanged()), SLOT(doUpdate()));//FIXME; optimize with handling only the delta instead of full update
 }
 
 QDeclarativeOrganizerModel::~QDeclarativeOrganizerModel()
@@ -412,48 +409,6 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
     if (end != d->m_endPeriod) {
         d->m_endPeriod = end;
         emit endPeriodChanged();
-    }
-}
-
-/*!
-  \qmlproperty enumeration OrganizerModel::StorageLocation
-
-  Defines the different storage locations for saving items and model population purposes.
-
-  \list
-  \li OrganizerModel::UserDataStorage        A storage location where user data is usually stored.
-  \li OrganizerModel::SystemStorage          A storage location where system files are usually stored.
-  \endlist
-
-  Depending on the platform, the access rights for different storage locations might vary.
-
-  \sa OrganizerModel::storageLocations
-  \sa OrganizerModel::saveCollection()
-  \sa OrganizerModel::saveItem()
-*/
-/*!
-  \qmlproperty int OrganizerModel::storageLocations
-
-  This property indicates which storage locations are used to populate the declarative model. As the type
-  of property is int, it can be utilized as flag with several values.
-
-  storageLocations is a backend specific feature. Some backends support it and some might just ignore it. If backend
-  is having some specific requirements and they're not met, backend returns MissingPlatformRequirementsError.
-
-  \sa OrganizerModel::StorageLocation
-*/
-int QDeclarativeOrganizerModel::storageLocations() const
-{
-    Q_D(const QDeclarativeOrganizerModel);
-    return int(d->m_storageLocations);
-}
-
-void QDeclarativeOrganizerModel::setStorageLocations(int storageLocationsFlag)
-{
-    Q_D(QDeclarativeOrganizerModel);
-    if (storageLocations() != storageLocationsFlag) {
-        d->m_storageLocations = QOrganizerAbstractRequest::StorageLocations(storageLocationsFlag);
-        emit storageLocationsChanged();
     }
 }
 
@@ -741,10 +696,6 @@ QString QDeclarativeOrganizerModel::error() const
             return QStringLiteral("InvalidItemType");
         case QOrganizerManager::InvalidOccurrenceError:
             return QStringLiteral("InvalidOccurrence");
-        case QOrganizerManager::InvalidStorageLocationError:
-            return QStringLiteral("InvalidStorageLocationError");
-        case QOrganizerManager::MissingPlatformRequirementsError:
-            return QStringLiteral("MissingPlatformRequirementsError");
         default:
             break;
         }
@@ -842,11 +793,10 @@ void QDeclarativeOrganizerModel::checkError(const QOrganizerAbstractRequest *req
                                Filter filter,
                                int maxCount,
                                list<SortOrder> sortOrders,
-                               FetchHint fetchHint,
-                               StorageLocation storageLocation)
+                               FetchHint fetchHint)
 
     This method will start a request to fetch items between the given \a start and \a end dates.
-    Optionally a \a sort order, \a filter, \a fetchHint, \a storageLocation and \a maxCount can
+    Optionally a \a sort order, \a filter, \a fetchHint and \a maxCount can
     be specified to narrow the search. If nothing is set for these optional paramenters then
     defaults are applied, essentially any sort order, default filter, default storage location and all items.
 
@@ -862,8 +812,7 @@ int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTi
                                            QDeclarativeOrganizerItemFilter *filter,
                                            int maxCount,
                                            const QVariantList &sortOrders,
-                                           QDeclarativeOrganizerItemFetchHint *fetchHint,
-                                           QDeclarativeOrganizerModel::StorageLocation storageLocation)
+                                           QDeclarativeOrganizerItemFetchHint *fetchHint)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (!start.isValid() || !end.isValid() || !(end > start))
@@ -894,7 +843,6 @@ int QDeclarativeOrganizerModel::fetchItems(const QDateTime &start, const QDateTi
     fetchRequest->setStartDate(start);
     fetchRequest->setEndDate(end);
     fetchRequest->setSorting(sList);
-    fetchRequest->setStorageLocations(QOrganizerAbstractRequest::StorageLocations(storageLocation));
     fetchRequest->setMaxCount(maxCount);
     fetchRequest->setFetchHint(hint);
 
@@ -1185,7 +1133,6 @@ void QDeclarativeOrganizerModel::fetchAgain()
     d->m_fetchRequest->setSorting(d->m_sortOrders);
     d->m_fetchRequest->setStartDate(d->m_startPeriod);
     d->m_fetchRequest->setEndDate(d->m_endPeriod);
-    d->m_fetchRequest->setStorageLocations(d->m_storageLocations);
 
     if (d->m_filter){
         d->m_fetchRequest->setFilter(d->m_filter->filter());
@@ -1278,15 +1225,11 @@ void QDeclarativeOrganizerModel::requestUpdated()
 }
 
 /*!
-  \qmlmethod OrganizerModel::saveItem(OrganizerItem item, StorageLocation storageLocation = UserDataStorage)
+  \qmlmethod OrganizerModel::saveItem(OrganizerItem item)
 
-  Saves asynchronously the given \a item into the organizer backend. The location for storing item
-  can be defined with optional \a storageLocation for new items. If optional \a storageLocation is not given, item
-  will be stored to UserDataStorage. When item is updated, ie saved again, \a storageLocation is ignored and
-  item is saved to the same location where it was originally saved.
-
-  */
-void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+  Saves asynchronously the given \a item into the organizer backend.
+ */
+void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (di) {
@@ -1294,7 +1237,6 @@ void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di, QDeclar
         QOrganizerItemSaveRequest* req = new QOrganizerItemSaveRequest(this);
         req->setManager(d->m_manager);
         req->setItem(item);
-        req->setStorageLocation(QOrganizerAbstractRequest::StorageLocation(storageLocation));
 
         connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
@@ -1467,7 +1409,6 @@ void QDeclarativeOrganizerModel::onItemsModified(const QList<QPair<QOrganizerIte
         fetchRequest->setFilter(d->m_filter ? d->m_filter->filter() : QOrganizerItemFilter());
         fetchRequest->setSorting(d->m_sortOrders);
         fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QOrganizerItemFetchHint());
-        fetchRequest->setStorageLocations(d->m_storageLocations);
         d->m_notifiedItems.insert(fetchRequest, addedAndChangedItems);
 
         fetchRequest->start();
@@ -1633,7 +1574,6 @@ void QDeclarativeOrganizerModel::fetchCollections()
 
     QOrganizerCollectionFetchRequest* req = new QOrganizerCollectionFetchRequest(this);
     req->setManager(d->m_manager);
-    req->setStorageLocations(d->m_storageLocations);
 
     connect(req,SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(collectionsFetched()));
 
@@ -1688,15 +1628,11 @@ void QDeclarativeOrganizerModel::collectionsFetched()
 }
 
 /*!
-  \qmlmethod OrganizerModel::saveCollection(Collection collection, StorageLocation storageLocation = UserDataStorage)
+  \qmlmethod OrganizerModel::saveCollection(Collection collection)
 
-  Saves asynchronously the given \a collection into the organizer backend. The location for storing collection
-  can be defined with optional \a storageLocation for new collections. If optional \a storageLocation is not given,
-  collection will be stored to UserDataStorage. When collection is updated, ie saved again, \a storageLocation is
-  ignored and collection is saved to the same location where it was originally saved.
-
-  */
-void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl, QDeclarativeOrganizerModel::StorageLocation storageLocation)
+  Saves asynchronously the given \a collection into the organizer backend.
+ */
+void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection* declColl)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (declColl) {
@@ -1704,7 +1640,6 @@ void QDeclarativeOrganizerModel::saveCollection(QDeclarativeOrganizerCollection*
         QOrganizerCollectionSaveRequest* req = new QOrganizerCollectionSaveRequest(this);
         req->setManager(d->m_manager);
         req->setCollection(collection);
-        req->setStorageLocation(QOrganizerAbstractRequest::StorageLocation(storageLocation));
 
         connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 

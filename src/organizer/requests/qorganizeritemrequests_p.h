@@ -62,7 +62,6 @@ class QOrganizerItemSaveRequestPrivate : public QOrganizerAbstractRequestPrivate
 public:
     QOrganizerItemSaveRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocation(QOrganizerAbstractRequest::StorageLocation(0))
     {
     }
 
@@ -85,9 +84,6 @@ public:
         dbg.nospace() << "* definitionMask=";
         dbg.nospace() << m_detailMask;
         dbg.nospace() << ",\n";
-        dbg.nospace() << "storageLocation=";
-        dbg.nospace() << m_storageLocation;
-        dbg.nospace() << ",\n";
         dbg.nospace() << "* errorMap=";
         dbg.nospace() << m_errors;
         dbg.nospace() << "\n)";
@@ -98,7 +94,6 @@ public:
     QList<QOrganizerItem> m_organizeritems;
     QMap<int, QOrganizerManager::Error> m_errors;
     QList<QOrganizerItemDetail::DetailType> m_detailMask;
-    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
 };
 
 class QOrganizerItemFetchRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -107,7 +102,6 @@ public:
     QOrganizerItemFetchRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
         , m_maxCount(-1)
-        , m_storageLocations(0)
     {
     }
 
@@ -144,9 +138,6 @@ public:
         dbg.nospace() << ",\n";
         dbg.nospace() << "* maxCount=";
         dbg.nospace() << m_maxCount;
-        dbg.nospace() << ",\n";
-        dbg.nospace() << "storageLocations=";
-        dbg.nospace() << m_storageLocations;
         dbg.nospace() << "\n)";
         return dbg.maybeSpace();
     }
@@ -162,7 +153,6 @@ public:
     QDateTime m_endDate;
 
     int m_maxCount;
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QOrganizerItemFetchForExportRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -170,7 +160,6 @@ class QOrganizerItemFetchForExportRequestPrivate : public QOrganizerAbstractRequ
 public:
     QOrganizerItemFetchForExportRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocations(0)
     {
     }
 
@@ -204,9 +193,6 @@ public:
         dbg.nospace() << ",\n";
         dbg.nospace() << "* fetchHint=";
         dbg.nospace() << m_fetchHint;
-        dbg.nospace() << ",\n";
-        dbg.nospace() << "storageLocations=";
-        dbg.nospace() << m_storageLocations;
         dbg.nospace() << "\n)";
         return dbg.maybeSpace();
     }
@@ -218,8 +204,6 @@ public:
 
     QList<QOrganizerItem> m_organizeritems;
 
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
-
     QDateTime m_startDate;
     QDateTime m_endDate;
 };
@@ -229,7 +213,6 @@ class QOrganizerItemFetchByIdRequestPrivate : public QOrganizerAbstractRequestPr
 public:
     QOrganizerItemFetchByIdRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocations(0)
     {
     }
 
@@ -255,9 +238,6 @@ public:
         dbg.nospace() << "* fetchHint=";
         dbg.nospace() << m_fetchHint;
         dbg.nospace() << ",\n";
-        dbg.nospace() << "storageLocations=";
-        dbg.nospace() << m_storageLocations;
-        dbg.nospace() << ",\n";
         dbg.nospace() << "* errorMap=";
         dbg.nospace() << m_errors;
         dbg.nospace() << "\n)";
@@ -270,7 +250,6 @@ public:
 
     QList<QOrganizerItem> m_items;
     QMap<int, QOrganizerManager::Error> m_errors;
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QOrganizerItemOccurrenceFetchRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -400,7 +379,6 @@ class QOrganizerItemIdFetchRequestPrivate : public QOrganizerAbstractRequestPriv
 public:
     QOrganizerItemIdFetchRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocations(0)
     {
     }
 
@@ -431,9 +409,6 @@ public:
         dbg.nospace() << ",\n";
         dbg.nospace() << "* endDate=";
         dbg.nospace() << m_endDate;
-        dbg.nospace() << ",\n";
-        dbg.nospace() << "storageLocations=";
-        dbg.nospace() << m_storageLocations;
         dbg.nospace() << "\n)";
         return dbg.maybeSpace();
     }
@@ -446,7 +421,6 @@ public:
 
     QDateTime m_startDate;
     QDateTime m_endDate;
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QOrganizerCollectionFetchRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -454,7 +428,6 @@ class QOrganizerCollectionFetchRequestPrivate : public QOrganizerAbstractRequest
 public:
     QOrganizerCollectionFetchRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocations(0)
     {
     }
 
@@ -473,16 +446,12 @@ public:
         dbg.nospace() << "QOrganizerCollectionFetchRequest(";
         dbg.nospace() << "collections=";
         dbg.nospace() << m_collections;
-        dbg.nospace() << ",";
-        dbg.nospace() << "storageLocations=";
-        dbg.nospace() << m_storageLocations;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
 #endif
 
     QList<QOrganizerCollection> m_collections;
-    QOrganizerAbstractRequest::StorageLocations m_storageLocations;
 };
 
 class QOrganizerCollectionRemoveRequestPrivate : public QOrganizerAbstractRequestPrivate
@@ -525,7 +494,6 @@ class QOrganizerCollectionSaveRequestPrivate : public QOrganizerAbstractRequestP
 public:
     QOrganizerCollectionSaveRequestPrivate()
         : QOrganizerAbstractRequestPrivate()
-        , m_storageLocation(QOrganizerAbstractRequest::StorageLocation(0))
     {
     }
 
@@ -547,9 +515,6 @@ public:
         dbg.nospace() << ",";
         dbg.nospace() << "errorMap=";
         dbg.nospace() << m_errors;
-        dbg.nospace() << ",";
-        dbg.nospace() << "storageLocation=";
-        dbg.nospace() << m_storageLocation;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }
@@ -557,7 +522,6 @@ public:
 
     QList<QOrganizerCollection> m_collections;
     QMap<int, QOrganizerManager::Error> m_errors;
-    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
 };
 
 QTORGANIZER_END_NAMESPACE

@@ -186,33 +186,6 @@ QDateTime QOrganizerItemFetchForExportRequest::endDate() const
 }
 
 /*!
-    Sets storage locations where the items are fetched from. \a storageLocations is a flag,
-    so you can define multiple locations in it.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerItemFetchForExportRequest::storageLocations()
-*/
-void QOrganizerItemFetchForExportRequest::setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations)
-{
-    Q_D(QOrganizerItemFetchForExportRequest);
-    QMutexLocker ml(&d->m_mutex);
-    d->m_storageLocations = storageLocations;
-}
-
-/*!
-    Storage locations where the items are fetched from.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerItemFetchForExportRequest::setStorageLocations()
-*/
-QOrganizerAbstractRequest::StorageLocations QOrganizerItemFetchForExportRequest::storageLocations() const
-{
-    Q_D(const QOrganizerItemFetchForExportRequest);
-    QMutexLocker ml(&d->m_mutex);
-    return d->m_storageLocations;
-}
-
-/*!
     Returns the list of organizer items retrieved by this request.
 */
 QList<QOrganizerItem> QOrganizerItemFetchForExportRequest::items() const

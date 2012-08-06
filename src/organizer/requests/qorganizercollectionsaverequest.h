@@ -63,9 +63,6 @@ public:
     void setCollections(const QList<QOrganizerCollection> &collections);
     QList<QOrganizerCollection> collections() const;
 
-    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
-    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
-
     QMap<int, QOrganizerManager::Error> errorMap() const;
 
 private:

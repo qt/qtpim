@@ -58,7 +58,6 @@ public:
     virtual bool isLessThan(const QOrganizerItemEngineId *other) const = 0;
 
     virtual QString managerUri() const = 0;
-    virtual QOrganizerAbstractRequest::StorageLocation storageLocation() const;
 
     virtual QOrganizerItemEngineId *clone() const = 0;
 

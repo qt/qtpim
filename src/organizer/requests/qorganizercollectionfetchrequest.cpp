@@ -73,33 +73,6 @@ QOrganizerCollectionFetchRequest::~QOrganizerCollectionFetchRequest()
 }
 
 /*!
-    Sets storage locations where the collections are fetched from. \a storageLocations is a flag,
-    so you can define multiple locations in it.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerCollectionFetchRequest::storageLocations()
-*/
-void QOrganizerCollectionFetchRequest::setStorageLocations(QOrganizerAbstractRequest::StorageLocations storageLocations)
-{
-    Q_D(QOrganizerCollectionFetchRequest);
-    QMutexLocker ml(&d->m_mutex);
-    d->m_storageLocations = storageLocations;
-}
-
-/*!
-    Storage locations where the collections are fetched from.
-
-    \sa QOrganizerAbstractRequest::StorageLocation
-    \sa QOrganizerCollectionFetchRequest::setStorageLocations()
-*/
-QOrganizerAbstractRequest::StorageLocations QOrganizerCollectionFetchRequest::storageLocations() const
-{
-    Q_D(const QOrganizerCollectionFetchRequest);
-    QMutexLocker ml(&d->m_mutex);
-    return d->m_storageLocations;
-}
-
-/*!
     Returns the collections retrieved by this request.
 */
 QList<QOrganizerCollection> QOrganizerCollectionFetchRequest::collections() const

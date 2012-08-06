@@ -47,7 +47,7 @@ QTORGANIZER_BEGIN_NAMESPACE
 QOrganizerJsonDbItemId::QOrganizerJsonDbItemId()
     : QOrganizerItemEngineId()
     , m_jsonDbUuid(QString())
-    , m_storageLocation(QOrganizerAbstractRequest::UserDataStorage)
+    , m_storageLocation(QOrganizerJsonDbEngine::UserDataStorage)
 {
 }
 
@@ -129,30 +129,30 @@ void QOrganizerJsonDbItemId::setJsonDbUuid(const QString &jsonDbUuid)
     m_jsonDbUuid = jsonDbUuid;
 }
 
-QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbItemId::storageLocation() const
+QOrganizerJsonDbEngine::StorageLocation QOrganizerJsonDbItemId::storageLocation() const
 {
     return m_storageLocation;
 }
 
-void QOrganizerJsonDbItemId::setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation)
+void QOrganizerJsonDbItemId::setStorageLocation(QOrganizerJsonDbEngine::StorageLocation storageLocation)
 {
     m_storageLocation = storageLocation;
 }
 
-void QOrganizerJsonDbItemId::splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation)
+void QOrganizerJsonDbItemId::splitId(const QString &fullId, QString &jsondbUuid, QOrganizerJsonDbEngine::StorageLocation &storageLocation)
 {
     // separate engine id part, if full id given
     QString engineId = fullId.contains(":") ? fullId.mid(fullId.lastIndexOf(":")+1) : fullId;
     // separate storagelocation and collection id from each other
     const QStringList splittedEngineId = engineId.split(QStringLiteral("/"));
-    storageLocation = (QOrganizerAbstractRequest::StorageLocation)splittedEngineId.first().toInt();
+    storageLocation = (QOrganizerJsonDbEngine::StorageLocation)splittedEngineId.first().toInt();
     jsondbUuid = splittedEngineId.last();
 }
 
 QOrganizerJsonDbCollectionId::QOrganizerJsonDbCollectionId()
     : QOrganizerCollectionEngineId()
     , m_jsonDbUuid(QString())
-    , m_storageLocation(QOrganizerAbstractRequest::UserDataStorage)
+    , m_storageLocation(QOrganizerJsonDbEngine::UserDataStorage)
 {
 }
 
@@ -234,23 +234,23 @@ void QOrganizerJsonDbCollectionId::setJsonDbUuid(const QString &jsonDbUuid)
     m_jsonDbUuid = jsonDbUuid;
 }
 
-QOrganizerAbstractRequest::StorageLocation QOrganizerJsonDbCollectionId::storageLocation() const
+QOrganizerJsonDbEngine::StorageLocation QOrganizerJsonDbCollectionId::storageLocation() const
 {
     return m_storageLocation;
 }
 
-void QOrganizerJsonDbCollectionId::setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation)
+void QOrganizerJsonDbCollectionId::setStorageLocation(QOrganizerJsonDbEngine::StorageLocation storageLocation)
 {
     m_storageLocation = storageLocation;
 }
 
-void QOrganizerJsonDbCollectionId::splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation)
+void QOrganizerJsonDbCollectionId::splitId(const QString &fullId, QString &jsondbUuid, QOrganizerJsonDbEngine::StorageLocation &storageLocation)
 {
     // separate engine id part, if full id given
     QString engineId = fullId.contains(":") ? fullId.mid(fullId.lastIndexOf(":")+1) : fullId;
     // separate storagelocation and collection id from each other
     const QStringList splittedEngineId = engineId.split(QStringLiteral("/"));
-    storageLocation = QOrganizerAbstractRequest::StorageLocation(splittedEngineId.first().toInt());
+    storageLocation = QOrganizerJsonDbEngine::StorageLocation(splittedEngineId.first().toInt());
     jsondbUuid = splittedEngineId.last();
 }
 

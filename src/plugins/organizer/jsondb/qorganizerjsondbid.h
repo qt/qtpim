@@ -53,6 +53,8 @@
 // We mean it.
 //
 
+#include "qorganizerjsondbengine.h"
+
 #include <QtOrganizer/qorganizerabstractrequest.h>
 #include <QtOrganizer/qorganizeritemengineid.h>
 #include <QtOrganizer/qorganizercollectionengineid.h>
@@ -88,15 +90,15 @@ public:
     QString jsondbUuid() const;
     void setJsonDbUuid(const QString &jsonDbUuid);
 
-    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
-    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
+    QOrganizerJsonDbEngine::StorageLocation storageLocation() const;
+    void setStorageLocation(QOrganizerJsonDbEngine::StorageLocation storageLocation);
 
 private:
-    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation);
+    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerJsonDbEngine::StorageLocation &storageLocation);
 
 private:
     QString m_jsonDbUuid;
-    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
+    QOrganizerJsonDbEngine::StorageLocation m_storageLocation;
 };
 
 
@@ -127,15 +129,15 @@ public:
     QString jsondbUuid() const;
     void setJsonDbUuid(const QString &jsonDbUuid);
 
-    QOrganizerAbstractRequest::StorageLocation storageLocation() const;
-    void setStorageLocation(QOrganizerAbstractRequest::StorageLocation storageLocation);
+    QOrganizerJsonDbEngine::StorageLocation storageLocation() const;
+    void setStorageLocation(QOrganizerJsonDbEngine::StorageLocation storageLocation);
 
 private:
-    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerAbstractRequest::StorageLocation &storageLocation);
+    void splitId(const QString &fullId, QString &jsondbUuid, QOrganizerJsonDbEngine::StorageLocation &storageLocation);
 
 private:
     QString m_jsonDbUuid;
-    QOrganizerAbstractRequest::StorageLocation m_storageLocation;
+    QOrganizerJsonDbEngine::StorageLocation m_storageLocation;
 };
 
 QTORGANIZER_END_NAMESPACE

@@ -112,16 +112,6 @@ QTORGANIZER_BEGIN_NAMESPACE
  */
 
 /*!
-    \enum QOrganizerAbstractRequest::StorageLocation
-
-    Defines the different storage locations for separate requests.
-    \value UserDataStorage        A storage location where user data is usually stored.
-    \value SystemStorage          A storage location where system files are usually stored.
-
-    Depending on the platform, the access rights for different storage locations might vary.
-*/
-
-/*!
     \internal
     \fn QOrganizerAbstractRequest::QOrganizerAbstractRequest(QObject *parent)
 

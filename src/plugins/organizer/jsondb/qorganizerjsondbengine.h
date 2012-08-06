@@ -106,6 +106,12 @@ class QOrganizerJsonDbEngine : public QOrganizerManagerEngine
     Q_OBJECT
 
 public:
+    enum StorageLocation {
+        UserDataStorage = 0x1,
+        SystemStorage = 0x2
+    };
+    Q_DECLARE_FLAGS(StorageLocations, StorageLocation)
+
     QOrganizerJsonDbEngine(QOrganizerManager::Error *error);
     ~QOrganizerJsonDbEngine();
 
@@ -172,6 +178,8 @@ private:
     friend class QOrganizerJsonDbEngineFactory;
     QOrganizerJsonDbRequestThread *m_requestHandlerThread;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerJsonDbEngine::StorageLocations)
 
 QTORGANIZER_END_NAMESPACE
 

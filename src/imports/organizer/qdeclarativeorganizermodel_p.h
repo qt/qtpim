@@ -81,12 +81,10 @@ class QDeclarativeOrganizerModel : public QAbstractListModel, public QQmlParserS
     Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
     Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerItem> items READ items NOTIFY modelChanged)
     Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerCollection> collections READ collections NOTIFY collectionsChanged)
-    Q_PROPERTY(int storageLocations READ storageLocations WRITE setStorageLocations NOTIFY storageLocationsChanged)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
     Q_ENUMS(ExportError)
     Q_ENUMS(ImportError)
-    Q_ENUMS(StorageLocation)
     Q_INTERFACES(QQmlParserStatus)
 public:
     enum {
@@ -127,14 +125,6 @@ public:
     QDateTime endPeriod() const;
     void setEndPeriod(const QDateTime& end);
 
-    enum StorageLocation {
-        UserDataStorage = QOrganizerAbstractRequest::UserDataStorage,
-        SystemStorage = QOrganizerAbstractRequest::SystemStorage
-    };
-
-    int storageLocations() const;
-    void setStorageLocations(int storageLocationsFlag);
-
     // From QQmlParserStatus
     virtual void classBegin() {}
     virtual void componentComplete();
@@ -155,18 +145,15 @@ public:
     Q_INVOKABLE void removeItem(QDeclarativeOrganizerItem *item);
     Q_INVOKABLE void removeItems(const QStringList& ids);
     Q_INVOKABLE void removeItems(const QList<QDeclarativeOrganizerItem> &items);
-    Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item,
-                              QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
+    Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
     Q_INVOKABLE int fetchItems(const QStringList &itemIds);
     Q_INVOKABLE int fetchItems(const QDateTime &start, const QDateTime &end,
                                QDeclarativeOrganizerItemFilter *filter = new QDeclarativeOrganizerItemFilter(),
                                int maxCount = -1,
                                const QVariantList &sortOrders = QVariantList(),
-                               QDeclarativeOrganizerItemFetchHint *fetchHint = new QDeclarativeOrganizerItemFetchHint(),
-                               QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
+                               QDeclarativeOrganizerItemFetchHint *fetchHint = new QDeclarativeOrganizerItemFetchHint());
     Q_INVOKABLE void removeCollection(const QString& collectionId);
-    Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection,
-                         QDeclarativeOrganizerModel::StorageLocation storageLocation = UserDataStorage);
+    Q_INVOKABLE void saveCollection(QDeclarativeOrganizerCollection* collection);
     // FIXME : Naming indicates fetch from database
     Q_INVOKABLE void fetchCollections();
 
@@ -203,7 +190,6 @@ signals:
     void itemsFetched(int requestId, const QVariantList &fetchedItems);
     void exportCompleted(ExportError error, QUrl url);
     void importCompleted(ImportError error, QUrl url);
-    void storageLocationsChanged();
 
 public slots:
     void update();

@@ -159,17 +159,6 @@ void QDeclarativeOrganizerCollection::setMetaData(QOrganizerCollection::MetaData
 }
 
 /*!
-    \obsolete
- */
-void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
-{
-    if (metaData(key) != value) {
-        d.setMetaData(key, value);
-        emit valueChanged();
-    }
-}
-
-/*!
     \qmlmethod var Collection::metaData(key)
 
     Returns the meta data stored in this collection for the given \a key. Possible keys include:
@@ -182,14 +171,6 @@ void QDeclarativeOrganizerCollection::setMetaData(const QString &key, const QVar
     \endlist
  */
 QVariant QDeclarativeOrganizerCollection::metaData(QOrganizerCollection::MetaDataKey key) const
-{
-    return d.metaData(key);
-}
-
-/*!
-    \obsolete
- */
-QVariant QDeclarativeOrganizerCollection::metaData(const QString &key) const
 {
     return d.metaData(key);
 }

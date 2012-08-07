@@ -57,18 +57,8 @@ public:
     QOrganizerItemDetailFilter();
     QOrganizerItemDetailFilter(const QOrganizerItemFilter &other);
 
-    QT_DEPRECATED void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
     void setDetail(const QOrganizerItemDetail &detail);
-
-    QT_DEPRECATED QOrganizerItemDetail::DetailType detailType() const;
-    QT_DEPRECATED int detailField() const;
     QOrganizerItemDetail detail() const;
-
-    QT_DEPRECATED void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
-    QT_DEPRECATED QOrganizerItemFilter::MatchFlags matchFlags() const;
-
-    QT_DEPRECATED void setValue(const QVariant &value);
-    QT_DEPRECATED QVariant value() const;
 
 private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)

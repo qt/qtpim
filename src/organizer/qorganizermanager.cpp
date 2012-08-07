@@ -821,7 +821,9 @@ QMap<QString, QString> QOrganizerManager::managerParameters() const
 }
 
 /*!
-    This is now obsoleted, and will be removed soon. Please parse the version from managerParameters().
+    Returns the version of the backend.
+
+    The version is stored as part of the parameters, with the key QTORGANIZER_BACKEND_VERSION.
  */
 int QOrganizerManager::managerVersion() const
 {

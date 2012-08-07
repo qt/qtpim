@@ -84,10 +84,6 @@ public:
     void setExtendedMetaData(const QString &key, const QVariant &value);
     QVariant extendedMetaData(const QString &key) const;
 
-    // obsolete
-    void setMetaData(const QString &key, const QVariant &value);
-    QVariant metaData(const QString &key) const;
-
 private:
     friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
     friend class QOrganizerManagerEngine;

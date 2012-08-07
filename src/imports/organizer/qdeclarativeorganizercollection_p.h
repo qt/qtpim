@@ -96,10 +96,6 @@ public:
     QOrganizerCollection collection() const;
     void setCollection(const QOrganizerCollection & collection);
 
-    // obsolete
-    Q_INVOKABLE void setMetaData(const QString &key, const QVariant &value);
-    Q_INVOKABLE QVariant metaData(const QString &key) const;
-
 Q_SIGNALS:
     void valueChanged();
 

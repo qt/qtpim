@@ -773,17 +773,6 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
             {
                 const QOrganizerItemDetailFilter cdf(filter);
 
-                //Compatibility with obsoleted API
-                //TODO: Remove when detailFilter API is cleaned up
-                if ( (cdf.detailType() != QOrganizerItemDetail::TypeUndefined) &&
-                     (cdf.detailField() != -1) ) {
-                    QOrganizerItemDetailFieldFilter newFilter;
-                    newFilter.setDetail(cdf.detailType(), cdf.detailField());
-                    newFilter.setMatchFlags(cdf.matchFlags());
-                    newFilter.setValue(cdf.value());
-                    return testFilter(newFilter, item);
-                }
-
                 QOrganizerItemDetail matchingDetail = cdf.detail();
                 if ( (matchingDetail.isEmpty()) || (matchingDetail.type() == QOrganizerItemDetail::TypeUndefined) )
                     return false;

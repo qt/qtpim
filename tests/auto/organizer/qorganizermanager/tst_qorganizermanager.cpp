@@ -1900,7 +1900,7 @@ void tst_QOrganizerManager::invalidManager()
 
     /* Collections */
     QOrganizerCollection testCollection;
-    testCollection.setMetaData("test", "example");
+    testCollection.setExtendedMetaData("test", "example");
     QVERIFY(!manager.saveCollection(&testCollection));
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidCollectionError);
     QVERIFY(!manager.removeCollection(testCollection.id()));
@@ -3081,48 +3081,6 @@ void tst_QOrganizerManager::itemFilterFetch()
     dFieldFilter.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
     dFieldFilter.setValue("DetailOfMine");
     QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-
-    // DetailFilter Checks: Compatibility with deprecated API
-    //TODO: remove when cleaning up detailFilter API
-    if (cm->managerName() == QStringLiteral("memory")) {
-        QOrganizerItemDetailFilter dFieldFilter;
-        // 1
-        dFieldFilter.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
-        dFieldFilter.setValue(QOrganizerItemPriority::VeryHighPriority);
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 0);
-        dFieldFilter.setValue(QOrganizerItemPriority::VeryLowPriority);
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-        // 2
-        dFieldFilter.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-        dFieldFilter.setValue("my comment");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-        // 3-4
-        dFieldFilter.setDetail(QOrganizerItemDetail::TypeDisplayLabel, QOrganizerItemDisplayLabel::FieldLabel);
-        dFieldFilter.setValue("my 3rd event!");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchEndsWith);
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-        dFieldFilter.setValue("event!");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
-        dFieldFilter.setValue("event");
-        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchContains);
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), cm->items().count());
-        dFieldFilter.setValue("my");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
-        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchStartsWith);
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 2);
-        dFieldFilter.setValue("event");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 4);
-        // 5
-        dFieldFilter.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-        dFieldFilter.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
-        dFieldFilter.setValue(QDateTime(QDate(2010, 10, 10), QTime(11, 0, 0)));
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-        // 6
-        dFieldFilter.setDetail(QOrganizerItemDetail::TypeExtendedDetail, QOrganizerItemExtendedDetail::FieldName);
-        dFieldFilter.setValue("DetailOfMine");
-        QCOMPARE(cm->items(QDateTime(), QDateTime(), dFieldFilter).count(), 1);
-    }
 
     // DetailFilter Checks
     if (cm->managerName() == QStringLiteral("memory")) {
@@ -4334,7 +4292,7 @@ void tst_QOrganizerManager::collections()
     QOrganizerCollection c1, c2, c3, sc1;
     c1.setMetaData(QOrganizerCollection::KeyName, "Test One");
     c1.setMetaData(QOrganizerCollection::KeyDescription, "This collection is for testing purposes.");
-    c1.setMetaData("key", "value");
+    c1.setExtendedMetaData("key", "value");
     c2.setMetaData(QOrganizerCollection::KeyName, "Test Two");
     c2.setMetaData(QOrganizerCollection::KeyColor, QColor(Qt::blue));
     // c3 doesn't have any meta-data, just an id.
@@ -4374,7 +4332,7 @@ void tst_QOrganizerManager::collections()
         sc1 = oim->collection(c1.id());
         QVERIFY(sc1.metaData(QOrganizerCollection::KeyName) == "Test One");
         QVERIFY(sc1.metaData(QOrganizerCollection::KeyDescription) == "This collection is for testing purposes.");
-        QVERIFY(sc1.metaData("key") == "value");
+        QVERIFY(sc1.extendedMetaData("key") == "value");
 
         // save an item in that collection
         QOrganizerItemCollectionFilter fil;

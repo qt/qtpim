@@ -203,48 +203,11 @@ QVariant QOrganizerCollection::extendedMetaData(const QString &key) const
 }
 
 /*!
-    \obsolete
- */
-void QOrganizerCollection::setMetaData(const QString &key, const QVariant &value)
-{
-    if (key == QString(QStringLiteral("Name"))) {
-        d->m_metaData.insert(KeyName, value);
-    } else if (key == QString(QStringLiteral("Description"))) {
-        d->m_metaData.insert(KeyDescription, value);
-    } else if (key == QString(QStringLiteral("Color"))) {
-        d->m_metaData.insert(KeyColor, value);
-    } else if (key == QString(QStringLiteral("Image"))) {
-        d->m_metaData.insert(KeyImage, value);
-    } else {
-        QVariantMap variantMap = d->m_metaData.value(KeyExtended).toMap();
-        variantMap.insert(key, value);
-        d->m_metaData.insert(KeyExtended, variantMap);
-    }
-}
-
-/*!
     Returns the meta data of the collection for the given \a key.
  */
 QVariant QOrganizerCollection::metaData(MetaDataKey key) const
 {
     return d->m_metaData.value(key);
-}
-
-/*!
-    \obsolete
- */
-QVariant QOrganizerCollection::metaData(const QString &key) const
-{
-    if (key == QString(QStringLiteral("Name")))
-        d->m_metaData.value(KeyName);
-    else if (key == QString(QStringLiteral("Description")))
-        d->m_metaData.value(KeyDescription);
-    else if (key == QString(QStringLiteral("Color")))
-        d->m_metaData.value(KeyColor);
-    else if (key == QString(QStringLiteral("Image")))
-        d->m_metaData.value(KeyImage);
-
-    return d->m_metaData.value(KeyExtended).toMap().value(key);
 }
 
 /*!

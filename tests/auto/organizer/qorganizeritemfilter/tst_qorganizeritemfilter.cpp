@@ -67,7 +67,6 @@ private slots:
     void classHierarchy();
     void intersectionFilter();
     void unionFilter();
-    void detailFilterDeprecatedApi();
     void detailFilter();
     void detailFieldFilter();
     void detailRangeFilter();
@@ -434,99 +433,6 @@ void tst_QOrganizerItemFilter::unionFilter()
     /* Clear */
     bf3.clear();
     QVERIFY(bf3.filters().isEmpty());
-}
-
-void tst_QOrganizerItemFilter::detailFilterDeprecatedApi()
-{
-    QOrganizerItemDetailFilter df;
-
-    QVERIFY(df.type() == QOrganizerItemFilter::DetailFilter);
-
-    // Verify that deprecated API still works
-    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df.detailField() == -1);
-    QVERIFY(df.matchFlags() == 0);
-    QVERIFY(df.value().isNull());
-
-    df.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(df.detailField() == QOrganizerItemComment::FieldComment);
-    QVERIFY(df.matchFlags() == 0);
-    QVERIFY(df.value().isNull());
-
-    df.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
-    QVERIFY(df.detailType() == QOrganizerItemDetail::TypeDescription);
-    QVERIFY(df.detailField() == QOrganizerItemDescription::FieldDescription);
-    QVERIFY(df.matchFlags() == 0);
-    QVERIFY(df.value().isNull());
-
-    df.setMatchFlags(QOrganizerItemFilter::MatchExactly);
-    QVERIFY(df.matchFlags() == QOrganizerItemFilter::MatchExactly);
-
-    df.setValue(5);
-    QVERIFY(df.value() == 5);
-
-    df.setValue("String value");
-    QVERIFY(df.value() == "String value");
-
-    /* Test op= */
-    QOrganizerItemFilter f = df;
-    QVERIFY(f == df);
-
-    QOrganizerItemDetailFilter df2 = f;
-    QVERIFY(df2 == df);
-    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeDescription);
-    QVERIFY(df2.detailField() == QOrganizerItemDescription::FieldDescription);
-
-    /* Self assignment should do nothing */
-    df2 = df2;
-    QVERIFY(df2 == df);
-
-    /* Some cross casting */
-    QOrganizerItemDetailRangeFilter rf;
-
-    /* Directly */
-    df2 = rf;
-    QVERIFY(df2.type() == QOrganizerItemFilter::DetailFilter);
-    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df2.detailField() == -1);
-    QVERIFY(df2.value().isNull());
-
-    /* reset it */
-    df2 = df;
-    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeDescription);
-    QVERIFY(df2.detailField() == QOrganizerItemDescription::FieldDescription);
-
-    /* Through base class */
-    f = rf;
-    df2 = f;
-    QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df2.detailField() == -1);
-    QVERIFY(df2.value().isNull());
-
-    /* Now test copy ctor */
-    QOrganizerItemDetailFilter df3(rf);
-    QVERIFY(df3.type() == QOrganizerItemFilter::DetailFilter);
-    QVERIFY(df3.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df3.detailField() == -1);
-    QVERIFY(df3.value().isNull());
-
-    /* reset it */
-    df3 = df;
-    QVERIFY(df3.detailType() == QOrganizerItemDetail::TypeDescription);
-    QVERIFY(df3.detailField() == QOrganizerItemDescription::FieldDescription);
-
-    /* Now test copy ctor through base class */
-    QOrganizerItemDetailFilter df4(f);
-    QVERIFY(df4.type() == QOrganizerItemFilter::DetailFilter);
-    QVERIFY(df4.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df4.detailField() == -1);
-    QVERIFY(df4.value().isNull());
-
-    /* reset it */
-    df4 = df;
-    QVERIFY(df4.detailType() == QOrganizerItemDetail::TypeDescription);
-    QVERIFY(df4.detailField() == QOrganizerItemDescription::FieldDescription);
 }
 
 void tst_QOrganizerItemFilter::detailFilter()

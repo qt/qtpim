@@ -2429,7 +2429,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
 #if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerCollection temp;
-    temp.setMetaData("description", "Should not be removed!");
+    temp.setMetaData(QOrganizerCollection::KeyDescription, "Should not be removed!");
     oim->saveCollection(&temp);
     crr.setCollectionId(temp.id());
 
@@ -2531,7 +2531,7 @@ void tst_QOrganizerItemAsync::collectionSave()
     // save a new item
     int originalCount = oim->collections().size();
     QOrganizerCollection testCollection;
-    testCollection.setMetaData("description", "test description");
+    testCollection.setMetaData(QOrganizerCollection::KeyDescription, "test description");
     testCollection.setMetaData(QOrganizerCollection::KeyName, "New collection");
     QList<QOrganizerCollection> saveList;
     saveList << testCollection;
@@ -2610,7 +2610,7 @@ void tst_QOrganizerItemAsync::collectionSave()
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData(testCollection.metaData());
-    temp.setMetaData("test", "shouldn't be saved");
+    temp.setExtendedMetaData("test", "shouldn't be saved");
     saveList.clear();
     saveList << temp;
     csr.setCollections(saveList);
@@ -3300,7 +3300,7 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
 
     QOrganizerCollection testCollection;
     testCollection.setMetaData(QOrganizerCollection::KeyName, "Test Collection");
-    testCollection.setMetaData("testCollection", "test collection");
+    testCollection.setMetaData(QOrganizerCollection::KeyDescription, "test collection");
     oim->saveCollection(&testCollection);
 
     return oim;

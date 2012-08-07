@@ -3,7 +3,7 @@ load(qt_build_config)
 TARGET = QtVersitOrganizer
 QT = core versit-private organizer
 
-load(qt_module_config)
+load(qt_module)
 
 PUBLIC_HEADERS += \
     qversitorganizerglobal.h \

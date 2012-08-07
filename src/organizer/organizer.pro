@@ -3,7 +3,7 @@ load(qt_build_config)
 TARGET = QtOrganizer
 QT = core-private
 
-load(qt_module_config)
+load(qt_module)
 
 include(details/details.pri)
 include(items/items.pri)

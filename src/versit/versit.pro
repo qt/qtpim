@@ -3,7 +3,7 @@ load(qt_build_config)
 TARGET = QtVersit
 QT = core contacts
 
-load(qt_module_config)
+load(qt_module)
 
 PUBLIC_HEADERS += \
     qversitglobal.h \

@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT += versit versit-private contacts
 
 TARGET = qtversit_backuphandler

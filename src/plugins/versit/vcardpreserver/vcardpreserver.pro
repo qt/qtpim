@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT += versit contacts
 
 TARGET = qtversit_vcardpreserver

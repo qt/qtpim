@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT = core contacts
 
 TARGET = qtcontacts_memory

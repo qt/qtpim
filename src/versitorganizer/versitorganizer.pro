@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TARGET = QtVersitOrganizer
 QT = core versit-private organizer
 

@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT += contacts contacts-private jsondb
 
 TARGET = qtcontacts_jsondb

@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT += organizer
 
 TARGET = qtorganizer_skeleton

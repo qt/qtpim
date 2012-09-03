@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 QT = core organizer organizer-private
 
 TARGET = qtorganizer_memory

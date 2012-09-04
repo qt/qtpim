@@ -31,55 +31,47 @@
 
 \page contactssync.html
 
-\title Contacts Synchronous API
+\title Qt Contacts Synchronous API
 
 \tableofcontents
 
+    The Qt Contacts Synchronous API provides the simplest way to access or
+    modify the contact information managed by a particular backend. It has the
+    disadvantage that calls block until completion and is therefore most
+    suitable only for applications which interact with local, high-speed
+    datastores.
 
-\section1 Introduction
-
-The Contacts Synchronous API enables a client to synchronously fetch, update, or remove
-contact data from a contact manager.  A synchronous API is of most use to clients who wish
-to perform simple requests where performance or user interface responsiveness is not critical.
-Synchronous calls to a contact manager will block until they are completed, and therefore
-should not be performed in the GUI thread if the manager is a frontend to an online service
-or long-latency datastore.  The main advantage of the synchronous API is its simplicity and
-convenience.
-
-Most operations which may be performed using the synchronous API may also be
-performed using the asynchronous API.  It is recommended for most
+Most operations that may be performed using the synchronous API may also be
+performed using the Qt Contacts Asynchronous API.  It is recommended for most
 applications that the asynchronous API be used where possible.
 
-
-\section1 Using The API
-
-The synchronous API offered by the Contacts module is available through the QContactManager
-class.  It consists of three major sections:
+The Qt Contacts Synchronous API is available through the QContactManager
+class. It has the following main use cases:
 \list
-  \li Error Reporting
-  \li Contact Manipulation
-  \li Relationship Manipulation
+  \li Reporting Errors
+  \li Manipulating Contacts
+  \li Manipulating Relationships
 \endlist
 
 
-\section2 Error Reporting
+\section1 Reporting Errors
 
 When a synchronous operation fails, clients need to be able to retrieve error information associated
 with that synchronous operation.  The QContactManager::error() function provides this information to clients.
 
 For some synchronous operations (for example, batch save or remove operations) it is possible that
-multiple errors may occur during the operation.  In those cases, the synchronous function will take
-a pointer to a map of input index to error, which will be filled by the function as required, and
-the QContactManager::error() function will report the overall operation error.
+multiple errors may occur during the operation.  In those cases, the synchronous function takes
+a pointer to a map of input index to error, which is filled by the function as required.
+The QContactManager::error() function then reports the overall operation error.
 
 Error reporting is handled slightly differently in the asynchronous API, in that each instance of
 an asynchronous request is able to report any overall operation error as well as the finer-grained
 map of errors, for the operation which it requested.
 
 
-\section2 Contact Manipulation
+\section1 Manipulating Contacts
 
-The most common type of operation that clients will perform involves retrieval or modification of contacts.
+The most common type of operation that clients perform involves retrieval or modification of contacts.
 The QContactManager class offers synchronous API to retrieve, create, update and delete contacts.  The create
 and update operations are provided through the same interface.  Both singular and batch operations are offered
 by the API.
@@ -108,8 +100,8 @@ which types of information they wish to retrieve.  This argument is a hint only,
 or used by the plugin to optimize the performance of the retrieve operation.
 
 The save operation entails a validation step, where the contact's details are checked against the supported schema.
-If the contact is valid, it will be saved.  Note that if the contact already exists in the database (determined by
-the id of the contact) it will be replaced with the contact contained in the argument.  This means that clients should
+If the contact is valid, it is saved.  Note that if the contact already exists in the database (determined by
+the id of the contact) it is replaced with the contact contained in the argument.  This means that clients should
 not save any contact which was retrieved with a non-empty fetchHint defined, or data loss may occur.
 
 Any error which occurs during such singular contact manipulation functions may be accessed by calling QContactManager::error()
@@ -124,13 +116,13 @@ The synchronous, batch contact manipulation functions offered by the QContactMan
 \endlist
 
 The batch save and remove functions both take an (optional) pointer to a map of errors.  If the pointer is non-null,
-this map will be filled out with any errors which occur.  The overall operation error of any batch manipulation operation
+this map is filled out with any errors which occur.  The overall operation error of any batch manipulation operation
 may be accessed by calling QContactManager::error() directly after the original synchronous call.
 
 The contact manipulation functionality is also provided via asynchronous API through the QContactFetchRequest,
 QContactSaveRequest, and QContactRemoveRequest classes.
 
-The "self" contact is a special concept, which has dedicated API.  A client may instruct any backend which supports the
+The \e self contact is a special concept, which has dedicated API.  A client may instruct any backend which supports the
 concept of a self contact that a particular, previously saved contact is the self contact.  Any backend which implements
 this functionality should report that it supports the QContactManager::SelfContact feature.
 
@@ -145,7 +137,39 @@ or set the self contact id to be null id (constructed via QContactId()).
 The self-contact manipulation functionality is only available via the synchronous API.
 
 
-\section2 Relationship Manipulation
+\section2 Adding Contacts
+
+The client creates a new contact, adds a name and a phone number, and
+saves it to the default store of the default manager.
+
+We assume the existence of a specialized leaf-class that allows simple
+access to details of the definition identified by the "PhoneNumber"
+identifier, and another that allows simple access to details of the
+definition identified by the "Name" identifier.  These specialized leaf
+classes may be written by anyone, and simply wrap the functionality
+provided by QContactDetail in order to allow simpler access to fields
+supported by a particular definition.
+
+    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Creating a new contact
+
+\section2 Filtering by Detail Definition and Value
+
+The client utilizes a default manager and asks for any contacts with a
+particular phone number.  The example assumes that the default manager
+supports the provided QContactPhoneNumber detail leaf class (which
+implements the default definition for phone number details).
+
+    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
+
+
+\section2 Modifying Contact Details
+
+The client retrieves a contact, modifies one of its details, adds a new
+detail, and then saves the contact back to the manager.
+
+    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Modifying an existing contact
+
+\section1 Manipulating Relationships
 
 Contacts may be related in various ways.  The contacts API allows clients to define relationships between contacts
 if the plugin providing the functionality supports such relationships.
@@ -164,48 +188,6 @@ The API which provides the relationship manipulation functionality consists of:
 
 The relationship manipulation functionality is also provided via asynchronous API through the QContactRelationshipFetchRequest,
 QContactRelationshipSaveRequest, and QContactRelationshipRemoveRequest classes.
-
-
-\section1 Examples Of Usage
-
-The synchronous API provides the simplest way to access or modify the
-contact information managed by a particular backend.  It has the
-disadvantage that calls block until completion and is therefore
-most suitable only for applications which interact with local, high-speed
-datastores.
-
-
-\section2 Saving a new contact to the default manager
-
-The client creates a new contact, adds a name and a phone number, and
-saves it to the default store of the default manager.
-
-We assume the existence of a specialized leaf-class that allows simple
-access to details of the definition identified by the "PhoneNumber"
-identifier, and another that allows simple access to details of the
-definition identified by the "Name" identifier.  These specialized leaf
-classes may be written by anyone, and simply wrap the functionality
-provided by QContactDetail in order to allow simpler access to fields
-supported by a particular definition.
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Creating a new contact
-
-\section2 Filtering by detail definition and value
-
-The client utilizes a default manager and asks for any contacts with a
-particular phone number.  The example assumes that the default manager
-supports the provided QContactPhoneNumber detail leaf class (which
-implements the default definition for phone number details).
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
-
-
-\section3 \b{Modifying an existing contact and saving the modifications}
-
-The client retrieves a contact, modifies one of its details, adds a new
-detail, and then saves the contact back to the manager.
-
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Modifying an existing contact
 
 */
 

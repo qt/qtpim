@@ -66,9 +66,9 @@ QTCONTACTS_BEGIN_NAMESPACE
   The functions provided by QContactManager are purely synchronous; to access the same functionality in an
   asynchronous manner, clients should use the use-case-specific classes derived from QContactAbstractRequest.
 
-  Some functionality provided by QContactManager directly is not accessible using the asynchronous API; see
-  the \l{Contacts Synchronous API}{synchronous} and \l{Contacts Asynchronous API}{asynchronous} API
-  information from the \l{C++ Contacts}{contacts module} API documentation.
+  Some functionality provided by QContactManager directly is not accessible using the asynchronous API. See
+  the \l{Qt Contacts Synchronous API}{synchronous} and \l{Qt Contacts Asynchronous API}{asynchronous} API
+  information in the \l{Qt Contacts C++ API} documentation.
  */
 
 /*!

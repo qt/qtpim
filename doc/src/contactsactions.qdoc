@@ -33,15 +33,13 @@
 
 \tableofcontents
 
-\section1 Introduction
-
-The Contacts API supports the concept of a generic action which may be invoked
+The Qt Contacts API supports the concept of a generic action which may be invoked
 upon an \l{QContactActionTarget}{action target} (e.g., a contact) or list thereof.
 The API allows clients to invoke an action upon a target (for example, to send an email
 to a contact) in a cross-platform manner, and allows third-party developers to provide
 platform-specific action plugins which may be used by clients.
 
-\section1 Information For Clients
+\section1 Invoking Actions upon Targets
 
 The client interface to actions consists of three classes: QContactAction, QContactActionTarget
 and QContactActionDescriptor.  A \l{QContactActionDescriptor}{descriptor} uniquely identifies
@@ -72,7 +70,7 @@ pointer and must delete it to avoid leaking memory.  The caller is able to delet
 at any time, however doing so prior to when the action transitions to a finished state may
 have an undefined outcome depending on the implementation of the action.
 
-\section1 Information For Action Implementors
+\section1 Implementing Actions
 
 If you are a third-party developer who wants to provide an action for other clients to use,
 you must do four things:
@@ -80,14 +78,14 @@ you must do four things:
 \li Implement a QServicePluginInterface-derived class
 \li Implement a QContactActionFactory-derived class
 \li Implement (one or more) QContactAction-derived classes
-\li Write an xml file which describes your service plugin
+\li Write an XML file which describes your service plugin
 \endlist
 
 For more information on the QServicePluginInterface and the format of the service description
-xml, please see the \l{Qt Service Framework}{Qt Service Framework} documentation.
+XML, see the \l{Qt Service Framework}{Qt Service Framework} documentation.
 An example action plugin is provided later in this document.
 
-Note that while the plugins are loaded by the \l{Qt Service Framework}{Qt Service Framework},
+\note While the plugins are loaded by the Qt Service Framework,
 clients of the Qt Contacts Action API are entirely shielded from this implementation detail.
 
 The QContactActionDescriptor class is actually a client-facing interface to an action factory,
@@ -119,8 +117,9 @@ The implementation of these classes might be something like the following (examp
 
 \snippet ../../tests/auto/contacts/qcontactactions/multiaction/multiaction.cpp Example Contact Action Plugin Implementation
 
-Once implemented, the plugin must be described by an xml file as per the Qt Service Framework guidelines,
-and installed in an appropriate location (once again, please see the documentation for the Qt Service Framework).
+Once implemented, the plugin must be described by an XML file and installed in
+an appropriate location. For more information, see the Qt Service Framework
+documentation.
 
 \code
 <?xml version="1.0" encoding="utf-8" ?>
@@ -138,7 +137,7 @@ and installed in an appropriate location (once again, please see the documentati
 </service>
 \endcode
 
-\section2 Deployment
+\section2 Deploying Services
 
 Depending on the platform, the service which provides the action must be
 deployed in a certain way.

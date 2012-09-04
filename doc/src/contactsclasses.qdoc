@@ -26,21 +26,69 @@
 ****************************************************************************/
 
 /*!
-\title Contacts c++ Classes
+\title Qt Contacts C++ API
 \page contactsclasses.html
+\brief The Qt Contacts API enables you to manage contact information, whether it
+is stored locally or remotely.
 
-    \group qtpim
-    \title Contacts c++ Classes
+\section1 Main Classes
 
-    \section1 Overview
+\annotatedlist contacts-main
 
-    \section2 Introducing the Contacts Module
+\section1 Contact Details Leaf Classes
 
-    The QtContacts API allows access to contact information.
-    It is not a single API but a collection of APIs and frameworks.
-    For more details, see the \l {C++ Contacts} {Contacts API overview}.
-    The following are the classes involved in this API.
+Several subclasses of \l{QContactDetail} are provided as part of the
+Qt Contacts API.  They are general in design but are intended
+to fulfill specific use-cases.  Please note that certain backends may
+choose not to support one or more of these subclasses as they appear here;
+they may offer their own which provide similar functionality.
 
-    \generatelist{classesbymodule QtContacts}
+\annotatedlist contacts-details
+
+Each of these subclasses provide access to information stored in fields which
+may have certain constraints, documented in each subclass documentation.
+
+\section1 Asynchronous Requests
+
+Clients may use either the \l{Qt Contacts Synchronous API}{synchronous}
+or \l{Qt Contacts Asynchronous API}{asynchronous} API to access
+functionality provided by a manager backend. The
+Qt Contacts Asynchronous API is
+offered through subclasses of the \l{QContactAbstractRequest} class:
+
+\annotatedlist contacts-requests
+
+\section1 Contact Selection
+
+Clients may select a contact by specifying a unique contact id, or by
+supplying a \l{QContactFilter} which matches the contact or contacts they
+wish to select.  The various derivatives of \l{QContactFilter} allow for
+fine-grained and flexible selection of contacts according to various
+criteria:
+
+\annotatedlist contacts-filters
+
+
+A client can also request that the results of such a selection be sorted,
+by passing a \l{QContactSortOrder} (or list of sort orders) to the manager.
+
+\section1 Actions
+
+Actions are described by descriptors and are instantiated by factories.
+
+\annotatedlist contacts-actions
+
+\section1 Backends
+
+A backend implementor must implement the following interfaces:
+
+\annotatedlist contacts-backends
+
+For more information, see \l{Qt Contacts Manager Engines}.
+
+\section1 Synchronization and Serialization
+
+The Qt Contacts API is used by the \l{Qt Versit Overview}{Qt Versit} module.  It allows
+serialization of a QContact into a vCard document, and vice versa.
 
 */

@@ -30,43 +30,31 @@
 
 \page contactsasync.html
 
-\title Contacts Asynchronous API
+\title Qt Contacts Asynchronous API
 
 \tableofcontents
 
+    The Qt Contacts Asynchronous API enables a client to asynchronously fetch,
+    update, or remove contact and relationship data from a contact manager. It
+    offers mostly the same functionality as the \l{Qt Contacts Synchronous API},
+    but with greater flexibility when requesting information from remote
+    datastores or slow local datastores. However, some information and reporting
+    functionality, as well as the functions to set and retrieve the id of the
+    self-contact are only provided through the synchronous API.
 
-\section1 Introduction
-
-The Contacts Asynchronous API enables a client to asynchronously fetch, update, or remove
-contact and relationship data from a contact manager.  Use of the asynchronous API
-offers the programmer greater flexibility when requesting information from remote or
-slow local datastores.
-
-\section1 Using the API
-
-The asynchronous API offered by the Contacts module is available through classes
-derived from the QContactAbstractRequest class.  It consists of two major sections:
+    The Qt Contacts Asynchronous API is available through classes
+    derived from the QContactAbstractRequest class. It has the following main
+    use cases:
 \list
-  \li Contact Manipulation
-  \li Relationship Manipulation
+  \li Manipulating contacts
+  \li Manipulating relationships
 \endlist
 
-The functionality offered by the synchronous API in these two categories is also
-available through the asynchronous API.  There is one category of functionality
-which is not provided by the asynchronous API which is provided by the synchronous
-API: some information and reporting functionality is only provided through the
-synchronous API.
-
-For detailed information about the information and reporting functionality provided,
-please refer to the documentation for the \l{Contacts Synchronous API}.
-
-The functions to set and retrieve the id of the self-contact are also only provided by
-the synchronous API.
-
-\section2 Contact Manipulation
+    \section1 Manipulating Contacts
 
 The most common type of operation that clients will perform involves retrieval or modification of contacts.
-For in-depth information about contact manipulation, please refer to the \l{Contacts Synchronous API}.
+For in-depth information about contact manipulation, please refer to the
+\l{Qt Contacts Synchronous API}.
 
 There are four different types of operation which are supported by the asynchronous API:
 \list
@@ -90,10 +78,11 @@ of the following functions:
   \li removeContacts(QList<QContactId>* contactIds, QMap<int, QContactManager::Error>* errorMap)
 \endlist
 
-\section3 \b{Relationship Manipulation}
+\section1 Manipulating Relationships
 
 Contacts may be related in various ways.  The contacts API allows clients to define relationships between contacts.
-For in-depth information about relationship manipulation, please refer to the \l{Contacts Synchronous API}.
+For in-depth information about relationship manipulation, please refer to the
+\l{Qt Contacts Synchronous API}.
 Support for relationships is backend specific.
 There are three different types of operation which are supported by the asynchronous API:
 \list
@@ -116,7 +105,7 @@ consists of the following functions:
   \li removeRelationships(const QList<QContactRelationship>& relationships);
 \endlist
 
-\section1 Examples Of Usage
+\section1 Examples of Usage
 
 \section2 Fetching Contacts
 

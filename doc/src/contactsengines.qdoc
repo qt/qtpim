@@ -34,22 +34,20 @@
 
 \tableofcontents
 
-\section1 Introduction
-
 The QContactManager interface provided to clients to allow access to contact information depends
 on an implementation of QContactManagerEngine existing.  This engine provides the methods
 which are called by the manager.  An engine is identified by its URI, which is the name
 reported to clients through the QContactManager::managerUri() function.  The URI of a manager
 is built by combining its name, version and relevant construction parameters.
 
-\section1 Information For Clients
+\section1 Information for Clients
 
 While clients never interact directly with instances of QContactManagerEngine, they may need to
 be aware of limitations of individual engines, or differences between engines.  The API offered
 through QContactManager allows clients to retrieve this information for the engine which provides
 the functionality exposed through a particular QContactManager.
 
-\section2 Where Is The Data Stored?
+\section2 Where Is the Data Stored?
 
 A QContactManagerEngine may provide an aggregated view of multiple physical datastores, zero or
 more of which may be remote datastores.  Clients of the API are aware only that the data is managed
@@ -75,9 +73,9 @@ supported by an engine by calling QContactManager::supportedContactTypes().
 The Qt PIM AddOn includes the Contacts module which includes several backends already, some of which
 are designed to interface with the default addressbook on their particular platform.
 
-\section3 \b{In-Memory Example Engine}
+\section3 In-Memory Example Engine
 
-The in-memory engine identifies itself as the "memory" engine.  It is available on all platforms
+The in-memory engine identifies itself as the \e memory engine.  It is available on all platforms
 which are supported by the Qt PIM AddOn.
 
 The in-memory engine supports the default schema, and provides all functionality available through
@@ -92,7 +90,7 @@ or provide some other functionality to clients.  An engine is distributed as a Q
 will be detected automatically by the plugin loading code in the QContactManager, so long as the
 plugin is located in the correct path ($QT_PLUGINS_DIR/contacts/).
 
-\section2 Which Functions Do I Need To Implement
+\section2 Which Functions Do I Need to Implement?
 
 Different engines provide different functionality and support different features.  Depending on
 the feature set of the engine, it will need to implement a particular subset of the API.
@@ -100,7 +98,7 @@ The default implementation for most functions will set the error to
 \c QContactManager::NotSupportedError and return the value which indicates that an error has
 occurred.
 
-\section3 \b{Mandatory Functions}
+\section3 Mandatory Functions
 
 All engines must implement the following functions:
 
@@ -149,7 +147,7 @@ It is recommended that all engine implementations support asynchronous requests,
 use a "dummy" implementation which services the request synchronously during startRequest, and then
 emit the appropriate signals from the request via a zero-millisecond timeout timer.
 
-\section3 \b{Optional Functionality}
+\section3 Optional Functionality
 
 The rest of the virtual functions are optional, and should be implemented only if the engine
 supports the operations.
@@ -205,7 +203,7 @@ information) is backend specific
 \endlist
 
 
-\section3 \b{Optional Implementation}
+\section3 Optional Implementation
 
 Apart from areas of functionality which may be optionally implemented by the engine or not,
 the default implementation provides several functions which operate in a naive, in-memory
@@ -221,7 +219,7 @@ QContactManagerEngine::contacts().  An engine may also implement:
 \endlist
 
 
-\section2 Which Signals Do I Need To Emit
+\section2 Which Signals Do I Need to Emit?
 
 An engine implementation must emit the appropriate signals for the subset of functionality
 that it supports.

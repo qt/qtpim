@@ -32,52 +32,36 @@
 
 \page organizer.html
 
-\title C++ Organizer
+\title Qt Organizer Overview
 \brief An API enabling clients to request calendar, schedule and personal data
 from local or remote backends.
 
 \ingroup qtpim-c++
 
-The Organizer API enables a client to request calendar, schedule and personal
-data from local or remote backends. This is part of the Qt PIM AddOn.
+The Qt Organizer API enables a client to request calendar, schedule and personal
+data from local or remote backends.
 
 \tableofcontents
 
+    With the Qt Organizer API typical use cases are:
 
-\section1 Introduction
+    \list
+        \li Access a list of calendar events from the calendar database
+            supported by the selected backend.
+        \li Import iCalendar events into the selected calendar database.
+        \li Share events by exporting iCalendar content.
+    \endlist
 
-The Organizer API provides clients with the ability to access calendar,
-schedule and personal data in a platform-independent and datastore-agnostic
-manner.  This is achieved by defining generic personal information data
-abstractions which can sufficiently describe calendar and scheduling data
-stored a platform's native calendaring system.  Through the plugin architecture,
-it can be used as a front-end API for any calenaring system (eg. an online
-calendar).
-
-\section1 Basic Usage
-
-The Qt Organizer API provides both a \l{Organizer Synchronous API}{synchronous}
-and an \l{Organizer Asynchronous API}{asynchronous} API.  Note that for clarity,
+The Qt Organizer provides both a \l{Qt Organizer Synchronous API}{synchronous}
+and an \l{Qt Organizer Asynchronous API}{asynchronous} API.  Note that for clarity,
 the short examples on this page demonstrate the synchronous API.  While these
 code snippets might be useful for non-GUI applications, it is highly recommended
 that the asynchronous API is used for GUI applications.
 
-A full list of classes can be found in the specific \l{Organizer c++ Classes} section.
+A full list of classes can be found in \l{Qt Organizer C++ API}.
 
+\section1 Instantiating Organizer Manager
 
-\section1 Getting Started
-
-    To include the definitions of the module's classes, use the
-    following directive:
-
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtorganizer.cpp include
-
-    To link against the module, add this line to your \l qmake \c
-    .pro file:
-
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtorganizer.pro organizer project modification
-
-\section2 The Organizer Manager
 Organizer information is stored in datastores whose functionality is exposed
 via the QOrganizerManager class.
 
@@ -88,9 +72,9 @@ platform being instantiated:
 
     \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Instantiating the default manager for the platform
 
-\section2 Creating a New Item
+\section1 Creating New Items
 
-You can create a new item simply by instantiating one and saving it a manager.
+You can create a new item simply by instantiating one and saving it in a manager.
 
     \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Creating a non-recurrent entry
 
@@ -100,7 +84,7 @@ You can request all items from the manager that occur in a given time range.
 
     \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries for a time period
 
-It is also possible filter the items on the value of a detail.
+It is also possible to filter the items on the value of a detail.
 
     \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries with a filter
 
@@ -116,7 +100,7 @@ The synchronous API provides the QOrganizerManager::item() function to retrieve
 a single item by its id.  With the asynchronous API, this can be done using a
 QOrganizerItemFetchRequest and a QOrganizerItemIdFilter.
 
-\section2 Updating an Existing Item
+\section1 Updating Existing Items
 
 You can update a previously saved item retrieving the item, modifying it, and
 saving it back to the manager.  The manager uses the id of the item to match up
@@ -124,7 +108,7 @@ the provided item with the one in the database.
 
     \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Editing a non-recurrent entry
 
-\section2 Removing an item from a manager
+\section1 Removing Items
 
 You can remove an item from the manager by using its id.
 
@@ -228,9 +212,7 @@ considered to start and end roughly on its given start and end dates
 be specified as an all-day QOrganizerEvent where the StartDateTime and
 EndDateTime have the same value.
 
-\section1 API Usage
-
-\section2 Asynchronous API
+\section1 Using Asynchronous and Synchronous API
 
 The asynchronous API provides a way to access or modify the
 organizer item information managed by a particular backend via non-blocking,
@@ -249,9 +231,7 @@ The asynchronous API allows manipulation of \l{QOrganizerItem}{items},
 and \l{QOrganizerCollection}{collections}, but does not provide manager
 capability information reporting.
 
-For more detailed documentation on the asynchronous API, see the \l{Organizer Asynchronous API}.
-
-\section2 Synchronous API
+\sa {Qt Organizer Asynchronous API}
 
 The synchronous API provides the simplest way to access or modify the
 organizer item information managed by a particular backend.  It has the
@@ -264,89 +244,16 @@ The synchronous API is offered through the QOrganizerManager class, and
 includes manipulation of \l{QOrganizerItem}{items}, and
 \l{QOrganizerCollection}{collections}.
 
-For more detailed documentation on the synchronous API, see the
-\l{Organizer Synchronous API}.
+\sa {Qt Organizer Synchronous API}
 
 
-\section1 More information
-
-While the information on this page should be sufficient for the common
-use-cases, please see the discussion on \l{Advanced Organizer API Usage} for
-more details on the intricacies of the API.
+\sa {Qt Organizer API Advanced Usage}
 
 It is possible for third party developers to implement a manager engine plugin
 from which clients may request data.  For more information on this topic (for
 example, if you intend to implement a manager backend) please see
 \l{Qt Organizer Manager Engines}.
 
-\section1 Reference documentation
-
-\section2 Main Classes
-
-\annotatedlist organizer-main
-
-\section2 QOrganizerItemDetail Leaf Classes
-
-Several subclasses of \l{QOrganizerItemDetail} are provided as part of the
-Organizer API.  They are general in design but are intended
-to fulfill specific use-cases.  Please note that certain backends may
-choose not to support one or more of these subclasses as they appear here;
-they may offer their own which provide similar functionality.
-
-\annotatedlist organizer-details
-
-\section2 Asynchronous Requests
-
-You may use either the \l{Organizer Synchronous API}{synchronous}
-or \l{Organizer Asynchronous API}{asynchronous} API to access
-functionality provided by a manager backend. The
-\l{Organizer Asynchronous API}{asynchronous} API is
-offered through subclasses of the \l{QOrganizerAbstractRequest} class:
-
-\annotatedlist organizer-requests
-
-\section2 Organizer Item Selection And Sorting
-
-You may select an organizer item by specifying a unique item id, or by
-supplying a \l{QOrganizerItemFilter} which matches the item or items they
-wish to select.  The various derivatives of \l{QOrganizerItemFilter} allow for
-fine-grained and flexible selection of organizer data according to various
-criteria:
-
-\annotatedlist organizer-filters
-
-
-A client can also request that the results of such a selection be sorted,
-by passing a \l{QOrganizerItemSortOrder} (or list of sort orders) to the
-manager.
-
-\section2 Implementing Backends
-
-A backend implementor must implement the following interfaces:
-
-\annotatedlist organizer-backends
-
-For more information on this topic, see please see the documentation on
-\l{Qt Organizer Manager Engines}{implementing manager engines}.
-
-\section2 Synchronization and Serialization
-
-The organizer API is used by the
-\l {C++ Versit} {Versit}* module.  It allows
-serialization of a QOrganizerItem into an iCalendar document, and vice versa.
-
-[*] Versit \reg is a trademark of the Internet Mail Consortium.
-
-\section1 Examples
-
-The following sample applications show examples of API usage:
-\list
-    \li \l{calendardemo}{Example Calendar Application}
-\endlist
-
-\section1 QML Elements
-
-For details on the QML support provided for the Organizer API see the documentation for the \l {Organizer QML API}.
 
 
 */

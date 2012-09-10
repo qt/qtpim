@@ -158,7 +158,8 @@ public:
 
     OrganizerModel provides a model of organizer items from the organizer store.
     The contents of the model can be specified with \l filter, \l sortOrders and \l fetchHint properties.
-    Whether the model is automatically updated when the store or \l {C++ organizer} item changes, can be
+    Whether the model is automatically updated when the store or
+    \l{Qt Organizer Overview} {C++ organizer} item changes, can be
     controlled with \l OrganizerModel::autoUpdate property.
 
     There are two ways of accessing the organizer item data: via the model by using views and delegates,

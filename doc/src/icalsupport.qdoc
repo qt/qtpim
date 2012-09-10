@@ -57,7 +57,7 @@ following are supported with the QOrganizer Versit implementation.
 
 \section1 Properties
 
-The following table lists the iCalendar properties that the \l{C++ Versit}{Versit API} supports
+The following table lists the iCalendar properties that the \l{Qt Versit C++ API} supports
 for the Organizer calendar components.
 
 \table

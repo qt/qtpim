@@ -34,7 +34,7 @@
     \section1 Overview
 
     This example shows how to write a simple calendar application using
-    the \l{C++ Organizer}{C++ Organizer API}.
+    the \l{Qt Organizer C++ API}.
 
     \section2 Use Case
 

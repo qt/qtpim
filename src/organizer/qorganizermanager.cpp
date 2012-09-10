@@ -58,8 +58,8 @@ QTORGANIZER_BEGIN_NAMESPACE
     certain functionality (e.g. backend functionality reporting) can not be accessed using the
     asynchronous APIs.
 
-    See the \l{Organizer Synchronous API}{synchronous} and \l{Organizer Asynchronous API}{asynchronous}
-    API information from the \l{C++ Organizer}{organizer module} API documentation for more details.
+    See the \l{Qt Organizer Synchronous API}{synchronous} and \l{Qt Organizer Asynchronous API}{asynchronous}
+    API information from the \l{Qt Organizer Overview}{organizer module} API documentation for more details.
 
     When constructing a QOrganizerManager instance, certain parameters can be given to provide more
     control, e.g. to specify the version of the backend it wants to construct. Note that the parameters

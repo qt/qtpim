@@ -32,7 +32,7 @@
 
 \page organizeradvanced.html
 
-\title Advanced Organizer API Usage
+\title Qt Organizer API Advanced Usage
 \section1 Introduction
 
 This section provides some detailed information on more advanced topics
@@ -66,7 +66,7 @@ used to manipulate these details.
 It is important to note that details are implicitly shared objects with
 particular semantics surrounding saving, removal and modification.
 
-\section2 Optimization in item retrieval
+\section2 Optimizing Item Retrieval
 
 Clients can inform the manager that they do not require certain details from an
 item, which can allow a manager to optimize item retrieval. In this way, the
@@ -98,7 +98,7 @@ API offered through QOrganizerManager allows clients to retrieve this
 information for the engine which provides the functionality exposed through a
 particular QOrganizerManager.
 
-\section2 Storage considerations
+\section2 Storage Considerations
 
 A QOrganizerManagerEngine may provide an aggregated view of multiple physical
 datastores, some of which may be remote datastores. Clients of the API are aware
@@ -119,13 +119,13 @@ designed to interface with the default calendar on their particular platform.
 
 \section3 In-Memory Example Engine
 
-The in-memory engine identifies itself as the "memory" engine.
+The in-memory engine identifies itself as the \c memory engine.
 
 The in-memory engine supports the default schema, and provides almost all
 functionality available through the Qt Organizer API; however, all data
 is stored in-memory and is not persisted in any way.
 
-\section1 Manager Settings And Configuration
+\section1 Manager Settings and Configuration
 
 Users of the items API can define which backend they wish to access if a manager
 for that backend is available. The list of available managers can be queried
@@ -134,13 +134,13 @@ ascertained by inspecting a QOrganizerManager instance. Furthermore, some
 managers can be constructed with parameters which affect the operation of the
 backend.
 
-\section2 Querying a manager for capabilities
+\section2 Querying a Manager for Capabilities
 
 Different managers will support different capabilities and details. Clients can
 use the meta data reporting functions of QOrganizerManager to determine what the
 capabilities of the manager they have instantiated might be.
 
-\section2 Loading the manager for a specific backend
+\section2 Loading the Manager for a Specific Backend
 
 The client can choose to load a manager for a specific backend. While the engine
 could be found and retrieved using a more advanced plugin framework (such as the
@@ -155,7 +155,7 @@ Clients may wish to use this feature of the API if they wish to store or
 retrieve item information to a particular manager (for example, one that
 interfaces with a particular online service).
 
-\section2 Loading a manager with specific parameters
+\section2 Loading a Manager with Specific Parameters
 
 The client can load a manager with specific parameters defined. The parameters
 which are available are backend specific, and so the client has to know which

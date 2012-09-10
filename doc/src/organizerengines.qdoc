@@ -34,15 +34,13 @@
 
 \tableofcontents
 
-\section1 Introduction
-
 The QOrganizerManager interface provided to clients to allow access to organizer information depends
 on an implementation of QOrganizerManagerEngine existing.  This engine provides the methods
 which are called by the manager.  An engine is identified by its URI, which is the name
 reported to clients through the QOrganizerManager::managerUri() function.  The URI of a manager
 is built by combining its name, version and relevant construction parameters.
 
-\section1 Information For Engine Implementors
+\section1 Implementing Organizer Manager Engines
 
 Some developers may wish to provide implementations of QOrganizerManagerEngine for use by clients.
 The engine that they provide may aggregate multiple datastores, or access a remote datastore,
@@ -55,7 +53,7 @@ plugin is located in the correct path ($QT_PLUGINS_DIR/organizer/).
 The functionality exposed by the QOrganizerManager class may be implemented
 by \l{QOrganizerManagerEngine}{engine} plugins which interface directly to
 a platform-specific backend or provide their own data storage backend.  As
-such, the terms "manager", "plugin" and "backend" are used interchangeably in
+such, the terms \e manager, \e plugin, and \e backend are used interchangeably in
 this documentation to refer to any engine plugin which implements the
 functionality exposed by the QOrganizerManager interface.  The plugin
 architecture allows dynamic loading of different manager engines at runtime.
@@ -73,7 +71,7 @@ id format.
 
 Engine implementers must implement their own id classes derived from
 \l QOrganizerItemEngineId and \l QOrganizerCollectionEngineId respectively.
-For an example of how to implement these classes, see the "skeleton" example
+For an example of how to implement these classes, see the \e skeleton example
 plugin.
 
 \section2 Which Functions Do I Need To Implement

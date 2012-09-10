@@ -30,35 +30,30 @@
 
 \page organizerasync.html
 
-\title Organizer Asynchronous API
+\title Qt Organizer Asynchronous API
 
 \tableofcontents
 
 
-\section1 Introduction
-
-The Organizer Asynchronous API enables a client to asynchronously fetch,
+The Qt Organizer Asynchronous API enables a client to asynchronously fetch,
 update, or remove calendar, scheduling and personal data from an organizer
 item manager.  Use of the asynchronous API offers the programmer greater
 flexibility when requesting information from remote or slow local datastores.
 
-\section1 Using the API
-
-The asynchronous API offered by the Organizer module is available through classes
-derived from the QOrganizerAbstractRequest class.  It consists of three major
-categories:
+The asynchronous API is available through classes derived from the
+QOrganizerAbstractRequest class that enable clients to:
 \list
-  \li Organizer Item Manipulation
-  \li Item Collection Manipulation
+  \li Manipulate organizer items
+  \li Manipulate item collections
 \endlist
 
-\section2 Organizer Item Manipulation
+\section1 Manipulating Organizer Items
 
 The most common type of operation that clients will perform involves retrieval
 or modification of organizer items.  For in-depth information about item
-manipulation, please refer to the main \l{C++ Organizer} API page.
+manipulation, see \l{Qt Organizer C++ API}.
 
-There are six different types of operation which are supported by the asynchronous API:
+The asynchronous API supports the following operations:
 \list
   \li Fetch item ids
   \li Fetch persistent items (for export)
@@ -68,7 +63,7 @@ There are six different types of operation which are supported by the asynchrono
   \li Remove items
 \endlist
 
-These operations are supported via the classes:
+These operations are supported via the following classes:
 \list
 \li QOrganizerItemIdFetchRequest
 \li QOrganizerItemFetchForExportRequest
@@ -78,22 +73,22 @@ These operations are supported via the classes:
 \li QOrganizerItemRemoveRequest
 \endlist
 
-\section2 Item Collection Manipulation
+\section1 Manipulating Item Collections
 
-Every item is saved in a collection in a manager.  Each collection has various
+Each item is saved in a collection in a manager.  Each collection has various
 properties which, if the manager supports such operations, may be modified
-by clients.  For in-depth information about collections, please refer to the
-main \l{C++ Organizer} API page.
+by clients.  For in-depth information about collections, see
+\l{Qt Organizer C++ API}.
 
 
-There are three different types of operation which are supported by the asynchronous API:
+The asynchronous API supports the following operations:
 \list
   \li Fetch collections (that is, the object which defines the properties of a collection)
   \li Save collections (create or update)
   \li Remove collections
 \endlist
 
-These operations are supported via the classes:
+These operations are supported via the following classes:
 \list
 \li QOrganizerCollectionFetchRequest
 \li QOrganizerCollectionSaveRequest
@@ -101,22 +96,25 @@ These operations are supported via the classes:
 \endlist
 
 
-\section1 Usage
+\section1 Performing Asynchronous Operations
 
-All asynchronous operations are performed in a similar pattern:
-a request of the desired type (which is derived from
-QOrganizerAbstractRequest) is created, certain criteria are set which
-determine the intent of the request, QOrganizerAbstractRequest::stateChanged()
-signal of the request is connected to a slot which deals with the results.
-The request can then be started.
+All asynchronous operations are performed in a similar way:
+    \list
+        \li A request of the desired type (which is derived from
+            QOrganizerAbstractRequest) is created
+        \li Certain criteria are set which determine the intent of the request
+        \li QOrganizerAbstractRequest::stateChanged() signal of the request is
+            connected to a slot which deals with the results.
+        \li The request is started.
+    \endlist
 
-Note that if the client is interested in receiving the results of the request
-as they become available, rather than only the final set of results once the
+\note To receive the results of the request as they become available, rather
+than only the final set of results once the
 request changes state (to \c FinishedState, for example), the client should
 instead connect the QOrganizerAbstractRequest::resultsAvailable() signal to the
 slot which deals with the results.
 
-\section2 Error Reporting
+\section2 Reporting Errors
 
 When a asynchronous operation fails, clients need to be able to retrieve error
 information associated with that asynchronous operation.  It is possible to

@@ -1,0 +1,92 @@
+/****************************************************************************
+**
+** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** GNU Free Documentation License
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms
+** and conditions contained in a signed written agreement between you
+** and Nokia.
+**
+**
+**
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \page qtversit-index.html
+    \title Qt Versit
+    \brief Qt Versit enables clients to import and export contact and calendar
+    information in vCard and iCalendar formats.
+
+    Most of the time your contacts do not remain in isolation in a single
+    device, but coexist on various mobile phones, computers, and servers. A
+    standard way to exchange the contacts is through the Versit \reg documents.
+
+    The Qt Versit API enables you to import calendar or contact information in
+    VCard and iCalendar format to the Qt Organizer and Qt Contact API, and to
+    store the information on the current platform. Alternatively, you can
+    export organizer and contact information to VCal or iCalendar files which
+    you can then import into other calendars and contact storages, or easily
+    share through Bluetooth or email, for example.
+
+
+    \section1 Getting Started
+
+    To include the definitions of the module's classes, use the following
+    directives. The generic Qt Versit is used in the contacts use case, and it
+    is extended with Qt Organizer:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit include
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit organizer include
+
+    To use the C++ library in your application, add the following configuration
+    option to your \c .pro file:
+
+    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.pro versit project modifications
+
+    \section1 References
+
+    \table
+    \header
+        \li {1,4} Reference
+        \li {1,4} Guides
+        \li {4,1} Examples
+    \header
+      \li QML API examples
+      \li C++ API examples
+    \row
+        \li
+        \li \l {Qt Versit Overview}
+        \li
+        \li
+    \row
+        \li \l {Qt Versit C++ API}
+        \li \l {Qt Versit Plugins}
+        \li
+        \li
+    \row
+        \li
+        \li \l{Supported vCard Features}
+        \li
+        \li
+    \row
+        \li
+        \li \l{Supported iCalendar Features}
+        \li
+        \li
+    \endtable
+
+*/

@@ -34,7 +34,7 @@
 
 \section1 Properties
 
-The following table lists the vCard properties that the \l{C++ Versit}{Versit API} supports.
+The following table lists the vCard properties that the \l{Qt Versit C++ API} supports.
 
 \table
   \header

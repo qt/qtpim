@@ -55,7 +55,7 @@ QTVERSIT_BEGIN_NAMESPACE
   to implement custom export behaviour for certain contact details.
 
   This interface is replaced by QVersitContactExporterDetailHandlerV2.  For general information on
-  extending Qt Versit, see the document on \l{Versit Plugins}.
+  extending Qt Versit, see the document on \l{Qt Versit Plugins}.
 
 
   \sa QVersitContactExporter
@@ -98,7 +98,7 @@ QTVERSIT_BEGIN_NAMESPACE
   \inmodule QtVersit
 
   This interface supercedes QVersitContactExporterDetailHandler.  For general information on
-  extending Qt Versit, see the document on \l{Versit Plugins}.
+  extending Qt Versit, see the document on \l{Qt Versit Plugins}.
 
 
   \sa QVersitContactExporter
@@ -171,7 +171,7 @@ QTVERSIT_BEGIN_NAMESPACE
   By associating a \l QVersitContactExporterDetailHandlerV2 with the exporter using
   setDetailHandler(), the client can pass in a handler to override the processing of details and/or
   handle details that QVersitContactExporter doesn't support.  Also, handlers can be implicitly
-  associated to an exporter through the \l{Versit Plugins}{handler plugin mechanism}.  The exporter
+  associated to an exporter through the \l{Qt Versit Plugins}{handler plugin mechanism}.  The exporter
   can be constructed with a profile, which gives hints about what kind of handlers should be added
   to it.  For example, the backup profile can be used to instruct the exporter to encode any unknown
   details in the vCard such that it can be reconstructed later (a QVersitContactImporter constructed
@@ -180,7 +180,7 @@ QTVERSIT_BEGIN_NAMESPACE
   \code
   QVersitContactExporter exporter(QVersitContactHandlerFactory::ProfileBackup);
   \endcode
-  For more details on how the backup plugin works, see \l{Versit Plugins}
+  For more details on how the backup plugin works, see \l{Qt Versit Plugins}
 
   \section1 Exporting group relationships
   The exporter does not handle QContactRelationships at all.
@@ -226,8 +226,8 @@ QVersitContactExporter::QVersitContactExporter()
 
 /*!
  * Constructs a new exporter for the given \a profile.  The profile strings should be one of those
- * defined by QVersitContactHandlerFactory, or a value otherwise agreed to by a \l{Versit
- * Plugin}{Versit plugin}.
+ * defined by QVersitContactHandlerFactory, or a value otherwise agreed to by a \l{Qt Versit
+ * Plugins}{Versit plugin}.
  *
  * The profile determines which plugins will be loaded to supplement the exporter.
  */
@@ -241,8 +241,8 @@ QVersitContactExporter::QVersitContactExporter(const QString& profile)
 
 /*!
  * Constructs a new exporter for the given \a profiles.  The profile strings should be one of those
- * defined by QVersitContactHandlerFactory, or a value otherwise agreed to by a \l{Versit
- * Plugin}{Versit plugin}.
+ * defined by QVersitContactHandlerFactory, or a value otherwise agreed to by a \l{Qt Versit
+ * Plugins}{Versit plugin}.
  *
  * The profiles determine which plugins will be loaded to supplement the exporter.
  */

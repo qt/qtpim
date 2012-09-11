@@ -67,7 +67,7 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
   \ingroup versit-extension
   \inmodule QtVersit
 
-  For general information on extending Qt Versit, see the document on \l{Versit Plugins}.
+  For general information on extending Qt Versit, see the document on \l{Qt Versit Plugins}.
 
   \sa QVersitOrganizerImporter
  */
@@ -120,7 +120,7 @@ QVersitOrganizerImporter::QVersitOrganizerImporter()
 
 /*!
  * Constructs a new importer for the given \a profile.  The profile strings should be one of those
- * defined by QVersitOrganizerHandlerFactory, or a value otherwise agreed to by a \l{Versit
+ * defined by QVersitOrganizerHandlerFactory, or a value otherwise agreed to by a \l{Qt Versit
  * Plugins}{Versit plugin}.
  *
  * The profile determines which plugins will be loaded to supplement the importer.

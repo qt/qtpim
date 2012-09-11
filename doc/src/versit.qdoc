@@ -28,7 +28,7 @@
 /*!
 
 \page versit.html
-\title C++ Versit
+\title Qt Versit Overview
 \brief An API to import and export to the vCard and iCalendar formats.
 
 \ingroup qtpim-c++
@@ -65,22 +65,9 @@ is subject to change.
 
 Versit \reg is a trademark of the Internet Mail Consortium.
 
-A full list of classes can be found in the specific \l{Versit c++ Classes} section.
+For full list of classes, see \l{Qt Versit C++ API}.
 
-\section1 Getting Started
-    To get started with Versit you will need to include the definitions of the module's classes, use the
-    following directives. The generic Versit is used in contacts use case, and is extended with the Organizer
-    module:
-
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit include
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit organizer include
-
-    To link against the module, add this line to your \l qmake \c
-    .pro file:
-
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.pro versit project modifications
-
-\section1 Usage
+\section1 Importing and Exporting Data
 The following example goes through the process of reading a vCard and importing
 it to QContact format, then exporting and writing it back out.
 
@@ -119,8 +106,7 @@ iCalendar documents are:
 \endlist
 
 It is also possible to extend the behaviour of the importer and exporter classes
-by writing handlers and plugins.  For more details, please see the document on
-\l{Versit Plugins}.
+by writing handlers and plugins.  For more details, see \l{Qt Versit Plugins}.
 \annotatedlist versit-extension
 
 \section1 Supported Features

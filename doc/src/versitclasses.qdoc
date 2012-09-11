@@ -26,18 +26,11 @@
 ****************************************************************************/
 
 /*!
-\title Versit c++ Classes
+\title Qt Versit C++ API
 \page versitclasses.html
 
-    \group qtpim
-    \title Versit c++ Classes
-
-    \section1 Overview
-
-    \section2 Introducing the Versit API
-
     The Versit API is not a single API but a collection of APIs and frameworks.
-    For more details, see the \l {C++ Versit} {Versit API overview}.
+    For more details, see \l{Qt Versit Overview}.
     The following are the classes involved in this API.
 
     \generatelist{classesbymodule QtVersit}

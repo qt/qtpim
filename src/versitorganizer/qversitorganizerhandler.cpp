@@ -58,7 +58,7 @@ QTVERSITORGANIZER_BEGIN_NAMESPACE
   \inmodule QtVersit
 
   This class provides a simple interface for the creation of QVersitOrganizerHandler instances.
-  Implement this interface to write a Versit plugin.  For more details, see \l{Versit Plugins}.
+  Implement this interface to write a Versit plugin.  For more details, see \l{Qt Versit Plugins}.
  */
 
 /*!

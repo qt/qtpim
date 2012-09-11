@@ -28,11 +28,10 @@
 /*!
 \page versitplugins.html
 
-\title Versit Plugins
+\title Qt Versit Plugins
 
-\section1 Introduction
-
-While the \l {C++ Versit}{Versit API} provides a convenient way to import and export vCards,
+While the \l {Qt Versit Overview}{QtVersit API} provides a convenient way to
+import and export vCards,
 it is common to encounter domain-specific vCard properties that the Versit
 importer and exporter classes don't support.  While it would be convenient if
 the base Versit module could support everything, that is not possible because
@@ -57,7 +56,7 @@ Versit library will be operating under a known context.  For example, the
 library might be deployed on a device on a particular network where all of its
 peers are known to support certain properties.  In this situation, it's
 desirable for all clients of the Versit library on that device to support those
-properties through the Versit API.  It is possible to extend the library
+properties through the Qt Versit API.  It is possible to extend the library
 globally by installing plugins that provide handlers automatically to all users
 of the library on the system.
 

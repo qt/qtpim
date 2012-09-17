@@ -132,6 +132,7 @@ const QContactDetail::DetailType QContactSyncTarget::Type(QContactDetail::TypeSy
    \brief The QContactEmailAddress class contains an email address of
    a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -164,6 +165,7 @@ const QContactDetail::DetailType QContactEmailAddress::Type(QContactDetail::Type
    \brief The QContactFamily class contains names of
    family members of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -208,6 +210,7 @@ const QContactDetail::DetailType QContactFamily::Type(QContactDetail::TypeFamily
    \brief The QContactFavorite class indicates if a contact is a favorite contact as well as the
    position it should appear in an ordered list of favorites.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -267,6 +270,7 @@ QContactFilter QContactFavorite::match()
    \class QContactAnniversary
    \brief The QContactAnniversary class contains an anniversary of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -363,6 +367,7 @@ const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeA
 /*!
    \class QContactAvatar
    \ingroup contacts-details
+    \inmodule QtContacts
    \brief The QContactAvatar class contains avatar URLs of a contact.
 
    Users can specify avatar URLs for a contact using this detail.
@@ -422,6 +427,7 @@ const QContactDetail::DetailType QContactAvatar::Type(QContactDetail::TypeAvatar
    \class QContactAddress
    \brief The QContactAddress class contains an address of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
 
    The fields in the QContactAddress class are based on the segments
    of the ADR property of a Versit vCard file.
@@ -586,6 +592,7 @@ QContactFilter QContactAddress::match(const QString &subString)
    \brief The QContactUrl class contains a url associated with
    a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -648,6 +655,7 @@ const QContactDetail::DetailType QContactUrl::Type(QContactDetail::TypeUrl);
     \brief The QContactPhoneNumber class provides a phone number
     of a contact.
     \ingroup contacts-details
+    \inmodule QtContacts
 */
 
 
@@ -713,6 +721,7 @@ const QContactDetail::DetailType QContactPhoneNumber::Type(QContactDetail::TypeP
    \class QContactBirthday
    \brief The QContactBirthday class contains a birthday of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -774,6 +783,7 @@ const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirt
    \class QContactDisplayLabel
    \brief The QContactDisplayLabel class contains a displayLabel of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -807,6 +817,7 @@ const QContactDetail::DetailType QContactDisplayLabel::Type(QContactType::TypeDi
    \class QContactGender
    \brief The QContactGender class contains the gender of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -848,6 +859,7 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    \brief The QContactGeoLocation class contains a global location
    coordinate associated with a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
 */
 
 /*!
@@ -1009,6 +1021,7 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    \brief The QContactGuid class contains a globally unique
    Id of a contact, for use in synchronization with other datastores.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1042,6 +1055,7 @@ const QContactDetail::DetailType QContactGuid::Type(QContactDetail::TypeGuid);
    \class QContactHobby
    \brief The QContactHobby class contains a hobby of the contact.
    \ingroup contacts-details
+    \inmodule QtContacts
 
    A contact may have one or more hobbies.  Each QContactHobby
    detail contains information about a single hobby of the contact.
@@ -1077,6 +1091,7 @@ const QContactDetail::DetailType QContactHobby::Type(QContactDetail::TypeHobby);
    \class QContactName
    \brief The QContactName class contains a name of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1160,6 +1175,7 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    \class QContactNickname
    \brief The QContactNickname class contains a nickname of a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1192,6 +1208,7 @@ const QContactDetail::DetailType QContactNickname::Type(QContactType::TypeNickna
    \brief The QContactNote class contains a note associated
    with a contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1224,6 +1241,7 @@ const QContactDetail::DetailType QContactNote::Type(QContactDetail::TypeNote);
    \brief The QContactTag class contains a tag associated with a
    contact.
    \ingroup contacts-details
+    \inmodule QtContacts
 
    Typically the tags associated with a contact will be distinct,
    although this is usually only enforced when the contact is saved
@@ -1280,6 +1298,7 @@ QContactFilter QContactTag::match(const QString &subString)
    \brief The QContactTimestamp class contains the creation and
    last-modified timestamp associated with the contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1323,6 +1342,7 @@ const QContactDetail::DetailType QContactTimestamp::Type(QContactDetail::TypeTim
    \class QContactType
    \brief The QContactType class describes the type of the contact.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1373,6 +1393,7 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
    \class QContactOnlineAccount
    \brief The QContactOnlineAccount class provides an online account,
    which the contact uses to communicate with friends and family.
+    \inmodule QtContacts
 
    A QContactOnlineAccount consists of the account details required to
    communicate with the contact, including the account URI, the capabilities
@@ -1509,6 +1530,7 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    \brief The QContactOrganization class provides details about an
    organization that the contact is either a part of, or stands for.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1627,6 +1649,7 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    \brief The QContactRingtone class provides a ringtone associated
    with a contact
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!
@@ -1693,6 +1716,7 @@ const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRing
    \class QContactPresence
    \brief The QContactPresence class provides presence information
    for an online account of a contact.
+    \inmodule QtContacts
 
    Presence information for a particular QContactOnlineAccount detail is provided
    in a QContactPresence detail which is linked (via linkedDetailUris()) to the
@@ -1840,6 +1864,7 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    \brief The QContactGlobalPresence class provides aggregated presence information
    for a contact, synthesized or supplied by the backend.
    \ingroup contacts-details
+    \inmodule QtContacts
  */
 
 /*!

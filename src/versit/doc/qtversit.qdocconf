@@ -1,0 +1,45 @@
+include(../../../doc/global/qt-html-templates-offline.qdocconf)
+include(../../../doc/global/qt-module-defaults.qdocconf)
+
+project                 = QtVersit
+description             = Qt Versit Reference Documentation
+url                     = http://qt-project.org/doc/qt-5.0/qtversit-index.html
+version                 = 5.0.0
+
+qhp.projects            = QtVersit
+
+qhp.QtVersit.file                = qtversit.qhp
+qhp.QtVersit.namespace           = org.qt-project.qtversit.500
+qhp.QtVersit.virtualFolder       = qdoc
+qhp.QtVersit.indexTitle          = Qt Versit Reference Documentation
+qhp.QtVersit.indexRoot           =
+
+qhp.QtVersit.filterAttributes    = qtversit 5.0.0 qtrefdoc
+qhp.QtVersit.customFilters.Qt.name = QtVersit 5.0.0
+qhp.QtVersit.customFilters.Qt.filterAttributes = qtversit 5.0.0
+qhp.QtVersit.subprojects         = classes overviews examples
+qhp.QtVersit.subprojects.classes.title = Classes
+qhp.QtVersit.subprojects.classes.indexTitle = Qt Versit's Classes
+qhp.QtVersit.subprojects.classes.selectors = class fake:headerfile
+qhp.QtVersit.subprojects.classes.sortPages = true
+qhp.QtVersit.subprojects.overviews.title = Overviews
+qhp.QtVersit.subprojects.overviews.indexTitle = All Overviews and HOWTOs
+qhp.QtVersit.subprojects.overviews.selectors = fake:page,group,module
+qhp.QtVersit.subprojects.examples.title = Qt Versit Examples
+qhp.QtVersit.subprojects.examples.indexTitle = Qt Versit Examples
+qhp.QtVersit.subprojects.examples.selectors = fake:example
+
+outputdir               = ../../../doc/qtversit
+tagfile                 = ../../../doc/qtversit/qtversit.tags
+
+headerdirs  += .. \
+                ../../versitorganizer
+
+sourcedirs  += .. \
+                ../../versitorganizer
+
+exampledirs += ../../../examples/versit \
+               snippets/
+
+
+imagedirs   += images

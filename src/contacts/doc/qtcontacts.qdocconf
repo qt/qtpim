@@ -1,0 +1,45 @@
+include(../../../doc/global/qt-html-templates-offline.qdocconf)
+include(../../../doc/global/qt-module-defaults.qdocconf)
+
+project                 = QtContacts
+description             = Qt Contacts Reference Documentation
+url                     = http://qt-project.org/doc/qt-5.0/qtcontacts-index.html
+version                 = 5.0.0
+
+qhp.projects            = QtContacts
+
+qhp.QtContacts.file                = qtcontacts.qhp
+qhp.QtContacts.namespace           = org.qt-project.qtcontacts.500
+qhp.QtContacts.virtualFolder       = qdoc
+qhp.QtContacts.indexTitle          = Qt Contacts Reference Documentation
+qhp.QtContacts.indexRoot           =
+
+qhp.QtContacts.filterAttributes    = qtcontacts 5.0.0 qtrefdoc
+qhp.QtContacts.customFilters.Qt.name = QtContacts 5.0.0
+qhp.QtContacts.customFilters.Qt.filterAttributes = qtcontacts 5.0.0
+qhp.QtContacts.subprojects         = classes overviews examples
+qhp.QtContacts.subprojects.classes.title = Classes
+qhp.QtContacts.subprojects.classes.indexTitle = Qt Contacts's Classes
+qhp.QtContacts.subprojects.classes.selectors = class fake:headerfile
+qhp.QtContacts.subprojects.classes.sortPages = true
+qhp.QtContacts.subprojects.overviews.title = Overviews
+qhp.QtContacts.subprojects.overviews.indexTitle = All Overviews and HOWTOs
+qhp.QtContacts.subprojects.overviews.selectors = fake:page,group,module
+qhp.QtContacts.subprojects.examples.title = Qt Contacts Examples
+qhp.QtContacts.subprojects.examples.indexTitle = Qt Contacts Examples
+qhp.QtContacts.subprojects.examples.selectors = fake:example
+
+outputdir               = ../../../doc/qtcontacts
+tagfile                 = ../../../doc/qtcontacts/qtcontacts.tags
+
+headerdirs  += .. \
+                ../../imports/contacts
+
+sourcedirs  += .. \
+                ../../imports/contacts
+
+exampledirs += ../../../examples/contacts \
+               snippets/
+
+
+imagedirs   += images

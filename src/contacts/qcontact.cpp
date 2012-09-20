@@ -104,7 +104,7 @@ QTCONTACTS_BEGIN_NAMESPACE
  * a subclass of QContactDetail.
  *
  * For example:
- *  \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 3
+ *  \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 3
  */
 
 /*!
@@ -294,12 +294,12 @@ void QContact::setTags(const QStringList& tags)
     The \a type argument is typically the detail type constant provided by a
     specific subclass of QContactDetail.  For example:
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 0
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 0
 
     It would usually be more convenient to use the template version of this function, in
     the following manner:
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 1
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 1
 */
 QContactDetail QContact::detail(QContactDetail::DetailType type) const
 {
@@ -325,12 +325,12 @@ QContactDetail QContact::detail(QContactDetail::DetailType type) const
     The \a type argument is typically the detail type constant provided by a
     specific subclass of QContactDetail.  For example:
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 2
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 2
 
     It would usually be more convenient to use the template version of this function, in
     the following manner:
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 3
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 3
 */
 QList<QContactDetail> QContact::details(QContactDetail::DetailType type) const
 {
@@ -591,7 +591,7 @@ QDataStream& operator>>(QDataStream& in, QContact& contact)
     was retrieved from a manager.  You can also query the manager directly, if you require
     the most up to date information.
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 5
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 5
 
     \sa QContactRelationshipFetchRequest, QContactManager::relationships()
  */
@@ -623,7 +623,7 @@ QList<QContactRelationship> QContact::relationships(const QString& relationshipT
     was retrieved from a manager.  You can also query the manager directly, if you require
     the most up to date information.
 
-    \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp 6
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp 6
 
     \sa QContactRelationshipFetchRequest, QContactManager::relationships()
  */

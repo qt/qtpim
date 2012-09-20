@@ -115,7 +115,7 @@ from a particular manager.
 Results from the request will be displayed to the user as they are
 received.
 
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Asynchronous contact request
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Asynchronous contact request
 
 \section2 Other Asynchronous Operations
 

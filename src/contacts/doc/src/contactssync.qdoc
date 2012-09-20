@@ -150,7 +150,7 @@ classes may be written by anyone, and simply wrap the functionality
 provided by QContactDetail in order to allow simpler access to fields
 supported by a particular definition.
 
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Creating a new contact
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Creating a new contact
 
 \section2 Filtering by Detail Definition and Value
 
@@ -159,7 +159,7 @@ particular phone number.  The example assumes that the default manager
 supports the provided QContactPhoneNumber detail leaf class (which
 implements the default definition for phone number details).
 
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Filtering by definition and value
 
 
 \section2 Modifying Contact Details
@@ -167,7 +167,7 @@ implements the default definition for phone number details).
 The client retrieves a contact, modifies one of its details, adds a new
 detail, and then saves the contact back to the manager.
 
-    \snippet snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Modifying an existing contact
+    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Modifying an existing contact
 
 \section1 Manipulating Relationships
 

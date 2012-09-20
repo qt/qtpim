@@ -111,11 +111,11 @@ derived classes.  The QServicePluginInterface-derived class merely instantiates 
 QContactActionFactory-derived class on request for the Qt Service Framework.  The
 QContactActionFactory-derived class then instantiates the actions when required.
 
-\snippet ../../tests/auto/contacts/qcontactactions/multiaction/multiaction_p.h Example Contact Action Plugin Declaration
+\snippet multiaction/multiaction_p.h Example Contact Action Plugin Declaration
 
 The implementation of these classes might be something like the following (example only):
 
-\snippet ../../tests/auto/contacts/qcontactactions/multiaction/multiaction.cpp Example Contact Action Plugin Implementation
+\snippet multiaction/multiaction.cpp Example Contact Action Plugin Implementation
 
 Once implemented, the plugin must be described by an XML file and installed in
 an appropriate location. For more information, see the Qt Service Framework

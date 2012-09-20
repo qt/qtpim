@@ -43,7 +43,7 @@
     reference the module before it can used. Simply add the following to the QML
     file:
 
-     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Contacts import
+     \snippet moduleimports.qml Contacts import
 
     The Contacts API enables client to search for contacts data from local backends and use
     filters to get only the relevant results. The QML Contacts API delivers this capability in

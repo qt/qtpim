@@ -33,10 +33,12 @@ outputdir               = ../../../doc/qtcontacts
 tagfile                 = ../../../doc/qtcontacts/qtcontacts.tags
 
 headerdirs  += .. \
-                ../../imports/contacts
+                ../../imports/contacts \
+                ../../plugins/contacts
 
 sourcedirs  += .. \
-                ../../imports/contacts
+                ../../imports/contacts \
+                ../../plugins/contacts
 
 exampledirs += ../../../examples/contacts \
                snippets/

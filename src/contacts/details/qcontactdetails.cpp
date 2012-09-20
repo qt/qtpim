@@ -1248,10 +1248,10 @@ const QContactDetail::DetailType QContactNote::Type(QContactDetail::TypeNote);
    in the manager.
 
    Here is an example of retrieving all the tags for a contact:
-   \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Getting all tags
+   \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Getting all tags
 
    Here is an example of checking for a specific tag value:
-   \snippet doc/src/snippets/qtcontactsdocsample/qtcontactsdocsample.cpp Checking for a specific tag
+   \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Checking for a specific tag
  */
 
 /*!

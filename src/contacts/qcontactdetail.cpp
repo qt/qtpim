@@ -160,7 +160,7 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
   and some convenience methods that return values associated with schema
   fields.
 
-  \snippet ../../src/contacts/details/qcontactphonenumber.h 0
+  \snippet qcontactphonenumber.h 0
  */
 
 /*!

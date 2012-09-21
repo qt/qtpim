@@ -26,36 +26,35 @@
 ****************************************************************************/
 
 /*!
-    \page qtversit-index.html
-    \title Qt Versit
-    \brief Qt Versit enables clients to import and export contact and calendar
-    information in vCard and iCalendar formats.
+    \page qtorganizer-index.html
+    \title Qt Organizer
+    \brief Qt Organizer enables clients to fetch, update, or remove calendar,
+    scheduling and personal data from an organizer item manager.
 
-    Most of the time your contacts do not remain in isolation in a single
-    device, but coexist on various mobile phones, computers, and servers. A
-    standard way to exchange the contacts is through the Versit \reg documents.
-
-    The Qt Versit API enables you to import calendar or contact information in
-    VCard and iCalendar format to the Qt Organizer and Qt Contact API, and to
-    store the information on the current platform. Alternatively, you can
-    export organizer and contact information to VCal or iCalendar files which
-    you can then import into other calendars and contact storages, or easily
-    share through Bluetooth or email, for example.
-
+    Qt Organizer provides clients with the ability to access calendar,
+    schedule, and personal data in a platform-independent and datastore-agnostic
+    manner. This is achieved by defining generic personal information data
+    abstractions which can sufficiently describe calendar and scheduling data
+    stored in the native calendaring system of a platform.  Through the plugin
+    architecture, Qt Organizer can be used as a front-end API for any
+    calendaring system, such as an online calendar.
 
     \section1 Getting Started
 
     To include the definitions of the module's classes, use the following
-    directives. The generic Qt Versit is used in the contacts use case, and it
-    is extended with Qt Organizer:
+    directive:
 
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit include
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.cpp versit organizer include
+    \snippet doc_src_qtorganizer.cpp include
 
     To use the C++ library in your application, add the following configuration
     option to your \c .pro file:
 
-    \snippet doc/src/snippets/code/moduleincludes/doc_src_qtversit.pro versit project modifications
+    \snippet doc_src_qtorganizer.pro organizer project modification
+
+    To use the classes of the module in your application, add the following
+    import statement to your \c .qml file:
+
+    \snippet moduleimports.qml Organizer import
 
     \section1 References
 
@@ -68,23 +67,37 @@
       \li QML API examples
       \li C++ API examples
     \row
+        \li \l{Organizer QML API}{Qt Organizer QML API}
+        \li \l{Qt Organizer Overview}
+        \li \l{qmlorganizerlistview}{Qt Quick Organizer List view}
+
+            Import event lists in iCalendar format, select a backend for
+            volatile memory or persistent storage, as well as list, add, edit,
+            and remove events.
+        \li \l{calendardemo}{Calendar Demo}
+
+            Specify some simple events with simple recurrence options and view
+            the events.
+    \row
+        \li \l{Qt Organizer C++ API}
+        \li \l{Qt Organizer API Advanced Usage}
         \li
-        \li \l {Qt Versit Overview}
+        \li \l{todo}{ToDo Example}
+
+        Organize todo items.
+    \row
+        \li
+        \li \l{Qt Organizer Asynchronous API}
         \li
         \li
     \row
-        \li \l {Qt Versit C++ API}
-        \li \l {Qt Versit Plugins}
+        \li
+        \li \l{Qt Organizer Synchronous API}
         \li
         \li
     \row
         \li
-        \li \l{Supported vCard Features}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Supported iCalendar Features}
+        \li \l{Qt Organizer Manager Engines}
         \li
         \li
     \endtable

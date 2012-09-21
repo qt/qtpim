@@ -1,0 +1,51 @@
+include(../../../doc/global/qt-html-templates-offline.qdocconf)
+include(../../../doc/global/qt-module-defaults.qdocconf)
+
+project                 = QtOrganizer
+description             = Qt Organizer Reference Documentation
+url                     = http://qt-project.org/doc/qt-5.0/qtorganizer-index.html
+version                 = 5.0.0
+
+qhp.projects            = QtOrganizer
+
+qhp.QtOrganizer.file                = qtorganizer.qhp
+qhp.QtOrganizer.namespace           = org.qt-project.qtorganizer.500
+qhp.QtOrganizer.virtualFolder       = qdoc
+qhp.QtOrganizer.indexTitle          = Qt Organizer Reference Documentation
+qhp.QtOrganizer.indexRoot           =
+
+qhp.QtOrganizer.filterAttributes    = qtorganizer 5.0.0 qtrefdoc
+qhp.QtOrganizer.customFilters.Qt.name = QtOrganizer 5.0.0
+qhp.QtOrganizer.customFilters.Qt.filterAttributes = qtorganizer 5.0.0
+qhp.QtOrganizer.subprojects         = classes overviews examples
+qhp.QtOrganizer.subprojects.classes.title = Classes
+qhp.QtOrganizer.subprojects.classes.indexTitle = Qt Organizer's Classes
+qhp.QtOrganizer.subprojects.classes.selectors = class fake:headerfile
+qhp.QtOrganizer.subprojects.classes.sortPages = true
+qhp.QtOrganizer.subprojects.overviews.title = Overviews
+qhp.QtOrganizer.subprojects.overviews.indexTitle = All Overviews and HOWTOs
+qhp.QtOrganizer.subprojects.overviews.selectors = fake:page,group,module
+qhp.QtOrganizer.subprojects.examples.title = Qt Organizer Examples
+qhp.QtOrganizer.subprojects.examples.indexTitle = Qt Organizer Examples
+qhp.QtOrganizer.subprojects.examples.selectors = fake:example
+
+outputdir               = ../../../doc/qtorganizer
+tagfile                 = ../../../doc/qtorganizer/qtorganizer.tags
+
+headerdirs  += .. \
+                ../../versitorganizer \
+                ../../plugins/organizer \
+                ../../imports/organizer
+
+sourcedirs  += .. \
+                ../../versitorganizer \
+                ../../plugins/organizer \
+                ../../imports/organizer
+
+exampledirs += ../../../examples/organizer \
+               snippets/
+
+
+imagedirs   += images
+
+depends += qtversit qtbase qtcontacts

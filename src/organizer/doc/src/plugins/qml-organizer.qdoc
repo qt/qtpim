@@ -43,7 +43,7 @@
     reference the module before it can used. Simply add the following to the QML
     file:
 
-     \snippet doc/src/snippets/declarative/moduleimports/moduleimports.qml Organizer import
+     \snippet moduleimports.qml Organizer import
 
     The Organizer API enables a client to request calendar, schedule and
     personal data from local or remote backends. The QML Organizer API

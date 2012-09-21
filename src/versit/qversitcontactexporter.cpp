@@ -159,7 +159,7 @@ QTVERSIT_BEGIN_NAMESPACE
   resource and detail handlers.
 
   Here is a simple example of how to use QVersitContactExporter:
-  \snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Export example
+  \snippet qtversitdocsample/qtversitdocsample.cpp Export example
 
   \section1 Extension via handlers
 
@@ -194,7 +194,7 @@ QTVERSIT_BEGIN_NAMESPACE
   QContactTag before passing the contact list to the exporter.  Below is some example code that
   does this translation.
 
-  \snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Export relationship example
+  \snippet qtversitdocsample/qtversitdocsample.cpp Export relationship example
 
   \section1 Other implementation notes
 

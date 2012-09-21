@@ -70,23 +70,23 @@ which provides access to the system address book.  Instantiating a manager by
 using the default constructor will result in the default manager for that
 platform being instantiated:
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Instantiating the default manager for the platform
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Instantiating the default manager for the platform
 
 \section1 Creating New Items
 
 You can create a new item simply by instantiating one and saving it in a manager.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Creating a non-recurrent entry
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Creating a non-recurrent entry
 
 \section2 Retrieving Items
 
 You can request all items from the manager that occur in a given time range.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries for a time period
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries for a time period
 
 It is also possible to filter the items on the value of a detail.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries with a filter
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving entries with a filter
 
 The above code will retrieve both items that have been saved to the manager and
 items which are generated based on \l {recurrences}{recurrence rules}.  Given a
@@ -106,13 +106,13 @@ You can update a previously saved item retrieving the item, modifying it, and
 saving it back to the manager.  The manager uses the id of the item to match up
 the provided item with the one in the database.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Editing a non-recurrent entry
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Editing a non-recurrent entry
 
 \section1 Removing Items
 
 You can remove an item from the manager by using its id.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Removing an entry
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Removing an entry
 
 \section1 The Organizer Item Model
 
@@ -139,7 +139,7 @@ for manipulating occurrences of event or todos (see the
 \l{recurrences}{Recurring Items} section).  Here is an example of how to
 retrieve details specific to an item:
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Downcasting items
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Downcasting items
 
 \target recurrences
 \section2 Recurring Items
@@ -161,7 +161,7 @@ the list.
 
 Here is an example of changing a single occurrence of an item:
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Creating an exception to a particular recurrent event
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Creating an exception to a particular recurrent event
 
 You can also query the manager for a list of unexpanded items by calling
 QOrganizerManager::itemsForExport().  The list of returned items will contain all
@@ -187,19 +187,19 @@ fixtures" collection) while others may have built-in collections (for example,
 
 A list of all collections can be retrieved from a manager with one function call:
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Getting a list of collections
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Getting a list of collections
 
 To save an item to a collection, set the collection ID on the item object.  If
 the collection id is the null id, the item will be saved in the collection in
 which it is currently saved (if the item already exists) or into the manager's
 default collection (if it is a new item).
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Saving an item to a collection
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Saving an item to a collection
 
 To retrieve all items in a collection, a QOrganizerItemCollectionFilter should be
 used.
 
-    \snippet snippets/qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving items in a collection
+    \snippet qtorganizerdocsample/qtorganizerdocsample.cpp Retrieving items in a collection
 
 \section2 All-day Events
 

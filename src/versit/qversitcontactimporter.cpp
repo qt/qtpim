@@ -152,7 +152,7 @@ QTVERSIT_BEGIN_NAMESPACE
   and property handlers.
 
   Here is a simple example of how to use QVersitContactImporter:
-  \snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Import example
+  \snippet qtversitdocsample/qtversitdocsample.cpp Import example
 
   \section1 Extension via handlers
 
@@ -183,7 +183,7 @@ QTVERSIT_BEGIN_NAMESPACE
   needs to be retained through group relationships, extra work needs to be done to do the
   conversion.  Below is some example code that does this translation.
 
-  \snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Import relationship example
+  \snippet qtversitdocsample/qtversitdocsample.cpp Import relationship example
 
   \sa QVersitDocument, QVersitProperty, QVersitResourceHandler, QVersitContactImporterPropertyHandlerV2
  */

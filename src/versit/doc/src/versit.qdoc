@@ -73,23 +73,23 @@ it to QContact format, then exporting and writing it back out.
 
 First, let's create some data to read.  In this case, we create a QBuffer as a demonstration, but
 any QIODevice will work.
-\snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Complete example - create
+\snippet qtversitdocsample/qtversitdocsample.cpp Complete example - create
 
 QVersitReader can be used to parse a vCard or iCalendar from an I/O device to
 produce a list of QVersitDocuments.
-\snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Complete example - read
+\snippet qtversitdocsample/qtversitdocsample.cpp Complete example - read
 
 QVersitDocuments aren't very useful to the QtContacts API.  They need to be imported using the
 QVersitContactImporter.  If the QVersitDocuments were iCalendar objects, they could be imported
 using QVersitOrganizerImporter.
-\snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Complete example - import
+\snippet qtversitdocsample/qtversitdocsample.cpp Complete example - import
 
 Conversely, QVersitContactExporter can be used to convert from QContacts to QVersitDocuments.
 (QVersitOrganizerExporter can be used for QOrganizerItem):
-\snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Complete example - export
+\snippet qtversitdocsample/qtversitdocsample.cpp Complete example - export
 
 To complete the exporting process, QVersitWriter can be used to write to an I/O device.
-\snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Complete example - write
+\snippet qtversitdocsample/qtversitdocsample.cpp Complete example - write
 
 \section1 Classes
 The main classes for a client interested in importing or exporting vCard and

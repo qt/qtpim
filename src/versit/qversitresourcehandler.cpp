@@ -89,7 +89,7 @@ QTVERSIT_BEGIN_NAMESPACE
   \ingroup versit-extension
 
   An example resource handler implementation:
-  \snippet ../../doc/src/snippets/qtversitdocsample/qtversitdocsample.cpp Resource handler
+  \snippet qtversitdocsample/qtversitdocsample.cpp Resource handler
 
   \sa QVersitContactImporter, QVersitContactExporter, QVersitResourceHandler
  */

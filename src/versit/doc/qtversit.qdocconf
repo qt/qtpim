@@ -33,13 +33,17 @@ outputdir               = ../../../doc/qtversit
 tagfile                 = ../../../doc/qtversit/qtversit.tags
 
 headerdirs  += .. \
-                ../../versitorganizer
+                ../../versitorganizer \
+                ../../plugins/versit
 
 sourcedirs  += .. \
-                ../../versitorganizer
+                ../../versitorganizer \
+                ../../plugins/versit
 
 exampledirs += ../../../examples/versit \
                snippets/
 
 
 imagedirs   += images
+
+depends += qtorganizer qtbase qtcontacts

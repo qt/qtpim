@@ -42,6 +42,8 @@
     you can then import into other calendars and contact storages, or easily
     share through Bluetooth or email, for example.
 
+    The \l{Qt Organizer} module has information about supported
+    \l{Supported iCalendar Features}{iCalendar features}.
 
     \section1 Getting Started
 
@@ -57,36 +59,18 @@
 
     \snippet doc_src_qtversit.pro versit project modifications
 
-    \section1 References
+    \section1 Related Information
 
-    \table
-    \header
-        \li {1,4} Reference
-        \li {1,4} Guides
-        \li {4,1} Examples
-    \header
-      \li QML API examples
-      \li C++ API examples
-    \row
-        \li
-        \li \l {Qt Versit Overview}
-        \li
-        \li
-    \row
-        \li \l {Qt Versit C++ API}
-        \li \l {Qt Versit Plugins}
-        \li
-        \li
-    \row
-        \li
+        \section2 Guides
+        \list
         \li \l{Supported vCard Features}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Supported iCalendar Features}
-        \li
-        \li
-    \endtable
+        \li \l{Qt Versit Overview}
+        \li \l{Qt Versit Plugins}
+        \endlist
 
+        \section2 References
+
+        \list
+        \li \l{Qt Versit C++ Classes}
+        \endlist
 */

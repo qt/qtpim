@@ -26,13 +26,14 @@
 ****************************************************************************/
 
 /*!
-\title Qt Versit C++ API
-\page versitclasses.html
+    \module QtVersit
+    \title Qt Versit C++ Classes
+    \ingroup modules
+    \brief The QtVersit module provides classes for personal information
+    management.
 
-    The Versit API is not a single API but a collection of APIs and frameworks.
-    For more details, see \l{Qt Versit Overview}.
-    The following are the classes involved in this API.
-
-    \generatelist{classesbymodule QtVersit}
+    The \l{Qt Versit} module is not a single API but a collection of APIs and
+    frameworks. For more details, see \l{Qt Versit Overview}. The following are
+    the classes involved in this API.
 
 */

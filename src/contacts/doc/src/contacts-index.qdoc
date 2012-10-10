@@ -63,50 +63,32 @@
 
     \snippet moduleimports.qml Contacts import
 
-    \section1 References
+    \section1 Related Information
 
-    \table
-    \header
-        \li {1,4} Reference
-        \li {1,4} Guides
-        \li {4,1} Examples
-    \header
-      \li QML API examples
-      \li C++ API examples
-    \row
-        \li \l{Contacts QML API}{Qt Contacts QML API}
+        \section2 Guides
+        \list
         \li \l{Qt Contacts Overview}
+        \li \l{Qt Contacts API Usage}
+        \li \l{Qt Contacts Action API}
+        \li \l{Qt Contacts Asynchronous API}
+        \li \l{Qt Contacts Synchronous API}
+        \li \l{Qt Contacts Manager Engines}
+        \li \l{Qt Contacts C++ API} - overview of the C++ API
+        \li \l{Qt Contacts QML API} - overview of the QML API
+        \endlist
+        \section2 References
+
+        \list
+        \li \l{Qt Contacts C++ Classes} - list of C++ classes
+        \li \l{Qt Contacts QML Types} - list of QML types
+        \endlist
+
+        \section2 Examples
+        \list
         \li \l{qmlcontactslistview}{Qt Quick Contacts List view}
 
             Import contact information from vCard files, select a backend for
             volatile memory or persistent storage, as well as list, add, edit,
             and remove contacts.
-        \li
-    \row
-        \li \l{Qt Contacts C++ API}
-        \li \l{Qt Contacts API Usage}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Qt Contacts Action API}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Qt Contacts Asynchronous API}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Qt Contacts Synchronous API}
-        \li
-        \li
-    \row
-        \li
-        \li \l{Qt Contacts Manager Engines}
-        \li
-        \li
-    \endtable
-
+        \endlist
 */

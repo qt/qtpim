@@ -26,16 +26,9 @@
 ****************************************************************************/
 
 /*!
-    \group qml-contacts
-    \ingroup qtpim-qml
-    \title Contacts QML API
-    QML Support for the Contacts API.
-
     \page qml-contacts.html
-
-    \title Contacts QML API
-
-    \brief A QML plugin for the Contacts API.
+    \title Qt Contacts QML API
+    \brief A QML plugin for the Qt Contacts API
 
     \section1 Overview
 
@@ -45,31 +38,35 @@
 
      \snippet moduleimports.qml Contacts import
 
-    The Contacts API enables client to search for contacts data from local backends and use
-    filters to get only the relevant results. The QML Contacts API delivers this capability in
-    easy to use form.
+    The Contacts API enables client to search for contacts data from local
+    backends and use filters to get only the relevant results. The QML Contacts
+    API delivers this capability in easy to use form.
 
-    The following describes the API. You can also study the \l{Qt Personal Information Management Examples}{Examples}
-    or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
+    The following describes the API. The \l{Examples} section contains sample
+    code for the QML API.
 
     \section2 Contact Model
+
     The Contact itself is represented by a model called a \l {ContactModel}.
-    This model supplies a rich selection of properties to display or to use
-    as filter criteria. The model is then used to perform requests on a contacts store.
+    This model supplies a rich selection of properties to display or to use as
+    filter criteria. The model is then used to perform requests on a contacts
+    store.
 
     \section2 Filters
-    User of the API can construct a series of filters and combine them
-    using the \l {IntersectionFilter} and \l {UnionFilter}
-    to represent a logical 'and' and 'or' of the results. There are also other properties that give
-    control over the filter logic, such as \l {DetailRangeFilter::rangeFlags} {RangeFlags}
-    and the \l {DetailFilter::matchFlags}{MatchFlags}.
 
-    As an example consider the follow QML code which has a \l ContactModel element
-    containing a filter and a list of sort orders. The contacts will be restricted
-    to those living in Finland who are either male or born between 1970 and 1984.
+    Developers can construct a series of filters and combine them using the
+    \l{IntersectionFilter} and \l{UnionFilter} types to represent a logical \e
+    and and \e or of the results. There are also other properties that give
+    control over the filter logic, such as \l {DetailRangeFilter::rangeFlags}
+    {RangeFlags} and the \l {DetailFilter::matchFlags}{MatchFlags}.
 
-    The list of contacts in this ContactModel will be first sorted on the contacts' organization name
-    and then on the contacts' first name.
+    As an example, consider the follow QML code which has a \l ContactModel type
+    containing a filter and a list of sort orders. The contacts will be
+    restricted to those living in Finland who are either male or born between
+    1970 and 1984.
+
+    The list of contacts in this ContactModel will be first sorted on the
+    contacts' organization name and then on the contacts' first name.
 
     \code
         import QtContacts 5.0
@@ -113,9 +110,9 @@
         }
     \endcode
 
-    \section2 Contact element
+    \section2 Contact type
 
-    The \l {Contact} element represents a single contact instance from the contacts store.
+    The \l {Contact} type represents a single contact instance from the contacts store.
     All contact details are organized as group properties.
 
     The following snippet shows how you can construct a Contact object in QML:
@@ -210,12 +207,4 @@
         \li \l{qmlcontactslistview}{Qt Quick Contacts List view}
     \endlist
 
-    \section2 Tutorials
-
-    The following tutorials are useful to work through the use of the Qt Quick Contacts API::
-    \list
-        \li TODO: This needs a wml contacts tutorial
-    \endlist
 */
-
-

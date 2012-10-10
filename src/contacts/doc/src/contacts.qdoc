@@ -65,10 +65,10 @@ retrieved, modified or deleted by clients using either the
 \l{Qt Contacts Synchronous API}{synchronous} or
 \l{Qt Contacts Asynchronous API}{asynchronous} API.
 
-For a full list of classes, see \l{Qt Contacts C++ API}.
+For a full list of classes, see \l{Qt Contacts C++ Classes}.
 
 \sa {Qt Contacts API Usage}
-\sa {Contacts QML API}{Qt Contacts QML API}
+\sa {Qt Contacts QML API}
 
 \section1 Client-Facing API
 
@@ -265,4 +265,3 @@ For more information on the available engines and how to write your own engine,
 see \l{Qt Contacts Manager Engines}.
 
 */
-

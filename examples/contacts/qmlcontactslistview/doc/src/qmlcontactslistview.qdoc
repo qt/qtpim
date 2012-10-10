@@ -26,31 +26,13 @@
 ****************************************************************************/
 
 /*!
-    \module QtContacts
-    \title Qt Contacts C++ Classes
-    \ingroup modules
+    \example qmlcontactslistview
+    \title Qt Quick Contacts List view
+    \brief An example using Qt Contacts' QML API
 
-    \brief The QtContacts module contains classes for management.
+    \image qmlcontactslistview-main.png
+    This example demonstrates usage of \l{Qt Contacts}' QML API.
 
-    The \l{Qt Contacts} C++ classes provide contact management. A contact is the
-    digital representation of a person, group, or entity that is stored in a
-    platform-specific manner. A typical example is contacts stored on mobile
-    phones.
-*/
-
-/*!
-    \qmlmodule QtContacts 5.0
-    \title Qt Contacts QML Types
-    \ingroup qmlmodules
-    \brief Provides QML types for handling personal contacts and information
-
-    \l{Qt Contacts}' QML API enables client to search for contacts data from
-    local backends and use filters to get only the relevant results. The QML
-    Contacts API delivers this capability in easy to use form. The \l{Qt
-    Contacts QML API} page contains an overview of the QML types.
-
-    To use the types, simply add the following to the QML file:
-
-     \snippet moduleimports.qml Contacts import
+    \image qmlcontactslistview-edit.png
 
 */

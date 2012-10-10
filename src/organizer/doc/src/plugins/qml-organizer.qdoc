@@ -26,16 +26,27 @@
 ****************************************************************************/
 
 /*!
-    \group qml-organizer
-    \ingroup qtpim-qml
-    \title Organizer QML API
-    QML Support for the Organizer API.
+    \qmlmodule QtOrganizer 5.0
+    \title Qt Organizer QML Types
+    \ingroup qmlmodules
+    \brief Provides QML types for handling calendar, schedule, and personal
+    data
 
+    The \l{Qt Organizer} module enables a client to request calendar, schedule
+    and personal data from local or remote backends. These QML types deliver
+    these capabilities in an easy to use form. The \l{Qt Organizer QML API}
+    page provides more information about the API.
+
+    To use the types, simply add the following to the QML
+    file:
+
+    \snippet moduleimports.qml Organizer import
+*/
+
+/*!
     \page qml-organizer.html
-
-    \title Organizer QML API
-
-    \brief A QML plugin for the Organizer API.
+    \title Qt Organizer QML API
+    \brief A QML plugin for the Organizer API
 
     \section1 Overview
 
@@ -53,10 +64,10 @@
     or try the \l{Qt Personal Information Management Tutorials}{Tutorials} to help get started quickly.
 
     \section2 Organizer Items
-    The \l {OrganizerItem} element provides a generic interface for accessing
-    events, todos, journals and notes. To actually access specific fields
-    of an item, convenience sub elements of OrganizerItem are offered.
-    These are \l {Event}, \l {Todo}, \l {Journal} and \l {Note}. Additionally,
+    The \l {OrganizerItem} type provides a generic interface for accessing
+    events, todos, journals and notes. To access specific fields
+    of an item, the \l {Event}, \l {Todo}, \l {Journal} and \l {Note} QML types
+    provide convenience. Additionally,
     \l {EventOccurrence} and \l {TodoOccurrence} can be used for manipulating
     occurrences of events or todos.
 
@@ -76,10 +87,10 @@
     manager, into which items are saved if no other collection is specified.
 
     \section2 Organizer Item Details
-    Several sub elements of \l {Detail} are provided as part of the API.
+    Several sub types of \l {Detail} are provided as part of the API.
     They are general in design but are intended to fulfill specific use-cases.
     Please note that certain backends may choose not to support one or more
-    of these elements as they appear here.
+    of these QML types as they appear here.
 
     \section2 Organizer Filters
     The Organizer QML plugin supplies filters to search for organizer items

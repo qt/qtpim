@@ -25,16 +25,27 @@
 **
 ****************************************************************************/
 
+/*!
+    \module QtOrganizer
+    \title Qt Organizer C++ Classes
+    \ingroup modules
+    \brief The QtOrganizer module allows access to calendar event information.
+
+    The \l{Qt Organizer} API provides access to calendar event information.
+    The following are the classes involved in this API.
+
+*/
 
 /*!
-\title Qt Organizer C++ API
-\page organizerclasses.html
+    \title Qt Organizer C++ API
+    \page organizerclasses.html
 
     The Organizer API allows access to calendar event information.
     For more details, see the \l {Qt Organizer Overview}.
     The following are the classes involved in this API.
 
-    \generatelist{classesbymodule QtOrganizer}
+    The \l{Qt Organizer C++ Classes} page has a list of all classes in
+    Qt Organizer.
 
 \section2 Main Classes
 
@@ -91,10 +102,12 @@ serialization of a QOrganizerItem into an iCalendar document, and vice versa.
 
 [*] Versit \reg is a trademark of the Internet Mail Consortium.
 
-\section1 QML Elements
+\section1 QML Types
 
-For details on the QML support provided for the Organizer API see the documentation for the
-\l {Organizer QML API}(Qt Organizer QML API}.
+Qt Organizer includes QML types that provide organizer functionality for
+QML applications. The \l{Qt Organizer QML API} page contains more details about
+the QML support. For a list of QML types, the \l{Qt Organizer QML Types} page
+lists the types in Qt Organizer
 
 
 */

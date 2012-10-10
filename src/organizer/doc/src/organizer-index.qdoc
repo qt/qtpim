@@ -56,50 +56,35 @@
 
     \snippet moduleimports.qml Organizer import
 
-    \section1 References
+    \section1 Related Information
 
-    \table
-    \header
-        \li {1,4} Reference
-        \li {1,4} Guides
-        \li {4,1} Examples
-    \header
-      \li QML API examples
-      \li C++ API examples
-    \row
-        \li \l{Organizer QML API}{Qt Organizer QML API}
+        \section2 Guides
+        \list
         \li \l{Qt Organizer Overview}
-        \li \l{qmlorganizerlistview}{Qt Quick Organizer List view}
-
-            Import event lists in iCalendar format, select a backend for
-            volatile memory or persistent storage, as well as list, add, edit,
-            and remove events.
-        \li \l{calendardemo}{Calendar Demo}
-
-            Specify some simple events with simple recurrence options and view
-            the events.
-    \row
-        \li \l{Qt Organizer C++ API}
         \li \l{Qt Organizer API Advanced Usage}
-        \li
-        \li \l{todo}{ToDo Example}
-
-        Organize todo items.
-    \row
-        \li
         \li \l{Qt Organizer Asynchronous API}
-        \li
-        \li
-    \row
-        \li
         \li \l{Qt Organizer Synchronous API}
-        \li
-        \li
-    \row
-        \li
         \li \l{Qt Organizer Manager Engines}
-        \li
-        \li
-    \endtable
+        \li \l{Qt Organizer C++ API} - overview of the C++ API
+        \li \l{Qt Organizer QML API} - overview of the QML API
+        \endlist
+
+        \section2 Reference
+        \list
+        \li \l{Qt Organizer C++ Classes} - list of C++ classes
+        \li \l{Qt Organizer QML Types} - list of QML types
+        \endlist
+
+        \section2 Examples
+
+        \list
+        \li \l{Qt Quick Organizer List View Example} - Import
+            event lists in iCalendar format, select a backend for volatile
+            memory or persistent storage, as well as list, add, edit, and remove
+            events.
+        \li \l{calendardemo}{Calendar Demo} -specify some simple events with
+            simple recurrence options and view the events.
+        \li \l{ToDo Example}
+        \endlist
 
 */

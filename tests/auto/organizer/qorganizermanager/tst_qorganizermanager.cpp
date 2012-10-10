@@ -4336,7 +4336,7 @@ void tst_QOrganizerManager::collections()
     c1.setMetaData(QOrganizerCollection::KeyDescription, "This collection is for testing purposes.");
     c1.setMetaData("key", "value");
     c2.setMetaData(QOrganizerCollection::KeyName, "Test Two");
-    c2.setMetaData(QOrganizerCollection::KeyColor, Qt::blue);
+    c2.setMetaData(QOrganizerCollection::KeyColor, QColor(Qt::blue));
     // c3 doesn't have any meta-data, just an id.
 
     QOrganizerEvent i1, i2, i3, i4, i5;

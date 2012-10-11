@@ -1,5 +1,5 @@
-include(../../../doc/global/qt-html-templates-offline.qdocconf)
-include(../../../doc/global/qt-module-defaults.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtVersit
 description             = Qt Versit Reference Documentation
@@ -29,7 +29,6 @@ qhp.QtVersit.subprojects.examples.title = Qt Versit Examples
 qhp.QtVersit.subprojects.examples.indexTitle = Qt Versit Examples
 qhp.QtVersit.subprojects.examples.selectors = fake:example
 
-outputdir               = ../../../doc/qtversit
 tagfile                 = ../../../doc/qtversit/qtversit.tags
 
 headerdirs  += .. \

@@ -1,6 +1,8 @@
 TARGET = QtVersit
 QT = core contacts
 
+QMAKE_DOCS = $$PWD/doc/qtversit.qdocconf
+
 load(qt_module)
 
 PUBLIC_HEADERS += \

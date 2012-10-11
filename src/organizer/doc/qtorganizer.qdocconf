@@ -1,5 +1,5 @@
-include(../../../doc/global/qt-html-templates-offline.qdocconf)
-include(../../../doc/global/qt-module-defaults.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtOrganizer
 description             = Qt Organizer Reference Documentation
@@ -29,7 +29,6 @@ qhp.QtOrganizer.subprojects.examples.title = Qt Organizer Examples
 qhp.QtOrganizer.subprojects.examples.indexTitle = Qt Organizer Examples
 qhp.QtOrganizer.subprojects.examples.selectors = fake:example
 
-outputdir               = ../../../doc/qtorganizer
 tagfile                 = ../../../doc/qtorganizer/qtorganizer.tags
 
 headerdirs  += .. \

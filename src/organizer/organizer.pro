@@ -1,6 +1,8 @@
 TARGET = QtOrganizer
 QT = core-private
 
+QMAKE_DOCS = $$PWD/doc/qtorganizer.qdocconf
+
 load(qt_module)
 
 include(details/details.pri)

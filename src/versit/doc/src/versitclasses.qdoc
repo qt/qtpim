@@ -32,8 +32,21 @@
     \brief The QtVersit module provides classes for personal information
     management.
 
-    The \l{Qt Versit} module is not a single API but a collection of APIs and
-    frameworks. For more details, see \l{Qt Versit Overview}. The following are
-    the classes involved in this API.
+        The \l{Qt Versit} API allows you to take standard VCard and VCal
+    formatted test files and import your calendar or contact information into
+    the \l{Qt Organizer} and \l{Qt Contact} APIs, resepectively. Alternatively
+    the organizer and contacts information and export to VCal or VCard files
+    which you can then import into other calendars and contacts, or easily share
+    this with others through bluetooth or email, for example.
+
+    To include the definitions of the module's classes, use the following
+    directive:
+
+    \snippet doc_src_qtversit.cpp versit include
+    \snippet doc_src_qtversit.cpp versit organizer include
+
+    To link against the module, add this line to your \l qmake \c .pro file:
+
+    \snippet doc_src_qtversit.pro versit project modifications
 
 */

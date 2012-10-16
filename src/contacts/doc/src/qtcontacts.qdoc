@@ -34,8 +34,17 @@
 
     The \l{Qt Contacts} C++ classes provide contact management. A contact is the
     digital representation of a person, group, or entity that is stored in a
-    platform-specific manner. A typical example is contacts stored on mobile
-    phones.
+    platform-specific manner.
+
+    To include the definitions of the module's classes, use the following
+    directive:
+
+    \snippet doc_src_qtcontacts.cpp include
+
+    To use the C++ library in your application, add the following configuration
+    option to your \c .pro file:
+
+    \snippet doc_src_qtcontacts.pro contacts project modification
 */
 
 /*!

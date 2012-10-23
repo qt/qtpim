@@ -94,16 +94,6 @@ EventOccurrenceEditPage::EventOccurrenceEditPage(QWidget *parent)
     mainLayout->addWidget(scrollArea);
     setLayout(mainLayout);
 
-    // Add softkeys
-    QAction* cancelSoftKey = new QAction("Cancel", this);
-    cancelSoftKey->setSoftKeyRole(QAction::NegativeSoftKey);
-    addAction(cancelSoftKey);
-    connect(cancelSoftKey, SIGNAL(triggered(bool)), this, SLOT(cancelClicked()));
-
-    m_saveOrNextSoftKey = new QAction("Save",this);
-    m_saveOrNextSoftKey->setSoftKeyRole(QAction::PositiveSoftKey);
-    addAction(m_saveOrNextSoftKey);
-    connect(m_saveOrNextSoftKey, SIGNAL(triggered(bool)), this, SLOT(saveOrNextClicked()));
     m_countFieldAdded = false;
     m_multipleEntries = false;
     m_listOfEvents.clear();
@@ -143,10 +133,6 @@ void EventOccurrenceEditPage::saveOrNextClicked()
     m_listOfEvents.append(m_organizerEventOccurrence);
     if(m_numOfEntiresToBeCreated > 1){
         m_numOfEntiresToBeCreated--;
-        if(m_numOfEntiresToBeCreated == 1){
-                // For the last entry change the option to Save.
-                m_saveOrNextSoftKey->setText("SaveAll");
-        }
         // Clear subject field indicating its a new editor.
         m_subjectEdit->clear();
     } else {

@@ -152,16 +152,6 @@ EventEditPage::EventEditPage(QWidget *parent)
     mainLayout->addWidget(scrollArea);
     setLayout(mainLayout);
 
-    // Add softkeys
-    QAction* cancelSoftKey = new QAction("Cancel", this);
-    cancelSoftKey->setSoftKeyRole(QAction::NegativeSoftKey);
-    addAction(cancelSoftKey);
-    connect(cancelSoftKey, SIGNAL(triggered(bool)), this, SLOT(cancelClicked()));
-    
-    QAction* saveSoftKey = new QAction("Save",this);
-    saveSoftKey->setSoftKeyRole(QAction::PositiveSoftKey);
-    addAction(saveSoftKey);
-    connect(saveSoftKey, SIGNAL(triggered(bool)), this, SLOT(saveClicked()));
     m_listOfEvents.clear();
 }
 

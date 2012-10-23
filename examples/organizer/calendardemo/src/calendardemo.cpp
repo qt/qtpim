@@ -140,7 +140,6 @@ void CalendarDemo::buildMenu()
 {
     // Build Options menu
     QMenu *optionsMenu = new QMenu("&Options", this);
-    // We add the options menu to the softkey manually later
     menuBar()->addMenu(optionsMenu);
     // Add editing options in the menu
     QOrganizerManager defaultManager;

@@ -90,7 +90,6 @@ private:
     QList<QOrganizerItem> m_listOfEvents;
     QOrganizerItemSaveRequest *m_saveItemRequest;
     QVBoxLayout *scrollAreaLayout;
-    QAction *m_saveOrNextSoftKey;
     QComboBox *m_typeComboBox;
     QLineEdit *m_subjectEdit;
     QDateTimeEdit *m_startTimeEdit;

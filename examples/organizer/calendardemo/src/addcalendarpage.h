@@ -77,7 +77,6 @@ Q_SIGNALS:
 private:
     QOrganizerManager *m_manager;
     QOrganizerCollection m_collection;
-    QAction *m_saveOrNextSoftKey;
 };
 
 #endif // ADDCALENDARPAGE_H

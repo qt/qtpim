@@ -82,7 +82,6 @@ protected: // from QWidget
 private:
     QOrganizerManager *m_manager;
     QOrganizerCollection m_collection;
-    QAction *m_saveOrNextSoftKey;
     QListWidget *m_calendarList;
 };
 

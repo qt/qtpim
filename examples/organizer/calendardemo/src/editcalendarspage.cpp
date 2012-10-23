@@ -82,17 +82,6 @@ EditCalendarsPage::EditCalendarsPage(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(scrollArea);
     setLayout(mainLayout);
-
-    // Add softkeys
-    QAction* cancelSoftKey = new QAction("Back", this);
-    cancelSoftKey->setSoftKeyRole(QAction::NegativeSoftKey);
-    addAction(cancelSoftKey);
-    connect(cancelSoftKey, SIGNAL(triggered(bool)), this, SLOT(backClicked()));
-
-    QAction* editSoftKey = new QAction("Edit",this);
-    editSoftKey->setSoftKeyRole(QAction::PositiveSoftKey); // Perhaps SelectSoftKey
-    addAction(editSoftKey);
-    connect(editSoftKey, SIGNAL(triggered(bool)), this, SLOT(editClicked()));
 }
 
 EditCalendarsPage::~EditCalendarsPage()

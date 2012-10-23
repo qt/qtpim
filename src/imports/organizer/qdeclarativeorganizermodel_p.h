@@ -227,7 +227,6 @@ private:
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
     void checkError(const QOrganizerAbstractRequest *request);
 
-    static void item_append(QQmlListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item);
     static int  item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p);
     static QDeclarativeOrganizerItem * item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, int idx);
 
@@ -236,7 +235,6 @@ private:
     static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx);
     static void  sortOrder_clear(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
 
-    static void collection_append(QQmlListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection);
     static int collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p);
     static QDeclarativeOrganizerCollection* collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, int idx);
 

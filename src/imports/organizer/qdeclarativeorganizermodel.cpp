@@ -1720,7 +1720,7 @@ QVariant QDeclarativeOrganizerModel::data(const QModelIndex &index, int role) co
   */
 QQmlListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::items()
 {
-    return QQmlListProperty<QDeclarativeOrganizerItem>(this, 0, item_append, item_count, item_at);
+    return QQmlListProperty<QDeclarativeOrganizerItem>(this, 0, item_count, item_at);
 }
 
 /*!
@@ -1732,14 +1732,7 @@ QQmlListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::items()
   */
 QQmlListProperty<QDeclarativeOrganizerCollection> QDeclarativeOrganizerModel::collections()
 {
-    return QQmlListProperty<QDeclarativeOrganizerCollection>(this, 0, collection_append, collection_count, collection_at);
-}
-
-void QDeclarativeOrganizerModel::item_append(QQmlListProperty<QDeclarativeOrganizerItem> *p, QDeclarativeOrganizerItem *item)
-{
-    Q_UNUSED(p);
-    Q_UNUSED(item);
-    qmlInfo(0) << tr("OrganizerModel: appending items is not currently supported");
+    return QQmlListProperty<QDeclarativeOrganizerCollection>(this, 0, collection_count, collection_at);
 }
 
 int  QDeclarativeOrganizerModel::item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p)
@@ -1803,13 +1796,6 @@ void  QDeclarativeOrganizerModel::sortOrder_clear(QQmlListProperty<QDeclarativeO
         model->d_ptr->m_declarativeSortOrders.clear();
         emit model->sortOrdersChanged();
     }
-}
-
-void QDeclarativeOrganizerModel::collection_append(QQmlListProperty<QDeclarativeOrganizerCollection> *p, QDeclarativeOrganizerCollection *collection)
-{
-    Q_UNUSED(p);
-    Q_UNUSED(collection);
-    qmlInfo(0) << tr("OrganizerModel: appending collections is not currently supported");
 }
 
 int  QDeclarativeOrganizerModel::collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p)

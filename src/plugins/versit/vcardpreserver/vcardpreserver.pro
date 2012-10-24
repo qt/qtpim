@@ -1,11 +1,9 @@
 QT += versit contacts
 
 TARGET = qtversit_vcardpreserver
-target.path += $$[QT_INSTALL_PLUGINS]/versit
-INSTALLS += target
 
+PLUGIN_TYPE = versit
 load(qt_plugin)
-DESTDIR = $$QT.versit.plugins/versit
 
 HEADERS += vcardpreserver.h
 SOURCES += vcardpreserver.cpp

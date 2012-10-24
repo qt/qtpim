@@ -1,9 +1,8 @@
-TEMPLATE = lib
-CONFIG += plugin testplugin
-TARGET = $$qtLibraryTarget(contacts_testdummycopy)
+CONFIG += testplugin
+TARGET = contacts_testdummycopy
 PLUGIN_TYPE=contacts
+load(qt_plugin)
 
-DESTDIR = $$QT.contacts.plugins/contacts
 QT += contacts
 
 DEFINES += DUMMYPLUGINTARGET=contacts_testdummycopy
@@ -12,7 +11,4 @@ DEFINES += DUMMYPLUGINNAME=testdummy
 SOURCES += ../dummyplugin/dummyplugin.cpp
 HEADERS += ../dummyplugin/dummyplugin.h
 
-# Enable installation of plugin in "make install"
-target.path += $$[QT_INSTALL_PLUGINS]/contacts
-INSTALLS += target
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

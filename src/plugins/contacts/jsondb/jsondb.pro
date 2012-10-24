@@ -1,12 +1,9 @@
 QT += contacts contacts-private jsondb
 
 TARGET = qtcontacts_jsondb
-target.path += $$[QT_INSTALL_PLUGINS]/contacts
-INSTALLS += target
 
+PLUGIN_TYPE = contacts
 load(qt_plugin)
-
-DESTDIR = $$QT.contacts.plugins/contacts
 
 # Input
 HEADERS += qcontactjsondbenginefactory.h \

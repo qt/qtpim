@@ -1,12 +1,9 @@
 QT += organizer network jsondb
 
 TARGET = qtorganizer_jsondb
-target.path += $$[QT_INSTALL_PLUGINS]/organizer
-INSTALLS += target
 
+PLUGIN_TYPE = organizer
 load(qt_plugin)
-
-DESTDIR = $$QT.organizer.plugins/organizer
 
 HEADERS += \
     qorganizerjsondbengine.h \

@@ -18,10 +18,4 @@ MOBILITY = contacts serviceframework
 SOURCES  += tst_qcontactmanagerfiltering.cpp
 HEADERS += ../../qcontactmanagerdataholder.h
 
-symbian: {
-    TARGET.CAPABILITY = ReadUserData \
-                        WriteUserData \
-                        ReadDeviceData \
-                        WriteDeviceData
-}
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -61,12 +61,4 @@ SOURCES += tst_qdeclarativecontact.cpp \
            ../../../src/import/contacts/qdeclarativecontact.cpp\
            ../../../src/import/contacts/qdeclarativecontactrelationshipmodel.cpp
 
-# reserved for future use
-#symbian: {
-#    importFiles.sources = data
-#    importFiles.path = .
-#    DEPLOYMENT = importFiles
-#} else {
-#    DEFINES += SRCDIR=\\\"$$PWD\\\"
-#}
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

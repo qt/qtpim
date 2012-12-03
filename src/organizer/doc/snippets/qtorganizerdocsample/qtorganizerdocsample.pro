@@ -18,8 +18,3 @@ CONFIG += mobility console
 MOBILITY = organizer
 
 SOURCES += qtorganizerdocsample.cpp
-
-symbian {
-    TARGET.EPOCALLOWDLLDATA = 1
-    MMP_RULES+="EXPORTUNFROZEN"
-}

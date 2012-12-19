@@ -48,6 +48,8 @@
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
 #include "../../../jsondbprocess.h"
 
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
+
 QTORGANIZER_USE_NAMESPACE
 
 /* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
@@ -249,7 +251,7 @@ tst_QOrganizerItemAsync::tst_QOrganizerItemAsync()
     QString path = QCoreApplication::applicationDirPath() + QStringLiteral("/dummyplugin/plugins");
     QCoreApplication::addLibraryPath(path);
 
-    qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
+    qRegisterMetaType<QOrganizerAbstractRequest::State>();
 }
 
 tst_QOrganizerItemAsync::~tst_QOrganizerItemAsync()
@@ -3307,9 +3309,6 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
 
     // TODO: cleanup once test is complete
 }
-
-Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
-Q_DECLARE_METATYPE(QList<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId)>)
 
 QTEST_MAIN(tst_QOrganizerItemAsync)
 #include "tst_qorganizeritemasync.moc"

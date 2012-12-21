@@ -13,7 +13,7 @@ SUBDIRS += \
     qcontactrelationship \
 #    qdeclarativecontact
 
-contains(QT_CONFIG, jsondb) {
+qtHaveModule(jsondb) {
     SUBDIRS += qcontactjsondb \
                qcontactjsondbconverter \
                qcontactjsondbstoragelocations \

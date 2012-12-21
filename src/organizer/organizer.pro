@@ -66,7 +66,7 @@ SOURCES += \
     qorganizeritemsortorder.cpp \
     qorganizermanager_p.cpp
 
-contains(QT_CONFIG, jsondb) {
+qtHaveModule(jsondb) {
     isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=jsondb
 }
 

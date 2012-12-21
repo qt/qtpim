@@ -3,7 +3,7 @@ include(../../../../auto.pri)
 TARGET = tst_nouserdatastorage
 
 QT += contacts
-contains(QT_CONFIG, jsondb): QT += jsondb
+qtHaveModule(jsondb): QT += jsondb
 
 SOURCES += tst_nouserdatastorage.cpp \
            ../tst_missingstorage.cpp \

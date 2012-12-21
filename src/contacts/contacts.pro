@@ -69,7 +69,7 @@ SOURCES += \
     qcontactsortorder.cpp \
     qcontactengineid.cpp \
 
-contains(QT_CONFIG, jsondb) {
+qtHaveModule(jsondb) {
     isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb
 }
 

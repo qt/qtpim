@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS +=
 
-!contains(QT_CONFIG, no-widgets): SUBDIRS += \
+qtHaveModule(widgets): SUBDIRS += \
     calendardemo \
     todo

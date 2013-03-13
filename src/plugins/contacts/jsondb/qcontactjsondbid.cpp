@@ -42,7 +42,7 @@
 #include "qcontactjsondbid.h"
 #include "qcontactjsondbstring.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactJsonDbId::QContactJsonDbId(const QString &engineId)
 {
@@ -146,4 +146,4 @@ QContactAbstractRequest::StorageLocation QContactJsonDbId::storageLocation() con
     return m_storageLocation;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

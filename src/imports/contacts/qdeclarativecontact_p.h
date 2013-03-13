@@ -49,7 +49,7 @@
 #include "qdeclarativecontactdetail_p.h"
 #include <QtQml/qqmllist.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QDeclarativeContact : public QObject
 {
@@ -200,7 +200,7 @@ private:
     static int _q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property);
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContact))
 

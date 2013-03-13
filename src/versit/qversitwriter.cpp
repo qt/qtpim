@@ -47,7 +47,7 @@
 #include <QTextCodec>
 #include <QBuffer>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 /*!
   \class QVersitWriter
@@ -298,4 +298,4 @@ bool QVersitWriter::waitForFinished(int msec)
 }
 
 #include "moc_qversitwriter.cpp"
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

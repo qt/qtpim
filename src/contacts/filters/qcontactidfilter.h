@@ -45,7 +45,7 @@
 #include "qcontactfilter.h"
 #include "qcontactid.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactIdFilterPrivate;
 class Q_CONTACTS_EXPORT QContactIdFilter : public QContactFilter
@@ -67,6 +67,6 @@ private:
     Q_DECLARE_CONTACTFILTER_PRIVATE(QContactIdFilter)
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

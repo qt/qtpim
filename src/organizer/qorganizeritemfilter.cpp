@@ -101,7 +101,7 @@ template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemFilterPrivate) *QSharedDa
 }
 #endif // Q_CC_MWERKS
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     Constructs an empty filter of type DefaultFilter.
@@ -310,4 +310,4 @@ const QOrganizerItemFilter operator|(const QOrganizerItemFilter &left, const QOr
     return nif;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -46,7 +46,7 @@
 
 #include <QtCore/qdatetime.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -73,6 +73,6 @@ public:
     bool isAllDay() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZEREVENTTIME_H

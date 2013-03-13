@@ -44,7 +44,7 @@
 
 #include <qorganizeritemdetail.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -71,6 +71,6 @@ public:
     QString label() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMLOCATION_H

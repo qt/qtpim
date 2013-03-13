@@ -50,7 +50,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonValue>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 QTextCodec* VersitUtils::m_previousCodec = 0;
 QList<QByteArrayMatcher>* VersitUtils::m_newlineList = 0;
@@ -244,4 +244,4 @@ bool VersitUtils::convertFromJson(const QString &json, QVariant *data)
     return true;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

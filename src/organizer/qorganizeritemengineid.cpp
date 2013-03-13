@@ -41,7 +41,7 @@
 
 #include "qorganizeritemengineid.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
   \class QOrganizerItemEngineId
@@ -112,4 +112,4 @@ QTORGANIZER_BEGIN_NAMESPACE
   Returns the hash value of this id.
  */
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

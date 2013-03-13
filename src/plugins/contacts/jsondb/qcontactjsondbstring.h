@@ -45,7 +45,7 @@
 #include <QtContacts/qcontactsglobal.h>
 #include <QString>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactJsonDbStr
 {
@@ -130,6 +130,6 @@ public:
     inline const static QString uuidSelectQuery() { return QStringLiteral("[={_uuid:_uuid}]"); }
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif // QCONTACTJSONDBSTRING_H

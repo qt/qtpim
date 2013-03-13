@@ -42,7 +42,7 @@
 
 #include "qcontactmanagerenginefactory.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactManagerEngineFactory
@@ -122,4 +122,4 @@ QList<int> QContactManagerEngineFactory::supportedImplementationVersions() const
 
 #include "moc_qcontactmanagerenginefactory.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

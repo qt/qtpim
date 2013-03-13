@@ -57,7 +57,7 @@
 #include "qcontact.h"
 #include "qcontactmanagerenginefactory.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QContactManagerEngineFactory
 {
@@ -73,7 +73,7 @@ class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QContactManagerEngineFa
     Q_DISABLE_COPY(QContactJsonDbEngineFactory)
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

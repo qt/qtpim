@@ -46,7 +46,7 @@
 
 #include "qcontactjsondbrequestmanager.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactJsonDbRequestManager::QContactJsonDbRequestManager()
 {
@@ -225,4 +225,4 @@ bool QContactJsonDbRequestManager::contains(QContactAbstractRequest *req) const
 
 #include "moc_qcontactjsondbrequestmanager.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

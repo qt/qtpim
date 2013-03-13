@@ -59,7 +59,7 @@
 #include "qcontact.h"
 #include "qcontactdetail.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactActionTargetPrivate : public QSharedData
 {
@@ -86,6 +86,6 @@ public:
     QList<QContactDetail> m_details;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

@@ -49,7 +49,7 @@
 #include <qcontactdetail.h>
 #include <qcontactfilter.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactName : public QContactDetail
@@ -86,6 +86,6 @@ public:
     static QContactFilter match(const QString& firstName, const QString& lastName);
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

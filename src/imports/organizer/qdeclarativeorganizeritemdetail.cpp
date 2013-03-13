@@ -44,7 +44,7 @@
 #include <qorganizeritemdetails.h>
 #include <qorganizeritemid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \qmltype Detail
@@ -2434,4 +2434,4 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
 
 #include "moc_qdeclarativeorganizeritemdetail_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

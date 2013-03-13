@@ -50,7 +50,7 @@
 #include "qcontactdetail.h"
 #include "qcontact.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactFetchHintPrivate;
 class Q_CONTACTS_EXPORT QContactFetchHint {
@@ -99,7 +99,7 @@ Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactFetchHint& hint);
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFetchHint::OptimizationHints);
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 
 #endif

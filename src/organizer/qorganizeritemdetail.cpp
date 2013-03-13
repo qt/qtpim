@@ -46,7 +46,7 @@
 #include <qdebug.h>
 #include <qdatastream.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemDetail
@@ -398,4 +398,4 @@ QMap<int, QVariant> QOrganizerItemDetail::values() const
     Returns the value of the template type associated with the given \a field.
  */
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

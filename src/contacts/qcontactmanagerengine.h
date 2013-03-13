@@ -57,7 +57,7 @@
 #include "qcontactrequests.h"
 #include "qcontactfetchhint.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactFilter;
 class QContactSortOrder;
@@ -159,7 +159,7 @@ private:
     friend class QContactChangeSet;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngine, "org.qt-project.Qt.QContactManagerEngine")

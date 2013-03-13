@@ -61,7 +61,7 @@
 #include <QString>
 #include <QHash>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactDetailPrivate : public QSharedData
 {
@@ -104,6 +104,6 @@ public:
     }
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

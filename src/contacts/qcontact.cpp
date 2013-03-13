@@ -50,7 +50,7 @@
 #include "qcontactactionmanager_p.h"
 #include "qcontactaction.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContact
@@ -807,4 +807,4 @@ void QContactData::removeOnly(const QSet<QContactDetail::DetailType>& types)
     }
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

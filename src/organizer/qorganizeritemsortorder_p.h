@@ -55,7 +55,7 @@
 
 #include <qorganizeritemsortorder.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemSortOrderPrivate : public QSharedData
 {
@@ -81,6 +81,6 @@ public:
     int m_detailField;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMSORTORDER_P_H

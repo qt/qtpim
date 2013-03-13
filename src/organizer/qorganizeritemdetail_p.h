@@ -57,7 +57,7 @@
 
 #include <QtCore/qmap.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailPrivate : public QSharedData
 {
@@ -92,6 +92,6 @@ public:
     }
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMDETAIL_P_H

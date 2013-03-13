@@ -47,7 +47,7 @@
 
 #include <QtQml/qqmllist.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QDeclarativeOrganizerItem : public QObject
 {
@@ -354,7 +354,7 @@ Q_SIGNALS:
     void valueChanged();
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItem))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEvent))

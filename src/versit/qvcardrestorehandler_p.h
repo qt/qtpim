@@ -47,7 +47,7 @@
 #include <qcontact.h>
 QTCONTACTS_USE_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitProperty;
 
 // This is a map from Versit group names to the details that were generated from properties with the
@@ -91,6 +91,6 @@ private:
     DetailGroupMap mDetailGroupMap; // remembers which details came from which groups
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif

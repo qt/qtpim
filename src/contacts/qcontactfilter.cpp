@@ -109,7 +109,7 @@ template<> QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPoint
 }
 #endif
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*! Constructs an empty filter */
 QContactFilter::QContactFilter()
@@ -308,4 +308,4 @@ const QContactFilter operator|(const QContactFilter& left, const QContactFilter&
     nif << left << right;
     return nif;
 }
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

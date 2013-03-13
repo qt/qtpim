@@ -50,7 +50,7 @@
 #include <QDebug>
 #include <QEventLoop>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*
   class QContactJsonDbEngine
@@ -465,4 +465,4 @@ bool qt_debug_jsondb_contacts()
 
 #include "moc_qcontactjsondbengine.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

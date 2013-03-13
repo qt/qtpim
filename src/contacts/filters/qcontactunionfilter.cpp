@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
    \class QContactUnionFilter
@@ -145,4 +145,4 @@ QList<QContactFilter> QContactUnionFilter::filters() const
     return d->m_filters;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

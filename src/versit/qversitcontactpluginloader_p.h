@@ -48,7 +48,7 @@
 
 #include <qversitcontacthandler.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class QVersitContactPluginLoader
 {
@@ -68,6 +68,6 @@ class QVersitContactPluginLoader
         QStringList mPluginPaths;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif

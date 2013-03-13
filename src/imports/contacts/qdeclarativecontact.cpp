@@ -75,7 +75,7 @@
 */
 
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 
 // call-back function templates for list properties
@@ -762,4 +762,4 @@ int QDeclarativeContact::_q_detail_count(QQmlListProperty<QDeclarativeContactDet
 
 #include "moc_qdeclarativecontact_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

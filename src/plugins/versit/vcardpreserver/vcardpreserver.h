@@ -46,7 +46,7 @@
 #include <QtPlugin>
 #include <qversitcontacthandler.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class VCardPreserverFactory : public QVersitContactHandlerFactory
 {
@@ -61,6 +61,6 @@ public:
     virtual QStringList keys() const;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif

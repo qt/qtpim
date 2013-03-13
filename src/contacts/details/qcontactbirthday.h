@@ -48,7 +48,7 @@
 #include <qcontactdetail.h>
 #include <qcontact.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactBirthday : public QContactDetail
@@ -73,7 +73,7 @@ public:
     QString calendarId() const {return value(FieldCalendarId).toString();}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

@@ -58,7 +58,7 @@
 
 #include <QSharedData>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactSortOrderPrivate : public QSharedData
 {
@@ -84,6 +84,6 @@ public:
     int m_field;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

@@ -41,7 +41,7 @@
 
 #include "qdeclarativecontactdetails_p.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 #include "moc_qdeclarativecontactaddress_p.cpp"
 #include "moc_qdeclarativecontactanniversary_p.cpp"
@@ -72,4 +72,4 @@ QTCONTACTS_BEGIN_NAMESPACE
 #include "moc_qdeclarativecontacturl_p.cpp"
 #include "moc_qdeclarativecontactversion_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

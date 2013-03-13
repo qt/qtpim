@@ -43,7 +43,7 @@
 
 #include <QSet>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
    \qmltype FetchHint
@@ -195,4 +195,4 @@ void QDeclarativeContactFetchHint::setFetchHint(const QContactFetchHint& fetchHi
 
 #include "moc_qdeclarativecontactfetchhint_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

@@ -51,7 +51,7 @@
 #include <qversitorganizerhandler.h>
 #include <qversittimezonehandler.h>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 class QVersitOrganizerPluginLoader
 {
@@ -73,6 +73,6 @@ class QVersitOrganizerPluginLoader
         QStringList mPluginPaths;
 };
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER
 
 #endif

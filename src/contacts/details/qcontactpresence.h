@@ -50,7 +50,7 @@
 #include "qcontactdetail.h"
 #include "qcontact.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactPresence : public QContactDetail
@@ -95,7 +95,7 @@ public:
     QString customMessage() const {return value(FieldCustomMessage).toString();}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

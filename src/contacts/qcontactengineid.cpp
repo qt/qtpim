@@ -42,7 +42,7 @@
 #include "qcontactengineid.h"
 #include "qcontactabstractrequest.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactEngineId
@@ -123,4 +123,4 @@ QContactAbstractRequest::StorageLocation QContactEngineId::storageLocation() con
   Returns the hash value of this id.
  */
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

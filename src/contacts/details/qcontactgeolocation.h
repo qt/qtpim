@@ -49,7 +49,7 @@
 #include <qcontactdetail.h>
 #include <qcontact.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 // replaces the below
@@ -94,7 +94,7 @@ public:
     QDateTime timestamp() const {return value(FieldTimestamp).toDateTime();}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

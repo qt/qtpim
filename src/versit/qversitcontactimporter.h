@@ -50,7 +50,7 @@
 
 QTCONTACTS_USE_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class QVersitDocument;
 class QVersitContactImporterPrivate;
@@ -116,7 +116,7 @@ private:
     QVersitContactImporterPrivate* d;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITCONTACTIMPORTER_H
 

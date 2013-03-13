@@ -46,7 +46,7 @@
 #include <qversitcontactimporter.h>
 #include <qversitcontactexporter.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 // qdoc seems to not find QVersitContactHandler if it is declared first.. ugh
 class QVersitContactHandler;
@@ -58,14 +58,14 @@ struct Q_VERSIT_EXPORT QVersitContactHandlerFactoryInterface : public QFactoryIn
     virtual int index() const = 0;
     virtual QVersitContactHandler* createHandler() const = 0;
 };
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 QT_BEGIN_NAMESPACE
 #define QT_VERSIT_CONTACT_HANDLER_INTERFACE "org.qt-project.Qt.QVersitContactHandlerFactoryInterface"
 Q_DECLARE_INTERFACE(QtVersit::QVersitContactHandlerFactoryInterface, QT_VERSIT_CONTACT_HANDLER_INTERFACE)
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class Q_VERSIT_EXPORT QVersitContactHandlerFactory : public QObject, public QVersitContactHandlerFactoryInterface
 {
@@ -89,6 +89,6 @@ class Q_VERSIT_EXPORT QVersitContactHandler : public QVersitContactImporterPrope
 public:
     virtual ~QVersitContactHandler() {}
 };
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif

@@ -51,7 +51,7 @@
     This class provides a filter which will never match any organizer items.
  */
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemInvalidFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -118,4 +118,4 @@ QOrganizerItemInvalidFilter::QOrganizerItemInvalidFilter(const QOrganizerItemFil
     Q_UNUSED(other);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

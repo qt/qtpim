@@ -60,7 +60,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/quuid.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactJsonDbId : public QContactEngineId
 {
@@ -93,6 +93,6 @@ private:
     QContactAbstractRequest::StorageLocation m_storageLocation;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

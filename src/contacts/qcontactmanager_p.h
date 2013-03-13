@@ -66,7 +66,7 @@
 
 #include <QJsonObject>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactManagerEngineFactory;
 
@@ -149,6 +149,6 @@ public:
     QMap<int, QContactManager::Error> *userError;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

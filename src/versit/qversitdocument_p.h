@@ -63,7 +63,7 @@ QT_BEGIN_NAMESPACE
 class QTextCodec;
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class QVersitDocumentPrivate : public QSharedData
 {
@@ -82,6 +82,6 @@ public:
     QList<QVersitDocument> mSubDocuments;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITDOCUMENT_P_H

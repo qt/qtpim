@@ -55,7 +55,7 @@
 
 QTVERSITORGANIZER_USE_NAMESPACE
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 // TODO:
 // - Improve handling of itemsModified signal. Instead of fetching all items each time the
@@ -1817,4 +1817,4 @@ QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QQmlL
 
 #include "moc_qdeclarativeorganizermodel_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

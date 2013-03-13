@@ -60,7 +60,7 @@
 
 QTCONTACTS_USE_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 // Mapping between a string in versit specifications and Qt contacts
 struct VersitContextMapping {
@@ -212,6 +212,6 @@ const VersitFileExtensionMapping versitFileExtensionMappings[] = {
 };
 //! [File extension mappings]
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITDEFS_P_H

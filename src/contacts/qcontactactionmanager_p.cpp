@@ -51,7 +51,7 @@
 #include <QMutexLocker>
 #include <QDebug>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 Q_GLOBAL_STATIC(QContactActionManager, contactActionManagerInstance)
 
@@ -135,4 +135,4 @@ QContactAction* QContactActionManager::action(const QContactActionDescriptor& de
 
 #include "moc_qcontactactionmanager_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

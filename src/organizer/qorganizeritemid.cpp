@@ -57,7 +57,7 @@ template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemEngineId) *QSharedDataPoi
 QT_END_NAMESPACE
 #endif
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemId
@@ -381,4 +381,4 @@ QOrganizerItemId QOrganizerItemId::fromString(const QString &idString)
     return QOrganizerItemId(engineId);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

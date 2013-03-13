@@ -63,7 +63,7 @@ class QTextCodec;
 class QTextEncoder;
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class Q_VERSIT_EXPORT QVersitDocumentWriter
 {
@@ -96,6 +96,6 @@ protected:
     int mCurrentLineLength;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITDOCUMENTWRITER_H

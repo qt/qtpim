@@ -47,7 +47,7 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qstring.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemSortOrderPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemSortOrder
@@ -98,7 +98,7 @@ Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemSortOr
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder);
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemSortOrder), Q_MOVABLE_TYPE);

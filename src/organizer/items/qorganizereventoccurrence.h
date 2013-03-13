@@ -45,7 +45,7 @@
 #include <qorganizeritem.h>
 #include <qorganizeritempriority.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -73,6 +73,6 @@ public:
     void setLocation(const QString &label);
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZEREVENTOCCURRENCE_H

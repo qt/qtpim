@@ -58,15 +58,15 @@
 #include <qversitorganizerglobal.h>
 #include <qorganizeritemdetail.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerItemDisplayLabel;
 class QOrganizerItemDescription;
 class QOrganizerItemGuid;
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QTORGANIZER_USE_NAMESPACE
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 // Mapping between a string in versit specifications and Qt contact details
 struct VersitOrganizerDetailMapping {
@@ -85,6 +85,6 @@ const VersitOrganizerDetailMapping versitOrganizerDetailMappings[] = {
     {"CATEGORIES", QOrganizerItemDetail::TypeTag, QOrganizerItemTag::FieldTag}
 };
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER
 
 #endif

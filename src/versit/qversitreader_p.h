@@ -77,7 +77,7 @@ QT_BEGIN_NAMESPACE
 class QBuffer;
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 // The maximum number of bytes allowed to stay in memory after being read.  The smaller this is,
 // the more time spent moving bytes around.  The larger it is, the more memory is wasted.
@@ -306,6 +306,6 @@ private:
     static QHash<QPair<QVersitDocument::VersitType,QString>, QVersitProperty::ValueType>* mValueTypeMap;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITREADER_P_H

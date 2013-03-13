@@ -41,7 +41,7 @@
 
 #include "qdeclarativeorganizercollection_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \qmltype Collection
@@ -216,4 +216,4 @@ void QDeclarativeOrganizerCollection::setCollection(const QOrganizerCollection &
 
 #include "moc_qdeclarativeorganizercollection_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -42,7 +42,7 @@
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerJsonDbItemId::QOrganizerJsonDbItemId()
     : QOrganizerItemEngineId()
@@ -254,4 +254,4 @@ void QOrganizerJsonDbCollectionId::splitId(const QString &fullId, QString &jsond
     jsondbUuid = splittedEngineId.last();
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

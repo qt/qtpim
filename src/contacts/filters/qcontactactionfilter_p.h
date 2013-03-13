@@ -59,7 +59,7 @@
 #include <QString>
 #include <QVariant>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactActionFilterPrivate : public QContactFilterPrivate
 {
@@ -114,6 +114,6 @@ public:
     QString m_action;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

@@ -51,7 +51,7 @@
 #include <QtCore/qstringbuilder.h>
 #include <QtCore/quuid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerManagerEngine* QOrganizerItemMemoryFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
 {
@@ -1741,4 +1741,4 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 
 #include "moc_qorganizeritemmemorybackend_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -44,7 +44,7 @@
 
 #include <qorganizercollectionid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 // MSVC needs the function declared before the friend declaration
 class QOrganizerCollection;
@@ -99,7 +99,7 @@ Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerCol
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection);
 #endif // QT_NO_DATASTREAM
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollection), Q_MOVABLE_TYPE);

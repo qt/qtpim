@@ -58,7 +58,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Initialise our static private data member */
 QAtomicInt QContactDetailPrivate::lastDetailKey(1);
@@ -634,4 +634,4 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
   \sa value()
  */
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

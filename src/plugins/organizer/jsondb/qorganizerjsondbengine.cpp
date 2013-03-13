@@ -48,7 +48,7 @@
 #include <QtCore/qeventloop.h>
 #include <QtNetwork/qabstractsocket.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerJsonDbEngine::QOrganizerJsonDbEngine(QOrganizerManager::Error *error)
     : m_requestHandlerThread(new QOrganizerJsonDbRequestThread)
@@ -606,7 +606,7 @@ const QList<int> QOrganizerJsonDbEngine::supportedDetailFields(QOrganizerItemDet
 
 #include "moc_qorganizerjsondbengine.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
 Q_DECLARE_METATYPE(QList<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId)>)

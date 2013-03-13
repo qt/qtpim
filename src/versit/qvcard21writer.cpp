@@ -43,7 +43,7 @@
 
 #include <QTextCodec>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 /*! Constructs a writer. */
 QVCard21Writer::QVCard21Writer(QVersitDocument::VersitType type) : QVersitDocumentWriter(type)
@@ -274,4 +274,4 @@ bool QVCard21Writer::shouldBeQuotedPrintableEncoded(QChar chr)
             (c > 122 && c < 256));
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

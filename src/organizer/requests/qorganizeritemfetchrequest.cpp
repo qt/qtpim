@@ -42,7 +42,7 @@
 #include <qorganizeritemfetchrequest.h>
 #include <private/qorganizeritemrequests_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemFetchRequest
@@ -216,4 +216,4 @@ QList<QOrganizerItem> QOrganizerItemFetchRequest::items() const
 
 #include "moc_qorganizeritemfetchrequest.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

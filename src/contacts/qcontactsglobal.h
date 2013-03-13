@@ -46,13 +46,13 @@
 
 #if defined(QT_NAMESPACE)
 #  define QTCONTACTS_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtContacts::name
-#  define QTCONTACTS_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtContacts {
-#  define QTCONTACTS_END_NAMESPACE } }
+#  define QT_BEGIN_NAMESPACE_CONTACTS namespace QT_NAMESPACE { namespace QtContacts {
+#  define QT_END_NAMESPACE_CONTACTS } }
 #  define QTCONTACTS_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtContacts;
 #else
 #  define QTCONTACTS_PREPEND_NAMESPACE(name) ::QtContacts::name
-#  define QTCONTACTS_BEGIN_NAMESPACE namespace QtContacts {
-#  define QTCONTACTS_END_NAMESPACE }
+#  define QT_BEGIN_NAMESPACE_CONTACTS namespace QtContacts {
+#  define QT_END_NAMESPACE_CONTACTS }
 #  define QTCONTACTS_USE_NAMESPACE using namespace QtContacts;
 #endif
 

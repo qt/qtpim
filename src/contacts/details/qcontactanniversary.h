@@ -48,7 +48,7 @@
 #include <qcontactdetail.h>
 #include <qcontact.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactAnniversary : public QContactDetail
@@ -89,7 +89,7 @@ public:
     QContactAnniversary::SubType subType() const {return static_cast<QContactAnniversary::SubType>(value<int>(FieldSubType));}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

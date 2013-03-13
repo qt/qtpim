@@ -44,7 +44,7 @@
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerManagerEngine *QOrganizerJsonDbEngineFactory::engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error)
 {
@@ -81,4 +81,4 @@ QString QOrganizerJsonDbEngineFactory::managerName() const
 
 #include "moc_qorganizerjsondbenginefactory.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

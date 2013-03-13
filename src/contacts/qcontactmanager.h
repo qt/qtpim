@@ -58,7 +58,7 @@
 #include <qcontactfetchhint.h>
 #include <qcontacttype.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactFilter;
 class QContactAction;
@@ -184,6 +184,6 @@ private:
     QContactManagerData* d;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

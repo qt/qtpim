@@ -57,7 +57,7 @@
 #include <QMap>
 #include <QTimer>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 const int QContactJsonDbRequestHandler::TIMEOUT_INTERVAL(100);
 
@@ -1091,4 +1091,4 @@ void QContactJsonDbPartitionWatcher::onJsonDbWatcherError(QtJsonDb::QJsonDbWatch
 
 #include "moc_qcontactjsondbrequesthandler.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

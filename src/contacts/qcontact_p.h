@@ -62,7 +62,7 @@
 #include <qcontacts.h>
 #include <qcontactdetail.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactData : public QSharedData
 {
@@ -96,7 +96,7 @@ public:
     static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

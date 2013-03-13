@@ -45,7 +45,7 @@
 #include <qorganizeritemfilter.h>
 #include <QtCore/qlist.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemIntersectionFilterPrivate;
 
@@ -71,6 +71,6 @@ private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemIntersectionFilter)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMINTERSECTIONFILTER_H

@@ -48,7 +48,7 @@
 
 #include <QtCore/qjsonarray.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 const int QOrganizerJsonDbConverter::enumMapEnd(-1212);
 
@@ -2173,4 +2173,4 @@ bool QOrganizerJsonDbConverter::createJsonDbQuery(const QOrganizerItemFilter &fi
     return false;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

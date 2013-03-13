@@ -63,15 +63,15 @@
 #include <QMap>
 #include <QSet>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 class QContact;
 class QContactDetail;
 class QContactOrganization;
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QTCONTACTS_USE_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitProperty;
 class QVersitDocument;
 class QVersitContactHandler;
@@ -133,6 +133,6 @@ public: // Data
     QHash< int ,QString> mContextMappings;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITCONTACTIMPORTER_P_H

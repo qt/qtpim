@@ -41,7 +41,7 @@
 
 #include "qversitcontacthandler.h"
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 /*!
   \internal
@@ -148,4 +148,4 @@ QStringList QVersitContactHandlerFactory::keys() const
  */
 
 #include "moc_qversitcontacthandler.cpp"
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

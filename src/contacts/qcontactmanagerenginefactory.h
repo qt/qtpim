@@ -50,7 +50,7 @@
 
 #include <qcontactmanager.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 /* Backend plugin API interface, creates engines for us */
 class QContactManagerEngine;
 
@@ -60,14 +60,14 @@ struct Q_CONTACTS_EXPORT QContactManagerEngineFactoryInterface : public QFactory
     virtual QString managerName() const = 0;
     virtual QContactEngineId *createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
 };
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 #define QT_CONTACT_MANAGER_ENGINE_INTERFACE "org.qt-project.Qt.QContactManagerEngineFactoryInterface"
 Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngineFactoryInterface, QT_CONTACT_MANAGER_ENGINE_INTERFACE)
 QT_END_NAMESPACE
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 class Q_CONTACTS_EXPORT QContactManagerEngineFactory : public QObject, public QContactManagerEngineFactoryInterface
 {
     Q_OBJECT
@@ -81,6 +81,6 @@ public:
     virtual QString managerName() const = 0;
     virtual QStringList keys() const;
 };
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

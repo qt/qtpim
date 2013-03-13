@@ -59,14 +59,14 @@
 #include <QHash>
 #include <QObject>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 class QContact;
 class QContactDetail;
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QTCONTACTS_USE_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitContactHandler;
 
 class QVersitContactExporterPrivate
@@ -182,6 +182,6 @@ public: // Data
     QHash< int ,QString> mContextMappings;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITCONTACTEXPORTER_P_H

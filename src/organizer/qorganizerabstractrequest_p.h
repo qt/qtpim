@@ -63,7 +63,7 @@
 #include <QtCore/qdebug.h>
 #endif
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerAbstractRequestPrivate
 {
@@ -109,6 +109,6 @@ public:
     mutable QMutex m_mutex;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERABSTRACTREQUEST_P_H

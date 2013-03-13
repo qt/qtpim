@@ -78,7 +78,7 @@
             d_ptr = new Class##Private; \
     }
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 class QContactFilterPrivate : public QSharedData
 {
 public:
@@ -103,7 +103,7 @@ public:
     /* Helper functions for C++ protection rules */
     static const QSharedDataPointer<QContactFilterPrivate>& extract_d(const QContactFilter& other) {return other.d_ptr;}
 };
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 #if defined(Q_CC_MWERKS)

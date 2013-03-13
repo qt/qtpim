@@ -42,7 +42,7 @@
 #include <qorganizeritemdetailfieldfilter.h>
 #include <private/qorganizeritemdetailfieldfilter_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemDetailFieldFilter
@@ -153,4 +153,4 @@ QVariant QOrganizerItemDetailFieldFilter::value() const
     return d->m_exactValue;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

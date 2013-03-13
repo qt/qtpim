@@ -55,7 +55,7 @@
 
 #include <qorganizeritem.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemData : public QSharedData
 {
@@ -86,6 +86,6 @@ public:
     QList<QOrganizerItemDetail> m_details;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEM_P_H

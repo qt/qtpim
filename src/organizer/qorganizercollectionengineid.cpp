@@ -41,7 +41,7 @@
 
 #include <qorganizercollectionengineid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerCollectionEngineId
@@ -118,4 +118,4 @@ QOrganizerCollectionEngineId::~QOrganizerCollectionEngineId()
     Returns the hash value of this ID.
  */
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

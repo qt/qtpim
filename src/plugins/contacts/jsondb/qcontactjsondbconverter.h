@@ -52,7 +52,7 @@
 
 QT_USE_NAMESPACE_JSONDB
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactJsonDbConverter
 {
@@ -107,6 +107,6 @@ private:
     QHash<QContactAbstractRequest::StorageLocation, QString> storageLocationMapping;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif // QCONTACTJSONDBCONVERTER_H

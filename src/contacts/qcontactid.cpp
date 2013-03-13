@@ -53,7 +53,7 @@ template<> QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId) *QSharedDataPointer<QT
 }
 QT_END_NAMESPACE
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactId
@@ -344,4 +344,4 @@ QContactId QContactId::fromString(const QString &idString)
     return QContactId(engineId);
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

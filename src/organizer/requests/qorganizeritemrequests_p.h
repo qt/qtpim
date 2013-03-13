@@ -55,7 +55,7 @@
 
 #include <private/qorganizerabstractrequest_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemSaveRequestPrivate : public QOrganizerAbstractRequestPrivate
 {
@@ -524,6 +524,6 @@ public:
     QMap<int, QOrganizerManager::Error> m_errors;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMREQUESTS_P_H

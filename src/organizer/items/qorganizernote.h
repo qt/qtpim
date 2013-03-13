@@ -44,7 +44,7 @@
 
 #include <qorganizeritem.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -54,6 +54,6 @@ public:
     Q_DECLARE_CUSTOM_ORGANIZER_ITEM(QOrganizerNote, QOrganizerItemType::TypeNote)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERNOTE_H

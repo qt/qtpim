@@ -57,7 +57,7 @@
 
 #include <QtCore/qstring.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerJsonDbStr
 {
@@ -205,6 +205,6 @@ public:
     inline const static QString warningDefaultCollectionRemove() { return QStringLiteral("Default collection can not be removed!"); }
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERJSONDBSTRING_H

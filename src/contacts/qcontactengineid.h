@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 class QDataStream;
 QT_END_NAMESPACE
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class Q_CONTACTS_EXPORT QContactEngineId: public QSharedData
 {
@@ -76,7 +76,7 @@ public:
     virtual uint hash() const = 0;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

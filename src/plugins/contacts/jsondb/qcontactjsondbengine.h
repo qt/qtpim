@@ -65,7 +65,7 @@
 #include <private/qcontactmanager_p.h>
 #include "qcontactjsondbstring.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactJsonDbRequestHandler;
 
@@ -121,6 +121,6 @@ public:
     QThread* m_thread;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif // QCONTACTJSONDBENGINE_H

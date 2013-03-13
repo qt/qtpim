@@ -45,7 +45,7 @@
 #include <qcontactmanager.h>
 #include <QObject>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactManagerEngine;
 class QContactAbstractRequestPrivate;
@@ -126,6 +126,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactAbstractRequest::StorageLocations)
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

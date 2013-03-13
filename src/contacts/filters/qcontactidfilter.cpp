@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactIdFilter
@@ -126,4 +126,4 @@ QList<QContactId> QContactIdFilter::ids() const
     return d->m_ids;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

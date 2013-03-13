@@ -53,7 +53,7 @@ QT_BEGIN_NAMESPACE
 class QDataStream;
 QT_END_NAMESPACE
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactActionDescriptor;
 class QContactDetailPrivate;
@@ -216,7 +216,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetail::AccessConstraints)
     className& operator=(const QContactDetail &other) {assign(other, Type); return *this;} \
     static const DetailType Type;
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactDetail), Q_MOVABLE_TYPE);

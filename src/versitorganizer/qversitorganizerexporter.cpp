@@ -45,7 +45,7 @@
 #include <qversitdocument.h>
 #include <qversitproperty.h>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 /*!
   \class QVersitOrganizerExporter
@@ -225,4 +225,4 @@ void QVersitOrganizerExporter::setDetailHandler(QVersitOrganizerExporterDetailHa
     d->mDetailHandler = handler;
 }
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER

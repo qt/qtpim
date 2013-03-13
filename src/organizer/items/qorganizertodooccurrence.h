@@ -46,7 +46,7 @@
 #include <qorganizeritempriority.h>
 #include <qorganizertodoprogress.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -80,6 +80,6 @@ public:
     QDateTime finishedDateTime() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERTODOOCCURRENCE_H

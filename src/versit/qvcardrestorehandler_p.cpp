@@ -59,7 +59,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 const QString QVCardRestoreHandler::PropertyName(QStringLiteral("X-NOKIA-QCONTACTFIELD"));
 const QString QVCardRestoreHandler::DetailTypeParameter(QStringLiteral("DETAIL"));
@@ -210,4 +210,4 @@ void QVCardRestoreHandler::documentProcessed()
     mDetailGroupMap.clear();
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

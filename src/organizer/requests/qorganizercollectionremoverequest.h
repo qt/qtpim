@@ -45,7 +45,7 @@
 #include <qorganizerabstractrequest.h>
 #include <qorganizercollection.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerCollectionRemoveRequestPrivate;
 
@@ -71,6 +71,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerCollectionRemoveRequest)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERCOLLECTIONREMOVEREQUEST_H

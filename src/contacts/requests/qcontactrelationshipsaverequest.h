@@ -49,7 +49,7 @@
 #include <QList>
 #include <QStringList>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactRelationshipSaveRequestPrivate;
 class Q_CONTACTS_EXPORT QContactRelationshipSaveRequest : public QContactAbstractRequest
@@ -74,6 +74,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QContactRelationshipSaveRequest)
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

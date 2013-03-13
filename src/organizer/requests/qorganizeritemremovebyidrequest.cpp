@@ -43,7 +43,7 @@
 #include "qorganizeritemremovebyidrequest.h"
 #include "qorganizeritemrequests_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
    \class QOrganizerItemRemoveByIdRequest
@@ -121,4 +121,4 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemRemoveByIdRequest::errorMap() 
 
 #include "moc_qorganizeritemremovebyidrequest.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

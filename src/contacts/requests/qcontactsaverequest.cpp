@@ -42,7 +42,7 @@
 #include "qcontactsaverequest.h"
 #include "qcontactrequests_p.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactSaveRequest
@@ -197,4 +197,4 @@ QList<QContactDetail::DetailType> QContactSaveRequest::typeMask() const
 
 #include "moc_qcontactsaverequest.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

@@ -44,7 +44,7 @@
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbstring.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactJsonDbBackup::QContactJsonDbBackup()
 {
@@ -213,4 +213,4 @@ int QContactJsonDbBackup::wasteSomeTime() {
     return x;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

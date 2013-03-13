@@ -44,7 +44,7 @@
 
 #include <qorganizermanager.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerEngine;
 class QOrganizerAbstractRequestPrivate;
@@ -114,6 +114,6 @@ private:
 #endif
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERABSTRACTREQUEST_H

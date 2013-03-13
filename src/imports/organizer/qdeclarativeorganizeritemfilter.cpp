@@ -41,7 +41,7 @@
 
 #include "qdeclarativeorganizeritemfilter_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \qmltype Filter
@@ -923,4 +923,4 @@ QOrganizerItemFilter QDeclarativeOrganizerItemIdFilter::filter() const
 
 #include "moc_qdeclarativeorganizeritemfilter_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

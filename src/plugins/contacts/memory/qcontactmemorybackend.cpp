@@ -53,7 +53,7 @@
 #include <QtCore/qstringbuilder.h>
 #include <QtCore/quuid.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactManagerEngine* QContactMemoryEngineFactory::engine(const QMap<QString, QString> &parameters, QContactManager::Error *error)
 {
@@ -1015,5 +1015,5 @@ uint QContactMemoryEngineId::hash() const
 
 #include "moc_qcontactmemorybackend_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 

@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
 class QVariant;
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitPropertyPrivate;
 
 class Q_VERSIT_EXPORT QVersitProperty
@@ -114,6 +114,6 @@ Q_VERSIT_EXPORT uint qHash(const QVersitProperty& key);
 Q_VERSIT_EXPORT QDebug operator<<(QDebug dbg, const QVersitProperty& property);
 #endif
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITPROPERTY_H

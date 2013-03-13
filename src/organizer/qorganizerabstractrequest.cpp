@@ -41,7 +41,7 @@
 
 #include <private/qorganizerabstractrequest_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerAbstractRequest
@@ -314,4 +314,4 @@ QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request)
 
 #include "moc_qorganizerabstractrequest.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

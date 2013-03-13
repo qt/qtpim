@@ -46,13 +46,13 @@
 
 #if defined(QT_NAMESPACE)
 #  define QTVERSIT_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtVersit::name
-#  define QTVERSIT_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtVersit {
-#  define QTVERSIT_END_NAMESPACE } }
+#  define QT_BEGIN_NAMESPACE_VERSIT namespace QT_NAMESPACE { namespace QtVersit {
+#  define QT_END_NAMESPACE_VERSIT } }
 #  define QTVERSIT_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtVersit;
 #else
 #  define QTVERSIT_PREPEND_NAMESPACE(name) ::QtVersit::name
-#  define QTVERSIT_BEGIN_NAMESPACE namespace QtVersit {
-#  define QTVERSIT_END_NAMESPACE }
+#  define QT_BEGIN_NAMESPACE_VERSIT namespace QtVersit {
+#  define QT_END_NAMESPACE_VERSIT }
 #  define QTVERSIT_USE_NAMESPACE using namespace QtVersit;
 #endif
 

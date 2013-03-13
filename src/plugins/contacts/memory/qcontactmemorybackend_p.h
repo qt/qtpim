@@ -63,7 +63,7 @@
 #include <qcontactmanagerenginefactory.h>
 
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactAbstractRequest;
 class QContactManagerEngine;
@@ -241,7 +241,7 @@ private:
     friend class QContactMemoryEngineData;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

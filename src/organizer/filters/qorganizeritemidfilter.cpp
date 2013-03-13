@@ -42,7 +42,7 @@
 #include <qorganizeritemidfilter.h>
 #include <private/qorganizeritemidfilter_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemIdFilter
@@ -128,4 +128,4 @@ QList<QOrganizerItemId> QOrganizerItemIdFilter::ids() const
     return d->m_ids;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

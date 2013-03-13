@@ -42,7 +42,7 @@
 #include <qorganizeritemcollectionfilter.h>
 #include <private/qorganizeritemcollectionfilter_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemCollectionFilter
@@ -98,4 +98,4 @@ QSet<QOrganizerCollectionId> QOrganizerItemCollectionFilter::collectionIds() con
     return d->m_ids;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

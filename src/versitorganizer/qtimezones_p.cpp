@@ -43,7 +43,7 @@
 #include <qorganizer.h>
 #include <QDateTime>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 QOrganizerManager* TimeZone::getManager()
 {
@@ -94,4 +94,4 @@ QDateTime TimeZones::convert(const QDateTime& dateTime, const QString& tzid) con
     return tz.convert(dateTime);
 }
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER

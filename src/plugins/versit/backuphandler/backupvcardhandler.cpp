@@ -62,7 +62,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 
 /* See QVersitContactImporter::createBackupHandler() */
@@ -266,4 +266,4 @@ void BackupVCardHandler::contactProcessed(
     mDetailNumber = 0;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

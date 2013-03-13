@@ -46,7 +46,7 @@
 
 #include <QtCore/qdatetime.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -80,6 +80,6 @@ public:
     Status status() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERTODOPROGRESS_H

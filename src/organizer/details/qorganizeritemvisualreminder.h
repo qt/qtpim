@@ -44,7 +44,7 @@
 
 #include <qorganizeritemreminder.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -67,6 +67,6 @@ public:
     QUrl dataUrl() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMVISUALREMINDER_H

@@ -55,7 +55,7 @@
 
 #include "qversitdocumentwriter_p.h"
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class Q_VERSIT_EXPORT QVCard30Writer : public QVersitDocumentWriter
 {
@@ -69,6 +69,6 @@ public:
     QHash<QString,QString> mPropertyNameMappings;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVCARD30WRITER_P_H

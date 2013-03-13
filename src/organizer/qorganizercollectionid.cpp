@@ -58,7 +58,7 @@ template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId) *QSharedD
 QT_END_NAMESPACE
 #endif // Q_CC_MWERKS
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerCollectionId
@@ -371,4 +371,4 @@ QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString &idStrin
     return QOrganizerCollectionId(engineId);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

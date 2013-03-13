@@ -57,7 +57,7 @@
 
 #include <QtCore/qwaitcondition.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerJsonDbRequestData;
 
@@ -101,6 +101,6 @@ public:
     QOrganizerJsonDbRequestManager::HandlingStatus m_status;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERJSONDBREQUESTMANAGER_H

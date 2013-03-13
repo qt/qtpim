@@ -49,7 +49,7 @@
 
 #include <QList>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemRemoveByIdRequestPrivate;
 
@@ -77,7 +77,7 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemRemoveByIdRequest)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif
 

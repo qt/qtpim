@@ -45,7 +45,7 @@
 #include <qversitorganizerglobal.h>
 #include <QDateTime>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 class Q_VERSIT_ORGANIZER_EXPORT QVersitTimeZoneHandler
 {
@@ -81,7 +81,7 @@ public:
     virtual QDateTime convertUtcToTimeZone(const QDateTime& datetime, const QString& timeZoneName) = 0;
 };
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER
 
 #define QT_VERSIT_TIMEZONE_HANDLER_INTERFACE "org.qt-project.Qt.QVersitTimeZoneHandler"
 QT_BEGIN_NAMESPACE

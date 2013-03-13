@@ -56,7 +56,7 @@
 #include "qorganizeritemfilter_p.h"
 #include <qorganizeritemdetailfilter.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -132,6 +132,6 @@ public:
     QOrganizerItemFilter::MatchFlags m_flags;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMDETAILFILTER_P_H

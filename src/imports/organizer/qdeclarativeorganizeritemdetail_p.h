@@ -45,7 +45,7 @@
 #include <qorganizeritemdetails.h>
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QDeclarativeOrganizerItemDetail : public QObject
 {
@@ -961,7 +961,7 @@ public:
     static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::DetailType type);
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerItemDetail))
 QML_DECLARE_TYPE(QTORGANIZER_PREPEND_NAMESPACE(QDeclarativeOrganizerEventTime))

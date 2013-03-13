@@ -51,7 +51,7 @@
 #include <qcontact.h>
 #include <qcontactpresence.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactGlobalPresence : public QContactDetail
@@ -89,7 +89,7 @@ public:
     static QContactFilter match(QContactPresence::PresenceState state);
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif
 

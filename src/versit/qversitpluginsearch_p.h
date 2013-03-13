@@ -49,7 +49,7 @@
 #include <QDebug>
 
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 #define CHECKDIR(dir) (dir).exists()
 
@@ -135,6 +135,6 @@ inline QStringList mobilityPlugins(const QString& plugintype)
     return  plugins;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITPLUGINSEARCH_H

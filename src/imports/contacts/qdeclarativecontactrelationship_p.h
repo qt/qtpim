@@ -48,7 +48,7 @@
 #include "qcontactrelationship.h"
 #include "qdeclarativecontact_p.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QDeclarativeContactRelationship : public QObject
 {
@@ -94,7 +94,7 @@ private:
     QContactRelationship m_relationship;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactRelationship))
 

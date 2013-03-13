@@ -48,7 +48,7 @@
 #include "qversitorganizerpluginloader_p.h"
 #include <private/qversitutils_p.h>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 QVersitOrganizerExporterPrivate::QVersitOrganizerExporterPrivate(const QString& profile) :
     mDetailHandler(NULL),
@@ -858,4 +858,4 @@ QVersitProperty QVersitOrganizerExporterPrivate::takeProperty(
     return QVersitProperty();
 }
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER

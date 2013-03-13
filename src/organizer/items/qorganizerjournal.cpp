@@ -42,7 +42,7 @@
 #include <qorganizerjournal.h>
 #include <qorganizerjournaltime.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerJournal
@@ -72,4 +72,4 @@ QDateTime QOrganizerJournal::dateTime() const
     return jtr.entryDateTime();
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

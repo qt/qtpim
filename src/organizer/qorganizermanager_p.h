@@ -56,7 +56,7 @@
 #include <qorganizermanager.h>
 #include <qorganizermanagerengine.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemObserver;
 class QOrganizerManagerEngineFactory;
@@ -134,6 +134,6 @@ public:
     QMap<int, QOrganizerManager::Error> *userError;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QCONTACTMANAGER_P_H

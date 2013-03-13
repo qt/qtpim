@@ -47,7 +47,7 @@
 #include <qcontactsglobal.h>
 #include <qcontactdetail.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactHobby : public QContactDetail
@@ -67,6 +67,6 @@ public:
     QString hobby() const {return value(FieldHobby).toString();}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

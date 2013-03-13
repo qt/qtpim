@@ -45,7 +45,7 @@
 #include <qorganizeritemfilter.h>
 #include <qorganizeritemdetail.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailFilterPrivate;
 
@@ -64,6 +64,6 @@ private:
     Q_DECLARE_ORGANIZERITEMFILTER_PRIVATE(QOrganizerItemDetailFilter)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMDETAILFILTER_H

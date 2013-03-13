@@ -64,7 +64,7 @@
 #include <QtCore/private/qfactoryloader_p.h>
 #include <QJsonArray>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Shared QContactManager stuff here, default engine stuff below */
 QHash<QString, QContactManagerEngineFactory*> QContactManagerData::m_engines;
@@ -352,5 +352,5 @@ QContactManagerEngine* QContactManagerData::engine(const QContactManager *manage
     return 0;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 

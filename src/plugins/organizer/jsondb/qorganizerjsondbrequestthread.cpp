@@ -55,7 +55,7 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/quuid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 const int QOrganizerJsonDbRequestThread::TIMEOUT_INTERVAL(100);
 const int QOrganizerJsonDbRequestThread::DefaultTimePeriod(1461);
@@ -1368,4 +1368,4 @@ QOrganizerManager::Error QOrganizerJsonDbRequestThread::checkRequestSpecificStor
 
 #include "moc_qorganizerjsondbrequestthread.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -53,7 +53,7 @@
 #include <QString>
 #include <QSharedDataPointer>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContact;
 class QContactActionFactory;
@@ -112,7 +112,7 @@ private:
     Q_CONTACTS_EXPORT friend uint qHash(const QContactActionDescriptor& key);
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactActionDescriptor), Q_MOVABLE_TYPE);

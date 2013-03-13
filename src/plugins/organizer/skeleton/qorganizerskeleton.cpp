@@ -41,7 +41,7 @@
 
 #include "qorganizerskeleton_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerManagerEngine* QOrganizerItemSkeletonFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)
 {
@@ -830,4 +830,4 @@ QList<QOrganizerItemType::ItemType> QOrganizerItemSkeletonEngine::supportedItemT
 
 #include "moc_qorganizerskeleton_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

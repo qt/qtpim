@@ -46,7 +46,7 @@
 #include <QtCore/qdebug.h>
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemFetchHint
@@ -216,4 +216,4 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemFetchHint &hint)
 }
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -66,7 +66,7 @@ QT_BEGIN_NAMESPACE
 class QBuffer;
 QT_END_NAMESPACE
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class QVersitDocumentWriter;
 
@@ -108,6 +108,6 @@ public:
     QVersitDocument::VersitType mType;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITWRITER_P_H

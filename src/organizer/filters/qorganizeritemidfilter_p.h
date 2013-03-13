@@ -56,7 +56,7 @@
 #include "qorganizeritemfilter_p.h"
 #include <qorganizeritemid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemIdFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -111,6 +111,6 @@ public:
     QList<QOrganizerItemId> m_ids;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMIDFILTER_P_H

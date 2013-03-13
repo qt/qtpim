@@ -47,7 +47,7 @@
 #include <qdebug.h>
 #include <qdatastream.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \macro Q_DECLARE_CUSTOM_ORGANIZER_ITEM
@@ -740,4 +740,4 @@ void QOrganizerItemData::removeOnly(const QSet<QOrganizerItemDetail::DetailType>
     }
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -60,7 +60,7 @@
 #include <QSet>
 #include <QPair>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactChangeSetData : public QSharedData
 {
@@ -96,6 +96,6 @@ public:
     QPair<QContactId, QContactId> m_oldAndNewSelfContactId;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

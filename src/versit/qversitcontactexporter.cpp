@@ -46,7 +46,7 @@
 #include <qcontact.h>
 #include <qcontactdetail.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 /*!
   \deprecated
@@ -388,4 +388,4 @@ QVersitResourceHandler* QVersitContactExporter::resourceHandler() const
     return d->mResourceHandler;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

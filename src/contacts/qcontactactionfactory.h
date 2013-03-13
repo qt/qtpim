@@ -55,7 +55,7 @@
 #include <QStringList>
 #include <QHash>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactAction;
 class Q_CONTACTS_EXPORT QContactActionFactory : public QObject
@@ -81,6 +81,6 @@ protected:
     QContactActionDescriptor createDescriptor(const QString& actionName, const QString& serviceName, const QString& actionIdentifier, int implementationVersion) const;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

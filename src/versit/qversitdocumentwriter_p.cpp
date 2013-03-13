@@ -43,7 +43,7 @@
 #include "qversitutils_p.h"
 #include <QTextCodec>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 #define MAX_LINE_LENGTH 76
 
@@ -280,4 +280,4 @@ void QVersitDocumentWriter::writeCrlf()
     mCurrentLineLength = 0;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactDetailRangeFilter
@@ -198,4 +198,4 @@ QContactDetailRangeFilter::RangeFlags QContactDetailRangeFilter::rangeFlags() co
     return d->m_rangeflags;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

@@ -44,7 +44,7 @@
 #include "qcontactfilter_p.h"
 #include "qcontactmanager.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactChangeLogFilter
@@ -122,4 +122,4 @@ QContactChangeLogFilter::EventType QContactChangeLogFilter::eventType() const
     return d->m_eventType;
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

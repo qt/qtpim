@@ -46,7 +46,7 @@
 #include <qorganizerabstractrequest.h>
 #include <qorganizerrecurrencerule.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerCollectionFetchRequest;
 class QOrganizerCollectionRemoveRequest;
@@ -197,6 +197,6 @@ private:
     friend class QOrganizerCollectionChangeSet;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERMANAGERENGINE_H

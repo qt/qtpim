@@ -53,7 +53,7 @@
 #include <QUrl>
 #include <QBuffer>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 /*!
  * Constructor.
@@ -970,4 +970,4 @@ bool QVersitContactExporterPrivate::encodeContentFromFile(const QString& resourc
     return encodeContent;
 }
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

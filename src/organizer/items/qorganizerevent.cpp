@@ -44,7 +44,7 @@
 #include <qorganizeritemlocation.h>
 #include <qorganizeritemrecurrence.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerEvent
@@ -312,4 +312,4 @@ void QOrganizerEvent::setLocation(const QString &label)
     saveDetail(&ld);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -51,7 +51,7 @@
 #include <QtCore/qdatetime.h>
 #include <QtCore/qstringlist.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerData;
 
@@ -182,6 +182,6 @@ private:
     Q_PRIVATE_SLOT(d, void _q_itemsDeleted(const QList<QOrganizerItemId> &ids))
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERMANAGER_H

@@ -42,7 +42,7 @@
 #include <qorganizerrecurrencerule.h>
 #include <private/qorganizerrecurrencerule_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerRecurrenceRule
@@ -587,4 +587,4 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
 }
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

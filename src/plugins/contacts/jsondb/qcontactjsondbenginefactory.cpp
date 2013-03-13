@@ -42,7 +42,7 @@
 #include "qcontactjsondbenginefactory.h"
 #include "qcontactjsondbid.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactJsonDbEngineFactory::QContactJsonDbEngineFactory()
 {
@@ -70,4 +70,4 @@ QString QContactJsonDbEngineFactory::managerName() const
 
 #include "moc_qcontactjsondbenginefactory.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

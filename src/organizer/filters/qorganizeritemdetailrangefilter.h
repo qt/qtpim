@@ -45,7 +45,7 @@
 #include <qorganizeritemfilter.h>
 #include <qorganizeritemdetail.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailRangeFilterPrivate;
 
@@ -82,6 +82,6 @@ private:
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemDetailRangeFilter::RangeFlags)
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMDETAILRANGEFILTER_H

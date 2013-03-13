@@ -46,13 +46,13 @@
 
 #if defined(QT_NAMESPACE)
 #  define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtVersitOrganizer::name
-#  define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtVersitOrganizer {
-#  define QTVERSITORGANIZER_END_NAMESPACE } }
+#  define QT_BEGIN_NAMESPACE_VERSITORGANIZER namespace QT_NAMESPACE { namespace QtVersitOrganizer {
+#  define QT_END_NAMESPACE_VERSITORGANIZER } }
 #  define QTVERSITORGANIZER_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtVersitOrganizer;
 #else
 #  define QTVERSITORGANIZER_PREPEND_NAMESPACE(name) ::QtVersitOrganizer::name
-#  define QTVERSITORGANIZER_BEGIN_NAMESPACE namespace QtVersitOrganizer {
-#  define QTVERSITORGANIZER_END_NAMESPACE }
+#  define QT_BEGIN_NAMESPACE_VERSITORGANIZER namespace QtVersitOrganizer {
+#  define QT_END_NAMESPACE_VERSITORGANIZER }
 #  define QTVERSITORGANIZER_USE_NAMESPACE using namespace QtVersitOrganizer;
 #endif
 

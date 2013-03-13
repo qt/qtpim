@@ -44,7 +44,7 @@
 #include <qorganizercollectionengineid.h>
 #include <qorganizeritemengineid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerCollectionFetchRequest
@@ -84,4 +84,4 @@ QList<QOrganizerCollection> QOrganizerCollectionFetchRequest::collections() cons
 
 #include "moc_qorganizercollectionfetchrequest.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

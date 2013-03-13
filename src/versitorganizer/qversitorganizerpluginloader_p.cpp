@@ -44,7 +44,7 @@
 #include "qversitorganizerpluginloader_p.h"
 #include "qversitorganizerpluginsearch_p.h"
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 /*!
    A less-than function for factory indices (see QVersitOrganizerHandlerFactory::index()).
@@ -138,4 +138,4 @@ QVersitTimeZoneHandler* QVersitOrganizerPluginLoader::timeZoneHandler()
     return mTimeZoneHandler;
 }
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER

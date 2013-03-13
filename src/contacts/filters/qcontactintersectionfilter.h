@@ -44,7 +44,7 @@
 
 #include "qcontactfilter.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactIntersectionFilterPrivate;
 class Q_CONTACTS_EXPORT QContactIntersectionFilter : public QContactFilter
@@ -70,6 +70,6 @@ private:
     Q_DECLARE_CONTACTFILTER_PRIVATE(QContactIntersectionFilter)
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

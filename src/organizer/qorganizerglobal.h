@@ -46,13 +46,13 @@
 
 #if defined(QT_NAMESPACE)
 #  define QTORGANIZER_PREPEND_NAMESPACE(name) ::QT_NAMESPACE::QtOrganizer::name
-#  define QTORGANIZER_BEGIN_NAMESPACE namespace QT_NAMESPACE { namespace QtOrganizer {
-#  define QTORGANIZER_END_NAMESPACE } }
+#  define QT_BEGIN_NAMESPACE_ORGANIZER namespace QT_NAMESPACE { namespace QtOrganizer {
+#  define QT_END_NAMESPACE_ORGANIZER } }
 #  define QTORGANIZER_USE_NAMESPACE using namespace QT_NAMESPACE; using namespace QtOrganizer;
 #else
 #  define QTORGANIZER_PREPEND_NAMESPACE(name) ::QtOrganizer::name
-#  define QTORGANIZER_BEGIN_NAMESPACE namespace QtOrganizer {
-#  define QTORGANIZER_END_NAMESPACE }
+#  define QT_BEGIN_NAMESPACE_ORGANIZER namespace QtOrganizer {
+#  define QT_END_NAMESPACE_ORGANIZER }
 #  define QTORGANIZER_USE_NAMESPACE using namespace QtOrganizer;
 #endif
 

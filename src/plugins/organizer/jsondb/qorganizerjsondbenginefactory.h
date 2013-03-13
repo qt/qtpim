@@ -55,7 +55,7 @@
 
 #include <QtOrganizer/qorganizermanagerenginefactory.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerJsonDbEngineFactory : public QOrganizerManagerEngineFactory
 {
@@ -69,6 +69,6 @@ public:
     QString managerName() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif

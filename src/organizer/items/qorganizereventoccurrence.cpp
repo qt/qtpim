@@ -45,7 +45,7 @@
 #include <qorganizeritemparent.h>
 #include <qorganizeritemid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerEventOccurrence
@@ -185,4 +185,4 @@ void QOrganizerEventOccurrence::setLocation(const QString &label)
     saveDetail(&ld);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

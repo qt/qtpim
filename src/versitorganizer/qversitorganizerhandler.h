@@ -45,7 +45,7 @@
 #include <qversitorganizerimporter.h>
 #include <qversitorganizerexporter.h>
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 // qdoc seems to not find QVersitOrganizerHandler if it is declared first, hence this forward
 // declaration
@@ -71,7 +71,7 @@ public:
     virtual ~QVersitOrganizerHandler() {}
 };
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER
 
 #define QT_VERSIT_ORGANIZER_HANDLER_INTERFACE "org.qt-project.Qt.QVersitOrganizerHandlerFactory"
 QT_BEGIN_NAMESPACE

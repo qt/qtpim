@@ -57,7 +57,7 @@
 #include <qorganizercollectionid.h>
 
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemCollectionFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -111,6 +111,6 @@ public:
     QSet<QOrganizerCollectionId> m_ids;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMCOLLECTIONFILTER_P_H

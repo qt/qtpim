@@ -42,7 +42,7 @@
 #include <qorganizeritemunionfilter.h>
 #include <private/qorganizeritemunionfilter_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemUnionFilter
@@ -147,4 +147,4 @@ QList<QOrganizerItemFilter> QOrganizerItemUnionFilter::filters() const
     return d->m_filters;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

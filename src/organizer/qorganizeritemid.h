@@ -55,7 +55,7 @@ class QDataStream;
 QT_END_NAMESPACE
 #endif
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 // MSVC needs the function declared before the friend declaration
 class QOrganizerItemId;
@@ -104,7 +104,7 @@ private:
     friend class QOrganizerManagerEngine;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId), Q_MOVABLE_TYPE);

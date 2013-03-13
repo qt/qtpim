@@ -81,7 +81,7 @@
             d_ptr = new Class##Private; \
     }
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemFilterPrivate : public QSharedData
 {
@@ -111,7 +111,7 @@ public:
     /* Helper functions for C++ protection rules */
     static const QSharedDataPointer<QOrganizerItemFilterPrivate> &extract_d(const QOrganizerItemFilter &other) { return other.d_ptr; }
 };
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 #if defined(Q_CC_MWERKS)

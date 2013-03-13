@@ -47,7 +47,7 @@
 #include <QDebug>
 #endif
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemSortOrder
@@ -305,4 +305,4 @@ void QOrganizerItemSortOrder::setCaseSensitivity(Qt::CaseSensitivity sensitivity
     d->m_sensitivity = sensitivity;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

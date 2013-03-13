@@ -47,7 +47,7 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailPrivate;
 
@@ -141,7 +141,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &det
     className(const QOrganizerItemDetail &other) : QOrganizerItemDetail(other, detailType) {} \
     className &operator=(const QOrganizerItemDetail &other) {assign(other, detailType); return *this;}
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemDetail), Q_MOVABLE_TYPE);

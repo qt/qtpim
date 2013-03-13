@@ -42,7 +42,7 @@
 #include <qorganizertodo.h>
 #include <qorganizertodotime.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerTodo
@@ -337,4 +337,4 @@ QDateTime QOrganizerTodo::finishedDateTime() const
     return tp.finishedDateTime();
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

@@ -61,7 +61,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 
 /* template docs:
@@ -2201,4 +2201,4 @@ QContactFilter QContactPhoneNumber::match(const QString &number)
 }
 
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

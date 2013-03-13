@@ -47,7 +47,7 @@
 #include <qcontactsglobal.h>
 #include <qcontactdetail.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactType : public QContactDetail
@@ -71,7 +71,7 @@ public:
     TypeValues type() const {return static_cast<TypeValues>(value<int>(FieldType));}
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactType::TypeValues))
 

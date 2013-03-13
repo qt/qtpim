@@ -45,7 +45,7 @@
 #include <qcontactsglobal.h>
 #include <qcontactabstractrequest.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactRelationshipRemoveRequestPrivate;
 class Q_CONTACTS_EXPORT QContactRelationshipRemoveRequest : public QContactAbstractRequest
@@ -70,6 +70,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QContactRelationshipRemoveRequest)
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

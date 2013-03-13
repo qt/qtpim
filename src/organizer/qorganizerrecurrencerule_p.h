@@ -55,7 +55,7 @@
 
 #include <qorganizerrecurrencerule.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerRecurrenceRulePrivate : public QSharedData
 {
@@ -97,6 +97,6 @@ public:
     Qt::DayOfWeek firstDayOfWeek;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERRECURRENCERULE_P_H

@@ -51,7 +51,7 @@
 #include <QPair>
 #include <QSet>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 /*!
   \class QContactManager
   \brief The QContactManager class provides an interface which allows clients with access to contact information stored in a particular backend.
@@ -932,4 +932,4 @@ void QContactManager::disconnectNotify(const QMetaMethod &signal)
 
 #include "moc_qcontactmanager.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

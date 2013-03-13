@@ -45,7 +45,7 @@
 #include <qorganizerabstractrequest.h>
 #include <qorganizeritem.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemFetchByIdRequestPrivate;
 
@@ -74,6 +74,6 @@ private:
     Q_DECLARE_PRIVATE_D(d_ptr, QOrganizerItemFetchByIdRequest)
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMFETCHBYIDREQUEST_H

@@ -50,7 +50,7 @@
 #include <QtCore/qdebug.h>
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerRecurrenceRulePrivate;
 class Q_ORGANIZER_EXPORT QOrganizerRecurrenceRule
@@ -143,7 +143,7 @@ inline uint qHash(QOrganizerRecurrenceRule::Month month)
     return static_cast<uint>(month);
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerRecurrenceRule), Q_MOVABLE_TYPE);

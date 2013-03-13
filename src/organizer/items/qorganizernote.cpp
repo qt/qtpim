@@ -41,7 +41,7 @@
 
 #include <qorganizernote.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerNote
@@ -54,4 +54,4 @@ QTORGANIZER_BEGIN_NAMESPACE
     not associated with a particular point in time.
  */
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

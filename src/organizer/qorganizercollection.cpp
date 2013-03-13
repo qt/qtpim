@@ -46,7 +46,7 @@
 #include <QtCore/qdebug.h>
 #endif // QT_NO_DEBUG_STREAM
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerCollection
@@ -295,4 +295,4 @@ QDataStream &operator>>(QDataStream &in, QOrganizerCollection &collection)
 }
 #endif // QT_NO_DATASTREAM
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

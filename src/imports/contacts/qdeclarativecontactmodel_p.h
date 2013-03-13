@@ -56,13 +56,13 @@
 #include "qdeclarativecontactsortorder_p.h"
 #include "qdeclarativecontactfilter_p.h"
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitReader;
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 QTVERSIT_USE_NAMESPACE
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QDeclarativeContactModelPrivate;
 class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserStatus
@@ -207,6 +207,6 @@ private:
     QDeclarativeContactModelPrivate *d;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif // QDECLARATIVECONTACTMODEL_P_H

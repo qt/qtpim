@@ -42,7 +42,7 @@
 #include <qorganizeritemfetchbyidrequest.h>
 #include <private/qorganizeritemrequests_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemFetchByIdRequest
@@ -142,4 +142,4 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemFetchByIdRequest::errorMap() c
 
 #include "moc_qorganizeritemfetchbyidrequest.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

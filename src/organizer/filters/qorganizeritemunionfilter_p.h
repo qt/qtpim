@@ -56,7 +56,7 @@
 #include "qorganizeritemfilter_p.h"
 #include <QtCore/qlist.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemUnionFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -111,6 +111,6 @@ public:
     QList<QOrganizerItemFilter> m_filters;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMUNIONFILTER_P_H

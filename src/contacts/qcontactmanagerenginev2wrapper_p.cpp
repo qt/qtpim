@@ -46,7 +46,7 @@
 #include "qcontactfetchbyidrequest.h"
 #include <QDebug>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QContactManagerEngineV2Wrapper::QContactManagerEngineV2Wrapper(QContactManagerEngine *wrappee)
     : m_engine(wrappee)
@@ -421,4 +421,4 @@ void PartialSaveRequestController::partiallyCopyDetails(QContact* to, const QCon
 
 #include "moc_qcontactmanagerenginev2wrapper_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

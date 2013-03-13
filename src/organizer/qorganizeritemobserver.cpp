@@ -44,7 +44,7 @@
 
 #include <QtCore/QPointer>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemObserverPrivate
 {
@@ -107,4 +107,4 @@ QOrganizerItemId QOrganizerItemObserver::itemId() const
 
 #include "moc_qorganizeritemobserver.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

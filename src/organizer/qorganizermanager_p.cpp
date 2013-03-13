@@ -47,7 +47,7 @@
 #include <QtCore/qpluginloader.h>
 #include <QtCore/private/qfactoryloader_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 QHash<QString, QOrganizerManagerEngineFactory *> QOrganizerManagerData::m_engines;
 bool QOrganizerManagerData::m_discovered;
@@ -249,4 +249,4 @@ QOrganizerManagerEngine *QOrganizerManagerData::engine(const QOrganizerManager *
     return 0;
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

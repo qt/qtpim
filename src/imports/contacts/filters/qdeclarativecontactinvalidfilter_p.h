@@ -45,7 +45,7 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactinvalidfilter.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QDeclarativeContactInvalidFilter : public QDeclarativeContactFilter
 {
@@ -64,6 +64,6 @@ public:
 
 
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

@@ -64,7 +64,7 @@
 #include <QStringList>
 #include <QList>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactRelationshipFilterPrivate : public QContactFilterPrivate
 {
@@ -132,6 +132,6 @@ public:
     QContactRelationship::Role m_relatedContactRole;
 };
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 #endif

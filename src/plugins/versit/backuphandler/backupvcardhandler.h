@@ -47,7 +47,7 @@
 #include <qversitcontacthandler.h>
 #include <private/qvcardrestorehandler_p.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class BackupVCardHandlerFactory : public QVersitContactHandlerFactory
 {
@@ -64,6 +64,6 @@ public:
 
 #include "moc_backupvcardhandler.cpp"
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif

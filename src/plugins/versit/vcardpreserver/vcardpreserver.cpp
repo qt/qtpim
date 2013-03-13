@@ -56,7 +56,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class VCardPreserver : public QVersitContactHandler
 {
@@ -177,4 +177,4 @@ void VCardPreserver::contactProcessed(const QContact& contact,
 
 #include "moc_vcardpreserver.cpp"
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT

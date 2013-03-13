@@ -47,7 +47,7 @@
 
 #include <QtCore/qshareddata.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class Q_ORGANIZER_EXPORT QOrganizerItemEngineId: public QSharedData
 {
@@ -70,6 +70,6 @@ public:
     virtual uint hash() const = 0;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMENGINEID_H

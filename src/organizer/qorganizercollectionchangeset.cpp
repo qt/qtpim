@@ -43,7 +43,7 @@
 #include <private/qorganizercollectionchangeset_p.h>
 #include <qorganizermanagerengine.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerCollectionChangeSet
@@ -274,4 +274,4 @@ void QOrganizerCollectionChangeSet::emitSignals(QOrganizerManagerEngine *engine)
     }
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

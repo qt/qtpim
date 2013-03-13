@@ -55,7 +55,7 @@
 
 #include "qorganizeritemfilter_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailRangeFilterPrivate : public QOrganizerItemFilterPrivate
 {
@@ -144,6 +144,6 @@ public:
     QOrganizerItemDetailRangeFilter::RangeFlags m_rangeflags;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMDETAILRANGEFILTER_P_H

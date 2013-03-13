@@ -47,12 +47,12 @@
 #include <qcontact.h>
 #include <qversitproperty.h>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 class QVersitContactExporter;
 class QVersitContactExporterPrivate;
 class QVersitDocument;
 class QVersitProperty;
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE

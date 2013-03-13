@@ -49,7 +49,7 @@
 
 #include <qcontactsglobal.h>
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Manual Q_DECLARE_CONTACTFILTER_PRIVATE macro */
 
@@ -125,7 +125,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFilter::MatchFlags);
 const Q_CONTACTS_EXPORT QContactFilter operator&(const QContactFilter& left, const QContactFilter& right);
 const Q_CONTACTS_EXPORT QContactFilter operator|(const QContactFilter& left, const QContactFilter& right);
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactFilter), Q_MOVABLE_TYPE);

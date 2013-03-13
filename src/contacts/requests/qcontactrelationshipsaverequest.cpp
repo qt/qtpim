@@ -42,7 +42,7 @@
 #include "qcontactrelationshipsaverequest.h"
 #include "qcontactrequests_p.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactRelationshipSaveRequest
@@ -120,4 +120,4 @@ QMap<int, QContactManager::Error> QContactRelationshipSaveRequest::errorMap() co
 
 #include "moc_qcontactrelationshipsaverequest.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

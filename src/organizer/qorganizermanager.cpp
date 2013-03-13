@@ -41,7 +41,7 @@
 
 #include <private/qorganizermanager_p.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerManager
@@ -852,4 +852,4 @@ QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem
 
 #include "moc_qorganizermanager.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

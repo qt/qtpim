@@ -41,7 +41,7 @@
 
 #include "qdeclarativeorganizeritemfetchhint_p.h"
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \qmltype QtOrganizer::FetchHint
@@ -116,4 +116,4 @@ void QDeclarativeOrganizerItemFetchHint::setFetchHint(const QOrganizerItemFetchH
 
 #include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

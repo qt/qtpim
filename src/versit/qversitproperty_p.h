@@ -63,7 +63,7 @@
 #include <QByteArray>
 #include <QVariant>
 
-QTVERSIT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSIT
 
 class QVersitPropertyPrivate : public QSharedData
 {
@@ -91,6 +91,6 @@ public:
     QVersitProperty::ValueType mValueType;
 };
 
-QTVERSIT_END_NAMESPACE
+QT_END_NAMESPACE_VERSIT
 
 #endif // QVERSITPROPERTY_P_H

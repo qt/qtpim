@@ -58,7 +58,7 @@
     The ContactDetail element is part of the \b{QtContacts} module.
 */
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 QDeclarativeContactDetail::QDeclarativeContactDetail(QObject* parent)
     :QObject(parent)
@@ -1283,4 +1283,4 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
 
 #include "moc_qdeclarativecontactdetail_p.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

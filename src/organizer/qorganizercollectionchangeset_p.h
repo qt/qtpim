@@ -56,7 +56,7 @@
 #include <qorganizercollectionid.h>
 #include <QtCore/qset.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerCollectionChangeSetData : public QSharedData
 {
@@ -87,6 +87,6 @@ public:
     QList<QPair<QOrganizerCollectionId, QOrganizerManager::Operation> > m_modifiedCollections;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERCOLLECTIONCHANGESET_P_H

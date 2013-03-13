@@ -46,10 +46,10 @@
 #include <qorganizeritemsaverequest.h>
 #include <qorganizeritemremovebyidrequest.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerManager;
 class QOrganizerItem;
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QTORGANIZER_USE_NAMESPACE
 

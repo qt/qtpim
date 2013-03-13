@@ -42,7 +42,7 @@
 #include "qcontactfetchbyidrequest.h"
 #include "qcontactrequests_p.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
   \class QContactFetchByIdRequest
@@ -152,4 +152,4 @@ QMap<int, QContactManager::Error> QContactFetchByIdRequest::errorMap() const
 
 #include "moc_qcontactfetchbyidrequest.cpp"
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

@@ -50,7 +50,7 @@
 #include <QList>
 #include "qcontact.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactSortOrderPrivate;
 class Q_CONTACTS_EXPORT QContactSortOrder
@@ -101,7 +101,7 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactSortOrder& so
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactSortOrder& sortOrder);
 #endif
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactSortOrder), Q_MOVABLE_TYPE);

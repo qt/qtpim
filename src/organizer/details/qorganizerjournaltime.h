@@ -46,7 +46,7 @@
 
 #include <QtCore/qdatetime.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -65,6 +65,6 @@ public:
     QDateTime entryDateTime() const;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERJOURNALTIME_H

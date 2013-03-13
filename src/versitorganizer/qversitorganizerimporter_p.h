@@ -59,7 +59,7 @@
 #include <qversittimezonehandler.h>
 #include "qtimezones_p.h"
 
-QTVERSITORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 class Duration
 {
@@ -229,6 +229,6 @@ private:
     TimeZones mTimeZones;
 };
 
-QTVERSITORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_VERSITORGANIZER
 
 #endif

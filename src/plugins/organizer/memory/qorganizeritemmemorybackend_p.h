@@ -60,7 +60,7 @@
 #include <qorganizeritemchangeset.h>
 #include <qorganizerrecurrencerule.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemMemoryFactory : public QOrganizerManagerEngineFactory
 {
@@ -280,6 +280,6 @@ private:
     static QMap<QString, QOrganizerItemMemoryEngineData*> engineDatas;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif

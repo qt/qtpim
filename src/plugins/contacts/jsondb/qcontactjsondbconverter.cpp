@@ -71,7 +71,7 @@
 #include "qcontactjsondbstring.h"
 #include "qcontactjsondbid.h"
 
-QTCONTACTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_CONTACTS
 
 const int QContactJsonDbConverter::jsonDbVersionLength(10);
 
@@ -1437,4 +1437,4 @@ QContactJsonDbConverter::SanitizeError QContactJsonDbConverter::sanitizeContactD
     }
 }
 
-QTCONTACTS_END_NAMESPACE
+QT_END_NAMESPACE_CONTACTS

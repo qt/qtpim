@@ -56,7 +56,7 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     \class QOrganizerItemDescription
@@ -1549,4 +1549,4 @@ QByteArray QOrganizerItemVersion::extendedVersion() const
     return value(FieldExtendedVersion).toByteArray();
 }
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER

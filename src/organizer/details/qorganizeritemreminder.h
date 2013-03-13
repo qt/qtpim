@@ -44,7 +44,7 @@
 
 #include <qorganizeritemdetail.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /* Leaf class */
 
@@ -93,6 +93,6 @@ protected:
     className(const QOrganizerItemDetail &field) : QOrganizerItemReminder(field, reminderType) {} \
     className& operator=(const QOrganizerItemDetail &other) {assign(other, reminderType); return *this;}
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMREMINDER_H

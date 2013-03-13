@@ -55,7 +55,7 @@
 
 #include <QtOrganizer/qorganizermanagerengine.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*
  Organizer jsondb backend storage location related documentation
@@ -181,6 +181,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerJsonDbEngine::StorageLocations)
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif

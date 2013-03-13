@@ -63,7 +63,7 @@
 
 QT_USE_NAMESPACE_JSONDB
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 // The purpose of this class is to provide synchronous access to jsondb and also hide jsondb
 // specific details such as filter creation and object conversions.
@@ -238,6 +238,6 @@ private:
     QMap<int, QOrganizerCollectionId> m_removeCollectionIds;
 };
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERJSONDBDATASTORAGE_H

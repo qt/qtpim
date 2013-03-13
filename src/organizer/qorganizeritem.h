@@ -47,7 +47,7 @@
 #include <qorganizeritemtype.h>
 #include <qorganizercollectionid.h>
 
-QTORGANIZER_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemData;
 
@@ -140,7 +140,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItem &item);
     className(const QOrganizerItem &other) : QOrganizerItem(other, typeConstant) {} \
     className& operator=(const QOrganizerItem &other) {assign(other, typeConstant); return *this;}
 
-QTORGANIZER_END_NAMESPACE
+QT_END_NAMESPACE_ORGANIZER
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItem), Q_MOVABLE_TYPE);

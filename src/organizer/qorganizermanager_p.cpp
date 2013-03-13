@@ -55,7 +55,7 @@ bool QOrganizerManagerData::m_discoveredStatic;
 QStringList QOrganizerManagerData::m_pluginPaths;
 
 #ifndef QT_NO_LIBRARY
-Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader, (QT_ORGANIZER_MANAGER_ENGINE_INTERFACE, QStringLiteral("/organizer")))
+Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader, (QT_ORGANIZER_MANAGER_ENGINE_INTERFACE, QLatin1String("/organizer")))
 #endif
 
 static void qOrganizerItemsCleanEngines()

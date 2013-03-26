@@ -66,4 +66,7 @@
 #include <qcontactrequests.h>                   // request leaf classes
 #include <qcontactrelationship.h>               // contact relationships
 
+QT_BEGIN_NAMESPACE_CONTACTS
+QT_END_NAMESPACE_CONTACTS
+
 #endif

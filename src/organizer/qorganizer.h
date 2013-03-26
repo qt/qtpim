@@ -73,4 +73,7 @@
 #include "qorganizeritemrequests.h"                   // request derived classes
 #include "qorganizeritemfilters.h"                    // detail derived classes
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif

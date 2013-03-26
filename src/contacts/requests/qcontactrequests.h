@@ -55,5 +55,8 @@
 #include "qcontactremoverequest.h"
 #include "qcontactsaverequest.h"
 
+QT_BEGIN_NAMESPACE_CONTACTS
+QT_END_NAMESPACE_CONTACTS
+
 #endif
 

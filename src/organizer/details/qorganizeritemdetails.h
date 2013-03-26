@@ -69,4 +69,7 @@
 #include <qorganizeritemclassification.h>
 #include <qorganizeritemversion.h>
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif // QORGANIZERITEMDETAILS_H

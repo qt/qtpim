@@ -52,4 +52,7 @@
 #include <qorganizertodooccurrence.h>
 #include <qorganizernote.h>
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif // QORGANIZERITEMS_H

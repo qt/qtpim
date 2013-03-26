@@ -54,4 +54,7 @@
 #include <qorganizeritemidfilter.h>
 #include <qorganizeritemcollectionfilter.h>
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif // QORGANIZERITEMFILTERS_H

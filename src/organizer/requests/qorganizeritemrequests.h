@@ -54,5 +54,8 @@
 #include <qorganizercollectionremoverequest.h>
 #include <qorganizercollectionsaverequest.h>
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif // QORGANIZERITEMREQUESTS_H
 

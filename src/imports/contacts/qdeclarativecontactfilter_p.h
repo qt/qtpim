@@ -125,7 +125,9 @@ protected:
 
 QT_END_NAMESPACE_CONTACTS
 
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactFilter))
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactCompoundFilter))
+QTCONTACTS_USE_NAMESPACE
+
+QML_DECLARE_TYPE(QDeclarativeContactFilter)
+QML_DECLARE_TYPE(QDeclarativeContactCompoundFilter)
 
 #endif

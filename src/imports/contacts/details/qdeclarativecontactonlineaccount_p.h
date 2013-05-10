@@ -135,7 +135,9 @@ signals:
 
 QT_END_NAMESPACE_CONTACTS
 
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactOnlineAccount))
+QTCONTACTS_USE_NAMESPACE
+
+QML_DECLARE_TYPE(QDeclarativeContactOnlineAccount)
 
 #endif
 

@@ -607,6 +607,3 @@ const QList<int> QOrganizerJsonDbEngine::supportedDetailFields(QOrganizerItemDet
 #include "moc_qorganizerjsondbengine.cpp"
 
 QT_END_NAMESPACE_ORGANIZER
-
-Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
-Q_DECLARE_METATYPE(QList<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId)>)

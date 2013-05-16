@@ -1573,6 +1573,26 @@ void tst_QVersitContactExporter::testDefaultResourceHandler()
     QVERIFY(!handler.saveResource("test contents", property, &location));
 }
 
+void tst_QVersitContactExporter::testEncodeEmailWithContextOther()
+{
+    QContact contact(createContactWithName(QStringLiteral("asdf")));
+    QContactEmailAddress email;
+    email.setEmailAddress(QStringLiteral("test@test"));
+    email.setContexts(QContactDetail::ContextOther);
+    contact.saveDetail(&email);
+    QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
+    QVersitDocument document = mExporter->documents().first();
+    QCOMPARE(countProperties(document), 1);
+    QVersitProperty property = findPropertyByName(document, QStringLiteral("EMAIL"));
+    QVERIFY(!property.isEmpty());
+    // Check parameters
+    QCOMPARE(property.parameters().count(), 1);
+    QVERIFY(property.parameters().contains(
+        QStringLiteral("TYPE"),QStringLiteral("OTHER")));
+    // Check value
+    QCOMPARE(property.value(), email.emailAddress());
+}
+
 // Test utility functions
 QContact tst_QVersitContactExporter::createContactWithName(QString name)
 {

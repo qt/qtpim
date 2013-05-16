@@ -99,6 +99,7 @@ private slots:
     void testEncodeMultipleExtendedDetails();
     void testEncodeAvatar();
     void testDefaultResourceHandler();
+    void testEncodeEmailWithContextOther();
 
 private:
     // Test Utility Functions

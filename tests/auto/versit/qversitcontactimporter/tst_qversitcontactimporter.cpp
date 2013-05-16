@@ -1718,6 +1718,23 @@ void tst_QVersitContactImporter::testInvalidDocument()
 
 }
 
+void tst_QVersitContactImporter::testEmailWithContextOther()
+{
+    QVersitProperty property;
+    property.setName(QStringLiteral("EMAIL"));
+    QString value(QStringLiteral("john.citizen@example.com"));
+    property.setValue(value);
+    property.insertParameter(QStringLiteral("TYPE"),QStringLiteral("OTHER"));
+    QVersitDocument document = createDocumentWithProperty(property);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    QContact contact = mImporter->contacts().first();
+    QContactEmailAddress email = contact.detail<QContactEmailAddress>();
+    QCOMPARE(email.emailAddress(),value);
+    const QList<int> contexts = email.contexts();
+    QCOMPARE(contexts.count(),1);
+    QVERIFY(contexts.contains(QContactDetail::ContextOther));
+}
+
 QVersitDocument tst_QVersitContactImporter::createDocumentWithProperty(
     const QVersitProperty& property)
 {

@@ -102,6 +102,7 @@ private slots: // Tests
     void testPref();
     void testPropertyHandler();
     void testInvalidDocument();
+    void testEmailWithContextOther();
 
 private: // Utilities
 

@@ -196,7 +196,8 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
 // Mappings from versit TYPE parameters to Qt contact detail contexts
 const VersitContextMapping versitContextMappings[] = {
     {"HOME", QContactDetail::ContextHome},
-    {"WORK", QContactDetail::ContextWork}
+    {"WORK", QContactDetail::ContextWork},
+    {"OTHER", QContactDetail::ContextOther}
 };
 
 //! [Property type parameter mappings]

@@ -2,129 +2,16 @@ import QtQuick.tooling 1.1
 
 // This file describes the plugin-supplied types contained in the library.
 // It is used for QML tooling purposes only.
+//
+// This file was auto-generated with the command 'qmlplugindump -notrelocatable QtContacts 5.0'.
 
 Module {
     Component {
-        name: "QAbstractItemModel"
-        prototype: "QObject"
-        Signal {
-            name: "dataChanged"
-            Parameter { name: "topLeft"; type: "QModelIndex" }
-            Parameter { name: "bottomRight"; type: "QModelIndex" }
-            Parameter { name: "roles"; type: "QSet<int>" }
-        }
-        Signal {
-            name: "dataChanged"
-            Parameter { name: "topLeft"; type: "QModelIndex" }
-            Parameter { name: "bottomRight"; type: "QModelIndex" }
-        }
-        Signal {
-            name: "headerDataChanged"
-            Parameter { name: "orientation"; type: "Qt::Orientation" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "layoutChanged"
-            Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
-        }
-        Signal { name: "layoutChanged" }
-        Signal {
-            name: "layoutAboutToBeChanged"
-            Parameter { name: "parents"; type: "QList<QPersistentModelIndex>" }
-        }
-        Signal { name: "layoutAboutToBeChanged" }
-        Signal {
-            name: "rowsAboutToBeInserted"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "rowsInserted"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "rowsAboutToBeRemoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "rowsRemoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "columnsAboutToBeInserted"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "columnsInserted"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "columnsAboutToBeRemoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal {
-            name: "columnsRemoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "first"; type: "int" }
-            Parameter { name: "last"; type: "int" }
-        }
-        Signal { name: "modelAboutToBeReset" }
-        Signal { name: "modelReset" }
-        Signal {
-            name: "rowsAboutToBeMoved"
-            Parameter { name: "sourceParent"; type: "QModelIndex" }
-            Parameter { name: "sourceStart"; type: "int" }
-            Parameter { name: "sourceEnd"; type: "int" }
-            Parameter { name: "destinationParent"; type: "QModelIndex" }
-            Parameter { name: "destinationRow"; type: "int" }
-        }
-        Signal {
-            name: "rowsMoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "start"; type: "int" }
-            Parameter { name: "end"; type: "int" }
-            Parameter { name: "destination"; type: "QModelIndex" }
-            Parameter { name: "row"; type: "int" }
-        }
-        Signal {
-            name: "columnsAboutToBeMoved"
-            Parameter { name: "sourceParent"; type: "QModelIndex" }
-            Parameter { name: "sourceStart"; type: "int" }
-            Parameter { name: "sourceEnd"; type: "int" }
-            Parameter { name: "destinationParent"; type: "QModelIndex" }
-            Parameter { name: "destinationColumn"; type: "int" }
-        }
-        Signal {
-            name: "columnsMoved"
-            Parameter { name: "parent"; type: "QModelIndex" }
-            Parameter { name: "start"; type: "int" }
-            Parameter { name: "end"; type: "int" }
-            Parameter { name: "destination"; type: "QModelIndex" }
-            Parameter { name: "column"; type: "int" }
-        }
-        Method { name: "submit"; type: "bool" }
-        Method { name: "revert" }
-    }
-    Component { name: "QAbstractListModel"; prototype: "QAbstractItemModel" }
-    Component {
-        name: "QDeclarativeContact"
+        name: "QtContacts::QDeclarativeContact"
         defaultProperty: "contactDetails"
         prototype: "QObject"
-        exports: ["Contact 5.0"]
+        exports: ["QtContacts/Contact 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "modified"; type: "bool"; isReadonly: true }
         Property { name: "type"; type: "QDeclarativeContactType::ContactType"; isReadonly: true }
         Property { name: "contactId"; type: "string"; isReadonly: true }
@@ -173,6 +60,18 @@ Module {
             isList: true
             isReadonly: true
         }
+        Property {
+            name: "extendedDetail"
+            type: "QDeclarativeContactExtendedDetail"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "extendedDetails"
+            type: "QDeclarativeContactExtendedDetail"
+            isList: true
+            isReadonly: true
+        }
         Property { name: "family"; type: "QDeclarativeContactFamily"; isReadonly: true; isPointer: true }
         Property {
             name: "favorite"
@@ -194,6 +93,7 @@ Module {
             isPointer: true
         }
         Property { name: "guid"; type: "QDeclarativeContactGuid"; isReadonly: true; isPointer: true }
+        Property { name: "hobby"; type: "QDeclarativeContactHobby"; isReadonly: true; isPointer: true }
         Property { name: "name"; type: "QDeclarativeContactName"; isReadonly: true; isPointer: true }
         Property {
             name: "nickname"
@@ -258,25 +158,12 @@ Module {
             isPointer: true
         }
         Property { name: "url"; type: "QDeclarativeContactUrl"; isReadonly: true; isPointer: true }
+        Property { name: "urls"; type: "QDeclarativeContactUrl"; isList: true; isReadonly: true }
         Property {
             name: "version"
             type: "QDeclarativeContactVersion"
             isReadonly: true
             isPointer: true
-        }
-        Property { name: "urls"; type: "QDeclarativeContactUrl"; isList: true; isReadonly: true }
-        Property { name: "hobby"; type: "QDeclarativeContactHobby"; isReadonly: true; isPointer: true }
-        Property {
-            name: "extendedDetail"
-            type: "QDeclarativeContactExtendedDetail"
-            isReadonly: true
-            isPointer: true
-        }
-        Property {
-            name: "extendedDetails"
-            type: "QDeclarativeContactExtendedDetail"
-            isList: true
-            isReadonly: true
         }
         Signal { name: "contactChanged" }
         Method { name: "clearDetails" }
@@ -303,16 +190,18 @@ Module {
         }
     }
     Component {
-        name: "QDeclarativeContactActionFilter"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["ActionFilter 5.0"]
+        name: "QtContacts::QDeclarativeContactActionFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/ActionFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "actionName"; type: "string" }
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactAddress"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Address 5.0"]
+        name: "QtContacts::QDeclarativeContactAddress"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Address 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -344,9 +233,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactAnniversary"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Anniversary 5.0"]
+        name: "QtContacts::QDeclarativeContactAnniversary"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Anniversary 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -374,9 +264,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactAvatar"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Avatar 5.0"]
+        name: "QtContacts::QDeclarativeContactAvatar"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Avatar 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -389,9 +280,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactBirthday"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Birthday 5.0"]
+        name: "QtContacts::QDeclarativeContactBirthday"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Birthday 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -402,9 +294,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactChangeLogFilter"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["ChangeLogFilter 5.0"]
+        name: "QtContacts::QDeclarativeContactChangeLogFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/ChangeLogFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "EventType"
             values: {
@@ -418,15 +311,16 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactCompoundFilter"
+        name: "QtContacts::QDeclarativeContactCompoundFilter"
         defaultProperty: "filters"
-        prototype: "QDeclarativeContactFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
         Property { name: "filters"; type: "QDeclarativeContactFilter"; isList: true; isReadonly: true }
     }
     Component {
-        name: "QDeclarativeContactDetail"
+        name: "QtContacts::QDeclarativeContactDetail"
         prototype: "QObject"
-        exports: ["ContactDetail 5.0"]
+        exports: ["QtContacts/ContactDetail 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "DetailType"
             values: {
@@ -496,18 +390,20 @@ Module {
         }
     }
     Component {
-        name: "QDeclarativeContactDetailFilter"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["DetailFilter 5.0"]
+        name: "QtContacts::QDeclarativeContactDetailFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/DetailFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "detail"; type: "QDeclarativeContactDetail::DetailType" }
         Property { name: "field"; type: "int" }
         Property { name: "value"; type: "QVariant" }
         Property { name: "matchFlags"; type: "MatchFlags" }
     }
     Component {
-        name: "QDeclarativeContactDetailRangeFilter"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["DetailRangeFilter 5.0"]
+        name: "QtContacts::QDeclarativeContactDetailRangeFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/DetailRangeFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "RangeFlags"
             values: {
@@ -526,10 +422,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactDisplayLabel"
+        name: "QtContacts::QDeclarativeContactDisplayLabel"
         defaultProperty: "label"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["DisplayLabel 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/DisplayLabel 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -540,9 +437,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactEmailAddress"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["EmailAddress 5.0"]
+        name: "QtContacts::QDeclarativeContactEmailAddress"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/EmailAddress 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -553,9 +451,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactExtendedDetail"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["ExtendedDetail 5.0"]
+        name: "QtContacts::QDeclarativeContactExtendedDetail"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/ExtendedDetail 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -568,9 +467,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactFamily"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Family 5.0"]
+        name: "QtContacts::QDeclarativeContactFamily"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Family 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -583,10 +483,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactFavorite"
+        name: "QtContacts::QDeclarativeContactFavorite"
         defaultProperty: "index"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Favorite 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Favorite 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -599,9 +500,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactFetchHint"
+        name: "QtContacts::QDeclarativeContactFetchHint"
         prototype: "QObject"
-        exports: ["FetchHint 5.0"]
+        exports: ["QtContacts/FetchHint 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "OptimizationHints"
             values: {
@@ -619,9 +521,10 @@ Module {
         Signal { name: "fetchHintChanged" }
     }
     Component {
-        name: "QDeclarativeContactFilter"
+        name: "QtContacts::QDeclarativeContactFilter"
         prototype: "QObject"
-        exports: ["Filter 5.0"]
+        exports: ["QtContacts/Filter 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FilterType"
             values: {
@@ -654,10 +557,11 @@ Module {
         Signal { name: "filterChanged" }
     }
     Component {
-        name: "QDeclarativeContactGender"
+        name: "QtContacts::QDeclarativeContactGender"
         defaultProperty: "gender"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Gender 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Gender 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -676,10 +580,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactGeoLocation"
+        name: "QtContacts::QDeclarativeContactGeoLocation"
         defaultProperty: "label"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Location 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Location 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -706,10 +611,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactGlobalPresence"
+        name: "QtContacts::QDeclarativeContactGlobalPresence"
         defaultProperty: "state"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["GlobalPresence 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/GlobalPresence 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -730,10 +636,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactGuid"
+        name: "QtContacts::QDeclarativeContactGuid"
         defaultProperty: "guid"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Guid 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Guid 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -744,10 +651,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactHobby"
+        name: "QtContacts::QDeclarativeContactHobby"
         defaultProperty: "hobby"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Hobby 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Hobby 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -758,23 +666,26 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactIdFilter"
+        name: "QtContacts::QDeclarativeContactIdFilter"
         defaultProperty: "ids"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["IdFilter 5.0"]
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/IdFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "ids"; type: "QStringList" }
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactIntersectionFilter"
+        name: "QtContacts::QDeclarativeContactIntersectionFilter"
         defaultProperty: "filters"
-        prototype: "QDeclarativeContactCompoundFilter"
-        exports: ["IntersectionFilter 5.0"]
+        prototype: "QtContacts::QDeclarativeContactCompoundFilter"
+        exports: ["QtContacts/IntersectionFilter 5.0"]
+        exportMetaObjectRevisions: [0]
     }
     Component {
-        name: "QDeclarativeContactModel"
+        name: "QtContacts::QDeclarativeContactModel"
         prototype: "QAbstractListModel"
-        exports: ["ContactModel 5.0"]
+        exports: ["QtContacts/ContactModel 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "ExportError"
             values: {
@@ -881,10 +792,11 @@ Module {
         }
     }
     Component {
-        name: "QDeclarativeContactName"
+        name: "QtContacts::QDeclarativeContactName"
         defaultProperty: "firstName"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Name 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Name 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -903,10 +815,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactNickname"
+        name: "QtContacts::QDeclarativeContactNickname"
         defaultProperty: "nickname"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Nickname 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Nickname 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -917,10 +830,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactNote"
+        name: "QtContacts::QDeclarativeContactNote"
         defaultProperty: "note"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Note 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Note 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -931,10 +845,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactOnlineAccount"
+        name: "QtContacts::QDeclarativeContactOnlineAccount"
         defaultProperty: "accountUri"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["OnlineAccount 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/OnlineAccount 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -960,10 +875,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactOrganization"
+        name: "QtContacts::QDeclarativeContactOrganization"
         defaultProperty: "name"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Organization 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Organization 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -986,10 +902,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactPhoneNumber"
+        name: "QtContacts::QDeclarativeContactPhoneNumber"
         defaultProperty: "number"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["PhoneNumber 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/PhoneNumber 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1019,10 +936,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactPresence"
+        name: "QtContacts::QDeclarativeContactPresence"
         defaultProperty: "state"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Presence 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Presence 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1055,9 +973,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactRelationship"
+        name: "QtContacts::QDeclarativeContactRelationship"
         prototype: "QObject"
-        exports: ["Relationship 5.0"]
+        exports: ["QtContacts/Relationship 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "RelationshipRole"
             values: {
@@ -1084,9 +1003,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactRelationshipFilter"
-        prototype: "QDeclarativeContactFilter"
-        exports: ["RelationshipFilter 5.0"]
+        name: "QtContacts::QDeclarativeContactRelationshipFilter"
+        prototype: "QtContacts::QDeclarativeContactFilter"
+        exports: ["QtContacts/RelationshipFilter 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "relationshipType"; type: "QVariant" }
         Property { name: "relatedContact"; type: "QDeclarativeContact"; isPointer: true }
         Property {
@@ -1096,9 +1016,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactRelationshipModel"
+        name: "QtContacts::QDeclarativeContactRelationshipModel"
         prototype: "QAbstractListModel"
-        exports: ["RelationshipModel 5.0"]
+        exports: ["QtContacts/RelationshipModel 5.0"]
+        exportMetaObjectRevisions: [0]
         Property { name: "manager"; type: "string" }
         Property { name: "autoUpdate"; type: "bool" }
         Property { name: "participant"; type: "QDeclarativeContact"; isPointer: true }
@@ -1121,10 +1042,11 @@ Module {
         }
     }
     Component {
-        name: "QDeclarativeContactRingtone"
+        name: "QtContacts::QDeclarativeContactRingtone"
         defaultProperty: "audioRingtoneUrl"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Ringtone 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Ringtone 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1139,9 +1061,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactSortOrder"
+        name: "QtContacts::QDeclarativeContactSortOrder"
         prototype: "QObject"
-        exports: ["SortOrder 5.0"]
+        exports: ["QtContacts/SortOrder 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "BlankPolicy"
             values: {
@@ -1157,10 +1080,11 @@ Module {
         Signal { name: "sortOrderChanged" }
     }
     Component {
-        name: "QDeclarativeContactSyncTarget"
+        name: "QtContacts::QDeclarativeContactSyncTarget"
         defaultProperty: "syncTarget"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["SyncTarget 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/SyncTarget 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1171,10 +1095,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactTag"
+        name: "QtContacts::QDeclarativeContactTag"
         defaultProperty: "tag"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Tag 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Tag 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1185,10 +1110,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactTimestamp"
+        name: "QtContacts::QDeclarativeContactTimestamp"
         defaultProperty: "lastModified"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Timestamp 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Timestamp 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1201,10 +1127,11 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactType"
+        name: "QtContacts::QDeclarativeContactType"
         defaultProperty: "type"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Type 5.0"]
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Type 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1223,15 +1150,17 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactUnionFilter"
+        name: "QtContacts::QDeclarativeContactUnionFilter"
         defaultProperty: "filters"
-        prototype: "QDeclarativeContactCompoundFilter"
-        exports: ["UnionFilter 5.0"]
+        prototype: "QtContacts::QDeclarativeContactCompoundFilter"
+        exports: ["QtContacts/UnionFilter 5.0"]
+        exportMetaObjectRevisions: [0]
     }
     Component {
-        name: "QDeclarativeContactUrl"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Url 5.0"]
+        name: "QtContacts::QDeclarativeContactUrl"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Url 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {
@@ -1253,9 +1182,10 @@ Module {
         Signal { name: "valueChanged" }
     }
     Component {
-        name: "QDeclarativeContactVersion"
-        prototype: "QDeclarativeContactDetail"
-        exports: ["Version 5.0"]
+        name: "QtContacts::QDeclarativeContactVersion"
+        prototype: "QtContacts::QDeclarativeContactDetail"
+        exports: ["QtContacts/Version 5.0"]
+        exportMetaObjectRevisions: [0]
         Enum {
             name: "FieldType"
             values: {

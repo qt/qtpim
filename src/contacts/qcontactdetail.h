@@ -148,16 +148,16 @@ public:
         return value(field).value<T>();
     }
 
-    void setContexts(int context)
+    void setContexts(int newContext)
     {
-        QList<int> contexts;
-        contexts << context;
-        setValue(FieldContext, QVariant::fromValue(contexts));
+        QList<int> newContexts;
+        newContexts << newContext;
+        setValue(FieldContext, QVariant::fromValue(newContexts));
     }
 
-    void setContexts(const QList<int>& contexts)
+    void setContexts(const QList<int>& newContexts)
     {
-        setValue(FieldContext, QVariant::fromValue(contexts));
+        setValue(FieldContext, QVariant::fromValue(newContexts));
     }
 
     QList<int> contexts() const
@@ -165,9 +165,9 @@ public:
         return value< QList<int> >(FieldContext);
     }
 
-    void setDetailUri(const QString& detailUri)
+    void setDetailUri(const QString& newDetailUri)
     {
-        setValue(FieldDetailUri, detailUri);
+        setValue(FieldDetailUri, newDetailUri);
     }
 
     QString detailUri() const
@@ -175,9 +175,9 @@ public:
         return value(FieldDetailUri).toString();
     }
 
-    void setLinkedDetailUris(const QStringList& linkedDetailUris)
+    void setLinkedDetailUris(const QStringList& newLinkedDetailUris)
     {
-        setValue(FieldLinkedDetailUris, linkedDetailUris);
+        setValue(FieldLinkedDetailUris, newLinkedDetailUris);
     }
 
     void setLinkedDetailUris(const QString& linkedDetailUri)

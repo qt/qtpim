@@ -67,7 +67,7 @@ public:
         TypeGroup
     };
 
-    void setType(const TypeValues type) {setValue(FieldType, type);}
+    void setType(const TypeValues newType) {setValue(FieldType, newType);}
     TypeValues type() const {return static_cast<TypeValues>(value<int>(FieldType));}
 };
 

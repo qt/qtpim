@@ -97,7 +97,7 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactFetchHint& hi
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactFetchHint& hint);
 #endif
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFetchHint::OptimizationHints);
+Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFetchHint::OptimizationHints)
 
 QT_END_NAMESPACE_CONTACTS
 

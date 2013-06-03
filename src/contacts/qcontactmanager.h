@@ -69,7 +69,7 @@ class Q_CONTACTS_EXPORT QContactManager : public QObject
     Q_OBJECT
 
 public:
-#if Q_QDOC // qdoc's parser fails to recognise the default map argument
+#ifdef Q_QDOC // qdoc's parser fails to recognise the default map argument
     explicit QContactManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = 0, QObject* parent = 0);
     QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = 0, QObject* parent = 0);
 #else

@@ -113,7 +113,7 @@ protected:
     QContactAbstractRequestPrivate* d_ptr;
 
 private:
-    QContactAbstractRequest(QObject* parent = 0) : QObject(parent), d_ptr(0) {}
+    QContactAbstractRequest(QObject* parent_ = 0) : QObject(parent_), d_ptr(0) {}
     Q_DISABLE_COPY(QContactAbstractRequest)
     friend class QContactManagerEngine;
     friend class QContactAbstractRequestPrivate;

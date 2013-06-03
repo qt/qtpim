@@ -120,7 +120,7 @@ protected:
     QSharedDataPointer<QContactFilterPrivate> d_ptr;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFilter::MatchFlags);
+Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFilter::MatchFlags)
 
 const Q_CONTACTS_EXPORT QContactFilter operator&(const QContactFilter& left, const QContactFilter& right);
 const Q_CONTACTS_EXPORT QContactFilter operator|(const QContactFilter& left, const QContactFilter& right);

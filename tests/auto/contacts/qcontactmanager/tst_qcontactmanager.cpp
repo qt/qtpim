@@ -164,6 +164,7 @@ private slots:
     void ctors();
     void invalidManager();
     void memoryManager();
+    void overrideManager();
     void changeSet();
     void fetchHint();
     void lazyConnections();
@@ -1538,6 +1539,29 @@ void tst_QContactManager::memoryManager()
     QCOMPARE(m3.contactIds().count(), 0);
     QCOMPARE(m4.contactIds().count(), 0);
     QCOMPARE(m5.contactIds().count(), 0);
+}
+
+void tst_QContactManager::overrideManager()
+{
+    QString defaultStore = QContactManager::availableManagers().value(0);
+
+    // preserve existing environment override
+    QString overrideManager = qgetenv("QTCONTACTS_MANAGER_OVERRIDE");
+
+    // override with specific managers
+    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "memory");
+    QContactManager m1;
+    QCOMPARE(m1.managerName(), QString::fromLatin1("memory"));
+
+    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "invalid");
+    QContactManager m2;
+    QCOMPARE(m2.managerName(), QString::fromLatin1("invalid"));
+
+    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "");
+    QContactManager m3;
+    QCOMPARE(m3.managerName(), defaultStore);
+
+    qputenv("QTCONTACTS_MANAGER_OVERRIDE", overrideManager.toLatin1());
 }
 
 #if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)

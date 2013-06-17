@@ -67,7 +67,9 @@ private slots: // Tests
     void testName();
     void testNameWithFormatted();
     void testAddress();
+    void testAddressWithoutSubTypes();
     void testTel();
+    void testTelWithoutSubTypes();
     void testEmail();
     void testUrl();
     void testUid();

@@ -308,6 +308,37 @@ void tst_QVersitContactImporter::testAddress()
     QVERIFY(subTypes.contains(QContactAddress::SubTypeParcel));
 }
 
+void tst_QVersitContactImporter::testAddressWithoutSubTypes()
+{
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    QVersitProperty property;
+    property.setName(QStringLiteral("ADR"));
+    property.setValue(QStringList()
+                      << QStringLiteral("PO Box")
+                      << QStringLiteral("E")
+                      << QStringLiteral("My Street")
+                      << QStringLiteral("My Town")
+                      << QStringLiteral("My State")
+                      << QStringLiteral("12345")
+                      << QStringLiteral("My Country")
+                      );
+    property.setValueType(QVersitProperty::CompoundType);
+    document = createDocumentWithProperty(property);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    QContact contact = mImporter->contacts().first();
+    QContactAddress address = contact.detail<QContactAddress>();
+
+    QContactAddress otherAddress;
+    otherAddress.setPostOfficeBox(QStringLiteral("PO Box"));
+    otherAddress.setStreet(QStringLiteral("My Street"));
+    otherAddress.setLocality(QStringLiteral("My Town"));
+    otherAddress.setRegion(QStringLiteral("My State"));
+    otherAddress.setPostcode(QStringLiteral("12345"));
+    otherAddress.setCountry(QStringLiteral("My Country"));
+
+    QCOMPARE(address, otherAddress);
+}
+
 void tst_QVersitContactImporter::testOrganizationName()
 {
     QVersitDocument document(QVersitDocument::VCard30Type);
@@ -517,6 +548,25 @@ void tst_QVersitContactImporter::testTel()
     QCOMPARE(contexts.count(),2);
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
     QVERIFY(contexts.contains(QContactDetail::ContextHome));
+}
+
+void tst_QVersitContactImporter::testTelWithoutSubTypes()
+{
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    QVersitProperty property;
+    property.setName(QStringLiteral("TEL"));
+    QString value(QStringLiteral("+35850987654321"));
+    property.setValue(value);
+
+    document.addProperty(property);
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+    QContact contact = mImporter->contacts().first();
+    const QContactPhoneNumber& phone = contact.detail<QContactPhoneNumber>();
+
+    QContactPhoneNumber otherPhone;
+    otherPhone.setNumber(QStringLiteral("+35850987654321"));
+
+    QCOMPARE(otherPhone, phone);
 }
 
 void tst_QVersitContactImporter::testEmail()

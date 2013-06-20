@@ -297,9 +297,11 @@ void tst_QVersitContactImporter::testAddress()
     contact = mImporter->contacts().first();
     address = contact.detail<QContactAddress>();
     QList<int> contexts = address.contexts();
+    QCOMPARE(contexts.size(), 2);
     QVERIFY(contexts.contains(QContactDetail::ContextHome));
     QVERIFY(contexts.contains(QContactDetail::ContextWork));
     QList<int> subTypes = address.subTypes();
+    QCOMPARE(subTypes.size(), 4);
     QVERIFY(subTypes.contains(QContactAddress::SubTypeDomestic));
     QVERIFY(subTypes.contains(QContactAddress::SubTypeInternational));
     QVERIFY(subTypes.contains(QContactAddress::SubTypePostal));

@@ -398,8 +398,10 @@ bool QVersitContactImporterPrivate::createAddress(
     QList<int> subTypesInt;
 
     foreach (const QString &stringValue, subTypes) {
-        int mappedValue = mSubTypeMappings.key(stringValue).second;
-        subTypesInt << mappedValue;
+        if (mSubTypeMappings.values().contains(stringValue)) {
+            int mappedValue = mSubTypeMappings.key(stringValue).second;
+            subTypesInt << mappedValue;
+        }
     }
 
     address.setSubTypes(subTypesInt);

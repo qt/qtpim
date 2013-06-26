@@ -711,7 +711,7 @@ void QDeclarativeContactModel::fetchAgain()
 
     fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
 
-    connect(fetchRequest,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
+    connect(fetchRequest, SIGNAL(resultsAvailable()), this, SLOT(requestUpdated()));
 
     fetchRequest->start();
 }
@@ -719,14 +719,13 @@ void QDeclarativeContactModel::fetchAgain()
 void QDeclarativeContactModel::requestUpdated()
 {
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
-    if (req && req->isFinished()) {
+    if (req) {
         QList<QContact> contacts = req->contacts();
         QList<QDeclarativeContact*> dcs;
         foreach (const QContact &c, contacts) {
             if (d->m_contactMap.contains(c.id())) {
                 QDeclarativeContact* dc = d->m_contactMap.value(c.id());
                 dc->setContact(c);
-                dcs.append(dc);
             } else {
                 QDeclarativeContact* dc = new QDeclarativeContact(this);
                 if (dc) {
@@ -737,25 +736,18 @@ void QDeclarativeContactModel::requestUpdated()
             }
         }
 
-        if (d->m_contacts.isEmpty()) {
-            reset();
-            if (contacts.count()>0) {
-                beginInsertRows(QModelIndex(), 0, contacts.count() - 1);
-                d->m_contacts = dcs;
-                endInsertRows();
-            }
-        } else {
-            //Partial updating, insert the fetched contacts into the the exist contact list.
-            beginResetModel();
-            d->m_contacts.clear();
-            if (dcs.count() > 0) {
-                d->m_contacts = dcs;
-            }
-            endResetModel();
+        if (dcs.count() > 0) {
+            beginInsertRows(QModelIndex(), d->m_contacts.count(), d->m_contacts.count() + dcs.count() - 1);
+            // At this point we need to relay on the backend and assume that the partial results are following the fetch sorting property
+            d->m_contacts += dcs;
+            endInsertRows();
+
+            emit contactsChanged();
         }
-        emit contactsChanged();
+
         checkError(req);
-        req->deleteLater();
+        if (req->isFinished())
+            req->deleteLater();
     }
 }
 

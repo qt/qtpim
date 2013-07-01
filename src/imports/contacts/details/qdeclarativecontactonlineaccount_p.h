@@ -56,14 +56,17 @@ class QDeclarativeContactOnlineAccount : public QDeclarativeContactDetail
     Q_PROPERTY(QString serviceProvider READ serviceProvider WRITE  setServiceProvider NOTIFY valueChanged)
     Q_PROPERTY(QStringList capabilities READ capabilities WRITE  setCapabilities NOTIFY valueChanged)
     Q_PROPERTY(QList<int> subTypes READ subTypes WRITE  setSubTypes NOTIFY valueChanged)
+    Q_PROPERTY(OnlineAccountProtocol protocol READ protocol WRITE setProtocol NOTIFY valueChanged)
     Q_ENUMS(FieldType)
     Q_ENUMS(OnlineAccountSubType)
+    Q_ENUMS(OnlineAccountProtocol)
 
     Q_CLASSINFO("DefaultProperty", "accountUri")
 public:
     enum FieldType {
         AccountUri = QContactOnlineAccount::FieldAccountUri,
         ServiceProvider = QContactOnlineAccount::FieldServiceProvider,
+        Protocol = QContactOnlineAccount::FieldProtocol,
         Capabilities = QContactOnlineAccount::FieldCapabilities,
         SubTypes = QContactOnlineAccount::FieldSubTypes
     };
@@ -73,6 +76,18 @@ public:
         SipVoip = QContactOnlineAccount::SubTypeSipVoip,
         Impp = QContactOnlineAccount::SubTypeImpp,
         VideoShare= QContactOnlineAccount::SubTypeVideoShare
+    };
+
+    enum OnlineAccountProtocol {
+        Unknown =  QContactOnlineAccount::ProtocolUnknown,
+        Aim = QContactOnlineAccount::ProtocolAim,
+        Icq = QContactOnlineAccount::ProtocolIcq,
+        Irc = QContactOnlineAccount::ProtocolIrc,
+        Jabber = QContactOnlineAccount::ProtocolJabber,
+        Msn = QContactOnlineAccount::ProtocolMsn,
+        Qq = QContactOnlineAccount::ProtocolQq,
+        Skype = QContactOnlineAccount::ProtocolSkype,
+        Yahoo = QContactOnlineAccount::ProtocolYahoo
     };
 
     QDeclarativeContactOnlineAccount(QObject* parent = 0)
@@ -127,6 +142,18 @@ public:
     QList<int> subTypes() const
     {
         return detail().value< QList<int> >(QContactOnlineAccount::FieldSubTypes);
+    }
+
+    void setProtocol(OnlineAccountProtocol v) {
+        if (!readOnly() && v != protocol()) {
+            detail().setValue(QContactOnlineAccount::FieldProtocol, static_cast<int>(v));
+            emit valueChanged();
+        }
+    }
+
+    OnlineAccountProtocol protocol() const
+    {
+        return static_cast<OnlineAccountProtocol>(detail().value<int>(QContactOnlineAccount::FieldProtocol));
     }
 
 signals:

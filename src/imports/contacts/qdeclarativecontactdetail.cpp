@@ -935,6 +935,7 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
    \list
    \li OnlineAccount.AccountUri - the account uri value.
    \li OnlineAccount.ServiceProvider - the account service provider name.
+   \li OnlineAccount.Protocol - the account protocol value.
    \li OnlineAccount.Capabilities - the account capabilities value.
    \li OnlineAccount.SubTypes - the sub types of an online account.
    \endlist
@@ -968,6 +969,23 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
   \li OnlineAccount.SipVoip - indicating this online account supports SIP based VOIP.
   \li OnlineAccount.Impp - indicating this online account supports IMPP.
   \li OnlineAccount.VideoShare - indicating this online account supports VideoShare.
+  \endlist
+*/
+/*!
+  \qmlproperty enumeration OnlineAccount::protocol
+
+  This property holds the protocol enumeration value.
+
+  \list
+  \li OnlineAccount.Unknown - indicates this online account is for one unsupported protocol.
+  \li OnlineAccount.Aim - indicates this online account is for the AIM protocol.
+  \li OnlineAccount.Icq - indicates this online account is for the ICQ protocol.
+  \li OnlineAccount.Irc - indicates this online account is for the IRC protocol.
+  \li OnlineAccount.Jabber - indicates this online account is for the jabber protocol.
+  \li OnlineAccount.Msn - indicates this online account is for the MSN protocol.
+  \li OnlineAccount.Qq - indicates this online account is for the QQ protocol.
+  \li OnlineAccount.Skype - indicates this online account is for the Skype protocol.
+  \li OnlineAccount.Yahoo - indicates this online account is for the Yahoo protocol.
   \endlist
 */
 

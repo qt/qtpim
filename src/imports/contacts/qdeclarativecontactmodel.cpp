@@ -1104,15 +1104,15 @@ void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContac
                     QDeclarativeContact* dc = d->m_contacts.at(i);
                     dc->setContact(fetchedContact);
                     int index = contactIndex(dc);
-                    beginInsertRows(QModelIndex(), index, index);
                     d->m_contactMap.remove(fetchedContact.id());
                     d->m_contacts.removeAt(i);
                     d->m_contacts.insert(index, dc);
                     d->m_contactMap.insert(fetchedContact.id(),dc);
                     if (!contactsUpdated)
                         contactsUpdated = true;
-                    endInsertRows();
+                    emit dataChanged(this->index(index), this->index(index), QVector<int>() << ContactRole);
                     fetchedContactFound = true;
+                    break;
                 }
             }
             //handle updated contacts which needs to be added in the model

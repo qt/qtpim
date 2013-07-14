@@ -1499,8 +1499,8 @@ void tst_QVersitOrganizerExporter::testExtendedDetail_data()
                 << true;
         QTest::newRow("double data, multiple digits")
                 << QString("name")
-                << QVariant((double)10.2)
-                << jsonArrayWith.arg("10.2")
+                << QVariant((double)10.199999999999999)
+                << jsonArrayWith.arg("10.199999999999999")
                 << true;
     }
 

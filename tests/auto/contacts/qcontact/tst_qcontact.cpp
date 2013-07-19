@@ -71,7 +71,7 @@ private slots:
     void idTraits();
     void equality();
     void inequality();
-    void prefferedDetails();
+    void preferredDetails();
 };
 
 tst_QContact::tst_QContact()
@@ -708,7 +708,7 @@ void tst_QContact::inequality()
     QVERIFY(one != two);
 }
 
-void tst_QContact::prefferedDetails()
+void tst_QContact::preferredDetails()
 {
     QContactPhoneNumber number;
     number.setNumber("7654321");

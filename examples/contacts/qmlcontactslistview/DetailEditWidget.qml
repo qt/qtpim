@@ -34,6 +34,9 @@ Item {
     property alias value: valueText.text
     property alias color: valueText.color
     property alias inputFocus: valueText.focus
+    property bool isPreferred: false
+    property bool requestPreferred: false
+    property bool showPreferredField: false
 
     property string old
 
@@ -48,6 +51,7 @@ Item {
     }
 
     Rectangle {
+        id: inputField
         width: 180
         height: 20
         anchors.left: label.right
@@ -75,6 +79,37 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    Text {
+        id: labelFav
+
+        anchors.left: inputField.right
+        anchors.leftMargin: 5
+
+        font {
+            family: "Helvetica"
+            pixelSize: 15
+            bold: true
+            italic: true
+        }
+        text: "favorite:"
+        visible: showPreferredField
+    }
+
+    Rectangle {
+        anchors.left: labelFav.right
+        anchors.leftMargin: 5
+        anchors.verticalCenter: labelFav.verticalCenter
+        width: 10
+        height: 10
+        color: isPreferred || requestPreferred ? "black" : "white"
+        visible: showPreferredField
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: requestPreferred = !requestPreferred
         }
     }
 }

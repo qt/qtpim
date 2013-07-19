@@ -95,6 +95,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QDeclarativeContactUrl*  url READ url NOTIFY contactChanged)
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
+    Q_PROPERTY (QVariantMap preferredDetails READ preferredDetails NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
@@ -118,6 +119,11 @@ public:
 
     Q_INVOKABLE bool removeDetail(QDeclarativeContactDetail* detail);
     Q_INVOKABLE bool addDetail(QDeclarativeContactDetail* detail);
+
+    Q_INVOKABLE bool setPreferredDetail(const QString& actionName, QDeclarativeContactDetail* detail);
+    Q_INVOKABLE bool isPreferredDetail(const QString& actionName, QDeclarativeContactDetail* detail) const;
+    Q_INVOKABLE QDeclarativeContactDetail* preferredDetail(const QString& actionName) const;
+    QVariantMap preferredDetails() const;
 
     QDeclarativeContactAddress* address();
     QQmlListProperty<QDeclarativeContactAddress>  addresses();
@@ -160,6 +166,7 @@ protected:
     // always create a copy of the detail for QML
     // however, seems the garbage collection can't delete all of them (QTBUG-20377)
     QList<QDeclarativeContactDetail *> m_details;
+    QMap<QString, int> m_preferredDetails;
 
 public slots:
     void clearDetails();
@@ -192,6 +199,8 @@ private:
         }
         return 0;
     }
+
+    void removePreferredDetail(QDeclarativeContactDetail *detail);
 
     // call-back functions for list property
     static void _q_detail_append(QQmlListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);

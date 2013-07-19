@@ -127,12 +127,21 @@ void QDeclarativeContact::setContact(const QContact& contact)
     foreach (QDeclarativeContactDetail *detail, m_details)
         delete detail;
     m_details.clear();
+    m_preferredDetails.clear();
+
     QList<QContactDetail> details(contact.details());
     foreach (const QContactDetail &detail, details) {
         QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(static_cast<QDeclarativeContactDetail::DetailType>(detail.type()));
         contactDetail->setDetail(detail);
         connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
         m_details.append(contactDetail);
+    }
+
+    QMap<QString, QContactDetail> prefDetails(contact.preferredDetails());
+    QMap<QString, QContactDetail>::const_iterator  it = prefDetails.begin();
+    while (it != prefDetails.end()) {
+        m_preferredDetails.insert(it.key(), it.value().key());
+        it++;
     }
 
     m_modified = false;
@@ -145,6 +154,13 @@ QContact QDeclarativeContact::contact() const
     contact.setId(m_id);
     foreach (QDeclarativeContactDetail *detail, m_details)
         contact.saveDetail(&detail->detail());
+
+    QVariantMap prefDetails = preferredDetails();
+    QVariantMap::const_iterator it = prefDetails.begin();
+    while (it != prefDetails.end()) {
+        contact.setPreferredDetail(it.key(), it.value().value<QDeclarativeContactDetail *>()->detail());
+        it++;
+    }
     return contact;
 }
 
@@ -198,6 +214,7 @@ bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
         int i = 0;
         foreach (QDeclarativeContactDetail *contactDetail, m_details) {
             if (key == contactDetail->detail().key()) {
+                removePreferredDetail(detail);
                 delete contactDetail;
                 m_details.removeAt(i);
                 emit contactChanged();
@@ -207,6 +224,16 @@ bool QDeclarativeContact::removeDetail(QDeclarativeContactDetail* detail)
         }
     }
     return false;
+}
+
+void QDeclarativeContact::removePreferredDetail(QDeclarativeContactDetail* detail)
+{
+    QMap<QString, int> cpy = m_preferredDetails;
+    QMap<QString, int>::const_iterator it = cpy.begin();
+    while (it != cpy.end()) {
+        if (it.value() == detail->detail().key())
+            m_preferredDetails.remove(it.key());
+    }
 }
 
 /*!
@@ -230,6 +257,93 @@ bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
     m_modified = true;
     emit contactChanged();
     return true;
+}
+
+/*!
+    \qmlmethod Contact::setPreferredDetail(actionName, detail)
+
+    Set a particular detail (\a preferredDetail) as the preferred detail for any actions with the given \a actionName.
+
+    The \a preferredDetail object must exist in this object, and the \a actionName cannot be empty.
+
+    Returns true if the preference could be recorded, and false otherwise.
+
+    \sa preferredDetail()
+ */
+bool QDeclarativeContact::setPreferredDetail(const QString& actionName, QDeclarativeContactDetail* detail)
+{
+   if (actionName.isEmpty() || !detail || !m_details.contains(detail))
+        return false;
+
+   if (m_preferredDetails.contains(actionName) && m_preferredDetails[actionName] == detail->detail().key())
+       return false;
+
+   m_preferredDetails.insert(actionName, detail->detail().key());
+   m_modified = true;
+   emit contactChanged();
+   return true;
+}
+
+/*!
+    \qmlmethod Contact::isPreferredDetail(actionName, detail)
+
+    Returns true if the given \a detail is a preferred detail for the given \a actionName,
+    or for any action if the \a actionName is empty.
+
+    \sa preferredDetail()
+ */
+bool QDeclarativeContact::isPreferredDetail(const QString& actionName, QDeclarativeContactDetail* detail) const
+{
+    if (actionName.isEmpty() || !detail || !m_details.contains(detail))
+         return false;
+
+    if (!m_preferredDetails.contains(actionName))
+        return false;
+
+    return (m_preferredDetails[actionName] == detail->detail().key());
+}
+
+/*!
+    \qmlmethod Contact::preferredDetail(actionName, detail)
+
+    Returns the preferred detail for a given \a actionName.
+
+    If the \a actionName is empty, or there is no preference recorded for
+    the supplied \a actionName, returns null.
+
+    \sa preferredDetails()
+ */
+QDeclarativeContactDetail* QDeclarativeContact::preferredDetail(const QString& actionName) const
+{
+    int id = m_preferredDetails.value(actionName, -1);
+    if (id == -1)
+        return 0;
+
+    foreach (QDeclarativeContactDetail* detail, m_details) {
+        if (detail->detail().key() == id)
+            return detail;
+    }
+    return 0;
+}
+
+
+/*!
+    \qmlproperty map<string, ContactDetail> Contact::preferredDetails
+
+    This property holds the recorded detail preferences for action names.
+
+    Each entry in the map has the action name as the key, and the corresponding
+    preferred detail as the value.
+ */
+QVariantMap QDeclarativeContact::preferredDetails() const
+{
+    QVariantMap result;
+    QMap<QString, int>::const_iterator it = m_preferredDetails.begin();
+    while (it != m_preferredDetails.end()) {
+        result.insert(it.key(), QVariant::fromValue<QDeclarativeContactDetail*>(preferredDetail(it.key())));
+        it++;
+    }
+    return result;
 }
 
 /*!

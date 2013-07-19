@@ -50,8 +50,8 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QDeclarativeContactChangeLogFilter: public QDeclarativeContactFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QDateTime since READ since WRITE setSince NOTIFY valueChanged())
-    Q_PROPERTY(EventType eventType READ eventType WRITE setEventType NOTIFY valueChanged())
+    Q_PROPERTY(QDateTime since READ since WRITE setSince NOTIFY valueChanged)
+    Q_PROPERTY(EventType eventType READ eventType WRITE setEventType NOTIFY valueChanged)
 
     Q_ENUMS(EventType)
 public:

@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QDeclarativeContactActionFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QString actionName READ actionName WRITE setActionName NOTIFY valueChanged())
+    Q_PROPERTY(QString actionName READ actionName WRITE setActionName NOTIFY valueChanged)
 public:
     QDeclarativeContactActionFilter(QObject* parent=0)
         :QDeclarativeContactFilter(parent)

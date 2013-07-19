@@ -52,12 +52,12 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged())
-    Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged())
-    Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged())
-    Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged())
-    Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged())
-    Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged())
+    Q_PROPERTY(QtContacts::QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
+    Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged)
+    Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
+    Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
+    Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
     Q_FLAGS(RangeFlags)
     Q_INTERFACES(QQmlParserStatus)
 public:

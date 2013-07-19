@@ -54,9 +54,9 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QDeclarativeContactRelationshipFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY valueChanged())
-    Q_PROPERTY(QDeclarativeContact* relatedContact READ relatedContact WRITE setRelatedContact NOTIFY valueChanged())
-    Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole relatedContactRole READ relatedContactRole WRITE setRelatedContactRole NOTIFY valueChanged())
+    Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContact* relatedContact READ relatedContact WRITE setRelatedContact NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole relatedContactRole READ relatedContactRole WRITE setRelatedContactRole NOTIFY valueChanged)
 
 public:
 

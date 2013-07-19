@@ -71,6 +71,7 @@ private slots:
     void idTraits();
     void equality();
     void inequality();
+    void prefferedDetails();
 };
 
 tst_QContact::tst_QContact()
@@ -705,6 +706,32 @@ void tst_QContact::inequality()
     two.saveDetail(&name);
     two.saveDetail(&email);
     QVERIFY(one != two);
+}
+
+void tst_QContact::prefferedDetails()
+{
+    QContactPhoneNumber number;
+    number.setNumber("7654321");
+    QContactEmailAddress email;
+    email.setEmailAddress("john.doe@nokia.com");
+    QContactPhoneNumber number2;
+    number2.setNumber("1234567");
+
+    QContact one;
+    one.saveDetail(&email);
+    one.saveDetail(&number);
+    one.saveDetail(&number2);
+
+    one.setPreferredDetail("EMAIL", email);
+    one.setPreferredDetail("PHONE", number);
+
+    QVERIFY(one.preferredDetail("EMAIL") == email);
+    QVERIFY(one.preferredDetail("PHONE") == number);
+
+    QMap<QString, QContactDetail> prefDetails = one.preferredDetails();
+    QCOMPARE(prefDetails.count(), 2);
+    QVERIFY(prefDetails["EMAIL"] == email);
+    QVERIFY(prefDetails["PHONE"] == number);
 }
 
 QTEST_MAIN(tst_QContact)

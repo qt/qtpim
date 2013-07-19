@@ -774,7 +774,7 @@ QMap<QString, QContactDetail> QContact::preferredDetails() const
     QMap<QString, QContactDetail> ret;
     QMap<QString, int>::const_iterator it = d.constData()->m_preferences.constBegin();
     while (it != d.constData()->m_preferences.constEnd()) {
-        ret.insert(it.key(), d.constData()->m_details.at(it.value()));
+        ret.insert(it.key(), preferredDetail(it.key()));
         ++it;
     }
 

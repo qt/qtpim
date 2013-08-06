@@ -1103,14 +1103,24 @@ void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContac
                 if (d->m_contacts.at(i)->contactId() == contactIdString) {
                     QDeclarativeContact* dc = d->m_contacts.at(i);
                     dc->setContact(fetchedContact);
-                    int index = contactIndex(dc);
+
+                    // Since the contact can change the position due the sort order we need take care of it
+                    // First we need to remove it from previous position and notify the model about that
+                    beginRemoveRows(QModelIndex(), i, i);
                     d->m_contactMap.remove(fetchedContact.id());
                     d->m_contacts.removeAt(i);
+                    endRemoveRows();
+
+                    // Calculate the new position
+                    int index = contactIndex(dc);
+                    // Notify the model about the new item position
+                    beginInsertRows(QModelIndex(), index, index);
                     d->m_contacts.insert(index, dc);
                     d->m_contactMap.insert(fetchedContact.id(),dc);
                     if (!contactsUpdated)
                         contactsUpdated = true;
-                    emit dataChanged(this->index(index), this->index(index), QVector<int>() << ContactRole);
+                    endInsertRows();
+
                     fetchedContactFound = true;
                     break;
                 }

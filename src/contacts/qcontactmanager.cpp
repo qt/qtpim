@@ -151,6 +151,10 @@ QStringList QContactManager::availableManagers()
         ret.prepend(overrideManagerName);
     }
 
+    // bump memory to the end of the list
+    if (ret.removeAll(QStringLiteral("memory")))
+        ret.append(QStringLiteral("memory"));
+
     return ret;
 }
 

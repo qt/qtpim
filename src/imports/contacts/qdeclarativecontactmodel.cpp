@@ -52,6 +52,7 @@
 #include "qversitwriter.h"
 #include "qversitcontactimporter.h"
 #include "qversitcontactexporter.h"
+#include <QPointer>
 #include <QColor>
 #include <QHash>
 #include <QPixmap>
@@ -849,6 +850,14 @@ void QDeclarativeContactModel::saveContact(QDeclarativeContact* dc, StorageLocat
         req->setManager(d->m_manager);
         req->setContact(dc->contact());
         req->setStorageLocation(QContactAbstractRequest::StorageLocation(storageLocation));
+        if (dc->contact().id().isNull()) {
+            // if the contact id is empty this means that this contact is a new contact
+            // we need to keep trace of this declarative contact to update with the
+            // new Id as soon as this request finish
+            QPointer<QDeclarativeContact> pContact = dc;
+            req->setProperty("DeclarativeContact", QVariant::fromValue(pContact));
+        }
+
         connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
         req->start();
     }
@@ -867,6 +876,21 @@ void QDeclarativeContactModel::onRequestStateChanged(QContactAbstractRequest::St
     QContactAbstractRequest *request = qobject_cast<QContactAbstractRequest *>(sender());
     if (!request)
         return;
+
+    if ((request->type() == QContactSaveRequest::ContactSaveRequest) &&
+        (request->error() == QContactManager::NoError)) {
+        QVariant vContact = request->property("DeclarativeContact");
+        if (vContact.isValid()) {
+            QPointer<QDeclarativeContact> pContact = vContact.value<QPointer<QDeclarativeContact> >();
+            // Update contact info.
+            // this is necessary to make sure that the declarative contact get the new contact ID otherwise
+            // the contact Id will be empty
+            QList<QContact> contacts = qobject_cast<QContactSaveRequest*>(request)->contacts();
+            if (pContact && contacts.length() == 1) {
+                pContact->setContact(contacts[0]);
+            }
+        }
+    }
     checkError(request);
     request->deleteLater();
 }

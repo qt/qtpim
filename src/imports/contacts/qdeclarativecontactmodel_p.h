@@ -178,6 +178,7 @@ private slots:
     void clearContacts();
     void fetchAgain();
     void requestUpdated();
+    void fetchRequestStateChanged(QContactAbstractRequest::State newState);
     void doUpdate();
     void onRequestStateChanged(QContactAbstractRequest::State newState);
     void onContactsAdded(const QList<QContactId>& ids);

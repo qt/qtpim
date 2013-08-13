@@ -97,7 +97,8 @@ public:
         m_filter(0),
         m_error(QContactManager::NoError),
         m_autoUpdate(true),
-        m_componentCompleted(false)
+        m_componentCompleted(false),
+        m_progressiveLoading(true)
     {
     }
     ~QDeclarativeContactModelPrivate()
@@ -126,6 +127,9 @@ public:
     QUrl m_lastImportUrl;
     QAtomicInt m_lastRequestId;
     QHash<QContactAbstractRequest *, int> m_requestIdHash;
+    QList<QContactFetchRequest*> m_pendingRequests;
+    QList<QContact> m_pendingContacts;
+    bool m_progressiveLoading;
 };
 
 QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
@@ -712,42 +716,116 @@ void QDeclarativeContactModel::fetchAgain()
     fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
 
     connect(fetchRequest, SIGNAL(resultsAvailable()), this, SLOT(requestUpdated()));
+    connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
+            this, SLOT(fetchRequestStateChanged(QContactAbstractRequest::State)));
+
+    // cancel all previous requests
+    foreach (QContactFetchRequest *req, d->m_pendingRequests) {
+        req->cancel();
+        req->deleteLater();
+    }
+
+    d->m_pendingContacts.clear();
+    d->m_pendingRequests.clear();
+    d->m_pendingRequests.append(fetchRequest);
+
+    // if we have no contacts yet, we can display results as soon as they arrive
+    // but if we are updating the model after a sort or filter change, we have to
+    // wait for all contacts before processing the update
+    d->m_progressiveLoading = d->m_contacts.isEmpty();
 
     fetchRequest->start();
 }
 
 void QDeclarativeContactModel::requestUpdated()
 {
+
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
     if (req) {
         QList<QContact> contacts = req->contacts();
-        QList<QDeclarativeContact*> dcs;
-        foreach (const QContact &c, contacts) {
-            if (d->m_contactMap.contains(c.id())) {
-                QDeclarativeContact* dc = d->m_contactMap.value(c.id());
-                dc->setContact(c);
-            } else {
-                QDeclarativeContact* dc = new QDeclarativeContact(this);
-                if (dc) {
-                    d->m_contactMap.insert(c.id(), dc);
+
+        // if we are starting from scratch, we can show contact results as they arrive
+        if (d->m_progressiveLoading) {
+            QList<QDeclarativeContact*> dcs;
+            foreach (const QContact &c, contacts) {
+                if (d->m_contactMap.contains(c.id())) {
+                    QDeclarativeContact* dc = d->m_contactMap.value(c.id());
                     dc->setContact(c);
-                    dcs.append(dc);
+                } else {
+                    QDeclarativeContact* dc = new QDeclarativeContact(this);
+                    if (dc) {
+                        d->m_contactMap.insert(c.id(), dc);
+                        dc->setContact(c);
+                        dcs.append(dc);
+                    }
                 }
             }
-        }
 
-        if (dcs.count() > 0) {
-            beginInsertRows(QModelIndex(), d->m_contacts.count(), d->m_contacts.count() + dcs.count() - 1);
-            // At this point we need to relay on the backend and assume that the partial results are following the fetch sorting property
-            d->m_contacts += dcs;
-            endInsertRows();
+            if (dcs.count() > 0) {
+                beginInsertRows(QModelIndex(), d->m_contacts.count(), d->m_contacts.count() + dcs.count() - 1);
+                // At this point we need to relay on the backend and assume that the partial results are following the fetch sorting property
+                d->m_contacts += dcs;
+                endInsertRows();
 
-            emit contactsChanged();
+                emit contactsChanged();
+            }
+        } else {
+            d->m_pendingContacts << contacts;
         }
 
         checkError(req);
-        if (req->isFinished())
-            req->deleteLater();
+    }
+}
+
+void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest::State newState)
+{
+    if (newState != QContactAbstractRequest::FinishedState)
+        return;
+
+    QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
+    if (req) {
+        // if we were not processing contacts as soon as they arrive, we need to process them here.
+        if (!d->m_progressiveLoading) {
+            // start by removing the contacts that don't belong to this result set anymore
+            for (int i = d->m_contacts.count()-1; i >= 0; --i) {
+                QDeclarativeContact *contact = d->m_contacts[i];
+                if (!d->m_pendingContacts.contains(contact->contact())) {
+                    beginRemoveRows(QModelIndex(), i, i);
+                    d->m_contacts.removeAt(i);
+                    d->m_contactMap.remove(contact->contact().id());
+                    endRemoveRows();
+                }
+            }
+
+            // now insert new contacts and move existing ones to their final positions
+            int count = d->m_pendingContacts.count();
+            for (int i = 0; i < count; ++i) {
+                QContact c = d->m_pendingContacts[i];
+                if (!d->m_contactMap.contains(c.id())) {
+                    QDeclarativeContact* dc = new QDeclarativeContact(this);
+                    dc->setContact(c);
+                    beginInsertRows(QModelIndex(), i, i);
+                    d->m_contacts.insert(i, dc);
+                    d->m_contactMap.insert(c.id(),dc);
+                    endInsertRows();
+                } else {
+                    QDeclarativeContact *contact = d->m_contactMap[c.id()];
+
+                    int pos = d->m_contacts.indexOf(contact);
+                    if (pos != i) {
+                        beginMoveRows(QModelIndex(), pos, pos, QModelIndex(), i);
+                        d->m_contacts.move(pos, i);
+                        endMoveRows();
+                    }
+                }
+            }
+            emit contactsChanged();
+        }
+
+        // and now clear the pending contact list as the model is up-to-date
+        d->m_pendingContacts.clear();
+        d->m_pendingRequests.removeOne(req);
+        req->deleteLater();
     }
 }
 
@@ -1165,7 +1243,6 @@ int QDeclarativeContactModel::contactIndex(const QDeclarativeContact* contact)
     }
     return d->m_contacts.size();
 }
-
 
 #include "moc_qdeclarativecontactmodel_p.cpp"
 

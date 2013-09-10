@@ -231,8 +231,11 @@ void QDeclarativeContact::removePreferredDetail(QDeclarativeContactDetail* detai
     QMap<QString, int> cpy = m_preferredDetails;
     QMap<QString, int>::const_iterator it = cpy.begin();
     while (it != cpy.end()) {
-        if (it.value() == detail->detail().key())
+        if (it.value() == detail->detail().key()) {
             m_preferredDetails.remove(it.key());
+            break;
+        }
+        it++;
     }
 }
 

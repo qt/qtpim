@@ -1497,6 +1497,20 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
                     removedIds.insert(oldItem.id());
                     emitSignal = true;
                     continue;
+                } else if (notifiedItems.contains(newItem.id())) {
+                    // if newItem is a notified item and does not correspond to an oldItem
+                    // then find a correspondent item by id in the old items list
+                    // and remove it from the hash and list
+                    for (int removeInd = oldInd + 1; removeInd < d->m_items.size(); ++removeInd) {
+                        if (newItem.id() == d->m_items[removeInd]->item().id()) {
+                            beginRemoveRows(QModelIndex(), removeInd, removeInd);
+                            d->m_itemIdHash.remove(d->m_items[removeInd]->itemId());
+                            d->m_items.takeAt(removeInd)->deleteLater();
+                            endRemoveRows();
+                            emitSignal = true;
+                            break;
+                        }
+                    }
                 }
             }
             // check should we add the new item

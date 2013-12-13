@@ -1322,10 +1322,13 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
     // if it's not the default collection, they can do whatever they like.  A collection does not need any metadata to be valid.
     for (int i = 0; i < d->m_organizerCollectionIds.size(); ++i) {
         if (d->m_organizerCollectionIds.at(i) == colId) {
-            // this collection already exists.  update our internal list.
-            d->m_organizerCollections.replace(i, *collection);
-            cs.insertChangedCollection(colId);
-            cs.emitSignals(this);
+            // this collection already exists.  update our internal list
+            // if the collection has been modified.
+            if (d->m_organizerCollections.at(i) != *collection) {
+                d->m_organizerCollections.replace(i, *collection);
+                cs.insertChangedCollection(colId);
+                cs.emitSignals(this);
+            }
             return true;
         }
     }

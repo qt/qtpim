@@ -62,6 +62,9 @@ public:
 
     QOrganizerItemFetchHint &operator=(const QOrganizerItemFetchHint &other);
 
+    bool operator==(const QOrganizerItemFetchHint &other) const;
+    inline bool operator!=(const QOrganizerItemFetchHint &other) const { return !(other == *this); }
+
     QList<QOrganizerItemDetail::DetailType> detailTypesHint() const;
     void setDetailTypesHint(const QList<QOrganizerItemDetail::DetailType> &detailTypes);
 

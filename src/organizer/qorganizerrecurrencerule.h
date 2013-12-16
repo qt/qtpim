@@ -90,7 +90,9 @@ public:
     ~QOrganizerRecurrenceRule();
 
     QOrganizerRecurrenceRule &operator=(const QOrganizerRecurrenceRule &other);
+
     bool operator==(const QOrganizerRecurrenceRule &other) const;
+    inline bool operator!=(const QOrganizerRecurrenceRule &other) const { return !operator==(other); }
 
     void setFrequency(Frequency freq);
     Frequency frequency() const;

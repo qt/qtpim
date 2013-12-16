@@ -181,6 +181,8 @@ QOrganizerRecurrenceRule &QOrganizerRecurrenceRule::operator=(const QOrganizerRe
 
 /*!
     Returns true if this recurrence rule is equal to the \a other; otherwise returns false.
+
+    \sa operator!=()
  */
 bool QOrganizerRecurrenceRule::operator==(const QOrganizerRecurrenceRule &other) const
 {
@@ -203,6 +205,14 @@ bool QOrganizerRecurrenceRule::operator==(const QOrganizerRecurrenceRule &other)
     }
     return false;
 }
+
+/*!
+    \fn bool QOrganizerRecurrenceRule::operator!=(const QOrganizerRecurrenceRule &other) const
+
+    Returns true if this recurrence rule is not equal to the \a other; otherwise returns false.
+
+    \sa operator==()
+*/
 
 /*!
     Sets the frequency with which the item recurs to \a freq.

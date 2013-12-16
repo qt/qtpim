@@ -118,6 +118,27 @@ QOrganizerItemFetchHint& QOrganizerItemFetchHint::operator=(const QOrganizerItem
 }
 
 /*!
+    Returns true if this fetch hint is the same as that of the \a other fetch hint; false otherwise.
+
+    \sa operator!=()
+*/
+bool QOrganizerItemFetchHint::operator==(const QOrganizerItemFetchHint &other) const
+{
+    if (d == other.d)
+        return true;
+
+    return d->m_optimizationHints == other.d->m_optimizationHints && d->m_detailTypesHint == other.d->m_detailTypesHint;
+}
+
+/*!
+    \fn QOrganizerItemFetchHint::operator!=(const QOrganizerItemFetchHint &other) const
+
+    Returns true if this fetch hint is not the same as that of the \a other fetch hint.
+
+    \sa operator==()
+*/
+
+/*!
     Returns the list of detail types that identify details which should be retrieved by the manager
     when fetching items.
 

@@ -83,6 +83,8 @@ private:
     QSharedDataPointer<QOrganizerItemFetchHintPrivate> d;
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(QOrganizerItemFetchHint::OptimizationHints)
+
 #ifndef QT_NO_DATASTREAM
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemFetchHint &hint);
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemFetchHint &hint);

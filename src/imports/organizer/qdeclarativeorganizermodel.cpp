@@ -1468,6 +1468,8 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
                 if (!newItem.id().isNull() && !oldItem.id().isNull() && newItem.id() == oldItem.id()) {
                     if (notifiedItems.contains(newItem.id())) {
                         d->m_items[oldInd]->setItem(newItem);
+                        const QModelIndex idx = index(oldInd, 0);
+                        emit dataChanged(idx, idx);
                         emitSignal = true;
                     }
                     newInd++;

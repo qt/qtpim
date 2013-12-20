@@ -334,8 +334,42 @@ bool LineReader::tryReadLine(LByteArray *cursor, bool atEnd)
                     return false;
                 } else {
                     // Found the CRLF.
-                    cursor->mEnd = crlfPos;
-                    return true;
+                    // Hack: if malformed vCard files (having no \r\n or \r\n\r\n ending) are
+                    // concatenated, we can get a malformed line in the document which looks like:
+                    // END:VCARDBEGIN:VCARD
+                    // In that situation, we should actually insert the \r\n sequence manually,
+                    // and return mEnd after the END:VCARD\r\n position.
+                    QByteArray cr(VersitUtils::encode('\r', mCodec));
+                    QByteArray lf(VersitUtils::encode('\n', mCodec));
+                    QByteArray ev(VersitUtils::encode(QByteArray("END:VCARD"), mCodec));
+                    QByteArray evbv(VersitUtils::encode(QByteArray("END:VCARDBEGIN:VCARD"), mCodec));
+                    QByteArray evcrlf(VersitUtils::encode(QByteArray("END:VCARD\r\n"), mCodec));
+                    int crSz = cr.size();
+                    int lfSz = lf.size();
+                    int evSz = ev.size();
+                    int evcrlfSz = evcrlf.size();
+
+                    QByteArray possiblyMalformedLine = cursor->mData.mid(cursor->mStart, crlfPos-cursor->mStart);
+                    int pmlEnd = possiblyMalformedLine.size() - 1;
+                    while (true) {
+                        if (QVersitReaderPrivate::containsAt(possiblyMalformedLine, cr, pmlEnd - crSz)) {
+                            possiblyMalformedLine.chop(crSz);
+                        } else if (QVersitReaderPrivate::containsAt(possiblyMalformedLine, lf, pmlEnd - lfSz)) {
+                            possiblyMalformedLine.chop(lfSz);
+                        } else {
+                            break;
+                        }
+                    }
+                    if (possiblyMalformedLine == evbv) {
+                        // fix up the malformed line, return the end cursor after it.
+                        cursor->mData.replace(cursor->mStart, evSz, evcrlf);
+                        cursor->mEnd = cursor->mStart+evcrlfSz;
+                        return true;
+                    } else {
+                        // A well-formed line.
+                        cursor->mEnd = crlfPos;
+                        return true;
+                    }
                 }
             }
         }

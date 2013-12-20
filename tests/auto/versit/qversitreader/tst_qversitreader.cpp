@@ -379,6 +379,20 @@ void tst_QVersitReader::testReading()
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(results.count(),1);
 
+    // Device set, two documents concatenated in a malformed manner (no \r\n separation)
+    const QByteArray& twoMalformedDocument =
+        "BEGIN:VCARD\r\nVERSION:2.1\r\nFN:John\r\nEND:VCARD"
+        "BEGIN:VCARD\r\nVERSION:2.1\r\nFN:James\r\nEND:VCARD";
+    mInputDevice->close();
+    mInputDevice->setData(twoMalformedDocument);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(),2);
 
     // Exception case for a property ending in =CrLfCrLf, ie "=\r\n\r\n"
     const QByteArray& myTest =

@@ -124,8 +124,7 @@ QOrganizerItemFilter::QOrganizerItemFilter(const QOrganizerItemFilter &other)
  */
 QOrganizerItemFilter &QOrganizerItemFilter::operator=(const QOrganizerItemFilter &other)
 {
-    if (this != &other)
-        d_ptr = other.d_ptr;
+    d_ptr = other.d_ptr;
     return *this;
 }
 
@@ -153,13 +152,13 @@ QOrganizerItemFilter::FilterType QOrganizerItemFilter::type() const
  */
 bool QOrganizerItemFilter::operator==(const QOrganizerItemFilter &other) const
 {
-    if (!d_ptr)
-        return !other.d_ptr;
+    if (d_ptr == other.d_ptr)
+        return true;
 
-    if (other.type() != type())
-        return false;
+    if (d_ptr && other.d_ptr)
+        return d_ptr->type() == other.d_ptr->type() && d_ptr->compare(other.d_ptr);
 
-    return d_ptr->compare(other.d_ptr);
+    return false;
 }
 
 #ifndef QT_NO_DATASTREAM

@@ -424,6 +424,9 @@ bool QOrganizerItem::removeDetail(QOrganizerItemDetail *detail)
  */
 bool QOrganizerItem::operator==(const QOrganizerItem &other) const
 {
+    if (d == other.d)
+        return true;
+
     if (other.d->m_id != d->m_id
         || other.d->m_collectionId != d->m_collectionId
         || d->m_details.size() != other.d->m_details.size()) {
@@ -431,11 +434,11 @@ bool QOrganizerItem::operator==(const QOrganizerItem &other) const
     }
 
     QList<QOrganizerItemDetail> searchList(d->m_details);
-
     foreach (const QOrganizerItemDetail &detail, other.d->m_details) {
         if (!searchList.removeOne(detail))
             return false;
     }
+
     return true;
 }
 

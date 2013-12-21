@@ -175,7 +175,7 @@ QOrganizerRecurrenceRule::QOrganizerRecurrenceRule(const QOrganizerRecurrenceRul
  */
 QOrganizerRecurrenceRule &QOrganizerRecurrenceRule::operator=(const QOrganizerRecurrenceRule &other)
 {
-    this->d = other.d;
+    d = other.d;
     return *this;
 }
 
@@ -186,24 +186,21 @@ QOrganizerRecurrenceRule &QOrganizerRecurrenceRule::operator=(const QOrganizerRe
  */
 bool QOrganizerRecurrenceRule::operator==(const QOrganizerRecurrenceRule &other) const
 {
-    if (d == 0 && other.d == 0)
+    if (d == other.d)
         return true;
 
-    if (d && other.d) {
-        return d->firstDayOfWeek == other.d->firstDayOfWeek
-               && d->frequency == other.d->frequency
-               && d->interval == other.d->interval
-               && d->limitCount == other.d->limitCount
-               && d->limitDate == other.d->limitDate
-               && d->limitType == other.d->limitType
-               && d->positions == other.d->positions
-               && d->daysOfMonth == other.d->daysOfMonth
-               && d->daysOfWeek == other.d->daysOfWeek
-               && d->daysOfYear == other.d->daysOfYear
-               && d->monthsOfYear == other.d->monthsOfYear
-               && d->weeksOfYear == other.d->weeksOfYear;
-    }
-    return false;
+    return d->firstDayOfWeek == other.d->firstDayOfWeek
+            && d->frequency == other.d->frequency
+            && d->interval == other.d->interval
+            && d->limitCount == other.d->limitCount
+            && d->limitDate == other.d->limitDate
+            && d->limitType == other.d->limitType
+            && d->positions == other.d->positions
+            && d->daysOfMonth == other.d->daysOfMonth
+            && d->daysOfWeek == other.d->daysOfWeek
+            && d->daysOfYear == other.d->daysOfYear
+            && d->monthsOfYear == other.d->monthsOfYear
+            && d->weeksOfYear == other.d->weeksOfYear;
 }
 
 /*!

@@ -190,8 +190,7 @@ QOrganizerItemDetail::QOrganizerItemDetail(const QOrganizerItemDetail &other, De
  */
 QOrganizerItemDetail &QOrganizerItemDetail::operator=(const QOrganizerItemDetail &other)
 {
-    if (this != &other)
-        d = other.d;
+    d = other.d;
     return *this;
 }
 
@@ -204,7 +203,7 @@ QOrganizerItemDetail &QOrganizerItemDetail::operator=(const QOrganizerItemDetail
  */
 QOrganizerItemDetail &QOrganizerItemDetail::assign(const QOrganizerItemDetail &other, DetailType expectedDetailType)
 {
-    if (this != &other) {
+    if (d != other.d) {
         if (other.d->m_detailType == expectedDetailType)
             d = other.d;
         else
@@ -235,17 +234,18 @@ QOrganizerItemDetail::DetailType QOrganizerItemDetail::type() const
  */
 bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
 {
-    if (!(d->m_detailType == other.d->m_detailType))
+    if (d == other.d)
+        return true;
+
+    // note: id is auto-generated and should not be compared here
+    if (d->m_detailType != other.d->m_detailType)
         return false;
 
     // QVariant doesn't support == on QOrganizerItemRecurrence - do it manually
     if (d->m_detailType == QOrganizerItemDetail::TypeRecurrence)
         return static_cast<QOrganizerItemRecurrence>(*this) == static_cast<QOrganizerItemRecurrence>(other);
 
-    if (d->m_values != other.d->m_values)
-        return false;
-
-    return true;
+    return d->m_values == other.d->m_values;
 }
 
 /*!

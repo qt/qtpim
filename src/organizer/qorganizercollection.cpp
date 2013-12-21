@@ -111,7 +111,7 @@ QOrganizerCollection::QOrganizerCollection(const QOrganizerCollection &other)
  */
 QOrganizerCollection &QOrganizerCollection::operator=(const QOrganizerCollection &other)
 {
-    this->d = other.d;
+    d = other.d;
     return *this;
 }
 
@@ -121,6 +121,9 @@ QOrganizerCollection &QOrganizerCollection::operator=(const QOrganizerCollection
  */
 bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
 {
+    if (d == other.d)
+        return true;
+
     if (d->m_id != other.d->m_id
         || d->m_metaData.size() != other.d->m_metaData.size()) {
         return false;
@@ -132,6 +135,7 @@ bool QOrganizerCollection::operator==(const QOrganizerCollection &other) const
             return false;
         ++i;
     }
+
     return true;
 }
 

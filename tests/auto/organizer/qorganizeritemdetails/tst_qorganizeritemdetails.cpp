@@ -59,6 +59,8 @@ public slots:
     void cleanup();
 
 private slots:
+    void compare();
+
     // leaf class testing
     void description();
     void displayLabel();
@@ -106,6 +108,83 @@ void tst_QOrganizerItemDetails::cleanup()
 {
 }
 
+void tst_QOrganizerItemDetails::compare()
+{
+    QOrganizerItemRecurrence r, r2;
+    QVERIFY(r == r2);
+    QVERIFY(QOrganizerItemDetail() != r);
+
+    QOrganizerRecurrenceRule testRule;
+    testRule.setFrequency(QOrganizerRecurrenceRule::Weekly);
+    testRule.setLimit(4);
+    QSet<QOrganizerRecurrenceRule> rrules;
+    rrules << testRule;
+
+    QOrganizerRecurrenceRule exrule;
+    exrule.setFrequency(QOrganizerRecurrenceRule::Daily);
+    testRule.setLimit(12);
+    QSet<QOrganizerRecurrenceRule> exrules;
+    exrules << exrule;
+
+    QSet<QDate> rdates, exdates;
+    rdates << QDate(2010, 10, 13);
+    exdates << QDate(2010, 11, 17) << QDate(2010, 11, 20);
+
+    r.setRecurrenceRules(rrules);
+    QVERIFY(r != r2);
+    r2.setRecurrenceRules(rrules);
+    QVERIFY(r == r2);
+    r.setExceptionRules(exrules);
+    QVERIFY(r != r2);
+    r2.setExceptionRules(exrules);
+    QVERIFY(r == r2);
+    r.setRecurrenceDates(rdates);
+    QVERIFY(r != r2);
+    r2.setRecurrenceDates(rdates);
+    QVERIFY(r == r2);
+    r.setExceptionDates(exdates);
+    QVERIFY(r != r2);
+    r2.setExceptionDates(exdates);
+    QVERIFY(r == r2);
+
+    QOrganizerEvent e, e2;
+    QCOMPARE(e.details(QOrganizerItemDetail::TypeRecurrence).size(), 0);
+    QVERIFY(e == e2);
+
+    // now save
+    QVERIFY(e.saveDetail(&r));
+    QCOMPARE(e.details(QOrganizerItemDetail::TypeRecurrence).size(), 1);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) == r);
+    QVERIFY(e != e2);
+
+    QVERIFY(e2.saveDetail(&r2));
+    QCOMPARE(e2.details(QOrganizerItemDetail::TypeRecurrence).size(), 1);
+    QVERIFY(e2.detail(QOrganizerItemDetail::TypeRecurrence) == r2);
+    QVERIFY(e == e2);
+
+    // update
+    exdates << QDate(2010, 10, 17);
+    r.setExceptionDates(exdates);
+    QVERIFY(r != r2);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) != r);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) == r2);
+    QVERIFY(e.saveDetail(&r));
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) == r);
+    QVERIFY(e.detail(QOrganizerItemDetail::TypeRecurrence) != r2);
+    QVERIFY(e != e2);
+
+    // remove.
+    QVERIFY(e.removeDetail(&r));
+    QVERIFY(e != e2);
+    QVERIFY(e2.removeDetail(&r2));
+    QVERIFY(e == e2);
+
+    QVERIFY(e.saveDetail(&r));
+    e2 = QOrganizerEvent();
+    QVERIFY(e != e2);
+    e2 = e;
+    QVERIFY(e == e2);
+}
 
 void tst_QOrganizerItemDetails::description()
 {

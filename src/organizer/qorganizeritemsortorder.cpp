@@ -106,9 +106,7 @@ QOrganizerItemSortOrder::QOrganizerItemSortOrder(const QOrganizerItemSortOrder &
  */
 QOrganizerItemSortOrder &QOrganizerItemSortOrder::operator=(const QOrganizerItemSortOrder &other)
 {
-    if (this != &other)
-        d = other.d;
-
+    d = other.d;
     return *this;
 }
 
@@ -130,13 +128,14 @@ bool QOrganizerItemSortOrder::isValid() const
  */
 bool QOrganizerItemSortOrder::operator ==(const QOrganizerItemSortOrder &other) const
 {
-    if (d->m_blankPolicy == other.d->m_blankPolicy
-        && d->m_direction == other.d->m_direction
-        && d->m_sensitivity == other.d->m_sensitivity
-        && d->m_detailType == other.d->m_detailType
-        && d->m_detailField == other.d->m_detailField)
+    if (d == other.d)
         return true;
-    return false;
+
+    return d->m_blankPolicy == other.d->m_blankPolicy
+            && d->m_direction == other.d->m_direction
+            && d->m_sensitivity == other.d->m_sensitivity
+            && d->m_detailType == other.d->m_detailType
+            && d->m_detailField == other.d->m_detailField;
 }
 
 #ifndef QT_NO_DATASTREAM

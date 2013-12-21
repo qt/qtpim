@@ -119,15 +119,12 @@ QOrganizerCollectionId &QOrganizerCollectionId::operator=(const QOrganizerCollec
 */
 bool QOrganizerCollectionId::operator==(const QOrganizerCollectionId &other) const
 {
-    // if both ids are null then they are equal.
-    if (d == 0 && other.d == 0)
+    if (d == other.d)
         return true;
 
-    if (d && other.d) {
-        // ensure they're of the same type (and therefore comparable)
-        if (d->managerUri() == other.d->managerUri())
-            return d->isEqualTo(other.d);
-    }
+    if (d && other.d)
+        return d->managerUri() == other.d->managerUri() && d->isEqualTo(other.d);
+
     return false;
 }
 

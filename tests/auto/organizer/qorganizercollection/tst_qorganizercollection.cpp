@@ -59,6 +59,7 @@ public:
 
 private slots:
     void metaData();
+    void compare();
     void idLessThan();
     void idHash();
     void idStringFunctions();
@@ -133,6 +134,38 @@ QOrganizerCollectionId makeId(const QString& managerUri, uint id)
     return QOrganizerCollectionId(new BasicCollectionLocalId(managerUri, id));
 }
 
+
+void tst_QOrganizerCollection::compare()
+{
+    QOrganizerCollection c, c2;
+    QVERIFY(c == c2);
+    c.setExtendedMetaData(QStringLiteral("test"), 5);
+    QVERIFY(c != c2);
+    c2.setExtendedMetaData(QStringLiteral("test"), 5);
+    QVERIFY(c == c2);
+
+    QMap<QOrganizerCollection::MetaDataKey, QVariant> mdm;
+    mdm.insert(QOrganizerCollection::KeyName, QStringLiteral("test2"));
+    c.setMetaData(mdm);
+    QVERIFY(c != c2);
+    c2.setMetaData(mdm);
+    QVERIFY(c == c2);
+
+    c2 = QOrganizerCollection();
+    QVERIFY(c != c2);
+    c2 = c;
+    QVERIFY(c == c2);
+
+    c.setId(makeId(QStringLiteral("a"), 1));
+    QVERIFY(c != c2);
+    c2.setId(makeId(QStringLiteral("a"), 1));
+    QVERIFY(c == c2);
+    c.setId(makeId(QStringLiteral("b"), 1));
+    QVERIFY(c != c2);
+    c2.setId(c.id());
+    QVERIFY(c == c2);
+    c.setId(makeId(QStringLiteral("b"), 2));
+}
 
 void tst_QOrganizerCollection::idLessThan()
 {

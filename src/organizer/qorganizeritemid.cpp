@@ -120,13 +120,12 @@ QOrganizerItemId &QOrganizerItemId::operator=(const QOrganizerItemId &other)
 */
 bool QOrganizerItemId::operator==(const QOrganizerItemId &other) const
 {
-    if (d == 0 && other.d == 0)
+    if (d == other.d)
         return true;
 
-    if (d && other.d) {
-        if (d->managerUri() == other.d->managerUri())
-            return d->isEqualTo(other.d);
-    }
+    if (d && other.d)
+        return d->managerUri() == other.d->managerUri() && d->isEqualTo(other.d);
+
     return false;
 }
 

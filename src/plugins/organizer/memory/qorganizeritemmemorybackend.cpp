@@ -291,7 +291,6 @@ uint QOrganizerCollectionMemoryEngineId::hash() const
 */
 QOrganizerItemMemoryEngineData::QOrganizerItemMemoryEngineData()
     : QSharedData(),
-    m_refCount(QAtomicInt(1)),
     m_nextOrganizerItemId(1),
     m_nextOrganizerCollectionId(2),
     m_anonymous(false)
@@ -317,14 +316,13 @@ QOrganizerItemMemoryEngine* QOrganizerItemMemoryEngine::createMemoryEngine(const
     }
 
     QOrganizerItemMemoryEngineData* data = engineDatas.value(idValue);
-    if (data) {
-        data->m_refCount.ref();
-    } else {
+    if (!data) {
         data = new QOrganizerItemMemoryEngineData();
         data->m_id = idValue;
         data->m_anonymous = anonymous;
         engineDatas.insert(idValue, data);
     }
+    data->ref.ref();
     return new QOrganizerItemMemoryEngine(data);
 }
 
@@ -354,7 +352,7 @@ QOrganizerItemMemoryEngine::QOrganizerItemMemoryEngine(QOrganizerItemMemoryEngin
 QOrganizerItemMemoryEngine::~QOrganizerItemMemoryEngine()
 {
     d->m_sharedEngines.removeAll(this);
-    if (!d->m_refCount.deref()) {
+    if (!d->ref.deref()) {
         engineDatas.remove(d->m_id);
         delete d;
     }

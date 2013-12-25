@@ -141,7 +141,6 @@ public:
     {
     }
 
-    QAtomicInt m_refCount;
     QString m_id;                                  // the id parameter value
 
     QHash<QOrganizerItemId, QOrganizerItem> m_idToItemHash; // hash of id to the item identified by that id

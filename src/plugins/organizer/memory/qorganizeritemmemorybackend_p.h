@@ -150,7 +150,6 @@ public:
     QList<QOrganizerCollection> m_organizerCollections;          // list of collections
     QList<QOrganizerCollectionId> m_organizerCollectionIds; // list of collection ids
     QMultiMap<QOrganizerCollectionId, QOrganizerItemId> m_itemsInCollections; // map of collection ids to the ids of items the collection contains.
-    QList<QString> m_definitionIds;                // list of definition types (id's)
     quint32 m_nextOrganizerItemId; // the m_itemId portion of a QOrganizerItemMemoryEngineId.
     quint32 m_nextOrganizerCollectionId; // the m_collectionId portion of a QOrganizerCollectionMemoryEngineId.
     bool m_anonymous;                              // Is this backend ever shared?

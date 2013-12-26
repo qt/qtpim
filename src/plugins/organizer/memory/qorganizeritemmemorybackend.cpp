@@ -100,8 +100,6 @@ QString QOrganizerItemMemoryFactory::managerName() const
   no longer requires this engine.
  */
 
-/* static data for manager class */
-QMap<QString, QOrganizerItemMemoryEngineData*> QOrganizerItemMemoryEngine::engineDatas;
 
 /*!
   \class QOrganizerItemMemoryEngineId
@@ -287,13 +285,16 @@ uint QOrganizerCollectionMemoryEngineId::hash() const
     return m_collectionId;
 }
 
+
+typedef QHash<QString, QOrganizerItemMemoryEngineData *> EngineDatas;
+Q_GLOBAL_STATIC(EngineDatas, theEngineDatas);
+
 /*! Constructor of a QOrganizerItemMemoryEngineData object
 */
 QOrganizerItemMemoryEngineData::QOrganizerItemMemoryEngineData()
     : QSharedData(),
     m_nextOrganizerItemId(1),
-    m_nextOrganizerCollectionId(2),
-    m_anonymous(false)
+    m_nextOrganizerCollectionId(2)
 {
 
 }
@@ -307,20 +308,17 @@ QOrganizerItemMemoryEngineData::QOrganizerItemMemoryEngineData()
  */
 QOrganizerItemMemoryEngine* QOrganizerItemMemoryEngine::createMemoryEngine(const QMap<QString, QString>& parameters)
 {
-    bool anonymous = false;
     QString idValue = parameters.value(QStringLiteral("id"));
-    if (idValue.isNull() || idValue.isEmpty()) {
-        // no store given?  new, anonymous store.
-        idValue = QUuid::createUuid().toString();
-        anonymous = true;
-    }
 
+    EngineDatas &engineDatas = *theEngineDatas();
     QOrganizerItemMemoryEngineData* data = engineDatas.value(idValue);
     if (!data) {
         data = new QOrganizerItemMemoryEngineData();
-        data->m_id = idValue;
-        data->m_anonymous = anonymous;
-        engineDatas.insert(idValue, data);
+        // no store given?  new, anonymous store.
+        if (!idValue.isEmpty()) {
+            data->m_id = idValue;
+            engineDatas.insert(idValue, data);
+        }
     }
     data->ref.ref();
     return new QOrganizerItemMemoryEngine(data);
@@ -353,7 +351,10 @@ QOrganizerItemMemoryEngine::~QOrganizerItemMemoryEngine()
 {
     d->m_sharedEngines.removeAll(this);
     if (!d->ref.deref()) {
-        engineDatas.remove(d->m_id);
+        if (!d->m_id.isEmpty()) {
+            EngineDatas &engineDatas = *theEngineDatas();
+            engineDatas.remove(d->m_id);
+        }
         delete d;
     }
 }

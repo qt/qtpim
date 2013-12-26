@@ -151,7 +151,6 @@ public:
     QMultiMap<QOrganizerCollectionId, QOrganizerItemId> m_itemsInCollections; // map of collection ids to the ids of items the collection contains.
     quint32 m_nextOrganizerItemId; // the m_itemId portion of a QOrganizerItemMemoryEngineId.
     quint32 m_nextOrganizerCollectionId; // the m_collectionId portion of a QOrganizerCollectionMemoryEngineId.
-    bool m_anonymous;                              // Is this backend ever shared?
     QString m_managerUri;                        // for faster lookup.
 
     void emitSharedSignals(QOrganizerItemChangeSet* cs)
@@ -275,7 +274,6 @@ private:
     void performAsynchronousOperation(QOrganizerAbstractRequest* request);
 
     QOrganizerItemMemoryEngineData* d;
-    static QMap<QString, QOrganizerItemMemoryEngineData*> engineDatas;
 };
 
 QT_END_NAMESPACE_ORGANIZER

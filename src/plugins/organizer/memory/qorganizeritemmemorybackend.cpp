@@ -710,7 +710,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
     }
 
     // check to see if this organizer item already exists
-    const QOrganizerItemId& theOrganizerItemId = theOrganizerItem->id();
+    QOrganizerItemId theOrganizerItemId = theOrganizerItem->id();
     QHash<QOrganizerItemId, QOrganizerItem>::const_iterator hashIterator = d->m_idToItemHash.find(theOrganizerItemId);
     if (hashIterator != d->m_idToItemHash.constEnd()) {
         /* We also need to check that there are no modified create only details */
@@ -749,7 +749,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
 
             // should we also check and remove exception dates if e.g. limit date or limit count has been changed
             // to be earlier (or smaller) than before thus invelidating an exception date..?
-            QList<QOrganizerItemId> occurrenceIds = d->m_parentIdToChildIdHash.values(theOrganizerItem->id());
+            QList<QOrganizerItemId> occurrenceIds = d->m_parentIdToChildIdHash.values(theOrganizerItemId);
             QOrganizerManager::Error occurrenceError = QOrganizerManager::NoError;
             if (!occurrenceIds.isEmpty()) {
                 if (itemHasReccurence(*theOrganizerItem)) {
@@ -782,49 +782,29 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         ts.setCreated(ts.lastModified());
         theOrganizerItem->saveDetail(&ts);
 
-        // now modify the target collection id; if null, set to default id.  BUT record whether we did that.
-        bool targetCollectionWasNull = false; // this determines for OCCURRENCES whether we ignore the default id.
-        if (targetCollectionId.isNull()) {
-            targetCollectionWasNull = true;
-            targetCollectionId = d->defaultCollectionId();
-        }
-
-        // update the organizer item - set its ID
-        quint32 nextOrganizerItemId = d->m_nextOrganizerItemId; // don't increment the persistent version until we're successful or we know it collides.
-        nextOrganizerItemId += 1; // but do increment the temporary version to check for collision
-        QOrganizerItemMemoryEngineId* newMemoryEngineId = new QOrganizerItemMemoryEngineId;
-        newMemoryEngineId->m_collectionId = static_cast<const QOrganizerCollectionMemoryEngineId*>(QOrganizerManagerEngine::engineCollectionId(targetCollectionId))->m_collectionId;
-        newMemoryEngineId->m_itemId = nextOrganizerItemId;
-        newMemoryEngineId->m_managerUri = d->m_managerUri;
-        QOrganizerItemId newOrganizerItemId = QOrganizerItemId(newMemoryEngineId);
-        theOrganizerItem->setId(newOrganizerItemId);
-        // note: do NOT delete the QOrganizerItemMemoryEngineId -- the QOrganizerItemId ctor takes ownership of it.
         if (!fixOccurrenceReferences(theOrganizerItem, error)) {
             return false;
         }
-        // set the guid if not set, and ensure that it's the same as the parent's
+        // set the guid if not set
         if (theOrganizerItem->guid().isEmpty())
             theOrganizerItem->setGuid(QUuid::createUuid().toString());
 
         // if we're saving an exception occurrence, we need to add it's original date as an exdate to the parent.
-        QOrganizerItemId parentHashKey;
-        if (theOrganizerItem->type() == QOrganizerItemType::TypeEventOccurrence) {
-            // update the event by adding an EX-DATE which corresponds to the original date of the occurrence being saved.
-            QOrganizerManager::Error tempError = QOrganizerManager::NoError;
+        QOrganizerItemId parentId;
+        if (theOrganizerItem->type() == QOrganizerItemType::TypeEventOccurrence
+            || theOrganizerItem->type() == QOrganizerItemType::TypeTodoOccurrence) {
+            // update the event or the todo by adding an EX-DATE which corresponds to the original date of the occurrence being saved.
             QOrganizerItemParent origin = theOrganizerItem->detail(QOrganizerItemDetail::TypeParent);
-            QOrganizerItemId parentId = origin.parentId();
+            parentId = origin.parentId();
 
             // for occurrences, if given a null collection id, save it in the same collection as the parent.
             // otherwise, ensure that the parent is in the same collection.  You cannot save an exception to a different collection than the parent.
-            if (targetCollectionWasNull) {
+            if (targetCollectionId.isNull()) {
                 targetCollectionId = d->m_itemsInCollections.key(parentId);
                 if (targetCollectionId.isNull()) {
                     *error = QOrganizerManager::UnspecifiedError; // this should never occur; parent should _always_ be in a collection.
                     return false;
                 }
-                const QOrganizerCollectionMemoryEngineId* newColId = static_cast<const QOrganizerCollectionMemoryEngineId*>(QOrganizerManagerEngine::engineCollectionId(targetCollectionId));
-                QOrganizerItemMemoryEngineId* newId = new QOrganizerItemMemoryEngineId(newColId->m_collectionId, nextOrganizerItemId, d->m_managerUri);
-                theOrganizerItem->setId(QOrganizerItemId(newId));
             } else if (!d->m_itemsInCollections.values(targetCollectionId).contains(parentId)) {
                 // nope, the specified collection doesn't contain the parent.  error.
                 *error = QOrganizerManager::InvalidCollectionError;
@@ -832,63 +812,44 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
             }
 
             QMap<int, QOrganizerManager::Error> tempErrorMap;
-            QOrganizerEvent parentEvent = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
-            QDate originalDate = origin.originalDate();
-            QSet<QDate> currentExceptionDates = parentEvent.exceptionDates();
-            if (!currentExceptionDates.contains(originalDate)) {
-                currentExceptionDates << originalDate;
-                parentEvent.setExceptionDates(currentExceptionDates);
-                d->m_idToItemHash.insert(parentEvent.id(), parentEvent); // replacement insert
-                changeSet.insertChangedItem(parentEvent.id());
-            }
-            parentHashKey = parentEvent.id(); // this will be the key into the d->m_parentIdToChildIdHash hash.
-        } else if (theOrganizerItem->type() == QOrganizerItemType::TypeTodoOccurrence) {
-            // update the todo by adding an EX-DATE which corresponds to the original date of the occurrence being saved.
             QOrganizerManager::Error tempError = QOrganizerManager::NoError;
-            QOrganizerItemParent origin = theOrganizerItem->detail(QOrganizerItemDetail::TypeParent);
-            QOrganizerItemId parentId = origin.parentId();
-
-            // for occurrences, if given a null collection id, save it in the same collection as the parent.
-            // otherwise, ensure that the parent is in the same collection.  You cannot save an exception to a different collection than the parent.
-            if (targetCollectionWasNull) {
-                targetCollectionId = d->m_itemsInCollections.key(parentId);
-                if (targetCollectionId.isNull()) {
-                    *error = QOrganizerManager::UnspecifiedError; // this should never occur; parent should _always_ be in a collection.
-                    return false;
-                }
-                const QOrganizerCollectionMemoryEngineId* newColId = static_cast<const QOrganizerCollectionMemoryEngineId*>(QOrganizerManagerEngine::engineCollectionId(targetCollectionId));
-                QOrganizerItemMemoryEngineId* newId = new QOrganizerItemMemoryEngineId(newColId->m_collectionId, nextOrganizerItemId, d->m_managerUri);
-                theOrganizerItem->setId(QOrganizerItemId(newId));
-            } else if (!d->m_itemsInCollections.values(targetCollectionId).contains(parentId)) {
-                // nope, the specified collection doesn't contain the parent.  error.
-                *error = QOrganizerManager::InvalidCollectionError;
+            const QList<QOrganizerItem> candidates = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError);
+            if (tempError != QOrganizerManager::NoError || candidates.isEmpty()) {
+                *error = tempError != QOrganizerManager::NoError ? tempError : QOrganizerManager::UnspecifiedError;
                 return false;
             }
-
-            QMap<int, QOrganizerManager::Error> tempErrorMap;
-            QOrganizerTodo parentTodo = items(QList<QOrganizerItemId>() << parentId, QOrganizerItemFetchHint(), &tempErrorMap, &tempError).at(0);
+            QOrganizerItem parentItem = candidates.first();
             QDate originalDate = origin.originalDate();
-            QSet<QDate> currentExceptionDates = parentTodo.exceptionDates();
+            QOrganizerItemRecurrence recurrence = parentItem.detail(QOrganizerItemDetail::TypeRecurrence);
+            QSet<QDate> currentExceptionDates = recurrence.exceptionDates();
             if (!currentExceptionDates.contains(originalDate)) {
                 currentExceptionDates << originalDate;
-                parentTodo.setExceptionDates(currentExceptionDates);
-                d->m_idToItemHash.insert(parentTodo.id(), parentTodo); // replacement insert
-                changeSet.insertChangedItem(parentTodo.id()); // is this correct?  it's an exception, so change parent?
+                recurrence.setExceptionDates(currentExceptionDates);
+                parentItem.saveDetail(&recurrence);
+                d->m_idToItemHash.insert(parentId, parentItem); // replacement insert
+                changeSet.insertChangedItem(parentId); // is this correct?  it's an exception, so change parent?
             }
-            parentHashKey = parentTodo.id(); // this will be the key into the d->m_parentIdToChildIdHash hash.
         }
-        // given that we were successful, now increment the persistent version of the next item id.
-        d->m_nextOrganizerItemId += 1;
 
+        // if target collection id is null, set to default id.
+        if (targetCollectionId.isNull())
+            targetCollectionId = d->defaultCollectionId();
+
+        // update the organizer item - set its ID
+        const QOrganizerCollectionMemoryEngineId *colEngineId = static_cast<const QOrganizerCollectionMemoryEngineId *>(QOrganizerManagerEngine::engineCollectionId(targetCollectionId));
+        QOrganizerItemMemoryEngineId* newId = new QOrganizerItemMemoryEngineId(colEngineId->m_collectionId, d->m_nextOrganizerItemId++, d->m_managerUri);
+        // note: do NOT delete the QOrganizerItemMemoryEngineId -- the QOrganizerItemId ctor takes ownership of it.
+        theOrganizerItemId = QOrganizerItemId(newId);
+        theOrganizerItem->setId(theOrganizerItemId);
         // finally, add the organizer item to our internal lists and return
         theOrganizerItem->setCollectionId(targetCollectionId);
-        d->m_idToItemHash.insert(theOrganizerItem->id(), *theOrganizerItem);  // add organizer item to hash
-        if (!parentHashKey.isNull()) {
+        d->m_idToItemHash.insert(theOrganizerItemId, *theOrganizerItem);  // add organizer item to hash
+        if (!parentId.isNull()) {
             // if it was an occurrence, we need to add it to the children hash.
-            d->m_parentIdToChildIdHash.insert(parentHashKey, theOrganizerItem->id());
+            d->m_parentIdToChildIdHash.insert(parentId, theOrganizerItemId);
         }
-        d->m_itemsInCollections.insert(targetCollectionId, theOrganizerItem->id());
-        changeSet.insertAddedItem(theOrganizerItem->id());
+        d->m_itemsInCollections.insert(targetCollectionId, theOrganizerItemId);
+        changeSet.insertAddedItem(theOrganizerItemId);
     }
 
     *error = QOrganizerManager::NoError;     // successful.

@@ -144,6 +144,12 @@ public:
 
     QString m_id;                                  // the id parameter value
 
+    inline QOrganizerCollectionId defaultCollectionId() const
+    {
+        enum { DefaultCollectionLocalId = 1 }; // default collection has id of 1.
+        return QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(DefaultCollectionLocalId, m_managerUri));
+    }
+
     QHash<QOrganizerItemId, QOrganizerItem> m_idToItemHash; // hash of id to the item identified by that id
     QMultiHash<QOrganizerItemId, QOrganizerItemId> m_parentIdToChildIdHash; // hash of id to that item's children's ids
 

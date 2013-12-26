@@ -335,7 +335,7 @@ QOrganizerItemMemoryEngine::QOrganizerItemMemoryEngine(QOrganizerItemMemoryEngin
     // the default collection always exists.
     if (d->m_organizerCollectionIds.isEmpty()) {
         d->m_managerUri = managerUri();
-        QOrganizerCollectionId defaultId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri));
+        QOrganizerCollectionId defaultId = d->defaultCollectionId();
         QOrganizerCollection defaultCollection;
         defaultCollection.setId(defaultId);
         defaultCollection.setMetaData(QOrganizerCollection::KeyName, QString(QStringLiteral("Default Collection")));
@@ -786,7 +786,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         bool targetCollectionWasNull = false; // this determines for OCCURRENCES whether we ignore the default id.
         if (targetCollectionId.isNull()) {
             targetCollectionWasNull = true;
-            targetCollectionId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri));
+            targetCollectionId = d->defaultCollectionId();
         }
 
         // update the organizer item - set its ID
@@ -1273,9 +1273,8 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItem> *items,
 
 QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error)
 {
-    // default collection has id of 1.
     *error = QOrganizerManager::NoError;
-    QOrganizerCollectionId defaultCollectionId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri));
+    QOrganizerCollectionId defaultCollectionId = d->defaultCollectionId();
     for (int i = 0; i < d->m_organizerCollections.size(); ++i) {
         if (d->m_organizerCollections.at(i).id() == defaultCollectionId) {
             return d->m_organizerCollections.at(i);
@@ -1311,7 +1310,7 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
 
     *error = QOrganizerManager::NoError;
     QOrganizerCollectionId colId = collection->id();
-    if (colId == QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri))) {
+    if (colId == d->defaultCollectionId()) {
         // attempting to update the default collection.  this is not allowed in the memory engine.
         *error = QOrganizerManager::PermissionsError;
         return false;
@@ -1352,7 +1351,7 @@ bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& 
 {
     QOrganizerCollectionChangeSet cs; // for signal emission.
     *error = QOrganizerManager::NoError;
-    if (collectionId == QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(1, d->m_managerUri))) {
+    if (collectionId == d->defaultCollectionId()) {
         // attempting to remove the default collection.  this is not allowed in the memory engine.
         *error = QOrganizerManager::PermissionsError;
         return false;

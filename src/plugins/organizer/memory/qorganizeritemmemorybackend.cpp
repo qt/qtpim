@@ -45,7 +45,6 @@
 #include <qorganizeritemdetails.h>
 #include <qorganizeritemfilters.h>
 #include <qorganizeritemrequests.h>
-#include <qorganizercollectionchangeset.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qstringbuilder.h>
@@ -1326,7 +1325,7 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
             if (d->m_organizerCollections.at(i) != *collection) {
                 d->m_organizerCollections.replace(i, *collection);
                 cs.insertChangedCollection(colId);
-                cs.emitSignals(this);
+                d->emitSharedSignals(&cs);
             }
             return true;
         }
@@ -1345,7 +1344,7 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
     d->m_organizerCollections.append(*collection);
     d->m_organizerCollectionIds.append(newId);
     cs.insertAddedCollection(newId);
-    cs.emitSignals(this);
+    d->emitSharedSignals(&cs);
     return true;
 }
 
@@ -1377,7 +1376,7 @@ bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& 
             d->m_organizerCollections.removeAt(i);
             d->m_itemsInCollections.remove(collectionId);
             cs.insertRemovedCollection(collectionId);
-            cs.emitSignals(this);
+            d->emitSharedSignals(&cs);
             return true;
         }
     }

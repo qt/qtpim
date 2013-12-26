@@ -57,6 +57,7 @@
 #include <qorganizercollectionengineid.h>
 #include <qorganizermanagerengine.h>
 #include <qorganizermanagerenginefactory.h>
+#include <qorganizercollectionchangeset.h>
 #include <qorganizeritemchangeset.h>
 #include <qorganizerrecurrencerule.h>
 
@@ -153,6 +154,11 @@ public:
     quint32 m_nextOrganizerCollectionId; // the m_collectionId portion of a QOrganizerCollectionMemoryEngineId.
     QString m_managerUri;                        // for faster lookup.
 
+    void emitSharedSignals(QOrganizerCollectionChangeSet *cs)
+    {
+        foreach (QOrganizerManagerEngine *engine, m_sharedEngines)
+            cs->emitSignals(engine);
+    }
     void emitSharedSignals(QOrganizerItemChangeSet* cs)
     {
         foreach(QOrganizerManagerEngine* engine, m_sharedEngines)

@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 class QDeclarativeOrganizerItemSortOrder : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
+    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY sortOrderChanged)
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)

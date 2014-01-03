@@ -52,7 +52,7 @@ QTORGANIZER_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 
-class QDeclarativeOrganizerItemSortOrder : public QObject, public QQmlParserStatus
+class QDeclarativeOrganizerItemSortOrder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
@@ -60,7 +60,6 @@ class QDeclarativeOrganizerItemSortOrder : public QObject, public QQmlParserStat
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::SortOrder direction READ direction WRITE setDirection NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity sensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
-    Q_INTERFACES(QQmlParserStatus)
     Q_ENUMS(BlankPolicy)
 
 public:
@@ -86,10 +85,6 @@ public:
     void setCaseSensitivity(Qt::CaseSensitivity newSensitivity);
     Qt::CaseSensitivity caseSensitivity() const;
 
-    // from QQmlParserStatus
-    void classBegin();
-    void componentComplete();
-
     // used by organizer model
     QOrganizerItemSortOrder sortOrder();
 
@@ -97,11 +92,8 @@ Q_SIGNALS:
     void sortOrderChanged();
 
 private:
-    void setDetailDefinitionName();
-
     QDeclarativeOrganizerItemDetail::DetailType m_detail;
     int m_field;
-    bool m_componentCompleted;
     QOrganizerItemSortOrder d;
 };
 

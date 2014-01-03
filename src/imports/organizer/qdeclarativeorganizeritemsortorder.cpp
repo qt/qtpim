@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)
     : QObject(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Undefined), m_field(-1), m_componentCompleted(false)
+    , m_detail(QDeclarativeOrganizerItemDetail::Undefined), m_field(-1)
 {
 }
 
@@ -63,22 +63,6 @@ QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *
 
   This signal is emitted, when any of the SortOrder's properties have been changed.
  */
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemSortOrder::classBegin()
-{
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemSortOrder::componentComplete()
-{
-    setDetailDefinitionName();
-    m_componentCompleted = true;
-}
 
 /*!
     \qmlproperty string SortOrder::detail
@@ -90,8 +74,8 @@ void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDeta
 {
     if (m_detail != detail) {
         m_detail = detail;
-        if (m_componentCompleted)
-            setDetailDefinitionName();
+        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
+        emit sortOrderChanged();
     }
 }
 
@@ -114,8 +98,8 @@ void QDeclarativeOrganizerItemSortOrder::setField(int field)
 {
     if (field != m_field) {
         m_field = field;
-        if (m_componentCompleted)
-            setDetailDefinitionName();
+        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
+        emit sortOrderChanged();
     }
 }
 
@@ -197,16 +181,6 @@ QOrganizerItemSortOrder QDeclarativeOrganizerItemSortOrder::sortOrder()
 {
     return d;
 }
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemSortOrder::setDetailDefinitionName()
-{
-    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
-    emit sortOrderChanged();
-}
-
 
 #include "moc_qdeclarativeorganizeritemsortorder_p.cpp"
 

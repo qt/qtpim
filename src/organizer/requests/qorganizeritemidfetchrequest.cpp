@@ -66,7 +66,6 @@ QOrganizerItemIdFetchRequest::QOrganizerItemIdFetchRequest(QObject *parent)
 */
 QOrganizerItemIdFetchRequest::~QOrganizerItemIdFetchRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

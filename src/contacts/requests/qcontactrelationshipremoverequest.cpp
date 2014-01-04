@@ -75,7 +75,6 @@ QContactRelationshipRemoveRequest::QContactRelationshipRemoveRequest(QObject* pa
 /*! Frees any memory used by this request */
 QContactRelationshipRemoveRequest::~QContactRelationshipRemoveRequest()
 {
-    QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

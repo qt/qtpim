@@ -66,7 +66,6 @@ QOrganizerCollectionSaveRequest::QOrganizerCollectionSaveRequest(QObject *parent
 */
 QOrganizerCollectionSaveRequest::~QOrganizerCollectionSaveRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

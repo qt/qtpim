@@ -68,7 +68,6 @@ QOrganizerCollectionFetchRequest::QOrganizerCollectionFetchRequest(QObject *pare
 */
 QOrganizerCollectionFetchRequest::~QOrganizerCollectionFetchRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

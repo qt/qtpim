@@ -70,7 +70,6 @@ QOrganizerItemFetchByIdRequest::QOrganizerItemFetchByIdRequest(QObject *parent)
 */
 QOrganizerItemFetchByIdRequest::~QOrganizerItemFetchByIdRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

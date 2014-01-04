@@ -69,7 +69,6 @@ QOrganizerItemFetchForExportRequest::QOrganizerItemFetchForExportRequest(QObject
 */
 QOrganizerItemFetchForExportRequest::~QOrganizerItemFetchForExportRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

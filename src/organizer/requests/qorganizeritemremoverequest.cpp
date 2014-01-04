@@ -69,7 +69,6 @@ QOrganizerItemRemoveRequest::QOrganizerItemRemoveRequest(QObject *parent)
 */
 QOrganizerItemRemoveRequest::~QOrganizerItemRemoveRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

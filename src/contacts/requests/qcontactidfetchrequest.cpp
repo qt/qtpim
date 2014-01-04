@@ -73,7 +73,6 @@ QContactIdFetchRequest::QContactIdFetchRequest(QObject* parent)
 /*! Frees any memory used by this request */
 QContactIdFetchRequest::~QContactIdFetchRequest()
 {
-    QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

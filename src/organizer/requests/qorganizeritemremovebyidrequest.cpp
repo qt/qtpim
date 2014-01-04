@@ -71,7 +71,6 @@ QOrganizerItemRemoveByIdRequest::QOrganizerItemRemoveByIdRequest(QObject* parent
 */
 QOrganizerItemRemoveByIdRequest::~QOrganizerItemRemoveByIdRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

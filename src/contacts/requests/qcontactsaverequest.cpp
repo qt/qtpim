@@ -73,7 +73,6 @@ QContactSaveRequest::QContactSaveRequest(QObject* parent)
 /*! Frees any memory used by this request */
 QContactSaveRequest::~QContactSaveRequest()
 {
-    QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

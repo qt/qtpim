@@ -81,19 +81,6 @@ public:
         return QOrganizerAbstractRequest::InvalidRequest;
     }
 
-    static void notifyEngine(QOrganizerAbstractRequest *request)
-    {
-        Q_ASSERT(request);
-        QOrganizerAbstractRequestPrivate *d = request->d_ptr;
-        if (d) {
-            QMutexLocker ml(&d->m_mutex);
-            QOrganizerManagerEngine *engine = QOrganizerManagerData::engine(d->m_manager);
-            ml.unlock();
-            if (engine)
-                engine->requestDestroyed(request);
-        }
-    }
-
 #ifndef QT_NO_DEBUG_STREAM
     virtual QDebug &debugStreamOut(QDebug &dbg) const = 0;
 #endif

@@ -192,7 +192,14 @@ QContactAbstractRequest::QContactAbstractRequest(QContactAbstractRequestPrivate*
 /*! Cleans up the memory used by this request */
 QContactAbstractRequest::~QContactAbstractRequest()
 {
-     delete d_ptr;
+    d_ptr->m_mutex.lock();
+    QContactManagerEngine *engine = QContactManagerData::engine(d_ptr->m_manager);
+    d_ptr->m_mutex.unlock();
+    if (engine)
+        engine->requestDestroyed(this);
+
+    delete d_ptr;
+    d_ptr = 0;
 }
 
 /*!

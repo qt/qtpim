@@ -66,7 +66,6 @@ QOrganizerCollectionRemoveRequest::QOrganizerCollectionRemoveRequest(QObject *pa
 */
 QOrganizerCollectionRemoveRequest::~QOrganizerCollectionRemoveRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

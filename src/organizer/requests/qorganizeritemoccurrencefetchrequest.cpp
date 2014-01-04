@@ -69,7 +69,6 @@ QOrganizerItemOccurrenceFetchRequest::QOrganizerItemOccurrenceFetchRequest(QObje
 */
 QOrganizerItemOccurrenceFetchRequest::~QOrganizerItemOccurrenceFetchRequest()
 {
-    QOrganizerAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*!

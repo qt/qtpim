@@ -138,7 +138,14 @@ QOrganizerAbstractRequest::QOrganizerAbstractRequest(QOrganizerAbstractRequestPr
  */
 QOrganizerAbstractRequest::~QOrganizerAbstractRequest()
 {
+    d_ptr->m_mutex.lock();
+    QOrganizerManagerEngine *engine = QOrganizerManagerData::engine(d_ptr->m_manager);
+    d_ptr->m_mutex.unlock();
+    if (engine)
+        engine->requestDestroyed(this);
+
     delete d_ptr;
+    d_ptr = 0;
 }
 
 /*!

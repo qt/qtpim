@@ -74,7 +74,6 @@ QContactRelationshipFetchRequest::QContactRelationshipFetchRequest(QObject* pare
 /*! Frees any memory used by this request */
 QContactRelationshipFetchRequest::~QContactRelationshipFetchRequest()
 {
-    QContactAbstractRequestPrivate::notifyEngine(this);
 }
 
 /*! Sets the source contact criterion of the fetch request to \a firstContact.

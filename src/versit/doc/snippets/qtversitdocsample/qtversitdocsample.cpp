@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the documentation of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-#include "qmobilityglobal.h"
 #include "qtcontacts.h"
 #include "qcontacttag.h"
 #include "qversitreader.h"
@@ -54,7 +53,7 @@
 #include <QList>
 #include <QFile>
 
-QTM_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 void completeExample();
 void exportExample();

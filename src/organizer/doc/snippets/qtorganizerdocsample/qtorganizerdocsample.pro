@@ -14,7 +14,7 @@ INCLUDEPATH += ../../../../src/global \
                ../../../../src/organizer/items \
                ../../../../src/organizer/filters
 
-CONFIG += mobility console
-MOBILITY = organizer
+CONFIG += console
+QT = organizer
 
 SOURCES += qtorganizerdocsample.cpp

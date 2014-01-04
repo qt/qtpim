@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the test suite of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -65,8 +65,7 @@
 #include <QString>
 #include <QVariantMap>
 
-QTM_USE_NAMESPACE
-
+QTCONTACTS_USE_NAMESPACE
 
 class QContactSendEmailActionPlugin : public QObject, public QServicePluginInterface
 {

@@ -14,7 +14,7 @@ INCLUDEPATH += ../../../../src/global \
                ../../../../src/contacts/details \
                ../../../../src/versit
 
-CONFIG += mobility console
-MOBILITY = contacts versit
+CONFIG += console
+QT = contacts versit
 
 SOURCES += qtversitdocsample.cpp

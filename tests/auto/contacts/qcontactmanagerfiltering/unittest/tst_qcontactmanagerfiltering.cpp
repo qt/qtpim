@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the test suite of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -55,7 +55,7 @@ do {                                                                      \
         qFatal("severe failure encountered, test cannot continue");       \
 } while (0)
 
-QTM_USE_NAMESPACE
+QTCONTACTS_USE_NAMESPACE
 /*
  * This test is mostly just for testing sorting and filtering -
  * having it in tst_QContactManager makes maintenance more

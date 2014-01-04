@@ -63,9 +63,7 @@
 #define SRCDIR "."
 #endif
 
-
-QTM_USE_NAMESPACE
-
+QTCONTACTS_USE_NAMESPACE
 
 class tst_QDeclarativeContact : public QObject
 {

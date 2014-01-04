@@ -3,7 +3,7 @@
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt Mobility Components.
+** This file is part of the documentation of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-#include "qmobilityglobal.h"
 #include "qtorganizer.h"
 
 #include <QDebug>
@@ -47,7 +46,7 @@
 #include <QObject>
 #include <QTimer>
 
-QTM_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 static void snippets();
 static void dumpItems(QOrganizerManager* manager);

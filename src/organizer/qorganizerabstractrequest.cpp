@@ -303,10 +303,13 @@ bool QOrganizerAbstractRequest::waitForFinished(int msecs)
 QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request)
 {
     dbg.nospace() << "QOrganizerAbstractRequest(";
-    if (request.d_ptr)
+    Q_ASSERT(request.d_ptr);
+    if (request.d_ptr->type() != QOrganizerAbstractRequest::InvalidRequest) {
+        QMutexLocker locker(&request.d_ptr->m_mutex);
         request.d_ptr->debugStreamOut(dbg);
-    else
+    } else {
         dbg.nospace() << "(null)";
+    }
     dbg.nospace() << ")";
     return dbg.maybeSpace();
 }

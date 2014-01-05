@@ -1367,9 +1367,10 @@ QList<QDateTime> QOrganizerManagerEngine::generateDateTimes(const QDateTime &ini
             // A final filter over the dates list before adding it to the returned list
             foreach (const QDate &match, matchesInPeriod) {
                 nextDate = match;
-                if (match > realPeriodEnd.date() || retn.size() >= maxCount) {
+                if (match < initialDateTime.date())
+                    continue;
+                if (match > realPeriodEnd.date() || retn.size() >= maxCount)
                     break;
-                }
 
                 QDateTime generatedDateTime(initialDateTime);
 

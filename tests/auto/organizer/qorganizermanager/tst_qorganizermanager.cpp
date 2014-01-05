@@ -2309,6 +2309,25 @@ void tst_QOrganizerManager::recurrenceWithGenerator_data()
                                    << QDate(2010, 1, 4)
                                    << QDate(2010, 1, 5));
         }
+
+        {
+            QOrganizerRecurrenceRule rrule;
+            rrule.setFrequency(QOrganizerRecurrenceRule::Weekly);
+            rrule.setLimit(8);
+            rrule.setDaysOfWeek(QSet<Qt::DayOfWeek>()
+                                << Qt::Monday
+                                << Qt::Tuesday
+                                << Qt::Wednesday);
+            QOrganizerRecurrenceRule exrule;
+            QTest::newRow(QString("mgr=%1, weekly, count, days of week").arg(mgr).toLatin1().constData())
+                << managerUri << QDate(2014, 1, 22)
+                << rrule << exrule << rdates << exdates
+                << QDate(2014, 1, 1) << QDate(2014, 5, 1)
+                << (QList<QDate>() << QDate(2014, 1, 22) << QDate(2014, 1, 27)
+                                   << QDate(2014, 1, 28) << QDate(2014, 1, 29)
+                                   << QDate(2014, 2,  3) << QDate(2014, 2,  4)
+                                   << QDate(2014, 2,  5) << QDate(2014, 2, 10));
+        }
     }
 }
 

@@ -1707,17 +1707,16 @@ bool QOrganizerManagerEngine::waitForRequestFinished(QOrganizerAbstractRequest* 
  */
 void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req, QOrganizerAbstractRequest::State state)
 {
-    if (req) {
-        QMutexLocker ml(&req->d_ptr->m_mutex);
-        if (req->d_ptr->m_state != state) {
-            req->d_ptr->m_state = state;
-            ml.unlock();
+    Q_ASSERT(req);
+    QMutexLocker ml(&req->d_ptr->m_mutex);
+    if (req->d_ptr->m_state != state) {
+        req->d_ptr->m_state = state;
+        ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-            QPointer<QOrganizerAbstractRequest> guard(req);
+        QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-            emit req->stateChanged(state);
-            Q_ASSERT(guard);
-        }
+        emit req->stateChanged(state);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1731,23 +1730,22 @@ void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req,
  */
 void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemOccurrenceFetchRequestPrivate* rd = static_cast<QOrganizerItemOccurrenceFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_organizeritems = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemOccurrenceFetchRequestPrivate* rd = static_cast<QOrganizerItemOccurrenceFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_organizeritems = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1760,23 +1758,22 @@ void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOcc
  */
 void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequest* req, const QList<QOrganizerItemId>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemIdFetchRequestPrivate* rd = static_cast<QOrganizerItemIdFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_ids = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemIdFetchRequestPrivate* rd = static_cast<QOrganizerItemIdFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_ids = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1792,24 +1789,23 @@ void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequ
  */
 void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *req, const QList<QOrganizerItem> &result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemFetchByIdRequestPrivate *rd = static_cast<QOrganizerItemFetchByIdRequestPrivate *>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_items = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemFetchByIdRequestPrivate *rd = static_cast<QOrganizerItemFetchByIdRequestPrivate *>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_items = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1822,23 +1818,22 @@ void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchById
  */
 void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemFetchRequestPrivate* rd = static_cast<QOrganizerItemFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_organizeritems = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemFetchRequestPrivate* rd = static_cast<QOrganizerItemFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_organizeritems = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1851,23 +1846,22 @@ void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest*
  */
 void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemFetchForExportRequestPrivate* rd = static_cast<QOrganizerItemFetchForExportRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_organizeritems = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemFetchForExportRequestPrivate* rd = static_cast<QOrganizerItemFetchForExportRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_organizeritems = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1880,23 +1874,22 @@ void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetc
  */
 void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemRemoveRequestPrivate* rd = static_cast<QOrganizerItemRemoveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemRemoveRequestPrivate* rd = static_cast<QOrganizerItemRemoveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1909,23 +1902,22 @@ void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveReques
  */
 void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemRemoveByIdRequestPrivate* rd = static_cast<QOrganizerItemRemoveByIdRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemRemoveByIdRequestPrivate* rd = static_cast<QOrganizerItemRemoveByIdRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1938,24 +1930,23 @@ void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveBy
  */
 void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerItemSaveRequestPrivate* rd = static_cast<QOrganizerItemSaveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_organizeritems = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerItemSaveRequestPrivate* rd = static_cast<QOrganizerItemSaveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_organizeritems = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1967,23 +1958,22 @@ void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* r
  */
 void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionFetchRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerCollectionFetchRequestPrivate* rd = static_cast<QOrganizerCollectionFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_collections = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerCollectionFetchRequestPrivate* rd = static_cast<QOrganizerCollectionFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_collections = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1995,23 +1985,22 @@ void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionF
  */
 void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerCollectionRemoveRequestPrivate* rd = static_cast<QOrganizerCollectionRemoveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerCollectionRemoveRequestPrivate* rd = static_cast<QOrganizerCollectionRemoveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -2023,24 +2012,23 @@ void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollection
  */
 void QOrganizerManagerEngine::updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
-    if (req) {
-        QOrganizerCollectionSaveRequestPrivate* rd = static_cast<QOrganizerCollectionSaveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_collections = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QOrganizerCollectionSaveRequestPrivate* rd = static_cast<QOrganizerCollectionSaveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_collections = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 #include "moc_qorganizermanagerengine.cpp"

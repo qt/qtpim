@@ -1360,9 +1360,6 @@ void QOrganizerItemMemoryEngine::requestDestroyed(QOrganizerAbstractRequest* req
 */
 bool QOrganizerItemMemoryEngine::startRequest(QOrganizerAbstractRequest* req)
 {
-    if (!req)
-        return false;
-
     updateRequestState(req, QOrganizerAbstractRequest::ActiveState);
     performAsynchronousOperation(req);
 

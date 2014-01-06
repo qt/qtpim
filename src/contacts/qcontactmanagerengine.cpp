@@ -1595,17 +1595,16 @@ bool QContactManagerEngine::waitForRequestFinished(QContactAbstractRequest* req,
  */
 void QContactManagerEngine::updateRequestState(QContactAbstractRequest* req, QContactAbstractRequest::State state)
 {
-    if (req) {
-        QMutexLocker ml(&req->d_ptr->m_mutex);
-        if (req->d_ptr->m_state != state) {
-            req->d_ptr->m_state = state;
-            ml.unlock();
+    Q_ASSERT(req);
+    QMutexLocker ml(&req->d_ptr->m_mutex);
+    if (req->d_ptr->m_state != state) {
+        req->d_ptr->m_state = state;
+        ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-            QPointer<QContactAbstractRequest> guard(req);
+        QPointer<QContactAbstractRequest> guard(req);
 #endif
-            emit req->stateChanged(state);
-            Q_ASSERT(guard);
-        }
+        emit req->stateChanged(state);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1620,23 +1619,22 @@ void QContactManagerEngine::updateRequestState(QContactAbstractRequest* req, QCo
  */
 void QContactManagerEngine::updateContactIdFetchRequest(QContactIdFetchRequest* req, const QList<QContactId>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactIdFetchRequestPrivate* rd = static_cast<QContactIdFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_ids = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactIdFetchRequestPrivate* rd = static_cast<QContactIdFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_ids = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1649,23 +1647,22 @@ void QContactManagerEngine::updateContactIdFetchRequest(QContactIdFetchRequest* 
  */
 void QContactManagerEngine::updateContactFetchRequest(QContactFetchRequest* req, const QList<QContact>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactFetchRequestPrivate* rd = static_cast<QContactFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_contacts = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactFetchRequestPrivate* rd = static_cast<QContactFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_contacts = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1678,23 +1675,22 @@ void QContactManagerEngine::updateContactFetchRequest(QContactFetchRequest* req,
  */
 void QContactManagerEngine::updateContactRemoveRequest(QContactRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactRemoveRequestPrivate* rd = static_cast<QContactRemoveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactRemoveRequestPrivate* rd = static_cast<QContactRemoveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1707,24 +1703,23 @@ void QContactManagerEngine::updateContactRemoveRequest(QContactRemoveRequest* re
  */
 void QContactManagerEngine::updateContactSaveRequest(QContactSaveRequest* req, const QList<QContact>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactSaveRequestPrivate* rd = static_cast<QContactSaveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_contacts = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactSaveRequestPrivate* rd = static_cast<QContactSaveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_contacts = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1737,24 +1732,23 @@ void QContactManagerEngine::updateContactSaveRequest(QContactSaveRequest* req, c
  */
 void QContactManagerEngine::updateRelationshipSaveRequest(QContactRelationshipSaveRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactRelationshipSaveRequestPrivate* rd = static_cast<QContactRelationshipSaveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_relationships = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactRelationshipSaveRequestPrivate* rd = static_cast<QContactRelationshipSaveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_relationships = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1767,23 +1761,22 @@ void QContactManagerEngine::updateRelationshipSaveRequest(QContactRelationshipSa
  */
 void QContactManagerEngine::updateRelationshipRemoveRequest(QContactRelationshipRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactRelationshipRemoveRequestPrivate* rd = static_cast<QContactRelationshipRemoveRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactRelationshipRemoveRequestPrivate* rd = static_cast<QContactRelationshipRemoveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1796,23 +1789,22 @@ void QContactManagerEngine::updateRelationshipRemoveRequest(QContactRelationship
  */
 void QContactManagerEngine::updateRelationshipFetchRequest(QContactRelationshipFetchRequest* req, const QList<QContactRelationship>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactRelationshipFetchRequestPrivate* rd = static_cast<QContactRelationshipFetchRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_relationships = result;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactRelationshipFetchRequestPrivate* rd = static_cast<QContactRelationshipFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_relationships = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -2014,24 +2006,23 @@ QList<QContact> QContactManagerEngine::contacts(const QList<QContactId> &contact
 void QContactManagerEngine::updateContactFetchByIdRequest(QContactFetchByIdRequest *req, const QList<QContact> &result, QContactManager::Error error,
                                                           const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State newState)
 {
-    if (req) {
-        QContactFetchByIdRequestPrivate* rd = static_cast<QContactFetchByIdRequestPrivate*>(req->d_ptr);
-        QMutexLocker ml(&rd->m_mutex);
-        bool emitState = rd->m_state != newState;
-        rd->m_contacts = result;
-        rd->m_errors = errorMap;
-        rd->m_error = error;
-        rd->m_state = newState;
-        ml.unlock();
+    Q_ASSERT(req);
+    QContactFetchByIdRequestPrivate* rd = static_cast<QContactFetchByIdRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_contacts = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->resultsAvailable();
-        Q_ASSERT(guard);
-        if (emitState)
-            emit req->stateChanged(newState);
-        Q_ASSERT(guard);
-    }
+    emit req->resultsAvailable();
+    Q_ASSERT(guard);
+    if (emitState)
+        emit req->stateChanged(newState);
+    Q_ASSERT(guard);
 }
 
 #include "moc_qcontactmanagerengine.cpp"

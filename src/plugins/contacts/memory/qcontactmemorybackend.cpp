@@ -521,9 +521,6 @@ void QContactMemoryEngine::requestDestroyed(QContactAbstractRequest *req)
 /*! \reimp */
 bool QContactMemoryEngine::startRequest(QContactAbstractRequest *req)
 {
-    if (!req)
-        return false;
-
     updateRequestState(req, QContactAbstractRequest::ActiveState);
     performAsynchronousOperation(req);
 

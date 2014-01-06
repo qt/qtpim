@@ -336,14 +336,13 @@ QOrganizerItemMemoryEngine::QOrganizerItemMemoryEngine(QOrganizerItemMemoryEngin
     d->m_sharedEngines.append(this);
 
     // the default collection always exists.
-    if (d->m_organizerCollectionIds.isEmpty()) {
+    if (d->m_idToCollectionHash.isEmpty()) {
         d->m_managerUri = managerUri();
         QOrganizerCollectionId defaultId = d->defaultCollectionId();
         QOrganizerCollection defaultCollection;
         defaultCollection.setId(defaultId);
         defaultCollection.setMetaData(QOrganizerCollection::KeyName, QString(QStringLiteral("Default Collection")));
-        d->m_organizerCollectionIds << defaultId;
-        d->m_organizerCollections << defaultCollection;
+        d->m_idToCollectionHash.insert(defaultId, defaultCollection);
     }
 }
 
@@ -702,7 +701,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
     QOrganizerCollectionId targetCollectionId = theOrganizerItem->collectionId();
 
     // check that the collection exists (or is null :. default collection):
-    if (!targetCollectionId.isNull() && !d->m_organizerCollectionIds.contains(targetCollectionId)) {
+    if (!targetCollectionId.isNull() && !d->m_idToCollectionHash.contains(targetCollectionId)) {
         *error = QOrganizerManager::InvalidCollectionError;
         return false;
     }
@@ -727,8 +726,8 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         // check that the old and new collection is the same (ie, not attempting to save to a different collection)
         if (targetCollectionId.isNull()) {
             // it already exists, so save it where it already exists.
-            targetCollectionId = d->m_itemsInCollections.key(theOrganizerItemId);
-        } else if (!d->m_itemsInCollections.values(targetCollectionId).contains(theOrganizerItemId)) {
+            targetCollectionId = d->m_itemsInCollectionsHash.key(theOrganizerItemId);
+        } else if (!d->m_itemsInCollectionsHash.values(targetCollectionId).contains(theOrganizerItemId)) {
             // the given collection id was non-null but doesn't already contain this item.  error.
             *error = QOrganizerManager::InvalidCollectionError;
             return false;
@@ -803,12 +802,12 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
             // for occurrences, if given a null collection id, save it in the same collection as the parent.
             // otherwise, ensure that the parent is in the same collection.  You cannot save an exception to a different collection than the parent.
             if (targetCollectionId.isNull()) {
-                targetCollectionId = d->m_itemsInCollections.key(parentId);
+                targetCollectionId = d->m_itemsInCollectionsHash.key(parentId);
                 if (targetCollectionId.isNull()) {
                     *error = QOrganizerManager::UnspecifiedError; // this should never occur; parent should _always_ be in a collection.
                     return false;
                 }
-            } else if (!d->m_itemsInCollections.values(targetCollectionId).contains(parentId)) {
+            } else if (!d->m_itemsInCollectionsHash.values(targetCollectionId).contains(parentId)) {
                 // nope, the specified collection doesn't contain the parent.  error.
                 *error = QOrganizerManager::InvalidCollectionError;
                 return false;
@@ -851,7 +850,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
             // if it was an occurrence, we need to add it to the children hash.
             d->m_parentIdToChildIdHash.insert(parentId, theOrganizerItemId);
         }
-        d->m_itemsInCollections.insert(targetCollectionId, theOrganizerItemId);
+        d->m_itemsInCollectionsHash.insert(targetCollectionId, theOrganizerItemId);
         changeSet.insertAddedItem(theOrganizerItemId);
     }
 
@@ -1119,14 +1118,14 @@ bool QOrganizerItemMemoryEngine::removeItem(const QOrganizerItemId& organizerite
     foreach (const QOrganizerItemId& childId, childrenIds) {
         // remove the child occurrence from our lists.
         d->m_idToItemHash.remove(childId);
-        d->m_itemsInCollections.remove(d->m_itemsInCollections.key(childId), childId);
+        d->m_itemsInCollectionsHash.remove(d->m_itemsInCollectionsHash.key(childId), childId);
         changeSet.insertRemovedItem(childId);
     }
 
     // remove the organizer item from the lists.
     d->m_idToItemHash.remove(organizeritemId);
     d->m_parentIdToChildIdHash.remove(organizeritemId);
-    d->m_itemsInCollections.remove(d->m_itemsInCollections.key(organizeritemId), organizeritemId);
+    d->m_itemsInCollectionsHash.remove(d->m_itemsInCollectionsHash.key(organizeritemId), organizeritemId);
     *error = QOrganizerManager::NoError;
 
     changeSet.insertRemovedItem(organizeritemId);
@@ -1237,25 +1236,17 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItem> *items,
 
 QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error)
 {
+    const QOrganizerCollectionId defaultCollectionId = d->defaultCollectionId();
+    Q_ASSERT(d->m_idToCollectionHash.contains(defaultCollectionId));
     *error = QOrganizerManager::NoError;
-    QOrganizerCollectionId defaultCollectionId = d->defaultCollectionId();
-    for (int i = 0; i < d->m_organizerCollections.size(); ++i) {
-        if (d->m_organizerCollections.at(i).id() == defaultCollectionId) {
-            return d->m_organizerCollections.at(i);
-        }
-    }
-
-    *error = QOrganizerManager::UnspecifiedError;
-    return QOrganizerCollection();
+    return d->m_idToCollectionHash.value(defaultCollectionId);
 }
 
 QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
-    *error = QOrganizerManager::NoError;
-    for (int i = 0; i < d->m_organizerCollections.size(); ++i) {
-        if (d->m_organizerCollections.at(i).id() == collectionId) {
-            return d->m_organizerCollections.at(i);
-        }
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        *error = QOrganizerManager::NoError;
+        return d->m_idToCollectionHash.value(collectionId);
     }
 
     *error = QOrganizerManager::DoesNotExistError;
@@ -1264,57 +1255,53 @@ QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerColl
 
 QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerManager::Error* error)
 {
+    Q_ASSERT(!d->m_idToCollectionHash.isEmpty());
     *error = QOrganizerManager::NoError;
-    return d->m_organizerCollections;
+    return d->m_idToCollectionHash.values();
 }
 
 bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error)
 {
-    QOrganizerCollectionChangeSet cs; // for signal emission.
-
-    *error = QOrganizerManager::NoError;
-    QOrganizerCollectionId colId = collection->id();
-    if (colId == d->defaultCollectionId()) {
+    QOrganizerCollectionId collectionId = collection->id();
+    if (collectionId == d->defaultCollectionId()) {
         // attempting to update the default collection.  this is not allowed in the memory engine.
         *error = QOrganizerManager::PermissionsError;
         return false;
     }
 
+    QOrganizerCollectionChangeSet cs;
     // if it's not the default collection, they can do whatever they like.  A collection does not need any metadata to be valid.
-    for (int i = 0; i < d->m_organizerCollectionIds.size(); ++i) {
-        if (d->m_organizerCollectionIds.at(i) == colId) {
-            // this collection already exists.  update our internal list
-            // if the collection has been modified.
-            if (d->m_organizerCollections.at(i) != *collection) {
-                d->m_organizerCollections.replace(i, *collection);
-                cs.insertChangedCollection(colId);
-                d->emitSharedSignals(&cs);
-            }
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        // this collection already exists.  update our internal list
+        // if the collection has been modified.
+        if (d->m_idToCollectionHash.value(collectionId) == *collection) {
+            *error = QOrganizerManager::NoError;
             return true;
         }
+
+        cs.insertChangedCollection(collectionId);
+    } else {
+        // this must be a new collection.  check that the id is null.
+        if (!collectionId.isNull() && collectionId.managerUri() != d->m_managerUri) {
+            // nope, this collection belongs in another manager, or has been deleted.
+            *error = QOrganizerManager::DoesNotExistError;
+            return false;
+        }
+
+        // this is a new collection with a null id; create a new id, add it to our list.
+        collectionId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(d->m_nextOrganizerCollectionId++, d->m_managerUri));
+        collection->setId(collectionId);
+        cs.insertAddedCollection(collectionId);
     }
 
-    // this must be a new collection.  check that the id is null.
-    if ((collection->id().managerUri() != d->m_managerUri && !collection->id().managerUri().isEmpty()) || !colId.isNull()) {
-        // nope, this collection belongs in another manager, or has been deleted.
-        *error = QOrganizerManager::DoesNotExistError;
-        return false;
-    }
-
-    // this is a new collection with a null id; create a new id, add it to our list.
-    QOrganizerCollectionId newId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(d->m_nextOrganizerCollectionId++, d->m_managerUri));
-    collection->setId(newId);
-    d->m_organizerCollections.append(*collection);
-    d->m_organizerCollectionIds.append(newId);
-    cs.insertAddedCollection(newId);
+    d->m_idToCollectionHash.insert(collectionId, *collection);
     d->emitSharedSignals(&cs);
+    *error = QOrganizerManager::NoError;
     return true;
 }
 
 bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
-    QOrganizerCollectionChangeSet cs; // for signal emission.
-    *error = QOrganizerManager::NoError;
     if (collectionId == d->defaultCollectionId()) {
         // attempting to remove the default collection.  this is not allowed in the memory engine.
         *error = QOrganizerManager::PermissionsError;
@@ -1322,26 +1309,25 @@ bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& 
     }
 
     // try to find the collection to remove it (and the items it contains)
-    QList<QOrganizerItemId> itemsToRemove = d->m_itemsInCollections.values(collectionId);
-    for (int i = 0; i < d->m_organizerCollectionIds.size(); ++i) {
-        if (d->m_organizerCollectionIds.at(i) == collectionId) {
-            // found the collection to remove.  remove the items in the collection.
-            if (!itemsToRemove.isEmpty()) {
-                QMap<int, QOrganizerManager::Error> errorMap;
-                if (!removeItems(itemsToRemove, &errorMap, error)) {
-                    // without transaction support, we can't back out.  but the operation should fail.
-                    return false;
-                }
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        // found the collection to remove.  remove the items in the collection.
+        const QList<QOrganizerItemId> itemsToRemove = d->m_itemsInCollectionsHash.values(collectionId);
+        if (!itemsToRemove.isEmpty()) {
+            QMap<int, QOrganizerManager::Error> errorMap;
+            if (!removeItems(itemsToRemove, &errorMap, error)) {
+                // without transaction support, we can't back out.  but the operation should fail.
+                return false;
             }
-
-            // now remove the collection from our lists.
-            d->m_organizerCollectionIds.removeAt(i);
-            d->m_organizerCollections.removeAt(i);
-            d->m_itemsInCollections.remove(collectionId);
-            cs.insertRemovedCollection(collectionId);
-            d->emitSharedSignals(&cs);
-            return true;
         }
+
+        // now remove the collection from our lists.
+        d->m_idToCollectionHash.remove(collectionId);
+        d->m_itemsInCollectionsHash.remove(collectionId);
+        QOrganizerCollectionChangeSet cs;
+        cs.insertRemovedCollection(collectionId);
+        d->emitSharedSignals(&cs);
+        *error = QOrganizerManager::NoError;
+        return true;
     }
 
     // the collection doesn't exist...

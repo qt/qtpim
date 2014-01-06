@@ -48,7 +48,9 @@
 #include "qcontactsortorder.h"
 #include "qdeclarativecontactdetail_p.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactSortOrder :public QObject, public QQmlParserStatus
 {
@@ -99,9 +101,7 @@ private:
     QContactSortOrder m_sortOrder;
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactSortOrder)
 

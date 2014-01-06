@@ -51,7 +51,7 @@
 #include "qdeclarativeorganizeritemsortorder_p.h"
 #include "qdeclarativeorganizercollection_p.h"
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QT_BEGIN_NAMESPACE
 
 class QOrganizerQmlPlugin : public QQmlExtensionPlugin
 {
@@ -124,4 +124,4 @@ public:
 
 #include "plugin.moc"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

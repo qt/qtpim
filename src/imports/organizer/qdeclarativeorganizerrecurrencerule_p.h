@@ -45,7 +45,9 @@
 #include <qorganizerrecurrencerule.h>
 #include <QtQml/qqml.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerRecurrenceRule : public QObject
 {
@@ -129,9 +131,7 @@ private:
     QOrganizerRecurrenceRule m_rule;
 };
 
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerRecurrenceRule)
 

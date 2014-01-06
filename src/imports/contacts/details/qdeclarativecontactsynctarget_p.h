@@ -46,7 +46,9 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactsynctarget.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class  QDeclarativeContactSyncTarget : public QDeclarativeContactDetail
 {
@@ -83,9 +85,7 @@ signals:
 
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactSyncTarget)
 

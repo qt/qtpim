@@ -46,7 +46,9 @@
 
 #include "qdeclarativecontactrelationship_p.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactRelationshipModelPrivate;
 class QDeclarativeContactRelationshipModel : public QAbstractListModel
@@ -107,9 +109,7 @@ private:
     QDeclarativeContactRelationshipModelPrivate* d;
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactRelationshipModel)
 

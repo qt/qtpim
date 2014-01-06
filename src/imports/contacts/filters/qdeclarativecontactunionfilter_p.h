@@ -47,7 +47,9 @@
 
 #include <QQmlListProperty>
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactUnionFilter : public QDeclarativeContactCompoundFilter
 {
@@ -70,8 +72,8 @@ public:
     }
 };
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE
 
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactUnionFilter))
+QML_DECLARE_TYPE(QDeclarativeContactUnionFilter)
 
 #endif

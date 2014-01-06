@@ -45,7 +45,9 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactchangelogfilter.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactChangeLogFilter: public QDeclarativeContactFilter
 {
@@ -104,10 +106,8 @@ private:
     QContactChangeLogFilter d;
 };
 
+QT_END_NAMESPACE
 
-
-QT_END_NAMESPACE_CONTACTS
-
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactChangeLogFilter))
+QML_DECLARE_TYPE(QDeclarativeContactChangeLogFilter)
 
 #endif

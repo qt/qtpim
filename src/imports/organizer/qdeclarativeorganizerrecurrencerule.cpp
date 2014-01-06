@@ -42,7 +42,9 @@
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 #include <QtQml/qqmlinfo.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
     \qmltype RecurrenceRule
@@ -354,4 +356,4 @@ void QDeclarativeOrganizerRecurrenceRule::setRule(const QOrganizerRecurrenceRule
 
 #include "moc_qdeclarativeorganizerrecurrencerule_p.cpp"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

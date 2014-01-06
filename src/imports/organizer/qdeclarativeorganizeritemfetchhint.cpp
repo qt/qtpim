@@ -41,10 +41,12 @@
 
 #include "qdeclarativeorganizeritemfetchhint_p.h"
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
-    \qmltype QtOrganizer::FetchHint
+    \qmltype FetchHint
     \instantiates QDeclarativeOrganizerItemFetchHint
     \brief The FetchHint element provides hints to the manager about which organizer item
            information needs to be retrieved in an asynchronous fetch request or a synchronous
@@ -116,4 +118,4 @@ void QDeclarativeOrganizerItemFetchHint::setFetchHint(const QOrganizerItemFetchH
 
 #include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

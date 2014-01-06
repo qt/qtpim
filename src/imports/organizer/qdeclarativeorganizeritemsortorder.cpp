@@ -41,7 +41,9 @@
 
 #include "qdeclarativeorganizeritemsortorder_p.h"
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
     \qmltype SortOrder
@@ -208,4 +210,4 @@ void QDeclarativeOrganizerItemSortOrder::setDetailDefinitionName()
 
 #include "moc_qdeclarativeorganizeritemsortorder_p.cpp"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

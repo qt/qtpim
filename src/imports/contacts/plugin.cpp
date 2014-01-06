@@ -53,7 +53,9 @@
 #include "qdeclarativecontactfetchhint_p.h"
 #include "qdeclarativecontactfilters_p.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QContactQmlPlugin : public QQmlExtensionPlugin
 {
@@ -130,4 +132,4 @@ public:
 
 #include "plugin.moc"
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE

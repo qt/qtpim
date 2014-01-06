@@ -44,7 +44,9 @@
 #include "qdeclarativecontactfilter_p.h"
 #include "qcontactactionfilter.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactActionFilter : public QDeclarativeContactFilter
 {
@@ -80,9 +82,8 @@ private:
     QContactActionFilter d;
 };
 
+QT_END_NAMESPACE
 
-QT_END_NAMESPACE_CONTACTS
-
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactActionFilter))
+QML_DECLARE_TYPE(QDeclarativeContactActionFilter)
 
 #endif

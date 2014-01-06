@@ -62,6 +62,11 @@
 
 #include "qcontactrequests.h"
 
+QTCONTACTS_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
+
 /*!
     \qmltype ContactModel
     \instantiates QDeclarativeContactModel
@@ -85,8 +90,6 @@
 
     \sa RelationshipModel, Contact, {QContactManager}
 */
-
-QT_BEGIN_NAMESPACE_CONTACTS
 
 class QDeclarativeContactModelPrivate
 {
@@ -1270,4 +1273,4 @@ int QDeclarativeContactModel::contactIndex(const QDeclarativeContact* contact)
 
 #include "moc_qdeclarativecontactmodel_p.cpp"
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE

@@ -47,12 +47,14 @@
 #include "qdeclarativecontactdetail_p.h"
 #include <QQmlParserStatus>
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(QtContacts::QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged)
     Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
@@ -178,10 +180,8 @@ private:
     QContactDetailRangeFilter d;
 };
 
+QT_END_NAMESPACE
 
-
-QT_END_NAMESPACE_CONTACTS
-
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactDetailRangeFilter))
+QML_DECLARE_TYPE(QDeclarativeContactDetailRangeFilter)
 
 #endif

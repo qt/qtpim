@@ -45,7 +45,9 @@
 
 #include <QPixmap>
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
    \qmltype RelationshipModel
@@ -422,4 +424,4 @@ void QDeclarativeContactRelationshipModel::relationshipsRemoved()
 
 #include "moc_qdeclarativecontactrelationshipmodel_p.cpp"
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE

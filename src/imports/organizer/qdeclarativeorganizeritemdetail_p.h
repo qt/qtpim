@@ -45,7 +45,9 @@
 #include <qorganizeritemdetails.h>
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemDetail : public QObject
 {
@@ -839,8 +841,8 @@ Q_SIGNALS:
 class QDeclarativeOrganizerEventRsvp : public QDeclarativeOrganizerItemDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus READ participationStatus WRITE setParticipationStatus NOTIFY valueChanged)
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerEventAttendee::ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationStatus participationStatus READ participationStatus WRITE setParticipationStatus NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerEventAttendee::ParticipationRole participationRole READ participationRole WRITE setParticipationRole NOTIFY valueChanged)
     Q_PROPERTY(ResponseRequirement responseRequirement READ responseRequirement WRITE setResponseRequirement NOTIFY valueChanged)
     Q_PROPERTY(QDateTime responseDeadline READ responseDeadline WRITE setResponseDeadline NOTIFY valueChanged)
     Q_PROPERTY(QDateTime responseDate READ responseDate WRITE setResponseDate NOTIFY valueChanged)
@@ -961,9 +963,7 @@ public:
     static QDeclarativeOrganizerItemDetail *createItemDetail(QDeclarativeOrganizerItemDetail::DetailType type);
 };
 
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemDetail)
 QML_DECLARE_TYPE(QDeclarativeOrganizerEventTime)

@@ -47,7 +47,9 @@
 #include <QtQml/qqml.h>
 #include <QtGui/qcolor.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerCollection : public QObject
 {
@@ -103,9 +105,7 @@ private:
     QOrganizerCollection d;
 };
 
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerCollection)
 

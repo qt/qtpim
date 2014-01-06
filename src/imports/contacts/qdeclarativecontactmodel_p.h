@@ -60,9 +60,10 @@ QT_BEGIN_NAMESPACE_VERSIT
 class QVersitReader;
 QT_END_NAMESPACE_VERSIT
 
+QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactModelPrivate;
 class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserStatus
@@ -208,9 +209,7 @@ private:
     QDeclarativeContactModelPrivate *d;
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactModel)
 

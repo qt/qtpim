@@ -46,7 +46,9 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactfavorite.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactFavorite : public QDeclarativeContactDetail
 {
@@ -91,9 +93,7 @@ signals:
     void valueChanged();
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactFavorite)
 

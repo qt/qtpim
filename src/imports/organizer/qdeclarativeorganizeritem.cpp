@@ -44,7 +44,9 @@
 
 #include <QtQml/qqmlengine.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
     \qmltype OrganizerItem
@@ -1970,4 +1972,4 @@ QString QDeclarativeOrganizerTodoOccurrence::parentId() const
 
 #include "moc_qdeclarativeorganizeritem_p.cpp"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

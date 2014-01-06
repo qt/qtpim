@@ -45,7 +45,9 @@
 #include <qorganizeritemfetchhint.h>
 #include <QtQml/qqml.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemFetchHint : public QObject
 {
@@ -79,9 +81,7 @@ private:
     QOrganizerItemFetchHint d;
 };
 
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemFetchHint)
 

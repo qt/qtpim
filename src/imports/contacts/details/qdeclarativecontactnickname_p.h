@@ -45,7 +45,9 @@
 #include "qdeclarativecontactdetail_p.h"
 #include "qcontactnickname.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactNickname : public QDeclarativeContactDetail
 {
@@ -81,9 +83,7 @@ signals:
     void valueChanged();
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactNickname)
 

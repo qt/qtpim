@@ -46,7 +46,9 @@
 #include "qcontactorganization.h"
 #include <QSet>
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactOrganization : public QDeclarativeContactDetail
 {
@@ -145,9 +147,7 @@ signals:
 
 };
 
-QT_END_NAMESPACE_CONTACTS
-
-QTCONTACTS_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactOrganization)
 

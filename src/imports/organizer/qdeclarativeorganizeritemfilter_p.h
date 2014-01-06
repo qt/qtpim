@@ -45,7 +45,9 @@
 #include "qdeclarativeorganizeritemdetail_p.h"
 #include <qorganizeritemfilters.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeOrganizerItemFilter : public QObject
 {
@@ -207,9 +209,9 @@ class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerI
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_INTERFACES(QQmlParserStatus)
 
 public:
@@ -254,9 +256,9 @@ class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerI
     Q_FLAGS(RangeFlags)
     Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged)
     Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
-    Q_PROPERTY(QtOrganizer::QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
+    Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_INTERFACES(QQmlParserStatus)
 
@@ -331,9 +333,7 @@ private:
     QStringList m_ids;
 };
 
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
+QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemInvalidFilter)

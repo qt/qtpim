@@ -41,7 +41,7 @@
 
 #include "qdeclarativecontactfilters_p.h"
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QT_BEGIN_NAMESPACE
 
 #include "moc_qdeclarativecontactactionfilter_p.cpp"
 #include "moc_qdeclarativecontactchangelogfilter_p.cpp"
@@ -53,4 +53,4 @@ QT_BEGIN_NAMESPACE_CONTACTS
 #include "moc_qdeclarativecontactrelationshipfilter_p.cpp"
 #include "moc_qdeclarativecontactunionfilter_p.cpp"
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE

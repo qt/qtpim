@@ -48,7 +48,9 @@
 #include <QStringList>
 #include <QSet>
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QTCONTACTS_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 class QDeclarativeContactIdFilter : public QDeclarativeContactFilter
 {
@@ -105,10 +107,8 @@ private:
         QStringList m_ids;
 };
 
+QT_END_NAMESPACE
 
-
-QT_END_NAMESPACE_CONTACTS
-
-QML_DECLARE_TYPE(QTCONTACTS_PREPEND_NAMESPACE(QDeclarativeContactIdFilter))
+QML_DECLARE_TYPE(QDeclarativeContactIdFilter)
 
 #endif

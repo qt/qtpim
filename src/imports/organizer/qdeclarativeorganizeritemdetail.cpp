@@ -44,7 +44,9 @@
 #include <qorganizeritemdetails.h>
 #include <qorganizeritemid.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE
 
 /*!
     \qmltype Detail
@@ -373,7 +375,7 @@ QString QDeclarativeOrganizerItemDescription::description() const
 
 
 /*!
-    \qmltype QtOrganizer::DisplayLabel
+    \qmltype DisplayLabel
     \instantiates QDeclarativeOrganizerItemDisplayLabel
     \brief The DisplayLabel element contains the display label of an organizer item.
     \inqmlmodule QtOrganizer 5.0
@@ -2434,4 +2436,4 @@ QDeclarativeOrganizerItemDetail *QDeclarativeOrganizerItemDetailFactory::createI
 
 #include "moc_qdeclarativeorganizeritemdetail_p.cpp"
 
-QT_END_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE

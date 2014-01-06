@@ -1712,7 +1712,11 @@ void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req,
         if (req->d_ptr->m_state != state) {
             req->d_ptr->m_state = state;
             ml.unlock();
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+            QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
             emit req->stateChanged(state);
+            Q_ASSERT(guard);
         }
     }
 }
@@ -1728,7 +1732,6 @@ void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req,
 void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOccurrenceFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemOccurrenceFetchRequest> ireq(req); // Take this in case the first emit deletes us
         QOrganizerItemOccurrenceFetchRequestPrivate* rd = static_cast<QOrganizerItemOccurrenceFetchRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
@@ -1736,9 +1739,14 @@ void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOcc
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1753,17 +1761,21 @@ void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOcc
 void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequest* req, const QList<QOrganizerItemId>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemIdFetchRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemIdFetchRequestPrivate* rd = static_cast<QOrganizerItemIdFetchRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemIdFetchRequestPrivate* rd = static_cast<QOrganizerItemIdFetchRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_ids = result;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1781,8 +1793,7 @@ void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequ
 void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchByIdRequest *req, const QList<QOrganizerItem> &result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error> &errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemFetchByIdRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemFetchByIdRequestPrivate *rd = static_cast<QOrganizerItemFetchByIdRequestPrivate *>(ireq.data()->d_ptr);
+        QOrganizerItemFetchByIdRequestPrivate *rd = static_cast<QOrganizerItemFetchByIdRequestPrivate *>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_items = result;
@@ -1790,9 +1801,14 @@ void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchById
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1807,17 +1823,21 @@ void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchById
 void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemFetchRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemFetchRequestPrivate* rd = static_cast<QOrganizerItemFetchRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemFetchRequestPrivate* rd = static_cast<QOrganizerItemFetchRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_organizeritems = result;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1832,17 +1852,21 @@ void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest*
 void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetchForExportRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemFetchForExportRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemFetchForExportRequestPrivate* rd = static_cast<QOrganizerItemFetchForExportRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemFetchForExportRequestPrivate* rd = static_cast<QOrganizerItemFetchForExportRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_organizeritems = result;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1857,17 +1881,21 @@ void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetc
 void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemRemoveRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemRemoveRequestPrivate* rd = static_cast<QOrganizerItemRemoveRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemRemoveRequestPrivate* rd = static_cast<QOrganizerItemRemoveRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_errors = errorMap;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1882,17 +1910,21 @@ void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveReques
 void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveByIdRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemRemoveByIdRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemRemoveByIdRequestPrivate* rd = static_cast<QOrganizerItemRemoveByIdRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemRemoveByIdRequestPrivate* rd = static_cast<QOrganizerItemRemoveByIdRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_errors = errorMap;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1907,8 +1939,7 @@ void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveBy
 void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* req, const QList<QOrganizerItem>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerItemSaveRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerItemSaveRequestPrivate* rd = static_cast<QOrganizerItemSaveRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerItemSaveRequestPrivate* rd = static_cast<QOrganizerItemSaveRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_organizeritems = result;
@@ -1916,9 +1947,14 @@ void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* r
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1932,17 +1968,21 @@ void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* r
 void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionFetchRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerCollectionFetchRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerCollectionFetchRequestPrivate* rd = static_cast<QOrganizerCollectionFetchRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerCollectionFetchRequestPrivate* rd = static_cast<QOrganizerCollectionFetchRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_collections = result;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1956,17 +1996,21 @@ void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionF
 void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollectionRemoveRequest* req, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerCollectionRemoveRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerCollectionRemoveRequestPrivate* rd = static_cast<QOrganizerCollectionRemoveRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerCollectionRemoveRequestPrivate* rd = static_cast<QOrganizerCollectionRemoveRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_errors = errorMap;
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 
@@ -1980,8 +2024,7 @@ void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollection
 void QOrganizerManagerEngine::updateCollectionSaveRequest(QOrganizerCollectionSaveRequest* req, const QList<QOrganizerCollection>& result, QOrganizerManager::Error error, const QMap<int, QOrganizerManager::Error>& errorMap, QOrganizerAbstractRequest::State newState)
 {
     if (req) {
-        QPointer<QOrganizerCollectionSaveRequest> ireq(req); // Take this in case the first emit deletes us
-        QOrganizerCollectionSaveRequestPrivate* rd = static_cast<QOrganizerCollectionSaveRequestPrivate*>(ireq.data()->d_ptr);
+        QOrganizerCollectionSaveRequestPrivate* rd = static_cast<QOrganizerCollectionSaveRequestPrivate*>(req->d_ptr);
         QMutexLocker ml(&rd->m_mutex);
         bool emitState = rd->m_state != newState;
         rd->m_collections = result;
@@ -1989,9 +2032,14 @@ void QOrganizerManagerEngine::updateCollectionSaveRequest(QOrganizerCollectionSa
         rd->m_error = error;
         rd->m_state = newState;
         ml.unlock();
-        emit ireq.data()->resultsAvailable();
-        if (emitState && ireq)
-            emit ireq.data()->stateChanged(newState);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+        QPointer<QOrganizerAbstractRequest> guard(req);
+#endif
+        emit req->resultsAvailable();
+        Q_ASSERT(guard);
+        if (emitState)
+            emit req->stateChanged(newState);
+        Q_ASSERT(guard);
     }
 }
 

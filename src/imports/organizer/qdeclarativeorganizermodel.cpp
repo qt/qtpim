@@ -1165,7 +1165,8 @@ void QDeclarativeOrganizerModel::requestUpdated()
     Q_D(QDeclarativeOrganizerModel);
     QList<QOrganizerItem> items;
     QOrganizerItemFetchRequest* ifr = qobject_cast<QOrganizerItemFetchRequest*>(QObject::sender());
-    if (ifr && ifr->isFinished()) {
+    Q_ASSERT(ifr);
+    if (ifr->isFinished()) {
         items = ifr->items();
         checkError(ifr);
         ifr->deleteLater();
@@ -1331,12 +1332,11 @@ void QDeclarativeOrganizerModel::removeItems(const QList<QDeclarativeOrganizerIt
  */
 void QDeclarativeOrganizerModel::onRequestStateChanged(QOrganizerAbstractRequest::State newState)
 {
-    if (newState != QOrganizerAbstractRequest::FinishedState || !sender())
+    if (newState != QOrganizerAbstractRequest::FinishedState)
         return;
 
     QOrganizerAbstractRequest *request = qobject_cast<QOrganizerAbstractRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     checkError(request);
     request->deleteLater();
@@ -1431,12 +1431,11 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
     // same data. E.g. items which have the identical sorting key must be sorted too.
 
     Q_D(QDeclarativeOrganizerModel);
-    if (state != QOrganizerAbstractRequest::FinishedState || !sender())
+    if (state != QOrganizerAbstractRequest::FinishedState)
         return;
 
     QOrganizerItemFetchRequest *request = qobject_cast<QOrganizerItemFetchRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     checkError(request);
 
@@ -1603,6 +1602,7 @@ void QDeclarativeOrganizerModel::collectionsFetched()
 {
     Q_D(QDeclarativeOrganizerModel);
     QOrganizerCollectionFetchRequest* req = qobject_cast<QOrganizerCollectionFetchRequest*>(QObject::sender());
+    Q_ASSERT(req);
     if (req->isFinished() && QOrganizerManager::NoError == req->error()) {
         d->m_updatePendingFlag &= ~QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending;
         // prepare tables

@@ -224,7 +224,6 @@ private slots:
 
 protected slots:
     void resultsAvailableReceived();
-    void deleteRequest();
 
 private:
     bool compareItemLists(QList<QOrganizerItem> lista, QList<QOrganizerItem> listb);
@@ -516,12 +515,6 @@ void tst_QOrganizerItemAsync::testDestructor()
     delete cm2;
 }
 
-void tst_QOrganizerItemAsync::deleteRequest()
-{
-    // Delete the sender (request) - check that it doesn't crash in this common coding error
-    delete sender();
-}
-
 void tst_QOrganizerItemAsync::itemFetch()
 {
     QFETCH(QString, uri);
@@ -750,20 +743,6 @@ void tst_QOrganizerItemAsync::itemFetch()
         QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-
-    // Now test deletion in the first slot called
-    QOrganizerItemFetchRequest *ifr2 = new QOrganizerItemFetchRequest();
-    QPointer<QObject> obj(ifr2);
-    ifr2->setManager(oim.data());
-    connect(ifr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
-    QVERIFY(ifr2->start());
-    int i = 100;
-    // at this point we can't even call wait for finished..
-    while(obj && i > 0) {
-        QTest::qWait(50); // force it to process events at least once.
-        i--;
-    }
-    QVERIFY(obj == NULL);
 #endif
 }
 
@@ -1186,20 +1165,6 @@ void tst_QOrganizerItemAsync::itemOccurrenceFetch()
 //        QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
 //        break;
 //    }
-
-//    // Now test deletion in the first slot called
-//    QOrganizerItemFetchRequest *ifr2 = new QOrganizerItemFetchRequest();
-//    QPointer<QObject> obj(ifr2);
-//    ifr2->setManager(oim.data());
-//    connect(ifr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
-//    QVERIFY(ifr2->start());
-//    int i = 100;
-//    // at this point we can't even call wait for finished..
-//    while (obj && i > 0) {
-//        QTest::qWait(50); // force it to process events at least once.
-//        i--;
-//    }
-//    QVERIFY(obj == NULL);
 }
 
 void tst_QOrganizerItemAsync::itemFetchForExport()
@@ -1429,20 +1394,6 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-
-    // Now test deletion in the first slot called
-    QOrganizerItemFetchRequest *ifr2 = new QOrganizerItemFetchRequest();
-    QPointer<QObject> obj(ifr2);
-    ifr2->setManager(oim.data());
-    connect(ifr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
-    QVERIFY(ifr2->start());
-    int i = 100;
-    // at this point we can't even call wait for finished..
-    while(obj && i > 0) {
-        QTest::qWait(50); // force it to process events at least once.
-        i--;
-    }
-    QVERIFY(obj == NULL);
 #endif
 }
 
@@ -2339,20 +2290,6 @@ void tst_QOrganizerItemAsync::collectionFetch()
         QVERIFY(cfr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-
-    // Now test deletion in the first slot called
-    QOrganizerCollectionFetchRequest *cfr2 = new QOrganizerCollectionFetchRequest();
-    QPointer<QObject> obj(cfr2);
-    cfr2->setManager(oim.data());
-    connect(cfr2, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(deleteRequest()));
-    QVERIFY(cfr2->start());
-    int i = 100;
-    // at this point we can't even call wait for finished..
-    while(obj && i > 0) {
-        QTest::qWait(50); // force it to process events at least once.
-        i--;
-    }
-    QVERIFY(obj == NULL);
 #endif
 }
 
@@ -3209,10 +3146,8 @@ void tst_QOrganizerItemAsync::testDebugStreamOut()
 void tst_QOrganizerItemAsync::resultsAvailableReceived()
 {
     QOrganizerItemFetchRequest *req = qobject_cast<QOrganizerItemFetchRequest *>(QObject::sender());
-    if (req)
-        m_resultsAvailableSlotThreadId = req->thread()->currentThreadId();
-    else
-        qWarning() << "resultsAvailableReceived() : request deleted; unable to set thread id!";
+    Q_ASSERT(req);
+    m_resultsAvailableSlotThreadId = req->thread()->currentThreadId();
 }
 
 void tst_QOrganizerItemAsync::addManagers(QStringList stringlist)

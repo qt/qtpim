@@ -340,6 +340,7 @@ void QDeclarativeContactRelationshipModel::removeRelationship(QDeclarativeContac
 void QDeclarativeContactRelationshipModel::requestUpdated()
 {
     QContactRelationshipFetchRequest* req = qobject_cast<QContactRelationshipFetchRequest*>(sender());
+    Q_ASSERT(req);
     if (req->isFinished() && req->error() == QContactManager::NoError) {
 
         QList<QContactRelationship> relationships = req->relationships();
@@ -368,7 +369,7 @@ void QDeclarativeContactRelationshipModel::requestUpdated()
 void QDeclarativeContactRelationshipModel::relationshipsSaved()
 {
     QContactRelationshipSaveRequest* req = qobject_cast<QContactRelationshipSaveRequest*>(sender());
-
+    Q_ASSERT(req);
     if (req->isFinished()) {
         QList<QContactRelationship> rs = req->relationships();
         QList<int> errorIds = req->errorMap().keys();
@@ -396,7 +397,7 @@ void QDeclarativeContactRelationshipModel::relationshipsSaved()
 void QDeclarativeContactRelationshipModel::relationshipsRemoved()
 {
     QContactRelationshipRemoveRequest* req = qobject_cast<QContactRelationshipRemoveRequest*>(sender());
-
+    Q_ASSERT(req);
     if (req->isFinished()) {
         QList<QContactRelationship> rs = req->relationships();
         QList<int> errorIds = req->errorMap().keys();

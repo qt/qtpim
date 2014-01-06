@@ -106,7 +106,7 @@ void QContactManagerEngineV2Wrapper::requestStateChanged(QContactAbstractRequest
     QContactAbstractRequest* request = controller->request();
 
     if (state == QContactAbstractRequest::FinishedState) {
-        delete controller;
+        controller->deleteLater();
         if (request) { // It's possible the request was deleted by the sender.
             // Keep the key in m_controllerForRequest but point it to null to indicate a defunct
             // controller

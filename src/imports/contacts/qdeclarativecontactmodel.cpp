@@ -667,12 +667,11 @@ int QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
  */
 void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstractRequest::State state)
 {
-    if (state != QContactAbstractRequest::FinishedState || !sender())
+    if (state != QContactAbstractRequest::FinishedState)
         return;
 
     QContactFetchByIdRequest *request = qobject_cast<QContactFetchByIdRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     checkError(request);
 
@@ -749,6 +748,7 @@ void QDeclarativeContactModel::requestUpdated()
 {
 
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
+    Q_ASSERT(req);
     if (req) {
         QList<QContact> contacts = req->contacts();
 
@@ -791,6 +791,7 @@ void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest:
         return;
 
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
+    Q_ASSERT(req);
     if (req) {
         // if we were not processing contacts as soon as they arrive, we need to process them here.
         if (!d->m_progressiveLoading) {
@@ -875,14 +876,9 @@ void QDeclarativeContactModel::onRequestStateChanged(QContactAbstractRequest::St
     if (newState != QContactAbstractRequest::FinishedState) {
         return;
     }
-    if (!sender()) {
-        qWarning() << Q_FUNC_INFO << "Called without a sender.";
-        return;
-    }
 
     QContactAbstractRequest *request = qobject_cast<QContactAbstractRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     if ((request->type() == QContactSaveRequest::ContactSaveRequest) &&
         (request->error() == QContactManager::NoError)) {
@@ -1120,11 +1116,10 @@ void  QDeclarativeContactModel::sortOrder_clear(QQmlListProperty<QDeclarativeCon
 void QDeclarativeContactModel::onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State state)
 {
 
-    if (state != QContactAbstractRequest::FinishedState || !sender())
+    if (state != QContactAbstractRequest::FinishedState)
         return;
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     checkError(request);
 
@@ -1168,12 +1163,11 @@ static bool contactListDoesNotContainContactWithId(const QList<QContact> &contac
  */
 void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State state)
 {
-    if (state != QContactAbstractRequest::FinishedState || !sender())
+    if (state != QContactAbstractRequest::FinishedState)
         return;
 
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest *>(sender());
-    if (!request)
-        return;
+    Q_ASSERT(request);
 
     checkError(request);
     bool contactsUpdated = false;

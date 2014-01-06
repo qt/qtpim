@@ -524,10 +524,8 @@ bool QContactMemoryEngine::startRequest(QContactAbstractRequest *req)
     if (!req)
         return false;
 
-    QPointer<QContactAbstractRequest> checkDeletion(req);
     updateRequestState(req, QContactAbstractRequest::ActiveState);
-    if (!checkDeletion.isNull())
-        performAsynchronousOperation(req);
+    performAsynchronousOperation(req);
 
     return true;
 }

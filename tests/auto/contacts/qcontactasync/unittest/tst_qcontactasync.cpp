@@ -253,7 +253,6 @@ private slots:
     void threadDelivery_data() { addManagers(QStringList(QString("maliciousplugin"))); }
 protected slots:
     void resultsAvailableReceived();
-    void deleteRequest();
 
 private:
     bool compareContactLists(QList<QContact> lista, QList<QContact> listb);
@@ -420,12 +419,6 @@ void tst_QContactAsync::testDestructor()
     // second, delete request then manager
     delete req2;
     delete cm2;
-}
-
-void tst_QContactAsync::deleteRequest()
-{
-    // Delete the sender (request) - check that it doesn't crash in this common coding error
-    delete sender();
 }
 
 void tst_QContactAsync::contactFetch()
@@ -657,20 +650,6 @@ void tst_QContactAsync::contactFetch()
         QVERIFY(cfr.state() == QContactAbstractRequest::CanceledState);
         break;
     }
-
-    // Now test deletion in the first slot called
-    QContactFetchRequest *cfr2 = new QContactFetchRequest();
-    QPointer<QObject> obj(cfr2);
-    cfr2->setManager(cm.data());
-    connect(cfr2, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(deleteRequest()));
-    QVERIFY(cfr2->start());
-    int i = 100;
-    // at this point we can't even call wait for finished..
-    while(obj && i > 0) {
-        QTest::qWait(50); // force it to process events at least once.
-        i--;
-    }
-    QVERIFY(obj == NULL);
 }
 
 void tst_QContactAsync::contactFetchById()
@@ -2629,10 +2608,8 @@ void tst_QContactAsync::threadDelivery()
 void tst_QContactAsync::resultsAvailableReceived()
 {
     QContactFetchRequest *req = qobject_cast<QContactFetchRequest *>(QObject::sender());
-    if (req)
-        m_resultsAvailableSlotThreadId = req->thread()->currentThreadId();
-    else
-        qWarning() << "resultsAvailableReceived() : request deleted; unable to set thread id!";
+    Q_ASSERT(req);
+    m_resultsAvailableSlotThreadId = req->thread()->currentThreadId();
 }
 
 void tst_QContactAsync::addManagers(QStringList stringlist)

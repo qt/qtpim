@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTCHANGESET_P_H
 #define QCONTACTCHANGESET_P_H
 
@@ -54,11 +53,11 @@
 // We mean it.
 //
 
-#include <qcontactsglobal.h>
-#include <qcontactid.h>
-#include <QSharedData>
-#include <QSet>
-#include <QPair>
+#include <QtCore/qpair.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtContacts/qcontactid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -98,4 +97,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTCHANGESET_P_H

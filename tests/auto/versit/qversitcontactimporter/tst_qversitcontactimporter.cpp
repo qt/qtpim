@@ -42,15 +42,17 @@
 //TESTED_COMPONENT=src/versit
 
 #include "tst_qversitcontactimporter.h"
-#include <qversitcontactimporter.h>
-#include <private/qversitcontactimporter_p.h>
-#include <qversitproperty.h>
-#include <qversitdocument.h>
-#include <qcontacts.h>
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/private/qversitcontactimporter_p.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtContacts/qcontacts.h>
 #include <QtTest/QtTest>
 #include <QDir>
 
+QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
+
 class MyQVersitContactImporterPropertyHandler : public QVersitContactImporterPropertyHandler
 {
 public:

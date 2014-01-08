@@ -42,14 +42,14 @@
 #ifndef QVERSITREADER_H
 #define QVERSITREADER_H
 
-#include <qversitdocument.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qobject.h>
 
-#include <QObject>
+#include <QtVersit/qversitdocument.h>
 
-QT_BEGIN_NAMESPACE
-class QIODevice;
-class QTextCodec;
-QT_END_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QByteArray)
+QT_FORWARD_DECLARE_CLASS(QIODevice)
+QT_FORWARD_DECLARE_CLASS(QTextCodec)
 
 QT_BEGIN_NAMESPACE_VERSIT
 

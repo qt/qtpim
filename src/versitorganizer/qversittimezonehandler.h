@@ -42,8 +42,9 @@
 #ifndef QVERSITTIMEZONEHANDLER_H
 #define QVERSITTIMEZONEHANDLER_H
 
-#include <qversitorganizerglobal.h>
-#include <QDateTime>
+#include <QtCore/qdatetime.h>
+
+#include <QtVersitOrganizer/qversitorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

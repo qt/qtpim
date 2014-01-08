@@ -53,16 +53,17 @@
 // We mean it.
 //
 
-#include <qorganizeritemfilter.h>
-#include <QtCore/qshareddata.h>
-
 #ifndef QT_NO_DATASTREAM
 #include <QtCore/qdatastream.h>
-#endif // QT_NO_DATASTREAM
-
+#endif
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
-#endif // QT_NO_DEBUG_STREAM
+#endif
+#include <QtCore/qlist.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizeritemfilter.h>
 
 /* Boiler plate code */
 #define Q_IMPLEMENT_ORGANIZERITEMFILTER_PRIVATE(Class) \

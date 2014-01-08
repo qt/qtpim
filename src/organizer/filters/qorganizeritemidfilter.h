@@ -42,8 +42,10 @@
 #ifndef QORGANIZERITEMIDFILTER_H
 #define QORGANIZERITEMIDFILTER_H
 
-#include <qorganizeritemfilter.h>
-#include <qorganizeritemid.h>
+#include <QtCore/qlist.h>
+
+#include <QtOrganizer/qorganizeritemfilter.h>
+#include <QtOrganizer/qorganizeritemid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

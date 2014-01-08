@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QVERSITCONTACTSDEFS_P_H
 #define QVERSITCONTACTSDEFS_P_H
 
@@ -54,32 +53,9 @@
 // We mean it.
 //
 
-#include <qcontacts.h>
-#include <qcontactdetail.h>
-#include "qversitdefs_p.h"
+#include <QtContacts/qcontactdetails.h>
 
-QT_BEGIN_NAMESPACE_CONTACTS
-class QContactAddress;
-class QContactAnniversary;
-class QContactBirthday;
-class QContactDisplayLabel;
-class QContactEmailAddress;
-class QContactFamily;
-class QContactGender;
-class QContactGeoLocation;
-class QContactGuid;
-class QContactName;
-class QContactNickname;
-class QContactNote;
-class QContactOnlineAccount;
-class QContactOrganization;
-class QContactPhoneNumber;
-class QContactRingtone;
-class QContactTag;
-class QContactTimestamp;
-class QContactUrl;
-class QContactVersion;
-QT_END_NAMESPACE_CONTACTS
+#include <QtVersit/private/qversitdefs_p.h>
 
 QTCONTACTS_USE_NAMESPACE
 

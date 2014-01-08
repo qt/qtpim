@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbenginefactory.h"
+
 #include "qorganizerjsondbengine.h"
 #include "qorganizerjsondbid.h"
 #include "qorganizerjsondbstring.h"

@@ -44,9 +44,9 @@
 #include <QtTest/QtTest>
 #include <QApplication>
 
-#include "qtcontacts.h"
-#include "qcontactaction.h"
-#include "qcontactactiondescriptor.h"
+#include <QtContacts/qtcontacts.h>
+#include <QtContacts/qcontactaction.h>
+#include <QtContacts/qcontactactiondescriptor.h>
 
 #include "qservicemanager.h"
 

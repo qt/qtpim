@@ -42,10 +42,10 @@
 #ifndef QORGANIZERITEMSORTORDER_H
 #define QORGANIZERITEMSORTORDER_H
 
-#include <qorganizeritemdetail.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qshareddata.h>
-#include <QtCore/qstring.h>
+
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

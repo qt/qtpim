@@ -41,16 +41,13 @@
 
 #include "qcontactabstractrequest.h"
 #include "qcontactabstractrequest_p.h"
-#include "qcontactmanager.h"
-#include "qcontactmanager_p.h"
-#include "qcontactmanagerengine.h"
-
-#include <QMutex>
-#include <QMutexLocker>
 
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#include <QtCore/qdebug.h>
 #endif
+
+#include "qcontactmanager_p.h"
+#include "qcontactmanagerengine.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 /*!

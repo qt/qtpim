@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QVERSITORGANIZERDEFS_P_H
 #define QVERSITORGANIZERDEFS_P_H
 
@@ -53,16 +52,10 @@
 //
 // We mean it.
 //
-//
 
-#include <qversitorganizerglobal.h>
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetails.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
-class QOrganizerItemDisplayLabel;
-class QOrganizerItemDescription;
-class QOrganizerItemGuid;
-QT_END_NAMESPACE_ORGANIZER
+#include <QtVersitOrganizer/qversitorganizerglobal.h>
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -87,4 +80,4 @@ const VersitOrganizerDetailMapping versitOrganizerDetailMappings[] = {
 
 QT_END_NAMESPACE_VERSITORGANIZER
 
-#endif
+#endif // QVERSITORGANIZERDEFS_P_H

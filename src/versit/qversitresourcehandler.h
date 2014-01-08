@@ -42,10 +42,10 @@
 #ifndef QVERSITRESOURCEHANDLER_H
 #define QVERSITRESOURCEHANDLER_H
 
-#include <qversitglobal.h>
+#include <QtVersit/qversitglobal.h>
 
-#include <QString>
-#include <QByteArray>
+QT_FORWARD_DECLARE_CLASS(QByteArray)
+QT_FORWARD_DECLARE_CLASS(QString)
 
 QT_BEGIN_NAMESPACE_VERSIT
 

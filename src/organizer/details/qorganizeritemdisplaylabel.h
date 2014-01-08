@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMDISPLAYLABEL_H
 #define QORGANIZERITEMDISPLAYLABEL_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

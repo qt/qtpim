@@ -39,19 +39,17 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGERENGINEFACTORY_H
 #define QCONTACTMANAGERENGINEFACTORY_H
 
-#include <QtPlugin>
-#include <QFactoryInterface>
-#include <QMap>
-#include <QString>
+#include <QtCore/qfactoryinterface.h>
+#include <QtCore/qplugin.h>
 
-#include <qcontactmanager.h>
+#include <QtContacts/qcontactmanager.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 /* Backend plugin API interface, creates engines for us */
+class QContactEngineId;
 class QContactManagerEngine;
 
 struct Q_CONTACTS_EXPORT QContactManagerEngineFactoryInterface : public QFactoryInterface
@@ -81,6 +79,7 @@ public:
     virtual QString managerName() const = 0;
     virtual QStringList keys() const;
 };
+
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTMANAGERENGINEFACTORY_H

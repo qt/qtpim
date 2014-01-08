@@ -42,14 +42,18 @@
 #ifndef QORGANIZERMANAGER_H
 #define QORGANIZERMANAGER_H
 
-#include <qorganizercollection.h>
-#include <qorganizeritem.h>
-#include <qorganizeritemfilter.h>
-#include <qorganizeritemfetchhint.h>
-#include <qorganizeritemsortorder.h>
-
 #include <QtCore/qdatetime.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qpair.h>
 #include <QtCore/qstringlist.h>
+
+#include <QtOrganizer/qorganizercollection.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemfilter.h>
+#include <QtOrganizer/qorganizeritemfetchhint.h>
+#include <QtOrganizer/qorganizeritemsortorder.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -42,17 +42,16 @@
 #ifndef QCONTACTFETCHREQUEST_H
 #define QCONTACTFETCHREQUEST_H
 
-#include <qcontactsglobal.h>
-#include <qcontactabstractrequest.h>
-#include <qcontactsortorder.h>
-#include <qcontactfilter.h>
-#include <qcontact.h>
-#include <qcontactfetchhint.h>
+#include <QtCore/qlist.h>
 
-#include <QList>
-#include <QStringList>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactsortorder.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFetchHint;
+class QContactFilter;
 
 class QContactFetchRequestPrivate;
 class Q_CONTACTS_EXPORT QContactFetchRequest : public QContactAbstractRequest
@@ -86,4 +85,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTFETCHREQUEST_H

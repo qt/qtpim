@@ -40,7 +40,7 @@
 #include "eventeditpage.h"
 
 #include <QtWidgets>
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 
 QTORGANIZER_USE_NAMESPACE
 

@@ -42,10 +42,10 @@
 #ifndef QORGANIZERITEMENGINEID_H
 #define QORGANIZERITEMENGINEID_H
 
-#include <qorganizerglobal.h>
-#include <qorganizerabstractrequest.h>
-
 #include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
+
+#include <QtOrganizer/qorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

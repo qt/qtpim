@@ -42,15 +42,9 @@
 #ifndef QCONTACTRELATIONSHIPFILTER_H
 #define QCONTACTRELATIONSHIPFILTER_H
 
-#include <qcontactsglobal.h>
-#include <qcontactfilter.h>
-#include <qcontact.h>
-#include <qcontactrelationship.h>
-
-#include <QSharedDataPointer>
-#include <QStringList>
-#include <QList>
-#include <QString>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactfilter.h>
+#include <QtContacts/qcontactrelationship.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -75,4 +69,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTRELATIONSHIPFILTER_H

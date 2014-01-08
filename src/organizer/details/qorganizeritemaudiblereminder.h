@@ -42,9 +42,9 @@
 #ifndef QORGANIZERITEMAUDIBLEREMINDER_H
 #define QORGANIZERITEMAUDIBLEREMINDER_H
 
-#include <qorganizeritemreminder.h>
+#include <QtOrganizer/qorganizeritemreminder.h>
 
-#include <QtCore/qurl.h>
+QT_FORWARD_DECLARE_CLASS(QUrl)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

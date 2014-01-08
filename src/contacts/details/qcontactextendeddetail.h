@@ -42,7 +42,7 @@
 #ifndef QCONTACTEXTENDEDDETAIL_H
 #define QCONTACTEXTENDEDDETAIL_H
 
-#include <qcontactdetail.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

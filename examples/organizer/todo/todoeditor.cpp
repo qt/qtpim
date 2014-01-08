@@ -40,9 +40,11 @@
 
 #include <QtWidgets>
 
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 
 #include "todoeditor.h"
+
+QTORGANIZER_USE_NAMESPACE
 
 TodoEditor::TodoEditor()
 {

@@ -39,13 +39,17 @@
 **
 ****************************************************************************/
 
-#include <private/qorganizermanager_p.h>
-#include <qorganizeritemobserver.h>
-#include <qorganizermanagerenginefactory.h>
+#include "qorganizermanager_p.h"
 
 #include <QtCore/qcoreapplication.h>
+#if !defined(QT_NO_DEBUG)
+#include <QtCore/qdebug.h>
+#endif
 #include <QtCore/qpluginloader.h>
 #include <QtCore/private/qfactoryloader_p.h>
+
+#include "qorganizeritemobserver.h"
+#include "qorganizermanagerenginefactory.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -134,11 +138,11 @@ void QOrganizerManagerData::loadStaticFactories()
                 if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name))
-                        qWarning() << "Static organizeritems plugin" << name << "has the same name as a currently loaded plugin; ignored";
+                        qWarning("Static organizeritems plugin %s has the same name as a currently loaded plugin; ignored", qPrintable(name));
                     else
                         m_engines.insertMulti(name, f);
                 } else {
-                    qWarning() << "Static organizeritems plugin with reserved name" << name << "ignored";
+                    qWarning("Static organizeritems plugin with reserved name %s ignored", qPrintable(name));
                 }
             }
         }
@@ -172,11 +176,11 @@ void QOrganizerManagerData::loadFactories()
                 if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name))
-                        qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "has the same name as currently loaded plugin" << name << "; ignored";
+                        qWarning("Organizer plugin %s has the same name as currently loaded plugin %s; ignored", qPrintable(m_pluginPaths.at(i)), qPrintable(name));
                     else
                         m_engines.insertMulti(name, f);
                 } else {
-                    qWarning() << "Organizer plugin" << m_pluginPaths.at(i) << "with reserved name" << name << "ignored";
+                    qWarning("Organizer plugin %s with reserved name %s ignored", qPrintable(m_pluginPaths.at(i)), qPrintable(name));
                 }
             }
 

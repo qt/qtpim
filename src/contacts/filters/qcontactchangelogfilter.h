@@ -42,9 +42,9 @@
 #ifndef QCONTACTCHANGELOGFILTER_H
 #define QCONTACTCHANGELOGFILTER_H
 
-#include "qcontactfilter.h"
+#include <QtCore/qdatetime.h>
 
-#include <QDateTime>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -73,4 +73,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTCHANGELOGFILTER_H

@@ -42,8 +42,10 @@
 #ifndef QORGANIZERCOLLECTIONFETCHREQUEST_H
 #define QORGANIZERCOLLECTIONFETCHREQUEST_H
 
-#include <qorganizerabstractrequest.h>
-#include <qorganizercollection.h>
+#include <QtCore/qlist.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizercollection.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

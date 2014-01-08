@@ -39,14 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTADDRESS_H
 #define QDECLARATIVECONTACTADDRESS_H
 
-#include "qdeclarativecontactdetail_p.h"
-#include "qcontactaddress.h"
+#include <QtContacts/qcontactaddress.h>
 
-#include <QSet>
+#include "qdeclarativecontactdetail_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -166,6 +164,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactAddress)
 
-
-#endif
-
+#endif // QDECLARATIVECONTACTADDRESS_H

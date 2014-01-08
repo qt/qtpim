@@ -42,15 +42,19 @@
 #ifndef QORGANIZERCOLLECTION_H
 #define QORGANIZERCOLLECTION_H
 
-#include <qorganizercollectionid.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qvariant.h>
+
+#include <QtOrganizer/qorganizercollectionid.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemtype.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
-// MSVC needs the function declared before the friend declaration
-class QOrganizerCollection;
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
-
 class QOrganizerManagerEngine;
+
 class QOrganizerCollectionData;
 class Q_ORGANIZER_EXPORT QOrganizerCollection
 {
@@ -89,6 +93,8 @@ private:
     friend class QOrganizerManagerEngine;
     QSharedDataPointer<QOrganizerCollectionData> d;
 };
+
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollection &key);
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollection &collection);

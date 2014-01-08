@@ -42,25 +42,22 @@
 #ifndef QDECLARATIVEORGANIZERMODEL_H
 #define QDECLARATIVEORGANIZERMODEL_H
 
-#include <QAbstractListModel>
-#include <QQmlListProperty>
-#include <QQmlParserStatus>
+#include <QtCore/qabstractitemmodel.h>
 
-#include <qorganizeritem.h>
-#include <qorganizerabstractrequest.h>
-#include "qdeclarativeorganizeritem_p.h"
-#include <qversitreader.h>
-#include <qversitwriter.h>
-#include <qorganizercollectionid.h>
-#include "qdeclarativeorganizeritemfetchhint_p.h"
-#include "qdeclarativeorganizeritemsortorder_p.h"
-#include "qdeclarativeorganizeritemfilter_p.h"
+#include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizercollectionid.h>
+#include <QtOrganizer/qorganizeritem.h>
+
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitwriter.h>
+
 #include "qdeclarativeorganizercollection_p.h"
-
-QT_BEGIN_NAMESPACE_VERSIT
-class QVersitReader;
-class QVersitWriter;
-QT_END_NAMESPACE_VERSIT
+#include "qdeclarativeorganizeritem_p.h"
+#include "qdeclarativeorganizeritemfetchhint_p.h"
+#include "qdeclarativeorganizeritemfilter_p.h"
+#include "qdeclarativeorganizeritemsortorder_p.h"
 
 QTORGANIZER_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE

@@ -40,15 +40,17 @@
 ****************************************************************************/
 
 #include "qversitutils_p.h"
-#include <qversitdocument.h>
-#include <qversitproperty.h>
 
-#include <QMap>
-#include <QTextCodec>
-#include <QScopedPointer>
+#include <QtCore/QTextCodec>
+#include <QtCore/qstring.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qvariant.h>
+
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonValue>
+
+#include "qversitdocument.h"
 
 QT_BEGIN_NAMESPACE_VERSIT
 

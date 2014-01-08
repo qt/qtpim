@@ -38,12 +38,15 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QtQml/qqmlinfo.h>
-#include "qdeclarativecontactrelationshipmodel_p.h"
-#include "qcontactmanager.h"
-#include "qcontactrequests.h"
 
-#include <QPixmap>
+#include "qdeclarativecontactrelationshipmodel_p.h"
+
+#include <QtGui/qpixmap.h>
+
+#include <QtQml/qqmlinfo.h>
+
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactrequests.h>
 
 QTCONTACTS_USE_NAMESPACE
 

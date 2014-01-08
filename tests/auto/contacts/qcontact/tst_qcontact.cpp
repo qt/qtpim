@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 #include <QSet>
 #include "../qcontactidmock.h"
 

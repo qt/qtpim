@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTBIRTHDAY_H
 #define QDECLARATIVECONTACTBIRTHDAY_H
 
+#include <QtContacts/qcontactbirthday.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactbirthday.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -87,5 +88,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactBirthday)
 
-#endif
-
+#endif // QDECLARATIVECONTACTBIRTHDAY_H

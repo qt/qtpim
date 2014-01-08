@@ -45,18 +45,17 @@
 // this file includes all of the asynchronous request
 // leaf classes that are included in the public API
 
-#include "qcontactrelationshipfetchrequest.h"
-#include "qcontactrelationshipremoverequest.h"
-#include "qcontactrelationshipsaverequest.h"
+#include <QtContacts/qcontactrelationshipfetchrequest.h>
+#include <QtContacts/qcontactrelationshipremoverequest.h>
+#include <QtContacts/qcontactrelationshipsaverequest.h>
 
-#include "qcontactfetchrequest.h"
-#include "qcontactfetchbyidrequest.h"
-#include "qcontactidfetchrequest.h"
-#include "qcontactremoverequest.h"
-#include "qcontactsaverequest.h"
+#include <QtContacts/qcontactfetchrequest.h>
+#include <QtContacts/qcontactfetchbyidrequest.h>
+#include <QtContacts/qcontactidfetchrequest.h>
+#include <QtContacts/qcontactremoverequest.h>
+#include <QtContacts/qcontactsaverequest.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTREQUESTS_H

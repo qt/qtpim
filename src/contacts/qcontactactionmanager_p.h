@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTACTIONMANAGER_P_H
 #define QCONTACTACTIONMANAGER_P_H
 
@@ -54,12 +53,12 @@
 // We mean it.
 //
 
-#include <QMultiHash>
-#include <QHash>
-#include <QMutex>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmutex.h>
 
-#include <qcontact.h>
-#include <qcontactactiondescriptor.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactactiondescriptor.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -99,4 +98,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtContacts::QContactActionManagerPlugin, "org.qt-project.Qt.QContactActionManagerPlugin")
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACTACTIONMANAGER_P_H

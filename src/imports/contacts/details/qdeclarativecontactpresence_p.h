@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTPRESENCE_H
 #define QDECLARATIVECONTACTPRESENCE_H
 
+#include <QtContacts/qcontactpresence.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactpresence.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -156,5 +156,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactPresence)
 
-#endif
-
+#endif // QDECLARATIVECONTACTPRESENCE_H

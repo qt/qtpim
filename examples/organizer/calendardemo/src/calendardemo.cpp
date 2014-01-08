@@ -56,7 +56,7 @@
 #endif
 #include <QtWidgets>
 #include <QDesktopServices>
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 
 QTORGANIZER_USE_NAMESPACE
 

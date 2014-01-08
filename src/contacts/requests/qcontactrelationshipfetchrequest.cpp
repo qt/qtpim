@@ -40,8 +40,7 @@
 ****************************************************************************/
 
 #include "qcontactrelationshipfetchrequest.h"
-#include "qcontactrelationship.h"
-#include "qcontactrelationshipfilter.h"
+
 #include "qcontactrequests_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

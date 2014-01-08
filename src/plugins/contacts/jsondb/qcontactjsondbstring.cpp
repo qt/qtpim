@@ -39,4 +39,4 @@
 **
 ****************************************************************************/
 
-#include <qcontactjsondbstring.h>
+#include "qcontactjsondbstring.h"

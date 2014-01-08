@@ -42,17 +42,17 @@
 //TESTED_COMPONENT=src/organizer
 
 #include <QtTest/QtTest>
-#include <QUuid>
+#include <QtCore/QUuid>
 
-#include "qorganizer.h"
-#include "qorganizeritemchangeset.h"
+#include <QtOrganizer/qorganizer.h>
+#include <QtOrganizer/qorganizeritemchangeset.h>
 #include "../qorganizermanagerdataholder.h"
 #include "../../jsondbprocess.h"
 
-#include "qorganizernote.h"
-#include "qorganizerevent.h"
+#include <QtOrganizer/qorganizernote.h>
+#include <QtOrganizer/qorganizerevent.h>
 
-#include "qorganizeritemengineid.h"
+#include <QtOrganizer/qorganizeritemengineid.h>
 
 QTORGANIZER_USE_NAMESPACE
 

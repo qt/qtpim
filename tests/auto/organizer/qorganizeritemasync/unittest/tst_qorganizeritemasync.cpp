@@ -41,10 +41,10 @@
 
 #include <QtTest/QtTest>
 
-#include <QCoreApplication>
-#include <QScopedPointer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QScopedPointer>
 
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
 #include "../../../jsondbprocess.h"
 

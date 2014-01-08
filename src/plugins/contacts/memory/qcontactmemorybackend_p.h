@@ -54,19 +54,15 @@
 // We mean it.
 //
 
-#include <QContact>
-#include <QContactManager>
-#include <QContactManagerEngine>
-#include <QContactAbstractRequest>
-#include <QContactChangeSet>
-#include <qcontactengineid.h>
-#include <qcontactmanagerenginefactory.h>
-
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactchangeset.h>
+#include <QtContacts/qcontactengineid.h>
+#include <QtContacts/qcontactmanagerenginefactory.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactAbstractRequest;
-class QContactManagerEngine;
 class QContactMemoryEngine;
 
 class QContactMemoryEngineFactory : public QContactManagerEngineFactory
@@ -243,5 +239,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTMEMORYBACKEND_P_H

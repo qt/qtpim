@@ -41,10 +41,10 @@
 
 #ifndef QDECLARATIVECONTACTURL_H
 #define QDECLARATIVECONTACTURL_H
-#include <QUrl>
+
+#include <QtContacts/qcontacturl.h>
 
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontacturl.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -123,5 +123,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactUrl)
 
-#endif
-
+#endif // QDECLARATIVECONTACTURL_H

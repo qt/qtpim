@@ -41,9 +41,9 @@
 
 #include <QtTest/QtTest>
 
-#include <qorganizeritemdetails.h>
-#include <qorganizeritems.h>
-#include <qorganizermanager.h>
+#include <QtOrganizer/qorganizeritemdetails.h>
+#include <QtOrganizer/qorganizeritems.h>
+#include <QtOrganizer/qorganizermanager.h>
 #include "../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE

@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTJSONDBENGINEFACTORY_H
 #define QCONTACTJSONDBENGINEFACTORY_H
 
@@ -54,8 +53,9 @@
 // We mean it.
 //
 
-#include "qcontact.h"
-#include "qcontactmanagerenginefactory.h"
+#include <QtContacts/qcontactengineid.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerenginefactory.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -75,5 +75,4 @@ class Q_DECL_EXPORT QContactJsonDbEngineFactory : public QContactManagerEngineFa
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTJSONDBENGINEFACTORY_H

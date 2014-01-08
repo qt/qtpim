@@ -53,24 +53,23 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QQueue>
-#include <QPair>
-#include <QSet>
-#include <QDateTime>
-#include <QString>
-#include <QObject>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
 
-#include <qorganizeritem.h>
-#include <qorganizermanager.h>
-#include <qorganizermanagerengine.h>
-#include <qorganizermanagerenginefactory.h>
-#include <qorganizerabstractrequest.h>
-#include <qorganizeritemengineid.h>
-#include <qorganizercollectionengineid.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizermanager.h>
+#include <QtOrganizer/qorganizermanagerengine.h>
+#include <QtOrganizer/qorganizermanagerenginefactory.h>
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizeritemengineid.h>
+#include <QtOrganizer/qorganizercollectionengineid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -228,4 +227,4 @@ private:
 
 QT_END_NAMESPACE_ORGANIZER
 
-#endif
+#endif // QORGANIZERSKELETON_P_H

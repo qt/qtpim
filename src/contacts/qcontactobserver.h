@@ -42,13 +42,15 @@
 #ifndef QCONTACTOBSERVER_H
 #define QCONTACTOBSERVER_H
 
-#include <QObject>
-#include <qcontactmanager.h>
+#include <QtCore/qobject.h>
+
+#include <QtContacts/qcontactid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactObserverPrivate;
+class QContactManager;
 
+class QContactObserverPrivate;
 class Q_CONTACTS_EXPORT QContactObserver : public QObject
 {
     Q_OBJECT
@@ -67,4 +69,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTOBSERVER_H

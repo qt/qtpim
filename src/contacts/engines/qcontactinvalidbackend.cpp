@@ -41,8 +41,6 @@
 
 #include "qcontactinvalidbackend_p.h"
 
-#include <QSharedData>
-
 /*!
   \class QContactInvalidEngine
 

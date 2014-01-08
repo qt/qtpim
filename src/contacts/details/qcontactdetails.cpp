@@ -39,14 +39,13 @@
 **
 ****************************************************************************/
 
-#include <QByteArray>
-#include <QUrl>
-#include <QFile>
+#include "qcontactdetails.h"
 
-#include <qcontactmanager.h>
-#include <qcontacts.h>
-#include <qcontactdetails.h>
-#include <qcontactdetail.h>
+#include <QtCore/qfile.h>
+
+#include "qcontactmanager.h"
+#include "qcontactfilter.h"
+#include "qcontacts.h"
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by

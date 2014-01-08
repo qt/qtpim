@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <qorganizercollectionengineid.h>
+#include "qorganizercollectionengineid.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

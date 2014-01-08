@@ -42,8 +42,8 @@
 #ifndef QORGANIZERITEMDETAILFIELDFILTER_H
 #define QORGANIZERITEMDETAILFIELDFILTER_H
 
-#include <qorganizeritemfilter.h>
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemfilter.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -38,14 +38,14 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QDECLARATIVECONTACTSORTORDER_P_H
 #define QDECLARATIVECONTACTSORTORDER_P_H
 
-#include <qqml.h>
-#include <QQmlExtensionPlugin>
-#include <QQmlParserStatus>
+#include <QtQml/qqml.h>
 
-#include "qcontactsortorder.h"
+#include <QtContacts/qcontactsortorder.h>
+
 #include "qdeclarativecontactdetail_p.h"
 
 QTCONTACTS_USE_NAMESPACE
@@ -105,4 +105,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactSortOrder)
 
-#endif
+#endif // QDECLARATIVECONTACTSORTORDER_P_H

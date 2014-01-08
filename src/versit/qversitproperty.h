@@ -42,21 +42,16 @@
 #ifndef QVERSITPROPERTY_H
 #define QVERSITPROPERTY_H
 
-#include <qversitdocument.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <QString>
-#include <QStringList>
-#include <QMultiHash>
-#include <QByteArray>
-#include <QSharedDataPointer>
-
-QT_BEGIN_NAMESPACE
-class QVariant;
-QT_END_NAMESPACE
+#include <QtVersit/qversitglobal.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
-class QVersitPropertyPrivate;
 
+class QVersitPropertyPrivate;
 class Q_VERSIT_EXPORT QVersitProperty
 {
 public:

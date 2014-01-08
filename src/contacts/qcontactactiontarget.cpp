@@ -42,9 +42,12 @@
 #include "qcontactactiontarget.h"
 #include "qcontactactiontarget_p.h"
 
-#include "qcontact.h"
-
-#include <QHash>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

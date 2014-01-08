@@ -38,6 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QVERSITORGANIZERIMPORTER_P_H
 #define QVERSITORGANIZERIMPORTER_P_H
 
@@ -52,14 +53,25 @@
 // We mean it.
 //
 
-#include <qversitorganizerglobal.h>
-#include <qversitorganizerimporter.h>
-#include <qorganizeritemrecurrence.h>
-#include <qversitorganizerhandler.h>
-#include <qversittimezonehandler.h>
-#include "qtimezones_p.h"
+#include <QtCore/qpair.h>
+#include <QtCore/qset.h>
+
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+
+#include <QtVersitOrganizer/qversitorganizerimporter.h>
+#include <QtVersitOrganizer/private/qtimezones_p.h>
+
+QT_BEGIN_NAMESPACE_ORGANIZER
+class QOrganizerRecurrenceRule;
+QT_END_NAMESPACE_ORGANIZER
+
+QTORGANIZER_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
+
+class QVersitOrganizerHandler;
+class QVersitTimeZoneHandler;
 
 class Duration
 {
@@ -231,4 +243,4 @@ private:
 
 QT_END_NAMESPACE_VERSITORGANIZER
 
-#endif
+#endif // QVERSITORGANIZERIMPORTER_P_H

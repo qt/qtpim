@@ -42,13 +42,11 @@
 #ifndef QORGANIZERRECURRENCERULE_H
 #define QORGANIZERRECURRENCERULE_H
 
-#include <qorganizerglobal.h>
-
 #include <QtCore/qdatetime.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
 
-#ifndef QT_NO_DEBUG_STREAM
-#include <QtCore/qdebug.h>
-#endif // QT_NO_DEBUG_STREAM
+#include <QtOrganizer/qorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

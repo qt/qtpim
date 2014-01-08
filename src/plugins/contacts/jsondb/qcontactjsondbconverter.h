@@ -42,13 +42,15 @@
 #ifndef QCONTACTJSONDBCONVERTER_H
 #define QCONTACTJSONDBCONVERTER_H
 
-#include <QHash>
+#include <QtCore/qhash.h>
+
 #include <QtJsonDb/qjsondbrequest.h>
 
-#include "qcontact.h"
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactfilter.h>
+
 #include "qcontactjsondbengine.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactfilter.h"
 
 QT_USE_NAMESPACE_JSONDB
 

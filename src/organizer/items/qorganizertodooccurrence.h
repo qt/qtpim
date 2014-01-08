@@ -42,11 +42,16 @@
 #ifndef QORGANIZERTODOOCCURRENCE_H
 #define QORGANIZERTODOOCCURRENCE_H
 
-#include <qorganizeritem.h>
-#include <qorganizeritempriority.h>
-#include <qorganizertodoprogress.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritempriority.h>
+#include <QtOrganizer/qorganizertodoprogress.h>
+
+QT_FORWARD_DECLARE_CLASS(QDate)
+QT_FORWARD_DECLARE_CLASS(QDateTime)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
+
+class QOrganizerItemId;
 
 /* Leaf class */
 

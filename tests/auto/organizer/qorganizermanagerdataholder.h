@@ -43,14 +43,6 @@
 #ifndef QORGANIZERITEMMANAGERDATAHOLDER_H
 #define QORGANIZERITEMMANAGERDATAHOLDER_H
 
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QString>
-#include <QDebug>
-
-#include "qorganizermanager.h"
-
 //
 //  W A R N I N G
 //  -------------
@@ -61,6 +53,13 @@
 //
 // We mean it.
 //
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstring.h>
+
+#include <QtOrganizer/qorganizermanager.h>
 
 QTORGANIZER_USE_NAMESPACE
 

@@ -42,11 +42,9 @@
 #ifndef QCONTACTANNIVERSARY_H
 #define QCONTACTANNIVERSARY_H
 
-#include <QString>
+#include <QtCore/qdatetime.h>
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -91,5 +89,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTANNIVERSARY_H

@@ -42,10 +42,13 @@
 #ifndef QORGANIZERTODO_H
 #define QORGANIZERTODO_H
 
-#include <qorganizeritem.h>
-#include <qorganizeritempriority.h>
-#include <qorganizeritemrecurrence.h>
-#include <qorganizertodoprogress.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qset.h>
+
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritempriority.h>
+#include <QtOrganizer/qorganizeritemrecurrence.h>
+#include <QtOrganizer/qorganizertodoprogress.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

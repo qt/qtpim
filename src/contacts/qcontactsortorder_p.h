@@ -53,10 +53,10 @@
 // We mean it.
 //
 
-#include "qcontactsortorder.h"
-#include "qcontactdetail.h"
+#include <QtCore/qshareddata.h>
 
-#include <QSharedData>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactsortorder.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -86,4 +86,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTSORTORDER_P_H

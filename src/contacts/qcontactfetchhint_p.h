@@ -53,11 +53,12 @@
 // We mean it.
 //
 
-#include "qcontactfetchhint.h"
-#include "qcontactdetail.h"
+#include <QtCore/qshareddata.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qstringlist.h>
 
-#include <QSharedData>
-#include <QStringList>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfetchhint.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -93,4 +94,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTFETCHHINT_P_H

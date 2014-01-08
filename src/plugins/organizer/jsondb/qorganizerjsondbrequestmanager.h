@@ -53,9 +53,9 @@
 // We mean it.
 //
 
-#include <QtOrganizer/qorganizerabstractrequest.h>
-
 #include <QtCore/qwaitcondition.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

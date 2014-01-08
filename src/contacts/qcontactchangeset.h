@@ -39,20 +39,20 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTCHANGESET_H
 #define QCONTACTCHANGESET_H
 
-#include <qcontactsglobal.h>
-#include "qcontactid.h"
+#include <QtCore/qlist.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
 
-#include <QSet>
-#include <QPair>
-#include <QSharedDataPointer>
+#include <QtContacts/qcontactid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactManagerEngine;
+
 class QContactChangeSetData;
 class Q_CONTACTS_EXPORT QContactChangeSet
 {
@@ -104,4 +104,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTCHANGESET_H

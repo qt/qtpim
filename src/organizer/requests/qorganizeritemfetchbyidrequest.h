@@ -42,10 +42,16 @@
 #ifndef QORGANIZERITEMFETCHBYIDREQUEST_H
 #define QORGANIZERITEMFETCHBYIDREQUEST_H
 
-#include <qorganizerabstractrequest.h>
-#include <qorganizeritem.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
+
+class QOrganizerItemFetchHint;
 
 class QOrganizerItemFetchByIdRequestPrivate;
 

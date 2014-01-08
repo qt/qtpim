@@ -38,24 +38,24 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QCoreApplication>
-#include "qcontact.h"
 
 #include "qcontactjsondbrequesthandler.h"
-#include "qcontactjsondbengine.h"
-#include "qcontactjsondbrequestmanager.h"
-#include "qcontactjsondbconverter.h"
-#include "qcontactjsondbid.h"
-#include "qcontactjsondbglobal.h"
-#include "qcontactjsondbstring.h"
+
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qtimer.h>
 
 #include <QtJsonDb/qjsondbreadrequest.h>
 #include <QtJsonDb/qjsondbwriterequest.h>
 
-#include <QDebug>
-#include <QString>
-#include <QMap>
-#include <QTimer>
+#include <QtContacts/qcontact.h>
+
+#include "qcontactjsondbconverter.h"
+#include "qcontactjsondbengine.h"
+#include "qcontactjsondbglobal.h"
+#include "qcontactjsondbid.h"
+#include "qcontactjsondbrequestmanager.h"
+#include "qcontactjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -347,7 +347,7 @@ void QContactJsonDbRequestHandler::handleContactFetchRequest(QContactFetchReques
 
 void QContactJsonDbRequestHandler::handleContactFetchByIdRequest(QContactFetchByIdRequest* req) {
     QContactManager::Error error = QContactManager::NoError;
-    QMap<int, QtContacts::QContactManager::Error> errorMap;
+    QMap<int, QContactManager::Error> errorMap;
     QList<QContact> emptyContactList;
     QString newJsonDbQuery;
     m_requestMgr->addRequest(req);
@@ -1084,10 +1084,6 @@ void QContactJsonDbPartitionWatcher::onJsonDbWatcherError(QtJsonDb::QJsonDbWatch
     if (error!=QJsonDbWatcher::NoError)
         qCritical()<<Q_FUNC_INFO<<"error"<<error<<"message"<<message;
 }
-
-
-
-
 
 #include "moc_qcontactjsondbrequesthandler.cpp"
 

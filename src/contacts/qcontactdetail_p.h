@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTDETAIL_P_H
 #define QCONTACTDETAIL_P_H
 
@@ -54,12 +53,11 @@
 // We mean it.
 //
 
-#include "qcontactactiondescriptor.h"
-#include "qcontactdetail.h"
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qvariant.h>
 
-#include <QSharedData>
-#include <QString>
-#include <QHash>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -106,4 +104,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTDETAIL_P_H

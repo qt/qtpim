@@ -42,10 +42,9 @@
 #ifndef QDECLARATIVECONTACTINTERSECTIONFILTER_H
 #define QDECLARATIVECONTACTINTERSECTIONFILTER_H
 
-#include "qdeclarativecontactfilter_p.h"
-#include "qcontactintersectionfilter.h"
+#include <QtContacts/qcontactintersectionfilter.h>
 
-#include <QQmlListProperty>
+#include "qdeclarativecontactfilter_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -77,4 +76,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactIntersectionFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTINTERSECTIONFILTER_H

@@ -42,13 +42,10 @@
 #ifndef QCONTACTSORTORDER_H
 #define QCONTACTSORTORDER_H
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
 
-#include <QString>
-#include <QSharedData>
-#include <QList>
-#include "qcontact.h"
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -107,4 +104,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactSortOrder), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACTSORTORDER_H

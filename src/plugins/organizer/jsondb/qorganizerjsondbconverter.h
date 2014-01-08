@@ -53,8 +53,6 @@
 // We mean it.
 //
 
-#include "qorganizerjsondbengine.h"
-
 #include <QtOrganizer/qorganizerabstractrequest.h>
 #include <QtOrganizer/qorganizermanager.h>
 #include <QtOrganizer/qorganizeritemdetails.h>
@@ -64,6 +62,8 @@
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbreadrequest.h>
 #include <QtJsonDb/qjsondbwriterequest.h>
+
+#include "qorganizerjsondbengine.h"
 
 QT_USE_NAMESPACE_JSONDB
 

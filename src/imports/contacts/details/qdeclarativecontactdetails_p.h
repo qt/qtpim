@@ -73,4 +73,5 @@
 #include "qdeclarativecontacturl_p.h"
 #include "qdeclarativecontactversion_p.h"
 #include "qdeclarativecontacthobby_p.h"
-#endif
+
+#endif // QDECLARATIVECONTACTDETAILS_H

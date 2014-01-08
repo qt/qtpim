@@ -42,8 +42,11 @@
 #ifndef QORGANIZEREVENTOCCURRENCE_H
 #define QORGANIZEREVENTOCCURRENCE_H
 
-#include <qorganizeritem.h>
-#include <qorganizeritempriority.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritempriority.h>
+
+QT_FORWARD_DECLARE_CLASS(QDate)
+QT_FORWARD_DECLARE_CLASS(QDateTime)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

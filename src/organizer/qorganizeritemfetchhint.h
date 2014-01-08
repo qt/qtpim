@@ -42,13 +42,10 @@
 #ifndef QORGANIZERITEMFETCHHINT_H
 #define QORGANIZERITEMFETCHHINT_H
 
-#include <qorganizeritemdetail.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
 
-#ifndef QT_NO_DATASTREAM
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
-#endif // QT_NO_DATASTREAM
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

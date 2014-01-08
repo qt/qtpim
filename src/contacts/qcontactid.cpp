@@ -40,11 +40,16 @@
 ****************************************************************************/
 
 #include "qcontactid.h"
-#include "qcontactmanager_p.h"
+
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
 #include "qcontactengineid.h"
-#include <QHash>
-#include <QDebug>
-#include <QDataStream>
+#include "qcontactmanager_p.h"
 
 QT_BEGIN_NAMESPACE
 template<> QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId)>::clone()

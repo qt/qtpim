@@ -42,20 +42,19 @@
 #ifndef QORGANIZERITEMREQUESTS_H
 #define QORGANIZERITEMREQUESTS_H
 
-#include <qorganizeritemoccurrencefetchrequest.h>
-#include <qorganizeritemfetchrequest.h>
-#include <qorganizeritemfetchbyidrequest.h>
-#include <qorganizeritemfetchforexportrequest.h>
-#include <qorganizeritemidfetchrequest.h>
-#include <qorganizeritemremoverequest.h>
-#include <qorganizeritemremovebyidrequest.h>
-#include <qorganizeritemsaverequest.h>
-#include <qorganizercollectionfetchrequest.h>
-#include <qorganizercollectionremoverequest.h>
-#include <qorganizercollectionsaverequest.h>
+#include <QtOrganizer/qorganizercollectionfetchrequest.h>
+#include <QtOrganizer/qorganizercollectionremoverequest.h>
+#include <QtOrganizer/qorganizercollectionsaverequest.h>
+#include <QtOrganizer/qorganizeritemfetchrequest.h>
+#include <QtOrganizer/qorganizeritemfetchbyidrequest.h>
+#include <QtOrganizer/qorganizeritemfetchforexportrequest.h>
+#include <QtOrganizer/qorganizeritemidfetchrequest.h>
+#include <QtOrganizer/qorganizeritemoccurrencefetchrequest.h>
+#include <QtOrganizer/qorganizeritemremoverequest.h>
+#include <QtOrganizer/qorganizeritemremovebyidrequest.h>
+#include <QtOrganizer/qorganizeritemsaverequest.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 QT_END_NAMESPACE_ORGANIZER
 
 #endif // QORGANIZERITEMREQUESTS_H
-

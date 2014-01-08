@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemdetailrangefilter.h>
-#include <private/qorganizeritemdetailrangefilter_p.h>
+#include "qorganizeritemdetailrangefilter.h"
+#include "qorganizeritemdetailrangefilter_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

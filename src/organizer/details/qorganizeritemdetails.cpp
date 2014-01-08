@@ -39,9 +39,10 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemdetails.h>
-#include <qorganizeritemdetailfilter.h>
-#include <qorganizeritemid.h>
+#include "qorganizeritemdetails.h"
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qurl.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

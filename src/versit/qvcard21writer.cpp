@@ -41,7 +41,10 @@
 
 #include "qvcard21writer_p.h"
 
-#include <QTextCodec>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qvariant.h>
+
+#include "qversitproperty.h"
 
 QT_BEGIN_NAMESPACE_VERSIT
 

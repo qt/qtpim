@@ -53,13 +53,11 @@
 // We mean it.
 //
 
-#include "qorganizerjsondbengine.h"
-
 #include <QtOrganizer/qorganizerabstractrequest.h>
 #include <QtOrganizer/qorganizeritemengineid.h>
 #include <QtOrganizer/qorganizercollectionengineid.h>
 
-#include <QtCore/qdebug.h>
+#include "qorganizerjsondbengine.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -142,4 +140,4 @@ private:
 
 QT_END_NAMESPACE_ORGANIZER
 
-#endif
+#endif // QORGANIZERJSONDBID_H

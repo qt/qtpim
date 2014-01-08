@@ -39,12 +39,14 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemsortorder.h>
-#include <private/qorganizeritemsortorder_p.h>
+#include "qorganizeritemsortorder.h"
+#include "qorganizeritemsortorder_p.h"
 
-#include <QtCore/QDataStream>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#include <QtCore/qdebug.h>
 #endif
 
 QT_BEGIN_NAMESPACE_ORGANIZER

@@ -39,15 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTADDRESS_H
 #define QCONTACTADDRESS_H
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactAddress : public QContactDetail
@@ -98,5 +97,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTADDRESS_H

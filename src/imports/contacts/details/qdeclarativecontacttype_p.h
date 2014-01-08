@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTTYPE_H
 #define QDECLARATIVECONTACTTYPE_H
 
+#include <QtContacts/qcontacttype.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontacttype.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -106,5 +107,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactType)
 
-#endif
-
+#endif // QDECLARATIVECONTACTTYPE_H

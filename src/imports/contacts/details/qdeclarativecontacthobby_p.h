@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTHOBBY_H
 #define QDECLARATIVECONTACTHOBBY_H
 
+#include <QtContacts/qcontacthobby.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontacthobby.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -88,5 +88,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactHobby)
 
-#endif
-
+#endif // QDECLARATIVECONTACTHOBBY_H

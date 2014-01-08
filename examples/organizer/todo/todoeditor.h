@@ -43,7 +43,7 @@
 
 #include <QWidget>
 
-#include <qorganizertodo.h>
+#include <QtOrganizer/qorganizertodo.h>
 
 QTORGANIZER_USE_NAMESPACE
 

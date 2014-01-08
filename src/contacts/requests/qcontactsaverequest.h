@@ -42,12 +42,12 @@
 #ifndef QCONTACTSAVEREQUEST_H
 #define QCONTACTSAVEREQUEST_H
 
-#include <qcontactsglobal.h>
-#include <qcontactabstractrequest.h>
-#include <qcontact.h>
-#include <qcontactdetail.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 
-#include <QList>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -83,4 +83,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTSAVEREQUEST_H

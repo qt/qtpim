@@ -1,4 +1,3 @@
-
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
@@ -43,15 +42,27 @@
 #ifndef QVERSITORGANIZERPLUGINLOADER_P_H
 #define QVERSITORGANIZERPLUGINLOADER_P_H
 
-#include <QMap>
-#include <QStringList>
-#include <QList>
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail.  This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
 
-#include <qversitorganizerglobal.h>
-#include <qversitorganizerhandler.h>
-#include <qversittimezonehandler.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstringlist.h>
+
+#include <QtVersitOrganizer/qversitorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
+
+class QVersitOrganizerHandler;
+class QVersitOrganizerHandlerFactory;
+class QVersitTimeZoneHandler;
 
 class QVersitOrganizerPluginLoader
 {
@@ -75,4 +86,4 @@ class QVersitOrganizerPluginLoader
 
 QT_END_NAMESPACE_VERSITORGANIZER
 
-#endif
+#endif // QVERSITORGANIZERPLUGINLOADER_P_H

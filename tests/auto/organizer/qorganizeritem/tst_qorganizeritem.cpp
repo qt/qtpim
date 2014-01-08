@@ -41,10 +41,11 @@
 
 #include <QtTest/QtTest>
 
-#include "qorganizer.h"
-#include "qorganizeritemid.h"
-#include "qorganizeritemengineid.h"
-#include <QSet>
+#include <QtCore/qset.h>
+
+#include <QtOrganizer/qorganizer.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizeritemengineid.h>
 
 //TESTED_COMPONENT=src/organizer
 

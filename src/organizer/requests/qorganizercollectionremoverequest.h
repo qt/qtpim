@@ -42,8 +42,11 @@
 #ifndef QORGANIZERCOLLECTIONREMOVEREQUEST_H
 #define QORGANIZERCOLLECTIONREMOVEREQUEST_H
 
-#include <qorganizerabstractrequest.h>
-#include <qorganizercollection.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizercollectionid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

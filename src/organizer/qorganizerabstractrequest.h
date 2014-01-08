@@ -42,11 +42,12 @@
 #ifndef QORGANIZERABSTRACTREQUEST_H
 #define QORGANIZERABSTRACTREQUEST_H
 
-#include <qorganizermanager.h>
+#include <QtOrganizer/qorganizermanager.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerEngine;
+
 class QOrganizerAbstractRequestPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerAbstractRequest : public QObject
 {
@@ -113,6 +114,10 @@ private:
     friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request);
 #endif
 };
+
+#ifndef QT_NO_DEBUG_STREAM
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request);
+#endif
 
 QT_END_NAMESPACE_ORGANIZER
 

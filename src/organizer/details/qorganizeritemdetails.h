@@ -42,32 +42,32 @@
 #ifndef QORGANIZERITEMDETAILS_H
 #define QORGANIZERITEMDETAILS_H
 
-#include <qorganizereventtime.h>
-#include <qorganizeritemcomment.h>
-#include <qorganizeritemdescription.h>
-#include <qorganizeritemdisplaylabel.h>
-#include <qorganizeritemguid.h>
-#include <qorganizeritemlocation.h>
-#include <qorganizeritemparent.h>
-#include <qorganizeritempriority.h>
-#include <qorganizeritemrecurrence.h>
-#include <qorganizeritemtag.h>
-#include <qorganizeritemtimestamp.h>
-#include <qorganizeritemtype.h>
-#include <qorganizerjournaltime.h>
-#include <qorganizertodoprogress.h>
-#include <qorganizertodotime.h>
+#include <QtOrganizer/qorganizereventtime.h>
+#include <QtOrganizer/qorganizeritemcomment.h>
+#include <QtOrganizer/qorganizeritemdescription.h>
+#include <QtOrganizer/qorganizeritemdisplaylabel.h>
+#include <QtOrganizer/qorganizeritemguid.h>
+#include <QtOrganizer/qorganizeritemlocation.h>
+#include <QtOrganizer/qorganizeritemparent.h>
+#include <QtOrganizer/qorganizeritempriority.h>
+#include <QtOrganizer/qorganizeritemrecurrence.h>
+#include <QtOrganizer/qorganizeritemtag.h>
+#include <QtOrganizer/qorganizeritemtimestamp.h>
+#include <QtOrganizer/qorganizeritemtype.h>
+#include <QtOrganizer/qorganizerjournaltime.h>
+#include <QtOrganizer/qorganizertodoprogress.h>
+#include <QtOrganizer/qorganizertodotime.h>
 
-#include <qorganizeritemreminder.h>
-#include <qorganizeritemaudiblereminder.h>
-#include <qorganizeritememailreminder.h>
-#include <qorganizeritemvisualreminder.h>
+#include <QtOrganizer/qorganizeritemreminder.h>
+#include <QtOrganizer/qorganizeritemaudiblereminder.h>
+#include <QtOrganizer/qorganizeritememailreminder.h>
+#include <QtOrganizer/qorganizeritemvisualreminder.h>
 
-#include <qorganizeritemextendeddetail.h>
-#include <qorganizereventattendee.h>
-#include <qorganizereventrsvp.h>
-#include <qorganizeritemclassification.h>
-#include <qorganizeritemversion.h>
+#include <QtOrganizer/qorganizeritemextendeddetail.h>
+#include <QtOrganizer/qorganizereventattendee.h>
+#include <QtOrganizer/qorganizereventrsvp.h>
+#include <QtOrganizer/qorganizeritemclassification.h>
+#include <QtOrganizer/qorganizeritemversion.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 QT_END_NAMESPACE_ORGANIZER

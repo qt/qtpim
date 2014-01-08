@@ -39,8 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qorganizeriteminvalidfilter.h>
-#include <private/qorganizeritemfilter_p.h>
+#include "qorganizeriteminvalidfilter.h"
+
+#include "qorganizeritemfilter_p.h"
 
 /*!
     \class QOrganizerItemInvalidFilter

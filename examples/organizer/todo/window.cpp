@@ -40,10 +40,12 @@
 
 #include <QtWidgets>
 
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 
 #include "window.h"
 #include "todoeditor.h"
+
+QTORGANIZER_USE_NAMESPACE
 
 //! [0]
 Window::Window()

@@ -39,16 +39,15 @@
 **
 ****************************************************************************/
 
-#include <qcontactrelationship.h>
+#include "qcontactrelationship.h"
 #include "qcontactrelationship_p.h"
-#include <qcontact.h>
 
-#include <QList>
-#include <QPair>
-#include <QString>
-#include <QHash>
-#include <QDebug>
-#include <QDataStream>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

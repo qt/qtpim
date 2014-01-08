@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVEORGANIZERITEMFETCHHINT_H
 #define QDECLARATIVEORGANIZERITEMFETCHHINT_H
 
-#include <qorganizeritemfetchhint.h>
 #include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizeritemfetchhint.h>
 
 QTORGANIZER_USE_NAMESPACE
 

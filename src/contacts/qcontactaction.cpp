@@ -40,13 +40,12 @@
 ****************************************************************************/
 
 #include "qcontactaction.h"
-#include "qcontactmanager_p.h"
+
+#include <QtCore/qset.h>
+
 #include "qcontactactiondescriptor.h"
-
 #include "qcontactactionmanager_p.h"
-
-#include <QSet>
-#include <QString>
+#include "qcontactmanager_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTACTIONSERVICEMANAGER_P_H
 #define QCONTACTACTIONSERVICEMANAGER_P_H
 
@@ -54,14 +53,12 @@
 // We mean it.
 //
 
-#include <QMultiHash>
-#include <QHash>
-#include <QMutex>
+#include <QtCore/qhash.h>
+#include <QtCore/qmutex.h>
 
-#include "qservice.h"
+#include <QtContacts/private/qcontactactionmanager_p.h>
+
 #include "qservicemanager.h"
-
-#include "qcontactactionmanager_p.h"
 
 QTM_BEGIN_NAMESPACE
 
@@ -99,5 +96,4 @@ private:
 
 QTM_END_NAMESPACE
 
-#endif
-
+#endif // QCONTACTACTIONSERVICEMANAGER_P_H

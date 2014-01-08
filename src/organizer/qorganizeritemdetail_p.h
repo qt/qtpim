@@ -53,9 +53,10 @@
 // We mean it.
 //
 
-#include <qorganizeritemdetail.h>
-
 #include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -42,7 +42,7 @@
 #ifndef QORGANIZERNOTE_H
 #define QORGANIZERNOTE_H
 
-#include <qorganizeritem.h>
+#include <QtOrganizer/qorganizeritem.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

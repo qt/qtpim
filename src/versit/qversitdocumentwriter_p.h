@@ -53,17 +53,19 @@
 // We mean it.
 //
 
-#include <qversitproperty.h>
-#include <QByteArray>
-#include <QMultiHash>
+#include <QtCore/qhash.h>
+#include <QtCore/qstringlist.h>
 
-QT_BEGIN_NAMESPACE
-class QIODevice;
-class QTextCodec;
-class QTextEncoder;
-QT_END_NAMESPACE
+#include <QtVersit/qversitdocument.h>
+
+QT_FORWARD_DECLARE_CLASS(QByteArray)
+QT_FORWARD_DECLARE_CLASS(QIODevice)
+QT_FORWARD_DECLARE_CLASS(QTextCodec)
+QT_FORWARD_DECLARE_CLASS(QTextEncoder)
 
 QT_BEGIN_NAMESPACE_VERSIT
+
+class QVersitProperty;
 
 class Q_VERSIT_EXPORT QVersitDocumentWriter
 {

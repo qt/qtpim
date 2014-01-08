@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-#include <qorganizermanagerengine.h>
-#include <qorganizeritems.h>
-#include <qorganizeritemdetails.h>
-#include <qorganizeritemfilters.h>
-#include <qorganizeritemrequests.h>
-#include <private/qorganizeritemrequests_p.h>
+#include "qorganizermanagerengine.h"
+#include "qorganizeritems.h"
+#include "qorganizeritemdetails.h"
+#include "qorganizeritemfilters.h"
+#include "qorganizeritemrequests.h"
+#include "qorganizeritemrequests_p.h"
 
 #include <QtCore/qmutex.h>
 

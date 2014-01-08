@@ -38,7 +38,9 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #include "qcontactjsondbengine.h"
+
 #include "qcontactjsondbenginefactory.h"
 #include "qcontactjsondbid.h"
 

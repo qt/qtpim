@@ -42,9 +42,9 @@
 #ifndef QORGANIZERJOURNALTIME_H
 #define QORGANIZERJOURNALTIME_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
-#include <QtCore/qdatetime.h>
+QT_FORWARD_DECLARE_CLASS(QDateTime)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

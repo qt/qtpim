@@ -40,20 +40,21 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbrequestthread.h"
-#include "qorganizerjsondbrequestmanager.h"
-#include "qorganizerjsondbdatastorage.h"
-#include "qorganizerjsondbstring.h"
-#include "qorganizerjsondbid.h"
-
-#include <QtOrganizer/qorganizeritems.h>
-#include <QtOrganizer/qorganizeritemcollectionfilter.h>
-#include <QtOrganizer/qorganizeritemunionfilter.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qeventloop.h>
 #include <QtCore/qmutex.h>
 #include <QtCore/qtimer.h>
 #include <QtCore/quuid.h>
+
+#include <QtOrganizer/qorganizeritems.h>
+#include <QtOrganizer/qorganizeritemcollectionfilter.h>
+#include <QtOrganizer/qorganizeritemunionfilter.h>
+
+#include "qorganizerjsondbdatastorage.h"
+#include "qorganizerjsondbid.h"
+#include "qorganizerjsondbrequestmanager.h"
+#include "qorganizerjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

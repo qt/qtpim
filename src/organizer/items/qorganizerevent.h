@@ -42,9 +42,12 @@
 #ifndef QORGANIZEREVENT_H
 #define QORGANIZEREVENT_H
 
-#include <qorganizeritem.h>
-#include <qorganizeritempriority.h>
-#include <qorganizerrecurrencerule.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qset.h>
+
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritempriority.h>
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

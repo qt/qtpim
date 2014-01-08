@@ -39,8 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qorganizercollectionremoverequest.h>
-#include <private/qorganizeritemrequests_p.h>
+#include "qorganizercollectionremoverequest.h"
+
+#include "qorganizeritemrequests_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

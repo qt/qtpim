@@ -39,10 +39,13 @@
 **
 ****************************************************************************/
 
-#include <QPluginLoader>
-
 #include "qversitorganizerpluginloader_p.h"
 #include "qversitorganizerpluginsearch_p.h"
+
+#include <QtCore/qpluginloader.h>
+
+#include "qversitorganizerhandler.h"
+#include "qversittimezonehandler.h"
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

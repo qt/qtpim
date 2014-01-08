@@ -42,13 +42,11 @@
 #ifndef QCONTACTFETCHHINT_H
 #define QCONTACTFETCHHINT_H
 
-#include <QVariant>
-#include <QList>
-#include <QSharedData>
-#include <QSize>
-#include "qcontactsglobal.h"
-#include "qcontactdetail.h"
-#include "qcontact.h"
+#include <QtCore/qshareddata.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qstringlist.h>
+
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -101,5 +99,4 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFetchHint::OptimizationHints)
 
 QT_END_NAMESPACE_CONTACTS
 
-
-#endif
+#endif // QCONTACTFETCHHINT_H

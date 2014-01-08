@@ -45,35 +45,35 @@
 // this file includes all of the public header files
 // provided by the Qt Organizer API
 
-#include "qorganizerglobal.h"                        // global exports
+#include <QtOrganizer/qorganizerglobal.h>                        // global exports
 
-#include "qorganizerabstractrequest.h"                // asynchronous request
-#include "qorganizeritemdetail.h"                     // organizer item detail
-#include "qorganizeritemfetchhint.h"                  // fetch hint class
-#include "qorganizeritemfilter.h"                     // organizer item filter
-#include "qorganizeritem.h"                           // organizer item
-#include "qorganizeritemid.h"                         // organizer item identifier
-#include "qorganizeritemobserver.h"                   // organizer item observer
-#include "qorganizermanager.h"                        // manager
-#include "qorganizermanagerengine.h"                  // manager backend
-#include "qorganizermanagerenginefactory.h"           // manage backend instantiator
-#include "qorganizerrecurrencerule.h"                 // a single recurrence rule
-#include "qorganizeritemsortorder.h"                  // organizer item sorting
+#include <QtOrganizer/qorganizerabstractrequest.h>                // asynchronous request
+#include <QtOrganizer/qorganizeritemdetail.h>                     // organizer item detail
+#include <QtOrganizer/qorganizeritemfetchhint.h>                  // fetch hint class
+#include <QtOrganizer/qorganizeritemfilter.h>                     // organizer item filter
+#include <QtOrganizer/qorganizeritem.h>                           // organizer item
+#include <QtOrganizer/qorganizeritemid.h>                         // organizer item identifier
+#include <QtOrganizer/qorganizeritemobserver.h>                   // organizer item observer
+#include <QtOrganizer/qorganizermanager.h>                        // manager
+#include <QtOrganizer/qorganizermanagerengine.h>                  // manager backend
+#include <QtOrganizer/qorganizermanagerenginefactory.h>           // manage backend instantiator
+#include <QtOrganizer/qorganizerrecurrencerule.h>                 // a single recurrence rule
+#include <QtOrganizer/qorganizeritemsortorder.h>                  // organizer item sorting
 
-#include "qorganizercollection.h"                     // collection of items
-#include "qorganizercollectionid.h"                   // collection identifier
+#include <QtOrganizer/qorganizercollection.h>                     // collection of items
+#include <QtOrganizer/qorganizercollectionid.h>                   // collection identifier
 
-#include "qorganizercollectionchangeset.h"            // engine-specific collection changeset
-#include "qorganizeritemchangeset.h"                  // engine-specific item changeset
-#include "qorganizercollectionengineid.h"             // engine-specific collection id
-#include "qorganizeritemengineid.h"                   // engine specific item id
+#include <QtOrganizer/qorganizercollectionchangeset.h>            // engine-specific collection changeset
+#include <QtOrganizer/qorganizeritemchangeset.h>                  // engine-specific item changeset
+#include <QtOrganizer/qorganizercollectionengineid.h>             // engine-specific collection id
+#include <QtOrganizer/qorganizeritemengineid.h>                   // engine specific item id
 
-#include "qorganizeritems.h"                          // item derived classes
-#include "qorganizeritemdetails.h"                    // detail derived classes
-#include "qorganizeritemrequests.h"                   // request derived classes
-#include "qorganizeritemfilters.h"                    // detail derived classes
+#include <QtOrganizer/qorganizeritems.h>                          // item derived classes
+#include <QtOrganizer/qorganizeritemdetails.h>                    // detail derived classes
+#include <QtOrganizer/qorganizeritemrequests.h>                   // request derived classes
+#include <QtOrganizer/qorganizeritemfilters.h>                    // detail derived classes
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 QT_END_NAMESPACE_ORGANIZER
 
-#endif
+#endif // QTORGANIZER_H

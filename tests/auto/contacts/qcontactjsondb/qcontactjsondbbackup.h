@@ -43,7 +43,7 @@
 #define QCONTACTJSONDBBACKUP_H
 
 #include <QList>
-#include <qcontactsglobal.h>
+#include <QtContacts/qcontactsglobal.h>
 #include "synchronizedjsondbclient.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

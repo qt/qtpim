@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 #include <QtTest/QtTest>
-#include <QMetaType>
+#include <QtCore/QMetaType>
 
-#include "qorganizer.h"
-#include "qorganizeritemengineid.h"
+#include <QtOrganizer/qorganizer.h>
+#include <QtOrganizer/qorganizeritemengineid.h>
 
 //TESTED_COMPONENT=src/organizer
 

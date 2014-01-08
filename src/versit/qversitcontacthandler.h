@@ -42,9 +42,11 @@
 #ifndef QVERSITCONTACTHANDLER_H
 #define QVERSITCONTACTHANDLER_H
 
-#include <QFactoryInterface>
-#include <qversitcontactimporter.h>
-#include <qversitcontactexporter.h>
+#include <QtCore/qfactoryinterface.h>
+#include <QtCore/qset.h>
+
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitcontactexporter.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -91,4 +93,4 @@ public:
 };
 QT_END_NAMESPACE_VERSIT
 
-#endif
+#endif // QVERSITCONTACTHANDLER_H

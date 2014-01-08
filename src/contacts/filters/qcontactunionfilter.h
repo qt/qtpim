@@ -42,7 +42,9 @@
 #ifndef QCONTACTUNIONFILTER_H
 #define QCONTACTUNIONFILTER_H
 
-#include "qcontactfilter.h"
+#include <QtCore/qlist.h>
+
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -72,4 +74,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTUNIONFILTER_H

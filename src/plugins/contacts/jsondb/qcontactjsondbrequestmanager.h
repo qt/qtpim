@@ -52,16 +52,17 @@
 // We mean it.
 //
 
-#include <QObject>
-#include <QMap>
-#include <QMutex>
-#include <QWaitCondition>
+#include <QtCore/qmap.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qwaitcondition.h>
+
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbwatcher.h>
 #include <QtJsonDb/qjsondbrequest.h>
 
-#include "qcontact.h"
-#include "qcontactrequests.h"
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactrequests.h>
 
 QT_USE_NAMESPACE_JSONDB
 

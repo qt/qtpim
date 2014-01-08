@@ -40,9 +40,13 @@
 ****************************************************************************/
 
 #include "qvcard30writer_p.h"
+
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qvariant.h>
+
+#include "qversitproperty.h"
 #include "qversitutils_p.h"
-#include <QTextCodec>
-#include <QBuffer>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

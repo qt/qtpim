@@ -42,18 +42,18 @@
 //TESTED_COMPONENT=src/versit
 
 #include "tst_qversitcontactexporter.h"
-#include <qversitcontactexporter.h>
-#include <qversitglobal.h>
-#include <qversitdocument.h>
-#include <qversitproperty.h>
-#include <qcontactmanagerengine.h>
+#include <QtVersit/qversitcontactexporter.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtContacts/qcontacts.h>
+#include <QtContacts/qcontactmanagerengine.h>
 #include <QString>
 #include <QStringList>
 #include <QList>
 #include <QPixmap>
 #include <QtTest/QtTest>
-#include <qcontacts.h>
 
+QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 
 class MyQVersitContactExporterDetailHandler : public QVersitContactExporterDetailHandler

@@ -39,15 +39,20 @@
 **
 ****************************************************************************/
 
-#include <QList>
-#include <QString>
-#include <QTextStream>
-#include <QUrl>
 #include "backupvcardhandler.h"
-#include <qcontact.h>
-#include <qcontactdetail.h>
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+
+#include <QtCore/qdatastream.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qurl.h>
+
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactextendeddetail.h>
+
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtVersit/private/qvcardrestorehandler_p.h>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -62,8 +67,9 @@
 # define QStringLiteral QLatin1String
 #endif
 
-QT_BEGIN_NAMESPACE_VERSIT
+QTCONTACTS_USE_NAMESPACE
 
+QT_BEGIN_NAMESPACE_VERSIT
 
 /* See QVersitContactImporter::createBackupHandler() */
 class BackupVCardHandler : public QVersitContactHandler
@@ -265,5 +271,7 @@ void BackupVCardHandler::contactProcessed(
     Q_UNUSED(document)
     mDetailNumber = 0;
 }
+
+#include "moc_backupvcardhandler.cpp"
 
 QT_END_NAMESPACE_VERSIT

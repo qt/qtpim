@@ -53,7 +53,8 @@
 // We mean it.
 //
 
-#include "qorganizeritemfilter_p.h"
+#include <QtOrganizer/qorganizeritemdetailrangefilter.h>
+#include <QtOrganizer/private/qorganizeritemfilter_p.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

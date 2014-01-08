@@ -42,12 +42,15 @@
 #ifndef QORGANIZERITEMOBSERVER_H
 #define QORGANIZERITEMOBSERVER_H
 
-#include <qorganizermanager.h>
+#include <QtCore/qobject.h>
+
+#include <QtOrganizer/qorganizeritemid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
-class QOrganizerItemObserverPrivate;
+class QOrganizerManager;
 
+class QOrganizerItemObserverPrivate;
 class Q_ORGANIZER_EXPORT QOrganizerItemObserver : public QObject
 {
     Q_OBJECT

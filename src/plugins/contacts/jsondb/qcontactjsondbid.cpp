@@ -38,8 +38,13 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QUuid>
+
 #include "qcontactjsondbid.h"
+
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
 #include "qcontactjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

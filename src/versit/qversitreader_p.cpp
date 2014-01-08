@@ -40,12 +40,12 @@
 ****************************************************************************/
 
 #include "qversitreader_p.h"
-#include <qversitdocument.h>
+
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qvariant.h>
+
 #include "qversitutils_p.h"
-#include <QTextCodec>
-#include <QMutexLocker>
-#include <QVariant>
-#include <QBuffer>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

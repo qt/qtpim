@@ -40,8 +40,8 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <QContactDetail>
-#include <qcontacts.h>
+#include <QtContacts/QContactDetail>
+#include <QtContacts/qcontacts.h>
 
 #include <QSet>
 

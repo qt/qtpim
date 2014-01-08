@@ -43,7 +43,7 @@
 #define tst_QVCARD21WRITER_H
 
 #include <QObject>
-#include <qversitglobal.h>
+#include <QtVersit/qversitglobal.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVCard21Writer;

@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #include "qcontactmanagerenginefactory.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

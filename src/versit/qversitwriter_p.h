@@ -53,18 +53,14 @@
 // We mean it.
 //
 
-#include <qversitwriter.h>
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qscopedpointer.h>
+#include <QtCore/qthread.h>
 
-#include <QThread>
-#include <QIODevice>
-#include <QMutex>
-#include <QWaitCondition>
+#include <QtVersit/qversitwriter.h>
+#include <QtVersit/qversitdocument.h>
 
-QT_BEGIN_NAMESPACE
-class QBuffer;
-QT_END_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QBuffer)
 
 QT_BEGIN_NAMESPACE_VERSIT
 

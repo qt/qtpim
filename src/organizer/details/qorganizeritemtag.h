@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMTAG_H
 #define QORGANIZERITEMTAG_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

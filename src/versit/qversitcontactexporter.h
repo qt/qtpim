@@ -42,10 +42,17 @@
 #ifndef QVERSITCONTACTEXPORTER_H
 #define QVERSITCONTACTEXPORTER_H
 
-#include <qversitresourcehandler.h>
-#include <qversitdocument.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 
-#include <qcontact.h>
+#include <QtContacts/qcontact.h>
+
+#include <QtVersit/qversitresourcehandler.h>
+#include <QtVersit/qversitdocument.h>
+
+QT_BEGIN_NAMESPACE_CONTACTS
+class QContactDetail;
+QT_END_NAMESPACE_CONTACTS
 
 QTCONTACTS_USE_NAMESPACE
 

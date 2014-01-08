@@ -53,7 +53,20 @@
 // We mean it.
 //
 
-#include <private/qorganizerabstractrequest_p.h>
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qdatetime.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemfetchhint.h>
+#include <QtOrganizer/qorganizeritemfilter.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizeritemsortorder.h>
+#include <QtOrganizer/private/qorganizerabstractrequest_p.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

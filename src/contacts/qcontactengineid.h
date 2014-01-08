@@ -42,15 +42,10 @@
 #ifndef QCONTACTENGINEID_H
 #define QCONTACTENGINEID_H
 
-#include <QString>
-#include <QSharedDataPointer>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
 
-#include "qcontactsglobal.h"
-#include "qcontactabstractrequest.h"
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtContacts/qcontactabstractrequest.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -78,5 +73,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTENGINEID_H

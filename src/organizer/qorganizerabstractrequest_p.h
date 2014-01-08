@@ -53,15 +53,12 @@
 // We mean it.
 //
 
-#include <qorganizerabstractrequest.h>
-#include <private/qorganizermanager_p.h>
-
 #include <QtCore/qmutex.h>
 #include <QtCore/qpointer.h>
 
-#ifndef QT_NO_DEBUG_STREAM
-#include <QtCore/qdebug.h>
-#endif
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizermanagerengine.h>
+#include <QtOrganizer/private/qorganizermanager_p.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

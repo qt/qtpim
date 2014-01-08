@@ -39,19 +39,18 @@
 **
 ****************************************************************************/
 
-#include "qcontactmanager.h"
-
-#include <QContactManagerEngine>
-#include <QContactAbstractRequest>
-#include <QContactChangeSet>
-#include <QContactTimestamp>
-#include <QContactIdFilter>
-#include <qcontactrequests.h>
 #include "qcontactmemorybackend_p.h"
 
+#ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qpointer.h>
 #include <QtCore/qstringbuilder.h>
 #include <QtCore/quuid.h>
+
+#include <QtContacts/qcontactidfilter.h>
+#include <QtContacts/qcontactrequests.h>
+#include <QtContacts/qcontacttimestamp.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -1012,8 +1011,6 @@ uint QContactMemoryEngineId::hash() const
     return m_contactId;
 }
 
-
 #include "moc_qcontactmemorybackend_p.cpp"
 
 QT_END_NAMESPACE_CONTACTS
-

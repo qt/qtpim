@@ -39,26 +39,19 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTRELATIONSHIP_H
 #define QCONTACTRELATIONSHIP_H
 
-#include <QString>
-#include <QList>
-#include <QPair>
-#include <QSharedDataPointer>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
 
-#include <qcontactsglobal.h>
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtContacts/qcontactsglobal.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactRelationshipPrivate;
 class QContact;
 
+class QContactRelationshipPrivate;
 class Q_CONTACTS_EXPORT QContactRelationship
 {
 public:
@@ -106,5 +99,4 @@ Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactRelationship&
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTRELATIONSHIP_H

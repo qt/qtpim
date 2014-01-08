@@ -39,19 +39,21 @@
 **
 ****************************************************************************/
 
-#include <qversitcontactexporter.h>
+#include "qversitcontactexporter.h"
 #include "qversitcontactexporter_p.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qurl.h>
+
+#include <QtContacts/qcontactdetail.h>
+
 #include "qversitcontactimporter_p.h"
 #include "qversitcontactsdefs_p.h"
 #include "qversitutils_p.h"
-
-#include <qcontact.h>
-#include <qcontactdetails.h>
 #include "qversitcontacthandler.h"
 #include "qversitcontactpluginloader_p.h"
 
-#include <QUrl>
-#include <QBuffer>
+QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
 

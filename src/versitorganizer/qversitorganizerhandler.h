@@ -42,8 +42,8 @@
 #ifndef QVERSITORGANIZERHANDLER_H
 #define QVERSITORGANIZERHANDLER_H
 
-#include <qversitorganizerimporter.h>
-#include <qversitorganizerexporter.h>
+#include <QtVersitOrganizer/qversitorganizerimporter.h>
+#include <QtVersitOrganizer/qversitorganizerexporter.h>
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
@@ -77,4 +77,5 @@ QT_END_NAMESPACE_VERSITORGANIZER
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtVersitOrganizer::QVersitOrganizerHandlerFactory, QT_VERSIT_ORGANIZER_HANDLER_INTERFACE)
 QT_END_NAMESPACE
-#endif
+
+#endif // QVERSITORGANIZERHANDLER_H

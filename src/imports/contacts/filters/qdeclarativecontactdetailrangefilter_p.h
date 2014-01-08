@@ -42,10 +42,10 @@
 #ifndef QDECLARATIVECONTACTDETAILRANGEFILTER_H
 #define QDECLARATIVECONTACTDETAILRANGEFILTER_H
 
+#include <QtContacts/qcontactdetailrangefilter.h>
+
+#include "qdeclarativecontact_p.h"
 #include "qdeclarativecontactfilter_p.h"
-#include "qcontactdetailrangefilter.h"
-#include "qdeclarativecontactdetail_p.h"
-#include <QQmlParserStatus>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -184,4 +184,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactDetailRangeFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTDETAILRANGEFILTER_H

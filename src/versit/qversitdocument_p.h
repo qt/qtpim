@@ -53,15 +53,11 @@
 // We mean it.
 //
 
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
 
-#include <QSharedData>
-#include <QList>
-
-QT_BEGIN_NAMESPACE
-class QTextCodec;
-QT_END_NAMESPACE
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

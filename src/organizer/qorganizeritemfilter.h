@@ -42,29 +42,14 @@
 #ifndef QORGANIZERITEMFILTER_H
 #define QORGANIZERITEMFILTER_H
 
-#include <qorganizerglobal.h>
-
 #include <QtCore/qnamespace.h>
 #include <QtCore/qshareddata.h>
 
-QT_BEGIN_NAMESPACE
-#ifndef QT_NO_DATASTREAM
-class QDataStream;
-#endif // QT_NO_DATASTREAM
-QT_END_NAMESPACE
+#include <QtOrganizer/qorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemFilterPrivate;
-
-#ifndef QT_NO_DATASTREAM
-// MSVC needs the function declared before the friend declaration
-class QOrganizerItemFilter;
-
-Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemFilter &filter);
-Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter);
-#endif // QT_NO_DATASTREAM
-
 class Q_ORGANIZER_EXPORT QOrganizerItemFilter
 {
 public:
@@ -126,6 +111,14 @@ protected:
 
 const Q_ORGANIZER_EXPORT QOrganizerItemFilter operator&(const QOrganizerItemFilter &left, const QOrganizerItemFilter &right);
 const Q_ORGANIZER_EXPORT QOrganizerItemFilter operator|(const QOrganizerItemFilter &left, const QOrganizerItemFilter &right);
+
+#ifndef QT_NO_DATASTREAM
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemFilter &filter);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter);
+#endif // QT_NO_DATASTREAM
+#ifndef QT_NO_DEBUG_STREAM
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemFilter &filter);
+#endif // QT_NO_DEBUG_STREAM
 
 QT_END_NAMESPACE_ORGANIZER
 

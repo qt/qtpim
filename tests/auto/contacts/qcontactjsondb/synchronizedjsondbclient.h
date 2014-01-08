@@ -46,7 +46,7 @@
 #include <QString>
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbrequest.h>
-#include <qcontactsglobal.h>
+#include <QtContacts/qcontactsglobal.h>
 #include "synchronizedworker.h"
 #include "qcontactjsondbstring.h"
 

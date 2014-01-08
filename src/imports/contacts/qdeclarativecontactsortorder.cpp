@@ -38,8 +38,8 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #include "qdeclarativecontactsortorder_p.h"
-#include <QDebug>
 
 QTCONTACTS_USE_NAMESPACE
 

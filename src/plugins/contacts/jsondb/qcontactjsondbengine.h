@@ -53,17 +53,18 @@
 // We mean it.
 //
 
-#include <QMap>
-#include <QString>
-#include <QList>
-#include <QQueue>
-#include <QDebug>
-#include <QVariantList>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qvariant.h>
 
-#include <qcontacts.h>
-#include <qcontactmanager.h>
-#include <private/qcontactmanager_p.h>
+#include <QtContacts/qcontacts.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/private/qcontactmanager_p.h>
+
 #include "qcontactjsondbstring.h"
+
+QT_FORWARD_DECLARE_CLASS(QThread)
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

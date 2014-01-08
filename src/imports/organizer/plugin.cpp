@@ -39,17 +39,17 @@
 **
 ****************************************************************************/
 
-#include <QtQml>
-#include <QQmlExtensionPlugin>
+#include <QtQml/qqml.h>
+#include <QtQml/qqmlextensionplugin.h>
 
-#include "qdeclarativeorganizermodel_p.h"
+#include "qdeclarativeorganizercollection_p.h"
 #include "qdeclarativeorganizeritem_p.h"
 #include "qdeclarativeorganizeritemdetail_p.h"
-#include "qdeclarativeorganizeritemfilter_p.h"
-#include "qdeclarativeorganizerrecurrencerule_p.h"
 #include "qdeclarativeorganizeritemfetchhint_p.h"
+#include "qdeclarativeorganizeritemfilter_p.h"
 #include "qdeclarativeorganizeritemsortorder_p.h"
-#include "qdeclarativeorganizercollection_p.h"
+#include "qdeclarativeorganizermodel_p.h"
+#include "qdeclarativeorganizerrecurrencerule_p.h"
 
 QT_BEGIN_NAMESPACE
 

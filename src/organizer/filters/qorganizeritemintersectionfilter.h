@@ -42,8 +42,9 @@
 #ifndef QORGANIZERITEMINTERSECTIONFILTER_H
 #define QORGANIZERITEMINTERSECTIONFILTER_H
 
-#include <qorganizeritemfilter.h>
 #include <QtCore/qlist.h>
+
+#include <QtOrganizer/qorganizeritemfilter.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

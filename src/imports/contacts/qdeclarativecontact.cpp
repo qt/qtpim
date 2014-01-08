@@ -39,15 +39,16 @@
 **
 ****************************************************************************/
 
-#include <qcontactdetails.h>
-#include <qcontactmanager.h>
 #include "qdeclarativecontact_p.h"
-#include "qdeclarativecontactmodel_p.h"
+
+#include <QtCore/qurl.h>
 
 #include <QtQml/qqmlengine.h>
 
-#include <QUrl>
-#include <QQmlListProperty>
+#include <QtContacts/qcontactdetails.h>
+#include <QtContacts/qcontactmanager.h>
+
+#include "qdeclarativecontactmodel_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 

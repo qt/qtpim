@@ -42,8 +42,8 @@
 //TESTED_COMPONENT=src/versit
 
 #include "tst_qversitdocument.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 #include <QString>
 #include <QtTest/QtTest>
 

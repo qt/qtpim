@@ -40,8 +40,8 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <QDateTime>
-#include "qorganizer.h"
+#include <QtCore/QDateTime>
+#include <QtOrganizer/qorganizer.h>
 #include "../qorganizermanagerdataholder.h"
 #include "../../jsondbprocess.h"
 

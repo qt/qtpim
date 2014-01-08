@@ -42,8 +42,9 @@
 #ifndef QCONTACTJSONDBSTRING_H
 #define QCONTACTJSONDBSTRING_H
 
+#include <QtCore/qstring.h>
+
 #include <QtContacts/qcontactsglobal.h>
-#include <QString>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

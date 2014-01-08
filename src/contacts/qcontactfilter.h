@@ -42,12 +42,9 @@
 #ifndef QCONTACTFILTER_H
 #define QCONTACTFILTER_H
 
-#include <QVariant>
-#include <QList>
-#include <QDateTime>
-#include <QSharedData>
+#include <QtCore/qshareddata.h>
 
-#include <qcontactsglobal.h>
+#include <QtContacts/qcontactsglobal.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -59,14 +56,6 @@ QT_BEGIN_NAMESPACE_CONTACTS
     friend class Class##Private;
 
 class QContactFilterPrivate;
-
-// MSVC needs the function declared before the friend declaration
-class QContactFilter;
-#ifndef QT_NO_DATASTREAM
-Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactFilter& filter);
-Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactFilter& filter);
-#endif
-
 class Q_CONTACTS_EXPORT QContactFilter
 {
 public:
@@ -125,10 +114,18 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactFilter::MatchFlags)
 const Q_CONTACTS_EXPORT QContactFilter operator&(const QContactFilter& left, const QContactFilter& right);
 const Q_CONTACTS_EXPORT QContactFilter operator|(const QContactFilter& left, const QContactFilter& right);
 
+#ifndef QT_NO_DATASTREAM
+Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactFilter& filter);
+Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactFilter& filter);
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactFilter& filter);
+#endif
+
 QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactFilter), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACTFILTER_H

@@ -42,13 +42,11 @@
 #ifndef QCONTACTTAG_H
 #define QCONTACTTAG_H
 
-#include <QString>
-
-#include <qcontactsglobal.h>
-#include "qcontactdetail.h"
-#include "qcontact.h"
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactTag : public QContactDetail
@@ -73,4 +71,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTTAG_H

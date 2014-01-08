@@ -42,8 +42,10 @@
 #ifndef QCONTACTDETAILFILTER_H
 #define QCONTACTDETAILFILTER_H
 
-#include "qcontactfilter.h"
-#include "qcontactdetail.h"
+#include <QtCore/qvariant.h>
+
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -74,4 +76,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTDETAILFILTER_H

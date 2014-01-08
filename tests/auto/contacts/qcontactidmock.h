@@ -43,8 +43,8 @@
 #ifndef QCONTACTIDMOCK_H
 #define QCONTACTIDMOCK_H
 
-#include <qcontacts.h>
-#include "qcontactengineid.h"
+#include <QtContacts/qcontacts.h>
+#include <QtContacts/qcontactengineid.h>
 
 //
 //  W A R N I N G

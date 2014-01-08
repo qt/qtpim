@@ -39,15 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTFAVORITE_H
 #define QCONTACTFAVORITE_H
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactFavorite : public QContactDetail
@@ -75,4 +74,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTFAVORITE_H

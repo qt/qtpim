@@ -40,8 +40,10 @@
 ****************************************************************************/
 
 #include "qtimezones_p.h"
-#include <qorganizer.h>
-#include <QDateTime>
+
+#include <QtOrganizer/qorganizer.h>
+
+QTORGANIZER_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

@@ -42,9 +42,9 @@
 #ifndef QDECLARATIVECONTACTORGANIZATION_H
 #define QDECLARATIVECONTACTORGANIZATION_H
 
+#include <QtContacts/qcontactorganization.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactorganization.h"
-#include <QSet>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -151,4 +151,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactOrganization)
 
-#endif
+#endif // QDECLARATIVECONTACTORGANIZATION_H

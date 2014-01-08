@@ -39,17 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTEMAILADDRESS_H
 #define QCONTACTEMAILADDRESS_H
 
-#include <QString>
-
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontactfilter.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactEmailAddress : public QContactDetail
@@ -74,5 +71,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTEMAILADDRESS_H

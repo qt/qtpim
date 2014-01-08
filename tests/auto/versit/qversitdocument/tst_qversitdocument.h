@@ -43,7 +43,7 @@
 #define tst_QVERSITDOCUMENT_H
 
 #include <QObject>
-#include <qversitdocument.h>
+#include <QtVersit/qversitdocument.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitDocument;

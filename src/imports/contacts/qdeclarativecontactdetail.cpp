@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
+#include "qdeclarativecontactdetail_p.h"
+
 #include "qdeclarativecontactdetails_p.h"
 #include "qdeclarativecontact_p.h"
-#include "qcontactdetails.h"
-#include <QDebug>
 
 QTCONTACTS_USE_NAMESPACE
 

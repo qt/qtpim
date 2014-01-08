@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTGLOBALPRESENCE_H
 #define QDECLARATIVECONTACTGLOBALPRESENCE_H
 
+#include <QtContacts/qcontactglobalpresence.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactglobalpresence.h"
 #include "qdeclarativecontactpresence_p.h"
 
 QTCONTACTS_USE_NAMESPACE
@@ -144,5 +144,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactGlobalPresence)
 
-#endif
-
+#endif // QDECLARATIVECONTACTGLOBALPRESENCE_H

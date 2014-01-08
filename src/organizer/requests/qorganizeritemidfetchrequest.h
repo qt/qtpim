@@ -42,10 +42,17 @@
 #ifndef QORGANIZERITEMIDFETCHREQUEST_H
 #define QORGANIZERITEMIDFETCHREQUEST_H
 
-#include <qorganizerabstractrequest.h>
-#include <qorganizeritemid.h>
+#include <QtCore/qlist.h>
+
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizeritemsortorder.h>
+
+QT_FORWARD_DECLARE_CLASS(QDateTime)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
+
+class QOrganizerItemFilter;
 
 class QOrganizerItemIdFetchRequestPrivate;
 

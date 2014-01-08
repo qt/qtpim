@@ -40,11 +40,12 @@
 ****************************************************************************/
 
 #include "qvcardrestorehandler_p.h"
-#include <qcontactdetail.h>
+
+#include <QtCore/qdatastream.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qurl.h>
+
 #include "qversitproperty.h"
-#include <QList>
-#include <QDateTime>
-#include <QUrl>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by

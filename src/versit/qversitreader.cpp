@@ -39,14 +39,11 @@
 **
 ****************************************************************************/
 
-
-#include <qversitreader.h>
+#include "qversitreader.h"
 #include "qversitreader_p.h"
-#include "qversitutils_p.h"
 
-#include <QTextCodec>
-#include <QMutexLocker>
-#include <QBuffer>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtextcodec.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -281,4 +278,5 @@ QList<QVersitDocument> QVersitReader::results() const
 }
 
 #include "moc_qversitreader.cpp"
+
 QT_END_NAMESPACE_VERSIT

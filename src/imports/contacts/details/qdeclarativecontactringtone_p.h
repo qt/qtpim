@@ -42,10 +42,9 @@
 #ifndef QDECLARATIVECONTACTRINGTONE_H
 #define QDECLARATIVECONTACTRINGTONE_H
 
-#include <QUrl>
+#include <QtContacts/qcontactringtone.h>
 
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactringtone.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -113,4 +112,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactRingtone)
 
-#endif
+#endif // QDECLARATIVECONTACTRINGTONE_H

@@ -42,8 +42,10 @@
 #ifndef QORGANIZEREVENTRSVP_H
 #define QORGANIZEREVENTRSVP_H
 
-#include <qorganizereventattendee.h>
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizereventattendee.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+
+QT_FORWARD_DECLARE_CLASS(QDate)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

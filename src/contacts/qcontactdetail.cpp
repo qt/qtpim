@@ -41,9 +41,15 @@
 
 #include "qcontactdetail.h"
 #include "qcontactdetail_p.h"
+
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
 #include "qcontactmanager.h"
-#include <QDebug>
-#include <QDataStream>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by

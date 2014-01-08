@@ -42,10 +42,14 @@
 #ifndef QVERSITWRITER_H
 #define QVERSITWRITER_H
 
-#include <qversitdocument.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qobject.h>
 
-#include <QObject>
-#include <QIODevice>
+#include <QtVersit/qversitdocument.h>
+
+QT_FORWARD_DECLARE_CLASS(QByteArray)
+QT_FORWARD_DECLARE_CLASS(QIODevice)
+QT_FORWARD_DECLARE_CLASS(QTextCodec)
 
 QT_BEGIN_NAMESPACE_VERSIT
 

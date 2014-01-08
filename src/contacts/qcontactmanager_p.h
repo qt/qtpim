@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGER_P_H
 #define QCONTACTMANAGER_P_H
 
@@ -54,17 +53,17 @@
 // We mean it.
 //
 
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QString>
+#include <QtCore/qhash.h>
+#include <QtCore/qjsonobject.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstringlist.h>
 
-#include "qcontactmanager.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactactionmanager_p.h"
-#include "qcontactobserver.h"
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactobserver.h>
+#include <QtContacts/private/qcontactactionmanager_p.h>
 
-#include <QJsonObject>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -151,4 +150,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTMANAGER_P_H

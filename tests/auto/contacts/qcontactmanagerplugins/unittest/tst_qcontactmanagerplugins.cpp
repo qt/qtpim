@@ -46,7 +46,7 @@
 
 #include <QtTest/QtTest>
 
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 
 #include <QApplication>
 QTCONTACTS_USE_NAMESPACE

@@ -41,7 +41,7 @@
 #define ADDCALENDARPAGE_H
 
 #include <QWidget>
-#include <qorganizercollection.h>
+#include <QtOrganizer/qorganizercollection.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerManager;

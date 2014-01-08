@@ -38,11 +38,13 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QDECLARATIVECONTACTACTIONFILTER_H
 #define QDECLARATIVECONTACTACTIONFILTER_H
 
+#include <QtContacts/qcontactactionfilter.h>
+
 #include "qdeclarativecontactfilter_p.h"
-#include "qcontactactionfilter.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -86,4 +88,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactActionFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTACTIONFILTER_H

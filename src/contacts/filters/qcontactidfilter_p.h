@@ -53,12 +53,8 @@
 // We mean it.
 //
 
-#include "qcontactfilter_p.h"
-#include "qcontactfilter.h"
-#include "qcontactid.h"
-
-#include <QString>
-#include <QVariant>
+#include <QtContacts/qcontactidfilter.h>
+#include <QtContacts/private/qcontactfilter_p.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -117,4 +113,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTIDLISTFILTER_P_H

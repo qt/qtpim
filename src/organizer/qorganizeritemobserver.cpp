@@ -39,10 +39,12 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemobserver.h>
-#include <private/qorganizermanager_p.h>
+#include "qorganizeritemobserver.h"
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
+
+#include "qorganizermanager.h"
+#include "qorganizermanager_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -43,8 +43,8 @@
 #define PLUGIN_H
 
 #include <QObject>
-#include "qversitcontacthandler.h"
-#include "qversitproperty.h"
+#include <QtVersit/qversitcontacthandler.h>
+#include <QtVersit/qversitproperty.h>
 
 QTVERSIT_USE_NAMESPACE
 

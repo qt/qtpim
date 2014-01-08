@@ -44,9 +44,9 @@
 
 #include <QString>
 
-#include <qcontactsglobal.h>
-#include "qcontactdetail.h"
-#include "qcontactfilter.h"
+#include <QtContacts/qcontactsglobal.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

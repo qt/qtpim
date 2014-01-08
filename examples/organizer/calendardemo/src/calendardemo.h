@@ -43,8 +43,8 @@
 
 #include <QMainWindow>
 #include <QDate>
-#include <qorganizeritemsaverequest.h>
-#include <qorganizeritemremovebyidrequest.h>
+#include <QtOrganizer/qorganizeritemsaverequest.h>
+#include <QtOrganizer/qorganizeritemremovebyidrequest.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerManager;

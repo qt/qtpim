@@ -42,9 +42,9 @@
 //TESTED_COMPONENT=src/versit
 
 #include "tst_qversitproperty.h"
-#include <qversitproperty.h>
-#include <private/qversitproperty_p.h>
-#include <qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtVersit/private/qversitproperty_p.h>
+#include <QtVersit/qversitdocument.h>
 #include <QtTest/QtTest>
 
 QTVERSIT_USE_NAMESPACE

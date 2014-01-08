@@ -39,29 +39,24 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGER_H
 #define QCONTACTMANAGER_H
 
-#include <QObject>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
 
-#include <QMap>
-#include <QString>
-#include <QStringList>
-#include <QList>
-#include <QDateTime>
-
-#include <qcontact.h>
-#include <qcontactid.h>
-#include <qcontactrelationship.h>
-#include <qcontactsortorder.h>
-#include <qcontactfetchhint.h>
-#include <qcontacttype.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactfetchhint.h>
+#include <QtContacts/qcontactrelationship.h>
+#include <QtContacts/qcontactsortorder.h>
+#include <QtContacts/qcontacttype.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactFilter;
 class QContactAction;
+class QContactFilter;
 
 class QContactManagerData;
 class Q_CONTACTS_EXPORT QContactManager : public QObject
@@ -186,4 +181,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTMANAGER_H

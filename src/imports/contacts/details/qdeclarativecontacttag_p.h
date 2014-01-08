@@ -43,8 +43,9 @@
 #ifndef QDECLARATIVECONTACTTAG_H
 #define QDECLARATIVECONTACTTAG_H
 
+#include <QtContacts/qcontacttag.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontacttag.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -88,4 +89,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactTag)
 
-#endif
+#endif // QDECLARATIVECONTACTTAG_H

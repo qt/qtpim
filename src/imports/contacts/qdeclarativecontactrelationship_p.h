@@ -42,10 +42,10 @@
 #ifndef QDECLARATIVECONTACTRELATIONSHIP_P_H
 #define QDECLARATIVECONTACTRELATIONSHIP_P_H
 
-#include <qqml.h>
-#include <QQmlExtensionPlugin>
+#include <QtQml/qqml.h>
 
-#include "qcontactrelationship.h"
+#include <QtContacts/qcontactrelationship.h>
+
 #include "qdeclarativecontact_p.h"
 
 QTCONTACTS_USE_NAMESPACE
@@ -100,5 +100,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactRelationship)
 
-#endif
-
+#endif // QDECLARATIVECONTACTRELATIONSHIP_P_H

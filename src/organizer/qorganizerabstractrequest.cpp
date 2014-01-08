@@ -39,7 +39,12 @@
 **
 ****************************************************************************/
 
-#include <private/qorganizerabstractrequest_p.h>
+#include "qorganizerabstractrequest.h"
+#include "qorganizerabstractrequest_p.h"
+
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QVERSITREADER_P_H
 #define QVERSITREADER_P_H
 
@@ -54,28 +53,24 @@
 // We mean it.
 //
 
-#include <qversitreader.h>
-#include <qversitdocument.h>
-#include <qversitproperty.h>
-#include "qversitutils_p.h"
+#include <QtCore/qbytearray.h>
+#include <QtCore/qbytearraymatcher.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qscopedpointer.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qthread.h>
 
-#include <QObject>
-#include <QThread>
-#include <QByteArray>
-#include <QIODevice>
-#include <QList>
-#include <QStack>
-#include <QPointer>
-#include <QScopedPointer>
-#include <QByteArray>
-#include <QMutex>
-#include <QWaitCondition>
-#include <QPair>
-#include <QHash>
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 
-QT_BEGIN_NAMESPACE
-class QBuffer;
-QT_END_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QBuffer)
+QT_FORWARD_DECLARE_CLASS(QIODevice)
+QT_FORWARD_DECLARE_CLASS(QTextCodec)
 
 QT_BEGIN_NAMESPACE_VERSIT
 

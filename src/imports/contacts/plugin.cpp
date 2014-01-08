@@ -39,19 +39,21 @@
 **
 ****************************************************************************/
 
+#include <QtQml/qqml.h>
+#include <QtQml/qqmlextensionplugin.h>
 
-#include <QtQml>
-#include <QQmlExtensionPlugin>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactabstractrequest.h>
 
-#include "qdeclarativecontactmodel_p.h"
 #include "qdeclarativecontact_p.h"
 #include "qdeclarativecontactdetail_p.h"
-#include "qdeclarativecontactfilter_p.h"
-#include "qdeclarativecontactsortorder_p.h"
-#include "qdeclarativecontactrelationshipmodel_p.h"
-#include "qdeclarativecontactrelationship_p.h"
 #include "qdeclarativecontactfetchhint_p.h"
+#include "qdeclarativecontactfilter_p.h"
 #include "qdeclarativecontactfilters_p.h"
+#include "qdeclarativecontactmodel_p.h"
+#include "qdeclarativecontactrelationship_p.h"
+#include "qdeclarativecontactrelationshipmodel_p.h"
+#include "qdeclarativecontactsortorder_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 

@@ -39,10 +39,13 @@
 **
 ****************************************************************************/
 
-#include <qorganizertodooccurrence.h>
-#include <qorganizertodotime.h>
-#include <qorganizeritemparent.h>
-#include <qorganizeritemid.h>
+#include "qorganizertodooccurrence.h"
+
+#include <QtCore/qdatetime.h>
+
+#include "qorganizeritemid.h"
+#include "qorganizeritemparent.h"
+#include "qorganizertodotime.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

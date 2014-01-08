@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTAVATAR_H
 #define QDECLARATIVECONTACTAVATAR_H
 
+#include <QtContacts/qcontactavatar.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactavatar.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -98,4 +99,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactAvatar)
 
-#endif
+#endif // QDECLARATIVECONTACTAVATAR_H

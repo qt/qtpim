@@ -39,13 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTPHONENUMBER_H
 #define QDECLARATIVECONTACTPHONENUMBER_H
 
+#include <QtContacts/qcontactphonenumber.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactphonenumber.h"
-#include <QSet>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -127,5 +126,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactPhoneNumber)
 
-#endif
-
+#endif // QDECLARATIVECONTACTPHONENUMBER_H

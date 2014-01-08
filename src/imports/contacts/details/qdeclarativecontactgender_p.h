@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTGENDER_H
 #define QDECLARATIVECONTACTGENDER_H
 
+#include <QtContacts/qcontactgender.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactgender.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -108,5 +109,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactGender)
 
-#endif
-
+#endif // QDECLARATIVECONTACTGENDER_H

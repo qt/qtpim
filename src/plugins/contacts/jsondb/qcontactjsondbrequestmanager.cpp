@@ -39,12 +39,10 @@
 **
 ****************************************************************************/
 
-#include <QDebug>
-#include <QMutexLocker>
-
-#include <QThread>
-
 #include "qcontactjsondbrequestmanager.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

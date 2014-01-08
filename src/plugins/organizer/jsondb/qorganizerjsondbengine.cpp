@@ -40,13 +40,15 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbengine.h"
-#include "qorganizerjsondbrequestthread.h"
-#include "qorganizerjsondbstring.h"
+
+#include <QtCore/qeventloop.h>
+
+#include <QtNetwork/qabstractsocket.h>
 
 #include <QtOrganizer/qorganizeritemdetails.h>
 
-#include <QtCore/qeventloop.h>
-#include <QtNetwork/qabstractsocket.h>
+#include "qorganizerjsondbrequestthread.h"
+#include "qorganizerjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

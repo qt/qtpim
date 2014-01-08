@@ -39,8 +39,8 @@
 ****************************************************************************/
 
 #include <QtWidgets>
-#include <qorganizer.h>
-#include <qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizer.h>
+#include <QtOrganizer/qorganizerabstractrequest.h>
 
 #include "monthpage.h"
 #include "calendardemo.h"

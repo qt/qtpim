@@ -53,15 +53,12 @@
 // We mean it.
 //
 
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <QSharedData>
-#include <QString>
-#include <QStringList>
-#include <QMultiHash>
-#include <QByteArray>
-#include <QVariant>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

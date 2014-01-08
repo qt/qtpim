@@ -42,10 +42,13 @@
 #ifndef QDECLARATIVEORGANIZERCOLLECTION_H
 #define QDECLARATIVEORGANIZERCOLLECTION_H
 
-#include <qorganizercollection.h>
 #include <QtCore/qurl.h>
-#include <QtQml/qqml.h>
+
 #include <QtGui/qcolor.h>
+
+#include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizercollection.h>
 
 QTORGANIZER_USE_NAMESPACE
 

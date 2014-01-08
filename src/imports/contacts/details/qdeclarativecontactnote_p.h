@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTNOTE_H
 #define QDECLARATIVECONTACTNOTE_H
 
+#include <QtContacts/qcontactnote.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactnote.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -88,5 +89,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactNote)
 
-#endif
-
+#endif // QDECLARATIVECONTACTNOTE_H

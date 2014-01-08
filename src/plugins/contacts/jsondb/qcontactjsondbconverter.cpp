@@ -39,37 +39,38 @@
 **
 ****************************************************************************/
 
-#include <QList>
-#include <QDebug>
-#include <QCryptographicHash>
-#include <QUuid>
-#include <QtCore/qjsonarray.h>
-
-#include "qcontactdetail.h"
-#include "qcontacttype.h"
-#include "qcontactid.h"
-#include "qcontactname.h"
-#include "qcontactaddress.h"
-#include "qcontactnickname.h"
-#include "qcontactemailaddress.h"
-#include "qcontactphonenumber.h"
-#include "qcontactmanager.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactid.h"
-#include "qcontacturl.h"
-#include "qcontactabstractrequest.h"
-
-#include "qcontactdetailfilter.h"
-#include "qcontactchangelogfilter.h"
-#include "qcontactactionfilter.h"
-#include "qcontactrelationshipfilter.h"
-#include "qcontactintersectionfilter.h"
-#include "qcontactidfilter.h"
-
 #include "qcontactjsondbconverter.h"
+
+#include <QtCore/qcryptographichash.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qjsonarray.h>
+#include <QtCore/qlist.h>
+#include <QtCore/quuid.h>
+
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontacttype.h>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactname.h>
+#include <QtContacts/qcontactaddress.h>
+#include <QtContacts/qcontactnickname.h>
+#include <QtContacts/qcontactemailaddress.h>
+#include <QtContacts/qcontactphonenumber.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontacturl.h>
+#include <QtContacts/qcontactabstractrequest.h>
+
+#include <QtContacts/qcontactactionfilter.h>
+#include <QtContacts/qcontactchangelogfilter.h>
+#include <QtContacts/qcontactdetailfilter.h>
+#include <QtContacts/qcontactidfilter.h>
+#include <QtContacts/qcontactintersectionfilter.h>
+#include <QtContacts/qcontactrelationshipfilter.h>
+
 #include "qcontactjsondbglobal.h"
-#include "qcontactjsondbstring.h"
 #include "qcontactjsondbid.h"
+#include "qcontactjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

@@ -41,27 +41,20 @@
 
 #include "qcontactmanagerengine.h"
 
-#include "qcontactdetails.h"
-#include "qcontactsortorder.h"
-#include "qcontactfilters.h"
-#include "qcontactaction.h"
-#include "qcontactactiondescriptor.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactabstractrequest_p.h"
-#include "qcontactrequests.h"
-#include "qcontactrequests_p.h"
-#include "qcontact.h"
-#include "qcontactfetchhint.h"
+#include <QtCore/qmutex.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qset.h>
 
 #include "qcontact_p.h"
 #include "qcontactdetail_p.h"
+#include "qcontactdetails.h"
+#include "qcontactfilters.h"
+#include "qcontactabstractrequest_p.h"
+#include "qcontactaction.h"
+#include "qcontactactiondescriptor.h"
 #include "qcontactactionmanager_p.h"
-
-#include <QMutex>
-#include <QMutexLocker>
-#include <QPointer>
-
-#include <QDebug>
+#include "qcontactrequests_p.h"
+#include "qcontactsortorder.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

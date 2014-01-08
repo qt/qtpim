@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include "qtorganizer.h"
+#include <QtOrganizer>
 
 #include <QDebug>
 #include <QCoreApplication>

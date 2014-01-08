@@ -53,7 +53,11 @@
 // We mean it.
 //
 
-#include <qorganizeritemfetchhint.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemfetchhint.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

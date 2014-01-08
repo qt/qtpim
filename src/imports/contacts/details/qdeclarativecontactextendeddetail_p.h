@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTEXTENDEDDETAIL_P_H
 #define QDECLARATIVECONTACTEXTENDEDDETAIL_P_H
 
+#include <QtContacts/qcontactextendeddetail.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactextendeddetail.h"
 
 QTCONTACTS_USE_NAMESPACE
 

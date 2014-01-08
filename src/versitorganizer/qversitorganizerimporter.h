@@ -42,24 +42,23 @@
 #ifndef QVERSITORGANIZERIMPORTER_H
 #define QVERSITORGANIZERIMPORTER_H
 
-#include <qversitorganizerglobal.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 
-#include <qorganizeritem.h>
-#include <qversitdocument.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
-#include <QList>
+#include <QtVersit/qversitglobal.h>
 
-QT_BEGIN_NAMESPACE_ORGANIZER
-class QOrganizerItem;
-QT_END_NAMESPACE_ORGANIZER
+#include <QtVersitOrganizer/qversitorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitDocument;
 class QVersitProperty;
 QT_END_NAMESPACE_VERSIT
 
-QTVERSIT_USE_NAMESPACE
 QTORGANIZER_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

@@ -41,16 +41,16 @@
 
 #include "qcontactfilter.h"
 #include "qcontactfilter_p.h"
-#include "qcontactfilters.h"
 
-#include "qcontactintersectionfilter.h"
-#include "qcontactunionfilter.h"
-
-#include "qcontactmanager.h"
-
-#ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
 #endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
+#include "qcontactfilters.h"
+#include "qcontactmanager.h"
 
 /*!
   \class QContactFilter
@@ -308,4 +308,5 @@ const QContactFilter operator|(const QContactFilter& left, const QContactFilter&
     nif << left << right;
     return nif;
 }
+
 QT_END_NAMESPACE_CONTACTS

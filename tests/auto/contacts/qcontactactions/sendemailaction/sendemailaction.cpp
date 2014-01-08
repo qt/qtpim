@@ -48,8 +48,8 @@
 
 #include "sendemailaction_p.h"
 
-#include "qcontactemailaddress.h"
-#include "qcontactfilters.h"
+#include <QtContacts/qcontactemailaddress.h>
+#include <QtContacts/qcontactfilters.h>
 
 #include <QDebug>
 #include <QMessageBox>
@@ -57,6 +57,8 @@
 
 #define makestr(x) (#x)
 #define makename(x) makestr(x)
+
+QTCONTACTS_USE_NAMESPACE
 
 QObject* QContactSendEmailActionPlugin::createInstance(const QServiceInterfaceDescriptor& descriptor,
                         QServiceContext* context,

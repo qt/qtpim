@@ -68,4 +68,7 @@
 
 #define QTORGANIZER_BACKEND_VERSION QString(QStringLiteral("org.qt-project.Qt.organizer.backendVersion"))
 
+QT_BEGIN_NAMESPACE_ORGANIZER
+QT_END_NAMESPACE_ORGANIZER
+
 #endif // QTORGANIZERGLOBAL_H

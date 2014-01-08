@@ -39,32 +39,22 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTDETAIL_H
 #define QCONTACTDETAIL_H
 
-#include <qcontactsglobal.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <QSharedDataPointer>
-#include <QStringList>
-#include <QVariant>
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtContacts/qcontactsglobal.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
+class QContact;
 class QContactActionDescriptor;
+
 class QContactDetailPrivate;
-
-// MSVC needs the function declared before the friend declaration
-class QContactDetail;
-#ifndef QT_NO_DATASTREAM
-Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactDetail& detail);
-Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactDetail& detail);
-#endif
-
 class Q_CONTACTS_EXPORT QContactDetail
 {
 public:
@@ -207,6 +197,10 @@ Q_CONTACTS_EXPORT uint qHash(const QContactDetail& key);
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactDetail& detail);
 #endif
+#ifndef QT_NO_DATASTREAM
+Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactDetail& detail);
+Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactDetail& detail);
+#endif
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetail::AccessConstraints)
 
@@ -222,5 +216,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactDetail), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QCONTACTDETAIL_H

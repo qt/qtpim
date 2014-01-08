@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTINVALIDBACKEND_P_H
 #define QCONTACTINVALIDBACKEND_P_H
 
@@ -54,11 +53,7 @@
 // We mean it.
 //
 
-#include "qcontactmanager.h"
-#include "qcontactmanager_p.h"
-
-#include <QMap>
-#include <QString>
+#include <QtContacts/qcontactmanagerengine.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -74,5 +69,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTINVALIDBACKEND_P_H

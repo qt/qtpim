@@ -38,17 +38,17 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QVariantMap>
-#include <QEventLoop>
 
 #include "qcontactjsondbengine.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qeventloop.h>
+#include <QtCore/qthread.h>
+
 #include "qcontactjsondbconverter.h"
 #include "qcontactjsondbglobal.h"
 #include "qcontactjsondbstring.h"
 #include "qcontactjsondbrequesthandler.h"
-
-#include <QDebug>
-#include <QEventLoop>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

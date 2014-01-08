@@ -43,10 +43,10 @@
 
 #include "tst_qvcard30writer.h"
 #ifdef QT_BUILD_INTERNAL
-#include <private/qvcard30writer_p.h>
+#include <QtVersit/private/qvcard30writer_p.h>
 #endif
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 #include <QtTest/QtTest>
 #include <QByteArray>
 #include <QVariant>

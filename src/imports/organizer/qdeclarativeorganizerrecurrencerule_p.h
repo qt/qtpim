@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVEORGANIZERITEMRECURRENCERULE_H
 #define QDECLARATIVEORGANIZERITEMRECURRENCERULE_H
 
-#include <qorganizerrecurrencerule.h>
 #include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QTORGANIZER_USE_NAMESPACE
 

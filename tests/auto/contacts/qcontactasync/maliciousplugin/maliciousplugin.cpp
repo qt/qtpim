@@ -51,12 +51,14 @@
 #define makename(x) makestr(x)
 
 #include "maliciousplugin_p.h"
-#include "qcontactmanager.h"
+#include <QtContacts/qcontactmanager.h>
 
 #include <QThread>
 #include <QMutex>
 #include <QSet>
 #include <QDebug>
+
+QTCONTACTS_USE_NAMESPACE
 
 class MaliciousThreadObject : public QObject
 {

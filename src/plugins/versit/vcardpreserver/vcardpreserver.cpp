@@ -40,8 +40,17 @@
 ****************************************************************************/
 
 #include "vcardpreserver.h"
-#include <qversitproperty.h>
-#include <QContactExtendedDetail>
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qurl.h>
+
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactextendeddetail.h>
+
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -55,6 +64,8 @@
 # undef QStringLiteral
 # define QStringLiteral QLatin1String
 #endif
+
+QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
 

@@ -41,8 +41,6 @@
 
 #include "qcontactdetailfilter.h"
 #include "qcontactdetailfilter_p.h"
-#include "qcontactfilter_p.h"
-#include "qcontactmanager.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

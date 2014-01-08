@@ -40,6 +40,8 @@
 ****************************************************************************/
 
 #include "qcontactactionfactory.h"
+
+#include "qcontact.h"
 #include "qcontactactiondescriptor_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

@@ -53,10 +53,12 @@
 // We mean it.
 //
 
-#include <qorganizercollection.h>
-#include <qorganizercollectionid.h>
-
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
+
+#include <QtOrganizer/qorganizercollection.h>
+#include <QtOrganizer/qorganizercollectionid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

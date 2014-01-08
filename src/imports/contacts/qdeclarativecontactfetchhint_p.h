@@ -38,18 +38,17 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QDECLARATIVECONTACTFETCHHINT_H
 #define QDECLARATIVECONTACTFETCHHINT_H
 
-#include <QVariant>
-#include <QList>
-#include <QSize>
-#include <QStringList>
+#include <QtCore/qsize.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <qqml.h>
-#include <QQmlExtensionPlugin>
+#include <QtQml/qqml.h>
 
-#include "qcontactfetchhint.h"
+#include <QtContacts/qcontactfetchhint.h>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -101,4 +100,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactFetchHint)
 
-#endif
+#endif // QDECLARATIVECONTACTFETCHHINT_H

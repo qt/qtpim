@@ -39,11 +39,15 @@
 **
 ****************************************************************************/
 
-
-#include <qversitorganizerexporter.h>
+#include "qversitorganizerexporter.h"
 #include "qversitorganizerexporter_p.h"
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+
+#include <QtOrganizer/qorganizer.h>
+
+#include <QtVersit/qversitproperty.h>
+
+QTORGANIZER_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
@@ -160,7 +164,7 @@ QVersitOrganizerExporter::~QVersitOrganizerExporter()
  */
 bool QVersitOrganizerExporter::exportItems(
     const QList<QOrganizerItem>& items,
-    QtVersit::QVersitDocument::VersitType versitType)
+    QVersitDocument::VersitType versitType)
 {
     int itemIndex = 0;
     d->mErrors.clear();
@@ -191,7 +195,7 @@ bool QVersitOrganizerExporter::exportItems(
  *
  * \sa exportItems()
  */
-QtVersit::QVersitDocument QVersitOrganizerExporter::document() const
+QVersitDocument QVersitOrganizerExporter::document() const
 {
     return d->mResult;
 }

@@ -42,12 +42,28 @@
 #ifndef QVCARDRESTOREHANDLER_P_H
 #define QVCARDRESTOREHANDLER_P_H
 
-#include <qversitglobal.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail.  This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
+
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+
+#include <QtVersit/qversitglobal.h>
+
+#include <QtContacts/qcontactdetail.h>
+
 QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
+
 class QVersitProperty;
 
 // This is a map from Versit group names to the details that were generated from properties with the
@@ -93,4 +109,4 @@ private:
 
 QT_END_NAMESPACE_VERSIT
 
-#endif
+#endif // QVCARDRESTOREHANDLER_P_H

@@ -39,14 +39,17 @@
 **
 ****************************************************************************/
 
-#include <QContact>
-#include <QOrganizerCollection>
+#include <QtContacts/QContact>
+#include <QtOrganizer/QOrganizerCollection>
+
+QTCONTACTS_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 
 int main(int argc, char **argv)
 {
-    QtContacts::QContact contact;
+    QContact contact;
 
-    QtOrganizer::QOrganizerCollection organizerCollection;
+    QOrganizerCollection organizerCollection;
 
     return 0;
 }

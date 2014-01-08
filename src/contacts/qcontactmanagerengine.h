@@ -39,28 +39,25 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGERENGINE_H
 #define QCONTACTMANAGERENGINE_H
 
-#include <QSharedData>
-#include <QMap>
-#include <QList>
-#include <QString>
-#include <QDateTime>
-#include <QVariant>
-#include <QObject>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include "qcontact.h"
-#include "qcontactmanager.h"
-#include "qcontactabstractrequest.h"
-#include "qcontactrequests.h"
-#include "qcontactfetchhint.h"
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactfetchhint.h>
+#include <QtContacts/qcontactfilter.h>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactrequests.h>
+#include <QtContacts/qcontactsortorder.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
-
-class QContactFilter;
-class QContactSortOrder;
 
 class Q_CONTACTS_EXPORT QContactManagerEngine : public QObject
 {
@@ -165,4 +162,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(QtContacts::QContactManagerEngine, "org.qt-project.Qt.QContactManagerEngine")
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACTMANAGERENGINE_H

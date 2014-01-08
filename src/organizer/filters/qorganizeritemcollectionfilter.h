@@ -42,9 +42,10 @@
 #ifndef QORGANIZERITEMCOLLECTIONFILTER_H
 #define QORGANIZERITEMCOLLECTIONFILTER_H
 
-#include <qorganizeritemfilter.h>
-#include <qorganizercollectionid.h>
 #include <QtCore/qset.h>
+
+#include <QtOrganizer/qorganizercollectionid.h>
+#include <QtOrganizer/qorganizeritemfilter.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

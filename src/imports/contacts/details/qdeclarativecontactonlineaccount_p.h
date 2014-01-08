@@ -39,13 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTONLINEACCOUNT_H
 #define QDECLARATIVECONTACTONLINEACCOUNT_H
 
+#include <QtContacts/qcontactonlineaccount.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactonlineaccount.h"
-#include <QSet>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -166,5 +165,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactOnlineAccount)
 
-#endif
-
+#endif // QDECLARATIVECONTACTONLINEACCOUNT_H

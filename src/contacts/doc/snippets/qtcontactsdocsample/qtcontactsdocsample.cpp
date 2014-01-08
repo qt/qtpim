@@ -39,8 +39,7 @@
 **
 ****************************************************************************/
 
-#include <qcontactsglobal.h>
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 #include "requestexample.h"
 
 #include <QDebug>

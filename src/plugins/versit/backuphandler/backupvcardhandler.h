@@ -42,10 +42,9 @@
 #ifndef TESTVCARDHANDLER_H
 #define TESTVCARDHANDLER_H
 
-#include <QObject>
-#include <QtPlugin>
-#include <qversitcontacthandler.h>
-#include <private/qvcardrestorehandler_p.h>
+#include <QtCore/qplugin.h>
+
+#include <QtVersit/qversitcontacthandler.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -62,8 +61,6 @@ public:
     virtual QStringList keys() const;
 };
 
-#include "moc_backupvcardhandler.cpp"
-
 QT_END_NAMESPACE_VERSIT
 
-#endif
+#endif // TESTVCARDHANDLER_H

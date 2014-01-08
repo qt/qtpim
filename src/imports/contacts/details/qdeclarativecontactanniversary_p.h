@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTANNIVERSARY_H
 #define QDECLARATIVECONTACTANNIVERSARY_H
 
+#include <QtContacts/qcontactanniversary.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactanniversary.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -141,6 +142,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactAnniversary)
 
-
-#endif
-
+#endif // QDECLARATIVECONTACTANNIVERSARY_H

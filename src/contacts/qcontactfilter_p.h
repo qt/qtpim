@@ -53,13 +53,16 @@
 // We mean it.
 //
 
-#include "qcontactfilter.h"
-#include <QSharedData>
-#include <QDataStream>
-
-#ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
 #endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtContacts/qcontactfilter.h>
 
 /* Boiler plate code */
 #define Q_IMPLEMENT_CONTACTFILTER_PRIVATE(Class) \
@@ -119,5 +122,4 @@ template<> QTCONTACTS_PREPEND_NAMESPACE(QContactFilterPrivate) *QSharedDataPoint
 #endif
 QT_END_NAMESPACE
 
-
-#endif
+#endif // QCONTACTFILTER_P_H

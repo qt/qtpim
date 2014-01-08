@@ -42,12 +42,11 @@
 #ifndef QDECLARATIVECONTACTRELATIONSHIPFILTER_H
 #define QDECLARATIVECONTACTRELATIONSHIPFILTER_H
 
-#include "qdeclarativecontactfilter_p.h"
-#include "qcontactrelationshipfilter.h"
-#include "qdeclarativecontactrelationship_p.h"
+#include <QtContacts/qcontactrelationshipfilter.h>
+
 #include "qdeclarativecontact_p.h"
-#include <qcontactmanager.h>
-#include <QDebug>
+#include "qdeclarativecontactfilter_p.h"
+#include "qdeclarativecontactrelationship_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -167,4 +166,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactRelationshipFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTRELATIONSHIPFILTER_H

@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemcollectionfilter.h>
-#include <private/qorganizeritemcollectionfilter_p.h>
+#include "qorganizeritemcollectionfilter.h"
+#include "qorganizeritemcollectionfilter_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

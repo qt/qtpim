@@ -40,6 +40,11 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbid.h"
+
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
 #include "qorganizerjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER

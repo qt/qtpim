@@ -53,11 +53,11 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QString>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
 
-#include "qcontact.h"
-#include "qcontactdetail.h"
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -88,4 +88,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTACTIONTARGET_P_H

@@ -43,7 +43,7 @@
 #include <QtTest/QtTest>
 
 #include "qservicemanager.h"
-#include "qtcontacts.h"
+#include <QtContacts/qtcontacts.h>
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 //TESTED_COMPONENT=src/contacts

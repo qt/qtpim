@@ -45,28 +45,28 @@
 // this file includes all of the public header files
 // provided by the Qt Contacts API
 
-#include <qcontactsglobal.h>                    // global exports
-#include <qcontactmanager.h>                    // manager
-#include <qcontactmanagerengine.h>              // manager backend
-#include <qcontactmanagerenginefactory.h>       // manage backend instantiator
-#include <qcontact.h>                           // contact
-#include <qcontactid.h>                         // contact identifier
-#include <qcontactobserver.h>                   // contact observer
-#include <qcontactdetail.h>                     // contact detail
-#include <qcontactdetails.h>                    // leaf detail classes
-#include <qcontactfetchhint.h>                  // backend optimization hint class
-#include <qcontactfilter.h>                     // contact filter
-#include <qcontactfilters.h>                    // leaf filter classes
-#include <qcontactsortorder.h>                  // contact sorting
-#include <qcontactaction.h>                     // actions
-#include <qcontactactiondescriptor.h>           // action descriptors
-#include <qcontactactionfactory.h>              // action factory
-#include <qcontactactiontarget.h>               // action target (contact + detail(s))
-#include <qcontactabstractrequest.h>            // asynchronous request
-#include <qcontactrequests.h>                   // request leaf classes
-#include <qcontactrelationship.h>               // contact relationships
+#include <QtContacts/qcontactsglobal.h>                    // global exports
+#include <QtContacts/qcontactmanager.h>                    // manager
+#include <QtContacts/qcontactmanagerengine.h>              // manager backend
+#include <QtContacts/qcontactmanagerenginefactory.h>       // manage backend instantiator
+#include <QtContacts/qcontact.h>                           // contact
+#include <QtContacts/qcontactid.h>                         // contact identifier
+#include <QtContacts/qcontactobserver.h>                   // contact observer
+#include <QtContacts/qcontactdetail.h>                     // contact detail
+#include <QtContacts/qcontactdetails.h>                    // leaf detail classes
+#include <QtContacts/qcontactfetchhint.h>                  // backend optimization hint class
+#include <QtContacts/qcontactfilter.h>                     // contact filter
+#include <QtContacts/qcontactfilters.h>                    // leaf filter classes
+#include <QtContacts/qcontactsortorder.h>                  // contact sorting
+#include <QtContacts/qcontactaction.h>                     // actions
+#include <QtContacts/qcontactactiondescriptor.h>           // action descriptors
+#include <QtContacts/qcontactactionfactory.h>              // action factory
+#include <QtContacts/qcontactactiontarget.h>               // action target (contact + detail(s))
+#include <QtContacts/qcontactabstractrequest.h>            // asynchronous request
+#include <QtContacts/qcontactrequests.h>                   // request leaf classes
+#include <QtContacts/qcontactrelationship.h>               // contact relationships
 
 QT_BEGIN_NAMESPACE_CONTACTS
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QTCONTACTS_H

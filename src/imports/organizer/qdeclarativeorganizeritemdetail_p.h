@@ -42,7 +42,10 @@
 #ifndef QDECLARATIVEORGANIZERITEMDETAIL_H
 #define QDECLARATIVEORGANIZERITEMDETAIL_H
 
-#include <qorganizeritemdetails.h>
+#include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizeritemdetails.h>
+
 #include "qdeclarativeorganizerrecurrencerule_p.h"
 
 QTORGANIZER_USE_NAMESPACE

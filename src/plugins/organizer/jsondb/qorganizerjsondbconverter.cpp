@@ -40,13 +40,15 @@
 ****************************************************************************/
 
 #include "qorganizerjsondbconverter.h"
-#include "qorganizerjsondbid.h"
-#include "qorganizerjsondbstring.h"
-#include "qorganizerjsondbengine.h"
+
+#include <QtCore/qjsonarray.h>
+
 #include <QtOrganizer/qorganizermanagerengine.h>
 #include <QtOrganizer/qorganizeritemfilters.h>
 
-#include <QtCore/qjsonarray.h>
+#include "qorganizerjsondbengine.h"
+#include "qorganizerjsondbid.h"
+#include "qorganizerjsondbstring.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

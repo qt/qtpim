@@ -1,3 +1,4 @@
+
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
@@ -42,7 +43,7 @@
 #ifndef QORGANIZEREVENTATTENDEE_H
 #define QORGANIZEREVENTATTENDEE_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -42,9 +42,9 @@
 #ifndef VCARDPRESERVER_H
 #define VCARDPRESERVER_H
 
-#include <QObject>
-#include <QtPlugin>
-#include <qversitcontacthandler.h>
+#include <QtCore/qplugin.h>
+
+#include <QtVersit/qversitcontacthandler.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -63,4 +63,4 @@ public:
 
 QT_END_NAMESPACE_VERSIT
 
-#endif
+#endif // VCARDPRESERVER_H

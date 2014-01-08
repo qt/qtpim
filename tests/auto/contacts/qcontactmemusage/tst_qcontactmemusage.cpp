@@ -42,9 +42,11 @@
 #include <malloc.h>
 #include <QtTest/QtTest>
 
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 
 //TESTED_COMPONENT=src/contacts
+
+QTCONTACTS_USE_NAMESPACE
 
 // Define global op new so we can track some amount of allocations
 static qulonglong cAllocated = 0;

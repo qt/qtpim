@@ -42,21 +42,17 @@
 #ifndef QVERSITDOCUMENT_H
 #define QVERSITDOCUMENT_H
 
-#include <qversitglobal.h>
-#include <QList>
-#include <QSharedDataPointer>
-#include <QVariant>
-#include <QDebug>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
 
-QT_BEGIN_NAMESPACE
-class QTextCodec;
-QT_END_NAMESPACE
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
-class QVersitDocumentPrivate;
 class QVersitProperty;
 
+class QVersitDocumentPrivate;
 class Q_VERSIT_EXPORT QVersitDocument
 {
 public:

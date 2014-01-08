@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include "qtcontacts.h"
+#include <QtContacts/qtcontacts.h>
 #include "qserviceplugininterface.h"
 #include "qservicecontext.h"
 #include "qserviceinterfacedescriptor.h"

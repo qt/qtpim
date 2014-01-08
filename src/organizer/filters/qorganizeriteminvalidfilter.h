@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMINVALIDFILTER_H
 #define QORGANIZERITEMINVALIDFILTER_H
 
-#include <qorganizeritemfilter.h>
+#include <QtOrganizer/qorganizeritemfilter.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

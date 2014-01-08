@@ -42,11 +42,9 @@
 #ifndef QDECLARATIVECONTACTIDFILTER_H
 #define QDECLARATIVECONTACTIDFILTER_H
 
-#include "qdeclarativecontactfilter_p.h"
-#include "qcontactidfilter.h"
+#include <QtContacts/qcontactidfilter.h>
 
-#include <QStringList>
-#include <QSet>
+#include "qdeclarativecontactfilter_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -111,4 +109,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactIdFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTIDFILTER_H

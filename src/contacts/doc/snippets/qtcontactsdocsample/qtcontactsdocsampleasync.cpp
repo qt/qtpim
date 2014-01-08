@@ -41,8 +41,7 @@
 
 #include "requestexample.h"
 
-#include <qcontactsglobal.h>
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 
 #include <QDebug>
 #include <QCoreApplication>

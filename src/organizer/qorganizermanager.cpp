@@ -39,7 +39,8 @@
 **
 ****************************************************************************/
 
-#include <private/qorganizermanager_p.h>
+#include "qorganizermanager.h"
+#include "qorganizermanager_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

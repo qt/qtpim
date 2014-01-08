@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTSYNCTARGET_H
 #define QDECLARATIVECONTACTSYNCTARGET_H
 
+#include <QtContacts/qcontactsynctarget.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactsynctarget.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -89,5 +89,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactSyncTarget)
 
-#endif
-
+#endif // QDECLARATIVECONTACTSYNCTARGET_H

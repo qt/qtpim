@@ -39,14 +39,18 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemid.h>
-#include <qorganizeritemengineid.h>
-#include <private/qorganizermanager_p.h>
+#include "qorganizeritemid.h"
 
 #ifndef QT_NO_DATASTREAM
 #include <QtCore/qdatastream.h>
 #endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 #include <QtCore/qstringlist.h>
+
+#include "qorganizeritemengineid.h"
+#include "qorganizermanager_p.h"
 
 #if !defined(Q_CC_MWERKS)
 QT_BEGIN_NAMESPACE

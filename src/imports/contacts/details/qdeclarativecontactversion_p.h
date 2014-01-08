@@ -41,10 +41,10 @@
 
 #ifndef QDECLARATIVECONTACTVERSION_H
 #define QDECLARATIVECONTACTVERSION_H
-#include <QByteArray>
+
+#include <QtContacts/qcontactversion.h>
 
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactversion.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -105,5 +105,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactVersion)
 
-#endif
-
+#endif // QDECLARATIVECONTACTVERSION_H

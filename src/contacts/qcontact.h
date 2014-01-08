@@ -42,42 +42,22 @@
 #ifndef QCONTACT_H
 #define QCONTACT_H
 
-#include <QVariant>
-#include <QString>
-#include <QPair>
-#include <QMultiMap>
-#include <QList>
-#include <QDateTime>
-#include <QSharedDataPointer>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstring.h>
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontactid.h>
-#include <qcontactrelationship.h>
-
-#include <qcontactdisplaylabel.h>
-#include <qcontactrelationshipfilter.h>
-#include <qcontacttype.h>
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactrelationship.h>
+#include <QtContacts/qcontacttype.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactManager;
-class QContactData;
-class QContactName;
-class QContactAction;
 class QContactActionDescriptor;
+class QContactId;
+class QContactManager;
 
-// MSVC needs the function declared before the friend declaration
-class QContact;
-#ifndef QT_NO_DATASTREAM
-Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContact& contact);
-Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContact& contact);
-#endif
-
+class QContactData;
 class Q_CONTACTS_EXPORT QContact
 {
 public:
@@ -159,6 +139,10 @@ Q_CONTACTS_EXPORT uint qHash(const QContact& key);
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContact& contact);
 #endif
+#ifndef QT_NO_DATASTREAM
+Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContact& contact);
+Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContact& contact);
+#endif
 
 QT_END_NAMESPACE_CONTACTS
 
@@ -166,4 +150,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContact), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACT_H

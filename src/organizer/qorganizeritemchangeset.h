@@ -42,14 +42,17 @@
 #ifndef QORGANIZERITEMCHANGESET_H
 #define QORGANIZERITEMCHANGESET_H
 
-#include <qorganizeritemid.h>
-#include <qorganizermanager.h>
-
+#include <QtCore/qlist.h>
 #include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizermanager.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerEngine;
+
 class QOrganizerItemChangeSetData;
 class Q_ORGANIZER_EXPORT QOrganizerItemChangeSet
 {

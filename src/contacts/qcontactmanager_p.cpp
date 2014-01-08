@@ -41,28 +41,24 @@
 
 #include "qcontactmanager.h"
 #include "qcontactmanager_p.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactmanagerenginefactory.h"
+
+#if !defined(QT_NO_DEBUG)
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qjsonarray.h>
+#include <QtCore/qpluginloader.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/private/qfactoryloader_p.h>
 
 #include "qcontact_p.h"
-
 #include "qcontactaction.h"
 #include "qcontactactiondescriptor.h"
-
-#include <QSharedData>
-#include <QtPlugin>
-#include <QPluginLoader>
-#include <QPointer>
-
-#include <QDebug>
-#include <QDir>
-#include <QFile>
+#include "qcontactmanagerenginefactory.h"
 
 #include "qcontactinvalidbackend_p.h"
 #include "qcontactspluginsearch_p.h"
-
-#include <QtCore/private/qfactoryloader_p.h>
-#include <QJsonArray>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -153,7 +149,7 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
                     versions.contains(implementationVersion)) {
                 m_engine = f->engine(parameters, &m_lastError);
                 if (!m_engine) {
-                    qWarning() << "Creation of" << managerName << "engine failed.";
+                    qWarning("Creation of %s engine failed.", qPrintable(managerName));
                 } else {
                     found = true;
                     break;
@@ -233,12 +229,12 @@ void QContactManagerData::loadStaticFactories()
                 if (name != QStringLiteral("invalid") && !name.isEmpty()) {
                     // we also need to ensure that we haven't already loaded this factory.
                     if (m_engines.keys().contains(name)) {
-                        qWarning() << "Static contacts plugin" << name << "has the same name as a currently loaded plugin; ignored";
+                        qWarning("Static contacts plugin %s has the same name as a currently loaded plugin; ignored", qPrintable(name));
                     } else {
                         m_engines.insertMulti(name, f);
                     }
                 } else {
-                    qWarning() << "Static contacts plugin with reserved name" << name << "ignored";
+                    qWarning("Static contacts plugin with reserved name %s ignored", qPrintable(name));
                 }
             }
         }
@@ -353,4 +349,3 @@ QContactManagerEngine* QContactManagerData::engine(const QContactManager *manage
 }
 
 QT_END_NAMESPACE_CONTACTS
-

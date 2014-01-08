@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-
 #include "qcontactchangeset.h"
 #include "qcontactchangeset_p.h"
+
 #include "qcontactmanagerengine.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
@@ -359,6 +359,5 @@ void QContactChangeSet::emitSignals(QContactManagerEngine *engine)
             emit engine->selfContactIdChanged(d.constData()->m_oldAndNewSelfContactId.first, d.constData()->m_oldAndNewSelfContactId.second);
     }
 }
-
 
 QT_END_NAMESPACE_CONTACTS

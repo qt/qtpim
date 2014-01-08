@@ -55,8 +55,8 @@
 //
 
 #include <QObject>
-#include "qcontactsglobal.h"
-#include "qcontactrequests.h"
+
+#include <QtContacts/qcontactrequests.h>
 
 //! [Class setup]
 QTCONTACTS_USE_NAMESPACE

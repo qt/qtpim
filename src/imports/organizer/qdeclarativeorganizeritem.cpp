@@ -40,9 +40,10 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizeritem_p.h"
-#include "qdeclarativeorganizermodel_p.h"
 
 #include <QtQml/qqmlengine.h>
+
+#include "qdeclarativeorganizermodel_p.h"
 
 QTORGANIZER_USE_NAMESPACE
 

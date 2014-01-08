@@ -42,9 +42,10 @@
 #ifndef QORGANIZERMANAGERENGINEFACTORY_H
 #define QORGANIZERMANAGERENGINEFACTORY_H
 
-#include <qorganizermanager.h>
 #include <QtCore/qfactoryinterface.h>
 #include <QtCore/qplugin.h>
+
+#include <QtOrganizer/qorganizermanager.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 struct Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactoryInterface : public QFactoryInterface

@@ -39,22 +39,22 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTACTION_H
 #define QCONTACTACTION_H
 
-#include <qcontactsglobal.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <qcontactfilter.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
-#include <qcontactactiontarget.h>
-
-#include <QObject>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactactiontarget.h>
+#include <QtContacts/qcontactactiondescriptor.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactActionDescriptor;
 class QContactActionData;
 class Q_CONTACTS_EXPORT QContactAction : public QObject
 {
@@ -117,4 +117,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTACTION_H

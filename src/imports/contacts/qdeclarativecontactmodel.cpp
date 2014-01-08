@@ -38,29 +38,33 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <qcontactdetails.h>
-#include <QtQml/qqmlinfo.h>
 
 #include "qdeclarativecontactmodel_p.h"
-#include "qcontactmanager.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactengineid.h"
-#include "qcontactdetailfilter.h"
-#include "qcontactidfilter.h"
-#include "qcontactintersectionfilter.h"
-#include "qversitreader.h"
-#include "qversitwriter.h"
-#include "qversitcontactimporter.h"
-#include "qversitcontactexporter.h"
-#include <QPointer>
-#include <QColor>
-#include <QHash>
-#include <QPixmap>
-#include <QFile>
-#include <QMap>
-#include <QUrl>
 
-#include "qcontactrequests.h"
+#include <QtCore/qfile.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qurl.h>
+
+#include <QtGui/qcolor.h>
+#include <QtGui/qpixmap.h>
+
+#include <QtQml/qqmlinfo.h>
+
+#include <QtContacts/qcontactdetails.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactengineid.h>
+#include <QtContacts/qcontactdetailfilter.h>
+#include <QtContacts/qcontactidfilter.h>
+#include <QtContacts/qcontactintersectionfilter.h>
+#include <QtContacts/qcontactrequests.h>
+
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitwriter.h>
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitcontactexporter.h>
 
 QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE

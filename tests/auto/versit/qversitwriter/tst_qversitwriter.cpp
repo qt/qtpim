@@ -42,9 +42,9 @@
 //TESTED_COMPONENT=src/versit
 
 #include "tst_qversitwriter.h"
-#include "qversitwriter.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
+#include <QtVersit/qversitwriter.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 #include <QtTest/QtTest>
 #include <QByteArray>
 

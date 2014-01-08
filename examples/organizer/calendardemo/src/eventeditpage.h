@@ -42,9 +42,9 @@
 
 #include <QWidget>
 #include <QDate>
-#include <qorganizeritemid.h>
-#include <qorganizerevent.h>
-#include <qorganizercollection.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizerevent.h>
+#include <QtOrganizer/qorganizercollection.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerManager;

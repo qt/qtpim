@@ -39,10 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qorganizercollectionfetchrequest.h>
-#include <private/qorganizeritemrequests_p.h>
-#include <qorganizercollectionengineid.h>
-#include <qorganizeritemengineid.h>
+#include "qorganizercollectionfetchrequest.h"
+
+#include "qorganizeritemrequests_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

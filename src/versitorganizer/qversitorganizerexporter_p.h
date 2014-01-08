@@ -42,20 +42,35 @@
 #ifndef QVERSITORGANIZEREXPORTER_P_H
 #define QVERSITORGANIZEREXPORTER_P_H
 
-#include <qversitorganizerexporter.h>
-#include <qorganizerrecurrencerule.h>
-#include <qversitorganizerhandler.h>
-#include <qversittimezonehandler.h>
-#include <qversitdocument.h>
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail.  This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
 
-QT_BEGIN_NAMESPACE_VERSIT
-class QVersitDocument;
-QT_END_NAMESPACE_VERSIT
+#include <QtCore/qpair.h>
+
+#include <QtOrganizer/qorganizeritemdetail.h>
+
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+
+#include <QtVersitOrganizer/qversitorganizerexporter.h>
+#include <QtVersitOrganizer/qversitorganizerhandler.h>
+#include <QtVersitOrganizer/qversittimezonehandler.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
+class QOrganizerItem;
 class QOrganizerItemReminder;
+class QOrganizerRecurrenceRule;
 QT_END_NAMESPACE_ORGANIZER
 
+QTORGANIZER_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER

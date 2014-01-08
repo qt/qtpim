@@ -69,4 +69,7 @@
 #define QTCONTACTS_VERSION_NAME "org.qt-project.Qt.contacts.api.version"
 #define QTCONTACTS_IMPLEMENTATION_VERSION_NAME "org.qt-project.Qt.contacts.implementation.version"
 
-#endif
+QT_BEGIN_NAMESPACE_CONTACTS
+QT_END_NAMESPACE_CONTACTS
+
+#endif // QTCONTACTSGLOBAL_H

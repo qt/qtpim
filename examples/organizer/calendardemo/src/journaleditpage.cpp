@@ -41,7 +41,7 @@
 
 #include <QtWidgets>
 #include <QComboBox>
-#include <qorganizer.h>
+#include <QtOrganizer/qorganizer.h>
 
 QTORGANIZER_USE_NAMESPACE
 

@@ -42,11 +42,9 @@
 #ifndef QCONTACTTIMESTAMP_H
 #define QCONTACTTIMESTAMP_H
 
-#include <QString>
+#include <QtCore/qdatetime.h>
 
-#include <qcontactsglobal.h>
-#include "qcontactdetail.h"
-#include "qcontact.h"
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -73,4 +71,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTTIMESTAMP_H

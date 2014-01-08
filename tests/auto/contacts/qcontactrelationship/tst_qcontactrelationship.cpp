@@ -43,7 +43,7 @@
 
 #include <QtTest/QtTest>
 
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
 #include "../qcontactidmock.h"
 
 QTCONTACTS_USE_NAMESPACE

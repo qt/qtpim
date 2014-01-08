@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qcontactinvalidfilter.h"
+
 #include "qcontactfilter_p.h"
 
 /*!

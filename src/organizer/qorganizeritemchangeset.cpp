@@ -39,9 +39,10 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemchangeset.h>
-#include <private/qorganizeritemchangeset_p.h>
-#include <qorganizermanagerengine.h>
+#include "qorganizeritemchangeset.h"
+#include "qorganizeritemchangeset_p.h"
+
+#include "qorganizermanagerengine.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

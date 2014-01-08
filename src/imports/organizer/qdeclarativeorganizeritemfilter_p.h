@@ -42,8 +42,11 @@
 #ifndef QDECLARATIVEORGANIZERITEMFILTER_P_H
 #define QDECLARATIVEORGANIZERITEMFILTER_P_H
 
+#include <QtQml/qqml.h>
+
+#include <QtOrganizer/qorganizeritemfilters.h>
+
 #include "qdeclarativeorganizeritemdetail_p.h"
-#include <qorganizeritemfilters.h>
 
 QTORGANIZER_USE_NAMESPACE
 

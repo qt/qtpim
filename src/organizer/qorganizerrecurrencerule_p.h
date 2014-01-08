@@ -53,7 +53,11 @@
 // We mean it.
 //
 
-#include <qorganizerrecurrencerule.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

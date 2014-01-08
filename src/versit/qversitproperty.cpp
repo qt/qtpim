@@ -39,11 +39,15 @@
 **
 ****************************************************************************/
 
-#include <qversitproperty.h>
+#include "qversitproperty.h"
 #include "qversitproperty_p.h"
 
-#include <QStringList>
-#include <QTextCodec>
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qtextcodec.h>
+
+#include "qversitdocument.h"
 
 QT_BEGIN_NAMESPACE_VERSIT
 

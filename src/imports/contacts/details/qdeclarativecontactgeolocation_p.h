@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTGEOLOCATION_H
 #define QDECLARATIVECONTACTGEOLOCATION_H
 
+#include <QtContacts/qcontactgeolocation.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactgeolocation.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -169,5 +169,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactGeoLocation)
 
-#endif
-
+#endif // QDECLARATIVECONTACTGEOLOCATION_H

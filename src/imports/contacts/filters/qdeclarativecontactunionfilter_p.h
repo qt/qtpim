@@ -42,10 +42,9 @@
 #ifndef QDECLARATIVECONTACTUNIONFILTER_H
 #define QDECLARATIVECONTACTUNIONFILTER_H
 
-#include "qdeclarativecontactfilter_p.h"
-#include "qcontactunionfilter.h"
+#include <QtContacts/qcontactunionfilter.h>
 
-#include <QQmlListProperty>
+#include "qdeclarativecontactfilter_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -76,4 +75,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactUnionFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTUNIONFILTER_H

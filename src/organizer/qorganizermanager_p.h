@@ -53,11 +53,17 @@
 // We mean it.
 //
 
-#include <qorganizermanager.h>
-#include <qorganizermanagerengine.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstringlist.h>
+
+#include <QtOrganizer/qorganizermanager.h>
+#include <QtOrganizer/qorganizermanagerengine.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
+class QOrganizerCollectionEngineId;
 class QOrganizerItemObserver;
 class QOrganizerManagerEngineFactory;
 class QOrganizerItemEngineId;

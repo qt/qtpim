@@ -42,29 +42,17 @@
 #ifndef QCONTACTID_H
 #define QCONTACTID_H
 
-#include <QString>
-#include <QSharedDataPointer>
-
-#include <qcontactsglobal.h>
-
-#ifndef QT_NO_DEBUG_STREAM
-#include <QtCore/qdebug.h>
-#endif
+#include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qvariant.h>
 
-
-QT_BEGIN_NAMESPACE
-class QDataStream;
-QT_END_NAMESPACE
+#include <QtContacts/qcontactsglobal.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactId;
-Q_CONTACTS_EXPORT uint qHash(const QContactId &key);
-
-class QContactEngineId;
 class QContactManagerEngine;
 
+class QContactEngineId;
 class Q_CONTACTS_EXPORT QContactId
 {
 public:
@@ -98,9 +86,12 @@ private:
 #endif
 };
 
+Q_CONTACTS_EXPORT uint qHash(const QContactId &key);
+
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactId &id);
 #endif
+
 #ifndef QT_NO_DATASTREAM
 Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream &out, const QContactId &id);
 Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream &in, QContactId &id);
@@ -114,6 +105,4 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactId))
 
-
-#endif
-
+#endif // QCONTACTID_H

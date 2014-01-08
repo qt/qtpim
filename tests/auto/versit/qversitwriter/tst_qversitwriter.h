@@ -44,7 +44,7 @@
 
 #include <QObject>
 #include <QBuffer>
-#include <qversitwriter.h>
+#include <QtVersit/qversitwriter.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitWriterPrivate;

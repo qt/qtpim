@@ -39,17 +39,14 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTPHONENUMBER_H
 #define QCONTACTPHONENUMBER_H
 
-#include <QString>
-
-#include <qcontactsglobal.h>
-#include "qcontactdetail.h"
-#include "qcontactfilter.h"
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 //! [0]
@@ -95,5 +92,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTPHONENUMBER_H

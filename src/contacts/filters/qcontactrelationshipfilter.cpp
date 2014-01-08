@@ -41,7 +41,6 @@
 
 #include "qcontactrelationshipfilter.h"
 #include "qcontactrelationshipfilter_p.h"
-#include "qcontactmanager.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

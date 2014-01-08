@@ -53,12 +53,11 @@
 // We mean it.
 //
 
-#include <qcontactengineid.h>
-#include <qcontactid.h>
-#include <qcontactabstractrequest.h>
-
-#include <QtCore/qdebug.h>
 #include <QtCore/quuid.h>
+
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactengineid.h>
+#include <QtContacts/qcontactid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -95,4 +94,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTJSONDBID_H

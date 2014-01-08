@@ -42,7 +42,9 @@
 #ifndef QORGANIZERITEMVISUALREMINDER_H
 #define QORGANIZERITEMVISUALREMINDER_H
 
-#include <qorganizeritemreminder.h>
+#include <QtOrganizer/qorganizeritemreminder.h>
+
+QT_FORWARD_DECLARE_CLASS(QUrl)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

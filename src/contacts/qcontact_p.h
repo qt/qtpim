@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACT_P_H
 #define QCONTACT_P_H
 
@@ -54,13 +53,14 @@
 // We mean it.
 //
 
-#include <QSharedData>
-#include <QList>
-#include <QDateTime>
-#include <QMultiHash>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qshareddata.h>
 
-#include <qcontacts.h>
-#include <qcontactdetail.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactrelationship.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -98,5 +98,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACT_P_H

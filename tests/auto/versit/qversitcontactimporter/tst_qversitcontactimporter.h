@@ -43,8 +43,8 @@
 #define tst_QVERSITCONTACTIMPORTER_H
 
 #include <QObject>
-#include <qversitcontactimporter.h>
-#include <qversitdocument.h>
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitdocument.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitContactImporter;

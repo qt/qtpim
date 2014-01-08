@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizerrecurrencerule_p.h"
+
 #include <QtQml/qqmlinfo.h>
 
 QTORGANIZER_USE_NAMESPACE

@@ -40,13 +40,16 @@
 ****************************************************************************/
 
 #include "qorganizeritemmemorybackend_p.h"
-#include <qorganizeritemrecurrence.h>
-#include <qorganizeritems.h>
-#include <qorganizeritemdetails.h>
-#include <qorganizeritemfilters.h>
-#include <qorganizeritemrequests.h>
 
+#include <QtOrganizer/qorganizeritemrecurrence.h>
+#include <QtOrganizer/qorganizeritems.h>
+#include <QtOrganizer/qorganizeritemdetails.h>
+#include <QtOrganizer/qorganizeritemfilters.h>
+#include <QtOrganizer/qorganizeritemrequests.h>
+
+#ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
+#endif
 #include <QtCore/qstringbuilder.h>
 #include <QtCore/quuid.h>
 

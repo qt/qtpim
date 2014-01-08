@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTFAVORITE_H
 #define QDECLARATIVECONTACTFAVORITE_H
 
+#include <QtContacts/qcontactfavorite.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactfavorite.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -97,4 +97,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactFavorite)
 
-#endif
+#endif // QDECLARATIVECONTACTFAVORITE_H

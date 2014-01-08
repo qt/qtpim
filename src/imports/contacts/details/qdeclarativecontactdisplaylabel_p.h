@@ -39,13 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTDISPLAYLABEL_H
 #define QDECLARATIVECONTACTDISPLAYLABEL_H
 
+#include <QtContacts/qcontactdisplaylabel.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactdisplaylabel.h"
-#include <QDebug>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -91,4 +90,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactDisplayLabel)
 
-#endif
+#endif // QDECLARATIVECONTACTDISPLAYLABEL_H

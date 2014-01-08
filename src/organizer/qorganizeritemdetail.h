@@ -42,23 +42,16 @@
 #ifndef QORGANIZERITEMDETAIL_H
 #define QORGANIZERITEMDETAIL_H
 
-#include <qorganizerglobal.h>
-
+#include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
 #include <QtCore/qvariant.h>
+
+#include <QtOrganizer/qorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemDetailPrivate;
-
-// MSVC needs the function declared before the friend declaration
-class QOrganizerItemDetail;
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
-#ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail);
-Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail);
-#endif // QT_NO_DATASTREAM
-
 class Q_ORGANIZER_EXPORT QOrganizerItemDetail
 {
 public:
@@ -132,6 +125,11 @@ private:
     QSharedDataPointer<QOrganizerItemDetailPrivate> d;
 };
 
+Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
+#ifndef QT_NO_DATASTREAM
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail);
+#endif // QT_NO_DATASTREAM
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemDetail &detail);
 #endif // QT_NO_DEBUG_STREAM

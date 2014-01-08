@@ -39,8 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qorganizertodo.h>
-#include <qorganizertodotime.h>
+#include "qorganizertodo.h"
+
+#include "qorganizertodotime.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

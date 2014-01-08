@@ -42,26 +42,27 @@
 #ifndef QCONTACTJSONDBREQUESTHANDLER_H
 #define QCONTACTJSONDBREQUESTHANDLER_H
 
-#include <QThread>
-#include <QMutex>
-#include <QWaitCondition>
+#include <QtCore/qmap.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qthread.h>
+#include <QtCore/qwaitcondition.h>
+
 #include <QtJsonDb/qjsondbconnection.h>
 #include <QtJsonDb/qjsondbwatcher.h>
 #include <QtJsonDb/qjsondbrequest.h>
-#include <qcontactabstractrequest.h>
-#include <qcontactsaverequest.h>
-#include <qcontactfetchrequest.h>
-#include <qcontactidfetchrequest.h>
-#include <qcontactremoverequest.h>
-#include <qcontact.h>
-#include <qcontactchangeset.h>
-#include <qcontactmanager.h>
+
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactsaverequest.h>
+#include <QtContacts/qcontactfetchrequest.h>
+#include <QtContacts/qcontactidfetchrequest.h>
+#include <QtContacts/qcontactremoverequest.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactchangeset.h>
+#include <QtContacts/qcontactmanager.h>
+
 #include "qcontactjsondbrequestmanager.h"
 
-QT_BEGIN_NAMESPACE
-class QTimer;
-QT_END_NAMESPACE
-
+QT_FORWARD_DECLARE_CLASS(QTimer)
 
 QT_USE_NAMESPACE_JSONDB
 

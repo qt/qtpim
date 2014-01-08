@@ -41,11 +41,14 @@
 
 #include "qcontactactiondescriptor.h"
 #include "qcontactactiondescriptor_p.h"
-#include "qcontactactionfactory.h"
-#include "qcontact.h"
-#include "qcontactinvalidfilter.h"
 
-#include <QHash>
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
+#include "qcontact.h"
+#include "qcontactactionfactory.h"
+#include "qcontactinvalidfilter.h"
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by

@@ -39,9 +39,10 @@
 **
 ****************************************************************************/
 
-#include <QPluginLoader>
-
 #include "qversitcontactpluginloader_p.h"
+
+#include <QtCore/qpluginloader.h>
+
 #include "qversitpluginsearch_p.h"
 
 QT_BEGIN_NAMESPACE_VERSIT

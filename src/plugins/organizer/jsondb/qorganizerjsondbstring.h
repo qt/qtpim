@@ -53,9 +53,9 @@
 // We mean it.
 //
 
-#include <QtOrganizer/qorganizerglobal.h>
-
 #include <QtCore/qstring.h>
+
+#include <QtOrganizer/qorganizerglobal.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

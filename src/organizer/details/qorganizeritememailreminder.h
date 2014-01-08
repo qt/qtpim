@@ -42,9 +42,7 @@
 #ifndef QORGANIZERITEMEMAILREMINDER_H
 #define QORGANIZERITEMEMAILREMINDER_H
 
-#include <qorganizeritemreminder.h>
-
-#include <QtCore/qstringlist.h>
+#include <QtOrganizer/qorganizeritemreminder.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

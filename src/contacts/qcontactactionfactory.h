@@ -39,25 +39,24 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTACTIONFACTORY_H
 #define QCONTACTACTIONFACTORY_H
 
-#include <qcontactsglobal.h>
-#include <qcontactactiondescriptor.h>
-#include <qcontactactiontarget.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qset.h>
+#include <QtCore/qvariant.h>
 
-#include <QObject>
-#include <QtPlugin>
-#include <QString>
-#include <QList>
-#include <QVariantMap>
-#include <QStringList>
-#include <QHash>
+#include <QtContacts/qcontactactiontarget.h>
+#include <QtContacts/qcontactactiondescriptor.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
+class QContact;
 class QContactAction;
+class QContactFilter;
+
 class Q_CONTACTS_EXPORT QContactActionFactory : public QObject
 {
     Q_OBJECT
@@ -83,4 +82,4 @@ protected:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTACTIONFACTORY_H

@@ -42,7 +42,7 @@
 #ifndef QORGANIZERITEMREMINDER_H
 #define QORGANIZERITEMREMINDER_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

@@ -41,24 +41,27 @@
 
 //TESTED_COMPONENT=src/versit
 
-#include <private/qversitdefs_p.h>
 #include "tst_qversit.h"
-#include "qversitwriter.h"
-#include "qversitreader.h"
-#include <private/qversitreader_p.h>
-#include "qversitcontactexporter.h"
-#include "qversitcontactimporter.h"
-#include "qversitcontacthandler.h"
-#include "qversitorganizerexporter.h"
-#include "qversitorganizerimporter.h"
-#include "qorganizer.h"
-#include <qcontacts.h>
+#include <QtContacts/qcontacts.h>
+#include <QtOrganizer/qorganizer.h>
+#include <QtVersit/qversitwriter.h>
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitcontactexporter.h>
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitcontacthandler.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/private/qversitdefs_p.h>
+#include <QtVersit/private/qversitreader_p.h>
+#include <QtVersitOrganizer/qversitorganizerexporter.h>
+#include <QtVersitOrganizer/qversitorganizerimporter.h>
 
 #include <QtTest/QtTest>
 #include <QDebug>
 #include <QDir>
 #include <QList>
 
+QTCONTACTS_USE_NAMESPACE
+QTORGANIZER_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 QTVERSITORGANIZER_USE_NAMESPACE
 

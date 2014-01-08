@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QVERSITDEFS_P_H
 #define QVERSITDEFS_P_H
 
@@ -54,9 +53,9 @@
 // We mean it.
 //
 
-#include <qversitglobal.h>
-#include <qcontactdetail.h>
-#include <QString>
+#include <QtContacts/qcontactdetail.h>
+
+#include <QtVersit/qversitglobal.h>
 
 QTCONTACTS_USE_NAMESPACE
 

@@ -42,10 +42,11 @@
 #ifndef QDECLARATIVEORGANIZERITEM_H
 #define QDECLARATIVEORGANIZERITEM_H
 
-#include <qorganizeritems.h>
-#include "qdeclarativeorganizeritemdetail_p.h"
+#include <QtQml/qqml.h>
 
-#include <QtQml/qqmllist.h>
+#include <QtOrganizer/qorganizeritems.h>
+
+#include "qdeclarativeorganizeritemdetail_p.h"
 
 QTORGANIZER_USE_NAMESPACE
 

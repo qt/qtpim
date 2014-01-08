@@ -48,12 +48,14 @@
 
 #include "multiaction_p.h"
 
-#include "qcontactphonenumber.h"
-#include "qcontactemailaddress.h"
-#include "qcontactfilters.h"
+#include <QtContacts/qcontactphonenumber.h>
+#include <QtContacts/qcontactemailaddress.h>
+#include <QtContacts/qcontactfilters.h>
 
 #include <QMessageBox>
 #include <QTimer>
+
+QTCONTACTS_USE_NAMESPACE
 
 //! [Example Contact Action Plugin Implementation]
 

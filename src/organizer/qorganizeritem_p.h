@@ -53,7 +53,13 @@
 // We mean it.
 //
 
-#include <qorganizeritem.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qshareddata.h>
+
+#include <QtOrganizer/qorganizercollectionid.h>
+#include <QtOrganizer/qorganizeritem.h>
+#include <QtOrganizer/qorganizeritemid.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

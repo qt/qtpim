@@ -39,13 +39,14 @@
 **
 ****************************************************************************/
 
-#include "qversitcontacthandler.h"
-#include "qversitproperty.h"
-#include "qcontactname.h"
+#include <QtVersit/qversitcontacthandler.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtContacts/qcontactname.h>
 
 #include <QObject>
 #include <QtTest/QtTest>
 
+QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 
 class TestFactory1 : public QVersitContactHandlerFactory

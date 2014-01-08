@@ -42,8 +42,10 @@
 #ifndef QCONTACTDETAILRANGEFILTER_H
 #define QCONTACTDETAILRANGEFILTER_H
 
-#include "qcontactfilter.h"
-#include "qcontactdetail.h"
+#include <QtCore/qvariant.h>
+
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -85,4 +87,4 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QContactDetailRangeFilter::RangeFlags)
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTDETAILRANGEFILTER_H

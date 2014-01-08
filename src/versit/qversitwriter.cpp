@@ -39,13 +39,13 @@
 **
 ****************************************************************************/
 
-#include <qversitwriter.h>
+#include "qversitwriter.h"
 #include "qversitwriter_p.h"
-#include "qversitutils_p.h"
 
-#include <QStringList>
-#include <QTextCodec>
-#include <QBuffer>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtextcodec.h>
+
+#include "qversitutils_p.h"
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -298,4 +298,5 @@ bool QVersitWriter::waitForFinished(int msec)
 }
 
 #include "moc_qversitwriter.cpp"
+
 QT_END_NAMESPACE_VERSIT

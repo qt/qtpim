@@ -39,17 +39,11 @@
 **
 ****************************************************************************/
 
-
 #include "qcontactactionmanager_p.h"
 
 #include "qcontactaction.h"
-#include "qcontactactiondescriptor.h"
 #include "qcontactactionfactory.h"
-
 #include "qcontactmanager_p.h"
-
-#include <QMutexLocker>
-#include <QDebug>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

@@ -39,19 +39,22 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemdetails.h>
-#include <QtQml/qqmlinfo.h>
 #include "qdeclarativeorganizermodel_p.h"
-#include <qorganizermanager.h>
-#include <qversitorganizerimporter.h>
-#include <qversitorganizerexporter.h>
-#include "qdeclarativeorganizercollection_p.h"
-#include <QFile>
-#include <QUrl>
 
-#include <qorganizeritemrequests.h>
+#include <QtCore/qfile.h>
 #include <QtCore/qmath.h>
+#include <QtCore/qurl.h>
 
+#include <QtQml/qqmlinfo.h>
+
+#include <QtOrganizer/qorganizeritemdetails.h>
+#include <QtOrganizer/qorganizeritemrequests.h>
+#include <QtOrganizer/qorganizermanager.h>
+
+#include <QtVersitOrganizer/qversitorganizerimporter.h>
+#include <QtVersitOrganizer/qversitorganizerexporter.h>
+
+#include "qdeclarativeorganizercollection_p.h"
 
 QTORGANIZER_USE_NAMESPACE
 QTVERSITORGANIZER_USE_NAMESPACE

@@ -42,23 +42,20 @@
 #ifndef QDECLARATIVECONTACTMODEL_P_H
 #define QDECLARATIVECONTACTMODEL_P_H
 
-#include <QAbstractListModel>
-#include <QQmlListProperty>
-#include <QQmlParserStatus>
+#include <QtCore/qabstractitemmodel.h>
 
-#include <qcontact.h>
-#include "qcontactrequests.h"
+#include <QtQml/qqml.h>
+
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactrequests.h>
+
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitwriter.h>
+
 #include "qdeclarativecontact_p.h"
-#include <qversitreader.h>
-#include <qversitwriter.h>
-
 #include "qdeclarativecontactfetchhint_p.h"
-#include "qdeclarativecontactsortorder_p.h"
 #include "qdeclarativecontactfilter_p.h"
-
-QT_BEGIN_NAMESPACE_VERSIT
-class QVersitReader;
-QT_END_NAMESPACE_VERSIT
+#include "qdeclarativecontactsortorder_p.h"
 
 QTCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE

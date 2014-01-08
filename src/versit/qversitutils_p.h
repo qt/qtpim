@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef QVERSITUTILS_P_H
 #define QVERSITUTILS_P_H
 
@@ -54,18 +53,19 @@
 // We mean it.
 //
 
-#include <qversitglobal.h>
+#include <QtCore/qbytearray.h>
+#include <QtCore/qbytearraymatcher.h>
+#include <QtCore/qlist.h>
 
-#include <QByteArray>
-#include <QByteArrayMatcher>
-#include <QPair>
-#include <QString>
-#include <QStringList>
-#include <QMultiHash>
+#include <QtVersit/qversitproperty.h>
+
+QT_FORWARD_DECLARE_CLASS(QString)
+QT_FORWARD_DECLARE_CLASS(QTextCodec)
+QT_FORWARD_DECLARE_CLASS(QVariant)
 
 QT_BEGIN_NAMESPACE_VERSIT
+
 class QVersitDocument;
-class QVersitProperty;
 
 class Q_VERSIT_EXPORT VersitUtils
 {

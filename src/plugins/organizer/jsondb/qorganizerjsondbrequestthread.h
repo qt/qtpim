@@ -53,18 +53,16 @@
 // We mean it.
 //
 
-#include "qorganizerjsondbengine.h"
+#include <QtCore/qthread.h>
 
 #include <QtOrganizer/qorganizercollectionchangeset.h>
 #include <QtOrganizer/qorganizeritemchangeset.h>
 #include <QtOrganizer/qorganizeritemrequests.h>
 
-#include <QtCore/qthread.h>
+#include "qorganizerjsondbengine.h"
 
-QT_BEGIN_NAMESPACE
-class QMutex;
-class QTimer;
-QT_END_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QMutex)
+QT_FORWARD_DECLARE_CLASS(QTimer)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

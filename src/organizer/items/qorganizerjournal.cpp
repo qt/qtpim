@@ -39,8 +39,11 @@
 **
 ****************************************************************************/
 
-#include <qorganizerjournal.h>
-#include <qorganizerjournaltime.h>
+#include "qorganizerjournal.h"
+
+#include <QtCore/qdatetime.h>
+
+#include "qorganizerjournaltime.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

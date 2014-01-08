@@ -41,6 +41,10 @@
 
 #include "qorganizerskeleton_p.h"
 
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 QOrganizerManagerEngine* QOrganizerItemSkeletonFactory::engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error* error)

@@ -39,10 +39,13 @@
 **
 ****************************************************************************/
 
-#include <qversitorganizerimporter.h>
+#include "qversitorganizerimporter.h"
 #include "qversitorganizerimporter_p.h"
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+
+QTVERSIT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

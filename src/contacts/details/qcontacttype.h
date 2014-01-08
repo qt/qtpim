@@ -42,10 +42,7 @@
 #ifndef QCONTACTTYPE_H
 #define QCONTACTTYPE_H
 
-#include <QString>
-
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -75,5 +72,4 @@ QT_END_NAMESPACE_CONTACTS
 
 Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactType::TypeValues))
 
-#endif
-
+#endif // QCONTACTTYPE_H

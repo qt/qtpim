@@ -39,41 +39,19 @@
 **
 ****************************************************************************/
 
-#include "qversitcontactsdefs_p.h"
 #include "qversitcontactimporter_p.h"
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+
+#include <QtContacts/qcontactdetails.h>
+
+#include "qversitcontacthandler.h"
+#include "qversitcontactpluginloader_p.h"
+#include "qversitcontactsdefs_p.h"
+#include "qversitdocument.h"
 #include "qversitpluginsearch_p.h"
+#include "qversitproperty.h"
 #include "qversitutils_p.h"
 
-#include <qcontactmanagerengine.h>
-#include <qcontact.h>
-#include <qcontactdetail.h>
-#include <qcontactname.h>
-#include <qcontactphonenumber.h>
-#include <qcontactaddress.h>
-#include <qcontactemailaddress.h>
-#include <qcontactorganization.h>
-#include <qcontacturl.h>
-#include <qcontactguid.h>
-#include <qcontacttimestamp.h>
-#include <qcontactanniversary.h>
-#include <qcontactbirthday.h>
-#include <qcontactdisplaylabel.h>
-#include <qcontactgender.h>
-#include <qcontactnickname.h>
-#include <qcontactavatar.h>
-#include <qcontactgeolocation.h>
-#include <qcontactnote.h>
-#include <qcontactonlineaccount.h>
-#include <qcontactfamily.h>
-#include <qcontactdisplaylabel.h>
-#include <qcontactringtone.h>
-#include <qversitcontacthandler.h>
-#include "qversitcontactpluginloader_p.h"
-
-#include <QHash>
-#include <QFile>
+QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
 

@@ -42,8 +42,11 @@
 #ifndef QCONTACTRELATIONSHIPREMOVEREQUEST_H
 #define QCONTACTRELATIONSHIPREMOVEREQUEST_H
 
-#include <qcontactsglobal.h>
-#include <qcontactabstractrequest.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactrelationship.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -72,4 +75,4 @@ private:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTRELATIONSHIPREMOVEREQUEST_H

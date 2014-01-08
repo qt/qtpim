@@ -45,14 +45,14 @@
 // this file includes all of the leaf filter classes
 // provided by the Qt Organizer API.
 
-#include <qorganizeritemunionfilter.h>
-#include <qorganizeritemdetailfilter.h>
-#include <qorganizeritemdetailfieldfilter.h>
-#include <qorganizeritemdetailrangefilter.h>
-#include <qorganizeritemintersectionfilter.h>
-#include <qorganizeriteminvalidfilter.h>
-#include <qorganizeritemidfilter.h>
-#include <qorganizeritemcollectionfilter.h>
+#include <QtOrganizer/qorganizeritemunionfilter.h>
+#include <QtOrganizer/qorganizeritemdetailfilter.h>
+#include <QtOrganizer/qorganizeritemdetailfieldfilter.h>
+#include <QtOrganizer/qorganizeritemdetailrangefilter.h>
+#include <QtOrganizer/qorganizeritemintersectionfilter.h>
+#include <QtOrganizer/qorganizeriteminvalidfilter.h>
+#include <QtOrganizer/qorganizeritemidfilter.h>
+#include <QtOrganizer/qorganizeritemcollectionfilter.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 QT_END_NAMESPACE_ORGANIZER

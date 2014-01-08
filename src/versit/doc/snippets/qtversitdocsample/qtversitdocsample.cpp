@@ -39,20 +39,23 @@
 **
 ****************************************************************************/
 
-#include "qtcontacts.h"
-#include "qcontacttag.h"
-#include "qversitreader.h"
-#include "qversitcontactimporter.h"
-#include "qversitwriter.h"
-#include "qversitcontactexporter.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qversitresourcehandler.h"
-#include <QCoreApplication>
-#include <QBuffer>
-#include <QList>
-#include <QFile>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qlist.h>
 
+#include <QtContacts/qtcontacts.h>
+#include <QtContacts/qcontacttag.h>
+
+#include <QtVersit/qversitreader.h>
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitwriter.h>
+#include <QtVersit/qversitcontactexporter.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtVersit/qversitresourcehandler.h>
+
+QCONTACTS_USE_NAMESPACE
 QTVERSIT_USE_NAMESPACE
 
 void completeExample();

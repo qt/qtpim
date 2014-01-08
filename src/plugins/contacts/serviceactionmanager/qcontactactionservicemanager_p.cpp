@@ -39,16 +39,14 @@
 **
 ****************************************************************************/
 
-
 #include "qcontactactionservicemanager_p.h"
 
-#include "qcontactaction.h"
-#include "qcontactactiondescriptor.h"
-#include "qcontactactionfactory.h"
+#include <QtContacts/qcontactaction.h>
+#include <QtContacts/qcontactactiondescriptor.h>
+#include <QtContacts/qcontactactionfactory.h>
 
+#include "qservice.h"
 #include "qservicemanager.h"
-
-#include <QMutexLocker>
 
 QTM_BEGIN_NAMESPACE
 

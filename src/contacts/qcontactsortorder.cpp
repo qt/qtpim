@@ -41,10 +41,12 @@
 
 #include "qcontactsortorder.h"
 #include "qcontactsortorder_p.h"
-#include "qcontactdetail.h"
 
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#include <QtCore/qdebug.h>
 #endif
 
 QT_BEGIN_NAMESPACE_CONTACTS

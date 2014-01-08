@@ -53,11 +53,12 @@
 // We mean it.
 //
 
-#include <qversitdocument.h>
-#include <qversitproperty.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 
-#include <QHash>
-#include <QObject>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 class QContact;
@@ -67,6 +68,7 @@ QT_END_NAMESPACE_CONTACTS
 QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
+
 class QVersitContactHandler;
 
 class QVersitContactExporterPrivate

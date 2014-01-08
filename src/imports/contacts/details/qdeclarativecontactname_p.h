@@ -39,12 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTNAME_H
 #define QDECLARATIVECONTACTNAME_H
 
+#include <QtContacts/qcontactname.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactname.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -132,4 +132,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactName)
 
-#endif
+#endif // QDECLARATIVECONTACTNAME_H

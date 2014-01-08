@@ -38,11 +38,13 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QDECLARATIVECONTACTRELATIONSHIPMODEL_P_H
 #define QDECLARATIVECONTACTRELATIONSHIPMODEL_P_H
 
-#include <qqml.h>
-#include <QAbstractListModel>
+#include <QtCore/qabstractitemmodel.h>
+
+#include <QtQml/qqml.h>
 
 #include "qdeclarativecontactrelationship_p.h"
 

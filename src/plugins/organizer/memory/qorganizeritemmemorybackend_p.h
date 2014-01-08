@@ -53,13 +53,13 @@
 // We mean it.
 //
 
-#include <qorganizeritemengineid.h>
-#include <qorganizercollectionengineid.h>
-#include <qorganizermanagerengine.h>
-#include <qorganizermanagerenginefactory.h>
-#include <qorganizercollectionchangeset.h>
-#include <qorganizeritemchangeset.h>
-#include <qorganizerrecurrencerule.h>
+#include <QtOrganizer/qorganizeritemengineid.h>
+#include <QtOrganizer/qorganizercollectionengineid.h>
+#include <QtOrganizer/qorganizermanagerengine.h>
+#include <QtOrganizer/qorganizermanagerenginefactory.h>
+#include <QtOrganizer/qorganizercollectionchangeset.h>
+#include <QtOrganizer/qorganizeritemchangeset.h>
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -290,4 +290,4 @@ private:
 
 QT_END_NAMESPACE_ORGANIZER
 
-#endif
+#endif // QCONTACTMEMORYBACKEND_P_H

@@ -55,4 +55,4 @@
 #include "qdeclarativecontactrelationshipfilter_p.h"
 #include "qdeclarativecontactunionfilter_p.h"
 
-#endif
+#endif // QDECLARATIVECONTACTFILTERS_H

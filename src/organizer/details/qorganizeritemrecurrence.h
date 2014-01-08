@@ -42,8 +42,12 @@
 #ifndef QORGANIZERITEMRECURRENCE_H
 #define QORGANIZERITEMRECURRENCE_H
 
-#include <qorganizeritemdetail.h>
-#include <qorganizerrecurrencerule.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qset.h>
+#include <QtCore/qurl.h>
+
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

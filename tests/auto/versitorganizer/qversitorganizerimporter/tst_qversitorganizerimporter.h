@@ -43,10 +43,14 @@
 #define tst_QVERSITORGANIZERIMPORTER_H
 
 #include <QObject>
-#include "qversitorganizerimporter.h"
-#include "qversitdocument.h"
-#include "qversitproperty.h"
-#include "qorganizer.h"
+#include <QtVersitOrganizer/qversitorganizerimporter.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtOrganizer/qorganizer.h>
+
+QTORGANIZER_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
+QTVERSITORGANIZER_USE_NAMESPACE
 
 class tst_QVersitOrganizerImporter : public QObject
 {

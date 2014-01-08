@@ -45,15 +45,14 @@
 #include <QtTest/QtTest>
 #include <QtGlobal>
 
-#include <QContact>
-#include <QContactAbstractRequest>
-#include <QContactFetchRequest>
-#include <QContactFetchByIdRequest>
-#include <QContactIdFetchRequest>
-#include <QContactRemoveRequest>
-#include <QContactSaveRequest>
-
-#include "qcontactengineid.h"
+#include <QtContacts/QContact>
+#include <QtContacts/QContactAbstractRequest>
+#include <QtContacts/QContactFetchRequest>
+#include <QtContacts/QContactFetchByIdRequest>
+#include <QtContacts/QContactIdFetchRequest>
+#include <QtContacts/QContactRemoveRequest>
+#include <QtContacts/QContactSaveRequest>
+#include <QtContacts/qcontactengineid.h>
 #include "qcontactjsondbid.h"
 
 #include "jsondbprocess.h"

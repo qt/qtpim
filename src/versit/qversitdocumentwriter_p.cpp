@@ -40,8 +40,10 @@
 ****************************************************************************/
 
 #include "qversitdocumentwriter_p.h"
+
+#include <QtCore/qtextcodec.h>
+
 #include "qversitutils_p.h"
-#include <QTextCodec>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

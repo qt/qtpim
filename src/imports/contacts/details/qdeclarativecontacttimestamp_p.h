@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTTIMESTAMP_H
 #define QDECLARATIVECONTACTTIMESTAMP_H
 
+#include <QtContacts/qcontacttimestamp.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontacttimestamp.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -97,4 +98,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactTimestamp)
 
-#endif
+#endif // QDECLARATIVECONTACTTIMESTAMP_H

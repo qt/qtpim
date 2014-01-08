@@ -39,13 +39,12 @@
 **
 ****************************************************************************/
 
-
 #ifndef QDECLARATIVECONTACTFAMILY_H
 #define QDECLARATIVECONTACTFAMILY_H
 
+#include <QtContacts/qcontactfamily.h>
+
 #include "qdeclarativecontactdetail_p.h"
-#include "qcontactfamily.h"
-#include <QSet>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -97,5 +96,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactFamily)
 
-#endif
-
+#endif // QDECLARATIVECONTACTFAMILY_H

@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <qorganizermanagerenginefactory.h>
+#include "qorganizermanagerenginefactory.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

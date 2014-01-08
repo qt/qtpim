@@ -48,9 +48,9 @@
 #define makestr(x) (#x)
 #define makename(x) makestr(x)
 
-#include "qcontactmanager.h"
-#include "qcontactmanagerengine.h"
-#include "qcontactmanagerenginefactory.h"
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactmanagerenginefactory.h>
 
 #include "dummyplugin.h"
 

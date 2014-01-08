@@ -53,25 +53,26 @@
 // We mean it.
 //
 
-#include <qversitcontactimporter.h>
-#include "qvcardrestorehandler_p.h"
+#include <QtCore/qdatetime.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpair.h>
 
-#include <QList>
-#include <QDateTime>
-#include <QHash>
-#include <QPair>
-#include <QMap>
-#include <QSet>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
+
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/private/qvcardrestorehandler_p.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
-class QContact;
-class QContactDetail;
 class QContactOrganization;
 QT_END_NAMESPACE_CONTACTS
 
 QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
+
 class QVersitProperty;
 class QVersitDocument;
 class QVersitContactHandler;

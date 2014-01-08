@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qcontactfetchbyidrequest.h"
+
 #include "qcontactrequests_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS

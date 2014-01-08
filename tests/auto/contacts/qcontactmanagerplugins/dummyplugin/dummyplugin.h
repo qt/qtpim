@@ -41,10 +41,10 @@
 #ifndef DUMMYPLUGIN_H
 #define DUMMYPLUGIN_H
 
-#include "qcontactmanagerenginefactory.h"
-#include "qcontactmanagerengine.h"
-#include "qscopedpointer.h"
-#include "qcontactmanager.h"
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/qcontactmanagerengine.h>
+#include <QtContacts/qcontactmanagerenginefactory.h>
+#include <QtCore/qscopedpointer.h>
 
 QTCONTACTS_USE_NAMESPACE
 

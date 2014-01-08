@@ -39,13 +39,20 @@
 **
 ****************************************************************************/
 
-#include <QSet>
-#include <QDebug>
-#include <QDataStream>
-
 #include "qcontact.h"
 #include "qcontact_p.h"
+
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+#include <QtCore/qset.h>
+
+#include "qcontactactiondescriptor.h"
 #include "qcontactdetail_p.h"
+#include "qcontactdetails.h"
 #include "qcontactmanager_p.h"
 #include "qcontactactionmanager_p.h"
 #include "qcontactaction.h"

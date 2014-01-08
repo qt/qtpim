@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <qversitorganizerhandler.h>
+#include "qversitorganizerhandler.h"
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

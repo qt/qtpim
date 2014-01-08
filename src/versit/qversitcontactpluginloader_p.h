@@ -42,11 +42,21 @@
 #ifndef QVERSITCONTACTPLUGINLOADER_P_H
 #define QVERSITCONTACTPLUGINLOADER_P_H
 
-#include <QMap>
-#include <QStringList>
-#include <QList>
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail.  This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
 
-#include <qversitcontacthandler.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstringlist.h>
+
+#include <QtVersit/qversitcontacthandler.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -70,4 +80,4 @@ class QVersitContactPluginLoader
 
 QT_END_NAMESPACE_VERSIT
 
-#endif
+#endif // QVERSITCONTACTPLUGINLOADER_P_H

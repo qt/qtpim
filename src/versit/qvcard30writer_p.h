@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include "qversitdocumentwriter_p.h"
+#include <QtVersit/private/qversitdocumentwriter_p.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

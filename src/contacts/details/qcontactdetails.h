@@ -45,36 +45,36 @@
 // this file includes all of the leaf detail classes
 // provided by the Qt Contacts API.
 
-#include <qcontactaddress.h>
-#include <qcontactanniversary.h>
-#include <qcontactavatar.h>
-#include <qcontactbirthday.h>
-#include <qcontactdisplaylabel.h>
-#include <qcontactemailaddress.h>
-#include <qcontactextendeddetail.h>
-#include <qcontactfamily.h>
-#include <qcontactfavorite.h>
-#include <qcontactgender.h>
-#include <qcontactgeolocation.h>
-#include <qcontactglobalpresence.h>
-#include <qcontactguid.h>
-#include <qcontacthobby.h>
-#include <qcontactname.h>
-#include <qcontactnickname.h>
-#include <qcontactnote.h>
-#include <qcontactonlineaccount.h>
-#include <qcontactorganization.h>
-#include <qcontactphonenumber.h>
-#include <qcontactpresence.h>
-#include <qcontactringtone.h>
-#include <qcontactsynctarget.h>
-#include <qcontacttag.h>
-#include <qcontacttimestamp.h>
-#include <qcontacttype.h>
-#include <qcontacturl.h>
-#include <qcontactversion.h>
+#include <QtContacts/qcontactaddress.h>
+#include <QtContacts/qcontactanniversary.h>
+#include <QtContacts/qcontactavatar.h>
+#include <QtContacts/qcontactbirthday.h>
+#include <QtContacts/qcontactdisplaylabel.h>
+#include <QtContacts/qcontactemailaddress.h>
+#include <QtContacts/qcontactextendeddetail.h>
+#include <QtContacts/qcontactfamily.h>
+#include <QtContacts/qcontactfavorite.h>
+#include <QtContacts/qcontactgender.h>
+#include <QtContacts/qcontactgeolocation.h>
+#include <QtContacts/qcontactglobalpresence.h>
+#include <QtContacts/qcontactguid.h>
+#include <QtContacts/qcontacthobby.h>
+#include <QtContacts/qcontactname.h>
+#include <QtContacts/qcontactnickname.h>
+#include <QtContacts/qcontactnote.h>
+#include <QtContacts/qcontactonlineaccount.h>
+#include <QtContacts/qcontactorganization.h>
+#include <QtContacts/qcontactphonenumber.h>
+#include <QtContacts/qcontactpresence.h>
+#include <QtContacts/qcontactringtone.h>
+#include <QtContacts/qcontactsynctarget.h>
+#include <QtContacts/qcontacttag.h>
+#include <QtContacts/qcontacttimestamp.h>
+#include <QtContacts/qcontacttype.h>
+#include <QtContacts/qcontacturl.h>
+#include <QtContacts/qcontactversion.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTDETAILS_H

@@ -47,15 +47,15 @@
 
 #include <QtContacts>
 #include "qcontactmanagerdataholder.h"
-#include "qcontactchangeset.h"
 #include "jsondbprocess.h"
 #include "qcontactidmock.h"
 
 #if defined(USE_VERSIT_PLZ)
 // This makes it easier to create specific QContacts
-#include "qversitcontactimporter.h"
-#include "qversitdocument.h"
-#include "qversitreader.h"
+#include <QtVersit/qversitcontactimporter.h>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitreader.h>
+QTVERSIT_USE_NAMESPACE
 #endif
 
 QTCONTACTS_USE_NAMESPACE

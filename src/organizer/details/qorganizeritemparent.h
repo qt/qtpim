@@ -42,9 +42,10 @@
 #ifndef QORGANIZERITEMPARENT_H
 #define QORGANIZERITEMPARENT_H
 
-#include <qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemdetail.h>
+#include <QtOrganizer/qorganizeritemid.h>
 
-#include <QtCore/qdatetime.h>
+QT_FORWARD_DECLARE_CLASS(QDate)
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

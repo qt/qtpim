@@ -39,19 +39,18 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTGLOBALPRESENCE_H
 #define QCONTACTGLOBALPRESENCE_H
 
-#include <QString>
-#include <QUrl>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qurl.h>
 
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
-#include <qcontact.h>
-#include <qcontactpresence.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactpresence.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+class QContactFilter;
 
 /* Leaf class */
 class Q_CONTACTS_EXPORT QContactGlobalPresence : public QContactDetail
@@ -91,5 +90,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
-
+#endif // QCONTACTGLOBALPRESENCE_H

@@ -42,10 +42,7 @@
 #ifndef QCONTACTHOBBY_H
 #define QCONTACTHOBBY_H
 
-#include <QString>
-
-#include <qcontactsglobal.h>
-#include <qcontactdetail.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -69,4 +66,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTHOBBY_H

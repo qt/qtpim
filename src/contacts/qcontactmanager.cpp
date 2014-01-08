@@ -41,15 +41,11 @@
 
 #include "qcontactmanager.h"
 
+#include <QtCore/qmetaobject.h>
+
 #include "qcontact_p.h"
 #include "qcontactfilter.h"
 #include "qcontactmanager_p.h"
-#include "qcontactfetchhint.h"
-
-#include <QMetaMethod>
-#include <QSharedData>
-#include <QPair>
-#include <QSet>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 /*!
@@ -943,7 +939,6 @@ void QContactManager::disconnectNotify(const QMetaMethod &signal)
         disconnect(d->m_engine, sourceSignal, this, signal);
     }
 }
-
 
 #include "moc_qcontactmanager.cpp"
 

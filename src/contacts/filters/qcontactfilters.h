@@ -45,17 +45,17 @@
 // this file includes all of the leaf filter classes
 // provided by the Qt Contacts API.
 
-#include "qcontactactionfilter.h"
-#include "qcontactchangelogfilter.h"
-#include "qcontactdetailfilter.h"
-#include "qcontactdetailrangefilter.h"
-#include "qcontactidfilter.h"
-#include "qcontactintersectionfilter.h"
-#include "qcontactinvalidfilter.h"
-#include "qcontactrelationshipfilter.h"
-#include "qcontactunionfilter.h"
+#include <QtContacts/qcontactactionfilter.h>
+#include <QtContacts/qcontactchangelogfilter.h>
+#include <QtContacts/qcontactdetailfilter.h>
+#include <QtContacts/qcontactdetailrangefilter.h>
+#include <QtContacts/qcontactidfilter.h>
+#include <QtContacts/qcontactintersectionfilter.h>
+#include <QtContacts/qcontactinvalidfilter.h>
+#include <QtContacts/qcontactrelationshipfilter.h>
+#include <QtContacts/qcontactunionfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTFILTERS_H

@@ -40,13 +40,20 @@
 ****************************************************************************/
 
 #include "qversitorganizerimporter_p.h"
-#include <qversitdocument.h>
-#include <qversitproperty.h>
-#include <qorganizer.h>
-#include "qversitorganizerdefs_p.h"
-#include "qversitorganizerpluginloader_p.h"
-#include <private/qversitutils_p.h>
 
+#include <QtOrganizer/qorganizer.h>
+
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitproperty.h>
+#include <QtVersit/private/qversitutils_p.h>
+
+#include "qversitorganizerdefs_p.h"
+#include "qversitorganizerhandler.h"
+#include "qversitorganizerpluginloader_p.h"
+#include "qversittimezonehandler.h"
+
+QTORGANIZER_USE_NAMESPACE
+QTVERSIT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSITORGANIZER
 

@@ -39,34 +39,25 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTACTIONDESCRIPTOR_H
 #define QCONTACTACTIONDESCRIPTOR_H
 
-#include <qcontactsglobal.h>
-#include <qcontactfilter.h>
-#include <qcontactdetail.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
-#include <QSet>
-#include <QVariant>
-#include <QMap>
-#include <QString>
-#include <QSharedDataPointer>
+#include <QtContacts/qcontactactiontarget.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtContacts/qcontactfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContact;
 class QContactActionFactory;
-class QContactActionTarget;
+
 class QContactActionDescriptorPrivate;
-
-// MSVC needs the declaration before the friend statement
-class QContactActionDescriptor;
-Q_CONTACTS_EXPORT uint qHash(const QContactActionDescriptor& key);
-#ifndef QT_NO_DEBUG_STREAM
-Q_CONTACTS_EXPORT QDebug& operator<<(QDebug dbg, const QContactActionDescriptor& descriptor);
-#endif
-
 class Q_CONTACTS_EXPORT QContactActionDescriptor
 {
 public:
@@ -112,10 +103,15 @@ private:
     Q_CONTACTS_EXPORT friend uint qHash(const QContactActionDescriptor& key);
 };
 
+Q_CONTACTS_EXPORT uint qHash(const QContactActionDescriptor& key);
+#ifndef QT_NO_DEBUG_STREAM
+Q_CONTACTS_EXPORT QDebug& operator<<(QDebug dbg, const QContactActionDescriptor& descriptor);
+#endif
+
 QT_END_NAMESPACE_CONTACTS
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactActionDescriptor), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-#endif
+#endif // QCONTACTACTIONDESCRIPTOR_H

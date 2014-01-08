@@ -42,10 +42,11 @@
 #ifndef QDECLARATIVEORGANIZERITEMSORTORDER_H
 #define QDECLARATIVEORGANIZERITEMSORTORDER_H
 
-#include "qdeclarativeorganizeritemdetail_p.h"
-#include <qorganizeritemsortorder.h>
 #include <QtQml/qqml.h>
-#include <QtQml/qqmlparserstatus.h>
+
+#include <QtOrganizer/qorganizeritemsortorder.h>
+
+#include "qdeclarativeorganizeritemdetail_p.h"
 
 QTORGANIZER_USE_NAMESPACE
 

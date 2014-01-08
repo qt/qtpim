@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTINVALIDFILTER_H
 #define QDECLARATIVECONTACTINVALIDFILTER_H
 
+#include <QtContacts/qcontactinvalidfilter.h>
+
 #include "qdeclarativecontactfilter_p.h"
-#include "qcontactinvalidfilter.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -66,4 +67,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QDECLARATIVECONTACTINVALIDFILTER_H

@@ -42,19 +42,6 @@
 #ifndef QTIMEZONES_P_H
 #define QTIMEZONES_P_H
 
-#include <QDateTime>
-#include <QHash>
-#include <qorganizerrecurrencerule.h>
-#include <qversitorganizerglobal.h>
-
-QT_BEGIN_NAMESPACE_ORGANIZER
-class QOrganizerManager;
-QT_END_NAMESPACE_ORGANIZER
-
-QTORGANIZER_USE_NAMESPACE
-
-QT_BEGIN_NAMESPACE_VERSITORGANIZER
-
 //
 //  W A R N I N G
 //  -------------
@@ -64,6 +51,23 @@ QT_BEGIN_NAMESPACE_VERSITORGANIZER
 // version without notice, or even be removed.
 //
 // We mean it.
+//
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qhash.h>
+
+#include <QtOrganizer/qorganizerrecurrencerule.h>
+
+#include <QtVersitOrganizer/qversitorganizerglobal.h>
+
+QT_BEGIN_NAMESPACE_ORGANIZER
+class QOrganizerManager;
+QT_END_NAMESPACE_ORGANIZER
+
+QTORGANIZER_USE_NAMESPACE
+
+QT_BEGIN_NAMESPACE_VERSITORGANIZER
 
 class TimeZonePhase {
     public:
@@ -122,4 +126,4 @@ class TimeZones {
 
 QT_END_NAMESPACE_VERSITORGANIZER
 
-#endif
+#endif // QTIMEZONES_P_H

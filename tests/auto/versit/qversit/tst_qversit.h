@@ -43,7 +43,7 @@
 #define tst_QVERSIT_H
 
 #include <QObject>
-#include <qversitdocument.h>
+#include <QtVersit/qversitdocument.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 
@@ -52,5 +52,7 @@ class QVersitContactImporterPrivate;
 class QVersitReader;
 
 QT_END_NAMESPACE_VERSIT
+
+QTVERSIT_USE_NAMESPACE
 
 #endif // tst_QVERSIT_H

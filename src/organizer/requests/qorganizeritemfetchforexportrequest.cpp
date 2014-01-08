@@ -39,8 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemfetchforexportrequest.h>
-#include <private/qorganizeritemrequests_p.h>
+#include "qorganizeritemfetchforexportrequest.h"
+
+#include "qorganizeritemrequests_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

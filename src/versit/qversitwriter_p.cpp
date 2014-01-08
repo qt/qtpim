@@ -40,16 +40,15 @@
 ****************************************************************************/
 
 #include "qversitwriter_p.h"
-#include "qversitdocumentwriter_p.h"
+
+#include <QtCore/qbuffer.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qtextcodec.h>
+
 #include "qvcard21writer_p.h"
 #include "qvcard30writer_p.h"
+#include "qversitdocumentwriter_p.h"
 #include "qversitutils_p.h"
-
-#include <QStringList>
-#include <QMutexLocker>
-#include <QScopedPointer>
-#include <QTextCodec>
-#include <QBuffer>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

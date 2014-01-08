@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemintersectionfilter.h>
-#include <private/qorganizeritemintersectionfilter_p.h>
+#include "qorganizeritemintersectionfilter.h"
+#include "qorganizeritemintersectionfilter_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

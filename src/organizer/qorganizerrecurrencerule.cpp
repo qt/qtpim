@@ -39,8 +39,12 @@
 **
 ****************************************************************************/
 
-#include <qorganizerrecurrencerule.h>
-#include <private/qorganizerrecurrencerule_p.h>
+#include "qorganizerrecurrencerule.h"
+#include "qorganizerrecurrencerule_p.h"
+
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

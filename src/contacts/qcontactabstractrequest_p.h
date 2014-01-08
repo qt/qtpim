@@ -53,17 +53,12 @@
 // We mean it.
 //
 
-#include <qcontactmanager.h>
-#include "qcontactmanager_p.h"
-#include <qcontactabstractrequest.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qpointer.h>
 
-#include <QList>
-#include <QPointer>
-#include <QMutex>
-
-#ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
-#endif
+#include <QtContacts/qcontactabstractrequest.h>
+#include <QtContacts/qcontactmanager.h>
+#include <QtContacts/private/qcontactmanager_p.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -114,4 +109,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTABSTRACTREQUEST_P_H

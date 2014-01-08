@@ -39,17 +39,15 @@
 **
 ****************************************************************************/
 
-
 #ifndef QCONTACTMANAGERDATAHOLDER_H
 #define QCONTACTMANAGERDATAHOLDER_H
 
-#include <QMap>
-#include <QMultiMap>
-#include <QList>
-#include <QString>
-#include <QDebug>
+#include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstring.h>
 
-#include "qcontactmanager.h"
+#include <QtContacts/qcontactmanager.h>
 
 //
 //  W A R N I N G
@@ -112,7 +110,4 @@ private:
     QMap<QString, QList<QContact> > savedContacts;
 };
 
-
-
-#endif
-
+#endif // QCONTACTMANAGERDATAHOLDER_H

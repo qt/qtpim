@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritemunionfilter.h>
-#include <private/qorganizeritemunionfilter_p.h>
+#include "qorganizeritemunionfilter.h"
+#include "qorganizeritemunionfilter_p.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

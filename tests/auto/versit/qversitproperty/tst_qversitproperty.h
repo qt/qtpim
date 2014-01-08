@@ -43,7 +43,7 @@
 #define tst_QVERSITPROPERTY_H
 
 #include <QObject>
-#include <qversitproperty.h>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitProperty;

@@ -41,7 +41,7 @@
 
 #include "qdeclarativecontactfetchhint_p.h"
 
-#include <QSet>
+#include <QtCore/qset.h>
 
 QTCONTACTS_USE_NAMESPACE
 

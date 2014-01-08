@@ -45,12 +45,12 @@
 // this file includes all of the organizer item
 // leaf classes that are included in the public API
 
-#include <qorganizerevent.h>
-#include <qorganizereventoccurrence.h>
-#include <qorganizerjournal.h>
-#include <qorganizertodo.h>
-#include <qorganizertodooccurrence.h>
-#include <qorganizernote.h>
+#include <QtOrganizer/qorganizerevent.h>
+#include <QtOrganizer/qorganizereventoccurrence.h>
+#include <QtOrganizer/qorganizerjournal.h>
+#include <QtOrganizer/qorganizernote.h>
+#include <QtOrganizer/qorganizertodo.h>
+#include <QtOrganizer/qorganizertodooccurrence.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 QT_END_NAMESPACE_ORGANIZER

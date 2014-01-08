@@ -39,12 +39,8 @@
 **
 ****************************************************************************/
 
-
-#include <qversitcontactexporter.h>
+#include "qversitcontactexporter.h"
 #include "qversitcontactexporter_p.h"
-
-#include <qcontact.h>
-#include <qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

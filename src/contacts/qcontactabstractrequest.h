@@ -42,12 +42,14 @@
 #ifndef QCONTACTABSTRACTREQUEST_H
 #define QCONTACTABSTRACTREQUEST_H
 
-#include <qcontactmanager.h>
-#include <QObject>
+#include <QtCore/qobject.h>
+
+#include <QtContacts/qcontactmanager.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactManagerEngine;
+
 class QContactAbstractRequestPrivate;
 class Q_CONTACTS_EXPORT QContactAbstractRequest : public QObject
 {
@@ -126,6 +128,10 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QContactAbstractRequest::StorageLocations)
 
+#ifndef QT_NO_DEBUG_STREAM
+Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactAbstractRequest& request);
+#endif
+
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTABSTRACTREQUEST_H

@@ -42,12 +42,9 @@
 #ifndef QCONTACTORGANIZATION_H
 #define QCONTACTORGANIZATION_H
 
-#include <QString>
-#include <QUrl>
+#include <QtCore/qurl.h>
 
-#include <qcontactsglobal.h>
-#include "qcontactdetail.h"
-#include "qcontact.h"
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -89,4 +86,4 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif
+#endif // QCONTACTORGANIZATION_H

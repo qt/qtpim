@@ -39,13 +39,18 @@
 **
 ****************************************************************************/
 
-#include <qorganizeritem.h>
-#include <private/qorganizeritem_p.h>
-#include <private/qorganizeritemdetail_p.h>
-#include <qorganizeritemdetails.h>
+#include "qorganizeritem.h"
+#include "qorganizeritem_p.h"
 
-#include <qdebug.h>
-#include <qdatastream.h>
+#ifndef QT_NO_DATASTREAM
+#include <QtCore/qdatastream.h>
+#endif
+#ifndef QT_NO_DEBUG_STREAM
+#include <QtCore/qdebug.h>
+#endif
+
+#include "qorganizeritemdetail_p.h"
+#include "qorganizeritemdetails.h"
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

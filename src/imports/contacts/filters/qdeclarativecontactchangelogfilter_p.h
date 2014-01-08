@@ -42,8 +42,9 @@
 #ifndef QDECLARATIVECONTACTCHANGELOGFILTER_H
 #define QDECLARATIVECONTACTCHANGELOGFILTER_H
 
+#include <QtContacts/qcontactchangelogfilter.h>
+
 #include "qdeclarativecontactfilter_p.h"
-#include "qcontactchangelogfilter.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -110,4 +111,4 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeContactChangeLogFilter)
 
-#endif
+#endif // QDECLARATIVECONTACTCHANGELOGFILTER_H

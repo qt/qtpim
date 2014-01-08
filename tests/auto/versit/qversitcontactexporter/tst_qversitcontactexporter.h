@@ -42,10 +42,10 @@
 #ifndef tst_QVERSITCONTACTEXPORTER_H
 #define tst_QVERSITCONTACTEXPORTER_H
 
-#include <qcontactdetail.h>
 #include <QObject>
-#include <qcontact.h>
-#include <qversitproperty.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
+#include <QtVersit/qversitproperty.h>
 
 QT_BEGIN_NAMESPACE_VERSIT
 class QVersitContactExporter;

@@ -40,9 +40,13 @@
 ****************************************************************************/
 
 #include "qversitresourcehandler.h"
-#include "qversitproperty.h"
+
+#include <QtCore/qbytearray.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qstring.h>
+
 #include "qversitdefs_p.h"
-#include <QFile>
+#include "qversitproperty.h"
 
 QT_BEGIN_NAMESPACE_VERSIT
 

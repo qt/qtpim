@@ -40,9 +40,11 @@
 ****************************************************************************/
 
 #include "qdeclarativeorganizeritemdetail_p.h"
+
 #include <QtQml/qqmlinfo.h>
-#include <qorganizeritemdetails.h>
-#include <qorganizeritemid.h>
+
+#include <QtOrganizer/qorganizeritemdetails.h>
+#include <QtOrganizer/qorganizeritemid.h>
 
 QTORGANIZER_USE_NAMESPACE
 

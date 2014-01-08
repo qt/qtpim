@@ -42,9 +42,9 @@
 #ifndef QORGANIZERMANAGERENGINE_H
 #define QORGANIZERMANAGERENGINE_H
 
-#include <qorganizermanager.h>
-#include <qorganizerabstractrequest.h>
-#include <qorganizerrecurrencerule.h>
+#include <QtOrganizer/qorganizermanager.h>
+#include <QtOrganizer/qorganizerabstractrequest.h>
+#include <QtOrganizer/qorganizerrecurrencerule.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 

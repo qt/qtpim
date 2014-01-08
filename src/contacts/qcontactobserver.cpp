@@ -40,10 +40,11 @@
 ****************************************************************************/
 
 #include "qcontactobserver.h"
-#include "qcontactid.h"
-#include "qcontactmanager_p.h"
 
-#include <QPointer>
+#include <QtCore/qpointer.h>
+
+#include "qcontactmanager.h"
+#include "qcontactmanager_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

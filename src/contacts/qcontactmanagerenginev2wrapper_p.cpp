@@ -39,12 +39,14 @@
 **
 ****************************************************************************/
 
-#include "qcontact_p.h"
 #include "qcontactmanagerenginev2wrapper_p.h"
+
+#include <QtCore/qset.h>
+
+#include "qcontact_p.h"
 #include "qcontactidfilter.h"
 #include "qcontactabstractrequest_p.h"
 #include "qcontactfetchbyidrequest.h"
-#include <QDebug>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 

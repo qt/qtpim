@@ -38,9 +38,10 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QtQml/qqmlinfo.h>
+
 #include "qdeclarativecontactrelationship_p.h"
-#include <QDebug>
+
+#include <QtQml/qqmlinfo.h>
 
 QTCONTACTS_USE_NAMESPACE
 

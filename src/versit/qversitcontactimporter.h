@@ -42,19 +42,22 @@
 #ifndef QVERSITCONTACTIMPORTER_H
 #define QVERSITCONTACTIMPORTER_H
 
-#include <qversitresourcehandler.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 
-#include <qcontact.h>
+#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactdetail.h>
 
-#include <QList>
+#include <QtVersit/qversitdocument.h>
+#include <QtVersit/qversitresourcehandler.h>
 
 QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE_VERSIT
 
-class QVersitDocument;
-class QVersitContactImporterPrivate;
 class QVersitProperty;
+
+class QVersitContactImporterPrivate;
 
 class Q_VERSIT_EXPORT QVersitContactImporterPropertyHandler
 {

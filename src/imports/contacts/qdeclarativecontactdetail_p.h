@@ -38,13 +38,16 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #ifndef QDECLARATIVECONTACTDETAIL_P_H
 #define QDECLARATIVECONTACTDETAIL_P_H
 
-#include <qqml.h>
-#include <QtQml/qqmlinfo.h>
-#include "qcontact.h"
-#include "qcontactdetail.h"
+#include <QtCore/qset.h>
+#include <QtCore/qstringlist.h>
+
+#include <QtQml/qqml.h>
+
+#include <QtContacts/qcontactdetail.h>
 
 QTCONTACTS_USE_NAMESPACE
 

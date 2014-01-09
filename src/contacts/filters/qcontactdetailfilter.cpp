@@ -72,13 +72,15 @@ QContactDetailFilter::QContactDetailFilter()
 }
 
 /*!
- * Sets the type of the detail type of which details will be matched to \a type, and the name of the field in
- * details of that type which will contain the value criterion to \a field.
- * If \a type is QContactDetail::TypeUndefined, the detail filter will match no contacts.  If \a field
+ * Sets the type of detail which will be matched to \a type, and the field of the detail
+ * which will contain the value criterion to \a field.
+ *
+ * If \a type is QContactDetail::TypeUndefined, the detail filter will match no contacts. If \a field
  * is not specified, or equal to -1, the detail filter acts like a "detail exists" filter; if any
  * detail of the specified type is present in a contact, that contact will match the filter, regardless
  * of what values might be stored in that detail.
- * \sa detailType()
+ *
+ * \sa detailType(), detailField()
  */
 void QContactDetailFilter::setDetailType(QContactDetail::DetailType type, int field)
 {

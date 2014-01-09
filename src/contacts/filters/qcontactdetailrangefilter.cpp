@@ -121,8 +121,14 @@ void QContactDetailRangeFilter::setMatchFlags(QContactFilter::MatchFlags flags)
 }
 
 /*!
- * Sets the type of the detail definition of which type details will be inspected for matching values to \a type,
- * and the name of the field which will be inspected in details of that definition to \a field.
+ * Sets the type of detail which will be matched to \a type, and the field of the detail
+ * which will contain the value criterion to \a field.
+ *
+ * If \a type is QContactDetail::TypeUndefined, the detail filter will match no contacts. If \a field
+ * is not specified, or equal to -1, the detail filter acts like a "detail exists" filter; if any
+ * detail of the specified type is present in a contact, that contact will match the filter, regardless
+ * of what values might be stored in that detail.
+ *
  * \sa detailType(), detailField()
  */
 void QContactDetailRangeFilter::setDetailType(QContactDetail::DetailType type, int field)

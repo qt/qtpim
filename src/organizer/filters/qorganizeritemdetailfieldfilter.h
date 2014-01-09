@@ -57,7 +57,7 @@ public:
     QOrganizerItemDetailFieldFilter();
     QOrganizerItemDetailFieldFilter(const QOrganizerItemFilter &other);
 
-    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field = -1);
     QOrganizerItemDetail::DetailType detailType() const;
     int detailField() const;
 

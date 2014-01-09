@@ -73,18 +73,18 @@ QOrganizerItemDetailFieldFilter::QOrganizerItemDetailFieldFilter()
     Sets the type of detail which will be matched to \a detailType, and the field of the detail
     which will contain the value criterion to \a field.
 
+    If \a detailType is QOrganizerItemDetail::TypeUndefined, the detail filter will match no organizer items.
+    If \a field is not specified, or equal to -1, the detail filter acts like a "detail exists" filter;
+    if any detail of the specified type is present in the organizer item, that organizer item will match
+    the filter, regardless of what values might be stored in that detail.
+
     \sa detailType(), detailField()
  */
 void QOrganizerItemDetailFieldFilter::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
     Q_D(QOrganizerItemDetailFieldFilter);
-    if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
-        d->m_detailType = detailType;
-        d->m_detailField = field;
-    } else {
-        d->m_detailType = QOrganizerItemDetail::TypeUndefined;
-        d->m_detailField = -1;
-    }
+    d->m_detailType = detailType;
+    d->m_detailField = field;
 }
 
 /*!

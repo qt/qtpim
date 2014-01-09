@@ -190,7 +190,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     QOrganizerItemDetailFieldFilter df2 = f;
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df2.detailField() == -1);
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     /* Now try to check if we dangle pointers at all */
@@ -199,7 +199,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     }
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df2.detailField() == -1);
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     {
@@ -210,7 +210,7 @@ void tst_QOrganizerItemFilter::classHierarchy()
     }
     QVERIFY(df2.type() == QOrganizerItemFilter::DetailFieldFilter);
     QVERIFY(df2.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(df2.detailField() == -1);
+    QVERIFY(df2.detailField() == 101);
     QVERIFY(df2.value() == 42);
 
     /* Try creating a default filter and making sure we don't break */

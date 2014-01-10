@@ -334,6 +334,7 @@ inline bool parseIdString(const QString &idString, QString *managerName, QMap<QS
     // and unescape the engine id string.
     engIdString.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
     engIdString.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+    engIdString.replace(QStringLiteral("&equ;"), QStringLiteral("="));
 
     // now fill the return values.
     if (managerName)

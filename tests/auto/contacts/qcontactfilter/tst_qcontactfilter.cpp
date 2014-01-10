@@ -80,9 +80,6 @@ private slots:
     void datastream();
     void datastream_data();
     void traits();
-
-    void sortObject(); // should perhaps be in a different test :)
-    void sortTraits();
 };
 
 tst_QContactFilter::tst_QContactFilter()
@@ -655,7 +652,7 @@ void tst_QContactFilter::relationshipFilter()
     QVERIFY(crf.relatedContact() == newContact);
 
     crf.setRelatedContactRole(QContactRelationship::First);
-    
+
     QVERIFY(crf.relationshipType() == QString());
     QVERIFY(crf.relatedContact() == newContact);
 
@@ -686,151 +683,7 @@ void tst_QContactFilter::relationshipFilter()
     crf.setRelationshipType("test"); // force a detach
 }
 
-void tst_QContactFilter::sortObject()
-{
-    QContactSortOrder sortorder;
 
-    /* Defaults */
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QContactSortOrder());
-
-    /* Blank Policy */
-    sortorder.setBlankPolicy(QContactSortOrder::BlanksFirst);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QContactSortOrder());
-
-    sortorder.setBlankPolicy(QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QContactSortOrder());
-
-    /* Direction */
-    sortorder.setDirection(Qt::DescendingOrder);
-    QVERIFY(sortorder.direction() == Qt::DescendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QContactSortOrder());
-
-    sortorder.setDirection(Qt::AscendingOrder);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QContactSortOrder());
-
-    /* Case sensitivity */
-    sortorder.setCaseSensitivity(Qt::CaseInsensitive);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseInsensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QContactSortOrder());
-
-    sortorder.setCaseSensitivity(Qt::CaseSensitive);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QContactSortOrder());
-
-    /* Definitions */
-    sortorder.setDetailType(QContactDetail::DetailType(), -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailType(QContactDetail::TypeUndefined, -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeAddress);
-    QVERIFY(sortorder.detailField() == QContactAddress::FieldStreet);
-    QVERIFY(sortorder.isValid());
-
-    sortorder.setDetailType(QContactDetail::DetailType(), QContactAddress::FieldStreet);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-
-    /* Copy ctor */
-    sortorder.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldStreet);
-    sortorder.setBlankPolicy(QContactSortOrder::BlanksFirst);
-    sortorder.setDirection(Qt::DescendingOrder);
-    QVERIFY(sortorder.direction() == Qt::DescendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailType() == QContactDetail::TypeAddress);
-    QVERIFY(sortorder.detailField() == QContactAddress::FieldStreet);
-    QVERIFY(sortorder.isValid());
-
-    QContactSortOrder other(sortorder);
-    QVERIFY(other.direction() == Qt::DescendingOrder);
-    QVERIFY(other.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(other.detailType() == QContactDetail::TypeAddress);
-    QVERIFY(other.detailField() == QContactAddress::FieldStreet);
-    QVERIFY(other.isValid());
-    QVERIFY(other == sortorder);
-    QVERIFY(!(other != sortorder));
-
-    other.setDetailType(QContactDetail::TypePhoneNumber, QContactAddress::FieldStreet);
-    QVERIFY(other != sortorder);
-
-    other.setDetailType(QContactDetail::TypeAddress, QContactAddress::FieldRegion);
-    QVERIFY(other != sortorder);
-
-    /* Assignment operator */
-    QContactSortOrder another;
-    another = other;
-    QVERIFY(another.direction() == Qt::DescendingOrder);
-    QVERIFY(another.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(another.detailType() == QContactDetail::TypeAddress);
-    QVERIFY(another.detailField() == QContactAddress::FieldRegion);
-    QVERIFY(another.isValid());
-    QVERIFY(another == other);
-    QVERIFY(!(other != another));
-
-    /* Self assignment */
-    another = another;
-    QVERIFY(another.direction() == Qt::DescendingOrder);
-    QVERIFY(another.blankPolicy() == QContactSortOrder::BlanksFirst);
-    QVERIFY(another.detailType() == QContactDetail::TypeAddress);
-    QVERIFY(another.detailField() == QContactAddress::FieldRegion);
-    QVERIFY(another.isValid());
-    QVERIFY(another == other);
-    QVERIFY(!(other != another));
-}
 
 void tst_QContactFilter::boringFilters()
 {
@@ -1442,17 +1295,6 @@ void tst_QContactFilter::traits()
     QCOMPARE(sizeof(QContactDetailFilter), sizeof(void*));
     QCOMPARE(sizeof(QContactChangeLogFilter), sizeof(void*));
 }
-
-void tst_QContactFilter::sortTraits()
-{
-    QCOMPARE(sizeof(QContactSortOrder), sizeof(void *));
-    QVERIFY(QTypeInfo<QContactSortOrder>::isComplex);
-    QVERIFY(!QTypeInfo<QContactSortOrder>::isStatic);
-    QVERIFY(!QTypeInfo<QContactSortOrder>::isLarge);
-    QVERIFY(!QTypeInfo<QContactSortOrder>::isPointer);
-    QVERIFY(!QTypeInfo<QContactSortOrder>::isDummy);
-}
-
 
 QTEST_MAIN(tst_QContactFilter)
 #include "tst_qcontactfilter.moc"

@@ -82,8 +82,6 @@ private slots:
     void datastream_data();
     void traits();
 
-    void sortObject(); // should perhaps be in a different test :)
-    void sortTraits();
     void testDebugStreamOut();
     void testDebugStreamOut_data();
 };
@@ -706,154 +704,6 @@ void tst_QOrganizerItemFilter::detailRangeFilter()
     QVERIFY(rf2 == rf);
 }
 
-
-void tst_QOrganizerItemFilter::sortObject()
-{
-    QOrganizerItemSortOrder sortorder;
-
-    /* Defaults */
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
-
-    /* Blank Policy */
-    sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QOrganizerItemSortOrder());
-
-    sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
-
-    /* Direction */
-    sortorder.setDirection(Qt::DescendingOrder);
-    QVERIFY(sortorder.direction() == Qt::DescendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QOrganizerItemSortOrder());
-
-    sortorder.setDirection(Qt::AscendingOrder);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
-
-    /* Case sensitivity */
-    sortorder.setCaseSensitivity(Qt::CaseInsensitive);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseInsensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder != QOrganizerItemSortOrder());
-
-    sortorder.setCaseSensitivity(Qt::CaseSensitive);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(sortorder.caseSensitivity() == Qt::CaseSensitive);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
-
-    /* Definitions */
-    sortorder.setDetail(QOrganizerItemDetail::TypeUndefined, -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-
-    sortorder.setDetail(QOrganizerItemDetail::TypeComment, -1);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
-
-    sortorder.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(sortorder.detailField() == QOrganizerItemComment::FieldComment);
-    QVERIFY(sortorder.isValid());
-
-    sortorder.setDetail(QOrganizerItemDetail::TypeUndefined, 101);
-    QVERIFY(sortorder.direction() == Qt::AscendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-
-    /* Copy ctor */
-    sortorder.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
-    sortorder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
-    sortorder.setDirection(Qt::DescendingOrder);
-    QVERIFY(sortorder.direction() == Qt::DescendingOrder);
-    QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(sortorder.detailField() == QOrganizerItemComment::FieldComment);
-    QVERIFY(sortorder.isValid());
-
-    QOrganizerItemSortOrder other(sortorder);
-    QVERIFY(other.direction() == Qt::DescendingOrder);
-    QVERIFY(other.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(other.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(other.detailField() == QOrganizerItemComment::FieldComment);
-    QVERIFY(other.isValid());
-    QVERIFY(other == sortorder);
-    QVERIFY(!(other != sortorder));
-
-    other.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
-    QVERIFY(other != sortorder);
-
-    other.setDetail(QOrganizerItemDetail::TypeComment, 2);
-    QVERIFY(other != sortorder);
-
-    /* Assignment operator */
-    QOrganizerItemSortOrder another;
-    another = other;
-    QVERIFY(another.direction() == Qt::DescendingOrder);
-    QVERIFY(another.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(another.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(another.detailField() == 2);
-    QVERIFY(another.isValid());
-    QVERIFY(another == other);
-    QVERIFY(!(other != another));
-
-    /* Self assignment */
-    another = another;
-    QVERIFY(another.direction() == Qt::DescendingOrder);
-    QVERIFY(another.blankPolicy() == QOrganizerItemSortOrder::BlanksFirst);
-    QVERIFY(another.detailType() == QOrganizerItemDetail::TypeComment);
-    QVERIFY(another.detailField() == 2);
-    QVERIFY(another.isValid());
-    QVERIFY(another == other);
-    QVERIFY(!(other != another));
-}
-
 void tst_QOrganizerItemFilter::boringFilters()
 {
     QOrganizerItemFilter all;
@@ -1365,17 +1215,6 @@ void tst_QOrganizerItemFilter::traits()
     QVERIFY(!ti.isDummy);
 }
 
-void tst_QOrganizerItemFilter::sortTraits()
-{
-    QCOMPARE(sizeof(QOrganizerItemSortOrder), sizeof(void *));
-    QTypeInfo<QOrganizerItemSortOrder> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
-}
-
 void tst_QOrganizerItemFilter::testDebugStreamOut()
 {
     QFETCH(QOrganizerItemFilter, filterIn);
@@ -1383,10 +1222,6 @@ void tst_QOrganizerItemFilter::testDebugStreamOut()
 
     QTest::ignoreMessage(QtDebugMsg, messageExpected.toUtf8());
     qDebug() << filterIn;
-
-    QOrganizerItemSortOrder sortorder;
-    QTest::ignoreMessage(QtDebugMsg, "QOrganizerItemSortOrder(detailType=0,detailField=-1,blankPolicy=1,direction=0,caseSensitivity=1)");
-    qDebug() << sortorder;
 }
 
 void tst_QOrganizerItemFilter::testDebugStreamOut_data()

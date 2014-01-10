@@ -7,6 +7,7 @@ SUBDIRS += \
     qorganizeritemdetail \
     qorganizeritemdetails \
     qorganizeritemfilter \
+    qorganizeritemsortorder \
     qorganizermanager \
     qorganizermanagerdetails \
     qorganizere2e

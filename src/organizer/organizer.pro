@@ -38,6 +38,7 @@ PRIVATE_HEADERS += \
     qorganizerabstractrequest_p.h \
     qorganizeritemchangeset_p.h \
     qorganizeritem_p.h \
+    qorganizeritemid_p.h \
     qorganizeritemdetail_p.h \
     qorganizeritemfilter_p.h \
     qorganizeritemfetchhint_p.h \

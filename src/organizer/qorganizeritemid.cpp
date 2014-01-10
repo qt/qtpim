@@ -266,7 +266,7 @@ QString escapeIdString(const QString &string)
 
     Builds a string from the given \a managerName, \a params and \a engineIdString.
  */
-inline QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
+QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
 {
     // the constructed id string will be of the form: "qtcontacts:managerName:param1=value1&param2=value2:
     QString ret(QStringLiteral("qtorganizer:%1:%2:%3"));
@@ -291,7 +291,7 @@ inline QString buildIdString(const QString &managerName, const QMap<QString, QSt
     Parses the individual components of the given \a idString and fills the \a managerName, \a params
     and \a engineIdString. Returns true if the parts could be parsed successfully, false otherwise.
  */
-inline bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString)
+bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString)
 {
     QStringList colonSplit = idString.split(QLatin1Char(':'));
 

@@ -51,6 +51,7 @@
 
 #include "qorganizercollectionengineid.h"
 #include "qorganizermanager_p.h"
+#include "qorganizeritemid_p.h"
 
 #if !defined(Q_CC_MWERKS)
 QT_BEGIN_NAMESPACE
@@ -237,40 +238,6 @@ QString QOrganizerCollectionId::managerUri() const
 }
 
 /*!
-    \internal
-
-    Builds a string from the given \a managerName, \a params and \a engineId.
- */
-inline QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineId)
-{
-    // the constructed id string will be of the form: "qtorganizer:managerName:param1=value1&param2=value2:
-    QString ret(QStringLiteral("qtorganizer:%1:%2:%3"));
-
-    // we have to escape each param
-    QStringList escapedParams;
-    QStringList keys = params.keys();
-    for (int i = 0; i < keys.size(); ++i) {
-        QString key = keys.at(i);
-        QString arg = params.value(key);
-        arg = arg.replace(QLatin1Char('&'), QStringLiteral("&amp;"));
-        arg = arg.replace(QLatin1Char('='), QStringLiteral("&equ;"));
-        arg = arg.replace(QLatin1Char(':'), QStringLiteral("&#58;"));
-        key = key.replace(QLatin1Char('&'), QStringLiteral("&amp;"));
-        key = key.replace(QLatin1Char('='), QStringLiteral("&equ;"));
-        key = key.replace(QLatin1Char(':'), QStringLiteral("&#58;"));
-        key = key + QLatin1Char('=') + arg;
-        escapedParams.append(key);
-    }
-
-    // and we escape the engine id string.
-    QString escapedEngineId = engineId;
-    escapedEngineId.replace(QLatin1Char('&'), QStringLiteral("&amp;"));
-    escapedEngineId.replace(QLatin1Char(':'), QStringLiteral("&#58;"));
-
-    return ret.arg(managerName, escapedParams.join(QStringLiteral("&")), escapedEngineId);
-}
-
-/*!
     Serializes the ID to a string. The format of the string will be:
     "qtorganizer:managerName:constructionParams:serializedEngineLocalItemId".
  */
@@ -287,70 +254,6 @@ QString QOrganizerCollectionId::toString() const
 
     // having extracted the params the name, we now need to build a new string.
     return buildIdString(mgrName, params, engineId);
-}
-
-/*!
-    \internal
-
-    Parses the individual components of the given \a idString and fills the \a managerName, \a params
-    and \a engineIdString.
-
-    Returns true if the parts could be parsed successfully, false otherwise.
- */
-inline bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString)
-{
-    QStringList colonSplit = idString.split(QLatin1Char(':'));
-
-    QString prefix = colonSplit.value(0);
-    if (prefix != QStringLiteral("qtorganizer") || colonSplit.size() != 4)
-        return false; // invalid serialized string.  we cannot continue.
-
-    QString mgrName = colonSplit.value(1);
-    QString paramString = colonSplit.value(2);
-    QString engIdString = colonSplit.value(3);
-
-    // Now we have to decode each parameter
-    QMap<QString, QString> outParams;
-    if (!paramString.isEmpty()) {
-        QStringList params = paramString.split(QRegExp(QStringLiteral("&(?!(amp;|equ;))")), QString::KeepEmptyParts);
-        // If we have an empty string for paramstring, we get one entry in params,
-        // so skip that case.
-        for (int i = 0; i < params.count(); ++i) {
-            /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
-            QStringList paramChunk = params.value(i).split(QStringLiteral("="), QString::KeepEmptyParts);
-
-            if (paramChunk.count() != 2)
-                return false;
-
-            QString arg = paramChunk.value(0);
-            QString param = paramChunk.value(1);
-
-            arg.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-            arg.replace(QStringLiteral("&equ;"), QStringLiteral("="));
-            arg.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-            param.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-            param.replace(QStringLiteral("&equ;"), QStringLiteral("="));
-            param.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-            if (arg.isEmpty())
-                return false;
-            outParams.insert(arg, param);
-        }
-    }
-
-    // and unescape the engine id string.
-    engIdString.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-    engIdString.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-
-    // now fill the return values.
-    if (managerName)
-        *managerName = mgrName;
-    if (params)
-        *params = outParams;
-    if (engineIdString)
-        *engineIdString = engIdString;
-
-    // and return.
-    return true;
 }
 
 /*!

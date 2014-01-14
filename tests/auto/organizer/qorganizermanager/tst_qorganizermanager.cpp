@@ -301,7 +301,6 @@ void tst_QOrganizerManager::initTestCase()
     // These are now removed from the list of managers in addManagers()
     QVERIFY(!QOrganizerManager::availableManagers().contains("testdummy"));
     QVERIFY(!QOrganizerManager::availableManagers().contains("teststaticdummy"));
-    QVERIFY(!QOrganizerManager::availableManagers().contains("maliciousplugin"));
 }
 
 void tst_QOrganizerManager::cleanupTestCase()

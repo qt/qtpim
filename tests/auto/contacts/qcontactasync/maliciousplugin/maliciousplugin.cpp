@@ -138,8 +138,8 @@ MaliciousAsyncManagerEngine::MaliciousAsyncManagerEngine()
     threadObject = new MaliciousThreadObject();
     threadObject->moveToThread(thread);
 
-    connect(this, SIGNAL(doStartRequest(QContactAbstractRequest*)), threadObject, SLOT(activateRequest(QContactAbstractRequest*)));
-    connect(this, SIGNAL(doFinishRequest(QContactAbstractRequest*)), threadObject, SLOT(finishRequest(QContactAbstractRequest*)));
+    connect(this, SIGNAL(doStartRequest(QContactAbstractRequest*)), threadObject, SLOT(activateRequest(QContactAbstractRequest*)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(doFinishRequest(QContactAbstractRequest*)), threadObject, SLOT(finishRequest(QContactAbstractRequest*)), Qt::BlockingQueuedConnection);
 
     thread->start();
 }

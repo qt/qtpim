@@ -1709,15 +1709,20 @@ void QOrganizerManagerEngine::updateRequestState(QOrganizerAbstractRequest* req,
 {
     Q_ASSERT(req);
     QMutexLocker ml(&req->d_ptr->m_mutex);
-    if (req->d_ptr->m_state != state) {
-        req->d_ptr->m_state = state;
-        ml.unlock();
+    bool emitState = req->d_ptr->m_state != state;
+    req->d_ptr->m_state = state;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QOrganizerAbstractRequest> guard(req);
+    QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-        emit req->stateChanged(state);
-        Q_ASSERT(guard);
-    }
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    if (emitState)
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, state));
+    Q_ASSERT(guard);
 }
 
 /*!
@@ -1741,10 +1746,15 @@ void QOrganizerManagerEngine::updateItemOccurrenceFetchRequest(QOrganizerItemOcc
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1769,10 +1779,15 @@ void QOrganizerManagerEngine::updateItemIdFetchRequest(QOrganizerItemIdFetchRequ
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1801,10 +1816,15 @@ void QOrganizerManagerEngine::updateItemFetchByIdRequest(QOrganizerItemFetchById
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1829,10 +1849,15 @@ void QOrganizerManagerEngine::updateItemFetchRequest(QOrganizerItemFetchRequest*
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1857,10 +1882,15 @@ void QOrganizerManagerEngine::updateItemFetchForExportRequest(QOrganizerItemFetc
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1885,10 +1915,15 @@ void QOrganizerManagerEngine::updateItemRemoveRequest(QOrganizerItemRemoveReques
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1913,10 +1948,15 @@ void QOrganizerManagerEngine::updateItemRemoveByIdRequest(QOrganizerItemRemoveBy
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1942,10 +1982,15 @@ void QOrganizerManagerEngine::updateItemSaveRequest(QOrganizerItemSaveRequest* r
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1969,10 +2014,15 @@ void QOrganizerManagerEngine::updateCollectionFetchRequest(QOrganizerCollectionF
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1996,10 +2046,15 @@ void QOrganizerManagerEngine::updateCollectionRemoveRequest(QOrganizerCollection
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -2024,10 +2079,15 @@ void QOrganizerManagerEngine::updateCollectionSaveRequest(QOrganizerCollectionSa
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QOrganizerAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QOrganizerAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 

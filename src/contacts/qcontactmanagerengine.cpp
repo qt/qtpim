@@ -1597,15 +1597,20 @@ void QContactManagerEngine::updateRequestState(QContactAbstractRequest* req, QCo
 {
     Q_ASSERT(req);
     QMutexLocker ml(&req->d_ptr->m_mutex);
-    if (req->d_ptr->m_state != state) {
-        req->d_ptr->m_state = state;
-        ml.unlock();
+    bool emitState = req->d_ptr->m_state != state;
+    req->d_ptr->m_state = state;
+    ml.unlock();
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
-        QPointer<QContactAbstractRequest> guard(req);
+    QPointer<QContactAbstractRequest> guard(req);
 #endif
-        emit req->stateChanged(state);
-        Q_ASSERT(guard);
-    }
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    if (emitState)
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, state));
+    Q_ASSERT(guard);
 }
 
 
@@ -1630,10 +1635,15 @@ void QContactManagerEngine::updateContactIdFetchRequest(QContactIdFetchRequest* 
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1658,10 +1668,15 @@ void QContactManagerEngine::updateContactFetchRequest(QContactFetchRequest* req,
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1686,10 +1701,15 @@ void QContactManagerEngine::updateContactRemoveRequest(QContactRemoveRequest* re
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1715,10 +1735,15 @@ void QContactManagerEngine::updateContactSaveRequest(QContactSaveRequest* req, c
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1744,10 +1769,15 @@ void QContactManagerEngine::updateRelationshipSaveRequest(QContactRelationshipSa
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1772,10 +1802,15 @@ void QContactManagerEngine::updateRelationshipRemoveRequest(QContactRelationship
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -1800,10 +1835,15 @@ void QContactManagerEngine::updateRelationshipFetchRequest(QContactRelationshipF
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 
@@ -2018,10 +2058,15 @@ void QContactManagerEngine::updateContactFetchByIdRequest(QContactFetchByIdReque
 #if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
     QPointer<QContactAbstractRequest> guard(req);
 #endif
-    emit req->resultsAvailable();
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
     Q_ASSERT(guard);
     if (emitState)
-        emit req->stateChanged(newState);
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
     Q_ASSERT(guard);
 }
 

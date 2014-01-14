@@ -81,6 +81,7 @@ void tst_QOrganizerManagerDetails::addManagers()
     /* Known one that will not pass */
     managers.removeAll("invalid");
     managers.removeAll("skeleton");
+    managers.removeAll("maliciousplugin");
 
     foreach(QString mgr, managers) {
         QMap<QString, QString> params;

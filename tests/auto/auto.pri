@@ -1,6 +1,6 @@
 TEMPLATE = app
 CONFIG += console testcase
 
-qtAddLibrary(QtTest)
+QT += testlib
 
 !qtHaveModule(jsondb): DEFINES += QT_NO_JSONDB

@@ -327,10 +327,9 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
         QOrganizerItem* item,
         QList<QOrganizerItemDetail>* updatedDetails)
 {
-    QOrganizerItemReminder itemReminder;
-    int repetitionCount;
-    int repetitionDelay;
-    int secondsBeforeStart;
+    int repetitionCount = 0;
+    int repetitionDelay = 0;
+    int secondsBeforeStart = 0;
     bool alreadySetSecondsBeforeStart = false;
     const QList<QVersitProperty> valarmProperties = valarmDocument.properties();
     QString actionValue;

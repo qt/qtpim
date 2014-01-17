@@ -74,10 +74,10 @@ EventEditPage::EventEditPage(QWidget *parent)
     m_typeComboBox->addItem("Weekly");
     m_typeComboBox->addItem("Monthly");
     m_typeComboBox->addItem("Yearly");
-    connect(m_typeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, 
+    connect(m_typeComboBox, SIGNAL(currentIndexChanged(const QString&)), this,
             SLOT(frequencyChanged(const QString&)));
     QStringList alarmList;
-    alarmList	<< "None"
+    alarmList   << "None"
                 << "0 minutes before"
                 << "5 minutes before"
                 << "15 minutes before"

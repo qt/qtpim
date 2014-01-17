@@ -110,7 +110,7 @@ void DayPage::refresh()
             listItem->setData(ORGANIZER_ITEM_ROLE, data);
             m_itemList->addItem(listItem);
         }
-        
+
         QOrganizerTodoTime todoTime = item.detail(QOrganizerItemDetail::TypeTodoTime);
         if (!todoTime.isEmpty()) {
             QString time = todoTime.startDateTime().time().toString("hh:mm");
@@ -130,7 +130,7 @@ void DayPage::refresh()
             listItem->setData(ORGANIZER_ITEM_ROLE, data);
             m_itemList->addItem(listItem);
         }
-        
+
         // TODO: other item types
     }
 

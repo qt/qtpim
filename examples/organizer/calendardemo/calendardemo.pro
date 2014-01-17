@@ -13,7 +13,7 @@ SOURCES += src/main.cpp \
            src/eventoccurrenceeditpage.cpp \
            src/addcalendarpage.cpp \
            src/editcalendarspage.cpp
-           
+
 HEADERS += src/calendardemo.h \
            src/monthpage.h \
            src/daypage.h \

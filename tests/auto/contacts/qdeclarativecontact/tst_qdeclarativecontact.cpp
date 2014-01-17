@@ -51,12 +51,12 @@
 
 #include "qdeclarativecontactmodel_p.h"
 #include "qdeclarativecontactsortorder_p.h"
-#include "qdeclarativecontact_p.h" 
-#include "qdeclarativecontactfilters_p.h" 
-#include "qdeclarativecontactdetails_p.h" 
-#include "qdeclarativecontactfetchhint_p.h" 
-#include "qdeclarativecontactrelationship_p.h" 
-#include "qdeclarativecontactrelationshipmodel_p.h" 
+#include "qdeclarativecontact_p.h"
+#include "qdeclarativecontactfilters_p.h"
+#include "qdeclarativecontactdetails_p.h"
+#include "qdeclarativecontactfetchhint_p.h"
+#include "qdeclarativecontactrelationship_p.h"
+#include "qdeclarativecontactrelationshipmodel_p.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

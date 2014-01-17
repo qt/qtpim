@@ -91,7 +91,7 @@ private:
     QComboBox *alarmCombo;
     QLineEdit *subjectLineEdit;
     QTextEdit *descriptionTextEdit;
-    QPushButton *doneButton; 
+    QPushButton *doneButton;
 };
 //! [0]
 

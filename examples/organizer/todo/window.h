@@ -81,7 +81,7 @@ private:
     void setupGui();
 
     QOrganizerManager *manager;
-    
+
     TodoEditor *todoEditor;
 
     QListWidget *listWidget;

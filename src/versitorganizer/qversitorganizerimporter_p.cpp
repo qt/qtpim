@@ -720,7 +720,7 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceRule(
         detail.setRecurrenceRules(detail.recurrenceRules() << rule);
     } else if (property.name() == QStringLiteral("EXRULE")) {
         detail.setExceptionRules(detail.exceptionRules() << rule);
-    } 
+    }
     updatedDetails->append(detail);
     return true;
 }
@@ -734,7 +734,7 @@ bool QVersitOrganizerImporterPrivate::parseRecurRule(const QString& str, QOrgani
     QStringList parts = str.split(QLatin1Char(';'));
     if (parts.size() == 0)
         return false;
-    
+
     QString freqPart = parts.takeFirst();
     QStringList freqParts = freqPart.split(QLatin1Char('='));
     if (freqParts.size() != 2)
@@ -920,7 +920,7 @@ bool QVersitOrganizerImporterPrivate::createRecurrenceDates(
         detail.setRecurrenceDates(detail.recurrenceDates() + dates);
     } else if (property.name() == QStringLiteral("EXDATE")) {
         detail.setExceptionDates(detail.exceptionDates() + dates);
-    } 
+    }
     updatedDetails->append(detail);
     return true;
 }

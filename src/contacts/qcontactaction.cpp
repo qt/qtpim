@@ -61,7 +61,7 @@ QContactAction::~QContactAction()
   \ingroup contacts-actions
 
   \inmodule QtContacts
-  
+
   An action is anything that can be performed on a contact, or a detail of a contact.  An example
   of an action might be "Send Email" or "Dial" or "Plot Navigation Route".  One action may be
   implemented by multiple vendors, and indeed one vendor may provide multiple implementations of
@@ -76,7 +76,7 @@ QContactAction::~QContactAction()
   \l QContactAction::action() is called; the caller takes ownership of the action instance.
   Each action is uniquely described by a \l QContactActionDescriptor, which is passed to the
   \l QContactAction::action() function to instantiate an action.
- 
+
   \sa QContactActionFactory, QContactActionFilter
  */
 

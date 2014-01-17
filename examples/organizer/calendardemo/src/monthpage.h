@@ -90,7 +90,7 @@ Q_SIGNALS:
     void showEditPage(const QOrganizerItem &item);
     void addNewEvent();
     void addNewTodo();
-    
+
 protected: // from QWidget
     void showEvent(QShowEvent *event);
 

@@ -119,7 +119,7 @@ void Window::deleteTodo()
         }
     }
 }
-//! [4] 
+//! [4]
 
 //! [5]
 void Window::refreshList()
@@ -143,7 +143,7 @@ void Window::refreshList()
                     QDateTime(calendarWidget->selectedDate(), QTime(23,59)) ||
                 todo.dueDateTime() <
                     QDateTime(calendarWidget->selectedDate(), QTime(0, 0)))
-                continue;            
+                continue;
 
             QString display = todo.startDateTime().toString("yy/MM/dd hh:mm") +
                 "-" + todo.dueDateTime().toString("yy/MM/dd hh:mm") +
@@ -161,7 +161,7 @@ void Window::setupGui()
 {
     todoEditor = new TodoEditor;
 
-    listWidget = new QListWidget;   
+    listWidget = new QListWidget;
     stackedWidget = new QStackedWidget;
     newTodoButton = new QPushButton(tr("New Todo"));
     deletTodoButton = new QPushButton(tr("Delete Todo"));
@@ -202,5 +202,5 @@ void Window::setupGui()
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(scrollArea);
 
-    setLayout(layout); 
+    setLayout(layout);
 }

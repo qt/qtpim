@@ -6,7 +6,7 @@ PLUGIN_TYPE=contacts
 include(../../../common.pri)
 
 HEADERS += \
-        qcontactactionservicemanager_p.h 
+        qcontactactionservicemanager_p.h
 SOURCES += \
         qcontactactionservicemanager_p.cpp
 

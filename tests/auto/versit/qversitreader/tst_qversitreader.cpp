@@ -67,7 +67,7 @@ void tst_QVersitReader::init()
     mInputDevice = new QBuffer;
     mInputDevice->open(QBuffer::ReadWrite);
     mReader = new QVersitReader;
-#ifdef QT_BUILD_INTERNAL    
+#ifdef QT_BUILD_INTERNAL
     mReaderPrivate = new QVersitReaderPrivate;
 #endif
     mSignalCatcher = new SignalCatcher;

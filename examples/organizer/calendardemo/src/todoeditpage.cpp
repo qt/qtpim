@@ -214,7 +214,7 @@ void TodoEditPage::saveClicked()
     m_organizerTodo.setDueDateTime(due);
     int index = m_priorityEdit->currentIndex();
     m_organizerTodo.setPriority((QOrganizerItemPriority::Priority) m_priorityEdit->itemData(index).toInt());
-    
+
     index = m_statusEdit->currentIndex();
     QOrganizerTodoProgress::Status currentStatus = (QOrganizerTodoProgress::Status) m_statusEdit->itemData(index).toInt();
     QOrganizerTodoProgress oldStatus = m_organizerTodo.detail(QOrganizerItemDetail::TypeTodoProgress);
@@ -252,7 +252,7 @@ void TodoEditPage::handleAlarmIndexChanged(const QString time)
             reminder.reset(new QOrganizerItemVisualReminder());
             static_cast<QOrganizerItemVisualReminder *>(reminder.data())->setMessage(m_subjectEdit->text());
         }
-    
+
     if (time == "None") {
         QOrganizerItemVisualReminder fetchedReminder = m_organizerTodo.detail(QOrganizerItemDetail::TypeVisualReminder);
         m_organizerTodo.removeDetail(&fetchedReminder);

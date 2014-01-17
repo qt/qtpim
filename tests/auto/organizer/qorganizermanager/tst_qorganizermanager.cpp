@@ -756,7 +756,7 @@ void tst_QOrganizerManager::add()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
-    
+
     // Use note & todo item depending on backend support
     QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))
@@ -780,7 +780,7 @@ void tst_QOrganizerManager::add()
 
     QOrganizerItem added = cm->item(item.id());
     QVERIFY(added.id() == item.id());
-    
+
     if (!isSuperset(added, item)) {
         // XXX TODO: fix the isSuperset so that it ignores timestamps.
         //dumpOrganizerItems(cm.data());
@@ -947,7 +947,7 @@ void tst_QOrganizerManager::persistence()
     cm->removeItems(cm->itemIds());
     QScopedPointer<QOrganizerManager> cm2(QOrganizerManager::fromUri(uri));
     QCOMPARE(cm->items().size(), 0);
-    
+
     // Add an event
     QOrganizerEvent event;
     event.setDisplayLabel(QStringLiteral("meeting"));
@@ -1312,7 +1312,7 @@ void tst_QOrganizerManager::addExceptionsWithGuid()
     exception.setGuid(QStringLiteral("halloween"));
     QVERIFY(!cm->saveItem(&exception));
     QCOMPARE(cm->error(), QOrganizerManager::InvalidOccurrenceError);
-    
+
     // with the guid set, it should work
     exception.setId(QOrganizerItemId());
     exception.setGuid(QStringLiteral("christmas"));
@@ -1384,7 +1384,7 @@ void tst_QOrganizerManager::update()
 {
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
-    
+
     // Use note & todo item depending on backend support
     QOrganizerItemType::ItemType type;
     if (cm->supportedItemTypes().contains(QOrganizerItemType::TypeNote))

@@ -2,7 +2,7 @@ include(../../auto.pri)
 
 QT += contacts qml versit
 
-DEFINES+=IGNORE_METAOBJECTBUILDER_EXPORT 
+DEFINES+=IGNORE_METAOBJECTBUILDER_EXPORT
 
 HEADERS += ../../../src/import/contacts/qdeclarativecontactdetail_p.h\
            ../../../src/import/contacts/qdeclarativecontactrelationship_p.h\
@@ -41,13 +41,13 @@ HEADERS += ../../../src/import/contacts/qdeclarativecontactdetail_p.h\
            ../../../src/import/contacts/details/qdeclarativecontacthobby_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactactionfilter_p.h\
            ../../../src/import/contacts/filters/qdeclarativecontactintersectionfilter_p.h \
-           ../../../src/import/contacts/filters/qdeclarativecontactchangelogfilter_p.h	\
+           ../../../src/import/contacts/filters/qdeclarativecontactchangelogfilter_p.h  \
            ../../../src/import/contacts/filters/qdeclarativecontactinvalidfilter_p.h \
-           ../../../src/import/contacts/filters/qdeclarativecontactdetailfilter_p.h	\
+           ../../../src/import/contacts/filters/qdeclarativecontactdetailfilter_p.h     \
            ../../../src/import/contacts/filters/qdeclarativecontactidfilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactdetailrangefilter_p.h \
            ../../../src/import/contacts/filters/qdeclarativecontactrelationshipfilter_p.h \
-           ../../../src/import/contacts/filters/qdeclarativecontactfilters_p.h	 \
+           ../../../src/import/contacts/filters/qdeclarativecontactfilters_p.h   \
            ../../../src/import/contacts/filters/qdeclarativecontactunionfilter_p.h
 
 SOURCES += tst_qdeclarativecontact.cpp \

@@ -80,7 +80,7 @@ static const int MAX_OLD_BYTES_TO_KEEP = 8192;
 
 /*
  * An LByteArray has a subset of QByteArray's interface, plus an efficient chopLeft function
- * 
+ *
  * It stores a QByteArray internally, plus a marker of where it starts and where it ends.
  */
 class LByteArray
@@ -98,7 +98,7 @@ public:
     QByteArray toByteArray() const {
         return mData.mid(mStart, mEnd-mStart);
     }
-    /* Removes \a n bytes from the start of the QByteArray. */ 
+    /* Removes \a n bytes from the start of the QByteArray. */
     void chopLeft(int n) {
         Q_ASSERT(size() >= n && n >= 0);
         mStart += n;

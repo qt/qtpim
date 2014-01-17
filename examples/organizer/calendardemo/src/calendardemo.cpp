@@ -112,7 +112,7 @@ CalendarDemo::CalendarDemo(QWidget *parent)
             this, SLOT(removeReqStateChanged(QOrganizerAbstractRequest::State)));
 
     m_monthPage->init();
-    
+
     m_stackedWidget->addWidget(m_monthPage);
     m_stackedWidget->addWidget(m_dayPage);
     m_stackedWidget->addWidget(m_eventEditPage);
@@ -310,7 +310,7 @@ void CalendarDemo::removeItem()
 void CalendarDemo::addEvents()
 {
     QList<QOrganizerItem> items;
-    
+
     // Create a large number of events asynchronously
     QOrganizerCollectionId defaultCollectionId = m_manager->defaultCollection().id();
     for(int index=0 ; index <  100 ; index++) {
@@ -318,7 +318,7 @@ void CalendarDemo::addEvents()
         item.setType(QOrganizerItemType::TypeEvent);
         item.setDescription(QString("Event %1").arg(index));
         item.setDisplayLabel(QString("Subject for event %1").arg(index + 1));
-        
+
         // Set the start date to index to add events to next 5000 days
         QOrganizerEventTime timeRange;
         timeRange.setStartDateTime(QDateTime::currentDateTime().addDays(index));
@@ -326,10 +326,10 @@ void CalendarDemo::addEvents()
         item.saveDetail(&timeRange);
 
         item.setCollectionId(defaultCollectionId);
-        
+
         items.append(item);
     }
-    
+
     // Now create a save request and execute it
     m_saveReq.setItems(items);
     m_saveReq.setManager(m_manager);
@@ -483,7 +483,7 @@ void CalendarDemo::deleteAllEntries()
 {
     // Fetch all the entries
     QList<QOrganizerItemId> ids = m_manager->itemIds();
-    
+
     if(ids.count()) {
         m_remReq.setItemIds(ids);
         m_remReq.setManager(m_manager);

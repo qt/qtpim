@@ -303,8 +303,8 @@ void tst_QContactAsync::cleanupTestCase()
 
 bool tst_QContactAsync::compareContactLists(QList<QContact> lista, QList<QContact> listb)
 {
-    // NOTE: This compare is contact order insensitive.  
-    
+    // NOTE: This compare is contact order insensitive.
+
     // Remove matching contacts
     foreach (QContact a, lista) {
         foreach (QContact b, listb) {
@@ -314,17 +314,17 @@ bool tst_QContactAsync::compareContactLists(QList<QContact> lista, QList<QContac
                 break;
             }
         }
-    }    
+    }
     return (lista.count() == 0 && listb.count() == 0);
 }
 
 bool tst_QContactAsync::compareContacts(QContact ca, QContact cb)
 {
     // NOTE: This compare is contact detail order insensitive.
-    
+
     if (ca.id() != cb.id())
         return false;
-    
+
     QList<QContactDetail> aDetails = ca.details();
     QList<QContactDetail> bDetails = cb.details();
 
@@ -336,7 +336,7 @@ bool tst_QContactAsync::compareContacts(QContact ca, QContact cb)
                 cb.removeDetail(&bd);
                 break;
             }
-            
+
             // Special handling for timestamp
             if (ad.type() == QContactTimestamp::Type &&
                 bd.type() == QContactTimestamp::Type) {
@@ -348,8 +348,8 @@ bool tst_QContactAsync::compareContacts(QContact ca, QContact cb)
                     cb.removeDetail(&bd);
                     break;
                 }
-                    
-            }            
+
+            }
         }
     }
     return (ca == cb);
@@ -1103,7 +1103,7 @@ void tst_QContactAsync::contactRemove()
     // remove all contacts
     // delete everything.
     crr.setContactIds(cm->contactIds());
-    
+
     QVERIFY(!crr.cancel()); // not started
     QVERIFY(crr.start());
 
@@ -1382,7 +1382,7 @@ void tst_QContactAsync::contactSave()
     //QVERIFY(containsIgnoringTimestamps(result, testContact));
     // XXX: really, we should use isSuperset() from tst_QContactManager, but this will do for now:
     QVERIFY(result.first().detail<QContactPhoneNumber>().number() == phn.number());
-    
+
     QCOMPARE(cm->contactIds().size(), originalCount + 1);
 
     // cancelling
@@ -1939,11 +1939,11 @@ void tst_QContactAsync::relationshipFetch()
     if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
-    
+
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }
-    
+
     QContactRelationshipFetchRequest rfr;
     QVERIFY(rfr.type() == QContactAbstractRequest::RelationshipFetchRequest);
 
@@ -2032,7 +2032,7 @@ void tst_QContactAsync::relationshipFetch()
         }
     }
     rfr.setSecond(bContact);
-    
+
     QVERIFY(!rfr.cancel()); // not started
     QVERIFY(rfr.start());
 
@@ -2060,7 +2060,7 @@ void tst_QContactAsync::relationshipFetch()
         }
     }
     rfr.setSecond(cContact);
-    
+
     QVERIFY(!rfr.cancel()); // not started
     QVERIFY(rfr.start());
 
@@ -2145,15 +2145,15 @@ void tst_QContactAsync::relationshipRemove()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
-    
+
     if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
-    
+
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }
-    
+
     QContactRelationshipRemoveRequest rrr;
     QVERIFY(rrr.type() == QContactAbstractRequest::RelationshipRemoveRequest);
 
@@ -2199,7 +2199,7 @@ void tst_QContactAsync::relationshipRemove()
     QVERIFY(!rrr.isFinished());
     QVERIFY(!rrr.cancel());
     QVERIFY(!rrr.waitForFinished());
-    
+
     QVERIFY(!rrr.cancel()); // not started
     QVERIFY(rrr.start());
 
@@ -2305,15 +2305,15 @@ void tst_QContactAsync::relationshipSave()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
-    
+
     if (cm->managerName() == "jsondb") {
        QSKIP("This contact manager does not support relationships!");
     }
-    
+
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
-    }    
-    
+    }
+
     QContactRelationshipSaveRequest rsr;
     QVERIFY(rsr.type() == QContactAbstractRequest::RelationshipSaveRequest);
 
@@ -2691,7 +2691,7 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
     if (cm->managerName() == "jsondb") {
         return cm;
     }
-    
+
     QContactRelationship arb;
     arb.setFirst(a);
     arb.setSecond(b);

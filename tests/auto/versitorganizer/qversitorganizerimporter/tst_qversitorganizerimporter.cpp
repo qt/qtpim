@@ -2032,7 +2032,7 @@ void tst_QVersitOrganizerImporter::testTimeZones_data()
             << vtimezone << QString::fromLatin1("20100102T100405")
             << QDateTime(QDate(2010, 1, 1), QTime(23, 4, 5), Qt::UTC);
     }
-    
+
     {
         QVersitDocument vtimezone(QVersitDocument::ICalendar20Type);
         vtimezone.setComponentType(QStringLiteral("VTIMEZONE"));

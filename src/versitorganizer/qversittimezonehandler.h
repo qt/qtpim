@@ -62,7 +62,7 @@ public:
       \a datetime must be specified with Qt::UTC.  The returned QDateTime will be specified with
       Qt::LocalTime.  Note that unlike the usual semantic of Qt::LocalTime, it does not represent a time
       in the system's local time zone.
-      
+
       An invalid QDateTime is returned on failure (eg. if \a timeZoneName is unknown).
      */
     virtual QDateTime convertTimeZoneToUtc(const QDateTime& datetime, const QString& timeZoneName) = 0;
@@ -76,7 +76,7 @@ public:
       \a datetime must be specified with Qt::LocalTime.  Note that unlike the usual semantic of
       Qt::LocalTime, \a datetime does not represent a time in the system's local time zone.
       The returned QDateTime will be specified with Qt::UTC.
-      
+
       An invalid QDateTime is returned on failure (eg. if \a timeZoneName is unknown).
      */
     virtual QDateTime convertUtcToTimeZone(const QDateTime& datetime, const QString& timeZoneName) = 0;

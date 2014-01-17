@@ -192,8 +192,8 @@ void tst_QContactManagerFiltering::initTestCase()
     managerNames.removeAll("teststaticdummy");
     managerNames.removeAll("maliciousplugin");
     // Symbiansim backend does not support the required details for these
-	// tests to pass. Symbiansim backend specific unit test tst_simcm is
-	// testing filtering instead.
+    // tests to pass. Symbiansim backend specific unit test tst_simcm is
+    // testing filtering instead.
     managerNames.removeAll("symbiansim");
 
     // Some internal engines on Maemo6
@@ -397,7 +397,7 @@ void tst_QContactManagerFiltering::detailStringFiltering_data()
             newMRow("Email == Aaron@Aaronson.com", manager) << manager << emailaddr << emailfield << QVariant("Aaron@Aaronson.com") << 0 << "a";
             newMRow("Email == Aaron@Aaronsen.com", manager) << manager << emailaddr << emailfield << QVariant("Aaron@Aaronsen.com") << 0 << es;
         }
-        
+
         // phone number
         if (manager->detailDefinitions().contains(QContactPhoneNumber::DefinitionName)) {
             newMRow("Phone number detail exists", manager) << manager << phonenumber << es << QVariant("") << 0 << "ab";
@@ -408,7 +408,7 @@ void tst_QContactManagerFiltering::detailStringFiltering_data()
             newMRow("Phone number = 555-1212, match phone number", manager) << manager << phonenumber << number << QVariant("555-1212") << (int) QContactFilter::MatchPhoneNumber << "a"; // hyphens will be ignored by the match algorithm
             newMRow("Phone number = 555, keypad collation", manager) << manager << phonenumber << number << QVariant("555") << (int) (QContactFilter::MatchKeypadCollation | QContactFilter::MatchStartsWith) << "ab";
         }
-        
+
         /* Converting other types to strings */
         QPair<QString, QString> defAndFieldNames = defAndFieldNamesForTypePerManager.value(manager).value("Integer");
         if (!defAndFieldNames.first.isEmpty() && !defAndFieldNames.second.isEmpty()) {
@@ -893,13 +893,13 @@ void tst_QContactManagerFiltering::rangeFiltering_data()
         newMRow("no min, cs, no results", manager) << manager << namedef << firstname << QVariant() << QVariant("Aardvark") << false << 0 << true << csflag << es;
         newMRow("no max, cs, badcase, all results", manager) << manager << namedef << firstname << QVariant("A") << QVariant() << false << 0 << true << csflag << "abcdefghijk";
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"no max, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"no max, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("no max, cs, badcase, some results", manager) << manager << namedef << firstname << QVariant("BOB") << QVariant() << false << 0 << true << csflag << "cdefghijk";
         newMRow("no max, cs, badcase, no results", manager) << manager << namedef << firstname << QVariant("XAMBEZI") << QVariant() << false << 0 << true << csflag << "hijk";
         newMRow("no min, cs, badcase, all results", manager) << manager << namedef << firstname << QVariant() << QVariant("XAMBEZI") << false << 0 << true << csflag << "abcdefg";
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"no min, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"no min, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("no min, cs, badcase, some results", manager) << manager << namedef << firstname << QVariant() << QVariant("BOB") << false << 0 << true << csflag << "ab";
         newMRow("no min, cs, badcase, no results", manager) << manager << namedef << firstname << QVariant() << QVariant("AARDVARK") << false << 0 << true << csflag << es;
@@ -2093,16 +2093,16 @@ void tst_QContactManagerFiltering::sorting_data()
         QPair<QString, QString> stringDefAndFieldNames = defAndFieldNamesForTypePerManager.value(manager).value("String");
 
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"first ascending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"first ascending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("first ascending", manager) << manager << namedef << firstname << asc << false << 0 << cs << "abcdefghjik" << "efg";  // efg have the same first name
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"first descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"first descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("first descending", manager) << manager << namedef << firstname << desc << false << 0 << cs << "kijhefgdcba" << "efg";// efg have the same first name
         newMRow("last ascending", manager) << manager << namedef << lastname << asc << false << 0 << cs << "bacdefghijk" << "hijk";       // all have a well defined, sortable last name except hijk
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"last descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"last descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("last descending", manager) << manager << namedef << lastname << desc << false << 0 << cs << "gfedcabhijk" << "hijk";     // all have a well defined, sortable last name except hijk
         if (!integerDefAndFieldNames.first.isEmpty() && !integerDefAndFieldNames.second.isEmpty()) {
@@ -2118,7 +2118,7 @@ void tst_QContactManagerFiltering::sorting_data()
 
         newMRow("display label insensitive", manager) << manager << dldef << dlfld << asc << false << 0 << ci << "abcdefghjik" << "efghji";
 #ifdef Q_OS_SYMBIAN
-        qWarning() << "Test case \"display label sensitive\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware"; 
+        qWarning() << "Test case \"display label sensitive\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
         newMRow("display label sensitive", manager) << manager << dldef << dlfld << asc << false << 0 << cs << "abcdefghjik" << "efg";
     }
@@ -2132,14 +2132,14 @@ void tst_QContactManagerFiltering::sorting()
     QFETCH(int, directioni);
     QFETCH(bool, setbp);
     QFETCH(int, blankpolicyi);
-    QFETCH(int, casesensitivityi);    
+    QFETCH(int, casesensitivityi);
     QFETCH(QString, expected);
     QFETCH(QString, unstable);
 
     Qt::SortOrder direction = (Qt::SortOrder)directioni;
     QContactSortOrder::BlankPolicy blankpolicy = (QContactSortOrder::BlankPolicy) blankpolicyi;
     Qt::CaseSensitivity casesensitivity = (Qt::CaseSensitivity) casesensitivityi;
-    
+
     QList<QContactLocalId> contacts = contactsAddedToManagers.values(cm);
     QList<QContactLocalId> ids;
 

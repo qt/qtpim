@@ -134,7 +134,7 @@ void TodoEditor::updateAlarm(int index)
 
     QOrganizerItemVisualReminder reminder;
     reminder.setSecondsBeforeStart(seconds);
-    
+
     todo.saveDetail(&reminder);
 }
 //! [6]

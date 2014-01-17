@@ -793,7 +793,7 @@ void tst_QContactManager::add()
 
     QContact added = cm->contact(alice.id());
     QVERIFY(added.id() == alice.id());
-    
+
     if (!isSuperset(added, alice)) {
         dumpContacts(cm.data());
         dumpContactDifferences(added, alice);
@@ -813,7 +813,7 @@ void tst_QContactManager::add()
 
     // check that all the numbers were added successfully
     QVERIFY(veryContactable.details(QContactPhoneNumber::Type).size() == nrOfdetails);
-    
+
     // check if it can be saved
     QVERIFY(cm->saveContact(&veryContactable));
 
@@ -1149,7 +1149,7 @@ void tst_QContactManager::batch()
 
     QVERIFY(!cm->removeContacts(QList<QContactId>(), NULL));
     QVERIFY(cm->error() == QContactManager::BadArgumentError);
-    
+
     // Get supported name field
     int nameField = QContactName::FieldFirstName;
 
@@ -1336,7 +1336,7 @@ void tst_QContactManager::batch()
     QVERIFY(cm->saveContacts(&contacts, &errorMap));
     QVERIFY(errorMap.count() == 0);
     QVERIFY(cm->error() == QContactManager::NoError);
-    
+
     // Save and remove a fourth contact. Store the id.
     a.setId(QContactId());
     QVERIFY(cm->saveContact(&a));
@@ -2076,14 +2076,14 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCM.count(), 0);
 
     QScopedPointer<QContactManager> m2(QContactManager::fromUri(uri));
-    
-    // During construction SIM backend (m2) will try writing contacts with 
+
+    // During construction SIM backend (m2) will try writing contacts with
     // nickname, email and additional number to find out if the SIM card
     // will support these fields. The other backend (m1) will then receive
     // signals about that. These need to be caught so they don't interfere
     // with the tests. (This trial and error method is used because existing
     // API for checking the availability of these fields is not public.)
-	// NOTE: This applies only to pre 10.1 platforms (S60 3.1, 3.2, ect.)
+    // NOTE: This applies only to pre 10.1 platforms (S60 3.1, 3.2, ect.)
     if (uri.contains("symbiansim")) {
         QTest::qWait(0);
         spyCA.clear();
@@ -2349,7 +2349,7 @@ void tst_QContactManager::detailOrders()
     //phone numbers
 
     QContactPhoneNumber number1, number2, number3;
-    
+
     number1.setNumber("11111111");
     number1.setContexts(QContactPhoneNumber::ContextHome);
 
@@ -2365,13 +2365,13 @@ void tst_QContactManager::detailOrders()
 
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
-    
+
     QList<QContactDetail> details = a.details(QContactPhoneNumber::Type);
     QVERIFY(details.count() == 3);
     QVERIFY(details.at(0).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextHome);
     QVERIFY(details.at(1).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextWork);
     QVERIFY(details.at(2).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextOther);
-    
+
     number2 = details.at(1);
     QVERIFY(a.removeDetail(&number2));
     QVERIFY(cm->saveContact(&a));
@@ -2384,7 +2384,7 @@ void tst_QContactManager::detailOrders()
     a.saveDetail(&number2);
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
-    
+
     details = a.details(QContactPhoneNumber::Type);
     QVERIFY(details.count() == 3);
     QVERIFY(details.at(0).value(QContactPhoneNumber::FieldContext) == QContactPhoneNumber::ContextHome);
@@ -2393,7 +2393,7 @@ void tst_QContactManager::detailOrders()
 
     //addresses
     QContactAddress address1, address2, address3;
-    
+
     address1.setStreet("Brandl St");
     address1.setRegion("Brisbane");
     address3 = address2 = address1;
@@ -2445,7 +2445,7 @@ void tst_QContactManager::detailOrders()
 
     QVERIFY(cm->saveContact(&a));
     a = cm->contact(a.id());
-    
+
     details = a.details(QContactEmailAddress::Type);
     QVERIFY(details.count() == 1);
     // Detail keys for the moment are not persistent through an contact save / fetch
@@ -2579,11 +2579,11 @@ void tst_QContactManager::relationships()
     }
 
     // Verify that we have relationship types. If there are none then the manager
-    // is saying it supports relationships but does not actually implement any 
+    // is saying it supports relationships but does not actually implement any
     // relationship type.
     QVERIFY(!availableRelationshipTypes.isEmpty());
 
-    // Some backends (eg. symbian) require that when type is "HasMember" 
+    // Some backends (eg. symbian) require that when type is "HasMember"
     // then "first" contact must be a group.
     if (availableRelationshipTypes.at(0) == QContactRelationship::HasMember()) {
         cm->removeContact(source.id());
@@ -2692,9 +2692,9 @@ void tst_QContactManager::relationships()
     if (availableRelationshipTypes.count() > 1) {
         QVERIFY(source.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::Second).contains(dest3));
         QVERIFY(source.relatedContacts(availableRelationshipTypes.at(1), QContactRelationship::First).isEmpty());
-        
+
         QVERIFY(dest2.relationships(availableRelationshipTypes.at(1)).isEmpty());
-        
+
         QVERIFY(!dest3.relationships(availableRelationshipTypes.at(0)).contains(customRelationshipTwo));
         QVERIFY(dest3.relationships(availableRelationshipTypes.at(1)).contains(customRelationshipTwo));
         QVERIFY(!dest3.relationships(availableRelationshipTypes.at(1)).contains(customRelationshipOne));
@@ -2723,7 +2723,7 @@ void tst_QContactManager::relationships()
     QContactRelationship br1, br2, br3;
     br1.setFirst(source);
     br1.setSecond(dest2);
-    br1.setRelationshipType(availableRelationshipTypes.at(0));    
+    br1.setRelationshipType(availableRelationshipTypes.at(0));
     br2.setFirst(source);
     br2.setSecond(dest3);
     br2.setRelationshipType(availableRelationshipTypes.at(0));
@@ -2745,7 +2745,7 @@ void tst_QContactManager::relationships()
     QVERIFY(batchRetrieve.contains(br1));
     QVERIFY(batchRetrieve.contains(br2));
     QVERIFY(batchRetrieve.contains(br3));
-    
+
     // remove a single relationship
     QVERIFY(cm->removeRelationship(br3));
     batchRetrieve = cm->relationships(source, QContactRelationship::First);

@@ -154,7 +154,7 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     connect(this, SIGNAL(filterChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
-    
+
     //import vcard
     connect(&d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
     connect(&d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(contactsExported(QVersitWriter::State)));
@@ -168,7 +168,7 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
 QString QDeclarativeContactModel::manager() const
 {
     if (d->m_manager)
-    	return d->m_manager->managerName();
+        return d->m_manager->managerName();
     return QString();
 }
 void QDeclarativeContactModel::setManager(const QString& managerName)

@@ -174,9 +174,9 @@ public:
     Through the \c item role can access any data provided by the OrganizerItem element.
 
 
-    \note Both the \c startPeriod and \c endPeriod are set by default to the current time (when the OrganizerModel was created). 
-     In most cases, both (or at least one) of the startPeriod and endPeriod should be set; otherwise, the OrganizerModel will contain 
-     zero items because the \c startPeriod and \c endPeriod are the same value. For example, if only \c endPeriod is provided, 
+    \note Both the \c startPeriod and \c endPeriod are set by default to the current time (when the OrganizerModel was created).
+     In most cases, both (or at least one) of the startPeriod and endPeriod should be set; otherwise, the OrganizerModel will contain
+     zero items because the \c startPeriod and \c endPeriod are the same value. For example, if only \c endPeriod is provided,
      the OrganizerModel will contain all items from now (the time of the OrganizerModel's creation) to the \c endPeriod time.
 
     \sa OrganizerItem, {QOrganizerManager}

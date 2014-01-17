@@ -110,7 +110,7 @@ public:
     bool cancelRequest(QContactAbstractRequest *req);
     bool waitForRequestProgress(QContactAbstractRequest* req, int msecs);
     bool waitForRequestFinished(QContactAbstractRequest* req, int msecs);
-  signals:    
+  signals:
     void requestReceived(QContactAbstractRequest* req);
   private:
     bool doSyncRequest(QContactAbstractRequest* req, int msecs) const;

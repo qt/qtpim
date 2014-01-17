@@ -116,7 +116,7 @@ public:
     void setStorageLocations(int storageLocations);
 
     QStringList availableManagers() const;
-    
+
     QString error() const;
 
     QDeclarativeContactFilter* filter() const;

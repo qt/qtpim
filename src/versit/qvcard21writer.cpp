@@ -207,7 +207,7 @@ bool typeValueLessThan(const QString& a, const QString& b) {
     parsers may ignore everything after the first TYPE */
 void sortTypeValues(QStringList* values)
 {
-    qSort(values->begin(), values->end(), typeValueLessThan);
+    std::sort(values->begin(), values->end(), typeValueLessThan);
 }
 
 /*!

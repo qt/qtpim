@@ -100,7 +100,7 @@ void QVersitContactPluginLoader::loadPlugins() {
                 mContactHandlerFactories.append(contactPlugin);
             }
         }
-        qSort(mContactHandlerFactories.begin(), mContactHandlerFactories.end(), factoryLessThan);
+        std::sort(mContactHandlerFactories.begin(), mContactHandlerFactories.end(), factoryLessThan);
     }
 }
 

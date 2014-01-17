@@ -1501,7 +1501,7 @@ void QContactManagerEngine::addSorted(QList<QContact>* sorted, const QContact& t
 {
     if (sortOrders.count() > 0) {
         ContactLessThan lessThan(&sortOrders);
-        QList<QContact>::iterator it(qUpperBound(sorted->begin(), sorted->end(), toAdd, lessThan));
+        QList<QContact>::iterator it(std::upper_bound(sorted->begin(), sorted->end(), toAdd, lessThan));
         sorted->insert(it, toAdd);
     } else {
         // no sort order? just add it to the end
@@ -1517,7 +1517,7 @@ QList<QContactId> QContactManagerEngine::sortContacts(const QList<QContact>& cs,
     QList<QContact> sortedContacts = cs;
     if (!sortOrders.isEmpty()) {
         ContactLessThan lessThan(&sortOrders);
-        qStableSort(sortedContacts.begin(), sortedContacts.end(), lessThan);
+        std::stable_sort(sortedContacts.begin(), sortedContacts.end(), lessThan);
     }
 
     foreach(const QContact& c, sortedContacts) {

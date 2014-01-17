@@ -108,7 +108,7 @@ void QVersitOrganizerPluginLoader::loadPlugins() {
                 }
             }
         }
-        qSort(mOrganizerHandlerFactories.begin(), mOrganizerHandlerFactories.end(), factoryLessThan);
+        std::sort(mOrganizerHandlerFactories.begin(), mOrganizerHandlerFactories.end(), factoryLessThan);
     }
 }
 

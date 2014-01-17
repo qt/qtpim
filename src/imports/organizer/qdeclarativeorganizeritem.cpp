@@ -929,6 +929,8 @@ QDeclarativeOrganizerItemRecurrence *QDeclarativeOrganizerEvent::recurrence()
 
     QDeclarativeOrganizerItemRecurrence *detail = new QDeclarativeOrganizerItemRecurrence;
     m_details.append(detail);
+    m_modified = true;
+    emit valueChanged();
     return detail;
 }
 
@@ -1611,6 +1613,8 @@ QDeclarativeOrganizerItemRecurrence* QDeclarativeOrganizerTodo::recurrence()
 
     QDeclarativeOrganizerItemRecurrence *detail = new QDeclarativeOrganizerItemRecurrence;
     m_details.append(detail);
+    m_modified = true;
+    emit valueChanged();
     return detail;
 }
 

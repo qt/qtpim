@@ -1125,10 +1125,7 @@ bool QOrganizerManagerEngine::itemLessThan(const QOrganizerItem& a, const QOrgan
  */
 int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganizerItem& b, const QList<QOrganizerItemSortOrder>& sortOrders)
 {
-    QList<QOrganizerItemSortOrder> copy = sortOrders;
-    while (copy.size()) {
-        // retrieve the next sort order in the list
-        QOrganizerItemSortOrder sortOrder = copy.takeFirst();
+    foreach (const QOrganizerItemSortOrder &sortOrder, sortOrders) {
         if (!sortOrder.isValid())
             break;
 
@@ -1165,6 +1162,22 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
     return 0; // or according to id? return (a.id() < b.id() ? -1 : 1);
 }
 
+/*!
+    A functor that returns true iff \a a is less than \a b, according to
+    \a sortOrders passed in to the ctor.
+*/
+class OrganizerItemLessThan
+{
+    const QList<QOrganizerItemSortOrder> &m_sortOrders;
+
+public:
+    inline OrganizerItemLessThan(const QList<QOrganizerItemSortOrder> &sortOrders)
+        : m_sortOrders(sortOrders)
+    {}
+
+    inline bool operator()(const QOrganizerItem &a, const QOrganizerItem &b) const
+    { return QOrganizerManagerEngine::compareItem(a, b, m_sortOrders) < 0; }
+};
 
 /*!
     Insert \a toAdd to the \a sorted list, according to the provided \a sortOrders. The index where \a toAdd is inserted
@@ -1174,20 +1187,13 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
  */
 int QOrganizerManagerEngine::addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders)
 {
-    if (sortOrders.count() > 0) {
-        for (int i = 0; i < sorted->size(); ++i) {
-            // check to see if the new item should be inserted here
-            int comparison = compareItem(sorted->at(i), toAdd, sortOrders);
-            if (comparison > 0) {
-                sorted->insert(i, toAdd);
-                return i;
-            }
-        }
-    }
-
-    // hasn't been inserted yet?  append to the list.
-    sorted->append(toAdd);
-    return sorted->size() - 1;
+    QList<QOrganizerItem>::iterator it;
+    if (sortOrders.count() > 0)
+        it = std::upper_bound(sorted->begin(), sorted->end(), toAdd, OrganizerItemLessThan(sortOrders));
+    else
+        it = sorted->end(); // no sort order? just add it to the end
+    it = sorted->insert(it, toAdd);
+    return it - sorted->begin();
 }
 
 /*!

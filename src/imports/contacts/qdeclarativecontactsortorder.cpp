@@ -72,17 +72,17 @@ QDeclarativeContactSortOrder::QDeclarativeContactSortOrder(QObject* parent)
   */
 void QDeclarativeContactSortOrder::setDetail(const int detailType)
 {
-    if (m_detail != detailType) {
-        m_detail = detailType;
+    if (detailType != static_cast<QDeclarativeContactDetail::DetailType>(m_sortOrder.detailType())) {
+        m_sortOrder.setDetailType(static_cast<QContactDetail::DetailType>(detailType), m_sortOrder.detailField());
         emit sortOrderChanged();
     }
-
 }
 
 int QDeclarativeContactSortOrder::detail() const
 {
-    return m_detail;
+    return static_cast<QDeclarativeContactDetail::DetailType>(m_sortOrder.detailType());
 }
+
 /*!
   \qmlproperty int SortOrder::field
 
@@ -91,15 +91,15 @@ int QDeclarativeContactSortOrder::detail() const
   */
 void QDeclarativeContactSortOrder::setField(const int fieldType)
 {
-    if (m_field != fieldType) {
-        m_field = fieldType;
+    if (fieldType != m_sortOrder.detailField()) {
+        m_sortOrder.setDetailType(m_sortOrder.detailType(), fieldType);
         emit sortOrderChanged();
     }
 }
 
 int QDeclarativeContactSortOrder::field() const
 {
-    return m_field;
+    return m_sortOrder.detailField();
 }
 
 /*!
@@ -163,22 +163,14 @@ void QDeclarativeContactSortOrder::setCaseSensitivity(Qt::CaseSensitivity sensit
     }
 }
 
-void QDeclarativeContactSortOrder::componentComplete()
-{
-    setSortOrder(sortOrder());
-}
-
 QContactSortOrder QDeclarativeContactSortOrder::sortOrder()
 {
-    m_sortOrder.setDetailType(static_cast<QContactDetail::DetailType>(m_detail), m_field);
     return m_sortOrder;
 }
 
 void QDeclarativeContactSortOrder::setSortOrder(const QContactSortOrder& sortOrder)
 {
     m_sortOrder = sortOrder;
-    m_field = sortOrder.detailField();
-    m_detail = sortOrder.detailType();
     emit sortOrderChanged();
 }
 

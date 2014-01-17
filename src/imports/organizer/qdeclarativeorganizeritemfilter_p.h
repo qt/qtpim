@@ -177,18 +177,13 @@ private:
 };
 
 
-class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
+class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeOrganizerItemDetail *detail READ detail WRITE setDetail NOTIFY valueChanged)
-    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
-
-    // inherited from QQmlParserStatus
-    void classBegin();
-    void componentComplete();
 
     QDeclarativeOrganizerItemDetail *detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail *detail);
@@ -200,29 +195,21 @@ signals:
     void valueChanged();
 
 private:
-    void setDetail();
-
     QDeclarativeOrganizerItemDetail *m_detail;
-    bool m_componentCompleted;
     QOrganizerItemDetailFilter d;
 };
 
 
-class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
+class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
-    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent = 0);
-
-    // inherited from QQmlParserStatus
-    void classBegin();
-    void componentComplete();
 
     QDeclarativeOrganizerItemDetail::DetailType detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
@@ -243,16 +230,11 @@ signals:
     void valueChanged();
 
 private:
-    void setDetail();
-
-    QDeclarativeOrganizerItemDetail::DetailType m_detail;
-    int m_field;
-    bool m_componentCompleted;
     QOrganizerItemDetailFieldFilter d;
 };
 
 
-class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter, public QQmlParserStatus
+class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
     Q_ENUMS(RangeFlag)
@@ -263,7 +245,6 @@ class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerI
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
-    Q_INTERFACES(QQmlParserStatus)
 
 public:
     enum RangeFlag {
@@ -275,10 +256,6 @@ public:
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
     QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = 0);
-
-    // inherited from QQmlParserStatus
-    void classBegin();
-    void componentComplete();
 
     QDeclarativeOrganizerItemDetail::DetailType detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
@@ -305,11 +282,6 @@ signals:
     void valueChanged();
 
 private:
-    void setDetail();
-
-    QDeclarativeOrganizerItemDetail::DetailType m_detail;
-    int m_field;
-    bool m_componentCompleted;
     QOrganizerItemDetailRangeFilter d;
 
 };

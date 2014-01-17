@@ -414,25 +414,9 @@ QOrganizerItemFilter QDeclarativeOrganizerItemCollectionFilter::filter() const
  */
 QDeclarativeOrganizerItemDetailFilter::QDeclarativeOrganizerItemDetailFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(0), m_componentCompleted(false)
+    , m_detail(0)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFilter::classBegin()
-{
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFilter::componentComplete()
-{
-    setDetail();
-    m_componentCompleted = true;
 }
 
 /*!
@@ -449,8 +433,10 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemD
 {
     if (m_detail != detail) {
         m_detail = detail;
-        if (m_componentCompleted)
-            setDetail();
+        if (m_detail && m_detail->detail() != d.detail()) {
+            d.setDetail(m_detail->detail());
+            emit valueChanged();
+        }
     }
 }
 
@@ -461,17 +447,6 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail(QDeclarativeOrganizerItemD
 QOrganizerItemFilter QDeclarativeOrganizerItemDetailFilter::filter() const
 {
     return d;
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFilter::setDetail()
-{
-    if (m_detail) {
-        d.setDetail(m_detail->detail());
-        emit valueChanged();
-    }
 }
 
 
@@ -523,27 +498,8 @@ void QDeclarativeOrganizerItemDetailFilter::setDetail()
  */
 QDeclarativeOrganizerItemDetailFieldFilter::QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
-    , m_field(-1)
-    , m_componentCompleted(false)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFieldFilter::classBegin()
-{
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFieldFilter::componentComplete()
-{
-    setDetail();
-    m_componentCompleted = true;
 }
 
 /*!
@@ -554,15 +510,14 @@ void QDeclarativeOrganizerItemDetailFieldFilter::componentComplete()
   */
 QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailFieldFilter::detail() const
 {
-    return m_detail;
+    return static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType());
 }
 
 void QDeclarativeOrganizerItemDetailFieldFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
-    if (m_detail != detail) {
-        m_detail = detail;
-        if (m_componentCompleted)
-            setDetail();
+    if (detail != static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType())) {
+        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(detail), d.detailField());
+        emit valueChanged();
     }
 }
 
@@ -578,15 +533,14 @@ void QDeclarativeOrganizerItemDetailFieldFilter::setDetail(QDeclarativeOrganizer
   */
 int QDeclarativeOrganizerItemDetailFieldFilter::field() const
 {
-    return m_field;
+    return d.detailField();
 }
 
 void QDeclarativeOrganizerItemDetailFieldFilter::setField(int field)
 {
-    if (field != m_field) {
-        m_field = field;
-        if (m_componentCompleted)
-            setDetail();
+    if (field != d.detailField()) {
+        d.setDetail(d.detailType(), field);
+        emit valueChanged();
     }
 }
 
@@ -651,15 +605,6 @@ QOrganizerItemFilter QDeclarativeOrganizerItemDetailFieldFilter::filter() const
     return d;
 }
 
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailFieldFilter::setDetail()
-{
-    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
-    emit valueChanged();
-}
-
 
 /*!
     \qmltype DetailRangeFilter
@@ -681,27 +626,8 @@ void QDeclarativeOrganizerItemDetailFieldFilter::setDetail()
  */
 QDeclarativeOrganizerItemDetailRangeFilter::QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent)
     : QDeclarativeOrganizerItemFilter(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Undefined)
-    , m_field(-1)
-    , m_componentCompleted(false)
 {
     connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailRangeFilter::classBegin()
-{
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
-{
-    setDetail();
-    m_componentCompleted = true;
 }
 
 /*!
@@ -712,15 +638,14 @@ void QDeclarativeOrganizerItemDetailRangeFilter::componentComplete()
   */
 QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemDetailRangeFilter::detail() const
 {
-    return m_detail;
+    return static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType());
 }
 
 void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
-    if (m_detail != detail) {
-        m_detail = detail;
-        if (m_componentCompleted)
-            setDetail();
+    if (detail != static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType())) {
+        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(detail), d.detailField());
+        emit valueChanged();
     }
 }
 
@@ -736,16 +661,14 @@ void QDeclarativeOrganizerItemDetailRangeFilter::setDetail(QDeclarativeOrganizer
   */
 int QDeclarativeOrganizerItemDetailRangeFilter::field() const
 {
-    return m_field;
+    return d.detailField();
 }
 
 void QDeclarativeOrganizerItemDetailRangeFilter::setField(int field)
 {
-    if (field != m_field || m_componentCompleted) {
-        m_field = field;
-        if (m_componentCompleted)
-            setDetail();
-        emit filterChanged();
+    if (field != d.detailField()) {
+        d.setDetail(d.detailType(), field);
+        emit valueChanged();
     }
 }
 
@@ -842,15 +765,6 @@ QDeclarativeOrganizerItemDetailRangeFilter::RangeFlags QDeclarativeOrganizerItem
 QOrganizerItemFilter QDeclarativeOrganizerItemDetailRangeFilter::filter() const
 {
     return d;
-}
-
-/*!
-    \internal
- */
-void QDeclarativeOrganizerItemDetailRangeFilter::setDetail()
-{
-    d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
-    emit valueChanged();
 }
 
 

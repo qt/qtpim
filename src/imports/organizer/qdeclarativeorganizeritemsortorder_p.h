@@ -92,8 +92,6 @@ Q_SIGNALS:
     void sortOrderChanged();
 
 private:
-    QDeclarativeOrganizerItemDetail::DetailType m_detail;
-    int m_field;
     QOrganizerItemSortOrder d;
 };
 

@@ -51,7 +51,7 @@ QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 
-class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, public QQmlParserStatus
+class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeContactDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
@@ -61,7 +61,6 @@ class QDeclarativeContactDetailRangeFilter : public QDeclarativeContactFilter, p
     Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
     Q_FLAGS(RangeFlags)
-    Q_INTERFACES(QQmlParserStatus)
 public:
     enum RangeFlag {
         IncludeLower = QContactDetailRangeFilter::IncludeLower,
@@ -72,41 +71,35 @@ public:
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
     QDeclarativeContactDetailRangeFilter(QObject* parent = 0)
-        :QDeclarativeContactFilter(parent),
-          m_componentCompleted(false)
+        : QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
     }
 
-    //from QQmlParserStatus
-    void classBegin() {}
-    void componentComplete()
-    {
-        m_componentCompleted = true;
-    }
-
     void setDetail(QDeclarativeContactDetail::DetailType detail)
     {
-        if (m_detail != detail) {
-            m_detail = detail;
-         }
+        if (detail != static_cast<QDeclarativeContactDetail::DetailType>(d.detailType())) {
+            d.setDetailType(static_cast<QContactDetail::DetailType>(detail), d.detailField());
+            emit valueChanged();
+        }
     }
 
     QDeclarativeContactDetail::DetailType detail() const
     {
-        return m_detail;
+        return static_cast<QDeclarativeContactDetail::DetailType>(d.detailType());
     }
 
     void setField(int field)
     {
-        if (field != m_field) {
-            m_field = field;
+        if (field != d.detailField()) {
+            d.setDetailType(d.detailType(), field);
+            emit valueChanged();
         }
     }
 
     int field() const
     {
-        return m_field;
+        return d.detailField();
     }
 
     QDeclarativeContactFilter::MatchFlags matchFlags() const
@@ -174,9 +167,6 @@ signals:
 
 
 private:
-    bool m_componentCompleted;
-    int m_field;
-    QDeclarativeContactDetail::DetailType m_detail;
     QContactDetailRangeFilter d;
 };
 

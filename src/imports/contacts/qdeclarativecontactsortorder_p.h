@@ -52,7 +52,7 @@ QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 
-class QDeclarativeContactSortOrder :public QObject, public QQmlParserStatus
+class QDeclarativeContactSortOrder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int detail READ detail WRITE setDetail NOTIFY sortOrderChanged)
@@ -61,7 +61,6 @@ class QDeclarativeContactSortOrder :public QObject, public QQmlParserStatus
     Q_PROPERTY(BlankPolicy blankPolicy READ blankPolicy WRITE setBlankPolicy NOTIFY sortOrderChanged)
     Q_PROPERTY(Qt::CaseSensitivity caseSensitivity READ caseSensitivity WRITE setCaseSensitivity NOTIFY sortOrderChanged)
     Q_ENUMS(BlankPolicy)
-    Q_INTERFACES(QQmlParserStatus)
 public:
 
     enum BlankPolicy {
@@ -80,10 +79,6 @@ public:
 
     int field() const;
 
-    //from QQmlParserStatus
-    void classBegin() {}
-    void componentComplete();
-
     BlankPolicy blankPolicy() const;
     void setBlankPolicy(BlankPolicy blankPolicy);
     Qt::SortOrder direction() const;
@@ -96,8 +91,6 @@ public:
 signals:
     void sortOrderChanged();
 private:
-    int m_field;
-    int m_detail;
     QContactSortOrder m_sortOrder;
 };
 

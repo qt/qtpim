@@ -54,7 +54,6 @@ QT_BEGIN_NAMESPACE
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)
     : QObject(parent)
-    , m_detail(QDeclarativeOrganizerItemDetail::Undefined), m_field(-1)
 {
 }
 
@@ -72,16 +71,15 @@ QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *
  */
 void QDeclarativeOrganizerItemSortOrder::setDetail(QDeclarativeOrganizerItemDetail::DetailType detail)
 {
-    if (m_detail != detail) {
-        m_detail = detail;
-        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
+    if (detail != static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType())) {
+        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(detail), d.detailField());
         emit sortOrderChanged();
     }
 }
 
 QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemSortOrder::detail() const
 {
-    return m_detail;
+    return static_cast<QDeclarativeOrganizerItemDetail::DetailType>(d.detailType());
 }
 
 /*!
@@ -96,16 +94,15 @@ QDeclarativeOrganizerItemDetail::DetailType QDeclarativeOrganizerItemSortOrder::
  */
 void QDeclarativeOrganizerItemSortOrder::setField(int field)
 {
-    if (field != m_field) {
-        m_field = field;
-        d.setDetail(static_cast<QOrganizerItemDetail::DetailType>(m_detail), m_field);
+    if (field != d.detailField()) {
+        d.setDetail(d.detailType(), field);
         emit sortOrderChanged();
     }
 }
 
 int QDeclarativeOrganizerItemSortOrder::field() const
 {
-    return m_field;
+    return d.detailField();
 }
 
 /*!

@@ -107,7 +107,13 @@ void QDeclarativeOrganizerRecurrenceRule::setLimit(const QVariant &value)
             m_rule.clearLimit();
             emit recurrenceRuleChanged();
         }
-    } else if (value.type() == QVariant::Date || value.type() == QVariant::DateTime) {
+    } else if (value.type() == QVariant::DateTime) {
+        QDate v = value.toDateTime().toUTC().date();
+        if (v != m_rule.limitDate()) {
+            m_rule.setLimit(v);
+            emit recurrenceRuleChanged();
+        }
+    } else if (value.type() == QVariant::Date) {
         QDate v = value.value<QDate>();
         if (v != m_rule.limitDate()) {
             m_rule.setLimit(v);

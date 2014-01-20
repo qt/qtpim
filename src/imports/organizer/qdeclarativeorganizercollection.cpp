@@ -110,6 +110,21 @@ void QDeclarativeOrganizerCollection::setDescription(const QString &description)
 }
 
 /*!
+    \qmlproperty color Collection::secondaryColor
+
+    This property holds the secondary color meta data of a collection.
+ */
+QColor QDeclarativeOrganizerCollection::secondaryColor() const
+{
+    return metaData(QOrganizerCollection::KeySecondaryColor).value<QColor>();
+}
+
+void QDeclarativeOrganizerCollection::setSecondaryColor(const QColor &secondaryColor)
+{
+    setMetaData(QOrganizerCollection::KeySecondaryColor, secondaryColor);
+}
+
+/*!
     \qmlproperty color Collection::color
 
     This property holds the color meta data of a collection.
@@ -148,6 +163,7 @@ void QDeclarativeOrganizerCollection::setImage(const QUrl &url)
     \li Collection.KeyName
     \li Collection.KeyDescription
     \li Collection.KeyColor
+    \li Collection.KeySecondaryColor
     \li Collection.KeyImage
     \li Collection.KeyExtended
     \endlist

@@ -82,6 +82,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
     \value KeyName         This metadata describes the name of the collection.
     \value KeyDescription  This metadata gives a description of the collection.
     \value KeyColor        This metadata describes the color of the collection.
+    \value KeySecondaryColor  This metadata describes the secondary color of the collection.
     \value KeyImage        This metadata describes the image of the collection.
     \value KeyExtended     This is an extened metadata, which is stored as a QVariantMap.
  */

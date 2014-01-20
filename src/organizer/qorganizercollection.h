@@ -63,6 +63,7 @@ public:
         KeyName = 0,
         KeyDescription,
         KeyColor,
+        KeySecondaryColor,
         KeyImage,
         KeyExtended
     };

@@ -63,6 +63,7 @@ class QDeclarativeOrganizerCollection : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY valueChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY valueChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY valueChanged)
+    Q_PROPERTY(QColor secondaryColor READ secondaryColor WRITE setSecondaryColor NOTIFY valueChanged)
     Q_PROPERTY(QUrl image READ image WRITE setImage NOTIFY valueChanged)
 
 public:
@@ -70,6 +71,7 @@ public:
         KeyName = QOrganizerCollection::KeyName,
         KeyDescription = QOrganizerCollection::KeyDescription,
         KeyColor = QOrganizerCollection::KeyColor,
+        KeySecondaryColor = QOrganizerCollection::KeySecondaryColor,
         KeyImage = QOrganizerCollection::KeyImage,
         KeyExtended = QOrganizerCollection::KeyExtended
     };
@@ -87,6 +89,9 @@ public:
 
     QColor color() const;
     void setColor(const QColor &color);
+
+    QColor secondaryColor() const;
+    void setSecondaryColor(const QColor &secondaryColor);
 
     QUrl image() const;
     void setImage(const QUrl &url);

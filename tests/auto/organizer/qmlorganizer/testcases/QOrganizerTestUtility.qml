@@ -82,9 +82,15 @@ TestCase {
         modelChanged = true;
     }
 
+    function clearModelChanged() {
+        modelChanged = false;
+        organizerChangedSpy.clear()
+    }
+
     function waitModelChanged(waitTimeCounter) {
-        // Something funny with the SignalSpy. It does not catch always the modelChanged-signal.
-        // Therefore having the own temporary "SignalSpy" here..
+        if (modelChanged)
+            return;
+
         var counter = 0;
         modelChanged = false;
         while (counter < waitTimeCounter) {
@@ -142,27 +148,51 @@ TestCase {
 
     function getManagerList() {
 
+        var testManagers = ["memory", "jsondb"];
+
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"
                 , testUtility);
+
         var managerlist = [];
-        for (var i = 0; i < model.availableManagers.length; i++) {
-            managerlist.push(model.availableManagers[i]);
+        for (var i in testManagers) {
+            if (model.availableManagers.indexOf(testManagers[i]) != -1) {
+                managerlist.push(testManagers[i]);
+            }
         }
-
-        var idx = managerlist.indexOf("invalid"); // Find the index
-        if (idx != -1)
-            managerlist.splice(idx, 1); // Remove it if really found!
-
-        idx = managerlist.indexOf("skeleton"); // Find the index
-        if (idx != -1)
-            managerlist.splice(idx, 1); // Remove it if really found!
 
         model.autoUpdate = false;
         model.destroy();
 
         return managerlist;
+    }
 
+    function getManagerListData() {
+        return utility.getManagerList().map(function(x) {
+            return {tag: x+" backend", managerToBeTested: x}
+        })
+    }
+
+    function createModel(managerName) {
+        var model = Qt.createQmlObject(
+              "import QtOrganizer 5.0;"
+            + "OrganizerModel {"
+            + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
+            + "   startPeriod:'2009-01-01';"
+            + "   endPeriod:'2012-12-31';"
+            + "   autoUpdate:true; }"
+            , testUtility);
+        init(model);
+        waitModelChange();
+        empty_calendar();
+        return model;
+    }
+
+    function create_spy(targetObj, signalName) {
+        var spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", testUtility);
+        spy.target = targetObj;
+        spy.signalName = signalName;
+        return spy;
     }
 
     function empty_calendar(log) {
@@ -191,19 +221,12 @@ TestCase {
             console.log("items  :" + removeIds);
         }
 
-        organizerChangedSpy.clear()
         if (removeIds.length > 0) {
+            clearModelChanged()
             __model.removeItems(removeIds)
-            // Something funny with the SignalSpy. It does not catch always the modelChanged-signal.
-            //organizerChangedSpy.wait()
             if (!__model.autoUpdate)
                 __model.update()
-            else
-                waitModelChanged(500);
-
-            // there might be more than one modelChanged signal, so waiting
-            // for a while to get them all
-            wait(500);
+            waitModelChanged(500);
         }
         compare(__model.items.length, 0)
         empty_calendar_collections(log);
@@ -221,7 +244,6 @@ TestCase {
             }
             __model.autoUpdate = setAutoUpdate;
             __model.update();
-            wait(300);
         }
     }
 
@@ -361,5 +383,9 @@ TestCase {
             __model.saveItem(item);
             organizerChangedSpy.wait();
         }
+    }
+
+    function toUTCMidnight(date) {
+        return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
     }
 }

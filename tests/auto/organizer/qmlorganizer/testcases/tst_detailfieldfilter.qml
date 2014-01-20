@@ -55,32 +55,6 @@ TestCase {
     }
 
     // UTILITIES
-
-    // There is currently some problem with static
-    // SignalSpy and changing the target (QTBUG-21083).
-    // As a workaround recreating the spy dynamicly.
-    function create_spy(targetObj, signalName) {
-        var spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", detailFieldFilterTests);
-        spy.target = targetObj;
-        spy.signalName = signalName;
-        return spy;
-    }
-
-    function createModel(managerName) {
-        var model = Qt.createQmlObject(
-              "import QtOrganizer 5.0;"
-            + "OrganizerModel {"
-            + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
-            + "   startPeriod:'2009-01-01';"
-            + "   endPeriod:'2012-12-31';"
-            + "   autoUpdate:true; }"
-            , detailFieldFilterTests);
-        utility.init(model);
-        utility.waitModelChange();
-        utility.empty_calendar();
-        return model;
-    }
-
     function create_testobject(ctorString) {
         var newObject = Qt.createQmlObject(ctorString, detailFieldFilterTests);
         verify(newObject != undefined, 'Object creation failed');
@@ -97,7 +71,7 @@ TestCase {
 
     function addDetailWithoutConvenienceAPI(constructionString) {
         // not all details have convenience API
-        var modelChangedSpy = create_spy(organizerModel, "modelChanged");
+        var modelChangedSpy = utility.create_spy(organizerModel, "modelChanged");
         var detail = create_testobject(constructionString);
         var detailEvent = create_testobject("import QtQuick 2.0\n"
         + "import QtOrganizer 5.0 \n"
@@ -111,7 +85,8 @@ TestCase {
     }
 
     function applyFilter(data) {
-        var filterChangedSpy = create_spy(organizerModel, "filterChanged");
+        var filterChangedSpy = utility.create_spy(organizerModel, "filterChanged");
+        var modelChangedSpy = utility.create_spy(organizerModel, "modelChanged");
         var filter = create_detailFieldFilter();
         filter.detail = data.filterDetail;
         if (data.filterField != undefined)
@@ -124,6 +99,8 @@ TestCase {
         organizerModel.filter = filter;
         filterChangedSpy.wait();
         compare(filterChangedSpy.count, 1);
+        modelChangedSpy.wait(spyWaitDelay)
+        compare(modelChangedSpy.count, 1);
     }
 
     // DETAILFIELDFILTER OWN API
@@ -173,8 +150,8 @@ TestCase {
     }
     function test_detail(data) {
         var detailFieldFilter = create_detailFieldFilter();
-        var valueChangedSpy = create_spy(detailFieldFilter, "valueChanged");
-        var filterChangedSpy = create_spy(detailFieldFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(detailFieldFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(detailFieldFilter, "filterChanged");
         // change
         detailFieldFilter.detail = data.testValue;
         compare(valueChangedSpy.count, 1);
@@ -196,8 +173,8 @@ TestCase {
     }
     function test_field(data) {
         var detailFieldFilter = create_detailFieldFilter();
-        var valueChangedSpy = create_spy(detailFieldFilter, "valueChanged");
-        var filterChangedSpy = create_spy(detailFieldFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(detailFieldFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(detailFieldFilter, "filterChanged");
         // change
         detailFieldFilter.field = data.testValue;
         compare(valueChangedSpy.count, data.testValue == -1 ? 0 : 1);
@@ -223,8 +200,8 @@ TestCase {
     }
     function test_value(data) {
         var detailFieldFilter = create_detailFieldFilter();
-        var valueChangedSpy = create_spy(detailFieldFilter, "valueChanged");
-        var filterChangedSpy = create_spy(detailFieldFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(detailFieldFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(detailFieldFilter, "filterChanged");
         // change
         detailFieldFilter.value = data.testValue;
         compare(valueChangedSpy.count, 1);
@@ -250,8 +227,8 @@ TestCase {
     }
     function test_matchflags_singlekey(data) {
         var detailFieldFilter = create_detailFieldFilter();
-        var valueChangedSpy = create_spy(detailFieldFilter, "valueChanged");
-        var filterChangedSpy = create_spy(detailFieldFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(detailFieldFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(detailFieldFilter, "filterChanged");
 
         var initialKey = detailFieldFilter.matchFlags;
         compare(initialKey, Filter.MatchExactly);
@@ -280,8 +257,8 @@ TestCase {
     }
     function test_matchflags_combinedkey(data) {
         var detailFieldFilter = create_detailFieldFilter();
-        var valueChangedSpy = create_spy(detailFieldFilter, "valueChanged");
-        var filterChangedSpy = create_spy(detailFieldFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(detailFieldFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(detailFieldFilter, "filterChanged");
 
         var initialKey = detailFieldFilter.matchFlags;
         var combinedKey = data.key1 | data.key2;
@@ -528,7 +505,7 @@ TestCase {
 
             var managerToBeTested = managers[i];
             console.log("## Testing plugin: " + managerToBeTested);
-            organizerModel = createModel(managerToBeTested);
+            organizerModel = utility.createModel(managerToBeTested);
 
             addEventsToModel(filterTestItems());
             compare(organizerModel.items.length, filterTestItems().length);
@@ -538,10 +515,6 @@ TestCase {
             }
             if (data.tag != "no filter") {
                 applyFilter(data);
-                wait(spyWaitDelay);
-
-                //console.log("organizerModel.filter: "+ organizerModel.filter.detail + "/" + organizerModel.filter.field + "/" + organizerModel.filter.value)
-                //console.log("filtered amount: " + organizerModel.items.length);
             }
 
             if (managerToBeTested == "jsondb" ) {
@@ -694,7 +667,7 @@ TestCase {
 
             var managerToBeTested = managers[i];
             console.log("## Testing plugin: " + managerToBeTested);
-            organizerModel = createModel(managerToBeTested);
+            organizerModel = utility.createModel(managerToBeTested);
 
             addEventsToModel(matchflagTestItems());
             compare(organizerModel.items.length, matchflagTestItems().length);
@@ -709,22 +682,18 @@ TestCase {
             }
 
             applyFilter(data);
-            wait(spyWaitDelay);
 
-            //console.log("organizerModel.filter: "+ organizerModel.filter.detail + "/" + organizerModel.filter.field + "/" + organizerModel.filter.value + "/" + organizerModel.filter.matchFlags)
-            //console.log("filtered amount: " + organizerModel.items.length);
-            expectFail("Filter set, Comment - MatchStartsWith", "\nNot working before indexing starts to work");
-            expectFail("Filter set, Comment - MatchContains", "\nNot working before indexing starts to work");
-            expectFail("Filter set, Comment - MatchEndsWith", "\nNot working before indexing starts to work");
-            expectFail("Filter set, Tag - MatchContains", "\nNot working before indexing starts to work");
             compare(organizerModel.items.length, data.expectedItemsAmount);
 
             if (data.matchFlagsTighter) {
                 // testing the case where we have had a filter and then were making the filtering rules tighter
-                var filterChangedSpy = create_spy(organizerModel, "filterChanged");
+                var filterChangedSpy = utility.create_spy(organizerModel, "filterChanged");
+                var modelChangedSpy = utility.create_spy(organizerModel, "modelChanged");
                 organizerModel.filter.matchFlags = data.matchFlagsTighter;
                 filterChangedSpy.wait();
-                wait(spyWaitDelay);
+                modelChangedSpy.wait(spyWaitDelay);
+                compare(filterChangedSpy.count, 1);
+                compare(modelChangedSpy.count, 1);
                 compare(organizerModel.items.length, data.expectedItemsAmount - 1);
             }
 
@@ -793,22 +762,15 @@ TestCase {
         console.log();
         //preparations
         // error codes are backend specific, these are tested only for jsondb
-        organizerModel = createModel("jsondb")
+        if (utility.getManagerList().indexOf("jsondb") === -1)
+            skip("Cannot run tests for jsondb backend. No plugin available!");
+        organizerModel = utility.createModel("jsondb")
 
-        var errorChangedSpy = create_spy(organizerModel, "errorChanged");
+        var errorChangedSpy = utility.create_spy(organizerModel, "errorChanged");
         applyFilter(data);
         errorChangedSpy.wait();
-        wait(50);//why needed?
 
         compare(organizerModel.error, "BadArgument");
         organizerModel.destroy();
     }
-
-    function cleanup() {
-        // Sometimes ModelChanged signal is not emitted when creating a model
-        // in beginning of a test case if there's no wait between tests.
-        // TODO: why?
-        wait(10);
-    }
-
 }

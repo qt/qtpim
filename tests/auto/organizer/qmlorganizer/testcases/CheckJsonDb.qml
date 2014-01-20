@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtPim module of the Qt Toolkit.
@@ -39,24 +39,68 @@
 **
 ****************************************************************************/
 
+//TESTED_COMPONENT=src/organizer
+
 import QtQuick 2.0
 import QtTest 1.0
+import QtJsonDb 1.0
 
-TestCase {
+Item {
     name: "A First thing to run"
     id: firstThingie
 
-    Loader {
-        id: checkJsonDb
-        source: "CheckJsonDb.qml"
-        property bool valid: item !== null
-        function check_db() {
-            if (valid) item.check_db()
+    // NOTE: Since Organizer jsondb-backend expects to have User- and System-partitions,
+    // we must ensure they are there before testing.
+
+    signal partitionsCreated
+    property int creationRequestAmount: 0
+
+    Partition {
+        id: systemPartition
+    }
+
+    JsonDbListModel {
+        id: partitionModel
+        query: "[?_type=\"Partition\"]"
+        roleNames: ["name", "_uuid"]
+        partition: systemPartition
+    }
+
+    SignalSpy {
+        id: partitionsCreatedSpy
+        target: firstThingie
+        signalName: "partitionsCreated"
+    }
+
+    function check_db() {
+        var neededPartitions = ["com.nokia.mt.System", "com.nokia.mt.User"];
+        for (var n=0;n<neededPartitions.length;n++) {
+            var found = false;
+            for (var p=0;p<partitionModel.count;p++) {
+                if (partitionModel.get(p, "name") == neededPartitions[n]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                console.log("Partition "+neededPartitions[n]+" not found. Creating it..");
+                systemPartition.create({_type :"Partition", name : neededPartitions[n]}, callback);
+                creationRequestAmount++;
+            }
+        }
+        if (creationRequestAmount) {
+            partitionsCreatedSpy.wait()
         }
     }
 
-    function initTestCase() {
-        checkJsonDb.check_db();
+    function callback(error, meta, response) {
+        if (error) {
+            console.log(response.status+" "+response.message);
+        } else {
+            creationRequestAmount--;
+            if (!creationRequestAmount)
+                partitionsCreated();
+        }
     }
 }
 

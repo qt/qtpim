@@ -57,13 +57,25 @@ TestCase {
     id: test
     name: "OrganizerRecurrenceTests"
 
+    property int spyWaitDelay: 700
+
     property variant fetchedItem
+
+    QOrganizerTestUtility {
+        id: utility
+    }
 
     OrganizerModel {
         id: model
         onItemsFetched : {
             test.fetchedItem = fetchedItems[0]
         }
+    }
+
+    SignalSpy {
+        id: spyManagerChanged
+        signalName: "managerChanged"
+        target: model
     }
 
     SignalSpy {
@@ -78,9 +90,13 @@ TestCase {
         target: model
     }
 
+    function cleanup() {
+        model.manager = ""
+    }
+
     function test_changeTimePeriod_data() {
         return [{
-                managers: ["jsondb", "memory"],
+                managers: utility.getManagerList(),
                 definitions: [
                 {
                     event :
@@ -268,18 +284,15 @@ TestCase {
             model.autoUpdate = true;
             model.startPeriod = new Date('2011-12-01');
             model.endPeriod = new Date('2012-04-30');
-            // wait to make sure the model is updated if the database is not empty
-            wait(1000);
+            spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
             for (j = 0; j < data.definitions.length; j++) {
                 var testEvent = createTestItemFromData(data.definitions[j]);
                 model.saveItem(testEvent);
                 if (data.definitions[j].affectsModel)
-                    modelChangedSpy.wait()
+                    modelChangedSpy.wait(spyWaitDelay)
             }
-            // make sure that all items which are not part of the model get saved
-            wait(1000);
             compareResultDatesToModel(data.results, model);
 
             for (j = 0; j < data.timePeriods.length; j++) {
@@ -287,17 +300,15 @@ TestCase {
                 if (data.timePeriods[j].start !== undefined) {
                     model.startPeriod = data.timePeriods[j].start;
                     if (model.autoUpdate)
-                        modelChangedSpy.wait();
+                        modelChangedSpy.wait(spyWaitDelay);
                 }
                 if (data.timePeriods[j].end !== undefined) {
                     model.endPeriod = data.timePeriods[j].end;
-                    if (model.autoUpdate)
-                        modelChangedSpy.wait();
                 }
                 if (!model.autoUpdate) {
                     model.update();
-                    modelChangedSpy.wait();
                 }
+                modelChangedSpy.wait(spyWaitDelay);
                 compareResultDatesToModel(data.timePeriods[j].results, model);
             }
             model.autoUpdate = true;
@@ -310,7 +321,7 @@ TestCase {
 
     function test_modifyParentItems_data() {
         return [{
-                managers: ["jsondb", "memory"],
+                managers: utility.getManagerList(),
                 definitions: [
                 {
                     event :
@@ -547,14 +558,14 @@ TestCase {
             model.startPeriod = new Date('2011-12-01');
             model.endPeriod = new Date('2012-04-30');
             model.autoUpdate = true;
-            wait(500) // Todo: replace with modelChangedSpy.wait()
+            spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
             for (j = 0; j < data.definitions.length; j++) {
                 var testEvent = createTestItemFromData(data.definitions[j]);
                 model.saveItem(testEvent);
                 if (data.definitions[j].affectsModel)
-                    modelChangedSpy.wait()
+                    modelChangedSpy.wait(spyWaitDelay)
             }
             compareResultDatesToModel(data.results, model);
 
@@ -564,38 +575,38 @@ TestCase {
             // as we make it a recurring event, it will be deleted from the model
             fetchSpy.clear();
             model.fetchItems([model.items[4].itemId]);
-            fetchSpy.wait();
+            fetchSpy.wait(spyWaitDelay);
             var testItem = test.fetchedItem;
             var newRule = createTestRuleFromData(data.modifications.addRule);
             testItem.recurrence.recurrenceRules = [newRule];
             model.saveItem(testItem);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.addRule.results, model);
 
             // modifyRule1, change rule to monthly
             var modRule1 = createTestRuleFromData(data.modifications.modifyRule1);
             testItem.recurrence.recurrenceRules = [modRule1];
             model.saveItem(testItem);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.modifyRule1.results, model);
 
             // modifyRule2, change rule to weekly
             var modRule2 = createTestRuleFromData(data.modifications.modifyRule2);
             testItem.recurrence.recurrenceRules = [modRule2];
             model.saveItem(testItem);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.modifyRule2.results, model);
 
             // removeRule
             testItem.recurrence.recurrenceRules = [];
             model.saveItem(testItem);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.removeRule.results, model);
 
             // clean db
             model.startPeriod = new Date('2011-01-01');
             model.endPeriod = new Date('2012-08-30');
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
         }
@@ -603,7 +614,7 @@ TestCase {
 
     function test_exceptionOccurrences_data() {
         return [{
-                managers: ["jsondb", "memory"],
+                managers: utility.getManagerList(),
                 definitions: [
                 {
                     event :
@@ -901,14 +912,14 @@ TestCase {
             model.startPeriod = new Date('2011-10-01');
             model.endPeriod = new Date('2012-04-30');
             model.autoUpdate = true;
-            wait(500) // Todo: replace with modelChangedSpy.wait()
+            spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
             for (j = 0; j < data.definitions.length; j++) {
                 var testItem = createTestItemFromData(data.definitions[j]);
                 model.saveItem(testItem);
                 if (data.definitions[j].affectsModel)
-                    modelChangedSpy.wait()
+                    modelChangedSpy.wait(spyWaitDelay)
             }
             compareResultDatesToModel(data.results, model);
 
@@ -919,7 +930,7 @@ TestCase {
             var newRule = createTestRuleFromData(data.modifications.addRule);
             testEvent.recurrence.recurrenceRules = [newRule];
             model.saveItem(testEvent);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.addRule.results, model);
 
             // addException, modify generated occurrence and save it
@@ -927,26 +938,26 @@ TestCase {
             xoccurrence.startDateTime = new Date('2012-02-02T15:00:00');
             xoccurrence.endDateTime = new Date('2012-02-02T16:00:00');
             model.saveItem(xoccurrence);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.addException.results, model);
 
             // removeException
             var xoccurrenceRemove = model.items[13];
             model.removeItem(xoccurrenceRemove);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.removeException.results, model);
 
             // addException2, change displayLabel
             var xoccurrence2 = model.items[4];
             xoccurrence2.displayLabel = "modifiedrecevent2";
             model.saveItem(xoccurrence2);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.addException2.results, model);
 
             // removeGeneratedOccurrence
             var occurrenceRemove = model.items[0];
             model.removeItem(occurrenceRemove);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.removeGeneratedOccurrence.results, model);
 
             // removeParent
@@ -955,7 +966,7 @@ TestCase {
             //find out parent id
             var parentId = parentsOccurrence.parentId;
             model.removeItem(parentId);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.removeParent.results, model);
 
             // removeParent2
@@ -964,14 +975,13 @@ TestCase {
             //find out parent id
             var parentId2 = parentsOccurrence2.parentId;
             model.removeItem(parentId2);
-            modelChangedSpy.wait();
+            modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.removeParent2.results, model);
 
             // clean db
             model.startPeriod = new Date('2011-01-01');
             model.endPeriod = new Date('2012-08-30');
-            modelChangedSpy.wait();
-            wait(500);
+            modelChangedSpy.wait(spyWaitDelay);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
         }
@@ -1008,9 +1018,8 @@ TestCase {
         modelChangedSpy.clear()
         if (removeIds.length > 0) {
             model.removeItems(removeIds)
-            modelChangedSpy.wait()
+            modelChangedSpy.wait(spyWaitDelay)
         }
-        wait(500);
         compare(model.items.length, 0)
     }
 

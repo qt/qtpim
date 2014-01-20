@@ -131,7 +131,7 @@ Rectangle {
                 utility.empty_calendar();
                 //------Create and save the detail test------//
                 emailReminderDetail.repetitionCount = -1;
-                event.addDetail(emailReminderDetail);
+                event.setDetail(emailReminderDetail);
                 model.saveItem(event);
                 //Wait for the model to be up-to-date
                 utility.waitModelChange(1);

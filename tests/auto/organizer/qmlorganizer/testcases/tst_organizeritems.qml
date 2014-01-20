@@ -52,18 +52,6 @@ Rectangle {
         id: utility
     }
 
-    OrganizerModel {
-        id:model
-        manager:"qtorganizer:jsondb:id=qml"
-        startPeriod:'2009-01-01'
-        endPeriod:'2012-12-31'
-        autoUpdate:false
-        Component.onCompleted: {
-            model.update();
-            model.autoUpdate = true;
-        }
-    }
-
     Event { id: event }
 
     Event {
@@ -85,7 +73,6 @@ Rectangle {
 
     TestCase {
         name: "OrganizerItemTests"
-        when: model.autoUpdate
         function test_addRemoveEvent() {
             var list = utility.getManagerList();
             if (list.length < 0) {
@@ -95,8 +82,8 @@ Rectangle {
             //Test all manager backends
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
-                var debugFlag = 0;
-                console.log("test_addRemoveEvents test start! :" + managerName);
+                console.log(managerName);
+                var model = utility.createModel(managerName);
 
                 utility.init(model);
                 utility.empty_calendar()

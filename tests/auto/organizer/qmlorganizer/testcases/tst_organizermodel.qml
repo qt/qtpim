@@ -366,14 +366,10 @@ TestCase {
     }
 
     function test_organizermodel_error_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-        ]
+        return utility.getManagerListData();
     }
 
     function test_organizermodel_error(data) {
-        var spyWaitDelay = 200;
         var organizerChangedSpy = utility.create_testobject("import QtTest 1.0; SignalSpy {}", modelTests);
         // Create and check that backend for the tests is available
         var organizerModel = utility.create_testobject("import QtQuick 2.0\n"
@@ -385,15 +381,12 @@ TestCase {
         organizerChangedSpy.signalName = "modelChanged";
         organizerChangedSpy.wait();
         organizerModel.removeCollection(organizerModel.defaultCollection().collectionId);
-        wait(spyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
+        wait(signalWaitTime);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.error, "PermissionsError");
     }
 
     function test_organizermodel_fetchitemsbyid_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-        ]
+        return utility.getManagerListData();
     }
 
     function test_organizermodel_fetchitemsbyid(data) {
@@ -402,7 +395,6 @@ TestCase {
             + "OrganizerModel {\n"
             + "  manager: '" + data.managerToBeTested + "'\n"
             + "}\n", modelTests);
-        wait(500);
 
         compare(organizerModel.fetchItems([]), -1)
 
@@ -478,10 +470,7 @@ TestCase {
     }
 
     function test_organizermodel_fetchitems_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-        ]
+        return utility.getManagerListData();
     }
 
     function test_organizermodel_fetchitems(data) {
@@ -570,7 +559,7 @@ TestCase {
         compare(organizerModel.testFetchedItems.length, 3);
 
         // 5. Filtering
-        var testFilterDisplayLabel = Qt.createQmlObject("import QtOrganizer 5.0; DetailFilter{}", organizerModel)
+        var testFilterDisplayLabel = Qt.createQmlObject("import QtOrganizer 5.0; DetailFieldFilter{}", organizerModel)
         testFilterDisplayLabel.detail = Detail.DisplayLabel
         testFilterDisplayLabel.field = DisplayLabel.FieldLabel
         testFilterDisplayLabel.value = "event2:"
@@ -668,10 +657,7 @@ TestCase {
     }
 
     function test_organizermodel_containsitems_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-        ]
+        return utility.getManagerListData();
     }
 
     function test_organizermodel_containsitems(data) {
@@ -748,10 +734,7 @@ TestCase {
     }
 
     function test_organizermodel_containsitems2_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-        ]
+        return utility.getManagerListData();
     }
 
     function test_organizermodel_containsitems2(data) {
@@ -896,7 +879,7 @@ TestCase {
             modelChangedSpy.signalName = "modelChanged"
 
             // during initialisation only one modelChanged allowed
-            wait(signalWaitTime);
+            modelChangedSpy.wait(signalWaitTime);
             compare(modelChangedSpy.count, 1)
 
             // prepare for rest of cases
@@ -908,7 +891,7 @@ TestCase {
             // after filterchange only one modelChanged allowed
             modelChangedSpy.clear()
             model.filter = filter
-            wait(signalWaitTime);
+            modelChangedSpy.wait(signalWaitTime);
             compare(modelChangedSpy.count, 1)
             compare(model.itemCount, 1)
 
@@ -917,7 +900,7 @@ TestCase {
             modelChangedSpy.clear()
             model.filter = null
             model.update()
-            wait(signalWaitTime);
+            modelChangedSpy.wait(signalWaitTime);
             compare(modelChangedSpy.count, 1)
             compare(model.itemCount, 2)
             utility.empty_calendar()
@@ -1036,6 +1019,9 @@ TestCase {
 
     function test_updateMethodsStartWithAutoupdateFalse() {
 
+        if (utility.getManagerList().indexOf("jsondb") === -1)
+            skip("Cannot run tests for jsondb backend. No plugin available!");
+
         var organizerModel = Qt.createQmlObject(
                 "import QtOrganizer 5.0;"
                 + "OrganizerModel {"
@@ -1081,7 +1067,6 @@ TestCase {
             }
         }
         organizerModel.saveItem(event);
-        wait(signalWaitTime)
 
         // Create collection filter and check that only the item with that collection is visible
         var collectionFilter = Qt.createQmlObject("import QtOrganizer 5.0;CollectionFilter{}", modelTests);

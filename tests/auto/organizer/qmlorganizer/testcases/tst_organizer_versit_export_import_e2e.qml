@@ -54,6 +54,10 @@ TestCase {
     property int importErrorCode
     property string importFileName
 
+    QOrganizerTestUtility {
+        id: utility
+    }
+
     OrganizerModel {
         id: organizerModel
         startPeriod: '2009-01-01'
@@ -87,7 +91,6 @@ TestCase {
     }
 
     function initTestCase() {
-        modelChangedSpy.wait()
     }
 
     function init() {
@@ -120,7 +123,6 @@ TestCase {
         var ids = organizerModel.itemIds()
         if (ids.length > 0) {
             organizerModel.removeItems(ids)
-            wait(200)
         }
         organizerModel.update()
 
@@ -139,7 +141,14 @@ TestCase {
         verify(organizerModel.itemCount === 1, 'Save item check failed.')
     }
 
-    function test_organizerImportExportSignaling() {
+    function test_organizerImportExportSignaling_data() {
+        return utility.getManagerListData();
+    }
+
+    function test_organizerImportExportSignaling(data) {
+
+        organizerModel.manager = data.managerToBeTested
+        modelChangedSpy.wait()
 
         // Save test Event.
         saveTestEvent()
@@ -183,7 +192,13 @@ TestCase {
                 "imported event label different to exported label.")
     }
 
-    function test_overlappingExportEmitsSignalWithError() {
+    function test_overlappingExportEmitsSignalWithError_data() {
+        return utility.getManagerListData();
+    }
+
+    function test_overlappingExportEmitsSignalWithError(data) {
+
+        organizerModel.manager = data.managerToBeTested
 
         // Export items to two ical files which we will use for testing purposes....
         var icalFilePath1 = Qt.resolvedUrl("export_3.ical")
@@ -212,7 +227,13 @@ TestCase {
                 'Exported item was different than expected.')
     }
 
-    function test_overlappingImportEmitsSignalWithError() {
+    function test_overlappingImportEmitsSignalWithError_data() {
+        return utility.getManagerListData();
+    }
+
+    function test_overlappingImportEmitsSignalWithError(data) {
+
+        organizerModel.manager = data.managerToBeTested
 
         // Save test Event.
         saveTestEvent()

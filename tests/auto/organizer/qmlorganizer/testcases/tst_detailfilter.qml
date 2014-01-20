@@ -55,32 +55,6 @@ TestCase {
     }
 
     // UTILITIES
-
-    // There is currently some problem with static
-    // SignalSpy and changing the target (QTBUG-21083).
-    // As a workaround recreating the spy dynamicly.
-    function create_spy(targetObj, signalName) {
-        var spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", detailFilterTests);
-        spy.target = targetObj;
-        spy.signalName = signalName;
-        return spy;
-    }
-
-    function createModel(managerName) {
-        var model = Qt.createQmlObject(
-              "import QtOrganizer 5.0;"
-            + "OrganizerModel {"
-            + "   manager: \"qtorganizer:" + managerName + ":id=qml\";"
-            + "   startPeriod:'2009-01-01';"
-            + "   endPeriod:'2012-12-31';"
-            + "   autoUpdate:true; }"
-            , detailFilterTests);
-        utility.init(model);
-        utility.waitModelChange();
-        utility.empty_calendar();
-        return model;
-    }
-
     function create_testobject(ctorString) {
         var newObject = Qt.createQmlObject(ctorString, detailFilterTests);
         verify(newObject != undefined, 'Object creation failed');
@@ -97,7 +71,7 @@ TestCase {
 
     function addDetailWithoutConvenienceAPI(constructionString) {
         // not all details have convenience API
-        var modelChangedSpy = create_spy(organizerModel, "modelChanged");
+        var modelChangedSpy = utility.create_spy(organizerModel, "modelChanged");
         var detail = create_testobject(constructionString);
         var detailEvent = create_testobject("import QtQuick 2.0\n"
         + "import QtOrganizer 5.0 \n"
@@ -112,13 +86,16 @@ TestCase {
     }
 
     function applyFilter(detailToMatch) {
-        var filterChangedSpy = create_spy(organizerModel, "filterChanged");
+        var filterChangedSpy = utility.create_spy(organizerModel, "filterChanged");
+        var modelChangedSpy = utility.create_spy(organizerModel, "modelChanged");
         var filter = create_detailFilter();
         filter.detail = detailToMatch;
         compare(organizerModel.error, "NoError");
         organizerModel.filter = filter;
         filterChangedSpy.wait();
         compare(filterChangedSpy.count, 1);
+        modelChangedSpy.wait()
+        compare(modelChangedSpy.count, 1);
     }
 
     // DETAILFILTER OWN API
@@ -180,8 +157,8 @@ TestCase {
     function test_detail(data) {
         var newDetailToMatch = create_testobject(data.code, detailFilterTests);
         var newDetailFilter = create_detailFilter();
-        var valueChangedSpy = create_spy(newDetailFilter, "valueChanged");
-        var filterChangedSpy = create_spy(newDetailFilter, "filterChanged");
+        var valueChangedSpy = utility.create_spy(newDetailFilter, "valueChanged");
+        var filterChangedSpy = utility.create_spy(newDetailFilter, "filterChanged");
         // change
         newDetailFilter.detail = newDetailToMatch;
         compare(valueChangedSpy.count, 1);
@@ -394,7 +371,7 @@ TestCase {
 
             var managerToBeTested = managers[i];
             console.log("## Testing plugin: " + managerToBeTested);
-            organizerModel = createModel(managerToBeTested);
+            organizerModel = utility.createModel(managerToBeTested);
 
             addEventsToModel(filterTestItems());
             compare(organizerModel.items.length, filterTestItems().length);
@@ -410,7 +387,6 @@ TestCase {
             }
             if (data.tag != "no filter") {
                 applyFilter(detailToMatch);
-                wait(spyWaitDelay);
             }
 
             if (managerToBeTested == "jsondb" ) {
@@ -526,22 +502,15 @@ TestCase {
         console.log();
         //preparations
         // error codes are backend specific, these are tested only for jsondb
-        organizerModel = createModel("jsondb")
+        if (utility.getManagerList().indexOf("jsondb") === -1)
+            skip("Cannot run tests for jsondb backend. No plugin available!");
+        organizerModel = utility.createModel("jsondb")
         var detailToMatch = create_testobject(data.filterDetailCtrStr)
-        var errorChangedSpy = create_spy(organizerModel, "errorChanged");
+        var errorChangedSpy = utility.create_spy(organizerModel, "errorChanged");
         applyFilter(detailToMatch);
         errorChangedSpy.wait();
-        wait(50);//why needed?
 
         compare(organizerModel.error, "BadArgument");
         organizerModel.destroy();
     }
-
-    function cleanup() {
-        // Sometimes ModelChanged signal is not emitted when creating a model
-        // in beginning of a test case if there's no wait between tests.
-        // TODO: why?
-        wait(10);
-    }
-
 }

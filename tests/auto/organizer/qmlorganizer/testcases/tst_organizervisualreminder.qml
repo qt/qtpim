@@ -98,6 +98,7 @@ Rectangle {
 
         function test_visualReminder(data) {
 
+            var debugFlag = 0;
             var list = utility.getManagerList();
             if (list.length < 0) {
                 console.log("No manager to test");
@@ -134,7 +135,7 @@ Rectangle {
                 //------Create and save the detail test------//
                 utility.debug("Create and save the detail test", debugFlag);
                 visualReminderDetail.dataUrl = "http://www.test0.com";
-                visualReminderEvent.addDetail(visualReminderDetail);
+                visualReminderEvent.setDetail(visualReminderDetail);
                 if (managerName == "jsondb") {
                     // custom fields allowed in JsonDb for audible reminder
                     // simple test here, since already fully tested in C++
@@ -150,7 +151,7 @@ Rectangle {
                         , test);
                     visualReminderEvent.addDetail(extendedDetail);
                 }
-                model.saveItem(event);
+                model.saveItem(visualReminderEvent);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);
                 compare(model.itemCount, 1)

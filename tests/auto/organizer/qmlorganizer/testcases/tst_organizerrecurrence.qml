@@ -47,6 +47,10 @@ TestCase {
     id: test
     name: "OrganizerRecurrenceTests"
 
+    QOrganizerTestUtility {
+        id: utility
+    }
+
     OrganizerModel {
         id: model
         autoUpdate:true
@@ -71,16 +75,26 @@ TestCase {
     }
 
     SignalSpy {
-        id: spy
+        id: spyManagerChanged
+        signalName: "managerChanged"
+        target: model
+    }
+
+    SignalSpy {
+        id: spyModelChanged
         signalName: "modelChanged"
         target: model
+    }
+
+    function cleanup() {
+        model.manager = ""
     }
 
     function test_recurrenceDates_data() {
         return [
                     {
                         tag: "Event with two recurrence dates",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -95,7 +109,7 @@ TestCase {
 
                     {
                         tag: "Event with recurrence date before event start date",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -110,7 +124,7 @@ TestCase {
 
                     {
                         tag: "Event outside model range with occurrences inside model range",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2008-01-01T14:00:00'),
@@ -125,7 +139,7 @@ TestCase {
 
                     {
                         tag: "Event inside model range with occurrences outside model range",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -140,7 +154,7 @@ TestCase {
 
                     {
                         tag: "Overlapping recurrence dates",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -164,7 +178,7 @@ TestCase {
         return [
                     {
                         tag: "Daily recurrence, limit to 3",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -191,7 +205,7 @@ TestCase {
 
                     {
                         tag: "Daily recurrence, limit to 3, interval of 2 days",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -218,7 +232,7 @@ TestCase {
 
                     {
                         tag: "Daily recurrence, limit to date",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -246,7 +260,7 @@ TestCase {
 
                     {
                         tag: "Daily recurrence, limit to 6, Mondays, Wednesdays and Saturdays only",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -274,7 +288,7 @@ TestCase {
 
                     {
                         tag: "Daily recurrence, limit to 4, days of month: 1, 2, 10, 11",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -303,7 +317,7 @@ TestCase {
 
                     {
                         tag: "Weekly recurrence, limit by date, biweekly",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -332,7 +346,7 @@ TestCase {
 
                     {
                         tag: "Monthly recurrence, limit of 6, February, May, December only",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -360,7 +374,7 @@ TestCase {
 
                     {
                         tag: "Monthly recurrence, limit of 6, positions 1, 2, -1",
-                        managers: ["jsondb"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -388,7 +402,7 @@ TestCase {
 
                     {
                         tag: "Monthly recurrence, limit of 6, position 31",
-                        managers: ["jsondb"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -418,7 +432,7 @@ TestCase {
 
                     {
                         tag: "Yearly recurrence, limit to 4, two exception dates ",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -445,7 +459,7 @@ TestCase {
 
                     {
                         tag: "Yearly recurrence, limit to 6, May, July, August, December only",
-                        managers: ["jsondb"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -481,7 +495,7 @@ TestCase {
         return [
                     {
                         tag: "Exception dates, two matching exception dates",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T23:00:00'),
@@ -496,7 +510,7 @@ TestCase {
 
                     {
                         tag: "Exception dates, two non-matching exception dates",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -519,7 +533,7 @@ TestCase {
         return [
                     {
                         tag: "Daily recurrence with matching daily exceptions",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -557,7 +571,7 @@ TestCase {
 
                     {
                         tag: "Daily recurrence, weekly exceptions on Monday and Sunday",
-                        managers: ["jsondb", "memory"],
+                        managers: utility.getManagerList(),
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),
@@ -635,11 +649,11 @@ TestCase {
     }*/
 
     function test_recurrenceRulesMaxLimit() {
-        var managers = ["jsondb", "memory"];
+        var managers = utility.getManagerList();
         for (var i in managers) {
             console.log("Testing "+managers[i]+" backend");
             model.manager = managers[i];
-            wait(500) // Todo: replace with spy.wait()
+            spyManagerChanged.wait()
             cleanDatabase();
 
             testRule.frequency = RecurrenceRule.Daily;
@@ -653,7 +667,7 @@ TestCase {
 
             testEvent.recurrence.recurrenceRules = [testRule];
             model.saveItem(testEvent)
-            spy.wait();
+            spyModelChanged.wait();
             compare(model.itemCount, 50); // Default max limit is 50
 
             cleanDatabase();
@@ -661,11 +675,11 @@ TestCase {
     }
 
     function test_recurrenceRulesUnion() {
-        var managers = ["jsondb", "memory"];
+        var managers = utility.getManagerList();
         for (var i in managers) {
             console.log("Testing "+managers[i]+" backend");
             model.manager = managers[i];
-            wait(500) // Todo: replace with spy.wait()
+            spyManagerChanged.wait()
             cleanDatabase();
 
             testRule.frequency = RecurrenceRule.Daily;
@@ -694,7 +708,7 @@ TestCase {
             testEvent.startDateTime = new Date('2012-01-01T14:00:00');
             testEvent.endDateTime = new Date('2012-01-01T16:00:00');
             model.saveItem(testEvent)
-            spy.wait();
+            spyModelChanged.wait();
 
             compareResultDatesToModel([new Date('2012-01-01T14:00:00'),
                                        new Date('2012-01-03T14:00:00'),
@@ -714,19 +728,19 @@ TestCase {
         for (var i in data.managers) {
             console.log("Testing "+data.managers[i]+" backend")
             model.manager = data.managers[i]
-            wait(500) // Todo: replace with spy.wait()
+            spyManagerChanged.wait()
             cleanDatabase()
             compare(model.itemCount, 0, "Model not empty")
             populateTestItemsFromData(data);
             model.saveItem(testEvent)
-            spy.wait()
+            spyModelChanged.wait()
             compareResultDatesToModel(data.results, model)
 
             cleanDatabase()
             compare(model.itemCount, 0, "Model not empty")
             populateTestItemsFromData(data);
             model.saveItem(testTodo)
-            spy.wait()
+            spyModelChanged.wait()
             compareResultDatesToModel(data.results, model)
 
             cleanDatabase()
@@ -756,10 +770,10 @@ TestCase {
                 removeIds.push(ids[i])
         }
 
-        spy.clear()
+        spyModelChanged.clear()
         if (ids.length > 0) {
             model.removeItems(removeIds)
-            spy.wait()
+            spyModelChanged.wait()
         }
         compare(model.itemIds().length, 0)
     }

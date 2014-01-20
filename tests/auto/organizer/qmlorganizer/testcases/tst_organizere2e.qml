@@ -47,30 +47,37 @@ TestCase {
     id: test
     name: "OrganizerE2ETests"
 
-    property OrganizerModel model: {}
-    property SignalSpy spy: {}
+    property int spyWaitDelay: 250
 
-    function initTestCase() {
-        model = Qt.createQmlObject(
-              "import QtOrganizer 5.0;"
-            + "OrganizerModel {"
-            + "   startPeriod:'2009-01-01';"
-            + "   endPeriod:'2012-12-31'; }"
-            , test);
+    QOrganizerTestUtility {
+        id: utility
+    }
 
-        spy = Qt.createQmlObject( "import QtTest 1.0 \nSignalSpy {}", test);
-        spy.target = model;
-        spy.signalName = "modelChanged";
+    OrganizerModel {
+        id: model
+        startPeriod:'2009-01-01';
+        endPeriod:'2012-12-31';
+    }
+
+    SignalSpy {
+        id: spyManagerChanged
+        signalName: "managerChanged"
+        target: model
+    }
+
+    SignalSpy {
+        id: spyModelChanged
+        signalName: "modelChanged"
+        target: model
     }
 
     function cleanup() {
-        model.destroy()
-        spy.destroy()
+        model.manager = ""
     }
 
     function test_megaitems_data() {
         return [{
-                managers: ["memory", "jsondb"],
+            managers: utility.getManagerList(),
             definitions: {
 
                 "Event": {
@@ -165,11 +172,11 @@ TestCase {
             console.log("Testing "+data.managers[i]+" backend")
 
             model.manager = data.managers[i]
-            wait(500) // Todo: replace with spy.wait()
+            spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase()
             for (var j in qmlItems) {
                 model.saveItem(qmlItems[j])
-                spy.wait()
+                spyModelChanged.wait(spyWaitDelay)
             }
             compare(model.itemCount, qmlItems.length, "Items were not successfully saved.")
             compareViewToModel(qmlItems, model)
@@ -185,10 +192,10 @@ TestCase {
 
         var ids = model.itemIds()
 
-        spy.clear()
+        spyModelChanged.clear()
         if (ids.length > 0) {
             model.removeItems(ids)
-            spy.wait()
+            spyModelChanged.wait(spyWaitDelay)
         }
 
         compare(model.itemIds().length, 0)

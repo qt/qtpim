@@ -51,6 +51,9 @@ TestCase {
     property int noSpyWaitDelay: 250
 
     // UTILITIES
+    QOrganizerTestUtility {
+        id: utility
+    }
 
     function empty_calendar(organizerModel) {
 
@@ -69,7 +72,6 @@ TestCase {
         organizerModel.autoUpdate = true;
 
         organizerModel.update();
-        wait(300);
     }
 
     // COLLECTION ELEMENT API
@@ -223,13 +225,13 @@ TestCase {
         var newCollection = create_collection();
         var spy = create_spy(newCollection, "valueChanged");
         // change
-        newCollection.setMetaData(data.testKey, data.testValue);
+        newCollection.setExtendedMetaData(data.testKey, data.testValue);
         compare(spy.count, 1);
-        compare(newCollection.metaData(data.testKey).toString(), data.testValue);
+        compare(newCollection.extendedMetaData(data.testKey).toString(), data.testValue);
         // change without change
-        newCollection.setMetaData(data.testKey, data.testValue);
+        newCollection.setExtendedMetaData(data.testKey, data.testValue);
         compare(spy.count, 1);
-        compare(newCollection.metaData(data.testKey).toString(), data.testValue);
+        compare(newCollection.extendedMetaData(data.testKey).toString(), data.testValue);
     }
 
     // ITEM COLLECTION API
@@ -250,10 +252,7 @@ TestCase {
         return newObject;
     }
     function test_item_api_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-            ]
+        return utility.getManagerListData();
     }
     function test_item_api(data) {
         console.log("");//to print out test tags for every data set
@@ -345,10 +344,7 @@ TestCase {
     // MODEL COLLECTION API
 
     function test_model_api_data() {
-        return [
-            {tag: "memory backend", managerToBeTested: "memory"},
-            {tag: "jsondb backend", managerToBeTested: "jsondb"}
-            ]
+        return utility.getManagerListData();
     }
     function test_model_api(data) {
         console.log("");//to print out test tags for every data set
@@ -392,12 +388,12 @@ TestCase {
           + "}\n");
         organizerModel.saveCollection(coll1);
         compare(organizerModel.collections.length, originalAmountOfCollections);
-        wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
-        compare(collectionsChangedSpy.count, 0);
+        collectionsChangedSpy.wait(spyWaitDelay);
+        compare(collectionsChangedSpy.count, 1);
         organizerModel.fetchCollections();
         collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, originalAmountOfCollections + 1);
-        compare(collectionsChangedSpy.count, 1);
+        compare(collectionsChangedSpy.count, 2);
         // -autoupdate enabled
         organizerModel.autoUpdate = true
         var coll2 = create_testobject("import QtQuick 2.0 \n"
@@ -407,11 +403,11 @@ TestCase {
         coll2.description = "My description";
         coll2.color = "red";
         coll2.image = "/test/path/"
-        coll2.setMetaData("MyKey", "My values");
+        coll2.setExtendedMetaData("MyKey", "My values");
         organizerModel.saveCollection(coll2);
         collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, originalAmountOfCollections + 2);
-        compare(collectionsChangedSpy.count, 2);
+        compare(collectionsChangedSpy.count, 3);
         // -check collection details were properly saved
         var amountBeforeSavingAgain = organizerModel.collections.length;
         var modifiableCollection = organizerModel.collections[amountBeforeSavingAgain - 1];
@@ -419,23 +415,23 @@ TestCase {
         compare(modifiableCollection.description, coll2.description);
         compare(modifiableCollection.color.toString(), coll2.color.toString());
         compare(modifiableCollection.image.toString(), coll2.image.toString());
-        compare(modifiableCollection.metaData("MyKey").toString(), coll2.metaData("MyKey").toString());
+        compare(modifiableCollection.extendedMetaData("MyKey").toString(), coll2.extendedMetaData("MyKey").toString());
         // -modify collection content
         modifiableCollection.name = "My brilliant collection";
         modifiableCollection.description = "My awesome description";
         modifiableCollection.color = "#000042";
         modifiableCollection.image = "/my/longer/test/path/";
-        modifiableCollection.setMetaData("MyKey", "My just unbelievable values");
+        modifiableCollection.setExtendedMetaData("MyKey", "My just unbelievable values");
         organizerModel.saveCollection(modifiableCollection);
         collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, amountBeforeSavingAgain);
-        compare(collectionsChangedSpy.count, 3);
+        compare(collectionsChangedSpy.count, 4);
         var resavedCollection = organizerModel.collections[organizerModel.collections.length - 1];
         compare(resavedCollection.name, modifiableCollection.name);
         compare(resavedCollection.description, modifiableCollection.description);
         compare(resavedCollection.color.toString(), modifiableCollection.color.toString());
         compare(resavedCollection.image.toString(), modifiableCollection.image.toString());
-        compare(resavedCollection.metaData("MyKey").toString(), modifiableCollection.metaData("MyKey").toString());
+        compare(resavedCollection.extendedMetaData("MyKey").toString(), modifiableCollection.extendedMetaData("MyKey").toString());
         // -save new collection with empty content data
         var coll3 = create_testobject("import QtQuick 2.0 \n"
           + "import QtOrganizer 5.0\n"
@@ -443,9 +439,9 @@ TestCase {
           + "}\n");
         coll3.name = "My empty collection";
         organizerModel.saveCollection(coll3);
-        collectionsChangedSpy.wait(spyWaitDelay+200);
+        collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, amountBeforeSavingAgain+1);
-        compare(collectionsChangedSpy.count, 4);
+        compare(collectionsChangedSpy.count, 5);
         var savedEmptyCollection = organizerModel.collections[organizerModel.collections.length - 1];
         compare(savedEmptyCollection.name, coll3.name);
         compare(savedEmptyCollection.description, coll3.description);
@@ -479,7 +475,7 @@ TestCase {
         organizerModel.removeCollection(organizerModel.collections[organizerModel.collections.length - 1].collectionId);
         collectionsChangedSpy.wait(spyWaitDelay);
         compare(organizerModel.collections.length, amountBeforeDeletions - 1);
-        compare(collectionsChangedSpy.count, 5);
+        compare(collectionsChangedSpy.count, 6);
         // - remove collection with items
         var toBeDeletedCollection = organizerModel.collections[organizerModel.collections.length - 1];
         var event = create_testobject("import QtTest 1.0\nimport QtOrganizer 5.0\n"
@@ -498,23 +494,22 @@ TestCase {
         modelChangedSpy.wait(spyWaitDelay);
         wait(noSpyWaitDelay);//waiting for asyncronous operations to finish on backend side
         verify(!organizerModel.item(eventItemId));
-        compare(collectionsChangedSpy.count, 6);
+        compare(collectionsChangedSpy.count, 7);
         // - remove non-existing
         organizerModel.removeCollection("Missing in action");
         wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 6);
+        compare(collectionsChangedSpy.count, 7);
         // - remove default collection
         organizerModel.removeCollection(organizerModel.defaultCollection.collectionId);
         wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
-        compare(collectionsChangedSpy.count, 6);
+        compare(collectionsChangedSpy.count, 7);
 
         // after all the modifications to collections, default should still be the same
         compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);
 
         empty_calendar(organizerModel);
-        wait(noSpyWaitDelay);
     }
 }
 

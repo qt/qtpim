@@ -65,7 +65,7 @@ public:
     };
 
     /* Mutators */
-    void setDetailType(QContactDetail::DetailType type, int field);
+    void setDetailType(QContactDetail::DetailType type, int field = -1);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);

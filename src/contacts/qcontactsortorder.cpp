@@ -117,10 +117,7 @@ QContactSortOrder& QContactSortOrder::operator=(const QContactSortOrder& other)
  */
 bool QContactSortOrder::isValid() const
 {
-    /* We clear both when one is empty, so we only need to check one */
-    if (d.constData()->m_type == QContactDetail::TypeUndefined)
-        return false;
-    return true;
+    return d->m_type != QContactDetail::TypeUndefined;
 }
 
 /*!
@@ -200,17 +197,17 @@ QDebug operator<<(QDebug dbg, const QContactSortOrder& sortOrder)
 /*!
  * Sets the type of the details which will be inspected to perform sorting to \a type
  * and the name of those details' fields which contains the value which contacts will be sorted by to \a field
+ *
+ * If \a field is not specified, or equal to -1, the contact with a detail of the specified type
+ * would appear before or after the contact that lacks a detail of the specified type,
+ * according to blankPolicy().
+ *
  * \sa detailType(), detailField()
  */
 void QContactSortOrder::setDetailType(QContactDetail::DetailType type, int field)
 {
-    if (type == QContactDetail::TypeUndefined || field == -1) {
-        d->m_type = QContactDetail::TypeUndefined;
-        d->m_field = -1;
-    } else {
-        d->m_type = type;
-        d->m_field = field;
-    }
+    d->m_type = type;
+    d->m_field = field;
 }
 
 /*!

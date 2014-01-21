@@ -189,7 +189,7 @@ void tst_QContactSortOrder::sortObject()
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QContactSortOrder::BlanksLast);
     QVERIFY(sortorder.detailType() == QContactDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
+    QVERIFY(sortorder.detailField() == QContactAddress::FieldStreet);
     QVERIFY(!sortorder.isValid());
 
     /* Copy ctor */
@@ -286,6 +286,10 @@ void tst_QContactSortOrder::compareContact_data()
 
         sortOrder.setBlankPolicy(QContactSortOrder::BlanksFirst);
         {
+            sortOrder.setDetailType(QContactDetail::TypeName, -1);
+            QTest::newRow("blanks first, field presence") << emptyContact << contact2 << sortOrder << -1;
+            QTest::newRow("blanks first, field presence") << contact1 << contact2 << sortOrder << -1;
+
             sortOrder.setDetailType(QContactDetail::TypeNote, QContactNote::FieldNote);
             QTest::newRow("blanks first") << emptyContact << contact2 << sortOrder << -1;
             QTest::newRow("blanks first") << contact2 << emptyContact << sortOrder << 1;
@@ -297,6 +301,10 @@ void tst_QContactSortOrder::compareContact_data()
 
         sortOrder.setBlankPolicy(QContactSortOrder::BlanksLast);
         {
+            sortOrder.setDetailType(QContactDetail::TypeName, -1);
+            QTest::newRow("blanks last, field presence") << emptyContact << contact2 << sortOrder << 1;
+            QTest::newRow("blanks last, field presence") << contact1 << contact2 << sortOrder << 1;
+
             sortOrder.setDetailType(QContactDetail::TypeNote, QContactNote::FieldNote);
             QTest::newRow("blanks last") << emptyContact << contact2 << sortOrder << 1;
             QTest::newRow("blanks last") << contact2 << emptyContact << sortOrder << -1;
@@ -333,6 +341,34 @@ void tst_QContactSortOrder::compareContact_data()
             QTest::newRow("desc, ci") << contact1 << contact2 << sortOrder << -1;
             QTest::newRow("desc, ci") << contact2 << contact1 << sortOrder << 1;
         }
+    }
+
+    { // ensure non-existence is treated just like blank-ness
+        QContact contact1;
+        QContactName name1;
+        name1.setFirstName("John");
+        name1.setLastName("Smith");
+        contact1.saveDetail(&name1);
+
+        QContact contact2;
+        QContactName name2;
+        name2.setFirstName("John");
+        contact2.saveDetail(&name2);
+
+        QContactSortOrder sortOrder;
+        sortOrder.setDetailType(QContactDetail::TypeName, QContactName::FieldLastName);
+        sortOrder.setDirection(Qt::AscendingOrder);
+        sortOrder.setCaseSensitivity(Qt::CaseInsensitive);
+
+        sortOrder.setBlankPolicy(QContactSortOrder::BlanksFirst);
+        QTest::newRow("non-existence vs blank-ness, blanks first") << contact1 << contact2 << sortOrder << 1;
+        QTest::newRow("non-existence vs blank-ness, blanks first") << emptyContact << contact1 << sortOrder << -1;
+        QTest::newRow("non-existence vs blank-ness, blanks first") << emptyContact << contact2 << sortOrder << 0;
+
+        sortOrder.setBlankPolicy(QContactSortOrder::BlanksLast);
+        QTest::newRow("non-existence vs blank-ness, blanks last") << contact1 << contact2 << sortOrder << -1;
+        QTest::newRow("non-existence vs blank-ness, blanks last") << emptyContact << contact1 << sortOrder << 1;
+        QTest::newRow("non-existence vs blank-ness, blanks last") << emptyContact << contact2 << sortOrder << 0;
     }
 }
 

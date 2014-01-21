@@ -1263,14 +1263,8 @@ QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerMa
 bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error)
 {
     QOrganizerCollectionId collectionId = collection->id();
-    if (collectionId == d->defaultCollectionId()) {
-        // attempting to update the default collection.  this is not allowed in the memory engine.
-        *error = QOrganizerManager::PermissionsError;
-        return false;
-    }
 
     QOrganizerCollectionChangeSet cs;
-    // if it's not the default collection, they can do whatever they like.  A collection does not need any metadata to be valid.
     if (d->m_idToCollectionHash.contains(collectionId)) {
         // this collection already exists.  update our internal list
         // if the collection has been modified.

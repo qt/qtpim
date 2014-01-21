@@ -1637,7 +1637,7 @@ void QDeclarativeOrganizerModel::collectionsFetched()
                 // collection deleted on the backend side, delete from declarative collection list
                 QDeclarativeOrganizerCollection* toBeDeletedColl = declCollections.value(declCollIterator.key());
                 d->m_collections.removeOne(toBeDeletedColl);
-                delete toBeDeletedColl;
+                toBeDeletedColl->deleteLater();
             }
         }
         emit collectionsChanged();

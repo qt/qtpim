@@ -1091,5 +1091,74 @@ TestCase {
         collectionsChangedSpy.destroy();
         organizerModel.destroy();
     }
+
+    function test_collectionsSaveRemove_data() {
+        return utility.getManagerListData();
+    }
+
+    function test_collectionsSaveRemove(data) {
+
+        var model = utility.createModel(data.managerToBeTested);
+
+        var event1 = utility.create_testobject(
+                "import QtOrganizer 5.0\n"
+                + "Event {\n"
+                + "  startDateTime: new Date(2011, 12, 7, 11)\n"
+                + "  endDateTime: new Date(2011, 12, 8, 0, 30)\n"
+                + "}\n", modelTests);
+
+        var collection1 = utility.create_testobject("import QtQuick 2.0 \n"
+              + "import QtOrganizer 5.0\n"
+              + "Collection {\n"
+              + "id: coll1\n"
+              + "}\n", modelTests);
+
+        var view = utility.create_testobject(
+                "import QtQuick 2.0\n"
+                + "ListView {\n"
+                + "  width:100; height: 1000;\n"
+                + "  delegate: Text{ text: name }\n"
+                + "}\n", modelTests);
+
+        var modelChangedSpy = utility.create_testobject("import QtTest 1.0; SignalSpy{}", modelTests)
+        modelChangedSpy.target = model
+        modelChangedSpy.signalName = "modelChanged"
+        var collectionsChangedSpy = utility.create_testobject("import QtTest 1.0; SignalSpy{}", modelTests)
+        collectionsChangedSpy.target = model
+        collectionsChangedSpy.signalName = "collectionsChanged"
+
+        // starting point
+        compare(model.items.length, 0);
+        compare(model.collections.length, 1);
+
+        // add collections
+        var ncoll = 10;
+        for (var i=1; i<=ncoll; ++i) {
+            collection1.name = 'collection ' + i
+            model.saveCollection(collection1);
+            collectionsChangedSpy.wait(signalWaitTime);
+            event1.collectionId = model.collections[i].collectionId;
+            model.saveItem(event1);
+            modelChangedSpy.wait(signalWaitTime);
+        }
+        compare(model.collections.length, ncoll+1);
+        compare(model.itemCount, ncoll);
+
+        view.model = model.collections;
+        verify(view.contentHeight > 0, 'view content is empty');
+        compare(view.count, ncoll+1);
+
+        model.removeCollection(model.collections[ncoll].collectionId);
+        collectionsChangedSpy.wait(signalWaitTime);
+        view.model = model.collections;
+        compare(model.collections.length, ncoll);
+        compare(model.itemCount, ncoll-1);
+        compare(view.count, ncoll);
+
+        view.destroy()
+        collection1.destroy()
+        event1.destroy()
+        model.destroy();
+    }
 }
 

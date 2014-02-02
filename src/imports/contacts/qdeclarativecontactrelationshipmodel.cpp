@@ -177,8 +177,8 @@ void QDeclarativeContactRelationshipModel::setManager(const QString& manager)
 {
     if (d->m_manager == 0 || manager != d->m_manager->managerName() ) {
         d->m_manager = new QContactManager(manager,QMap<QString,QString>(), this);
-        connect(d->m_manager,SIGNAL(relationshipsAdded(const QList<QContactId>&)), this, SLOT(fetchAgain()));
-        connect(d->m_manager,SIGNAL(relationshipsRemoved(const QList<QContactId>&)), this, SLOT(fetchAgain()));
+        connect(d->m_manager,SIGNAL(relationshipsAdded(QList<QContactId>)), this, SLOT(fetchAgain()));
+        connect(d->m_manager,SIGNAL(relationshipsRemoved(QList<QContactId>)), this, SLOT(fetchAgain()));
         emit managerChanged();
     }
 }

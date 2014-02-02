@@ -109,8 +109,8 @@ void QContactActionServiceManager::init()
         }
 
         // and listen for signals.
-        connect(&m_serviceManager, SIGNAL(serviceAdded(QString, QService::Scope)), this, SLOT(serviceAdded(QString)));
-        connect(&m_serviceManager, SIGNAL(serviceRemoved(QString, QService::Scope)), this, SLOT(serviceRemoved(QString)));
+        connect(&m_serviceManager, SIGNAL(serviceAdded(QString,QService::Scope)), this, SLOT(serviceAdded(QString)));
+        connect(&m_serviceManager, SIGNAL(serviceRemoved(QString,QService::Scope)), this, SLOT(serviceRemoved(QString)));
     }
 }
 

@@ -568,7 +568,7 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
     }
 
     connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(doUpdate()));
-    connect(d->m_manager, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> >)), this, SLOT(onItemsModified(QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> >)));
+    connect(d->m_manager, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)), this, SLOT(onItemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)));
     connect(d->m_manager, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
     connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));

@@ -76,7 +76,7 @@
   \value RelationshipFilter A filter which matches contacts which participate in a particular type of relationship, or relationship with a specified contact
   \value IntersectionFilter A filter which matches all contacts that are matched by all filters it includes
   \value UnionFilter A filter which matches any contact that is matched by any of the filters it includes
-  \value IdFilter A filter which matches any contact whose local id is contained in a particular list of contact local ids
+  \value IdFilter A filter which matches any contact whose id is contained in a particular list of contact ids
   \value DefaultFilter A filter which matches everything
  */
 

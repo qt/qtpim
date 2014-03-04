@@ -130,10 +130,16 @@ QStringList QContactManager::availableManagers()
     QContactManagerData::loadFactoriesMetadata();
     ret = QContactManagerData::m_managerNames;
 
-    ret << QStringLiteral("invalid");
+    // Unless overridden, the default must be 'invalid' so that malicious plugins
+    // do not become the default selection without explicit selection
+    ret.prepend(QStringLiteral("invalid"));
 
-    // now swizzle the default engine to pole position
+    // bump memory to the end of the list
+    if (ret.removeAll(QStringLiteral("memory")))
+        ret.append(QStringLiteral("memory"));
+
 #if defined(Q_CONTACTS_DEFAULT_ENGINE)
+    // now swizzle the default engine to pole position
     const QString defaultManagerName = QString::fromLatin1(makename(Q_CONTACTS_DEFAULT_ENGINE));
     if (ret.removeAll(defaultManagerName)) {
         ret.prepend(defaultManagerName);
@@ -146,10 +152,6 @@ QStringList QContactManager::availableManagers()
         ret.removeAll(overrideManagerName);
         ret.prepend(overrideManagerName);
     }
-
-    // bump memory to the end of the list
-    if (ret.removeAll(QStringLiteral("memory")))
-        ret.append(QStringLiteral("memory"));
 
     return ret;
 }

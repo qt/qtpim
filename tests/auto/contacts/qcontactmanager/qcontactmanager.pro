@@ -1,6 +1,9 @@
 include(../../auto.pri)
 
-QT += contacts versit contacts-private jsondb
+QT += contacts versit contacts-private
+qtHaveModule(jsondb) {
+    QT += jsondb
+}
 
 SOURCES  += tst_qcontactmanager.cpp
 HEADERS += ../qcontactmanagerdataholder.h

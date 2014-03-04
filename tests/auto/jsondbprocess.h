@@ -68,8 +68,12 @@ public:
 
     bool start(const QString &partitionsFilePath = QString(), bool killAllJsonDb = true) {
 
-        if (killAllJsonDb)
-            system("killall jsondb");
+        if (killAllJsonDb) {
+            if (system("killall jsondb") != 0) {
+                qWarning() << Q_FUNC_INFO << "Unable to kill running jsondb instances.";
+            }
+        }
+
         QFileInfo partitionsFileInfo(partitionsFilePath);
         // Start new process
         QString jsondbPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/jsondb";

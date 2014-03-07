@@ -51,6 +51,7 @@
 #include <QtGui/qpixmap.h>
 
 #include <QtQml/qqmlinfo.h>
+#include <QtQml/qqmlengine.h>
 
 #include <QtContacts/qcontactdetails.h>
 #include <QtContacts/qcontactmanager.h>
@@ -117,6 +118,7 @@ public:
 
     QList<QDeclarativeContact*> m_contacts;
     QMap<QContactId, QDeclarativeContact*> m_contactMap;
+    QMap<QContactId, QDeclarativeContact*> m_contactFetchedMap;
     QContactManager* m_manager;
     QContactAbstractRequest::StorageLocations m_storageLocations;
     QDeclarativeContactFetchHint* m_fetchHint;
@@ -482,6 +484,13 @@ void QDeclarativeContactModel::contactsExported(QVersitWriter::State state)
     }
 }
 
+void QDeclarativeContactModel::onFetchedContactDestroyed(QObject *obj)
+{
+    QContactId id = d->m_contactFetchedMap.key(static_cast<QDeclarativeContact*>(obj));
+    if (!id.isNull())
+        d->m_contactFetchedMap.remove(id);
+}
+
 int QDeclarativeContactModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
@@ -684,8 +693,21 @@ void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstra
     if (request->error() == QContactManager::NoError) {
         QList<QContact> contacts(request->contacts());
         foreach (const QContact &contact, contacts) {
-            QDeclarativeContact *declarativeContact(0);
-            declarativeContact = new QDeclarativeContact(this);
+            // if the contact was already fetched update the contact
+            QDeclarativeContact *declarativeContact = d->m_contactFetchedMap.value(contact.id(), 0);
+            if (!declarativeContact) {
+                declarativeContact = new QDeclarativeContact(this);
+                // Transfer the ownership to QML
+                // The model will destroy the contact if it get removed from the backend, otherwise the QML side need to destroy it.
+                QQmlEngine::setObjectOwnership(declarativeContact, QQmlEngine::JavaScriptOwnership);
+
+                // keep track of contact destruction to remove it from the list if QML destroys it
+                connect(declarativeContact, SIGNAL(destroyed(QObject*)), SLOT(onFetchedContactDestroyed(QObject*)));
+
+                // we need keep track of the contact to update it if the contact get update on the backend. or destroy it
+                // if the contact get removed from the backend
+                d->m_contactFetchedMap[contact.id()] = declarativeContact;
+            }
             declarativeContact->setContact(contact);
             list.append(QVariant::fromValue(declarativeContact));
         }
@@ -699,6 +721,8 @@ void QDeclarativeContactModel::clearContacts()
     qDeleteAll(d->m_contacts);
     d->m_contacts.clear();
     d->m_contactMap.clear();
+    qDeleteAll(d->m_contactFetchedMap.values());
+    d->m_contactFetchedMap.clear();
 }
 
 void QDeclarativeContactModel::fetchAgain()
@@ -987,6 +1011,11 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 
     bool emitSignal = false;
     foreach (const QContactId &id, ids) {
+        // delete the contact from fetched map if necessary
+        QDeclarativeContact* contact = d->m_contactFetchedMap.take(id);
+        if (contact)
+            contact->deleteLater();
+
         if (d->m_contactMap.contains(id)) {
             int row = 0;
             //TODO:need a fast lookup
@@ -997,7 +1026,8 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 
             if (row < d->m_contacts.count()) {
                 beginRemoveRows(QModelIndex(), row, row);
-                d->m_contacts.removeAt(row);
+                contact = d->m_contacts.takeAt(row);
+                contact->deleteLater();
                 d->m_contactMap.remove(id);
                 endRemoveRows();
                 emitSignal = true;
@@ -1018,6 +1048,21 @@ void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &ids)
         connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
                 this, SLOT(onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State)));
         fetchRequest->start();
+    }
+
+    // If any contact in the fetchedList has changed we need to update it.
+    // We need a different query because feched contacts could not be part of the model.
+    //
+    // For example: if the model contains a filter
+    if (!ids.isEmpty()) {
+        QStringList pendingFetch;
+        foreach (const QContactId &id, ids) {
+            QDeclarativeContact* dc = d->m_contactFetchedMap.value(id);
+            if (dc)
+                pendingFetch << dc->contactId();
+        }
+        if (!pendingFetch.isEmpty())
+            fetchContacts(pendingFetch);
     }
 }
 
@@ -1190,7 +1235,9 @@ void QDeclarativeContactModel::onContactsChangedFetchRequestStateChanged(QContac
                 for (int i=0;i<d->m_contacts.size();++i) {
                     if (d->m_contacts.at(i)->contactId() == id.toString()) {
                         beginRemoveRows(QModelIndex(), i, i);
-                        d->m_contacts.removeAt(i);
+                        // Remove and delete contact object
+                        QDeclarativeContact* dc = d->m_contacts.takeAt(i);
+                        dc->deleteLater();
                         d->m_contactMap.remove(id);
                         endRemoveRows();
                         contactsUpdated = true;

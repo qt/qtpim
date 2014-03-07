@@ -184,6 +184,7 @@ private slots:
     void onContactsChanged(const QList<QContactId>& ids);
     void startImport(QVersitReader::State state);
     void contactsExported(QVersitWriter::State state);
+    void onFetchedContactDestroyed(QObject *obj);
 
     // handle fetch request from onContactsAdded()
     void onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State state);

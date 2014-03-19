@@ -204,7 +204,7 @@ class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerI
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
+    Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
 
@@ -237,11 +237,10 @@ private:
 class QDeclarativeOrganizerItemDetailRangeFilter : public QDeclarativeOrganizerItemFilter
 {
     Q_OBJECT
-    Q_ENUMS(RangeFlag)
     Q_FLAGS(RangeFlags)
     Q_PROPERTY(QVariant min READ minValue WRITE setMinValue NOTIFY valueChanged)
     Q_PROPERTY(QVariant max READ maxValue WRITE setMaxValue NOTIFY valueChanged)
-    Q_PROPERTY(QDeclarativeOrganizerItemFilter::MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
+    Q_PROPERTY(MatchFlags matchFlags READ matchFlags WRITE setMatchFlags NOTIFY valueChanged)
     Q_PROPERTY(RangeFlags rangeFlags READ rangeFlags WRITE setRangeFlags NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
     Q_PROPERTY(int field READ field WRITE setField NOTIFY valueChanged)
@@ -311,7 +310,6 @@ private:
 QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemFilter)
-QML_DECLARE_TYPE(QDeclarativeOrganizerItemInvalidFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemCompoundFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemIntersectionFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemUnionFilter)

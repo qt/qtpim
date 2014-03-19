@@ -65,6 +65,13 @@ public:
 
         int major = 5;
         int minor = 0;
+
+        qRegisterMetaType<QOrganizerAbstractRequest::State>("QOrganizerAbstractRequest::State");
+        qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
+        qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
+        qRegisterMetaType<QOrganizerCollectionId>("QOrganizerCollectionId");
+        qRegisterMetaType<QList<QOrganizerCollectionId> >("QList<QOrganizerCollectionId>");
+
         qmlRegisterType<QDeclarativeOrganizerModel>(uri, major, minor, "OrganizerModel");
         qmlRegisterType<QDeclarativeOrganizerRecurrenceRule>(uri, major, minor, "RecurrenceRule");
         qmlRegisterType<QDeclarativeOrganizerItemFetchHint>(uri, major, minor, "FetchHint");
@@ -117,7 +124,6 @@ public:
         qmlRegisterType<QDeclarativeOrganizerItemIdFilter>(uri, major, minor, "IdFilter");
         qmlRegisterType<QDeclarativeOrganizerItemIntersectionFilter>(uri, major, minor, "IntersectionFilter");
         qmlRegisterType<QDeclarativeOrganizerItemUnionFilter>(uri, major, minor, "UnionFilter");
-        qmlRegisterType<QDeclarativeOrganizerItemInvalidFilter>(uri, major, minor, "InvalidFilter");
         qmlRegisterType<QDeclarativeOrganizerItemCompoundFilter>();
     }
 };

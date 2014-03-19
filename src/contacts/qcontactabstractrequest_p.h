@@ -65,8 +65,9 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QContactAbstractRequestPrivate
 {
 public:
-    QContactAbstractRequestPrivate()
-        : m_error(QContactManager::NoError),
+    QContactAbstractRequestPrivate(QContactAbstractRequest::RequestType type = QContactAbstractRequest::InvalidRequest)
+        : m_type(type),
+          m_error(QContactManager::NoError),
             m_state(QContactAbstractRequest::InactiveState),
             m_manager(0)
     {
@@ -76,10 +77,7 @@ public:
     {
     }
 
-    virtual QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::InvalidRequest;
-    }
+    const QContactAbstractRequest::RequestType m_type;
 
     QContactManager::Error m_error;
     QContactAbstractRequest::State m_state;

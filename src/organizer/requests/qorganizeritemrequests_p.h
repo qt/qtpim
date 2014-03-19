@@ -74,17 +74,12 @@ class QOrganizerItemSaveRequestPrivate : public QOrganizerAbstractRequestPrivate
 {
 public:
     QOrganizerItemSaveRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemSaveRequest)
     {
     }
 
     ~QOrganizerItemSaveRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemSaveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -113,18 +108,13 @@ class QOrganizerItemFetchRequestPrivate : public QOrganizerAbstractRequestPrivat
 {
 public:
     QOrganizerItemFetchRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemFetchRequest)
         , m_maxCount(-1)
     {
     }
 
     ~QOrganizerItemFetchRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -172,17 +162,12 @@ class QOrganizerItemFetchForExportRequestPrivate : public QOrganizerAbstractRequ
 {
 public:
     QOrganizerItemFetchForExportRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemFetchForExportRequest)
     {
     }
 
     ~QOrganizerItemFetchForExportRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemFetchForExportRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -225,17 +210,12 @@ class QOrganizerItemFetchByIdRequestPrivate : public QOrganizerAbstractRequestPr
 {
 public:
     QOrganizerItemFetchByIdRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemFetchByIdRequest)
     {
     }
 
     ~QOrganizerItemFetchByIdRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemFetchByIdRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -269,17 +249,13 @@ class QOrganizerItemOccurrenceFetchRequestPrivate : public QOrganizerAbstractReq
 {
 public:
     QOrganizerItemOccurrenceFetchRequestPrivate()
-        : QOrganizerAbstractRequestPrivate(), m_maxOccurrences(-1)
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemOccurrenceFetchRequest)
+        , m_maxOccurrences(-1)
     {
     }
 
     ~QOrganizerItemOccurrenceFetchRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemOccurrenceFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -321,17 +297,12 @@ class QOrganizerItemRemoveRequestPrivate : public QOrganizerAbstractRequestPriva
 {
 public:
     QOrganizerItemRemoveRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemRemoveRequest)
     {
     }
 
     ~QOrganizerItemRemoveRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemRemoveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -356,17 +327,12 @@ class QOrganizerItemRemoveByIdRequestPrivate : public QOrganizerAbstractRequestP
 {
 public:
     QOrganizerItemRemoveByIdRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemRemoveByIdRequest)
     {
     }
 
     ~QOrganizerItemRemoveByIdRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemRemoveByIdRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -391,17 +357,12 @@ class QOrganizerItemIdFetchRequestPrivate : public QOrganizerAbstractRequestPriv
 {
 public:
     QOrganizerItemIdFetchRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::ItemIdFetchRequest)
     {
     }
 
     ~QOrganizerItemIdFetchRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::ItemIdFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -440,17 +401,12 @@ class QOrganizerCollectionFetchRequestPrivate : public QOrganizerAbstractRequest
 {
 public:
     QOrganizerCollectionFetchRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::CollectionFetchRequest)
     {
     }
 
     ~QOrganizerCollectionFetchRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::CollectionFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -471,17 +427,12 @@ class QOrganizerCollectionRemoveRequestPrivate : public QOrganizerAbstractReques
 {
 public:
     QOrganizerCollectionRemoveRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::CollectionRemoveRequest)
     {
     }
 
     ~QOrganizerCollectionRemoveRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::CollectionRemoveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -506,17 +457,12 @@ class QOrganizerCollectionSaveRequestPrivate : public QOrganizerAbstractRequestP
 {
 public:
     QOrganizerCollectionSaveRequestPrivate()
-        : QOrganizerAbstractRequestPrivate()
+        : QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::CollectionSaveRequest)
     {
     }
 
     ~QOrganizerCollectionSaveRequestPrivate()
     {
-    }
-
-    QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::CollectionSaveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM

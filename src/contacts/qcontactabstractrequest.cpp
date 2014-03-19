@@ -259,8 +259,7 @@ QContactManager::Error QContactAbstractRequest::error() const
  */
 QContactAbstractRequest::RequestType QContactAbstractRequest::type() const
 {
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return d_ptr->type();
+    return d_ptr->m_type;
 }
 
 /*!
@@ -363,7 +362,7 @@ QDebug operator<<(QDebug dbg, const QContactAbstractRequest& request)
 {
     dbg.nospace() << "QContactAbstractRequest(";
     Q_ASSERT(request.d_ptr);
-    if (request.d_ptr->type() != QContactAbstractRequest::InvalidRequest) {
+    if (request.d_ptr->m_type != QContactAbstractRequest::InvalidRequest) {
         QMutexLocker locker(&request.d_ptr->m_mutex);
         request.d_ptr->debugStreamOut(dbg);
     } else {

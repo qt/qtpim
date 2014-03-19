@@ -73,18 +73,13 @@ class QContactSaveRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactSaveRequestPrivate()
-        : QContactAbstractRequestPrivate(),
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::ContactSaveRequest),
           m_storageLocation(QContactAbstractRequest::UserDataStorage)
     {
     }
 
     ~QContactSaveRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::ContactSaveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -110,18 +105,13 @@ class QContactFetchRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactFetchRequestPrivate()
-        : QContactAbstractRequestPrivate(),
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::ContactFetchRequest),
           m_storageLocations(QContactAbstractRequest::UserDataStorage)
     {
     }
 
     ~QContactFetchRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::ContactFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -149,17 +139,12 @@ class QContactFetchByIdRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactFetchByIdRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::ContactFetchByIdRequest)
     {
     }
 
     ~QContactFetchByIdRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::ContactFetchByIdRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -186,17 +171,12 @@ class QContactRemoveRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactRemoveRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::ContactRemoveRequest)
     {
     }
 
     ~QContactRemoveRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::ContactRemoveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -218,18 +198,13 @@ class QContactIdFetchRequestPrivate : public QContactAbstractRequestPrivate
 {
 public:
     QContactIdFetchRequestPrivate()
-        : QContactAbstractRequestPrivate(),
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::ContactIdFetchRequest),
           m_storageLocations(QContactAbstractRequest::UserDataStorage)
     {
     }
 
     ~QContactIdFetchRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::ContactIdFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -256,17 +231,12 @@ class QContactRelationshipFetchRequestPrivate : public QContactAbstractRequestPr
 {
 public:
     QContactRelationshipFetchRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::RelationshipFetchRequest)
     {
     }
 
     ~QContactRelationshipFetchRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::RelationshipFetchRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -295,17 +265,12 @@ class QContactRelationshipSaveRequestPrivate : public QContactAbstractRequestPri
 {
 public:
     QContactRelationshipSaveRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::RelationshipSaveRequest)
     {
     }
 
     ~QContactRelationshipSaveRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::RelationshipSaveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -327,17 +292,12 @@ class QContactRelationshipRemoveRequestPrivate : public QContactAbstractRequestP
 {
 public:
     QContactRelationshipRemoveRequestPrivate()
-        : QContactAbstractRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::RelationshipRemoveRequest)
     {
     }
 
     ~QContactRelationshipRemoveRequestPrivate()
     {
-    }
-
-    QContactAbstractRequest::RequestType type() const
-    {
-        return QContactAbstractRequest::RelationshipRemoveRequest;
     }
 
 #ifndef QT_NO_DEBUG_STREAM

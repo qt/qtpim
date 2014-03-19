@@ -65,8 +65,9 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 class QOrganizerAbstractRequestPrivate
 {
 public:
-    QOrganizerAbstractRequestPrivate()
-        : m_error(QOrganizerManager::NoError)
+    QOrganizerAbstractRequestPrivate(QOrganizerAbstractRequest::RequestType type = QOrganizerAbstractRequest::InvalidRequest)
+        : m_type(type)
+        , m_error(QOrganizerManager::NoError)
         , m_state(QOrganizerAbstractRequest::InactiveState)
         , m_manager(0)
     {
@@ -76,14 +77,11 @@ public:
     {
     }
 
-    virtual QOrganizerAbstractRequest::RequestType type() const
-    {
-        return QOrganizerAbstractRequest::InvalidRequest;
-    }
-
 #ifndef QT_NO_DEBUG_STREAM
     virtual QDebug &debugStreamOut(QDebug &dbg) const = 0;
 #endif
+
+    const QOrganizerAbstractRequest::RequestType m_type;
 
     QOrganizerManager::Error m_error;
     QOrganizerAbstractRequest::State m_state;

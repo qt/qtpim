@@ -210,8 +210,7 @@ QOrganizerManager::Error QOrganizerAbstractRequest::error() const
  */
 QOrganizerAbstractRequest::RequestType QOrganizerAbstractRequest::type() const
 {
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return d_ptr->type();
+    return d_ptr->m_type;
 }
 
 /*!
@@ -316,7 +315,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request)
 {
     dbg.nospace() << "QOrganizerAbstractRequest(";
     Q_ASSERT(request.d_ptr);
-    if (request.d_ptr->type() != QOrganizerAbstractRequest::InvalidRequest) {
+    if (request.d_ptr->m_type != QOrganizerAbstractRequest::InvalidRequest) {
         QMutexLocker locker(&request.d_ptr->m_mutex);
         request.d_ptr->debugStreamOut(dbg);
     } else {

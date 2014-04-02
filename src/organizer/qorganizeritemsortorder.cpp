@@ -117,10 +117,7 @@ QOrganizerItemSortOrder &QOrganizerItemSortOrder::operator=(const QOrganizerItem
  */
 bool QOrganizerItemSortOrder::isValid() const
 {
-    /* We clear both when one is empty, so we only need to check one */
-    if (d->m_detailType == QOrganizerItemDetail::TypeUndefined)
-        return false;
-    return true;
+    return d->m_detailType != QOrganizerItemDetail::TypeUndefined;
 }
 
 /*!
@@ -213,17 +210,16 @@ QDebug operator<<(QDebug dbg, const QOrganizerItemSortOrder &sortOrder)
     Sets the type of detail which will be inspected for sorting to \a detailType, and the field of
     the detail to \a field.
 
+    If \a field is not specified, or equal to -1, the organizer item with a detail of the specified type
+    would appear before or after the organizer item that lacks a detail of the specified type,
+    according to blankPolicy().
+
     \sa detailType(), detailField()
  */
 void QOrganizerItemSortOrder::setDetail(QOrganizerItemDetail::DetailType detailType, int field)
 {
-    if (detailType != QOrganizerItemDetail::TypeUndefined && field >= 0) {
-        d->m_detailType = detailType;
-        d->m_detailField = field;
-    } else {
-        d->m_detailType = QOrganizerItemDetail::TypeUndefined;
-        d->m_detailField = -1;
-    }
+    d->m_detailType = detailType;
+    d->m_detailField = field;
 }
 
 /*!

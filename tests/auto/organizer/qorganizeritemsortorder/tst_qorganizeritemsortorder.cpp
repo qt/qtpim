@@ -170,14 +170,14 @@ void tst_QOrganizerItemSortOrder::sortObject()
     QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
     QVERIFY(sortorder.detailField() == -1);
     QVERIFY(!sortorder.isValid());
+    QVERIFY(sortorder == QOrganizerItemSortOrder());
 
     sortorder.setDetail(QOrganizerItemDetail::TypeComment, -1);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
-    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
+    QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeComment);
     QVERIFY(sortorder.detailField() == -1);
-    QVERIFY(!sortorder.isValid());
-    QVERIFY(sortorder == QOrganizerItemSortOrder());
+    QVERIFY(sortorder.isValid());
 
     sortorder.setDetail(QOrganizerItemDetail::TypeComment, QOrganizerItemComment::FieldComment);
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
@@ -190,7 +190,7 @@ void tst_QOrganizerItemSortOrder::sortObject()
     QVERIFY(sortorder.direction() == Qt::AscendingOrder);
     QVERIFY(sortorder.blankPolicy() == QOrganizerItemSortOrder::BlanksLast);
     QVERIFY(sortorder.detailType() == QOrganizerItemDetail::TypeUndefined);
-    QVERIFY(sortorder.detailField() == -1);
+    QVERIFY(sortorder.detailField() == 101);
     QVERIFY(!sortorder.isValid());
 
     /* Copy ctor */
@@ -275,6 +275,10 @@ void tst_QOrganizerItemSortOrder::compareItem_data()
 
         sortOrder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
         {
+            sortOrder.setDetail(QOrganizerItemDetail::TypeLocation, -1);
+            QTest::newRow("blanks first, field presence") << emptyItem << item2 << sortOrder << -1;
+            QTest::newRow("blanks first, field presence") << item1 << item2 << sortOrder << -1;
+
             sortOrder.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
             QTest::newRow("blanks first") << emptyItem << item2 << sortOrder << -1;
             QTest::newRow("blanks first") << item2 << emptyItem << sortOrder << 1;
@@ -286,6 +290,10 @@ void tst_QOrganizerItemSortOrder::compareItem_data()
 
         sortOrder.setBlankPolicy(QOrganizerItemSortOrder::BlanksLast);
         {
+            sortOrder.setDetail(QOrganizerItemDetail::TypeLocation, -1);
+            QTest::newRow("blanks last, field presence") << emptyItem << item2 << sortOrder << 1;
+            QTest::newRow("blanks last, field presence") << item1 << item2 << sortOrder << 1;
+
             sortOrder.setDetail(QOrganizerItemDetail::TypeDescription, QOrganizerItemDescription::FieldDescription);
             QTest::newRow("blanks last") << emptyItem << item2 << sortOrder << 1;
             QTest::newRow("blanks last") << item2 << emptyItem << sortOrder << -1;
@@ -322,6 +330,34 @@ void tst_QOrganizerItemSortOrder::compareItem_data()
             QTest::newRow("desc, ci") << item1 << item2 << sortOrder << -1;
             QTest::newRow("desc, ci") << item2 << item1 << sortOrder << 1;
         }
+    }
+
+    { // ensure non-existence is treated just like blank-ness
+        QOrganizerItem item1;
+        QOrganizerEventTime time1;
+        time1.setStartDateTime(QDateTime::currentDateTime());
+        time1.setEndDateTime(QDateTime::currentDateTime().addDays(1));
+        item1.saveDetail(&time1);
+
+        QOrganizerItem item2;
+        QOrganizerEventTime time2;
+        time2.setStartDateTime(QDateTime::currentDateTime());
+        item2.saveDetail(&time2);
+
+        QOrganizerItemSortOrder sortOrder;
+        sortOrder.setDetail(QOrganizerItemDetail::TypeEventTime, QOrganizerEventTime::FieldEndDateTime);
+        sortOrder.setDirection(Qt::AscendingOrder);
+        sortOrder.setCaseSensitivity(Qt::CaseInsensitive);
+
+        sortOrder.setBlankPolicy(QOrganizerItemSortOrder::BlanksFirst);
+        QTest::newRow("non-existence vs blank-ness, blanks first") << item1 << item2 << sortOrder << 1;
+        QTest::newRow("non-existence vs blank-ness, blanks first") << emptyItem << item1 << sortOrder << -1;
+        QTest::newRow("non-existence vs blank-ness, blanks first") << emptyItem << item2 << sortOrder << 0;
+
+        sortOrder.setBlankPolicy(QOrganizerItemSortOrder::BlanksLast);
+        QTest::newRow("non-existence vs blank-ness, blanks last") << item1 << item2 << sortOrder << -1;
+        QTest::newRow("non-existence vs blank-ness, blanks last") << emptyItem << item1 << sortOrder << 1;
+        QTest::newRow("non-existence vs blank-ness, blanks last") << emptyItem << item2 << sortOrder << 0;
     }
 }
 

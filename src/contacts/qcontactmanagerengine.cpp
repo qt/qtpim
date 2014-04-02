@@ -1443,9 +1443,29 @@ int QContactManagerEngine::compareContact(const QContact& a, const QContact& b, 
         if (!sortOrder.isValid())
             break;
 
+        const QContactDetail::DetailType detailType = sortOrder.detailType();
+        const int detailField = sortOrder.detailField();
+
+        const QList<QContactDetail> aDetails = a.details(detailType);
+        const QList<QContactDetail> bDetails = b.details(detailType);
+        if (aDetails.isEmpty() && bDetails.isEmpty())
+            continue; // use next sort criteria.
+
+        // See if we need to check the values
+        if (detailField == -1) {
+            // just testing for the presence of a detail of the specified definition
+            if (aDetails.size() == bDetails.size())
+                continue; // use next sort criteria.
+            if (aDetails.isEmpty())
+                return sortOrder.blankPolicy() == QContactSortOrder::BlanksFirst ? -1 : 1;
+            if (bDetails.isEmpty())
+                return sortOrder.blankPolicy() == QContactSortOrder::BlanksFirst ? 1 : -1;
+            return 0;
+        }
+
         // obtain the values which this sort order concerns
-        const QVariant& aVal = a.detail(sortOrder.detailType()).value(sortOrder.detailField());
-        const QVariant& bVal = b.detail(sortOrder.detailType()).value(sortOrder.detailField());
+        const QVariant aVal = !aDetails.isEmpty() ? aDetails.first().value(detailField) : QVariant();
+        const QVariant bVal = !bDetails.isEmpty() ? bDetails.first().value(detailField) : QVariant();
 
         bool aIsNull = false;
         bool bIsNull = false;

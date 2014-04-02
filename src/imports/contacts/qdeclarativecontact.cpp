@@ -133,6 +133,7 @@ void QDeclarativeContact::setContact(const QContact& contact)
     QList<QContactDetail> details(contact.details());
     foreach (const QContactDetail &detail, details) {
         QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(static_cast<QDeclarativeContactDetail::DetailType>(detail.type()));
+        contactDetail->setParent(this);
         contactDetail->setDetail(detail);
         connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
         m_details.append(contactDetail);
@@ -254,6 +255,7 @@ bool QDeclarativeContact::addDetail(QDeclarativeContactDetail* detail)
         return false;
 
     QDeclarativeContactDetail *contactDetail = QDeclarativeContactDetailFactory::createContactDetail(detail->detailType());
+    contactDetail->setParent(this);
     contactDetail->setDetail(detail->detail());
     connect(contactDetail, SIGNAL(detailChanged()), this, SIGNAL(contactChanged()));
     m_details.append(contactDetail);

@@ -65,7 +65,7 @@ public:
     };
 
     // mutators
-    void setDetail(QOrganizerItemDetail::DetailType detailType, int field);
+    void setDetail(QOrganizerItemDetail::DetailType detailType, int field = -1);
     void setBlankPolicy(BlankPolicy blankPolicy);
     void setDirection(Qt::SortOrder direction);
     void setCaseSensitivity(Qt::CaseSensitivity sensitivity);

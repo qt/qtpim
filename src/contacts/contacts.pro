@@ -1,9 +1,10 @@
 TARGET = QtContacts
 QT = core-private
 
-QMAKE_DOCS = $$PWD/doc/qtcontacts.qdocconf
+MODULE_PLUGIN_TYPES = \
+    contacts
 
-load(qt_module)
+QMAKE_DOCS = $$PWD/doc/qtcontacts.qdocconf
 
 include(details/details.pri)
 include(engines/engines.pri)
@@ -76,3 +77,5 @@ qtHaveModule(jsondb) {
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+
+load(qt_module)

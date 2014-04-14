@@ -1,9 +1,10 @@
 TARGET = QtVersit
 QT = core contacts
 
-QMAKE_DOCS = $$PWD/doc/qtversit.qdocconf
+MODULE_PLUGIN_TYPES = \
+    versit
 
-load(qt_module)
+QMAKE_DOCS = $$PWD/doc/qtversit.qdocconf
 
 PUBLIC_HEADERS += \
     qversitglobal.h \
@@ -55,3 +56,5 @@ SOURCES += \
     qversitutils.cpp
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+
+load(qt_module)

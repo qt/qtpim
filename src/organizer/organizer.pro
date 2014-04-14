@@ -1,9 +1,10 @@
 TARGET = QtOrganizer
 QT = core-private
 
-QMAKE_DOCS = $$PWD/doc/qtorganizer.qdocconf
+MODULE_PLUGIN_TYPES = \
+    organizer
 
-load(qt_module)
+QMAKE_DOCS = $$PWD/doc/qtorganizer.qdocconf
 
 include(details/details.pri)
 include(items/items.pri)
@@ -74,3 +75,5 @@ qtHaveModule(jsondb) {
 !isEmpty(ORGANIZER_DEFAULT_ENGINE): DEFINES += Q_ORGANIZER_DEFAULT_ENGINE=$$ORGANIZER_DEFAULT_ENGINE
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+
+load(qt_module)

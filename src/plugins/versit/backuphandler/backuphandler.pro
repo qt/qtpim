@@ -1,6 +1,5 @@
-QT += versit versit-private contacts
-
 TARGET = qtversit_backuphandler
+QT += contacts versit-private
 
 PLUGIN_TYPE = versit
 load(qt_plugin)

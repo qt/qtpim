@@ -1,11 +1,9 @@
-QT += contacts contacts-private jsondb
-
 TARGET = qtcontacts_jsondb
+QT += contacts-private jsondb
 
 PLUGIN_TYPE = contacts
 load(qt_plugin)
 
-# Input
 HEADERS += qcontactjsondbenginefactory.h \
     qcontactjsondbengine.h \
     qcontactjsondbrequesthandler.h \

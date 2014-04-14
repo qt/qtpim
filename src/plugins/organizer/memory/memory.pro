@@ -1,6 +1,5 @@
-QT = core organizer organizer-private
-
 TARGET = qtorganizer_memory
+QT = core organizer-private
 
 PLUGIN_TYPE = organizer
 load(qt_plugin)

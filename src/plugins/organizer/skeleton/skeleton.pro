@@ -1,6 +1,5 @@
-QT += organizer
-
 TARGET = qtorganizer_skeleton
+QT += organizer
 
 PLUGIN_TYPE = organizer
 load(qt_plugin)

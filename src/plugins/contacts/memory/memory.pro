@@ -1,6 +1,5 @@
-QT = core contacts
-
 TARGET = qtcontacts_memory
+QT = core contacts
 
 PLUGIN_TYPE = contacts
 load(qt_plugin)

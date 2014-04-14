@@ -1,6 +1,5 @@
-QT += versit contacts
-
 TARGET = qtversit_vcardpreserver
+QT += contacts versit
 
 PLUGIN_TYPE = versit
 load(qt_plugin)

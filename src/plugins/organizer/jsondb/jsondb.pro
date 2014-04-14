@@ -1,6 +1,5 @@
-QT += organizer network jsondb
-
 TARGET = qtorganizer_jsondb
+QT += organizer network jsondb
 
 PLUGIN_TYPE = organizer
 load(qt_plugin)

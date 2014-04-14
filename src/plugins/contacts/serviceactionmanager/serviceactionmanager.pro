@@ -1,9 +1,8 @@
-TEMPLATE = lib
-CONFIG += plugin
-TARGET = $$qtLibraryTarget(qtcontacts_serviceactionmanager)
-PLUGIN_TYPE=contacts
+TARGET = qtcontacts_serviceactionmanager
+QT = core contacts
 
-include(../../../common.pri)
+PLUGIN_TYPE = contacts
+load(qt_plugin)
 
 HEADERS += \
         qcontactactionservicemanager_p.h

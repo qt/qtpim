@@ -111,8 +111,6 @@ public:
     {
         if (m_manager)
             delete m_manager;
-        if (m_filter)
-            delete m_filter;
         delete m_reader;
         delete m_writer;
 }

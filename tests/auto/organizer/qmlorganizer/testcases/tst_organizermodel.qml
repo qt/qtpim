@@ -1160,5 +1160,18 @@ TestCase {
         event1.destroy()
         model.destroy();
     }
+
+    function test_modelsSharingFilter() {
+        var view = utility.create_testobject(
+                "import QtQuick 2.0\n"
+                + "import QtOrganizer 5.0\n"
+                + "ListView {\n"
+                + "  model:2;\n"
+                + "  width:100; height: 1000;\n"
+                + "  property var theFilter: DetailRangeFilter {\n"
+                + "  }\n"
+                + "  delegate: Item { OrganizerModel { filter: theFilter } }\n"
+                + "}\n", modelTests);
+    }
 }
 

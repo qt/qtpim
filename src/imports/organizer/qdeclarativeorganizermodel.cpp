@@ -616,9 +616,11 @@ void QDeclarativeOrganizerModel::setFilter(QDeclarativeOrganizerItemFilter* filt
 {
     Q_D(QDeclarativeOrganizerModel);
     if (filter != d->m_filter) {
+        if (d->m_filter)
+            disconnect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
         d->m_filter = filter;
         if (d->m_filter)
-            connect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
+            connect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()), Qt::UniqueConnection);
         emit filterChanged();
     }
 }

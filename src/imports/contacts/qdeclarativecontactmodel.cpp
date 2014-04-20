@@ -514,13 +514,11 @@ QDeclarativeContactFilter* QDeclarativeContactModel::filter() const
 void QDeclarativeContactModel::setFilter(QDeclarativeContactFilter* filter)
 {
     if (d->m_filter != filter) {
-        if (d->m_filter) {
-            disconnect(d->m_filter, SIGNAL(filterChanged()), this, SLOT(update()));
-        }
+        if (d->m_filter)
+            disconnect(d->m_filter, SIGNAL(filterChanged()), this, SIGNAL(filterChanged()));
         d->m_filter = filter;
-        if (d->m_filter) {
-            connect(d->m_filter, SIGNAL(filterChanged()), SLOT(update()), Qt::UniqueConnection);
-        }
+        if (d->m_filter)
+            connect(d->m_filter, SIGNAL(filterChanged()), SIGNAL(filterChanged()), Qt::UniqueConnection);
         emit filterChanged();
     }
 }
@@ -538,10 +536,12 @@ QDeclarativeContactFetchHint* QDeclarativeContactModel::fetchHint() const
 }
 void QDeclarativeContactModel::setFetchHint(QDeclarativeContactFetchHint* fetchHint)
 {
-    if (fetchHint && fetchHint != d->m_fetchHint) {
+    if (d->m_fetchHint != fetchHint) {
         if (d->m_fetchHint)
-            delete d->m_fetchHint;
+            disconnect(d->m_fetchHint, SIGNAL(fetchHintChanged()), this, SIGNAL(fetchHintChanged()));
         d->m_fetchHint = fetchHint;
+        if (d->m_fetchHint)
+            connect(d->m_fetchHint, SIGNAL(fetchHintChanged()), SIGNAL(fetchHintChanged()), Qt::UniqueConnection);
         emit fetchHintChanged();
     }
 }

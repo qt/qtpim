@@ -641,11 +641,12 @@ QDeclarativeOrganizerItemFetchHint* QDeclarativeOrganizerModel::fetchHint() cons
 void QDeclarativeOrganizerModel::setFetchHint(QDeclarativeOrganizerItemFetchHint* fetchHint)
 {
     Q_D(QDeclarativeOrganizerModel);
-    if (fetchHint && fetchHint != d->m_fetchHint) {
+    if (fetchHint != d->m_fetchHint) {
         if (d->m_fetchHint)
-            delete d->m_fetchHint;
+            disconnect(d->m_fetchHint, SIGNAL(fetchHintChanged()), this, SIGNAL(fetchHintChanged()));
         d->m_fetchHint = fetchHint;
-        connect(d->m_fetchHint, SIGNAL(fetchHintChanged()), this, SIGNAL(fetchHintChanged()));
+        if (d->m_fetchHint)
+            connect(d->m_fetchHint, SIGNAL(fetchHintChanged()), this, SIGNAL(fetchHintChanged()), Qt::UniqueConnection);
         emit fetchHintChanged();
     }
 }

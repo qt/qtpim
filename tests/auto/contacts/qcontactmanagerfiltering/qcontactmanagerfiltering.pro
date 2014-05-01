@@ -1,5 +1,9 @@
-include(../../../staticconfig.pri)
+include(../../auto.pri)
 
 TEMPLATE=subdirs
-SUBDIRS+=testactions \
-         unittest
+SUBDIRS += unittest
+
+qtHaveModule(serviceframework) {
+    DEFINES += INCLUDE_TESTACTIONS
+    SUBDIRS += testactions
+}

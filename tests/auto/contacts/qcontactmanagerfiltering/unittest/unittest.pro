@@ -1,21 +1,14 @@
-QT += testlib
-TEMPLATE=app
-TARGET=tst_qcontactmanagerfiltering
-CONFIG+=testcase
+include(../../../auto.pri)
 
-include(../../../../common.pri)
+QT += contacts versit contacts-private
+qtHaveModule(serviceframework) {
+    QT += serviceframework
+}
 
-INCLUDEPATH += ../../../../src/global \
-               ../../../../src/contacts \
-               ../../../../src/contacts/details \
-               ../../../../src/contacts/requests \
-               ../../../../src/contacts/filters \
-               ../../../../src/serviceframework
-INCLUDEPATH += ../../
-
-CONFIG += mobility
-MOBILITY = contacts serviceframework
 SOURCES  += tst_qcontactmanagerfiltering.cpp
 HEADERS += ../../qcontactmanagerdataholder.h
+
+INCLUDEPATH += ../.. \
+               ../../..
 
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

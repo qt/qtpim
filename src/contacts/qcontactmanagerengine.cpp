@@ -1271,6 +1271,12 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
 
                 // first, retrieve contact uris
                 QContact relatedContact = rf.relatedContact();
+                QContactId relatedId = relatedContact.id();
+
+                QContactId contactId = contact.id();
+                if (relatedId == contactId) {
+                    return false;
+                }
 
                 // get the relationships in which this contact is involved.
                 QList<QContactRelationship> allRelationships;
@@ -1281,17 +1287,17 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     // perform the matching.
                     if (rf.relatedContactRole() == QContactRelationship::Second) { // this is the role of the related contact; ie, to match, contact must be the first in the relationship.
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (rel.first() == contact) && (relatedContact == rel.second())) {
+                                && (rel.first().id() == contactId) && (relatedId.isNull() || relatedId == rel.second().id())) {
                             return true;
                         }
-                    } else if (rf.relatedContactRole() == QContactRelationship::First) { // this is the role of the related contact; ie, to match, contact.id() must be the second in the relationship.
+                    } else if (rf.relatedContactRole() == QContactRelationship::First) { // this is the role of the related contact; ie, to match, contact must be the second in the relationship.
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (rel.second() == contact) && (relatedContact == rel.first())) {
+                                && (rel.second().id() == contactId) && (relatedId.isNull() || relatedId == rel.first().id())) {
                             return true;
                         }
                     } else { // QContactRelationship::Either
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (((relatedContact == rel.first()) && !(contact == relatedContact)) || ((relatedContact == rel.second()) && !(contact == relatedContact)))) {
+                                && (relatedId.isNull() || (relatedId == rel.first().id() || relatedId == rel.second().id()))) {
                             return true;
                         }
                     }

@@ -67,4 +67,6 @@ public:
 
 QT_END_NAMESPACE
 
+QML_DECLARE_TYPE(QDeclarativeContactInvalidFilter)
+
 #endif // QDECLARATIVECONTACTINVALIDFILTER_H

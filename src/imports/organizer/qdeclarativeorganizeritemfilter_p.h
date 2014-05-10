@@ -310,6 +310,7 @@ private:
 QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemFilter)
+QML_DECLARE_TYPE(QDeclarativeOrganizerItemInvalidFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemCompoundFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemIntersectionFilter)
 QML_DECLARE_TYPE(QDeclarativeOrganizerItemUnionFilter)

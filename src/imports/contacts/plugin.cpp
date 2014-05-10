@@ -121,6 +121,7 @@ public:
         qmlRegisterType<QDeclarativeContactRelationshipFilter>(uri, major, minor, "RelationshipFilter");
         qmlRegisterType<QDeclarativeContactIntersectionFilter>(uri, major, minor, "IntersectionFilter");
         qmlRegisterType<QDeclarativeContactUnionFilter>(uri, major, minor, "UnionFilter");
+        qmlRegisterType<QDeclarativeContactInvalidFilter>(uri, major, minor, "InvalidFilter");
         qmlRegisterType<QDeclarativeContactCompoundFilter>();
 
     }

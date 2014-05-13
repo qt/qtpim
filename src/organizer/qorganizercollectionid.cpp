@@ -47,11 +47,9 @@
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif
-#include <QtCore/qstringlist.h>
 
 #include "qorganizercollectionengineid.h"
 #include "qorganizermanager_p.h"
-#include "qorganizeritemid_p.h"
 
 #if !defined(Q_CC_MWERKS)
 QT_BEGIN_NAMESPACE
@@ -238,36 +236,38 @@ QString QOrganizerCollectionId::managerUri() const
 }
 
 /*!
-    Serializes the ID to a string. The format of the string will be:
-    "qtorganizer:managerName:constructionParams:serializedEngineLocalItemId".
- */
+    Serializes the collection ID to a string. The format of the string will be:
+    "qtorganizer:managerName:constructionParams:engineLocalCollectionId".
+
+    \sa fromString()
+*/
 QString QOrganizerCollectionId::toString() const
 {
-    QString mgrName;
+    QString managerName;
     QMap<QString, QString> params;
-    QString engineId;
+    QString engineIdString;
 
-    if (d) {
-        QOrganizerManager::parseUri(d->managerUri(), &mgrName, &params);
-        engineId = d->toString();
-    }
+    // rely on engine id to supply the full manager uri
+    if (d && QOrganizerManagerData::parseIdString(d->managerUri(), &managerName, &params))
+        engineIdString = d->toString();
 
-    // having extracted the params the name, we now need to build a new string.
-    return buildIdString(mgrName, params, engineId);
+    return QOrganizerManagerData::buildIdString(managerName, params, &engineIdString);
 }
 
 /*!
-    Deserializes the given \a idString.  Returns a default-constructed (null) collection ID if the
-    given \a idString is not a valid, serialized collection ID, or if the manager engine from which
-    the ID refers to could not be found.
- */
+    Deserializes the given \a idString. Returns a default-constructed (null)
+    collection ID if the given \a idString is not a valid, serialized collection ID,
+    or if the manager engine from which the ID refers to could not be found.
+
+    \sa toString()
+*/
 QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString &idString)
 {
     QString managerName;
     QMap<QString, QString> params;
     QString engineIdString;
 
-    if (!parseIdString(idString, &managerName, &params, &engineIdString))
+    if (!QOrganizerManagerData::parseIdString(idString, &managerName, &params, &engineIdString))
         return QOrganizerCollectionId(); // invalid idString given.
 
     QOrganizerCollectionEngineId *engineId = QOrganizerManagerData::createEngineCollectionId(managerName, params, engineIdString);

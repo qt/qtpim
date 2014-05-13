@@ -253,4 +253,128 @@ QOrganizerManagerEngine *QOrganizerManagerData::engine(const QOrganizerManager *
     return 0;
 }
 
+static inline QString escapeParam(const QString &param)
+{
+    QString ret;
+    const int len = param.length();
+    ret.reserve(int(len * 1.1));
+    for (int i = 0; i < len; ++i) {
+        switch (param.at(i).unicode()) {
+        case ':':
+            ret += QStringLiteral("&#58;");
+            break;
+        case '=':
+            ret += QStringLiteral("&equ;");
+            break;
+        case '&':
+            ret += QStringLiteral("&amp;");
+            break;
+        default:
+            ret += param.at(i);
+            break;
+        }
+    }
+    return ret;
+}
+
+static inline QString unescapeParam(const QString &param)
+{
+    QString ret(param);
+    if (ret.contains(QLatin1Char('&'))) {
+        ret.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
+        ret.replace(QStringLiteral("&equ;"), QStringLiteral("="));
+        ret.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+    }
+    return ret;
+}
+
+/*!
+    Parses the individual components of the given \a idString and fills the
+    \a managerName, \a params and \a engineIdString.
+    Returns true if the parts could be parsed successfully, false otherwise.
+*/
+bool QOrganizerManagerData::parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString)
+{
+    // Format: qtorganizer:<managerid>:<key>=<value>&<key>=<value>:<engineIdString>
+    // we assume that the prefix, managerid, params, and engineIdString cannot contain `:', `=', or `&'
+    // similarly, that neither param keys nor param values can contain these characters
+
+    const QStringList colonSplit = idString.split(QLatin1Char(':'), QString::KeepEmptyParts);
+    if (colonSplit.size() < 2 || (engineIdString && colonSplit.size() != 4))
+        return false;
+
+    const QString prefix = colonSplit.at(0);
+    const QString mgrName = colonSplit.at(1).trimmed();
+    const QString paramString = colonSplit.value(2);
+
+    if (prefix != QStringLiteral("qtorganizer") || mgrName.isEmpty())
+        return false;
+
+    if (!paramString.isEmpty()) {
+        // Now we have to decode each parameter
+        QMap<QString, QString> outParams;
+        const QStringList pairs = paramString.split(QRegExp(QStringLiteral("&(?!(amp;|equ;|#))")), QString::KeepEmptyParts);
+        for (int i = 0; i < pairs.size(); ++i) {
+            // This should be something like "foo&amp;bar&equ;=grob&amp;"
+            const QStringList pair = pairs.at(i).split(QLatin1Char('='), QString::KeepEmptyParts);
+            if (pair.size() != 2)
+                return false;
+
+            QString arg = pair.at(0);
+            QString param = pair.at(1);
+
+            if (arg.isEmpty())
+                return false;
+
+            arg = unescapeParam(arg);
+            param = unescapeParam(param);
+
+            outParams.insert(arg, param);
+        }
+
+        if (params)
+            *params = outParams;
+    }
+
+    if (managerName)
+        *managerName = unescapeParam(mgrName);
+
+    // and unescape the engine id string
+    if (engineIdString)
+        *engineIdString = unescapeParam(colonSplit.at(3));
+
+    return true;
+}
+
+/*!
+    Returns a ID string that describes a manager name and parameters with which to instantiate
+    a manager object, from the given \a managerName and \a params.
+    If \a engineIdString is not null, the generated ID string is suitable for
+    passing to QOrganizerCollectionId::fromString() or QOrganizerItemId::fromString().
+*/
+QString QOrganizerManagerData::buildIdString(const QString &managerName, const QMap<QString, QString> &params, QString *engineIdString)
+{
+    // Format: qtorganizer:<managerid>:<key>=<value>&<key>=<value>:<engineIdString>
+    // if the prefix, managerid, param keys, param values, or engineIdString contain `:', `=', or `&',
+    // we escape them to `&#58;', `&equ;', and `&amp;', respectively
+
+    QString idString;
+
+    // we have to escape each param
+    QMap<QString, QString>::const_iterator it = params.constBegin();
+    for ( ; it != params.constEnd(); ++it) {
+        if (it.key().isEmpty())
+            continue;
+        if (!idString.isEmpty())
+            idString += QLatin1Char('&');
+        idString += escapeParam(it.key()) + QLatin1Char('=') + escapeParam(it.value());
+    }
+
+    idString = QStringLiteral("qtorganizer:") + escapeParam(managerName) + QLatin1Char(':') + idString;
+    if (engineIdString)
+        idString += QLatin1Char(':') + escapeParam(*engineIdString);
+
+    return idString;
+}
+
 QT_END_NAMESPACE_ORGANIZER

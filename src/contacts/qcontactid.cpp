@@ -193,112 +193,11 @@ bool QContactId::isNull() const
 }
 
 /*!
-  Escapes the parameters for inclusion to URIs
- */
-QString QContactId::escapeUriParam(const QString &param)
-{
-    QString rich;
-    const int len = param.length();
-    rich.reserve(int(len * 1.1));
-    for (int i = 0; i < len; ++i) {
-        if (param.at(i) == QLatin1Char(':'))
-            rich += QStringLiteral("&#58;");
-        else if (param.at(i) == QLatin1Char('='))
-            rich += QStringLiteral("&equ;");
-        else if (param.at(i) == QLatin1Char('&'))
-            rich += QStringLiteral("&amp;");
-        else
-            rich += param.at(i);
-    }
-    rich.squeeze();
-    return rich;
-}
-
-/*!
-  Parses the individual components of the given \a idString and fills the \a managerName, \a params and \a engineIdString.
-  Returns true if the parts could be parsed successfully, false otherwise.
- */
-bool QContactId::parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString)
-{
-    QStringList colonSplit = idString.split(QLatin1Char(':'));
-
-    QString prefix = colonSplit.value(0);
-    if (prefix != QStringLiteral("qtcontacts") || colonSplit.size() != 4)
-        return false; // invalid serialized string.  we cannot continue.
-
-    QString mgrName = colonSplit.value(1);
-    QString paramString = colonSplit.value(2);
-    QString engIdString = colonSplit.value(3);
-
-    // Now we have to decode each parameter
-    QMap<QString, QString> outParams;
-    if (!paramString.isEmpty()) {
-        QStringList params = paramString.split(QStringLiteral("&(?!(amp;|equ;))"), QString::KeepEmptyParts);
-        // If we have an empty string for paramstring, we get one entry in params,
-        // so skip that case.
-        for (int i = 0; i < params.count(); i++) {
-            /* This should be something like "foo&amp;bar&equ;=grob&amp;" */
-            QStringList paramChunk = params.value(i).split(QStringLiteral("="), QString::KeepEmptyParts);
-
-            if (paramChunk.count() != 2)
-                return false;
-
-            QString arg = paramChunk.value(0);
-            QString param = paramChunk.value(1);
-
-            arg.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-            arg.replace(QStringLiteral("&equ;"), QStringLiteral("="));
-            arg.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-            param.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-            param.replace(QStringLiteral("&equ;"), QStringLiteral("="));
-            param.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-            if (arg.isEmpty())
-                return false;
-            outParams.insert(arg, param);
-        }
-    }
-
-    // and unescape the engine id string.
-    engIdString.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-    engIdString.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-
-    // now fill the return values.
-    if (managerName)
-        *managerName = mgrName;
-    if (params)
-        *params = outParams;
-    if (engineIdString)
-        *engineIdString = engIdString;
-
-    // and return.
-    return true;
-}
-
-
-/*!
  * Returns the URI of the manager which contains the contact identified by this id
  */
 QString QContactId::managerUri() const
 {
     return d ? d->managerUri() : QString();
-}
-
-/*!
-   Returns the contact id as a string. This string can be converted back to equal contact id
-   using fromString.
-
-  \sa fromString()
-*/
-QString QContactId::toString() const
-{
-    // rely on engine id to supply the full manager uri
-    if (d) {
-        QString result(QStringLiteral("%1:%2"));
-        QString managerUri = d->managerUri();
-        QString escapedEngineId = QContactId::escapeUriParam(d->toString());
-        return result.arg(managerUri, escapedEngineId);
-    }
-    return QString(QStringLiteral("qtcontacts:::"));
 }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -330,19 +229,38 @@ QDataStream& operator>>(QDataStream &in, QContactId &id)
 #endif
 
 /*!
-  Deserializes the given \a idString.  Returns a default-constructed (null)
-  contact id if the given \a idString is not a valid, serialized contact id, or
-  if the manager engine from which the id came could not be found.
+    Serializes the contact ID to a string. The format of the string will be:
+    "qtcontacts:managerName:constructionParams:engineLocalItemId".
 
-  \sa toString()
- */
+    \sa fromString()
+*/
+QString QContactId::toString() const
+{
+    QString managerName;
+    QMap<QString, QString> params;
+    QString engineIdString;
+
+    // rely on engine id to supply the full manager uri
+    if (d && QContactManagerData::parseIdString(d->managerUri(), &managerName, &params))
+        engineIdString = d->toString();
+
+    return QContactManagerData::buildIdString(managerName, params, &engineIdString);
+}
+
+/*!
+    Deserializes the given \a idString. Returns a default-constructed (null)
+    contact ID if the given \a idString is not a valid, serialized contact ID,
+    or if the manager engine from which the ID came could not be found.
+
+    \sa toString()
+*/
 QContactId QContactId::fromString(const QString &idString)
 {
     QString managerName;
     QMap<QString, QString> params;
     QString engineIdString;
 
-    if (!QContactId::parseIdString(idString, &managerName, &params, &engineIdString))
+    if (!QContactManagerData::parseIdString(idString, &managerName, &params, &engineIdString))
         return QContactId(); // invalid idString given.
 
     QContactEngineId* engineId = QContactManagerData::createEngineContactId(managerName, params, engineIdString);

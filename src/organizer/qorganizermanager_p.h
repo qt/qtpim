@@ -81,6 +81,10 @@ public:
         delete m_engine;
     }
 
+    // helpers
+    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString = 0);
+    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, QString *engineIdString = 0);
+
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
     static QOrganizerManagerData *get(const QOrganizerManager *manager);
     static QOrganizerManagerEngine *engine(const QOrganizerManager *manager);

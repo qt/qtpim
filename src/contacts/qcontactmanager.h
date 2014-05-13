@@ -86,8 +86,9 @@ public:
     QString managerUri() const;                        // managerName + managerParameters
     int managerVersion() const;
 
-    static bool parseUri(const QString& uri, QString* managerName, QMap<QString, QString>* params);
-    static QString buildUri(const QString& managerName, const QMap<QString, QString>& params, int implementationVersion = -1);
+    static bool parseUri(const QString &uri, QString *managerName, QMap<QString, QString> *params);
+    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params);
+    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params, int implementationVersion);
 
     enum Error {
         NoError = 0,

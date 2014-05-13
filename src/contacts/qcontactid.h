@@ -42,7 +42,6 @@
 #ifndef QCONTACTID_H
 #define QCONTACTID_H
 
-#include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
 
@@ -73,9 +72,6 @@ public:
     static QContactId fromString(const QString &idString);
 
 private:
-    static bool parseIdString(const QString &idString, QString* managerName, QMap<QString, QString> *params, QString *engineIdString);
-    static QString escapeUriParam(const QString &param);
-
     QSharedDataPointer<QContactEngineId> d;
     friend class QContactManager;
     friend class QContactManagerEngine;

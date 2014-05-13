@@ -52,8 +52,6 @@ struct Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactoryInterface : public QFact
 {
     virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
     virtual QString managerName() const = 0;
-    virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
-    virtual QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
 };
 QT_END_NAMESPACE_ORGANIZER
 
@@ -72,8 +70,6 @@ public:
     virtual ~QOrganizerManagerEngineFactory();
     virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
     virtual QString managerName() const = 0;
-    virtual QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
-    virtual QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
 
     QStringList keys() const;
 };

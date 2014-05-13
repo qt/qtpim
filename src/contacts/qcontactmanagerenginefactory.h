@@ -48,15 +48,11 @@
 #include <QtContacts/qcontactmanager.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
-/* Backend plugin API interface, creates engines for us */
-class QContactEngineId;
-class QContactManagerEngine;
 
 struct Q_CONTACTS_EXPORT QContactManagerEngineFactoryInterface : public QFactoryInterface
 {
     virtual QContactManagerEngine *engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) = 0;
     virtual QString managerName() const = 0;
-    virtual QContactEngineId *createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
 };
 QT_END_NAMESPACE_CONTACTS
 
@@ -75,7 +71,6 @@ public:
     virtual QList<int> supportedImplementationVersions() const;
     virtual ~QContactManagerEngineFactory();
     virtual QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) = 0;
-    virtual QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const = 0;
     virtual QString managerName() const = 0;
     virtual QStringList keys() const;
 };

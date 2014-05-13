@@ -63,20 +63,6 @@ QOrganizerManagerEngine* QOrganizerItemMemoryFactory::engine(const QMap<QString,
     return ret;
 }
 
-QOrganizerItemEngineId* QOrganizerItemMemoryFactory::createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
-{
-    Q_UNUSED(parameters);
-    QOrganizerItemMemoryEngineId *retn = new QOrganizerItemMemoryEngineId(idString);
-    return retn;
-}
-
-QOrganizerCollectionEngineId* QOrganizerItemMemoryFactory::createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
-{
-    Q_UNUSED(parameters);
-    QOrganizerCollectionMemoryEngineId *retn = new QOrganizerCollectionMemoryEngineId(idString);
-    return retn;
-}
-
 QString QOrganizerItemMemoryFactory::managerName() const
 {
     return QString::fromLatin1("memory");
@@ -101,192 +87,6 @@ QString QOrganizerItemMemoryFactory::managerName() const
   whenever a manager uses this backend, and is decreased when the manager
   no longer requires this engine.
  */
-
-
-/*!
-  \class QOrganizerItemMemoryEngineId
-  \brief The QOrganizerItemMemoryEngineId class provides an id which uniquely identifies
-  a QOrganizerItem stored within a collection stored within a a QOrganizerItemMemoryEngine.
-
-  \internal
-  It may be used as a reference implementation, although since different platforms
-  have different semantics for ids (datastore-unique versus calendar-unique, etc),
-  the precise implementation required may differ.
- */
-QOrganizerItemMemoryEngineId::QOrganizerItemMemoryEngineId()
-    : QOrganizerItemEngineId(), m_collectionId(0), m_itemId(0)
-{
-}
-
-QOrganizerItemMemoryEngineId::QOrganizerItemMemoryEngineId(quint32 collectionId, quint32 itemId, const QString& managerUri)
-    : QOrganizerItemEngineId(), m_collectionId(collectionId), m_itemId(itemId), m_managerUri(managerUri)
-{
-}
-
-QOrganizerItemMemoryEngineId::~QOrganizerItemMemoryEngineId()
-{
-}
-
-QOrganizerItemMemoryEngineId::QOrganizerItemMemoryEngineId(const QOrganizerItemMemoryEngineId& other)
-    : QOrganizerItemEngineId(), m_collectionId(other.m_collectionId), m_itemId(other.m_itemId), m_managerUri(other.m_managerUri)
-{
-}
-
-QOrganizerItemMemoryEngineId::QOrganizerItemMemoryEngineId(const QString& idString)
-    : QOrganizerItemEngineId()
-{
-    int temp = 0;
-    int colonIndex = idString.indexOf(QStringLiteral(":"), 0);
-    m_collectionId = idString.mid(temp, colonIndex).toUInt();
-    temp = colonIndex + 1;
-    colonIndex = idString.indexOf(QStringLiteral(":"), temp);
-    m_itemId = idString.mid(temp, (colonIndex-temp)).toUInt();
-    temp = colonIndex + 1;
-    m_managerUri = idString.mid(temp);
-}
-
-bool QOrganizerItemMemoryEngineId::isEqualTo(const QOrganizerItemEngineId* other) const
-{
-    // note: we don't need to check the collectionId because itemIds in the memory
-    // engine are unique regardless of which collection the item is in; also, we
-    // don't need to check the managerUri, because this function is not called if
-    // the managerUris don't match.
-    if (m_itemId != static_cast<const QOrganizerItemMemoryEngineId*>(other)->m_itemId)
-        return false;
-    return true;
-}
-
-bool QOrganizerItemMemoryEngineId::isLessThan(const QOrganizerItemEngineId* other) const
-{
-    // order by collection, then by item in collection.
-    const QOrganizerItemMemoryEngineId* otherPtr = static_cast<const QOrganizerItemMemoryEngineId*>(other);
-    if (m_managerUri < otherPtr->m_managerUri)
-        return true;
-    if (m_collectionId < otherPtr->m_collectionId)
-        return true;
-    if (m_collectionId == otherPtr->m_collectionId)
-        return (m_itemId < otherPtr->m_itemId);
-    return false;
-}
-
-QString QOrganizerItemMemoryEngineId::managerUri() const
-{
-    return m_managerUri;
-}
-
-QString QOrganizerItemMemoryEngineId::toString() const
-{
-    return (QString::number(m_collectionId) % QLatin1Char(':') % QString::number(m_itemId) % QLatin1Char(':') % m_managerUri);
-}
-
-QOrganizerItemEngineId* QOrganizerItemMemoryEngineId::clone() const
-{
-    return new QOrganizerItemMemoryEngineId(m_collectionId, m_itemId, m_managerUri);
-}
-
-#ifndef QT_NO_DEBUG_STREAM
-QDebug& QOrganizerItemMemoryEngineId::debugStreamOut(QDebug& dbg) const
-{
-    dbg.nospace() << "QOrganizerItemMemoryEngineId(" << m_collectionId << ", " << m_itemId << "," << m_managerUri << ")";
-    return dbg.maybeSpace();
-}
-#endif
-
-uint QOrganizerItemMemoryEngineId::hash() const
-{
-    // Note: doesn't need to be unique, since == ensures difference.
-    // Hash function merely determines distribution in a hash table.
-    // We certainly don't want to qHash(managerUri) since that's slow.
-    // We don't need anything other than itemId in the memory engine,
-    // since it's unique across collections.
-    return m_itemId;
-}
-
-/*!
-  \class QOrganizerCollectionMemoryEngineId
-  \brief The QOrganizerCollectionMemoryEngineId class provides an id which uniquely identifies
-  a QOrganizerCollection stored within a collection stored within a a QOrganizerCollectionMemoryEngine.
-  \internal
-
-  It may be used as a reference implementation, although since different platforms
-  have different semantics for ids (datastore-unique versus calendar-unique, etc),
-  the precise implementation required may differ.
- */
-QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId()
-    : QOrganizerCollectionEngineId(), m_collectionId(0)
-{
-}
-
-QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId(quint32 collectionId, const QString& managerUri)
-    : QOrganizerCollectionEngineId(), m_collectionId(collectionId), m_managerUri(managerUri)
-{
-}
-
-QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId(const QOrganizerCollectionMemoryEngineId& other)
-    : QOrganizerCollectionEngineId(), m_collectionId(other.m_collectionId)
-{
-}
-
-QOrganizerCollectionMemoryEngineId::QOrganizerCollectionMemoryEngineId(const QString& idString)
-    : QOrganizerCollectionEngineId()
-{
-    int colonIndex = idString.indexOf(QStringLiteral(":"));
-    m_collectionId = idString.mid(0, colonIndex).toUInt();
-    m_managerUri = idString.mid(colonIndex+1);
-}
-
-QOrganizerCollectionMemoryEngineId::~QOrganizerCollectionMemoryEngineId()
-{
-}
-
-bool QOrganizerCollectionMemoryEngineId::isEqualTo(const QOrganizerCollectionEngineId* other) const
-{
-    // note: we don't need to check the managerUri because this function is not called
-    // if the managerUris are different.
-    if (m_collectionId != static_cast<const QOrganizerCollectionMemoryEngineId*>(other)->m_collectionId)
-        return false;
-    return true;
-}
-
-bool QOrganizerCollectionMemoryEngineId::isLessThan(const QOrganizerCollectionEngineId* other) const
-{
-    // order by collection, then by item in collection.
-    const QOrganizerCollectionMemoryEngineId* otherPtr = static_cast<const QOrganizerCollectionMemoryEngineId*>(other);
-    if (m_managerUri < otherPtr->m_managerUri)
-        return true;
-    if (m_collectionId < otherPtr->m_collectionId)
-        return true;
-    return false;
-}
-
-QString QOrganizerCollectionMemoryEngineId::managerUri() const
-{
-    return m_managerUri;
-}
-
-QString QOrganizerCollectionMemoryEngineId::toString() const
-{
-    return (QString::number(m_collectionId) % QLatin1Char(':') % m_managerUri);
-}
-
-QOrganizerCollectionEngineId* QOrganizerCollectionMemoryEngineId::clone() const
-{
-    return new QOrganizerCollectionMemoryEngineId(m_collectionId, m_managerUri);
-}
-
-#ifndef QT_NO_DEBUG_STREAM
-QDebug& QOrganizerCollectionMemoryEngineId::debugStreamOut(QDebug& dbg) const
-{
-    dbg.nospace() << "QOrganizerCollectionMemoryEngineId(" << m_collectionId << "," << m_managerUri << ")";
-    return dbg.maybeSpace();
-}
-#endif
-
-uint QOrganizerCollectionMemoryEngineId::hash() const
-{
-    return m_collectionId;
-}
-
 
 typedef QHash<QString, QOrganizerItemMemoryEngineData *> EngineDatas;
 Q_GLOBAL_STATIC(EngineDatas, theEngineDatas);
@@ -338,7 +138,7 @@ QOrganizerItemMemoryEngine::QOrganizerItemMemoryEngine(QOrganizerItemMemoryEngin
     // the default collection always exists.
     if (d->m_idToCollectionHash.isEmpty()) {
         d->m_managerUri = managerUri();
-        QOrganizerCollectionId defaultId = d->defaultCollectionId();
+        const QOrganizerCollectionId defaultId = defaultCollectionId();
         QOrganizerCollection defaultCollection;
         defaultCollection.setId(defaultId);
         defaultCollection.setMetaData(QOrganizerCollection::KeyName, QString(QStringLiteral("Default Collection")));
@@ -374,6 +174,13 @@ QMap<QString, QString> QOrganizerItemMemoryEngine::managerParameters() const
     QMap<QString, QString> params;
     params.insert(QStringLiteral("id"), d->m_id);
     return params;
+}
+
+/*! \reimp
+*/
+QMap<QString, QString> QOrganizerItemMemoryEngine::idInterpretationParameters() const
+{
+    return managerParameters();
 }
 
 QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
@@ -842,13 +649,10 @@ bool QOrganizerItemMemoryEngine::storeItem(QOrganizerItem* theOrganizerItem, QOr
 
         // if target collection id is null, set to default id.
         if (targetCollectionId.isNull())
-            targetCollectionId = d->defaultCollectionId();
+            targetCollectionId = defaultCollectionId();
 
         // update the organizer item - set its ID
-        const QOrganizerCollectionMemoryEngineId *colEngineId = static_cast<const QOrganizerCollectionMemoryEngineId *>(QOrganizerManagerEngine::engineCollectionId(targetCollectionId));
-        QOrganizerItemMemoryEngineId* newId = new QOrganizerItemMemoryEngineId(colEngineId->m_collectionId, d->m_nextOrganizerItemId++, d->m_managerUri);
-        // note: do NOT delete the QOrganizerItemMemoryEngineId -- the QOrganizerItemId ctor takes ownership of it.
-        theOrganizerItemId = QOrganizerItemId(newId);
+        theOrganizerItemId = this->itemId(QString::number(d->m_nextOrganizerItemId++));
         theOrganizerItem->setId(theOrganizerItemId);
         // finally, add the organizer item to our internal lists and return
         theOrganizerItem->setCollectionId(targetCollectionId);
@@ -1244,7 +1048,7 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItem> *items,
 
 QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error)
 {
-    const QOrganizerCollectionId defaultCollectionId = d->defaultCollectionId();
+    const QOrganizerCollectionId defaultCollectionId = this->defaultCollectionId();
     Q_ASSERT(d->m_idToCollectionHash.contains(defaultCollectionId));
     *error = QOrganizerManager::NoError;
     return d->m_idToCollectionHash.value(defaultCollectionId);
@@ -1291,7 +1095,7 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
         }
 
         // this is a new collection with a null id; create a new id, add it to our list.
-        collectionId = QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(d->m_nextOrganizerCollectionId++, d->m_managerUri));
+        collectionId = this->collectionId(QString::number(d->m_nextOrganizerCollectionId++));
         collection->setId(collectionId);
         cs.insertAddedCollection(collectionId);
     }
@@ -1304,7 +1108,7 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
 
 bool QOrganizerItemMemoryEngine::removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
 {
-    if (collectionId == d->defaultCollectionId()) {
+    if (collectionId == defaultCollectionId()) {
         // attempting to remove the default collection.  this is not allowed in the memory engine.
         *error = QOrganizerManager::PermissionsError;
         return false;

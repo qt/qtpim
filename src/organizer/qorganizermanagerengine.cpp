@@ -202,10 +202,9 @@ QString QOrganizerManagerEngine::managerName() const
 }
 
 /*!
-    This function should be reimplemented to return the parameters used in when constructing this
-    backend. The default implementation returns an empty QMap.
-
-    If certain paramters are invalid, or discarded by the backend, they should not be returned.
+    Returns the parameters with which this engine was constructed.  Note that
+    the engine may have discarded unused or invalid parameters at the time of
+    construction, and these will not be returned.
  */
 QMap<QString, QString> QOrganizerManagerEngine::managerParameters() const
 {
@@ -213,13 +212,46 @@ QMap<QString, QString> QOrganizerManagerEngine::managerParameters() const
 }
 
 /*!
-    Returns the unique URI of this manager, which is built from the manager name and the parameters
-    used to construct it.
+    Returns the subset of the manager parameters that are relevant when interpreting
+    contact ID values. Since contact ID comparison involves equivalence of
+    managerUri values, parameters that do not differentiate contact IDs should not
+    be returned by this function.
+
+    For example, a manager engine may support 'user' and 'cachesize' parameters,
+    where the former distinguishes between separate user domains, and the latter
+    is for performance tuning. The 'user' parameter will be relevant to the interpretation
+    of contact IDs and thus should be returned by this function, whereas 'cachesize'
+    is not relevant and should be omitted.
+
+    \sa managerUri(), managerParamaters()
  */
-QString QOrganizerManagerEngine::managerUri() const
+QMap<QString, QString> QOrganizerManagerEngine::idInterpretationParameters() const
 {
-    return QOrganizerManager::buildUri(managerName(), managerParameters());
+    return QMap<QString, QString>(); // default implementation returns no parameters.
 }
+
+/*!
+    \fn QString QOrganizerManagerEngine::managerUri() const
+
+    Returns the unique URI of this manager, which is built from the manager name and the
+    ID interpretation parameters used to construct it.
+
+    \sa idInterpretationParameters()
+ */
+
+/*!
+    \fn QOrganizerItemId QOrganizerManagerEngine::itemId(const QString &localId) const
+
+    Returns the organizer item ID for this managerUri() and the given
+    engine specific ID part \a localId.
+*/
+
+/*!
+    \fn QOrganizerCollectionId QOrganizerManagerEngine::collectionId(const QString &localId) const
+
+    Returns the organizer collection ID for this managerUri() and the given
+    engine specific ID part \a localId.
+*/
 
 /*!
     This function should be reimplemented to support synchronous calls to fetch occurrences of the
@@ -1656,31 +1688,6 @@ bool QOrganizerManagerEngine::itemHasReccurence(const QOrganizerItem& oi)
     }
 
     return false;
-}
-
-
-
-
-/*!
-    Returns the engine ID from the given item \a id.
-
-    The caller does not take ownership of the pointer, and should not delete returned id or undefined
-    behavior may occur.
- */
-const QOrganizerItemEngineId *QOrganizerManagerEngine::engineItemId(const QOrganizerItemId &id)
-{
-    return id.d.data();
-}
-
-/*!
-    Returns the engine ID from the given collection \a id.
-
-    The caller does not take ownership of the pointer, and should not delete returned id or undefined
-    behavior may occur.
- */
-const QOrganizerCollectionEngineId* QOrganizerManagerEngine::engineCollectionId(const QOrganizerCollectionId& id)
-{
-    return id.d.data();
 }
 
 /*!

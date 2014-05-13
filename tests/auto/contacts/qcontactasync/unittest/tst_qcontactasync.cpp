@@ -44,28 +44,8 @@
 #include <QCoreApplication>
 #include <QScopedPointer>
 
-#include <QtContacts/QContact>
-#include <QtContacts/QContactAbstractRequest>
-#include <QtContacts/QContactTimestamp>
-#include <QtContacts/QContactFetchRequest>
-#include <QtContacts/QContactDetailFilter>
-#include <QtContacts/QContactUrl>
-#include <QtContacts/QContactPhoneNumber>
-#include <QtContacts/QContactFetchByIdRequest>
-#include <QtContacts/QContactIdFetchRequest>
-#include <QtContacts/QContactRemoveRequest>
-#include <QtContacts/QContactSaveRequest>
-#include <QtContacts/QContactEmailAddress>
-#include <QtContacts/QContactOnlineAccount>
-#include <QtContacts/QContactTag>
-#include <QtContacts/QContactOrganization>
-#include <QtContacts/QContactRelationshipFetchRequest>
-#include <QtContacts/QContactRelationshipRemoveRequest>
-#include <QtContacts/QContactRelationshipSaveRequest>
-#include <QtContacts/QContactName>
-#include <QtContacts/QContactIdFilter>
+#include <QtContacts/qcontacts.h>
 
-#include "qcontactidmock.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
 QTCONTACTS_USE_NAMESPACE
@@ -183,6 +163,13 @@ private:
     // Different API
     QList< QVariantList> savedArgs;
 };
+
+
+static inline QContactId makeId(const QString &managerName, uint id)
+{
+    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QString::number(id));
+}
+
 
 class tst_QContactAsync : public QObject
 {
@@ -1240,7 +1227,7 @@ void tst_QContactAsync::contactRemoveErrorHandling() {
 
     // Setup valid and invalid contact ids for remove request, start it and wait for finished.
     QContactId emptyId;
-    QContactId failingId = QContactIdMock::createId("Failing", 0);
+    QContactId failingId = makeId("Failing", 0);
     QList<QContactId> toRemove;
     toRemove << emptyId << cm.data()->contactIds();
     toRemove.insert(3, emptyId);
@@ -1779,7 +1766,7 @@ void tst_QContactAsync::contactPartialSave()
     QCOMPARE(contacts[4].details<QContactPhoneNumber>().count(), 1); // saved
 
     // 6) Have a bad manager uri in the middle
-    QContactId badId = QContactIdMock::createId("BadManager", 0);
+    QContactId badId = makeId("BadManager", 0);
     contacts[3].setId(badId);
     csr.setContacts(contacts);
     QVERIFY(csr.start());
@@ -1790,7 +1777,7 @@ void tst_QContactAsync::contactPartialSave()
     QCOMPARE(errorMap[3], QContactManager::DoesNotExistError);
 
     // 7) Have a non existing contact in the middle
-    badId = QContactIdMock::createId(cm->managerName(), 0);
+    badId = makeId(cm->managerName(), 0);
     contacts[3].setId(badId);
     csr.setContacts(contacts);
     QVERIFY(csr.start());

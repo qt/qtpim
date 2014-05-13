@@ -63,10 +63,8 @@
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
-class QOrganizerCollectionEngineId;
 class QOrganizerItemObserver;
 class QOrganizerManagerEngineFactory;
-class QOrganizerItemEngineId;
 
 class QOrganizerManagerData
 {
@@ -82,14 +80,14 @@ public:
     }
 
     // helpers
-    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString = 0);
-    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, QString *engineIdString = 0);
+    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *managerUri = 0, QString *engineIdString = 0);
+
+    static QString buildIdString(const QString &managerUri, const QString &engineIdString = QString());
+    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString = QString());
 
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
     static QOrganizerManagerData *get(const QOrganizerManager *manager);
     static QOrganizerManagerEngine *engine(const QOrganizerManager *manager);
-    static QOrganizerItemEngineId *createEngineItemId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
-    static QOrganizerCollectionEngineId *createEngineCollectionId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
 
     QOrganizerManagerEngine *m_engine;
     QOrganizerManager::Error m_lastError;

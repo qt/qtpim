@@ -42,11 +42,16 @@
 #include <QtTest/QtTest>
 #include <QtContacts/qcontacts.h>
 #include <QSet>
-#include "../qcontactidmock.h"
 
 //TESTED_COMPONENT=src/contacts
 
 QTCONTACTS_USE_NAMESPACE
+
+static inline QContactId makeId(const QString &managerName, uint id)
+{
+    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QString::number(id));
+}
+
 
 class tst_QContact: public QObject
 {
@@ -536,28 +541,29 @@ void tst_QContact::emptiness()
 
 void tst_QContact::idComparison()
 {
-    QContactId id1 = QContactIdMock::createId("a", 1);
-    QContactId id2 = QContactIdMock::createId("a", 1);
+    QContactId id1(makeId("a", 1));
+    QContactId id2(makeId("a", 1));
     QVERIFY(!(id1 < id2));
     QVERIFY(!(id2 < id1));
     QVERIFY(id1 == id2);
-    QContactId id3 = QContactIdMock::createId("a", 2);
-    QContactId id4 = QContactIdMock::createId("b", 1);
-    QContactId id5 = QContactIdMock::createId(QString(), 2); // no Uri specified.
-    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
-    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
-    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
-    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
+    QContactId id3(makeId("a", 2));
+    QContactId id4(makeId("b", 1));
+    QContactId id5(makeId(QString(), 2)); // no Uri specified.
+    QVERIFY((((id1 < id3) && !(id3 < id1)) || ((id3 < id1) && !(id1 < id3))) && (id1 != id3));
+    QVERIFY((((id1 < id4) && !(id4 < id1)) || ((id4 < id1) && !(id1 < id4))) && (id1 != id4));
+    QVERIFY((((id3 < id4) && !(id4 < id3)) || ((id4 < id3) && !(id3 < id4))) && (id3 != id4));
+    QVERIFY((((id1 < id5) && !(id5 < id1)) || ((id5 < id1) && !(id1 < id5))) && (id3 != id4));
 }
 
 void tst_QContact::idHash()
 {
-    QContactId id1 = QContactIdMock::createId("a", 1);
-    QContactId id2 = QContactIdMock::createId("a", 1);
-    QContactId id3 = QContactIdMock::createId("b", 1);
-    QContactId id4 = QContactIdMock::createId("a", 2);
+    QContactId id1(makeId("a", 1));
+    QContactId id2(makeId("a", 1));
+    QContactId id3(makeId("b", 1));
+    QContactId id4(makeId("a", 2));
     // note that the hash function ignores the managerUri
     QCOMPARE(qHash(id1), qHash(id2));
+    QCOMPARE(qHash(id1), qHash(id3));
     QVERIFY(qHash(id1) != qHash(id4));
 
     QSet<QContactId> set;
@@ -570,7 +576,7 @@ void tst_QContact::idHash()
 
 void tst_QContact::hash()
 {
-    QContactId id = QContactIdMock::createId("a", 1);
+    QContactId id = makeId("a", 1);
     QContact contact1;
     contact1.setId(id);
     QContactDetail detail1(QContactDetail::TypeExtendedDetail);
@@ -603,7 +609,7 @@ void tst_QContact::datastream()
     QByteArray buffer;
     QDataStream stream1(&buffer, QIODevice::WriteOnly);
     QContact contactIn;
-    QContactId id = QContactIdMock::createId("manager", 1234);
+    QContactId id = makeId("manager", 1234);
     contactIn.setId(id);
     QContactPhoneNumber phone;
     phone.setNumber("5678");
@@ -612,11 +618,10 @@ void tst_QContact::datastream()
 
     QVERIFY(buffer.size() > 0);
 
-    /* TODO: fix me?
     QDataStream stream2(buffer);
     QContact contactOut;
     stream2 >> contactOut;
-    QCOMPARE(contactOut, contactIn);*/
+    QCOMPARE(contactOut, contactIn);
 }
 
 void tst_QContact::traits()
@@ -631,10 +636,10 @@ void tst_QContact::traits()
 
 void tst_QContact::idTraits()
 {
-    QCOMPARE(sizeof(QContactId), sizeof(void *));
+    QCOMPARE(sizeof(QContactId), 2*sizeof(void *));
     QVERIFY(QTypeInfo<QContactId>::isComplex);
     QVERIFY(!QTypeInfo<QContactId>::isStatic);
-    QVERIFY(!QTypeInfo<QContactId>::isLarge);
+    QVERIFY(QTypeInfo<QContactId>::isLarge);
     QVERIFY(!QTypeInfo<QContactId>::isPointer);
     QVERIFY(!QTypeInfo<QContactId>::isDummy);
 }
@@ -667,7 +672,7 @@ void tst_QContact::equality()
 
 void tst_QContact::inequality()
 {
-    QContactId id = QContactIdMock::createId("a", 123);
+    QContactId id = makeId("a", 123);
     QContactName name;
     name.setFirstName("John");
     name.setLastName("Doe");

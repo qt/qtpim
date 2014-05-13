@@ -88,21 +88,6 @@ QOrganizerManagerEngineFactory::~QOrganizerManagerEngineFactory()
  */
 
 /*!
-    \fn QOrganizerManagerEngineFactory::createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
-
-    This function should return an engine-specific item ID, according to the given \a parameters and
-    the \a engineIdString.
- */
-
-/*!
-    \fn QOrganizerManagerEngineFactory::createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
-
-
-    This function should return an engine-specific collection ID, according to the given \a parameters
-    and the \a engineIdString.
- */
-
-/*!
     \internal
  */
 QStringList QOrganizerManagerEngineFactory::keys() const

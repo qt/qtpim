@@ -67,12 +67,16 @@ public:
     QContactManagerEngine() {}
 
     /* URI reporting */
-    virtual QString managerName() const = 0;                       // e.g. "memory"
-    virtual QMap<QString, QString> managerParameters() const;  // e.g. "filename=private.db"
+    virtual QString managerName() const = 0;                           // e.g. "memory"
+    virtual QMap<QString, QString> managerParameters() const;          // e.g. "filename=private.db,cachesize=1024"
+    virtual QMap<QString, QString> idInterpretationParameters() const; // e.g. "filename=private.db"
     virtual int managerVersion() const = 0;
 
-    /* Default and only implementation of this */
-    QString managerUri() const;
+    inline QString managerUri() const
+    { return QContactManager::buildUri(managerName(), idInterpretationParameters()); }
+
+    inline QContactId contactId(const QString &localId) const
+    { return QContactId(managerUri(), localId); }
 
     /* Filtering */
     virtual QList<QContactId> contactIds(const QContactFilter &filter, const QList<QContactSortOrder> &sortOrders, QContactManager::Error *error) const;
@@ -141,7 +145,6 @@ public:
     static void setContactRelationships(QContact *contact, const QList<QContactRelationship> &relationships);
 
     /* Helper functions */
-    static const QContactEngineId *engineId(const QContactId &contactId);
     static int compareContact(const QContact &a, const QContact &b, const QList<QContactSortOrder> &sortOrders);
     static void addSorted(QList<QContact>* sorted, const QContact &toAdd, const QList<QContactSortOrder> &sortOrders);
     static int compareVariant(const QVariant &first, const QVariant &second, Qt::CaseSensitivity sensitivity);
@@ -149,7 +152,6 @@ public:
     static QList<QContactId> sortContacts(const QList<QContact> &contacts, const QList<QContactSortOrder> &sortOrders);
 
     static QContactFilter canonicalizedFilter(const QContactFilter &filter);
-
 
 private:
     /* QContactChangeSet is a utility class used to emit the appropriate signals */

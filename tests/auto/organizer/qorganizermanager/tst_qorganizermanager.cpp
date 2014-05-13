@@ -51,8 +51,6 @@
 #include <QtOrganizer/qorganizernote.h>
 #include <QtOrganizer/qorganizerevent.h>
 
-#include <QtOrganizer/qorganizeritemengineid.h>
-
 QTORGANIZER_USE_NAMESPACE
 
 // to get QFETCH to work with the template expression...
@@ -69,6 +67,17 @@ Q_DECLARE_METATYPE(QOrganizerItem)
 Q_DECLARE_METATYPE(QOrganizerManager::Error)
 Q_DECLARE_METATYPE(QList<QDate>)
 Q_DECLARE_METATYPE(QList<QOrganizerItemDetail::DetailType>);
+
+static inline QOrganizerItemId makeItemId(uint id)
+{
+    return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+}
+
+static inline QOrganizerCollectionId makeCollectionId(uint id)
+{
+    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+}
+
 
 class tst_QOrganizerManager : public QObject
 {
@@ -201,80 +210,6 @@ private slots:
     void testVersion_data() { addManagers(); }
     void testVersion();
 };
-
-class BasicItemLocalId : public QOrganizerItemEngineId
-{
-public:
-    BasicItemLocalId(uint id) : m_id(id) {}
-    bool isEqualTo(const QOrganizerItemEngineId* other) const {
-        return m_id == static_cast<const BasicItemLocalId*>(other)->m_id;
-    }
-    bool isLessThan(const QOrganizerItemEngineId* other) const {
-        return m_id < static_cast<const BasicItemLocalId*>(other)->m_id;
-    }
-    QOrganizerItemEngineId* clone() const {
-        BasicItemLocalId* cloned = new BasicItemLocalId(m_id);
-        return cloned;
-    }
-    QString managerUri() const {
-        static const QString uri(QStringLiteral("qtorganizer:basicItem:"));
-        return uri;
-    }
-    QDebug& debugStreamOut(QDebug& dbg) const {
-        return dbg << m_id;
-    }
-    QString toString() const {
-        return QString::number(m_id);
-    }
-    uint hash() const {
-        return m_id;
-    }
-
-private:
-    uint m_id;
-};
-
-class BasicCollectionLocalId : public QOrganizerCollectionEngineId
-{
-public:
-    BasicCollectionLocalId(uint id) : m_id(id) {}
-    bool isEqualTo(const QOrganizerCollectionEngineId* other) const {
-        return m_id == static_cast<const BasicCollectionLocalId*>(other)->m_id;
-    }
-    bool isLessThan(const QOrganizerCollectionEngineId* other) const {
-        return m_id < static_cast<const BasicCollectionLocalId*>(other)->m_id;
-    }
-    QOrganizerCollectionEngineId* clone() const {
-        BasicCollectionLocalId* cloned = new BasicCollectionLocalId(m_id);
-        return cloned;
-    }
-    QString managerUri() const {
-        static const QString uri(QStringLiteral("qtorganizer:basicCollection:"));
-        return uri;
-    }
-    QDebug& debugStreamOut(QDebug& dbg) const {
-        return dbg << m_id;
-    }
-    QString toString() const {
-        return QString::number(m_id);
-    }
-    uint hash() const {
-        return m_id;
-    }
-
-private:
-    uint m_id;
-};
-
-QOrganizerItemId makeItemId(uint id)
-{
-    return QOrganizerItemId(new BasicItemLocalId(id));
-}
-
-QOrganizerCollectionId makeCollectionId(uint id)
-{
-    return QOrganizerCollectionId(new BasicCollectionLocalId(id));
-}
 
 tst_QOrganizerManager::tst_QOrganizerManager()
 {

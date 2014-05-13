@@ -215,9 +215,4 @@ QList<QVariant::Type> DummyEngine::supportedDataTypes() const
     return st;
 }
 
-QContactEngineId* DummyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
-{
-   return 0;
-}
-
 #include "moc_dummyplugin.cpp"

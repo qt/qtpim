@@ -45,11 +45,17 @@
 
 #include <QtOrganizer/qorganizer.h>
 #include <QtOrganizer/qorganizeritemid.h>
-#include <QtOrganizer/qorganizeritemengineid.h>
 
 //TESTED_COMPONENT=src/organizer
 
 QTORGANIZER_USE_NAMESPACE
+
+static inline QOrganizerItemId makeId(const QString &managerName, uint id)
+{
+    return QOrganizerItemId(QStringLiteral("qtorganizer:basic%1:").arg(managerName), QString::number(id));
+}
+
+
 class tst_QOrganizerItem: public QObject
 {
 Q_OBJECT
@@ -556,48 +562,6 @@ void tst_QOrganizerItem::emptiness()
     QVERIFY(oi.isEmpty() == true); // type doesn't affect emptiness
 }
 
-class BasicItemLocalId : public QOrganizerItemEngineId
-{
-public:
-    BasicItemLocalId(const QString& managerUri, uint id) : m_managerUri(managerUri), m_id(id) {}
-    bool isEqualTo(const QOrganizerItemEngineId* other) const {
-        if (m_managerUri == static_cast<const BasicItemLocalId*>(other)->m_managerUri)
-            return m_id == static_cast<const BasicItemLocalId*>(other)->m_id;
-        return false;
-    }
-    bool isLessThan(const QOrganizerItemEngineId* other) const {
-        if (m_managerUri == static_cast<const BasicItemLocalId*>(other)->m_managerUri)
-            return m_id < static_cast<const BasicItemLocalId*>(other)->m_id;
-        return m_managerUri < static_cast<const BasicItemLocalId*>(other)->m_managerUri;
-    }
-    QString managerUri() const {
-        static const QString uri(QStringLiteral("qtorganizer:basic:"));
-        return uri;
-    }
-    QOrganizerItemEngineId* clone() const {
-        BasicItemLocalId* cloned = new BasicItemLocalId(m_managerUri, m_id);
-        return cloned;
-    }
-    QDebug& debugStreamOut(QDebug& dbg) const {
-        return dbg << m_managerUri << m_id;
-    }
-    QString toString() const {
-        return m_managerUri + QString("::") + QString::number(m_id);
-    }
-    uint hash() const {
-        return m_id;
-    }
-
-private:
-    QString m_managerUri;
-    uint m_id;
-};
-
-QOrganizerItemId makeId(const QString& managerUri, uint id)
-{
-    return QOrganizerItemId(new BasicItemLocalId(managerUri, id));
-}
-
 void tst_QOrganizerItem::idComparison()
 {
     QOrganizerItemId id1(makeId("a", 1));
@@ -608,10 +572,10 @@ void tst_QOrganizerItem::idComparison()
     QOrganizerItemId id3(makeId("a", 2));
     QOrganizerItemId id4(makeId("b", 1));
     QOrganizerItemId id5(makeId(QString(), 2)); // no Uri specified.
-    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
-    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
-    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
-    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
+    QVERIFY((((id1 < id3) && !(id3 < id1)) || ((id3 < id1) && !(id1 < id3))) && (id1 != id3));
+    QVERIFY((((id1 < id4) && !(id4 < id1)) || ((id4 < id1) && !(id1 < id4))) && (id1 != id4));
+    QVERIFY((((id3 < id4) && !(id4 < id3)) || ((id4 < id3) && !(id3 < id4))) && (id3 != id4));
+    QVERIFY((((id1 < id5) && !(id5 < id1)) || ((id5 < id1) && !(id1 < id5))) && (id3 != id4));
 }
 
 void tst_QOrganizerItem::idHash()
@@ -622,6 +586,7 @@ void tst_QOrganizerItem::idHash()
     QOrganizerItemId id4(makeId("a", 2));
     // note that the hash function ignores the managerUri
     QCOMPARE(qHash(id1), qHash(id2));
+    QCOMPARE(qHash(id1), qHash(id3));
     QVERIFY(qHash(id1) != qHash(id4));
 
     QSet<QOrganizerItemId> set;
@@ -921,10 +886,10 @@ void tst_QOrganizerItem::traits()
 
 void tst_QOrganizerItem::idTraits()
 {
-    QCOMPARE(sizeof(QOrganizerItemId), sizeof(void *));
+    QCOMPARE(sizeof(QOrganizerItemId), 2*sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerItemId>::isComplex);
     QVERIFY(!QTypeInfo<QOrganizerItemId>::isStatic);
-    QVERIFY(!QTypeInfo<QOrganizerItemId>::isLarge);
+    QVERIFY(QTypeInfo<QOrganizerItemId>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerItemId>::isPointer);
     QVERIFY(!QTypeInfo<QOrganizerItemId>::isDummy);
 }

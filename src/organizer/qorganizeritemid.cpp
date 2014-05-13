@@ -48,17 +48,7 @@
 #include <QtCore/qdebug.h>
 #endif
 
-#include "qorganizeritemengineid.h"
 #include "qorganizermanager_p.h"
-
-#if !defined(Q_CC_MWERKS)
-QT_BEGIN_NAMESPACE
-template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemEngineId) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemEngineId)>::clone()
-{
-    return d ? d->clone() : 0;
-}
-QT_END_NAMESPACE
-#endif
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -72,169 +62,95 @@ QT_BEGIN_NAMESPACE_ORGANIZER
     It consists of a manager URI which identifies the manager which contains the organizer item,
     and the engine specific ID of the organizer item in that manager.
 
-    A "null" QOrganizerItemId has an empty manager URI.
- */
-
-/*!
-    Constructs a new organizer item ID.
- */
-QOrganizerItemId::QOrganizerItemId()
-    : d(0)
-{
-}
-
-/*!
-    Constructs a manager-unique ID which wraps the given engine-unique item ID \a engineItemId.
-    This item ID takes ownership of the engine ID and will delete it when the item ID goes out
-    of scope.  Engine implementors must not delete the \a engineItemId or undefined behaviour
-    will occur.
- */
-QOrganizerItemId::QOrganizerItemId(QOrganizerItemEngineId *engineItemId)
-    : d(engineItemId)
-{
-}
-
-/*!
-    Cleans up the memory in use by the organizer item ID.
- */
-QOrganizerItemId::~QOrganizerItemId()
-{
-}
-
-/*!
-    Constructs a new organizer item ID as a copy of \a other.
+    An invalid QOrganizerItemId has an empty manager URI.
 */
-QOrganizerItemId::QOrganizerItemId(const QOrganizerItemId &other)
-    : d(other.d)
-{
-}
 
 /*!
-    Assigns the organizer item ID to be equal to \a other.
+    \fn QOrganizerItemId::QOrganizerItemId()
+
+    Constructs a new, invalid organizer item ID.
 */
-QOrganizerItemId &QOrganizerItemId::operator=(const QOrganizerItemId &other)
-{
-    d = other.d;
-    return *this;
-}
 
+// TODO: Document and remove internal once the correct signature has been determined
 /*!
-    Returns true if the organizer item ID has the same manager URI and ID as \a other.
+    \fn QOrganizerItemId::QOrganizerItemId(const QString &managerUri, const QString &localId)
+    \internal
+
+    Constructs an ID from the supplied manager URI \a managerUri and the engine
+    specific \a localId string.
 */
-bool QOrganizerItemId::operator==(const QOrganizerItemId &other) const
-{
-    if (d == other.d)
-        return true;
-
-    if (d && other.d)
-        return d->managerUri() == other.d->managerUri() && d->isEqualTo(other.d);
-
-    return false;
-}
 
 /*!
-    Returns true if either the manager URI or ID is different to that of \a other.
+    \fn bool QOrganizerItemId::operator==(const QOrganizerItemId &other) const
+
+    Returns true if this organizer item ID has the same manager URI and
+    engine specific ID as \a other. Returns true also, if both IDs are null.
 */
-bool QOrganizerItemId::operator!=(const QOrganizerItemId &other) const
-{
-    return !(*this == other);
-}
 
 /*!
-    Returns true if this ID is less than the \a other ID.
+    \fn bool QOrganizerItemId::operator!=(const QOrganizerItemId &other) const
 
-    This ID will be considered less than the \a other iID if the manager URI of this ID is
-    alphabetically less than the manager URI of the \a other ID.  If both IDs have the same
-    manager URI, this ID will be considered less than the \a other ID if the engine ID of
-    this ID is less than the engine ID of the \a other ID.
+    Returns true if either the manager URI or engine specific ID of this
+    organizer item ID is different to that of \a other.
+*/
 
-    The invalid, empty ID consists of an empty manager URI and a null engine ID, and hence will
-    be less than any non-invalid ID.
+/*!
+    \fn bool operator<(const QOrganizerItemId &id1, const QOrganizerItemId &id2)
+    \relates QOrganizerItemId
+
+    Returns true if the organizer item ID \a id1 will be considered less than
+    the organizer item ID \a id2 if the manager URI of ID \a id1 is alphabetically
+    less than the manager URI of the \a id2 ID. If both IDs have the same
+    manager URI, ID \a id1 will be considered less than the ID \a id2
+    if the the engine specific ID of \a id1 is less than the engine specific ID of \a id2.
+
+    The invalid, null organizer item ID consists of an empty manager URI and a null engine ID,
+    and hence will be less than any valid, non-null organizer item ID.
 
     This operator is provided primarily to allow use of a QOrganizerItemId as a key in a QMap.
- */
-bool QOrganizerItemId::operator<(const QOrganizerItemId &other) const
-{
-    if (d == 0 && other.d != 0)
-        return true;
-
-    if (d && other.d) {
-        if (d->managerUri() == other.d->managerUri())
-            return d->isLessThan(other.d);
-
-        return d->managerUri() < other.d->managerUri();
-    }
-
-    return false;
-}
+*/
 
 /*!
+    \fn uint qHash(const QOrganizerItemId &id)
     \relates QOrganizerItemId
-    Returns the hash value for \a key.
- */
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key)
-{
-    if (key.d)
-        return key.d->hash();
-    return 0;
-}
 
-#ifndef QT_NO_DEBUG_STREAM
-/*!
-    \relates QOrganizerItemId
-    Outputs \a id to the debug stream \a dbg.
- */
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
-{
-    dbg.nospace() << "QOrganizerItemId(";
-    if (id.isNull())
-        dbg.nospace() << "(null))";
-    else
-        id.d->debugStreamOut(dbg)  << ")";
-    return dbg.maybeSpace();
-}
-#endif
-
-#ifndef QT_NO_DATASTREAM
-/*!
-    \relates QOrganizerItemId
-    Streams \a itemId to the data stream \a out.
- */
-Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId)
-{
-    out << (itemId.toString());
-    return out;
-}
+    Returns the hash value for \a id.
+*/
 
 /*!
-    \relates QOrganizerItemId
-    Streams \a itemId in from the data stream \a in.
- */
-Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &itemId)
-{
-    QString idString;
-    in >> idString;
-    itemId = QOrganizerItemId::fromString(idString);
-    return in;
-}
-#endif
+    \fn bool QOrganizerItemId::isValid() const
+
+    Returns true if the manager URI part is not null; returns false otherwise.
+
+    Note that valid ID may be null at the same time, which means new organizer item.
+
+    \sa isNull()
+*/
 
 /*!
-    Returns true if the engine ID part is a null (default constructed) engine ID; otherwise,
-    returns false.
- */
-bool QOrganizerItemId::isNull() const
-{
-    return d == 0;
-}
+    \fn bool QOrganizerItemId::isNull() const
+
+    Returns true if the engine specific ID part is a null (default constructed);
+    returns false otherwise.
+
+    \sa isValid()
+*/
 
 /*!
+    \fn QString QOrganizerItemId::managerUri() const
+
     Returns the URI of the manager which contains the organizer item identified by this ID.
- */
-QString QOrganizerItemId::managerUri() const
-{
-    return d ? d->managerUri() : QString();
-}
+
+    \sa localId()
+*/
+
+/*!
+    \fn QString QOrganizerItemId::localId() const
+
+    Returns the organizer item's engine specific ID part.
+
+    \sa managerUri()
+*/
 
 /*!
     Serializes the organizer item ID to a string. The format of the string will be:
@@ -244,35 +160,63 @@ QString QOrganizerItemId::managerUri() const
 */
 QString QOrganizerItemId::toString() const
 {
-    QString managerName;
-    QMap<QString, QString> params;
-    QString engineIdString;
+    if (QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
+        return QOrganizerManagerData::buildIdString(m_managerUri, m_localId);
 
-    // rely on engine id to supply the full manager uri
-    if (d && QOrganizerManagerData::parseIdString(d->managerUri(), &managerName, &params))
-        engineIdString = d->toString();
-
-    return QOrganizerManagerData::buildIdString(managerName, params, &engineIdString);
+    return QOrganizerManagerData::buildIdString(QString(), QMap<QString, QString>(), QStringLiteral(""));
 }
 
 /*!
     Deserializes the given \a idString. Returns a default-constructed (null)
-    organizer item ID if the given \a idString is not a valid, serialized organizer item ID,
-    or if the manager engine from which the ID came could not be found.
+    organizer item ID if the given \a idString is not a valid, serialized organizer item ID.
 
     \sa toString()
 */
 QOrganizerItemId QOrganizerItemId::fromString(const QString &idString)
 {
-    QString managerName;
-    QMap<QString, QString> params;
+    QString managerUri;
     QString engineIdString;
 
-    if (!QOrganizerManagerData::parseIdString(idString, &managerName, &params, &engineIdString))
-        return QOrganizerItemId(); // invalid idString given.
+    if (QOrganizerManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
+        return QOrganizerItemId(managerUri, engineIdString);
 
-    QOrganizerItemEngineId *engineId = QOrganizerManagerData::createEngineItemId(managerName, params, engineIdString);
-    return QOrganizerItemId(engineId);
+    return QOrganizerItemId();
 }
+
+#ifndef QT_NO_DEBUG_STREAM
+/*!
+    \relates QOrganizerItemId
+    Outputs \a id to the debug stream \a dbg.
+*/
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
+{
+    dbg.nospace() << "QOrganizerItemId(" << id.toString() << ")";
+    return dbg.maybeSpace();
+}
+#endif // QT_NO_DEBUG_STREAM
+
+#ifndef QT_NO_DATASTREAM
+/*!
+    \relates QOrganizerItemId
+    Streams \a id to the data stream \a out.
+*/
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &id)
+{
+    out << id.toString();
+    return out;
+}
+
+/*!
+    \relates QOrganizerItemId
+    Streams \a id in from the data stream \a in.
+*/
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &id)
+{
+    QString idString;
+    in >> idString;
+    id = QOrganizerItemId::fromString(idString);
+    return in;
+}
+#endif // QT_NO_DATASTREAM
 
 QT_END_NAMESPACE_ORGANIZER

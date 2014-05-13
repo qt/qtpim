@@ -195,11 +195,4 @@ QContactManagerEngine* MaliciousEngineFactory::engine(const QMap<QString, QStrin
     return new MaliciousAsyncManagerEngine();
 }
 
-QContactEngineId* MaliciousEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
-{
-    Q_UNUSED(parameters);
-    Q_UNUSED(engineIdString);
-    return 0;
-}
-
 #include "maliciousplugin.moc"

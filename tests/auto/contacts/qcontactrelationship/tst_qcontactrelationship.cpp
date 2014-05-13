@@ -44,9 +44,14 @@
 #include <QtTest/QtTest>
 
 #include <QtContacts/qcontacts.h>
-#include "../qcontactidmock.h"
 
 QTCONTACTS_USE_NAMESPACE
+
+static inline QContactId makeId(const QString &managerName, uint id)
+{
+    return QContactId(QStringLiteral("qtcontacts:%1:").arg(managerName), QString::number(id));
+}
+
 
 class tst_QContactRelationship: public QObject
 {
@@ -97,9 +102,9 @@ void tst_QContactRelationship::emptiness()
     QContactRelationship r1, r2, r3;
 
     QContact contact1, contact2, contact3;
-    contact1.setId(QContactIdMock::createId("test", 1));
-    contact2.setId(QContactIdMock::createId("test", 2));
-    contact3.setId(QContactIdMock::createId("test", 3));
+    contact1.setId(makeId("test", 1));
+    contact2.setId(makeId("test", 2));
+    contact3.setId(makeId("test", 3));
 
     QVERIFY(r1.first() == QContactId());
     QVERIFY(r1.second() == QContactId());
@@ -134,10 +139,10 @@ void tst_QContactRelationship::hash()
 {
     QContactRelationship r1;
     QContact contact1;
-    contact1.setId(QContactIdMock::createId("a", 1));
+    contact1.setId(makeId("a", 1));
     r1.setFirst(contact1.id());
     QContact contact2;
-    contact2.setId(QContactIdMock::createId("b", 2));
+    contact2.setId(makeId("b", 2));
     r1.setSecond(contact2.id());
     r1.setRelationshipType(QContactRelationship::HasMember());
 
@@ -149,7 +154,7 @@ void tst_QContactRelationship::hash()
     QContactRelationship r3;
     r3.setFirst(contact1.id());
     QContact contact3;
-    contact1.setId(QContactIdMock::createId("c", 3));
+    contact1.setId(makeId("c", 3));
     r3.setSecond(contact3.id());
     r3.setRelationshipType(QContactRelationship::HasMember());
 
@@ -160,20 +165,14 @@ void tst_QContactRelationship::hash()
 
 void tst_QContactRelationship::datastream()
 {
-    QSKIP("Datastream is not currently supported when using the QContactIdMock class");
-    //After QContactId introduction, the QCOMPARE at then end this case will fail, since
-    //relationshipOut will contain contacts with "null" QContactIds, whereas
-    //relationshipIn will contain contacts with QContactIds referring to
-    //manager "a", which is an invalid one.
-
     QByteArray buffer;
     QDataStream stream1(&buffer, QIODevice::WriteOnly);
     QContactRelationship relationshipIn;
     QContact contact1;
-    contact1.setId(QContactIdMock::createId("a", 1));
+    contact1.setId(makeId("a", 1));
     relationshipIn.setFirst(contact1.id());
     QContact contact2;
-    contact2.setId(QContactIdMock::createId("a", 2));
+    contact2.setId(makeId("a", 2));
     relationshipIn.setSecond(contact2.id());
     relationshipIn.setRelationshipType(QContactRelationship::HasMember());
     stream1 << relationshipIn;

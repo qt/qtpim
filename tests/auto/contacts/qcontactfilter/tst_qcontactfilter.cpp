@@ -42,7 +42,6 @@
 #include <QMetaType>
 
 #include <QtContacts/qcontacts.h>
-#include "../qcontactidmock.h"
 
 //TESTED_COMPONENT=src/contacts
 
@@ -50,6 +49,11 @@ QTCONTACTS_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(QContact)
 Q_DECLARE_METATYPE(QContactFilter)
+
+static inline QContactId makeId(const QString &managerName, uint id)
+{
+    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QString::number(id));
+}
 
 class tst_QContactFilter : public QObject
 {
@@ -645,7 +649,7 @@ void tst_QContactFilter::relationshipFilter()
     QVERIFY(crf.relatedContactId() == QContactId());
 
     QContact newContact;
-    newContact.setId(QContactIdMock::createId("test", 5));
+    newContact.setId(makeId("test", 5));
     crf.setRelatedContactId(newContact.id());
 
     QVERIFY(crf.relationshipType() == QString());

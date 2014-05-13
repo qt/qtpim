@@ -48,185 +48,109 @@
 #include <QtCore/qdebug.h>
 #endif
 
-#include "qcontactengineid.h"
 #include "qcontactmanager_p.h"
-
-QT_BEGIN_NAMESPACE
-template<> QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactEngineId)>::clone()
-{
-    return d ? d->clone() : 0;
-}
-QT_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
-  \class QContactId
+    \class QContactId
+    \brief The QContactId class provides information that uniquely identifies
+           a contact in a particular manager.
+    \inmodule QtContacts
+    \ingroup contacts-main
 
-  \inmodule QtContacts
+    It consists of a manager URI which identifies the manager which contains the contact,
+    and the engine specific ID of the contact in that manager.
 
-  \brief The QContactId class provides information that uniquely identifies
-  a contact in a particular manager.
-
-  It consists of a manager URI which identifies the manager which contains the contact,
-
-  A QContactId is "null" when it is default-constructed and therefore not associated with a contact in any manager.
+    An invalid QContactId has an empty manager URI.
 */
 
 /*!
- * Constructs a new contact id. The contact is said to be "null",
-   it has null engine id and isNull() for it returns true. This is the default constructor
+    \fn QContactId::QContactId()
 
-   \sa isNull()
- */
-QContactId::QContactId()
-        : d(0)
-{
-}
-
-/*!
- * Cleans up the memory in use by the contact id
- */
-QContactId::~QContactId()
-{
-}
-
-/*! Constructs a new contact id as a copy of \a other */
-QContactId::QContactId(const QContactId &other)
-        : d(other.d)
-{
-}
-
-/*!
-  Constructs a manager-unique id which wraps the given engine-unique contact id
-  \a engineId.  This id takes ownership of the engine-unique contact id and
-  will delete it when the id goes out of scope.  Engine implementors must not
-  delete the \a engineId or undefined behaviour will occur.
-  The created contact id is not null, if the \a engineId is not null.
- */
-QContactId::QContactId(QContactEngineId *engineId)
-    : d(engineId)
-{
-}
-
-/*! Assigns the contact id to be equal to \a other
+    Constructs a new, invalid contact ID.
 */
-QContactId& QContactId::operator=(const QContactId &other)
-{
-    d = other.d;
-    return *this;
-}
 
-/*! Returns true if the \a other contact id has the same manager URI
-    and they have equal engine ids. Returns true also, if both are null contact ids.
+// TODO: Document and remove internal once the correct signature has been determined
+/*!
+    \fn QContactId::QContactId(const QString &managerUri, const QString &localId)
+    \internal
+
+    Constructs an ID from the supplied manager URI \a managerUri and the engine
+    specific \a localId string.
 */
-bool QContactId::operator==(const QContactId &other) const
-{
-    // if both ids are null then they are equal.
-    if (d == 0 && other.d == 0)
-        return true;
 
-    if (d && other.d) {
-        // ensure they're of the same type (and therefore comparable)
-        if (d->managerUri() == other.d->managerUri())
-            return d->isEqualTo(other.d);
-    }
+/*!
+    \fn bool QContactId::operator==(const QContactId &other) const
 
-    return false;
-}
-
-/*! Returns true if either the manager URI or id of the contact id is different to that of \a other
+    Returns true if this contact ID has the same manager URI and
+    engine specific ID as \a other. Returns true also, if both IDs are null.
 */
-bool QContactId::operator!=(const QContactId &other) const
-{
-    return !(*this == other);
-}
-
-/*! Returns true if this id is less than the \a other id.
-    This id will be considered less than the \a other id if the
-    manager URI of this id is alphabetically less than the manager
-    URI of the \a other id.  If both ids have the same manager URI,
-    this id will be considered less than the \a other id if the
-    engine id of this id is less than the engine id of the \a other id.
-
-    The null contact id is less than any non-null id.
-
-    This operator is provided primarily to allow use of a QContactId
-    as a key in a QMap.
- */
-bool QContactId::operator<(const QContactId &other) const
-{
-
-    // a null id is always less than a non-null id.
-    if (d == 0 && other.d != 0)
-        return true;
-
-    if (d && other.d) {
-        // ensure they're of the same type (and therefore comparable)
-        if (d->managerUri() == other.d->managerUri())
-            return d->isLessThan(other.d);
-
-        // not the same type?  just compare the manager uri.
-        return d->managerUri() < other.d->managerUri();
-    }
-
-    return false;
-}
 
 /*!
- * Returns the hash value for \a key.
- */
-uint qHash(const QContactId &key)
-{
-    if (key.d)
-        return key.d->hash();
-    return 0;
-}
+    \fn bool QContactId::operator!=(const QContactId &other) const
 
+    Returns true if either the manager URI or engine specific ID of this
+    contact ID is different to that of \a other.
+*/
 
 /*!
-Returns true if this is the null (default constructed) id which has a null engine id;
- */
-bool QContactId::isNull() const
-{
-    return d == 0;
-}
+    \fn bool operator<(const QContactId &id1, const QContactId &id2)
+    \relates QContactId
+
+    Returns true if the contact ID \a id1 will be considered less than
+    the contact ID \a id2 if the manager URI of ID \a id1 is alphabetically
+    less than the manager URI of the \a id2 ID. If both IDs have the same
+    manager URI, ID \a id1 will be considered less than the ID \a id2
+    if the the engine specific ID of \a id1 is less than the engine specific ID of \a id2.
+
+    The invalid, null contact ID consists of an empty manager URI and a null engine ID,
+    and hence will be less than any valid, non-null contact ID.
+
+    This operator is provided primarily to allow use of a QContactId as a key in a QMap.
+*/
 
 /*!
- * Returns the URI of the manager which contains the contact identified by this id
- */
-QString QContactId::managerUri() const
-{
-    return d ? d->managerUri() : QString();
-}
+    \fn uint qHash(const QContactId &id)
+    \relates QContactId
 
-#ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const QContactId &id)
-{
-    dbg.nospace() << "QContactId(";
-    if (id.isNull())
-        dbg.nospace() << "(null))";
-    else
-        id.d->debugStreamOut(dbg)  << ")";
-    return dbg.maybeSpace();
-}
-#endif
+    Returns the hash value for \a id.
+*/
 
-#ifndef QT_NO_DATASTREAM
-QDataStream& operator<<(QDataStream &out, const QContactId &contactId)
-{
-    out << (contactId.toString());
-    return out;
-}
+/*!
+    \fn bool QContactId::isValid() const
 
-QDataStream& operator>>(QDataStream &in, QContactId &id)
-{
-    QString idString;
-    in >> idString;
-    id = QContactId::fromString(idString);
-    return in;
-}
-#endif
+    Returns true if the manager URI part is not null; returns false otherwise.
+
+    Note that valid ID may be null at the same time, which means new contact.
+
+    \sa isNull()
+*/
+
+/*!
+    \fn bool QContactId::isNull() const
+
+    Returns true if the engine specific ID part is a null (default constructed);
+    returns false otherwise.
+
+    \sa isValid()
+*/
+
+/*!
+    \fn QString QContactId::managerUri() const
+
+    Returns the URI of the manager which contains the contact identified by this ID.
+
+    \sa localId()
+*/
+
+/*!
+    \fn QString QContactId::localId() const
+
+    Returns the contact's engine specific ID part.
+
+    \sa managerUri()
+*/
 
 /*!
     Serializes the contact ID to a string. The format of the string will be:
@@ -236,35 +160,63 @@ QDataStream& operator>>(QDataStream &in, QContactId &id)
 */
 QString QContactId::toString() const
 {
-    QString managerName;
-    QMap<QString, QString> params;
-    QString engineIdString;
+    if (QContactManagerData::parseIdString(m_managerUri, 0, 0))
+        return QContactManagerData::buildIdString(m_managerUri, m_localId);
 
-    // rely on engine id to supply the full manager uri
-    if (d && QContactManagerData::parseIdString(d->managerUri(), &managerName, &params))
-        engineIdString = d->toString();
-
-    return QContactManagerData::buildIdString(managerName, params, &engineIdString);
+    return QContactManagerData::buildIdString(QString(), QMap<QString, QString>(), QStringLiteral(""));
 }
 
 /*!
     Deserializes the given \a idString. Returns a default-constructed (null)
-    contact ID if the given \a idString is not a valid, serialized contact ID,
-    or if the manager engine from which the ID came could not be found.
+    contact ID if the given \a idString is not a valid, serialized contact ID.
 
     \sa toString()
 */
 QContactId QContactId::fromString(const QString &idString)
 {
-    QString managerName;
-    QMap<QString, QString> params;
+    QString managerUri;
     QString engineIdString;
 
-    if (!QContactManagerData::parseIdString(idString, &managerName, &params, &engineIdString))
-        return QContactId(); // invalid idString given.
+    if (QContactManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
+        return QContactId(managerUri, engineIdString);
 
-    QContactEngineId* engineId = QContactManagerData::createEngineContactId(managerName, params, engineIdString);
-    return QContactId(engineId);
+    return QContactId();
 }
+
+#ifndef QT_NO_DEBUG_STREAM
+/*!
+    \relates QContactId
+    Outputs \a id to the debug stream \a dbg.
+*/
+QDebug operator<<(QDebug dbg, const QContactId &id)
+{
+    dbg.nospace() << "QContactId(" << id.toString() << ")";
+    return dbg.maybeSpace();
+}
+#endif // QT_NO_DEBUG_STREAM
+
+#ifndef QT_NO_DATASTREAM
+/*!
+    \relates QContactId
+    Streams \a id to the data stream \a out.
+*/
+QDataStream& operator<<(QDataStream &out, const QContactId &id)
+{
+    out << id.toString();
+    return out;
+}
+
+/*!
+    \relates QContactId
+    Streams \a id in from the data stream \a in.
+*/
+QDataStream& operator>>(QDataStream &in, QContactId &id)
+{
+    QString idString;
+    in >> idString;
+    id = QContactId::fromString(idString);
+    return in;
+}
+#endif // QT_NO_DATASTREAM
 
 QT_END_NAMESPACE_CONTACTS

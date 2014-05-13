@@ -47,7 +47,6 @@
 
 #include <QtContacts>
 #include "qcontactmanagerdataholder.h"
-#include "qcontactidmock.h"
 
 #if defined(USE_VERSIT_PLZ)
 // This makes it easier to create specific QContacts
@@ -276,7 +275,6 @@ class LazyEngineFactory : public QContactManagerEngineFactory
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "lazy.json")
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
-        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
         QString managerName() const {return "testlazy";}
 };
 
@@ -290,11 +288,9 @@ QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& p
         return new QContactLazyEngine2();
 }
 
-QContactEngineId* LazyEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& idString) const
+static inline QContactId makeId(const QString &managerName, uint id)
 {
-    Q_UNUSED(parameters)
-    Q_UNUSED(idString)
-    return new QContactIdMock("",1);
+    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QString::number(id));
 }
 
 tst_QContactManager::tst_QContactManager()
@@ -2156,7 +2152,7 @@ void tst_QContactManager::actionPreferences()
 
 void tst_QContactManager::changeSet()
 {
-    QContactId id = QContactIdMock::createId("a", 1);
+    QContactId id = makeId("a", 1);
     QContactChangeSet changeSet;
     QVERIFY(changeSet.addedContacts().isEmpty());
     QVERIFY(changeSet.changedContacts().isEmpty());
@@ -2198,7 +2194,7 @@ void tst_QContactManager::changeSet()
 
     QList<QContactId> l1, l2;
     foreach (int n, QList<int>() << 1 << 1 << 1 << 2 << 2 << 3 << 3 << 4 << 4 << 4 << 5 << 10 << 9 << 8 << 8 << 8 << 7 << 7 << 6) {
-        ((qrand() % 2) ? l1 : l2).append(QContactIdMock::createId("a", n));
+        ((qrand() % 2) ? l1 : l2).append(makeId("a", n));
     }
     changeSet.clearChangedContacts();
     changeSet.insertChangedContacts(l1, QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type);

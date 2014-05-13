@@ -73,7 +73,6 @@ class DummyStaticEngineFactory : public QObject, public QContactManagerEngineFac
     Q_INTERFACES(QtContacts::QContactManagerEngineFactory)
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
-        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const;
         QString managerName() const {return "teststaticdummy";}
 };
 
@@ -82,13 +81,6 @@ QContactManagerEngine* DummyStaticEngineFactory::engine(const QMap<QString, QStr
     Q_UNUSED(parameters);
     *error = QContactManager::LockedError; // random unlikely error
     return 0; // always fail, haha
-}
-
-QContactEngineId* DummyStaticEngineFactory::createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const
-{
-    Q_UNUSED(parameters);
-    Q_UNUSED(engineIdString);
-    return 0;
 }
 
 Q_EXPORT_PLUGIN2(contacts_teststaticdummy, DummyStaticEngineFactory)

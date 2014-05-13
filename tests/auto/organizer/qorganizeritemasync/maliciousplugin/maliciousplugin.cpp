@@ -237,18 +237,4 @@ QOrganizerManagerEngine *MaliciousEngineFactory::engine(const QMap<QString, QStr
     return new MaliciousAsyncManagerEngine();
 }
 
-QOrganizerItemEngineId *MaliciousEngineFactory::createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
-{
-    Q_UNUSED(parameters);
-    Q_UNUSED(engineIdString);
-    return 0;
-}
-
-QOrganizerCollectionEngineId *MaliciousEngineFactory::createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
-{
-    Q_UNUSED(parameters);
-    Q_UNUSED(engineIdString);
-    return 0;
-}
-
 #include "maliciousplugin.moc"

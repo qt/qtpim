@@ -42,7 +42,6 @@
 #ifndef QCONTACTID_H
 #define QCONTACTID_H
 
-#include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
 
 #include <QtContacts/qcontactsglobal.h>
@@ -51,38 +50,39 @@ QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContactManagerEngine;
 
-class QContactEngineId;
 class Q_CONTACTS_EXPORT QContactId
 {
 public:
-    QContactId();
-    ~QContactId();
+    inline QContactId() {}
+    inline QContactId(const QString &managerUri, const QString &localId)
+        : m_managerUri(managerUri), m_localId(localId)
+    {}
+    // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
-    QContactId(const QContactId &other);
-    QContactId& operator=(const QContactId &other);
-    explicit QContactId(QContactEngineId *engineId);
+    inline bool operator==(const QContactId &other) const
+    { return localId() == other.localId() && managerUri() == other.managerUri(); }
+    inline bool operator!=(const QContactId &other) const
+    { return localId() != other.localId() || managerUri() != other.managerUri(); }
 
-    bool operator==(const QContactId &other) const;
-    bool operator!=(const QContactId &other) const;
-    bool operator<(const QContactId &other) const;
+    inline bool isValid() const { return !m_managerUri.isEmpty(); }
+    inline bool isNull() const { return m_localId.isEmpty(); }
 
-    QString managerUri() const;
-    bool isNull() const;
+    inline QString managerUri() const { return m_managerUri; }
+    inline QString localId() const { return m_localId; }
+
     QString toString() const;
     static QContactId fromString(const QString &idString);
 
 private:
-    QSharedDataPointer<QContactEngineId> d;
-    friend class QContactManager;
-    friend class QContactManagerEngine;
-    Q_CONTACTS_EXPORT friend uint qHash(const QContactId &key);
-
-#ifndef QT_NO_DEBUG_STREAM
-    Q_CONTACTS_EXPORT friend QDebug operator<<(QDebug dbg, const QContactId &id);
-#endif
+    QString m_managerUri;
+    QString m_localId;
 };
 
-Q_CONTACTS_EXPORT uint qHash(const QContactId &key);
+inline bool operator<(const QContactId &id1, const QContactId &id2)
+{ return (id1.managerUri() != id2.managerUri()) ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
+
+inline uint qHash(const QContactId &id)
+{ return qHash(id.localId()); }
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactId &id);

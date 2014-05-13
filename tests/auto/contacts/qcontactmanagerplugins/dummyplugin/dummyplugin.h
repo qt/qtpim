@@ -179,7 +179,6 @@ class DummyEngineFactory : public QContactManagerEngineFactory
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QContactManagerEngineFactoryInterface" FILE "dummy.json")
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
-        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const;
         QString managerName() const;
 };
 

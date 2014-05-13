@@ -69,11 +69,6 @@ have its own particular way of identifying items stored in it.  The
 Qt Organizer API allows engine implementers to define their own
 id format.
 
-Engine implementers must implement their own id classes derived from
-\l QOrganizerItemEngineId and \l QOrganizerCollectionEngineId respectively.
-For an example of how to implement these classes, see the \e skeleton example
-plugin.
-
 \section2 Which Functions Do I Need To Implement
 
 Different engines provide different functionality and support different features.  Depending on

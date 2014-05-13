@@ -69,7 +69,15 @@ public:
 
     virtual QString managerName() const;
     virtual QMap<QString, QString> managerParameters() const;
-    QString managerUri() const;
+    virtual QMap<QString, QString> idInterpretationParameters() const;
+
+    inline QString managerUri() const
+    { return QOrganizerManager::buildUri(managerName(), idInterpretationParameters()); }
+
+    inline QOrganizerItemId itemId(const QString &localId) const
+    { return QOrganizerItemId(managerUri(), localId); }
+    inline QOrganizerCollectionId collectionId(const QString &localId) const
+    { return QOrganizerCollectionId(managerUri(), localId); }
 
     // items
     virtual QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
@@ -157,9 +165,6 @@ public:
     virtual QList<QOrganizerItemType::ItemType> supportedItemTypes() const;
 
     // helper
-    static const QOrganizerItemEngineId *engineItemId(const QOrganizerItemId &itemId);
-    static const QOrganizerCollectionEngineId *engineCollectionId(const QOrganizerCollectionId &collectionId);
-
     static int addSorted(QList<QOrganizerItem> *sorted, const QOrganizerItem &toAdd, const QList<QOrganizerItemSortOrder> &sortOrders);
     static bool addDefaultSorted(QMultiMap<QDateTime, QOrganizerItem> *defaultSorted, const QOrganizerItem &toAdd);
     static int compareItem(const QOrganizerItem &a, const QOrganizerItem &b, const QList<QOrganizerItemSortOrder> &sortOrders);

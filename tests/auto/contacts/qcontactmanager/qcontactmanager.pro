@@ -4,7 +4,6 @@ QT += contacts versit contacts-private
 
 SOURCES  += tst_qcontactmanager.cpp
 HEADERS += ../qcontactmanagerdataholder.h
-HEADERS += ../qcontactidmock.h
 
 OTHER_FILES += lazy.json
 

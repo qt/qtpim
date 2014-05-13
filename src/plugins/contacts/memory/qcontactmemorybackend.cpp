@@ -62,14 +62,6 @@ QContactManagerEngine* QContactMemoryEngineFactory::engine(const QMap<QString, Q
     return ret;
 }
 
-
-QContactEngineId* QContactMemoryEngineFactory::createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const
-{
-    Q_UNUSED(parameters);
-    QContactMemoryEngineId *retn = new QContactMemoryEngineId(parameters, engineIdString);
-    return retn;
-}
-
 QString QContactMemoryEngineFactory::managerName() const
 {
     return QString::fromLatin1("memory");
@@ -166,6 +158,13 @@ QMap<QString, QString> QContactMemoryEngine::managerParameters() const
     QMap<QString, QString> params;
     params.insert(QStringLiteral("id"), d->m_id);
     return params;
+}
+
+/*! \reimp
+*/
+QMap<QString, QString> QContactMemoryEngine::idInterpretationParameters() const
+{
+    return managerParameters();
 }
 
 /*! \reimp */
@@ -909,109 +908,18 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         theContact->saveDetail(&ts);
 
         // update the contact item - set its ID
-        quint32 nextContactId = d->m_nextContactId; // don't increment the persistent version until we're successful or we know it collides.
-        nextContactId += 1; // but do increment the temporary version to check for collision
-        QContactMemoryEngineId *newMemoryEngineId = new QContactMemoryEngineId;
-        newMemoryEngineId->m_contactId = nextContactId;
-        newMemoryEngineId->m_managerUri = d->m_managerUri;
-        QContactId newContactId = QContactId(newMemoryEngineId);
+        QContactId newContactId = contactId(QString::number(d->m_nextContactId++));
         theContact->setId(newContactId);
-
-        // note: do NOT delete the QContactMemoryEngineId -- the QContactId ctor takes ownership of it.
-
 
         // finally, add the contact to our internal lists and return
         d->m_contacts.append(*theContact);                   // add contact to list
         d->m_contactIds.append(theContact->id());  // track the contact id.
 
         changeSet.insertAddedContact(theContact->id());
-        // successful, now increment the persistent version of the next item id.
-        d->m_nextContactId += 1;
     }
 
     *error = QContactManager::NoError;     // successful.
     return true;
-}
-
-/*!
-  \class QContactMemoryEngineId
-  \brief The QContactMemoryEngineId class provides an id which uniquely identifies
-  a QContact stored within a QContactMemoryEngine.
-
-  \internal
-  It may be used as a reference implementation, although since different platforms
-  have different semantics for ids
-  the precise implementation required may differ.
- */
-QContactMemoryEngineId::QContactMemoryEngineId()
-    : QContactEngineId(), m_contactId(0)
-{
-}
-
-QContactMemoryEngineId::QContactMemoryEngineId(quint32 contactId, const QString &managerUri)
-    : QContactEngineId(), m_contactId(contactId), m_managerUri(managerUri)
-{
-}
-
-QContactMemoryEngineId::~QContactMemoryEngineId()
-{
-}
-
-QContactMemoryEngineId::QContactMemoryEngineId(const QContactMemoryEngineId &other)
-    : QContactEngineId(), m_contactId(other.m_contactId), m_managerUri(other.m_managerUri)
-{
-}
-
-QContactMemoryEngineId::QContactMemoryEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString)
-    : QContactEngineId()
-{
-    m_contactId = engineIdString.toInt();
-    m_managerUri = QContactManager::buildUri("memory", parameters);
-}
-
-bool QContactMemoryEngineId::isEqualTo(const QContactEngineId *other) const
-{
-    if (m_contactId != static_cast<const QContactMemoryEngineId*>(other)->m_contactId)
-        return false;
-    return true;
-}
-
-bool QContactMemoryEngineId::isLessThan(const QContactEngineId *other) const
-{
-    const QContactMemoryEngineId *otherPtr = static_cast<const QContactMemoryEngineId*>(other);
-    if (m_managerUri < otherPtr->m_managerUri)
-        return true;
-    if (m_contactId < otherPtr->m_contactId)
-        return true;
-    return false;
-}
-
-QString QContactMemoryEngineId::managerUri() const
-{
-    return m_managerUri;
-}
-
-QString QContactMemoryEngineId::toString() const
-{
-    return QString::number(m_contactId);
-}
-
-QContactEngineId* QContactMemoryEngineId::clone() const
-{
-    return new QContactMemoryEngineId(m_contactId, m_managerUri);
-}
-
-#ifndef QT_NO_DEBUG_STREAM
-QDebug& QContactMemoryEngineId::debugStreamOut(QDebug &dbg) const
-{
-    dbg.nospace() << "QContactMemoryEngineId(" << m_managerUri << "," << m_contactId << ")";
-    return dbg.maybeSpace();
-}
-#endif
-
-uint QContactMemoryEngineId::hash() const
-{
-    return m_contactId;
 }
 
 #include "moc_qcontactmemorybackend_p.cpp"

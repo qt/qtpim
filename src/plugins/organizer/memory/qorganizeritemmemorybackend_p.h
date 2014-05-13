@@ -53,8 +53,6 @@
 // We mean it.
 //
 
-#include <QtOrganizer/qorganizeritemengineid.h>
-#include <QtOrganizer/qorganizercollectionengineid.h>
 #include <QtOrganizer/qorganizermanagerengine.h>
 #include <QtOrganizer/qorganizermanagerenginefactory.h>
 #include <QtOrganizer/qorganizercollectionchangeset.h>
@@ -70,73 +68,17 @@ class QOrganizerItemMemoryFactory : public QOrganizerManagerEngineFactory
 
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
-    QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
-    QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
     QString managerName() const;
 };
 
-class QOrganizerItemMemoryEngineId : public QOrganizerItemEngineId
-{
-public:
-    QOrganizerItemMemoryEngineId();
-    QOrganizerItemMemoryEngineId(quint32 collectionId, quint32 itemId, const QString& managerUri);
-    ~QOrganizerItemMemoryEngineId();
-    QOrganizerItemMemoryEngineId(const QOrganizerItemMemoryEngineId& other);
-    QOrganizerItemMemoryEngineId(const QString& idString);
-
-    bool isEqualTo(const QOrganizerItemEngineId* other) const;
-    bool isLessThan(const QOrganizerItemEngineId* other) const;
-
-    QString managerUri() const;
-    QOrganizerItemEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
-#endif
-    uint hash() const;
-
-private:
-    quint32 m_collectionId;
-    quint32 m_itemId;
-    QString m_managerUri;
-    friend class QOrganizerItemMemoryEngine;
-};
-
-class QOrganizerCollectionMemoryEngineId : public QOrganizerCollectionEngineId
-{
-public:
-    QOrganizerCollectionMemoryEngineId();
-    QOrganizerCollectionMemoryEngineId(quint32 collectionId, const QString& managerUri);
-    ~QOrganizerCollectionMemoryEngineId();
-    QOrganizerCollectionMemoryEngineId(const QOrganizerCollectionMemoryEngineId& other);
-    QOrganizerCollectionMemoryEngineId(const QString& idString);
-
-    bool isEqualTo(const QOrganizerCollectionEngineId* other) const;
-    bool isLessThan(const QOrganizerCollectionEngineId* other) const;
-
-    QString managerUri() const;
-    QOrganizerCollectionEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
-#endif
-    uint hash() const;
-
-private:
-    quint32 m_collectionId;
-    QString m_managerUri;
-    friend class QOrganizerItemMemoryEngine;
-};
 
 class QOrganizerAbstractRequest;
 class QOrganizerManagerEngine;
 class QOrganizerItemMemoryEngineData : public QSharedData
 {
 public:
+    enum { DefaultCollectionLocalId = 1 }; // default collection has id of 1.
+
     QOrganizerItemMemoryEngineData();
     ~QOrganizerItemMemoryEngineData()
     {
@@ -144,18 +86,12 @@ public:
 
     QString m_id;                                  // the id parameter value
 
-    inline QOrganizerCollectionId defaultCollectionId() const
-    {
-        enum { DefaultCollectionLocalId = 1 }; // default collection has id of 1.
-        return QOrganizerCollectionId(new QOrganizerCollectionMemoryEngineId(DefaultCollectionLocalId, m_managerUri));
-    }
-
     QHash<QOrganizerItemId, QOrganizerItem> m_idToItemHash; // hash of id to the item identified by that id
     QMultiHash<QOrganizerItemId, QOrganizerItemId> m_parentIdToChildIdHash; // hash of id to that item's children's ids
     QHash<QOrganizerCollectionId, QOrganizerCollection> m_idToCollectionHash; // hash of id to the collection identified by that id
     QMultiHash<QOrganizerCollectionId, QOrganizerItemId> m_itemsInCollectionsHash; // hash of collection ids to the ids of items the collection contains.
-    quint32 m_nextOrganizerItemId; // the m_itemId portion of a QOrganizerItemMemoryEngineId.
-    quint32 m_nextOrganizerCollectionId; // the m_collectionId portion of a QOrganizerCollectionMemoryEngineId.
+    quint32 m_nextOrganizerItemId; // the localId() portion of a QOrganizerItemId
+    quint32 m_nextOrganizerCollectionId; // the localId() portion of a QOrganizerCollectionId
     QString m_managerUri;                        // for faster lookup.
 
     void emitSharedSignals(QOrganizerCollectionChangeSet *cs)
@@ -184,6 +120,10 @@ public:
     /* URI reporting */
     QString managerName() const;
     QMap<QString, QString> managerParameters() const;
+    QMap<QString, QString> idInterpretationParameters() const;
+
+    inline QOrganizerCollectionId defaultCollectionId() const
+    { return collectionId(QString::number(QOrganizerItemMemoryEngineData::DefaultCollectionLocalId)); }
 
     // items
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,

@@ -65,8 +65,6 @@
 
 #include <QtOrganizer/qorganizercollectionchangeset.h>            // engine-specific collection changeset
 #include <QtOrganizer/qorganizeritemchangeset.h>                  // engine-specific item changeset
-#include <QtOrganizer/qorganizercollectionengineid.h>             // engine-specific collection id
-#include <QtOrganizer/qorganizeritemengineid.h>                   // engine specific item id
 
 #include <QtOrganizer/qorganizeritems.h>                          // item derived classes
 #include <QtOrganizer/qorganizeritemdetails.h>                    // detail derived classes

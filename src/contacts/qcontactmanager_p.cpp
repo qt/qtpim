@@ -193,16 +193,6 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
     }
 }
 
-
-/* Caller takes ownership of the id */
-QContactEngineId* QContactManagerData::createEngineContactId(const QString &managerName, const QMap<QString, QString>& parameters, const QString &engineIdString)
-{
-    loadFactoriesMetadata();
-    QContactManagerEngineFactory *engineFactory = m_engines.value(managerName);
-    return engineFactory ? engineFactory->createContactEngineId(parameters, engineIdString) : NULL;
-}
-
-
 void QContactManagerData::loadStaticFactories()
 {
     if (!m_discoveredStatic) {
@@ -385,10 +375,10 @@ static inline QString unescapeParam(const QString &param)
 
 /*!
     Parses the individual components of the given \a idString and fills the
-    \a managerName, \a params and \a engineIdString.
+    \a managerName, \a params, \a managerUri and \a engineIdString.
     Returns true if the parts could be parsed successfully, false otherwise.
 */
-bool QContactManagerData::parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString)
+bool QContactManagerData::parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *managerUri, QString *engineIdString)
 {
     // Format: qtcontacts:<managerid>:<key>=<value>&<key>=<value>:<engineIdString>
     // we assume that the prefix, managerid, params, and engineIdString cannot contain `:', `=', or `&'
@@ -399,7 +389,7 @@ bool QContactManagerData::parseIdString(const QString &idString, QString *manage
         return false;
 
     const QString prefix = colonSplit.at(0);
-    const QString mgrName = colonSplit.at(1).trimmed();
+    const QString mgrName = colonSplit.at(1);
     const QString paramString = colonSplit.value(2);
 
     if (prefix != QStringLiteral("qtcontacts") || mgrName.isEmpty())
@@ -434,6 +424,9 @@ bool QContactManagerData::parseIdString(const QString &idString, QString *manage
     if (managerName)
         *managerName = unescapeParam(mgrName);
 
+    if (managerUri)
+        *managerUri = prefix + QLatin1Char(':') + mgrName + QLatin1Char(':') + paramString;
+
     // and unescape the engine id string
     if (engineIdString)
         *engineIdString = unescapeParam(colonSplit.at(3));
@@ -442,12 +435,26 @@ bool QContactManagerData::parseIdString(const QString &idString, QString *manage
 }
 
 /*!
-    Returns a ID string that describes a manager name and parameters with which to instantiate
-    a manager object, from the given \a managerName and \a params.
-    If \a engineIdString is not null, the generated ID string is suitable for
+    Returns an ID string that describes a manager name and parameters with which to instantiate
+    a manager object, from the given \a managerUri.
+    If \a engineIdString is non-null, the generated ID string is suitable for
     passing to QContactId::fromString().
 */
-QString QContactManagerData::buildIdString(const QString &managerName, const QMap<QString, QString> &params, QString *engineIdString)
+QString QContactManagerData::buildIdString(const QString &managerUri, const QString &engineIdString)
+{
+    if (!engineIdString.isNull())
+        return managerUri + QLatin1Char(':') + escapeParam(engineIdString);
+
+    return managerUri;
+}
+
+/*!
+    Returns an ID string that describes a manager name and parameters with which to instantiate
+    a manager object, from the given \a managerName and \a params.
+    If \a engineIdString is non-null, the generated ID string is suitable for
+    passing to QContactId::fromString().
+*/
+QString QContactManagerData::buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString)
 {
     // Format: qtcontacts:<managerid>:<key>=<value>&<key>=<value>:<engineIdString>
     // if the prefix, managerid, param keys, param values, or engineIdString contain `:', `=', or `&',
@@ -466,8 +473,8 @@ QString QContactManagerData::buildIdString(const QString &managerName, const QMa
     }
 
     idString = QStringLiteral("qtcontacts:") + escapeParam(managerName) + QLatin1Char(':') + idString;
-    if (engineIdString)
-        idString += QLatin1Char(':') + escapeParam(*engineIdString);
+    if (!engineIdString.isNull())
+        idString += QLatin1Char(':') + escapeParam(engineIdString);
 
     return idString;
 }

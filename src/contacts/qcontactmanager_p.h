@@ -85,13 +85,14 @@ public:
     }
 
     // helpers
-    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *engineIdString = 0);
-    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, QString *engineIdString = 0);
+    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *managerUri = 0, QString *engineIdString = 0);
+
+    static QString buildIdString(const QString &managerUri, const QString &engineIdString = QString());
+    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString = QString());
 
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
     static QContactManagerData* get(const QContactManager *manager);
     static QContactManagerEngine* engine(const QContactManager *manager);
-    static QContactEngineId* createEngineContactId(const QString &managerName, const QMap<QString, QString> &parameters, const QString &engineIdString);
 
     QContactManagerEngine* m_engine;
     QContactManager::Error m_lastError;

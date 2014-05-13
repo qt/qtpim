@@ -178,7 +178,6 @@ class MaliciousEngineFactory : public QContactManagerEngineFactory
 
     public:
         QContactManagerEngine* engine(const QMap<QString, QString>& parameters, QContactManager::Error* error);
-        QContactEngineId* createContactEngineId(const QMap<QString, QString>& parameters, const QString& engineIdString) const;
         QString managerName() const;
 
     private:

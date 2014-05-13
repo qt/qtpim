@@ -30,8 +30,7 @@ PUBLIC_HEADERS += \
     qcontactrelationship.h \
     qcontactsortorder.h \
     qcontactsglobal.h \
-    qcontacts.h \
-    qcontactengineid.h \
+    qcontacts.h
 
 PRIVATE_HEADERS += \
     qcontact_p.h \
@@ -67,8 +66,7 @@ SOURCES += \
     qcontactmanagerenginefactory.cpp \
     qcontactobserver.cpp \
     qcontactrelationship.cpp \
-    qcontactsortorder.cpp \
-    qcontactengineid.cpp \
+    qcontactsortorder.cpp
 
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 

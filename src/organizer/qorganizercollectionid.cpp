@@ -48,17 +48,7 @@
 #include <QtCore/qdebug.h>
 #endif
 
-#include "qorganizercollectionengineid.h"
 #include "qorganizermanager_p.h"
-
-#if !defined(Q_CC_MWERKS)
-QT_BEGIN_NAMESPACE
-template<> QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId) *QSharedDataPointer<QTORGANIZER_PREPEND_NAMESPACE(QOrganizerCollectionEngineId)>::clone()
-{
-    return d ? d->clone() : 0;
-}
-QT_END_NAMESPACE
-#endif // Q_CC_MWERKS
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -69,171 +59,98 @@ QT_BEGIN_NAMESPACE_ORGANIZER
     \inmodule QtOrganizer
     \ingroup organizer-main
 
-    It consists of a manager URI which identifies the manager which manages the collection, and the
-    ID of the collection in that manager.
- */
+    It consists of a manager URI which identifies the manager which contains the collection,
+    and the engine specific ID of the collection in that manager.
 
-/*!
-    Constructs a new, null collection ID.
- */
-QOrganizerCollectionId::QOrganizerCollectionId()
-    : d(0)
-{
-}
-
-/*!
-    Cleans up the memory in use by the collection ID.
- */
-QOrganizerCollectionId::~QOrganizerCollectionId()
-{
-}
-
-/*!
-    Constructs a manager-unique ID which wraps the given engine-unique \a engineId.
-
-    This ID takes ownership of the \a engineId and will delete it when this ID is destructed. Engine
-    implementors must not delete the \a engineId, otherwise undefined behaviour will occur.
- */
-QOrganizerCollectionId::QOrganizerCollectionId(QOrganizerCollectionEngineId *engineId)
-    : d(engineId)
-{
-}
-
-/*!
-    Constructs a new collection ID as a copy of \a other.
- */
-QOrganizerCollectionId::QOrganizerCollectionId(const QOrganizerCollectionId &other)
-    : d(other.d)
-{
-}
-
-/*!
-    Assigns the collection ID to be equal to \a other.
- */
-QOrganizerCollectionId &QOrganizerCollectionId::operator=(const QOrganizerCollectionId &other)
-{
-    d = other.d;
-    return *this;
-}
-
-/*!
-    Returns true if it has the same manager URI and ID as \a other.
+    An invalid QOrganizerCollectionId has an empty manager URI.
 */
-bool QOrganizerCollectionId::operator==(const QOrganizerCollectionId &other) const
-{
-    if (d == other.d)
-        return true;
-
-    if (d && other.d)
-        return d->managerUri() == other.d->managerUri() && d->isEqualTo(other.d);
-
-    return false;
-}
 
 /*!
-    Returns true if either the manager URI or ID of it is different to that of \a other.
- */
-bool QOrganizerCollectionId::operator!=(const QOrganizerCollectionId &other) const
-{
-    return !(*this == other);
-}
+    \fn QOrganizerCollectionId::QOrganizerCollectionId()
+
+    Constructs a new, invalid collection ID.
+*/
+
+// TODO: Document and remove internal once the correct signature has been determined
+/*!
+    \fn QOrganizerCollectionId::QOrganizerCollectionId(const QString &managerUri, const QString &localId)
+    \internal
+
+    Constructs an ID from the supplied manager URI \a managerUri and the engine
+    specific \a localId string.
+*/
 
 /*!
-    Returns true if this ID is less than the \a other.
+    \fn bool QOrganizerCollectionId::operator==(const QOrganizerCollectionId &other) const
 
-    This ID will be considered less than the \a other if the manager URI of this ID is alphabetically
-    less than the manager URI of the \a other. If both IDs have the same manager URI, this ID will
-    be considered less than the \a other if the engine ID is less than the engine ID of the \a other.
+    Returns true if this collection ID has the same manager URI and
+    engine specific ID as \a other. Returns true also, if both IDs are null.
+*/
 
-    The invalid, empty ID consists of an empty manager URI and a null engine ID, and hence will be
-    less than any non-invalid ID.
+/*!
+    \fn bool QOrganizerCollectionId::operator!=(const QOrganizerCollectionId &other) const
+
+    Returns true if either the manager URI or engine specific ID of this
+    collection ID is different to that of \a other.
+*/
+
+/*!
+    \fn bool operator<(const QOrganizerCollectionId &id1, const QOrganizerCollectionId &id2)
+    \relates QOrganizerCollectionId
+
+    Returns true if the collection ID \a id1 will be considered less than
+    the collection ID \a id2 if the manager URI of ID \a id1 is alphabetically
+    less than the manager URI of the \a id2 ID. If both IDs have the same
+    manager URI, ID \a id1 will be considered less than the ID \a id2
+    if the the engine specific ID of \a id1 is less than the engine specific ID of \a id2.
+
+    The invalid, null collection ID consists of an empty manager URI and a null engine ID,
+    and hence will be less than any valid, non-null collection ID.
 
     This operator is provided primarily to allow use of a QOrganizerCollectionId as a key in a QMap.
- */
-bool QOrganizerCollectionId::operator<(const QOrganizerCollectionId &other) const
-{
-    // a null id is always less than a non-null id.
-    if (d == 0 && other.d != 0)
-        return true;
-
-    if (d && other.d) {
-        // ensure they're of the same type (and therefore comparable)
-        if (d->managerUri() == other.d->managerUri())
-            return d->isLessThan(other.d);
-
-        // not the same type?  just compare the manager uri.
-        return d->managerUri() < other.d->managerUri();
-    }
-
-    return false;
-}
+*/
 
 /*!
-    Returns true if the engine ID part of this ID is null (default constructed); otherwise, returns false.
- */
-bool QOrganizerCollectionId::isNull() const
-{
-    return (d == 0);
-}
-
-/*!
+    \fn uint qHash(const QOrganizerCollectionId &id)
     \relates QOrganizerCollectionId
-    Returns the hash value for \a key.
- */
-uint qHash(const QOrganizerCollectionId &key)
-{
-    if (key.d)
-        return key.d->hash();
-    return 0;
-}
 
-#ifndef QT_NO_DEBUG_STREAM
-/*!
-    \relates QOrganizerCollectionId
-    Outputs \a id to the debug stream \a dbg.
- */
-QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
-{
-    dbg.nospace() << "QOrganizerCollectionId(";
-    if (id.isNull())
-        dbg.nospace() << "(null))";
-    else
-        id.d->debugStreamOut(dbg)  << ")";
-    return dbg.maybeSpace();
-}
-#endif // QT_NO_DEBUG_STREAM
-
-#ifndef QT_NO_DATASTREAM
-/*!
-    \relates QOrganizerCollectionId
-    Streams \a collectionId to the data stream \a out.
- */
-QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &collectionId)
-{
-    out << (collectionId.toString());
-    return out;
-}
+    Returns the hash value for \a id.
+*/
 
 /*!
-    \relates QOrganizerCollectionId
-    Streams \a collectionId in from the data stream \a in.
- */
-QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &collectionId)
-{
-    QString idString;
-    in >> idString;
-    collectionId = QOrganizerCollectionId::fromString(idString);
-    return in;
-}
-#endif // QT_NO_DATASTREAM
+    \fn bool QOrganizerCollectionId::isValid() const
+
+    Returns true if the manager URI part is not null; returns false otherwise.
+
+    Note that valid ID may be null at the same time, which means new collection.
+
+    \sa isNull()
+*/
 
 /*!
+    \fn bool QOrganizerCollectionId::isNull() const
+
+    Returns true if the engine specific ID part is a null (default constructed);
+    returns false otherwise.
+
+    \sa isValid()
+*/
+
+/*!
+    \fn QString QOrganizerCollectionId::managerUri() const
+
     Returns the URI of the manager which contains the collection identified by this ID.
- */
-QString QOrganizerCollectionId::managerUri() const
-{
-    return d ? d->managerUri() : QString::null;
-}
+
+    \sa localId()
+*/
+
+/*!
+    \fn QString QOrganizerCollectionId::localId() const
+
+    Returns the collection's engine specific ID part.
+
+    \sa managerUri()
+*/
 
 /*!
     Serializes the collection ID to a string. The format of the string will be:
@@ -243,35 +160,63 @@ QString QOrganizerCollectionId::managerUri() const
 */
 QString QOrganizerCollectionId::toString() const
 {
-    QString managerName;
-    QMap<QString, QString> params;
-    QString engineIdString;
+    if (QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
+        return QOrganizerManagerData::buildIdString(m_managerUri, m_localId);
 
-    // rely on engine id to supply the full manager uri
-    if (d && QOrganizerManagerData::parseIdString(d->managerUri(), &managerName, &params))
-        engineIdString = d->toString();
-
-    return QOrganizerManagerData::buildIdString(managerName, params, &engineIdString);
+    return QOrganizerManagerData::buildIdString(QString(), QMap<QString, QString>(), QStringLiteral(""));
 }
 
 /*!
     Deserializes the given \a idString. Returns a default-constructed (null)
-    collection ID if the given \a idString is not a valid, serialized collection ID,
-    or if the manager engine from which the ID refers to could not be found.
+    collection ID if the given \a idString is not a valid, serialized collection ID.
 
     \sa toString()
 */
 QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString &idString)
 {
-    QString managerName;
-    QMap<QString, QString> params;
+    QString managerUri;
     QString engineIdString;
 
-    if (!QOrganizerManagerData::parseIdString(idString, &managerName, &params, &engineIdString))
-        return QOrganizerCollectionId(); // invalid idString given.
+    if (QOrganizerManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
+        return QOrganizerCollectionId(managerUri, engineIdString);
 
-    QOrganizerCollectionEngineId *engineId = QOrganizerManagerData::createEngineCollectionId(managerName, params, engineIdString);
-    return QOrganizerCollectionId(engineId);
+    return QOrganizerCollectionId();
 }
+
+#ifndef QT_NO_DEBUG_STREAM
+/*!
+    \relates QOrganizerCollectionId
+    Outputs \a id to the debug stream \a dbg.
+*/
+QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
+{
+    dbg.nospace() << "QOrganizerCollectionId(" << id.toString() << ")";
+    return dbg.maybeSpace();
+}
+#endif // QT_NO_DEBUG_STREAM
+
+#ifndef QT_NO_DATASTREAM
+/*!
+    \relates QOrganizerCollectionId
+    Streams \a id to the data stream \a out.
+*/
+QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &id)
+{
+    out << id.toString();
+    return out;
+}
+
+/*!
+    \relates QOrganizerCollectionId
+    Streams \a id in from the data stream \a in.
+*/
+QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &id)
+{
+    QString idString;
+    in >> idString;
+    id = QOrganizerCollectionId::fromString(idString);
+    return in;
+}
+#endif // QT_NO_DATASTREAM
 
 QT_END_NAMESPACE_ORGANIZER

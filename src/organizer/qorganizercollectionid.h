@@ -42,7 +42,6 @@
 #ifndef QORGANIZERCOLLECTIONID_H
 #define QORGANIZERCOLLECTIONID_H
 
-#include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
 
 #include <QtOrganizer/qorganizerglobal.h>
@@ -51,49 +50,48 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerEngine;
 
-class QOrganizerCollectionEngineId;
 class Q_ORGANIZER_EXPORT QOrganizerCollectionId
 {
 public:
-    QOrganizerCollectionId();
-    explicit QOrganizerCollectionId(QOrganizerCollectionEngineId *engineId);
-    QOrganizerCollectionId(const QOrganizerCollectionId &other);
-    ~QOrganizerCollectionId();
+    inline QOrganizerCollectionId() {}
+    inline QOrganizerCollectionId(const QString &managerUri, const QString &localId)
+        : m_managerUri(managerUri), m_localId(localId)
+    {}
+    // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
-    QOrganizerCollectionId &operator=(const QOrganizerCollectionId &other);
+    inline bool operator==(const QOrganizerCollectionId &other) const
+    { return localId() == other.localId() && managerUri() == other.managerUri(); }
+    inline bool operator!=(const QOrganizerCollectionId &other) const
+    { return localId() != other.localId() || managerUri() != other.managerUri(); }
 
-    bool operator==(const QOrganizerCollectionId &other) const;
-    bool operator!=(const QOrganizerCollectionId &other) const;
-    bool operator<(const QOrganizerCollectionId &other) const;
+    inline bool isValid() const { return !m_managerUri.isEmpty(); }
+    inline bool isNull() const { return m_localId.isEmpty(); }
 
-    bool isNull() const;
-
-    QString managerUri() const;
+    inline QString managerUri() const { return m_managerUri; }
+    inline QString localId() const { return m_localId; }
 
     QString toString() const;
     static QOrganizerCollectionId fromString(const QString &idString);
 
 private:
-    QSharedDataPointer<QOrganizerCollectionEngineId> d;
-
-#ifndef QT_NO_DEBUG_STREAM
-    Q_ORGANIZER_EXPORT friend QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id);
-#endif // QT_NO_DEBUG_STREAM
-
-    Q_ORGANIZER_EXPORT friend uint qHash(const QOrganizerCollectionId &key);
-    friend class QOrganizerManagerEngine;
+    QString m_managerUri;
+    QString m_localId;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerCollectionId &key);
+inline bool operator<(const QOrganizerCollectionId &id1, const QOrganizerCollectionId &id2)
+{ return (id1.managerUri() != id2.managerUri()) ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
+
+inline uint qHash(const QOrganizerCollectionId &id)
+{ return qHash(id.localId()); }
 
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &collectionId);
-Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &collectionId);
-#endif // QT_NO_DATASTREAM
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &id);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &id);
+#endif
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id);
-#endif // QT_NO_DEBUG_STREAM
+#endif
 
 QT_END_NAMESPACE_ORGANIZER
 

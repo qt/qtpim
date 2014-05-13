@@ -207,13 +207,39 @@ QMap<QString, QString> QContactManagerEngine::managerParameters() const
 }
 
 /*!
-  Returns the unique URI of this manager, which is built from the manager name and the parameters
-  used to construct it.
+  Returns the subset of the manager parameters that are relevant when interpreting
+  contact ID values. Since contact ID comparison involves equivalence of
+  managerUri values, parameters that do not differentiate contact IDs should not
+  be returned by this function.
+
+  For example, a manager engine may support 'user' and 'cachesize' parameters,
+  where the former distinguishes between separate user domains, and the latter
+  is for performance tuning. The 'user' parameter will be relevant to the interpretation
+  of contact IDs and thus should be returned by this function, whereas 'cachesize'
+  is not relevant and should be omitted.
+
+  \sa managerUri(), managerParamaters()
  */
-QString QContactManagerEngine::managerUri() const
+QMap<QString, QString> QContactManagerEngine::idInterpretationParameters() const
 {
-    return QContactManager::buildUri(managerName(), managerParameters());
+    return QMap<QString, QString>(); // default implementation returns no parameters.
 }
+
+/*!
+  \fn QString QContactManagerEngine::managerUri() const
+
+  Returns the unique URI of this manager, which is built from the manager name and the
+  ID interpretation parameters used to construct it.
+
+  \sa idInterpretationParameters()
+ */
+
+/*!
+    \fn QContactId QContactManagerEngine::contactId(const QString &localId) const
+
+    Returns the contact ID for this managerUri() and the given
+    engine specific ID part \a localId.
+*/
 
 /*!
   Returns a list of contact ids that match the given \a filter, sorted according to the given list of \a sortOrders.
@@ -1428,18 +1454,6 @@ bool validateActionFilter(const QContactFilter& filter)
 void QContactManagerEngine::setContactRelationships(QContact* contact, const QList<QContactRelationship>& relationships)
 {
     contact->d->m_relationshipsCache = relationships;
-}
-
-
-/*!
-    Returns the engine ID from the given \a contactId.
-
-    The caller does not take ownership of the pointer, and should not delete returned id or undefined
-    behavior may occur.
- */
-const QContactEngineId *QContactManagerEngine::engineId(const QContactId &contactId)
-{
-    return contactId.d.data();
 }
 
 /*!

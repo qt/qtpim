@@ -68,8 +68,6 @@
 #include <QtOrganizer/qorganizermanagerengine.h>
 #include <QtOrganizer/qorganizermanagerenginefactory.h>
 #include <QtOrganizer/qorganizerabstractrequest.h>
-#include <QtOrganizer/qorganizeritemengineid.h>
-#include <QtOrganizer/qorganizercollectionengineid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
@@ -80,67 +78,9 @@ class QOrganizerItemSkeletonFactory : public QOrganizerManagerEngineFactory
 
 public:
     QOrganizerManagerEngine* engine(const QMap<QString, QString>& parameters, QOrganizerManager::Error*);
-    QOrganizerItemEngineId* createItemEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
-    QOrganizerCollectionEngineId* createCollectionEngineId(const QMap<QString, QString>& parameters, const QString& idString) const;
     QString managerName() const;
 };
 
-class QOrganizerCollectionSkeletonEngineId : public QOrganizerCollectionEngineId
-{
-public:
-    QOrganizerCollectionSkeletonEngineId();
-    QOrganizerCollectionSkeletonEngineId(quint32 collectionId);
-    ~QOrganizerCollectionSkeletonEngineId();
-    QOrganizerCollectionSkeletonEngineId(const QOrganizerCollectionSkeletonEngineId& other);
-
-    bool isEqualTo(const QOrganizerCollectionEngineId* other) const;
-    bool isLessThan(const QOrganizerCollectionEngineId* other) const;
-
-    QString managerUri() const;
-    QOrganizerCollectionEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
-#endif
-    uint hash() const;
-
-    // data members:
-    // Your backend can use whatever it likes as an id internally.
-    // In this example, we use just a single quint32, but you can
-    // use any datatype you need to (filename string, etc).
-    quint32 m_collectionId;
-};
-
-class QOrganizerItemSkeletonEngineId : public QOrganizerItemEngineId
-{
-public:
-    QOrganizerItemSkeletonEngineId();
-    QOrganizerItemSkeletonEngineId(quint32 itemId);
-    ~QOrganizerItemSkeletonEngineId();
-    QOrganizerItemSkeletonEngineId(const QOrganizerItemSkeletonEngineId& other);
-
-    bool isEqualTo(const QOrganizerItemEngineId* other) const;
-    bool isLessThan(const QOrganizerItemEngineId* other) const;
-
-    QString managerUri() const;
-    QOrganizerItemEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const;
-#endif
-    uint hash() const;
-
-    // data members:
-    // Your backend can use whatever it likes as an id internally.
-    // In this example, we use just a single quint32, but you can
-    // use a pair of ints (one for collectionId, one for itemId)
-    // or any other information (uuid string, etc).
-    quint32 m_itemId;
-};
 
 class QOrganizerItemSkeletonEngineData : public QSharedData
 {

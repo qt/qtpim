@@ -58,7 +58,6 @@
 #include <QtContacts/qcontactmanager.h>
 #include <QtContacts/qcontactmanagerengine.h>
 #include <QtContacts/qcontactchangeset.h>
-#include <QtContacts/qcontactengineid.h>
 #include <QtContacts/qcontactmanagerenginefactory.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
@@ -72,7 +71,6 @@ class QContactMemoryEngineFactory : public QContactManagerEngineFactory
 public:
     QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error*);
     QString managerName() const;
-    QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
 };
 
 class QContactMemoryEngineData : public QSharedData
@@ -126,35 +124,6 @@ public:
 };
 
 
-class  QContactMemoryEngineId : public QContactEngineId
-{
-public:
-    QContactMemoryEngineId();
-    ~QContactMemoryEngineId();
-    QContactMemoryEngineId(quint32 contactId, const QString &managerUri);
-    QContactMemoryEngineId(const QContactMemoryEngineId &other);
-    QContactMemoryEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString);
-
-    bool isEqualTo(const QContactEngineId *other) const;
-    bool isLessThan(const QContactEngineId *other) const;
-
-    QString managerUri() const;
-
-    QContactEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const;
-#endif
-    uint hash() const;
-
-private:
-    quint32 m_contactId;
-    QString m_managerUri;
-    friend class QContactMemoryEngine;
-};
-
 class QContactMemoryEngine : public QContactManagerEngine
 {
     Q_OBJECT
@@ -167,6 +136,8 @@ public:
     /* URI reporting */
     QString managerName() const;
     QMap<QString, QString> managerParameters() const;
+    QMap<QString, QString> idInterpretationParameters() const;
+
     /*! \reimp */
     int managerVersion() const {return 1;}
 

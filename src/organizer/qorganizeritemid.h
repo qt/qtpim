@@ -42,7 +42,6 @@
 #ifndef QORGANIZERITEMID_H
 #define QORGANIZERITEMID_H
 
-#include <QtCore/qshareddata.h>
 #include <QtCore/qvariant.h>
 
 #include <QtOrganizer/qorganizerglobal.h>
@@ -51,47 +50,47 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerManagerEngine;
 
-class QOrganizerItemEngineId;
 class Q_ORGANIZER_EXPORT QOrganizerItemId
 {
 public:
-    QOrganizerItemId();
-    QOrganizerItemId(const QOrganizerItemId &other);
-    explicit QOrganizerItemId(QOrganizerItemEngineId *engineId);
-    ~QOrganizerItemId();
+    inline QOrganizerItemId() {}
+    inline QOrganizerItemId(const QString &managerUri, const QString &localId)
+        : m_managerUri(managerUri), m_localId(localId)
+    {}
+    // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
-    QOrganizerItemId &operator=(const QOrganizerItemId &other);
+    inline bool operator==(const QOrganizerItemId &other) const
+    { return localId() == other.localId() && managerUri() == other.managerUri(); }
+    inline bool operator!=(const QOrganizerItemId &other) const
+    { return localId() != other.localId() || managerUri() != other.managerUri(); }
 
-    bool operator==(const QOrganizerItemId &other) const;
-    bool operator!=(const QOrganizerItemId &other) const;
-    bool operator<(const QOrganizerItemId &other) const;
+    inline bool isValid() const { return !m_managerUri.isEmpty(); }
+    inline bool isNull() const { return m_localId.isEmpty(); }
 
-    bool isNull() const;
-
-    QString managerUri() const;
+    inline QString managerUri() const { return m_managerUri; }
+    inline QString localId() const { return m_localId; }
 
     QString toString() const;
     static QOrganizerItemId fromString(const QString &idString);
 
 private:
-    QSharedDataPointer<QOrganizerItemEngineId> d;
-
-#ifndef QT_NO_DEBUG_STREAM
-    friend Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &itemId);
-#endif
-    friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key);
-    friend class QOrganizerManagerEngine;
+    QString m_managerUri;
+    QString m_localId;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemId &key);
+inline bool operator<(const QOrganizerItemId &id1, const QOrganizerItemId &id2)
+{ return (id1.managerUri() != id2.managerUri()) ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
+
+inline uint qHash(const QOrganizerItemId &id)
+{ return qHash(id.localId()); }
 
 #ifndef QT_NO_DATASTREAM
-Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &itemId);
-Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &itemId);
+Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &id);
+Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &id);
 #endif
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &itemId);
+Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id);
 #endif
 
 QT_END_NAMESPACE_ORGANIZER
@@ -100,6 +99,6 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId), Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId));
+Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerItemId))
 
 #endif // QORGANIZERITEMID_H

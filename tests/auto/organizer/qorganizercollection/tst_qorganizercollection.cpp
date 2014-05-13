@@ -45,11 +45,17 @@
 
 #include <QtOrganizer/qorganizer.h>
 #include <QtOrganizer/qorganizeritemid.h>
-#include <QtOrganizer/qorganizercollectionengineid.h>
 
 //TESTED_COMPONENT=src/organizer
 
 QTORGANIZER_USE_NAMESPACE
+
+static inline QOrganizerCollectionId makeId(const QString &managerName, uint id)
+{
+    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic%1:").arg(managerName), QString::number(id));
+}
+
+
 class tst_QOrganizerCollection: public QObject
 {
 Q_OBJECT
@@ -91,49 +97,6 @@ void tst_QOrganizerCollection::metaData()
     QCOMPARE(c.metaData(), mdm);
     QCOMPARE(c.metaData(QOrganizerCollection::KeyName).toString(), QString(QStringLiteral("test2")));
 }
-
-class BasicCollectionLocalId : public QOrganizerCollectionEngineId
-{
-public:
-    BasicCollectionLocalId(const QString& managerUri, uint id) : m_managerUri(managerUri), m_id(id) {}
-    bool isEqualTo(const QOrganizerCollectionEngineId* other) const {
-        if (m_managerUri == static_cast<const BasicCollectionLocalId*>(other)->m_managerUri)
-            return m_id == static_cast<const BasicCollectionLocalId*>(other)->m_id;
-        return false;
-    }
-    bool isLessThan(const QOrganizerCollectionEngineId* other) const {
-        if (m_managerUri == static_cast<const BasicCollectionLocalId*>(other)->m_managerUri)
-            return m_id < static_cast<const BasicCollectionLocalId*>(other)->m_id;
-        return m_managerUri < static_cast<const BasicCollectionLocalId*>(other)->m_managerUri;
-    }
-    QString managerUri() const {
-        static const QString uri(QStringLiteral("qtorganizer:basic:"));
-        return uri;
-    }
-    QOrganizerCollectionEngineId* clone() const {
-        BasicCollectionLocalId* cloned = new BasicCollectionLocalId(m_managerUri, m_id);
-        return cloned;
-    }
-    QDebug& debugStreamOut(QDebug& dbg) const {
-        return dbg << m_managerUri << m_id;
-    }
-    QString toString() const {
-        return m_managerUri + QString("::") + QString::number(m_id);
-    }
-    uint hash() const {
-        return m_id;
-    }
-
-private:
-    QString m_managerUri;
-    uint m_id;
-};
-
-QOrganizerCollectionId makeId(const QString& managerUri, uint id)
-{
-    return QOrganizerCollectionId(new BasicCollectionLocalId(managerUri, id));
-}
-
 
 void tst_QOrganizerCollection::compare()
 {
@@ -177,10 +140,10 @@ void tst_QOrganizerCollection::idComparison()
     QOrganizerCollectionId id3(makeId("a", 2));
     QOrganizerCollectionId id4(makeId("b", 1));
     QOrganizerCollectionId id5(makeId(QString(), 2)); // no Uri specified.
-    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
-    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
-    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
-    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
+    QVERIFY((((id1 < id3) && !(id3 < id1)) || ((id3 < id1) && !(id1 < id3))) && (id1 != id3));
+    QVERIFY((((id1 < id4) && !(id4 < id1)) || ((id4 < id1) && !(id1 < id4))) && (id1 != id4));
+    QVERIFY((((id3 < id4) && !(id4 < id3)) || ((id4 < id3) && !(id3 < id4))) && (id3 != id4));
+    QVERIFY((((id1 < id5) && !(id5 < id1)) || ((id5 < id1) && !(id1 < id5))) && (id3 != id4));
 }
 
 void tst_QOrganizerCollection::idHash()
@@ -191,6 +154,7 @@ void tst_QOrganizerCollection::idHash()
     QOrganizerCollectionId id4(makeId("a", 2));
     // note that the hash function ignores the managerUri
     QCOMPARE(qHash(id1), qHash(id2));
+    QCOMPARE(qHash(id1), qHash(id3));
     QVERIFY(qHash(id1) != qHash(id4));
 
     QSet<QOrganizerCollectionId> set;
@@ -460,10 +424,10 @@ void tst_QOrganizerCollection::traits()
 
 void tst_QOrganizerCollection::idTraits()
 {
-    QCOMPARE(sizeof(QOrganizerCollectionId), sizeof(void *));
+    QCOMPARE(sizeof(QOrganizerCollectionId), 2*sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerCollectionId>::isComplex);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isStatic);
-    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isLarge);
+    QVERIFY(QTypeInfo<QOrganizerCollectionId>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isPointer);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isDummy);
 }

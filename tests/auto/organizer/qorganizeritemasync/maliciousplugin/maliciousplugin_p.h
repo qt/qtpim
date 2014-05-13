@@ -194,8 +194,6 @@ class MaliciousEngineFactory : public QOrganizerManagerEngineFactory
 public:
     QString managerName() const;
     QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error);
-    QOrganizerItemEngineId *createItemEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
-    QOrganizerCollectionEngineId *createCollectionEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
 
 private:
     MaliciousAsyncManagerEngine mame;

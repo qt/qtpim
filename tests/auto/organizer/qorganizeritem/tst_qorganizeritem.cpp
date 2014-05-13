@@ -66,14 +66,13 @@ private slots:
     void tags();
     void type();
     void emptiness();
-    void idLessThan();
+    void idComparison();
     void idHash();
     void idStringFunctions();
     void hash();
     void datastream();
     void traits();
     void idTraits();
-    void localIdTraits();
     void debugOutput();
 
     void event();
@@ -599,37 +598,31 @@ QOrganizerItemId makeId(const QString& managerUri, uint id)
     return QOrganizerItemId(new BasicItemLocalId(managerUri, id));
 }
 
-void tst_QOrganizerItem::idLessThan()
+void tst_QOrganizerItem::idComparison()
 {
-    // TODO: review test
     QOrganizerItemId id1(makeId("a", 1));
     QOrganizerItemId id2(makeId("a", 1));
     QVERIFY(!(id1 < id2));
     QVERIFY(!(id2 < id1));
+    QVERIFY(id1 == id2);
     QOrganizerItemId id3(makeId("a", 2));
     QOrganizerItemId id4(makeId("b", 1));
     QOrganizerItemId id5(makeId(QString(), 2)); // no Uri specified.
-    QVERIFY(id1 < id3);
-    QVERIFY(!(id3 < id1));
-    QVERIFY(id1 < id4);
-    QVERIFY(!(id4 < id1));
-    QVERIFY(id3 < id4);
-    QVERIFY(!(id4 < id3));
-    QVERIFY(id5 < id1);
-    QVERIFY(!(id1 < id5));
+    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
+    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
+    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
+    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
 }
 
 void tst_QOrganizerItem::idHash()
 {
-    // TODO: review test
     QOrganizerItemId id1(makeId("a", 1));
     QOrganizerItemId id2(makeId("a", 1));
     QOrganizerItemId id3(makeId("b", 1));
     QOrganizerItemId id4(makeId("a", 2));
-    QVERIFY(qHash(id1) == qHash(id2));
+    // note that the hash function ignores the managerUri
+    QCOMPARE(qHash(id1), qHash(id2));
     QVERIFY(qHash(id1) != qHash(id4));
-    // note that the hash function is dependent on the id type
-    // in BasicCollectionLocalId, the hash function ignores the managerUri.
 
     QSet<QOrganizerItemId> set;
     set.insert(id1);
@@ -919,34 +912,21 @@ void tst_QOrganizerItem::datastream()
 void tst_QOrganizerItem::traits()
 {
     QCOMPARE(sizeof(QOrganizerItem), sizeof(void *));
-    QTypeInfo<QOrganizerItem> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QVERIFY(QTypeInfo<QOrganizerItem>::isComplex);
+    QVERIFY(!QTypeInfo<QOrganizerItem>::isStatic);
+    QVERIFY(!QTypeInfo<QOrganizerItem>::isLarge);
+    QVERIFY(!QTypeInfo<QOrganizerItem>::isPointer);
+    QVERIFY(!QTypeInfo<QOrganizerItem>::isDummy);
 }
 
 void tst_QOrganizerItem::idTraits()
 {
-    QVERIFY(sizeof(QOrganizerItemId) == sizeof(void *));
-    QTypeInfo<QOrganizerItemId> ti;
-    QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
-}
-
-void tst_QOrganizerItem::localIdTraits()
-{
-    QVERIFY(sizeof(QOrganizerItemId) == sizeof(void *));
-    QTypeInfo<QOrganizerItemId> ti;
-    QVERIFY(ti.isComplex); // unlike QContactLocalId (int typedef), we have a ctor
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
-    QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
+    QCOMPARE(sizeof(QOrganizerItemId), sizeof(void *));
+    QVERIFY(QTypeInfo<QOrganizerItemId>::isComplex);
+    QVERIFY(!QTypeInfo<QOrganizerItemId>::isStatic);
+    QVERIFY(!QTypeInfo<QOrganizerItemId>::isLarge);
+    QVERIFY(!QTypeInfo<QOrganizerItemId>::isPointer);
+    QVERIFY(!QTypeInfo<QOrganizerItemId>::isDummy);
 }
 
 void tst_QOrganizerItem::event()

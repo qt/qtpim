@@ -3929,8 +3929,8 @@ void tst_QOrganizerManager::idComparison()
     QVERIFY(idList.contains(t1id));
     QVERIFY(idList.contains(biid1));
 
-    QVERIFY(bcid1 < bcid2);
-    QVERIFY(bcid3 < bcid2);
+    QVERIFY(((bcid1 < bcid2) || (bcid2 < bcid1)) && (bcid1 != bcid2));
+    QVERIFY(((bcid3 < bcid2) || (bcid3 < bcid1)) && (bcid3 != bcid2));
     QVERIFY(((e1id < e2id) || (e2id < e1id)) && (e1id != e2id));
 
     // now we do some tests which might be unstable

@@ -63,7 +63,7 @@ private slots:
     void type();
     void tags();
     void emptiness();
-    void idLessThan();
+    void idComparison();
     void idHash();
     void hash();
     void datastream();
@@ -534,23 +534,20 @@ void tst_QContact::emptiness()
     QVERIFY(c.isEmpty() == true); // type doesn't affect emptiness
 }
 
-void tst_QContact::idLessThan()
+void tst_QContact::idComparison()
 {
     QContactId id1 = QContactIdMock::createId("a", 1);
     QContactId id2 = QContactIdMock::createId("a", 1);
     QVERIFY(!(id1 < id2));
     QVERIFY(!(id2 < id1));
+    QVERIFY(id1 == id2);
     QContactId id3 = QContactIdMock::createId("a", 2);
     QContactId id4 = QContactIdMock::createId("b", 1);
-    QContactId id5 = QContactIdMock::createId("", 2);
-    QVERIFY(id1 < id3);
-    QVERIFY(!(id3 < id1));
-    QVERIFY(id1 < id4);
-    QVERIFY(!(id4 < id1));
-    QVERIFY(id3 < id4);
-    QVERIFY(!(id4 < id3));
-    QVERIFY(id5 < id1);
-    QVERIFY(!(id1 < id5));
+    QContactId id5 = QContactIdMock::createId(QString(), 2); // no Uri specified.
+    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
+    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
+    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
+    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
 }
 
 void tst_QContact::idHash()
@@ -558,13 +555,17 @@ void tst_QContact::idHash()
     QContactId id1 = QContactIdMock::createId("a", 1);
     QContactId id2 = QContactIdMock::createId("a", 1);
     QContactId id3 = QContactIdMock::createId("b", 1);
-    QVERIFY(qHash(id1) == qHash(id2));
-    QVERIFY(qHash(id1) != qHash(id3));
+    QContactId id4 = QContactIdMock::createId("a", 2);
+    // note that the hash function ignores the managerUri
+    QCOMPARE(qHash(id1), qHash(id2));
+    QVERIFY(qHash(id1) != qHash(id4));
+
     QSet<QContactId> set;
     set.insert(id1);
     set.insert(id2);
     set.insert(id3);
-    QCOMPARE(set.size(), 2);
+    set.insert(id4);
+    QCOMPARE(set.size(), 3);
 }
 
 void tst_QContact::hash()
@@ -620,7 +621,7 @@ void tst_QContact::datastream()
 
 void tst_QContact::traits()
 {
-    QVERIFY(sizeof(QContact) == sizeof(void *));
+    QCOMPARE(sizeof(QContact), sizeof(void *));
     QVERIFY(QTypeInfo<QContact>::isComplex);
     QVERIFY(!QTypeInfo<QContact>::isStatic);
     QVERIFY(!QTypeInfo<QContact>::isLarge);
@@ -630,7 +631,7 @@ void tst_QContact::traits()
 
 void tst_QContact::idTraits()
 {
-    QVERIFY(sizeof(QContactId) == sizeof(void *));
+    QCOMPARE(sizeof(QContactId), sizeof(void *));
     QVERIFY(QTypeInfo<QContactId>::isComplex);
     QVERIFY(!QTypeInfo<QContactId>::isStatic);
     QVERIFY(!QTypeInfo<QContactId>::isLarge);

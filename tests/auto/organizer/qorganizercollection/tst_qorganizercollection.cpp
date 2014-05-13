@@ -61,14 +61,13 @@ public:
 private slots:
     void metaData();
     void compare();
-    void idLessThan();
+    void idComparison();
     void idHash();
     void idStringFunctions();
     void hash();
     void datastream();
     void traits();
     void idTraits();
-    void localIdTraits();
 };
 
 tst_QOrganizerCollection::tst_QOrganizerCollection()
@@ -168,9 +167,8 @@ void tst_QOrganizerCollection::compare()
     c.setId(makeId(QStringLiteral("b"), 2));
 }
 
-void tst_QOrganizerCollection::idLessThan()
+void tst_QOrganizerCollection::idComparison()
 {
-    // TODO: review tests
     QOrganizerCollectionId id1(makeId("a", 1));
     QOrganizerCollectionId id2(makeId("a", 1));
     QVERIFY(!(id1 < id2));
@@ -178,28 +176,22 @@ void tst_QOrganizerCollection::idLessThan()
     QVERIFY(id1 == id2);
     QOrganizerCollectionId id3(makeId("a", 2));
     QOrganizerCollectionId id4(makeId("b", 1));
-    QOrganizerCollectionId id5(makeId(QString(), 2));
-    QVERIFY(id1 < id3);
-    QVERIFY(!(id3 < id1));
-    QVERIFY(id1 < id4);
-    QVERIFY(!(id4 < id1));
-    QVERIFY(id3 < id4);
-    QVERIFY(!(id4 < id3));
-    QVERIFY(id5 < id1);
-    QVERIFY(!(id1 < id5));
+    QOrganizerCollectionId id5(makeId(QString(), 2)); // no Uri specified.
+    QVERIFY(((id1 < id3) || (id3 < id1)) && (id1 != id3));
+    QVERIFY(((id1 < id4) || (id4 < id1)) && (id1 != id4));
+    QVERIFY(((id3 < id4) || (id4 < id3)) && (id3 != id4));
+    QVERIFY(((id1 < id5) || (id5 < id1)) && (id1 != id5));
 }
 
 void tst_QOrganizerCollection::idHash()
 {
-    // TODO: review tests
-    QOrganizerCollectionId id1(makeId(QString(), 1));
-    QOrganizerCollectionId id2(makeId(QString(), 1));
-    QOrganizerCollectionId id3(makeId(QString(), 2));
-    QOrganizerCollectionId id4(makeId("a", 1));
-    QVERIFY(qHash(id1) == qHash(id2));
-    QVERIFY(qHash(id1) != qHash(id3));
-    // note that the hash function is dependent on the id type
-    // in BasicCollectionLocalId, the hash function ignores the managerUri.
+    QOrganizerCollectionId id1(makeId("a", 1));
+    QOrganizerCollectionId id2(makeId("a", 1));
+    QOrganizerCollectionId id3(makeId("b", 1));
+    QOrganizerCollectionId id4(makeId("a", 2));
+    // note that the hash function ignores the managerUri
+    QCOMPARE(qHash(id1), qHash(id2));
+    QVERIFY(qHash(id1) != qHash(id4));
 
     QSet<QOrganizerCollectionId> set;
     set.insert(id1);
@@ -458,7 +450,7 @@ void tst_QOrganizerCollection::datastream()
 
 void tst_QOrganizerCollection::traits()
 {
-    QVERIFY(sizeof(QOrganizerCollection) == sizeof(void *));
+    QCOMPARE(sizeof(QOrganizerCollection), sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerCollection>::isComplex);
     QVERIFY(!QTypeInfo<QOrganizerCollection>::isStatic);
     QVERIFY(!QTypeInfo<QOrganizerCollection>::isLarge);
@@ -468,18 +460,8 @@ void tst_QOrganizerCollection::traits()
 
 void tst_QOrganizerCollection::idTraits()
 {
-    QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QVERIFY(QTypeInfo<QOrganizerCollection>::isComplex);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isStatic);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isLarge);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isPointer);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isDummy);
-}
-
-void tst_QOrganizerCollection::localIdTraits()
-{
-    QVERIFY(sizeof(QOrganizerCollectionId) == sizeof(void *));
-    QVERIFY(QTypeInfo<QOrganizerCollectionId>::isComplex); // unlike QContactLocalId (int typedef), we have a ctor
+    QCOMPARE(sizeof(QOrganizerCollectionId), sizeof(void *));
+    QVERIFY(QTypeInfo<QOrganizerCollectionId>::isComplex);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isStatic);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isPointer);

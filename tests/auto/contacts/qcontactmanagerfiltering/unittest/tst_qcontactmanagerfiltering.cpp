@@ -196,7 +196,7 @@ tst_QContactManagerFiltering::tst_QContactManagerFiltering()
     // In order to make our tests reliable, set the C locale
     QLocale::setDefault(QLocale::c());
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) && !defined(QT_USE_ICU)
     // Without ICU, we also need to set the locale on unix
     ::setlocale(LC_ALL, "C");
 #endif
@@ -904,13 +904,25 @@ void tst_QContactManagerFiltering::rangeFiltering_data()
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"no max, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("no max, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant("bob") << QVariant() << false << 0 << true << csflag << "hj";
+        newMRow("no max, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant("bob") << QVariant() << false << 0 << true << csflag
+#ifdef QT_USE_ICU
+                                                              // Case sensitivity is handled differently with/without ICU (in one case, the char sequence is
+                                                              // 'A-Za-z', in the other it is 'AaBb..Zz') - the results are therefore highly divergent
+                                                              << "bcdefghijk";
+#else
+                                                              << "hj";
+#endif
         newMRow("no max, cs, badcase, no results", manager) << manager << nameType << firstname << QVariant("XAMBEZI") << QVariant() << false << 0 << true << csflag << "hijk";
         newMRow("no min, cs, badcase, all results", manager) << manager << nameType << firstname << QVariant() << QVariant("XAMBEZI") << false << 0 << true << csflag << "abcdefg";
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"no min, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("no min, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant() << QVariant("BOB") << false << 0 << true << csflag << "a";
+        newMRow("no min, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant() << QVariant("BOB") << false << 0 << true << csflag
+#ifdef QT_USE_ICU
+                                                              << "ab";
+#else
+                                                              << "a";
+#endif
         newMRow("no min, cs, badcase, no results", manager) << manager << nameType << firstname << QVariant() << QVariant("AARDVARK") << false << 0 << true << csflag << es;
 
         /* 'a' has phone number ("5551212") */
@@ -2105,11 +2117,25 @@ void tst_QContactManagerFiltering::sorting_data()
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"first ascending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("first ascending", manager) << manager << nameType << firstname << asc << false << 0 << cs << "abcdefgikjh" << "efg";  // efg have the same first name
+        newMRow("first ascending", manager) << manager << nameType << firstname << asc << false << 0 << cs
+#ifdef QT_USE_ICU
+                                            // Case sensitivity is handled differently with/without ICU (in one case, the char sequence is
+                                            // 'A-Za-z', in the other it is 'AaBb..Zz') - the results are therefore divergent
+                                            << "abcdefghjik"
+#else
+                                            << "abcdefgikjh"
+#endif
+                                            << "efg";  // efg have the same first name
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"first descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("first descending", manager) << manager << nameType << firstname << desc << false << 0 << cs << "hjkiefgdcba" << "efg";// efg have the same first name
+        newMRow("first descending", manager) << manager << nameType << firstname << desc << false << 0 << cs
+#ifdef QT_USE_ICU
+                                             << "kijhefgdcba"
+#else
+                                             << "hjkiefgdcba"
+#endif
+                                             << "efg";// efg have the same first name
         newMRow("last ascending", manager) << manager << nameType << lastname << asc << false << 0 << cs << "bacdefghijk" << "hijk";       // all have a well defined, sortable last name except hijk
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"last descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";

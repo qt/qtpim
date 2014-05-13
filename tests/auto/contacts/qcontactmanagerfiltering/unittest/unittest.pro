@@ -5,6 +5,8 @@ qtHaveModule(serviceframework) {
     QT += serviceframework
 }
 
+contains(QT_CONFIG,icu):DEFINES += QT_USE_ICU
+
 SOURCES  += tst_qcontactmanagerfiltering.cpp
 HEADERS += ../../qcontactmanagerdataholder.h
 

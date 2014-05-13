@@ -203,48 +203,40 @@ QContactAbstractRequest::~QContactAbstractRequest()
 }
 
 /*!
-  Returns true if the request is in the \c QContactAbstractRequest::InactiveState state; otherwise, returns false
+    \fn bool QContactAbstractRequest::isInactive() const
 
-  \sa state()
- */
-bool QContactAbstractRequest::isInactive() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QContactAbstractRequest::InactiveState);
-}
+    Returns true if the request is in the \l QContactAbstractRequest::InactiveState state;
+    returns false otherwise.
+
+    \sa state(), isActive(), isCanceled(), isFinished()
+*/
 
 /*!
-  Returns true if the request is in the \c QContactAbstractRequest::ActiveState state; otherwise, returns false
+    \fn bool QContactAbstractRequest::isActive() const
 
-  \sa state()
- */
-bool QContactAbstractRequest::isActive() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QContactAbstractRequest::ActiveState);
-}
+    Returns true if the request is in the \l QContactAbstractRequest::ActiveState state;
+    returns false otherwise.
+
+    \sa state(), isInactive(), isCanceled(), isFinished()
+*/
 
 /*!
-  Returns true if the request is in the \c QContactAbstractRequest::FinishedState; otherwise, returns false
+    \fn bool QContactAbstractRequest::isFinished() const
 
-  \sa state()
- */
-bool QContactAbstractRequest::isFinished() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QContactAbstractRequest::FinishedState);
-}
+    Returns true if the request is in the \l QContactAbstractRequest::FinishedState;
+    returns false otherwise.
+
+    \sa state(), isActive(), isInactive(), isCanceled()
+*/
 
 /*!
-  Returns true if the request is in the \c QContactAbstractRequest::CanceledState; otherwise, returns false
+    \fn bool QContactAbstractRequest::isCanceled() const
 
-  \sa state()
- */
-bool QContactAbstractRequest::isCanceled() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QContactAbstractRequest::CanceledState);
-}
+    Returns true if the request is in the \l QContactAbstractRequest::CanceledState;
+    returns false otherwise.
+
+    \sa state(), isActive(), isInactive(), isFinished()
+*/
 
 /*! Returns the overall error of the most recent asynchronous operation
 */

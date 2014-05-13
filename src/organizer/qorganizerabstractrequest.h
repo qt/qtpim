@@ -64,10 +64,10 @@ public:
     };
 
     State state() const;
-    bool isInactive() const;
-    bool isActive() const;
-    bool isFinished() const;
-    bool isCanceled() const;
+    inline bool isInactive() const { return state() == QOrganizerAbstractRequest::InactiveState; }
+    inline bool isActive() const { return state() == QOrganizerAbstractRequest::ActiveState; }
+    inline bool isCanceled() const { return state() == QOrganizerAbstractRequest::CanceledState; }
+    inline bool isFinished() const { return state() == QOrganizerAbstractRequest::FinishedState; }
 
     QOrganizerManager::Error error() const;
 

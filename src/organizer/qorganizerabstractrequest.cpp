@@ -149,52 +149,40 @@ QOrganizerAbstractRequest::~QOrganizerAbstractRequest()
 }
 
 /*!
-    Returns true if the request is in the QOrganizerAbstractRequest::InactiveState state; otherwise,
-    returns false.
+    \fn bool QOrganizerAbstractRequest::isInactive() const
 
-    \sa state()
- */
-bool QOrganizerAbstractRequest::isInactive() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QOrganizerAbstractRequest::InactiveState);
-}
+    Returns true if the request is in the \l QOrganizerAbstractRequest::InactiveState state;
+    returns false otherwise.
+
+    \sa state(), isActive(), isCanceled(), isFinished()
+*/
 
 /*!
-    Returns true if the request is in the QOrganizerAbstractRequest::ActiveState state; otherwise,
-    returns false.
+    \fn bool QOrganizerAbstractRequest::isActive() const
 
-    \sa state()
- */
-bool QOrganizerAbstractRequest::isActive() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QOrganizerAbstractRequest::ActiveState);
-}
+    Returns true if the request is in the \l QOrganizerAbstractRequest::ActiveState state;
+    returns false otherwise.
+
+    \sa state(), isInactive(), isCanceled(), isFinished()
+*/
 
 /*!
-    Returns true if the request is in the QOrganizerAbstractRequest::FinishedState; otherwise,
-    returns false.
+    \fn bool QOrganizerAbstractRequest::isFinished() const
 
-    \sa state()
- */
-bool QOrganizerAbstractRequest::isFinished() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QOrganizerAbstractRequest::FinishedState);
-}
+    Returns true if the request is in the \l QOrganizerAbstractRequest::FinishedState;
+    returns false otherwise.
+
+    \sa state(), isActive(), isInactive(), isCanceled()
+*/
 
 /*!
-    Returns true if the request is in the QOrganizerAbstractRequest::CanceledState; otherwise,
-    returns false.
+    \fn bool QOrganizerAbstractRequest::isCanceled() const
 
-    \sa state()
- */
-bool QOrganizerAbstractRequest::isCanceled() const
-{
-    QMutexLocker ml(&d_ptr->m_mutex);
-    return (d_ptr->m_state == QOrganizerAbstractRequest::CanceledState);
-}
+    Returns true if the request is in the \l QOrganizerAbstractRequest::CanceledState;
+    returns false otherwise.
+
+    \sa state(), isActive(), isInactive(), isFinished()
+*/
 
 /*!
     Returns the overall error of the most recent asynchronous operation.

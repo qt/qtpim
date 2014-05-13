@@ -67,10 +67,11 @@ public:
     };
 
     State state() const; // replaces status()
-    bool isInactive() const;
-    bool isActive() const;
-    bool isFinished() const;
-    bool isCanceled() const;
+    inline bool isInactive() const { return state() == QContactAbstractRequest::InactiveState; }
+    inline bool isActive() const { return state() == QContactAbstractRequest::ActiveState; }
+    inline bool isFinished() const { return state() == QContactAbstractRequest::FinishedState; }
+    inline bool isCanceled() const { return state() == QContactAbstractRequest::CanceledState; }
+
     QContactManager::Error error() const;
 
     Q_ENUMS(RequestType)

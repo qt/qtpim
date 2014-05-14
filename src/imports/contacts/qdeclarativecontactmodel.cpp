@@ -162,6 +162,10 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     connect(&d->m_writer, SIGNAL(stateChanged(QVersitWriter::State)), this, SLOT(contactsExported(QVersitWriter::State)));
 }
 
+QDeclarativeContactModel::~QDeclarativeContactModel()
+{
+}
+
 /*!
   \qmlproperty string ContactModel::manager
 

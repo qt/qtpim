@@ -82,6 +82,7 @@ class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserSta
 
 public:
     explicit QDeclarativeContactModel(QObject *parent = 0);
+    ~QDeclarativeContactModel();
 
     enum {
         ContactRole =  Qt::UserRole + 500
@@ -204,7 +205,7 @@ private:
     int contactIndex(const QDeclarativeContact* contact);
 
 private:
-    QDeclarativeContactModelPrivate *d;
+    QScopedPointer<QDeclarativeContactModelPrivate> d;
 };
 
 QT_END_NAMESPACE

@@ -58,7 +58,6 @@ public:
     virtual bool isLessThan(const QContactEngineId *other) const = 0;
 
     virtual QString managerUri() const = 0;
-    virtual QContactAbstractRequest::StorageLocation storageLocation() const;
 
     virtual QContactEngineId* clone() const = 0;
 

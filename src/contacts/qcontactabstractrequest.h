@@ -93,12 +93,6 @@ public:
     QContactManager* manager() const;
     void setManager(QContactManager* manager);
 
-    enum StorageLocation {
-        UserDataStorage = 0x1,
-        SystemStorage = 0x2
-    };
-    Q_DECLARE_FLAGS(StorageLocations, StorageLocation)
-
 public Q_SLOTS:
     /* Verbs */
     bool start();
@@ -126,8 +120,6 @@ private:
 #endif
 
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(QContactAbstractRequest::StorageLocations)
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_CONTACTS_EXPORT QDebug operator<<(QDebug dbg, const QContactAbstractRequest& request);

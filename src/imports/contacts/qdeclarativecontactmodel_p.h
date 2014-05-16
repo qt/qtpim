@@ -67,7 +67,6 @@ class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserSta
 {
     Q_OBJECT
     Q_PROPERTY(QString manager READ manager WRITE setManager NOTIFY managerChanged)
-    Q_PROPERTY(int storageLocations READ storageLocations WRITE setStorageLocations NOTIFY storageLocationsChanged)
     Q_PROPERTY(QStringList availableManagers READ availableManagers)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(bool autoUpdate READ autoUpdate WRITE setAutoUpdate NOTIFY autoUpdateChanged)
@@ -77,7 +76,6 @@ class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserSta
     Q_PROPERTY(QQmlListProperty<QDeclarativeContactSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
     Q_ENUMS(ExportError)
     Q_ENUMS(ImportError)
-    Q_ENUMS(StorageLocation)
     Q_INTERFACES(QQmlParserStatus)
 
 public:
@@ -105,16 +103,8 @@ public:
         ImportParseError       = QVersitReader::ParseError
     };
 
-    enum StorageLocation {
-        UserDataStorage = QContactAbstractRequest::UserDataStorage,
-        SystemStorage = QContactAbstractRequest::SystemStorage
-    };
-
     QString manager() const;
     void setManager(const QString& manager);
-
-    int storageLocations() const;
-    void setStorageLocations(int storageLocations);
 
     QStringList availableManagers() const;
 
@@ -152,14 +142,13 @@ public:
 
     Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);
-    Q_INVOKABLE void saveContact(QDeclarativeContact* dc, StorageLocation storageLocation = UserDataStorage);
+    Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
     Q_INVOKABLE int fetchContacts(const QStringList& contactIds);
     Q_INVOKABLE void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
     Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList(), const QVariantList &declarativeContacts = QVariantList());
 
 signals:
     void managerChanged();
-    void storageLocationsChanged();
     void filterChanged();
     void errorChanged();
     void fetchHintChanged();
@@ -197,8 +186,6 @@ private slots:
     void onFetchContactsRequestStateChanged(QContactAbstractRequest::State state);
 
 private:
-    QList<QContactId> extractContactIdsInStorageLocationFromThisModel(const QList<QContactId> &ids);
-    static QContactAbstractRequest::StorageLocations extractStorageLocation(const QContactId &id);
     QContactFetchRequest *createContactFetchRequest(const QList<QContactId> &ids);
     void checkError(const QContactAbstractRequest *request);
     void updateError(QContactManager::Error error);

@@ -89,16 +89,6 @@ QT_BEGIN_NAMESPACE_CONTACTS
  */
 
 /*!
-  \fn QContactAbstractRequest::StorageLocation QContactEngineId::storageLocation() const
-
-  Returns the storage location where the contact is from.
- */
-QContactAbstractRequest::StorageLocation QContactEngineId::storageLocation() const
-{
-    return QContactAbstractRequest::UserDataStorage;
-}
-
-/*!
   \fn QContactEngineId::toString() const
   Serializes the id to a string.  It contains all of the information
   required to identify a particular contact in the manager which created

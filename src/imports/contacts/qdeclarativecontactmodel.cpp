@@ -56,7 +56,6 @@
 #include <QtContacts/qcontactdetails.h>
 #include <QtContacts/qcontactmanager.h>
 #include <QtContacts/qcontactmanagerengine.h>
-#include <QtContacts/qcontactengineid.h>
 #include <QtContacts/qcontactdetailfilter.h>
 #include <QtContacts/qcontactidfilter.h>
 #include <QtContacts/qcontactintersectionfilter.h>
@@ -101,7 +100,6 @@ class QDeclarativeContactModelPrivate
 public:
     QDeclarativeContactModelPrivate()
         :m_manager(0),
-        m_storageLocations(QContactAbstractRequest::UserDataStorage),
         m_fetchHint(0),
         m_filter(0),
         m_error(QContactManager::NoError),
@@ -120,7 +118,6 @@ public:
     QMap<QContactId, QDeclarativeContact*> m_contactMap;
     QMap<QContactId, QDeclarativeContact*> m_contactFetchedMap;
     QContactManager* m_manager;
-    QContactAbstractRequest::StorageLocations m_storageLocations;
     QDeclarativeContactFetchHint* m_fetchHint;
     QList<QDeclarativeContactSortOrder*> m_sortOrders;
     QDeclarativeContactFilter* m_filter;
@@ -152,7 +149,6 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     setRoleNames(roleNames);
 
     connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(storageLocationsChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(filterChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
@@ -197,74 +193,6 @@ void QDeclarativeContactModel::setManager(const QString& managerName)
     }
 
     emit managerChanged();
-}
-
-/*!
-  \qmlproperty enumeration ContactModel::StorageLocation
-
-  Defines the different storage locations for saving contacts and model population purposes.
-
-  \list
-  \li ContactModel::UserDataStorage        A storage location where user data is stored.
-  \li ContactModel::SystemStorage          A storage location where system files are stored.
-  \endlist
-
-  Depending on the backend implementation, the access rights for different storage locations might vary.
-
-  \sa ContactModel::storageLocations
-  \sa ContactModel::saveContact
-*/
-
-/*!
-  \qmlsignal ContactModel::storageLocationsChanged()
-
-  This signal is emitted, when \l ContactModel::storageLocations property changes.
-
-  \sa ContactModel::storageLocations
- */
-
-/*!
-  \qmlproperty int ContactModel::storageLocations
-
-  This property indicates which storage location is used to populate the model.
-
-  Only one storage location can be used for each model.
-
-  Storage location is a backend specific feature. Some backends support it and some might just ignore it. If backend
-  is having some specific requirements and they're not met, backend returns StorageLocationsNotExistingError.
-
-  \sa ContactModel::StorageLocation
-  \sa ContactModel::saveContact
-*/
-int QDeclarativeContactModel::storageLocations() const
-{
-    return d->m_storageLocations;
-}
-
-void QDeclarativeContactModel::setStorageLocations(int storageLocations)
-{
-    QContactAbstractRequest::StorageLocations newStorageLocation = 0;
-    // only one storage location for a model is supported
-    switch (storageLocations) {
-    case UserDataStorage:
-        newStorageLocation = QContactAbstractRequest::UserDataStorage;
-        break;
-    case SystemStorage:
-        newStorageLocation = QContactAbstractRequest::SystemStorage;
-        break;
-    case (UserDataStorage | SystemStorage):
-        qWarning() << Q_FUNC_INFO << "Model does not support multiple storage locations";
-        updateError(QContactManager::NotSupportedError);
-        return;
-    default:
-        qWarning() << Q_FUNC_INFO << "Unknown storage location";
-        updateError(QContactManager::BadArgumentError);
-        return;
-    }
-    if (d->m_storageLocations != newStorageLocation) {
-        d->m_storageLocations = newStorageLocation;
-        emit storageLocationsChanged();
-    }
 }
 
 void QDeclarativeContactModel::componentComplete()
@@ -740,8 +668,6 @@ void QDeclarativeContactModel::fetchAgain()
     }
     QContactFetchRequest* fetchRequest = new QContactFetchRequest(this);
 
-    fetchRequest->setStorageLocations(d->m_storageLocations);
-
     fetchRequest->setManager(d->m_manager);
     fetchRequest->setSorting(sortOrders);
 
@@ -870,25 +796,19 @@ void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest:
 }
 
 /*!
-  \qmlmethod ContactModel::saveContact(Contact contact, StorageLocation storageLocation = UserDataStorage)
+  \qmlmethod ContactModel::saveContact(Contact contact)
 
   Save the given \a contact into the contacts backend.
-
-  The location for storing the contact can be defined with \a storageLocation for new contacts.
-  When the contact is updated, ie saved again, \a storageLocation is ignored and the contact
-  is saved to the same location as it were before.
-
   Once saved successfully, the dirty flags of this contact will be reset.
 
   \sa Contact::modified
   */
-void QDeclarativeContactModel::saveContact(QDeclarativeContact* dc, StorageLocation storageLocation)
+void QDeclarativeContactModel::saveContact(QDeclarativeContact* dc)
 {
     if (dc) {
         QContactSaveRequest* req = new QContactSaveRequest(this);
         req->setManager(d->m_manager);
         req->setContact(dc->contact());
-        req->setStorageLocation(QContactAbstractRequest::StorageLocation(storageLocation));
         if (dc->contact().id().isNull()) {
             // if the contact id is empty this means that this contact is a new contact
             // we need to keep trace of this declarative contact to update with the
@@ -947,30 +867,11 @@ void QDeclarativeContactModel::updateError(QContactManager::Error error)
 void QDeclarativeContactModel::onContactsAdded(const QList<QContactId>& ids)
 {
     if (d->m_autoUpdate && !ids.isEmpty()) {
-        QList<QContactId> contactsIdsForThisModel = extractContactIdsInStorageLocationFromThisModel(ids);
-        if (contactsIdsForThisModel.isEmpty())
-            return;
-        QContactFetchRequest *fetchRequest = createContactFetchRequest(contactsIdsForThisModel);
+        QContactFetchRequest *fetchRequest = createContactFetchRequest(ids);
         connect(fetchRequest,SIGNAL(stateChanged(QContactAbstractRequest::State)),
                 this, SLOT(onContactsAddedFetchRequestStateChanged(QContactAbstractRequest::State)));
         fetchRequest->start();
     }
-}
-
-QList<QContactId> QDeclarativeContactModel::extractContactIdsInStorageLocationFromThisModel(const QList<QContactId> &ids)
-{
-    QList<QContactId> idsForThisModel;
-    foreach (const QContactId &id, ids) {
-        if (d->m_storageLocations & extractStorageLocation(id))
-            idsForThisModel.append(id);
-    }
-    return idsForThisModel;
-}
-
-QContactAbstractRequest::StorageLocations QDeclarativeContactModel::extractStorageLocation(const QContactId &id)
-{
-    const QContactEngineId *engineId = QContactManagerEngine::engineId(id);
-    return engineId->storageLocation();
 }
 
 /*!
@@ -1048,10 +949,7 @@ void QDeclarativeContactModel::onContactsRemoved(const QList<QContactId> &ids)
 void QDeclarativeContactModel::onContactsChanged(const QList<QContactId> &ids)
 {
     if (d->m_autoUpdate && !ids.isEmpty()) {
-        QList<QContactId> contactsIdsForThisModel = extractContactIdsInStorageLocationFromThisModel(ids);
-        if (contactsIdsForThisModel.isEmpty())
-            return;
-        QContactFetchRequest *fetchRequest = createContactFetchRequest(contactsIdsForThisModel);
+        QContactFetchRequest *fetchRequest = createContactFetchRequest(ids);
         connect(fetchRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
                 this, SLOT(onContactsChangedFetchRequestStateChanged(QContactAbstractRequest::State)));
         fetchRequest->start();
@@ -1078,8 +976,6 @@ QContactFetchRequest *QDeclarativeContactModel::createContactFetchRequest(const 
     QContactFetchRequest *fetchRequest = new QContactFetchRequest(this);
     fetchRequest->setManager(d->m_manager);
     fetchRequest->setFetchHint(d->m_fetchHint ? d->m_fetchHint->fetchHint() : QContactFetchHint());
-    // model supports only one storage location at the moment
-    fetchRequest->setStorageLocations(QFlags<QContactAbstractRequest::StorageLocation>(d->m_storageLocations));
 
     QContactIdFilter idFilter;
     idFilter.setIds(ids);

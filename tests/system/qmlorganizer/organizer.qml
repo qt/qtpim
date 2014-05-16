@@ -54,7 +54,6 @@ Rectangle {
          property int weekDay:currentDate.getDay()
          property string status:currentDate.toDateString()
          property string preState: "MonthView"
-         property alias storageLocationModel: storageLocationModel
          property alias contentArea : contentArea
 
         color: "#343434";
@@ -107,12 +106,6 @@ Rectangle {
                     calendar.state = "DetailsView";
                 }
             }
-        }
-
-        ListModel {
-            id: storageLocationModel
-            ListElement{name: "UserDataStorage"}
-            ListElement{name: "SystemStorage"}
         }
 
         InfoBar {

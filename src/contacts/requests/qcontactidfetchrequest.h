@@ -70,10 +70,6 @@ public:
     /* Results */
     QList<QContactId> ids() const;
 
-    // Storage location setter and getter
-    void setStorageLocations(QContactAbstractRequest::StorageLocations storageLocations);
-    QContactAbstractRequest::StorageLocations storageLocations() const;
-
 private:
     Q_DISABLE_COPY(QContactIdFetchRequest)
     friend class QContactManagerEngine;

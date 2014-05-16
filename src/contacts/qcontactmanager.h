@@ -107,7 +107,6 @@ public:
         LimitReachedError,
         InvalidContactTypeError,
         TimeoutError,
-        InvalidStorageLocationError,
         MissingPlatformRequirementsError
     };
 

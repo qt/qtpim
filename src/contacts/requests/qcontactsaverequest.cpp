@@ -76,41 +76,6 @@ QContactSaveRequest::~QContactSaveRequest()
 }
 
 /*!
-  Sets the \a storageLocation where the new contacts will be saved to.
-
-  This is ignored for contacts which have already been saved. Instead,
-  those contacts are saved back to the storage location where they were
-  originally stored.
-
-  \sa QContactAbstractRequest::StorageLocation
-  \sa storageLocation()
-
- */
-void QContactSaveRequest::setStorageLocation(QContactAbstractRequest::StorageLocation storageLocation)
-{
-    Q_D(QContactSaveRequest);
-    QMutexLocker ml(&d->m_mutex);
-    d->m_storageLocation = storageLocation;
-}
-
-/*!
-  Returns the storage location where the contacts will be saved to.
-
-  This is ignored for contacts which have already been saved. Instead,
-  those contacts are saved back to the storage location where they were
-  originally stored.
-
-  \sa QContactAbstractRequest::StorageLocation
-  \sa setStorageLocation()
- */
-QContactAbstractRequest::StorageLocation QContactSaveRequest::storageLocation() const
-{
-    Q_D(const QContactSaveRequest);
-    QMutexLocker ml(&d->m_mutex);
-    return d->m_storageLocation;
-}
-
-/*!
   Sets the contact to be saved to \a contact.
   Equivalent to calling:
   \code

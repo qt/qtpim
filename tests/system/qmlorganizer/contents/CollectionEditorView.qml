@@ -90,11 +90,6 @@ Item {
             label: "Image"
             value: collection? collection.image : ""
         }
-
-        StorageLocationRoller {
-            id: storageLocationRow
-            opacity: isNewCollection ? 1 : 0;
-        }
     }
 
     Rectangle {
@@ -115,8 +110,7 @@ Item {
         newCollection.description = descRow.newValue;
         newCollection.color = colorRow.newValue;
         newCollection.image = imageRow.newValue;
-        organizer.saveCollection(newCollection, settingsView.mapStorageLocationStringToInt(
-                calendar.storageLocationModel.get(storageLocationRow.currentIndex).name));
+        organizer.saveCollection(newCollection);
         settingsView.state = "CollectionManagerView";
     }
 

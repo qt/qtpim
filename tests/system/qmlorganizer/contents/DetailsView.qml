@@ -144,12 +144,8 @@ Rectangle
                 if (item.detail(Detail.AudibleReminder)) {
                     item.setDetail(audibleReminderdetail);
                 }
-                var storageLocation = OrganizerModel.UserDataStorage;
                 var isEventType = (item.itemType == Type.Event || item.itemType == Type.EventOccurrence);
-                storageLocation = settingsView.mapStorageLocationStringToInt(calendar.storageLocationModel.get(
-                        isEventType ? customStorageLocationRow.currentIndex : todoStorageLocationRow.currentIndex).name);
-                console.log("storageLocation:"+storageLocation)
-                calendar.organizer.saveItem(item, storageLocation);
+                calendar.organizer.saveItem(item);
                 calendar.state = "DayView";
                 saveButton.enabled = true;
                 //"item" will be removed after saved without any signal notify.
@@ -381,11 +377,6 @@ Rectangle
             }
         }
 
-        StorageLocationRoller {
-            id: customStorageLocationRow
-            opacity: isNewItem ? 1 : 0;
-        }
-
         RollerRow {
             id: customRsvpParticipationStatusRow
             valueRoller.clip: true // clipping to roller-component..
@@ -557,11 +548,6 @@ Rectangle
            onCurrentIndexChanged: {
                item.collectionId = organizer.collections[currentIndex].collectionId;
            }
-       }
-
-       StorageLocationRoller {
-           id: todoStorageLocationRow
-           opacity: isNewItem ? 1 : 0;
        }
     }
 }

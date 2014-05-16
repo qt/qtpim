@@ -54,8 +54,7 @@ Item {
 
         states: [
             State {name: "CollectionManagerView"; PropertyChanges { target: collectionManagerView; opacity: 1; }},
-            State {name: "CollectionEditorView"; PropertyChanges { target: collectionEditorView; opacity: 1; }},
-            State {name: "StorageLocationView"; PropertyChanges { target: storageLocationView; opacity: 1; }}
+            State {name: "CollectionEditorView"; PropertyChanges { target: collectionEditorView; opacity: 1; }}
         ]
         transitions: [
             Transition {
@@ -75,11 +74,6 @@ Item {
                 width: calendar.width / 2
                 onClicked: { view.state = "CollectionManagerView"}
             }
-            Button {
-                text: "Storage Locations"
-                width: calendar.width / 2
-                onClicked: { view.state = "StorageLocationView" }
-            }
         }
 
         CollectionManagerView {
@@ -87,15 +81,5 @@ Item {
         }
         CollectionEditorView {
             id: collectionEditorView;
-        }
-        StorageLocationView {
-            id: storageLocationView;
-        }
-
-        function mapStorageLocationStringToInt(storageName) {
-            if (storageName == "UserDataStorage")
-                return OrganizerModel.UserDataStorage;
-            else if (storageName == "SystemStorage")
-                return OrganizerModel.SystemStorage;
         }
 }
